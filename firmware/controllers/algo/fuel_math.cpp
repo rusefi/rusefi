@@ -259,7 +259,7 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_S) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
-	if (cisnan(coolantTemperature))
+	if (cisnan(coolantTemperature)) // todo: move this check down, below duration correction?
 		return baseCrankingFuel;
 	float durationCoef = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef, CRANKING_CURVE_SIZE);

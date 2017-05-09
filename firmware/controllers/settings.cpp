@@ -438,6 +438,10 @@ static void printTemperatureInfo(void) {
 #endif /* EFI_ANALOG_SENSORS */
 }
 
+static void setCallFromPitStop(int durationMs) {
+	engine->callFromPitStopEndTime = currentTimeMillis() + durationMs;
+}
+
 static void setCrankingRpm(int value) {
 	engineConfiguration->cranking.rpm = value;
 	doPrintConfiguration(engine);
@@ -461,8 +465,16 @@ static void setRpmHardLimit(int value) {
 	doPrintConfiguration(engine);
 }
 
+static void setCrankingIACExtra(float percent) {
+	engineConfiguration->crankingIdleAdjustment = percent;
+	scheduleMsg(&logger, "cranking_iac %f", percent);
+
+}
+
 static void setCrankingFuel(float timeMs) {
 	engineConfiguration->cranking.baseFuel = timeMs;
+	scheduleMsg(&logger, "cranking_fuel %f", timeMs);
+
 	printTemperatureInfo();
 }
 
@@ -703,7 +715,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 	boardConfiguration->triggerSimulatorPinModes[index] = (pin_output_mode_e) mode;
 }
 
-static void setEgtCSPin(const char *indexStr, const char *pinName, board_configuration_s * board_configuration_s) {
+static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index >= EGT_CHANNEL_COUNT || absI(index) == ERROR_CODE)
 		return;
@@ -986,6 +998,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"cranking_fuel", setCrankingFuel},
+		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
 		{"cranking_charge_angle", setCrankingChargeAngle},
 		{"vbatt_divider", setVBattDivider},
@@ -1024,6 +1037,7 @@ static void setTpsErrorDetectionTooHigh(int v) {
 }
 
 command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
+		{"call_from_pitstop", setCallFromPitStop},
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},
@@ -1135,7 +1149,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	}
 }
 
-void initSettings(const engine_configuration_s *engineConfiguration) {
+void initSettings(void) {
 	// todo: start saving values into flash right away?
 
 	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
@@ -1185,7 +1199,7 @@ void initSettings(const engine_configuration_s *engineConfiguration) {
 	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
 
-	addConsoleActionSSP("set_egt_cs_pin", (VoidCharPtrCharPtrVoidPtr) setEgtCSPin, boardConfiguration);
+	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
 	addConsoleActionI("set_egt_spi", setEgtSpi);
 
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);

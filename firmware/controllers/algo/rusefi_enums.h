@@ -158,6 +158,8 @@ typedef enum {
 
 	MAZDA_MIATA_2003_BETTER = 54,
 
+	PROMETHEUS_DEFAULTS = 100,
+
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
 

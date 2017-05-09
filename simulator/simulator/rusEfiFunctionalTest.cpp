@@ -102,7 +102,7 @@ void rusEfiFunctionalTest(void) {
 	resetConfigurationExt(NULL, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
 	prepareShapes(PASS_ENGINE_PARAMETER_F);
 
-	initAlgo(&sharedLogger, engineConfiguration);
+	initAlgo(&sharedLogger);
 	commonInitEngineController(&sharedLogger);
 
 	initRpmCalculator(&sharedLogger, engine);

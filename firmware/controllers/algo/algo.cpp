@@ -35,10 +35,10 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_F) {
 	initSpeedDensity(PASS_ENGINE_PARAMETER_F);
 }
 
-void initAlgo(Logging *sharedLogger, const engine_configuration_s *engineConfiguration) {
+void initAlgo(Logging *sharedLogger) {
 	initInterpolation(sharedLogger);
 #if EFI_SIMULATOR
 	// todo: this is a mess, remove code duplication with PROD
-	initSettings(engineConfiguration);
+	initSettings();
 #endif
 }

@@ -74,6 +74,7 @@
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"
+#include "prometheus.h"
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
@@ -541,13 +542,17 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	config->crankingFuelBins[7] = 90;
 
 	config->crankingCycleCoef[0] = 1.5;
-	config->crankingCycleBins[0] = 10;
-	config->crankingCycleCoef[1] = 1.2;
-	config->crankingCycleBins[1] = 31;
-	config->crankingCycleCoef[2] = 1;
-	config->crankingCycleBins[2] = 52;
-	config->crankingCycleCoef[3] = 0.5;
-	config->crankingCycleBins[3] = 73;
+	config->crankingCycleBins[0] = 4;
+
+	config->crankingCycleCoef[1] = 1.35;
+	config->crankingCycleBins[1] = 8;
+
+	config->crankingCycleCoef[2] = 1.05;
+	config->crankingCycleBins[2] = 12;
+
+	config->crankingCycleCoef[3] = 0.75;
+	config->crankingCycleBins[3] = 16;
+
 	config->crankingCycleCoef[4] = 0.5;
 	config->crankingCycleBins[4] = 74;
 	config->crankingCycleCoef[5] = 0.5;
@@ -1040,6 +1045,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MAZDA_MIATA_2003_BETTER:
 		setMazdaMiata2003EngineConfigurationNewBoard(PASS_ENGINE_PARAMETER_F);
 		break;
+	case PROMETHEUS_DEFAULTS:
+		setPrometheusDefaults(PASS_ENGINE_PARAMETER_F);
+		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
@@ -1145,7 +1153,17 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->joystickDPin = GPIOD_11;
 }
 
+void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination) {
+	// todo: extract a template!
+	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
+		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
+			destination[loadIndex][rpmIndex] = AFR_STORAGE_MULT * source[loadIndex][rpmIndex];
+		}
+	}
+}
+
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
+	// todo: extract a template!
 	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
 			destination[loadIndex][rpmIndex] = source[loadIndex][rpmIndex];
@@ -1154,6 +1172,7 @@ void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
 }
 
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination) {
+	// todo: extract a template!
 	for (int k = 0; k < IGN_LOAD_COUNT; k++) {
 		for (int rpmIndex = 0; rpmIndex < IGN_RPM_COUNT; rpmIndex++) {
 			destination[k][rpmIndex] = source[k][rpmIndex];

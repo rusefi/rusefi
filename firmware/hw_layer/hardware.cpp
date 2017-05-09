@@ -40,7 +40,8 @@
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "CJ125.h"
-#endif
+#include "aux_pid.h"
+#endif /* EFI_PROD_CODE */
 
 #if EFI_SPEED_DENSITY
 #include "map_averaging.h"
@@ -230,6 +231,7 @@ void applyNewHardwareSettings(void) {
 	stopCanPins();
 	stopETBPins();
 	stopVSSPins();
+	stopAuxPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
 		stopSpi(SPI_DEVICE_1);
@@ -288,6 +290,7 @@ void applyNewHardwareSettings(void) {
 	startCanPins();
 	startETBPins();
 	startVSSPins();
+	startAuxPins();
 
 	adcConfigListener(engine);
 }
@@ -371,14 +374,17 @@ void initHardware(Logging *l) {
 	initTriggerDecoder();
 #endif
 
-	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
-	PAL_MODE_INPUT_PULLUP);
-	bool isBoardTestMode_b = (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)));
+	bool isBoardTestMode_b;
+	if (boardConfiguration->boardTestModeJumperPin != GPIO_UNASSIGNED) {
+		mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
+		PAL_MODE_INPUT_PULLUP);
+		isBoardTestMode_b = (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)));
 
-	// we can now relese this pin, it is actually used as output sometimes
-	unmarkPin(boardConfiguration->boardTestModeJumperPin);
-
-
+		// we can now relese this pin, it is actually used as output sometimes
+		unmarkPin(boardConfiguration->boardTestModeJumperPin);
+	} else {
+		isBoardTestMode_b = false;
+	}
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	initAdcInputs(isBoardTestMode_b);

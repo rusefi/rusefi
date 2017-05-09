@@ -116,7 +116,7 @@ void initLcdController(void) {
 	msObjectInit(&lcdLineStream, (uint8_t *) lcdLineBuffer, sizeof(lcdLineBuffer), 0);
 }
 
-static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
+static char * prepareVBattMapLine(char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'V';
 	ptr = ftoa(ptr, getVBatt(PASS_ENGINE_PARAMETER_F), 10.0f);
@@ -126,7 +126,7 @@ static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, c
 	return ptr;
 }
 
-static char * prepareCltIatTpsLine(Engine *engine, char *buffer) {
+static char * prepareCltIatTpsLine(char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'C';
 
@@ -197,6 +197,7 @@ static char dateBuffer[30];
 static void lcdPrintf(const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
+	// todo: migrate to chsnprintf
 	lcdLineStream.eos = 0; // reset
 	chvprintf((BaseSequentialStream *) &lcdLineStream, fmt, ap);
 	lcdLineStream.buffer[lcdLineStream.eos] = 0; // terminator
@@ -321,7 +322,7 @@ static void fillWithSpaces(void) {
 	}
 }
 
-void updateHD44780lcd(Engine *engine) {
+void updateHD44780lcd(void) {
 	MenuItem *p = tree.topVisible;
 	int screenY = 0;
 	for (; screenY < tree.linesCount && p != NULL; screenY++) {

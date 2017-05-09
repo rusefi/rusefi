@@ -613,16 +613,16 @@ void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e m
 #define TEST_RESPONSE_TAG " ts_p_alive\r\n"
 
 void handleTestCommand(ts_channel_s *tsChannel) {
-	static char warningCodeBuff[7];
+	tsState.testCommandCounter++;
+	static char testOutputBuffer[12];
 	/**
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
 	tunerStudioWriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
-	warningCodeBuff[0] = ' ';
-	itoa10(warningCodeBuff + 1, engine->engineState.lastErrorCode);
-	tunerStudioWriteData(tsChannel, (const uint8_t *) warningCodeBuff, strlen(warningCodeBuff));
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "%d %d", engine->engineState.lastErrorCode, tsState.testCommandCounter);
+	tunerStudioWriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection
 	 * @see EngineState#TS_PROTOCOL_TAG
@@ -632,8 +632,10 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 
 extern CommandHandler console_line_callback;
 
-static void handleGetVersion(ts_channel_s *tsChannel) {
-
+static void handleGetVersion(ts_channel_s *tsChannel, ts_response_format_e mode) {
+	static char versionBuffer[32];
+	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	tsSendResponse(tsChannel, mode, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
@@ -746,7 +748,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
 	} else if (command == TS_GET_FIRMWARE_VERSION) {
-		handleGetVersion(tsChannel);
+		handleGetVersion(tsChannel, TS_CRC);
 	} else if (command == TS_GET_TEXT) {
 		handleGetText(tsChannel);
 	} else if (command == TS_EXECUTE) {

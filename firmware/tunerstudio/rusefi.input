@@ -7,6 +7,7 @@ enable2ndByteCanID = false
 
 [TunerStudio]
    queryCommand   = "S"
+   versionInfo    = "V"  ; firmwave version for title bar.
    signature    = "MShift v0.02" ; signature is expected to be 7 or more characters.
 
 [Constants]

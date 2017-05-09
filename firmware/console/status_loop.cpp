@@ -97,7 +97,8 @@ static void setWarningEnabled(int value) {
 }
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-static char FILE_LOGGER[1000] CCM_OPTIONAL;
+// this one needs to be in main ram so that SD card SPI DMA works fine
+static char FILE_LOGGER[1000] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 #endif /* EFI_FILE_LOGGING */
 
@@ -643,7 +644,7 @@ static void lcdThread(void *arg) {
 	while (true) {
 		if (engineConfiguration->bc.useLcdScreen) {
 #if EFI_HD44780_LCD
-			updateHD44780lcd(engine);
+			updateHD44780lcd();
 #endif
 		}
 		chThdSleepMilliseconds(engineConfiguration->bc.lcdThreadPeriod);
@@ -748,7 +749,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
 		}
 	} else if (engineConfiguration->debugMode == DBG_VEHICLE_SPEED_SENSOR) {
-		tsOutputChannels->debugIntField1 = engine->engineState.vssCounter;
+		tsOutputChannels->debugIntField1 = engine->engineState.vssDebugEventCounter;
 	} else if (engineConfiguration->debugMode == DBG_SD_CARD) {
 		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
 	} else if (engineConfiguration->debugMode == DBG_CRANKING_DETAILS) {
@@ -830,7 +831,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float timing = engine->engineState.timingAdvance;
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);
+	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->chargeAirMass = engine->engineState.airMass;
 }
 
