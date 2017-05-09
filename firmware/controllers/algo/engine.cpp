@@ -147,6 +147,8 @@ EngineState::EngineState() {
 	crankingTime = 0;
 	timeSinceCranking = 0;
 	vssDebugEventCounter = 0;
+	mazdaOdoCounter=0;
+	mazdaCANOdoDelayCounter=0;
 	targetAFR = 0;
 	tpsAccelEnrich = 0;
 	tChargeK = 0;

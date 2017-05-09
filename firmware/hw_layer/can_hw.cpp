@@ -138,7 +138,10 @@ static void canMazdaRX8(void) {
 	setShortValue(&txmsg, SWAP_UINT16((int )(100 * kph + 10000)), 4);
 	setShortValue(&txmsg, 0, 6);
 	sendMessage();
-
+	engine->engineState.mazdaCANOdoDelayCounter++;
+	if (engine->engineState.mazdaCANOdoDelayCounter==3) //should be even less to make odo work properly at higher speed (>180kmh)
+	{
+	engine->engineState.mazdaCANOdoDelayCounter=0;
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
 	txmsg.data8[0] = 0xFE; //Unknown
 	txmsg.data8[1] = 0xFE; //Unknown
@@ -150,8 +153,9 @@ static void canMazdaRX8(void) {
 	txmsg.data8[7] = 0x00; // Unused
 
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
-	txmsg.data8[0] = (char)(engine->sensors.clt + 62); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
-	txmsg.data8[1] = 0x00; // something to do with trip meter 0x10, 0x11, 0x17 increments by 0.1 miles
+	txmsg.data8[0] = (char)(engine->sensors.clt + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
+	txmsg.data8[1] = (char)engine->engineState.mazdaOdoCounter; // mazdaOdoCounter is increased with each VSS pulse by some value
+	// in vehicle_speed.cpp and cycles from 0 to 255. RX_STATUS_2 packet might need to be sent more frequently at higher speeds
 	txmsg.data8[2] = 0x00; // unknown
 	txmsg.data8[3] = 0x00; //unknown
 	txmsg.data8[4] = 0x01; //Oil Pressure (not really a gauge)
@@ -160,14 +164,14 @@ static void canMazdaRX8(void) {
 	if ((getRpmE(engine)>0) && (engine->sensors.vBatt<13)) {
 		setTxBit(6, 6); // battery light
 	}
-	if (engine->sensors.clt > 98) {
-		setTxBit(6, 1); // coolant light
+	if (engine->sensors.clt > 105) {
+		setTxBit(6, 1); // coolant light, 101 - red zone, light means its get too hot
 	}
 	//oil pressure warning lamp bit is 7
 	txmsg.data8[7] = 0x00; //unused
 	sendMessage();
 }
-
+}
 static void canDashboardFiat(void) {
 	//Fiat Dashboard
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
