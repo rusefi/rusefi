@@ -20,6 +20,7 @@ static Logging *logger;
 
 static efitick_t lastSignalTimeNt = 0;
 static efitick_t vssDiff = 0;
+static float tickOdoDistance;
 
 #define DEFAULT_MOCK_SPEED -1
 static float mockVehicleSpeed = DEFAULT_MOCK_SPEED; // in kilometers per hour
@@ -48,6 +49,9 @@ static void vsAnaWidthCallback(void) {
 	efitick_t nowNt = getTimeNowNt();
 	vssDiff = nowNt - lastSignalTimeNt;
 	lastSignalTimeNt = nowNt;
+	engine->engineState.mazdaOdoCounter = engine->engineState.mazdaOdoCounter + tickOdoDistance;
+	if(engine->engineState.mazdaOdoCounter>255) //not sure what happens with vehicleSpeedCoef>1 - what's the result of (char)257?  (char)255? 
+		engine->engineState.mazdaOdoCounter=0;
 }
 
 static void speedInfo(void) {
@@ -81,7 +85,7 @@ void initVehicleSpeed(Logging *l) {
 		return;
 	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver("VSS", boardConfiguration->vehicleSpeedSensorInputPin);
 	startInputDriver(vehicleSpeedInput, true);
-
+	tickOdoDistance = engineConfiguration->vehicleSpeedCoef*0.277*2.58; //2.58 - magic coeff for RX8 cluster
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
 }
 #else  /* EFI_VEHICLE_SPEED */

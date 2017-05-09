@@ -159,6 +159,8 @@ public:
 	float targetAFR;
 
 	int vssDebugEventCounter;
+	int mazdaCANOdoDelayCounter;
+	float mazdaOdoCounter;
 	int totalLoggedBytes;
 
 
