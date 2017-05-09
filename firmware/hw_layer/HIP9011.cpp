@@ -116,9 +116,6 @@ static void checkResponse(void) {
 	spiUnselect(driver); \
 	checkResponse();
 
-// todo: make this configurable
-spi_device_e hipSpiDevice = SPI_DEVICE_2;
-
 static SPIDriver *driver;
 
 EXTERN_ENGINE
@@ -154,7 +151,7 @@ static void showHipInfo(void) {
 
 	const char * msg = invalidResponsesCount > 0 ? "NOT GOOD" : "ok";
 	scheduleMsg(logger, "spi=%s IntHold@%s/%d response count=%d incorrect response=%d %s",
-			getSpi_device_e(hipSpiDevice),
+			getSpi_device_e(engineConfiguration->hip9011SpiDevice),
 			hwPortname(boardConfiguration->hip9011IntHoldPin),
 			boardConfiguration->hip9011IntHoldPinMode,
 			correctResponsesCount, invalidResponsesCount,
@@ -167,9 +164,9 @@ static void showHipInfo(void) {
 			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
 			boardConfiguration->useTpicAdvancedMode);
-	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(hipSpiDevice)));
-	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(hipSpiDevice)));
-	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(hipSpiDevice)));
+	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(engineConfiguration->hip9011SpiDevice)));
+	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
+	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
 
 	scheduleMsg(logger, "start %f end %f", engineConfiguration->knockDetectionWindowStart,
 			engineConfiguration->knockDetectionWindowEnd);
