@@ -1367,8 +1367,14 @@
 #define aux1PidMax_offset_hex b0c
 #define sdCardSpiDevice_offset 2832
 #define sdCardSpiDevice_offset_hex b10
-#define unused_offset 2836
-#define unused_offset_hex b14
+#define spi3SckMode_offset 2836
+#define spi3SckMode_offset_hex b14
+#define spi3MosiMode_offset 2840
+#define spi3MosiMode_offset_hex b18
+#define spi3MisoMode_offset 2844
+#define spi3MisoMode_offset_hex b1c
+#define unused_offset 2848
+#define unused_offset_hex b20
 #define le_formulas1_offset 3048
 #define le_formulas1_offset_hex be8
 #define le_formulas2_offset 3248
