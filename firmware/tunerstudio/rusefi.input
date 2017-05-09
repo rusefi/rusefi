@@ -1248,6 +1248,9 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "SPI2sck",								spi2SckMode, {isHip9011Enabled == 1}
 		field = "SPI2mosi",								spi2MosiMode, {isHip9011Enabled == 1}
 		field = "SPI2miso",								spi2MisoMode, {isHip9011Enabled == 1}
+		field = "SPI3sck",								spi3SckMode, {isHip9011Enabled == 1}
+		field = "SPI3mosi",								spi3MosiMode, {isHip9011Enabled == 1}
+		field = "SPI3miso",								spi3MisoMode, {isHip9011Enabled == 1}
 		panel = knockThresholdCurve
 		
 ;			Engine->cj125 Settings
