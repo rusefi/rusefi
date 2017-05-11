@@ -119,6 +119,7 @@ void Engine::reset() {
 	isRunningPwmTest = false;
 	isTestMode = false;
 	isSpinning = false;
+	isCltBroken = false;
 	adcToVoltageInputDividerCoefficient = NAN;
 	sensors.reset();
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
