@@ -480,6 +480,17 @@ static void setDefaultFsioParameters() {
 	}
 }
 
+static void setCanDefaults() {
+	boardConfiguration->canDeviceMode = CD_USE_CAN2;
+	boardConfiguration->canTxPin = GPIOB_6;
+	boardConfiguration->canRxPin = GPIOB_12;
+
+	engineConfiguration->canSleepPeriod = 50;
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -678,10 +689,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
-	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
-	engineConfiguration->canSleepPeriod = 50;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = false;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->specs.cylindersCount = 4;
@@ -843,11 +850,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
 
-	boardConfiguration->canDeviceMode = CD_USE_CAN2;
-	boardConfiguration->canTxPin = GPIOB_6;
-	boardConfiguration->canRxPin = GPIOB_12;
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
+	setCanDefaults();
+
 
 	// set this to SPI_DEVICE_3 to enable stimulation
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
