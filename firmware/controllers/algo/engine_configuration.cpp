@@ -362,7 +362,7 @@ static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injector.battLagCorr[7] = 0.726;
 }
 
-static void setDefaultWarmupIdleCorrection() {
+static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_F) {
 	initTemperatureCurve(CLT_CURVE_SIZE, config->cltIdleCorrBins, config->cltIdleCorr, PERCENT_MULT);
 
 	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -40, 150);
@@ -379,7 +379,7 @@ static void setDefaultWarmupIdleCorrection() {
 	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 70, 101);
 }
 
-static void setDefaultWarmupFuelEnrichment() {
+static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	initTemperatureCurve(CLT_CURVE_SIZE, config->cltFuelCorrBins, config->cltFuelCorr, PERCENT_MULT);
 
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 150);
@@ -396,7 +396,7 @@ static void setDefaultWarmupFuelEnrichment() {
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 101);
 }
 
-static void setDefaultCrankingSettings() {
+static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_F) {
 	setTableBin2(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
 	setTableBin2(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
 
@@ -440,7 +440,7 @@ static void setDefaultCrankingSettings() {
 
 }
 
-static void setDefaultIdleSpeedTarget() {
+static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_F) {
 	// todo: set bins
 	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
 	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
@@ -460,7 +460,7 @@ static void setDefaultIdleSpeedTarget() {
 
 }
 
-static void setDefaultStepperIdleParameters() {
+static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
 	boardConfiguration->idle.stepperStepPin = GPIOE_12;
 	engineConfiguration->stepperEnablePin = GPIOE_14;
@@ -468,7 +468,7 @@ static void setDefaultStepperIdleParameters() {
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
-static void setDefaultFsioParameters() {
+static void setDefaultFsioParameters(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < AUX_PID_COUNT; i++) {
 		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
 	}
@@ -480,7 +480,7 @@ static void setDefaultFsioParameters() {
 	}
 }
 
-static void setCanDefaults() {
+static void setCanDefaults(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
@@ -538,9 +538,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setTableBin2(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
 	setTableBin2(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
 
-	setDefaultWarmupIdleCorrection();
+	setDefaultWarmupIdleCorrection(PASS_ENGINE_PARAMETER_F);
 
-	setDefaultWarmupFuelEnrichment();
+	setDefaultWarmupFuelEnrichment(PASS_ENGINE_PARAMETER_F);
 
 	setConstantDwell(4 PASS_ENGINE_PARAMETER); // 4ms is global default dwell
 	// disable constant_dwell
@@ -622,10 +622,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tChargeMaxRpmMinTps = 0.25;
 	engineConfiguration->tChargeMaxRpmMaxTps = 0.9;
 
-
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
 
-	setDefaultCrankingSettings();
+	setDefaultCrankingSettings(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->warmupTargetAfrBins[0] = -12;
 	engineConfiguration->warmupTargetAfr[0] = 12.3;
@@ -636,8 +635,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->warmupTargetAfrBins[3] = 60;
 	engineConfiguration->warmupTargetAfr[3] = 14.5;
 
-	setDefaultIdleSpeedTarget();
-
+	setDefaultIdleSpeedTarget(PASS_ENGINE_PARAMETER_F);
 
 
 	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
@@ -749,7 +747,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->useSerialPort = true;
 	boardConfiguration->useStepperIdle = false;
 
-	setDefaultStepperIdleParameters();
+	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_F);
 
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -794,7 +792,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
 	}
 
-	setDefaultFsioParameters();
+	setDefaultFsioParameters(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 
@@ -850,7 +848,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
 
-	setCanDefaults();
+	setCanDefaults(PASS_ENGINE_PARAMETER_F);
 
 
 	// set this to SPI_DEVICE_3 to enable stimulation
