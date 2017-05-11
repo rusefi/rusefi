@@ -274,6 +274,8 @@ public:
 	 */
 	bool isAlternatorControlEnabled;
 
+	bool isCltBroken;
+
 
 //	floatms_t callToPitEndTime;
 

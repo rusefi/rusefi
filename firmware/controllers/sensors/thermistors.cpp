@@ -106,14 +106,17 @@ bool hasCltSensor(DECLARE_ENGINE_PARAMETER_F) {
  */
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	if (!hasCltSensor(PASS_ENGINE_PARAMETER_F)) {
+		engine->isCltBroken = false;
 		return NO_CLT_SENSOR_TEMPERATURE;
 	}
  	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %f", temperature);
+		engine->isCltBroken = true;
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
+	engine->isCltBroken = false;
 	return temperature;
 }
 
