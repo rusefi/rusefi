@@ -396,6 +396,90 @@ static void setDefaultWarmupFuelEnrichment() {
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 101);
 }
 
+static void setDefaultCrankingSettings() {
+	setTableBin2(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
+	setTableBin2(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
+
+	config->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
+	config->crankingFuelBins[0] = -20; // temperature in C
+	config->crankingFuelCoef[1] = 3.7;
+	config->crankingFuelBins[1] = -10;
+	config->crankingFuelCoef[2] = 2.6;
+	config->crankingFuelBins[2] = 5;
+	config->crankingFuelCoef[3] = 2.4;
+	config->crankingFuelBins[3] = 20;
+	config->crankingFuelCoef[4] = 2.1;
+	config->crankingFuelBins[4] = 35;
+	config->crankingFuelCoef[5] = 1.8;
+	config->crankingFuelBins[5] = 50;
+	config->crankingFuelCoef[6] = 1.1;
+	config->crankingFuelBins[6] = 65;
+	config->crankingFuelCoef[7] = 1;
+	config->crankingFuelBins[7] = 90;
+
+	config->crankingCycleCoef[0] = 1.5;
+	config->crankingCycleBins[0] = 4;
+
+	config->crankingCycleCoef[1] = 1.35;
+	config->crankingCycleBins[1] = 8;
+
+	config->crankingCycleCoef[2] = 1.05;
+	config->crankingCycleBins[2] = 12;
+
+	config->crankingCycleCoef[3] = 0.75;
+	config->crankingCycleBins[3] = 16;
+
+	config->crankingCycleCoef[4] = 0.5;
+	config->crankingCycleBins[4] = 74;
+	config->crankingCycleCoef[5] = 0.5;
+	config->crankingCycleBins[5] = 75;
+	config->crankingCycleCoef[6] = 0.5;
+	config->crankingCycleBins[6] = 76;
+	config->crankingCycleCoef[7] = 0.5;
+	config->crankingCycleBins[7] = 77;
+
+}
+
+static void setDefaultIdleSpeedTarget() {
+	// todo: set bins
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 0, 1150);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 10, 1100);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 20, 1050);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 30, 1000);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 40, 1000);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 50, 950);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 60, 950);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 70, 930);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 80, 900);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
+	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
+
+}
+
+static void setDefaultStepperIdleParameters() {
+	boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
+	boardConfiguration->idle.stepperStepPin = GPIOE_12;
+	engineConfiguration->stepperEnablePin = GPIOE_14;
+	engineConfiguration->idleStepperReactionTime = 10;
+	engineConfiguration->idleStepperTotalSteps = 150;
+}
+
+static void setDefaultFsioParameters() {
+	for (int i = 0; i < AUX_PID_COUNT; i++) {
+		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
+	}
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
+		config->le_formulas[i][0] = 0;
+		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
+		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
+	}
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -530,47 +614,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
 
-	setTableBin2(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
-	setTableBin2(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
-
-	config->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
-	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 3.7;
-	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 2.6;
-	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 2.4;
-	config->crankingFuelBins[3] = 20;
-	config->crankingFuelCoef[4] = 2.1;
-	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 1.8;
-	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 1.1;
-	config->crankingFuelBins[6] = 65;
-	config->crankingFuelCoef[7] = 1;
-	config->crankingFuelBins[7] = 90;
-
-	config->crankingCycleCoef[0] = 1.5;
-	config->crankingCycleBins[0] = 4;
-
-	config->crankingCycleCoef[1] = 1.35;
-	config->crankingCycleBins[1] = 8;
-
-	config->crankingCycleCoef[2] = 1.05;
-	config->crankingCycleBins[2] = 12;
-
-	config->crankingCycleCoef[3] = 0.75;
-	config->crankingCycleBins[3] = 16;
-
-	config->crankingCycleCoef[4] = 0.5;
-	config->crankingCycleBins[4] = 74;
-	config->crankingCycleCoef[5] = 0.5;
-	config->crankingCycleBins[5] = 75;
-	config->crankingCycleCoef[6] = 0.5;
-	config->crankingCycleBins[6] = 76;
-	config->crankingCycleCoef[7] = 0.5;
-	config->crankingCycleBins[7] = 77;
-
+	setDefaultCrankingSettings();
 
 	engineConfiguration->warmupTargetAfrBins[0] = -12;
 	engineConfiguration->warmupTargetAfr[0] = 12.3;
@@ -581,22 +625,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->warmupTargetAfrBins[3] = 60;
 	engineConfiguration->warmupTargetAfr[3] = 14.5;
 
-	// todo: set bins
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 0, 1150);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 10, 1100);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 20, 1050);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 30, 1000);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 40, 1000);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 50, 950);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 60, 950);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 70, 930);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 80, 900);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
-	setTableValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
+	setDefaultIdleSpeedTarget();
+
 
 
 	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
@@ -712,11 +742,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->useSerialPort = true;
 	boardConfiguration->useStepperIdle = false;
 
-	boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
-	boardConfiguration->idle.stepperStepPin = GPIOE_12;
-	engineConfiguration->stepperEnablePin = GPIOE_14;
-	engineConfiguration->idleStepperReactionTime = 10;
-	engineConfiguration->idleStepperTotalSteps = 150;
+	setDefaultStepperIdleParameters();
+
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	engineConfiguration->engineChartSize = 300;
@@ -760,16 +787,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
 	}
 
+	setDefaultFsioParameters();
+
 	engineConfiguration->alternatorPwmFrequency = 300;
-	for (int i = 0; i < AUX_PID_COUNT; i++) {
-		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
-	}
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
-		config->le_formulas[i][0] = 0;
-		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
-		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
-	}
 
 	engineConfiguration->communicationPin = GPIOD_15; // blue LED on discovery
 	engineConfiguration->runningPin = GPIOD_12; // greeb LED on discovery
