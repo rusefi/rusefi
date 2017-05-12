@@ -964,7 +964,7 @@ typedef struct {
 } plain_get_float_s;
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 plain_get_integer_s getI_plain[] = {
 //		{"cranking_rpm", &engineConfiguration->cranking.rpm},
 //		{"cranking_injection_mode", setCrankingInjectionMode},
@@ -1000,6 +1000,7 @@ plain_get_integer_s getI_plain[] = {
 };
 
 plain_get_float_s getF_plain[] = {
+		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &boardConfiguration->manIdlePosition},
 		{"ignition_offset", &engineConfiguration->ignitionOffset},
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
@@ -1009,14 +1010,14 @@ plain_get_float_s getF_plain[] = {
 		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
 		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
 };
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_UNIT_TEST */
 
 
 static void getValue(const char *paramStr) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	{
 		plain_get_integer_s *currentI = &getI_plain[0];
-		while (currentI < currentI + sizeof(getI_plain)/sizeof(getI_plain[0])) {
+		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
 			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
 				scheduleMsg(&logger, "%s value: %d", currentI->token, *currentI->value);
 				return;
@@ -1026,16 +1027,17 @@ static void getValue(const char *paramStr) {
 	}
 
 	plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < currentF + sizeof(getF_plain)/sizeof(getF_plain[0])) {
+	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
 		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
-			scheduleMsg(&logger, "%s value: %f", currentF->token, *currentF->value);
+			float value = *currentF->value;
+			scheduleMsg(&logger, "%s value: %f", currentF->token, value);
 			return;
 		}
 		currentF++;
 	}
 
 
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_UNIT_TEST */
 
 
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
