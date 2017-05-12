@@ -160,7 +160,7 @@ public:
 
 	int vssDebugEventCounter;
 	int mazdaCANOdoDelayCounter;
-	float mazdaOdoCounter;
+	uint16_t mazdaOdoCounter;
 	int totalLoggedBytes;
 
 
