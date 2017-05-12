@@ -1001,6 +1001,13 @@ plain_get_integer_s getI_plain[] = {
 
 plain_get_float_s getF_plain[] = {
 		{"idle_position", &boardConfiguration->manIdlePosition},
+		{"ignition_offset", &engineConfiguration->ignitionOffset},
+		{"injection_offset", &engineConfiguration->extraInjectionOffset},
+		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
+		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
+		{"cranking_iac", &engineConfiguration->crankingIdleAdjustment},
+		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
+		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
 };
 #endif /* EFI_PROD_CODE */
 
