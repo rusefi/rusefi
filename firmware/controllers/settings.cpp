@@ -953,7 +953,84 @@ static void printAllInfo(void) {
 #endif
 }
 
+typedef struct {
+	const char *token;
+	int *value;
+} plain_get_integer_s;
+
+typedef struct {
+	const char *token;
+	float *value;
+} plain_get_float_s;
+
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+plain_get_integer_s getI_plain[] = {
+//		{"cranking_rpm", &engineConfiguration->cranking.rpm},
+//		{"cranking_injection_mode", setCrankingInjectionMode},
+//		{"injection_mode", setInjectionMode},
+//		{"sensor_chart_mode", setSensorChartMode},
+//		{"tpsErrorDetectionTooLow", setTpsErrorDetectionTooLow},
+//		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
+//		{"fixed_mode_timing", setFixedModeTiming},
+//		{"timing_mode", setTimingMode},
+//		{"engine_type", setEngineType},
+		{"hard_limit", &engineConfiguration->rpmHardLimit},
+//		{"firing_order", setFiringOrder},
+//		{"algorithm", setAlgorithmInt},
+//		{"injection_pin_mode", setInjectionPinMode},
+//		{"ignition_pin_mode", setIgnitionPinMode},
+//		{"idle_pin_mode", setIdlePinMode},
+//		{"fuel_pump_pin_mode", setFuelPumpPinMode},
+//		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
+//		{"operation_mode", setOM},
+//		{"trigger_type", setTriggerType},
+//		{"idle_solenoid_freq", setIdleSolenoidFrequency},
+//		{"tps_accel_len", setTpsAccelLen},
+//		{"engine_load_accel_len", setEngineLoadAccelLen},
+//		{"bor", setBor},
+//		{"can_mode", setCanType},
+//		{"idle_rpm", setTargetIdleRpm},
+//		{"idle_dt", setIdleDT},
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+		//		{"", },
+};
+
+plain_get_float_s getF_plain[] = {
+		{"idle_position", &boardConfiguration->manIdlePosition},
+};
+#endif /* EFI_PROD_CODE */
+
+
 static void getValue(const char *paramStr) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	{
+		plain_get_integer_s *currentI = &getI_plain[0];
+		while (currentI < currentI + sizeof(getI_plain)/sizeof(getI_plain[0])) {
+			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
+				scheduleMsg(&logger, "%s value: %d", currentI->token, *currentI->value);
+				return;
+			}
+			currentI++;
+		}
+	}
+
+	plain_get_float_s *currentF = &getF_plain[0];
+	while (currentF < currentF + sizeof(getF_plain)/sizeof(getF_plain[0])) {
+		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
+			scheduleMsg(&logger, "%s value: %f", currentF->token, *currentF->value);
+			return;
+		}
+		currentF++;
+	}
+
+
+#endif /* EFI_PROD_CODE */
+
+
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
 		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
