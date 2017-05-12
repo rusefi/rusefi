@@ -69,8 +69,8 @@ public class AutoTest {
 
     private static void testMazdaMiata2003() {
         setEngineType(47);
-        sendCommand("get cranking_dwell"); // just test coverage
-        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
+//        sendCommand("get cranking_dwell"); // just test coverage
+//        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
     private static void testCamaro() {
