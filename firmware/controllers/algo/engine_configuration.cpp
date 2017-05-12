@@ -365,18 +365,20 @@ static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_F) {
 static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_F) {
 	initTemperatureCurve(CLT_CURVE_SIZE, config->cltIdleCorrBins, config->cltIdleCorr, PERCENT_MULT);
 
+	float baseIdle = 30;
+
 	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -40, 150);
 	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -30, 150);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -20, 142);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -10, 136);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 0, 128);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 10, 119);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 20, 112);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 30, 110);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 40, 106);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 50, 106);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 60, 103);
-	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 70, 101);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -20, 40.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -10, 40.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,   0, 40.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  10, 40.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  20, 40.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  30, 40.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  40, 40.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  50, 37.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  60, 35.0 / baseIdle * 100);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  70, 33.0 / baseIdle * 100);
 }
 
 static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_F) {
