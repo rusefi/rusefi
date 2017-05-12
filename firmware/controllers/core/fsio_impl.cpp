@@ -212,37 +212,37 @@ extern LEElement * fsioLogics[LE_COMMAND_COUNT];
 static const char *getGpioPinName(int index) {
 	switch (index) {
 	case 0:
-		return "GPIO_0";
+		return "FSIO_OUT_0";
 	case 1:
-		return "GPIO_1";
+		return "FSIO_OUT_1";
 	case 10:
-		return "GPIO_10";
+		return "FSIO_OUT_10";
 	case 11:
-		return "GPIO_11";
+		return "FSIO_OUT_11";
 	case 12:
-		return "GPIO_12";
+		return "FSIO_OUT_12";
 	case 13:
-		return "GPIO_13";
+		return "FSIO_OUT_13";
 	case 14:
-		return "GPIO_14";
+		return "FSIO_OUT_14";
 	case 15:
-		return "GPIO_15";
+		return "FSIO_OUT_15";
 	case 2:
-		return "GPIO_2";
+		return "FSIO_OUT_2";
 	case 3:
-		return "GPIO_3";
+		return "FSIO_OUT_3";
 	case 4:
-		return "GPIO_4";
+		return "FSIO_OUT_4";
 	case 5:
-		return "GPIO_5";
+		return "FSIO_OUT_5";
 	case 6:
-		return "GPIO_6";
+		return "FSIO_OUT_6";
 	case 7:
-		return "GPIO_7";
+		return "FSIO_OUT_7";
 	case 8:
-		return "GPIO_8";
+		return "FSIO_OUT_8";
 	case 9:
-		return "GPIO_9";
+		return "FSIO_OUT_9";
 	}
 	return NULL;
 }
