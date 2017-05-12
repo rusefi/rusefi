@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 09 19:04:57 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri May 12 16:28:16 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -968,6 +968,7 @@ typedef struct {
 	 */
 	float knockBandCustom;
 	/**
+	 * On single-coil or wasted spark setups you have to lower dwell at high RPM
 	 * offset 336
 	 */
 	float sparkDwellRpmBins[DWELL_CURVE_SIZE];
@@ -1389,6 +1390,7 @@ typedef struct {
 	 */
 	brain_pin_e stepperEnablePin;
 	/**
+	 * TODO: finish this #413
 	 * offset 1636
 	 */
 	float noAccelAfterHardLimitPeriodSecs;
@@ -2094,4 +2096,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 09 19:04:57 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri May 12 16:28:16 EDT 2017
