@@ -291,19 +291,19 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 #endif /* EFI_PROD_CODE */
 }
 
-static void doPrintConfiguration(Engine *engine) {
+static void doPrintConfiguration() {
 	printConfiguration(engineConfiguration);
 }
 
 static void setFixedModeTiming(int value) {
 	engineConfiguration->fixedModeTiming = value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
 static void setTimingMode(int value) {
 	engineConfiguration->timingMode = (timing_mode_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
@@ -322,7 +322,7 @@ void setEngineType(int value) {
 //	scheduleReset();
 #endif /* EFI_PROD_CODE */
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setIdleSolenoidFrequency(int value) {
@@ -331,49 +331,49 @@ static void setIdleSolenoidFrequency(int value) {
 
 static void setInjectionPinMode(int value) {
 	boardConfiguration->injectionPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setIgnitionPinMode(int value) {
 	boardConfiguration->ignitionPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setIdlePinMode(int value) {
 	boardConfiguration->idle.solenoidPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setInjectionOffset(float value) {
 	engineConfiguration->extraInjectionOffset = value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
 static void setIgnitionOffset(float value) {
 	engineConfiguration->ignitionOffset = value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
 }
 
 static void setFuelPumpPinMode(int value) {
 	boardConfiguration->fuelPumpPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setMalfunctionIndicatorPinMode(int value) {
 	boardConfiguration->malfunctionIndicatorPinMode = (pin_output_mode_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setSensorChartMode(int value) {
 	boardConfiguration->sensorChartMode = (sensor_chart_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setOM(int value) {
 	engineConfiguration->operationMode = (operation_mode_e)value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static char pinNameBuffer[16];
@@ -444,7 +444,7 @@ static void setCallFromPitStop(int durationMs) {
 
 static void setCrankingRpm(int value) {
 	engineConfiguration->cranking.rpm = value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 /**
@@ -452,17 +452,17 @@ static void setCrankingRpm(int value) {
  */
 static void setAlgorithmInt(int value) {
 	setAlgorithm((engine_load_mode_e) value);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setFiringOrder(int value) {
 	engineConfiguration->specs.firingOrder = (firing_order_e) value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setRpmHardLimit(int value) {
 	engineConfiguration->rpmHardLimit = value;
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setCrankingIACExtra(float percent) {
@@ -485,31 +485,31 @@ static void setGlobalTriggerAngleOffset(float value) {
 	}
 	engineConfiguration->globalTriggerAngleOffset = value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setCrankingInjectionMode(int value) {
 	engineConfiguration->crankingInjectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setInjectionMode(int value) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setIgnitionMode(int value) {
 	engineConfiguration->ignitionMode = (ignition_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setOneCoilIgnition(void) {
@@ -527,7 +527,7 @@ static void setIndividualCoilsIgnition(void) {
 static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
@@ -543,13 +543,13 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
 	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->operationMode);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setCrankingChargeAngle(float value) {
 	engineConfiguration->crankingChargeAngle = value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
-	doPrintConfiguration(engine);
+	doPrintConfiguration();
 }
 
 static void setGlobalFuelCorrection(float value) {
