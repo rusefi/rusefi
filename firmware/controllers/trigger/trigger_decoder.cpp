@@ -227,6 +227,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				float currentGap = 1.0 * currentDuration / toothed_previous_duration;
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 				tsOutputChannels.debugFloatField1 = currentGap;
+				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
 #endif /* EFI_UNIT_TEST */
 			}
 
