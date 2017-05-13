@@ -60,9 +60,9 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 
     // set_ignition_channels
     boardConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: low side - out #8
-    boardConfiguration->ignitionPins[1] = GPIOE_10; // Frankenstein: low side - out #8
-    boardConfiguration->ignitionPins[2] = GPIOE_12; // Frankenstein: low side - out #8
-    boardConfiguration->ignitionPins[3] = GPIOE_14; // Frankenstein: low side - out #8
+    boardConfiguration->ignitionPins[7] = GPIOE_10; // Frankenstein: low side - out #8
+    boardConfiguration->ignitionPins[3] = GPIOE_12; // Frankenstein: low side - out #8
+    boardConfiguration->ignitionPins[2] = GPIOE_14; // Frankenstein: low side - out #8
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15
@@ -116,9 +116,9 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
     engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
     /* Stepper logic:
-    boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
-    boardConfiguration->idle.stepperStepPin = GPIOE_12; // todo: set pin which would not conflict with coils
-    engineConfiguration->stepperEnablePin = GPIOE_14; // todo: set pin which would not conflict with coils
+    boardConfiguration->idle.stepperDirectionPin = GPIOB_10;
+    boardConfiguration->idle.stepperStepPin = GPIOB_15; // todo: set pin which would not conflict with coils
+    engineConfiguration->stepperEnablePin = GPIOB_14; // todo: set pin which would not conflict with coils
     engineConfiguration->idleStepperReactionTime = 10;
     engineConfiguration->idleStepperTotalSteps = 150;
     */
