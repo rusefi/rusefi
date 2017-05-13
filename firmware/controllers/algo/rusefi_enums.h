@@ -695,7 +695,7 @@ typedef enum {
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
-	DM_16 = 16,
+	DGB_TRIGGER_SYNC = 16,
 	DM_17 = 17,
 	DM_18 = 18,
 	DM_19 = 19,
