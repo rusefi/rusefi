@@ -48,6 +48,7 @@ static void vsAnaWidthCallback(void) {
 	engine->engineState.vssDebugEventCounter++;
 	efitick_t nowNt = getTimeNowNt();
 	vssDiff = nowNt - lastSignalTimeNt;
+	lastSignalTimeNt = nowNt;
 	engine->engineState.mazdaOdoCounter = engine->engineState.mazdaOdoCounter + tickOdoDistance;
 }
 
