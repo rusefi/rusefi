@@ -59,6 +59,10 @@ bool printTriggerDebug = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_UNIT_TEST */
+
 static Logging * logger;
 
 efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
@@ -219,6 +223,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
 			// this is getting a little out of hand, any ideas?
 
+			if (engineConfiguration->debugMode == DGB_TRIGGER_SYNC) {
+				float currentGap = currentDuration / toothed_previous_duration;
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+				tsOutputChannels.debugIntField1 = currentGap;
+#endif /* EFI_UNIT_TEST */
+			}
+
 			bool primaryGap = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
 				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo);
 
@@ -309,6 +320,15 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 			if (isDecodingError && !isInitializingTrigger) {
+				if (engineConfiguration->debugMode == DGB_TRIGGER_SYNC) {
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+
+					tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
+					tsOutputChannels.debugIntField2 = currentCycle.eventCount[1];
+					tsOutputChannels.debugIntField3 = currentCycle.eventCount[2];
+#endif /* EFI_UNIT_TEST */
+				}
+
 				warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
 						currentCycle.eventCount[0],
 						currentCycle.eventCount[1],
