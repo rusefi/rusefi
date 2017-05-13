@@ -24,6 +24,8 @@
 #include "mpu_util.h"
 
 #if EFI_PROD_CODE
+//#include "usb_msd.h"
+
 #include "AdcConfiguration.h"
 #include "electronic_throttle.h"
 #include "board_test.h"
@@ -448,6 +450,9 @@ void initHardware(Logging *l) {
 #if HAL_USE_I2C || defined(__DOXYGEN__)
 	addConsoleActionII("i2c", sendI2Cbyte);
 #endif
+
+
+//	USBMassStorageDriver UMSD1;
 
 //	while (true) {
 //		for (int addr = 0x20; addr < 0x28; addr++) {
