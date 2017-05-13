@@ -530,6 +530,10 @@ static void setTriggerType(int value) {
 	doPrintConfiguration();
 }
 
+static void setDebugMode(int value) {
+	engineConfiguration->debugMode = (debug_mode_e) value;
+}
+
 static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
 	if (total < 1 || skipped >= total) {
 		scheduleMsg(&logger, "invalid parameters %d %d", total, skipped);
@@ -984,7 +988,8 @@ plain_get_integer_s getI_plain[] = {
 //		{"fuel_pump_pin_mode", setFuelPumpPinMode},
 //		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
 //		{"operation_mode", setOM},
-//		{"trigger_type", setTriggerType},
+		{"debug_mode", (int*)&engineConfiguration->debugMode},
+		{"trigger_type", (int*)&engineConfiguration->trigger.type},
 //		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 //		{"tps_accel_len", setTpsAccelLen},
 //		{"engine_load_accel_len", setEngineLoadAccelLen},
@@ -1142,6 +1147,7 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"fuel_pump_pin_mode", setFuelPumpPinMode},
 		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
 		{"operation_mode", setOM},
+		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 		{"tps_accel_len", setTpsAccelLen},
