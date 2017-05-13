@@ -979,6 +979,7 @@ plain_get_integer_s getI_plain[] = {
 //		{"fixed_mode_timing", setFixedModeTiming},
 //		{"timing_mode", setTimingMode},
 //		{"engine_type", setEngineType},
+		{"warning_period", (int*)&engineConfiguration->warningPeriod},
 		{"hard_limit", &engineConfiguration->rpmHardLimit},
 //		{"firing_order", setFiringOrder},
 //		{"algorithm", setAlgorithmInt},
@@ -1055,8 +1056,6 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%f", engineConfiguration->globalTriggerAngleOffset);
-	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
-		scheduleMsg(&logger, "warningPeriod=%d", engineConfiguration->warningPeriod);
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
 		scheduleMsg(&logger, "isHip9011Enabled=%d", boardConfiguration->isHip9011Enabled);
 	}
@@ -1208,7 +1207,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 //	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
 //	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
 //	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-	} else if (strEqualCaseInsensitive(paramStr, "warningPeriod")) {
+	} else if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF PASS_ENGINE_PARAMETER);
