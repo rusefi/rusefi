@@ -28,8 +28,6 @@
 #ifndef _CHCONF_H_
 #define _CHCONF_H_
 
-#define COMMON_IRQ_PRIORITY 6
-#define CORTEX_PRIORITY_SYSTICK COMMON_IRQ_PRIORITY
 #define PORT_IDLE_THREAD_STACK_SIZE     1024
 #define PORT_INT_REQUIRED_STACK 	768
 #define CHPRINTF_USE_FLOAT          	TRUE
@@ -79,6 +77,7 @@ extern "C"
  *          The value one is not valid, timeouts are rounded up to
  *          this value.
  */
+// rusEfi currently uses tick mode, see CH_CFG_ST_FREQUENCY
 #define CH_CFG_ST_TIMEDELTA                 0
 
 /** @} */
