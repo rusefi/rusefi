@@ -31,6 +31,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="ChibiOS3/os/hal/ports/STM32/STM32F7xx|ChibiOS3/os/hal/ports/LPC|ChibiOS3/os/hal/ports/KINETIS|ChibiOS3/os/hal/ports/AVR" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
