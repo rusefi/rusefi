@@ -24,12 +24,21 @@
  * This is about SingleTimerExecutor - rusEfi 1MHz precise scheduling timer
  * this is not about ChibiOS virtual timer which rusEfi uses for
  * periodicFastCallback and periodicSlowCallback
+ * See STM32_ST_IRQ_PRIORITY
+ *
+ * http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:priority
  */
 #define PRECISE_SCHEDULING_TIMER_PRIORITY 4
 /**
  * Input Capture Unit is how we capture shaft position sensors output
  */
 #define ICU_PRIORITY 3
+
+/*
+ * SysTick driver system settings.
+ */
+#define STM32_ST_IRQ_PRIORITY               8
+#define STM32_ST_USE_TIMER                  2
 
 /*
  * STM32F4xx drivers configuration.
@@ -298,11 +307,6 @@
 #define STM32_SPI_SPI3_IRQ_PRIORITY         10
 #define STM32_SPI_DMA_ERROR_HOOK(spip)      osalSysHalt("STM32_SPI_DMA_ERROR_HOOK")
 
-/*
- * ST driver system settings.
- */
-#define STM32_ST_IRQ_PRIORITY               8
-#define STM32_ST_USE_TIMER                  2
 
 /*
  * UART driver system settings.
