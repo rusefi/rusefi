@@ -1019,6 +1019,12 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "ETB Control #2",						etbControlPin2	
 		field = "SD CS Pin",							sdCardCsPin
 		field = "Check Engine Pin",						malfunctionIndicatorPin
+		field = "Aux Pin #1",							auxPidPins1
+		field = "Aux Pin #2",							auxPidPins2
+		field = "Aux Pin #3",							auxPidPins3
+		field = "Aux Pin #4",							auxPidPins4
+		
+
 
 	dialog = allPins3
 		field = "Injection Pin 1",						injectionPins1
