@@ -32,7 +32,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="ChibiOS3/os/hal/ports/STM32/STM32F7xx|ChibiOS3/os/hal/ports/LPC|ChibiOS3/os/hal/ports/KINETIS|ChibiOS3/os/hal/ports/AVR" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="ChibiOS3/demos|ChibiOS-Contrib/testhal|ChibiOS-Contrib/demos|ChibiOS3/os/hal/ports/STM32/STM32F7xx|ChibiOS3/os/hal/ports/LPC|ChibiOS3/os/hal/ports/KINETIS|ChibiOS3/os/hal/ports/AVR" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -50,4 +50,5 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>
