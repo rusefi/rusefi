@@ -647,8 +647,8 @@ fileVersion = { 20161225 }
    entry = debugIntField3,   "debug i3",int,"%d"
    
    entry = engineMode,   "mode",int,"%d"
-   entry = warningCounter,   @@GAUGE_NAME_WARNING_LAST@@,int,"%d"
-   entry = lastErrorCode,   "err: last",int,"%d"
+   entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
+   entry = lastErrorCode,   @@GAUGE_NAME_WARNING_LAST@@,int,"%d"
    entry = internalMcuTemperature,   @@GAUGE_NAME_CPU_TEMP@@,float,"%.2f"
    
    entry = tCharge, "tCharge",float,"%.3f"
