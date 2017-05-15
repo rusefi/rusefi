@@ -52,7 +52,6 @@ public:
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
-	bool insertTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param);
 	bool insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param);
 
 	int executeAll(efitime_t now);

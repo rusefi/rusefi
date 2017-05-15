@@ -35,13 +35,10 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	return assertNotInList<scheduling_s>(head, scheduling);
 }
 
-bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
-	return insertTask(false, "*", scheduling, timeX, callback, param);
-}
 /**
  * @return true if inserted into the head of the list
  */
-bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
+bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
@@ -50,10 +47,6 @@ bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, schedul
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
 	if (scheduling->isScheduled) {
-		if (monitorReuse) {
-			warning(CUSTOM_OBD_SCH_REUSE, "reuse [%s]", prefix);
-		}
-
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
 		printf("Already scheduled now %d\r\n", (int)timeX);
