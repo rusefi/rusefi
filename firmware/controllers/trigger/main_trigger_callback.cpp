@@ -209,7 +209,7 @@ static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efiti
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
-	scheduleByTime(true, prefix, scheduling, time, callback, pair);
+	scheduleByTime(scheduling, time, callback, pair);
 }
 
 static void scheduleFuelInjection(int rpm, OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
@@ -318,8 +318,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;
 
-		scheduleTask(true, "out up s", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, event);
-		scheduleTask(true, "out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
+		scheduleTask(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, event);
+		scheduleTask(sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
 					(schfunc_t) &endSimultaniousInjection, event);
 
 	} else {

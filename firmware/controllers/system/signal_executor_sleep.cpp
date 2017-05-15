@@ -34,8 +34,8 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleByTime(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	scheduleTask(monitorReuse, prefix, scheduling, time - getTimeNowUs(), callback, param);
+void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
+	scheduleTask(scheduling, time - getTimeNowUs(), callback, param);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
@@ -52,7 +52,7 @@ static void timerCallback(scheduling_s *scheduling) {
 
 }
 
-void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	int delaySt = MY_US2ST(delayUs);
 	if (delaySt <= 0) {
 		/**
