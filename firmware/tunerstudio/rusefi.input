@@ -1003,6 +1003,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "Vehicle Speed Input pin",				vehicleSpeedSensorInputPin
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
+		field = "brakePedalPin",						brakePedalPin
 
 	dialog = allPins2
 		field = "Tachometer output Pin",						tachOutputPin
@@ -1663,4 +1664,5 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "Use Fuel Cut",							step1fuelCutEnable
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
+		field = "brakePedalPin",						brakePedalPin
 	    

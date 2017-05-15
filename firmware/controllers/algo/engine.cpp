@@ -134,7 +134,7 @@ void Engine::reset() {
 
 	timeOfLastKnockEvent = 0;
 	fuelMs = 0;
-	clutchDownState = clutchUpState = false;
+	clutchDownState = clutchUpState = brakePedalState = false;
 	memset(&m, 0, sizeof(m));
 
 }
