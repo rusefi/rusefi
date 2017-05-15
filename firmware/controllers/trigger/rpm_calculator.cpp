@@ -316,7 +316,7 @@ void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
 	efiAssertVoid(isValidRpm(rpm), "RPM check expected");
 	float delayUs = calc->oneDegreeUs * angle;
 	efiAssertVoid(!cisnan(delayUs), "NaN delay?");
-	scheduleTask(false, "by angle", timer, (int) delayUs, callback, param);
+	scheduleTask(timer, (int) delayUs, callback, param);
 }
 #endif
 
