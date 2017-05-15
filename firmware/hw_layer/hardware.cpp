@@ -383,7 +383,7 @@ void initHardware(Logging *l) {
 	if (boardConfiguration->boardTestModeJumperPin != GPIO_UNASSIGNED) {
 		mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
 		PAL_MODE_INPUT_PULLUP);
-		isBoardTestMode_b = (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)));
+		isBoardTestMode_b = (!efiReadPin(boardConfiguration->boardTestModeJumperPin));
 
 		// we can now relese this pin, it is actually used as output sometimes
 		unmarkPin(boardConfiguration->boardTestModeJumperPin);

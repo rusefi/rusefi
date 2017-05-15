@@ -53,6 +53,10 @@ ioportmask_t getHwPin(brain_pin_e brainPin) {
 	return brainPin % PORT_SIZE;
 }
 
+bool efiReadPin(brain_pin_e pin) {
+	return palReadPad(getHwPort(pin), getHwPin(pin));
+}
+
 /**
  * This method would set an error condition if pin is already used
  */
