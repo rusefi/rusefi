@@ -156,7 +156,7 @@ void printBoardTestState(void) {
 static void btInitOutputPins() {
 	for (int i = 0; i < pinsCount; i++) {
 		currentPin = BLINK_PINS[i];
-		mySetPadMode2("test", currentPin, PAL_STM32_MODE_OUTPUT);
+		efiSetPadMode("test", currentPin, PAL_STM32_MODE_OUTPUT);
 	}
 }
 

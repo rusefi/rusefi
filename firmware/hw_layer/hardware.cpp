@@ -126,8 +126,8 @@ void initI2Cmodule(void) {
 	i2cInit();
 	i2cStart(&I2CD1, &i2cfg);
 
-	mySetPadMode2("I2C clock", EFI_I2C_SCL_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
-	mySetPadMode2("I2C data", EFI_I2C_SDA_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
+	efiSetPadMode("I2C clock", EFI_I2C_SCL_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
+	efiSetPadMode("I2C data", EFI_I2C_SDA_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 }
 
 //static char txbuf[1];
@@ -381,7 +381,7 @@ void initHardware(Logging *l) {
 
 	bool isBoardTestMode_b;
 	if (boardConfiguration->boardTestModeJumperPin != GPIO_UNASSIGNED) {
-		mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
+		efiSetPadMode("board test", boardConfiguration->boardTestModeJumperPin,
 		PAL_MODE_INPUT_PULLUP);
 		isBoardTestMode_b = (!efiReadPin(boardConfiguration->boardTestModeJumperPin));
 

@@ -102,9 +102,9 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, flo
 	enablePort = getHwPort(enablePin);
 	this->enablePin = getHwPin(enablePin);
 
-	mySetPadMode2("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
-	mySetPadMode2("stepper dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
-	mySetPadMode2("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
+	efiSetPadMode("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
+	efiSetPadMode("stepper dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
+	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
 	palWritePad(this->enablePort, enablePin, true); // disable stepper
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
