@@ -312,6 +312,8 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
 	boardConfiguration->clutchUpPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchUpPinMode = PI_PULLUP;
+	engineConfiguration->brakePedalPin = GPIO_UNASSIGNED;
+	engineConfiguration->brakePedalPinMode = PI_PULLUP;
 
 	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
 	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;

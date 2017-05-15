@@ -1379,8 +1379,12 @@
 #define spi1MosiMode_offset_hex b24
 #define spi1MisoMode_offset 2856
 #define spi1MisoMode_offset_hex b28
-#define unused_offset 2860
-#define unused_offset_hex b2c
+#define brakePedalPin_offset 2860
+#define brakePedalPin_offset_hex b2c
+#define brakePedalPinMode_offset 2864
+#define brakePedalPinMode_offset_hex b30
+#define unused_offset 2868
+#define unused_offset_hex b34
 #define le_formulas1_offset 3048
 #define le_formulas1_offset_hex be8
 #define le_formulas2_offset 3248

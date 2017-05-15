@@ -801,7 +801,9 @@ spi_device_e sdCardSpiDevice;
 	pin_mode_e spi1SckMode;
 	pin_mode_e spi1MosiMode;
 	pin_mode_e spi1MisoMode;
-	int[47] unused;
+brain_pin_e brakePedalPin
+	pin_input_mode_e brakePedalPinMode;
+	int[45] unused;
 	
 
 end_struct
