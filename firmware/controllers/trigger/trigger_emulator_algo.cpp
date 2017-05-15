@@ -23,9 +23,7 @@
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 
-#if EFI_PROD_CODE
 #include "pwm_generator.h"
-#endif
 
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 	primaryWheelState = false;
@@ -157,16 +155,16 @@ static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
 	}
 }
 
-static void setEmulatorAtIndex(int index, Engine *engine) {
+static void setEmulatorAtIndex(int index) {
 	stopEmulationAtIndex = index;
 }
 
-static void resumeStimulator(Engine *engine) {
+static void resumeStimulator() {
 	isEmulating = true;
 	stopEmulationAtIndex = DO_NOT_STOP;
 }
 
-void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine) {
+void initTriggerEmulatorLogic(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
@@ -176,8 +174,8 @@ void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine) {
 	triggerSignal.weComplexInit("position sensor", s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
 
-	addConsoleActionIP("rpm", (VoidIntVoidPtr) setTriggerEmulatorRPM, engine);
-	addConsoleActionIP("stop_stimulator_at_index", (VoidIntVoidPtr) setEmulatorAtIndex, engine);
-	addConsoleActionP("resume_stimulator", (VoidPtr) resumeStimulator, engine);
+	addConsoleActionI("rpm", setTriggerEmulatorRPM);
+	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
+	addConsoleAction("resume_stimulator", resumeStimulator);
 }
-#endif
+#endif /* EFI_EMULATE_POSITION_SENSORS */

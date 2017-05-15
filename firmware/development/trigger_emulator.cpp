@@ -51,7 +51,7 @@ void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 			&boardConfiguration->triggerSimulatorPinModes[2]);
 #endif /* EFI_PROD_CODE */
 
-	initTriggerEmulatorLogic(sharedLogger, engine);
+	initTriggerEmulatorLogic(sharedLogger);
 #else
 	print("No position sensor(s) emulation\r\n");
 #endif /* EFI_EMULATE_POSITION_SENSORS */
