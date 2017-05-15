@@ -31,7 +31,7 @@ void scheduleByTime(const bool monitorReuse, const char *prefix, scheduling_s *s
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", time);
 	}
-	schedulingQueue.insertTask(false, prefix, scheduling, time, callback, param);
+	schedulingQueue.insertTask(scheduling, time, callback, param);
 }
 
 void initSignalExecutorImpl(void) {
