@@ -34,7 +34,7 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
+void scheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
 	scheduleTask(scheduling, time - getTimeNowUs(), callback, param);
 }
 
