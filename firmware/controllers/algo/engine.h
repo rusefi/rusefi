@@ -329,6 +329,7 @@ public:
 
 	bool clutchUpState;
 	bool clutchDownState;
+	bool brakePedalState;
 
 	bool isRunningPwmTest;
 

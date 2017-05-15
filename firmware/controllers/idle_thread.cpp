@@ -210,12 +210,14 @@ static msg_t ivThread(int param) {
 
 		// this value is not used yet
 		if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
-			engine->clutchDownState = palReadPad(getHwPort(boardConfiguration->clutchDownPin),
-					getHwPin(boardConfiguration->clutchDownPin));
+			engine->clutchDownState = efiReadPin(boardConfiguration->clutchDownPin);
 		}
 		if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
-			engine->clutchUpState = palReadPad(getHwPort(boardConfiguration->clutchUpPin),
-					getHwPin(boardConfiguration->clutchUpPin));
+			engine->clutchUpState = efiReadPin(boardConfiguration->clutchUpPin);
+		}
+
+		if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+			engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
 		}
 
 		finishIdleTestIfNeeded();
@@ -320,13 +322,20 @@ void startIdleThread(Logging*sharedLogger) {
 
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet
-	if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED)
+	if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
 		mySetPadMode2("clutch down switch", boardConfiguration->clutchDownPin,
 				getInputMode(boardConfiguration->clutchDownPinMode));
+	}
 
-	if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED)
+	if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
 		mySetPadMode2("clutch up switch", boardConfiguration->clutchUpPin,
 				getInputMode(boardConfiguration->clutchUpPinMode));
+	}
+
+	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+		mySetPadMode2("brake pedal switch", engineConfiguration->brakePedalPin,
+				getInputMode(engineConfiguration->brakePedalPinMode));
+	}
 
 	addConsoleAction("idleinfo", showIdleInfo);
 
