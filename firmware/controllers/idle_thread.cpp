@@ -323,17 +323,17 @@ void startIdleThread(Logging*sharedLogger) {
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet
 	if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
-		mySetPadMode2("clutch down switch", boardConfiguration->clutchDownPin,
+		efiSetPadMode("clutch down switch", boardConfiguration->clutchDownPin,
 				getInputMode(boardConfiguration->clutchDownPinMode));
 	}
 
 	if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
-		mySetPadMode2("clutch up switch", boardConfiguration->clutchUpPin,
+		efiSetPadMode("clutch up switch", boardConfiguration->clutchUpPin,
 				getInputMode(boardConfiguration->clutchUpPinMode));
 	}
 
 	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
-		mySetPadMode2("brake pedal switch", engineConfiguration->brakePedalPin,
+		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
 				getInputMode(engineConfiguration->brakePedalPinMode));
 	}
 

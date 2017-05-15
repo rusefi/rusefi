@@ -179,7 +179,7 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
-		mySetPadMode2(msg, brainPin, mode);
+		efiSetPadMode(msg, brainPin, mode);
 	}
 }
 

@@ -312,10 +312,10 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		int mosiMode,
 		int misoMode) {
 
-	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) + sckMode);
+	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) + sckMode);
 
-	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) + mosiMode);
-	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) + misoMode);
+	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) + mosiMode);
+	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) + misoMode);
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
@@ -324,7 +324,7 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	ioportmask_t pin = getHwPin(csPin);
 	spiConfig->ssport = port;
 	spiConfig->sspad = pin;
-	mySetPadMode2("chip select", csPin, PAL_STM32_MODE_OUTPUT);
+	efiSetPadMode("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
 
 #endif /* HAL_USE_SPI */

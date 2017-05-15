@@ -60,7 +60,7 @@ bool efiReadPin(brain_pin_e pin) {
 /**
  * This method would set an error condition if pin is already used
  */
-void mySetPadMode2(const char *msg, brain_pin_e brainPin, iomode_t mode) {
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
 

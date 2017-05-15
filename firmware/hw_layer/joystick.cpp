@@ -153,11 +153,11 @@ void initJoystick(Logging *shared) {
 	applyPin(boardConfiguration->joystickCPin);
 	applyPin(boardConfiguration->joystickDPin);
 
-	mySetPadMode2("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy A", boardConfiguration->joystickAPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy D", boardConfiguration->joystickDPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy A", boardConfiguration->joystickAPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy D", boardConfiguration->joystickDPin, PAL_MODE_INPUT_PULLUP);
 
 	addConsoleAction("joystickinfo", joystickInfo);
 

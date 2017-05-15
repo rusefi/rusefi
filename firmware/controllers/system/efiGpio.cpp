@@ -313,7 +313,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 	this->port = port;
 	this->pin = pin;
 
-	mySetPadMode2(msg, brainPin, mode);
+	efiSetPadMode(msg, brainPin, mode);
 
 	setDefaultPinState(outputMode);
 #endif /* EFI_GPIO_HARDWARE */
