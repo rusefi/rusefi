@@ -152,6 +152,7 @@ fileVersion = { 20161225 }
       clutchDownState  =bits,    U32,     72, [12:12], "true", "false";
       knockEverIndicator=bits,   U32,     72, [13:13], "true", "false";
       knockNowIndicator=bits,    U32,     72, [14:14], "true", "false";
+      brakePedalIndicator=bits,  U32,     72, [15:15], "true", "false";
       vehicleSpeedKph = scalar,  F32,     76,        "kph",   1,       0.0;
       
       ind_tps_error   = bits,    U32,     80, [0:0], "true", "false";
@@ -553,6 +554,7 @@ fileVersion = { 20161225 }
     indicator = { ind_fuel_pump}, "no pump",   "pump",   white, black, green,   black
     indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
     indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, red,   black
+    indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
     
     ; error codes
     indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
@@ -646,12 +648,18 @@ fileVersion = { 20161225 }
 ; Alternator_PID: PID reset counter   
    entry = debugIntField3,   "debug i3",int,"%d"
    
+      
    entry = engineMode,   "mode",int,"%d"
    entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
    entry = lastErrorCode,   @@GAUGE_NAME_WARNING_LAST@@,int,"%d"
    entry = internalMcuTemperature,   @@GAUGE_NAME_CPU_TEMP@@,float,"%.2f"
    
    entry = tCharge, "tCharge",float,"%.3f"
+   
+   entry = clutchUpState,   "clutch: up",int,"%d"
+   entry = clutchDownState,   "clutch: down",int,"%d"
+   entry = brakePedalIndicator,   "brake pedal",int,"%d"
+   
    
 ;     tpsADC          = U16,    "ADC",
 ;     alignmet        = U16,    "al",
