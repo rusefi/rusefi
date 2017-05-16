@@ -440,7 +440,7 @@ public:
 	bool isTpsAbove50;
 	int pumpsCounter;
 private:
-	void setPumpsCounter(engine_configuration_s *engineConfiguration, int newValue);
+	void setPumpsCounter(int newValue);
 };
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_F);

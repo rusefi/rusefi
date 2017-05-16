@@ -380,8 +380,7 @@ StartupFuelPumping::StartupFuelPumping() {
 	pumpsCounter = 0;
 }
 
-void StartupFuelPumping::setPumpsCounter(
-		engine_configuration_s *engineConfiguration, int newValue) {
+void StartupFuelPumping::setPumpsCounter(int newValue) {
 	if (pumpsCounter != newValue) {
 		pumpsCounter = newValue;
 
@@ -399,14 +398,14 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_F) {
 		bool isTpsAbove50 = getTPS(PASS_ENGINE_PARAMETER_F) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {
-			setPumpsCounter(engineConfiguration, pumpsCounter + 1);
+			setPumpsCounter(pumpsCounter + 1);
 		}
 
 	} else {
 		/**
 		 * Engine is not stopped - not priming pumping mode
 		 */
-		setPumpsCounter(engineConfiguration, 0);
+		setPumpsCounter(0);
 		isTpsAbove50 = false;
 	}
 }
