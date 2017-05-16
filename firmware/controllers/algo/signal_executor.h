@@ -41,6 +41,7 @@ public:
 	 * TODO: make watchdog decrement relevant counter
 	 */
 	bool isScheduled;
+
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 
 	InjectionEvent *event;
