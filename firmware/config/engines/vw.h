@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setVwAba(DECLARE_ENGINE_PARAMETER_F);
+void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_VW_H_ */

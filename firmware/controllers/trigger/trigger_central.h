@@ -13,7 +13,7 @@
 #include "trigger_decoder.h"
 
 class Engine;
-typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_S);
+typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #ifdef __cplusplus
 class Engine;
@@ -25,7 +25,7 @@ class TriggerCentral {
 public:
 	TriggerCentral();
 	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
-	void handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_S);
+	void handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index);
 	void resetCounters();
 	TriggerState triggerState;
@@ -46,8 +46,8 @@ private:
 #endif
 
 void triggerInfo(void);
-efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_F);
-efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_F);
+efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void hwHandleShaftSignal(trigger_event_e signal);
 void hwHandleVvtCamSignal(trigger_value_e front);
 float getTriggerDutyCycle(int index);

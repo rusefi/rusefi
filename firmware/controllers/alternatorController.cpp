@@ -85,7 +85,7 @@ static msg_t AltCtrlThread(int param) {
 			continue;
 		}
 
-		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
+		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
 		if (boardConfiguration->onOffAlternatorLogic) {
@@ -123,7 +123,7 @@ void showAltInfo(void) {
 			engineConfiguration->alternatorDT);
 	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_F), currentAltDuty,
+	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 

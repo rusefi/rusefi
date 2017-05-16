@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CITROENBERLINGOTU3JP_H_ */

@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setDodgeStratus(DECLARE_ENGINE_PARAMETER_F);
+void setDodgeStratus(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_DODGE_STRATUS_H_ */

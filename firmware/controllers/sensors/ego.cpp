@@ -8,11 +8,11 @@
 
 EXTERN_ENGINE;
 
-bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
 }
 
-float getAfr(DECLARE_ENGINE_PARAMETER_F) {
+float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	afr_sensor_s * sensor = &CONFIG(afr);
 
 	float volts = getVoltageDivided("ego", sensor->hwChannel);
@@ -65,7 +65,7 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 	}
 }
 
-void setEgoSensor(ego_sensor_e type DECLARE_ENGINE_PARAMETER_S) {
+void setEgoSensor(ego_sensor_e type DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	boardConfiguration->afr_type = type;
 	initEgoSensor(&engineConfiguration->afr, type);
 }

@@ -29,7 +29,7 @@ static OutputPin emulatorOutputs[3];
 
 EXTERN_ENGINE;
 
-void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)

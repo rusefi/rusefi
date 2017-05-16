@@ -10,12 +10,12 @@
 
 #include "engine.h"
 
-void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F);
-void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F);
-void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_F);
-void setHondaAccordConfiguration1_24(DECLARE_ENGINE_PARAMETER_F);
-void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_F);
-void setHondaCivic4_0_both(DECLARE_ENGINE_PARAMETER_F);
-void setHondaCivic4_0_rise(DECLARE_ENGINE_PARAMETER_F);
+void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setHondaAccordConfiguration1_24(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setHondaCivic4_0_both(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setHondaCivic4_0_rise(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* HONDA_ACCORD_H_ */

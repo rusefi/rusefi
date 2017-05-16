@@ -42,19 +42,19 @@ typedef struct {
 } persistent_config_container_s;
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
-void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setAfrMap(afr_table_t table, float value);
 void setMap(fuel_table_t table, float value);
-void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S);
-void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_S);
-void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_S);
-void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_S);
-void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_S);
-void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S);
+void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printFloatArray(const char *prefix, float array[], int size);
 
 void rememberCurrentConfiguration(void);
-void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F);
+void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getGlobalConfigurationVersion(void);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);

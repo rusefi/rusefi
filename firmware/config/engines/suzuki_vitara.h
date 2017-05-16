@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setSuzukiVitara(DECLARE_ENGINE_PARAMETER_F);
+void setSuzukiVitara(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_SUZUKI_VITARA_H_ */

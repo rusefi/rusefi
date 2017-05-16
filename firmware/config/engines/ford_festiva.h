@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F);
+void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_FORD_FESTIVA_H_ */

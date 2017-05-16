@@ -72,7 +72,7 @@ static bool wasEtbBraking = false;
 static msg_t etbThread(void *arg) {
         UNUSED(arg);
 	while (true) {
-		percent_t pedal = getPedalPosition(PASS_ENGINE_PARAMETER_F);
+		percent_t pedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 		percent_t tps = getTPS();
 
 		currentEtbDuty = pid.getValue(pedal, getTPS());

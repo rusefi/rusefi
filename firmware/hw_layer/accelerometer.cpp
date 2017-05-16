@@ -8,14 +8,14 @@
 #include "main.h"
 //#include "lis302dl.h"
 
-void initAccelerometer(DECLARE_ENGINE_PARAMETER_F) {
+void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_F) {
+float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return 0;
 }
 
-float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_F) {
+float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return 0;
 }

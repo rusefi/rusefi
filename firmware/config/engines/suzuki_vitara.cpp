@@ -11,7 +11,7 @@
 
 EXTERN_ENGINE;
 
-void setSuzukiVitara(DECLARE_ENGINE_PARAMETER_F) {
+void setSuzukiVitara(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_SOHC_4;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.590;

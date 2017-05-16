@@ -27,12 +27,12 @@
 #define CAN_VAG_CLT 0x289
 
 void initCan(void);
-void stopCanPins(DECLARE_ENGINE_PARAMETER_F);
-void startCanPins(DECLARE_ENGINE_PARAMETER_F);
+void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void commonTxInit(int eid);
 void sendMessage();
 void setCanType(int type);
 void setTxBit(int offset, int index);
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F);
+void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CAN_HW_H_ */

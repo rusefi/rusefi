@@ -42,14 +42,14 @@ public:
 	/**
 	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
 	 */
-	bool isRunning(DECLARE_ENGINE_PARAMETER_F);
-	int getRpm(DECLARE_ENGINE_PARAMETER_F);
+	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
-	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_S);
+	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	uint32_t getRevolutionCounterSinceStart(void);
 	float getRpmAcceleration();
 	/**
@@ -79,16 +79,16 @@ private:
 /**
  * @brief   Current RPM
  */
-#define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F)
+#define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)
 
 bool isCrankingE(Engine *engine);
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
  * @brief   Initialize RPM calculator
  */
 void initRpmCalculator(Logging *sharedLogger, Engine *engine);
 
-float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_S);
+float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 

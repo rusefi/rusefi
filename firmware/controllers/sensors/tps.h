@@ -16,19 +16,19 @@
 // we have 12 bit precision and TS uses 10 bit precision
 #define TPS_TS_CONVERSION 4
 
-bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F);
-percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F);
+bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 /**
  * Throttle Position Sensor
  * In case of dual TPS this function would return logical TPS position
  * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
  */
-percent_t getTPS(DECLARE_ENGINE_PARAMETER_F);
-bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_F);
+percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int convertVoltageTo10bitADC(float voltage);
-int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_F);
-float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F);
-percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S);
+int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 typedef struct {
 	efitimeus_t prevTime;

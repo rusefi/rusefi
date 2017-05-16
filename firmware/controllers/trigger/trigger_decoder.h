@@ -53,9 +53,9 @@ public:
 	void intTotalEventCounter();
 	efitime_t getTotalEventCounter();
 	efitime_t getStartOfRevolutionIndex();
-	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_S);
+	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	bool isValidIndex(DECLARE_ENGINE_PARAMETER_F);
+	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback cycleCallback;
 
@@ -116,7 +116,7 @@ private:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
+uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 class Engine;
 

@@ -272,18 +272,18 @@ void setCanType(int type) {
 
 #endif /* EFI_PROD_CODE */
 
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F) {
+void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canReadEnabled = false;
 }
 
-void stopCanPins(DECLARE_ENGINE_PARAMETER_F) {
+void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	unmarkPin(activeConfiguration.bc.canTxPin);
 	unmarkPin(activeConfiguration.bc.canRxPin);
 }
 
-void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
+void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiSetPadMode("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadMode("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }

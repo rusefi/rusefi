@@ -11,6 +11,6 @@
 
 #include "trigger_structure.h"
 
-void initializeRoverK(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void initializeRoverK(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_ */

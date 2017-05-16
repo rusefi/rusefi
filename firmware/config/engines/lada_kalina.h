@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setLadaKalina(DECLARE_ENGINE_PARAMETER_F);
+void setLadaKalina(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_LADA_KALINA_H_ */

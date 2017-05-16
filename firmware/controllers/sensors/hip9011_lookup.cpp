@@ -84,7 +84,7 @@ int getHip9011BandIndex(float frequency) {
 
 EXTERN_ENGINE;
 
-void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_F) {
+void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
 
 	engineConfiguration->knockNoise[0] = 2; // 800

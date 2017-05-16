@@ -27,7 +27,7 @@ baroCorr_Map3D_t baroCorrMap("baro");
 #define tpMin 0
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
-float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_S) {
+float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float minRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMinRpmMinTps, tpMax,
 			engineConfiguration->tChargeMinRpmMaxTps, tps);
 	float maxRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMaxRpmMinTps, tpMax,
@@ -81,7 +81,7 @@ EXTERN_ENGINE;
 /**
  * @return per cylinder injection time, in Milliseconds
  */
-floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_F) {
+floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
@@ -93,7 +93,7 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_F) {
 	float map = getMap();
 	efiAssert(!cisnan(map), "NaN map", 0);
 
-	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F);
+	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 	efiAssert(!cisnan(adjustedMap), "NaN adjustedMap", 0);
 
 	float airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
@@ -114,7 +114,7 @@ static const baro_corr_table_t default_baro_corr = {
 		{1.141, 1.086, 1.039, 1}
 };
 
-void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F) {
+void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
 	veMap.setAll(80);
 
@@ -130,7 +130,7 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 	memcpy(engineConfiguration->baroCorrTable, default_baro_corr, sizeof(default_baro_corr));
 }
 
-void initSpeedDensity(DECLARE_ENGINE_PARAMETER_F) {
+void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);

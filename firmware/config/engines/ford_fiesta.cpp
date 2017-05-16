@@ -18,7 +18,7 @@
 
 EXTERN_ENGINE;
 
-void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->rpmHardLimit = 7000;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 

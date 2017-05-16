@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F);
+void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_DODGE_RAM_H_ */

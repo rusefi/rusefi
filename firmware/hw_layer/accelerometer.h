@@ -9,14 +9,14 @@
 #define HW_LAYER_ACCELEROMETER_H_
 
 
-void initAccelerometer(DECLARE_ENGINE_PARAMETER_F);
+void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 /**
  * Acceleration/braking
  */
-float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_F);
+float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 /**
  * Turns
  */
-float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_F);
+float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* HW_LAYER_ACCELEROMETER_H_ */
