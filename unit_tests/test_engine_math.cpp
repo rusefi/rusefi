@@ -20,7 +20,7 @@ void testIgnitionPlanning(void) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
 	EXPAND_EngineTestHelper;
 
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("testIgnitionPlanning_AFR", 13.5, eth.engine.engineState.targetAFR);
 
 	assertEquals(IM_BATCH, engineConfiguration->injectionMode);
@@ -38,14 +38,14 @@ void testEngineMath(void) {
 	assertEqualsM("6000 RPM", 5, getOneDegreeTimeMs(6000) * 180);
 
 
-	assertEquals(312.5, getTCharge(1000, 0, 300, 350 PASS_ENGINE_PARAMETER));
-	assertEquals(313.5833, getTCharge(1000, 50, 300, 350 PASS_ENGINE_PARAMETER));
-	assertEquals(314.6667, getTCharge(1000, 100, 300, 350 PASS_ENGINE_PARAMETER));
+	assertEquals(312.5, getTCharge(1000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEquals(313.5833, getTCharge(1000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEquals(314.6667, getTCharge(1000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 
 
-	assertEquals(312.5, getTCharge(4000, 0, 300, 350 PASS_ENGINE_PARAMETER));
-	assertEquals(320.0833, getTCharge(4000, 50, 300, 350 PASS_ENGINE_PARAMETER));
-	assertEquals(327.6667, getTCharge(4000, 100, 300, 350 PASS_ENGINE_PARAMETER));
+	assertEquals(312.5, getTCharge(4000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEquals(320.0833, getTCharge(4000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEquals(327.6667, getTCharge(4000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 void testIgnitionMapGenerator(void) {

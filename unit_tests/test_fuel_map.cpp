@@ -29,7 +29,7 @@ void testMafFuelMath(void) {
 
 	setAfrMap(config->afrTable, 13);
 
-	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER);
+	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("fuelMs", 26.7099, fuelMs);
 }
 
@@ -58,20 +58,20 @@ void testFuelMap(void) {
 
 	printf("*** getInjectorLag\r\n");
 //	engine->engineState.vb
-	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER));
+	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER_SUFFIX));
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
 		eth.engine.engineConfiguration->injector.battLagCorrBins[i] = i;
 		eth.engine.engineConfiguration->injector.battLagCorr[i] = 0.5 + 2 * i;
 	}
 
-	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
-	float baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
-	assertEqualsM("base fuel", 5.05, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER));
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("base fuel", 5.05, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -86,24 +86,24 @@ void testFuelMap(void) {
 		eth.engine.config->cltFuelCorr[i] = 100;
 	}
 
-	setInjectorLag(0 PASS_ENGINE_PARAMETER);
+	setInjectorLag(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	assertEquals(NAN, getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
-	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER);
+	assertEquals(NAN, getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("IAT", 2, iatCorrection);
-	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
-	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_F);
+	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("CLT", 1, cltCorrection);
-	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("injectorLag", 0, injectorLag);
 
 	testMafValue = 5;
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
-	baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
-	assertEqualsM("v1", 30150, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER));
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("v1", 30150, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX));
 
 	testMafValue = 0;
 
@@ -111,28 +111,28 @@ void testFuelMap(void) {
 
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor
-	assertEqualsM("getStartingFuel nan", 4, getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#1", 17.8, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#2", 8.4480, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#3", 6.48, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER));
-	assertEqualsM("getStartingFuel#4", 2.6069, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER));
+	assertEqualsM("getStartingFuel nan", 4, getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#1", 17.8, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#2", 8.4480, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#3", 6.48, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#4", 2.6069, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 
-static void confgiureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_S) {
+static void confgiureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->addEvent2(53.747, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(121.90, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
-	s->addEvent2(232.76, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(300.54, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
-	s->addEvent2(360, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(53.747, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(121.90, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(232.76, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(300.54, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(360, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
-	s->addEvent2(409.8412, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(478.6505, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
-	s->addEvent2(588.045, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(657.03, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
-	s->addEvent2(720, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(409.8412, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(478.6505, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(588.045, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(657.03, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(720, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	assertEquals(53.747 / 720, s->wave.getSwitchTime(0));
 	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
@@ -170,7 +170,7 @@ void testAngleResolver(void) {
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
 	TriggerShape * ts = &engine->triggerCentral.triggerShape;
-	ts->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+	ts->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	assertEqualsM("index 2", 52.76, ts->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
@@ -184,37 +184,37 @@ void testAngleResolver(void) {
 	event_trigger_position_s injectionStart;
 
 	printf("*************************************************** testAngleResolver 0\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
 	assertEquals(0.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
 	assertEquals(42.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
 	assertEquals(68.2400, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEquals(2, injectionStart.eventIndex);
 	assertEquals(69.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEquals(2, injectionStart.eventIndex);
 	assertEquals(122.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEquals(2, injectionStart.eventIndex);
 	assertEquals(178.24, injectionStart.angleOffset);
 
 	TriggerShape t;
-	confgiureFordAspireTriggerShape(&t PASS_ENGINE_PARAMETER);
+	confgiureFordAspireTriggerShape(&t PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void testPinHelper(void) {

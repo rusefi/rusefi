@@ -76,7 +76,7 @@ bool isTriggerDecoderError(void) {
 	return errorDetection.sum(6) > 4;
 }
 
-bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_F) {
+bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return currentCycle.current_index < TRIGGER_SHAPE(size);
 }
 
@@ -145,7 +145,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
  * @param signal type of event which just happened
  * @param nowNt current time
  */
-void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_S) {
+void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(signal <= SHAFT_3RD_RISING, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
@@ -384,7 +384,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		toothed_previous_duration = currentDuration;
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(PASS_ENGINE_PARAMETER_F) && !isInitializingTrigger) {
+	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {
 		// let's not show a warning if we are just starting to spin
 		if (engine->rpmCalculator.rpmValue != 0) {
 			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
@@ -427,7 +427,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	}
 }
 
-void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
+void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 
@@ -436,61 +436,61 @@ void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_EN
 
 	trigger_wheel_e crank = T_SECONDARY;
 
-	s->addEvent2(10, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(50, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(10, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(50, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	float a = 2 * crankW;
 
 	// #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	// #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	// #3/3
 	a += crankW;
 	a += crankW;
 
 	// 2nd #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// 2nd #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->isSynchronizationNeeded = false;
 }
 
-void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
+void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float engineCycle = getEngineCycle(operationMode);
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->addEvent2(180, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(360, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(180, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(360, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	s->addEvent2(540, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER);
-	s->addEvent2(720, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(540, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(720, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
+void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 
-	s->addEvent2(2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER);
-	s->addEvent2(20, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
+	s->addEvent2(2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(20, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
 
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
+	NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
@@ -501,7 +501,7 @@ static TriggerState initState CCM_OPTIONAL;
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_S) {
+void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "init t");
@@ -514,160 +514,160 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_TOOTHED_WHEEL:
 		initializeSkippedToothTriggerShapeExt(this, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
-		initializeMazdaMiataNaShape(this PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataNaShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
-		initializeMazdaMiataNb1Shape(this PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataNb1Shape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MAZDA_MIATA_VVT_TEST:
-		initializeMazdaMiataVVtTestShape(this PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataVVtTestShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MIATA_VVT:
-		initializeMazdaMiataNb2Crank(this PASS_ENGINE_PARAMETER);
+		initializeMazdaMiataNb2Crank(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_DODGE_NEON_1995:
-		configureNeon1995TriggerShape(this PASS_ENGINE_PARAMETER);
+		configureNeon1995TriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_DODGE_STRATUS:
-		configureDodgeStratusTriggerShape(this PASS_ENGINE_PARAMETER);
+		configureDodgeStratusTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_DODGE_NEON_2003_CAM:
-		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER);
+		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_DODGE_NEON_2003_CRANK:
-		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER);
-//		configureNeon2003TriggerShapeCrank(triggerShape PASS_ENGINE_PARAMETER);
+		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER_SUFFIX);
+//		configureNeon2003TriggerShapeCrank(triggerShape PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_FORD_ASPIRE:
-		configureFordAspireTriggerShape(this PASS_ENGINE_PARAMETER);
+		configureFordAspireTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_GM_7X:
-		configureGmTriggerShape(this PASS_ENGINE_PARAMETER);
+		configureGmTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
-		configureMazdaProtegeLx(this PASS_ENGINE_PARAMETER);
+		configureMazdaProtegeLx(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_ONE_PLUS_ONE:
-		configureOnePlusOne(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		configureOnePlusOne(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_3_1_CAM:
-		configure3_1_cam(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		configure3_1_cam(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		configureOnePlus60_2(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_ONE:
-		setToothedWheelConfiguration(this, 1, 0, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		setToothedWheelConfiguration(this, 1, 0, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MAZDA_SOHC_4:
-		configureMazdaProtegeSOHC(this PASS_ENGINE_PARAMETER);
+		configureMazdaProtegeSOHC(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MINI_COOPER_R50:
-		configureMiniCooperTriggerShape(this PASS_ENGINE_PARAMETER);
+		configureMiniCooperTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(this, 60, 2, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		setToothedWheelConfiguration(this, 60, 2, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_60_2_VW:
-		setVwConfiguration(this PASS_ENGINE_PARAMETER);
+		setVwConfiguration(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(this, 36, 1, engineConfiguration->operationMode PASS_ENGINE_PARAMETER);
+		setToothedWheelConfiguration(this, 36, 1, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_HONDA_4_24_1:
-		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
+		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_HONDA_4_24:
-		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0 PASS_ENGINE_PARAMETER);
+		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_HONDA_1_24:
-		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10 PASS_ENGINE_PARAMETER);
+		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10 PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifted(this PASS_ENGINE_PARAMETER);
+		configureHondaAccordShifted(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_HONDA_1_4_24:
-		configureHondaAccordCDDip(this PASS_ENGINE_PARAMETER);
+		configureHondaAccordCDDip(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_HONDA_CBR_600:
-		configureHondaCbr600(this PASS_ENGINE_PARAMETER);
+		configureHondaCbr600(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_HONDA_CBR_600_CUSTOM:
-		configureHondaCbr600custom(this PASS_ENGINE_PARAMETER);
+		configureHondaCbr600custom(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MITSUBISHI:
-		initializeMitsubishi4g18(this PASS_ENGINE_PARAMETER);
+		initializeMitsubishi4g18(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_DODGE_RAM:
-		initDodgeRam(this PASS_ENGINE_PARAMETER);
+		initDodgeRam(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_JEEP_18_2_2_2:
-		initJeep18_2_2_2(this PASS_ENGINE_PARAMETER);
+		initJeep18_2_2_2(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_SUBARU_7_6:
-		initializeSubaru7_6(this PASS_ENGINE_PARAMETER);
+		initializeSubaru7_6(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_36_2_2_2:
-		initialize36_2_2_2(this PASS_ENGINE_PARAMETER);
+		initialize36_2_2_2(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_2JZ_3_34:
-		initialize2jzGE3_34(this PASS_ENGINE_PARAMETER);
+		initialize2jzGE3_34(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_2JZ_1_12:
-		initialize2jzGE1_12(this PASS_ENGINE_PARAMETER);
+		initialize2jzGE1_12(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_NISSAN_SR20VE:
-		initializeNissanSR20VE_4(this PASS_ENGINE_PARAMETER);
+		initializeNissanSR20VE_4(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_NISSAN_SR20VE_360:
-		initializeNissanSR20VE_4_360(this PASS_ENGINE_PARAMETER);
+		initializeNissanSR20VE_4_360(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_ROVER_K:
-		initializeRoverK(this PASS_ENGINE_PARAMETER);
+		initializeRoverK(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_GM_LS_24:
-		initGmLS24(this PASS_ENGINE_PARAMETER);
+		initGmLS24(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	default:
@@ -681,7 +681,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 */
 	initState.reset();
-	calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER);
+	calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void onFindIndex(TriggerState *state) {
@@ -698,7 +698,7 @@ static void onFindIndex(TriggerState *state) {
  * This function finds the index of synchronization event within TriggerShape
  */
 uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
-		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
+		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(getRemainingStack(chThdGetSelfX()) > 128, "findPos", -1);
 #endif
@@ -715,7 +715,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
-	uint32_t syncIndex = helper.doFindTrigger(shape, triggerConfig, state PASS_ENGINE_PARAMETER);
+	uint32_t syncIndex = helper.doFindTrigger(shape, triggerConfig, state PASS_ENGINE_PARAMETER_SUFFIX);
 	if (syncIndex == EFI_ERROR_CODE) {
 		isInitializingTrigger = false;
 		return syncIndex;
@@ -736,7 +736,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	 */
 	state->cycleCallback = onFindIndex;
 
-	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape, triggerConfig PASS_ENGINE_PARAMETER);
+	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
 
 	isInitializingTrigger = false;
 	return syncIndex % shape->getSize();

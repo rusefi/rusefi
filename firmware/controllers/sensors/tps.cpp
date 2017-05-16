@@ -57,7 +57,7 @@ float getTpsRateOfChange(void) {
  * Return current TPS position based on configured ADC levels, and adc
  *
  * */
-percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
+percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (engineConfiguration->tpsMin == engineConfiguration->tpsMax) {
 		warning(CUSTOM_INVALID_TPS_SETTING, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
 		return NAN;
@@ -83,7 +83,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
 /*
  * Return voltage on TPS AND channel
  * */
-float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F) {
+float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getVoltageDivided("tps", engineConfiguration->tpsAdcChannel);
 }
 
@@ -92,7 +92,7 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F) {
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
  */
-int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_F) {
+int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
 	if (mockTps != MOCK_UNDEFINED)
 		return mockTps;
@@ -111,18 +111,18 @@ int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_F) {
 /**
  * @brief Position on physical primary TPS
  */
-static percent_t getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
-	percent_t tpsValue = getTpsValue(getTPS12bitAdc(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+static percent_t getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	percent_t tpsValue = getTpsValue(getTPS12bitAdc(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 	return tpsValue;
 }
 
 #define NO_TPS_MAGIC_VALUE 66.611
 
-bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->pedalPositionChannel != EFI_ADC_NONE;
 }
 
-percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F) {
+percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float voltage = getVoltageDivided("pPS", engineConfiguration->pedalPositionChannel);
 	float result = interpolate(engineConfiguration->pedalPositionMin, 0, engineConfiguration->pedalPositionMax, 100, voltage);
 
@@ -130,18 +130,18 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F) {
 	return maxF(0, minF(100, result));
 }
 
-bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->tpsAdcChannel != EFI_ADC_NONE;
 }
 
-percent_t getTPS(DECLARE_ENGINE_PARAMETER_F) {
-	if (!hasTpsSensor(PASS_ENGINE_PARAMETER_F))
+percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (!hasTpsSensor(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return NO_TPS_MAGIC_VALUE;
 	// todo: if (config->isDualTps)
 	// todo: blah blah
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c
 
-	return getPrimatyRawTPS(PASS_ENGINE_PARAMETER_F);
+	return getPrimatyRawTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 int convertVoltageTo10bitADC(float voltage) {

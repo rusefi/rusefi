@@ -66,7 +66,7 @@ static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* 
  */
 static FastInterpolation *mapDecoder;
 
-float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_S) {
+float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (mapConfig->type) {
 	case MT_CUSTOM:
 		// todo: migrate to 'FastInterpolation customMap'
@@ -98,7 +98,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
  * This function adds an error if MAP sensor value is outside of expected range
  * @return unchanged mapKPa parameter
  */
-float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S) {
+float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorDetectionTooLow) || mapKPa > CONFIG(mapErrorDetectionTooHigh)) {
 		warning(OBD_Manifold_Absolute_Pressure_Circuit_Malfunction, "unexpected MAP value: %f", mapKPa);
 		return 0;
@@ -110,7 +110,7 @@ float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_S) {
  * @brief	MAP value decoded according to current settings
  * @returns kPa value
  */
-float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S) {
+float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENABLE_MOCK_ADC || defined(__DOXYGEN__)
 	int mapChannel = engineConfiguration->map.sensor.hwChannel;
 	if (engine->engineState.mockAdcState.hasMockAdc[mapChannel])
@@ -119,32 +119,32 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S) {
 
 	// todo: migrate to mapDecoder once parameter listeners are ready
 	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
-	return decodePressure(voltage, apConfig PASS_ENGINE_PARAMETER);
+	return decodePressure(voltage, apConfig PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**
  * @return Manifold Absolute Pressure, in kPa
  */
-float getRawMap(DECLARE_ENGINE_PARAMETER_F) {
+float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		return interpolate(boardConfiguration->mapFrequency0Kpa, 0, boardConfiguration->mapFrequency100Kpa, 100, mapFreq);
 	}
 
 	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel);
-	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER);
+	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE;
 }
 
-bool hasMapSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE;
 }
 
-float getBaroPressure(DECLARE_ENGINE_PARAMETER_F) {
+float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float voltage = getVoltageDivided("baro", engineConfiguration->baroSensor.hwChannel);
-	return decodePressure(voltage, &engineConfiguration->baroSensor PASS_ENGINE_PARAMETER);
+	return decodePressure(voltage, &engineConfiguration->baroSensor PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
@@ -169,7 +169,7 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	}
 }
 
-static void applyConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+static void applyConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
 	customMap.init(0, apConfig->lowValue, 5, apConfig->highValue);
 	mapDecoder = getDecoder(engineConfiguration->map.sensor.type);
@@ -210,7 +210,7 @@ static void printMAPInfo(void) {
 		}
 	}
 
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		scheduleMsg(logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
 			scheduleMsg(logger, "min=%f@%f max=%f@%f",
@@ -225,9 +225,9 @@ static void printMAPInfo(void) {
 #endif /* EFI_PROD_CODE */
 
 
-void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
-	applyConfiguration(PASS_ENGINE_PARAMETER_F);
+	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -244,7 +244,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #else /* EFI_ANALOG_SENSORS */
 
-void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 #endif /* EFI_ANALOG_SENSORS */

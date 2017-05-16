@@ -98,7 +98,7 @@ void writeToFlashNow(void) {
 	} else {
 		scheduleMsg(logger, "Flashing failed");
 	}
-	assertEngineReference(PASS_ENGINE_PARAMETER_F);
+	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
 	maxLockTime = 0;
 }
 
@@ -109,7 +109,7 @@ static bool isValidCrc(persistent_config_container_s *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 persisted_configuration_state_e flashState;
@@ -133,7 +133,7 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  */
 persisted_configuration_state_e readConfiguration(Logging * logger) {
 	efiAssert(getRemainingStack(chThdGetSelfX()) > 256, "read f", PC_ERROR);
-	assertEngineReference(PASS_ENGINE_PARAMETER_F);
+	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
 	persisted_configuration_state_e result = doReadConfiguration(FLASH_ADDR, logger);
 	if (result != PC_OK) {
 		printMsg(logger, "Reading second configuration copy");
@@ -142,14 +142,14 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 
 	if (result == CRC_FAILED) {
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
-		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
+		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {
-		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		/**
 		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 		 */
-		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
+		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();

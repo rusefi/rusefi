@@ -60,12 +60,12 @@ int MockAdcState::getMockAdcValue(int hwChannel) {
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  * See also periodicFastCallback
  */
-void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
+void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int rpm = rpmCalculator.rpmValue;
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? boardConfiguration->sensorChartMode : SC_OFF;
 
-	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (engineConfiguration->fuelLevelSensor != EFI_ADC_NONE) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
@@ -73,9 +73,9 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
 				boardConfiguration->fuelLevelFullTankVoltage, 100,
 				fuelLevelVoltage);
 	}
-	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_F) ? getVBatt(PASS_ENGINE_PARAMETER_F) : 12;
+	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) ? getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) : 12;
 
-	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER);
+	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void Engine::onTriggerEvent(efitick_t nowNt) {
@@ -163,15 +163,15 @@ EngineState::EngineState() {
 	totalLoggedBytes = injectionOffset = 0;
 }
 
-void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_F) {
-	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
-	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
+void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	warmupTargetAfr = interpolate2d(engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
 			engineConfiguration->warmupTargetAfr, WARMUP_TARGET_AFR_SIZE);
 }
 
-void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
+void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int rpm = ENGINE(rpmCalculator.rpmValue);
 
 	efitick_t nowNt = getTimeNowNt();
@@ -181,12 +181,12 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		timeSinceCranking = nowNt - crankingTime;
 	}
 
-	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER);
+	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
-	engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_F);
+	engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	iatFuelCorrection = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER);
+	iatFuelCorrection = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SUFFIX);
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	if (boardConfiguration->useWarmupPidAfr && engine->sensors.clt < engineConfiguration->warmupAfrThreshold) {
 		if (rpm < 200) {
@@ -203,25 +203,25 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 
 	} else {
-		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_F);
+		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_F);
+	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);
 
-	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
+	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	injectionOffset = getinjectionOffset(rpm PASS_ENGINE_PARAMETER);
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+	injectionOffset = getinjectionOffset(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		float coolantC = ENGINE(sensors.clt);
 		float intakeC = ENGINE(sensors.iat);
-		float tps = getTPS(PASS_ENGINE_PARAMETER_F);
-		tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER));
+		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER_SUFFIX));
 		float map = getMap();
 
 		/**
@@ -335,7 +335,7 @@ void Engine::watchdog() {
 #endif
 }
 
-injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F) {
+injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int rpm = rpmCalculator.rpmValue;
 	return isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 }
@@ -344,7 +344,7 @@ injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F) {
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
  * so that trigger event handler/IO scheduler tasks are faster.
  */
-void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
+void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int rpm = rpmCalculator.rpmValue;
 
 	if (isValidRpm(rpm)) {
@@ -367,10 +367,10 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		engine->engineState.mapAveragingDuration = NAN;
 	}
 
-	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
-	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
+	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->globalFuelCorrection;
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
 }
@@ -393,9 +393,9 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 	}
 }
 
-void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_F) {
-	if (engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) == 0) {
-		bool isTpsAbove50 = getTPS(PASS_ENGINE_PARAMETER_F) >= 50;
+void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) == 0) {
+		bool isTpsAbove50 = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {
 			setPumpsCounter(pumpsCounter + 1);

@@ -18,7 +18,7 @@
 
 EXTERN_ENGINE;
 
-void set1973c20(DECLARE_ENGINE_PARAMETER_F) {
+void set1973c20(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.displacement = 5.7;
 	engineConfiguration->specs.cylindersCount = 8;
@@ -38,7 +38,7 @@ void set1973c20(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 	engineConfiguration->rpmHardLimit = 5000;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 }

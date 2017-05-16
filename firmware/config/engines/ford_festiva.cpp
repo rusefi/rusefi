@@ -66,7 +66,7 @@ EXTERN_ENGINE;
  * pin 1I/W9 - extra +5v
  * set engine_type 14
  */
-void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
+void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
@@ -79,11 +79,11 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
 //	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 //	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	config->veRpmBins[0] = 800;
 	config->veRpmBins[1] = 1200;
@@ -122,13 +122,13 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5
 
 	// set_idle_position 10
 	boardConfiguration->manIdlePosition = 10;
 
-	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER);
+	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	// set global_trigger_offset_angle -37
@@ -146,9 +146,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cranking.baseFuel = 9;
 
 	setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 105, 5);
-	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
+	setWholeTimingTable(10 PASS_ENGINE_PARAMETER_SUFFIX);
 	// set_whole_fuel_map 5
-	setWholeFuelMap(5 PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(5 PASS_ENGINE_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 13.5);
 
 	setSingleCoilDwell(engineConfiguration);
@@ -231,7 +231,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsioExt(0, GPIOE_3, "rpm 1 fsio_setting >", 150 PASS_ENGINE_PARAMETER);
+	setFsioExt(0, GPIOE_3, "rpm 1 fsio_setting >", 150 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	// warning light
@@ -249,8 +249,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->fsio_setting[2] = 90; // CLT threshold
 	boardConfiguration->fsio_setting[3] = 13.5; // voltage threshold
 
-//	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER);
-	setFsio(1, GPIOD_7, "rpm 2 fsio_setting >" PASS_ENGINE_PARAMETER);
+//	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(1, GPIOD_7, "rpm 2 fsio_setting >" PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	config->ignitionRpmBins[0] = 800;

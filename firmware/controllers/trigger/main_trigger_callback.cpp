@@ -97,7 +97,7 @@ static void endSimultaniousInjection(InjectionEvent *event) {
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setLow();
 	}
-	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER);
+	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void tempTurnPinHigh(InjectorOutputPin *output) {
@@ -194,7 +194,7 @@ void seTurnPinLow(OutputSignalPair *pair) {
 	Engine *engine = pair->event->engine;
 	EXPAND_Engine;
 #endif
-	engine->injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER);
+	engine->injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
@@ -210,7 +210,7 @@ static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc
 	scheduleByTime(scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
+static void scheduleFuelInjection(OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (durationUs < 0) {
 		warning(CUSTOM_NEGATIVE_DURATION, "duration cannot be negative: %d", durationUs);
 		return;
@@ -255,14 +255,14 @@ static void scheduleFuelInjection(OutputSignalPair *pair, efitimeus_t nowUs, flo
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
-		int rpm DECLARE_ENGINE_PARAMETER_S) {
+		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
 	 * todo: this is a bit tricky with batched injection. is it? Does the same
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->outputs[0]->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER);
+	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->outputs[0]->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -271,9 +271,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
 	 */
-	if (!isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER)) {
+	if (!isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %fms", injectionDuration);
-	} else if (isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER)) {
+	} else if (isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		warning(CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION, "Too long cranking fuel injection %fms", injectionDuration);
 	}
 
@@ -335,15 +335,15 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(pair, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(pair, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
-static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {
+static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 	if (ENGINE(rpmCalculator.rpmValue) < CONFIG(fuelClosedLoopRpmThreshold) ||
 			ENGINE(sensors.clt) < CONFIG(fuelClosedLoopCltThreshold) ||
-			getTPS(PASS_ENGINE_PARAMETER_F) > CONFIG(fuelClosedLoopTpsThreshold) ||
+			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < engineConfiguration->fuelClosedLoopAfrLowThreshold ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
 		engine->engineState.fuelPidCorrection = 0;
@@ -361,7 +361,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 
-static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#3");
 	efiAssertVoid(trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
@@ -379,17 +379,17 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	 */
 	FuelSchedule *fs = &engine->injectionEvents;
 	if (!fs->isReady) {
-		fs->addFuelEvents(PASS_ENGINE_PARAMETER_F);
+		fs->addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
-	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F));
+	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER) * CONFIG(globalFuelCorrection);
+	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX) * CONFIG(globalFuelCorrection);
 
 	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
 		InjectionEvent *event = &fs->elements[injEventIndex];
@@ -399,7 +399,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		if (eventIndex != trgEventIndex) {
 			continue;
 		}
-		handleFuelInjectionEvent(injEventIndex, event, rpm PASS_ENGINE_PARAMETER);
+		handleFuelInjectionEvent(injEventIndex, event, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -424,7 +424,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_S) {
+void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void) ckpSignalType;
 
 	ENGINE(m.beforeMainTrigger) = GET_TIMESTAMP();
@@ -482,13 +482,13 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 			engine->ignitionEvents.isReady = false; // we need to rebuild ignition schedule
 			engine->injectionEvents.isReady = false;
 			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
-			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
+			prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 			// we need this to apply new 'triggerIndexByAngle' values
-			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 
 		if (CONFIG(fuelClosedLoopCorrectionEnabled)) {
-			fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_F);
+			fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 	}
 
@@ -506,11 +506,11 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(limitedFuel, trgEventIndex, rpm PASS_ENGINE_PARAMETER);
+	handleFuel(limitedFuel, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	handleSpark(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER);
+	handleSpark(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
@@ -536,10 +536,10 @@ static void showTriggerHistogram(void) {
 
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F);
-	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %f", rpm, el);
-	scheduleMsg(logger, "fuel %fms timing %f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER), engine->engineState.timingAdvance);
+	scheduleMsg(logger, "fuel %fms timing %f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);
 #endif
 }
 

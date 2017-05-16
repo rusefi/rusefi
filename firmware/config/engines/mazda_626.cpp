@@ -18,8 +18,8 @@
 
 EXTERN_ENGINE;
 
-void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -62,14 +62,14 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsMin = 80;
 	engineConfiguration->tpsMax = 764;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// set_whole_fuel_map 9
-	setWholeFuelMap(9 PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(9 PASS_ENGINE_PARAMETER_SUFFIX);
 
 // set_whole_timing_map 10
-	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
+	setWholeTimingTable(10 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// http://s1.micp.ru/tOb0U.png
 	setThermistorConfiguration(&engineConfiguration->clt, -15, 5900, 23, 1750, 97, 165);
@@ -95,12 +95,12 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 
 // todo	engineConfiguration->afr.hwChannel = EFI_ADC_3;
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 //#if EFI_FSIO || defined(__DOXYGEN__)
 //	// backup main relay pin
-//	setFsio(0, GPIOE_6, "1" PASS_ENGINE_PARAMETER);
+//	setFsio(0, GPIOE_6, "1" PASS_ENGINE_PARAMETER_SUFFIX);
 //#endif
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;

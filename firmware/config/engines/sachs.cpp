@@ -14,7 +14,7 @@
 
 EXTERN_ENGINE;
 
-void setSachs(DECLARE_ENGINE_PARAMETER_F) {
+void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
 
@@ -25,7 +25,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	 // set injection_offset 0
 	engineConfiguration->extraInjectionOffset = 0;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * 50/2 trigger
@@ -81,8 +81,8 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->fuelPumpPin = GPIOE_6;
 
 	// todo: extract a method? figure out something smarter
-	setFuelRpmBin(800, 15000 PASS_ENGINE_PARAMETER);
-	setTimingRpmBin(800, 15000 PASS_ENGINE_PARAMETER);
+	setFuelRpmBin(800, 15000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setTimingRpmBin(800, 15000 PASS_ENGINE_PARAMETER_SUFFIX);
 	setTableBin2(config->veRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
 	setTableBin2(config->afrRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
 

@@ -169,7 +169,7 @@ static void cylinderCleanupControl(Engine *engine) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_F) && getTPS(PASS_ENGINE_PARAMETER_F) > CLEANUP_MODE_TPS;
+		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
@@ -192,7 +192,7 @@ static void scheduleNextSlowInvocation(void) {
 	chVTSetAny(&periodicSlowTimer, MS2ST(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
 }
 
-static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
+static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->periodicFastCallback();
 
 	chVTSetAny(&periodicFastTimer, MS2ST(20), (vtfunc_t) &periodicFastCallback, engine);
@@ -241,9 +241,9 @@ static void periodicSlowCallback(Engine *engine) {
 	scheduleNextSlowInvocation();
 }
 
-void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_F) {
+void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	scheduleNextSlowInvocation();
-	periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
@@ -314,10 +314,10 @@ static void printAnalogInfo(void) {
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	}
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
@@ -370,7 +370,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of dev console API
 	 */
 	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setShort(const int offset, const int value) {
@@ -379,7 +379,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void getBit(int offset, int bit) {
@@ -410,7 +410,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void getFloat(int offset) {
@@ -509,7 +509,7 @@ static void getKnockInfo(void) {
 }
 
 // this method is used by real firmware and simulator
-void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initConfigActions();
 	initMockVoltage();
 
@@ -535,17 +535,17 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	if (hasFirmwareError()) {
 		return;
 	}
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_F);
+	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FSIO || defined(__DOXYGEN__)
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER);
+	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 	initAccelEnrichment(sharedLogger);
 
 }
 
-void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 	commonInitEngineController(sharedLogger);
 
@@ -577,7 +577,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 // multiple issues with this	initMapAdjusterThread();
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (hasFirmwareError()) {
 		return;
@@ -590,7 +590,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
 	 * properly detect un-assigned output pins
 	 */
-	prepareShapes(PASS_ENGINE_PARAMETER_F);
+	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 #if EFI_PWM_TESTER || defined(__DOXYGEN__)

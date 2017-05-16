@@ -42,11 +42,11 @@ static histogram_s triggerCallbackHistogram;
 
 static Logging *logger;
 
-efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_F) {
+efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->triggerCentral.triggerState.getTotalEventCounter();
 }
 
-efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_F) {
+efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->triggerCentral.triggerState.getStartOfRevolutionIndex();
 }
 
@@ -171,7 +171,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#8");
-	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
 	triggerDuration = GET_TIMESTAMP() - triggerHanlderEntryTime;
 	isInsideTriggerHandler = false;
@@ -206,7 +206,7 @@ static char shaft_signal_msg_index[15];
 static bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { CRANK1, CRANK1, CRANK2, CRANK2, CRANK3, CRANK3 };
 
-static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	itoa10(&shaft_signal_msg_index[2], index);
 	bool isUp = isUpEvent[(int) ckpSignalType];
 	shaft_signal_msg_index[0] = isUp ? 'u' : 'd';
@@ -219,7 +219,7 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	}
 }
 
-void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_S) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
 	if (triggerShape.shapeDefinitionError) {
@@ -251,7 +251,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(signal, nowNt PASS_ENGINE_PARAMETER);
+	triggerState.decodeTriggerEvent(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -272,14 +272,14 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	if (triggerIndexForListeners == 0) {
 		timeAtVirtualZeroNt = nowNt;
 	}
-	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER);
+	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (!triggerState.shaft_is_synchronized) {
 		// we should not propagate event if we do not know where we are
 		return;
 	}
 
-	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_F)) {
+	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 #if TRIGGER_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -289,7 +289,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		 */
 		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
 			ShaftPositionListener listener = (ShaftPositionListener) triggerListeneres.callbacks[i];
-			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER);
+			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 
 	}
@@ -360,7 +360,7 @@ void printAllTriggers() {
 		engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
-		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 		fprintf(fp, "TRIGGERTYPE %d %d %s %f\r\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 

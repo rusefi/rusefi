@@ -69,7 +69,7 @@ static const ignition_table_t tps_advance_table = {
 
 EXTERN_ENGINE;
 
-void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineType = CITROEN_TU3JP;
 
 	/**
@@ -98,10 +98,10 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	 * Algorithm Alpha-N setting
 	 */
-	setAlgorithm(LM_ALPHA_N PASS_ENGINE_PARAMETER);
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
-	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_ALPHA_N PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * Outputs

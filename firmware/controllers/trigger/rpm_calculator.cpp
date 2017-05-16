@@ -65,7 +65,7 @@ RpmCalculator::RpmCalculator() {
 /**
  * @return true if there was a full shaft revolution within the last second
  */
-bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
+bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (engine->stopEngineRequestTimeNt != 0) {
 		if (nowNt
@@ -101,14 +101,14 @@ void RpmCalculator::assignRpmValue(int value) {
 	}
 }
 
-void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_S) {
+void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	assignRpmValue(value);
 	if (previousRpmValue == 0 && rpmValue > 0) {
 		/**
 		 * this would make sure that we have good numbers for first cranking revolution
 		 * #275 cranking could be improved
 		 */
-		engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+		engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 }
 
@@ -139,12 +139,12 @@ float RpmCalculator::getRpmAcceleration() {
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
-int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_F) {
+int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED)
 	return mockRpm;
 #endif
-	if (!isRunning(PASS_ENGINE_PARAMETER_F)) {
+	if (!isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		revolutionCounterSinceStart = 0;
 		if (rpmValue != 0) {
 			rpmValue = 0;
@@ -176,7 +176,7 @@ bool isCranking(void) {
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 	efitick_t nowNt = getTimeNowNt();
 	engine->m.beforeRpmCb = GET_TIMESTAMP();
@@ -188,7 +188,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	angle_t crankAngle = NAN;
 	int signal = -1;
 	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
-		crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER);
+		crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		signal = 1000 * ckpSignalType + index;
 	}
 #endif
@@ -203,7 +203,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 	// todo: wrap this with if (index == 0) statement this would make scAddData logic simpler
 
-	bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_F);
+	bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (hadRpmRecently) {
 		efitime_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
@@ -215,11 +215,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 *
 		 */
 		if (diffNt == 0) {
-			rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER);
+			rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 		} else {
 			int mult = (int)getEngineCycle(engineConfiguration->operationMode) / 360;
 			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
-			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER);
+			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 	rpmState->onNewEngineCycle();
@@ -252,7 +252,7 @@ static void onTdcCallback(void) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 static void tdcMarkCallback(trigger_event_e ckpSignalType,
-		uint32_t index0 DECLARE_ENGINE_PARAMETER_S) {
+		uint32_t index0 DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
@@ -276,7 +276,7 @@ int getRevolutionCounter() {
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_S) {
+float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitime_t timeSinceZeroAngleNt = timeNt
 			- engine->rpmCalculator.lastRpmEventTimeNt;
 
@@ -285,7 +285,7 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_S) {
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F);
+	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 

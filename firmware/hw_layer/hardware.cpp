@@ -351,14 +351,14 @@ void initHardware(Logging *l) {
 	 */
 	if (SHOULD_INGORE_FLASH()) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 		writeToFlashNow();
 	} else {
 		readFromFlash();
 	}
 #else
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
 
 #if EFI_HD44780_LCD
