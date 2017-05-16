@@ -50,7 +50,7 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 void tunerStudioDebug(const char *msg);
 void tunerStudioError(const char *msg);
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S);
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printTsStats(void);
 void requestBurn(void);
 

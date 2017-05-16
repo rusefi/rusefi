@@ -25,8 +25,8 @@
 #include "adc_math.h"
 #endif
 
-void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
+void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-bool getAcToggle(DECLARE_ENGINE_PARAMETER_F);
+bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /*SENSORS_H_*/

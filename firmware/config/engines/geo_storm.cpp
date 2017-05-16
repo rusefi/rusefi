@@ -10,7 +10,7 @@
 
 EXTERN_ENGINE;
 
-void setGeoStormConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setGeoStormConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 

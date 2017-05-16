@@ -9,18 +9,18 @@ EXTERN_ENGINE
 /**
  * @return MAF sensor voltage
  */
-float getMaf(DECLARE_ENGINE_PARAMETER_F) {
+float getMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getMafT(engineConfiguration);
 }
 
-bool hasMafSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->mafAdcChannel != EFI_ADC_NONE;
 }
 
 /**
  * @return kg/hour value
  */
-float getRealMaf(DECLARE_ENGINE_PARAMETER_F) {
+float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int mafAdc = getAdcValue("maf", engineConfiguration->mafAdcChannel);
 	/**
 	 * here we drop from 12 bit ADC to 8 bit index

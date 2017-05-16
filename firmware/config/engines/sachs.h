@@ -9,6 +9,6 @@
 
 #include "engine.h"
 
-void setSachs(DECLARE_ENGINE_PARAMETER_F);
+void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_SACHS_H_ */

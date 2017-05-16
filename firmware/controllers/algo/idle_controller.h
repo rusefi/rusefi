@@ -21,9 +21,9 @@
 class IdleValveState {
 public:
 	IdleValveState();
-	void init(DECLARE_ENGINE_PARAMETER_F);
+	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void setTargetRpm(int targetRpm);
-	percent_t getIdle(int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_S);
+	percent_t getIdle(int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	int time;
 

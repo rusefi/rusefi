@@ -14,6 +14,6 @@
 
 #include "engine.h"
 
-void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* FORD_ASPIRE_H_ */

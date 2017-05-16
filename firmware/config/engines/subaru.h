@@ -9,6 +9,6 @@
 
 #include "engine.h"
 
-void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_F);
+void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* SUBARU_H_ */

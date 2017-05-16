@@ -228,7 +228,7 @@ static void endIntegration(void) {
 /**
  * Shaft Position callback used to start or finish HIP integration
  */
-static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// this callback is invoked on interrupt thread
 	engine->m.beforeHipCb = GET_TIMESTAMP();
 	if (index != 0)

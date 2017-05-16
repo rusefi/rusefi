@@ -13,14 +13,14 @@
 
 #include "engine.h"
 
-void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
  * testing or broken CAM sensor option
  */
-void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_ENGINE_PARAMETER_F);
+void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

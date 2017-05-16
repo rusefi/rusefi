@@ -30,6 +30,6 @@ void prepareHip9011RpmLookup(float angleWindowWidth);
 
 extern float rpmLookup[INT_LOOKUP_SIZE];
 int getIntegrationIndexByRpm(float rpm);
-void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_F);
+void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONTROLLERS_SENSORS_HIP9011_LOOKUP_H_ */

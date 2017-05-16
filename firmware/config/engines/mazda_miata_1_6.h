@@ -9,6 +9,6 @@
 #define CONFIG_ENGINES_MAZDA_MIATA_1_6_H_
 
 #include "engine.h"
-void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F);
+void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_MAZDA_MIATA_1_6_H_ */

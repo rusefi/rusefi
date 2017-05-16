@@ -151,7 +151,7 @@ static void scheduleReboot(void) {
 
 void runRusEfi(void) {
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 512, "init s");
-	assertEngineReference(PASS_ENGINE_PARAMETER_F);
+	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
 
@@ -167,7 +167,7 @@ void runRusEfi(void) {
 	/**
 	 * we need to initialize table objects before default configuration can set values
 	 */
-	initDataStructures(PASS_ENGINE_PARAMETER_F);
+	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * First thing is reading configuration from flash memory.
@@ -200,7 +200,7 @@ void runRusEfi(void) {
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
-	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_F);
+	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 	initTimePerfActions(&sharedLogger);

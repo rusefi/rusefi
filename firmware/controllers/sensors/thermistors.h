@@ -33,19 +33,19 @@ float convertFtoCelcius(float tempF);
 float getKelvinTemperature(float resistance, ThermistorMath *tm);
 float getResistance(ThermistorConf *config, float voltage);
 float getTemperatureC(ThermistorConf *config, ThermistorMath *tm);
-float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F);
+float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isValidCoolantTemperature(float temperature);
-float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F);
+float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isValidIntakeAirTemperature(float temperature);
-bool hasIatSensor(DECLARE_ENGINE_PARAMETER_F);
-bool hasCltSensor(DECLARE_ENGINE_PARAMETER_F);
+bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setThermistorConfiguration(ThermistorConf * tc, float temp1, float r1, float temp2, float r2, float temp3,
 		float r3);
 
 class Engine;
 
-void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
+void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);
 void setDodgeSensor(ThermistorConf *thermistorConf);

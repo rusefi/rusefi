@@ -13,7 +13,7 @@
 class Biquad {
 public:
     Biquad();
-    void initValue(float input DECLARE_ENGINE_PARAMETER_S);
+    void initValue(float input DECLARE_ENGINE_PARAMETER_SUFFIX);
     float getValue(float input);
 
     float a0, a1, a2, b1, b2;

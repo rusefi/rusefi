@@ -11,11 +11,11 @@
 #include "engine.h"
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);
-void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_S);
+void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initSparkLogic(Logging *sharedLogger);
 void turnSparkPinHigh(IgnitionEvent *event);
 void turnSparkPinLow(IgnitionEvent *event);
-int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_S);
-percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S);
+int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
+percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* CONTROLLERS_TRIGGER_SPARK_LOGIC_H_ */

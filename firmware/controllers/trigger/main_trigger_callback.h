@@ -16,7 +16,7 @@
 #include "engine.h"
 
 void initMainEventListener(Logging *sharedLogger, Engine *engine);
-void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S);
+void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 int isIgnitionTimingError(void);
 

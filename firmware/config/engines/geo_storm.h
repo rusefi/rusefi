@@ -9,6 +9,6 @@
 #define CONFIG_ENGINES_GEO_STORM_H_
 
 #include "engine.h"
-void setGeoStormConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setGeoStormConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_GEO_STORM_H_ */

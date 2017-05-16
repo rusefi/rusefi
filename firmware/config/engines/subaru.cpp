@@ -13,7 +13,7 @@
 
 EXTERN_ENGINE;
 
-void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_F) {
+void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 

@@ -43,8 +43,8 @@ public:
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
-	void addFuelEvents(DECLARE_ENGINE_PARAMETER_F);
-	bool addFuelEventsForCylinder(int i DECLARE_ENGINE_PARAMETER_S);
+	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool addFuelEventsForCylinder(int i DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
 	bool isReady;
@@ -94,8 +94,8 @@ public:
 class EngineState {
 public:
 	EngineState();
-	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
-	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
+	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 
 	efitick_t crankingTime;
@@ -243,7 +243,7 @@ public:
 	Engine();
 	void setConfig(persistent_config_s *config);
 	void reset();
-	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F);
+	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	OutputSignalPair fuelActuators[INJECTION_PIN_COUNT];
 	IgnitionEventList ignitionEvents;
@@ -324,8 +324,8 @@ public:
 	 */
 	floatms_t actualLastInjection;
 
-	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
-	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
+	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	bool clutchUpState;
 	bool clutchDownState;
@@ -436,17 +436,17 @@ private:
 class StartupFuelPumping {
 public:
 	StartupFuelPumping();
-	void update(DECLARE_ENGINE_PARAMETER_F);
+	void update(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	bool isTpsAbove50;
 	int pumpsCounter;
 private:
 	void setPumpsCounter(int newValue);
 };
 
-void prepareShapes(DECLARE_ENGINE_PARAMETER_F);
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S);
-void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S);
-void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F);
-void assertEngineReference(DECLARE_ENGINE_PARAMETER_F);
+void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void assertEngineReference(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* H_ENGINE_H_ */

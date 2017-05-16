@@ -9,6 +9,6 @@
 #define CONFIG_ENGINES_PROMETHEUS_H_
 
 #include "engine.h"
-void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_F);
+void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_PROMETHEUS_H_ */

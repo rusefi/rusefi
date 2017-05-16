@@ -14,7 +14,7 @@ Biquad::Biquad() {
 	z1 = z2 = 0;
 }
 
-void Biquad::initValue(float input DECLARE_ENGINE_PARAMETER_S) {
+void Biquad::initValue(float input DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	a0 = engineConfiguration->biQuad.a0;
 	a1 = engineConfiguration->biQuad.a1;
 	a2 = engineConfiguration->biQuad.a2;

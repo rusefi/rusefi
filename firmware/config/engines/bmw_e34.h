@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setBmwE34(DECLARE_ENGINE_PARAMETER_F);
+void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* BMW_E34_H_ */

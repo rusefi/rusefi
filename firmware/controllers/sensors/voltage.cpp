@@ -14,15 +14,15 @@
 
 EXTERN_ENGINE;
 
-float getVRef(DECLARE_ENGINE_PARAMETER_F) {
+float getVRef(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // not currently used	return getVoltageDivided("vref", engineConfiguration->vRefAdcChannel);
 	return NAN;
 }
 
-bool hasVBatt(DECLARE_ENGINE_PARAMETER_F) {
+bool hasVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->vbattAdcChannel != EFI_ADC_NONE;
 }
 
-float getVBatt(DECLARE_ENGINE_PARAMETER_F) {
+float getVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
 }
