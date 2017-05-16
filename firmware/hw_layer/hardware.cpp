@@ -417,7 +417,7 @@ void initHardware(Logging *l) {
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	// todo: figure out better startup logic
-	initTriggerCentral(sharedLogger, engine);
+	initTriggerCentral(sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 	turnOnHardware(sharedLogger);
