@@ -890,6 +890,11 @@ end_struct
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 
+#define INDICATOR_NAME_CLUTCH_UP "clutch: up"
+#define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
+#define INDICATOR_NAME_BRAKE_DOWN "brake: down"
+
+
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 
