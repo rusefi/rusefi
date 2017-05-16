@@ -111,7 +111,7 @@ void rusEfiFunctionalTest(void) {
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
 
-	initTriggerCentral(&sharedLogger, engine);
+	initTriggerCentral(&sharedLogger);
 
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER);
 
