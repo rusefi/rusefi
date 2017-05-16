@@ -192,7 +192,6 @@ static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char 
 //}
 
 static char buffer[MAX_LCD_WIDTH + 4];
-static char dateBuffer[30];
 
 static void lcdPrintf(const char *fmt, ...) {
 	va_list ap;

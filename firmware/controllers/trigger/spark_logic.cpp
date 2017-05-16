@@ -270,7 +270,7 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 	list->isReady = true;
 }
 
-static ALWAYS_INLINE void prepareIgnitionSchedule(int rpm DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_F) {
 
 	engine->m.beforeIgnitionSch = GET_TIMESTAMP();
 	/**
@@ -310,7 +310,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	}
 
 	if (!engine->ignitionEvents.isReady) {
-		prepareIgnitionSchedule(rpm PASS_ENGINE_PARAMETER);
+		prepareIgnitionSchedule(PASS_ENGINE_PARAMETER_F);
 	}
 
 	/**
