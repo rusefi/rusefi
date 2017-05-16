@@ -339,34 +339,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	}
 }
 
-/**
- *
- * @param	delay	the number of ticks before the output signal
- * 					immediate output if delay is zero
- * @param	dwell	the number of ticks of output duration
- *
- */
-static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float delayUs, float durationUs, InjectorOutputPin *output) {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
-
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("scheduling output %s\r\n", output->name);
-#endif /* EFI_UNIT_TEST */
-
-	efitimeus_t turnOnTime = nowUs + (int) delayUs;
-
-	scheduling_s *sUp = &pair->signalTimerUp;
-	pair->isScheduled = true;
-	scheduling_s *sDown = &pair->signalTimerDown;
-
-	pair->outputs[0] = output;
-	seScheduleByTime(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
-	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
-
-	seScheduleByTime(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
-#endif /* EFI_GPIO_HARDWARE */
-}
-
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_F) {
 #if ! EFI_UNIT_TEST
 	if (ENGINE(rpmCalculator.rpmValue) < CONFIG(fuelClosedLoopRpmThreshold) ||
