@@ -197,14 +197,12 @@ void seTurnPinLow(OutputSignalPair *pair) {
 	engine->injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER);
 }
 
-static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
-	InjectorOutputPin *param = pair->outputs[0];
+static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+	InjectorOutputPin *param = pair->outputs[0];
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
 //	scheduleMsg(&sharedLogger, "schX %s", param->name);
-#endif /* FUEL_MATH_EXTREME_LOGGING */
 
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	const char *direction = callback == (schfunc_t) &seTurnPinHigh ? "up" : "down";
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
@@ -212,7 +210,7 @@ static void seScheduleByTime(const char *prefix, scheduling_s *scheduling, efiti
 	scheduleByTime(scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(int rpm, OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
+static void scheduleFuelInjection(OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	if (durationUs < 0) {
 		warning(CUSTOM_NEGATIVE_DURATION, "duration cannot be negative: %d", durationUs);
 		return;
@@ -224,7 +222,7 @@ static void scheduleFuelInjection(int rpm, OutputSignalPair *pair, efitimeus_t n
 	InjectorOutputPin *output = event->outputs[0];
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-			(int)MS2US(getCrankshaftRevolutionTimeMs(rpm)));
+			(int)MS2US(getCrankshaftRevolutionTimeMs(ENGINE(rpmCalculator.rpmValue))));
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 
@@ -250,10 +248,10 @@ static void scheduleFuelInjection(int rpm, OutputSignalPair *pair, efitimeus_t n
 	printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 #endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 	} else {
-		seScheduleByTime("out up1", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
+		seScheduleByTime(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	}
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
-	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
+	seScheduleByTime(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
@@ -337,7 +335,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(rpm, pair, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER);
+		scheduleFuelInjection(pair, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -362,10 +360,10 @@ static void scheduleOutput2(OutputSignalPair *pair, efitimeus_t nowUs, float del
 	scheduling_s *sDown = &pair->signalTimerDown;
 
 	pair->outputs[0] = output;
-	seScheduleByTime("out up2", sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
+	seScheduleByTime(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
 
-	seScheduleByTime("out down", sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
+	seScheduleByTime(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
 #endif /* EFI_GPIO_HARDWARE */
 }
 
