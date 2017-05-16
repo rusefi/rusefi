@@ -318,6 +318,10 @@ static void printSensors(Logging *log, bool fileFormat) {
 	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warningCounter);
 	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.lastErrorCode);
 
+	reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
+	reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
+	reportSensorI(log, fileFormat, INDICATOR_NAME_BRAKE_DOWN, "bool", engine->brakePedalState);
+
 }
 
 
