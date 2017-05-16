@@ -395,7 +395,7 @@ public:
 	 * value of 'triggerShape.getLength()'
 	 * pre-calculating this value is a performance optimization
 	 */
-	int engineCycleEventCount;
+	uint32_t engineCycleEventCount;
 
 	/**
 	 * fast spark dwell time interpolation helper
