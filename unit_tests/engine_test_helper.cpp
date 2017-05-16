@@ -45,24 +45,24 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
 
 	Engine *engine = &this->engine;
-	prepareFuelMap(PASS_ENGINE_PARAMETER_F);
+	prepareFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initAccelEnrichment(NULL PASS_ENGINE_PARAMETER);
+	initAccelEnrichment(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	initSpeedDensity(PASS_ENGINE_PARAMETER_F);
+	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER);
-	prepareShapes(PASS_ENGINE_PARAMETER_F);
+	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->engineConfiguration->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
 
-	initThermistors(NULL PASS_ENGINE_PARAMETER);
+	initThermistors(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	// this is needed to have valid CLT and IAT.
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
-	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	prepareTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
-	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
 }
@@ -96,7 +96,7 @@ void EngineTestHelper::applyTriggerShape() {
 	persistent_config_s *config = engine->config;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
-	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }

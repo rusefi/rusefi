@@ -38,7 +38,7 @@ IdleValveState::IdleValveState() {
 	targetRpmRangeLeft = targetRpmRangeRight = 0;
 }
 
-void IdleValveState::init(DECLARE_ENGINE_PARAMETER_F) {
+void IdleValveState::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTargetRpm(engineConfiguration->targetIdleRpm);
 }
 
@@ -63,19 +63,19 @@ static percent_t setNewValue(IdleValveState *idle, int currentRpm, efitimems_t n
 	return newValue;
 }
 
-bool isTpsLockout(DECLARE_ENGINE_PARAMETER_F) {
+bool isTpsLockout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// if we have TPS sensor, then use it
-	if (hasTpsSensor(PASS_ENGINE_PARAMETER_F)) {
-		return getTPS(PASS_ENGINE_PARAMETER_F) > TPS_IDLE_LOCKOUT;
+	if (hasTpsSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		return getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > TPS_IDLE_LOCKOUT;
 	}
 	// TODO: if no TPS sensor then idle switch is our
 	return true;
 }
 
-static percent_t changeValue(IdleValveState *idle, int currentRpm, int now, const char * msg, percent_t delta DECLARE_ENGINE_PARAMETER_S) {
-	if (isTpsLockout(PASS_ENGINE_PARAMETER_F)) {
+static percent_t changeValue(IdleValveState *idle, int currentRpm, int now, const char * msg, percent_t delta DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (isTpsLockout(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// We are not supposed to be in idle mode. Don't touch anything
-		idleDebug("TPS Lockout, TPS=", getTPS(PASS_ENGINE_PARAMETER_F));
+		idleDebug("TPS Lockout, TPS=", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return idle->value;
 	}
 	percent_t newValue = idle->value + delta;
@@ -85,7 +85,7 @@ static percent_t changeValue(IdleValveState *idle, int currentRpm, int now, cons
 /**
  * now - current time in milliseconds
  */
-percent_t IdleValveState::getIdle(int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_S) {
+percent_t IdleValveState::getIdle(int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (currentRpm == 0 || isCranking()) {
 		// todo: why hard-coded value during cranking
 		return setNewValue(this, currentRpm, now, "cranking value: ", DEFAULT_IDLE_DUTY);
@@ -108,14 +108,14 @@ percent_t IdleValveState::getIdle(int currentRpm, efitimems_t now DECLARE_ENGINE
 	}
 
 	if (currentRpm >= targetRpmRangeRight + 100)
-		return changeValue(this, currentRpm, now, "idle control: rpm is too high: ", -IDLE_DECREASE_STEP PASS_ENGINE_PARAMETER);
+		return changeValue(this, currentRpm, now, "idle control: rpm is too high: ", -IDLE_DECREASE_STEP PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (currentRpm >= targetRpmRangeRight)
-		return changeValue(this, currentRpm, now, "idle control: rpm is a bit too high: ", -IDLE_DECREASE_SMALL_STEP PASS_ENGINE_PARAMETER);
+		return changeValue(this, currentRpm, now, "idle control: rpm is a bit too high: ", -IDLE_DECREASE_SMALL_STEP PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// we are here if RPM is low, let's see how low
 	if (currentRpm < targetRpmRangeLeft - 100) {
-		return changeValue(this, currentRpm, now, "idle control: RPMs are low: ", IDLE_INCREASE_STEP PASS_ENGINE_PARAMETER);
+		return changeValue(this, currentRpm, now, "idle control: RPMs are low: ", IDLE_INCREASE_STEP PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	return changeValue(this, currentRpm, now, "idle control: RPMs are a bit low: ", IDLE_INCREASE_SMALL_STEP PASS_ENGINE_PARAMETER);
+	return changeValue(this, currentRpm, now, "idle control: RPMs are a bit low: ", IDLE_INCREASE_SMALL_STEP PASS_ENGINE_PARAMETER_SUFFIX);
 }

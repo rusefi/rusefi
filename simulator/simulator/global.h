@@ -105,10 +105,10 @@ void applyNewConfiguration(void);
 		extern persistent_config_container_s persistentState; \
 		extern EnginePins enginePins
 
-#define DECLARE_ENGINE_PARAMETER_F void
-#define DECLARE_ENGINE_PARAMETER_S
-#define PASS_ENGINE_PARAMETER_F
-#define PASS_ENGINE_PARAMETER
+#define DECLARE_ENGINE_PARAMETER_SIGNATURE void
+#define DECLARE_ENGINE_PARAMETER_SUFFIX
+#define PASS_ENGINE_PARAMETER_SIGNATURE
+#define PASS_ENGINE_PARAMETER_SUFFIX
 
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) engine->x

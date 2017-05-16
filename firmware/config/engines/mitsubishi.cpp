@@ -15,7 +15,7 @@
 
 EXTERN_ENGINE;
 
-void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineType = MITSU_4G93;
 
 	engineConfiguration->trigger.type = TT_MITSUBISHI; // same trigger as 4G63?
@@ -38,7 +38,7 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->crankingTimingAngle = -715;
 
 	// set_whole_fuel_map 3
-	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// set cranking_fuel 4
 	engineConfiguration->cranking.baseFuel = 4;
@@ -85,9 +85,9 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_FSIO || defined(__DOXYGEN__)
-	setFsio(0, GPIOD_11, "rpm 5500 >" PASS_ENGINE_PARAMETER);
+	setFsio(0, GPIOD_11, "rpm 5500 >" PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
 

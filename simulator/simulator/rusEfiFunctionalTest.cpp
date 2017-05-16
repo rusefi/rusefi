@@ -94,13 +94,13 @@ void rusEfiFunctionalTest(void) {
 	initializeConsole(&sharedLogger);
 
 	initStatusLoop();
-	initDataStructures(PASS_ENGINE_PARAMETER_F);
+	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(NULL, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
-	prepareShapes(PASS_ENGINE_PARAMETER_F);
+	resetConfigurationExt(NULL, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initAlgo(&sharedLogger);
 	commonInitEngineController(&sharedLogger);
@@ -113,7 +113,7 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerCentral(&sharedLogger);
 
-	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER);
+	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
 	initMapAveraging(&sharedLogger, engine);
@@ -125,9 +125,9 @@ void rusEfiFunctionalTest(void) {
 
 	runChprintfTest();
 
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setTriggerEmulatorRPM(DEFAULT_SIM_RPM PASS_ENGINE_PARAMETER);
+	setTriggerEmulatorRPM(DEFAULT_SIM_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
 }
 

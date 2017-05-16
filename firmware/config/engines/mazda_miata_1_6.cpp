@@ -87,8 +87,8 @@ static const fuel_table_t mafBased16FuelTable = {
 		{/* 15 4.400	*//* 0 800.0*/7.000,	/* 1 1213.33*/7.000,	/* 2 1626.6599*/7.000,	/* 3 2040.0*/7.000,	/* 4 2453.3298*/7.000,	/* 5 2866.66*/7.000,	/* 6 3280.0*/7.000,	/* 7 3693.3298*/7.000,	/* 8 4106.6597*/6.000,	/* 9 4520.0*/6.000,	/* 10 4933.33*/6.000,	/* 11 5346.6597*/6.000,	/* 12 5760.0*/6.000,	/* 13 6173.33*/6.000,	/* 14 6586.6597*/6.000,	/* 15 7000.0*/6.000,	},
 };
 
-void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
@@ -116,7 +116,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
 
-	setWholeFuelMap(6 PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(6 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
@@ -190,7 +190,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_fsio_expression 0 "((rpm > fsio_setting(4) & (fsio_input < fsio_setting(5)) | rpm > fsio_setting(1) | (coolant > fsio_setting(2)  > | (vbatt < fsio_setting(3)"
 
 	// todo: convert
-	setFsio(0, GPIOC_13, "rpm 3 fsio_setting > fsio_input 4 fsio_setting < & rpm 0 fsio_setting | > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |" PASS_ENGINE_PARAMETER);
+	setFsio(0, GPIOC_13, "rpm 3 fsio_setting > fsio_input 4 fsio_setting < & rpm 0 fsio_setting | > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;

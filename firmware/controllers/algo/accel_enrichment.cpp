@@ -47,7 +47,7 @@ void WallFuel::reset() {
 	memset(wallFuel, 0, sizeof(wallFuel));
 }
 
-floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S) {
+floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(target)) {
 		return target;
 	}
@@ -70,7 +70,7 @@ floatms_t WallFuel::getWallFuel(int injectorIndex) {
 	return wallFuel[injectorIndex];
 }
 
-int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_F) {
+int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	int len = minI(cb.getSize(), cb.getCount());
 	if (len < 2)
@@ -93,15 +93,15 @@ int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_F) {
 	return resultIndex;
 }
 
-float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_F) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
+float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	return (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
 }
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
-floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
+floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 //	FuelSchedule *fs = engine->engineConfiguration2->injectionEvents;
 	float tpsTo = cb.get(index);
@@ -132,8 +132,8 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	return extraFuel;
 }
 
-float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_F);
+float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float d = (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
 
@@ -173,16 +173,16 @@ void AccelEnrichmemnt::setLength(int length) {
 	cb.setSize(length);
 }
 
-void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S) {
+void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cb.add(currentValue);
 }
 
-void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F) {
-	onNewValue(getTPS(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_F) {
-	onNewValue(getEngineLoadT(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
+void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	onNewValue(getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 AccelEnrichmemnt::AccelEnrichmemnt() {
@@ -266,7 +266,7 @@ void updateAccelParameters() {
 #endif /* ! EFI_UNIT_TEST */
 
 
-void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 

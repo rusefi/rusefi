@@ -17,7 +17,7 @@
 
 EXTERN_ENGINE;
 
-void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
@@ -32,10 +32,10 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 
-	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER);
+	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	setConstantDwell(3 PASS_ENGINE_PARAMETER); // 50% duty cycle @ 5000 rpm
+	setConstantDwell(3 PASS_ENGINE_PARAMETER_SUFFIX); // 50% duty cycle @ 5000 rpm
 
 	board_configuration_s *bc = &engineConfiguration->bc;
 	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
@@ -53,7 +53,7 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 }
 
-void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
@@ -61,7 +61,7 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
 	// set algorithm 3
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOA_5;
@@ -74,8 +74,8 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_F) {
-	setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setTestEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
@@ -86,8 +86,8 @@ void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_F) {
 
 }
 
-void setTestEngineIssue366rise(DECLARE_ENGINE_PARAMETER_F) {
-	setTestEngineIssue366both(PASS_ENGINE_PARAMETER_F);
+void setTestEngineIssue366rise(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setTestEngineIssue366both(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

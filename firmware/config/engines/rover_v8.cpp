@@ -29,7 +29,7 @@ void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
 
 EXTERN_ENGINE;
 
-void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
+void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	// set trigger_type 9
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
@@ -48,7 +48,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cranking.rpm = 350;
 
 	// set_whole_fuel_map 3
-	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -134,7 +134,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 
-    setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+    setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
     // todo: make this official Frankenstein joystick?
     boardConfiguration->joystickCenterPin = GPIOD_8;

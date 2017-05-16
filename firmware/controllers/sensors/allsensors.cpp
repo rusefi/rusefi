@@ -12,13 +12,13 @@
 
 EXTERN_ENGINE;
 
-void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
-	initThermistors(sharedLogger PASS_ENGINE_PARAMETER);
-	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER);
+void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	initThermistors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 // todo: move this somewhere else? maybe.
-bool getAcToggle(DECLARE_ENGINE_PARAMETER_F) {
+bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * todo: make this flexible
 	 *

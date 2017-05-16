@@ -41,7 +41,7 @@ void disableLCD(board_configuration_s *boardConfiguration) {
 
 // todo: should this be renamed to 'setFrankensoConfiguration'?
 // todo: should this be part of more default configurations?
-void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	setFrankenso_01_LCD(boardConfiguration);
@@ -103,7 +103,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
 	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PWM_TESTER
 	boardConfiguration->injectionPins[4] = GPIOC_8; // #5
@@ -146,8 +146,8 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 }
 
-void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;

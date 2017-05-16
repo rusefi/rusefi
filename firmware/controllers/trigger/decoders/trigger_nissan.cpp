@@ -8,7 +8,7 @@
 #include "trigger_nissan.h"
 #include "trigger_universal.h"
 
-static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd DECLARE_ENGINE_PARAMETER_S) {
+static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, with2nd);
 	s->isSynchronizationNeeded = true;
 	s->gapBothDirections = true;
@@ -29,18 +29,18 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 
 	if (with2nd) {
 		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right PASS_ENGINE_PARAMETER);
+				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
 	left = right;
 	right = base;
 	if (with2nd) {
 		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right PASS_ENGINE_PARAMETER);
+				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// was is the the one with 360 opto sensor?
 
@@ -50,43 +50,43 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 	right = base - w;
 	if (with2nd) {
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right PASS_ENGINE_PARAMETER);
+//				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
 	left = right;
 	right = base;
 	if (with2nd) {
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right PASS_ENGINE_PARAMETER);
+//				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	base += 180;
 	left = right;
 	right = base - w;
 	if (with2nd) {
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right PASS_ENGINE_PARAMETER);
+//				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
 	left = right;
 	right = base;
 	if (with2nd) {
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right PASS_ENGINE_PARAMETER);
+//				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	base += 180;
 	left = right;
 	right = base - w;
 
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 	left = right;
 	right = base;
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER);
+	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 
@@ -94,10 +94,10 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
  * Nissan Primera p11 year 1995-2002
  */
 
-void initializeNissanSR20VE_4(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	initializeNissanSR20VE_4_optional_360(s, false PASS_ENGINE_PARAMETER);
+void initializeNissanSR20VE_4(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	initializeNissanSR20VE_4_optional_360(s, false PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void initializeNissanSR20VE_4_360(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	initializeNissanSR20VE_4_optional_360(s, true PASS_ENGINE_PARAMETER);
+void initializeNissanSR20VE_4_360(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	initializeNissanSR20VE_4_optional_360(s, true PASS_ENGINE_PARAMETER_SUFFIX);
 }

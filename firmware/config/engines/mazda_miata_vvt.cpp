@@ -213,7 +213,7 @@ static const ignition_table_t mapBased18vvtTimingTable = {
 		{/* 15 250.000	*//* 0 700.0*/1.100,	/* 1 850.0*/1.400,	/* 2 943.0*/1.600,	/* 3 1112.0*/2.000,	/* 4 1310.0*/2.500,	/* 5 1545.0*/3.000,	/* 6 1821.0*/3.700,	/* 7 2146.0*/4.400,	/* 8 2530.0*/5.400,	/* 9 2982.0*/6.600,	/* 10 3515.0*/7.600,	/* 11 4144.0*/9.000,	/* 12 4884.0*/10.500,	/* 13 5757.0*/12.000,	/* 14 6787.0*/13.400,	/* 15 8000.0*/14.900,	},
 };
 
-void setMazdaMiataNbTpsTps(DECLARE_ENGINE_PARAMETER_F) {
+void setMazdaMiataNbTpsTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	memcpy(config->tpsTpsAccelFromRpmBins, tpsTspSame, sizeof(tpsTspSame));
 	memcpy(config->tpsTpsAccelFromRpmBins, tpsTspSame, sizeof(tpsTspSame));
 	// todo: there should be a better way?
@@ -224,13 +224,13 @@ void setMazdaMiataNbTpsTps(DECLARE_ENGINE_PARAMETER_F) {
 		}
 }
 
-void setMazdaMiataNbInjectorLag(DECLARE_ENGINE_PARAMETER_F) {
+void setMazdaMiataNbInjectorLag(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	memcpy(engineConfiguration->injector.battLagCorr, injectorLagCorrection, sizeof(injectorLagCorrection));
 	memcpy(engineConfiguration->injector.battLagCorrBins, injectorLagBins, sizeof(injectorLagBins));
 }
 
-void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
@@ -277,7 +277,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	//	 * set_fsio_setting 1 0.55
 	//	 */
 	boardConfiguration->fsio_setting[0] = 0.0;
-//	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER);
+//	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 
@@ -320,10 +320,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 			}
 		}
 
-	setMazdaMiataNbTpsTps(PASS_ENGINE_PARAMETER_F);
+	setMazdaMiataNbTpsTps(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
-	setMazdaMiataNbInjectorLag(PASS_ENGINE_PARAMETER_F);
+	setMazdaMiataNbInjectorLag(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
@@ -368,7 +368,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// todo: re-wire the board to use default input channel!
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
 
 	//
 	/**
@@ -383,13 +383,13 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
 	boardConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
 
-	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER);
+	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 }
 
-void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
-	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: there should be a better way?
 	for (int loadIndex = 0; loadIndex < FSIO_TABLE_8; loadIndex++) {
@@ -413,7 +413,7 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4
 
-	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	// set cranking_fuel 9

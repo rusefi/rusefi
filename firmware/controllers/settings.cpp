@@ -298,20 +298,20 @@ static void doPrintConfiguration() {
 static void setFixedModeTiming(int value) {
 	engineConfiguration->fixedModeTiming = value;
 	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setTimingMode(int value) {
 	engineConfiguration->timingMode = (timing_mode_e) value;
 	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 void setEngineType(int value) {
 //	enginePins.stopPins(); // this is mostly needed by functional tests
 
 	engineConfiguration->engineType = (engine_type_e) value;
-	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER);
+	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	if (engine->isTestMode)
 		waveChart.reset();
@@ -321,7 +321,7 @@ void setEngineType(int value) {
 	writeToFlashNow();
 //	scheduleReset();
 #endif /* EFI_PROD_CODE */
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
@@ -347,13 +347,13 @@ static void setIdlePinMode(int value) {
 static void setInjectionOffset(float value) {
 	engineConfiguration->extraInjectionOffset = value;
 	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setIgnitionOffset(float value) {
 	engineConfiguration->ignitionOffset = value;
 	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setFuelPumpPinMode(int value) {
@@ -409,20 +409,20 @@ static void printTPSInfo(void) {
 	static char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			getTPSVoltage(PASS_ENGINE_PARAMETER_F), getPinNameByAdcChannel("tps", engineConfiguration->tpsAdcChannel, pinNameBuffer));
+			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tpsAdcChannel, pinNameBuffer));
 #endif /* EFI_PROD_CODE */
-	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS12bitAdc() / TPS_TS_CONVERSION, getTPS(PASS_ENGINE_PARAMETER_F),
+	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS12bitAdc() / TPS_TS_CONVERSION, getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
 			getTpsRateOfChange());
 }
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve);
-	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F))) {
+	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
 	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F))) {
+	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 
@@ -484,31 +484,31 @@ static void setGlobalTriggerAngleOffset(float value) {
 		return;
 	}
 	engineConfiguration->globalTriggerAngleOffset = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
 static void setCrankingInjectionMode(int value) {
 	engineConfiguration->crankingInjectionMode = (injection_mode_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
 static void setInjectionMode(int value) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
 static void setIgnitionMode(int value) {
 	engineConfiguration->ignitionMode = (ignition_mode_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
@@ -526,7 +526,7 @@ static void setIndividualCoilsIgnition(void) {
 
 static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
@@ -534,7 +534,7 @@ static void setDebugMode(int value) {
 	engineConfiguration->debugMode = (debug_mode_e) value;
 }
 
-static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
+static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (total < 1 || skipped >= total) {
 		scheduleMsg(&logger, "invalid parameters %d %d", total, skipped);
 		return;
@@ -546,13 +546,13 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_S) {
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->operationMode);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
 static void setCrankingChargeAngle(float value) {
 	engineConfiguration->crankingChargeAngle = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
 
@@ -617,7 +617,7 @@ static void setWholeFuelMapCmd(float value) {
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
-	setWholeFuelMap(value PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(value PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 #if EFI_PROD_CODE
@@ -642,7 +642,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->ignitionPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
@@ -653,7 +653,7 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 	}
 	scheduleMsg(&logger, "setting %s pin to %s please save&restart", name, hwPortname(pin));
 	*targetPin = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 // set_idle_pin none
@@ -689,7 +689,7 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->injectionPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setTriggerInputPin(const char *indexStr, const char *pinName) {
@@ -704,7 +704,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->triggerInputPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
@@ -730,7 +730,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->max31855_cs[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
@@ -744,7 +744,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->triggerSimulatorPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
@@ -772,7 +772,7 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		engineConfiguration->tpsAdcChannel = channel;
 		scheduleMsg(&logger, "setting TPS to %s/%d", pinName, channel);
 	}
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 #endif
 
@@ -866,16 +866,16 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
 		engineConfiguration->useOnlyRisingEdgeForTrigger = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else if (strEqualCaseInsensitive(param, "use_only_first_channel")) {
 		engineConfiguration->trigger.useOnlyFirstChannel = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		boardConfiguration->isHip9011Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
@@ -1210,7 +1210,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
-		setConstantDwell(valueF PASS_ENGINE_PARAMETER);
+		setConstantDwell(valueF PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (strEqualCaseInsensitive(paramStr, "engineSnifferRpmThreshold")) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {

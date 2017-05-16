@@ -126,7 +126,7 @@ void mapAveragingCallback(adcsample_t adcValue) {
 			float voltage = adcToVoltsDivided(adcValue);
 			float currentPressure = getMapByVoltage(voltage);
 			scAddData(
-					getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER),
+					getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX),
 					currentPressure);
 		}
 	}
@@ -174,7 +174,7 @@ static void endAveraging(void *arg) {
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
 static void mapAveragingCallback(trigger_event_e ckpEventType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);
 	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();

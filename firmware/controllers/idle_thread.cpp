@@ -184,7 +184,7 @@ percent_t getIdlePosition(void) {
 static void autoIdle() {
 	efitimems_t now = currentTimeMillis();
 
-	percent_t newValue = idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER);
+	percent_t newValue = idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (currentIdleValve != newValue) {
 		currentIdleValve = newValue;

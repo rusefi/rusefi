@@ -98,13 +98,13 @@ typedef unsigned int time_t;
 		extern EnginePins enginePins
 
 // Use this macro to declare a function which only takes magic references
-#define DECLARE_ENGINE_PARAMETER_F void
+#define DECLARE_ENGINE_PARAMETER_SIGNATURE void
 // Use this version of the macro as the suffix if method has other parameters
-#define DECLARE_ENGINE_PARAMETER_S
+#define DECLARE_ENGINE_PARAMETER_SUFFIX
 // Pass this if only magic reference are needed
-#define PASS_ENGINE_PARAMETER_F
+#define PASS_ENGINE_PARAMETER_SIGNATURE
 // Pass this after some other parameters are passed
-#define PASS_ENGINE_PARAMETER
+#define PASS_ENGINE_PARAMETER_SUFFIX
 
 /**
  * this macro allows the compiled to figure out the complete static address, that's a performance

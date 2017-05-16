@@ -11,42 +11,42 @@
 
 EXTERN_ENGINE;
 
-void initialize2jzGE1_12(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+void initialize2jzGE1_12(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float crankD = 360 / 12 / 2; // 15
 
 	float crankAngle = 10;
-	s->addEvent2(crankAngle, T_SECONDARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER); // 120
+	s->addEvent2(crankAngle, T_SECONDARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX); // 120
 
 	for (int i = 0; i < 2; i++) {
-		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER);
+		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX);
 		crankAngle += crankD;
-		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER); // 120
+		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX); // 120
 		crankAngle += crankD;
 	}
 
 
-	s->addEvent2(75, T_PRIMARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER);
+	s->addEvent2(75, T_PRIMARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	for (int i = 0; i < 21; i++) {
-		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER);
+		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX);
 		crankAngle += crankD;
-		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER); // 120
+		s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_FALL, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX); // 120
 		crankAngle += crankD;
 	}
 
-	s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER);
+	s->addEvent2(crankAngle + crankD, T_SECONDARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX);
 	crankAngle += crankD;
 
 
-	s->addEvent2(720, T_PRIMARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER);
+	s->addEvent2(720, T_PRIMARY, TV_RISE, -1, 721 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->isSynchronizationNeeded = false;
 }
 
-void initialize2jzGE3_34(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
-	setToothedWheelConfiguration(s, 36, 2, FOUR_STROKE_CRANK_SENSOR PASS_ENGINE_PARAMETER);
+void initialize2jzGE3_34(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setToothedWheelConfiguration(s, 36, 2, FOUR_STROKE_CRANK_SENSOR PASS_ENGINE_PARAMETER_SUFFIX);
 
 //	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 //

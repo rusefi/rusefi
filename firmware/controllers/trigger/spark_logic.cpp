@@ -30,7 +30,7 @@ int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
 
-void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S);
+void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
@@ -73,7 +73,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 	EXPAND_Engine;
 #endif
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
-	prepareIgnitionSchedule(event PASS_ENGINE_PARAMETER);
+	prepareIgnitionSchedule(event PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -122,7 +122,7 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 static int globalSparkIdCoutner = 0;
 
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
-		int rpm DECLARE_ENGINE_PARAMETER_S) {
+		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
 	if (cisnan(dwellMs) || dwellMs <= 0) {
@@ -172,7 +172,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
 	 */
-	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, iEvent->advance PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, iEvent->advance PASS_ENGINE_PARAMETER_SUFFIX));
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.eventIndex, (int)iEvent->dwellPosition.angleOffset,
@@ -217,19 +217,19 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 }
 
 
-void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
+void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
 	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]) + CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
-	const int coilIndex = ID2INDEX(getCylinderId(index PASS_ENGINE_PARAMETER));
+	const int coilIndex = ID2INDEX(getCylinderId(index PASS_ENGINE_PARAMETER_SUFFIX));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
 	IgnitionOutputPin *secondOutput;
 	if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
 		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
-		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex PASS_ENGINE_PARAMETER));
+		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex PASS_ENGINE_PARAMETER_SUFFIX));
 		secondOutput = &enginePins.coils[secondCoilIndex];
 		assertPinAssigned(secondOutput);
 	} else {
@@ -243,7 +243,7 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 	event->outputs[1] = secondOutput;
 	event->advance = localAdvance;
 
-	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER_SUFFIX));
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.eventIndex);
@@ -251,7 +251,7 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_S) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 }
 
-static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(ENGINE(engineState.timingAdvance))) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
@@ -265,12 +265,12 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 #if EFI_UNIT_TEST
 		list->elements[cylinderIndex].engine = engine;
 #endif
-		prepareIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER);
+		prepareIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	list->isReady = true;
 }
 
-static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_F) {
+static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->m.beforeIgnitionSch = GET_TIMESTAMP();
 	/**
@@ -297,12 +297,12 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_F) {
 
 	IgnitionEventList *list = &engine->ignitionEvents;
 
-	initializeIgnitionActions(list PASS_ENGINE_PARAMETER);
+	initializeIgnitionActions(list PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 }
 
 void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
-		 DECLARE_ENGINE_PARAMETER_S) {
+		 DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
 		 // this might happen for instance in case of a single trigger event after a pause
@@ -310,7 +310,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	}
 
 	if (!engine->ignitionEvents.isReady) {
-		prepareIgnitionSchedule(PASS_ENGINE_PARAMETER_F);
+		prepareIgnitionSchedule(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 	/**
@@ -344,7 +344,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			IgnitionEvent *event = &engine->ignitionEvents.elements[i];
 			if (event->dwellPosition.eventIndex != trgEventIndex)
 				continue;
-			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER);
+			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 }
@@ -357,7 +357,7 @@ void initSparkLogic(Logging *sharedLogger) {
  * Number of sparks per physical coil
  * @see getNumberOfInjections
  */
-int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
+int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (mode) {
 	case IM_ONE_COIL:
 		return engineConfiguration->specs.cylindersCount;
@@ -374,8 +374,8 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 /**
  * @see getInjectorDutyCycle
  */
-percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
-	floatms_t totalPerCycle = 1/**getInjectionDuration(rpm PASS_ENGINE_PARAMETER)*/ * getNumberOfSparks(engineConfiguration->ignitionMode PASS_ENGINE_PARAMETER);
+percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	floatms_t totalPerCycle = 1/**getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)*/ * getNumberOfSparks(engineConfiguration->ignitionMode PASS_ENGINE_PARAMETER_SUFFIX);
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }

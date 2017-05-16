@@ -44,11 +44,11 @@ static void emulate(void) {
 	for (int i = 400; i <= 1300; i++) {
 		if (i % 50 != 0)
 			continue;
-		setTriggerEmulatorRPM(i PASS_ENGINE_PARAMETER);
+		setTriggerEmulatorRPM(i PASS_ENGINE_PARAMETER_SUFFIX);
 		chThdSleepMilliseconds(PERIOD);
 	}
 
-	setTriggerEmulatorRPM(0 PASS_ENGINE_PARAMETER);
+	setTriggerEmulatorRPM(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	setFullLog(0);
 	setDiag(0);
@@ -103,5 +103,5 @@ void initEngineEmulator(Logging *sharedLogger, Engine *engine) {
 #endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();
-	initTriggerEmulator(sharedLogger PASS_ENGINE_PARAMETER);
+	initTriggerEmulator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 }

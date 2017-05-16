@@ -38,7 +38,7 @@
 
 EXTERN_ENGINE;
 
-static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
+static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	boardConfiguration->isFastAdcEnabled = true;
 
@@ -57,10 +57,10 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	// Keihin 06164-P0A-A00
 	engineConfiguration->injector.flow = 248;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	buildTimingMap(35 PASS_ENGINE_PARAMETER);
+	buildTimingMap(35 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * 18K Ohm @ -20C
@@ -177,43 +177,43 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 /*
-void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F) {
+void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_TWO_WIRES;
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD_TWO_WIRES;
-	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 */
 
-void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F) {
+void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD;
 	engineConfiguration->trigger.type = TT_HONDA_4_24_1;
-	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_F) {
+void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_DIP;
 	engineConfiguration->trigger.type = TT_HONDA_1_4_24;
-	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-void setHondaAccordConfiguration1_24(DECLARE_ENGINE_PARAMETER_F) {
+void setHondaAccordConfiguration1_24(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_DIP;
 	engineConfiguration->trigger.type = TT_HONDA_1_24;
-	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_F) {
+void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineType = HONDA_ACCORD_1_24_SHIFTED;
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_1_24_SHIFTED;
-	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 }
 
-void setHondaCivic4_0_both(DECLARE_ENGINE_PARAMETER_F) {
-	setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_F);
+void setHondaCivic4_0_both(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->trigger.customTotalToothCount = 4;
@@ -222,8 +222,8 @@ void setHondaCivic4_0_both(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 }
 
-void setHondaCivic4_0_rise(DECLARE_ENGINE_PARAMETER_F) {
-	setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_F);
+void setHondaCivic4_0_rise(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.customTotalToothCount = 4;

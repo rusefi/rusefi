@@ -80,15 +80,15 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();
 	case LE_METHOD_AC_TOGGLE:
-		return getAcToggle(PASS_ENGINE_PARAMETER_F);
+		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_COOLANT:
-		return getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
+		return getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
+		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.getRpm();
 	case LE_METHOD_MAF:
-		return getMaf(PASS_ENGINE_PARAMETER_F);
+		return getMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_MAP:
 		return getMap();
 	case LE_METHOD_INTAKE_VVT:
@@ -101,7 +101,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_FAN_ON_SETTING:
 		return engineConfiguration->fanOnTemperature;
 	case LE_METHOD_VBATT:
-		return getVBatt(PASS_ENGINE_PARAMETER_F);
+		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	default:
 		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO unexpected %d", action);
 		return NAN;
@@ -170,7 +170,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 /**
  * index is between zero and LE_COMMAND_LENGTH-1
  */
-void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S) {
+void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	boardConfiguration->fsioPins[index] = pin;
 	int len = strlen(exp);
 	if (len >= LE_COMMAND_LENGTH) {
@@ -180,11 +180,11 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_E
 	boardConfiguration->fsioFrequency[index] = freq;
 }
 
-void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S) {
-	setFsioExt(index, pin, exp, NO_PWM PASS_ENGINE_PARAMETER);
+void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setFsioExt(index, pin, exp, NO_PWM PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	userPool.reset();
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
@@ -460,7 +460,7 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine, Engi
 	scheduleMsg(logger, "setting user out #%d to [%s]", index + 1, l);
 	strcpy(engine->config->le_formulas[index], l);
 	// this would apply the changes
-	applyFsioConfiguration(PASS_ENGINE_PARAMETER_F);
+	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	showFsioInfo();
 #endif
 }
@@ -480,7 +480,7 @@ static void rpnEval(char *line, Engine *engine) {
 #endif
 }
 
-void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	logger = sharedLogger;
 #endif

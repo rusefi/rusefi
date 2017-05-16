@@ -15,10 +15,10 @@
 
 EXTERN_ENGINE;
 
-void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setWholeTimingTable(20 PASS_ENGINE_PARAMETER);
+	setWholeTimingTable(20 PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->cranking.baseFuel = 12;
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
@@ -26,7 +26,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->isCylinderCleanupEnabled = true;
 
 	// set_whole_fuel_map 12
-	setWholeFuelMap(12 PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(12 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// set global_trigger_offset_angle 93
 	engineConfiguration->globalTriggerAngleOffset = 93;
@@ -44,7 +44,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set algorithm 3
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -57,9 +57,9 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 
 	float mapRange = 110;
 
-	setEgoSensor(ES_PLX PASS_ENGINE_PARAMETER);
-	setFuelTablesLoadBin(20, mapRange PASS_ENGINE_PARAMETER);
-	setTimingLoadBin(20, mapRange PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_PLX PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(20, mapRange PASS_ENGINE_PARAMETER_SUFFIX);
+	setTimingLoadBin(20, mapRange PASS_ENGINE_PARAMETER_SUFFIX);
 
 	boardConfiguration->isSdCardEnabled = false;
 	engineConfiguration->tpsMin = 740;

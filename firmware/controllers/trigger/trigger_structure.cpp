@@ -42,13 +42,13 @@ TriggerShape::TriggerShape() :
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 }
 
-void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
+void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
-	triggerShapeSynchPointIndex = findTriggerZeroEventIndex(state, this, triggerConfig PASS_ENGINE_PARAMETER);
+	triggerShapeSynchPointIndex = findTriggerZeroEventIndex(state, this, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
 
 	int length = getLength();
 	engine->engineCycleEventCount = length;
@@ -276,9 +276,9 @@ angle_t TriggerShape::getAngle(int index) const {
 	return getCycleDuration() * crankCycle + getSwitchAngle(remainder);
 }
 
-void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_S) {
+void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (angle > filterLeft && angle < filterRight)
-		addEvent2(angle, waveIndex, stateParam PASS_ENGINE_PARAMETER);
+		addEvent2(angle, waveIndex, stateParam PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 operation_mode_e TriggerShape::getOperationMode() {
@@ -289,7 +289,7 @@ operation_mode_e TriggerShape::getOperationMode() {
 extern bool printTriggerDebug;
 #endif
 
-void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_S) {
+void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
@@ -394,7 +394,7 @@ void multi_wave_s::checkSwitchTimes(int size) {
 	checkSwitchTimes2(size, switchTimes);
 }
 
-void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
+void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	operation_mode_e operationMode = FOUR_STROKE_CRANK_SENSOR;
 
@@ -410,23 +410,23 @@ void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_S) {
 	float toothWidth = 0.5;
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, 60, 2, toothWidth, 0, engineCycle,
-			NO_LEFT_FILTER, 690 PASS_ENGINE_PARAMETER);
+			NO_LEFT_FILTER, 690 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth) );
-	s->addEvent2(0 + angleDown + 12, T_PRIMARY, TV_RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
-	s->addEvent2(0 + engineCycle, T_PRIMARY, TV_FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
+	s->addEvent2(0 + angleDown + 12, T_PRIMARY, TV_RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(0 + engineCycle, T_PRIMARY, TV_FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->setTriggerSynchronizationGap2(1.6, 4);
 }
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
-		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
+		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 	s->useRiseEdge = true;
 
 	initializeSkippedToothTriggerShapeExt(s, total, skipped,
-			operationMode PASS_ENGINE_PARAMETER);
+			operationMode PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
 
