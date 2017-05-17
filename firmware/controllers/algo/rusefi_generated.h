@@ -1031,8 +1031,8 @@
 #define idleRpmPid_offset_offset_hex 778
 #define idleDT_offset 1916
 #define idleDT_offset_hex 77c
-#define idleControl_offset 1920
-#define idleControl_offset_hex 780
+#define unusedIdleControl_offset 1920
+#define unusedIdleControl_offset_hex 780
 #define communicationPin_offset 1924
 #define communicationPin_offset_hex 784
 #define runningPin_offset 1928

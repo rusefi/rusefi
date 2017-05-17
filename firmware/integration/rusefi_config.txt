@@ -693,7 +693,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;
 	int idleDT;
-	idle_control_e idleControl;
+	int unusedIdleControl;
 	brain_pin_e communicationPin;blue LED on discovery by default	
 	brain_pin_e runningPin;green LED on discovery by default
 	brain_pin_e binarySerialTxPin;	

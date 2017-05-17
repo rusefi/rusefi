@@ -328,17 +328,7 @@ case IM_MANUAL:
   }
  return NULL;
 }
-const char *getIdle_control_e(idle_control_e value){
-switch(value) {
-case Force_4b_idle_control:
-  return "Force_4b_idle_control";
-case IC_PID:
-  return "IC_PID";
-case IC_LINEAR:
-  return "IC_LINEAR";
-  }
- return NULL;
-}
+
 const char *getPin_output_mode_e(pin_output_mode_e value){
 switch(value) {
 case Force_4b_pin_output_mode:

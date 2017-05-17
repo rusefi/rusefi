@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 15 20:14:12 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 20:30:28 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -747,8 +747,8 @@ public class Fields {
 	public static final int idleRpmPid_offset_offset = 1912;
 	public static final int idleRpmPid_offset_offset_hex = 778;
 	public static final int idleDT_offset = 1916;
-	public static final int idleControl_offset = 1920;
-	public static final int idleControl_offset_hex = 780;
+	public static final int unusedIdleControl_offset = 1920;
+	public static final int unusedIdleControl_offset_hex = 780;
 	public static final int communicationPin_offset = 1924;
 	public static final int communicationPin_offset_hex = 784;
 	public static final int runningPin_offset = 1928;
@@ -1523,7 +1523,7 @@ public class Fields {
 	public static final Field IDLERPMPID_DFACTOR = Field.create("IDLERPMPID_DFACTOR", 1908, FieldType.FLOAT);
 	public static final Field IDLERPMPID_OFFSET = Field.create("IDLERPMPID_OFFSET", 1912, FieldType.FLOAT);
 	public static final Field IDLEDT = Field.create("IDLEDT", 1916, FieldType.INT);
-	public static final Field IDLECONTROL = Field.create("IDLECONTROL", 1920, FieldType.INT);
+	public static final Field UNUSEDIDLECONTROL = Field.create("UNUSEDIDLECONTROL", 1920, FieldType.INT);
 	public static final Field COMMUNICATIONPIN = Field.create("COMMUNICATIONPIN", 1924, FieldType.INT, brain_pin_e);
 	public static final Field RUNNINGPIN = Field.create("RUNNINGPIN", 1928, FieldType.INT, brain_pin_e);
 	public static final Field BINARYSERIALTXPIN = Field.create("BINARYSERIALTXPIN", 1932, FieldType.INT, brain_pin_e);
