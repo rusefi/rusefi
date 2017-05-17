@@ -466,7 +466,7 @@ static void setRpmHardLimit(int value) {
 }
 
 static void setCrankingIACExtra(float percent) {
-	engineConfiguration->crankingIdleAdjustment = percent;
+	engineConfiguration->crankingIACposition = percent;
 	scheduleMsg(&logger, "cranking_iac %f", percent);
 
 }
@@ -994,6 +994,7 @@ plain_get_integer_s getI_plain[] = {
 //		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
 //		{"operation_mode", setOM},
 		{"debug_mode", (int*)&engineConfiguration->debugMode},
+		{"cranking_iac", &engineConfiguration->crankingIACposition},
 		{"trigger_type", (int*)&engineConfiguration->trigger.type},
 //		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 //		{"tps_accel_len", setTpsAccelLen},
@@ -1016,7 +1017,6 @@ plain_get_float_s getF_plain[] = {
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
 		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
-		{"cranking_iac", &engineConfiguration->crankingIdleAdjustment},
 		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
 		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
 };

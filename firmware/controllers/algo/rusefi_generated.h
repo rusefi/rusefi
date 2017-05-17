@@ -841,8 +841,8 @@
 #define vvtDisplayInverted_offset_hex 5d0
 #define fuelClosedLoopCorrectionEnabled_offset 1488
 #define fuelClosedLoopCorrectionEnabled_offset_hex 5d0
-#define unusedBit__5_offset 1488
-#define unusedBit__5_offset_hex 5d0
+#define isVerboseIAC_offset 1488
+#define isVerboseIAC_offset_hex 5d0
 #define unusedBit__6_offset 1488
 #define unusedBit__6_offset_hex 5d0
 #define useConstantDwellDuringCranking_offset 1488
@@ -1163,8 +1163,8 @@
 #define auxPidDT3_offset_hex 974
 #define auxPidDT4_offset 2424
 #define auxPidDT4_offset_hex 978
-#define crankingIdleAdjustment_offset 2428
-#define crankingIdleAdjustment_offset_hex 97c
+#define crankingIACposition_offset 2428
+#define crankingIACposition_offset_hex 97c
 #define tChargeMinRpmMinTps_offset 2432
 #define tChargeMinRpmMinTps_offset_hex 980
 #define tChargeMinRpmMaxTps_offset 2436

@@ -430,5 +430,5 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNA
 
 	// set idle_position 30
 	boardConfiguration->manIdlePosition = 30;
-	engineConfiguration->crankingIdleAdjustment = 30;
+	engineConfiguration->crankingIACposition = 65;
 }

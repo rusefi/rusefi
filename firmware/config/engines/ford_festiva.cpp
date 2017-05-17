@@ -127,6 +127,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// set_idle_position 10
 	boardConfiguration->manIdlePosition = 10;
+	engineConfiguration->crankingIACposition = 65;
 
 	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
 

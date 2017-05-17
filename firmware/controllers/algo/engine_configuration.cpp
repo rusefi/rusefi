@@ -740,6 +740,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->idle.solenoidFrequency = 200;
 	// set idle_position 50
 	boardConfiguration->manIdlePosition = 50;
+	engineConfiguration->crankingIACposition = 50;
 	engineConfiguration->targetIdleRpm = 1200;
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
