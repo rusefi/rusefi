@@ -20,7 +20,7 @@ void setIdleDT(int value);
 void setIdlePFactor(float value);
 void setIdleIFactor(float value);
 void setIdleDFactor(float value);
-void setIdleControlEnabled(int value);
+void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);
 void setIdleDT(int value);
 

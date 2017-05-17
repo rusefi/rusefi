@@ -60,6 +60,7 @@ static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", idleModeStr,
 			getIdlePosition(), boolToString(boardConfiguration->useStepperIdle));
+
 	if (boardConfiguration->useStepperIdle) {
 		scheduleMsg(logger, "directionPin=%s reactionTime=%f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
 				engineConfiguration->idleStepperReactionTime);
@@ -71,8 +72,10 @@ static void showIdleInfo(void) {
 		scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idle.solenoidFrequency,
 				hwPortname(boardConfiguration->idle.solenoidPin));
 	}
-	scheduleMsg(logger, "mode=%s", getIdle_control_e(engineConfiguration->idleControl));
-	if (engineConfiguration->idleControl == IC_PID) {
+
+
+
+	if (engineConfiguration->idleMode == IM_AUTO) {
 		scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idleRpmPid.pFactor,
 				engineConfiguration->idleRpmPid.iFactor,
 				engineConfiguration->idleRpmPid.dFactor,
@@ -80,7 +83,7 @@ static void showIdleInfo(void) {
 	}
 }
 
-void setIdleControlEnabled(int value) {
+void setIdleMode(idle_mode_e value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
@@ -330,9 +333,6 @@ void startIdleThread(Logging*sharedLogger) {
 	}
 
 	addConsoleAction("idleinfo", showIdleInfo);
-
-
-	addConsoleActionI("set_idle_enabled", (VoidInt) setIdleControlEnabled);
 
 	addConsoleActionII("blipidle", blipIdle);
 

@@ -860,6 +860,10 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
 		boardConfiguration->enabledStep1Limiter = isEnabled;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	} else if (strEqualCaseInsensitive(param, "auto_idle")) {
+		setIdleMode(isEnabled ? IM_AUTO : IM_MANUAL);
+#endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(param, "serial")) {
 		boardConfiguration->useSerialPort = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
@@ -1051,7 +1055,7 @@ static void getValue(const char *paramStr) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
 		showBor();
-#endif
+#endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
 		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
