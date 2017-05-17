@@ -25,7 +25,6 @@
  */
 
 #include "main.h"
-#include "idle_controller.h"
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
 #include "idle_thread.h"
@@ -52,12 +51,6 @@ static StepperMotor iacMotor;
  * that's the position with CLT and IAT corrections
  */
 static percent_t actualIdlePosition = -100.0f;
-
-/**
- * Idle level calculation algorithm lives in idle_controller.cpp
- * todo: replace this with a PID regulator?
- */
-static IdleValveState idlePositionController;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
@@ -184,7 +177,7 @@ percent_t getIdlePosition(void) {
 static void autoIdle() {
 	efitimems_t now = currentTimeMillis();
 
-	percent_t newValue = idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER_SUFFIX);
+	percent_t newValue = 0;//idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (currentIdleValve != newValue) {
 		currentIdleValve = newValue;
@@ -237,7 +230,7 @@ static msg_t ivThread(int param) {
 }
 
 void setTargetIdleRpm(int value) {
-	idlePositionController.setTargetRpm(value);
+	engineConfiguration->targetIdleRpm = value;
 	scheduleMsg(logger, "target idle RPM %d", value);
 }
 
@@ -315,8 +308,7 @@ void startIdleThread(Logging*sharedLogger) {
 	// todo: re-initialize idle pins on the fly
 	initIdleHardware();
 
-	idlePositionController.init();
-	scheduleMsg(logger, "initial idle %d", idlePositionController.value);
+	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 

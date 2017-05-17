@@ -10,7 +10,6 @@
 #include "interpolation.h"
 #include "engine_configuration.h"
 #include "main.h"
-#include "idle_controller.h"
 
 #if 1
 

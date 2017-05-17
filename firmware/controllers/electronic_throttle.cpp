@@ -30,7 +30,6 @@
 
 #include "main.h"
 #include "electronic_throttle.h"
-#include "idle_controller.h"
 #include "tps.h"
 #include "io_pins.h"
 #include "engine_configuration.h"

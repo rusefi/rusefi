@@ -6,14 +6,11 @@
  */
 
 #include <stdio.h>
-#include "idle_controller.h"
+
 #include "efitime.h"
 #include "engine_test_helper.h"
 #include "pid.h"
 
-void idleDebug(const char *msg, percent_t value) {
-	printf("%s\r\n", msg);
-}
 
 void testPidController(void) {
 	print("******************************************* testPidController\r\n");
