@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 15 04:47:12 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 20:30:28 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1485,7 +1485,7 @@ typedef struct {
 	/**
 	 * offset 1920
 	 */
-	idle_control_e idleControl;
+	int unusedIdleControl;
 	/**
 	 * blue LED on discovery by default
 	 * offset 1924
@@ -2104,4 +2104,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 15 04:47:12 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 20:30:28 EDT 2017
