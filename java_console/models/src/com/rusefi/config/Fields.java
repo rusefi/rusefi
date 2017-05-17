@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 20:30:28 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 21:58:40 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -622,7 +622,7 @@ public class Fields {
 	public static final int frequencyReportingMapInputPin_offset = 1484;
 	public static final int vvtDisplayInverted_offset = 1488;
 	public static final int fuelClosedLoopCorrectionEnabled_offset = 1488;
-	public static final int unusedBit__5_offset = 1488;
+	public static final int isVerboseIAC_offset = 1488;
 	public static final int unusedBit__6_offset = 1488;
 	public static final int useConstantDwellDuringCranking_offset = 1488;
 	public static final int isEngineChartEnabled_offset = 1488;
@@ -843,7 +843,7 @@ public class Fields {
 	public static final int auxPidDT3_offset_hex = 974;
 	public static final int auxPidDT4_offset = 2424;
 	public static final int auxPidDT4_offset_hex = 978;
-	public static final int crankingIdleAdjustment_offset = 2428;
+	public static final int crankingIACposition_offset = 2428;
 	public static final int tChargeMinRpmMinTps_offset = 2432;
 	public static final int tChargeMinRpmMinTps_offset_hex = 980;
 	public static final int tChargeMinRpmMaxTps_offset = 2436;
@@ -1435,7 +1435,7 @@ public class Fields {
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 1484, FieldType.INT, brain_input_pin_e);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1488, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1488, FieldType.BIT, 1);
-	public static final Field UNUSEDBIT__5 = Field.create("UNUSEDBIT__5", 1488, FieldType.BIT, 2);
+	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1488, FieldType.BIT, 2);
 	public static final Field UNUSEDBIT__6 = Field.create("UNUSEDBIT__6", 1488, FieldType.BIT, 3);
 	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1488, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1488, FieldType.BIT, 5);
@@ -1579,7 +1579,7 @@ public class Fields {
 	public static final Field AUXPIDDT2 = Field.create("AUXPIDDT2", 2416, FieldType.INT);
 	public static final Field AUXPIDDT3 = Field.create("AUXPIDDT3", 2420, FieldType.INT);
 	public static final Field AUXPIDDT4 = Field.create("AUXPIDDT4", 2424, FieldType.INT);
-	public static final Field CRANKINGIDLEADJUSTMENT = Field.create("CRANKINGIDLEADJUSTMENT", 2428, FieldType.FLOAT);
+	public static final Field CRANKINGIACPOSITION = Field.create("CRANKINGIACPOSITION", 2428, FieldType.INT);
 	public static final Field TCHARGEMINRPMMINTPS = Field.create("TCHARGEMINRPMMINTPS", 2432, FieldType.FLOAT);
 	public static final Field TCHARGEMINRPMMAXTPS = Field.create("TCHARGEMINRPMMAXTPS", 2436, FieldType.FLOAT);
 	public static final Field TCHARGEMAXRPMMINTPS = Field.create("TCHARGEMAXRPMMINTPS", 2440, FieldType.FLOAT);

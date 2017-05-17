@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 20:30:28 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 21:58:40 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1189,7 +1189,7 @@ typedef struct {
 	bool fuelClosedLoopCorrectionEnabled : 1;
 	/**
 	offset 1488 bit 2 */
-	bool unusedBit__5 : 1;
+	bool isVerboseIAC : 1;
 	/**
 	offset 1488 bit 3 */
 	bool unusedBit__6 : 1;
@@ -1694,10 +1694,10 @@ typedef struct {
 	 */
 	pid_dt auxPidDT[AUX_PID_COUNT];
 	/**
-	 * Extra idle while cranking
+	 * IAC cranking position
 	 * offset 2428
 	 */
-	float crankingIdleAdjustment;
+	int crankingIACposition;
 	/**
 	 * offset 2432
 	 */
@@ -2104,4 +2104,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 20:30:28 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 16 21:58:40 EDT 2017

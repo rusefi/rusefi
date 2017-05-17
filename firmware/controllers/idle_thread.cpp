@@ -42,6 +42,9 @@ extern TunerStudioOutputChannels tsOutputChannels;
 EXTERN_ENGINE
 ;
 
+
+static Pid idlePid(&engineConfiguration->idleRpmPid, 1, 99);
+
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid;
 
@@ -88,44 +91,39 @@ void setIdleMode(idle_mode_e value) {
 	showIdleInfo();
 }
 
-static void setIdleValvePwm(percent_t value) {
-	/**
-	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
-	 * todo: unify?
-	 */
-	idleSolenoid.setSimplePwmDutyCycle(value / 100);
+static void applyIACposition(percent_t position) {
+	if (boardConfiguration->useStepperIdle) {
+		iacMotor.setTargetPosition(position / 100 * engineConfiguration->idleStepperTotalSteps);
+	} else {
+		/**
+		 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
+		 * todo: unify?
+		 */
+		idleSolenoid.setSimplePwmDutyCycle(position / 100.0);
+	}
 }
 
-static void manualIdleController() {
+/**
+ * Adjusts cra
+ *
+ * @param target percentage of manual-controlled IAC or RPM for auto idle
+ */
+static float adjustIdleTarget(float target) {
 
-	int positionPercent = boardConfiguration->manIdlePosition;
 
-	if (isCranking()) {
-		positionPercent += engineConfiguration->crankingIdleAdjustment;
-	}
 
-	percent_t cltCorrectedPosition = interpolate2d(engine->sensors.clt, config->cltIdleCorrBins, config->cltIdleCorr,
-	CLT_CURVE_SIZE) / PERCENT_MULT * positionPercent;
+	return target;
+}
+
+static float manualIdleController(float cltCorrection) {
+
+	percent_t correctedPosition = cltCorrection * boardConfiguration->manIdlePosition;
 
 	// let's put the value into the right range
-	cltCorrectedPosition = maxF(cltCorrectedPosition, 0.01);
-	cltCorrectedPosition = minF(cltCorrectedPosition, 99.9);
+	correctedPosition = maxF(correctedPosition, 0.01);
+	correctedPosition = minF(correctedPosition, 99.9);
 
-	if (engineConfiguration->debugMode == DBG_IDLE) {
-		tsOutputChannels.debugFloatField1 = actualIdlePosition;
-	}
-
-	if (absF(cltCorrectedPosition - actualIdlePosition) < 1) {
-		return; // value is pretty close, let's leave the poor valve alone
-	}
-	actualIdlePosition = cltCorrectedPosition;
-
-
-	if (boardConfiguration->useStepperIdle) {
-		iacMotor.setTargetPosition(cltCorrectedPosition / 100 * engineConfiguration->idleStepperTotalSteps);
-	} else {
-		setIdleValvePwm(cltCorrectedPosition);
-	}
+	return correctedPosition;
 }
 
 void setIdleValvePosition(int positionPercent) {
@@ -135,10 +133,9 @@ void setIdleValvePosition(int positionPercent) {
 	showIdleInfo();
 	// todo: this is not great that we have to write into configuration here
 	boardConfiguration->manIdlePosition = positionPercent;
-	manualIdleController();
 }
 
-static int idlePositionBeforeBlip;
+static int blipIdlePosition;
 static efitimeus_t timeToStopBlip = 0;
 static efitimeus_t timeToStopIdleTest = 0;
 
@@ -146,12 +143,10 @@ static efitimeus_t timeToStopIdleTest = 0;
  * I use this questionable feature to tune acceleration enrichment
  */
 static void blipIdle(int idlePosition, int durationMs) {
-	// todo: add 'blip' feature for automatic target control
 	if (timeToStopBlip != 0) {
 		return; // already in idle blip
 	}
-	idlePositionBeforeBlip = boardConfiguration->manIdlePosition;
-	setIdleValvePosition(idlePosition);
+	blipIdlePosition = idlePosition;
 	timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
 }
 
@@ -163,7 +158,6 @@ static void finishIdleTestIfNeeded() {
 static void undoIdleBlipIfNeeded() {
 	if (timeToStopBlip != 0 && getTimeNowUs() > timeToStopBlip) {
 		timeToStopBlip = 0;
-		setIdleValvePosition(idlePositionBeforeBlip);
 	}
 }
 
@@ -177,18 +171,13 @@ percent_t getIdlePosition(void) {
 	}
 }
 
-static void autoIdle() {
-	efitimems_t now = currentTimeMillis();
+static float autoIdle(float cltCorrection) {
 
-	percent_t newValue = 0;//idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER_SUFFIX);
+	int targetRpm = 1400 * cltCorrection;
 
-	if (currentIdleValve != newValue) {
-		currentIdleValve = newValue;
+	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine));
 
-		// todo: looks like in auto mode stepper value is not set, only solenoid?
-
-		setIdleValvePwm(newValue);
-	}
+	return newValue;
 }
 
 static msg_t ivThread(int param) {
@@ -219,13 +208,34 @@ static msg_t ivThread(int param) {
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		if (engineConfiguration->idleMode == IM_MANUAL) {
+		float cltCorrection = interpolate2d(engine->sensors.clt, config->cltIdleCorrBins, config->cltIdleCorr,
+		CLT_CURVE_SIZE) / PERCENT_MULT;
+
+		float iacPosition;
+
+		if (timeToStopBlip != 0) {
+			iacPosition = blipIdlePosition;
+		} else if (isCranking()) {
+			// during cranking it's always manual mode, PID would make no sence during cranking
+			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
+		} else if (engineConfiguration->idleMode == IM_MANUAL) {
 			// let's re-apply CLT correction
-			manualIdleController();
+			iacPosition = manualIdleController(cltCorrection);
 		} else {
-			autoIdle();
+			iacPosition = autoIdle(cltCorrection);
 		}
 
+		if (absF(iacPosition - actualIdlePosition) < 1) {
+			continue; // value is pretty close, let's leave the poor valve alone
+		}
+
+		if (engineConfiguration->debugMode == DBG_IDLE) {
+			tsOutputChannels.debugFloatField1 = iacPosition;
+		}
+
+		actualIdlePosition = iacPosition;
+
+		applyIACposition(actualIdlePosition);
 	}
 #if defined __GNUC__
 	return -1;
