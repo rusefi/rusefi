@@ -74,7 +74,7 @@ typedef struct {
 	unsigned int knockNowIndicator : 1; // bit 14
 	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
 	float vehicleSpeedKph; // 76
-	unsigned int isTpsError : 1; // bit 0
+	unsigned int isTpsError : 1; // bit 0, 80
 	unsigned int isCltError : 1; // bit 1
 	unsigned int isMapError : 1; // bit 2
 	unsigned int isIatError : 1; // bit 3
@@ -82,10 +82,10 @@ typedef struct {
 	unsigned int isTriggerError : 1; // bit 5
 	unsigned int hasFatalError : 1; // bit 6
 	unsigned int isWarnNow : 1; // bit 7
-	int tsConfigVersion;
-	egt_values_s egtValues;
-	float rpmAcceleration;
-	float massAirFlow;
+	int tsConfigVersion; // 84
+	egt_values_s egtValues; // 88
+	float unusedOffset104; // 104
+	float massAirFlow; // 108
 	/**
 	 * Current volumetric efficiency
 	 */

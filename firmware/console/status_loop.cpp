@@ -702,7 +702,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
 	tsOutputChannels->engineLoad = engineLoad;
-	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
+
+	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
+		tsOutputChannels->debugFloatField4 = engine->rpmCalculator.getRpmAcceleration();
+	}
+
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
