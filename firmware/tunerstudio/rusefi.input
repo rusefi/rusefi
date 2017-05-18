@@ -1208,7 +1208,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		
 	dialog = idleSettings, "", yAxis
 		field = "Manual mode",							idleMode
-		field = "Cranking Extra",						crankingIdleAdjustment
+		field = "Cranking Idle Air",					crankingIACposition
 		field = "Auto target",							targetIdleRpm, { idleMode == 0}
 		field = "idle P",								idleRpmPid_pFactor
 		field = "idle I",								idleRpmPid_iFactor
@@ -1496,7 +1496,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "Cranking RPM limit",                	cranking_rpm
 		panel = crankingFuel
 		panel = crankingIgnition
-		field = "Cranking IAC Extra",					crankingIdleAdjustment
+		field = "Cranking Idle Air",					crankingIACposition
 		panel = postCrankingEnrichment
 		field = ""
 		field = ""
