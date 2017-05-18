@@ -64,6 +64,12 @@ typedef unsigned int time_t;
 #endif
 
 
+/**
+ * rusEfi is placing some of data structures into CCM memory simply
+ * in order to use that memory - no magic about which RAM is faster etc.
+ *
+ * Please note that DMA does not work with CCM memory
+ */
 #if EFI_USE_CCM && defined __GNUC__
 #define CCM_OPTIONAL __attribute__((section(".ram4")))
 #elif defined __GNUC__
