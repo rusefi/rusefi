@@ -82,11 +82,6 @@ public:
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	// we need two instances of TriggerState
-	// todo: re-imiplement as a sub-class to reduce memory consumption
-//	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
-//	float instantRpmValue[PWM_PHASE_MAX_COUNT];
-
 	/**
 	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle
 	 */
@@ -97,6 +92,8 @@ public:
 
 	void reset();
 	void resetRunningCounters();
+
+	virtual void runtimeStatistics();
 
 	uint32_t runningRevolutionCounter;
 	/**
@@ -113,6 +110,13 @@ private:
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
 	efitime_t prevCycleDuration;
+};
+
+class TriggerStateWithRunningStatistics : public TriggerState {
+public:
+	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	float instantRpmValue[PWM_PHASE_MAX_COUNT];
+	virtual void runtimeStatistics();
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

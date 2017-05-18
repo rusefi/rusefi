@@ -205,6 +205,14 @@ void TriggerState::resetRunningCounters() {
 	runningOrderingErrorCounter = 0;
 }
 
+void TriggerState::runtimeStatistics() {
+	// empty base implementation
+}
+
+void TriggerStateWithRunningStatistics::runtimeStatistics() {
+	// empty base implementation
+}
+
 efitime_t TriggerState::getTotalEventCounter() {
 	return totalEventCountBase + currentCycle.current_index;
 }
