@@ -20,7 +20,11 @@ class Engine;
 
 #define HW_EVENT_TYPES 6
 
-// todo: maybe merge TriggerCentral and TriggerState classes into one class?
+/**
+ * Maybe merge TriggerCentral and TriggerState classes into one class?
+ * Probably not: we have an instance of TriggerState which is used for trigger initialization,
+ * also composition probably better than inheritance here
+ */
 class TriggerCentral {
 public:
 	TriggerCentral();
@@ -28,7 +32,7 @@ public:
 	void handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index);
 	void resetCounters();
-	TriggerState triggerState;
+	TriggerStateWithRunningStatistics triggerState;
 	efitick_t nowNt;
 	angle_t vvtPosition;
 	/**
