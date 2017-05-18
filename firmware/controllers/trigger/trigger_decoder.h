@@ -93,7 +93,7 @@ public:
 	void reset();
 	void resetRunningCounters();
 
-	virtual void runtimeStatistics();
+	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	uint32_t runningRevolutionCounter;
 	/**
@@ -112,11 +112,15 @@ private:
 	efitime_t prevCycleDuration;
 };
 
+
+/**
+ * the reason for sub-class is simply to save RAM but not having statisics in the trigger initialization instance
+ */
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
 	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
 	float instantRpmValue[PWM_PHASE_MAX_COUNT];
-	virtual void runtimeStatistics();
+	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

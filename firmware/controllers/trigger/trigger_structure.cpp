@@ -24,6 +24,7 @@
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "trigger_universal.h"
+#include "sensor_chart.h"
 
 EXTERN_ENGINE;
 
@@ -205,12 +206,37 @@ void TriggerState::resetRunningCounters() {
 	runningOrderingErrorCounter = 0;
 }
 
-void TriggerState::runtimeStatistics() {
+void TriggerState::runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// empty base implementation
 }
 
-void TriggerStateWithRunningStatistics::runtimeStatistics() {
-	// empty base implementation
+void TriggerStateWithRunningStatistics::runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
+		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
+		// todo: make this '90' depend on cylinder count?
+		angle_t prevAngle = currentAngle - 90;
+		fixAngle(prevAngle, "prevAngle");
+		// todo: prevIndex should be pre-calculated
+		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
+		// now let's get precise angle for that event
+		prevAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
+		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
+		angle_t angleDiff = currentAngle - prevAngle;
+		// todo: angle diff should be pre-calculated
+		fixAngle(angleDiff, "angleDiff");
+
+		float r = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
+
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+		if (boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
+			scAddData(currentAngle, r);
+		} else {
+			scAddData(currentAngle, r / instantRpmValue[prevIndex]);
+		}
+#endif
+		instantRpmValue[currentCycle.current_index] = r;
+		timeOfLastEvent[currentCycle.current_index] = nowNt;
+	}
 }
 
 efitime_t TriggerState::getTotalEventCounter() {
