@@ -23,7 +23,7 @@ typedef char log_buf_t[DL_OUTPUT_BUFFER];
  */
 static char *accumulationBuffer;
 
-static log_buf_t pendingBuffers0 CCM_OPTIONAL;
+static log_buf_t pendingBuffers0;
 static log_buf_t pendingBuffers1;
 
 /**
