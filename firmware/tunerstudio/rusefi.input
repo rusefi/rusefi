@@ -1400,9 +1400,10 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 
 ;			Board->Connection
 	dialog = tsPort, "TunerStudio Port"
-		field = "tunerStudioSerialSpeed", tunerStudioSerialSpeed
-		field = "Use PC10/PC11 serial?", useSerialPort
-		field = "startConsoleInBinaryMode", startConsoleInBinaryMode
+		field = "tunerStudioSerialSpeed",				tunerStudioSerialSpeed
+		field = "Use PC10/PC11 serial?",				useSerialPort
+		field = "startConsoleInBinaryMode", 			startConsoleInBinaryMode
+		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
 		
 	dialog = canBus, "CAN Bus"
 		field = "Can Read Enabled",						canReadEnabled
