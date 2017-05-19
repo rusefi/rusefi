@@ -24,7 +24,9 @@
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "trigger_universal.h"
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
+#endif /* EFI_SENSOR_CHART */
 
 EXTERN_ENGINE;
 
@@ -233,7 +235,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(trigger_event_e const 
 		} else {
 			scAddData(currentAngle, r / instantRpmValue[prevIndex]);
 		}
-#endif
+#endif /* EFI_SENSOR_CHART */
 		instantRpmValue[currentCycle.current_index] = r;
 		timeOfLastEvent[currentCycle.current_index] = nowNt;
 	}
