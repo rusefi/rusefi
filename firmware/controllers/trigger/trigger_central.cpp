@@ -398,7 +398,9 @@ extern int vvtEventRiseCounter;
 extern int vvtEventFallCounter;
 
 void resetMaxValues() {
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	maxEventQueueTime = triggerMaxDuration = 0;
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
 void triggerInfo(void) {
