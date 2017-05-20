@@ -100,6 +100,7 @@ void writeToFlashNow(void) {
 	}
 	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
 	maxLockTime = 0;
+	resetMaxValues();
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {

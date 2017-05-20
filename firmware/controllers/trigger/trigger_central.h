@@ -61,5 +61,6 @@ void printAllTriggers();
 
 void addTriggerEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 int isSignalDecoderError(void);
+void resetMaxValues();
 
 #endif /* TRIGGER_CENTRAL_H_ */

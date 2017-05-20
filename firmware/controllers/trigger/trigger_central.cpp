@@ -397,6 +397,10 @@ extern uint32_t *cyccnt;
 extern int vvtEventRiseCounter;
 extern int vvtEventFallCounter;
 
+void resetMaxValues() {
+	maxEventQueueTime = triggerMaxDuration = 0;
+}
+
 void triggerInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
@@ -437,7 +441,7 @@ void triggerInfo(void) {
 		scheduleMsg(logger, "gap from %f to %f", ts->syncRatioFrom, ts->syncRatioTo);
 	}
 
-#endif
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
@@ -495,7 +499,7 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "hwSetTimerTime %d", hwSetTimerTime);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
-	triggerMaxDuration = 0;
+	resetMaxValues();
 
 #endif /* EFI_PROD_CODE */
 }
