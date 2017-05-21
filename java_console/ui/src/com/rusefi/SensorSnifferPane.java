@@ -46,7 +46,7 @@ public class SensorSnifferPane {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        unpackValues(values, message);
+                        unpackValues(message, values);
                         if (!paused) {
                             processValues();
                             UiUtils.trueRepaint(canvas);
@@ -176,15 +176,15 @@ public class SensorSnifferPane {
         }
     }
 
-    private void unpackValues(TreeMap<Double, Double> values, String chart) {
-        values.clear();
+    private static void unpackValues(String chart, TreeMap<Double, Double> destination) {
+        destination.clear();
 
         String[] tokens = chart.split("\\|");
         for (int i = 0; i < tokens.length - 1; ) {
             String key = tokens[i++];
             String value = tokens[i++];
 
-            values.put(Double.parseDouble(key), Double.parseDouble(value));
+            destination.put(Double.parseDouble(key), Double.parseDouble(value));
         }
     }
 }
