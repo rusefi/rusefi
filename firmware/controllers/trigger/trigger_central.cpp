@@ -390,6 +390,7 @@ extern uint32_t maxLockTime;
 extern uint32_t maxEventQueueTime;
 extern uint32_t hipLastExecutionCount;
 extern uint32_t hwSetTimerTime;
+extern uint32_t maxPrecisionTCallbackDuration;
 
 extern int maxHowFarOff;
 extern uint32_t *cyccnt;
@@ -400,6 +401,7 @@ extern int vvtEventFallCounter;
 void resetMaxValues() {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	maxEventQueueTime = triggerMaxDuration = 0;
+	maxPrecisionTCallbackDuration = 0;
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
@@ -501,6 +503,7 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "hwSetTimerTime %d", hwSetTimerTime);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
+	scheduleMsg(logger, "maxPrecisionTCallbackDuration=%d", maxPrecisionTCallbackDuration);
 	resetMaxValues();
 
 #endif /* EFI_PROD_CODE */
