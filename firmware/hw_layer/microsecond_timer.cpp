@@ -21,8 +21,13 @@
 #if (EFI_PROD_CODE && HAL_USE_GPT) || defined(__DOXYGEN__)
 #include "efilib2.h"
 
-uint32_t maxPrecisionTCallbackDuration = 0;
+/**
+ * Maximum duration of complete timer callback, all pending events together
+ * See also 'maxEventCallbackDuration' for maximum duration of one event
+ */
+uint32_t maxPrecisionCallbackDuration = 0;
 
+// must be one of 32 bit times
 #define GPTDEVICE GPTD5
 
 static volatile efitick_t lastSetTimerTimeNt;
@@ -99,8 +104,8 @@ static void callback(GPTDriver *gptp) {
 	uint32_t before = GET_TIMESTAMP();
 	globalTimerCallback(NULL);
 	uint32_t precisionCallbackDuration = GET_TIMESTAMP() - before;
-	if (precisionCallbackDuration > maxPrecisionTCallbackDuration) {
-		maxPrecisionTCallbackDuration = precisionCallbackDuration;
+	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
+		maxPrecisionCallbackDuration = precisionCallbackDuration;
 	}
 }
 

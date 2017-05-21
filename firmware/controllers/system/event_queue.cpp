@@ -106,8 +106,11 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) {
 }
 
 static scheduling_s * longScheduling;
-uint32_t maxEventQueueTime = 0;
-uint32_t lastEventQueueTime;
+/**
+ * See also maxPrecisionCallbackDuration for total hw callback time
+ */
+uint32_t maxEventCallbackDuration = 0;
+static uint32_t lastEventCallbackDuration;
 
 /**
  * Invoke all pending actions prior to specified timestamp
@@ -169,12 +172,12 @@ int EventQueue::executeAll(efitime_t now) {
 #endif
 		current->callback(current->param);
 		// even with overflow it's safe to subtract here
-		lastEventQueueTime = GET_TIMESTAMP() - before;
-		if (lastEventQueueTime > maxEventQueueTime)
-			maxEventQueueTime = lastEventQueueTime;
-		if (lastEventQueueTime > 2000) {
+		lastEventCallbackDuration = GET_TIMESTAMP() - before;
+		if (lastEventCallbackDuration > maxEventCallbackDuration)
+			maxEventCallbackDuration = lastEventCallbackDuration;
+		if (lastEventCallbackDuration > 2000) {
 			longScheduling = current;
-			lastEventQueueTime++;
+// what is this line about?			lastEventCallbackDuration++;
 		}
 	}
 	return executionCounter;

@@ -386,11 +386,15 @@ void printAllTriggers() {
 extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
-extern uint32_t maxLockTime;
-extern uint32_t maxEventQueueTime;
 extern uint32_t hipLastExecutionCount;
-extern uint32_t hwSetTimerTime;
-extern uint32_t maxPrecisionTCallbackDuration;
+extern uint32_t hwSetTimerDuration;
+
+extern uint32_t maxLockedDuration;
+extern uint32_t maxEventCallbackDuration;
+
+#if (EFI_PROD_CODE) || defined(__DOXYGEN__)
+extern uint32_t maxPrecisionCallbackDuration;
+#endif /* EFI_PROD_CODE  */
 
 extern int maxHowFarOff;
 extern uint32_t *cyccnt;
@@ -400,9 +404,13 @@ extern int vvtEventFallCounter;
 
 void resetMaxValues() {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	maxEventQueueTime = triggerMaxDuration = 0;
-	maxPrecisionTCallbackDuration = 0;
+	maxEventCallbackDuration = triggerMaxDuration = 0;
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
+	maxLockedDuration = 0;
+
+#if (EFI_PROD_CODE) || defined(__DOXYGEN__)
+	maxPrecisionCallbackDuration = 0;
+#endif /* EFI_PROD_CODE  */
 }
 
 void triggerInfo(void) {
@@ -495,15 +503,14 @@ void triggerInfo(void) {
 			engine->m.rpmCbTime,
 			engine->m.mainTriggerCallbackTime);
 
-	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
-	maxLockTime = 0;
-	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
+	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
+	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);
 
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
-	scheduleMsg(logger, "hwSetTimerTime %d", hwSetTimerTime);
+	scheduleMsg(logger, "hwSetTimerDuration=%d", hwSetTimerDuration);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
-	scheduleMsg(logger, "maxPrecisionTCallbackDuration=%d", maxPrecisionTCallbackDuration);
+	scheduleMsg(logger, "maxPrecisionCallbackDuration=%d", maxPrecisionCallbackDuration);
 	resetMaxValues();
 
 #endif /* EFI_PROD_CODE */
