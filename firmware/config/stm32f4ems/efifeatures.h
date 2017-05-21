@@ -18,6 +18,8 @@
 
 #define EFI_USE_CCM TRUE
 
+#define EFI_CLOCK_LOCKS FALSE
+
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
