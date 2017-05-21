@@ -114,7 +114,9 @@ static void printStatus(void) {
 static void setChartActive(int value) {
 	engineConfiguration->isEngineChartEnabled = value;
 	printStatus();
-	maxLockedDuration = 0;
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+	maxLockedDuration = 0; // todo: why do we reset this here? why only this and not all metrics?
+#endif /* EFI_CLOCK_LOCKS */
 }
 
 void setChartSize(int newSize) {
