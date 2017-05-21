@@ -187,6 +187,10 @@ public class Launcher {
         if (true)
             tabbedPane.add("Fuel Tune", fuelTunePane.getContent());
 
+
+        if (!LinkManager.isLogViewer())
+            tabbedPane.add("Trigger Shape", new AverageAnglePanel().getPanel());
+
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
             if (selectedIndex < tabbedPane.getTabCount())

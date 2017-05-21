@@ -18,6 +18,7 @@ public class AverageAngles {
     static String PRIMARY = "T_PRIMARY";
     static String SECONDARY = "T_SECONDARY";
     static String T_CHANNEL_3 = "T_CHANNEL_3";
+    private int count;
 
     enum trigger_event_e {
         SHAFT_PRIMARY_FALLING(PRIMARY),
@@ -55,6 +56,7 @@ public class AverageAngles {
     public void clear() {
         rpmAtPrevChart = -1;
         angleData.clear();
+        count = 0;
     }
 
     public void add(int rpm, String line) {
@@ -63,6 +65,7 @@ public class AverageAngles {
             rpmAtPrevChart = rpm;
             return;
         }
+        count ++;
         rpmAtPrevChart = rpm;
 
         String v[] = line.split("\\|");
@@ -93,7 +96,7 @@ public class AverageAngles {
     public void printReport(Appendable stream) throws IOException {
         List<AngleEvent> angles = new ArrayList<>();
 
-        stream.append("Based on " + angleData.size() + " charts\r\n");
+        stream.append("Based on " + count + " charts\r\n");
 
         stream.append("index,average,stdev,diff\r\n");
 
