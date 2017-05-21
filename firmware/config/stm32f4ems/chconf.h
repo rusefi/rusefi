@@ -32,13 +32,20 @@
 #define PORT_INT_REQUIRED_STACK 	768
 #define CHPRINTF_USE_FLOAT          	TRUE
 
+#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
+ #define EFI_CLOCK_LOCKS FALSE
+#endif /* EFI_CLOCK_LOCKS */
+
+
 #if EFI_CLOCK_LOCKS
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
+#ifndef __ASSEMBLER__
   void onLockHook(void);
   void onUnlockHook(void);
+#endif /* __ASSEMBLER__ */
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -358,6 +365,7 @@ extern "C"
  */
 #define CH_DBG_SYSTEM_STATE_CHECK           TRUE
 
+
 /**
  * @brief   Debug option, parameters checks.
  * @details If enabled then the checks on the API functions input
@@ -528,10 +536,6 @@ extern "C"
 /*===========================================================================*/
 
 #ifndef __ASSEMBLER__
-#if !CH_DBG_SYSTEM_STATE_CHECK
-#define dbg_enter_lock() {ch.dbg.lock_cnt = 1;ON_LOCK_HOOK;}
-#define dbg_leave_lock() {ON_UNLOCK_HOOK;ch.dbg.lock_cnt = 0;}
-#endif
 
 void chDbgPanic3(const char *msg, const char * file, int line);
 #endif

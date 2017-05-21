@@ -18,10 +18,6 @@
 
 #define EFI_USE_CCM TRUE
 
-#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
- #define EFI_CLOCK_LOCKS FALSE
-#endif /* EFI_CLOCK_LOCKS */
-
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
