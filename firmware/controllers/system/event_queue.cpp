@@ -16,7 +16,7 @@
 #include "efitime.h"
 #include "efilib2.h"
 
-int maxHowFarOff = 0;
+uint32_t maxSchedulingPrecisionLoss = 0;
 
 scheduling_s::scheduling_s() {
 	callback = NULL;
@@ -165,8 +165,8 @@ int EventQueue::executeAll(efitime_t now) {
 		efiAssert(current->callback != NULL, "callback==null2", 0);
 		uint32_t before = GET_TIMESTAMP();
 		current->isScheduled = false;
-		int howFarOff = now - current->momentX;
-		maxHowFarOff = maxI(maxHowFarOff, howFarOff);
+		uint32_t howFarOff = now - current->momentX;
+		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		printf("execute current=%d param=%d\r\n", (long)current, (long)current->param);
 #endif
