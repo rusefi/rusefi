@@ -113,9 +113,9 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 	printf("sim_warning %s\r\n", fmt);
-#endif
+#endif /* EFI_SIMULATOR */
 
-#if EFI_SIMULATOR || EFI_PROD_CODE
+#if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
 	addWarningCode(code);
 
@@ -146,7 +146,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	va_end(ap);
 	printf("\r\n");
 
-#endif
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 	return false;
 }
 
@@ -154,6 +154,8 @@ char *getWarning(void) {
 	return warningBuffer;
 }
 
+
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
 uint32_t lastLockTime;
 /**
  * Maximum time before requesting lock and releasing lock at the end of critical section
@@ -174,6 +176,9 @@ void onUnlockHook(void) {
 //		maxLockTime = t + 1;
 //	}
 }
+
+#endif /* EFI_CLOCK_LOCKS */
+
 
 void initErrorHandling(void) {
 #if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)

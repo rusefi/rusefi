@@ -406,7 +406,10 @@ void resetMaxValues() {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	maxEventCallbackDuration = triggerMaxDuration = 0;
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
+
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
 	maxLockedDuration = 0;
+#endif /* EFI_CLOCK_LOCKS */
 
 #if (EFI_PROD_CODE) || defined(__DOXYGEN__)
 	maxPrecisionCallbackDuration = 0;
@@ -503,7 +506,10 @@ void triggerInfo(void) {
 			engine->m.rpmCbTime,
 			engine->m.mainTriggerCallbackTime);
 
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
 	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
+#endif /* EFI_CLOCK_LOCKS */
+
 	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);
 
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
