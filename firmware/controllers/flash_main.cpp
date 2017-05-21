@@ -76,8 +76,6 @@ void writeToFlashIfPending() {
 	writeToFlashNow();
 }
 
-extern uint32_t maxLockTime;
-
 void writeToFlashNow(void) {
 	scheduleMsg(logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
 	persistentState.size = PERSISTENT_SIZE;
@@ -99,7 +97,6 @@ void writeToFlashNow(void) {
 		scheduleMsg(logger, "Flashing failed");
 	}
 	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
-	maxLockTime = 0;
 	resetMaxValues();
 }
 

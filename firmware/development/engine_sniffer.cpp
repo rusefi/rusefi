@@ -44,7 +44,7 @@ static histogram_s engineSnifferHisto;
 
 EXTERN_ENGINE
 ;
-extern uint32_t maxLockTime;
+extern uint32_t maxLockedDuration;
 
 /**
  * This is the number of events in the digital chart which would be displayed
@@ -114,7 +114,7 @@ static void printStatus(void) {
 static void setChartActive(int value) {
 	engineConfiguration->isEngineChartEnabled = value;
 	printStatus();
-	maxLockTime = 0;
+	maxLockedDuration = 0;
 }
 
 void setChartSize(int newSize) {
