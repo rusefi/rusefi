@@ -396,7 +396,7 @@ extern uint32_t maxEventCallbackDuration;
 extern uint32_t maxPrecisionCallbackDuration;
 #endif /* EFI_PROD_CODE  */
 
-extern int maxHowFarOff;
+extern uint32_t maxSchedulingPrecisionLoss;
 extern uint32_t *cyccnt;
 
 extern int vvtEventRiseCounter;
@@ -406,6 +406,8 @@ void resetMaxValues() {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	maxEventCallbackDuration = triggerMaxDuration = 0;
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
+
+	maxSchedulingPrecisionLoss = 0;
 
 #if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
 	maxLockedDuration = 0;
@@ -488,8 +490,7 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
 
-	scheduleMsg(logger, "zeroTestTime=%d maxHowFarOff=%d", engine->m.zeroTestTime, maxHowFarOff);
-	maxHowFarOff = 0;
+	scheduleMsg(logger, "zeroTestTime=%d maxSchedulingPrecisionLoss=%d", engine->m.zeroTestTime, maxSchedulingPrecisionLoss);
 
 	scheduleMsg(logger, "advanceLookupTime=%d now=%d fuelCalcTime=%d",
 			engine->m.advanceLookupTime, *cyccnt,
