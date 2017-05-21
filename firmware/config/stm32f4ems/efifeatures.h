@@ -18,7 +18,9 @@
 
 #define EFI_USE_CCM TRUE
 
-#define EFI_CLOCK_LOCKS FALSE
+#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
+ #define EFI_CLOCK_LOCKS FALSE
+#endif /* EFI_CLOCK_LOCKS */
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
