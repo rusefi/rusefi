@@ -117,7 +117,7 @@ void Executor::doExecute() {
 	}
 	lastExecutionCount = totalExecuted;
 	if (!isLocked()) {
-		firmwareError(CUSTOM_ERR_6508, "Someone has stolen my lock");
+		firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
 		return;
 	}
 	reentrantFlag = false;
