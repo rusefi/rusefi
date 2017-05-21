@@ -35,8 +35,7 @@ extern schfunc_t globalTimerCallback;
  */
 static efitime_t nextEventTimeNt = 0;
 
-uint32_t beforeHwSetTimer;
-uint32_t hwSetTimerTime;
+uint32_t hwSetTimerDuration;
 uint32_t lastExecutionCount;
 
 static void executorCallback(void *arg) {
@@ -136,9 +135,9 @@ void Executor::scheduleTimerCallback() {
 	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
 	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
-	beforeHwSetTimer = GET_TIMESTAMP();
+	uint32_t beforeHwSetTimer = GET_TIMESTAMP();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
-	hwSetTimerTime = GET_TIMESTAMP() - beforeHwSetTimer;
+	hwSetTimerDuration = GET_TIMESTAMP() - beforeHwSetTimer;
 }
 
 /**

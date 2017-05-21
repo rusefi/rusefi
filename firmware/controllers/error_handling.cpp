@@ -155,16 +155,19 @@ char *getWarning(void) {
 }
 
 uint32_t lastLockTime;
-uint32_t maxLockTime = 0;
+/**
+ * Maximum time before requesting lock and releasing lock at the end of critical section
+ */
+uint32_t maxLockedDuration = 0;
 
 void onLockHook(void) {
 	lastLockTime = GET_TIMESTAMP();
 }
 
 void onUnlockHook(void) {
-	uint32_t t = GET_TIMESTAMP() - lastLockTime;
-	if (t > maxLockTime) {
-		maxLockTime = t;
+	uint32_t lockedDuration = GET_TIMESTAMP() - lastLockTime;
+	if (lockedDuration > maxLockedDuration) {
+		maxLockedDuration = lockedDuration;
 	}
 //	if (t > 2800) {
 //		// un-comment this if you want a nice stop for a breakpoint
