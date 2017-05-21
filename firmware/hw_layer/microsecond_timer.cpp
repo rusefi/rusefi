@@ -19,6 +19,9 @@
 // https://my.st.com/public/STe2ecommunities/mcu/Lists/cortex_mx_stm32/Flat.aspx?RootFolder=https%3a%2f%2fmy.st.com%2fpublic%2fSTe2ecommunities%2fmcu%2fLists%2fcortex_mx_stm32%2fInterrupt%20on%20CEN%20bit%20setting%20in%20TIM7&FolderCTID=0x01200200770978C69A1141439FE559EB459D7580009C4E14902C3CDE46A77F0FFD06506F5B&currentviews=474
 
 #if (EFI_PROD_CODE && HAL_USE_GPT) || defined(__DOXYGEN__)
+#include "efilib2.h"
+
+uint32_t maxPrecisionTCallbackDuration = 0;
 
 #define GPTDEVICE GPTD5
 
@@ -79,7 +82,7 @@ static void callback(GPTDriver *gptp) {
 	(void)gptp;
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
-		firmwareError(CUSTOM_ERR_6527, "NULL globalTimerCallback");
+		firmwareError(CUSTOM_ERR_NULL_TIMER_CALLBACK, "NULL globalTimerCallback");
 		return;
 	}
 	isTimerPending = false;
@@ -93,14 +96,19 @@ static void callback(GPTDriver *gptp) {
 //	chSysUnlockFromISR()
 //	;
 
+	uint32_t before = GET_TIMESTAMP();
 	globalTimerCallback(NULL);
+	uint32_t precisionCallbackDuration = GET_TIMESTAMP() - before;
+	if (precisionCallbackDuration > maxPrecisionTCallbackDuration) {
+		maxPrecisionTCallbackDuration = precisionCallbackDuration;
+	}
 }
 
 static void usTimerWatchDog(void) {
 	if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 		strcpy(buff, "no_event");
 		itoa10(&buff[8], lastSetTimerValue);
-		firmwareError(CUSTOM_ERR_6528, buff);
+		firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
 		return;
 	}
 

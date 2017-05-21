@@ -51,7 +51,7 @@ static bool intermediateLoggingBufferInited = false;
  */
 static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (logging->buffer == NULL) {
-		firmwareError(CUSTOM_ERR_6529, "Logging not initialized: %s", logging->name);
+		firmwareError(CUSTOM_ERR_LOGGING_NOT_READY, "Logging not initialized: %s", logging->name);
 		return true;
 	}
 
