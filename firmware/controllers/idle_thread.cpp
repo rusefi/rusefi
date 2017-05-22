@@ -77,7 +77,6 @@ static void showIdleInfo(void) {
 	}
 
 
-
 	if (engineConfiguration->idleMode == IM_AUTO) {
 		scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idleRpmPid.pFactor,
 				engineConfiguration->idleRpmPid.iFactor,
@@ -101,18 +100,6 @@ static void applyIACposition(percent_t position) {
 		 */
 		idleSolenoid.setSimplePwmDutyCycle(position / 100.0);
 	}
-}
-
-/**
- * Adjusts cra
- *
- * @param target percentage of manual-controlled IAC or RPM for auto idle
- */
-static float adjustIdleTarget(float target) {
-
-
-
-	return target;
 }
 
 static float manualIdleController(float cltCorrection) {
@@ -173,7 +160,7 @@ percent_t getIdlePosition(void) {
 
 static float autoIdle(float cltCorrection) {
 
-	int targetRpm = 1400 * cltCorrection;
+	int targetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
 	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine));
 
@@ -229,8 +216,17 @@ static msg_t ivThread(int param) {
 			continue; // value is pretty close, let's leave the poor valve alone
 		}
 
-		if (engineConfiguration->debugMode == DBG_IDLE) {
+		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 			tsOutputChannels.debugFloatField1 = iacPosition;
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+			if (engineConfiguration->idleMode == IM_AUTO) {
+				idlePid.postState(&tsOutputChannels);
+			}
+#endif
+		}
+
+		if (engineConfiguration->isVerboseIAC) {
+			scheduleMsg(logger, "rpm=%d position=%f", getRpmE(engine), iacPosition);
 		}
 
 		actualIdlePosition = iacPosition;
