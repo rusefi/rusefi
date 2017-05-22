@@ -217,17 +217,17 @@ static void printSensors(Logging *log, bool fileFormat) {
 #endif /* EFI_ANALOG_SENSORS */
 
 	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_AFR, "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 	}
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	if (fileFormat) {
-		reportSensorF(log, fileFormat, "idle", "%", getIdlePosition(), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_IAC, "%", getIdlePosition(), 2);
 	}
 #endif /* EFI_IDLE_CONTROL */
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	reportSensorF(log, fileFormat, "target", "AFR", engine->engineState.targetAFR, 2);
+	reportSensorF(log, fileFormat, GAUGE_NAME_TARGET_AFR, "AFR", engine->engineState.targetAFR, 2);
 #endif /* EFI_ANALOG_SENSORS */
 
 	if (fileFormat) {
@@ -266,9 +266,9 @@ static void printSensors(Logging *log, bool fileFormat) {
 	if (fileFormat) {
 		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		reportSensorF(log, fileFormat, "f: base", "ms", fuelBase, 2);
-		reportSensorF(log, fileFormat, "f: actual", "ms", ENGINE(actualLastInjection), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.injectorLag, 2);
-		reportSensorF(log, fileFormat, "f: running", "ms", ENGINE(engineState.runningFuel), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.runningFuel), 2);
 		reportSensorF(log, fileFormat, "f: pid", "ms", ENGINE(engineState.fuelPidCorrection), 2);
 
 		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);

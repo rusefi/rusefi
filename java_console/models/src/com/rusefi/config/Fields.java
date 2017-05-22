@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 22 18:26:06 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 22 19:37:38 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -1056,8 +1056,13 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_VR = "fuel: VE";
+	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
+	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: last injection";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
+	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
+	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
+	public static final String GAUGE_NAME_IAC = "Idle Air Valve";
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
