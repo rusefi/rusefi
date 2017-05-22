@@ -1210,10 +1210,11 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "Manual mode",							idleMode
 		field = "Cranking Idle Air",					crankingIACposition
 		field = "Auto target",							targetIdleRpm, { idleMode == 0}
-		field = "idle P",								idleRpmPid_pFactor
-		field = "idle I",								idleRpmPid_iFactor
-		field = "idle D",								idleRpmPid_dFactor
-		field = "idle offset",							idleRpmPid_offset
+		field = "idle P",								idleRpmPid_pFactor, { idleMode == 0}
+		field = "idle I",								idleRpmPid_iFactor, { idleMode == 0}
+		field = "idle D",								idleRpmPid_dFactor, { idleMode == 0}
+		field = "idle offset",							idleRpmPid_offset, { idleMode == 0}
+		field = "verbose",								isVerboseIAC
 		slider = "Manual Idle Position",				manIdlePosition, horizontal
 		field = ""
 		field = "use stepper",							useStepperIdle
