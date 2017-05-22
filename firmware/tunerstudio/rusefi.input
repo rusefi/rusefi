@@ -134,7 +134,7 @@ fileVersion = { 20161225 }
       ignitionAdvance = scalar,  F32,     56,              "deg",           1,       0.0;
       sparkDwellValue = scalar,  F32,     60,              "ms",           1,       0.0;
       ; actual total Ms time per engine cycle with all corrections
-      pulseWidth      = scalar,  F32,     64,              "ms",           1,       0.0;
+      actualLastInjection      = scalar,  F32,     64,              "ms",           1,       0.0;
       debugFloatField1    = scalar,  F32,  68,            "val",           1,       0.0;
       
       hasSdCard       = bits,    U32,     72, [0:0], "true", "false";
@@ -189,7 +189,10 @@ fileVersion = { 20161225 }
       iatCorrection = scalar, F32,       164, "%",            1,         0
       wallFuelCorrection = scalar, F32,  168, "ms",           1,         0
       curIdlePosition = scalar, F32,     172, "percent",      1,         0
+      currentTargetAfr = scalar, F32,    176, "ratio",      1,         0
+      chargeAirMass = scalar, F32,       180, "g",      1,         0
       cltCorrection = scalar, F32,       184, "%",            1,         0
+      fuelRunning = scalar, F32,         188, "g",      1,         0
       debugIntField1    = scalar,  U32,  192, "val",          1,       0.0;
       debugFloatField2  = scalar,  F32,  200,            "val",           1,       0.0;
       debugFloatField3  = scalar,  F32,  204,            "val",           1,       0.0;
@@ -481,10 +484,12 @@ fileVersion = { 20161225 }
    
    triggerErrorsCounterGauge = triggerErrorsCounter, "trg err", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
    
-   pulseWidthGauge   = pulseWidth,     "fuel final squirt, per injection", "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   actualLastInjectionGauge   = actualLastInjection,     "fuel final squirt, per injection", "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   
+   fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    baseFuelGauge     = baseFuel,       "fuel: base duration, before corr",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    fuelPidCorrectionGauge = fuelPidCorrection,       "fuel: closed loop correction",      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
-   coilDutyCycleGauge = coilDutyCycle,       "dwell: duty cycle",      "perc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   coilDutyCycleGauge = coilDutyCycle,       @@GAUGE_NAME_DWELL_DUTY@@,      "perc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
 
    crankingFuelGauge = crankingFuel,   "fuel: crank Width",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, "fuel: IAT correction", "mult",     0,   3,     0,    0,    3,  3,   2,   2
@@ -576,7 +581,7 @@ fileVersion = { 20161225 }
    entry = TPS,             "TPS",         float,  "%.2f"
    entry = MAF,             "MAF",         float,  "%.2f"
    entry = MAPValue,        "MAP",         float,  "%.1f"
-   entry = AFRactual,       "AFR",         float,  "%.2f"
+   entry = AFRactual,       @@GAUGE_NAME_AFR@@,         float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
    entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
@@ -587,15 +592,17 @@ fileVersion = { 20161225 }
    entry = massAirFlowValue,"airMass",     float,  "%.3f"
    entry = pedalPosition,   "pedal",       float,  "%.3f"
    entry = triggerErrorsCounter, "trg err",int,    "%d"
-   entry = curIdlePosition, "idle position", float,  "%.3f"
+   entry = curIdlePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
 
 
-   entry = pulseWidth,      "fuel: pulse", float,  "%.3f"
+   entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
+   entry = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, float,  "%.3f"
    entry = baseFuel,	    "fuel: base",  float,  "%.2f"
    entry = fuelPidCorrection,"fuel: pid",  float,  "%.2f"
    entry = veValue,         @@GAUGE_NAME_FUEL_VR@@,    float,  "%.3f"
    entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
+   entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
 
    entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
    entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
