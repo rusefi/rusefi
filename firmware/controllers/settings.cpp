@@ -882,6 +882,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		boardConfiguration->isHip9011Enabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
+		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
 		engineConfiguration->isVerboseAuxPid1 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug2")) {
