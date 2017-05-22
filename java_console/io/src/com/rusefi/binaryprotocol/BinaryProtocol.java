@@ -170,7 +170,8 @@ public class BinaryProtocol {
                         LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
                             @Override
                             public void run() {
-                                requestOutputChannels();
+                                if (requestOutputChannels())
+                                	ConnectionWatchdog.onDataArrived();
                                 String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
@@ -494,12 +495,12 @@ public class BinaryProtocol {
         }
     }
 
-    public void requestOutputChannels() {
+    public boolean requestOutputChannels() {
         if (isClosed)
-            return;
+            return false;
         byte[] response = executeCommand(new byte[]{COMMAND_OUTPUTS}, "output channels", false);
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
-            return;
+            return false;
 
         currentOutputs = response;
 
@@ -515,5 +516,6 @@ public class BinaryProtocol {
                 SensorCentral.getInstance().setValue(value, sensor);
             }
         }
+        return true;
     }
 }
