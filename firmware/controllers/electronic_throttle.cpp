@@ -40,6 +40,7 @@
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "pwm_generator.h"
+extern TunerStudioOutputChannels tsOutputChannels;
 
 #define ETB_FREQ 400
 
@@ -85,6 +86,9 @@ static msg_t etbThread(void *arg) {
 		}
 		outputDirectionClose.setValue(needEtbBraking);
 
+		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE) {
+			pid.postState(&tsOutputChannels);
+		}
 
 //		if (tps != prevTps) {
 //			prevTps = tps;
