@@ -757,7 +757,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
 		}
 	} else if (engineConfiguration->debugMode == DBG_VEHICLE_SPEED_SENSOR) {
-		tsOutputChannels->debugIntField1 = engine->engineState.vssDebugEventCounter;
+		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
 	} else if (engineConfiguration->debugMode == DBG_SD_CARD) {
 		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
 	} else if (engineConfiguration->debugMode == DBG_CRANKING_DETAILS) {

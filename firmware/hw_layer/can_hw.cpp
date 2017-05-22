@@ -151,7 +151,7 @@ static void canMazdaRX8(void) {
 
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
 	txmsg.data8[0] = (uint8_t)(engine->sensors.clt + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
-	txmsg.data8[1] = ((int16_t)(engine->engineState.vssDebugEventCounter*(engineConfiguration->vehicleSpeedCoef*0.277*2.58))) & 0xff;
+	txmsg.data8[1] = ((int16_t)(engine->engineState.vssEventCounter*(engineConfiguration->vehicleSpeedCoef*0.277*2.58))) & 0xff;
 	txmsg.data8[2] = 0x00; // unknown
 	txmsg.data8[3] = 0x00; //unknown
 	txmsg.data8[4] = 0x01; //Oil Pressure (not really a gauge)
