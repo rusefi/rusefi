@@ -223,7 +223,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
 			// this is getting a little out of hand, any ideas?
 
-			if (engineConfiguration->debugMode == DGB_TRIGGER_SYNC) {
+			if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
 				float currentGap = 1.0 * currentDuration / toothed_previous_duration;
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 				tsOutputChannels.debugFloatField1 = currentGap;
@@ -321,7 +321,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 			if (isDecodingError && !isInitializingTrigger) {
-				if (engineConfiguration->debugMode == DGB_TRIGGER_SYNC) {
+				if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 
 					tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
