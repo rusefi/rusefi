@@ -132,12 +132,7 @@
  * @brief   Enables the SERIAL subsystem.
  */
 #if !defined(HAL_USE_SERIAL) || defined(__DOXYGEN__)
-/* Configured in efifeatures.h */
-#if TS_UART_DMA_MODE
-#define HAL_USE_SERIAL              FALSE
-#else
 #define HAL_USE_SERIAL              TRUE
-#endif
 #endif
 
 /**
