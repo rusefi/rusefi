@@ -428,7 +428,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	bool isFirstByte = true;
 
 	while (true) {
-		int isReady = tsIsReady(isConsoleRedirect);
+		int isReady = sr5IsReady(isConsoleRedirect);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
 			wasReady = false;
