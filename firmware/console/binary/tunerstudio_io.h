@@ -39,13 +39,30 @@ typedef enum {
 
 typedef struct {
 	BaseChannel * channel;
-	uint8_t writeBuffer[4];
+	uint8_t writeBuffer[7];	// size(2 bytes) + response(1 byte) + crc32 (4 bytes)
 	/**
 	 * we use 'blockingFactor = 320' in rusefi.ini
 	 * todo: should we just do (320 + CRC_WRAPPING_SIZE) ?
 	 */
 	char crcReadBuffer[BLOCKING_FACTOR + 30];
 } ts_channel_s;
+
+// See uart_dma_s
+#define TS_FIFO_BUFFER_SIZE (BLOCKING_FACTOR + 30)
+// This must be a power of 2!
+#define TS_DMA_BUFFER_SIZE 32
+
+// struct needed for async DMA transfer mode (see TS_UART_DMA_MODE)
+typedef struct {
+	// circular DMA buffer
+	uint8_t dmaBuffer[TS_DMA_BUFFER_SIZE];
+	// current read position for the DMA buffer
+	volatile int readPos;
+	// secondary FIFO buffer for async. transfer
+	uint8_t buffer[TS_FIFO_BUFFER_SIZE];
+	// input FIFO Rx queue
+	input_queue_t fifoRxQueue;
+} uart_dma_s;
 
 #define TS_HELLO_COMMAND_DEPRECATED 'H' // 0x48
 #define TS_HELLO_COMMAND 'S' // 0x53
@@ -71,14 +88,16 @@ typedef struct {
 // todo: double-check this
 #define CRC_WRAPPING_SIZE (CRC_VALUE_SIZE + 3)
 
-BaseChannel * getTsSerialDevice(void);
-void startTsPort(void);
 
-// that's 3 seconds
-#define BINARY_IO_TIMEOUT MS2ST(3000)
+void startTsPort(ts_channel_s *tsChannel);
+
+// that's 1 second
+#define BINARY_IO_TIMEOUT MS2ST(1000)
 
 void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
 void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);
 void tsSendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
+bool tsIsReady(bool isConsoleRedirect);
+int tunerStudioReadData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
 
 #endif /* CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_ */

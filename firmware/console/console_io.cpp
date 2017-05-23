@@ -72,6 +72,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		short c = (short) chSequentialStreamGet(chp);
 		onDataArrived();
 
+#if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
 		if (isCommandLineConsoleOverTTL()) {
 			uint32_t flags;
 			chSysLock()
@@ -80,12 +81,11 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			flags = chEvtGetAndClearFlagsI(&consoleEventListener);
 			chSysUnlock()
 			;
-
 			if (flags & SD_OVERRUN_ERROR) {
 //				firmwareError(OBD_PCM_Processor_Fault, "serial overrun");
 			}
-
 		}
+#endif
 
 #if EFI_UART_ECHO_TEST_MODE
 		/**
@@ -176,15 +176,15 @@ void runConsoleLoop(ts_channel_s *console) {
 #if EFI_PROD_CODE || EFI_EGT || defined(__DOXYGEN__)
 
 
-SerialDriver * getConsoleChannel(void) {
+BaseChannel * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
 	if (isCommandLineConsoleOverTTL()) {
-		return (SerialDriver *) EFI_CONSOLE_UART_DEVICE;
+		return (BaseChannel *) EFI_CONSOLE_UART_DEVICE;
 	}
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
-	return (SerialDriver *) &SDU1;
+	return (BaseChannel *) &SDU1;
 #else
 	return NULL;
 #endif /* HAL_USE_SERIAL_USB */
@@ -217,8 +217,8 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 
 
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
-	runConsoleLoop(&binaryConsole);
-
+	if (binaryConsole.channel != NULL)
+		runConsoleLoop(&binaryConsole);
 }
 
 // 10 seconds
