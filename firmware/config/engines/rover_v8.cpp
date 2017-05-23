@@ -87,7 +87,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     boardConfiguration->injectionPins[6] = GPIOE_2; // Frankenstein: low side - out #7
     boardConfiguration->injectionPins[7] = GPIOE_3; // Frankenstein: low side - out #8
 
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIOC_2; 
+// not valid ICU pin	boardConfiguration->vehicleSpeedSensorInputPin = GPIOC_2;
 
 	//GPIOE_0 AND GPIOE_1 are bad pins since they conflict with accelerometer
 	//no malfunction indicator pin needed, since we use CAN_BUS_MAZDA_RX8
