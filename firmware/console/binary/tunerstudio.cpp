@@ -222,7 +222,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	currentPageId = pageId;
 	scheduleMsg(&tsLogger, "PAGE %d", currentPageId);
-	tsSendResponse(tsChannel, mode, NULL, 0);
+	sr5SendResponse(tsChannel, mode, NULL, 0);
 }
 
 static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
@@ -274,7 +274,7 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	memcpy(addr, content, count);
 	onlineTuneBytes(currentPageId, offset, count);
 
-	tsSendResponse(tsChannel, mode, NULL, 0);
+	sr5SendResponse(tsChannel, mode, NULL, 0);
 }
 
 void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
@@ -291,7 +291,7 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
 
 	scheduleMsg(&tsLogger, "CRC32 response: %x", crc);
 
-	tsSendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
+	sr5SendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
 }
 
 /**
@@ -336,7 +336,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 }
 
 static void sendErrorCode(ts_channel_s *tsChannel) {
-	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
 void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
@@ -364,7 +364,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 	}
 
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
-	tsSendResponse(tsChannel, mode, addr, count);
+	sr5SendResponse(tsChannel, mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 //	scheduleMsg(&tsLogger, "Sending %d done", count);
 #endif
@@ -379,7 +379,7 @@ void requestBurn(void) {
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
 	if (mode == TS_CRC) {
-		tunerStudioWriteCrcPacket(tsChannel, responseCode, NULL, 0);
+		sr5WriteCrcPacket(tsChannel, responseCode, NULL, 0);
 	}
 }
 
@@ -443,7 +443,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		tsState.totalCounter++;
 
 		uint8_t firstByte;
-		int recieved = tunerStudioReadData(tsChannel, &firstByte, 1);
+		int received = sr5ReadData(tsChannel, &firstByte, 1);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("received %d\r\n", received);
 #endif
@@ -468,8 +468,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 
 		uint8_t secondByte;
-		recieved = tunerStudioReadData(tsChannel, &secondByte, 1);
-		if (recieved != 1) {
+		received = sr5ReadData(tsChannel, &secondByte, 1);
+		if (received != 1) {
 			tunerStudioError("TS: ERROR: no second byte");
 			continue;
 		}
@@ -479,7 +479,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 		if (incomingPacketSize == BINARY_SWITCH_TAG) {
 			// we are here if we get a binary switch request while already in binary mode. We will just ignore it.
-			tunerStudioWriteData(tsChannel, (const uint8_t *) &BINARY_RESPONSE, 2);
+			sr5WriteData(tsChannel, (const uint8_t *) &BINARY_RESPONSE, 2);
 			continue;
 		}
 
@@ -490,8 +490,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 		}
 
-		recieved = tunerStudioReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
-		if (recieved != 1) {
+		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
+		if (received != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
 		}
@@ -510,7 +510,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		recieved = tunerStudioReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
+		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (received != expectedSize) {
@@ -581,7 +581,7 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
-	tsSendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	sr5SendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
 }
 
 /**
@@ -591,7 +591,7 @@ void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e m
 	tsState.outputChannelsCommandCounter++;
 	prepareTunerStudioOutputs();
 	// this method is invoked too often to print any debug information
-	tsSendResponse(tsChannel, mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
+	sr5SendResponse(tsChannel, mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
 }
 
 #define TEST_RESPONSE_TAG " ts_p_alive\r\n"
@@ -604,14 +604,14 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
-	tunerStudioWriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
+	sr5WriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.lastErrorCode, tsState.testCommandCounter);
-	tunerStudioWriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
+	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection
 	 * @see EngineState#TS_PROTOCOL_TAG
 	 */
-	tunerStudioWriteData(tsChannel, (const uint8_t *) TEST_RESPONSE_TAG, sizeof(TEST_RESPONSE_TAG));
+	sr5WriteData(tsChannel, (const uint8_t *) TEST_RESPONSE_TAG, sizeof(TEST_RESPONSE_TAG));
 }
 
 extern CommandHandler console_line_callback;
@@ -619,7 +619,7 @@ extern CommandHandler console_line_callback;
 static void handleGetVersion(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	static char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
-	tsSendResponse(tsChannel, mode, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
+	sr5SendResponse(tsChannel, mode, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
@@ -631,14 +631,14 @@ static void handleGetText(ts_channel_s *tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
 
 static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
-	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
@@ -659,8 +659,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		handleTestCommand(tsChannel);
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
-		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&pageIn, sizeof(pageIn));
-		if (recieved != sizeof(pageIn)) {
+		int received = sr5ReadData(tsChannel, (uint8_t * )&pageIn, sizeof(pageIn));
+		if (received != sizeof(pageIn)) {
 			tunerStudioError("ERROR: not enough for PAGE");
 			return true;
 		}
@@ -669,7 +669,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	} else if (command == TS_BURN_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked BURN");
 		uint16_t page;
-		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&page, sizeof(page));
+		int recieved = sr5ReadData(tsChannel, (uint8_t * )&page, sizeof(page));
 		if (recieved != sizeof(page)) {
 			tunerStudioError("ERROR: Not enough for plain burn");
 			return true;
@@ -678,15 +678,15 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked CHUNK_WRITE");
-		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest));
-		if (recieved != sizeof(writeChunkRequest)) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
+		int received = sr5ReadData(tsChannel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest));
+		if (received != sizeof(writeChunkRequest)) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", received);
 			tsState.errorCounter++;
 			return true;
 		}
-		recieved = tunerStudioReadData(tsChannel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
-		if (recieved != writeChunkRequest.count) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved,
+		received = sr5ReadData(tsChannel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
+		if (received != writeChunkRequest.count) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", received,
 					writeChunkRequest.count);
 			tsState.errorCounter++;
 			return true;
@@ -698,8 +698,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&readRequest, sizeof(readRequest));
-		if (recieved != sizeof(readRequest)) {
+		int received = sr5ReadData(tsChannel, (uint8_t * )&readRequest, sizeof(readRequest));
+		if (received != sizeof(readRequest)) {
 			tunerStudioError("Not enough for plain read header");
 			return true;
 		}
@@ -714,7 +714,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_COMMAND_F) {
 		tunerStudioDebug("not ignoring F");
-		tunerStudioWriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
+		sr5WriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
 		return true;
 	} else {
 		return false;
