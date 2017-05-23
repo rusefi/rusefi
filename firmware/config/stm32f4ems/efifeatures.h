@@ -251,6 +251,7 @@
 
 // todo: add DMA-mode for Console & GPS?
 #if TS_UART_DMA_MODE
+#undef EFI_UART_GPS
 #define EFI_UART_GPS FALSE
 #undef EFI_CONSOLE_UART_DEVICE
 #endif
