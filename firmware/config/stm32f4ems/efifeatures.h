@@ -243,8 +243,16 @@
 #define EFI_CONSOLE_UART_DEVICE (&SD3)
 #endif
 
-#ifndef TS_SERIAL_UART_DEVICE
+// Use 'UART' DMA-mode driver instead of 'SERIAL'
+#define TS_UART_DMA_MODE FALSE
+
+#define TS_DMA_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_UART_DEVICE (&SD3)
+
+// todo: add DMA-mode for Console & GPS?
+#if TS_UART_DMA_MODE
+#define EFI_UART_GPS FALSE
+#undef EFI_CONSOLE_UART_DEVICE
 #endif
 
 // todo: start using consoleSerialTxPin? Not sure
