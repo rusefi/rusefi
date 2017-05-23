@@ -30,11 +30,13 @@ void usb_serial_start(void) {
 	chThdSleepMilliseconds(1500);
 	usbStart(serusbcfg.usbp, &usbcfg);
 	usbConnectBus(serusbcfg.usbp);
-
+	
+#if HAL_USE_SERIAL
 	/*
 	 * Activates the serial driver 2 using the driver default configuration.
 	 */
 	sdStart(&SD2, NULL);
+#endif
 }
 
 bool is_usb_serial_ready(void) {
