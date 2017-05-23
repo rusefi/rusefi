@@ -147,20 +147,20 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	if (transferred != size) {
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
-#endif
+#endif /* EFI_SIMULATOR */
 		scheduleMsg(&tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
 	}
 }
 
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
-#if TS_UART_DMA_MODE && EFI_PROD_CODE
+#if TS_UART_DMA_MODE || defined(__DOXYGEN__)
 	UNUSED(tsChannel);
 	return (int)chIQReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, SR5_READ_TIMEOUT);
-#else
+#else /* TS_UART_DMA_MODE */
 	if (tsChannel->channel == NULL)
 		return 0;
 	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, SR5_READ_TIMEOUT);
-#endif
+#endif /* TS_UART_DMA_MODE */
 }
 
 
