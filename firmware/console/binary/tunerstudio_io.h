@@ -94,10 +94,13 @@ void startTsPort(ts_channel_s *tsChannel);
 // that's 1 second
 #define BINARY_IO_TIMEOUT MS2ST(1000)
 
-void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
-void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);
-void tsSendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
-bool tsIsReady(bool isConsoleRedirect);
-int tunerStudioReadData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
+// that's 1 second
+#define SR5_READ_TIMEOUT MS2ST(1000)
+
+void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);
+void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
+int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
+bool sr55IsReady(bool isConsoleRedirect);
 
 #endif /* CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_ */

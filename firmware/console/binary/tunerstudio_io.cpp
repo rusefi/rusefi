@@ -17,9 +17,6 @@ EXTERN_ENGINE;
 
 extern LoggingWithStorage tsLogger;
 
-// that's 1 second
-#define TS_READ_TIMEOUT MS2ST(1000)
-
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "usbconsole.h"
@@ -128,7 +125,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 #endif /* EFI_PROD_CODE */
 }
 
-void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
         efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "tunerStudioWriteData");
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
@@ -155,14 +152,14 @@ void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int s
 	}
 }
 
-int tunerStudioReadData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+int sr5ReadData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 #if TS_UART_DMA_MODE && EFI_PROD_CODE
 	UNUSED(tsChannel);
-	return (int)chIQReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, TS_READ_TIMEOUT);
+	return (int)chIQReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, SR5_READ_TIMEOUT);
 #else
 	if (tsChannel->channel == NULL)
 		return 0;
-	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, TS_READ_TIMEOUT);
+	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, SR5_READ_TIMEOUT);
 #endif
 }
 
@@ -170,12 +167,12 @@ int tunerStudioReadData(ts_channel_s *tsChannel, const uint8_t * buffer, int siz
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
 	uint8_t *writeBuffer = tsChannel->writeBuffer;
 
 	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
 	*(uint8_t *) (writeBuffer + 2) = responseCode;
-	tunerStudioWriteData(tsChannel, writeBuffer, 3);      // header
+	sr5WriteData(tsChannel, writeBuffer, 3);      // header
 
 	// CRC on whole packet
 	uint32_t crc = crc32((void *) (writeBuffer + 2), 1); // command part of CRC
@@ -183,22 +180,22 @@ void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCo
 	*(uint32_t *) (writeBuffer + 3) = SWAP_UINT32(crc);
 
 	if (size > 0) {
-		tunerStudioWriteData(tsChannel, (const uint8_t*)buf, size);      // body
+		sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
 	}
 
-	tunerStudioWriteData(tsChannel, writeBuffer + 3, 4);      // CRC footer
+	sr5WriteData(tsChannel, writeBuffer + 3, 4);      // CRC footer
 }
 
-void tsSendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
+void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
 	if (mode == TS_CRC) {
-		tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
+		sr5WriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
 	} else {
 		if (size > 0)
-			tunerStudioWriteData(tsChannel, buffer, size);
+			sr5WriteData(tsChannel, buffer, size);
 	}
 }
 
-bool tsIsReady(bool isConsoleRedirect) {
+bool sr5IsReady(bool isConsoleRedirect) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (isCommandLineConsoleOverTTL() ^ isConsoleRedirect) {
 		// TS uses USB when console uses serial
