@@ -445,11 +445,11 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		uint8_t firstByte;
 		int recieved = tunerStudioReadData(tsChannel, &firstByte, 1);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-			logMsg("recieved %d\r\n", recieved);
+			logMsg("received %d\r\n", received);
 #endif
 
 
-		if (recieved != 1) {
+		if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 			continue;
 		}
@@ -513,8 +513,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		recieved = tunerStudioReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
-		if (recieved != expectedSize) {
-			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", recieved,
+		if (received != expectedSize) {
+			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", received,
 					expectedSize, command);
 			tunerStudioError("ERROR: not enough bytes in stream");
 			sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_UNDERRUN);
