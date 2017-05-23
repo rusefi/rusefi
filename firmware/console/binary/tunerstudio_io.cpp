@@ -152,7 +152,7 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	}
 }
 
-int sr5ReadData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
 #if TS_UART_DMA_MODE && EFI_PROD_CODE
 	UNUSED(tsChannel);
 	return (int)chIQReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, SR5_READ_TIMEOUT);

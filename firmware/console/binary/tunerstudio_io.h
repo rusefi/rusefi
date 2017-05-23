@@ -101,6 +101,6 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
 void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);
 void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
-bool sr55IsReady(bool isConsoleRedirect);
+bool sr5IsReady(bool isConsoleRedirect);
 
 #endif /* CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_ */
