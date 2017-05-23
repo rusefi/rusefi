@@ -862,7 +862,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->enabledStep1Limiter = isEnabled;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(param, "auto_idle")) {
-		setIdleMode(isEnabled ? IM_AUTO : IM_MANUAL);
+		setIdleMode(isEnabled ? IM_MANUAL : IM_AUTO);
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(param, "serial")) {
 		boardConfiguration->useSerialPort = isEnabled;
@@ -1109,6 +1109,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
 		{"engine_decel_multiplier", setDecelMult},
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		{"mock_vehicle_speed", setMockVehicleSpeed},
+		{"idle_offset", setIdleOffset},
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
 		{"idle_d", setIdleDFactor},

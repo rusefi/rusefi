@@ -50,6 +50,8 @@ static SimplePwm idleSolenoid;
 
 static StepperMotor iacMotor;
 
+static int adjustedTargetRpm;
+
 /**
  * that's the position with CLT and IAT corrections
  */
@@ -57,6 +59,17 @@ static percent_t actualIdlePosition = -100.0f;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
+}
+
+static void showPidSettings(const char*msg, pid_s *pid) {
+	scheduleMsg(logger, "%s o=%f P=%.5f I=%.5f D=%.5f dT=%d",
+			msg,
+			pid->offset,
+			pid->pFactor,
+			pid->iFactor,
+			pid->dFactor,
+			engineConfiguration->idleDT);
+
 }
 
 static void showIdleInfo(void) {
@@ -78,10 +91,7 @@ static void showIdleInfo(void) {
 
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
-		scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idleRpmPid.pFactor,
-				engineConfiguration->idleRpmPid.iFactor,
-				engineConfiguration->idleRpmPid.dFactor,
-				engineConfiguration->idleDT);
+		showPidSettings("idle", &engineConfiguration->idleRpmPid);
 	}
 }
 
@@ -160,9 +170,9 @@ percent_t getIdlePosition(void) {
 
 static float autoIdle(float cltCorrection) {
 
-	int targetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
+	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
-	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine));
+	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine));
 
 	return newValue;
 }
@@ -225,8 +235,13 @@ static msg_t ivThread(int param) {
 #endif
 		}
 
-		if (engineConfiguration->isVerboseIAC) {
-			scheduleMsg(logger, "rpm=%d position=%f", getRpmE(engine), iacPosition);
+		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
+			showPidSettings("idle", &engineConfiguration->idleRpmPid);
+			scheduleMsg(logger, "rpm=%d/%d position=%f iTerm=%.5f dTerm=%.5f",
+					getRpmE(engine),
+					adjustedTargetRpm,
+					iacPosition,
+					idlePid.iTerm, idlePid.dTerm);
 		}
 
 		actualIdlePosition = iacPosition;
@@ -241,10 +256,16 @@ static msg_t ivThread(int param) {
 void setTargetIdleRpm(int value) {
 	engineConfiguration->targetIdleRpm = value;
 	scheduleMsg(logger, "target idle RPM %d", value);
+	showIdleInfo();
 }
 
 static void apply(void) {
-//	idleMath.updateFactors(engineConfiguration->idlePFactor, engineConfiguration->idleIFactor, engineConfiguration->idleDFactor, engineConfiguration->idleDT);
+	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+}
+
+void setIdleOffset(float value)  {
+	engineConfiguration->idleRpmPid.offset = value;
+	showIdleInfo();
 }
 
 void setIdlePFactor(float value) {
