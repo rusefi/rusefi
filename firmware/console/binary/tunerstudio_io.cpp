@@ -73,7 +73,7 @@ BaseChannel * getTsSerialDevice(void) {
 #endif
 }
 
-void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
         efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "tunerStudioWriteData");
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
@@ -93,12 +93,12 @@ void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int s
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
+void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
 	uint8_t *writeBuffer = tsChannel->writeBuffer;
 
 	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
 	*(uint8_t *) (writeBuffer + 2) = responseCode;
-	tunerStudioWriteData(tsChannel, writeBuffer, 3);      // header
+	sr5WriteData(tsChannel, writeBuffer, 3);      // header
 
 	// CRC on whole packet
 	uint32_t crc = crc32((void *) (writeBuffer + 2), 1); // command part of CRC
@@ -106,18 +106,22 @@ void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCo
 	*(uint32_t *) (writeBuffer) = SWAP_UINT32(crc);
 
 	if (size > 0) {
-		tunerStudioWriteData(tsChannel, (const uint8_t*)buf, size);      // body
+		sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
 	}
 
-	tunerStudioWriteData(tsChannel, writeBuffer, 4);      // CRC footer
+	sr5WriteData(tsChannel, writeBuffer, 4);      // CRC footer
 }
 
-void tsSendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
+void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
 	if (mode == TS_CRC) {
-		tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
+		sr5WriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
 	} else {
 		if (size > 0)
-			tunerStudioWriteData(tsChannel, buffer, size);
+			sr5WriteData(tsChannel, buffer, size);
 	}
+}
+
+int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
+	return chnReadTimeout(tsChannel->channel, buffer, size, SR5_READ_TIMEOUT);
 }
 
