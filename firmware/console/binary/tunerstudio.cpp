@@ -443,13 +443,13 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		tsState.totalCounter++;
 
 		uint8_t firstByte;
-		int received = tunerStudioReadData(tsChannel, &firstByte, 1);
+		int recieved = tunerStudioReadData(tsChannel, &firstByte, 1);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-			logMsg("received %d\r\n", received);
+			logMsg("recieved %d\r\n", recieved);
 #endif
 
 
-		if (received != 1) {
+		if (recieved != 1) {
 //			tunerStudioError("ERROR: no command");
 			continue;
 		}
@@ -468,8 +468,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 
 		uint8_t secondByte;
-		received = tunerStudioReadData(tsChannel, &secondByte, 1);
-		if (received != 1) {
+		recieved = tunerStudioReadData(tsChannel, &secondByte, 1);
+		if (recieved != 1) {
 			tunerStudioError("TS: ERROR: no second byte");
 			continue;
 		}
@@ -490,8 +490,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 		}
 
-		received = tunerStudioReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
-		if (received != 1) {
+		recieved = tunerStudioReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
+		if (recieved != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
 		}
@@ -510,11 +510,11 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		received = tunerStudioReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
+		recieved = tunerStudioReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
-		if (received != expectedSize) {
-			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", received,
+		if (recieved != expectedSize) {
+			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", recieved,
 					expectedSize, command);
 			tunerStudioError("ERROR: not enough bytes in stream");
 			sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_UNDERRUN);
@@ -659,8 +659,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		handleTestCommand(tsChannel);
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
-		int received = tunerStudioReadData(tsChannel, (uint8_t * )&pageIn, sizeof(pageIn));
-		if (received != sizeof(pageIn)) {
+		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&pageIn, sizeof(pageIn));
+		if (recieved != sizeof(pageIn)) {
 			tunerStudioError("ERROR: not enough for PAGE");
 			return true;
 		}
@@ -669,8 +669,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	} else if (command == TS_BURN_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked BURN");
 		uint16_t page;
-		int received = tunerStudioReadData(tsChannel, (uint8_t * )&page, sizeof(page));
-		if (received != sizeof(page)) {
+		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&page, sizeof(page));
+		if (recieved != sizeof(page)) {
 			tunerStudioError("ERROR: Not enough for plain burn");
 			return true;
 		}
@@ -678,15 +678,15 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked CHUNK_WRITE");
-		int received = tunerStudioReadData(tsChannel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest));
-		if (received != sizeof(writeChunkRequest)) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", received);
+		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest));
+		if (recieved != sizeof(writeChunkRequest)) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
 			tsState.errorCounter++;
 			return true;
 		}
-		received = tunerStudioReadData(tsChannel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
-		if (received != writeChunkRequest.count) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", received,
+		recieved = tunerStudioReadData(tsChannel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
+		if (recieved != writeChunkRequest.count) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved,
 					writeChunkRequest.count);
 			tsState.errorCounter++;
 			return true;
@@ -698,8 +698,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int received = tunerStudioReadData(tsChannel, (uint8_t * )&readRequest, sizeof(readRequest));
-		if (received != sizeof(readRequest)) {
+		int recieved = tunerStudioReadData(tsChannel, (uint8_t * )&readRequest, sizeof(readRequest));
+		if (recieved != sizeof(readRequest)) {
 			tunerStudioError("Not enough for plain read header");
 			return true;
 		}
