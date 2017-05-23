@@ -37,11 +37,11 @@ public:
 #endif
 	float minResult;
 	float maxResult;
+	float iTerm;
+	float dTerm; // we are remembering this only for debugging purposes
 private:
 	pid_s *pid;
 
-	float iTerm;
-	float dTerm; // we are remembering this only for debugging purposes
 	float prevError;
 };
 
