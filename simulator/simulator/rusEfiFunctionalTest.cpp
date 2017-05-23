@@ -163,6 +163,6 @@ void logMsg(const char *format, ...) {
 //	fclose(fp);
 }
 
-SerialDriver * getConsoleChannel(void) {
-	return (SerialDriver *)EFI_CONSOLE_UART_DEVICE;
+BaseChannel * getConsoleChannel(void) {
+	return (BaseChannel *)EFI_CONSOLE_UART_DEVICE;
 }
