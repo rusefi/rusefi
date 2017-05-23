@@ -169,21 +169,22 @@ int sr5ReadData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
  */
 void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size) {
 	uint8_t *writeBuffer = tsChannel->writeBuffer;
+	uint8_t *crcBuffer = &tsChannel->writeBuffer[3];
 
 	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
 	*(uint8_t *) (writeBuffer + 2) = responseCode;
-	sr5WriteData(tsChannel, writeBuffer, 3);      // header
 
 	// CRC on whole packet
 	uint32_t crc = crc32((void *) (writeBuffer + 2), 1); // command part of CRC
 	crc = crc32inc((void *) buf, crc, (uint32_t) (size)); // combined with packet CRC
-	*(uint32_t *) (writeBuffer + 3) = SWAP_UINT32(crc);
 
+	*(uint32_t *) (crcBuffer) = SWAP_UINT32(crc);
+
+	sr5WriteData(tsChannel, writeBuffer, 3);      // header
 	if (size > 0) {
 		sr5WriteData(tsChannel, (const uint8_t*)buf, size);      // body
 	}
-
-	sr5WriteData(tsChannel, writeBuffer + 3, 4);      // CRC footer
+	sr5WriteData(tsChannel, crcBuffer, 4);      // CRC footer
 }
 
 void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
