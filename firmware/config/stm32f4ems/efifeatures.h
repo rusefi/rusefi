@@ -243,16 +243,21 @@
 #define EFI_CONSOLE_UART_DEVICE (&SD3)
 #endif
 
-// Use 'UART' DMA-mode driver instead of 'SERIAL'
-#define TS_UART_DMA_MODE FALSE
+/**
+ * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'
+ *
+ * See also
+ *  STM32_SERIAL_USE_USARTx
+ *  STM32_UART_USE_USARTx
+ * in mcuconf.h
+ */
+#define TS_UART_DMA_MODE TRUE
 
 #define TS_DMA_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_UART_DEVICE (&SD3)
 
-// todo: add DMA-mode for Console & GPS?
+// todo: add DMA-mode for Console?
 #if TS_UART_DMA_MODE
-#undef EFI_UART_GPS
-#define EFI_UART_GPS FALSE
 #undef EFI_CONSOLE_UART_DEVICE
 #endif
 
