@@ -94,9 +94,6 @@ extern persistent_config_container_s persistentState;
 
 extern short currentPageId;
 
-// that's 3 seconds
-#define TS_READ_TIMEOUT MS2ST(3000)
-
 /**
  * note the use-case where text console port is switched into
  * binary port
@@ -113,21 +110,7 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-ts_channel_s tsChannel;
-
-static int ts_serial_ready(bool isConsoleRedirect) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (isCommandLineConsoleOverTTL() ^ isConsoleRedirect) {
-		// TS uses USB when console uses serial
-		return is_usb_serial_ready();
-	} else {
-		// TS uses serial when console uses USB
-		return true;
-	}
-#else
-	return true;
-#endif
-}
+static ts_channel_s tsChannel;
 
 static uint16_t BINARY_RESPONSE = (uint16_t) SWAP_UINT16(BINARY_SWITCH_TAG);
 
@@ -243,6 +226,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 }
 
 static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
+	UNUSED(currentPageId);
 	if (offset > sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
@@ -316,6 +300,8 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
  */
 void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
 		uint8_t value) {
+	UNUSED(tsChannel);
+	UNUSED(mode);
 	tsState.writeValueCommandCounter++;
 
 	currentPageId = page;
@@ -442,7 +428,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	bool isFirstByte = true;
 
 	while (true) {
-		int isReady = ts_serial_ready(isConsoleRedirect);
+		int isReady = tsIsReady(isConsoleRedirect);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
 			wasReady = false;
@@ -457,13 +443,13 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		tsState.totalCounter++;
 
 		uint8_t firstByte;
-		int recieved = chnReadTimeout(tsChannel->channel, &firstByte, 1, TS_READ_TIMEOUT);
+		int received = tunerStudioReadData(tsChannel, &firstByte, 1);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-			logMsg("recieved %d\r\n", recieved);
+			logMsg("received %d\r\n", received);
 #endif
 
 
-		if (recieved != 1) {
+		if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 			continue;
 		}
@@ -482,8 +468,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 
 		uint8_t secondByte;
-		recieved = chnReadTimeout(tsChannel->channel, &secondByte, 1, TS_READ_TIMEOUT);
-		if (recieved != 1) {
+		received = tunerStudioReadData(tsChannel, &secondByte, 1);
+		if (received != 1) {
 			tunerStudioError("TS: ERROR: no second byte");
 			continue;
 		}
@@ -504,8 +490,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 		}
 
-		recieved = chnReadTimeout(tsChannel->channel, (uint8_t* )tsChannel->crcReadBuffer, 1, TS_READ_TIMEOUT);
-		if (recieved != 1) {
+		received = tunerStudioReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
+		if (received != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
 		}
@@ -524,11 +510,11 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		recieved = chnReadTimeout(tsChannel->channel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
-				incomingPacketSize + CRC_VALUE_SIZE - 1, TS_READ_TIMEOUT);
+		received = tunerStudioReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
+				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
-		if (recieved != expectedSize) {
-			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", recieved,
+		if (received != expectedSize) {
+			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", received,
 					expectedSize, command);
 			tunerStudioError("ERROR: not enough bytes in stream");
 			sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_UNDERRUN);
@@ -565,9 +551,7 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	startTsPort();
-#endif
+	startTsPort(&tsChannel);
 
 	runBinaryProtocolLoop(&tsChannel, false);
 }
@@ -675,8 +659,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		handleTestCommand(tsChannel);
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&pageIn, sizeof(pageIn), TS_READ_TIMEOUT);
-		if (recieved != sizeof(pageIn)) {
+		int received = tunerStudioReadData(tsChannel, (uint8_t * )&pageIn, sizeof(pageIn));
+		if (received != sizeof(pageIn)) {
 			tunerStudioError("ERROR: not enough for PAGE");
 			return true;
 		}
@@ -685,8 +669,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	} else if (command == TS_BURN_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked BURN");
 		uint16_t page;
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&page, sizeof(page), TS_READ_TIMEOUT);
-		if (recieved != sizeof(page)) {
+		int received = tunerStudioReadData(tsChannel, (uint8_t * )&page, sizeof(page));
+		if (received != sizeof(page)) {
 			tunerStudioError("ERROR: Not enough for plain burn");
 			return true;
 		}
@@ -694,17 +678,15 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked CHUNK_WRITE");
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest),
-				TS_READ_TIMEOUT);
-		if (recieved != sizeof(writeChunkRequest)) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
+		int received = tunerStudioReadData(tsChannel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest));
+		if (received != sizeof(writeChunkRequest)) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", received);
 			tsState.errorCounter++;
 			return true;
 		}
-		recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count,
-				TS_READ_TIMEOUT);
-		if (recieved != writeChunkRequest.count) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved,
+		received = tunerStudioReadData(tsChannel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
+		if (received != writeChunkRequest.count) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", received,
 					writeChunkRequest.count);
 			tsState.errorCounter++;
 			return true;
@@ -716,9 +698,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&readRequest, sizeof(readRequest),
-				TS_READ_TIMEOUT);
-		if (recieved != sizeof(readRequest)) {
+		int received = tunerStudioReadData(tsChannel, (uint8_t * )&readRequest, sizeof(readRequest));
+		if (received != sizeof(readRequest)) {
 			tunerStudioError("Not enough for plain read header");
 			return true;
 		}
@@ -829,8 +810,6 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("tsinfo", printTsStats);
 	addConsoleAction("reset_ts", resetTs);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
-
-	tsChannel.channel = getTsSerialDevice();
 
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
 }
