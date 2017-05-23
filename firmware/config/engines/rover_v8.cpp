@@ -57,6 +57,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	boardConfiguration->ignitionPinMode = OM_INVERTED;
 
     // set_ignition_channels
     boardConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: low side - out #x (?)
@@ -86,9 +87,15 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     boardConfiguration->injectionPins[6] = GPIOE_2; // Frankenstein: low side - out #7
     boardConfiguration->injectionPins[7] = GPIOE_3; // Frankenstein: low side - out #8
 
-    boardConfiguration->fuelPumpPin = GPIOE_0; // Frankenstein: low side - out #9
-    boardConfiguration->malfunctionIndicatorPin = GPIOE_1; // Frankenstein: low side - out #10
+	boardConfiguration->vehicleSpeedSensorInputPin = GPIOC_2; 
+
+	//GPIOE_0 AND GPIOE_1 are bad pins since they conflict with accelerometer
+	//no malfunction indicator pin needed, since we use CAN_BUS_MAZDA_RX8
+	//boardConfiguration->fuelPumpPin = GPIOE_0; // Frankenstein: low side - out #9
+	//boardConfiguration->malfunctionIndicatorPin = GPIOE_1; // Frankenstein: low side - out #10
+	boardConfiguration->fuelPumpPin = GPIOB_8; // Frankenstein: low side - out #11
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	boardConfiguration->mainRelayPin  = GPIOB_9; // Frankenstein: low side - out #12
 
     boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
     boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
