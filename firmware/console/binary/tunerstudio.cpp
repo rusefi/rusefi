@@ -110,21 +110,7 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-ts_channel_s tsChannel;
-
-static int ts_serial_ready(bool isConsoleRedirect) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (isCommandLineConsoleOverTTL() ^ isConsoleRedirect) {
-		// TS uses USB when console uses serial
-		return is_usb_serial_ready();
-	} else {
-		// TS uses serial when console uses USB
-		return true;
-	}
-#else
-	return true;
-#endif
-}
+static ts_channel_s tsChannel;
 
 static uint16_t BINARY_RESPONSE = (uint16_t) SWAP_UINT16(BINARY_SWITCH_TAG);
 
@@ -240,6 +226,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 }
 
 static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
+	UNUSED(currentPageId);
 	if (offset > sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
@@ -313,6 +300,8 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
  */
 void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
 		uint8_t value) {
+	UNUSED(tsChannel);
+	UNUSED(mode);
 	tsState.writeValueCommandCounter++;
 
 	currentPageId = page;
@@ -439,7 +428,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	bool isFirstByte = true;
 
 	while (true) {
-		int isReady = ts_serial_ready(isConsoleRedirect);
+		int isReady = sr5IsReady(isConsoleRedirect);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
 			wasReady = false;
@@ -562,9 +551,7 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	startTsPort();
-#endif
+	startTsPort(&tsChannel);
 
 	runBinaryProtocolLoop(&tsChannel, false);
 }
@@ -823,8 +810,6 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("tsinfo", printTsStats);
 	addConsoleAction("reset_ts", resetTs);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
-
-	tsChannel.channel = getTsSerialDevice();
 
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
 }
