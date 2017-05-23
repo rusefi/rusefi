@@ -17,6 +17,7 @@ void startIdleThread(Logging*sharedLogger);
 void setDefaultIdleParameters(void);
 void startIdleBench(void);
 void setIdleDT(int value);
+void setIdleOffset(float value);
 void setIdlePFactor(float value);
 void setIdleIFactor(float value);
 void setIdleDFactor(float value);
