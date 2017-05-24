@@ -19,6 +19,8 @@
 #include "hal_usb_msd.h"
 #include "usb_msd_cfg.h"
 
+#if HAL_USE_USB_MSD
+
 /*
  * must be 64 for full speed and 512 for high speed
  */
@@ -228,3 +230,4 @@ const USBConfig msdusbcfg = {
   NULL
 };
 
+#endif /* HAL_USE_USB_MSD */
