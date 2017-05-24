@@ -45,8 +45,6 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 
 	InjectionEvent *event;
-	turnPinHigh();
-	turnPinLow();
 };
 
 void initSignalExecutor(void);
