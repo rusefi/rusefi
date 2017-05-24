@@ -160,7 +160,7 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 #if STM32_ICU_USE_TIM8
 	if (hwPin == GPIOC_6 ||
 		hwPin == GPIOC_7) {
-		return &ICUD9;
+		return &ICUD8;
 	}
 #endif
 #if STM32_ICU_USE_TIM9
