@@ -139,6 +139,12 @@ void Engine::reset() {
 
 }
 
+FuelConsumptionState::FuelConsumptionState() {
+	perSecondConsumption = perSecondAccumulator = 0;
+	perMinuteConsumption = perMinuteAccumulator = 0;
+	accumulatedSecond = accumulatedMinute = -1;
+}
+
 EngineState::EngineState() {
 	dwellAngle = 0;
 	engineNoiseHipLevel = 0;
