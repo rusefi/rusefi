@@ -259,7 +259,7 @@ public:
 	void reset();
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	OutputSignalPair fuelActuators[INJECTION_PIN_COUNT];
+	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
 	IgnitionEventList ignitionEvents;
 
 

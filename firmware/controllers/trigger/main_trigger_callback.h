@@ -22,8 +22,8 @@ int isIgnitionTimingError(void);
 
 void showMainHistogram(void);
 
-void seTurnPinHigh(OutputSignalPair *pair);
-void seTurnPinLow(OutputSignalPair *pair);
+void seTurnPinHigh(InjectionSignalPair *pair);
+void seTurnPinLow(InjectionSignalPair *pair);
 
 float getFuel(int rpm, float key);
 #endif /* MAIN_LOOP_H_ */
