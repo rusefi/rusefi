@@ -251,7 +251,7 @@
  *  STM32_UART_USE_USARTx
  * in mcuconf.h
  */
-#define TS_UART_DMA_MODE TRUE
+#define TS_UART_DMA_MODE FALSE
 
 #define TS_DMA_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_UART_DEVICE (&SD3)
