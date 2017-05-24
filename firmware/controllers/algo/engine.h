@@ -91,12 +91,26 @@ public:
 	void reset();
 };
 
+class FuelConsumptionState {
+public:
+	FuelConsumptionState();
+	void addData(float durationMs);
+	float perSecondConsumption;
+	float perMinuteConsumption;
+	float perSecondAccumulator;
+	float perMinuteAccumulator;
+	int accumulatedSecond;
+	int accumulatedMinute;
+};
+
+
 class EngineState {
 public:
 	EngineState();
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+	FuelConsumptionState fuelConsumption;
 
 	efitick_t crankingTime;
 	efitick_t timeSinceCranking;
