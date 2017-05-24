@@ -54,10 +54,11 @@ EXTERN_ENGINE;
 
 extern board_configuration_s *boardConfiguration;
 
+#if HAL_USE_USB_MSD
 //static USBDriver *ms_usb_driver = &USBD1;
 //static USBMassStorageDriver UMSD1;
 extern const USBConfig msdusbcfg;
-
+#endif /* HAL_USE_USB_MSD */
 
 
 #define PUSHPULLDELAY 500
