@@ -596,7 +596,7 @@ void assertEvent(const char *msg, int index, void *callback, efitime_t start, ef
 	scheduling_s *ev = schedulingQueue.getForUnitText(index);
 	assertEqualsM4(msg, "up/down", (void*)ev->callback == (void*) callback, 1);
 	assertEqualsM(msg, momentX, ev->momentX - start);
-	OutputSignalPair *pair = (OutputSignalPair *)ev->param;
+	InjectionSignalPair *pair = (InjectionSignalPair *)ev->param;
 	assertEqualsLM(msg, param, (long)pair->outputs[0]);
 }
 

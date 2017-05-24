@@ -133,7 +133,7 @@ static void tempTurnPinHigh(InjectorOutputPin *output) {
 }
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
-void seTurnPinHigh(OutputSignalPair *pair) {
+void seTurnPinHigh(InjectionSignalPair *pair) {
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = pair->outputs[i];
 		if (output != NULL) {
@@ -181,7 +181,7 @@ static void tempTurnPinLow(InjectorOutputPin *output) {
 	output->setLow();
 }
 
-void seTurnPinLow(OutputSignalPair *pair) {
+void seTurnPinLow(InjectionSignalPair *pair) {
 	pair->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = pair->outputs[i];
@@ -197,7 +197,7 @@ void seTurnPinLow(OutputSignalPair *pair) {
 	engine->injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, OutputSignalPair *pair) {
+static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionSignalPair *pair) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	InjectorOutputPin *param = pair->outputs[0];
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
@@ -210,7 +210,7 @@ static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc
 	scheduleByTime(scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(OutputSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void scheduleFuelInjection(InjectionSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (durationUs < 0) {
 		warning(CUSTOM_NEGATIVE_DURATION, "duration cannot be negative: %d", durationUs);
 		return;
@@ -230,7 +230,7 @@ static void scheduleFuelInjection(OutputSignalPair *pair, efitimeus_t nowUs, flo
 #if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
 	printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
-		return; // this OutputSignalPair is still needed for an extremely long injection scheduled previously
+		return; // this InjectionSignalPair is still needed for an extremely long injection scheduled previously
 	}
 	pair->outputs[0] = output;
 	pair->outputs[1] = event->outputs[1];
@@ -303,7 +303,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
-	OutputSignalPair *pair = &ENGINE(fuelActuators[injEventIndex]);
+	InjectionSignalPair *pair = &ENGINE(fuelActuators[injEventIndex]);
 
 	if (event->isSimultanious) {
 		/**

@@ -41,7 +41,7 @@ extern WaveChart waveChart;
 
 #include "efiGpio.h"
 
-OutputSignalPair::OutputSignalPair() {
+InjectionSignalPair::InjectionSignalPair() {
 	isScheduled = false;
 	memset(outputs, 0, sizeof(outputs));
 	event = NULL;
