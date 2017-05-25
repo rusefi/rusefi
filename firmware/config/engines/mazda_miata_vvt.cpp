@@ -388,7 +388,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// enable auto_idle
 	// enable verbose_idle
 	engineConfiguration->isVerboseIAC = false;
-	// set idle_p 0.01
+	// set idle_p 0.05
 	// set idle_i 0
 	// set idle_d 0
 	// set debug_mode 3
