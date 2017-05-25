@@ -68,9 +68,10 @@ void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schf
 //		callback(param);
 //		return;
 //	}
+	bool alreadyLocked = true;
 	if (!reentrantFlag) {
 		// this would guard the queue and disable interrupts
-		lockAnyContext();
+		alreadyLocked = lockAnyContext();
 	}
 	bool needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), callback, param);
 	if (!reentrantFlag) {
@@ -78,15 +79,17 @@ void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schf
 		if (needToResetTimer) {
 			scheduleTimerCallback();
 		}
-		unlockAnyContext();
+		if (!alreadyLocked)
+			unlockAnyContext();
 	}
 }
 
 void Executor::onTimerCallback() {
-	lockAnyContext();
+	bool alreadyLocked = lockAnyContext();
 	doExecute();
 	scheduleTimerCallback();
-	unlockAnyContext();
+	if (!alreadyLocked)
+		unlockAnyContext();
 }
 
 /*

@@ -62,7 +62,7 @@ void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, voi
 		return;
 	}
 
-	lockAnyContext();
+	bool alreadyLocked = lockAnyContext();
 	scheduling->callback = callback;
 	scheduling->param = param;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
@@ -82,7 +82,8 @@ void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, voi
 #endif /* EFI_SIMULATOR */
 
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
-	unlockAnyContext();
+	if (!alreadyLocked)
+		unlockAnyContext();
 }
 
 void initSignalExecutorImpl(void) {
