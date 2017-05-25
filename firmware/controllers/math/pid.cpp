@@ -24,7 +24,7 @@ void Pid::init(pid_s *pid, float minResult, float maxResult) {
 	this->maxResult = maxResult;
 
 	dTerm = iTerm = 0;
-	prevError = 0;
+	prevResult = prevInput = prevTarget = prevError = 0;
 }
 
 bool Pid::isSame(pid_s *pid) {
@@ -38,6 +38,8 @@ float Pid::getValue(float target, float input) {
 
 float Pid::getValue(float target, float input, float dTime) {
 	float error = target - input;
+	prevTarget = target;
+	prevInput = input;
 
 	float pTerm = pid->pFactor * error;
 	iTerm += pid->iFactor * dTime * error;
@@ -61,6 +63,7 @@ float Pid::getValue(float target, float input, float dTime) {
 	} else if (result < minResult) {
 		result = minResult;
 	}
+	prevResult = result;
 	return result;
 }
 
@@ -123,4 +126,11 @@ void Pid::showPidStatus(Logging *logging, const char*msg, int dTime) {
 			pid->iFactor,
 			pid->dFactor,
 			dTime);
+
+	scheduleMsg(logging, "%f input=%d/target=%f iTerm=%.5f dTerm=%.5f",
+			prevResult,
+			prevInput,
+			prevTarget,
+			iTerm, dTerm);
+
 }

@@ -47,6 +47,10 @@ private:
 	pid_s *pid;
 
 	float prevError;
+	// these are only used for logging
+	float prevTarget;
+	float prevInput;
+	float prevResult;
 };
 
 #endif /* PID_H_ */

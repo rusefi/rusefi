@@ -227,12 +227,8 @@ static msg_t ivThread(int param) {
 		}
 
 		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
-			idlePid.showPidStatus(logger, "idle",engineConfiguration->idleDT);
-			scheduleMsg(logger, "rpm=%d/%d position=%f iTerm=%.5f dTerm=%.5f",
-					getRpmE(engine),
-					adjustedTargetRpm,
-					iacPosition,
-					idlePid.iTerm, idlePid.dTerm);
+			idlePid.showPidStatus(logger, "idle", engineConfiguration->idleDT);
+
 		}
 
 		actualIdlePosition = iacPosition;
