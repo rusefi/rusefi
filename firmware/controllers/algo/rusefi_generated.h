@@ -849,8 +849,8 @@
 #define useConstantDwellDuringCranking_offset_hex 5d0
 #define isEngineChartEnabled_offset 1488
 #define isEngineChartEnabled_offset_hex 5d0
-#define unusedBit_7_offset 1488
-#define unusedBit_7_offset_hex 5d0
+#define silentTriggerError_offset 1488
+#define silentTriggerError_offset_hex 5d0
 #define unusedBit__2_offset 1488
 #define unusedBit__2_offset_hex 5d0
 #define canReadEnabled_offset 1488

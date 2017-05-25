@@ -1608,6 +1608,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 				
 	dialog = etbDialog, "Electronic Thtottle Body (alpha)"			
 		field = "pedal Position Channel", 				pedalPositionChannel
+		field = "verbose",								isVerboseETB
 		field = "Pedal min",							pedalPositionMin
 		field = "Pedal max",							pedalPositionMax
 		field = "PWM Frequency",						etbFreq
