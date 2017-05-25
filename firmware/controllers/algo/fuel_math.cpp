@@ -158,7 +158,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
 		return 0; // we can end up here during configuration reset
 	}
-	return theoreticalInjectionLength + injectorLag;
+	return theoreticalInjectionLength * engineConfiguration->globalFuelCorrection + injectorLag;
 }
 
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
