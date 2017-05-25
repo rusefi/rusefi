@@ -210,52 +210,6 @@ static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc
 	scheduleByTime(scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(InjectionSignalPair *pair, efitimeus_t nowUs,
-		floatus_t injectionStartDelayUs, floatus_t durationUs,
-		InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (durationUs < 0) {
-		warning(CUSTOM_NEGATIVE_DURATION, "duration cannot be negative: %d", durationUs);
-		return;
-	}
-	if (cisnan(durationUs)) {
-		warning(CUSTOM_NAN_DURACTION, "NaN in scheduleFuelInjection", durationUs);
-		return;
-	}
-	InjectorOutputPin *output = event->outputs[0];
-#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
-	printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-			(int)MS2US(getCrankshaftRevolutionTimeMs(ENGINE(rpmCalculator.rpmValue))));
-#endif /*EFI_PRINTF_FUEL_DETAILS */
-
-
-	if (pair->isScheduled) {
-#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
-	printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
-#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
-		return; // this InjectionSignalPair is still needed for an extremely long injection scheduled previously
-	}
-	pair->outputs[0] = output;
-	pair->outputs[1] = event->outputs[1];
-	scheduling_s * sUp = &pair->signalTimerUp;
-	scheduling_s * sDown = &pair->signalTimerDown;
-
-	pair->isScheduled = true;
-	pair->event = event;
-	efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
-	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
-
-	if (isSecondaryOverlapping) {
-		output->cancelNextTurningInjectorOff = true;
-#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
-	printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
-#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
-	} else {
-		seScheduleByTime(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
-	}
-	efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
-	seScheduleByTime(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
-}
-
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
 		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
@@ -288,6 +242,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		warning(CUSTOM_OBD_NEG_INJECTION, "Negative injection pulse %f", injectionDuration);
 		return;
 	}
+	floatus_t durationUs = MS2US(injectionDuration);
+
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "handleFuel totalPerCycle=%f", totalPerCycle);
@@ -319,7 +275,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		scheduling_s * sDown = &pair->signalTimerDown;
 
 		scheduleTask(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, event);
-		scheduleTask(sDown, (int) injectionStartDelayUs + MS2US(injectionDuration),
+		scheduleTask(sDown, (int) injectionStartDelayUs + durationUs,
 					(schfunc_t) &endSimultaniousInjection, event);
 
 	} else {
@@ -338,8 +294,40 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		}
 
 		efitimeus_t nowUs = getTimeNowUs();
-		floatus_t durationUs = MS2US(injectionDuration);
-		scheduleFuelInjection(pair, nowUs, injectionStartDelayUs, durationUs, event PASS_ENGINE_PARAMETER_SUFFIX);
+
+		InjectorOutputPin *output = event->outputs[0];
+	#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+		printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
+				(int)MS2US(getCrankshaftRevolutionTimeMs(ENGINE(rpmCalculator.rpmValue))));
+	#endif /*EFI_PRINTF_FUEL_DETAILS */
+
+
+		if (pair->isScheduled) {
+	#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+		printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
+	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
+			return; // this InjectionSignalPair is still needed for an extremely long injection scheduled previously
+		}
+		pair->outputs[0] = output;
+		pair->outputs[1] = event->outputs[1];
+		scheduling_s * sUp = &pair->signalTimerUp;
+		scheduling_s * sDown = &pair->signalTimerDown;
+
+		pair->isScheduled = true;
+		pair->event = event;
+		efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
+		bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
+
+		if (isSecondaryOverlapping) {
+			output->cancelNextTurningInjectorOff = true;
+	#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
+	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
+		} else {
+			seScheduleByTime(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
+		}
+		efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
+		seScheduleByTime(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
 	}
 }
 
