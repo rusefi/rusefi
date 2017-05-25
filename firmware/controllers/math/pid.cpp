@@ -113,3 +113,14 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField6 = dTerm;
 }
 #endif
+
+void Pid::showPidStatus(Logging *logging, const char*msg, int dTime) {
+	// todo: dTime should be taken from pid_s
+	scheduleMsg(logging, "%s o=%f P=%.5f I=%.5f D=%.5f dT=%d",
+			msg,
+			pid->offset,
+			pid->pFactor,
+			pid->iFactor,
+			pid->dFactor,
+			dTime);
+}
