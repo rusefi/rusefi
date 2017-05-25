@@ -210,7 +210,9 @@ static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc
 	scheduleByTime(scheduling, time, callback, pair);
 }
 
-static void scheduleFuelInjection(InjectionSignalPair *pair, efitimeus_t nowUs, floatus_t delayUs, floatus_t durationUs, InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void scheduleFuelInjection(InjectionSignalPair *pair, efitimeus_t nowUs,
+		floatus_t injectionStartDelayUs, floatus_t durationUs,
+		InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (durationUs < 0) {
 		warning(CUSTOM_NEGATIVE_DURATION, "duration cannot be negative: %d", durationUs);
 		return;
@@ -239,7 +241,7 @@ static void scheduleFuelInjection(InjectionSignalPair *pair, efitimeus_t nowUs, 
 
 	pair->isScheduled = true;
 	pair->event = event;
-	efitimeus_t turnOnTime = nowUs + (int) delayUs;
+	efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
 	bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
 
 	if (isSecondaryOverlapping) {
@@ -250,7 +252,7 @@ static void scheduleFuelInjection(InjectionSignalPair *pair, efitimeus_t nowUs, 
 	} else {
 		seScheduleByTime(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
 	}
-	efitimeus_t turnOffTime = nowUs + (int) (delayUs + durationUs);
+	efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
 	seScheduleByTime(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
 }
 
@@ -335,7 +337,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			prevOutputName = outputName;
 		}
 
-		scheduleFuelInjection(pair, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration), event PASS_ENGINE_PARAMETER_SUFFIX);
+		efitimeus_t nowUs = getTimeNowUs();
+		floatus_t durationUs = MS2US(injectionDuration);
+		scheduleFuelInjection(pair, nowUs, injectionStartDelayUs, durationUs, event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
