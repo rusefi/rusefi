@@ -843,8 +843,8 @@
 #define fuelClosedLoopCorrectionEnabled_offset_hex 5d0
 #define isVerboseIAC_offset 1488
 #define isVerboseIAC_offset_hex 5d0
-#define unusedBit__6_offset 1488
-#define unusedBit__6_offset_hex 5d0
+#define isVerboseETB_offset 1488
+#define isVerboseETB_offset_hex 5d0
 #define useConstantDwellDuringCranking_offset 1488
 #define useConstantDwellDuringCranking_offset_hex 5d0
 #define isEngineChartEnabled_offset 1488
