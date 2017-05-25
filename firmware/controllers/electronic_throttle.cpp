@@ -97,6 +97,10 @@ static msg_t etbThread(void *arg) {
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE) {
 			pid.postState(&tsOutputChannels);
 		}
+		if (engineConfiguration->isVerboseETB) {
+			pid.showPidStatus(&logger, "ETB", boardConfiguration->etbDT);
+		}
+
 
 //		if (tps != prevTps) {
 //			prevTps = tps;
