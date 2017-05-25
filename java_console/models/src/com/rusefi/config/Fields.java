@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 22 19:37:38 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 25 00:30:55 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -623,7 +623,7 @@ public class Fields {
 	public static final int vvtDisplayInverted_offset = 1488;
 	public static final int fuelClosedLoopCorrectionEnabled_offset = 1488;
 	public static final int isVerboseIAC_offset = 1488;
-	public static final int unusedBit__6_offset = 1488;
+	public static final int isVerboseETB_offset = 1488;
 	public static final int useConstantDwellDuringCranking_offset = 1488;
 	public static final int isEngineChartEnabled_offset = 1488;
 	public static final int unusedBit_7_offset = 1488;
@@ -1441,7 +1441,7 @@ public class Fields {
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1488, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1488, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1488, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT__6 = Field.create("UNUSEDBIT__6", 1488, FieldType.BIT, 3);
+	public static final Field ISVERBOSEETB = Field.create("ISVERBOSEETB", 1488, FieldType.BIT, 3);
 	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1488, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1488, FieldType.BIT, 5);
 	public static final Field UNUSEDBIT_7 = Field.create("UNUSEDBIT_7", 1488, FieldType.BIT, 6);
