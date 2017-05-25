@@ -99,7 +99,7 @@ static void startAveraging(void *arg) {
 	mapMeasurementsCounter = 0;
 	isAveraging = true;
 	if (!wasLocked)
-		chSysUnlockFromISR()
+		unlockAnyContext();
 	;
 	mapAveragingPin.setHigh();
 }
@@ -144,13 +144,14 @@ void mapAveragingCallback(adcsample_t adcValue) {
 	readIndex = writeIndex;
 
 	// todo: migrate to the lock-free implementation
-	chSysLockFromISR()
+	bool alreadyLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
 
 	mapAccumulator += adcValue;
 	mapMeasurementsCounter++;
-	chSysUnlockFromISR()
+	if (!alreadyLocked)
+		unlockAnyContext();
 	;
 }
 #endif
@@ -165,7 +166,7 @@ static void endAveraging(void *arg) {
 			mapAccumulator / mapMeasurementsCounter);
 #endif
 	if (!wasLocked)
-		chSysUnlockFromISR()
+		unlockAnyContext();
 	;
 	mapAveragingPin.setLow();
 }
