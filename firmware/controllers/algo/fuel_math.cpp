@@ -155,7 +155,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	floatms_t injectorLag = ENGINE(engineState.injectorLag);
 	if (cisnan(injectorLag)) {
-		warning(CUSTOM_ERR_6539, "injectorLah not ready");
+		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
 		return 0; // we can end up here during configuration reset
 	}
 	return theoreticalInjectionLength + injectorLag;
