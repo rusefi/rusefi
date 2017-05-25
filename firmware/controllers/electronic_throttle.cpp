@@ -9,6 +9,14 @@
  *  it is believed that more than just PID would be needed, as is this is probably
  *  not usable on a real vehicle. Needs to be tested :)
  *
+ *  ETB is controlled according to pedal position input (pedal position sensor is a potentiometer)
+ *    petal 0% means pedal not pressed / idle
+ *    pedal 100% means pedal all the way down
+ *
+ *  At the moment we only control opening motor - while relying on ETB spring to move throttle butterfly
+ *  back. Throttle position sensor inside ETB is used for closed-loop PID control of ETB.
+ *
+ *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
  * @date Dec 7, 2013
