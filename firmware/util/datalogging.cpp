@@ -117,7 +117,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
-		firmwareError(CUSTOM_ERR_6532, "intermediateLoggingBufferInited not inited!");
+		firmwareError(CUSTOM_ERR_BUFF_INIT_ERROR, "intermediateLoggingBufferInited not inited!");
 		return;
 	}
 	int wasLocked = lockAnyContext();
