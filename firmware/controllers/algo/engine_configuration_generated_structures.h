@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 25 00:30:55 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 25 08:26:42 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1202,7 +1202,7 @@ typedef struct {
 	bool isEngineChartEnabled : 1;
 	/**
 	offset 1488 bit 6 */
-	bool unusedBit_7 : 1;
+	bool silentTriggerError : 1;
 	/**
 	offset 1488 bit 7 */
 	bool unusedBit__2 : 1;
@@ -2105,4 +2105,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 25 00:30:55 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 25 08:26:42 EDT 2017

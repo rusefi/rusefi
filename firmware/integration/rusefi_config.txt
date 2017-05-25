@@ -590,7 +590,7 @@ bit vvtDisplayInverted
 	bit isVerboseETB
 	bit useConstantDwellDuringCranking 
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
-	bit unusedBit_7
+	bit silentTriggerError
 	bit unusedBit__2
 	bit canReadEnabled
 	bit canWriteEnabled

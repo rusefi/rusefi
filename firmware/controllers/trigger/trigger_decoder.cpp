@@ -248,7 +248,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					&& thirdGap;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-			if (engineConfiguration->isPrintTriggerSynchDetails || someSortOfTriggerError) {
+			if (engineConfiguration->isPrintTriggerSynchDetails || (someSortOfTriggerError && !engineConfiguration->silentTriggerError)) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
