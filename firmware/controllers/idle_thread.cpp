@@ -61,16 +61,6 @@ void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
 }
 
-static void showPidSettings(const char*msg, pid_s *pid) {
-	scheduleMsg(logger, "%s o=%f P=%.5f I=%.5f D=%.5f dT=%d",
-			msg,
-			pid->offset,
-			pid->pFactor,
-			pid->iFactor,
-			pid->dFactor,
-			engineConfiguration->idleDT);
-
-}
 
 static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
@@ -91,7 +81,7 @@ static void showIdleInfo(void) {
 
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
-		showPidSettings("idle", &engineConfiguration->idleRpmPid);
+		idlePid.showPidStatus(logger, "idle", engineConfiguration->idleDT);
 	}
 }
 
@@ -172,7 +162,7 @@ static float autoIdle(float cltCorrection) {
 
 	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
-	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine));
+	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleDT);
 
 	return newValue;
 }
@@ -188,6 +178,7 @@ static msg_t ivThread(int param) {
 	 */
 
 	while (true) {
+		// todo: in auto mode, speel should be taken from idleDTe
 		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
 
 		// this value is not used yet
@@ -236,7 +227,7 @@ static msg_t ivThread(int param) {
 		}
 
 		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
-			showPidSettings("idle", &engineConfiguration->idleRpmPid);
+			idlePid.showPidStatus(logger, "idle",engineConfiguration->idleDT);
 			scheduleMsg(logger, "rpm=%d/%d position=%f iTerm=%.5f dTerm=%.5f",
 					getRpmE(engine),
 					adjustedTargetRpm,
