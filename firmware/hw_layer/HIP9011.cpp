@@ -230,9 +230,9 @@ static void endIntegration(void) {
  */
 static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// this callback is invoked on interrupt thread
-	engine->m.beforeHipCb = GET_TIMESTAMP();
 	if (index != 0)
 		return;
+	engine->m.beforeHipCb = GET_TIMESTAMP();
 
 	int rpm = engine->rpmCalculator.rpmValue;
 	if (!isValidRpm(rpm))
