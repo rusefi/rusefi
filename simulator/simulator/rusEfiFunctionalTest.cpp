@@ -119,7 +119,7 @@ void rusEfiFunctionalTest(void) {
 	initMapAveraging(&sharedLogger, engine);
 #endif /* EFI_MAP_AVERAGING */
 
-	initMainEventListener(&sharedLogger, engine);
+	initMainEventListener(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 	startStatusThreads();
 
