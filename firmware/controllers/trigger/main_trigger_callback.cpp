@@ -81,6 +81,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 //#endif
 
 static void startSimultaniousInjection(InjectionEvent *event) {
+	(void)event;
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = event->engine;
 #endif
@@ -100,7 +101,7 @@ static void endSimultaniousInjection(InjectionEvent *event) {
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-static void tempTurnPinHigh(InjectorOutputPin *output) {
+static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 	output->overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
@@ -136,7 +137,7 @@ void seTurnPinHigh(InjectionSignalPair *pair) {
 	}
 }
 
-static void tempTurnPinLow(InjectorOutputPin *output) {
+static inline void tempTurnPinLow(InjectorOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -188,7 +189,7 @@ void seTurnPinLow(InjectionSignalPair *pair) {
 	Engine *engine = pair->event->engine;
 	EXPAND_Engine;
 #endif
-	engine->injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 static void seScheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionSignalPair *pair) {
