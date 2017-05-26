@@ -178,13 +178,14 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);
-	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
 	if (index != CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
+	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
 	int rpm = ENGINE(rpmCalculator.rpmValue);
-	if (!isValidRpm(rpm))
+	if (!isValidRpm(rpm)) {
 		return;
+	}
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
