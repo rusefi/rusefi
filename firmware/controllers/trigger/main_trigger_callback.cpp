@@ -357,7 +357,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#3");
 	efiAssertVoid(trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	if (!isInjectionEnabled(engineConfiguration) || limitedFuel) {
+	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE) || limitedFuel) {
 		return;
 	}
 	if (engine->isCylinderCleanupMode) {
@@ -535,7 +535,7 @@ static void showMainInfo(Engine *engine) {
 #endif
 }
 
-void initMainEventListener(Logging *sharedLogger, Engine *engine) {
+void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "null engine");
 	initSparkLogic(logger);
@@ -545,7 +545,7 @@ void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
-	if (!isInjectionEnabled(engine->engineConfiguration))
+	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE))
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
