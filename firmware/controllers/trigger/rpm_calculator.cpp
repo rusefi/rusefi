@@ -81,7 +81,7 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool result = nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND_LL);
+	bool result = nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND_LL); // Anything below 60 rpm is not running
 	if (!result) {
 		notRunnintNow = nowNt;
 		notRunningPrev = lastRpmEventTimeNt;
