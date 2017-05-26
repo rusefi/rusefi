@@ -203,7 +203,7 @@ static msg_t ivThread(int param) {
 
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
-		} else if (isCranking()) {
+		} else if (isCrankingE(engine)) {
 			// during cranking it's always manual mode, PID would make no sence during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
 		} else if (engineConfiguration->idleMode == IM_MANUAL) {
