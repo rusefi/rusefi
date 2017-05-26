@@ -176,7 +176,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 	efitick_t nowNt = getTimeNowNt();
-	engine->m.beforeRpmCb = GET_TIMESTAMP();
+	ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstckRCL");
 #endif
@@ -228,7 +228,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		scAddData(crankAngle, signal);
 	}
 #endif
-	engine->m.rpmCbTime = GET_TIMESTAMP() - engine->m.beforeRpmCb;
+	ENGINE(m.rpmCbTime) = GET_TIMESTAMP() - ENGINE(m.beforeRpmCb);
 }
 
 static scheduling_s tdcScheduler[2];
@@ -254,7 +254,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
-		int rpm = getRpmE(engine);
+		int rpm = ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 		// todo: use event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
