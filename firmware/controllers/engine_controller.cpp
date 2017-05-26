@@ -626,7 +626,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */
-		initMainEventListener(sharedLogger, engine);
+		initMainEventListener(sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 

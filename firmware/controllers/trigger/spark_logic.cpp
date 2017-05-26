@@ -21,9 +21,9 @@ IgnitionEventList::IgnitionEventList() {
 	isReady = false;
 }
 
-int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
+int isInjectionEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: is this worth a method? should this be inlined?
-	return engineConfiguration->isInjectionEnabled;
+	return CONFIG(isInjectionEnabled);
 }
 
 int isIgnitionTimingError(void) {

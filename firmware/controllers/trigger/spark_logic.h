@@ -10,7 +10,7 @@
 
 #include "engine.h"
 
-int isInjectionEnabled(engine_configuration_s *engineConfiguration);
+int isInjectionEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initSparkLogic(Logging *sharedLogger);
 void turnSparkPinHigh(IgnitionEvent *event);
