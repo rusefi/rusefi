@@ -174,36 +174,19 @@ bool isCrankingE(Engine *engine) {
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	RpmCalculator *rpmState = &engine->rpmCalculator;
 	efitick_t nowNt = getTimeNowNt();
-	ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstckRCL");
 #endif
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-	angle_t crankAngle = NAN;
-	int signal = -1;
-	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
-		crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-		signal = 1000 * ckpSignalType + index;
-	}
-#endif
+	if (index == 0) {
+		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
+		RpmCalculator *rpmState = &engine->rpmCalculator;
 
-	if (index != 0) {
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-		if (ENGINE(sensorChartMode) == SC_TRIGGER) {
-			scAddData(crankAngle, signal);
-		}
-#endif
-		return;
-	}
-	// todo: wrap this with if (index == 0) statement this would make scAddData logic simpler
+		bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	if (hadRpmRecently) {
-		efitime_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
+		if (hadRpmRecently) {
+			efitime_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -211,24 +194,30 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 * and each revolution of crankshaft consists of two engine cycles revolutions
 		 *
 		 */
-		if (diffNt == 0) {
-			rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
-		} else {
-			int mult = (int)getEngineCycle(engineConfiguration->operationMode) / 360;
-			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
-			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
+			if (diffNt == 0) {
+				rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
+			} else {
+				int mult = (int)getEngineCycle(engineConfiguration->operationMode) / 360;
+				int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
+				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
+			}
 		}
+		rpmState->onNewEngineCycle();
+		rpmState->lastRpmEventTimeNt = nowNt;
+		ENGINE(m.rpmCbTime) = GET_TIMESTAMP() - ENGINE(m.beforeRpmCb);
 	}
-	rpmState->onNewEngineCycle();
-	rpmState->lastRpmEventTimeNt = nowNt;
+
+
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	// this 'index==0' case is here so that it happens after cycle callback so
 	// it goes into sniffer report into the first position
 	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
+		angle_t crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		int signal = 1000 * ckpSignalType + index;
 		scAddData(crankAngle, signal);
 	}
 #endif
-	ENGINE(m.rpmCbTime) = GET_TIMESTAMP() - ENGINE(m.beforeRpmCb);
+
 }
 
 static scheduling_s tdcScheduler[2];
