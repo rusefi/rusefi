@@ -165,12 +165,12 @@ static char timeBuffer[10];
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
-	if (skipUntilEngineCycle != 0 && ENGINE(rpmCalculator.getRevolutionCounter()) < skipUntilEngineCycle)
-		return;
-	efiAssertVoid(name!=NULL, "WC: NULL name");
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;
 	}
+	if (skipUntilEngineCycle != 0 && ENGINE(rpmCalculator.getRevolutionCounter()) < skipUntilEngineCycle)
+		return;
+	efiAssertVoid(name!=NULL, "WC: NULL name");
 
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 32, "lowstck#2c");
