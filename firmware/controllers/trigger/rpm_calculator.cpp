@@ -67,9 +67,9 @@ RpmCalculator::RpmCalculator() {
  */
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
-	if (engine->stopEngineRequestTimeNt != 0) {
+	if (ENGINE(stopEngineRequestTimeNt) != 0) {
 		if (nowNt
-				- engine->stopEngineRequestTimeNt< 3 * US2NT(US_PER_SECOND_LL)) {
+				- ENGINE(stopEngineRequestTimeNt)< 3 * US2NT(US_PER_SECOND_LL)) {
 			return false;
 		}
 	}
@@ -108,7 +108,7 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		 * this would make sure that we have good numbers for first cranking revolution
 		 * #275 cranking could be improved
 		 */
-		engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+		ENGINE(periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE));
 	}
 }
 
@@ -117,7 +117,7 @@ void RpmCalculator::onNewEngineCycle() {
 	revolutionCounterSinceStart++;
 #if EFI_UNIT_TEST
 	revolutionCounterSinceBootForUnitTest = revolutionCounterSinceBoot;
-#endif
+#endif /* EFI_UNIT_TEST */
 }
 
 uint32_t RpmCalculator::getRevolutionCounter(void) {
@@ -163,9 +163,6 @@ bool isCrankingE(Engine *engine) {
 	return isCrankingR(rpm);
 }
 
-bool isCranking(void) {
-	return isCrankingE(engine);
-}
 #endif
 
 /**
