@@ -151,7 +151,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 	trigger_value_e type = eventType[signal];
 
-	if (!engineConfiguration->useOnlyRisingEdgeForTrigger && curSignal == prevSignal) {
+	if (!CONFIG(useOnlyRisingEdgeForTrigger) && curSignal == prevSignal) {
 		orderingErrorCounter++;
 	}
 
@@ -180,20 +180,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					nowNt,
 					currentCycle.current_index);
 		}
-#endif
+#endif /* EFI_UNIT_TEST */
 
 		/**
 		 * For less important events we simply increment the index.
 		 */
 		nextTriggerEvent()
 		;
-//		if (TRIGGER_SHAPE(gapBothDirections) && considerEventForGap()) {
-//			isFirstEvent = false;
-//			thirdPreviousDuration = durationBeforePrevious;
-//			durationBeforePrevious = toothed_previous_duration;
-//			toothed_previous_duration = currentDuration;
-//			toothed_previous_time = nowNt;
-//		}
 	} else {
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -203,7 +196,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					getTrigger_event_e(signal),
 					nowNt);
 		}
-#endif
+#endif /* EFI_UNIT_TEST */
 
 		isFirstEvent = false;
 // todo: skip a number of signal from the beginning
@@ -223,7 +216,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
 			// this is getting a little out of hand, any ideas?
 
-			if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
+			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
 				float currentGap = 1.0 * currentDuration / toothed_previous_duration;
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 				tsOutputChannels.debugFloatField1 = currentGap;
@@ -248,7 +241,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					&& thirdGap;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-			if (engineConfiguration->isPrintTriggerSynchDetails || (someSortOfTriggerError && !engineConfiguration->silentTriggerError)) {
+			if (CONFIG(isPrintTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
@@ -283,21 +276,20 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					currentCycle.current_index,
 					TRIGGER_SHAPE(size));
 		}
-#endif
-			int endOfCycleIndex = TRIGGER_SHAPE(size) - (engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1);
+#endif /* EFI_UNIT_TEST */
+			int endOfCycleIndex = TRIGGER_SHAPE(size) - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
 
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-		if (printTriggerDebug) {
-			printf("isSynchronizationPoint=%d index=%d size=%d\r\n",
-					isSynchronizationPoint,
-					currentCycle.current_index,
-					TRIGGER_SHAPE(size));
-		}
-#endif
-
+			if (printTriggerDebug) {
+				printf("isSynchronizationPoint=%d index=%d size=%d\r\n",
+						isSynchronizationPoint,
+						currentCycle.current_index,
+						TRIGGER_SHAPE(size));
+			}
+#endif /* EFI_UNIT_TEST */
 
 		}
 
@@ -308,7 +300,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
 		}
-#endif
+#endif /* EFI_UNIT_TEST */
 
 		if (isSynchronizationPoint) {
 
