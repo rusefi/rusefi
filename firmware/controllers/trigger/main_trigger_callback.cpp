@@ -108,9 +108,6 @@ static void tempTurnPinHigh(InjectorOutputPin *output) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	if (output->overlappingCounter > 1) {
-//		if (output->cancelNextTurningInjectorOff) {
-//			// how comes AutoTest.testFordAspire ends up here?
-//		} else {
 //		/**
 //		 * #299
 //		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
@@ -118,23 +115,20 @@ static void tempTurnPinHigh(InjectorOutputPin *output) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 		printf("overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
-
-//			output->cancelNextTurningInjectorOff = true;
-			return;
-//		}
-	}
+	} else {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	const char * w = output->currentLogicValue == true ? "err" : "";
+		const char * w = output->currentLogicValue == true ? "err" : "";
 //	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
 //			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	output->setHigh();
+		output->setHigh();
+	}
 }
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
 void seTurnPinHigh(InjectionSignalPair *pair) {
-	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
+	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = pair->outputs[i];
 		if (output != NULL) {
 			tempTurnPinHigh(output);
@@ -161,24 +155,24 @@ static void tempTurnPinLow(InjectorOutputPin *output) {
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 		printf("was cancelled %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* EFI_SIMULATOR */
-		return;
-	}
+	} else {
 
-	#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	const char * w = output->currentLogicValue == false ? "err" : "";
+#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+		const char * w = output->currentLogicValue == false ? "err" : "";
 
 //	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
 //			getRevolutionCounter(), getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	output->overlappingCounter--;
-	if (output->overlappingCounter > 0) {
+		output->overlappingCounter--;
+		if (output->overlappingCounter > 0) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-		printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
+			printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
-		return;
+		} else {
+			output->setLow();
+		}
 	}
-	output->setLow();
 }
 
 void seTurnPinLow(InjectionSignalPair *pair) {
