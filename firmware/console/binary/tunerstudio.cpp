@@ -590,12 +590,12 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  */
 void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 
-//
-//	if (size < offset + count) {
-//		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
-//		sendErrorCode(tsChannel);
-//		return;
-//	}
+
+	if (sizeof(TunerStudioOutputChannels) < offset + count) {
+		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
+		sendErrorCode(tsChannel);
+		return;
+	}
 
 
 	tsState.outputChannelsCommandCounter++;
