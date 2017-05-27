@@ -56,14 +56,14 @@ public class BinaryProtocol {
      * See SWITCH_TO_BINARY_COMMAND in firmware source code
      */
     private static final String SWITCH_TO_BINARY_COMMAND = "~";
-    public static final char COMMAND_OUTPUTS = 'O';
-    public static final char COMMAND_HELLO = 'S';
+    public static final char COMMAND_OUTPUTS = 'O'; // ochGetCommand
+    public static final char COMMAND_HELLO = 'S'; // queryCommand
     public static final char COMMAND_PROTOCOL = 'F';
     public static final char COMMAND_CRC_CHECK_COMMAND = 'k';
     public static final char COMMAND_PAGE = 'P';
     public static final char COMMAND_READ = 'R'; // 082 decimal
-    public static final char COMMAND_CHUNK_WRITE = 'C';
-    public static final char COMMAND_BURN = 'B';
+    public static final char COMMAND_CHUNK_WRITE = 'C'; // pageChunkWrite
+    public static final char COMMAND_BURN = 'B'; // burnCommand
 
     private final Logger logger;
     private final IoStream stream;
