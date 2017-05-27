@@ -724,7 +724,7 @@ fileVersion = { 20161225 }
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
 		subMenu = std_separator
 		subMenu = fuelTableTbl,				"Fuel Table", 0, {fuelAlgorithm != 3}
-        subMenu = veTableTbl,           	"VE Table", 0, {fuelAlgorithm == 3}
+        subMenu = veTableDialog,           	"VE Table", 0, {fuelAlgorithm == 3}
         subMenu = afrTableTbl,          	"Target AFR Table", 0, {fuelAlgorithm == 3}
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
         subMenu = injPhaseTableTbl,         "Injection Phase"           
@@ -745,7 +745,7 @@ fileVersion = { 20161225 }
 ;		subMenu = std_realtime,				"Realtime Display"
 ;		subMenu = std_warmup,				"Warmup Wizard"
 		subMenu = fuelTableMap,				"Fuel Table", 0, {fuelAlgorithm != 3}
-		subMenu = veTableMap,				"VE Table", 0, {fuelAlgorithm == 3}
+		subMenu = veTableDialog3D,			"VE Table", 0, {fuelAlgorithm == 3}
 		subMenu = afrTableMap,				"Target AFR Table", 0, {fuelAlgorithm == 3}
 		subMenu = injPhaseTableMap,			"Injection Phase"
 		subMenu = ignitionTableMap,			"Ignition Table"
@@ -1471,9 +1471,11 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 				
 ;			Tuning->General
 	dialog = generalSettings, "General"
+		field = "http://rusefi.com/support"
 		field = "RPM Hard Limit",         	    		rpmHardLimit
 		field = "Boost Cut Pressure",					boostCutPressure
 		field = ""
+		field = "http://rusefi.com/fuel"
 		field = "Fuel Algorithm",						fuelAlgorithm
 		field = ""
 		field = "#System hack's"
@@ -1605,6 +1607,18 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
+				
+	dialog = veTableDialogNorth
+		field = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
+		field = "http://rusefi.com/fuel"
+				
+	dialog = veTableDialog, "VE Table"
+		panel = veTableDialogNorth, North
+		panel = veTableTbl, South
+				
+	dialog = veTableDialog3D, "VE Table"
+		panel = veTableDialogNorth, North
+		panel = veTableMap, South
 				
 	dialog = etbDialog, "Electronic Thtottle Body (alpha)"			
 		field = "pedal Position Channel", 				pedalPositionChannel
