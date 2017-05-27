@@ -65,21 +65,21 @@ typedef struct {
 } uart_dma_s;
 
 #define TS_HELLO_COMMAND_DEPRECATED 'H' // 0x48
-#define TS_HELLO_COMMAND 'S' // 0x53
+#define TS_HELLO_COMMAND 'S' // 0x53 queryCommand
 #define TS_TEST_COMMAND 't' // 0x74
 #define TS_LEGACY_HELLO_COMMAND 'Q' // 0x51
-#define TS_OUTPUT_COMMAND 'O' // 0x4F
+#define TS_OUTPUT_COMMAND 'O' // 0x4F ochGetCommand
 #define TS_READ_COMMAND 'R' // 0x52
 #define TS_PAGE_COMMAND 'P' // 0x50
 #define TS_COMMAND_F 'F' // 0x46
 #define TS_EXECUTE 'E' // 0x45
 #define TS_GET_TEXT 'G' // 0x47
 #define TS_GET_FILE_RANGE '2'
-#define TS_GET_FIRMWARE_VERSION 'V'
+#define TS_GET_FIRMWARE_VERSION 'V' // versionInfo
 
-#define TS_SINGLE_WRITE_COMMAND 'W' // 0x57
-#define TS_CHUNK_WRITE_COMMAND 'C' // 0x43
-#define TS_BURN_COMMAND 'B' // 0x42
+#define TS_SINGLE_WRITE_COMMAND 'W' // 0x57 pageValueWrite
+#define TS_CHUNK_WRITE_COMMAND 'C' // 0x43 pageChunkWrite
+#define TS_BURN_COMMAND 'B' // 0x42 burnCommand
 #define TS_IO_TEST_COMMAND 'w' // 0x77
 
 #define TS_CRC_CHECK_COMMAND 'k' // 0x6B
