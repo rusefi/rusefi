@@ -1615,7 +1615,11 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "Dir #1",								etbDirectionPin1
 		field = "Dir #2",								etbDirectionPin2
 		field = "Control #1",							etbControlPin1	
-		field = "Control #2",							etbControlPin2	
+		field = "Control #2",							etbControlPin2
+		field = "pFactor",								etb_pFactor
+		field = "iFactor",								etb_iFactor
+		field = "dFactor",								etb_dFactor	
+		field = "offset",								etb_offset	
 				
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1
