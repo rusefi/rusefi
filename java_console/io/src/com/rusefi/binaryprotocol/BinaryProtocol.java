@@ -498,7 +498,13 @@ public class BinaryProtocol {
     public boolean requestOutputChannels() {
         if (isClosed)
             return false;
-        byte[] response = executeCommand(new byte[]{COMMAND_OUTPUTS}, "output channels", false);
+
+        byte packet[] = new byte[5];
+        packet[0] = COMMAND_OUTPUTS;
+        putShort(packet, 1, 0); // offset
+        putShort(packet, 3, swap16(Fields.TS_OUTPUT_SIZE));
+
+        byte[] response = executeCommand(packet, "output channels", false);
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
             return false;
 

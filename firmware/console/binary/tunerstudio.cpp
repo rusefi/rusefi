@@ -409,6 +409,7 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 
 static TunerStudioReadRequest readRequest;
 static TunerStudioWriteChunkRequest writeChunkRequest;
+static TunerStudioOchRequest ochRequest;
 static short int pageIn;
 
 static bool isKnownCommand(char command) {
@@ -587,11 +588,20 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 /**
  * @brief 'Output' command sends out a snapshot of current values
  */
-void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
+void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+
+//
+//	if (size < offset + count) {
+//		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
+//		sendErrorCode(tsChannel);
+//		return;
+//	}
+
+
 	tsState.outputChannelsCommandCounter++;
 	prepareTunerStudioOutputs();
 	// this method is invoked too often to print any debug information
-	sr5SendResponse(tsChannel, mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
+	sr5SendResponse(tsChannel, mode, ((const uint8_t *) &tsOutputChannels) + offset, count);
 }
 
 #define TEST_RESPONSE_TAG " ts_p_alive\r\n"
@@ -706,8 +716,14 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		handlePageReadCommand(tsChannel, TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
 		return true;
 	} else if (command == TS_OUTPUT_COMMAND) {
+		int received = sr5ReadData(tsChannel, (uint8_t * )&ochRequest, sizeof(ochRequest));
+		if (received != sizeof(ochRequest)) {
+			tunerStudioError("Not enough for OutputChannelsCommand");
+			return true;
+		}
+
 		//scheduleMsg(logger, "Got naked Channels???");
-		handleOutputChannelsCommand(tsChannel, TS_PLAIN);
+		handleOutputChannelsCommand(tsChannel, TS_PLAIN, ochRequest.offset, ochRequest.count);
 		return true;
 	} else if (command == TS_LEGACY_HELLO_COMMAND) {
 		tunerStudioDebug("ignoring LEGACY_HELLO_COMMAND");
@@ -735,7 +751,9 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	} else if (command == TS_EXECUTE) {
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 	} else if (command == TS_OUTPUT_COMMAND) {
-		handleOutputChannelsCommand(tsChannel, TS_CRC);
+		uint16_t offset = *(uint16_t *) (data);
+		uint16_t count = *(uint16_t *) (data + 2);
+		handleOutputChannelsCommand(tsChannel, TS_CRC, offset, count);
 	} else if (command == TS_PAGE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		handlePageSelectCommand(tsChannel, TS_CRC, page);
