@@ -123,6 +123,10 @@ public class BinaryProtocolServer {
                 }
             } else if (command == BinaryProtocol.COMMAND_OUTPUTS) {
 
+                if (1==1)
+                    throw new UnsupportedOperationException("offset and count not supported see #429");
+                // todo: new version with offset and
+
                 byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
                 response[0] = (byte) TS_OK.charAt(0);
                 byte[] currentOutputs = BinaryProtocol.currentOutputs;
