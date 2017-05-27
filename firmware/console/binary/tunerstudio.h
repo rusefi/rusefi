@@ -70,6 +70,13 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect);
 
 typedef pre_packed struct
 	post_packed {
+		short int offset;
+		short int count;
+	} TunerStudioOchRequest;
+
+
+	typedef pre_packed struct
+	post_packed {
 		short int page;
 		short int offset;
 		short int count;
