@@ -849,15 +849,15 @@ float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load",   1,   0.0,        0,  300.0,   
 float[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ve_table_t veTable;
-float[FUEL_LOAD_COUNT] veLoadBins;;"%",	1,   0.0,        0,  300.0,   2
+float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1,   0.0,        0,  300.0,   2
 float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 afr_table_t afrTable;		
-float[FUEL_LOAD_COUNT] afrLoadBins;;"%",	1,   0.0,        0,  300.0,   2
+float[FUEL_LOAD_COUNT] afrLoadBins;;"",	1,   0.0,        0,  300.0,   2
 float[FUEL_RPM_COUNT] afrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ! ve_table_t ve2Table;
-! float[FUEL_LOAD_COUNT] ve2LoadBins;;"%",	1,   0.0,        0,  300.0,   2
+! float[FUEL_LOAD_COUNT] ve2LoadBins;;"kPa",	1,   0.0,        0,  300.0,   2
 ! float[FUEL_RPM_COUNT] ve2RpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 tps_tps_table_t tpsTpsAccelTable;
