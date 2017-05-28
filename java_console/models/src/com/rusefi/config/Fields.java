@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:14:55 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:31:01 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -512,7 +512,8 @@ public class Fields {
 	public static final int consoleUartDevice_offset = 1196;
 	public static final int alternatorPidMin_offset = 1200;
 	public static final int alternatorPidMax_offset = 1202;
-	public static final int unusedHere_offset = 1204;
+	public static final int idlePidDeactivationTpsThreshold_offset = 1204;
+	public static final int unusedHere_offset = 1206;
 	public static final int nb2ratioFrom_offset = 1208;
 	public static final int nb2ratioTo_offset = 1212;
 	public static final int triggerErrorPin_offset = 1216;
@@ -1364,7 +1365,8 @@ public class Fields {
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1196, FieldType.INT);
 	public static final Field ALTERNATORPIDMIN = Field.create("ALTERNATORPIDMIN", 1200, FieldType.INT);
 	public static final Field ALTERNATORPIDMAX = Field.create("ALTERNATORPIDMAX", 1202, FieldType.INT);
-	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 1204, FieldType.INT);
+	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 1204, FieldType.INT);
+	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 1206, FieldType.INT);
 	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 1208, FieldType.FLOAT);
 	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 1212, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 1216, FieldType.INT, brain_pin_e);

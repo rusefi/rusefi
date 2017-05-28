@@ -1221,6 +1221,9 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "idle I",								idleRpmPid_iFactor, { idleMode == 0}
 		field = "idle D",								idleRpmPid_dFactor, { idleMode == 0}
 		field = "idle offset",							idleRpmPid_offset, { idleMode == 0}
+		field = "pid min",								idleValvePidMin, { idleMode == 0}
+		field = "pid max",								idleValvePidMax, { idleMode == 0}
+		field = "pid TPS deactivation",					idlePidDeactivationTpsThreshold, { idleMode == 0}
 		field = "verbose",								isVerboseIAC
 		slider = "Manual Idle Position",				manIdlePosition, horizontal
 		field = ""

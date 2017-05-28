@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:14:55 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:31:01 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -652,7 +652,11 @@ typedef struct {
 	/**
 	 * offset 580
 	 */
-	int unusedHere;
+	int16_t idlePidDeactivationTpsThreshold;
+	/**
+	 * offset 582
+	 */
+	int16_t unusedHere;
 	/**
 	 * offset 584
 	 */
@@ -2125,4 +2129,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:14:55 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:31:01 EDT 2017
