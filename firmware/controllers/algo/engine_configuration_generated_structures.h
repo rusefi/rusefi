@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 25 08:26:42 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:14:55 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -644,11 +644,15 @@ typedef struct {
 	/**
 	 * offset 576
 	 */
-	float alternatorPidMin;
+	int16_t alternatorPidMin;
+	/**
+	 * offset 578
+	 */
+	int16_t alternatorPidMax;
 	/**
 	 * offset 580
 	 */
-	float alternatorPidMax;
+	int unusedHere;
 	/**
 	 * offset 584
 	 */
@@ -1846,11 +1850,15 @@ typedef struct {
 	/**
 	 * offset 2824
 	 */
-	float aux1PidMin;
+	int16_t aux1PidMin;
+	/**
+	 * offset 2826
+	 */
+	int16_t aux1PidMax;
 	/**
 	 * offset 2828
 	 */
-	float aux1PidMax;
+	int unusedThere;
 	/**
 	 * offset 2832
 	 */
@@ -1890,7 +1898,19 @@ typedef struct {
 	/**
 	 * offset 2868
 	 */
-	int unused[45];
+	int16_t idleValvePidMin;
+	/**
+	 * offset 2870
+	 */
+	int16_t idleValvePidMax;
+	/**
+	 * offset 2872
+	 */
+	float idlePidActivationTime;
+	/**
+	 * offset 2876
+	 */
+	int unused[43];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2105,4 +2125,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 25 08:26:42 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:14:55 EDT 2017
