@@ -1636,7 +1636,9 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "pFactor",								etb_pFactor
 		field = "iFactor",								etb_iFactor
 		field = "dFactor",								etb_dFactor	
-		field = "offset",								etb_offset	
+		field = "offset",								etb_offset
+		field = "pid min",								etbPidMin	
+		field = "pid max",								etbPidMax	
 				
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1

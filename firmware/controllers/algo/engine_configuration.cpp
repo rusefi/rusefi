@@ -545,6 +545,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->aux1PidMin = 10;
 	engineConfiguration->aux1PidMax = 90;
 
+	engineConfiguration->etbPidMin = 0;
+	engineConfiguration->etbPidMax = 99;
+
 	boardConfiguration->alternatorPidMin = 10;
 	boardConfiguration->alternatorPidMax = 90;
 

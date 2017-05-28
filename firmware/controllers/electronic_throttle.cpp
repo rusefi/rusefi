@@ -184,8 +184,9 @@ void stopETBPins(void) {
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !pid.isSame(&engineConfiguration->etb);
-
+	shouldResetPid = !pid.isSame(&previousConfiguration->etb);
+	pid.minResult = engineConfiguration->etbPidMin;
+	pid.maxResult = engineConfiguration->etbPidMax;
 }
 
 void startETBPins(void) {

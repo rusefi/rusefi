@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:31:01 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 13:44:34 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1862,7 +1862,11 @@ typedef struct {
 	/**
 	 * offset 2828
 	 */
-	int unusedThere;
+	int16_t etbPidMin;
+	/**
+	 * offset 2830
+	 */
+	int16_t etbPidMax;
 	/**
 	 * offset 2832
 	 */
@@ -2129,4 +2133,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 27 23:31:01 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 13:44:34 EDT 2017
