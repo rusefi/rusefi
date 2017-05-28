@@ -55,6 +55,7 @@
 #include "pin_repository.h"
 #include "pwm_generator.h"
 extern TunerStudioOutputChannels tsOutputChannels;
+static bool shouldResetPid = false;
 
 #define ETB_FREQ 400
 
@@ -72,20 +73,26 @@ static SimplePwm etbPwmDown CCM_OPTIONAL;
 static OutputPin outputDirectionOpen CCM_OPTIONAL;
 static OutputPin outputDirectionClose CCM_OPTIONAL;
 
-static pid_s etbS;
-static Pid pid(&etbS, 0, 100);
+EXTERN_ENGINE;
+
+static Pid pid(&engineConfiguration->etb, 0, 100);
 
 static float prevTps;
 
 static float currentEtbDuty;
-
-EXTERN_ENGINE;
 
 static bool wasEtbBraking = false;
 
 static msg_t etbThread(void *arg) {
         UNUSED(arg);
 	while (true) {
+		if (shouldResetPid) {
+			pid.reset();
+//			alternatorPidResetCounter++;
+			shouldResetPid = false;
+		}
+
+
 		percent_t pedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 		percent_t tps = getTPS();
 
@@ -174,6 +181,11 @@ void stopETBPins(void) {
 	unmarkPin(activeConfiguration.bc.etbControlPin2);
 	unmarkPin(activeConfiguration.bc.etbDirectionPin1);
 	unmarkPin(activeConfiguration.bc.etbDirectionPin2);
+}
+
+void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
+	shouldResetPid = !pid.isSame(&engineConfiguration->etb);
+
 }
 
 void startETBPins(void) {
