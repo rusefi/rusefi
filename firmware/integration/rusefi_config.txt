@@ -795,7 +795,8 @@ int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
 	
 	int16_t aux1PidMin;;"v",        1,     0,  0,    100.0,  0
 	int16_t aux1PidMax;;"v",        1,     0,  0,    100.0,  0
-	int unusedThere;
+	int16_t etbPidMin;;"v",        1,     0,  0,    3000.0,  3
+	int16_t etbPidMax;;"v",        1,     0,  0,    3000.0,  3
 
 spi_device_e sdCardSpiDevice;
 	pin_mode_e spi3SckMode;
