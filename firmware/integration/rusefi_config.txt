@@ -524,8 +524,9 @@ bit is_enabled_spi_2
 
 custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	uart_device_e consoleUartDevice;
-	float alternatorPidMin;;"v",        1,     0,  0,    3000.0,  3
-	float alternatorPidMax;;"v",        1,     0,  0,    3000.0,  3
+	int16_t alternatorPidMin;;"v",        1,     0,  0,    3000.0,  3
+	int16_t alternatorPidMax;;"v",        1,     0,  0,    3000.0,  3
+	int unusedHere;
 	float nb2ratioFrom;;"value",      1,      0,       0, 1000,      5
 	float nb2ratioTo;;"value",      1,      0,       0, 1000,      5
 
@@ -791,8 +792,9 @@ int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
 	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;
 	
-	float aux1PidMin;;"v",        1,     0,  0,    3000.0,  3
-	float aux1PidMax;;"v",        1,     0,  0,    3000.0,  3
+	int16_t aux1PidMin;;"v",        1,     0,  0,    100.0,  0
+	int16_t aux1PidMax;;"v",        1,     0,  0,    100.0,  0
+	int unusedThere;
 
 spi_device_e sdCardSpiDevice;
 	pin_mode_e spi3SckMode;
@@ -803,7 +805,10 @@ spi_device_e sdCardSpiDevice;
 	pin_mode_e spi1MisoMode;
 brain_pin_e brakePedalPin
 	pin_input_mode_e brakePedalPinMode;
-	int[45] unused;
+	int16_t idleValvePidMin;;"%",        1,     0,  0,    100.0,  0
+	int16_t idleValvePidMax;;"%",        1,     0,  0,    100.0,  0
+	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1
+	int[43] unused;
 	
 
 end_struct
