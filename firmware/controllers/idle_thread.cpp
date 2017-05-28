@@ -34,6 +34,7 @@
 #include "stepper.h"
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#include "allsensors.h"
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -53,9 +54,9 @@ static StepperMotor iacMotor;
 static int adjustedTargetRpm;
 
 /**
- * that's the position with CLT and IAT corrections
+ * that's current position with CLT and IAT corrections
  */
-static percent_t actualIdlePosition = -100.0f;
+static percent_t currentIdlePosition = -100.0f;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
@@ -159,6 +160,8 @@ percent_t getIdlePosition(void) {
 }
 
 static float autoIdle(float cltCorrection) {
+	if (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > boardConfiguration->idlePidDeactivationTpsThreshold)
+		return currentIdlePosition;
 
 	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
@@ -213,7 +216,7 @@ static msg_t ivThread(int param) {
 			iacPosition = autoIdle(cltCorrection);
 		}
 
-		if (absF(iacPosition - actualIdlePosition) < 1) {
+		if (absF(iacPosition - currentIdlePosition) < 1) {
 			continue; // value is pretty close, let's leave the poor valve alone
 		}
 
@@ -231,9 +234,9 @@ static msg_t ivThread(int param) {
 
 		}
 
-		actualIdlePosition = iacPosition;
+		currentIdlePosition = iacPosition;
 
-		applyIACposition(actualIdlePosition);
+		applyIACposition(currentIdlePosition);
 	}
 #if defined __GNUC__
 	return -1;
@@ -277,6 +280,10 @@ void setIdleDT(int value) {
 	engineConfiguration->idleDT = value;
 	apply();
 	showIdleInfo();
+}
+
+void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
+
 }
 
 void startIdleBench(void) {
