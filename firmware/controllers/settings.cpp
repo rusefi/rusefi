@@ -970,11 +970,21 @@ typedef struct {
 
 typedef struct {
 	const char *token;
+	uint16_t *value;
+} plain_get_short_s;
+
+typedef struct {
+	const char *token;
 	float *value;
 } plain_get_float_s;
 
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+plain_get_short_s getS_plain[] = {
+		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleValvePidMin},
+		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleValvePidMax},
+};
+
 plain_get_integer_s getI_plain[] = {
 //		{"cranking_rpm", &engineConfiguration->cranking.rpm},
 //		{"cranking_injection_mode", setCrankingInjectionMode},
