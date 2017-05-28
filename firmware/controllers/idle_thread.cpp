@@ -43,6 +43,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 EXTERN_ENGINE
 ;
 
+static bool shouldResetPid = false;
 
 static Pid idlePid(&engineConfiguration->idleRpmPid, 1, 99);
 
@@ -184,6 +185,14 @@ static msg_t ivThread(int param) {
 		// todo: in auto mode, speel should be taken from idleDTe
 		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
 
+		if (shouldResetPid) {
+			idlePid.reset();
+//			alternatorPidResetCounter++;
+			shouldResetPid = false;
+		}
+
+
+
 		// this value is not used yet
 		if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
 			engine->clutchDownState = efiReadPin(boardConfiguration->clutchDownPin);
@@ -283,7 +292,9 @@ void setIdleDT(int value) {
 }
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
-
+	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
+	idlePid.minResult = engineConfiguration->idleValvePidMin;
+	idlePid.maxResult = engineConfiguration->idleValvePidMax;
 }
 
 void startIdleBench(void) {
