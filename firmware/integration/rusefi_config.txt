@@ -526,7 +526,8 @@ custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	uart_device_e consoleUartDevice;
 	int16_t alternatorPidMin;;"v",        1,     0,  0,    3000.0,  3
 	int16_t alternatorPidMax;;"v",        1,     0,  0,    3000.0,  3
-	int unusedHere;
+	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
+	int16_t unusedHere;
 	float nb2ratioFrom;;"value",      1,      0,       0, 1000,      5
 	float nb2ratioTo;;"value",      1,      0,       0, 1000,      5
 

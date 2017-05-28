@@ -681,8 +681,10 @@
 #define alternatorPidMin_offset_hex 4b0
 #define alternatorPidMax_offset 1202
 #define alternatorPidMax_offset_hex 4b2
-#define unusedHere_offset 1204
-#define unusedHere_offset_hex 4b4
+#define idlePidDeactivationTpsThreshold_offset 1204
+#define idlePidDeactivationTpsThreshold_offset_hex 4b4
+#define unusedHere_offset 1206
+#define unusedHere_offset_hex 4b6
 #define nb2ratioFrom_offset 1208
 #define nb2ratioFrom_offset_hex 4b8
 #define nb2ratioTo_offset 1212
