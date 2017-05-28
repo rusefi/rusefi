@@ -166,6 +166,10 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+	onConfigurationChangeIdleCallback(&activeConfiguration);
+#endif /* EFI_IDLE_CONTROL */
+
 
 	rememberCurrentConfiguration();
 }
@@ -656,6 +660,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
 
 	engineConfiguration->cranking.baseFuel = 5;
+
+	engineConfiguration->idleValvePidMin = 5;
+	engineConfiguration->idleValvePidMax = 95;
+	boardConfiguration->idlePidDeactivationTpsThreshold = 2;
 
 	engineConfiguration->analogInputDividerCoefficient = 2;
 

@@ -24,5 +24,6 @@ void setIdleDFactor(float value);
 void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);
 void setIdleDT(int value);
+void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
 
 #endif /* IDLE_THREAD_H_ */
