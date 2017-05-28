@@ -162,6 +162,11 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
 #endif /* EFI_ALTERNATOR_CONTROL */
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+
 	rememberCurrentConfiguration();
 }
 
