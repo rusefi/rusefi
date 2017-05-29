@@ -207,7 +207,8 @@ static msg_t ivThread(int param) {
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		float cltCorrection = interpolate2d("cltT", engine->sensors.clt, config->cltIdleCorrBins, config->cltIdleCorr,
+		float clt = engine->sensors.clt;
+		float cltCorrection = cisnan(clt) ? 1 : interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr,
 		CLT_CURVE_SIZE) / PERCENT_MULT;
 
 		float iacPosition;
