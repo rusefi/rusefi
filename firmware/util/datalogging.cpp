@@ -241,7 +241,7 @@ void appendMsgPostfix(Logging *logging) {
 void resetLogging(Logging *logging) {
 	char *buffer = logging->buffer;
 	if (buffer == NULL) {
-		firmwareError(CUSTOM_ERR_6531, "Null buffer: %s", logging->name);
+		firmwareError(ERROR_NULL_BUFFER, "Null buffer: %s", logging->name);
 		return;
 	}
 	logging->linePointer = buffer;

@@ -96,7 +96,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	if (*actualOutputBufferSize != expectedOutputSize) {
 		int sizeToShow = minI(10, *actualOutputBufferSize);
 		int offsetToShow = *actualOutputBufferSize - sizeToShow;
-		firmwareError(CUSTOM_ERR_6534, "lsize mismatch %d/%d [%s]", *actualOutputBufferSize, expectedOutputSize,
+		firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d/%d [%s]", *actualOutputBufferSize, expectedOutputSize,
 				&outputBuffer[offsetToShow]);
 		return NULL;
 	}
