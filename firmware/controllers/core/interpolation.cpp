@@ -129,9 +129,12 @@ float interpolate(float x1, float y1, float x2, float y2, float x) {
 	return interpolateMsg("", x1, y1, x2, y2, x);
 }
 
+/**
+ * Another implementation, which one is faster?
+ */
 int findIndex2(const float array[], unsigned size, float value) {
-	efiAssert(!cisnan(value), "NaN in findIndex", 0);
-	efiAssert(size > 1, "NaN in findIndex", 0);
+	efiAssert(!cisnan(value), "NaN in findIndex2", 0);
+	efiAssert(size > 1, "size in findIndex", 0);
 //	if (size <= 1)
 //		return size && *array <= value ? 0 : -1;
 
@@ -157,8 +160,11 @@ int findIndex2(const float array[], unsigned size, float value) {
  * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
  */
-int findIndex(const float array[], int size, float value) {
-	efiAssert(!cisnan(value), "NaN in findIndex", 0);
+int findIndexMsg(const char *msg, const float array[], int size, float value) {
+	if (cisnan(value)) {
+		firmwareError(CUSTOM_ERR_6530, "NaN in findIndex%s", msg);
+		return 0;
+	}
 
 	if (value < array[0])
 		return -1;
@@ -195,6 +201,10 @@ int findIndex(const float array[], int size, float value) {
 	}
 
 	return middle;
+}
+
+int findIndex(const float array[], int size, float value) {
+	return findIndexMsg("", array, size, value);
 }
 
 /**

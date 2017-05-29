@@ -21,6 +21,7 @@
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 
 int findIndex(const float array[], int size, float value);
+int findIndexMsg(const char *msg, const float array[], int size, float value);
 int findIndex2(const float array[], unsigned size, float value);
 float interpolate(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
@@ -42,12 +43,12 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 		return NAN;
 	}
 
-	int xIndex = findIndex(xBin, xBinSize, x);
+	int xIndex = findIndexMsg("x", xBin, xBinSize, x);
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging())
 		printf("X index=%d\r\n", xIndex);
 #endif
-	int yIndex = findIndex(yBin, yBinSize, y);
+	int yIndex = findIndexMsg("y", yBin, yBinSize, y);
 	if (xIndex < 0 && yIndex < 0) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
