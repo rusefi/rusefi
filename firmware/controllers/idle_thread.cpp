@@ -83,7 +83,7 @@ static void showIdleInfo(void) {
 
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
-		idlePid.showPidStatus(logger, "idle", engineConfiguration->idleDT);
+		idlePid.showPidStatus(logger, "idle", engineConfiguration->idleRpmPid.period);
 	}
 }
 
@@ -166,7 +166,7 @@ static float autoIdle(float cltCorrection) {
 
 	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
-	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleDT);
+	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
 
 	return newValue;
 }
@@ -182,8 +182,7 @@ static msg_t ivThread(int param) {
 	 */
 
 	while (true) {
-		// todo: in auto mode, speel should be taken from idleDTe
-		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
+		idlePid.sleep();  // in both manual and auto mode same period is used
 
 		if (shouldResetPid) {
 			idlePid.reset();
@@ -239,7 +238,7 @@ static msg_t ivThread(int param) {
 		}
 
 		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
-			idlePid.showPidStatus(logger, "idle", engineConfiguration->idleDT);
+			idlePid.showPidStatus(logger, "idle", engineConfiguration->idleRpmPid.period);
 
 		}
 
@@ -286,15 +285,13 @@ void setIdleDFactor(float value) {
 }
 
 void setIdleDT(int value) {
-	engineConfiguration->idleDT = value;
+	engineConfiguration->idleRpmPid.period = value;
 	apply();
 	showIdleInfo();
 }
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
-	idlePid.minResult = engineConfiguration->idleValvePidMin;
-	idlePid.maxResult = engineConfiguration->idleValvePidMax;
 }
 
 void startIdleBench(void) {
@@ -307,7 +304,7 @@ void setDefaultIdleParameters(void) {
 	engineConfiguration->idleRpmPid.pFactor = 0.1f;
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
-	engineConfiguration->idleDT = 10;
+	engineConfiguration->idleRpmPid.period = 10;
 }
 
 static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {

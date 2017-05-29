@@ -251,14 +251,14 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.pFactor = 14;
 	engineConfiguration->alternatorControl.iFactor = 0.1;
 	engineConfiguration->alternatorControl.dFactor = 0;
-	engineConfiguration->alternatorDT = 10;
+	engineConfiguration->alternatorControl.period = 10;
 
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
 	engineConfiguration->auxPid[0].dFactor = 0;
 	engineConfiguration->auxPid[0].offset = 33;
-	engineConfiguration->aux1PidMin = 24;
-	engineConfiguration->aux1PidMax = 44;
+	engineConfiguration->auxPid[0].minValue = 24;
+	engineConfiguration->auxPid[0].maxValue = 44;
 
 	// set idle_position 35
 	boardConfiguration->manIdlePosition = 35;

@@ -44,8 +44,6 @@ static bool shouldResetPid = false;
 
 static void pidReset(void) {
 	altPid.reset();
-	altPid.minResult = engineConfiguration->bc.alternatorPidMin;
-	altPid.maxResult = engineConfiguration->bc.alternatorPidMax;
 }
 
 static msg_t AltCtrlThread(int param) {
@@ -60,8 +58,7 @@ static msg_t AltCtrlThread(int param) {
 		}
 #endif
 
-		int dt = maxI(10, engineConfiguration->alternatorDT);
-		chThdSleepMilliseconds(dt);
+		altPid.sleep();
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
@@ -120,7 +117,7 @@ static msg_t AltCtrlThread(int param) {
 void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
 			hwPortname(boardConfiguration->alternatorControlPin),
-			engineConfiguration->alternatorDT);
+			engineConfiguration->alternatorControl.period);
 	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
 	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
@@ -155,13 +152,11 @@ void setDefaultAlternatorParameters(void) {
 
 	engineConfiguration->alternatorControl.offset = 0;
 	engineConfiguration->alternatorControl.pFactor = 30;
-	engineConfiguration->alternatorDT = 100;
+	engineConfiguration->alternatorControl.period = 100;
 }
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !altPid.isSame(&previousConfiguration->alternatorControl) ||
-			engineConfiguration->bc.alternatorPidMin != previousConfiguration->bc.alternatorPidMin ||
-			engineConfiguration->bc.alternatorPidMax != previousConfiguration->bc.alternatorPidMax;
+	shouldResetPid = !altPid.isSame(&previousConfiguration->alternatorControl);
 }
 
 void initAlternatorCtrl(Logging *sharedLogger) {

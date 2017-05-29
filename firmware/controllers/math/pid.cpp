@@ -29,7 +29,7 @@ void Pid::init(pid_s *pid, float minResult, float maxResult) {
 }
 
 bool Pid::isSame(pid_s *pid) {
-	return this->pid->dFactor == pid->dFactor && this->pid->iFactor == pid->iFactor  &&
+	return this->pid->dFactor == pid->dFactor && this->pid->iFactor == pid->iFactor &&
 			this->pid->offset == pid->offset && this->pid->pFactor == pid->pFactor;
 }
 
@@ -119,8 +119,10 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif
 
 void Pid::sleep() {
-	int period = maxI(10, 10);
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
+	int period = maxI(10, pid->period);
 	chThdSleepMilliseconds(period);
+#endif /* EFI_UNIT_TEST */
 }
 
 void Pid::showPidStatus(Logging *logging, const char*msg, int dTime) {
