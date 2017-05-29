@@ -241,7 +241,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else {
 		efiAssert(!cisnan(rpm), "invalid rpm", NAN);
 
-		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE);
+		dwellMs = interpolate2d("dwell", rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE);
 	}
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {

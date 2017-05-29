@@ -210,7 +210,11 @@ int findIndex(const float array[], int size, float value) {
 /**
  * @brief	One-dimensional table lookup with linear interpolation
  */
-float interpolate2d(float value, float bin[], float values[], int size) {
+float interpolate2d(const char *msg, float value, float bin[], float values[], int size) {
+	if (isnan(value)) {
+		firmwareError(CUSTOM_ERR_6533, "NaN in interpolate2d %s", msg);
+		return NAN;
+	}
 	int index = findIndexMsg("value", bin, size, value);
 
 	if (index == -1)

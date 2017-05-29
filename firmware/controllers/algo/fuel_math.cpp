@@ -184,7 +184,7 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
 		return 0;
 	}
-	float vBattCorrection = interpolate2d(vBatt, engineConfiguration->injector.battLagCorrBins,
+	float vBattCorrection = interpolate2d("lag", vBatt, engineConfiguration->injector.battLagCorrBins,
 			engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE);
 	return vBattCorrection;
 }
@@ -205,19 +205,19 @@ void prepareFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (cisnan(engine->sensors.clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(engine->sensors.clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
+	return interpolate2d("cltf", engine->sensors.clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (cisnan(engine->sensors.clt))
 		return 0; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(engine->sensors.clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE);
+	return interpolate2d("timc", engine->sensors.clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE);
 }
 
 float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE);
+	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE);
 }
 
 /**
@@ -261,13 +261,13 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
 	if (cisnan(coolantTemperature)) // todo: move this check down, below duration correction?
 		return baseCrankingFuel;
-	float durationCoef = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
+	float durationCoef = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef, CRANKING_CURVE_SIZE);
 
-	float coolantTempCoef = interpolate2d(coolantTemperature, config->crankingFuelBins,
+	float coolantTempCoef = interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
 			config->crankingFuelCoef, CRANKING_CURVE_SIZE);
 
-	float tpsCoef = interpolate2d(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), engineConfiguration->crankingTpsBins,
+	float tpsCoef = interpolate2d("crank", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE);
 
 	return baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
