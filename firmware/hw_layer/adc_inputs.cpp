@@ -450,7 +450,8 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return 5;
 	default:
-		firmwareError(CUSTOM_ERR_6535, "Unknown hw channel %d", hwChannel);
+		// todo: better error handling, that's input parameter validation
+		firmwareError(CUSTOM_ERR_ADC_CHANNEL, "Unknown hw channel %d", hwChannel);
 		return -1;
 	}
 }

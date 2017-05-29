@@ -409,7 +409,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	isFrontEvent[index] = TV_RISE == stateParam;
 
 	if (index != size) {
-		firmwareError(CUSTOM_ERR_6513, "are we ever here?");
+		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
 	}
 
 //	int index = size;

@@ -195,7 +195,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 
 		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
 		if (samplingDuration <= 0) {
-			firmwareError(CUSTOM_ERR_6514, "map sampling angle should be positive");
+			warning(CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
 			return;
 		}
 

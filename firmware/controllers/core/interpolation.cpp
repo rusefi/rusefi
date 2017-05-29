@@ -162,7 +162,7 @@ int findIndex2(const float array[], unsigned size, float value) {
  */
 int findIndexMsg(const char *msg, const float array[], int size, float value) {
 	if (cisnan(value)) {
-		firmwareError(CUSTOM_ERR_6530, "NaN in findIndex%s", msg);
+		firmwareError(ERROR_NAN_FIND_INDEX, "NaN in findIndex%s", msg);
 		return 0;
 	}
 
@@ -212,7 +212,7 @@ int findIndex(const float array[], int size, float value) {
  */
 float interpolate2d(const char *msg, float value, float bin[], float values[], int size) {
 	if (isnan(value)) {
-		firmwareError(CUSTOM_ERR_6533, "NaN in interpolate2d %s", msg);
+		firmwareError(CUSTOM_OBD_55, "NaN in interpolate2d %s", msg);
 		return NAN;
 	}
 	int index = findIndexMsg("value", bin, size, value);

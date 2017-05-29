@@ -59,7 +59,7 @@ bool FLStack<T, MAXSIZE>::remove(T value) {
 template<typename T, int MAXSIZE>
 void FLStack<T, MAXSIZE>::push(T value) {
 	if (currentSize >= MAXSIZE) {
-		firmwareError(CUSTOM_ERR_6502, "FLstack overflow");
+		firmwareError(ERROR_FL_STACK_OVERFLOW, "FLstack overflow");
 		return;
 		//warning()
 	}
