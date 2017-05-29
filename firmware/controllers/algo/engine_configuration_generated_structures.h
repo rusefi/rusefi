@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 13:44:34 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 22:30:58 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -20,8 +20,21 @@ typedef struct {
 	 * Linear addition to PID logic
 	 * offset 12
 	 */
-	float offset;
-	/** total size 16*/
+	int16_t offset;
+	/**
+	 * PID dTime
+	 * offset 14
+	 */
+	int16_t period;
+	/**
+	 * offset 16
+	 */
+	int16_t minValue;
+	/**
+	 * offset 18
+	 */
+	int16_t maxValue;
+	/** total size 20*/
 } pid_s;
 
 typedef struct {
@@ -471,7 +484,7 @@ typedef struct {
 	/**
 	 * offset 272
 	 */
-	int etbDT;
+	float fuelClosedLoopAfrLowThreshold;
 	/**
 	 * offset 276
 	 */
@@ -644,11 +657,7 @@ typedef struct {
 	/**
 	 * offset 576
 	 */
-	int16_t alternatorPidMin;
-	/**
-	 * offset 578
-	 */
-	int16_t alternatorPidMax;
+	int unused1;
 	/**
 	 * offset 580
 	 */
@@ -1455,19 +1464,17 @@ typedef struct {
 	 */
 	float suckedOffCoef;
 	/**
-	 * TODO make suckedOffCoef an array by RPM
 	 * offset 1828
 	 */
-	float unused71[7];
+	pid_s alternatorControl;
 	/**
-	 * offset 1856
+	 * offset 1848
 	 */
-	float addedToWallCoef;
+	pid_s etb;
 	/**
-	 * TODO make addedToWallCoef an array by RPM
-	 * offset 1860
+	 * offset 1868
 	 */
-	float unused72[7];
+	pid_s warmupAfrPid;
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1888
@@ -1488,13 +1495,9 @@ typedef struct {
 	 */
 	pid_s idleRpmPid;
 	/**
-	 * offset 1916
-	 */
-	int idleDT;
-	/**
 	 * offset 1920
 	 */
-	int unusedIdleControl;
+	float addedToWallCoef;
 	/**
 	 * blue LED on discovery by default
 	 * offset 1924
@@ -1535,7 +1538,7 @@ typedef struct {
 	/**
 	 * offset 2012
 	 */
-	pid_s etb;
+	float unusedetb[4];
 	/**
 	 * CLT-based target RPM for automatic idle controller
 	 * offset 2028
@@ -1555,14 +1558,9 @@ typedef struct {
 	 */
 	float alternatorOffAboveTps;
 	/**
-	 * PID dTime
 	 * offset 2164
 	 */
-	int alternatorDT;
-	/**
-	 * offset 2168
-	 */
-	pid_s alternatorControl;
+	float unusedalternatorControl[5];
 	/**
 	 * offset 2184
 	 */
@@ -1634,7 +1632,7 @@ typedef struct {
 	/**
 	 * offset 2248
 	 */
-	pid_s warmupAfrPid;
+	float unusedwarmupAfrPid[4];
 	/**
 	 * CLT-based target AFR for PID-based control
 	 * offset 2264
@@ -1701,7 +1699,7 @@ typedef struct {
 	/**
 	 * offset 2412
 	 */
-	pid_dt auxPidDT[AUX_PID_COUNT];
+	int unused4[4];
 	/**
 	 * IAC cranking position
 	 * offset 2428
@@ -1750,7 +1748,7 @@ typedef struct {
 	/**
 	 * offset 2488
 	 */
-	pid_s auxPid[AUX_PID_COUNT];
+	float unusedauxPid[16];
 	/**
 	 * set vvt_mode X
 	 * offset 2552
@@ -1826,10 +1824,6 @@ typedef struct {
 	 */
 	pid_s fuelClosedLoopPid;
 	/**
-	 * offset 2756
-	 */
-	float fuelClosedLoopAfrLowThreshold;
-	/**
 	 * offset 2760
 	 */
 	float fuelClosedLoopAfrHighThreshold;
@@ -1854,19 +1848,11 @@ typedef struct {
 	/**
 	 * offset 2824
 	 */
-	int16_t aux1PidMin;
-	/**
-	 * offset 2826
-	 */
-	int16_t aux1PidMax;
+	pin_input_mode_e brakePedalPinMode;
 	/**
 	 * offset 2828
 	 */
-	int16_t etbPidMin;
-	/**
-	 * offset 2830
-	 */
-	int16_t etbPidMax;
+	float idlePidActivationTime;
 	/**
 	 * offset 2832
 	 */
@@ -1902,23 +1888,11 @@ typedef struct {
 	/**
 	 * offset 2864
 	 */
-	pin_input_mode_e brakePedalPinMode;
+	pid_s auxPid[AUX_PID_COUNT];
 	/**
-	 * offset 2868
+	 * offset 2944
 	 */
-	int16_t idleValvePidMin;
-	/**
-	 * offset 2870
-	 */
-	int16_t idleValvePidMax;
-	/**
-	 * offset 2872
-	 */
-	float idlePidActivationTime;
-	/**
-	 * offset 2876
-	 */
-	int unused[43];
+	int unusedEnd[26];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2133,4 +2107,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 13:44:34 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 22:30:58 EDT 2017

@@ -981,8 +981,8 @@ typedef struct {
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 plain_get_short_s getS_plain[] = {
-		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleValvePidMin},
-		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleValvePidMax},
+		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
+		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
 };
 
 plain_get_integer_s getI_plain[] = {
@@ -1210,7 +1210,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
-			engineConfiguration->alternatorDT = valueI;
+			engineConfiguration->alternatorControl.period = valueI;
 		}
 		showAltInfo();
 	} else if (strEqualCaseInsensitive(paramStr, "alt_offset")) {

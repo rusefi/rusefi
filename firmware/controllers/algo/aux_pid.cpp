@@ -54,16 +54,13 @@ static bool isEnabled(int index) {
 
 static void pidReset(void) {
 	auxPid.reset();
-	auxPid.minResult = engineConfiguration->aux1PidMin;
-	auxPid.maxResult = engineConfiguration->aux1PidMax;
 }
 
 static msg_t auxPidThread(int param) {
 	UNUSED(param);
 		chRegSetThreadName("AuxPidController");
 		while (true) {
-			int dt = maxI(10, engineConfiguration->auxPidDT[0]);
-			chThdSleepMilliseconds(dt);
+			auxPid.sleep();
 
 			if (parametersVersion.isOld()) {
 				pidReset();

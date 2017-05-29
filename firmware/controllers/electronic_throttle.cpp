@@ -111,7 +111,7 @@ static msg_t etbThread(void *arg) {
 			pid.postState(&tsOutputChannels);
 		}
 		if (engineConfiguration->isVerboseETB) {
-			pid.showPidStatus(&logger, "ETB", boardConfiguration->etbDT);
+			pid.showPidStatus(&logger, "ETB", engineConfiguration->etb.period);
 		}
 
 
@@ -121,7 +121,7 @@ static msg_t etbThread(void *arg) {
 //		}
 
 		// this thread is activated 10 times per second
-		chThdSleepMilliseconds(boardConfiguration->etbDT);
+		pid.sleep();
 	}
 #if defined __GNUC__
 	return -1;
@@ -150,7 +150,7 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "etb P=%f I=%f D=%f dT=%d", engineConfiguration->etb.pFactor,
 			engineConfiguration->etb.iFactor,
 			0.0,
-			boardConfiguration->etbDT);
+			engineConfiguration->etb.period);
 }
 
 static void apply(void) {
@@ -173,7 +173,7 @@ void setDefaultEtbParameters(void) {
 	engineConfiguration->pedalPositionMax = 6;
 	engineConfiguration->etb.pFactor = 1;
 	engineConfiguration->etb.iFactor = 0.5;
-	boardConfiguration->etbDT = 100;
+	engineConfiguration->etb.period = 100;
 }
 
 void stopETBPins(void) {
@@ -185,8 +185,6 @@ void stopETBPins(void) {
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !pid.isSame(&previousConfiguration->etb);
-	pid.minResult = engineConfiguration->etbPidMin;
-	pid.maxResult = engineConfiguration->etbPidMax;
 }
 
 void startETBPins(void) {

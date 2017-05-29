@@ -1221,8 +1221,8 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "idle I",								idleRpmPid_iFactor, { idleMode == 0}
 		field = "idle D",								idleRpmPid_dFactor, { idleMode == 0}
 		field = "idle offset",							idleRpmPid_offset, { idleMode == 0}
-		field = "pid min",								idleValvePidMin, { idleMode == 0}
-		field = "pid max",								idleValvePidMax, { idleMode == 0}
+		field = "pid min",								idleRpmPid_minValue, { idleMode == 0}
+		field = "pid max",								idleRpmPid_maxValue, { idleMode == 0}
 		field = "pid TPS deactivation",					idlePidDeactivationTpsThreshold, { idleMode == 0}
 		field = "verbose",								isVerboseIAC
 		slider = "Manual Idle Position",				manIdlePosition, horizontal
@@ -1328,14 +1328,14 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "PWM Frequency",						auxPidFrequency1
 		field = "verbose",								isVerboseAuxPid1
 		field = "#target based on FSIO map#1"
-		field = "control period",						auxPidDT1, {activateAuxPid1 == 1}
+		field = "control period",						auxPid1_period, {activateAuxPid1 == 1}
 		field = "#PID control"
 		field = "offset",								auxPid1_offset, {activateAuxPid1 == 1}
 		field = "P factor",								auxPid1_pFactor, {activateAuxPid1 == 1}
 		field = "I factor",								auxPid1_iFactor, {activateAuxPid1 == 1}
 		field = "D factor",								auxPid1_dFactor, {activateAuxPid1 == 1}
-		field = "Min",									aux1PidMin
-		field = "Max",									aux1PidMax
+		field = "Min",									auxPid1_minValue, {activateAuxPid1 == 1}
+		field = "Max",									auxPid1_maxValue, {activateAuxPid1 == 1}
 		field = "FSIO pin #2",							auxPidPins2
 		field = "FSIO pin #3",							auxPidPins3
 		field = "FSIO pin #4",							auxPidPins4
@@ -1353,14 +1353,14 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
 		field = "Verbose",								isVerboseAlternator, {isAlternatorControlEnabled == 1}
-		field = "control period",						alternatorDT, {isAlternatorControlEnabled == 1}
+		field = "control period",						alternatorControl_period, {isAlternatorControlEnabled == 1}
 		field = "#PID control"
 		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Min",									alternatorPidMin
-		field = "Max",									alternatorPidMax
+		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
 
@@ -1637,8 +1637,8 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "iFactor",								etb_iFactor
 		field = "dFactor",								etb_dFactor	
 		field = "offset",								etb_offset
-		field = "pid min",								etbPidMin	
-		field = "pid max",								etbPidMax	
+		field = "pid min",								etb_minValue	
+		field = "pid max",								etb_maxValue	
 				
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1

@@ -542,14 +542,14 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tachPulseDuractionMs = 4;
 	engineConfiguration->tachPulseTriggerIndex = 4;
 
-	engineConfiguration->aux1PidMin = 10;
-	engineConfiguration->aux1PidMax = 90;
+	engineConfiguration->auxPid[0].minValue = 10;
+	engineConfiguration->auxPid[0].maxValue = 90;
 
-	engineConfiguration->etbPidMin = 0;
-	engineConfiguration->etbPidMax = 99;
+	engineConfiguration->etb.minValue = 0;
+	engineConfiguration->etb.maxValue = 99;
 
-	boardConfiguration->alternatorPidMin = 10;
-	boardConfiguration->alternatorPidMax = 90;
+	engineConfiguration->alternatorControl.minValue = 10;
+	engineConfiguration->alternatorControl.maxValue = 90;
 
 	setTableBin2(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
 	setTableBin2(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
@@ -658,14 +658,14 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelClosedLoopCltThreshold = 70;
 	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
 	engineConfiguration->fuelClosedLoopTpsThreshold = 80;
-	engineConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
+	boardConfiguration->fuelClosedLoopAfrLowThreshold = 10.3;
 	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
 	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
 
 	engineConfiguration->cranking.baseFuel = 5;
 
-	engineConfiguration->idleValvePidMin = 5;
-	engineConfiguration->idleValvePidMax = 95;
+	engineConfiguration->idleRpmPid.minValue = 5;
+	engineConfiguration->idleRpmPid.maxValue = 95;
 	boardConfiguration->idlePidDeactivationTpsThreshold = 2;
 
 	engineConfiguration->analogInputDividerCoefficient = 2;

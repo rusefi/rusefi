@@ -488,7 +488,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.pFactor = 20;
 	engineConfiguration->alternatorControl.iFactor = 0.2;
 	engineConfiguration->alternatorControl.dFactor = 0.1;
-	engineConfiguration->alternatorDT = 10;
+	engineConfiguration->alternatorControl.period = 10;
 
 //	enableFrankensoCan();
 	engineConfiguration->canWriteEnabled = true;
