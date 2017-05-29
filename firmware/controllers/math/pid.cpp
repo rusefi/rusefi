@@ -118,6 +118,11 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif
 
+void Pid::sleep() {
+	int period = maxI(10, 10);
+	chThdSleepMilliseconds(period);
+}
+
 void Pid::showPidStatus(Logging *logging, const char*msg, int dTime) {
 	// todo: dTime should be taken from pid_s
 	scheduleMsg(logging, "%s o=%f P=%.5f I=%.5f D=%.5f dT=%d",

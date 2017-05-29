@@ -43,6 +43,7 @@ public:
 	float iTerm;
 	float dTerm; // we are remembering this only for debugging purposes
 	void showPidStatus(Logging *logging, const char*msg, int dTime);
+	void sleep();
 private:
 	pid_s *pid;
 
