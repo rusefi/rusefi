@@ -89,7 +89,7 @@ extern bool hasFirmwareErrorFlag;
 extern tunerstudio_counters_s tsState;
 #define FULL_LOGGING_KEY "fl"
 
-static char LOGGING_BUFFER[1400] CCM_OPTIONAL;
+static char LOGGING_BUFFER[1800] CCM_OPTIONAL;
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
