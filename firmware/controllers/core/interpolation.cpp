@@ -211,7 +211,7 @@ int findIndex(const float array[], int size, float value) {
  * @brief	One-dimensional table lookup with linear interpolation
  */
 float interpolate2d(float value, float bin[], float values[], int size) {
-	int index = findIndex(bin, size, value);
+	int index = findIndexMsg("value", bin, size, value);
 
 	if (index == -1)
 		return values[0];
@@ -222,7 +222,7 @@ float interpolate2d(float value, float bin[], float values[], int size) {
 }
 
 void setTableValue(float bins[], float values[], int size, float key, float value) {
-	int index = findIndex(bins, size, key);
+	int index = findIndexMsg("tbVl", bins, size, key);
 	if (index == -1)
 		index = 0;
 	values[index] = value;

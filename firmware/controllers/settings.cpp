@@ -806,9 +806,9 @@ static void setTimingMap(const char * rpmStr, const char *loadStr, const char *v
 	float engineLoad = atoff(loadStr);
 	float value = atoff(valueStr);
 
-	int rpmIndex = findIndex(config->ignitionRpmBins, IGN_RPM_COUNT, rpm);
+	int rpmIndex = findIndexMsg("setTM", config->ignitionRpmBins, IGN_RPM_COUNT, rpm);
 	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndex(config->ignitionLoadBins, IGN_LOAD_COUNT, engineLoad);
+	int loadIndex = findIndexMsg("setTM", config->ignitionLoadBins, IGN_LOAD_COUNT, engineLoad);
 	loadIndex = loadIndex < 0 ? 0 : loadIndex;
 
 	config->ignitionTable[loadIndex][rpmIndex] = value;
@@ -820,9 +820,9 @@ static void setFuelMap(const char * rpmStr, const char *loadStr, const char *val
 	float engineLoad = atoff(loadStr);
 	float value = atoff(valueStr);
 
-	int rpmIndex = findIndex(config->fuelRpmBins, FUEL_RPM_COUNT, rpm);
+	int rpmIndex = findIndexMsg("setFM", config->fuelRpmBins, FUEL_RPM_COUNT, rpm);
 	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, engineLoad);
+	int loadIndex = findIndexMsg("setTM", config->fuelLoadBins, FUEL_LOAD_COUNT, engineLoad);
 	loadIndex = loadIndex < 0 ? 0 : loadIndex;
 
 	config->fuelTable[loadIndex][rpmIndex] = value;
