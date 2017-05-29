@@ -173,7 +173,7 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	warmupTargetAfr = interpolate2d(engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
+	warmupTargetAfr = interpolate2d("warm", engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
 			engineConfiguration->warmupTargetAfr, WARMUP_TARGET_AFR_SIZE);
 }
 
@@ -214,7 +214,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
+	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -254,7 +254,7 @@ void Engine::preCalculate() {
 	 */
 	for (int i = 0; i < MAF_DECODING_CACHE_SIZE; i++) {
 		float volts = i / MAF_DECODING_CACHE_MULT;
-		float maf = interpolate2d(volts, config->mafDecodingBins,
+		float maf = interpolate2d("maf", volts, config->mafDecodingBins,
 				config->mafDecoding, MAF_DECODING_COUNT);
 		mafDecodingLookup[i] = maf;
 	}
@@ -355,7 +355,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
-		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
+		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
 
 		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
 
@@ -365,7 +365,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			fixAngle(cylinderStart, "cylinderStart");
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
-		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
+		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
 	} else {
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			engine->engineState.mapAveragingStart[i] = NAN;
