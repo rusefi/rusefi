@@ -589,7 +589,7 @@ board_configuration_s bc;
 bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled
 	bit isVerboseIAC
-	bit isVerboseETB
+	bit isVerboseETB;enable verbose_etb
 	bit useConstantDwellDuringCranking 
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError
