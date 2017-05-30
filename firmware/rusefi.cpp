@@ -119,6 +119,10 @@
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+#include "bootloader/bootloader.h"
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+
 LoggingWithStorage sharedLogger("main");
 
 bool main_loop_started = false;
@@ -251,5 +255,10 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+	// make bootloader code happy too
+	if (initBootloader() != 0)
+		return 123;
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 	return 20170529;
 }
