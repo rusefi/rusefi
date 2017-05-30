@@ -19,8 +19,10 @@ void testPidController(void) {
 	pidS.iFactor = 0.5;
 	pidS.dFactor = 0;
 	pidS.offset = 0;
+	pidS.minValue = 10;
+	pidS.maxValue = 90;
 
-	Pid pid(&pidS, 10, 90);
+	Pid pid(&pidS);
 
 	assertEqualsM("getValue#90", 90, pid.getValue(14, 12, 0.1));
 
