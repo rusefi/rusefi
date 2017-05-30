@@ -344,6 +344,37 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->configResetPin = GPIOB_1;
 }
 
+// needed also by bootloader code
+void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	boardConfiguration->startConsoleInBinaryMode = true;
+	boardConfiguration->useSerialPort = true;
+	engineConfiguration->binarySerialTxPin = GPIOC_10;
+	engineConfiguration->binarySerialRxPin = GPIOC_11;
+	engineConfiguration->consoleSerialTxPin = GPIOC_10;
+	engineConfiguration->consoleSerialRxPin = GPIOC_11;
+	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
+	engineConfiguration->uartConsoleSerialSpeed = 115200;
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
+	setSerialConfigurationOverrides();
+#endif
+}
+
+// needed also by bootloader code
+void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	boardConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	boardConfiguration->sdCardCsPin = GPIOD_4;
+	boardConfiguration->isSdCardEnabled = true;
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
+	setSdCardConfigurationOverrides();
+#endif
+}
+
+
 // todo: move injector calibration somewhere else?
 // todo: add a enum? if we have enough data?
 static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -526,8 +557,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
-
-	boardConfiguration->startConsoleInBinaryMode = true;
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -765,7 +794,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 
-	boardConfiguration->useSerialPort = true;
 	boardConfiguration->useStepperIdle = false;
 
 	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -820,11 +848,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->communicationPin = GPIOD_15; // blue LED on discovery
 	engineConfiguration->runningPin = GPIOD_12; // greeb LED on discovery
 	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engineConfiguration->binarySerialTxPin = GPIOC_10;
-	engineConfiguration->binarySerialRxPin = GPIOC_11;
-	engineConfiguration->consoleSerialTxPin = GPIOC_10;
-	engineConfiguration->consoleSerialRxPin = GPIOC_11;
-
+	
+	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
@@ -900,16 +925,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setHip9011FrankensoPinout();
 #endif
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	boardConfiguration->sdCardCsPin = GPIOD_4;
-	boardConfiguration->isSdCardEnabled = true;
+	setDefaultSdCardParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	
 	boardConfiguration->isFastAdcEnabled = true;
 	boardConfiguration->isEngineControlEnabled = true;
 
 	boardConfiguration->isVerboseAlternator = false;
-
-	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
-	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
 	engineConfiguration->warmupAfrPid.offset = 1;
 	engineConfiguration->warmupAfrThreshold = 60;
