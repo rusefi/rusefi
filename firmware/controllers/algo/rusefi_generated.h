@@ -319,10 +319,8 @@
 #define hip9011SpiDevice_offset_hex 234
 #define globalFuelCorrection_offset 568
 #define globalFuelCorrection_offset_hex 238
-#define pedalPositionMin_offset 572
-#define pedalPositionMin_offset_hex 23c
-#define pedalPositionMax_offset 574
-#define pedalPositionMax_offset_hex 23e
+#define unusedAnother_offset 572
+#define unusedAnother_offset_hex 23c
 #define maxKnockSubDeg_offset 576
 #define maxKnockSubDeg_offset_hex 240
 #define mafAdcChannel_offset 580
@@ -1097,8 +1095,12 @@
 #define knockNoise_offset_hex 79c
 #define knockNoiseRpmBins_offset 1980
 #define knockNoiseRpmBins_offset_hex 7bc
-#define unusedetb_offset 2012
-#define unusedetb_offset_hex 7dc
+#define throttlePedalUpVoltage_offset 2012
+#define throttlePedalUpVoltage_offset_hex 7dc
+#define throttlePedalWOTVoltage_offset 2016
+#define throttlePedalWOTVoltage_offset_hex 7e0
+#define unusedetb_offset 2020
+#define unusedetb_offset_hex 7e4
 #define cltIdleRpmBins_offset 2028
 #define cltIdleRpmBins_offset_hex 7ec
 #define cltIdleRpm_offset 2092

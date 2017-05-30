@@ -137,7 +137,7 @@ static void setThrottleConsole(int level) {
 static void showEthInfo(void) {
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "pedal=%f %d/%d @", getPedalPosition(), engineConfiguration->pedalPositionMin, engineConfiguration->pedalPositionMax,
+	scheduleMsg(&logger, "pedal=%f %f/%f @", getPedalPosition(), engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage,
 			getPinNameByAdcChannel("etb", engineConfiguration->pedalPositionChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%f", getTPS());
@@ -168,7 +168,9 @@ void setEtbIFactor(float value) {
 }
 
 void setDefaultEtbParameters(void) {
-	engineConfiguration->pedalPositionMax = 6;
+	engineConfiguration->throttlePedalUpVoltage = 0; // that's voltage, not ADC like with TPS
+	engineConfiguration->throttlePedalWOTVoltage = 6; // that's voltage, not ADC like with TPS
+
 	engineConfiguration->etb.pFactor = 1;
 	engineConfiguration->etb.iFactor = 0.5;
 	engineConfiguration->etb.period = 100;

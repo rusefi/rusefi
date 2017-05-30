@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 22:30:58 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 22:21:18 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1165,11 +1165,7 @@ typedef struct {
 	/**
 	 * offset 572
 	 */
-	int16_t pedalPositionMin;
-	/**
-	 * offset 574
-	 */
-	int16_t pedalPositionMax;
+	int unusedAnother;
 	/**
 	 * maximum total number of degrees to subtract from ignition advance
 	 * when knocking
@@ -1538,7 +1534,16 @@ typedef struct {
 	/**
 	 * offset 2012
 	 */
-	float unusedetb[4];
+	float throttlePedalUpVoltage;
+	/**
+	 * Pedal in the floor
+	 * offset 2016
+	 */
+	float throttlePedalWOTVoltage;
+	/**
+	 * offset 2020
+	 */
+	float unusedetb[2];
 	/**
 	 * CLT-based target RPM for automatic idle controller
 	 * offset 2028
@@ -2107,4 +2112,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 22:30:58 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 22:21:18 EDT 2017
