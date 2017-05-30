@@ -55,7 +55,9 @@ typedef enum {
 
 void initHip9011(Logging *sharedLogger);
 void setHip9011FrankensoPinout(void);
+#if HAL_USE_ADC
 void hipAdcCallback(adcsample_t value);
+#endif /* HAL_USE_ADC */
 void setHipGain(float value);
 void setHipBand(float value);
 void setPrescalerAndSDO(int value);
