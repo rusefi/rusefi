@@ -27,21 +27,6 @@ const board_configuration_s *boardConfiguration = &persistentState.persistentCon
 LoggingWithStorage tsLogger("binary");
 static bool wasCommand = false;
 
-#define PROMETHEUS_LED 13
-
-// BLIIINK!!!!!!!!!!
-void BLIIINK(int t) {
-	int i, j;
-	palSetPadMode(GPIOA, PROMETHEUS_LED, PAL_MODE_OUTPUT_PUSHPULL);
-	for (j = 0; j < 2; j++) {
-		palClearPad(GPIOA, PROMETHEUS_LED);
-    	for (i = 0; i < 2*t; i++) {
-	    	palTogglePad(GPIOA, PROMETHEUS_LED);
-    		chThdSleepMilliseconds(250);
-    	}
-    	chThdSleepMilliseconds(1000);
-    }
-}
 
 static THD_WORKING_AREA(waBootloaderSerial, 128);
 static THD_FUNCTION(thBootloaderSerial, arg) {
