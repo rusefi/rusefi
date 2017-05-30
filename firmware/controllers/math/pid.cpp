@@ -21,8 +21,6 @@ Pid::Pid(pid_s *pid, float minResult, float maxResult) {
 
 void Pid::init(pid_s *pid, float minResult, float maxResult) {
 	this->pid = pid;
-	this->minResult = minResult;
-	this->maxResult = maxResult;
 
 	dTerm = iTerm = 0;
 	prevResult = prevInput = prevTarget = prevError = 0;
@@ -52,17 +50,17 @@ float Pid::getValue(float target, float input, float dTime) {
 	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
 	 * Here we limit the I-term #353
 	 */
-	if (iTerm > maxResult - (pTerm + dTerm + pid->offset))
-		iTerm = maxResult - (pTerm + dTerm + pid->offset);
+	if (iTerm > pid->maxValue - (pTerm + dTerm + pid->offset))
+		iTerm = pid->maxValue - (pTerm + dTerm + pid->offset);
 
-	if (iTerm < minResult - (pTerm + dTerm + pid->offset))
-		iTerm = minResult - (pTerm + dTerm + pid->offset);
+	if (iTerm < pid->minValue - (pTerm + dTerm + pid->offset))
+		iTerm = pid->minValue - (pTerm + dTerm + pid->offset);
 
 	float result = pTerm + iTerm + dTerm + pid->offset;
-	if (result > maxResult) {
-		result = maxResult;
-	} else if (result < minResult) {
-		result = minResult;
+	if (result > pid->maxValue) {
+		result = pid->maxValue;
+	} else if (result < pid->minValue) {
+		result = pid->minValue;
 	}
 	prevResult = result;
 	return result;
@@ -110,8 +108,8 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();
 	tsOutputChannels->debugFloatField5 = getD();
-	tsOutputChannels->debugFloatField6 = minResult;
-	tsOutputChannels->debugFloatField7 = maxResult;
+	tsOutputChannels->debugFloatField6 = pid->minValue;
+	tsOutputChannels->debugFloatField7 = pid->maxValue;
 	tsOutputChannels->debugIntField1 = getP();
 	tsOutputChannels->debugIntField2 = getOffset();
 	tsOutputChannels->debugFloatField6 = dTerm;
@@ -126,16 +124,16 @@ void Pid::sleep() {
 }
 
 void Pid::showPidStatus(Logging *logging, const char*msg, int dTime) {
-	// todo: dTime should be taken from pid_s
-	scheduleMsg(logging, "%s o=%f P=%.5f I=%.5f D=%.5f dT=%d",
+	scheduleMsg(logging, "%s settings: offset=%d P=%.5f I=%.5f D=%.5f dT=%d",
 			msg,
 			pid->offset,
 			pid->pFactor,
 			pid->iFactor,
 			pid->dFactor,
-			dTime);
+			pid->period);
 
-	scheduleMsg(logging, "%f input=%d/target=%f iTerm=%.5f dTerm=%.5f",
+	scheduleMsg(logging, "%s status: value=%f input=%f/target=%f iTerm=%.5f dTerm=%.5f",
+			msg,
 			prevResult,
 			prevInput,
 			prevTarget,
