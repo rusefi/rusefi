@@ -53,6 +53,10 @@ void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printFloatArray(const char *prefix, float array[], int size);
 
+// needed by bootloader
+void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 void rememberCurrentConfiguration(void);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getGlobalConfigurationVersion(void);
