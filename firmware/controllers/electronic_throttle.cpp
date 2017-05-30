@@ -91,14 +91,14 @@ static msg_t etbThread(void *arg) {
 		}
 
 
-		percent_t pedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
+		percent_t throttlePedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 		percent_t tps = getTPS();
 
-		currentEtbDuty = pid.getValue(pedal, getTPS());
+		currentEtbDuty = pid.getValue(throttlePedal, getTPS());
 
 		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
 
-		bool needEtbBraking = absF(pedal - tps) < 3;
+		bool needEtbBraking = absF(throttlePedal - tps) < 3;
 		if (needEtbBraking != wasEtbBraking) {
 			scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
 			wasEtbBraking = needEtbBraking;
