@@ -97,4 +97,4 @@ void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
 
 	icuStart(icup, config);
 }
-#endif
+#endif /* HAL_USE_ICU */
