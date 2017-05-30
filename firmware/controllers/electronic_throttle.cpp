@@ -57,8 +57,6 @@
 extern TunerStudioOutputChannels tsOutputChannels;
 static bool shouldResetPid = false;
 
-#define ETB_FREQ 400
-
 static LoggingWithStorage logger("ETB");
 /**
  * @brief Control Thread stack
@@ -174,6 +172,7 @@ void setDefaultEtbParameters(void) {
 	engineConfiguration->etb.pFactor = 1;
 	engineConfiguration->etb.iFactor = 0.5;
 	engineConfiguration->etb.period = 100;
+	engineConfiguration->etbFreq = 300;
 }
 
 void stopETBPins(void) {
@@ -188,17 +187,20 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 }
 
 void startETBPins(void) {
+
+	int freq = maxI(100, engineConfiguration->etbFreq);
+
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
 			boardConfiguration->etbControlPin1,
 			&enginePins.etbOutput1,
-			ETB_FREQ,
+			freq,
 			0.80,
 			applyPinState);
 	startSimplePwmExt(&etbPwmDown, "etb2",
 			boardConfiguration->etbControlPin2,
 			&enginePins.etbOutput2,
-			ETB_FREQ,
+			freq,
 			0.80,
 			applyPinState);
 
@@ -211,6 +213,7 @@ void initElectronicThrottle(void) {
 //	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
 //	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
 
+	addConsoleAction("ethinfo", showEthInfo);
 	if (!hasPedalPositionSensor()) {
 		return;
 	}
@@ -218,8 +221,6 @@ void initElectronicThrottle(void) {
 	startETBPins();
 
 	addConsoleActionI("e", setThrottleConsole);
-
-	addConsoleAction("ethinfo", showEthInfo);
 
 	apply();
 
