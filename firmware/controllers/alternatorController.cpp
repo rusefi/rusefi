@@ -64,7 +64,6 @@ static msg_t AltCtrlThread(int param) {
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
 			// but at least we would reflect latest state
-			tsOutputChannels.debugFloatField1 = currentAltDuty;
 			altPid.postState(&tsOutputChannels);
 			tsOutputChannels.debugIntField3 = alternatorPidResetCounter;
 		}

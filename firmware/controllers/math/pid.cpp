@@ -104,6 +104,7 @@ float Pid::getOffset(void) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
+	tsOutputChannels->debugFloatField1 = prevResult;
 	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();

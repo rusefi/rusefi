@@ -89,7 +89,6 @@ static msg_t auxPidThread(int param) {
 
 
 			if (engineConfiguration->debugMode == AUX_PID_1) {
-				tsOutputChannels.debugFloatField1 = pwm;
 				auxPid.postState(&tsOutputChannels);
 				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
 			}
