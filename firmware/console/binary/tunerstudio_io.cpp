@@ -20,7 +20,6 @@ extern LoggingWithStorage tsLogger;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "usbconsole.h"
-#include "map_averaging.h"
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 extern SerialUSBDriver SDU1;
@@ -152,15 +151,19 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	}
 }
 
-int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
+int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout) {
 #if TS_UART_DMA_MODE || defined(__DOXYGEN__)
 	UNUSED(tsChannel);
-	return (int)chIQReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, SR5_READ_TIMEOUT);
+	return (int)chIQReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, timeout);
 #else /* TS_UART_DMA_MODE */
 	if (tsChannel->channel == NULL)
 		return 0;
-	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, SR5_READ_TIMEOUT);
+	return chnReadTimeout(tsChannel->channel, (uint8_t * )buffer, size, timeout);
 #endif /* TS_UART_DMA_MODE */
+}
+
+int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size) {
+	return sr5ReadDataTimeout(tsChannel, buffer, size, SR5_READ_TIMEOUT);
 }
 
 
