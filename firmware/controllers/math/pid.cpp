@@ -12,14 +12,14 @@
 #include "math.h"
 
 Pid::Pid() {
-    init(NULL, NAN, NAN);
+    init(NULL);
 }
 
-Pid::Pid(pid_s *pid, float minResult, float maxResult) {
-	init(pid, minResult, maxResult);
+Pid::Pid(pid_s *pid) {
+	init(pid);
 }
 
-void Pid::init(pid_s *pid, float minResult, float maxResult) {
+void Pid::init(pid_s *pid) {
 	this->pid = pid;
 
 	dTerm = iTerm = 0;
@@ -123,7 +123,7 @@ void Pid::sleep() {
 #endif /* EFI_UNIT_TEST */
 }
 
-void Pid::showPidStatus(Logging *logging, const char*msg, int dTime) {
+void Pid::showPidStatus(Logging *logging, const char*msg) {
 	scheduleMsg(logging, "%s settings: offset=%d P=%.5f I=%.5f D=%.5f dT=%d",
 			msg,
 			pid->offset,

@@ -35,7 +35,7 @@ static SimplePwm auxPidPwm[AUX_PID_COUNT];
 static OutputPin auxPidPin[AUX_PID_COUNT];
 
 static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[0];
-static Pid auxPid(auxPidS, 0, 90);
+static Pid auxPid(auxPidS);
 static Logging *logger;
 
 static bool isEnabled(int index) {

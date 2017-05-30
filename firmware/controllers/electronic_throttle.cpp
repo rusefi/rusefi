@@ -73,7 +73,7 @@ static OutputPin outputDirectionClose CCM_OPTIONAL;
 
 EXTERN_ENGINE;
 
-static Pid pid(&engineConfiguration->etb, 0, 100);
+static Pid pid(&engineConfiguration->etb);
 
 static float prevTps;
 
@@ -109,7 +109,7 @@ static msg_t etbThread(void *arg) {
 			pid.postState(&tsOutputChannels);
 		}
 		if (engineConfiguration->isVerboseETB) {
-			pid.showPidStatus(&logger, "ETB", engineConfiguration->etb.period);
+			pid.showPidStatus(&logger, "ETB");
 		}
 
 

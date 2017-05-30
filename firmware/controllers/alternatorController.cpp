@@ -29,7 +29,7 @@ int alternatorPidResetCounter = 0;
 
 static SimplePwm alternatorControl;
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
-static Pid altPid(altPidS, 1, 90);
+static Pid altPid(altPidS);
 
 static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
 
