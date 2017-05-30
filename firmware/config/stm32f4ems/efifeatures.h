@@ -145,7 +145,9 @@
  */
 #define EFI_FILE_LOGGING TRUE
 
+#ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
+#endif
 
 /**
  * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
