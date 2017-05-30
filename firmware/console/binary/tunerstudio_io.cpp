@@ -20,7 +20,6 @@ extern LoggingWithStorage tsLogger;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "usbconsole.h"
-#include "map_averaging.h"
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 extern SerialUSBDriver SDU1;
