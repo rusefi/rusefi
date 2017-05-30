@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 22:21:18 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 23:12:19 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1204,6 +1204,7 @@ typedef struct {
 	offset 1488 bit 2 */
 	bool isVerboseIAC : 1;
 	/**
+	 * enable verbose_etb
 	offset 1488 bit 3 */
 	bool isVerboseETB : 1;
 	/**
@@ -2112,4 +2113,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 22:21:18 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 23:12:19 EDT 2017
