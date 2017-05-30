@@ -58,6 +58,10 @@ ifeq ($(USE_SMART_BUILD),)
   USE_SMART_BUILD = no
 endif
 
+ifeq ($(USE_BOOTLOADER),)
+  USE_BOOTLOADER = no
+endif
+
 #
 # Build global options
 ##############################################################################
@@ -137,6 +141,10 @@ include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/console/console.mk
 
+ifeq ($(USE_BOOTLOADER),yes)
+include $(PROJECT_DIR)/bootloader/bootloader.mk
+endif
+
 # Define linker script file here
 ifeq ($(LDSCRIPT),)
   LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
@@ -151,6 +159,7 @@ CSRC = $(STARTUPSRC) \
 	$(HALSRC) \
 	$(PLATFORMSRC) \
 	$(BOARDSRC) \
+	$(BOOTLOADERSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
@@ -222,6 +231,7 @@ INCDIR = $(PORTINC) \
 	$(HALINC) \
 	$(PLATFORMINC) \
 	$(BOARDINC) \
+	$(BOOTLOADERINC) \
 	$(CHCPPINC) \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
