@@ -22,6 +22,11 @@
  *
  * See also pid.cpp
  *
+ * Relevant console commands:
+ *
+ * enable verbose_etb
+ * disable verbose_etb
+ * ethinfo
  *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
@@ -137,18 +142,20 @@ static void setThrottleConsole(int level) {
 static void showEthInfo(void) {
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "pedal=%f %f/%f @", getPedalPosition(), engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage,
-			getPinNameByAdcChannel("etb", engineConfiguration->pedalPositionChannel, pinNameBuffer));
+	scheduleMsg(&logger, "throttlePedal=%f %f/%f @%s",
+			getPedalPosition(),
+			engineConfiguration->throttlePedalUpVoltage,
+			engineConfiguration->throttlePedalWOTVoltage,
+			getPinNameByAdcChannel("tPedal", engineConfiguration->pedalPositionChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%f", getTPS());
 
-	scheduleMsg(&logger, "etbControlPin1=%s duty=%f", hwPortname(boardConfiguration->etbControlPin1),
-			currentEtbDuty);
+	scheduleMsg(&logger, "etbControlPin1=%s duty=%f freq=%d",
+			hwPortname(boardConfiguration->etbControlPin1),
+			currentEtbDuty,
+			engineConfiguration->etbFreq);
 	scheduleMsg(&logger, "close dir=%s", hwPortname(boardConfiguration->etbDirectionPin2));
-	scheduleMsg(&logger, "etb P=%f I=%f D=%f dT=%d", engineConfiguration->etb.pFactor,
-			engineConfiguration->etb.iFactor,
-			0.0,
-			engineConfiguration->etb.period);
+	pid.showPidStatus(&logger, "ETB");
 }
 
 static void apply(void) {
