@@ -58,7 +58,9 @@ void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
 bool efiReadPin(brain_pin_e pin);
 
 iomode_t getInputMode(pin_input_mode_e mode);
+#if HAL_USE_ICU
 void efiIcuStart(ICUDriver *icup, const ICUConfig *config);
+#endif /* HAL_USE_ICU */
 #endif /* EFI_GPIO_HARDWARE */
 
 
