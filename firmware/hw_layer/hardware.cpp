@@ -234,7 +234,10 @@ void applyNewHardwareSettings(void) {
     stopInjectionPins();
 	stopIgnitionPins();
 	stopCanPins();
-	stopETBPins();
+	bool etbRestartNeeded = isETBRestartNeeded();
+	if (etbRestartNeeded) {
+		stopETBPins();
+	}
 	stopVSSPins();
 	stopAuxPins();
 
@@ -293,7 +296,9 @@ void applyNewHardwareSettings(void) {
 	startInjectionPins();
 	startIgnitionPins();
 	startCanPins();
-	startETBPins();
+	if (etbRestartNeeded) {
+		startETBPins();
+	}
 	startVSSPins();
 	startAuxPins();
 

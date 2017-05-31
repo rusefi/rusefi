@@ -184,6 +184,16 @@ void setDefaultEtbParameters(void) {
 	engineConfiguration->etbFreq = 300;
 }
 
+bool isETBRestartNeeded(void) {
+	/**
+	 * We do not want any interruption in HW pin while adjusting other properties
+	 */
+	return engineConfiguration->bc.etbControlPin1 != activeConfiguration.bc.etbControlPin1 ||
+		   engineConfiguration->bc.etbControlPin2 != activeConfiguration.bc.etbControlPin2 ||
+		   engineConfiguration->bc.etbDirectionPin1 != activeConfiguration.bc.etbDirectionPin1 ||
+		   engineConfiguration->bc.etbDirectionPin2 != activeConfiguration.bc.etbDirectionPin2;
+}
+
 void stopETBPins(void) {
 	unmarkPin(activeConfiguration.bc.etbControlPin1);
 	unmarkPin(activeConfiguration.bc.etbControlPin2);
