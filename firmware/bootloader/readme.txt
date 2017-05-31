@@ -8,15 +8,17 @@ To start the bootloader updater:
 - Turn on the ECU board.
 - If the connection is successful, the next page of STMFlashLoader appears immediately. Press "Next" button again and follow the instructions.
 - You can use:
-  - Flash Read command;
-  - Flash Write command;
-  - Sector Erase command (not Full Erase!).
+  - Upload from device (Flash Read) command;
+  - Download to device (Flash Write) command;
+  - Erase->Selection command (only Sector erase is currently supported, not Full Erase!).
 
 To update the firmware:
-- choose "Flash Write" mode;
+- choose "Download to device" mode;
 - select the firmware file (rusefi.hex). Note! ***Use only recent firmware builds with bootloader support!***
 - you may select "verify" option to check 
-- you may select "Start application" to automatically run the main firmware after the update.
+- you may select "Jump to the user program" to automatically run the main firmware after the update.
+
+See STMFlashLoader_all_screenshots.png for more info.
 
 !!! Note that the bootloader can update only the main firmware, but not itself !!!
 
