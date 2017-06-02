@@ -22,6 +22,11 @@
  *
  * See also pid.cpp
  *
+ * Relevant console commands:
+ *
+ * enable verbose_etb
+ * disable verbose_etb
+ * ethinfo
  *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
@@ -57,8 +62,6 @@
 extern TunerStudioOutputChannels tsOutputChannels;
 static bool shouldResetPid = false;
 
-#define ETB_FREQ 400
-
 static LoggingWithStorage logger("ETB");
 /**
  * @brief Control Thread stack
@@ -75,7 +78,7 @@ static OutputPin outputDirectionClose CCM_OPTIONAL;
 
 EXTERN_ENGINE;
 
-static Pid pid(&engineConfiguration->etb, 0, 100);
+static Pid pid(&engineConfiguration->etb);
 
 static float prevTps;
 
@@ -93,14 +96,14 @@ static msg_t etbThread(void *arg) {
 		}
 
 
-		percent_t pedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
+		percent_t throttlePedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 		percent_t tps = getTPS();
 
-		currentEtbDuty = pid.getValue(pedal, getTPS());
+		currentEtbDuty = pid.getValue(throttlePedal, getTPS());
 
 		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
 
-		bool needEtbBraking = absF(pedal - tps) < 3;
+		bool needEtbBraking = absF(throttlePedal - tps) < 3;
 		if (needEtbBraking != wasEtbBraking) {
 			scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
 			wasEtbBraking = needEtbBraking;
@@ -111,7 +114,7 @@ static msg_t etbThread(void *arg) {
 			pid.postState(&tsOutputChannels);
 		}
 		if (engineConfiguration->isVerboseETB) {
-			pid.showPidStatus(&logger, "ETB", engineConfiguration->etb.period);
+			pid.showPidStatus(&logger, "ETB");
 		}
 
 
@@ -139,18 +142,20 @@ static void setThrottleConsole(int level) {
 static void showEthInfo(void) {
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "pedal=%f %d/%d @", getPedalPosition(), engineConfiguration->pedalPositionMin, engineConfiguration->pedalPositionMax,
-			getPinNameByAdcChannel("etb", engineConfiguration->pedalPositionChannel, pinNameBuffer));
+	scheduleMsg(&logger, "throttlePedal=%f %f/%f @%s",
+			getPedalPosition(),
+			engineConfiguration->throttlePedalUpVoltage,
+			engineConfiguration->throttlePedalWOTVoltage,
+			getPinNameByAdcChannel("tPedal", engineConfiguration->pedalPositionChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%f", getTPS());
 
-	scheduleMsg(&logger, "etbControlPin1=%s duty=%f", hwPortname(boardConfiguration->etbControlPin1),
-			currentEtbDuty);
+	scheduleMsg(&logger, "etbControlPin1=%s duty=%f freq=%d",
+			hwPortname(boardConfiguration->etbControlPin1),
+			currentEtbDuty,
+			engineConfiguration->etbFreq);
 	scheduleMsg(&logger, "close dir=%s", hwPortname(boardConfiguration->etbDirectionPin2));
-	scheduleMsg(&logger, "etb P=%f I=%f D=%f dT=%d", engineConfiguration->etb.pFactor,
-			engineConfiguration->etb.iFactor,
-			0.0,
-			engineConfiguration->etb.period);
+	pid.showPidStatus(&logger, "ETB");
 }
 
 static void apply(void) {
@@ -170,10 +175,23 @@ void setEtbIFactor(float value) {
 }
 
 void setDefaultEtbParameters(void) {
-	engineConfiguration->pedalPositionMax = 6;
+	engineConfiguration->throttlePedalUpVoltage = 0; // that's voltage, not ADC like with TPS
+	engineConfiguration->throttlePedalWOTVoltage = 6; // that's voltage, not ADC like with TPS
+
 	engineConfiguration->etb.pFactor = 1;
 	engineConfiguration->etb.iFactor = 0.5;
 	engineConfiguration->etb.period = 100;
+	engineConfiguration->etbFreq = 300;
+}
+
+bool isETBRestartNeeded(void) {
+	/**
+	 * We do not want any interruption in HW pin while adjusting other properties
+	 */
+	return engineConfiguration->bc.etbControlPin1 != activeConfiguration.bc.etbControlPin1 ||
+		   engineConfiguration->bc.etbControlPin2 != activeConfiguration.bc.etbControlPin2 ||
+		   engineConfiguration->bc.etbDirectionPin1 != activeConfiguration.bc.etbDirectionPin1 ||
+		   engineConfiguration->bc.etbDirectionPin2 != activeConfiguration.bc.etbDirectionPin2;
 }
 
 void stopETBPins(void) {
@@ -188,17 +206,20 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 }
 
 void startETBPins(void) {
+
+	int freq = maxI(100, engineConfiguration->etbFreq);
+
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
 			boardConfiguration->etbControlPin1,
 			&enginePins.etbOutput1,
-			ETB_FREQ,
+			freq,
 			0.80,
 			applyPinState);
 	startSimplePwmExt(&etbPwmDown, "etb2",
 			boardConfiguration->etbControlPin2,
 			&enginePins.etbOutput2,
-			ETB_FREQ,
+			freq,
 			0.80,
 			applyPinState);
 
@@ -211,6 +232,7 @@ void initElectronicThrottle(void) {
 //	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
 //	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
 
+	addConsoleAction("ethinfo", showEthInfo);
 	if (!hasPedalPositionSensor()) {
 		return;
 	}
@@ -218,8 +240,6 @@ void initElectronicThrottle(void) {
 	startETBPins();
 
 	addConsoleActionI("e", setThrottleConsole);
-
-	addConsoleAction("ethinfo", showEthInfo);
 
 	apply();
 

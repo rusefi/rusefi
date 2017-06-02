@@ -69,7 +69,7 @@ static const char *prevOutputName = NULL;
 static Logging *logger;
 #if ! EFI_UNIT_TEST
 static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
-static Pid fuelPid(fuelPidS, -100, 100);
+static Pid fuelPid(fuelPidS);
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif
 

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 28 22:30:58 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 22:21:18 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -249,8 +249,7 @@ public class Fields {
 	public static final int hip9011SpiDevice_offset_hex = 234;
 	public static final int globalFuelCorrection_offset = 568;
 	public static final int globalFuelCorrection_offset_hex = 238;
-	public static final int pedalPositionMin_offset = 572;
-	public static final int pedalPositionMax_offset = 574;
+	public static final int unusedAnother_offset = 572;
 	public static final int maxKnockSubDeg_offset = 576;
 	public static final int maxKnockSubDeg_offset_hex = 240;
 	public static final int mafAdcChannel_offset = 580;
@@ -799,7 +798,9 @@ public class Fields {
 	public static final int consoleSerialRxPin_offset_hex = 798;
 	public static final int knockNoise_offset = 1948;
 	public static final int knockNoiseRpmBins_offset = 1980;
-	public static final int unusedetb_offset = 2012;
+	public static final int throttlePedalUpVoltage_offset = 2012;
+	public static final int throttlePedalWOTVoltage_offset = 2016;
+	public static final int unusedetb_offset = 2020;
 	public static final int cltIdleRpmBins_offset = 2028;
 	public static final int cltIdleRpm_offset = 2092;
 	public static final int targetVBatt_offset = 2156;
@@ -1207,8 +1208,7 @@ public class Fields {
 	public static final Field TRIGGER_UNUSEDCUSTOMUSERISEEDGE = Field.create("TRIGGER_UNUSEDCUSTOMUSERISEEDGE", 560, FieldType.INT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 564, FieldType.INT);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 568, FieldType.FLOAT);
-	public static final Field PEDALPOSITIONMIN = Field.create("PEDALPOSITIONMIN", 572, FieldType.INT);
-	public static final Field PEDALPOSITIONMAX = Field.create("PEDALPOSITIONMAX", 574, FieldType.INT);
+	public static final Field UNUSEDANOTHER = Field.create("UNUSEDANOTHER", 572, FieldType.INT);
 	public static final Field MAXKNOCKSUBDEG = Field.create("MAXKNOCKSUBDEG", 576, FieldType.FLOAT);
 	public static final Field MAFADCCHANNEL = Field.create("MAFADCCHANNEL", 580, FieldType.INT, adc_channel_e);
 	public static final Field AFR_HWCHANNEL = Field.create("AFR_HWCHANNEL", 584, FieldType.INT, adc_channel_e);
@@ -1586,6 +1586,8 @@ public class Fields {
 	public static final Field BINARYSERIALRXPIN = Field.create("BINARYSERIALRXPIN", 1936, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLESERIALTXPIN = Field.create("CONSOLESERIALTXPIN", 1940, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLESERIALRXPIN = Field.create("CONSOLESERIALRXPIN", 1944, FieldType.INT, brain_pin_e);
+	public static final Field THROTTLEPEDALUPVOLTAGE = Field.create("THROTTLEPEDALUPVOLTAGE", 2012, FieldType.FLOAT);
+	public static final Field THROTTLEPEDALWOTVOLTAGE = Field.create("THROTTLEPEDALWOTVOLTAGE", 2016, FieldType.FLOAT);
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2184, FieldType.INT);

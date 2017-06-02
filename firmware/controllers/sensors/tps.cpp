@@ -124,7 +124,7 @@ bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float voltage = getVoltageDivided("pPS", engineConfiguration->pedalPositionChannel);
-	float result = interpolate(engineConfiguration->pedalPositionMin, 0, engineConfiguration->pedalPositionMax, 100, voltage);
+	float result = interpolate(engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 
 	// this would put the value into the 0-100 range
 	return maxF(0, minF(100, result));
@@ -142,6 +142,14 @@ percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c
 
 	return getPrimatyRawTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// see http://rusefi.com/wiki/index.php?title=Vehicle:VW_Passat_2002_1.8
+	engineConfiguration->tpsMin = 159;
+	engineConfiguration->tpsMax = 957;
+
+	// todo: add 2nd TPS sensor calibration
 }
 
 int convertVoltageTo10bitADC(float voltage) {
