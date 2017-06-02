@@ -7,6 +7,8 @@
 #define BOOTLOADER_ADDR    0x08000000
 // Bootloader code max. size, in bytes
 #define BOOTLOADER_SIZE    0x4000
+// Number of sectors for the bootloader
+#define BOOTLOADER_NUM_SECTORS (BOOTLOADER_SIZE/0x4000)
 
 // This is where the application starts
 #define APPLICATION_ADDR   0x08008000
