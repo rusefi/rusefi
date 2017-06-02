@@ -45,7 +45,7 @@ EXTERN_ENGINE
 
 static bool shouldResetPid = false;
 
-static Pid idlePid(&engineConfiguration->idleRpmPid, 1, 99);
+static Pid idlePid(&engineConfiguration->idleRpmPid);
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid;
@@ -83,7 +83,7 @@ static void showIdleInfo(void) {
 
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
-		idlePid.showPidStatus(logger, "idle", engineConfiguration->idleRpmPid.period);
+		idlePid.showPidStatus(logger, "idle");
 	}
 }
 
@@ -239,7 +239,7 @@ static msg_t ivThread(int param) {
 		}
 
 		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
-			idlePid.showPidStatus(logger, "idle", engineConfiguration->idleRpmPid.period);
+			idlePid.showPidStatus(logger, "idle");
 
 		}
 

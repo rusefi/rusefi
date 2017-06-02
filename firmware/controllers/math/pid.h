@@ -20,8 +20,8 @@ class Pid {
 
 public:
 	Pid();
-	Pid(pid_s *pid, float minResult, float maxResult);
-	void init(pid_s *pid, float minResult, float maxResult);
+	Pid(pid_s *pid);
+	void init(pid_s *pid);
 	bool isSame(pid_s *pid);
 
 	float getValue(float target, float input);
@@ -42,7 +42,7 @@ public:
 	float maxResult;
 	float iTerm;
 	float dTerm; // we are remembering this only for debugging purposes
-	void showPidStatus(Logging *logging, const char*msg, int dTime);
+	void showPidStatus(Logging *logging, const char*msg);
 	void sleep();
 private:
 	pid_s *pid;
