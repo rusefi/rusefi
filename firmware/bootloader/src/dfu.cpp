@@ -129,7 +129,7 @@ bool dfuStartLoop(void) {
 			break;
 		}
 		
-		// check if we have a correct command recieved
+		// check if we have a correct command received
 		if (complement != complementByte(command)) {
 			sendByte(DFU_NACK_BYTE);
 			continue;
@@ -141,7 +141,7 @@ bool dfuStartLoop(void) {
 		// set normal (longer) timeout, we're not in a hurry anymore
 		sr5Timeout = DFU_SR5_TIMEOUT_NORMAL;
 
-		// now execute it
+		// now execute it (see ST appnote "AN3155")
     	switch (command) {
         case DFU_UART_CHECK:
 			break;
@@ -187,7 +187,7 @@ bool dfuStartLoop(void) {
             	break;
             if (!getByte(&complement))
 				break;
-			// check if we have a correct byte recieved
+			// check if we have a correct byte received
 			if (complement != complementByte(byte)) {
 				sendByte(DFU_NACK_BYTE);
 				break;

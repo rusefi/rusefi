@@ -123,7 +123,7 @@ static efitimeus_t togglePwmState(PwmConfig *state) {
 	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(state);
 #if DEBUG_PWM
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
-#endif
+#endif /* DEBUG_PWM */
 	// signed value is needed here
 //	int64_t timeToSwitch = nextSwitchTimeUs - getTimeNowUs();
 //	if (timeToSwitch < 1) {
