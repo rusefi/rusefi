@@ -50,8 +50,8 @@ static bool isInVirtualPageBuffer(uint32_t addr) {
 
 // read 32-bit address and 8-bit checksum
 static bool readAddress(uint32_t *addr) {
-	uint8_t buf[5];	// 4 bytes
-	if (sr5ReadData(&blTsChannel, buf, 5) != 5)
+	uint8_t buf[5];	// 4 bytes+checksum
+	if (sr5ReadDataTimeout(&blTsChannel, buf, 5, sr5Timeout) != 5)
 		return false;
 	if (dfuCalcChecksum(buf, 4) != buf[4])
 		return false;
@@ -76,7 +76,7 @@ static uint16_t bufToInt16(uint8_t *buf) {
 
 // some weird STM32 magic...
 void dfuJumpToApp(uint32_t addr) {
-	typedef  void (*pFunction)(void);
+	typedef void (*pFunction)(void);
 
 	// goodbye ChibiOS, we're leaving...
 	chSysDisable();
@@ -104,6 +104,8 @@ bool dfuStartLoop(void) {
 	bool wasCommand = false;
 	uint8_t command, complement;	
 	uint32_t addr;
+
+	sr5Timeout = DFU_SR5_TIMEOUT_FIRST;
 
 	// We cannot afford waiting for the first handshake byte, so we have to send an answer in advance!
 	sendByte(DFU_ACK_BYTE);
@@ -203,7 +205,6 @@ bool dfuStartLoop(void) {
 
 			// transmit data
 			sr5WriteData(&blTsChannel, (uint8_t *)buffer, numBytes);
-
 			break;
         }
         case DFU_WRITE_CMD: {
@@ -217,7 +218,7 @@ bool dfuStartLoop(void) {
 			int numBytes = buffer[0] + 1;
 			int numBytesAndChecksum = numBytes + 1;	// +1 byte of checkSum
 			// receive data
-			if (sr5ReadData(&blTsChannel, buffer + 1, numBytesAndChecksum) != numBytesAndChecksum)
+			if (sr5ReadDataTimeout(&blTsChannel, buffer + 1, numBytesAndChecksum, sr5Timeout) != numBytesAndChecksum)
 				break;
 			// don't write corrupted data!
 			if (dfuCalcChecksum(buffer, numBytesAndChecksum) != buffer[numBytesAndChecksum]) {
@@ -250,7 +251,7 @@ bool dfuStartLoop(void) {
         		numSectorData = (numSectors + 1) * 2 + 1;
         	uint8_t *sectorList = buffer + 2;
         	// read sector data & checksum
-        	if (sr5ReadData(&blTsChannel, sectorList, numSectorData) != numSectorData)
+        	if (sr5ReadDataTimeout(&blTsChannel, sectorList, numSectorData, sr5Timeout) != numSectorData)
 				break;
 			// verify checksum
 			if (dfuCalcChecksum(buffer, 2 + numSectorData - 1) != buffer[2 + numSectorData - 1]) {
@@ -260,7 +261,8 @@ bool dfuStartLoop(void) {
 			// Erase the chosen sectors, sector by sector
 			for (int i = 0; i < numSectorData - 1; i += 2) {
 				int sectorIdx = bufToInt16(sectorList + i);
-				if (sectorIdx == 0) {	// skip zero sector where our bootloader is
+				if (sectorIdx < BOOTLOADER_NUM_SECTORS) {	// skip first sectors where our bootloader is
+					// imitate flash erase by writing '0xff'
 					memset(bootloaderVirtualPageBuffer, 0xff, BOOTLOADER_SIZE);
 					continue;
 				}
