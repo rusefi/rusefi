@@ -13,6 +13,10 @@
 
 #define DFU_BUFFER_SIZE    258   // Max. 256 bytes at a time plus 2 bytes (numBytes+checksum)
 
+
+// DFU/USART Protocol is described in AN3155 document "Application note. USART protocol used in the STM32 bootloader"
+// http://www.st.com/resource/en/application_note/cd00264342.pdf
+
 #define DFU_UART_CHECK     0x7F  // "UART handshake" escape byte
 
 #define DFU_GET_LIST_CMD   0x00  // "Get supported commands list" command

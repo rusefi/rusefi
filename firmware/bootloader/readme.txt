@@ -41,5 +41,5 @@ The bootloader executable works as follows:
 - Init ChibiOS and UART/Serial driver using tunerstudio_io code;
 - Create a thread to listen to UART (thBootloaderSerial), using dfuStartLoop();
 - The PC 'stm32-flasher' software sends its request byte only once, so we don't wait for it - the bootloader sends an answer as soon as it starts (both the request & answer bytes are known consts);
-- Ff the next command doesn't come immediately (<100 ms), we abort the bootloader dfu loop and run the application code - calling dfuJumpToApp() in main().
+- If the next command doesn't come immediately (<100 ms), we abort the bootloader dfu loop and run the application code - calling dfuJumpToApp() in main().
 - Otherwise, if at least one command is received, we stay in the bootloader mode and process commands.
