@@ -21,6 +21,7 @@ void testPidController(void) {
 	pidS.offset = 0;
 	pidS.minValue = 10;
 	pidS.maxValue = 90;
+	pidS.period = 1;
 
 	Pid pid(&pidS);
 
@@ -39,5 +40,31 @@ void testPidController(void) {
 
 	assertEquals(10, pid.getValue(14, 16, 1));
 //	assertEquals(68, pid.getIntegration());
+
+
+
+	pidS.pFactor = 1;
+	pidS.iFactor = 0;
+	pidS.dFactor = 0;
+	pidS.offset = 0;
+	pidS.minValue = 0;
+	pidS.maxValue = 100;
+	pidS.period = 1;
+
+	pid.reset();
+
+	assertEqualsM("target=50, input=0", 50, pid.getValue(/*target*/50, /*input*/0));
+	assertEqualsM("target=50, input=0 iTerm", 0, pid.iTerm);
+
+	assertEqualsM("target=50, input=70", 0, pid.getValue(/*target*/50, /*input*/70));
+	assertEqualsM("target=50, input=70 iTerm", 20, pid.iTerm);
+
+	assertEqualsM("target=50, input=70 #2", 0, pid.getValue(/*target*/50, /*input*/70));
+	// WOW, we are getting non-zero iTerm while iFactor is zero?!
+	assertEqualsM("target=50, input=70 iTerm #2", 20, pid.iTerm);
+
+	// and now we inherit this iTerm even for cases where targer==input?! NOT RIGHT
+	assertEqualsM("target=50, input=50", 20, pid.getValue(/*target*/50, /*input*/50));
+	assertEqualsM("target=50, input=50 iTerm", 20, pid.iTerm);
 
 }
