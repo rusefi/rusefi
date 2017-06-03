@@ -21,9 +21,9 @@ Pid::Pid(pid_s *pid) {
 
 void Pid::init(pid_s *pid) {
 	this->pid = pid;
+	resetCounter = 0;
 
-	dTerm = iTerm = 0;
-	prevResult = prevInput = prevTarget = prevError = 0;
+	reset();
 }
 
 bool Pid::isSame(pid_s *pid) {
@@ -74,8 +74,9 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 }
 
 void Pid::reset(void) {
-	iTerm = 0;
-	prevError = 0;
+	dTerm = iTerm = 0;
+	prevResult = prevInput = prevTarget = prevError = 0;
+	resetCounter++;
 }
 
 float Pid::getP(void) {
