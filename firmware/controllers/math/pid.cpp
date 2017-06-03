@@ -114,6 +114,7 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField7 = pid->maxValue;
 	tsOutputChannels->debugIntField1 = getP();
 	tsOutputChannels->debugIntField2 = getOffset();
+	tsOutputChannels->debugIntField3 = resetCounter;
 	tsOutputChannels->debugFloatField6 = dTerm;
 }
 #endif
