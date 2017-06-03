@@ -21,9 +21,9 @@ Pid::Pid(pid_s *pid) {
 
 void Pid::init(pid_s *pid) {
 	this->pid = pid;
+	resetCounter = 0;
 
-	dTerm = iTerm = 0;
-	prevResult = prevInput = prevTarget = prevError = 0;
+	reset();
 }
 
 bool Pid::isSame(pid_s *pid) {
@@ -50,11 +50,11 @@ float Pid::getValue(float target, float input, float dTime) {
 	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
 	 * Here we limit the I-term #353
 	 */
-	if (iTerm > pid->maxValue - (pTerm + dTerm + pid->offset))
-		iTerm = pid->maxValue - (pTerm + dTerm + pid->offset);
+	if (iTerm > pid->maxValue)
+		iTerm = pid->maxValue;
 
-	if (iTerm < pid->minValue - (pTerm + dTerm + pid->offset))
-		iTerm = pid->minValue - (pTerm + dTerm + pid->offset);
+	if (iTerm < pid->minValue)
+		iTerm = pid->minValue;
 
 	float result = pTerm + iTerm + dTerm + pid->offset;
 	if (result > pid->maxValue) {
@@ -74,8 +74,9 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 }
 
 void Pid::reset(void) {
-	iTerm = 0;
-	prevError = 0;
+	dTerm = iTerm = 0;
+	prevResult = prevInput = prevTarget = prevError = 0;
+	resetCounter++;
 }
 
 float Pid::getP(void) {
@@ -113,6 +114,7 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField7 = pid->maxValue;
 	tsOutputChannels->debugIntField1 = getP();
 	tsOutputChannels->debugIntField2 = getOffset();
+	tsOutputChannels->debugIntField3 = resetCounter;
 	tsOutputChannels->debugFloatField6 = dTerm;
 }
 #endif
