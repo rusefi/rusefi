@@ -82,19 +82,11 @@ void append(Logging *logging, const char *text) {
  * @note This method if fast because it does not validate much, be sure what you are doing
  */
 void appendFast(Logging *logging, const char *text) {
-//  todo: fix this implementation? this would be a one-pass implementation instead of a two-pass
-
 	register char *s;
-	for (s = (char *) text; *s; ++s)
-		;
-	int extraLen = (s - text);
-
 	s = logging->linePointer;
 	while ((*s++ = *text++) != 0)
 		;
-
-//	strcpy(logging->linePointer, text);
-	logging->linePointer += extraLen;
+	logging->linePointer = s - 1;
 }
 
 // todo: look into chsnprintf once on Chibios 3
