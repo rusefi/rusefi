@@ -5,9 +5,7 @@ ifeq ($(BOOTLOADERINC),)
 	BOOTLOADERINC=$(PROJECT_DIR)/bootloader
 endif
 
-ifeq ($(LDSCRIPT),)
-	LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM_bootloader.ld
-endif
+USE_OPT += -Wl,--defsym=BOOTLOADER=1
 
 # Add bootloader code to the firmware
 DDEFS += -DEFI_BOOTLOADER_INCLUDE_CODE=TRUE

@@ -19,11 +19,6 @@ extern "C"
 
 #include "dfu.h"
 
-persistent_config_container_s persistentState CCM_OPTIONAL;
-const persistent_config_s *config = &persistentState.persistentConfiguration;
-const engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
-const board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
-
 LoggingWithStorage tsLogger("binary");
 static bool wasCommand = false;
 

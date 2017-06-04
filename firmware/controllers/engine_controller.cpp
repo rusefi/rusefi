@@ -70,17 +70,8 @@
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
-persistent_config_container_s persistentState CCM_OPTIONAL;
+EXTERN_ENGINE;
 
-const persistent_config_s *config = &persistentState.persistentConfiguration;
-
-/**
- * todo: it really looks like these fields should become 'static', i.e. private
- * the whole 'extern ...' pattern is less then perfect, I guess the 'God object' Engine
- * would be a smaller evil. Whatever is needed should be passed into methods/modules/files as an explicit parameter.
- */
-const engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
-const board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 
 /**
  * CH_FREQUENCY is the number of system ticks in a second
