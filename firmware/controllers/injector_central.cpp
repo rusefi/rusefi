@@ -39,6 +39,8 @@ EXTERN_ENGINE
 static Logging * logger;
 static bool isRunningBench = false;
 
+// todo: move into Engine object?
+// todo: looks like these flags are not currently used? dead functionality? unfinished functionality?
 static int is_injector_enabled[INJECTION_PIN_COUNT];
 
 bool isRunningBenchTest(void) {
