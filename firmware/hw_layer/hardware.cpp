@@ -200,6 +200,7 @@ static void calcFastAdcIndexes(void) {
 }
 
 static void adcConfigListener(Engine *engine) {
+	// todo: something is not right here - looks like should be a callback for each configuration change?
 	calcFastAdcIndexes();
 }
 
