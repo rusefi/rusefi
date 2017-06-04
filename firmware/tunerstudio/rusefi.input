@@ -1221,6 +1221,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "idle I",								idleRpmPid_iFactor, { idleMode == 0}
 		field = "idle D",								idleRpmPid_dFactor, { idleMode == 0}
 		field = "idle offset",							idleRpmPid_offset, { idleMode == 0}
+		field = "period",								idleRpmPid_period
 		field = "pid min",								idleRpmPid_minValue, { idleMode == 0}
 		field = "pid max",								idleRpmPid_maxValue, { idleMode == 0}
 		field = "pid TPS deactivation",					idlePidDeactivationTpsThreshold, { idleMode == 0}
