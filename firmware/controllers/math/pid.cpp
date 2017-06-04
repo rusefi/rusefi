@@ -53,8 +53,9 @@ float Pid::getValue(float target, float input, float dTime) {
 	if (iTerm > pid->maxValue)
 		iTerm = pid->maxValue;
 
-	if (iTerm < pid->minValue)
-		iTerm = pid->minValue;
+	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValye'
+	if (iTerm < -pid->maxValue)
+		iTerm = -pid->maxValue;
 
 	float result = pTerm + iTerm + dTerm + pid->offset;
 	if (result > pid->maxValue) {
