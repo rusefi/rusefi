@@ -19,8 +19,6 @@ void fuelPumpBench(void);
 void milBench(void);
 void initInjectorCentral(Logging *sharedLogger);
 bool isRunningBenchTest(void);
-int isInjectorEnabled(int cylinderId);
-void assertCylinderId(int cylinderId, const char *msg);
 
 void stopInjectionPins(void);
 void startInjectionPins(void);
