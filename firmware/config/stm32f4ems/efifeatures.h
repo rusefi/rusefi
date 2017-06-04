@@ -57,6 +57,11 @@
 #define EFI_TUNER_STUDIO TRUE
 
 /**
+ * Bluetooth UART setup support.
+ */
+#define EFI_BLUETOOTH_SETUP FALSE
+
+/**
  * TunerStudio debug output
  */
 #define EFI_TUNER_STUDIO_VERBOSE TRUE
