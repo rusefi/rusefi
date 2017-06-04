@@ -85,7 +85,6 @@
 #define EFI_HISTOGRAMS FALSE
 
 #define EFI_TUNER_STUDIO TRUE
-#define EFI_BLUETOOTH_SETUP FALSE
 
 /**
  * This is the size of the MemoryStream used by chvprintf
