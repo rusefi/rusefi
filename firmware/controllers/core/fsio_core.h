@@ -96,8 +96,8 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float getValue(float selfValue, Engine *engine);
-	float getValue2(float selfValue, LEElement *fistElementInList, Engine *engine);
+	float getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void add(LEElement *element);
 	bool isEmpty();
 	void reset();
@@ -107,7 +107,7 @@ public:
 	int currentCalculationLogPosition;
 private:
 	void push(le_action_e action, float value);
-	bool processElement(Engine *engine, LEElement *element);
+	bool processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;
