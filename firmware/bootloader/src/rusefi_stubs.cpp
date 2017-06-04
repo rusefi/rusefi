@@ -3,6 +3,12 @@
 #include "efiGpio.h"
 #include "global.h"
 
+/*
+ * We need only a small portion of code from rusEFI codebase in the bootloader.
+ * Mostly it's tunerstudio_io.cpp. And other files like efiGpio.cpp etc. needed only to make it work.
+ * And stubs needed just to settle down compiler errors.
+ * The whole idea of bootloader is to make it as small as possible. And reasonably independent.
+*/
 
 int maxNesting = 0;
 
