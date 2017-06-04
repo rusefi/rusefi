@@ -44,6 +44,7 @@ public:
 	float dTerm; // we are remembering this only for debugging purposes
 	void showPidStatus(Logging *logging, const char*msg);
 	void sleep();
+	int resetCounter;
 private:
 	pid_s *pid;
 

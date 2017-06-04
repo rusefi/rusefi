@@ -25,8 +25,6 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-int alternatorPidResetCounter = 0;
-
 static SimplePwm alternatorControl;
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
 static Pid altPid(altPidS);
@@ -53,7 +51,6 @@ static msg_t AltCtrlThread(int param) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (shouldResetPid) {
 			pidReset();
-			alternatorPidResetCounter++;
 			shouldResetPid = false;
 		}
 #endif
@@ -65,7 +62,6 @@ static msg_t AltCtrlThread(int param) {
 			// this block could be executed even in on/off alternator control mode
 			// but at least we would reflect latest state
 			altPid.postState(&tsOutputChannels);
-			tsOutputChannels.debugIntField3 = alternatorPidResetCounter;
 		}
 #endif /* !EFI_UNIT_TEST */
 

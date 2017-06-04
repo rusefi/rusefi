@@ -148,8 +148,7 @@
 145) RESOLVED IN R0.4.3 HI/LO net names are confusing, and jumbled. 
 146) RESOLVED IN R0.5 HI/LO 2 silk screen is on wrong harness pin. 
 147) RESOLVED IN R0.5 Add 232 TX and RX connection points for external MAX232 or equiv chip SEE P701
-148)                  route NC located next to PD15 to 3.3V battery+ / RTC mod / see http://rusefi.com/forum/viewtopic.php?f=4&t=460
-
+148)                  route NC located next to PD15 to 3.3V battery+ / RTC mod / see viewtopic.php?f=4&t=460
 
 
 For honda add-on / rewiring board
