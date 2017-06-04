@@ -19,6 +19,7 @@
 
 // Supported Bluetooth module types
 typedef enum {
+	BLUETOOTH_HC_05,
 	BLUETOOTH_HC_06,
 } bluetooth_module_e;
 
