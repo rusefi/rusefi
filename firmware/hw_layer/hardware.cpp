@@ -262,12 +262,8 @@ void applyNewHardwareSettings(void) {
 
 	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
 
+	enginePins.unregisterPins();
 
-	enginePins.fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
-	enginePins.fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
-	enginePins.hipCs.unregisterOutput(activeConfiguration.bc.hip9011CsPin, engineConfiguration->bc.hip9011CsPin);
-	enginePins.triggerDecoderErrorPin.unregisterOutput(activeConfiguration.bc.triggerErrorPin,
-		engineConfiguration->bc.triggerErrorPin);
 	enginePins.sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
 	enginePins.etbOutput1.unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
 			engineConfiguration->bc.etbDirectionPin1);
