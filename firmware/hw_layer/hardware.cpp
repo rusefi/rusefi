@@ -264,29 +264,6 @@ void applyNewHardwareSettings(void) {
 
 	enginePins.unregisterPins();
 
-	enginePins.sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
-	enginePins.etbOutput1.unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
-			engineConfiguration->bc.etbDirectionPin1);
-	enginePins.etbOutput2.unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
-			engineConfiguration->bc.etbDirectionPin2);
-	enginePins.checkEnginePin.unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
-			engineConfiguration->bc.malfunctionIndicatorPin);
-	enginePins.dizzyOutput.unregisterOutput(activeConfiguration.dizzySparkOutputPin,
-			engineConfiguration->dizzySparkOutputPin);
-	enginePins.tachOut.unregisterOutput(activeConfiguration.bc.tachOutputPin,
-			engineConfiguration->bc.tachOutputPin);
-	enginePins.idleSolenoidPin.unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
-			engineConfiguration->bc.idle.solenoidPin);
-
-	for (int i = 0;i < LE_COMMAND_COUNT;i++) {
-		enginePins.fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioPins[i],
-				engineConfiguration->bc.fsioPins[i]);
-	}
-
-	enginePins.alternatorPin.unregisterOutput(activeConfiguration.bc.alternatorControlPin,
-			engineConfiguration->bc.alternatorControlPin);
-	enginePins.mainRelay.unregisterOutput(activeConfiguration.bc.mainRelayPin,
-			engineConfiguration->bc.mainRelayPin);
 
 	startInjectionPins();
 	startIgnitionPins();
