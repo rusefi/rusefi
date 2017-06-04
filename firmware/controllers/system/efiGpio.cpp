@@ -86,6 +86,30 @@ void EnginePins::unregisterPins() {
 	triggerDecoderErrorPin.unregisterOutput(activeConfiguration.bc.triggerErrorPin,
 		engineConfiguration->bc.triggerErrorPin);
 
+	sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
+	etbOutput1.unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
+			engineConfiguration->bc.etbDirectionPin1);
+	etbOutput2.unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
+			engineConfiguration->bc.etbDirectionPin2);
+	checkEnginePin.unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
+			engineConfiguration->bc.malfunctionIndicatorPin);
+	dizzyOutput.unregisterOutput(activeConfiguration.dizzySparkOutputPin,
+			engineConfiguration->dizzySparkOutputPin);
+	tachOut.unregisterOutput(activeConfiguration.bc.tachOutputPin,
+			engineConfiguration->bc.tachOutputPin);
+	idleSolenoidPin.unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
+			engineConfiguration->bc.idle.solenoidPin);
+
+	for (int i = 0;i < LE_COMMAND_COUNT;i++) {
+		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioPins[i],
+				engineConfiguration->bc.fsioPins[i]);
+	}
+
+	alternatorPin.unregisterOutput(activeConfiguration.bc.alternatorControlPin,
+			engineConfiguration->bc.alternatorControlPin);
+	mainRelay.unregisterOutput(activeConfiguration.bc.mainRelayPin,
+			engineConfiguration->bc.mainRelayPin);
+
 #endif /* EFI_PROD_CODE */
 }
 
