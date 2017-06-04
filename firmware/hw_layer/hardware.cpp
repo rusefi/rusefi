@@ -263,36 +263,34 @@ void applyNewHardwareSettings(void) {
 	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
 
 
-	unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin,
-			&enginePins.fuelPumpRelay);
-	unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin, &enginePins.fanRelay);
-	unregisterOutput(activeConfiguration.bc.hip9011CsPin,
-			engineConfiguration->bc.hip9011CsPin, &enginePins.hipCs);
-	unregisterOutput(activeConfiguration.bc.triggerErrorPin,
-		engineConfiguration->bc.triggerErrorPin, &enginePins.triggerDecoderErrorPin);
-	unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin,
-			&enginePins.sdCsPin);
-	unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
-			engineConfiguration->bc.etbDirectionPin1, &enginePins.etbOutput1);
-	unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
-			engineConfiguration->bc.etbDirectionPin2, &enginePins.etbOutput2);
-	unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
-			engineConfiguration->bc.malfunctionIndicatorPin, &enginePins.checkEnginePin);
-	unregisterOutput(activeConfiguration.dizzySparkOutputPin,
-			engineConfiguration->dizzySparkOutputPin, &enginePins.dizzyOutput);
-	unregisterOutput(activeConfiguration.bc.tachOutputPin,
-			engineConfiguration->bc.tachOutputPin, &enginePins.tachOut);
-	unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
-			engineConfiguration->bc.idle.solenoidPin, &enginePins.idleSolenoidPin);
+	enginePins.fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
+	enginePins.fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
+	enginePins.hipCs.unregisterOutput(activeConfiguration.bc.hip9011CsPin, engineConfiguration->bc.hip9011CsPin);
+	enginePins.triggerDecoderErrorPin.unregisterOutput(activeConfiguration.bc.triggerErrorPin,
+		engineConfiguration->bc.triggerErrorPin);
+	enginePins.sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
+	enginePins.etbOutput1.unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
+			engineConfiguration->bc.etbDirectionPin1);
+	enginePins.etbOutput2.unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
+			engineConfiguration->bc.etbDirectionPin2);
+	enginePins.checkEnginePin.unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
+			engineConfiguration->bc.malfunctionIndicatorPin);
+	enginePins.dizzyOutput.unregisterOutput(activeConfiguration.dizzySparkOutputPin,
+			engineConfiguration->dizzySparkOutputPin);
+	enginePins.tachOut.unregisterOutput(activeConfiguration.bc.tachOutputPin,
+			engineConfiguration->bc.tachOutputPin);
+	enginePins.idleSolenoidPin.unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
+			engineConfiguration->bc.idle.solenoidPin);
 
-	for (int i = 0;i < LE_COMMAND_COUNT;i++)
-		unregisterOutput(activeConfiguration.bc.fsioPins[i],
-				engineConfiguration->bc.fsioPins[i], &enginePins.fsioOutputs[i]);
+	for (int i = 0;i < LE_COMMAND_COUNT;i++) {
+		enginePins.fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioPins[i],
+				engineConfiguration->bc.fsioPins[i]);
+	}
 
-	unregisterOutput(activeConfiguration.bc.alternatorControlPin,
-			engineConfiguration->bc.alternatorControlPin, &enginePins.alternatorPin);
-	unregisterOutput(activeConfiguration.bc.mainRelayPin,
-			engineConfiguration->bc.mainRelayPin, &enginePins.mainRelay);
+	enginePins.alternatorPin.unregisterOutput(activeConfiguration.bc.alternatorControlPin,
+			engineConfiguration->bc.alternatorControlPin);
+	enginePins.mainRelay.unregisterOutput(activeConfiguration.bc.mainRelayPin,
+			engineConfiguration->bc.mainRelayPin);
 
 	startInjectionPins();
 	startIgnitionPins();
