@@ -734,6 +734,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
 	tsOutputChannels->isWarnNow = isWarningNow(now, true);
+	tsOutputChannels->isCltBroken = engine->isCltBroken;
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
