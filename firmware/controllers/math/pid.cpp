@@ -27,8 +27,11 @@ void Pid::init(pid_s *pid) {
 }
 
 bool Pid::isSame(pid_s *pid) {
-	return this->pid->dFactor == pid->dFactor && this->pid->iFactor == pid->iFactor &&
-			this->pid->offset == pid->offset && this->pid->pFactor == pid->pFactor;
+	return this->pid->pFactor == pid->pFactor
+			&& this->pid->iFactor == pid->iFactor
+			&& this->pid->dFactor == pid->dFactor
+			&& this->pid->offset == pid->offset
+			&& this->pid->period == pid->period;
 }
 
 float Pid::getValue(float target, float input) {
