@@ -73,6 +73,7 @@
 #include "console_io.h"
 #include "crc.h"
 #include "fl_protocol.h"
+#include "bluetooth.h"
 
 #include <string.h>
 #include "engine_configuration.h"
@@ -166,6 +167,13 @@ static void setTsSpeed(int value) {
 	boardConfiguration->tunerStudioSerialSpeed = value;
 	printTsStats();
 }
+
+#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+// Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
+static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
+	bluetoothStart(&tsChannel, BLUETOOTH_HC_06, baudRate, name, pinCode);
+}
+#endif  /* EFI_BLUETOOTH_SETUP */
 
 void tunerStudioDebug(const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
@@ -452,6 +460,10 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 		if (received != 1) {
 //			tunerStudioError("ERROR: no command");
+#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+			// assume there's connection loss and notify the bluetooth init code
+			bluetoothSoftwareDisconnectNotify();
+#endif  /* EFI_BLUETOOTH_SETUP */
 			continue;
 		}
 		onDataArrived();
@@ -828,6 +840,13 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("tsinfo", printTsStats);
 	addConsoleAction("reset_ts", resetTs);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
+	
+#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"
+	// Example: "bluetooth_hc06 38400 rusefi 1234"
+	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
+	addConsoleAction("bluetooth_cancel", bluetoothCancel);
+#endif /* EFI_BLUETOOTH_SETUP */
 
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
 }
