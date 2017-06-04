@@ -212,11 +212,6 @@ void printWithLength(char *line) {
 	consoleOutputBuffer((const uint8_t *) line, p - line);
 }
 
-void printLine(Logging *logging) {
-	printWithLength(logging->buffer);
-	resetLogging(logging);
-}
-
 void appendMsgPrefix(Logging *logging) {
 	append(logging, "msg" DELIMETER);
 }
@@ -250,7 +245,8 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 	va_end(ap);
 
 	append(logger, DELIMETER);
-	printLine(logger);
+	printWithLength(logger->buffer);
+	resetLogging(logger);
 }
 
 /**
