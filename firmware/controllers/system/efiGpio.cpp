@@ -50,8 +50,7 @@ EnginePins::EnginePins() {
  * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
  */
 
-#if EFI_PROD_CODE                                                                  \
-
+#if EFI_PROD_CODE
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
   {                                                                                \
     if ((outputPin)->currentLogicValue != (logicValue)) {                          \
@@ -77,6 +76,17 @@ bool EnginePins::stopPins() {
 		result |= injectors[i].stop();
 	}
 	return result;
+}
+
+void EnginePins::unregisterPins() {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
+	fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
+	hipCs.unregisterOutput(activeConfiguration.bc.hip9011CsPin, engineConfiguration->bc.hip9011CsPin);
+	triggerDecoderErrorPin.unregisterOutput(activeConfiguration.bc.triggerErrorPin,
+		engineConfiguration->bc.triggerErrorPin);
+
+#endif /* EFI_PROD_CODE */
 }
 
 void EnginePins::reset() {

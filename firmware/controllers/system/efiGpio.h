@@ -90,6 +90,7 @@ public:
 	EnginePins();
 	void reset();
 	bool stopPins();
+	void unregisterPins();
 	OutputPin mainRelay;
 	OutputPin fanRelay;
 	OutputPin acRelay;
