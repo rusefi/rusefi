@@ -222,33 +222,28 @@ static msg_t benchThread(int param) {
 #endif
 }
 
-static void unregister(brain_pin_e currentPin, OutputPin *output) {
-	if (currentPin == GPIO_UNASSIGNED)
-		return;
-	scheduleMsg(logger, "unregistering %s", hwPortname(currentPin));
-	unmarkPin(currentPin);
-	output->unregister();
-}
 
-void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin, OutputPin *output) {
-	if (oldPin != newPin) {
-		unregister(oldPin, output);
+void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
+	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
+		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
+		unmarkPin(oldPin);
+		unregister();
 	}
 }
 
 void stopIgnitionPins(void) {
 	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
-		unregisterOutput(activeConfiguration.bc.ignitionPins[i],
-				engineConfiguration->bc.ignitionPins[i], output);
+		output->unregisterOutput(activeConfiguration.bc.ignitionPins[i],
+				engineConfiguration->bc.ignitionPins[i]);
 	}
 }
 
 void stopInjectionPins(void) {
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
-		unregisterOutput(activeConfiguration.bc.injectionPins[i],
-				engineConfiguration->bc.injectionPins[i], output);
+		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
+				engineConfiguration->bc.injectionPins[i]);
 	}
 }
 

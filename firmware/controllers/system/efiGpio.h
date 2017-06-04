@@ -35,6 +35,8 @@ public:
 	bool isPinAssigned();
 	void initPin(const char *msg, brain_pin_e brainPin);
 	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+	void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin);
+
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	ioportid_t port;
