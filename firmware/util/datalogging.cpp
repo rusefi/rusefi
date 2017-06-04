@@ -58,7 +58,7 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (remainingSize(logging) < extraLen + 1) {
 #if EFI_PROD_CODE
 		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s", logging->name);
-#endif
+#endif /* EFI_PROD_CODE */
 		return true;
 	}
 	return false;
@@ -67,8 +67,8 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isError = validateBuffer(logging, extraLen);
-	if (isError) {
+	bool isCapacityProblem = validateBuffer(logging, extraLen);
+	if (isCapacityProblem) {
 		return;
 	}
 	strcpy(logging->linePointer, text);
@@ -83,12 +83,7 @@ void append(Logging *logging, const char *text) {
  */
 void appendFast(Logging *logging, const char *text) {
 //  todo: fix this implementation? this would be a one-pass implementation instead of a two-pass
-//	char c;
-//	char *s = (char *) text;
-//	do {
-//		c = *s++;
-//		*logging->linePointer++ = c;
-//	} while (c != '\0');
+
 	register char *s;
 	for (s = (char *) text; *s; ++s)
 		;
