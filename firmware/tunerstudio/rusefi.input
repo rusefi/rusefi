@@ -478,7 +478,7 @@ fileVersion = { 20161225 }
    massAirFlowValueGa = massAirFlowValue,"Air Flow",       "kg/hr",        0,     50,    -999,   -999,     999,   999,   1,   1
    veValueGauge      = veValue,                 "fuel: VE",            "",        0,    120,      10,     10,     100,   100,   1,   1
    baroCorrectionGauge  = baroCorrection,"BaroCorr",           "%",        0,    120,      10,     10,     100,   100,   1,   1
-   pedalPositionGauge = pedalPosition,"Pedal Position",        "%",        0,    120,      10,     10,     100,   100,   1,   1
+   pedalPositionGauge = pedalPosition,"Throttle Pedal Position",        "%",        0,    120,      10,     10,     100,   100,   1,   1
    knockCountGauge   = knockCount,"Knock count",           "count",        0,    120,      10,     10,     100,   100,   1,   1
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
    
@@ -1011,7 +1011,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "fuelLevelSensor", 						fuelLevelSensor
 		field = "Baro ADC input", 						baroSensor_hwChannel
-		field = "pedal Position Channel", 				pedalPositionChannel
+		field = "Throttle pedal Position Channel", 		pedalPositionChannel
 		field = "Primary input channel", 				triggerInputPins1
 		field = "Secondary channel", 					triggerInputPins2
 		field = "Cam Sync/VVT input",					camInput
@@ -1628,17 +1628,18 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "verbose",								isVerboseETB
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
-		field = "PWM Frequency",						etbFreq
-		field = "Dir #1",								etbDirectionPin1
-		field = "Dir #2",								etbDirectionPin2
-		field = "Control #1",							etbControlPin1	
-		field = "Control #2",							etbControlPin2
-		field = "pFactor",								etb_pFactor
-		field = "iFactor",								etb_iFactor
-		field = "dFactor",								etb_dFactor	
-		field = "offset",								etb_offset
-		field = "pid min",								etb_minValue	
-		field = "pid max",								etb_maxValue	
+		field = "PWM Frequency",						etbFreq, {pedalPositionChannel != 16}
+		field = "Dir #1",								etbDirectionPin1, {pedalPositionChannel != 16}
+		field = "Dir #2",								etbDirectionPin2, {pedalPositionChannel != 16}
+		field = "Control #1",							etbControlPin1, {pedalPositionChannel != 16}
+		field = "Control #2",							etbControlPin2, {pedalPositionChannel != 16}
+		field = "pFactor",								etb_pFactor, {pedalPositionChannel != 16}
+		field = "iFactor",								etb_iFactor, {pedalPositionChannel != 16}
+		field = "dFactor",								etb_dFactor, {pedalPositionChannel != 16}	
+		field = "offset",								etb_offset, {pedalPositionChannel != 16}
+		field = "control period",						etb_period, {pedalPositionChannel != 16}
+		field = "pid min",								etb_minValue, {pedalPositionChannel != 16}	
+		field = "pid max",								etb_maxValue, {pedalPositionChannel != 16}	
 				
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1
