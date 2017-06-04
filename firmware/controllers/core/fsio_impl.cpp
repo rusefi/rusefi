@@ -33,6 +33,7 @@ static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
 static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
+static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
 static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
@@ -83,6 +84,8 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_COOLANT:
 		return getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case LE_METHOD_IS_COOLANT_BROKEN:
+		return engine->isCltBroken;
 	case LE_METHOD_INTAKE_AIR:
 		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_RPM:
