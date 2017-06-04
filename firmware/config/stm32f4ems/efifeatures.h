@@ -45,12 +45,6 @@
  */
 #define EFI_WAVE_ANALYZER TRUE
 
-//#define SERIAL_SPEED (8 * 115200)
-//#define SERIAL_SPEED (2 * 115200)
-//todo: make this configurable via Tuner Studio
-//todo: see uartConsoleSerialSpeed
-#define SERIAL_SPEED 115200
-
 /**
  * TunerStudio support.
  */
