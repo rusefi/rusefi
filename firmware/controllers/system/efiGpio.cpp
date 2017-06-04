@@ -122,6 +122,60 @@ void EnginePins::reset() {
 	}
 }
 
+void EnginePins::stopIgnitionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.coils[i];
+		output->unregisterOutput(activeConfiguration.bc.ignitionPins[i],
+				engineConfiguration->bc.ignitionPins[i]);
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::stopInjectionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.injectors[i];
+		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
+				engineConfiguration->bc.injectionPins[i]);
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::startIgnitionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *output = &enginePins.coils[i];
+		// todo: we need to check if mode has changed
+		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
+			output->initPin(output->name, boardConfiguration->ignitionPins[i],
+				&boardConfiguration->ignitionPinMode);
+		}
+	}
+	// todo: we need to check if mode has changed
+	if (engineConfiguration->dizzySparkOutputPin != activeConfiguration.dizzySparkOutputPin) {
+		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
+				&engineConfiguration->dizzySparkOutputPinMode);
+
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::startInjectionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// todo: should we move this code closer to the injection logic?
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *output = &enginePins.injectors[i];
+		// todo: we need to check if mode has changed
+		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
+
+			output->initPin(output->name, boardConfiguration->injectionPins[i],
+					&boardConfiguration->injectionPinMode);
+		}
+	}
+#endif /* EFI_PROD_CODE */
+}
+
 NamedOutputPin::NamedOutputPin() : OutputPin() {
 	name = NULL;
 }

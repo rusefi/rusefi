@@ -232,52 +232,6 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	}
 }
 
-void EnginePins::stopIgnitionPins(void) {
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		output->unregisterOutput(activeConfiguration.bc.ignitionPins[i],
-				engineConfiguration->bc.ignitionPins[i]);
-	}
-}
-
-void EnginePins::stopInjectionPins(void) {
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.injectors[i];
-		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
-				engineConfiguration->bc.injectionPins[i]);
-	}
-}
-
-void EnginePins::startIgnitionPins(void) {
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		// todo: we need to check if mode has changed
-		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
-			output->initPin(output->name, boardConfiguration->ignitionPins[i],
-				&boardConfiguration->ignitionPinMode);
-		}
-	}
-	// todo: we need to check if mode has changed
-	if (engineConfiguration->dizzySparkOutputPin != activeConfiguration.dizzySparkOutputPin) {
-		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
-				&engineConfiguration->dizzySparkOutputPinMode);
-
-	}
-}
-
-void EnginePins::startInjectionPins(void) {
-	// todo: should we move this code closer to the injection logic?
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.injectors[i];
-		// todo: we need to check if mode has changed
-		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
-
-			output->initPin(output->name, boardConfiguration->injectionPins[i],
-					&boardConfiguration->injectionPinMode);
-		}
-	}
-}
-
 void runIoTest(int subsystem, int index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
