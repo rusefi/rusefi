@@ -15,7 +15,8 @@ static const char *commands[5];
 static int numCommands = 0;
 static int setBaudIdx = -1;
 
-static char cmdBaud[10];
+static char cmdHello[5];
+static char cmdBaud[25];
 static char cmdName[30];
 static char cmdPin[16];
 
@@ -166,12 +167,6 @@ void bluetoothStart(ts_channel_s *tsChan, bluetooth_module_e moduleType, const c
 		return;
 	}
 
-	// todo: add support for other BT module types
-	if (moduleType != BLUETOOTH_HC_06) {
-		scheduleMsg(&btLogger, "This Bluetooth module is currently not supported!");
-		return;
-	}
-	
 	numCommands = 0;
 
 	// now check the arguments and add other commands:
@@ -221,12 +216,30 @@ void bluetoothStart(ts_channel_s *tsChan, bluetooth_module_e moduleType, const c
 	}
 
 	// ok, add commands!
-	commands[numCommands++] = "AT"; // this command is added to test a connection
-	chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c", '0' + setBaudIdx);
+	switch (moduleType) {
+	case BLUETOOTH_HC_05:
+		chsnprintf(cmdHello, sizeof(cmdHello), "AT\r\n");
+		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+UART=%d,0,0\r\n", baud);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
+		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME=%s\r\n", name);
+		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PSWD=%s\r\n", pinCode);
+		// todo: add more commands?
+		// AT+RMAAD
+		// AT+ROLE=0
+		break;
+	case BLUETOOTH_HC_06:
+		chsnprintf(cmdHello, sizeof(cmdHello), "AT");
+		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c", '0' + setBaudIdx);
+		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s", name);
+		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s", pinCode);
+		break;
+	default:
+		// todo: add support for other BT module types
+		scheduleMsg(&btLogger, "This Bluetooth module is currently not supported!");
+		return;
+	}
+	commands[numCommands++] = cmdHello; // this command is added to test a connection
 	commands[numCommands++] = cmdBaud;
-	chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s", name);
 	commands[numCommands++] = cmdName;
-	chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s", pinCode);
    	commands[numCommands++] = cmdPin;
    	
    	// create a thread to execute these commands later

@@ -169,6 +169,10 @@ static void setTsSpeed(int value) {
 }
 
 #if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+// Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
+static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
+	bluetoothStart(&tsChannel, BLUETOOTH_HC_05, baudRate, name, pinCode);
+}
 // Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
 	bluetoothStart(&tsChannel, BLUETOOTH_HC_06, baudRate, name, pinCode);
@@ -844,6 +848,7 @@ void startTunerStudioConnectivity(void) {
 #if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
 	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
+	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);
 	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
