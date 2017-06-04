@@ -232,8 +232,8 @@ void applyNewHardwareSettings(void) {
 	
         // all 'stop' methods need to go before we begin starting pins
        
-    stopInjectionPins();
-	stopIgnitionPins();
+	enginePins.stopInjectionPins();
+    enginePins.stopIgnitionPins();
 	stopCanPins();
 	bool etbRestartNeeded = isETBRestartNeeded();
 	if (etbRestartNeeded) {
@@ -265,8 +265,8 @@ void applyNewHardwareSettings(void) {
 	enginePins.unregisterPins();
 
 
-	startInjectionPins();
-	startIgnitionPins();
+	enginePins.startInjectionPins();
+	enginePins.startIgnitionPins();
 	startCanPins();
 	if (etbRestartNeeded) {
 		startETBPins();
