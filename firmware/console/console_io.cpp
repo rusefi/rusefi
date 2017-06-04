@@ -138,7 +138,7 @@ bool isCommandLineConsoleOverTTL(void) {
 }
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
-static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
 
 bool consoleInBinaryMode = false;
@@ -256,9 +256,10 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 
 	if (isCommandLineConsoleOverTTL()) {
 		/*
-		 * Activates the serial using the driver default configuration (that's 38400)
+		 * Activates the serial
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC
 		 */
+		serialConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		sdStart(EFI_CONSOLE_UART_DEVICE, &serialConfig);
 
 // cannot use pin repository here because pin repository prints to console
