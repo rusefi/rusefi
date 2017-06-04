@@ -124,6 +124,36 @@ void startTsPort(ts_channel_s *tsChannel) {
 #endif /* EFI_PROD_CODE */
 }
 
+bool stopTsPort(ts_channel_s *tsChannel) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_USB_SERIAL || defined(__DOXYGEN__)
+	if (isCommandLineConsoleOverTTL()) {
+#if 0
+		usb_serial_stop();
+#endif
+		// don't stop USB!
+		return false;
+	} else
+#endif
+	{
+		if (boardConfiguration->useSerialPort) {
+			// todo: disable Rx/Tx pads?
+#if TS_UART_DMA_MODE
+			uartStop(TS_DMA_UART_DEVICE);
+#else
+			sdStop(TS_SERIAL_UART_DEVICE);
+#endif /* TS_UART_DMA_MODE */
+		}
+	}
+
+	tsChannel->channel = (BaseChannel *) NULL;
+	return true;
+#else  /* EFI_PROD_CODE */
+	// don't stop simulator!
+	return false;
+#endif /* EFI_PROD_CODE */
+}
+
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
         efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "tunerStudioWriteData");
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
