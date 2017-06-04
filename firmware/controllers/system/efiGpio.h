@@ -91,6 +91,10 @@ public:
 	void reset();
 	bool stopPins();
 	void unregisterPins();
+	void startInjectionPins();
+	void startIgnitionPins();
+	void stopInjectionPins();
+	void stopIgnitionPins();
 	OutputPin mainRelay;
 	OutputPin fanRelay;
 	OutputPin acRelay;

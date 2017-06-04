@@ -232,7 +232,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	}
 }
 
-void stopIgnitionPins(void) {
+void EnginePins::stopIgnitionPins(void) {
 	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		output->unregisterOutput(activeConfiguration.bc.ignitionPins[i],
@@ -240,7 +240,7 @@ void stopIgnitionPins(void) {
 	}
 }
 
-void stopInjectionPins(void) {
+void EnginePins::stopInjectionPins(void) {
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
@@ -248,7 +248,7 @@ void stopInjectionPins(void) {
 	}
 }
 
-void startIgnitionPins(void) {
+void EnginePins::startIgnitionPins(void) {
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		// todo: we need to check if mode has changed
@@ -265,7 +265,7 @@ void startIgnitionPins(void) {
 	}
 }
 
-void startInjectionPins(void) {
+void EnginePins::startInjectionPins(void) {
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
@@ -304,8 +304,8 @@ void initInjectorCentral(Logging *sharedLogger) {
 		is_injector_enabled[i] = true;
 	}
 
-	startInjectionPins();
-	startIgnitionPins();
+	enginePins.startInjectionPins();
+	enginePins.startIgnitionPins();
 
 	printInjectorsStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
