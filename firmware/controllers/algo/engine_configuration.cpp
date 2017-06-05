@@ -693,6 +693,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->cranking.baseFuel = 5;
 
+	engineConfiguration->idleRpmPid.pFactor = 0.05;
+	engineConfiguration->idleRpmPid.iFactor = 0.002;
+
 	engineConfiguration->idleRpmPid.minValue = 5;
 	engineConfiguration->idleRpmPid.maxValue = 95;
 	boardConfiguration->idlePidDeactivationTpsThreshold = 2;
