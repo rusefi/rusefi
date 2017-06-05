@@ -58,7 +58,7 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (remainingSize(logging) < extraLen + 1) {
 #if EFI_PROD_CODE
 		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s", logging->name);
-#endif
+#endif /* EFI_PROD_CODE */
 		return true;
 	}
 	return false;
@@ -67,8 +67,8 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isError = validateBuffer(logging, extraLen);
-	if (isError) {
+	bool isCapacityProblem = validateBuffer(logging, extraLen);
+	if (isCapacityProblem) {
 		return;
 	}
 	strcpy(logging->linePointer, text);
@@ -82,24 +82,11 @@ void append(Logging *logging, const char *text) {
  * @note This method if fast because it does not validate much, be sure what you are doing
  */
 void appendFast(Logging *logging, const char *text) {
-//  todo: fix this implementation? this would be a one-pass implementation instead of a two-pass
-//	char c;
-//	char *s = (char *) text;
-//	do {
-//		c = *s++;
-//		*logging->linePointer++ = c;
-//	} while (c != '\0');
 	register char *s;
-	for (s = (char *) text; *s; ++s)
-		;
-	int extraLen = (s - text);
-
 	s = logging->linePointer;
 	while ((*s++ = *text++) != 0)
 		;
-
-//	strcpy(logging->linePointer, text);
-	logging->linePointer += extraLen;
+	logging->linePointer = s - 1;
 }
 
 // todo: look into chsnprintf once on Chibios 3
@@ -225,11 +212,6 @@ void printWithLength(char *line) {
 	consoleOutputBuffer((const uint8_t *) line, p - line);
 }
 
-void printLine(Logging *logging) {
-	printWithLength(logging->buffer);
-	resetLogging(logging);
-}
-
 void appendMsgPrefix(Logging *logging) {
 	append(logging, "msg" DELIMETER);
 }
@@ -263,7 +245,8 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 	va_end(ap);
 
 	append(logger, DELIMETER);
-	printLine(logger);
+	printWithLength(logger->buffer);
+	resetLogging(logger);
 }
 
 /**

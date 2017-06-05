@@ -56,7 +56,6 @@ void debugFloat(Logging *logging, const char *text, float value, int precision);
 void appendFloat(Logging *logging, float value, int precision);
 
 void resetLogging(Logging *logging);
-void printLine(Logging *logging);
 
 void appendMsgPrefix(Logging *logging);
 void appendMsgPostfix(Logging *logging);

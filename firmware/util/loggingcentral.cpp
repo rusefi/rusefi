@@ -73,7 +73,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	int expectedOutputSize;
 #endif /* EFI_ENABLE_ASSERTS */
 	{ // start of critical section
-		lockOutputBuffer();
+		bool alreadyLocked = lockOutputBuffer();
 		/**
 		 * we cannot output under syslock, we simply rotate which buffer is which
 		 */
@@ -88,7 +88,9 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 		accumulatedSize = 0;
 		accumulationBuffer[0] = 0;
 
-		unlockOutputBuffer();
+		if (!alreadyLocked) {
+			unlockOutputBuffer();
+		}
 	} // end of critical section
 
 	*actualOutputBufferSize = efiStrlen(outputBuffer);
@@ -104,16 +106,12 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	return outputBuffer;
 }
 
-extern bool consoleInBinaryMode;
-
 /**
  * This method actually sends all the pending data to the communication layer.
  * This method is invoked by the main thread - that's the only thread which should be sending
  * actual data to console in order to avoid concurrent access to serial hardware.
  */
 void printPending(void) {
-	if (consoleInBinaryMode)
-		return;
 	int actualOutputBufferSize;
 	char *output = swapOutputBuffers(&actualOutputBufferSize);
 

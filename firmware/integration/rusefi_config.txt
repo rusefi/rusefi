@@ -107,8 +107,8 @@ struct pid_s
 	float dFactor;;"value",      1,      0,       -1000, 1000,      5
 	int16_t offset;Linear addition to PID logic;"value",      1,      0,       0, 1000,      0
 	int16_t period;PID dTime;"ms",      1,      0,       0, 3000,      0
-	int16_t minValue;;"v",        1,     0,  0,    3000.0,  3
-	int16_t maxValue;;"v",        1,     0,  0,    3000.0,  3
+	int16_t minValue;;"",        1,     0,  0,    3000.0,  3
+	int16_t maxValue;;"",        1,     0,  0,    3000.0,  3
 end_struct
 
 struct cranking_parameters_s

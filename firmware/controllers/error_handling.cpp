@@ -171,9 +171,9 @@ void onUnlockHook(void) {
 	if (lockedDuration > maxLockedDuration) {
 		maxLockedDuration = lockedDuration;
 	}
-//	if (t > 2800) {
+//	if (lockedDuration > 2800) {
 //		// un-comment this if you want a nice stop for a breakpoint
-//		maxLockTime = t + 1;
+//		maxLockedDuration = lockedDuration + 1;
 //	}
 }
 

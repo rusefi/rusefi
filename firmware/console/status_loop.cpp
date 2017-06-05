@@ -432,6 +432,7 @@ static void printInfo(systime_t nowSeconds) {
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
 extern fatal_msg_t errorMessageBuffer;
+extern bool consoleInBinaryMode;
 
 /**
  * @brief Sends all pending data to dev console
@@ -442,7 +443,9 @@ void updateDevConsoleState(void) {
 	}
 // looks like this is not needed anymore
 //	checkIfShouldHalt();
-	printPending();
+	if (!consoleInBinaryMode) {
+		printPending();
+	}
 
 	/**
 	 * this should go before the firmware error so that console can detect connection
@@ -731,6 +734,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
 	tsOutputChannels->isWarnNow = isWarningNow(now, true);
+	tsOutputChannels->isCltBroken = engine->isCltBroken;
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();

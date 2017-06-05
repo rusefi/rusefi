@@ -52,6 +52,7 @@ typedef enum {
 	LE_METHOD_FSIO_ANALOG_INPUT = 116,
 	LE_METHOD_INTAKE_VVT = 117,
 	LE_METHOD_EXHAUST_VVT = 118,
+	LE_METHOD_IS_COOLANT_BROKEN = 119,
 
 	Force_4b_le_action = ENUM_32_BITS,
 
@@ -95,8 +96,8 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float getValue(float selfValue, Engine *engine);
-	float getValue2(float selfValue, LEElement *fistElementInList, Engine *engine);
+	float getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void add(LEElement *element);
 	bool isEmpty();
 	void reset();
@@ -106,7 +107,7 @@ public:
 	int currentCalculationLogPosition;
 private:
 	void push(le_action_e action, float value);
-	bool processElement(Engine *engine, LEElement *element);
+	bool processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;

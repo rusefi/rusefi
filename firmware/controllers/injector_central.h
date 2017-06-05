@@ -19,15 +19,7 @@ void fuelPumpBench(void);
 void milBench(void);
 void initInjectorCentral(Logging *sharedLogger);
 bool isRunningBenchTest(void);
-int isInjectorEnabled(int cylinderId);
-void assertCylinderId(int cylinderId, const char *msg);
 
-void stopInjectionPins(void);
-void startInjectionPins(void);
-void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin, OutputPin *output);
-
-void stopIgnitionPins(void);
-void startIgnitionPins(void);
 void runIoTest(int subsystem, int index);
 
 #endif /* INJECTOR_CENTRAL_H_ */

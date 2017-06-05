@@ -90,6 +90,7 @@ typedef struct {
 
 
 void startTsPort(ts_channel_s *tsChannel);
+bool stopTsPort(ts_channel_s *tsChannel);
 
 // that's 1 second
 #define BINARY_IO_TIMEOUT MS2ST(1000)

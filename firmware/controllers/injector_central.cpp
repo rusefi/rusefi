@@ -39,13 +39,15 @@ EXTERN_ENGINE
 static Logging * logger;
 static bool isRunningBench = false;
 
+// todo: move into Engine object?
+// todo: looks like these flags are not currently used? dead functionality? unfinished functionality?
 static int is_injector_enabled[INJECTION_PIN_COUNT];
 
 bool isRunningBenchTest(void) {
 	return isRunningBench;
 }
 
-void assertCylinderId(int cylinderId, const char *msg) {
+static void assertCylinderId(int cylinderId, const char *msg) {
 	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->specs.cylindersCount;
 	if (!isValid) {
 		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
@@ -58,12 +60,12 @@ void assertCylinderId(int cylinderId, const char *msg) {
 /**
  * @param cylinderId - from 1 to NUMBER_OF_CYLINDERS
  */
-int isInjectorEnabled(int cylinderId) {
+static int isInjectorEnabled(int cylinderId) {
 	assertCylinderId(cylinderId, "isInjectorEnabled");
 	return is_injector_enabled[cylinderId - 1];
 }
 
-static void printStatus(void) {
+static void printInjectorsStatus(void) {
 	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
 		scheduleMsg(logger, "injector_%d_%d", isInjectorEnabled(id));
 	}
@@ -72,7 +74,7 @@ static void printStatus(void) {
 static void setInjectorEnabled(int id, int value) {
 	efiAssertVoid(id >= 0 && id < engineConfiguration->specs.cylindersCount, "injector id");
 	is_injector_enabled[id] = value;
-	printStatus();
+	printInjectorsStatus();
 }
 
 static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
@@ -222,63 +224,11 @@ static msg_t benchThread(int param) {
 #endif
 }
 
-static void unregister(brain_pin_e currentPin, OutputPin *output) {
-	if (currentPin == GPIO_UNASSIGNED)
-		return;
-	scheduleMsg(logger, "unregistering %s", hwPortname(currentPin));
-	unmarkPin(currentPin);
-	output->unregister();
-}
-
-void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin, OutputPin *output) {
-	if (oldPin != newPin) {
-		unregister(oldPin, output);
-	}
-}
-
-void stopIgnitionPins(void) {
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		unregisterOutput(activeConfiguration.bc.ignitionPins[i],
-				engineConfiguration->bc.ignitionPins[i], output);
-	}
-}
-
-void stopInjectionPins(void) {
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.injectors[i];
-		unregisterOutput(activeConfiguration.bc.injectionPins[i],
-				engineConfiguration->bc.injectionPins[i], output);
-	}
-}
-
-void startIgnitionPins(void) {
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		// todo: we need to check if mode has changed
-		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
-			output->initPin(output->name, boardConfiguration->ignitionPins[i],
-				&boardConfiguration->ignitionPinMode);
-		}
-	}
-	// todo: we need to check if mode has changed
-	if (engineConfiguration->dizzySparkOutputPin != activeConfiguration.dizzySparkOutputPin) {
-		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
-				&engineConfiguration->dizzySparkOutputPinMode);
-
-	}
-}
-
-void startInjectionPins(void) {
-	// todo: should we move this code closer to the injection logic?
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.injectors[i];
-		// todo: we need to check if mode has changed
-		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
-
-			output->initPin(output->name, boardConfiguration->injectionPins[i],
-					&boardConfiguration->injectionPinMode);
-		}
+void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
+	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
+		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
+		unmarkPin(oldPin);
+		unregister();
 	}
 }
 
@@ -304,14 +254,14 @@ void initInjectorCentral(Logging *sharedLogger) {
 	logger = sharedLogger;
 	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
 
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		is_injector_enabled[i] = true;
 	}
 
-	startInjectionPins();
-	startIgnitionPins();
+	enginePins.startInjectionPins();
+	enginePins.startIgnitionPins();
 
-	printStatus();
+	printInjectorsStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
 
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
