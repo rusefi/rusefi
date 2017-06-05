@@ -63,7 +63,6 @@ void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
 }
 
-
 static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", idleModeStr,
@@ -150,14 +149,8 @@ static void undoIdleBlipIfNeeded() {
 	}
 }
 
-static percent_t currentIdleValve = -1;
-
 percent_t getIdlePosition(void) {
-	if (engineConfiguration->idleMode == IM_AUTO) {
-		return currentIdleValve;
-	} else {
-		return boardConfiguration->manIdlePosition;
-	}
+	return currentIdlePosition;
 }
 
 static float autoIdle(float cltCorrection) {
