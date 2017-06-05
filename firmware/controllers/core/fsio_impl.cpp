@@ -33,6 +33,7 @@ static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
 static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
+static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
 static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
@@ -73,8 +74,7 @@ EXTERN_ENGINE
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging *logger;
 
-float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(engine!=NULL, "getLEValue", NAN);
 	switch (action) {
 	case LE_METHOD_FAN:
@@ -83,6 +83,8 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_COOLANT:
 		return getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case LE_METHOD_IS_COOLANT_BROKEN:
+		return engine->isCltBroken;
 	case LE_METHOD_INTAKE_AIR:
 		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_RPM:
@@ -261,7 +263,7 @@ static void handleFsio(Engine *engine, int index) {
 		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(boardConfiguration->fsioPins[index]));
 		fvalue = NAN;
 	} else {
-		fvalue = calc.getValue2(engine->fsioLastValue[index], fsioLogics[index], engine);
+		fvalue = calc.getValue2(engine->fsioLastValue[index], fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	engine->fsioLastValue[index] = fvalue;
 
@@ -298,11 +300,11 @@ static const char * action2String(le_action_e action) {
 	return buffer;
 }
 
-static void setPinState(const char * msg, OutputPin *pin, LEElement *element, Engine *engine) {
+static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 	if (element == NULL) {
 		warning(CUSTOM_OBD_11, "invalid expression for %s", msg);
 	} else {
-		int value = (int)calc.getValue2(pin->getLogicValue(), element, engine);
+		int value = (int)calc.getValue2(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 			if (isRunningBenchTest()) {
 				return; // let's not mess with bench testing
@@ -339,7 +341,7 @@ void runFsio(void) {
 
 #if EFI_FUEL_PUMP || defined(__DOXYGEN__)
 	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED) {
-		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic, engine);
+		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic);
 	}
 #endif /* EFI_FUEL_PUMP */
 
@@ -352,7 +354,7 @@ void runFsio(void) {
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
 	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
-		setPinState("A/C", &enginePins.acRelay, acRelayLogic, engine);
+		setPinState("A/C", &enginePins.acRelay, acRelayLogic);
 	}
 
 //	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
@@ -360,7 +362,7 @@ void runFsio(void) {
 //	}
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
-		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic, engine);
+		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic);
 	}
 
 }
@@ -465,7 +467,7 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine, Engi
 #endif
 }
 
-static void rpnEval(char *line, Engine *engine) {
+static void rpnEval(char *line) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	line = unquote(line);
 	scheduleMsg(logger, "Parsing [%s]", line);
@@ -474,7 +476,7 @@ static void rpnEval(char *line, Engine *engine) {
 	if (e == NULL) {
 		scheduleMsg(logger, "parsing failed");
 	} else {
-		float result = evalCalc.getValue2(0, e, engine);
+		float result = evalCalc.getValue2(0, e PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(logger, "Evaluate result: %f", result);
 	}
 #endif
@@ -527,11 +529,11 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_PROD_CODE */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleActionSSP("set_rpn_expression", (VoidCharPtrCharPtrVoidPtr) setFsioExpression, engine);
+	addConsoleActionSS("set_rpn_expression", (VoidCharPtrCharPtr) setFsioExpression);
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);
 	addConsoleAction("fsioinfo", showFsioInfo);
-	addConsoleActionSP("rpn_eval", (VoidCharPtrVoidPtr) rpnEval, engine);
-#endif
+	addConsoleActionS("rpn_eval", (VoidCharPtr) rpnEval);
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 	fsioTable1.init(config->fsioTable1, config->fsioTable1LoadBins,
 			config->fsioTable1RpmBins);

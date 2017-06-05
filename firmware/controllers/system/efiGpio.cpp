@@ -50,8 +50,7 @@ EnginePins::EnginePins() {
  * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
  */
 
-#if EFI_PROD_CODE                                                                  \
-
+#if EFI_PROD_CODE
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
   {                                                                                \
     if ((outputPin)->currentLogicValue != (logicValue)) {                          \
@@ -79,6 +78,41 @@ bool EnginePins::stopPins() {
 	return result;
 }
 
+void EnginePins::unregisterPins() {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
+	fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
+	hipCs.unregisterOutput(activeConfiguration.bc.hip9011CsPin, engineConfiguration->bc.hip9011CsPin);
+	triggerDecoderErrorPin.unregisterOutput(activeConfiguration.bc.triggerErrorPin,
+		engineConfiguration->bc.triggerErrorPin);
+
+	sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
+	etbOutput1.unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
+			engineConfiguration->bc.etbDirectionPin1);
+	etbOutput2.unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
+			engineConfiguration->bc.etbDirectionPin2);
+	checkEnginePin.unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
+			engineConfiguration->bc.malfunctionIndicatorPin);
+	dizzyOutput.unregisterOutput(activeConfiguration.dizzySparkOutputPin,
+			engineConfiguration->dizzySparkOutputPin);
+	tachOut.unregisterOutput(activeConfiguration.bc.tachOutputPin,
+			engineConfiguration->bc.tachOutputPin);
+	idleSolenoidPin.unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
+			engineConfiguration->bc.idle.solenoidPin);
+
+	for (int i = 0;i < LE_COMMAND_COUNT;i++) {
+		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioPins[i],
+				engineConfiguration->bc.fsioPins[i]);
+	}
+
+	alternatorPin.unregisterOutput(activeConfiguration.bc.alternatorControlPin,
+			engineConfiguration->bc.alternatorControlPin);
+	mainRelay.unregisterOutput(activeConfiguration.bc.mainRelayPin,
+			engineConfiguration->bc.mainRelayPin);
+
+#endif /* EFI_PROD_CODE */
+}
+
 void EnginePins::reset() {
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		injectors[i].reset();
@@ -86,6 +120,60 @@ void EnginePins::reset() {
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		coils[i].reset();
 	}
+}
+
+void EnginePins::stopIgnitionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.coils[i];
+		output->unregisterOutput(activeConfiguration.bc.ignitionPins[i],
+				engineConfiguration->bc.ignitionPins[i]);
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::stopInjectionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.injectors[i];
+		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
+				engineConfiguration->bc.injectionPins[i]);
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::startIgnitionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *output = &enginePins.coils[i];
+		// todo: we need to check if mode has changed
+		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
+			output->initPin(output->name, boardConfiguration->ignitionPins[i],
+				&boardConfiguration->ignitionPinMode);
+		}
+	}
+	// todo: we need to check if mode has changed
+	if (engineConfiguration->dizzySparkOutputPin != activeConfiguration.dizzySparkOutputPin) {
+		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
+				&engineConfiguration->dizzySparkOutputPinMode);
+
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::startInjectionPins(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// todo: should we move this code closer to the injection logic?
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *output = &enginePins.injectors[i];
+		// todo: we need to check if mode has changed
+		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
+
+			output->initPin(output->name, boardConfiguration->injectionPins[i],
+					&boardConfiguration->injectionPinMode);
+		}
+	}
+#endif /* EFI_PROD_CODE */
 }
 
 NamedOutputPin::NamedOutputPin() : OutputPin() {

@@ -56,9 +56,6 @@ static void sayHello(void) {
 #ifdef CH_FREQUENCY
 	scheduleMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
 #endif
-#ifdef SERIAL_SPEED
-	scheduleMsg(&logger, "SERIAL_SPEED=%d", SERIAL_SPEED);
-#endif
 
 #ifdef CORTEX_MAX_KERNEL_PRIORITY
 	scheduleMsg(&logger, "CORTEX_MAX_KERNEL_PRIORITY=%d", CORTEX_MAX_KERNEL_PRIORITY);

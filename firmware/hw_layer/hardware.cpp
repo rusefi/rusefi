@@ -200,6 +200,7 @@ static void calcFastAdcIndexes(void) {
 }
 
 static void adcConfigListener(Engine *engine) {
+	// todo: something is not right here - looks like should be a callback for each configuration change?
 	calcFastAdcIndexes();
 }
 
@@ -231,8 +232,8 @@ void applyNewHardwareSettings(void) {
 	
         // all 'stop' methods need to go before we begin starting pins
        
-    stopInjectionPins();
-	stopIgnitionPins();
+	enginePins.stopInjectionPins();
+    enginePins.stopIgnitionPins();
 	stopCanPins();
 	bool etbRestartNeeded = isETBRestartNeeded();
 	if (etbRestartNeeded) {
@@ -261,40 +262,11 @@ void applyNewHardwareSettings(void) {
 
 	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
 
+	enginePins.unregisterPins();
 
-	unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin,
-			&enginePins.fuelPumpRelay);
-	unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin, &enginePins.fanRelay);
-	unregisterOutput(activeConfiguration.bc.hip9011CsPin,
-			engineConfiguration->bc.hip9011CsPin, &enginePins.hipCs);
-	unregisterOutput(activeConfiguration.bc.triggerErrorPin,
-		engineConfiguration->bc.triggerErrorPin, &enginePins.triggerDecoderErrorPin);
-	unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin,
-			&enginePins.sdCsPin);
-	unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
-			engineConfiguration->bc.etbDirectionPin1, &enginePins.etbOutput1);
-	unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
-			engineConfiguration->bc.etbDirectionPin2, &enginePins.etbOutput2);
-	unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
-			engineConfiguration->bc.malfunctionIndicatorPin, &enginePins.checkEnginePin);
-	unregisterOutput(activeConfiguration.dizzySparkOutputPin,
-			engineConfiguration->dizzySparkOutputPin, &enginePins.dizzyOutput);
-	unregisterOutput(activeConfiguration.bc.tachOutputPin,
-			engineConfiguration->bc.tachOutputPin, &enginePins.tachOut);
-	unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
-			engineConfiguration->bc.idle.solenoidPin, &enginePins.idleSolenoidPin);
 
-	for (int i = 0;i < LE_COMMAND_COUNT;i++)
-		unregisterOutput(activeConfiguration.bc.fsioPins[i],
-				engineConfiguration->bc.fsioPins[i], &enginePins.fsioOutputs[i]);
-
-	unregisterOutput(activeConfiguration.bc.alternatorControlPin,
-			engineConfiguration->bc.alternatorControlPin, &enginePins.alternatorPin);
-	unregisterOutput(activeConfiguration.bc.mainRelayPin,
-			engineConfiguration->bc.mainRelayPin, &enginePins.mainRelay);
-
-	startInjectionPins();
-	startIgnitionPins();
+	enginePins.startInjectionPins();
+	enginePins.startIgnitionPins();
 	startCanPins();
 	if (etbRestartNeeded) {
 		startETBPins();
