@@ -188,7 +188,7 @@ fileVersion = { 20161225 }
       wallFuelAmount = scalar, F32,      160, "ms",           1,         0
       iatCorrection = scalar, F32,       164, "%",            1,         0
       wallFuelCorrection = scalar, F32,  168, "ms",           1,         0
-      curIdlePosition = scalar, F32,     172, "percent",      1,         0
+      idleAirValvePosition = scalar, F32,     172, "percent",      1,         0
       currentTargetAfr = scalar, F32,    176, "ratio",      1,         0
       chargeAirMass = scalar, F32,       180, "g",      1,         0
       cltCorrection = scalar, F32,       184, "%",            1,         0
@@ -503,7 +503,7 @@ fileVersion = { 20161225 }
    wallFuelAmountGauge = wallFuelAmount, "fuel: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
    wallFuelCorrectionGauge = wallFuelCorrection, "fuel: wall correction extra", "ms",     0,   100,     0,    0,    100,  100,   0,   0
    
-   curIdlePositionGauge = curIdlePosition, "idle position", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   idleAirValvePositionGauge = idleAirValvePosition, "idle position", "%",     0,   100,     0,    0,    100,  100,   0,   0
 
    debugFloatField1Gauge = debugFloatField1, "debug f1", "%",     0,   100,     0,    0,    100,  100,   4,   4
    debugFloatField2Gauge = debugFloatField2, "debug f2", "%",     0,   100,     0,    0,    100,  100,   4,   4
@@ -592,7 +592,7 @@ fileVersion = { 20161225 }
    entry = massAirFlowValue,"airMass",     float,  "%.3f"
    entry = pedalPosition,   "pedal",       float,  "%.3f"
    entry = triggerErrorsCounter, "trg err",int,    "%d"
-   entry = curIdlePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
+   entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
 
 
    entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
