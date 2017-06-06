@@ -127,6 +127,7 @@ CSRC =  ${PORTSRC} \
         $(UTILSRC) \
         main.c
 
+# todo: reuse controllers.mk here 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
@@ -134,7 +135,10 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(PROJECT_DIR)/controllers/settings.cpp \
 	$(PROJECT_DIR)/controllers/engine_controller.cpp \
 	$(PROJECT_DIR)/controllers/error_handling.cpp \
+	$(PROJECT_DIR)/controllers/persistent_store.cpp \
+	$(PROJECT_DIR)/controllers/map_averaging.cpp \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
+	$(PROJECT_DIR)/development/trigger_emulator.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
@@ -148,8 +152,6 @@ CPPSRC = $(UTILSRC_CPP) \
 	simulator/rusEfiFunctionalTest.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
-	$(PROJECT_DIR)/controllers/map_averaging.cpp \
-	$(PROJECT_DIR)/development/trigger_emulator.cpp \
 	$(TEST_SRC_CPP)
 
 
