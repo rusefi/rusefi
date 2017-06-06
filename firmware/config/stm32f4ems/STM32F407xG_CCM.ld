@@ -20,7 +20,8 @@
  */
 MEMORY
 {
-    flash : org = 0x08000000, len = 896k
+    bl    : org = 0x08000000, len = 16k     /* bootloader section */
+    flash : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 864k : 896k  /* change address & length if bootloader */
     ram0  : org = 0x20000000, len = 128k    /* SRAM1 + SRAM2 */
     ram1  : org = 0x20000000, len = 112k    /* SRAM1 */
     ram2  : org = 0x2001C000, len = 16k     /* SRAM2 */
@@ -47,5 +48,17 @@ REGION_ALIAS("BSS_RAM", ram0);
 
 /* RAM region to be used for the default heap.*/
 REGION_ALIAS("HEAP_RAM", ram0);
+
+/* Bootloader section */
+SECTIONS
+{
+.bl : ALIGN(4)
+    {
+        . = ALIGN(4);
+        *(.bl)
+        *(.bl.*)
+        . = ALIGN(4);
+    } > bl AT > bl
+}
 
 INCLUDE rules.ld
