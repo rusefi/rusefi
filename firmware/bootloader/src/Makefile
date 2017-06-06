@@ -181,6 +181,7 @@ CPPSRC = $(CHCPPSRC) \
 	$(PROJECT_DIR)/console/binary/tunerstudio_io.cpp \
 	$(PROJECT_DIR)/controllers/system/efiGpio.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
+	$(PROJECT_DIR)/controllers/persistent_store.cpp \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	src/rusefi_stubs.cpp \
