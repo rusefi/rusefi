@@ -22,6 +22,7 @@
 
 int findIndex(const float array[], int size, float value);
 int findIndexMsg(const char *msg, const float array[], int size, float value);
+void ensureArrayIsAscending(const char *msg, const float array[], int size);
 int findIndex2(const float array[], unsigned size, float value);
 float interpolate(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
