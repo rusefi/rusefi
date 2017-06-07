@@ -156,6 +156,17 @@ int findIndex2(const float array[], unsigned size, float value) {
 	return i || *array <= value ? i : -1;
 }
 
+/**
+ * in order to use binary search we need to know that axis elements are sorted
+ */
+void ensureArrayIsAscending(const char *msg, const float array[], int size) {
+	for (int i = 0; i < size - 1; i ++) {
+		if (array[i] >= array[i+ 1]) {
+			firmwareError(CUSTOM_ERR_6538, "invalid axis %s at %f", msg, array[i]);
+		}
+	}
+}
+
 /** @brief	Binary search
  * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
