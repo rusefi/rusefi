@@ -734,7 +734,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
-	debug_mode_e debugMode;
+	debug_mode_e debugMode;set debug_mode X
 	float[4] unusedwarmupAfrPid;
 
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfrBins;CLT-based target AFR for PID-based control;"C",        1,     0,   -100.0,    250.0,  2
