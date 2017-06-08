@@ -691,8 +691,11 @@ typedef enum {
 	DBG_KNOCK = 15,
 	DBG_TRIGGER_SYNC = 16,
 	DBG_ELECTRONIC_THROTTLE = 17,
-	DM_18 = 18,
+	DBG_EXECUTOR = 18,
 	DM_19 = 19,
+	DM_20 = 20,
+	DM_21 = 21,
+	DM_22 = 22,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;

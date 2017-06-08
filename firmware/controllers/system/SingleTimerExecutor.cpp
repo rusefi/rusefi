@@ -176,7 +176,7 @@ EXTERN_ENGINE;
 
 
 void executorStatistics() {
-	if (engineConfiguration->debugMode == DM_18) {
+	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
 		tsOutputChannels.debugIntField1 = instance.timerCallbackCounter;
 		tsOutputChannels.debugIntField2 = instance.doExecuteCounter;
 		tsOutputChannels.debugIntField3 = instance.scheduleCounter;
