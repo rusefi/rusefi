@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 23:12:19 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 07 23:10:13 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1632,6 +1632,7 @@ typedef struct {
 	 */
 	float slowAdcAlpha;
 	/**
+	 * set debug_mode X
 	 * offset 2244
 	 */
 	debug_mode_e debugMode;
@@ -2113,4 +2114,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 29 23:12:19 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 07 23:10:13 EDT 2017
