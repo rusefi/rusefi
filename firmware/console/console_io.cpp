@@ -287,7 +287,7 @@ bool lockAnyContext(void) {
 		return true;
 #if USE_PORT_LOCK
 	port_lock();
-#else
+#else /* #if USE_PORT_LOCK */
 	if (isIsrContext()) {
 		chSysLockFromISR()
 		;
@@ -295,11 +295,14 @@ bool lockAnyContext(void) {
 		chSysLock()
 		;
 	}
-#endif
+#endif /* #if USE_PORT_LOCK */
 	return false;
 }
 
 void unlockAnyContext(void) {
+#if USE_PORT_LOCK
+	port_unlock();
+#else /* #if USE_PORT_LOCK */
 	if (isIsrContext()) {
 		chSysUnlockFromISR()
 		;
@@ -307,4 +310,5 @@ void unlockAnyContext(void) {
 		chSysUnlock()
 		;
 	}
+#endif /* #if USE_PORT_LOCK */
 }
