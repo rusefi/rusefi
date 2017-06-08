@@ -338,6 +338,8 @@
  */
 #define CH_DBG_SYSTEM_STATE_CHECK           FALSE
 
+#define USE_PORT_LOCK TRUE
+
 /**
  * @brief   Debug option, parameters checks.
  * @details If enabled then the checks on the API functions input
