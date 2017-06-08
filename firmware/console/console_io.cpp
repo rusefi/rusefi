@@ -285,6 +285,9 @@ bool lockAnyContext(void) {
 	int alreadyLocked = isLocked();
 	if (alreadyLocked)
 		return true;
+#if USE_PORT_LOCK
+	port_lock();
+#else
 	if (isIsrContext()) {
 		chSysLockFromISR()
 		;
@@ -292,6 +295,7 @@ bool lockAnyContext(void) {
 		chSysLock()
 		;
 	}
+#endif
 	return false;
 }
 
