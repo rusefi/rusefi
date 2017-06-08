@@ -299,10 +299,6 @@ bool lockAnyContext(void) {
 	return false;
 }
 
-bool lockOutputBuffer(void) {
-	return lockAnyContext();
-}
-
 void unlockAnyContext(void) {
 	if (isIsrContext()) {
 		chSysUnlockFromISR()
@@ -311,8 +307,4 @@ void unlockAnyContext(void) {
 		chSysUnlock()
 		;
 	}
-}
-
-void unlockOutputBuffer(void) {
-	unlockAnyContext();
 }

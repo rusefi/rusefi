@@ -68,8 +68,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-bool lockOutputBuffer(void);
-void unlockOutputBuffer(void);
+#define lockOutputBuffer lockAnyContext
+#define unlockOutputBuffer unlockAnyContext
 
 uint32_t remainingSize(Logging *logging);
 
