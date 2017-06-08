@@ -72,6 +72,7 @@ extern bool main_loop_started;
 #include "flash_main.h"
 #include "max31855.h"
 #include "vehicle_speed.h"
+#include "SingleTimerExecutor.h"
 #endif
 
 static bool subscription[(int) RO_LAST_ELEMENT];
@@ -670,6 +671,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	int rpm = getRpmE(engine);
 #else
 	int rpm = 0;
+#endif
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	executorStatistics();
 #endif
 
 	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);

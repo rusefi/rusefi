@@ -17,8 +17,9 @@
 #include "efitime.h"
 #include "efilib2.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "microsecond_timer.h"
+#include "tunerstudio_configuration.h"
 #endif
 
 #if (EFI_SIGNAL_EXECUTOR_ONE_TIMER && EFI_PROD_CODE )|| defined(__DOXYGEN__)
@@ -52,6 +53,7 @@ static void executorCallback(void *arg) {
 
 Executor::Executor() {
 	reentrantFlag = false;
+	doExecuteCounter = scheduleCounter = timerCallbackCounter = 0;
 	/**
 	 * todo: a good comment
 	 */
@@ -60,6 +62,7 @@ Executor::Executor() {
 
 void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
+	scheduleCounter++;
 //	if (delayUs < 0) {
 //		firmwareError(OBD_PCM_Processor_Fault, "Negative delayUs %s: %d", prefix, delayUs);
 //		return;
@@ -85,6 +88,7 @@ void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schf
 }
 
 void Executor::onTimerCallback() {
+	timerCallbackCounter++;
 	bool alreadyLocked = lockAnyContext();
 	doExecute();
 	scheduleTimerCallback();
@@ -96,6 +100,7 @@ void Executor::onTimerCallback() {
  * this private method is executed under lock
  */
 void Executor::doExecute() {
+	doExecuteCounter++;
 	/**
 	 * Let's execute actions we should execute at this point.
 	 * reentrantFlag takes care of the use case where the actions we are executing are scheduling
@@ -162,10 +167,21 @@ void scheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callba
 
 void initSignalExecutorImpl(void) {
 	globalTimerCallback = executorCallback;
-#if EFI_PROD_CODE
 	initMicrosecondTimer();
-#endif /* EFI_PROD_CODE */
 }
 
-#endif
+extern TunerStudioOutputChannels tsOutputChannels;
+#include "engine.h"
+EXTERN_ENGINE;
+
+
+void executorStatistics() {
+	if (engineConfiguration->debugMode == DM_18) {
+		tsOutputChannels.debugIntField1 = instance.timerCallbackCounter;
+		tsOutputChannels.debugIntField2 = instance.doExecuteCounter;
+		tsOutputChannels.debugIntField3 = instance.scheduleCounter;
+	}
+}
+
+#endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
 
