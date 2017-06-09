@@ -355,7 +355,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE) || limitedFuel) {
 		return;
 	}
-	if (engine->isCylinderCleanupMode) {
+	if (ENGINE(isCylinderCleanupMode)) {
 		return;
 	}
 
@@ -364,7 +364,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	 * Ignition events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	FuelSchedule *fs = &engine->injectionEvents;
+	FuelSchedule *fs = &ENGINE(injectionEvents);
 	if (!fs->isReady) {
 		fs->addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -424,7 +424,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	}
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#2");
 
-	if (trgEventIndex >= engine->engineCycleEventCount) {
+	if (trgEventIndex >= ENGINE(engineCycleEventCount)) {
 		/**
 		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
 		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?
