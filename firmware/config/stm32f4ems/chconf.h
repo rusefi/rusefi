@@ -369,7 +369,7 @@ extern "C"
  * micro-optimization: use same (lower-level) api for lock/unlock regardless on context
  * this saves us one branching
  */
-#define USE_PORT_LOCK TRUE
+#define USE_PORT_LOCK FALSE
 
 /**
  * @brief   Debug option, parameters checks.
