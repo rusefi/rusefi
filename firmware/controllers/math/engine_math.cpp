@@ -329,6 +329,7 @@ static int order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
 
 // 12 cyliner
 static int order_1_7_5_11_3_9_6_12_2_8_4_10[] = {1, 7, 5, 11, 3, 9, 6, 12, 2, 8, 4, 10};
+static int order_1_7_4_10_2_8_6_12_3_9_5_11[] = {1, 7, 4, 10, 2, 8, 6, 12, 3, 9, 5, 11};
 
 static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
@@ -369,6 +370,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // 12 cylinder
 	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
+	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
 		return 12;
 
 	default:
@@ -435,6 +437,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 // 12 cylinder
 	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
 		return order_1_7_5_11_3_9_6_12_2_8_4_10[index];
+	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
+		return order_1_7_4_10_2_8_6_12_3_9_5_11[index];
 
 	default:
 		warning(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "getCylinderId not supported for %d", CONFIG(specs.firingOrder));
