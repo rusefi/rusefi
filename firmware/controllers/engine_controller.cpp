@@ -134,7 +134,58 @@ efitimeus_t getTimeNowUs(void) {
 
 //todo: macro to save method invocation
 efitick_t getTimeNowNt(void) {
-	return halTime.get();
+#if EFI_PROD_CODE
+	bool alreadyLocked = lockAnyContext();
+	efitime_t localH = halTime.state.highBits;
+	uint32_t localLow = halTime.state.lowBits;
+
+	uint32_t value = GET_TIMESTAMP();
+
+	if (value < localLow) {
+		// new value less than previous value means there was an overflow in that 32 bit counter
+		localH += 0x100000000LL;
+	}
+
+	efitime_t result = localH + value;
+
+	if (!alreadyLocked) {
+		unlockAnyContext();
+	}
+	return result;
+#else
+// todo: why is this implementation not used?
+	/**
+	 * this method is lock-free and thread-safe, that's because the 'update' method
+	 * is atomic with a critical zone requirement.
+	 *
+	 * http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
+	 */
+	efitime_t localH;
+	efitime_t localH2;
+	uint32_t localLow;
+	int counter = 0;
+	do {
+		localH = halTime.state.highBits;
+		localLow = halTime.state.lowBits;
+		localH2 = halTime.state.highBits;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+		if (counter++ == 10000)
+			chDbgPanic("lock-free frozen");
+#endif /* EFI_PROD_CODE */
+	} while (localH != localH2);
+	/**
+	 * We need to take current counter after making a local 64 bit snapshot
+	 */
+	uint32_t value = GET_TIMESTAMP();
+
+	if (value < localLow) {
+		// new value less than previous value means there was an overflow in that 32 bit counter
+		localH += 0x100000000LL;
+	}
+
+	return localH + value;
+#endif
+
 }
 
 /**
