@@ -398,6 +398,8 @@ case FO_1_10_9_4_3_6_5_8_7_2:
 	return "FO_1_10_9_4_3_6_5_8_7_2";
 case FO_1_7_5_11_3_9_6_12_2_8_4_10:
 	return "FO_1_7_5_11_3_9_6_12_2_8_4_10";
+case FO_1_7_4_10_2_8_6_12_3_9_5_11:
+	return "FO_1_7_4_10_2_8_6_12_3_9_5_11";
 case Force_4b_firing_order:
   return "Force_4b_firing_order";
   }
