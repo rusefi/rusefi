@@ -136,7 +136,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	if (isIgnitionError) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		scheduleMsg(logger, "Negative spark delay=%f", chargeDelayUs);
-#endif
+#endif /* EFI_PROD_CODE */
 		chargeDelayUs = 0;
 		return;
 	}
@@ -309,7 +309,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 		return;
 	}
 
-	if (!engine->ignitionEvents.isReady) {
+	if (!ENGINE(ignitionEvents.isReady)) {
 		prepareIgnitionSchedule(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
@@ -339,9 +339,9 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	}
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
-	if (engine->ignitionEvents.isReady) {
+	if (ENGINE(ignitionEvents.isReady)) {
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			IgnitionEvent *event = &engine->ignitionEvents.elements[i];
+			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
 			if (event->dwellPosition.eventIndex != trgEventIndex)
 				continue;
 			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER_SUFFIX);
