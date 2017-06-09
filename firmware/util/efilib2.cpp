@@ -69,19 +69,18 @@ efitime_t Overflow64Counter::get() {
 	 * http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
 	 */
 	efitime_t localH;
+	efitime_t localH2;
 	uint32_t localLow;
 	int counter = 0;
-	while (true) {
+	do {
 		localH = state.highBits;
 		localLow = state.lowBits;
-		efitime_t localH2 = state.highBits;
-		if (localH == localH2)
-			break;
+		localH2 = state.highBits;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		if (counter++ == 10000)
 			chDbgPanic("lock-free frozen");
 #endif /* EFI_PROD_CODE */
-	}
+	} while (localH != localH2);
 	/**
 	 * We need to take current counter after making a local 64 bit snapshot
 	 */
