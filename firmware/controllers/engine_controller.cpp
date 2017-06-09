@@ -122,7 +122,7 @@ static msg_t csThread(void) {
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-Overflow64Counter halTime;
+static Overflow64Counter halTime;
 
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
