@@ -554,7 +554,7 @@ fileVersion = { 20161225 }
 	; minor info	
     indicator = { ind_fan}, "no fan",   "fan",   white, black, green,   black
     indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, green,   black    
-    indicator = { needBurn }, "no Burn",   "Need Burn",   white, black, yellow,   black
+    indicator = { needBurn }, "config ok",  "unsaved changes",   white, black, yellow,   black
     indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
     indicator = { ind_fuel_pump}, "no pump",   "pump",   white, black, green,   black
     indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
