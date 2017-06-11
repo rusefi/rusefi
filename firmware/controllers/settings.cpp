@@ -534,6 +534,10 @@ static void setDebugMode(int value) {
 	engineConfiguration->debugMode = (debug_mode_e) value;
 }
 
+static void setInjectorLag(float voltage, float value) {
+	setCurveValue(INJECTOR_LAG_CURVE, voltage, value);
+}
+
 static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (total < 1 || skipped >= total) {
 		scheduleMsg(&logger, "invalid parameters %d %d", total, skipped);
@@ -1295,7 +1299,10 @@ void initSettings(void) {
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 
 
+	// flat curve - constant injector lag regardless of voltage
 	addConsoleActionF("set_flat_injector_lag", setFlatInjectorLag);
+
+	addConsoleActionFF("set_injector_lag", setInjectorLag);
 
 	addConsoleActionFF("set_fan", setFanSetting);
 

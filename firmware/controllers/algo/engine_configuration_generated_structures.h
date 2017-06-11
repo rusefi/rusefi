@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 07 23:10:13 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 11 15:31:14 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -177,10 +177,13 @@ typedef struct {
 	 */
 	float unusedlag;
 	/**
+	 * set_flat_injector_lag LAG
+	 * set_injector_lag VOLTAGE LAG
 	 * offset 8
 	 */
 	float battLagCorrBins[VBAT_INJECTOR_CURVE_SIZE];
 	/**
+	 * ms delay between injector open and close dead times
 	 * offset 40
 	 */
 	float battLagCorr[VBAT_INJECTOR_CURVE_SIZE];
@@ -2114,4 +2117,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 07 23:10:13 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 11 15:31:14 EDT 2017
