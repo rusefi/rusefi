@@ -237,7 +237,7 @@ void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setTimingMap(config->ignitionTable, value);
 }
 
-static void initTemperatureCurve(int size, float *bins, float *values, float defaultValue) {
+static void initTemperatureCurve(float *bins, float *values, int size, float defaultValue) {
 	for (int i = 0; i < size; i++) {
 		bins[i] = -40 + i * 10;
 		values[i] = defaultValue; // this correction is a multiplier
@@ -404,27 +404,29 @@ static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.battLagCorr[7] = 0.726;
 }
 
+#define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
+
 static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	initTemperatureCurve(CLT_CURVE_SIZE, config->cltIdleCorrBins, config->cltIdleCorr, PERCENT_MULT);
+	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, PERCENT_MULT);
 
 	float baseIdle = 30;
 
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -40, 150);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -30, 150);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -20, 40.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -10, 40.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,   0, 40.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  10, 40.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  20, 40.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  30, 40.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  40, 40.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  50, 37.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  60, 35.0 / baseIdle * 100);
-	setCurveValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE,  70, 33.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -40, 150);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -30, 150);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -20, 40.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -10, 40.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,   0, 40.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  10, 40.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  20, 40.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  30, 40.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  40, 40.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  50, 37.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  60, 35.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle * 100);
 }
 
 static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	initTemperatureCurve(CLT_CURVE_SIZE, config->cltFuelCorrBins, config->cltFuelCorr, PERCENT_MULT);
+	initTemperatureCurve(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, PERCENT_MULT);
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 150);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 150);
@@ -566,7 +568,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->postCrankingTargetClt = 25;
 	engineConfiguration->postCrankingDurationSec = 2;
 
-	initTemperatureCurve(IAT_CURVE_SIZE, config->iatFuelCorrBins, config->iatFuelCorr, 1);
+	initTemperatureCurve(config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE, 1);
 
 	engineConfiguration->tachPulseDuractionMs = 4;
 	engineConfiguration->tachPulseTriggerIndex = 4;
