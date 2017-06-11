@@ -110,10 +110,10 @@ void testSetTableValue(void) {
 
 	assertEquals(1, config.cltFuelCorr[0]);
 
-	setTableValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
+	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	assertEquals(1.5, config.cltFuelCorr[0]);
 
-	setTableValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
+	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
 	assertEquals(1.4, config.cltFuelCorr[0]);
 
 }
