@@ -425,21 +425,23 @@ static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle * 100);
 }
 
-static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	initTemperatureCurve(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, PERCENT_MULT);
+#define WARMUP_CLT_EXTRA_FUEL_CURVE config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE
 
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 150);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 150);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -20, 142);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -10, 136);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 0, 128);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 10, 119);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 20, 112);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 30, 110);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 40, 106);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 50, 106);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 103);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 101);
+static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	initTemperatureCurve(WARMUP_CLT_EXTRA_FUEL_CURVE, PERCENT_MULT);
+
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -40, 150);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -30, 150);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -20, 142);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -10, 136);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 0, 128);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 10, 119);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 20, 112);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 30, 110);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 40, 106);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 50, 106);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 60, 103);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 70, 101);
 }
 
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -568,7 +570,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->postCrankingTargetClt = 25;
 	engineConfiguration->postCrankingDurationSec = 2;
 
-	initTemperatureCurve(config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE, 1);
+#define IAT_FUEL_CORRECTION_CURVE config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE
+	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
 
 	engineConfiguration->tachPulseDuractionMs = 4;
 	engineConfiguration->tachPulseTriggerIndex = 4;
