@@ -23,7 +23,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define assertAngleRange(angle, msg) {}
 #endif
 
-void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 
 /**

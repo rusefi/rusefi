@@ -52,7 +52,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	// Injection settings
-	setInjectorLag(1.15 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFlatInjectorLag(1.15 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->injector.flow = 750;
 

@@ -1295,7 +1295,7 @@ void initSettings(void) {
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 
 
-	addConsoleActionF("set_injector_lag", setInjectorLag);
+	addConsoleActionF("set_flat_injector_lag", setFlatInjectorLag);
 
 	addConsoleActionFF("set_fan", setFanSetting);
 
