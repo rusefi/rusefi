@@ -314,7 +314,7 @@ void testRpmCalculator(void) {
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.applyTriggerShape();
 
-	setInjectorLag(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFlatInjectorLag(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timeNow = 0;
