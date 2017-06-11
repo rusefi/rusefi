@@ -146,7 +146,7 @@ static void canMazdaRX8(void) {
 	setShortValue(&txmsg, 0, 6);
 	sendCanMessage();
 
-	commonTxInit(CAN_MAZDA_RX_STATUS_2);
+	commonTxInit(CAN_MAZDA_RX_STATUS_1);
 	txmsg.data8[0] = 0xFE; //Unknown
 	txmsg.data8[1] = 0xFE; //Unknown
 	txmsg.data8[2] = 0xFE; //Unknown
