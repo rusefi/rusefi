@@ -184,8 +184,7 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
 		return 0;
 	}
-	float vBattCorrection = interpolate2d("lag", vBatt, engineConfiguration->injector.battLagCorrBins,
-			engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE);
+	float vBattCorrection = interpolate2d("lag", vBatt, INJECTOR_LAG_CURVE);
 	return vBattCorrection;
 }
 
@@ -205,7 +204,7 @@ void prepareFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (cisnan(engine->sensors.clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("cltf", engine->sensors.clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
+	return interpolate2d("cltf", engine->sensors.clt, WARMUP_CLT_EXTRA_FUEL_CURVE) / PERCENT_MULT;
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -217,7 +216,7 @@ angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE);
+	return interpolate2d("iatc", iat, IAT_FUEL_CORRECTION_CURVE);
 }
 
 /**
