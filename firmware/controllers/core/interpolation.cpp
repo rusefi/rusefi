@@ -236,7 +236,10 @@ float interpolate2d(const char *msg, float value, float bin[], float values[], i
 	return interpolateMsg("2d", bin[index], values[index], bin[index + 1], values[index + 1], value);
 }
 
-void setTableValue(float bins[], float values[], int size, float key, float value) {
+/**
+ * Sets specified value for specified key in a correction curve
+ */
+void setCurveValue(float bins[], float values[], int size, float key, float value) {
 	int index = findIndexMsg("tbVl", bins, size, key);
 	if (index == -1)
 		index = 0;

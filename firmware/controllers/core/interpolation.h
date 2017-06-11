@@ -145,7 +145,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	float result = interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
 	return result;
 }
-void setTableValue(float bins[], float values[], int size, float key, float value);
+void setCurveValue(float bins[], float values[], int size, float key, float value);
 void initInterpolation(Logging *sharedLogger);
 
 class FastInterpolation {
