@@ -680,7 +680,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		addConsoleAction("knockinfo", getKnockInfo);
 	}
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("reset_accel", resetAccel);
 #endif /* EFI_PROD_CODE */
 
