@@ -87,7 +87,10 @@ void commonTxInit(int eid) {
 	txmsg.DLC = 8;
 }
 
-void sendMessage2(int size) {
+/**
+ * send CAN message from txmsg buffer
+ */
+static void sendCanMessage2(int size) {
 	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
 			boardConfiguration->canTxPin);
 	if (device == NULL) {
@@ -104,8 +107,11 @@ void sendMessage2(int size) {
 	}
 }
 
-void sendMessage() {
-	sendMessage2(8);
+/**
+ * send CAN message from txmsg buffer, using default packet size
+ */
+void sendCanMessage() {
+	sendCanMessage2(8);
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -114,20 +120,21 @@ static void canDashboardBMW(void) {
 	//BMW Dashboard
 	commonTxInit(CAN_BMW_E46_SPEED);
 	setShortValue(&txmsg, 10 * 8, 1);
-	sendMessage();
+	sendCanMessage();
 
 	commonTxInit(CAN_BMW_E46_RPM);
 	setShortValue(&txmsg, (int) (getRpmE(engine) * 6.4), 2);
-	sendMessage();
+	sendCanMessage();
 
 	commonTxInit(CAN_BMW_E46_DME2);
 	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1);
-	sendMessage();
+	sendCanMessage();
 }
 
 static void canMazdaRX8(void) {
-//	commonTxInit(0x300);
-//	sendMessage2(0);
+	commonTxInit(CAN_MAZDA_RX_STEERING_WARNING);
+	// todo: something needs to be set here? see http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Rx8_2004
+	sendCanMessage();
 
 	commonTxInit(CAN_MAZDA_RX_RPM_SPEED);
 
@@ -137,7 +144,7 @@ static void canMazdaRX8(void) {
 	setShortValue(&txmsg, 0xFFFF, 2);
 	setShortValue(&txmsg, SWAP_UINT16((int )(100 * kph + 10000)), 4);
 	setShortValue(&txmsg, 0, 6);
-	sendMessage();
+	sendCanMessage();
 
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
 	txmsg.data8[0] = 0xFE; //Unknown
@@ -148,6 +155,7 @@ static void canMazdaRX8(void) {
 	txmsg.data8[5] = 0x40; // TCS in combo with byte 3
 	txmsg.data8[6] = 0x00; // Unknown
 	txmsg.data8[7] = 0x00; // Unused
+	sendCanMessage();
 
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
 	txmsg.data8[0] = (uint8_t)(engine->sensors.clt + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
@@ -165,7 +173,7 @@ static void canMazdaRX8(void) {
 	}
 	//oil pressure warning lamp bit is 7
 	txmsg.data8[7] = 0x00; //unused
-	sendMessage();
+	sendCanMessage();
 }
 
 static void canDashboardFiat(void) {
@@ -173,18 +181,18 @@ static void canDashboardFiat(void) {
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
 	setShortValue(&txmsg, (int) (engine->sensors.clt - 40), 3); //Coolant Temp
 	setShortValue(&txmsg, getRpmE(engine) / 32, 6); //RPM
-	sendMessage();
+	sendCanMessage();
 }
 
 static void canDashboardVAG(void) {
 	//VAG Dashboard
 	commonTxInit(CAN_VAG_RPM);
 	setShortValue(&txmsg, getRpmE(engine) * 4, 2); //RPM
-	sendMessage();
+	sendCanMessage();
 
 	commonTxInit(CAN_VAG_CLT);
 	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1); //Coolant Temp
-	sendMessage();
+	sendCanMessage();
 }
 
 static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
