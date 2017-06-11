@@ -404,8 +404,6 @@ static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.battLagCorr[7] = 0.726;
 }
 
-#define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
-
 static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, PERCENT_MULT);
 
@@ -424,8 +422,6 @@ static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  60, 35.0 / baseIdle * 100);
 	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle * 100);
 }
-
-#define WARMUP_CLT_EXTRA_FUEL_CURVE config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE
 
 static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initTemperatureCurve(WARMUP_CLT_EXTRA_FUEL_CURVE, PERCENT_MULT);
@@ -570,7 +566,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->postCrankingTargetClt = 25;
 	engineConfiguration->postCrankingDurationSec = 2;
 
-#define IAT_FUEL_CORRECTION_CURVE config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
 
 	engineConfiguration->tachPulseDuractionMs = 4;
