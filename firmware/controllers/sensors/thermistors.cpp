@@ -77,10 +77,20 @@ float getResistance(ThermistorConf *config, float voltage) {
 	return resistance;
 }
 
-float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
+float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
 	tm->setConfig(&config->config); // implementation checks if configuration has changed or not
 
 	float voltage = getVoltageDivided("term", config->adcChannel);
+	if (useLinear) {
+			// todo: fix this horrible code!
+			// should work as a short term fix.
+			// todo: move 'useLinearXXXSensor' into termistor configuration record
+		// yes, we use 'resistance' setting for 'voltage' here
+		return interpolate(config->config.resistance_1, config->config.tempC_1,
+				config->config.resistance_2, config->config.tempC_2,
+						voltage);
+
+	}
 	float resistance = getResistance(config, voltage);
 
 	float kelvinTemperature = tm->getKelvinTemperatureByResistance(resistance);
@@ -109,7 +119,8 @@ float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->isCltBroken = false;
 		return NO_CLT_SENSOR_TEMPERATURE;
 	}
- 	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
+ 	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve,
+ 			engineConfiguration->useLinearCltSensor);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %f", temperature);
@@ -189,7 +200,8 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!hasIatSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		return NO_IAT_SENSOR_TEMPERATURE;
 	}
-	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve);
+	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve,
+			engineConfiguration->useLinearIatSensor);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 #if EFI_PROD_CODE || EFI_UNIT_TEST || defined(__DOXYGEN__)
