@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 08:15:34 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 18:21:38 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -511,7 +511,7 @@ public class Fields {
 	public static final int consoleUartDevice_offset = 1196;
 	public static final int unused1_offset = 1200;
 	public static final int idlePidDeactivationTpsThreshold_offset = 1204;
-	public static final int unusedHere_offset = 1206;
+	public static final int idleStepperPulseDuration_offset = 1206;
 	public static final int nb2ratioFrom_offset = 1208;
 	public static final int nb2ratioTo_offset = 1212;
 	public static final int triggerErrorPin_offset = 1216;
@@ -627,10 +627,10 @@ public class Fields {
 	public static final int useConstantDwellDuringCranking_offset = 1488;
 	public static final int isEngineChartEnabled_offset = 1488;
 	public static final int silentTriggerError_offset = 1488;
-	public static final int unusedBit__2_offset = 1488;
+	public static final int useLinearCltSensor_offset = 1488;
 	public static final int canReadEnabled_offset = 1488;
 	public static final int canWriteEnabled_offset = 1488;
-	public static final int unusedBit_123_offset = 1488;
+	public static final int useLinearIatSensor_offset = 1488;
 	public static final int unusedbit_9_offset = 1488;
 	public static final int unusedbit_10_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
@@ -1387,7 +1387,7 @@ public class Fields {
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1196, FieldType.INT);
 	public static final Field UNUSED1 = Field.create("UNUSED1", 1200, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 1204, FieldType.INT);
-	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 1206, FieldType.INT);
+	public static final Field IDLESTEPPERPULSEDURATION = Field.create("IDLESTEPPERPULSEDURATION", 1206, FieldType.INT);
 	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 1208, FieldType.FLOAT);
 	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 1212, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 1216, FieldType.INT, brain_pin_e);
@@ -1474,10 +1474,10 @@ public class Fields {
 	public static final Field USECONSTANTDWELLDURINGCRANKING = Field.create("USECONSTANTDWELLDURINGCRANKING", 1488, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1488, FieldType.BIT, 5);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1488, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT__2 = Field.create("UNUSEDBIT__2", 1488, FieldType.BIT, 7);
+	public static final Field USELINEARCLTSENSOR = Field.create("USELINEARCLTSENSOR", 1488, FieldType.BIT, 7);
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1488, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1488, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_123 = Field.create("UNUSEDBIT_123", 1488, FieldType.BIT, 10);
+	public static final Field USELINEARIATSENSOR = Field.create("USELINEARIATSENSOR", 1488, FieldType.BIT, 10);
 	public static final Field UNUSEDBIT_9 = Field.create("UNUSEDBIT_9", 1488, FieldType.BIT, 11);
 	public static final Field UNUSEDBIT_10 = Field.create("UNUSEDBIT_10", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);

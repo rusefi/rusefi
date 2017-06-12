@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 08:15:34 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 18:21:38 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -668,7 +668,7 @@ typedef struct {
 	/**
 	 * offset 582
 	 */
-	int16_t unusedHere;
+	int16_t idleStepperPulseDuration;
 	/**
 	 * offset 584
 	 */
@@ -1222,7 +1222,7 @@ typedef struct {
 	bool silentTriggerError : 1;
 	/**
 	offset 1488 bit 7 */
-	bool unusedBit__2 : 1;
+	bool useLinearCltSensor : 1;
 	/**
 	offset 1488 bit 8 */
 	bool canReadEnabled : 1;
@@ -1231,7 +1231,7 @@ typedef struct {
 	bool canWriteEnabled : 1;
 	/**
 	offset 1488 bit 10 */
-	bool unusedBit_123 : 1;
+	bool useLinearIatSensor : 1;
 	/**
 	offset 1488 bit 11 */
 	bool unusedbit_9 : 1;
@@ -2118,4 +2118,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 08:15:34 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 18:21:38 EDT 2017
