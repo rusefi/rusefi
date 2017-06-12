@@ -378,12 +378,12 @@ static void setOM(int value) {
 
 static char pinNameBuffer[16];
 
-static void printThermistor(const char *msg, ThermistorConf *config, ThermistorMath *tm) {
+static void printThermistor(const char *msg, ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
 	adc_channel_e adcChannel = config->adcChannel;
 	float voltage = getVoltageDivided("term", adcChannel);
 	float r = getResistance(config, voltage);
 
-	float t = getTemperatureC(config, tm);
+	float t = getTemperatureC(config, tm, useLinear);
 
 	thermistor_conf_s *tc = &config->config;
 
@@ -417,11 +417,13 @@ static void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve);
+	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
+			engineConfiguration->useLinearCltSensor);
 	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
-	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve);
+	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve,
+			engineConfiguration->useLinearIatSensor);
 	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}

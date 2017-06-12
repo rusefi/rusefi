@@ -32,7 +32,7 @@ float convertFtoCelcius(float tempF);
 
 float getKelvinTemperature(float resistance, ThermistorMath *tm);
 float getResistance(ThermistorConf *config, float voltage);
-float getTemperatureC(ThermistorConf *config, ThermistorMath *tm);
+float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear);
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isValidCoolantTemperature(float temperature);
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);

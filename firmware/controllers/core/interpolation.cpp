@@ -170,6 +170,8 @@ void ensureArrayIsAscending(const char *msg, const float array[], int size) {
 /** @brief	Binary search
  * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
+ *
+ * See also ensureArrayIsAscending
  */
 int findIndexMsg(const char *msg, const float array[], int size, float value) {
 	if (cisnan(value)) {
