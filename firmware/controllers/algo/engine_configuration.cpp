@@ -788,6 +788,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
+	boardConfiguration->idleStepperPulseDuration = 10;
 	boardConfiguration->idle.solenoidFrequency = 200;
 	// set idle_position 50
 	boardConfiguration->manIdlePosition = 50;
