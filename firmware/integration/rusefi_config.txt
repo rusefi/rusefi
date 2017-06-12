@@ -527,7 +527,7 @@ custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	uart_device_e consoleUartDevice;
 	int unused1;
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
-	int16_t unusedHere;
+	int16_t idleStepperPulseDuration;;"ms",        1,     0,  0,    1000.0,  0
 	float nb2ratioFrom;;"value",      1,      0,       0, 1000,      5
 	float nb2ratioTo;;"value",      1,      0,       0, 1000,      5
 
@@ -593,10 +593,10 @@ bit vvtDisplayInverted
 	bit useConstantDwellDuringCranking 
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError
-	bit unusedBit__2
+	bit useLinearCltSensor
 	bit canReadEnabled
 	bit canWriteEnabled
-	bit unusedBit_123
+	bit useLinearIatSensor
 	bit unusedbit_9
 	bit unusedbit_10
 	bit isAlternatorControlEnabled
