@@ -18,3 +18,6 @@ AC_RELAY_LOGIC=ac_on_switch
 
 # Combined RPM, CLT and VBATT warning light
 COMBINED_WARNING_LIGHT=(rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
+
+#needed by EFI_MAIN_RELAY_CONTROL
+MAIN_RELAY_LOGIC=(time_since_boot < 2) | (vbatt > 5)

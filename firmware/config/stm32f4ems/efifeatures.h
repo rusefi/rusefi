@@ -124,6 +124,11 @@
 
 #define EFI_IDLE_CONTROL TRUE
 
+/**
+ * Control the main power relay based on measured ignition voltage (Vbatt)
+ */
+#define EFI_MAIN_RELAY_CONTROL FALSE
+
 #define EFI_PWM TRUE
 
 #define EFI_VEHICLE_SPEED TRUE

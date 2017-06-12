@@ -68,6 +68,10 @@ static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 static LEElement * alternatorLogic;
 
+#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+static LEElement * mainRelayLogic;
+#endif /* EFI_MAIN_RELAY_CONTROL */
+
 EXTERN_ENGINE
 ;
 
@@ -345,11 +349,16 @@ void runFsio(void) {
 	}
 #endif /* EFI_FUEL_PUMP */
 
+#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
+		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic);
+#else /* EFI_MAIN_RELAY_CONTROL */
 	/**
 	 * main relay is always on if ECU is on, that's a good enough initial implementation
 	 */
 	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
 		enginePins.mainRelay.setValue(true);
+#endif /* EFI_MAIN_RELAY_CONTROL */
 
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
@@ -498,6 +507,11 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	radiatorFanLogic = sysPool.parseExpression(FAN_CONTROL_LOGIC);
 
 	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
+	
+#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
+		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
+#endif /* EFI_MAIN_RELAY_CONTROL */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
