@@ -776,6 +776,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->globalFuelCorrection = 1;
+	engineConfiguration->adcVcc = 3.0;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
