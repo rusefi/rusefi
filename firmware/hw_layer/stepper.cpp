@@ -9,8 +9,9 @@
 
 #include "stepper.h"
 #include "pin_repository.h"
+#include "engine.h"
 
-#define ST_DELAY_MS 10
+EXTERN_ENGINE;
 
 static msg_t stThread(StepperMotor *motor) {
 	chRegSetThreadName("stepper");
@@ -32,7 +33,7 @@ static msg_t stThread(StepperMotor *motor) {
 		int currentPosition = motor->currentPosition;
 
 		if (targetPosition == currentPosition) {
-			chThdSleepMilliseconds(ST_DELAY_MS);
+			chThdSleepMilliseconds(boardConfiguration->idleStepperPulseDuration);
 			continue;
 		}
 		bool isIncrementing = targetPosition > currentPosition;
@@ -78,9 +79,9 @@ void StepperMotor::pulse() {
 	palWritePad(enablePort, enablePin, false); // ebable stepper
 
 	palWritePad(stepPort, stepPin, true);
-	chThdSleepMilliseconds(ST_DELAY_MS);
+	chThdSleepMilliseconds(boardConfiguration->idleStepperPulseDuration);
 	palWritePad(stepPort, stepPin, false);
-	chThdSleepMilliseconds(ST_DELAY_MS);
+	chThdSleepMilliseconds(boardConfiguration->idleStepperPulseDuration);
 
 	palWritePad(enablePort, enablePin, true); // disable stepper
 }
