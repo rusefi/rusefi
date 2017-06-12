@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 11 15:35:28 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 08:15:34 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1168,7 +1168,7 @@ typedef struct {
 	/**
 	 * offset 572
 	 */
-	int unusedAnother;
+	float adcVcc;
 	/**
 	 * maximum total number of degrees to subtract from ignition advance
 	 * when knocking
@@ -2118,4 +2118,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 11 15:35:28 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 08:15:34 EDT 2017

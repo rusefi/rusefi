@@ -319,8 +319,8 @@
 #define hip9011SpiDevice_offset_hex 234
 #define globalFuelCorrection_offset 568
 #define globalFuelCorrection_offset_hex 238
-#define unusedAnother_offset 572
-#define unusedAnother_offset_hex 23c
+#define adcVcc_offset 572
+#define adcVcc_offset_hex 23c
 #define maxKnockSubDeg_offset 576
 #define maxKnockSubDeg_offset_hex 240
 #define mafAdcChannel_offset 580
