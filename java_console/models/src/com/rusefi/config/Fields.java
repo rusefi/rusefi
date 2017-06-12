@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 07 23:04:15 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 08:15:34 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int FSIO_ADC_COUNT = 4;
@@ -249,7 +249,7 @@ public class Fields {
 	public static final int hip9011SpiDevice_offset_hex = 234;
 	public static final int globalFuelCorrection_offset = 568;
 	public static final int globalFuelCorrection_offset_hex = 238;
-	public static final int unusedAnother_offset = 572;
+	public static final int adcVcc_offset = 572;
 	public static final int maxKnockSubDeg_offset = 576;
 	public static final int maxKnockSubDeg_offset_hex = 240;
 	public static final int mafAdcChannel_offset = 580;
@@ -1208,7 +1208,7 @@ public class Fields {
 	public static final Field TRIGGER_UNUSEDCUSTOMUSERISEEDGE = Field.create("TRIGGER_UNUSEDCUSTOMUSERISEEDGE", 560, FieldType.INT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 564, FieldType.INT);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 568, FieldType.FLOAT);
-	public static final Field UNUSEDANOTHER = Field.create("UNUSEDANOTHER", 572, FieldType.INT);
+	public static final Field ADCVCC = Field.create("ADCVCC", 572, FieldType.FLOAT);
 	public static final Field MAXKNOCKSUBDEG = Field.create("MAXKNOCKSUBDEG", 576, FieldType.FLOAT);
 	public static final Field MAFADCCHANNEL = Field.create("MAFADCCHANNEL", 580, FieldType.INT, adc_channel_e);
 	public static final Field AFR_HWCHANNEL = Field.create("AFR_HWCHANNEL", 584, FieldType.INT, adc_channel_e);

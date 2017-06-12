@@ -1452,6 +1452,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		panel = canBus
 		panel = sdCard
 		panel = gpsReceiver
+		field = "stm32 voltage",						adcVcc
 	
 	dialog = connection, "", 	border
 		panel = lcdScreen,		East
