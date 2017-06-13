@@ -1099,8 +1099,10 @@
 #define throttlePedalUpVoltage_offset_hex 7dc
 #define throttlePedalWOTVoltage_offset 2016
 #define throttlePedalWOTVoltage_offset_hex 7e0
-#define unusedetb_offset 2020
-#define unusedetb_offset_hex 7e4
+#define stepperDirectionPinMode_offset 2020
+#define stepperDirectionPinMode_offset_hex 7e4
+#define unusedetb_offset 2024
+#define unusedetb_offset_hex 7e8
 #define cltIdleRpmBins_offset 2028
 #define cltIdleRpmBins_offset_hex 7ec
 #define cltIdleRpm_offset 2092
