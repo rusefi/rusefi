@@ -315,9 +315,9 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 
 static void initIdleHardware() {
 	if (boardConfiguration->useStepperIdle) {
-		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin,
-				engineConfiguration->idleStepperReactionTime, engineConfiguration->idleStepperTotalSteps,
-				engineConfiguration->stepperEnablePin);
+		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin, 
+				engineConfiguration->stepperDirectionPinMode, engineConfiguration->idleStepperReactionTime, 
+				engineConfiguration->idleStepperTotalSteps, engineConfiguration->stepperEnablePin);
 	} else {
 		/**
 		 * Start PWM for idleValvePin
