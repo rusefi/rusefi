@@ -164,8 +164,6 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsioAdc[0] = EFI_ADC_4;
 
 
-	/*
-	these indeces are off
 	// warning light
 	/**
 	 * to test
@@ -177,6 +175,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * rpn_eval "rpm 1 fsio_setting > coolant 2 fsio_setting > | vbatt 4 fsio_setting < |"
 	 */
 	/*
+//WARNING:	these indeces are off
 	boardConfiguration->fsio_setting[0] = 6400; // RPM threshold
 	boardConfiguration->fsio_setting[1] = 100; // CLT threshold, fsio_setting #2
 	boardConfiguration->fsio_setting[2] = 13.0; // voltage threshold, fsio_setting #3
