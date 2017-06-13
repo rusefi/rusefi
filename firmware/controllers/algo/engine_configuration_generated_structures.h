@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 18:21:38 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jun 13 10:18:38 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1547,7 +1547,11 @@ typedef struct {
 	/**
 	 * offset 2020
 	 */
-	float unusedetb[2];
+	pin_output_mode_e stepperDirectionPinMode;
+	/**
+	 * offset 2024
+	 */
+	float unusedetb;
 	/**
 	 * CLT-based target RPM for automatic idle controller
 	 * offset 2028
@@ -2118,4 +2122,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 12 18:21:38 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jun 13 10:18:38 EDT 2017
