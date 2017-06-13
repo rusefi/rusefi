@@ -16,7 +16,7 @@ EXTERN_ENGINE;
 static msg_t stThread(StepperMotor *motor) {
 	chRegSetThreadName("stepper");
 
-	palWritePad(motor->directionPort, motor->directionPin, false);
+	motor->directionPin.setValue(false);
 
 	/**
 	 * let's park the motor in a known position to begin with
@@ -37,7 +37,7 @@ static msg_t stThread(StepperMotor *motor) {
 			continue;
 		}
 		bool isIncrementing = targetPosition > currentPosition;
-		palWritePad(motor->directionPort, motor->directionPin, isIncrementing);
+		motor->directionPin.setValue(isIncrementing);
 		if (isIncrementing) {
 			motor->currentPosition++;
 		} else {
@@ -57,8 +57,6 @@ static msg_t stThread(StepperMotor *motor) {
 StepperMotor::StepperMotor() {
 	currentPosition = 0;
 	targetPosition = 0;
-	directionPort = NULL;
-	directionPin = 0;
 	enablePort = NULL;
 	enablePin = 0;
 	stepPort = NULL;
@@ -86,8 +84,8 @@ void StepperMotor::pulse() {
 	palWritePad(enablePort, enablePin, true); // disable stepper
 }
 
-void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps,
-		brain_pin_e enablePin) {
+void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
+		float reactionTime, int totalSteps, brain_pin_e enablePin) {
 	this->reactionTime = maxF(1, reactionTime);
 	this->totalSteps = maxI(3, totalSteps);
 	if (stepPin == GPIO_UNASSIGNED || directionPin == GPIO_UNASSIGNED) {
@@ -97,14 +95,13 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, flo
 	stepPort = getHwPort(stepPin);
 	this->stepPin = getHwPin(stepPin);
 
-	directionPort = getHwPort(directionPin);
-	this->directionPin = getHwPin(directionPin);
+	this->directionPinMode = directionPinMode;
+	this->directionPin.initPin("stepper dir", directionPin, &this->directionPinMode);
 
 	enablePort = getHwPort(enablePin);
 	this->enablePin = getHwPin(enablePin);
 
 	efiSetPadMode("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
-	efiSetPadMode("stepper dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
 	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
 	palWritePad(this->enablePort, enablePin, true); // disable stepper
 
