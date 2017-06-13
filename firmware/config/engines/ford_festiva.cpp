@@ -251,7 +251,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fsio_setting[3] = 13.5; // voltage threshold
 
 //	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER_SUFFIX);
-	setFsio(1, GPIOD_7, "rpm 2 fsio_setting >" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	config->ignitionRpmBins[0] = 800;
