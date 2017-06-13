@@ -1,9 +1,11 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2017-06-12_17_45_41
+// on 2017-06-13_19_39_11
 //
 //
 // in this file we define system FSIO expressions
+//
+// system_fsio.txt is input for compile_fsio_file tool, see gen_system_fsio.bat
 //
 // see http://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
 //
@@ -31,3 +33,14 @@
 
 // Human-readable: (time_since_boot < 2) | (vbatt > 5)
 #define MAIN_RELAY_LOGIC "time_since_boot 2 < vbatt 5 > |"
+// could be used for simple variable intake geometry setups or warning light or starter block
+
+// Human-readable: rpm > fsio_setting(1)
+#define RPM_ABOVE_USER_SETTING_1 "rpm 1 fsio_setting >"
+// could be used for simple variable intake geometry setups or warning light or starter block
+
+// Human-readable: rpm > fsio_setting(2)
+#define RPM_ABOVE_USER_SETTING_2 "rpm 2 fsio_setting >"
+
+// Human-readable: rpm < fsio_setting(1)
+#define RPM_BELOW_USER_SETTING_1 "rpm 1 fsio_setting <"
