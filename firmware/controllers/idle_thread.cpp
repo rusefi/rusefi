@@ -36,11 +36,6 @@
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 #include "allsensors.h"
 
-#ifndef STEPPER_DIRECTION_PIN_MODE
-// todo: migrate this to boardConfiguration->idle.stepperDirectionPinMode
-#define STEPPER_DIRECTION_PIN_MODE OM_DEFAULT
-#endif /* STEPPER_DIRECTION_PIN_MODE */
-
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static Logging *logger;
@@ -321,7 +316,7 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 static void initIdleHardware() {
 	if (boardConfiguration->useStepperIdle) {
 		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin, 
-				STEPPER_DIRECTION_PIN_MODE, engineConfiguration->idleStepperReactionTime, 
+				engineConfiguration->stepperDirectionPinMode, engineConfiguration->idleStepperReactionTime, 
 				engineConfiguration->idleStepperTotalSteps, engineConfiguration->stepperEnablePin);
 	} else {
 		/**
