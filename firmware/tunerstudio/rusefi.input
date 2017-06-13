@@ -1026,6 +1026,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "O2 heater pin",						o2heaterPin
 		field = "Idle Solenoid Pin",					idle_solenoidPin
 		field = "Idle Stepper Dir",						idle_stepperDirectionPin
+		field = "Idle Stepper Dir Mode",				stepperDirectionPinMode
 		field = "Idle Stepper Step",					idle_stepperStepPin
 		field = "Idle Stepper Enable",					stepperEnablePin
 		field = "Idle Stepper Pulse",					idleStepperPulseDuration
