@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2017-06-13_19_39_11
+// on 2017-06-14_11_10_39
 //
 //
 // in this file we define system FSIO expressions
@@ -44,3 +44,7 @@
 
 // Human-readable: rpm < fsio_setting(1)
 #define RPM_BELOW_USER_SETTING_1 "rpm 1 fsio_setting <"
+// starter block using configurable parameter
+
+// Human-readable: rpm < cranking_rpm
+#define STARTER_BLOCK "rpm cranking_rpm <"
