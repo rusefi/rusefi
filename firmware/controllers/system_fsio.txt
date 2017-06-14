@@ -32,3 +32,5 @@ RPM_ABOVE_USER_SETTING_2=rpm > fsio_setting(2)
 
 RPM_BELOW_USER_SETTING_1=rpm < fsio_setting(1)
 
+# starter block using configurable parameter
+STARTER_BLOCK=rpm < cranking_rpm
