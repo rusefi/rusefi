@@ -44,6 +44,7 @@ static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, "fsio_in
 static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
+static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
 
 #define LE_EVAL_POOL_SIZE 32
 
@@ -106,6 +107,8 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engineConfiguration->fanOffTemperature;
 	case LE_METHOD_FAN_ON_SETTING:
 		return engineConfiguration->fanOnTemperature;
+	case LE_METHOD_CRANKING_RPM:
+		return engineConfiguration->cranking.rpm;
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	default:
@@ -288,6 +291,8 @@ static const char * action2String(le_action_e action) {
 	switch(action) {
 		case LE_METHOD_RPM:
 			return "RPM";
+		case LE_METHOD_CRANKING_RPM:
+			return "cranking_rpm";
 		case LE_METHOD_COOLANT:
 			return "CLT";
 		case LE_METHOD_FAN_ON_SETTING:
