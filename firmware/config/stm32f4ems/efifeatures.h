@@ -16,6 +16,8 @@
 
 #define EFI_PWM_TESTER FALSE
 
+#define HAL_USE_USB_MSD FALSE
+
 #define EFI_USE_CCM TRUE
 
 /**
