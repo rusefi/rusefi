@@ -55,8 +55,11 @@ EXTERN_ENGINE;
 extern board_configuration_s *boardConfiguration;
 
 #if HAL_USE_USB_MSD
-//static USBDriver *ms_usb_driver = &USBD1;
-//static USBMassStorageDriver UMSD1;
+#if STM32_USB_USE_OTG2
+  USBDriver *usb_driver = &USBD2;
+#else
+  USBDriver *usb_driver = &USBD1;
+#endif
 extern const USBConfig msdusbcfg;
 #endif /* HAL_USE_USB_MSD */
 
@@ -351,12 +354,15 @@ static void MMCmount(void) {
 		return;
 	}
 
-	if (engineConfiguration->storageMode == MS_ALWAYS) {
-//		  BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+//	if (engineConfiguration->storageMode == MS_ALWAYS) {
+#if HAL_USE_USB_MSD
+	  msdObjectInit(&USBMSD1);
+
+	//		  BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
 //		  const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
-//		  UMSD1.chp = NULL;
-//
-//		  /*Disconnect the USB Bus*/
+	//	  UMSD1.chp = NULL;
+
+		  /*Disconnect the USB Bus*/
 //		  usbDisconnectBus(ms_usb_driver);
 //		  chThdSleepMilliseconds(200);
 //
@@ -366,8 +372,8 @@ static void MMCmount(void) {
 //
 //		  /*Connect the USB Bus*/
 //		  usbConnectBus(ms_usb_driver);
-
-	}
+#endif
+	//}
 
 
 	unlockSpi();
