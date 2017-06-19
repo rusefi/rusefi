@@ -326,7 +326,7 @@ void initOutputPins(void) {
 
 	enginePins.mainRelay.initPin("main relay", boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
 
-	enginePins.fanRelay.initPin("fan relay", boardConfiguration->fanPin);
+	enginePins.fanRelay.initPin("fan relay", boardConfiguration->fanPin, &boardConfiguration->fanPinMode);
 	enginePins.o2heater.initPin("o2 heater", boardConfiguration->o2heaterPin);
 	enginePins.acRelay.initPin("A/C relay", boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
 
