@@ -78,7 +78,7 @@ enable2ndByteCanID = false
    pageButtons  = "&EGO"
    gauge1       = tachometer	
    gauge2       = afr1Gauge
-   gauge3		= mapGaugeValue
+   gauge3		= MAPGauge
    gauge4		= veValueGauge
 
 
@@ -467,6 +467,52 @@ fileVersion = { 20161225 }
 [GaugeConfigurations]
 
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
+#if CELSIUS
+   tChargeGauge          = tCharge,     "Charge Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
+#else
+   tChargeGauge          = tCharge,     "Charge Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
+#endif
+
+
+;   warmupEnrichGauge = warmupEnrich, "Warmup Enrichment",    "%",      100,    150,      -1,     -1,     101,   105,   0, 0
+;   accelEnrichGauge  = accDecEnrich, "Accel Enrich",         "%",       50,    150,      -1,     -1,     999,   999,   0, 0
+   egt1Gauge         = egt1, "EGT#1", "C", 0, 2000
+   egt2Gauge         = egt2, "EGT#2", "C", 0, 2000
+   egt3Gauge         = egt3, "EGT#3", "C", 0, 2000
+   egt4Gauge         = egt4, "EGT#4", "C", 0, 2000
+   egt5Gauge         = egt5, "EGT#5", "C", 0, 2000
+   egt6Gauge         = egt6, "EGT#6", "C", 0, 2000
+   egt7Gauge         = egt7, "EGT#7", "C", 0, 2000
+   egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
+   rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "dRpm",        0,      3,       0,      1,       3,     4,   1,   1
+   massAirFlowValueGa = massAirFlowValue,"Air Flow",       "kg/hr",        0,     50,    -999,   -999,     999,   999,   1,   1
+   veValueGauge      = veValue,                 "fuel: VE",            "",        0,    120,      10,     10,     100,   100,   1,   1
+   baroCorrectionGauge  = baroCorrection,"BaroCorr",           "%",        0,    120,      10,     10,     100,   100,   1,   1
+   knockCountGauge   = knockCount,"Knock count",           "count",        0,    120,      10,     10,     100,   100,   1,   1
+   knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
+   
+   triggerErrorsCounterGauge = triggerErrorsCounter, "trg err", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
+   
+   
+   idleAirValvePositionGauge = idleAirValvePosition, "idle position", "%",     0,   100,     0,    0,    100,  100,   0,   0
+
+   speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
+   warningCounterGauge = warningCounter, "warn", "",     0,   100,     0,    0,    100,  100,   0,   0
+   lastErrorCodeGauge = lastErrorCode, "error", "",     0,   8000,     0,    0,    8000,  8000,   0,   0
+   
+gaugeCategory = Debug  
+   debugFloatField1Gauge = debugFloatField1, "debug f1", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField2Gauge = debugFloatField2, "debug f2", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField3Gauge = debugFloatField3, "debug f3", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField4Gauge = debugFloatField4, "debug f4", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField5Gauge = debugFloatField5, "debug f5", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField6Gauge = debugFloatField6, "debug f6", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField7Gauge = debugFloatField7, "debug f7", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugIntField1Gauge = debugIntField1, "debug i1", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   debugIntField2Gauge = debugIntField2, "debug i2", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   debugIntField3Gauge = debugIntField3, "debug i3", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   
+gaugeCategory = Sensors  
    tachometer        = rpm,           "Engine Speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
 #if CELSIUS
    CLTGauge          = coolant,       "Coolant Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
@@ -478,79 +524,42 @@ fileVersion = { 20161225 }
 #else
    IATGauge          = intake,     "Intake Air Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
-#if CELSIUS
-   tChargeGauge          = tCharge,     "Charge Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
-#else
-   tChargeGauge          = tCharge,     "Charge Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
-#endif
-
-
    TPSGauge			 = TPSValue,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
    afr1Gauge         = AFRactual, "Air:Fuel Ratio 1",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
    MAFGauge			 = MAFValue,          "Mass Air Flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
    VBattGauge        = VBatt,      "Battery Voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
+   MAPGauge     	 = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
    tpsADCGauge       = tpsADC,             "tps ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
    atmPresCGauge     = baroPressure,          "Baro",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
-   mapGaugeValue     = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
-   ignadvGauge = ignitionAdvance,       "Ignition Advance 1",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
-;   warmupEnrichGauge = warmupEnrich, "Warmup Enrichment",    "%",      100,    150,      -1,     -1,     101,   105,   0, 0
-;   accelEnrichGauge  = accDecEnrich, "Accel Enrich",         "%",       50,    150,      -1,     -1,     999,   999,   0, 0
-   dwellGauge        = sparkDwellValue,           "Dwell",      "mSec",        0,     10,     0.5,    1.0,     6.0,   8.0,   1, 1
-   egt1Gauge         = egt1, "EGT#1", "C", 0, 2000
-   egt2Gauge         = egt2, "EGT#2", "C", 0, 2000
-   egt3Gauge         = egt3, "EGT#3", "C", 0, 2000
-   egt4Gauge         = egt4, "EGT#4", "C", 0, 2000
-   egt5Gauge         = egt5, "EGT#5", "C", 0, 2000
-   egt6Gauge         = egt6, "EGT#6", "C", 0, 2000
-   egt7Gauge         = egt7, "EGT#7", "C", 0, 2000
-   egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
-   vssGauge          = vehicleSpeedKph,     "Speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
-   rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "dRpm",        0,      3,       0,      1,       3,     4,   1,   1
-   massAirFlowValueGa = massAirFlowValue,"Air Flow",       "kg/hr",        0,     50,    -999,   -999,     999,   999,   1,   1
-   veValueGauge      = veValue,                 "fuel: VE",            "",        0,    120,      10,     10,     100,   100,   1,   1
-   baroCorrectionGauge  = baroCorrection,"BaroCorr",           "%",        0,    120,      10,     10,     100,   100,   1,   1
+   vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
+   internalMcuTemperatureGauge = internalMcuTemperature, "internal temperature", "C",     0,   100,     0,    0,    100,  100,   0,   0
+   VSSGauge          = vehicleSpeedKph,     "Speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
    pedalPositionGauge = pedalPosition,"Throttle Pedal Position",        "%",        0,    120,      10,     10,     100,   100,   1,   1
-   knockCountGauge   = knockCount,"Knock count",           "count",        0,    120,      10,     10,     100,   100,   1,   1
-   knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
-   
-   triggerErrorsCounterGauge = triggerErrorsCounter, "trg err", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
-   
-   actualLastInjectionGauge   = actualLastInjection,     "fuel final squirt, per injection", "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   
-   fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   baseFuelGauge     = baseFuel,       "fuel: base duration, before corr",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   fuelPidCorrectionGauge = fuelPidCorrection,       "fuel: closed loop correction",      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
+
+gaugeCategory = Spark Data  
+   ignadvGauge = ignitionAdvance,       "Ignition Advance 1",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
+   dwellGauge        = sparkDwellValue,           "Dwell",      "mSec",        0,     10,     0.5,    1.0,     6.0,   8.0,   1, 1
    coilDutyCycleGauge = coilDutyCycle,       @@GAUGE_NAME_DWELL_DUTY@@,      "perc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
 
-   crankingFuelGauge = crankingFuel,   "fuel: crank Width",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
-   iatCorrectionGauge = iatCorrection, "fuel: IAT correction", "mult",     0,   3,     0,    0,    3,  3,   2,   2
-   cltCorrectionGauge = cltCorrection, "fuel: CLT correction", "mult",     0,   3,     0,    0,    3,  3,   2,   2
-   injectorDutyCycleGauge=injectorDutyCycle, "fuel: injectorDutyCycle","%",      0,    120,      10,     10,     100,   100,   1,   1
-
+gaugeCategory = Accel Data
    engineLoadDeltaGauge = engineLoadDelta,"fuel: load change","value",      0,    120,      10,     10,     100,   100,   1,   1
    engineLoadAccelExtraGauge = engineLoadAccelExtra,"fuel: load extra","value",      0,    120,      10,     10,     100,   100,   1,   1
    deltaTpsGauge     = deltaTps,                "fuel: TPS change",            "",        0,    120,      10,     10,     100,   100,   1,   1
    tpsAccelFuelGauge = tpsAccelFuel,"fuel: TPS enrich",             "ms",        0,    120,      10,     10,     100,   100,   1,   1
    wallFuelAmountGauge = wallFuelAmount, "fuel: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
    wallFuelCorrectionGauge = wallFuelCorrection, "fuel: wall correction extra", "ms",     0,   100,     0,    0,    100,  100,   0,   0
-   
-   idleAirValvePositionGauge = idleAirValvePosition, "idle position", "%",     0,   100,     0,    0,    100,  100,   0,   0
 
-   debugFloatField1Gauge = debugFloatField1, "debug f1", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField2Gauge = debugFloatField2, "debug f2", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField3Gauge = debugFloatField3, "debug f3", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField4Gauge = debugFloatField4, "debug f4", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField5Gauge = debugFloatField5, "debug f5", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField6Gauge = debugFloatField6, "debug f6", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField7Gauge = debugFloatField7, "debug f7", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugIntField1Gauge = debugIntField1, "debug i1", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField2Gauge = debugIntField2, "debug i2", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField3Gauge = debugIntField3, "debug i3", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
-   warningCounterGauge = warningCounter, "warn", "",     0,   100,     0,    0,    100,  100,   0,   0
-   lastErrorCodeGauge = lastErrorCode, "error", "",     0,   8000,     0,    0,    8000,  8000,   0,   0
-   internalMcuTemperatureGauge = internalMcuTemperature, "internal temperature", "C",     0,   100,     0,    0,    100,  100,   0,   0
-   vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
+
+gaugeCategory = Fuel Data
+   crankingFuelGauge = crankingFuel,   "fuel: crank Width",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   iatCorrectionGauge = iatCorrection, "fuel: IAT correction", "mult",     0,   3,     0,    0,    3,  3,   2,   2
+   cltCorrectionGauge = cltCorrection, "fuel: CLT correction", "mult",     0,   3,     0,    0,    3,  3,   2,   2
+   injectorDutyCycleGauge=injectorDutyCycle, "fuel: injectorDutyCycle","%",      0,    120,      10,     10,     100,   100,   1,   1
+   actualLastInjectionGauge   = actualLastInjection,     "fuel final squirt, per injection", "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   
+   fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   baseFuelGauge     = baseFuel,       "fuel: base duration, before corr",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   fuelPidCorrectionGauge = fuelPidCorrection,       "fuel: closed loop correction",      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
    
    
 [FrontPage]
