@@ -322,7 +322,7 @@ void initOutputPins(void) {
 #endif /* HAL_USE_SPI */
 
 	// todo: should we move this code closer to the fuel pump logic?
-	enginePins.fuelPumpRelay.initPin("fuel pump relay", boardConfiguration->fuelPumpPin);
+	enginePins.fuelPumpRelay.initPin("fuel pump relay", boardConfiguration->fuelPumpPin, &boardConfiguration->fuelPumpPinMode);
 
 	enginePins.mainRelay.initPin("main relay", boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
 
