@@ -558,7 +558,7 @@ static OutputPin *leds[] = { &enginePins.warningPin, &enginePins.runningPin, &en
 static void initStatusLeds(void) {
 	enginePins.communicationPin.initPin("led: comm status", engineConfiguration->communicationPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin);
+	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin, &boardConfiguration->malfunctionIndicatorPinMode);
 
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
