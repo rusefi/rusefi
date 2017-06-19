@@ -5,6 +5,20 @@ enable2ndByteCanID = false
 
 #unset tuneByMAF
 
+[SettingGroups]
+   ; the referenceName will over-ride previous, so if you are creating a 
+   ; settingGroup with a reference name of lambdaSensor, it will replace the 
+   ; setting group defined in the settingGroups.xml of the TunerStudio config
+   ; folder. If is is an undefined referenceName, it will be added.
+   ; keyword    =  referenceName,  DisplayName
+
+    settingGroup = fAlgorithmSetting, "Fuel Logic / Tables"  
+    settingOption = FA_PLAIN_MAF, "Plain MAF"
+    settingOption = FA_TPS, "AlphaN/TPS"
+    settingOption = DEFAULT, "Speed Density" ; DEFAULT will be over looked and this will fall into the #else block of the statement.
+
+
+
 [TunerStudio]
    queryCommand   = "S"
    versionInfo    = "V"  ; firmwave version for title bar.
@@ -50,6 +64,10 @@ enable2ndByteCanID = false
 
 ; CONFIG_DEFINITION_END
 	
+
+[SettingContextHelp]
+
+	fuelAlgorithm = "See also http://rusefi.com/fuel"
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
@@ -117,8 +135,8 @@ fileVersion = { 20161225 }
 #else
       intake          = scalar,  F32,      8,              "°F",         {9/5},  17.77777
 #endif
-      TPS             = scalar,  F32,     12,               "%",            1,         0
-      MAF             = scalar,  F32,     16,               "V",            1,         0
+      TPSValue        = scalar,  F32,     12,               "%",            1,         0
+      MAFValue        = scalar,  F32,     16,               "V",            1,         0
       AFRactual       = scalar,  F32,     20,             "AFR",            1,       0.0
       engineLoad      = scalar,	 F32,     24,	    "%",            1,       0.0 ; Blend of MAP and TPS, depends on algorithm
       VBatt	          = scalar,	 F32,     28,	            "V",            1,       0.0
@@ -273,9 +291,9 @@ fileVersion = { 20161225 }
       columnLabel = "Voltage", "kg/hour"
       xAxis       =  -1, 6, 10
       yAxis       = -30,  1300, 10
-      xBins       = mafDecodingBins, MAF
+      xBins       = mafDecodingBins, MAFValue
       yBins       = mafDecoding
-      gauge       = mafGaugeVolts
+      gauge       = MAFGauge
 
    curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
       columnLabel = "Coolant", "Multiplier"
@@ -313,9 +331,9 @@ fileVersion = { 20161225 }
       columnLabel = "TPS", "Multiplier"
       xAxis       =  -40, 120, 10
       yAxis       =  0,  5, 10
-      xBins       = crankingTpsBins, TPS
+      xBins       = crankingTpsBins, TPSValue
       yBins       = crankingTpsCoef
-      gauge       = throttleGauge
+      gauge       = TPSGauge
 
 	curve = crankingDurationCurve, "Cranking Duration Multiplier"
       columnLabel = "Engine Cycle", "Multiplier"
@@ -346,15 +364,21 @@ fileVersion = { 20161225 }
    table = fuelTableTbl,  fuelTableMap,  "Fuel Table",   1
       ;       constant, variable
       xBins       = fuelRpmBins,  rpm
+#if   FA_PLAIN_MAF
+      yBins       = fuelLoadBins,  MAFValue
+#elif FA_TPS
+      yBins       = fuelLoadBins,  TPSValue
+#else
       yBins       = fuelLoadBins,  engineLoad
+#endif
       zBins       = fuelTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
    table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel",   1
-      xBins       = tpsTpsAccelFromRpmBins,  TPS
-      yBins       = tpsTpsAccelToRpmBins,  TPS
+      xBins       = tpsTpsAccelFromRpmBins,  TPSValue
+      yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
     
 
@@ -390,12 +414,19 @@ fileVersion = { 20161225 }
    table = ignitionTableTbl,  ignitionTableMap,  "Ignition Table",   1
       ;       constant, variable
       xBins       = ignitionRpmBins,  rpm
+#if   FA_PLAIN_MAF
+      yBins       = ignitionLoadBins,  MAFValue
+#elif FA_TPS
+      yBins       = ignitionLoadBins,  TPSValue
+#else
       yBins       = ignitionLoadBins,  engineLoad
+#endif
+
       zBins       = ignitionTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
-
+	
    table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",   1
       ;       constant, variable
       xBins       = ignitionIatCorrRpmBins,  rpm
@@ -454,9 +485,9 @@ fileVersion = { 20161225 }
 #endif
 
 
-   throttleGauge     = TPS,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
+   TPSGauge			 = TPSValue,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
    afr1Gauge         = AFRactual, "Air:Fuel Ratio 1",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
-   mafGaugeVolts     = MAF,          "Mass Air Flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
+   MAFGauge			 = MAFValue,          "Mass Air Flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
    VBattGauge        = VBatt,      "Battery Voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
    tpsADCGauge       = tpsADC,             "tps ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
    atmPresCGauge     = baroPressure,          "Baro",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
@@ -531,8 +562,8 @@ fileVersion = { 20161225 }
    ; currently a minimum of 6 gauges must be on the dash, this appears to be an old not needed limitation. next release 1 will work.
    gauge1 = tachometer
    gauge2 = CLTGauge
-   gauge3 = throttleGauge
-   gauge4 = mafGaugeVolts
+   gauge3 = TPSGauge
+   gauge4 = MAFGauge
    gauge5 = afr1Gauge
    gauge6 = VBattGauge
    gauge7 = dwellGauge
@@ -578,8 +609,8 @@ fileVersion = { 20161225 }
    entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
    entry = coolant,         "CLT",         float,  "%.2f"
    entry = intake,          "IAT",         float,  "%.2f"
-   entry = TPS,             "TPS",         float,  "%.2f"
-   entry = MAF,             "MAF",         float,  "%.2f"
+   entry = TPSValue,             "TPS",         float,  "%.2f"
+   entry = MAFValue,             "MAF",         float,  "%.2f"
    entry = MAPValue,        "MAP",         float,  "%.1f"
    entry = AFRactual,       @@GAUGE_NAME_AFR@@,         float,  "%.2f"
    entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
