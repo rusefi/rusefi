@@ -327,6 +327,9 @@ static void MMCumount(void) {
 	scheduleMsg(&logger, "MMC/SD card removed");
 }
 
+#define RAMDISK_BLOCK_SIZE    512U
+static uint8_t blkbuf[RAMDISK_BLOCK_SIZE];
+
 /*
  * MMC card mount.
  */
@@ -358,25 +361,32 @@ static void MMCmount(void) {
 #if HAL_USE_USB_MSD
 	  msdObjectInit(&USBMSD1);
 
-	//		  BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+	BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+	  msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, NULL);
+
 //		  const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
 	//	  UMSD1.chp = NULL;
 
 		  /*Disconnect the USB Bus*/
-//		  usbDisconnectBus(ms_usb_driver);
-//		  chThdSleepMilliseconds(200);
+		  usbDisconnectBus(usb_driver);
+		  chThdSleepMilliseconds(200);
 //
 //		  /*Start the useful functions*/
 //		  msdStart(&UMSD1);
-//		  usbStart(ms_usb_driver, &msd_usb_config);
+		  usbStart(usb_driver, &msdusbcfg);
 //
-//		  /*Connect the USB Bus*/
-//		  usbConnectBus(ms_usb_driver);
+		  /*Connect the USB Bus*/
+		  usbConnectBus(usb_driver);
 #endif
 	//}
 
 
 	unlockSpi();
+#if HAL_USE_USB_MSD
+	sdStatus = SD_STATE_MOUNTED;
+	return;
+#endif
+
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));
 	if (f_mount(&MMC_FS, "/", 1) == FR_OK) {
