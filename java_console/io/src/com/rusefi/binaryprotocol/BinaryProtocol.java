@@ -64,8 +64,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         this.logger = logger;
         this.stream = stream;
 
-        BinaryProtocolHolder.instance = this;
-
         incomingData = new IncomingDataBuffer(logger);
         DataListener streamDataListener = new DataListener() {
             @Override
@@ -74,10 +72,6 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             }
         };
         stream.setInputListener(streamDataListener);
-    }
-
-    public BinaryProtocol(Logger logger, SerialPort serialPort) {
-        this(logger, new SerialIoStream(serialPort, logger));
     }
 
     private static void sleep() {

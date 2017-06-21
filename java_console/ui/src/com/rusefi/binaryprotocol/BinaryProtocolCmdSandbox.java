@@ -8,6 +8,7 @@ import com.rusefi.RomRaiderWrapper;
 import com.rusefi.TsPageSize;
 import com.rusefi.UploadChanges;
 import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.SerialIoStream;
 import jssc.SerialPort;
 
 /**
@@ -32,7 +33,7 @@ public class BinaryProtocolCmdSandbox {
         if (!opened) {
             logger.error("failed to open " + port);
         }
-        BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
+        BinaryProtocol bp = BinaryProtocolHolder.create(logger, new SerialIoStream(serialPort, logger));
 
         PortHolder.setupPort(serialPort, 38400);
         logger.info("Binary looks good!");
