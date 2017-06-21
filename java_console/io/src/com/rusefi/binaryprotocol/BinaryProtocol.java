@@ -54,8 +54,11 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private ConfigurationImage controller;
 
     public boolean isClosed;
-    // todo: make a singleton?
-    public static byte[] currentOutputs;
+    /**
+     * Snapshot of current gauges status
+     * @see BinaryProtocolCommands#COMMAND_OUTPUTS
+     */
+    public byte[] currentOutputs;
 
     public BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
@@ -70,7 +73,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 incomingData.addData(freshData);
             }
         };
-        stream.setDataListener(streamDataListener);
+        stream.setInputListener(streamDataListener);
     }
 
     public BinaryProtocol(Logger logger, SerialPort serialPort) {

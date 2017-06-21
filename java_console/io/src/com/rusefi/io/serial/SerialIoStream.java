@@ -59,7 +59,7 @@ public class SerialIoStream implements IoStream {
     }
 
     @Override
-    public void setDataListener(DataListener listener) {
+    public void setInputListener(DataListener listener) {
         try {
             SerialPortReader reader = new SerialPortReader(serialPort, listener);
             serialPort.addEventListener(reader.getSerialPortEventListener());

@@ -14,9 +14,10 @@ import java.io.ByteArrayOutputStream;
 class BinaryProtocolServerSandbox {
     public static void main(String[] args) {
         TcpIoStream stream = new TcpIoStream(new ByteArrayInputStream(new byte[0]), new ByteArrayOutputStream());
-        BinaryProtocolHolder.instance = new BinaryProtocol(FileLog.LOGGER, stream);
-        BinaryProtocolHolder.getInstance().get().setController(new ConfigurationImage(new byte[14008]));
-        BinaryProtocol.currentOutputs = new byte[1 + Fields.TS_OUTPUT_SIZE];
+        BinaryProtocol bp = new BinaryProtocol(FileLog.LOGGER, stream);
+        BinaryProtocolHolder.instance = bp;
+        bp.setController(new ConfigurationImage(new byte[14008]));
+        bp.currentOutputs = new byte[1 + Fields.TS_OUTPUT_SIZE];
         BinaryProtocolServer.start();
     }
 }
