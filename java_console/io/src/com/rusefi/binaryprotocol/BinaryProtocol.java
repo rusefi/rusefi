@@ -60,7 +60,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      */
     public byte[] currentOutputs;
 
-    public BinaryProtocol(final Logger logger, IoStream stream) {
+    protected BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
         this.stream = stream;
 
