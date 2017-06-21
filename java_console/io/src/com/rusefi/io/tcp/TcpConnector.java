@@ -3,6 +3,7 @@ package com.rusefi.io.tcp;
 import com.opensr5.io.DataListener;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.*;
 
@@ -109,7 +110,7 @@ public class TcpConnector implements LinkConnector {
         };
 //        ioStream.setInputListener(listener1);
 
-        bp = new BinaryProtocol(FileLog.LOGGER, new TcpIoStream(stream, os));
+        bp = BinaryProtocolHolder.create(FileLog.LOGGER, new TcpIoStream(stream, os));
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {

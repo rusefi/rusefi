@@ -7,6 +7,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.SerialIoStream;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.SettingsTab;
 import com.rusefi.ui.StatusWindow;
@@ -73,7 +74,7 @@ public class UploadChanges {
 
         final ConfigurationImage ci2 = ConfigurationImageFile.readFromFile("rusefi_configuration.bin");
 
-        final BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
+        final BinaryProtocol bp = BinaryProtocolHolder.create(logger, new SerialIoStream(serialPort, logger));
         bp.setController(ci1);
 
         scheduleUpload(ci2);
