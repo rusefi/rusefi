@@ -77,6 +77,13 @@ static volatile int mapMeasurementsCounter = 0;
  */
 static float v_averagedMapValue;
 
+#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
+// in MAP units, not voltage!
+static float averagedMapRunningBuffer[INJECTION_PIN_COUNT];
+static int averagedMapBufIdx = 0;
+static float minMapPressure;
+#endif /* EFI_MAP_AVERAGING_ITB */
+
 EXTERN_ENGINE
 ;
 
@@ -164,6 +171,18 @@ static void endAveraging(void *arg) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	v_averagedMapValue = adcToVoltsDivided(
 			mapAccumulator / mapMeasurementsCounter);
+#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
+	// todo: move out of locked context?
+	averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
+	// increment circular running buffer index
+	averagedMapBufIdx = (averagedMapBufIdx + 1) % CONFIG(specs.cylindersCount);
+	// find min. value (only works for pressure values, not raw voltages!)
+	minMapPressure = averagedMapRunningBuffer[0];
+	for (int i = 1; i < CONFIG(specs.cylindersCount); i++) {
+		if (averagedMapRunningBuffer[i] < minMapPressure)
+			minMapPressure = averagedMapRunningBuffer[i];
+	}
+#endif /* EFI_MAP_AVERAGING_ITB */
 #endif
 	if (!wasLocked)
 		unlockAnyContext();
@@ -220,10 +239,6 @@ static void showMapStats(void) {
 	scheduleMsg(logger, "per revolution %d", measurementsPerRevolution);
 }
 
-float getMapVoltage(void) {
-	return v_averagedMapValue;
-}
-
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 /**
@@ -238,7 +253,11 @@ float getMap(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
+#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
+	return validateMap(minMapPressure);
+#else /* EFI_MAP_AVERAGING_ITB */
 	return validateMap(getMapByVoltage(v_averagedMapValue));
+#endif /* EFI_MAP_AVERAGING_ITB */
 #else
 	return 100;
 #endif
@@ -252,6 +271,13 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 //	startTimer[1].name = "map start1";
 //	endTimer[0].name = "map end0";
 //	endTimer[1].name = "map end1";
+
+#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
+	// fill with maximum values
+	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+		averagedMapRunningBuffer[i] = CONFIG(mapErrorDetectionTooHigh);
+	}
+#endif /* EFI_MAP_AVERAGING_ITB */
 
 	addTriggerEventListener(&mapAveragingCallback, "MAP averaging", engine);
 	addConsoleAction("faststat", showMapStats);
