@@ -1,8 +1,9 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 19 11:17:25 MSK 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 21 07:10:43 MSK 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
+	public static final int BLOCKING_FACTOR = 400;
 	public static final int FSIO_ADC_COUNT = 4;
 	public static final int TS_OUTPUT_SIZE = 356;
 	public static final int TS_FILE_VERSION = 20161225;

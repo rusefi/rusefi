@@ -30,6 +30,9 @@ struct_no_prefix engine_configuration_s
 ! todo there is still a spot where this 200 is hard-coded
 #define LE_COMMAND_LENGTH 200
 
+! see 'blockingFactor' in rusefi.ini
+#define BLOCKING_FACTOR 400
+
 #define FSIO_ADC_COUNT 4
 
 ! this is here so that rusEfi console can access it, too

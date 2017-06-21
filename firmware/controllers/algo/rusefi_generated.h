@@ -14,6 +14,7 @@
 #define ignitionPin11logic 
 #define ignitionPin12logic 
 #define LE_COMMAND_LENGTH 200
+#define BLOCKING_FACTOR 400
 #define FSIO_ADC_COUNT 4
 #define TS_OUTPUT_SIZE 356
 #define TS_FILE_VERSION 20161225
