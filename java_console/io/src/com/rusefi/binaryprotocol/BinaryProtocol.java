@@ -31,7 +31,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  * (c) Andrey Belomutskiy
  * 3/6/2015
  */
-public class BinaryProtocol {
+public class BinaryProtocol implements BinaryProtocolCommands {
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     /**
@@ -42,28 +42,6 @@ public class BinaryProtocol {
     static {
         FileLog.MAIN.logLine(USE_PLAIN_PROTOCOL_PROPERTY + ": " + PLAIN_PROTOCOL);
     }
-
-    // see BLOCKING_FACTOR in firmware code
-    private static final int BLOCKING_FACTOR = Fields.BLOCKING_FACTOR;
-    private static final byte RESPONSE_OK = 0;
-    private static final byte RESPONSE_BURN_OK = 0x04;
-    private static final byte RESPONSE_COMMAND_OK = 0x07;
-    /**
-     * that's hex for "~\n", see BINARY_SWITCH_TAG in firmware source code
-     */
-    private static final int SWITCH_TO_BINARY_RESPONSE = 0x7e0a;
-    /**
-     * See SWITCH_TO_BINARY_COMMAND in firmware source code
-     */
-    private static final String SWITCH_TO_BINARY_COMMAND = "~";
-    public static final char COMMAND_OUTPUTS = 'O'; // ochGetCommand
-    public static final char COMMAND_HELLO = 'S'; // queryCommand
-    public static final char COMMAND_PROTOCOL = 'F';
-    public static final char COMMAND_CRC_CHECK_COMMAND = 'k';
-    public static final char COMMAND_PAGE = 'P';
-    public static final char COMMAND_READ = 'R'; // 082 decimal
-    private static final char COMMAND_CHUNK_WRITE = 'C'; // pageChunkWrite
-    private static final char COMMAND_BURN = 'B'; // burnCommand
 
     private final Logger logger;
     private final IoStream stream;
