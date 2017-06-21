@@ -62,8 +62,8 @@ public class BinaryProtocol {
     public static final char COMMAND_CRC_CHECK_COMMAND = 'k';
     public static final char COMMAND_PAGE = 'P';
     public static final char COMMAND_READ = 'R'; // 082 decimal
-    public static final char COMMAND_CHUNK_WRITE = 'C'; // pageChunkWrite
-    public static final char COMMAND_BURN = 'B'; // burnCommand
+    private static final char COMMAND_CHUNK_WRITE = 'C'; // pageChunkWrite
+    private static final char COMMAND_BURN = 'B'; // burnCommand
 
     private final Logger logger;
     private final IoStream stream;
