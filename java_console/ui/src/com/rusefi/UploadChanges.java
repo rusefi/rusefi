@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.opensr5.io.ConfigurationImageFile;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.RecentCommands;
@@ -89,7 +90,7 @@ public class UploadChanges {
             @Override
             public void run() {
                 try {
-                    BinaryProtocol.instance.uploadChanges(newVersion, logger);
+                    BinaryProtocolHolder.getInstance().get().uploadChanges(newVersion, logger);
                     if (afterUpload != null)
                         afterUpload.run();
                 } catch (InterruptedException | EOFException | SerialPortException e) {
