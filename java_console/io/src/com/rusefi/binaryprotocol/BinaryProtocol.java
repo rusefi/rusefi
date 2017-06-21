@@ -33,18 +33,18 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  */
 public class BinaryProtocol {
 
-    private static final String PROTOCOL_PLAIN = "protocol.plain";
+    private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     /**
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
      */
-    private static boolean PLAIN_PROTOCOL = Boolean.getBoolean(PROTOCOL_PLAIN);
+    private static boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
     static {
-        FileLog.MAIN.logLine(PROTOCOL_PLAIN + ": " + PLAIN_PROTOCOL);
+        FileLog.MAIN.logLine(USE_PLAIN_PROTOCOL_PROPERTY + ": " + PLAIN_PROTOCOL);
     }
 
     // see BLOCKING_FACTOR in firmware code
-    private static final int BLOCKING_FACTOR = 400;
+    private static final int BLOCKING_FACTOR = Fields.BLOCKING_FACTOR;
     private static final byte RESPONSE_OK = 0;
     private static final byte RESPONSE_BURN_OK = 0x04;
     private static final byte RESPONSE_COMMAND_OK = 0x07;
