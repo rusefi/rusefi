@@ -107,7 +107,7 @@ public class TcpConnector implements LinkConnector {
                 rb.append(new String(freshData), LinkManager.ENCODER);
             }
         };
-//        ioStream.setDataListener(listener1);
+//        ioStream.setInputListener(listener1);
 
         bp = new BinaryProtocol(FileLog.LOGGER, new TcpIoStream(stream, os));
 
