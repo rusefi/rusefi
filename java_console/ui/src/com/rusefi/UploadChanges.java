@@ -75,7 +75,11 @@ public class UploadChanges {
         final BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
         bp.setController(ci1);
 
-        scheduleUpload(ci2, null);
+        scheduleUpload(ci2);
+    }
+
+    public static void scheduleUpload(final ConfigurationImage newVersion) {
+        scheduleUpload(newVersion, null);
     }
 
     public static void scheduleUpload(final ConfigurationImage newVersion, final Runnable afterUpload) {
