@@ -27,16 +27,6 @@ import java.nio.BufferOverflowException;
  */
 @NotThreadSafe
 public class CircularByteBuffer extends ByteBuffer {
-    /**
-     * Constructs the CircularByteBuffer.
-     *
-     * @param size
-     */
-    public CircularByteBuffer(int size) {
-        this.size = size;
-        buf = new byte[size];
-    }
-
     private final int size;
 
     private final byte[] buf;
@@ -47,6 +37,23 @@ public class CircularByteBuffer extends ByteBuffer {
 
     private int nextPut;
 
+    /**
+     * Constructs the CircularByteBuffer.
+     *
+     * @param size
+     */
+    public CircularByteBuffer(int size) {
+        this.size = size;
+        buf = new byte[size];
+    }
+
+    @Override
+    public void clear() {
+        length = 0;
+        nextGet = 0;
+        nextPut = 0;
+    }
+
     @Override
     public int size() {
         return size;
@@ -55,13 +62,6 @@ public class CircularByteBuffer extends ByteBuffer {
     @Override
     public int length() {
         return length;
-    }
-
-    @Override
-    public void clear() {
-        length = 0;
-        nextGet = 0;
-        nextPut = 0;
     }
 
     @Override

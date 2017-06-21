@@ -167,6 +167,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         return logger;
     }
 
+    /**
+     * the whole dynamic 'switch to binary protocol' still does not work great
+     */
     public void switchToBinaryProtocol() {
         // we do not have reliable implementation yet :(
         for (int i = 0; i < 15; i++)
@@ -185,7 +188,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 stream.write((SWITCH_TO_BINARY_COMMAND + "\n").getBytes());
                 // todo: document why is ioLock needed here?
                 synchronized (ioLock) {
-                    boolean isTimeout = incomingData.waitForBytes(2, start, "switch to binary");
+                    boolean isTimeout = incomingData.waitForBytes("switch to binary", start, 2);
                     if (isTimeout) {
                         logger.info(new Date() + ": Timeout waiting for switch response");
                         close();
@@ -246,7 +249,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
-            boolean isTimeout = incomingData.waitForBytes(2, start, msg + " header");
+            boolean isTimeout = incomingData.waitForBytes(msg + " header", start, 2);
             if (isTimeout)
                 return null;
 
@@ -257,7 +260,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             if (!allowLongResponse && packetSize > Math.max(BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
                 return null;
 
-            isTimeout = incomingData.waitForBytes(packetSize + 4, start, msg + " body");
+            isTimeout = incomingData.waitForBytes(msg + " body", start, packetSize + 4);
             if (isTimeout)
                 return null;
 
