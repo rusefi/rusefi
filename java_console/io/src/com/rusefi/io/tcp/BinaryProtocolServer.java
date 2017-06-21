@@ -2,6 +2,7 @@ package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.Fields;
 
@@ -99,7 +100,7 @@ public class BinaryProtocolServer {
                 short offset = dis.readShort();
                 short count = dis.readShort(); // no swap here? interesting!
                 System.out.println("CRC check " + page + "/" + offset + "/" + count);
-                BinaryProtocol bp = BinaryProtocol.instance;
+                BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
                 int result = IoHelper.getCrc32(bp.getController().getContent(), offset, count);
                 ByteArrayOutputStream response = new ByteArrayOutputStream();
                 response.write(TS_OK.charAt(0));
@@ -115,7 +116,7 @@ public class BinaryProtocolServer {
                     FileLog.MAIN.logLine("Error: negative read request " + offset + "/" + count);
                 } else {
                     System.out.println("read " + page + "/" + offset + "/" + count);
-                    BinaryProtocol bp = BinaryProtocol.instance;
+                    BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
                     byte[] response = new byte[1 + count];
                     response[0] = (byte) TS_OK.charAt(0);
                     System.arraycopy(bp.getController().getContent(), offset, response, 1, count);

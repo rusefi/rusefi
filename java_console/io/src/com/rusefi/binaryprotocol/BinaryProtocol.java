@@ -75,9 +75,6 @@ public class BinaryProtocol {
     private final Object imageLock = new Object();
     private ConfigurationImage controller;
 
-    // todo: fix this, this is HORRIBLE!
-    @Deprecated
-    public static BinaryProtocol instance;
     public boolean isClosed;
     // todo: make a singleton?
     public static byte[] currentOutputs;
@@ -86,7 +83,7 @@ public class BinaryProtocol {
         this.logger = logger;
         this.stream = stream;
 
-        instance = this;
+        BinaryProtocolHolder.instance = this;
 
         incomingData = new IncomingDataBuffer(logger);
         DataListener streamDataListener = new DataListener() {

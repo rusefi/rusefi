@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
@@ -277,7 +278,7 @@ public class Launcher {
         root.setProperty(TAB_INDEX, tabbedPane.getSelectedIndex());
         GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
         getConfig().save();
-        BinaryProtocol bp = BinaryProtocol.instance;
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
         if (bp != null && !bp.isClosed)
             bp.close(); // it could be that serial driver wants to be closed explicitly
         System.exit(0);
