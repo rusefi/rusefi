@@ -297,7 +297,7 @@ public class EngineSnifferPanel {
             // injection
             signalBody = Color.green;
         } else if (name.startsWith("map")) {
-            signalBody = Color.gray;
+            signalBody = Color.pink;
         } else {
             signalBody = Color.gray;
         }

@@ -42,6 +42,9 @@ public class UpDownImage extends JPanel {
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
     private String pin = "";
     private long mouseEnterTime;
+    /**
+     * we have variable color depending on signal name
+     */
     private Color signalBody = Color.lightGray;
     private Color signalBorder = Color.blue;
 
