@@ -9,6 +9,7 @@
 #define MAIN_H_
 
 #include <math.h>
+#include <float.h>
 
 #include "efilib.h"
 
