@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jun 21 07:10:43 MSK 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:48:12 EEST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -510,7 +510,7 @@ public class Fields {
 	public static final int gpioPinModes15_offset = 1188;
 	public static final int gpioPinModes16_offset = 1192;
 	public static final int consoleUartDevice_offset = 1196;
-	public static final int unused1_offset = 1200;
+	public static final int mapMinBufferLength_offset = 1200;
 	public static final int idlePidDeactivationTpsThreshold_offset = 1204;
 	public static final int idleStepperPulseDuration_offset = 1206;
 	public static final int nb2ratioFrom_offset = 1208;
@@ -1387,7 +1387,7 @@ public class Fields {
 	public static final Field GPIOPINMODES15 = Field.create("GPIOPINMODES15", 1188, FieldType.INT, pin_output_mode_e);
 	public static final Field GPIOPINMODES16 = Field.create("GPIOPINMODES16", 1192, FieldType.INT, pin_output_mode_e);
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1196, FieldType.INT);
-	public static final Field UNUSED1 = Field.create("UNUSED1", 1200, FieldType.INT);
+	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 1200, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 1204, FieldType.INT);
 	public static final Field IDLESTEPPERPULSEDURATION = Field.create("IDLESTEPPERPULSEDURATION", 1206, FieldType.INT);
 	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 1208, FieldType.FLOAT);

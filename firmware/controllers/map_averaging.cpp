@@ -81,8 +81,11 @@ static volatile int mapMeasurementsCounter = 0;
 static float v_averagedMapValue;
 
 #if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
+// allow a bit more smoothing
+#define MAX_MAP_BUFFER_LENGTH (INJECTION_PIN_COUNT * 2)
 // in MAP units, not voltage!
-static float averagedMapRunningBuffer[INJECTION_PIN_COUNT];
+static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
+static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 static float minMapPressure;
 #endif /* EFI_MAP_AVERAGING_ITB */
@@ -178,15 +181,17 @@ static void endAveraging(void *arg) {
 	v_averagedMapValue = adcToVoltsDivided(
 			mapAccumulator / mapMeasurementsCounter);
 #if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
-	// todo: move out of locked context?
-	averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
-	// increment circular running buffer index
-	averagedMapBufIdx = (averagedMapBufIdx + 1) % CONFIG(specs.cylindersCount);
-	// find min. value (only works for pressure values, not raw voltages!)
-	minMapPressure = averagedMapRunningBuffer[0];
-	for (int i = 1; i < CONFIG(specs.cylindersCount); i++) {
-		if (averagedMapRunningBuffer[i] < minMapPressure)
-			minMapPressure = averagedMapRunningBuffer[i];
+	if (mapMinBufferLength > 1) {
+		// todo: move out of locked context?
+		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
+		// increment circular running buffer index
+		averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+		// find min. value (only works for pressure values, not raw voltages!)
+		minMapPressure = averagedMapRunningBuffer[0];
+		for (int i = 1; i < mapMinBufferLength; i++) {
+			if (averagedMapRunningBuffer[i] < minMapPressure)
+				minMapPressure = averagedMapRunningBuffer[i];
+		}
 	}
 #endif /* EFI_MAP_AVERAGING_ITB */
 #endif
@@ -211,6 +216,19 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 	if (!isValidRpm(rpm)) {
 		return;
 	}
+
+#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
+	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
+		// check range
+		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 0);
+		// reset index
+		averagedMapBufIdx = 0;
+		// fill with maximum values
+		for (int i = 0; i < MAX_MAP_BUFFER_LENGTH; i++) {
+			averagedMapRunningBuffer[i] = CONFIG(mapErrorDetectionTooHigh);
+		}
+	}
+#endif /* EFI_MAP_AVERAGING_ITB */
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
@@ -260,10 +278,11 @@ float getMap(void) {
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
 #if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
-	return validateMap(minMapPressure);
-#else /* EFI_MAP_AVERAGING_ITB */
-	return validateMap(getMapByVoltage(v_averagedMapValue));
+	if (mapMinBufferLength > 1)
+		return validateMap(minMapPressure);
+	else
 #endif /* EFI_MAP_AVERAGING_ITB */
+		return validateMap(getMapByVoltage(v_averagedMapValue));
 #else
 	return 100;
 #endif
@@ -277,13 +296,6 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 //	startTimer[1].name = "map start1";
 //	endTimer[0].name = "map end0";
 //	endTimer[1].name = "map end1";
-
-#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
-	// fill with maximum values
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		averagedMapRunningBuffer[i] = CONFIG(mapErrorDetectionTooHigh);
-	}
-#endif /* EFI_MAP_AVERAGING_ITB */
 
 	addTriggerEventListener(&mapAveragingCallback, "MAP averaging", engine);
 	addConsoleAction("faststat", showMapStats);
