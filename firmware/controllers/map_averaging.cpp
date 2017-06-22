@@ -275,6 +275,7 @@ float getMap(void) {
 		return validateMap(minMapPressure);
 	else
 		return validateMap(getMapByVoltage(v_averagedMapValue));
+#else
 	return 100;
 #endif
 }
