@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:48:12 EEST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:24:53 MSK 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;

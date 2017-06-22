@@ -215,12 +215,12 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 
 	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
 		// check range
-		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 0);
+		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
 		// reset index
 		averagedMapBufIdx = 0;
 		// fill with maximum values
-		for (int i = 0; i < MAX_MAP_BUFFER_LENGTH; i++) {
-			averagedMapRunningBuffer[i] = CONFIG(mapErrorDetectionTooHigh);
+		for (int i = 0; i < mapMinBufferLength; i++) {
+			averagedMapRunningBuffer[i] = FLT_MAX;
 		}
 	}
 
