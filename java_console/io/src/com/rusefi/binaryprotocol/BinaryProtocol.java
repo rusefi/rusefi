@@ -30,6 +30,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 /**
  * (c) Andrey Belomutskiy
  * 3/6/2015
+ * @see BinaryProtocolHolder
  */
 public class BinaryProtocol implements BinaryProtocolCommands {
 
