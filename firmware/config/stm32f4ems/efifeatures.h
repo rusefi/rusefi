@@ -198,11 +198,6 @@
 #define EFI_MAP_AVERAGING TRUE
 //#define EFI_MAP_AVERAGING FALSE
 
-/**
- * MAP sensor filtering for Individual Throttle Bodies (ITB) configs.
- */
-#define EFI_MAP_AVERAGING_ITB FALSE
-
 // todo: most of this should become configurable
 
 // todo: switch to continues ADC conversion for slow ADC?

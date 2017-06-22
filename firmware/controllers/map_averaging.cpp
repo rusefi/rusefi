@@ -80,7 +80,6 @@ static volatile int mapMeasurementsCounter = 0;
  */
 static float v_averagedMapValue;
 
-#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
 // allow a bit more smoothing
 #define MAX_MAP_BUFFER_LENGTH (INJECTION_PIN_COUNT * 2)
 // in MAP units, not voltage!
@@ -88,7 +87,6 @@ static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 static float minMapPressure;
-#endif /* EFI_MAP_AVERAGING_ITB */
 
 EXTERN_ENGINE
 ;
@@ -180,7 +178,6 @@ static void endAveraging(void *arg) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	v_averagedMapValue = adcToVoltsDivided(
 			mapAccumulator / mapMeasurementsCounter);
-#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
 	if (mapMinBufferLength > 1) {
 		// todo: move out of locked context?
 		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
@@ -193,7 +190,6 @@ static void endAveraging(void *arg) {
 				minMapPressure = averagedMapRunningBuffer[i];
 		}
 	}
-#endif /* EFI_MAP_AVERAGING_ITB */
 #endif
 	if (!wasLocked)
 		unlockAnyContext();
@@ -217,7 +213,6 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		return;
 	}
 
-#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
 	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
 		// check range
 		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 0);
@@ -228,7 +223,6 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 			averagedMapRunningBuffer[i] = CONFIG(mapErrorDetectionTooHigh);
 		}
 	}
-#endif /* EFI_MAP_AVERAGING_ITB */
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
@@ -277,13 +271,10 @@ float getMap(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
-#if EFI_MAP_AVERAGING_ITB || defined(__DOXYGEN__)
 	if (mapMinBufferLength > 1)
 		return validateMap(minMapPressure);
 	else
-#endif /* EFI_MAP_AVERAGING_ITB */
 		return validateMap(getMapByVoltage(v_averagedMapValue));
-#else
 	return 100;
 #endif
 }
