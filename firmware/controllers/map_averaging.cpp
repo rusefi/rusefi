@@ -80,6 +80,15 @@ static volatile int mapMeasurementsCounter = 0;
  */
 static float v_averagedMapValue;
 
+// allow a bit more smoothing
+#define MAX_MAP_BUFFER_LENGTH (INJECTION_PIN_COUNT * 2)
+// in MAP units, not voltage!
+static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
+static int mapMinBufferLength = 0;
+static int averagedMapBufIdx = 0;
+// this is 'minimal averaged' MAP
+static float currentPressure;
+
 EXTERN_ENGINE
 ;
 
@@ -170,6 +179,17 @@ static void endAveraging(void *arg) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	v_averagedMapValue = adcToVoltsDivided(
 			mapAccumulator / mapMeasurementsCounter);
+	// todo: move out of locked context?
+	averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
+	// increment circular running buffer index
+	averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+	// find min. value (only works for pressure values, not raw voltages!)
+	float minPressure = averagedMapRunningBuffer[0];
+	for (int i = 1; i < mapMinBufferLength; i++) {
+		if (averagedMapRunningBuffer[i] < minPressure)
+			minPressure = averagedMapRunningBuffer[i];
+	}
+	currentPressure = minPressure;
 #endif
 	if (!wasLocked)
 		unlockAnyContext();
@@ -191,6 +211,17 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 	int rpm = ENGINE(rpmCalculator.rpmValue);
 	if (!isValidRpm(rpm)) {
 		return;
+	}
+
+	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
+		// check range
+		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
+		// reset index
+		averagedMapBufIdx = 0;
+		// fill with maximum values
+		for (int i = 0; i < mapMinBufferLength; i++) {
+			averagedMapRunningBuffer[i] = FLT_MAX;
+		}
 	}
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
@@ -240,7 +271,7 @@ float getMap(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
-	return validateMap(getMapByVoltage(v_averagedMapValue));
+	return validateMap(currentPressure);
 #else
 	return 100;
 #endif
