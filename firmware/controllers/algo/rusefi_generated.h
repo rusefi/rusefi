@@ -676,8 +676,8 @@
 #define gpioPinModes16_offset_hex 4a8
 #define consoleUartDevice_offset 1196
 #define consoleUartDevice_offset_hex 4ac
-#define unused1_offset 1200
-#define unused1_offset_hex 4b0
+#define mapMinBufferLength_offset 1200
+#define mapMinBufferLength_offset_hex 4b0
 #define idlePidDeactivationTpsThreshold_offset 1204
 #define idlePidDeactivationTpsThreshold_offset_hex 4b4
 #define idleStepperPulseDuration_offset 1206
