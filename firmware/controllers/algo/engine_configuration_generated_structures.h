@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:48:12 EEST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:24:53 EEST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1971,7 +1971,7 @@ typedef struct {
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
 	 * kg/hour value.
-	 * By the way 2.081989116 kg/h = 1 ft³/m
+	 * By the way 2.081989116 kg/h = 1 ftÂ³/m
 	 * offset 7160
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
@@ -2122,4 +2122,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:48:12 EEST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:24:53 EEST 2017
