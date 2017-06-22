@@ -561,6 +561,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	boardConfiguration->mapMinBufferLength = 1;
+
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 

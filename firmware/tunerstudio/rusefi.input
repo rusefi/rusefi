@@ -1229,6 +1229,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "MAP voltage low point", 	 		    mapLowValueVoltage, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
 		field = "MAP value high point",               	map_sensor_highValue, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
 		field = "MAP voltage high value",               mapHighValueVoltage, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
+		field = "Use minimal value of",					mapMinBufferLength
 
 	dialog = mapSensorFDlg, "Frequency Sensor Settings", xAxis		
 		field = "pin",		frequencyReportingMapInputPin, {hasFrequencyReportingMapSensor == 1}
