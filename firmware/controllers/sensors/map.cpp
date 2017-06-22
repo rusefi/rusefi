@@ -1,4 +1,7 @@
 /**
+ *
+ * See also map_averaging.cpp
+ *
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 #include "main.h"

@@ -1,6 +1,9 @@
 /**
  * @file	map_averaging.cpp
  *
+ * In order to have best MAP estimate possible, we real MAP value at a relatively high frequency
+ * and average the value within a specified angle position window for each cylinder
+ *
  * @date Dec 11, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
  *
@@ -64,7 +67,7 @@ static float accumulators[2];
 static int counters[2];
 
 /**
- * Running MAP accumulator
+ * Running MAP accumulator - sum of all measurements within averaging window
  */
 static volatile float mapAccumulator = 0;
 /**
@@ -80,6 +83,9 @@ static float v_averagedMapValue;
 EXTERN_ENGINE
 ;
 
+/**
+ * here we have averaging start and averaging end points for each cylinder
+ */
 static scheduling_s startTimer[INJECTION_PIN_COUNT][2];
 static scheduling_s endTimer[INJECTION_PIN_COUNT][2];
 
