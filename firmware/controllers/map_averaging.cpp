@@ -178,17 +178,15 @@ static void endAveraging(void *arg) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	v_averagedMapValue = adcToVoltsDivided(
 			mapAccumulator / mapMeasurementsCounter);
-	if (mapMinBufferLength > 1) {
-		// todo: move out of locked context?
-		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
-		// increment circular running buffer index
-		averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
-		// find min. value (only works for pressure values, not raw voltages!)
-		minMapPressure = averagedMapRunningBuffer[0];
-		for (int i = 1; i < mapMinBufferLength; i++) {
-			if (averagedMapRunningBuffer[i] < minMapPressure)
-				minMapPressure = averagedMapRunningBuffer[i];
-		}
+	// todo: move out of locked context?
+	averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
+	// increment circular running buffer index
+	averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+	// find min. value (only works for pressure values, not raw voltages!)
+	minMapPressure = averagedMapRunningBuffer[0];
+	for (int i = 1; i < mapMinBufferLength; i++) {
+		if (averagedMapRunningBuffer[i] < minMapPressure)
+			minMapPressure = averagedMapRunningBuffer[i];
 	}
 #endif
 	if (!wasLocked)
@@ -271,10 +269,7 @@ float getMap(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
-	if (mapMinBufferLength > 1)
-		return validateMap(minMapPressure);
-	else
-		return validateMap(getMapByVoltage(v_averagedMapValue));
+	return validateMap(minMapPressure);
 #else
 	return 100;
 #endif
