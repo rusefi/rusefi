@@ -86,7 +86,8 @@ static float v_averagedMapValue;
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
-static float minMapPressure;
+// this is 'minimal averaged' MAP
+static float currentPressure;
 
 EXTERN_ENGINE
 ;
@@ -183,11 +184,12 @@ static void endAveraging(void *arg) {
 	// increment circular running buffer index
 	averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
 	// find min. value (only works for pressure values, not raw voltages!)
-	minMapPressure = averagedMapRunningBuffer[0];
+	float minPressure = averagedMapRunningBuffer[0];
 	for (int i = 1; i < mapMinBufferLength; i++) {
-		if (averagedMapRunningBuffer[i] < minMapPressure)
-			minMapPressure = averagedMapRunningBuffer[i];
+		if (averagedMapRunningBuffer[i] < minPressure)
+			minPressure = averagedMapRunningBuffer[i];
 	}
+	currentPressure = minPressure;
 #endif
 	if (!wasLocked)
 		unlockAnyContext();
@@ -269,7 +271,7 @@ float getMap(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
-	return validateMap(minMapPressure);
+	return validateMap(currentPressure);
 #else
 	return 100;
 #endif
