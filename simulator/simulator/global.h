@@ -5,6 +5,7 @@
 #include <hal.h>
 #include <time.h>
 #include <math.h>
+#include <float.h>
 
 #include "efifeatures.h"
 
