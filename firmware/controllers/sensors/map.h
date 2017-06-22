@@ -21,7 +21,6 @@ bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
  * @return MAP value averaged within a window of measurement
  */
 float getMap(void);
-float getMapVoltage(void);
 float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX);

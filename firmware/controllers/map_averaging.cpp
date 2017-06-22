@@ -220,10 +220,6 @@ static void showMapStats(void) {
 	scheduleMsg(logger, "per revolution %d", measurementsPerRevolution);
 }
 
-float getMapVoltage(void) {
-	return v_averagedMapValue;
-}
-
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 /**
