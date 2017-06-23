@@ -710,7 +710,10 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float throttlePedalUpVoltage;;"voltage",      1,     0,    -6,   6,      2
 	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
 	pin_output_mode_e stepperDirectionPinMode;
-	float unusedetb;
+	
+	int16_t startUpFuelPumpDuration;;"seconds",        1,     0,  0,    6000,  0
+	int16_t unusedetb;;"C",        1,     0,  0,    100,  0
+	
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
 	float[CLT_CURVE_SIZE] cltIdleRpm;;"RPM",      1,     0,      0.0,    400.0,   0
