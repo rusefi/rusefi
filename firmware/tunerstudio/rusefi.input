@@ -1604,6 +1604,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = ""
 		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
+		field = "Startup fuel prime duration",			startUpFuelPumpDuration
 		
 		
 	dialog = EngineLoadAccelPanel, "Engine Load"
