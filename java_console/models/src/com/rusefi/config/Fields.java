@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jun 22 09:24:53 MSK 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 25 00:14:59 EEST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -802,7 +802,8 @@ public class Fields {
 	public static final int throttlePedalUpVoltage_offset = 2012;
 	public static final int throttlePedalWOTVoltage_offset = 2016;
 	public static final int stepperDirectionPinMode_offset = 2020;
-	public static final int unusedetb_offset = 2024;
+	public static final int startUpFuelPumpDuration_offset = 2024;
+	public static final int unusedetb_offset = 2026;
 	public static final int cltIdleRpmBins_offset = 2028;
 	public static final int cltIdleRpm_offset = 2092;
 	public static final int targetVBatt_offset = 2156;
@@ -1591,7 +1592,8 @@ public class Fields {
 	public static final Field THROTTLEPEDALUPVOLTAGE = Field.create("THROTTLEPEDALUPVOLTAGE", 2012, FieldType.FLOAT);
 	public static final Field THROTTLEPEDALWOTVOLTAGE = Field.create("THROTTLEPEDALWOTVOLTAGE", 2016, FieldType.FLOAT);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 2020, FieldType.INT, pin_output_mode_e);
-	public static final Field UNUSEDETB = Field.create("UNUSEDETB", 2024, FieldType.FLOAT);
+	public static final Field STARTUPFUELPUMPDURATION = Field.create("STARTUPFUELPUMPDURATION", 2024, FieldType.INT);
+	public static final Field UNUSEDETB = Field.create("UNUSEDETB", 2026, FieldType.INT);
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2184, FieldType.INT);
