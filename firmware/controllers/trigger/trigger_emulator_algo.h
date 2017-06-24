@@ -22,5 +22,6 @@ public:
 };
 
 void initTriggerEmulatorLogic(Logging *sharedLogger);
+void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration);
 
 #endif /* TRIGGER_EMULATOR_ALGO_H_ */

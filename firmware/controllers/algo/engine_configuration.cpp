@@ -33,6 +33,7 @@
 #include "electronic_throttle.h"
 #include "idle_thread.h"
 #include "alternatorController.h"
+#include "trigger_emulator_algo.h"
 #include "hardware.h"
 #include "board.h"
 #endif /* EFI_PROD_CODE */
@@ -170,6 +171,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeIdleCallback(&activeConfiguration);
 #endif /* EFI_IDLE_CONTROL */
 
+	onConfigurationChangeTriggerCallback(&activeConfiguration);
 
 	rememberCurrentConfiguration();
 }
