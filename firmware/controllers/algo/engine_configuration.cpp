@@ -33,7 +33,6 @@
 #include "electronic_throttle.h"
 #include "idle_thread.h"
 #include "alternatorController.h"
-#include "trigger_emulator_algo.h"
 #include "hardware.h"
 #include "board.h"
 #endif /* EFI_PROD_CODE */
@@ -171,9 +170,9 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeIdleCallback(&activeConfiguration);
 #endif /* EFI_IDLE_CONTROL */
 
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	onConfigurationChangeTriggerCallback(&activeConfiguration);
-#endif /* EFI_EMULATE_POSITION_SENSORS */
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	rememberCurrentConfiguration();
 }
