@@ -125,22 +125,22 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration) {
-	isTriggerConfigChanged = COMPARE_CONFIG_PARAMS(trigger.type) |
-		COMPARE_CONFIG_PARAMS(operationMode) |
-		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) |
-		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) |
-		COMPARE_CONFIG_PARAMS(trigger.customTotalToothCount) |
-		COMPARE_CONFIG_PARAMS(trigger.customSkippedToothCount) |
-		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[0]) |
-		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[1]) |
-		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[2]) |
-		COMPARE_CONFIG_PARAMS(camInput) |
-		COMPARE_CONFIG_PARAMS(vvtMode) |
-		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) |
-		COMPARE_CONFIG_PARAMS(vvtOffset) |
-		COMPARE_CONFIG_PARAMS(vvtDisplayInverted) |
-		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) |
-		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) |
+	isTriggerConfigChanged = COMPARE_CONFIG_PARAMS(trigger.type) ||
+		COMPARE_CONFIG_PARAMS(operationMode) ||
+		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
+		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
+		COMPARE_CONFIG_PARAMS(trigger.customTotalToothCount) ||
+		COMPARE_CONFIG_PARAMS(trigger.customSkippedToothCount) ||
+		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[0]) ||
+		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[1]) ||
+		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[2]) ||
+		COMPARE_CONFIG_PARAMS(camInput) ||
+		COMPARE_CONFIG_PARAMS(vvtMode) ||
+		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
+		COMPARE_CONFIG_PARAMS(vvtOffset) ||
+		COMPARE_CONFIG_PARAMS(vvtDisplayInverted) ||
+		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
+		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
 }
 
