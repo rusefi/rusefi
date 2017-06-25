@@ -11,8 +11,7 @@
 
 FAN_CONTROL_LOGIC=(fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting)
 
-# todo: start-up fuel pump priming time should probably be configurable?
-FUEL_PUMP_LOGIC=(time_since_boot < 4) | (rpm > 0)
+FUEL_PUMP_LOGIC=(time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
 
 ALTERNATOR_LOGIC=vbatt < 14.5
 
@@ -22,7 +21,7 @@ AC_RELAY_LOGIC=ac_on_switch
 COMBINED_WARNING_LIGHT=(rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
 
 #needed by EFI_MAIN_RELAY_CONTROL
-MAIN_RELAY_LOGIC=(time_since_boot < 2) | (vbatt > 5)
+MAIN_RELAY_LOGIC=(time_since_boot < 2) | (vbatt > 5) | in_shutdown
 
 # could be used for simple variable intake geometry setups or warning light or starter block
 RPM_ABOVE_USER_SETTING_1=rpm > fsio_setting(1)

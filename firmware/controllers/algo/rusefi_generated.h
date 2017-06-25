@@ -1102,8 +1102,10 @@
 #define throttlePedalWOTVoltage_offset_hex 7e0
 #define stepperDirectionPinMode_offset 2020
 #define stepperDirectionPinMode_offset_hex 7e4
-#define unusedetb_offset 2024
-#define unusedetb_offset_hex 7e8
+#define startUpFuelPumpDuration_offset 2024
+#define startUpFuelPumpDuration_offset_hex 7e8
+#define unusedetb_offset 2026
+#define unusedetb_offset_hex 7ea
 #define cltIdleRpmBins_offset 2028
 #define cltIdleRpmBins_offset_hex 7ec
 #define cltIdleRpm_offset 2092

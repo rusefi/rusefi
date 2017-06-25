@@ -20,6 +20,7 @@
 #include "speed_density.h"
 #include "advance_map.h"
 #include "efilib2.h"
+#include "settings.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
@@ -339,6 +340,32 @@ void Engine::watchdog() {
 
 	enginePins.stopPins();
 #endif
+}
+
+void Engine::checkShutdown() {
+#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+	int rpm = rpmCalculator.rpmValue;
+
+	const float vBattThreshold = 5.0f;
+	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold) {
+		stopEngine();
+		// todo: add stepper motor parking
+	}
+#endif /* EFI_MAIN_RELAY_CONTROL */
+}
+
+bool Engine::isInShutdownMode() {
+#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+	if (stopEngineRequestTimeNt == 0)	// the shutdown procedure is not started
+		return false;
+	
+	const efitime_t engineStopWaitTimeoutNt = 5LL * 1000000LL;
+	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
+	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < US2NT(engineStopWaitTimeoutNt))
+		return true;
+	// todo: add checks for stepper motor parking
+#endif /* EFI_MAIN_RELAY_CONTROL */
+	return false;
 }
 
 injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

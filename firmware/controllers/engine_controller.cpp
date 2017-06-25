@@ -273,6 +273,7 @@ static void periodicSlowCallback(Engine *engine) {
 
 	engine->watchdog();
 	engine->updateSlowSensors();
+	engine->checkShutdown();
 
 #if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
 	runFsio();
