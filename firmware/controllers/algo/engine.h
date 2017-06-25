@@ -427,6 +427,17 @@ public:
 
 	void watchdog();
 
+	/**
+	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
+	 */
+	void checkShutdown();
+	
+	/**
+	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
+	   Returns true if some operations are in progress on background.
+	 */
+	bool isInShutdownMode();
+
 	monitoring_timestamps_s m;
 
 	void knockLogic(float knockVolts);
