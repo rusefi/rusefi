@@ -30,8 +30,8 @@
 #define COMBINED_WARNING_LIGHT "rpm 2 fsio_setting > coolant 3 fsio_setting > vbatt 4 fsio_setting < | |"
 //needed by EFI_MAIN_RELAY_CONTROL
 
-// Human-readable: (time_since_boo < 2) | (vbatt > 5) | in_shutdown
-#define MAIN_RELAY_LOGIC "time_since_boo 2 < vbatt 5 > | in_shutdown |"
+// Human-readable: (time_since_boot < 2) | (vbatt > 5) | in_shutdown
+#define MAIN_RELAY_LOGIC "time_since_boot 2 < vbatt 5 > | in_shutdown |"
 // could be used for simple variable intake geometry setups or warning light or starter block
 
 // Human-readable: rpm > fsio_setting(1)
