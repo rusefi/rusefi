@@ -45,6 +45,8 @@ static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
+static LENameOrdinalPair leStartupFuelPumpDuration(LE_METHOD_STARTUP_FUEL_PUMP_DURATION, "startup_fuel_pump_duration");
+static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 
 #define LE_EVAL_POOL_SIZE 32
 
@@ -109,6 +111,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engineConfiguration->fanOnTemperature;
 	case LE_METHOD_CRANKING_RPM:
 		return engineConfiguration->cranking.rpm;
+	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
+		// todo: remove default value check and finish migration to startUpFuelPumpDuration param.
+		return (engineConfiguration->startUpFuelPumpDuration == 0) ? 4 : engineConfiguration->startUpFuelPumpDuration;
+	case LE_METHOD_IN_SHUTDOWN:
+		return engine->isInShutdownMode();
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	default:
@@ -301,6 +308,11 @@ static const char * action2String(le_action_e action) {
 			return "fan_off";
 		case LE_METHOD_FAN:
 			return "fan";
+		case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
+			return "startup_fuel_pump_duration";
+		case LE_METHOD_IN_SHUTDOWN:
+			return "in_shutdown";
+
 		default: {
 			// this is here to make compiler happy
 		}

@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2017-06-14_11_10_39
+// on 2017-06-25_01_22_09
 //
 //
 // in this file we define system FSIO expressions
@@ -15,10 +15,9 @@
 
 // Human-readable: (fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting)
 #define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > and coolant fan_on_setting > |"
-// todo: start-up fuel pump priming time should probably be configurable?
 
-// Human-readable: (time_since_boot < 4) | (rpm > 0)
-#define FUEL_PUMP_LOGIC "time_since_boot 4 < rpm 0 > |"
+// Human-readable: (time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
+#define FUEL_PUMP_LOGIC "time_since_boot startup_fuel_pump_duration < rpm 0 > |"
 
 // Human-readable: vbatt < 14.5
 #define ALTERNATOR_LOGIC "vbatt 14.5 <"
@@ -31,8 +30,8 @@
 #define COMBINED_WARNING_LIGHT "rpm 2 fsio_setting > coolant 3 fsio_setting > vbatt 4 fsio_setting < | |"
 //needed by EFI_MAIN_RELAY_CONTROL
 
-// Human-readable: (time_since_boot < 2) | (vbatt > 5)
-#define MAIN_RELAY_LOGIC "time_since_boot 2 < vbatt 5 > |"
+// Human-readable: (time_since_boot < 2) | (vbatt > 5) | in_shutdown
+#define MAIN_RELAY_LOGIC "time_since_boot 2 < vbatt 5 > | in_shutdown |"
 // could be used for simple variable intake geometry setups or warning light or starter block
 
 // Human-readable: rpm > fsio_setting(1)

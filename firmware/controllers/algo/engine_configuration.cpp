@@ -697,6 +697,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
 
 	engineConfiguration->cranking.baseFuel = 5;
+	engineConfiguration->startUpFuelPumpDuration = 4;
 
 	engineConfiguration->idleRpmPid.pFactor = 0.05;
 	engineConfiguration->idleRpmPid.iFactor = 0.002;
