@@ -18,6 +18,7 @@
 static float mockCoolant;
 static float mockFan;
 static float mockRpm;
+static float mockCrankingRpm;
 static float mockTimeSinceBoot;
 
 float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -28,6 +29,8 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return mockCoolant;
 	case LE_METHOD_RPM:
 		return mockRpm;
+	case LE_METHOD_CRANKING_RPM:
+		return mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return mockTimeSinceBoot;
 	case LE_METHOD_FAN_ON_SETTING:
@@ -209,7 +212,16 @@ void testLogicExpressions(void) {
 
 	testExpression(FAN_CONTROL_LOGIC, 1);
 
+	{
+		mockRpm = 900;
+		mockCrankingRpm = 200;
+		testExpression("rpm", 900);
+		testExpression("cranking_rpm", 200);
+		testExpression(STARTER_BLOCK, 0);
+		testExpression("rpm cranking_rpm > ", 1);
+
+	}
 	mockRpm = 900;
-	testExpression(FUEL_PUMP_LOGIC, 1);
+	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
 
 }
