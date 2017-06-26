@@ -545,6 +545,7 @@ static void resetRunningTriggerCounters() {
 #define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	isTriggerConfigChanged = COMPARE_CONFIG_PARAMS(trigger.type) ||
 		COMPARE_CONFIG_PARAMS(operationMode) ||
 		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
@@ -562,10 +563,15 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
+#endif /* EFI_PROD_CODE */
 }
 
 bool checkIfTriggerConfigChanged(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	return isTriggerConfigChanged;
+#else
+	return false;
+#endif /* EFI_PROD_CODE */
 }
 
 void initTriggerCentral(Logging *sharedLogger) {
