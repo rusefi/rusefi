@@ -130,7 +130,7 @@ int main(void) {
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
 	testFuelSchedulerBug299smallAndMedium();
-	testLogicExpressions();
+	testLogicExpressions(); // fsio
 	testOverflow64Counter();
 	testInterpolate3d();
 	testFindIndex();
