@@ -820,7 +820,7 @@ end_struct
 
 engine_configuration_s engineConfiguration;
 
-le_formula_t[FSIO_COMMAND_COUNT iterate] le_formulas;
+le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingMultiplier;
 	le_formula_t timingAdditive;
 
