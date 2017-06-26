@@ -118,7 +118,7 @@ public:
 	NamedOutputPin tachOut;
 	OutputPin etbOutput1;
 	OutputPin etbOutput2;
-	OutputPin fsioOutputs[LE_COMMAND_COUNT];
+	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	OutputPin triggerDecoderErrorPin;
 	OutputPin hipCs;
 	OutputPin sdCsPin;

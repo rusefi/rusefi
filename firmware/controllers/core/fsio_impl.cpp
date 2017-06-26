@@ -64,7 +64,7 @@ LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
 static LEElement userElements[UD_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
 LEElementPool userPool(userElements, UD_ELEMENT_POOL_SIZE);
-static LEElement * fsioLogics[LE_COMMAND_COUNT] CCM_OPTIONAL;
+static LEElement * fsioLogics[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
 
 static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
@@ -134,7 +134,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 static void setFsioInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
+	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
@@ -166,7 +166,7 @@ static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 
 static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
+	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
@@ -202,7 +202,7 @@ void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMET
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	userPool.reset();
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
@@ -219,10 +219,10 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
-static SimplePwm fsioPwm[LE_COMMAND_COUNT] CCM_OPTIONAL;
+static SimplePwm fsioPwm[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
 
 static LECalculator calc;
-extern LEElement * fsioLogics[LE_COMMAND_COUNT];
+extern LEElement * fsioLogics[FSIO_COMMAND_COUNT];
 
 // that's crazy, but what's an alternative? we need const char *, a shared buffer would not work for pin repository
 static const char *getGpioPinName(int index) {
@@ -264,7 +264,7 @@ static const char *getGpioPinName(int index) {
 }
 
 /**
- * @param index from zero for (LE_COMMAND_COUNT - 1)
+ * @param index from zero for (FSIO_COMMAND_COUNT - 1)
  */
 static void handleFsio(Engine *engine, int index) {
 	if (boardConfiguration->fsioPins[index] == GPIO_UNASSIGNED)
@@ -343,7 +343,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 
 static void setFsioFrequency(int index, int frequency) {
 	index--;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
+	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
@@ -356,7 +356,7 @@ static void setFsioFrequency(int index, int frequency) {
 }
 
 void runFsio(void) {
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		handleFsio(engine, i);
 	}
 
@@ -428,7 +428,7 @@ static void showFsioInfo(void) {
 
 
 
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		char * exp = config->le_formulas[i];
 		if (exp[0] != 0) {
 			/**
@@ -442,13 +442,13 @@ static void showFsioInfo(void) {
 			showFsio(NULL, fsioLogics[i]);
 		}
 	}
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		float v = boardConfiguration->fsio_setting[i];
 		if (!cisnan(v)) {
 			scheduleMsg(logger, "user property #%d: %f", i + 1, v);
 		}
 	}
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e inputPin = boardConfiguration->fsioDigitalInputs[i];
 		if (inputPin != GPIO_UNASSIGNED) {
 			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
@@ -463,7 +463,7 @@ static void showFsioInfo(void) {
 static void setFsioSetting(float humanIndexF, float value) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = (int)humanIndexF - 1;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
+	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", (int)humanIndexF);
 		return;
 	}
@@ -475,7 +475,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 static void setFsioExpression(const char *indexStr, const char *quotedLine, Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
+	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
@@ -512,7 +512,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	logger = sharedLogger;
 #endif
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		fsioLogics[i] = NULL;
 	}
 
@@ -531,7 +531,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
@@ -544,7 +544,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 	}
 
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e inputPin = boardConfiguration->fsioDigitalInputs[i];
 
 		if (inputPin != GPIO_UNASSIGNED) {

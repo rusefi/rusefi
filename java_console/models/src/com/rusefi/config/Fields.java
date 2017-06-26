@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 25 00:14:59 EEST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 26 09:05:40 MSK 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -26,7 +26,7 @@ public class Fields {
 	public static final int HW_MAX_ADC_INDEX = 17;
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
-	public static final int LE_COMMAND_COUNT = 16;
+	public static final int FSIO_COMMAND_COUNT = 16;
 	public static final int AUX_PID_COUNT = 4;
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int FUEL_LOAD_COUNT = 16;

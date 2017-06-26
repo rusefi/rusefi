@@ -267,7 +267,7 @@ public:
 	FuelSchedule injectionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
-	float fsioLastValue[LE_COMMAND_COUNT];
+	float fsioLastValue[FSIO_COMMAND_COUNT];
 
 	WallFuel wallFuel;
 

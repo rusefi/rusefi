@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 25 00:14:59 EEST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 26 09:05:40 MSK 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -648,11 +648,11 @@ typedef struct {
 	/**
 	 * offset 444
 	 */
-	brain_pin_e fsioPins[LE_COMMAND_COUNT];
+	brain_pin_e fsioPins[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 508
 	 */
-	pin_output_mode_e gpioPinModes[LE_COMMAND_COUNT];
+	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 572
 	 */
@@ -697,7 +697,7 @@ typedef struct {
 	/**
 	 * offset 608
 	 */
-	fsio_pwm_freq_t fsioFrequency[LE_COMMAND_COUNT];
+	fsio_pwm_freq_t fsioFrequency[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 640
 	 */
@@ -713,7 +713,7 @@ typedef struct {
 	/**
 	 * offset 652
 	 */
-	fsio_setting_t fsio_setting[LE_COMMAND_COUNT];
+	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 716
 	 */
@@ -800,7 +800,7 @@ typedef struct {
 	 * These input pins allow us to pull toggle buttons state
 	 * offset 796
 	 */
-	brain_pin_e fsioDigitalInputs[LE_COMMAND_COUNT];
+	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 860
 	 */
@@ -1390,7 +1390,7 @@ typedef struct {
 	/**
 	 * offset 1548
 	 */
-	pin_input_mode_e fsioInputModes[LE_COMMAND_COUNT];
+	pin_input_mode_e fsioInputModes[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 1612
 	 */
@@ -1923,7 +1923,7 @@ typedef struct {
 	/**
 	 * offset 3048
 	 */
-	le_formula_t le_formulas[LE_COMMAND_COUNT];
+	le_formula_t le_formulas[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 6248
 	 */
@@ -2126,4 +2126,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 25 00:14:59 EEST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 26 09:05:40 MSK 2017
