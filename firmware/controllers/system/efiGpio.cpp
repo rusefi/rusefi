@@ -100,7 +100,7 @@ void EnginePins::unregisterPins() {
 	idleSolenoidPin.unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
 			engineConfiguration->bc.idle.solenoidPin);
 
-	for (int i = 0;i < LE_COMMAND_COUNT;i++) {
+	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
 		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioPins[i],
 				engineConfiguration->bc.fsioPins[i]);
 	}

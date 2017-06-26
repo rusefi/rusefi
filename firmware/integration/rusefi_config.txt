@@ -70,7 +70,7 @@ struct_no_prefix engine_configuration_s
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define LE_COMMAND_COUNT 16
+#define FSIO_COMMAND_COUNT 16
 #define AUX_PID_COUNT 4
 
 #define FUEL_RPM_COUNT 16
@@ -523,8 +523,8 @@ bit is_enabled_spi_2
 
 	spi_device_e max31855spiDevice;
 
-	brain_pin_e[LE_COMMAND_COUNT iterate] fsioPins;
-	pin_output_mode_e[LE_COMMAND_COUNT iterate] gpioPinModes;
+	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioPins;
+	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
 
 custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	uart_device_e consoleUartDevice;
@@ -543,13 +543,13 @@ custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 
 custom pid_dt 4 scalar, U32,  @OFFSET@, "ms",      1,      0,       0, 3000,      0
 custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,       0, 3000,      0
-	fsio_pwm_freq_t[LE_COMMAND_COUNT iterate] fsioFrequency;
+	fsio_pwm_freq_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
 
 	brain_pin_e hip9011CsPin;
 	brain_pin_e hip9011IntHoldPin;
 pin_output_mode_e hip9011IntHoldPinMode;
 custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  4
-	fsio_setting_t[LE_COMMAND_COUNT iterate] fsio_setting;
+	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
 	brain_pin_e spi1mosiPin;
 	brain_pin_e spi1misoPin;
 	brain_pin_e spi1sckPin;
@@ -580,7 +580,7 @@ brain_input_pin_e vehicleSpeedSensorInputPin;
 
 	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	pin_input_mode_e clutchUpPinMode;
-	brain_pin_e[LE_COMMAND_COUNT iterate] fsioDigitalInputs;These input pins allow us to pull toggle buttons state;
+	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;These input pins allow us to pull toggle buttons state;
 
 brain_input_pin_e frequencyReportingMapInputPin;
 
@@ -658,7 +658,7 @@ float idleStepperReactionTime;;"ms",      1,      0,       1, 300,      0
 	float knockVThreshold;;"V",      1,      0,       1, 5,      2
 
 custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1	
-	pin_input_mode_e[LE_COMMAND_COUNT iterate] fsioInputModes;
+	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
 	
 	adc_channel_e externalKnockSenseAdc;
 	int[3] unsed2342342;
@@ -820,7 +820,7 @@ end_struct
 
 engine_configuration_s engineConfiguration;
 
-le_formula_t[LE_COMMAND_COUNT iterate] le_formulas;
+le_formula_t[FSIO_COMMAND_COUNT iterate] le_formulas;
 	le_formula_t timingMultiplier;
 	le_formula_t timingAdditive;
 

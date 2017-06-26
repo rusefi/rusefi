@@ -517,7 +517,7 @@ static void setDefaultFsioParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < AUX_PID_COUNT; i++) {
 		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
 	}
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
 		config->le_formulas[i][0] = 0;
 		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
