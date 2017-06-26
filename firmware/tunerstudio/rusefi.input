@@ -822,6 +822,7 @@ gaugeCategory = Fuel Data
 		subMenu = fsioTable2Tbl,			"FSIO Table #2"
 		subMenu = fsioTable3Tbl,			"FSIO Table #3"
 		subMenu = fsioTable4Tbl,			"FSIO Table #4"
+		subMenu = fsioFormulas,				"FSIO Formulas"
 		subMenu	= std_separator
 	 	subMenu = connection,            	"Connection"
 		subMenu = joystickPanel,		"Joystick"
@@ -1694,6 +1695,11 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		panel = fsioFrequency,	Center
 		panel = fsioSetting,	East
 		
+	dialog = fsioFormulas, "FSIO Formulas"
+		field = "#1",									fsioFormulas1
+		field = "#2",									fsioFormulas2
+		field = "#3",									fsioFormulas3
+		field = "#4",									fsioFormulas4
 		
 	dialog = fsioInputsDialog, "FSIO inputs"
 		field = "ADC #1",								fsioAdc1
