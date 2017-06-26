@@ -170,6 +170,9 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeIdleCallback(&activeConfiguration);
 #endif /* EFI_IDLE_CONTROL */
 
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+	onConfigurationChangeTriggerCallback(&activeConfiguration);
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	rememberCurrentConfiguration();
 }

@@ -465,7 +465,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 
 	if (trgEventIndex == 0) {
 
-		if (triggerVersion.isOld()) {
+		if (checkIfTriggerConfigChanged()) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild ignition schedule
 			engine->injectionEvents.isReady = false;
 			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
