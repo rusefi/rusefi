@@ -519,7 +519,7 @@ static void setDefaultFsioParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
-		config->le_formulas[i][0] = 0;
+		config->fsioFormulas[i][0] = 0;
 		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}

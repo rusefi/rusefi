@@ -192,7 +192,7 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_E
 	if (len >= LE_COMMAND_LENGTH) {
 		return;
 	}
-	strcpy(config->le_formulas[index], exp);
+	strcpy(config->fsioFormulas[index], exp);
 	boardConfiguration->fsioFrequency[index] = freq;
 }
 
@@ -206,7 +206,7 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
-			const char *formula = config->le_formulas[i];
+			const char *formula = config->fsioFormulas[i];
 			LEElement *logic = userPool.parseExpression(formula);
 			if (logic == NULL) {
 				warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
@@ -429,7 +429,7 @@ static void showFsioInfo(void) {
 
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		char * exp = config->le_formulas[i];
+		char * exp = config->fsioFormulas[i];
 		if (exp[0] != 0) {
 			/**
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
@@ -486,7 +486,7 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine, Engi
 	}
 
 	scheduleMsg(logger, "setting user out #%d to [%s]", index + 1, l);
-	strcpy(engine->config->le_formulas[index], l);
+	strcpy(engine->config->fsioFormulas[index], l);
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	showFsioInfo();

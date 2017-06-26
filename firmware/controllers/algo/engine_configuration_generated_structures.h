@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 26 09:05:40 MSK 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 26 09:15:23 MSK 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1923,7 +1923,7 @@ typedef struct {
 	/**
 	 * offset 3048
 	 */
-	le_formula_t le_formulas[FSIO_COMMAND_COUNT];
+	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 6248
 	 */
@@ -2126,4 +2126,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 26 09:05:40 MSK 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jun 26 09:15:23 MSK 2017
