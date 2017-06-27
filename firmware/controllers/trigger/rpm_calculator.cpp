@@ -158,9 +158,9 @@ int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-bool isCrankingE(Engine *engine) {
+bool isCrankingOrInitialE(Engine *engine) {
 	int rpm = getRpmE(engine);
-	return isCrankingR(rpm);
+	return isCrankingR(rpm) || (rpm == 0);
 }
 
 #endif
