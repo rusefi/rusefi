@@ -63,7 +63,6 @@ EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
 
-static LocalVersionHolder triggerVersion;
 static const char *prevOutputName = NULL;
 
 static Logging *logger;
