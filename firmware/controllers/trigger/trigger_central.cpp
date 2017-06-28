@@ -20,6 +20,7 @@
 #include "efilib2.h"
 #include "settings.h"
 #include "engine_math.h"
+#include "LocalVersionHolder.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -41,6 +42,7 @@ static histogram_s triggerCallbackHistogram;
 #endif /* EFI_HISTOGRAMS */
 
 static Logging *logger;
+static LocalVersionHolder triggerVersion;
 
 efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->triggerCentral.triggerState.getTotalEventCounter();
@@ -570,7 +572,7 @@ bool checkIfTriggerConfigChanged(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	return isTriggerConfigChanged;
 #else
-	return false;
+	return triggerVersion.isOld();
 #endif /* EFI_PROD_CODE */
 }
 
