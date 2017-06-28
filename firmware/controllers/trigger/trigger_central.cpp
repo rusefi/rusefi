@@ -547,7 +547,7 @@ static void resetRunningTriggerCounters() {
 #define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	isTriggerConfigChanged = COMPARE_CONFIG_PARAMS(trigger.type) ||
 		COMPARE_CONFIG_PARAMS(operationMode) ||
 		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
@@ -569,7 +569,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 }
 
 bool checkIfTriggerConfigChanged(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	return isTriggerConfigChanged;
 #else
 	return triggerVersion.isOld();
