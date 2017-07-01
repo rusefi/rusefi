@@ -236,7 +236,7 @@ floatms_t getCrankingSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float dwellMs;
-	if (isCrankingR(rpm)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		dwellMs = getCrankingSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		efiAssert(!cisnan(rpm), "invalid rpm", NAN);

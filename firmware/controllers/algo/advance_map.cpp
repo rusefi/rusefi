@@ -101,7 +101,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	angle_t angle;
-	if (isCrankingR(rpm)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		angle = engineConfiguration->crankingTimingAngle;
 	} else {
 		if (CONFIG(timingMode) == TM_DYNAMIC) {

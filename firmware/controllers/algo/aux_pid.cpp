@@ -66,7 +66,7 @@ static msg_t auxPidThread(int param) {
 				pidReset();
 			}
 
-			float rpm = engine->rpmCalculator.rpmValue;
+			float rpm = engine->rpmCalculator.getRpm();
 
 			// todo: make this configurable?
 			bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;

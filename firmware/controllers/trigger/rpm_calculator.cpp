@@ -51,7 +51,7 @@ RpmCalculator::RpmCalculator() {
 	mockRpm = MOCK_UNDEFINED;
 #endif
 	rpmValue = 0;
-	assignRpmValue(0);
+	setRpmValue(0);
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
@@ -62,20 +62,30 @@ RpmCalculator::RpmCalculator() {
 	oneDegreeUs = NAN;
 }
 
-/**
- * @return true if there was a full shaft revolution within the last second
- */
-bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool RpmCalculator::isStopped() {
+	return (state == STOPPED);
+}
+
+bool RpmCalculator::isCranking() {
+	return (state == CRANKING);
+}
+
+bool RpmCalculator::isRunning() {
+	return (state == RUNNING);
+}
+
+void RpmCalculator::checkIfRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(stopEngineRequestTimeNt) != 0) {
-		if (nowNt
-				- ENGINE(stopEngineRequestTimeNt)< 3 * US2NT(US_PER_SECOND_LL)) {
-			return false;
+		if (nowNt - ENGINE(stopEngineRequestTimeNt) < 3 * US2NT(US_PER_SECOND_LL)) {
+			stopRunning();
+			return;
 		}
 	}
 	if (lastRpmEventTimeNt == 0) {
 		// here we assume 64 bit time does not overflow, zero value is the default meaning no events so far
-		return false;
+		stopRunning();
+		return;
 	}
 	/**
 	 * note that the result of this subtraction could be negative, that would happen if
@@ -85,10 +95,32 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!result) {
 		notRunnintNow = nowNt;
 		notRunningPrev = lastRpmEventTimeNt;
+		stopRunning();
 	}
-	return result;
 }
 
+void RpmCalculator::stopRunning(void) {
+	revolutionCounterSinceStart = 0;
+	if (rpmValue != 0) {
+		setRpmValue(0);
+		scheduleMsg(logger,
+				"templog rpm=0 since not running [%x][%x] [%x][%x]",
+				(int) (notRunnintNow >> 32), (int) notRunnintNow,
+				(int) (notRunningPrev >> 32), (int) notRunningPrev);
+	}
+}
+
+void RpmCalculator::updateState(void) {
+	// todo: add cranking hysteresis
+	if (rpmValue == 0)
+    	state = STOPPED;
+	else if (rpmValue != NOISY_RPM) {
+    	if (rpmValue < CONFIG(cranking.rpm))
+	        state = CRANKING;
+    	else
+        	state = RUNNING;
+	}
+}
 
 // private method
 void RpmCalculator::assignRpmValue(int value) {
@@ -103,6 +135,7 @@ void RpmCalculator::assignRpmValue(int value) {
 
 void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	assignRpmValue(value);
+	updateState();
 	if (previousRpmValue == 0 && rpmValue > 0) {
 		/**
 		 * this would make sure that we have good numbers for first cranking revolution
@@ -142,28 +175,10 @@ float RpmCalculator::getRpmAcceleration() {
 int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED)
-	return mockRpm;
+		return mockRpm;
 #endif
-	if (!isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		revolutionCounterSinceStart = 0;
-		if (rpmValue != 0) {
-			rpmValue = 0;
-			scheduleMsg(logger,
-					"templog rpm=0 since not running [%x][%x] [%x][%x]",
-					(int) (notRunnintNow >> 32), (int) notRunnintNow,
-					(int) (notRunningPrev >> 32), (int) notRunningPrev);
-		}
-	}
 	return rpmValue;
 }
-
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-bool isCrankingOrInitialE(Engine *engine) {
-	int rpm = getRpmE(engine);
-	return isCrankingR(rpm) || (rpm == 0);
-}
-
-#endif
 
 /**
  * @brief Shaft position callback used by RPM calculation logic.

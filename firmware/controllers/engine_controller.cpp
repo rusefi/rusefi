@@ -102,10 +102,7 @@ static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	while (true) {
-		int rpm = getRpmE(engine);
-		int is_cranking = isCrankingR(rpm);
-		int is_running = rpm > 0 && !is_cranking;
-		if (is_running) {
+		if (engine->rpmCalculator.isRunning()) {
 			// blinking while running
 			enginePins.runningPin.setValue(0);
 			chThdSleepMilliseconds(50);
@@ -113,7 +110,7 @@ static msg_t csThread(void) {
 			chThdSleepMilliseconds(50);
 		} else {
 			// constant on while cranking and off if engine is stopped
-			enginePins.runningPin.setValue(is_cranking);
+			enginePins.runningPin.setValue(engine->rpmCalculator.isCranking());
 			chThdSleepMilliseconds(100);
 		}
 	}
@@ -211,7 +208,7 @@ static void cylinderCleanupControl(Engine *engine) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
+		newValue = engine->rpmCalculator.isStopped() && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
@@ -259,7 +256,12 @@ static void periodicSlowCallback(Engine *engine) {
 	}
 #endif
 
-	if (!engine->rpmCalculator.isRunning()) {
+	/**
+	 * Update engine state if needed (check timeouts).
+	 */
+	engine->rpmCalculator.checkIfRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	if (engine->rpmCalculator.isStopped()) {
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
 		writeToFlashIfPending();
 #endif

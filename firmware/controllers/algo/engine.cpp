@@ -62,7 +62,7 @@ int MockAdcState::getMockAdcValue(int hwChannel) {
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.rpmValue;
+	int rpm = rpmCalculator.getRpm();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? boardConfiguration->sensorChartMode : SC_OFF;
 
@@ -179,10 +179,10 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = ENGINE(rpmCalculator.rpmValue);
+	int rpm = ENGINE(rpmCalculator).getRpm();
 
 	efitick_t nowNt = getTimeNowNt();
-	if (isCrankingR(rpm)) {
+	if (ENGINE(rpmCalculator).isCranking()) {
 		crankingTime = nowNt;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
@@ -344,7 +344,7 @@ void Engine::watchdog() {
 
 void Engine::checkShutdown() {
 #if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
-	int rpm = rpmCalculator.rpmValue;
+	int rpm = rpmCalculator.getRpm();
 
 	const float vBattThreshold = 5.0f;
 	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold && stopEngineRequestTimeNt == 0) {
@@ -369,8 +369,7 @@ bool Engine::isInShutdownMode() {
 }
 
 injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.rpmValue;
-	return isCrankingR(rpm) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
+	return rpmCalculator.isCranking() ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 }
 
 /**
@@ -378,7 +377,7 @@ injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNAT
  * so that trigger event handler/IO scheduler tasks are faster.
  */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.rpmValue;
+	int rpm = rpmCalculator.getRpm();
 
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;

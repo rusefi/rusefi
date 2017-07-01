@@ -31,6 +31,24 @@
 
 #ifdef __cplusplus
 
+/**
+ * The engine state stored in RpmCalculator. Accessed via isStopped(), isCranking(), isRunning().
+ */
+typedef enum {
+	/**
+	 * The engine is not spinning, RPM=0
+	 */
+	STOPPED,
+	/**
+	 * The engine is cranking (RPM < cranking.rpm)
+	 */
+	CRANKING,
+	/**
+	 * The engine is running (RPM >= cranking.rpm)
+	 */
+	RUNNING,
+} engine_state_e;
+
 class Engine;
 
 class RpmCalculator {
@@ -40,9 +58,25 @@ public:
 #endif
 	RpmCalculator();
 	/**
+	 * Returns true if the engine is not spinning (RPM==0)
+	 */
+	bool isStopped();
+	/**
+	 * Returns true if the engine is cranking
+	 */
+	bool isCranking();
+	/**
+	 * Returns true if the engine is running and not cranking
+	 */
+	bool isRunning();
+	/**
+	 * Check if there was a full shaft revolution within the last second
 	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
 	 */
-	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void checkIfRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	/**
+	 * This is a fast accessor method.
+	 */
 	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
@@ -53,18 +87,21 @@ public:
 	uint32_t getRevolutionCounterSinceStart(void);
 	float getRpmAcceleration();
 	/**
-	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
-	 * Zero if engine is not running
-	 */
-	volatile int rpmValue;
-	int previousRpmValue;
-	/**
 	 * This is a performance optimization: let's pre-calulate this each time RPM changes
 	 */
 	volatile floatus_t oneDegreeUs;
 	volatile efitime_t lastRpmEventTimeNt;
 private:
 	void assignRpmValue(int value);
+	/**
+	 * Called from checkIfRunning() if no revolutions occurred.
+	 */
+	void stopRunning(void);
+	/**
+	 * Update engine state
+	 */
+	void updateState(void);
+
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
@@ -74,6 +111,16 @@ private:
 	 * Same as the above, but since the engine started spinning
 	 */
 	volatile uint32_t revolutionCounterSinceStart;
+	/**
+	 * Zero if engine is not running
+	 */
+	volatile int rpmValue;
+	int previousRpmValue;
+
+	/**
+	 * Current engine state
+	 */
+	engine_state_e state;
 };
 
 /**
@@ -81,7 +128,6 @@ private:
  */
 #define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)
 
-bool isCrankingOrInitialE(Engine *engine);
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
  * @brief   Initialize RPM calculator
@@ -93,8 +139,6 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 
 int getRevolutionCounter(void);
-
-bool isCranking(void);
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
