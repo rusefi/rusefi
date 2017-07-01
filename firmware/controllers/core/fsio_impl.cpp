@@ -512,9 +512,6 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	logger = sharedLogger;
 #endif
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		fsioLogics[i] = NULL;
-	}
 
 #if EFI_FUEL_PUMP || defined(__DOXYGEN__)
 	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);
@@ -577,5 +574,10 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 }
 
+void prepareFsio(void) {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		fsioLogics[i] = NULL;
+	}
+}
 
 #endif /* EFI_FSIO */
