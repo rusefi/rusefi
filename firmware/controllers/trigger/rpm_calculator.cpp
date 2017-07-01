@@ -51,7 +51,8 @@ RpmCalculator::RpmCalculator() {
 	mockRpm = MOCK_UNDEFINED;
 #endif
 	rpmValue = 0;
-	setRpmValue(0);
+	assignRpmValue(0);
+	state = STOPPED;
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
@@ -74,18 +75,18 @@ bool RpmCalculator::isRunning() {
 	return (state == RUNNING);
 }
 
-void RpmCalculator::checkIfRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(stopEngineRequestTimeNt) != 0) {
 		if (nowNt - ENGINE(stopEngineRequestTimeNt) < 3 * US2NT(US_PER_SECOND_LL)) {
-			stopRunning();
-			return;
+			stopRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+			return false;
 		}
 	}
 	if (lastRpmEventTimeNt == 0) {
 		// here we assume 64 bit time does not overflow, zero value is the default meaning no events so far
-		stopRunning();
-		return;
+		stopRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return false;
 	}
 	/**
 	 * note that the result of this subtraction could be negative, that would happen if
@@ -95,14 +96,15 @@ void RpmCalculator::checkIfRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!result) {
 		notRunnintNow = nowNt;
 		notRunningPrev = lastRpmEventTimeNt;
-		stopRunning();
+		stopRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
+	return result;
 }
 
-void RpmCalculator::stopRunning(void) {
+void RpmCalculator::stopRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
-		setRpmValue(0);
+		setRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(logger,
 				"templog rpm=0 since not running [%x][%x] [%x][%x]",
 				(int) (notRunnintNow >> 32), (int) notRunnintNow,
@@ -110,7 +112,7 @@ void RpmCalculator::stopRunning(void) {
 	}
 }
 
-void RpmCalculator::updateState(void) {
+void RpmCalculator::updateState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: add cranking hysteresis
 	if (rpmValue == 0)
     	state = STOPPED;
@@ -135,7 +137,7 @@ void RpmCalculator::assignRpmValue(int value) {
 
 void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	assignRpmValue(value);
-	updateState();
+	updateState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (previousRpmValue == 0 && rpmValue > 0) {
 		/**
 		 * this would make sure that we have good numbers for first cranking revolution
@@ -166,13 +168,11 @@ float RpmCalculator::getRpmAcceleration() {
 }
 
 /**
- * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
- *
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
-int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int RpmCalculator::getRpm(void) {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED)
 		return mockRpm;
@@ -197,8 +197,9 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (index == 0) {
 		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 		RpmCalculator *rpmState = &engine->rpmCalculator;
-
-		bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		
+		// todo: do we really need to check it here? or just use the current 'state'?
+		bool hadRpmRecently = rpmState->checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		if (hadRpmRecently) {
 			efitime_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
@@ -258,7 +259,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
-		int rpm = ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+		int rpm = ENGINE(rpmCalculator.getRpm());
 		// todo: use event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
@@ -286,7 +287,7 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int rpm = engine->rpmCalculator.getRpm();
 	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 

@@ -70,14 +70,14 @@ public:
 	 */
 	bool isRunning();
 	/**
-	 * Check if there was a full shaft revolution within the last second
+	 * Check if there was a full shaft revolution within the last second (and returns true if so)
 	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
 	 */
-	void checkIfRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * This is a fast accessor method.
 	 */
-	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	int getRpm(void);
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
@@ -94,13 +94,13 @@ public:
 private:
 	void assignRpmValue(int value);
 	/**
-	 * Called from checkIfRunning() if no revolutions occurred.
+	 * Called from checkIfSpinning() if no revolutions occurred.
 	 */
-	void stopRunning(void);
+	void stopRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * Update engine state
 	 */
-	void updateState(void);
+	void updateState(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
@@ -126,7 +126,7 @@ private:
 /**
  * @brief   Current RPM
  */
-#define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)
+#define getRpmE(engine) (engine)->rpmCalculator.getRpm()
 
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
