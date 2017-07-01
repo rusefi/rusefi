@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "signal_executor.h"
 #include "speed_density.h"
+#include "fsio_impl.h"
 
 EXTERN_ENGINE;
 
@@ -33,6 +34,7 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	prepareFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	prepareTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
+	prepareFsio();
 }
 
 void initAlgo(Logging *sharedLogger) {

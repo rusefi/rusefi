@@ -25,5 +25,6 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_E
 void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void runFsio(void);
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void prepareFsio(void);
 
 #endif /* LE_FUNCTIONS_H_ */
