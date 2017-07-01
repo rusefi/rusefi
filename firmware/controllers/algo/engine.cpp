@@ -347,7 +347,7 @@ void Engine::checkShutdown() {
 	int rpm = rpmCalculator.rpmValue;
 
 	const float vBattThreshold = 5.0f;
-	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold) {
+	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold && stopEngineRequestTimeNt == 0) {
 		stopEngine();
 		// todo: add stepper motor parking
 	}
