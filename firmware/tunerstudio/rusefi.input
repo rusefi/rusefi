@@ -1302,6 +1302,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		panel = idleStepper,				East
 		
 	dialog = idleSettings, "", yAxis
+		field = "#Automatic Mode is still Alpha Version"
 		field = "Manual mode",							idleMode
 		field = "Cranking Idle Air",					crankingIACposition
 		field = "Auto target",							targetIdleRpm, { idleMode == 0}
