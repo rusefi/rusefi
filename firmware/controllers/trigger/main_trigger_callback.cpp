@@ -217,13 +217,14 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
+	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
 	 */
-	if (!isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
+	if (!isCranking && injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %fms", injectionDuration);
-	} else if (isCrankingR(rpm) && injectionDuration * getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
+	} else if (isCranking && injectionDuration * getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER_SUFFIX) > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		warning(CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION, "Too long cranking fuel injection %fms", injectionDuration);
 	}
 
