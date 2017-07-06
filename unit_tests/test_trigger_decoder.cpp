@@ -204,9 +204,12 @@ void testFordAspire(void) {
 	engineConfiguration->crankingChargeAngle = 65;
 	engineConfiguration->crankingTimingAngle = 31;
 
+	engine->rpmCalculator.rpmValue = 200;
 	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
+	engine->rpmCalculator.rpmValue = 2000;
 	assertEqualsM("running dwell", 4, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
 
+	engine->rpmCalculator.rpmValue = 6000;
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
