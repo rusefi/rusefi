@@ -31,16 +31,13 @@
 
 #ifdef __cplusplus
 
-/**
- * The engine state stored in RpmCalculator. Accessed via isStopped(), isCranking(), isRunning().
- */
 typedef enum {
 	/**
 	 * The engine is not spinning, RPM=0
 	 */
 	STOPPED,
 	/**
-	 * The engine is cranking (RPM < cranking.rpm)
+	 * The engine is cranking (0 < RPM < cranking.rpm)
 	 */
 	CRANKING,
 	/**
