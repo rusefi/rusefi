@@ -179,15 +179,14 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = ENGINE(rpmCalculator.rpmValue);
-
 	efitick_t nowNt = getTimeNowNt();
-	if (isCrankingR(rpm)) {
+	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		crankingTime = nowNt;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
 
+	int rpm = ENGINE(rpmCalculator.rpmValue);
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
 	engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
