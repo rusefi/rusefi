@@ -100,6 +100,9 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return result;
 }
 
+bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return false;
+}
 
 // private method
 void RpmCalculator::assignRpmValue(int value) {
@@ -143,6 +146,17 @@ float RpmCalculator::getRpmAcceleration() {
 	return 1.0 * previousRpmValue / rpmValue;
 }
 
+void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	revolutionCounterSinceStart = 0;
+	if (rpmValue != 0) {
+		rpmValue = 0;
+		scheduleMsg(logger,
+				"templog rpm=0 since not running [%x][%x] [%x][%x]",
+				(int) (notRunnintNow >> 32), (int) notRunnintNow,
+				(int) (notRunningPrev >> 32), (int) notRunningPrev);
+	}
+}
+
 /**
  * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
  *
@@ -156,14 +170,7 @@ int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return mockRpm;
 #endif
 	if (!isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		revolutionCounterSinceStart = 0;
-		if (rpmValue != 0) {
-			rpmValue = 0;
-			scheduleMsg(logger,
-					"templog rpm=0 since not running [%x][%x] [%x][%x]",
-					(int) (notRunnintNow >> 32), (int) notRunnintNow,
-					(int) (notRunningPrev >> 32), (int) notRunningPrev);
-		}
+		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	return rpmValue;
 }
