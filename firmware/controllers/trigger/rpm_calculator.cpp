@@ -62,6 +62,18 @@ RpmCalculator::RpmCalculator() {
 	oneDegreeUs = NAN;
 }
 
+bool RpmCalculator::isStopped() {
+	return false;
+}
+
+bool RpmCalculator::isCranking() {
+	return false;
+}
+
+//bool RpmCalculator::isRunning() {
+//	return false;
+//}
+
 /**
  * @return true if there was a full shaft revolution within the last second
  */
