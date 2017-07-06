@@ -565,6 +565,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
+	isTriggerConfigChanged = true;
 #endif /* EFI_PROD_CODE */
 }
 
