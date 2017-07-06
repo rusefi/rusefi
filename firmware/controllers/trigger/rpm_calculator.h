@@ -31,6 +31,21 @@
 
 #ifdef __cplusplus
 
+typedef enum {
+	/**
+	 * The engine is not spinning, RPM=0
+	 */
+	STOPPED,
+	/**
+	 * The engine is cranking (0 < RPM < cranking.rpm)
+	 */
+	CRANKING,
+	/**
+	 * The engine is running (RPM >= cranking.rpm)
+	 */
+	RUNNING,
+} engine_state_e;
+
 class Engine;
 
 class RpmCalculator {
