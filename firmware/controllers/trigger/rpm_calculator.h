@@ -57,11 +57,11 @@ public:
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)
 	 */
-	bool isStopped();
+	bool isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * Returns true if the engine is cranking
 	 */
-	bool isCranking();
+	bool isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * Returns true if the engine is running and not cranking
 	 */

@@ -62,12 +62,12 @@ RpmCalculator::RpmCalculator() {
 	oneDegreeUs = NAN;
 }
 
-bool RpmCalculator::isStopped() {
+bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return false;
 }
 
-bool RpmCalculator::isCranking() {
-	return false;
+bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return ((rpmValue) > 0 && (rpmValue) < CONFIG(cranking.rpm));
 }
 
 //bool RpmCalculator::isRunning() {
@@ -80,8 +80,7 @@ bool RpmCalculator::isCranking() {
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(stopEngineRequestTimeNt) != 0) {
-		if (nowNt
-				- ENGINE(stopEngineRequestTimeNt)< 3 * US2NT(US_PER_SECOND_LL)) {
+		if (nowNt - ENGINE(stopEngineRequestTimeNt)	< 3 * US2NT(US_PER_SECOND_LL)) {
 			return false;
 		}
 	}
