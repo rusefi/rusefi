@@ -55,6 +55,18 @@ public:
 #endif
 	RpmCalculator();
 	/**
+	 * Returns true if the engine is not spinning (RPM==0)
+	 */
+	bool isStopped();
+	/**
+	 * Returns true if the engine is cranking
+	 */
+	bool isCranking();
+	/**
+	 * Returns true if the engine is running and not cranking
+	 */
+//	bool isRunning();
+	/**
 	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
 	 */
 	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
