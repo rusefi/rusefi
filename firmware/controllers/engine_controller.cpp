@@ -259,7 +259,7 @@ static void periodicSlowCallback(Engine *engine) {
 	}
 #endif
 
-	if (!engine->rpmCalculator.isRunning()) {
+	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
 		writeToFlashIfPending();
 #endif
