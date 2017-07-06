@@ -70,6 +70,14 @@ public:
 	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
 	 */
 	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+	/**
+	 * Should be called once we've realized engine is not spinning any more.
+	 */
+	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+	bool checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
