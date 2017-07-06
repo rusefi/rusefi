@@ -221,7 +221,7 @@ void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #endif
 
-floatms_t getCrankingSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->useConstantDwellDuringCranking) {
 		return engineConfiguration->ignitionDwellForCrankingMs;
 	} else {
@@ -237,7 +237,7 @@ floatms_t getCrankingSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float dwellMs;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		dwellMs = getCrankingSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else {
 		efiAssert(!cisnan(rpm), "invalid rpm", NAN);
 
@@ -493,40 +493,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			maxTimingMap = maxF(maxTimingMap, config->ignitionTable[l][rpmIndex]);
 		}
 	}
-
-#if EFI_UNIT_TEST
-	floatms_t crankingDwell = getCrankingSparkDwell(CONFIG(cranking.rpm) PASS_ENGINE_PARAMETER_SUFFIX);
-
-	// dwell at cranking is constant angle or constant time, dwell at cranking threshold is the highest angle duration
-	// lower RPM angle duration goes up
-	angle_t maxDwellAngle = crankingDwell / getOneDegreeTimeMs(CONFIG(cranking.rpm));
-
-	printf("cranking angle %f\r\n", maxDwellAngle);
-
-	for (int i = 0;i<DWELL_CURVE_SIZE;i++) {
-		int rpm = (int)engineConfiguration->sparkDwellRpmBins[i];
-		floatms_t dwell = engineConfiguration->sparkDwellValues[i];
-		angle_t dwellAngle = dwell / getOneDegreeTimeMs(rpm);
-		printf("dwell angle %f at %d\r\n", dwellAngle, rpm);
-		maxDwellAngle = maxF(maxDwellAngle, dwellAngle);
-	}
-
-	angle_t maxIatAdvanceCorr = -720;
-	for (int r = 0;r<IGN_RPM_COUNT;r++) {
-		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
-			maxIatAdvanceCorr = maxF(maxIatAdvanceCorr, config->ignitionIatCorrTable[l][r]);
-		}
-	}
-
-	angle_t maxAdvance = -720;
-	for (int r = 0;r<IGN_RPM_COUNT;r++) {
-		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
-			maxAdvance = maxF(maxAdvance, config->ignitionTable[l][r]);
-		}
-	}
-
-	printf("max dwell angle %f/%d/%d\r\n", maxDwellAngle, (int)maxAdvance, (int)maxIatAdvanceCorr);
-#endif
 
 #if EFI_UNIT_TEST
 	printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
