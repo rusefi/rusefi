@@ -570,11 +570,11 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 }
 
 bool checkIfTriggerConfigChanged(void) {
-#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
-	return isTriggerConfigChanged;
-#else
+//#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+//	return isTriggerConfigChanged;
+//#else
 	return triggerVersion.isOld();
-#endif /* EFI_PROD_CODE */
+//#endif /* EFI_PROD_CODE */
 }
 
 void initTriggerCentral(Logging *sharedLogger) {
