@@ -132,7 +132,7 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float theoreticalInjectionLength;
-	bool isCranking = isCrankingR(rpm);
+	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	int numberOfCylinders = getNumberOfInjections(isCranking ?
 			engineConfiguration->crankingInjectionMode :
 			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);

@@ -103,7 +103,7 @@ static msg_t csThread(void) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	while (true) {
 		int rpm = getRpmE(engine);
-		int is_cranking = isCrankingR(rpm);
+		int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int is_running = rpm > 0 && !is_cranking;
 		if (is_running) {
 			// blinking while running
