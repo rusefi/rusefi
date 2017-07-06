@@ -121,7 +121,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 static void updateTriggerShapeIfNeeded(PwmConfig *state) {
-	if (checkIfTriggerConfigChanged()) {
+	if (emulatorConfigVersion.isOld()) {
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", emulatorConfigVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
