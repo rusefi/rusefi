@@ -63,7 +63,7 @@ RpmCalculator::RpmCalculator() {
 }
 
 bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return false;
+	return rpmValue == 0;
 }
 
 bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
