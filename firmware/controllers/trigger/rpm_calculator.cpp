@@ -98,7 +98,7 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool noEventsForTooLong = nowNt - lastRpmEventTimeNt < US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
+	bool noEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
 	if (noEventsForTooLong) {
 		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return false;
