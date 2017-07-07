@@ -44,7 +44,7 @@ typedef enum {
 	 * The engine is running (RPM >= cranking.rpm)
 	 */
 	RUNNING,
-} engine_state_e;
+} spinning_state_e;
 
 class Engine;
 
@@ -66,11 +66,6 @@ public:
 	 * Returns true if the engine is running and not cranking
 	 */
 	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-	/**
-	 * Should be called once we've realized engine is not spinning any more.
-	 */
-	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	bool checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -95,6 +90,11 @@ public:
 	volatile floatus_t oneDegreeUs;
 	volatile efitime_t lastRpmEventTimeNt;
 private:
+	/**
+	 * Should be called once we've realized engine is not spinning any more.
+	 */
+	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	void assignRpmValue(int value);
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
@@ -105,6 +105,8 @@ private:
 	 * Same as the above, but since the engine started spinning
 	 */
 	volatile uint32_t revolutionCounterSinceStart;
+
+	spinning_state_e state;
 };
 
 /**
