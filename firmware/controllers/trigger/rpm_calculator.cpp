@@ -103,7 +103,6 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
-// private method
 void RpmCalculator::assignRpmValue(int value) {
 	previousRpmValue = rpmValue;
 	rpmValue = value;
@@ -148,9 +147,10 @@ float RpmCalculator::getRpmAcceleration() {
 void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
-		rpmValue = 0;
+		assignRpmValue(0);
 		scheduleMsg(logger, "engine stopped");
 	}
+	state = STOPPED;
 }
 
 /**
