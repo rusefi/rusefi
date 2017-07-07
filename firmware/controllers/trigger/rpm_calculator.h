@@ -52,7 +52,7 @@ class RpmCalculator {
 public:
 #if !EFI_PROD_CODE
 	int mockRpm;
-#endif
+#endif /* EFI_PROD_CODE */
 	RpmCalculator();
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)

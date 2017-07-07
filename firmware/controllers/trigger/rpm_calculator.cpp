@@ -47,7 +47,7 @@ int revolutionCounterSinceBootForUnitTest = 0;
 RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
-#endif
+#endif /* EFI_PROD_CODE */
 	rpmValue = 0;
 	assignRpmValue(0);
 
@@ -166,9 +166,10 @@ void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
-	if (mockRpm != MOCK_UNDEFINED)
-	return mockRpm;
-#endif
+	if (mockRpm != MOCK_UNDEFINED) {
+		return mockRpm;
+	}
+#endif /* EFI_PROD_CODE */
 	if (!isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
