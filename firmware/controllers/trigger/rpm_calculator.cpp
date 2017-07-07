@@ -61,7 +61,7 @@ RpmCalculator::RpmCalculator() {
 }
 
 bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return rpmValue == 0;
+	return state == STOPPED;
 }
 
 bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -72,7 +72,7 @@ bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return true if there was a full shaft revolution within the last second
  */
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return rpmValue >= CONFIG(cranking.rpm);
+	return state == RUNNING;
 }
 
 bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -121,6 +121,13 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		 * #275 cranking could be improved
 		 */
 		ENGINE(periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE));
+	}
+	if (rpmValue == 0) {
+		state = STOPPED;
+	} else if (rpmValue < CONFIG(cranking.rpm)) {
+		state = CRANKING;
+	} else {
+		state = RUNNING;
 	}
 }
 
