@@ -202,7 +202,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 		RpmCalculator *rpmState = &engine->rpmCalculator;
 
-		bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool hadRpmRecently = rpmState->checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		if (hadRpmRecently) {
 			efitime_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
