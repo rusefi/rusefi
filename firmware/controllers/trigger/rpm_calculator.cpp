@@ -68,14 +68,11 @@ bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return ((rpmValue) > 0 && (rpmValue) < CONFIG(cranking.rpm));
 }
 
-//bool RpmCalculator::isRunning() {
-//	return false;
-//}
-
 /**
  * @return true if there was a full shaft revolution within the last second
  */
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+//	return rpmValue >= CONFIG(cranking.rpm);
 	return checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -170,9 +167,6 @@ int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return mockRpm;
 	}
 #endif /* EFI_PROD_CODE */
-	if (!isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
 	return rpmValue;
 }
 
