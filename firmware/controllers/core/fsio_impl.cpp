@@ -377,6 +377,9 @@ void runFsio(void) {
 		enginePins.mainRelay.setValue(true);
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
+	/**
+	 * o2 heater is off during cranking
+	 */
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
 	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
