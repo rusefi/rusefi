@@ -72,8 +72,7 @@ bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return true if there was a full shaft revolution within the last second
  */
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-//	return rpmValue >= CONFIG(cranking.rpm);
-	return checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+	return rpmValue >= CONFIG(cranking.rpm);
 }
 
 bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
