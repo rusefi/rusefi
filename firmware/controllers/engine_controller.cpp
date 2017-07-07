@@ -262,7 +262,7 @@ static void periodicSlowCallback(Engine *engine) {
 	/**
 	 * Update engine RPM state if needed (check timeouts).
 	 */
-	 engine->rpmCalculator.checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->rpmCalculator.checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
