@@ -38,8 +38,6 @@ extern WaveChart waveChart;
 EXTERN_ENGINE
 ;
 
-efitime_t notRunnintNow;
-efitime_t notRunningPrev;
 extern bool hasFirmwareErrorFlag;
 
 static Logging * logger;
@@ -78,30 +76,35 @@ bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return true if there was a full shaft revolution within the last second
  */
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (lastRpmEventTimeNt == 0) {
+		// here we assume 64 bit time does not overflow
+		// zero value is the default meaning no RPM events since reboot
+		return false;
+	}
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(stopEngineRequestTimeNt) != 0) {
 		if (nowNt - ENGINE(stopEngineRequestTimeNt)	< 3 * US2NT(US_PER_SECOND_LL)) {
+			// 'stopengine' command implementation
+			setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 			return false;
 		}
 	}
-	if (lastRpmEventTimeNt == 0) {
-		// here we assume 64 bit time does not overflow, zero value is the default meaning no events so far
-		return false;
-	}
+
 	/**
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool result = nowNt - lastRpmEventTimeNt < US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
-	if (!result) {
-		notRunnintNow = nowNt;
-		notRunningPrev = lastRpmEventTimeNt;
+	bool noEventsForTooLong = nowNt - lastRpmEventTimeNt < US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
+	if (noEventsForTooLong) {
+		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return false;
 	}
-	return result;
-}
 
-bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return false;
+	return true;
 }
 
 // private method
@@ -150,10 +153,7 @@ void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
 		rpmValue = 0;
-		scheduleMsg(logger,
-				"templog rpm=0 since not running [%x][%x] [%x][%x]",
-				(int) (notRunnintNow >> 32), (int) notRunnintNow,
-				(int) (notRunningPrev >> 32), (int) notRunningPrev);
+		scheduleMsg(logger, "engine stopped");
 	}
 }
 
