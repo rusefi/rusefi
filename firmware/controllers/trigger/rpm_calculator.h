@@ -65,10 +65,6 @@ public:
 	/**
 	 * Returns true if the engine is running and not cranking
 	 */
-//	bool isRunning();
-	/**
-	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
-	 */
 	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
@@ -116,7 +112,6 @@ private:
  */
 #define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)
 
-bool isCrankingOrInitialE(Engine *engine);
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
  * @brief   Initialize RPM calculator

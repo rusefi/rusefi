@@ -169,14 +169,6 @@ int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return rpmValue;
 }
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-bool isCrankingOrInitialE(Engine *engine) {
-	int rpm = getRpmE(engine);
-	return ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE) || (rpm == 0);
-}
-
-#endif
-
 /**
  * @brief Shaft position callback used by RPM calculation logic.
  *
