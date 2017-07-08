@@ -227,7 +227,7 @@ static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		// technically this could be implemented via interpolate2d
 		float angle = engineConfiguration->crankingChargeAngle;
-		return getOneDegreeTimeMs(engine->rpmCalculator.rpmValue) * angle;
+		return getOneDegreeTimeMs(GET_RPM()) * angle;
 	}
 }
 

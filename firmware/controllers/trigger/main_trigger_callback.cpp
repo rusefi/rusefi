@@ -328,7 +328,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
-	if (ENGINE(rpmCalculator.rpmValue) < CONFIG(fuelClosedLoopRpmThreshold) ||
+	if (GET_RPM() < CONFIG(fuelClosedLoopRpmThreshold) ||
 			ENGINE(sensors.clt) < CONFIG(fuelClosedLoopCltThreshold) ||
 			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < boardConfiguration->fuelClosedLoopAfrLowThreshold ||
@@ -432,7 +432,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		return;
 	}
 
-	int rpm = ENGINE(rpmCalculator.rpmValue);
+	int rpm = GET_RPM();
 	if (rpm == 0) {
 		// this happens while we just start cranking
 		// todo: check for 'trigger->is_synchnonized?'
