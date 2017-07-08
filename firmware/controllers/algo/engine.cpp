@@ -186,7 +186,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		timeSinceCranking = nowNt - crankingTime;
 	}
 
-	int rpm = ENGINE(rpmCalculator.rpmValue);
+	int rpm = GET_RPM();
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
 	engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -68,7 +68,7 @@ static msg_t AltCtrlThread(int param) {
 
 
 		// todo: migrate this to FSIO
-		bool alternatorShouldBeEnabledAtCurrentRpm = engine->rpmCalculator.rpmValue > engineConfiguration->cranking.rpm;
+		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
 		engine->isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
 
 		if (!engine->isAlternatorControlEnabled) {

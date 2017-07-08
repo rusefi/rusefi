@@ -48,6 +48,8 @@ typedef enum {
 
 class Engine;
 
+#define GET_RPM() ( ENGINE(rpmCalculator.rpmValue) )
+
 class RpmCalculator {
 public:
 #if !EFI_PROD_CODE

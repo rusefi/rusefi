@@ -307,7 +307,7 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
 	if (!value /* always allow turning solenoid off */ ||
-			(engine->rpmCalculator.rpmValue != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
+			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			) {
 		output->setValue(value);
 	}
