@@ -50,6 +50,7 @@ RpmCalculator::RpmCalculator() {
 #endif /* EFI_PROD_CODE */
 	rpmValue = 0;
 	assignRpmValue(0);
+	state = STOPPED;
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);

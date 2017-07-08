@@ -104,7 +104,7 @@ static msg_t csThread(void) {
 	while (true) {
 		int rpm = getRpmE(engine);
 		int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-		int is_running = rpm > 0 && !is_cranking;
+		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		if (is_running) {
 			// blinking while running
 			enginePins.runningPin.setValue(0);
