@@ -293,7 +293,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		InjectorOutputPin *output = event->outputs[0];
 	#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 		printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-				(int)MS2US(getCrankshaftRevolutionTimeMs(ENGINE(rpmCalculator).getRpm())));
+				(int)MS2US(getCrankshaftRevolutionTimeMs(ENGINE(rpmCalculator.rpmValue))));
 	#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 
@@ -523,7 +523,7 @@ static void showTriggerHistogram(void) {
 
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	int rpm = engine->rpmCalculator.getRpm();
+	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %f", rpm, el);
 	scheduleMsg(logger, "fuel %fms timing %f", getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX), engine->engineState.timingAdvance);

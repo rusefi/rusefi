@@ -81,6 +81,12 @@ public:
 	uint32_t getRevolutionCounterSinceStart(void);
 	float getRpmAcceleration();
 	/**
+	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
+	 * Zero if engine is not running
+	 */
+	volatile int rpmValue;
+	int previousRpmValue;
+	/**
 	 * This is a performance optimization: let's pre-calulate this each time RPM changes
 	 */
 	volatile floatus_t oneDegreeUs;
@@ -92,15 +98,6 @@ private:
 	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	void assignRpmValue(int value);
-	/**
-	 * Called from checkIfSpinning() if no revolutions occurred.
-	 */
-	void stopRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	/**
-	 * Update engine state
-	 */
-	void updateState(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
@@ -117,7 +114,7 @@ private:
 /**
  * @brief   Current RPM
  */
-#define getRpmE(engine) (engine)->rpmCalculator.getRpm()
+#define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)
 
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**

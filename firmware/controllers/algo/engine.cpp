@@ -62,7 +62,7 @@ int MockAdcState::getMockAdcValue(int hwChannel) {
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.getRpm();
+	int rpm = rpmCalculator.rpmValue;
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? boardConfiguration->sensorChartMode : SC_OFF;
 
@@ -343,7 +343,7 @@ void Engine::watchdog() {
 
 void Engine::checkShutdown() {
 #if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
-	int rpm = rpmCalculator.getRpm();
+	int rpm = rpmCalculator.rpmValue;
 
 	const float vBattThreshold = 5.0f;
 	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold && stopEngineRequestTimeNt == 0) {
@@ -377,7 +377,7 @@ injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNAT
  * so that trigger event handler/IO scheduler tasks are faster.
  */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.getRpm();
+	int rpm = rpmCalculator.rpmValue;
 
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
@@ -426,7 +426,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 }
 
 void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engine->rpmCalculator.getRpm() == 0) {
+	if (engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) == 0) {
 		bool isTpsAbove50 = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {

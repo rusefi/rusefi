@@ -116,7 +116,6 @@ void RpmCalculator::assignRpmValue(int value) {
 
 void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	assignRpmValue(value);
-	updateState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (previousRpmValue == 0 && rpmValue > 0) {
 		/**
 		 * this would make sure that we have good numbers for first cranking revolution
@@ -163,11 +162,13 @@ void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 /**
+ * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
+ *
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
-int RpmCalculator::getRpm(void) {
+int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED) {
 		return mockRpm;
@@ -254,7 +255,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
-		int rpm = ENGINE(rpmCalculator.getRpm());
+		int rpm = ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 		// todo: use event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
@@ -282,7 +283,7 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	int rpm = engine->rpmCalculator.getRpm();
+	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 

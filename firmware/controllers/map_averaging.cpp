@@ -208,7 +208,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		return;
 
 	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
-	int rpm = ENGINE(rpmCalculator).getRpm();
+	int rpm = ENGINE(rpmCalculator.rpmValue);
 	if (!isValidRpm(rpm)) {
 		return;
 	}
@@ -269,7 +269,7 @@ float getMap(void) {
 	}
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (!isValidRpm(engine->rpmCalculator.getRpm()))
+	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
 	return validateMap(currentPressure);
 #else
