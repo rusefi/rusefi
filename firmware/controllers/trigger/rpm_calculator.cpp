@@ -65,7 +65,7 @@ bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return ((rpmValue) > 0 && (rpmValue) < CONFIG(cranking.rpm));
+	return state == CRANKING;
 }
 
 /**
