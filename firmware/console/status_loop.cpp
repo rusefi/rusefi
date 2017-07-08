@@ -522,7 +522,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	if (!engine->rpmCalculator.isStopped()) {
+	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float iatCorrection = engine->engineState.iatFuelCorrection;
 		float cltCorrection = engine->engineState.cltFuelCorrection;
 		floatms_t injectorLag = engine->engineState.injectorLag;

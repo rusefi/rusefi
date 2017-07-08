@@ -206,12 +206,12 @@ void testFordAspire(void) {
 	engineConfiguration->crankingTimingAngle = 31;
 
 	engine->rpmCalculator.setRpmValue(200 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(engine->rpmCalculator.getRpm() PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
 	engine->rpmCalculator.setRpmValue(2000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("running dwell", 4, getSparkDwell(engine->rpmCalculator.getRpm() PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("running dwell", 4, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
 
 	engine->rpmCalculator.setRpmValue(6000 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(engine->rpmCalculator.getRpm() PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {

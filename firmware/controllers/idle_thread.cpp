@@ -208,7 +208,7 @@ static msg_t ivThread(int param) {
 
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
-		} else if (!engine->rpmCalculator.isRunning()) {
+		} else if (!engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			// during cranking it's always manual mode, PID would make no sence during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
 		} else if (engineConfiguration->idleMode == IM_MANUAL) {
@@ -307,7 +307,7 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
 	if (!value /* always allow turning solenoid off */ ||
-			(engine->rpmCalculator.getRpm() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
+			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			) {
 		output->setValue(value);
 	}

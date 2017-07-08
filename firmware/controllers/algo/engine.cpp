@@ -179,15 +179,14 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = ENGINE(rpmCalculator).getRpm();
-
 	efitick_t nowNt = getTimeNowNt();
-	if (ENGINE(rpmCalculator).isCranking()) {
+	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		crankingTime = nowNt;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
 
+	int rpm = GET_RPM();
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
 	engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -369,7 +368,8 @@ bool Engine::isInShutdownMode() {
 }
 
 injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return rpmCalculator.isCranking() ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
+	int rpm = rpmCalculator.rpmValue;
+	return rpmCalculator.isCranking(PASS_ENGINE_PARAMETER_SIGNATURE) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 }
 
 /**

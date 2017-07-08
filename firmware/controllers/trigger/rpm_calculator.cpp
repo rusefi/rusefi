@@ -38,8 +38,6 @@ extern WaveChart waveChart;
 EXTERN_ENGINE
 ;
 
-efitime_t notRunnintNow;
-efitime_t notRunningPrev;
 extern bool hasFirmwareErrorFlag;
 
 static Logging * logger;
@@ -49,7 +47,7 @@ int revolutionCounterSinceBootForUnitTest = 0;
 RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
-#endif
+#endif /* EFI_PROD_CODE */
 	rpmValue = 0;
 	assignRpmValue(0);
 	state = STOPPED;
@@ -63,68 +61,49 @@ RpmCalculator::RpmCalculator() {
 	oneDegreeUs = NAN;
 }
 
-bool RpmCalculator::isStopped() {
-	return (state == STOPPED);
+bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return state == STOPPED;
 }
 
-bool RpmCalculator::isCranking() {
-	return (state == CRANKING);
+bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return state == CRANKING;
 }
 
-bool RpmCalculator::isRunning() {
-	return (state == RUNNING);
+/**
+ * @return true if there was a full shaft revolution within the last second
+ */
+bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return state == RUNNING;
 }
 
 bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (lastRpmEventTimeNt == 0) {
+		// here we assume 64 bit time does not overflow
+		// zero value is the default meaning no RPM events since reboot
+		return false;
+	}
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(stopEngineRequestTimeNt) != 0) {
-		if (nowNt - ENGINE(stopEngineRequestTimeNt) < 3 * US2NT(US_PER_SECOND_LL)) {
-			stopRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		if (nowNt - ENGINE(stopEngineRequestTimeNt)	< 3 * US2NT(US_PER_SECOND_LL)) {
+			// 'stopengine' command implementation
+			setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 			return false;
 		}
 	}
-	if (lastRpmEventTimeNt == 0) {
-		// here we assume 64 bit time does not overflow, zero value is the default meaning no events so far
-		stopRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
-		return false;
-	}
+
 	/**
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool result = nowNt - lastRpmEventTimeNt < US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
-	if (!result) {
-		notRunnintNow = nowNt;
-		notRunningPrev = lastRpmEventTimeNt;
-		stopRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool noEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
+	if (noEventsForTooLong) {
+		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return false;
 	}
-	return result;
+
+	return true;
 }
 
-void RpmCalculator::stopRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	revolutionCounterSinceStart = 0;
-	if (rpmValue != 0) {
-		setRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleMsg(logger,
-				"templog rpm=0 since not running [%x][%x] [%x][%x]",
-				(int) (notRunnintNow >> 32), (int) notRunnintNow,
-				(int) (notRunningPrev >> 32), (int) notRunningPrev);
-	}
-}
-
-void RpmCalculator::updateState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// todo: add cranking hysteresis
-	if (rpmValue == 0)
-    	state = STOPPED;
-	else if (rpmValue != NOISY_RPM) {
-    	if (rpmValue < CONFIG(cranking.rpm))
-	        state = CRANKING;
-    	else
-        	state = RUNNING;
-	}
-}
-
-// private method
 void RpmCalculator::assignRpmValue(int value) {
 	previousRpmValue = rpmValue;
 	rpmValue = value;
@@ -144,6 +123,13 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		 * #275 cranking could be improved
 		 */
 		ENGINE(periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE));
+	}
+	if (rpmValue == 0) {
+		state = STOPPED;
+	} else if (rpmValue < CONFIG(cranking.rpm)) {
+		state = CRANKING;
+	} else {
+		state = RUNNING;
 	}
 }
 
@@ -167,6 +153,15 @@ float RpmCalculator::getRpmAcceleration() {
 	return 1.0 * previousRpmValue / rpmValue;
 }
 
+void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	revolutionCounterSinceStart = 0;
+	if (rpmValue != 0) {
+		assignRpmValue(0);
+		scheduleMsg(logger, "engine stopped");
+	}
+	state = STOPPED;
+}
+
 /**
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
@@ -174,9 +169,10 @@ float RpmCalculator::getRpmAcceleration() {
 // todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::getRpm(void) {
 #if !EFI_PROD_CODE
-	if (mockRpm != MOCK_UNDEFINED)
+	if (mockRpm != MOCK_UNDEFINED) {
 		return mockRpm;
-#endif
+	}
+#endif /* EFI_PROD_CODE */
 	return rpmValue;
 }
 
@@ -197,8 +193,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (index == 0) {
 		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 		RpmCalculator *rpmState = &engine->rpmCalculator;
-		
-		// todo: do we really need to check it here? or just use the current 'state'?
+
 		bool hadRpmRecently = rpmState->checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		if (hadRpmRecently) {

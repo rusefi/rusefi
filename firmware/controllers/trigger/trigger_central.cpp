@@ -80,6 +80,9 @@ uint32_t triggerMaxDuration = 0;
 
 static bool isInsideTriggerHandler = false;
 
+/**
+ * true if most recent configuration change has changed any of the trigger settings
+ */
 static bool isTriggerConfigChanged = false;
 
 efitick_t previousVvtCamTime = 0;
@@ -568,9 +571,12 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 #endif /* EFI_PROD_CODE */
 }
 
+/**
+ * @returns true if configuration just changed, and if that change has affected trigger
+ */
 bool checkIfTriggerConfigChanged(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
-	return isTriggerConfigChanged;
+	return triggerVersion.isOld() && isTriggerConfigChanged;
 #else
 	return triggerVersion.isOld();
 #endif /* EFI_PROD_CODE */

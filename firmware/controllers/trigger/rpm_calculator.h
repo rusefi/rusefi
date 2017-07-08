@@ -31,53 +31,47 @@
 
 #ifdef __cplusplus
 
-/**
- * The engine state stored in RpmCalculator. Accessed via isStopped(), isCranking(), isRunning().
- */
 typedef enum {
 	/**
 	 * The engine is not spinning, RPM=0
 	 */
 	STOPPED,
 	/**
-	 * The engine is cranking (RPM < cranking.rpm)
+	 * The engine is cranking (0 < RPM < cranking.rpm)
 	 */
 	CRANKING,
 	/**
 	 * The engine is running (RPM >= cranking.rpm)
 	 */
 	RUNNING,
-} engine_state_e;
+} spinning_state_e;
 
 class Engine;
+
+#define GET_RPM() ( ENGINE(rpmCalculator.rpmValue) )
 
 class RpmCalculator {
 public:
 #if !EFI_PROD_CODE
 	int mockRpm;
-#endif
+#endif /* EFI_PROD_CODE */
 	RpmCalculator();
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)
 	 */
-	bool isStopped();
+	bool isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * Returns true if the engine is cranking
 	 */
-	bool isCranking();
+	bool isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * Returns true if the engine is running and not cranking
 	 */
-	bool isRunning();
-	/**
-	 * Check if there was a full shaft revolution within the last second (and returns true if so)
-	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
-	 */
+	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	bool checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	/**
-	 * This is a fast accessor method.
-	 */
-	int getRpm(void);
+
+	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
@@ -92,6 +86,11 @@ public:
 	volatile floatus_t oneDegreeUs;
 	volatile efitime_t lastRpmEventTimeNt;
 private:
+	/**
+	 * Should be called once we've realized engine is not spinning any more.
+	 */
+	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	void assignRpmValue(int value);
 	/**
 	 * Called from checkIfSpinning() if no revolutions occurred.
@@ -111,16 +110,8 @@ private:
 	 * Same as the above, but since the engine started spinning
 	 */
 	volatile uint32_t revolutionCounterSinceStart;
-	/**
-	 * Zero if engine is not running
-	 */
-	volatile int rpmValue;
-	int previousRpmValue;
 
-	/**
-	 * Current engine state
-	 */
-	engine_state_e state;
+	spinning_state_e state;
 };
 
 /**
