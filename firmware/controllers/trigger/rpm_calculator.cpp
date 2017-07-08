@@ -125,10 +125,10 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	if (rpmValue == 0) {
 		state = STOPPED;
-	} else if (rpmValue < CONFIG(cranking.rpm)) {
-		state = CRANKING;
-	} else {
+	} else if (rpmValue >= CONFIG(cranking.rpm)) {
 		state = RUNNING;
+	} else if (state == STOPPED) {
+		state = CRANKING;
 	}
 }
 
