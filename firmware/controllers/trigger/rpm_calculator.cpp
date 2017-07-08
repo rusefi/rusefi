@@ -128,6 +128,10 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else if (rpmValue >= CONFIG(cranking.rpm)) {
 		state = RUNNING;
 	} else if (state == STOPPED) {
+		/**
+		 * We are here if RPM is above zero but we have not seen running RPM yet.
+		 * This gives us cranking hysteresis - a drop of RPM during running is still running, not cranking.
+		 */
 		state = CRANKING;
 	}
 }

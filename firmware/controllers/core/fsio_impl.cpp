@@ -379,6 +379,8 @@ void runFsio(void) {
 
 	/**
 	 * o2 heater is off during cranking
+	 * todo: convert to FSIO?
+	 * open question if heater should be ON during cranking
 	 */
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
