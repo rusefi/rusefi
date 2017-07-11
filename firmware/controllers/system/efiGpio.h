@@ -27,15 +27,26 @@ void turnAllPinsOff(void);
 class OutputPin {
 public:
 	OutputPin();
+	/**
+	 * initializes pin & registers it in pin repository
+	 */
+	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+	/**
+	 * same as above, with DEFAULT_OUTPUT mode
+	 */
+	void initPin(const char *msg, brain_pin_e brainPin);
+	/**
+	 * disassosiates pin from this output and un-registers it in pin repository
+	 */
+	void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin);
+
+
 	bool isInitialized();
+	bool isPinAssigned();
+
 	void setValue(int logicValue);
 	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool getLogicValue();
-
-	bool isPinAssigned();
-	void initPin(const char *msg, brain_pin_e brainPin);
-	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);
-	void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin);
 
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
