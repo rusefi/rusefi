@@ -295,12 +295,6 @@ bool OutputPin::getLogicValue() {
 	return currentLogicValue;
 }
 
-void OutputPin::unregister() {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
-	port = NULL;
-#endif /* EFI_PROD_CODE */
-}
-
 void OutputPin::setDefaultPinState(pin_output_mode_e *outputMode) {
 	pin_output_mode_e mode = *outputMode;
 	assertOMode(mode);

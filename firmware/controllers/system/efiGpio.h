@@ -31,7 +31,7 @@ public:
 	void setValue(int logicValue);
 	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool getLogicValue();
-	void unregister();
+
 	bool isPinAssigned();
 	void initPin(const char *msg, brain_pin_e brainPin);
 	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);

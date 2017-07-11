@@ -228,7 +228,9 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
 		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
 		unmarkPin(oldPin);
-		unregister();
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+		port = NULL;
+#endif /* EFI_PROD_CODE */
 	}
 }
 
