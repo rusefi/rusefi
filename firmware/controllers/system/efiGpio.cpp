@@ -272,7 +272,7 @@ bool OutputPin::isInitialized() {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	return port != NULL;
 #else /* EFI_GPIO_HARDWARE */
-	return false;
+	return true;
 #endif /* EFI_GPIO_HARDWARE */
 }
 
