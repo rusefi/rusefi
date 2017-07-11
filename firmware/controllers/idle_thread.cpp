@@ -286,6 +286,7 @@ void setIdleDT(int value) {
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
+	idleSolenoid.setFrequency(boardConfiguration->idle.solenoidFrequency);
 }
 
 void startIdleBench(void) {

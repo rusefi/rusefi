@@ -327,6 +327,7 @@ void setEngineType(int value) {
 
 static void setIdleSolenoidFrequency(int value) {
 	boardConfiguration->idle.solenoidFrequency = value;
+	incrementGlobalConfigurationVersion();
 }
 
 static void setInjectionPinMode(int value) {

@@ -9,6 +9,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 07/09/2017    | r14473    | improvement: IAC solenoid frequencty changeable on the fly |
 | 06/19/2017    | r14393    | bugfix: pinMode, milMode |
 | 05/27/2017    | r14221    | improvement: ochGetCommand to support offset and count |
 | 05/05/2017    | r13974    | bugfix #404: 36/1 FATAL error: angle range trgSync |
