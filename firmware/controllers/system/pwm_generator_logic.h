@@ -50,6 +50,7 @@ public:
 			pwm_cycle_callback *cycleCallback,
 			pwm_gen_callback *callback);
 
+	void setFrequency(float frequency);
 
 	void handleCycleStart();
 

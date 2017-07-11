@@ -75,6 +75,13 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	return NT2US(state->safe.startNt + timeToSwitchNt);
 }
 
+void PwmConfig::setFrequency(float frequency) {
+	/**
+	 * see #handleCycleStart()
+	 */
+	periodNt = US2NT(frequency2periodUs(frequency));
+}
+
 void PwmConfig::handleCycleStart() {
 	if (safe.phaseIndex == 0) {
 		if (cycleCallback != NULL) {
