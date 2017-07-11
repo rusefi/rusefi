@@ -177,7 +177,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	InjectorOutputPin *output = &enginePins.injectors[index];
 
-	if (!isSimultanious && !isPinAssigned(output)) {
+	if (!isSimultanious && !output->isInitialized()) {
 		// todo: extract method for this index math
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}

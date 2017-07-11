@@ -211,11 +211,10 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 }
 
 #define assertPinAssigned(output) { \
-		if (!isPinAssigned(output)) { \
+		if (!output->isInitialized()) { \
 			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->name); \
 		} \
 }
-
 
 void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: clean up this implementation? does not look too nice as is.
