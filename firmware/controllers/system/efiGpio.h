@@ -36,16 +36,13 @@ public:
 	 */
 	void initPin(const char *msg, brain_pin_e brainPin);
 	/**
-	 * disassosiates pin from this output and un-registers it in pin repository
+	 * dissociates pin from this output and un-registers it in pin repository
 	 */
 	void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin);
 
-
 	bool isInitialized();
-	bool isPinAssigned();
 
 	void setValue(int logicValue);
-	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool getLogicValue();
 
 
@@ -54,12 +51,16 @@ public:
 	uint8_t pin;
 #endif /* EFI_GPIO_HARDWARE */
 	int8_t currentLogicValue;
-	// 4 byte pointer is a bit of a memory waste here
-	pin_output_mode_e *modePtr;
 	/**
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
 	 */
+private:
+	// todo: inline this method?
+	void setDefaultPinState(pin_output_mode_e *defaultState);
+
+	// 4 byte pointer is a bit of a memory waste here
+	pin_output_mode_e *modePtr;
 };
 
 
@@ -154,12 +155,6 @@ public:
 
 #define getElectricalValue(logicalValue, mode) \
 	(logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode))
-
-#if EFI_PROD_CODE
- #define isPinAssigned(output) ((output)->port != GPIO_NULL)
-#else /* EFI_PROD_CODE */
- #define isPinAssigned(output) (true)
-#endif /* EFI_PROD_CODE */
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
