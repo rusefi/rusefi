@@ -210,6 +210,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	}
 }
 
+// todo: make this a class method?
 #define assertPinAssigned(output) { \
 		if (!output->isInitialized()) { \
 			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->name); \

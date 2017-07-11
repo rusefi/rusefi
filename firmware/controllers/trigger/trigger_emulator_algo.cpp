@@ -109,8 +109,8 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		triggerSignal.periodNt = NAN;
 	} else {
 		float rpmM = getRpmMultiplier(engineConfiguration->operationMode);
-		float gRpm = rpm * rpmM / 60.0; // per minute converted to per second
-		triggerSignal.periodNt = US2NT(frequency2periodUs(gRpm));
+		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
+		triggerSignal.setFrequency(rPerSecond);
 	}
 #if EFI_ENGINE_SNIFFER
 	if (engine->isTestMode)
