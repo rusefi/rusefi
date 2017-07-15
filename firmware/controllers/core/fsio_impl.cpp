@@ -15,6 +15,10 @@
 #include "rpm_calculator.h"
 #include "efiGpio.h"
 
+/**
+ * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
+ *
+ */
 #define NO_PWM 0
 
 fsio8_Map3D_f32t fsioTable1("fsio#1");
@@ -186,7 +190,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 /**
  * index is between zero and LE_COMMAND_LENGTH-1
  */
-void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	boardConfiguration->fsioPins[index] = pin;
 	int len = strlen(exp);
 	if (len >= LE_COMMAND_LENGTH) {
