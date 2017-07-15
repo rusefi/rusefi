@@ -197,7 +197,7 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency D
 		return;
 	}
 	strcpy(config->fsioFormulas[index], exp);
-	boardConfiguration->fsioFrequency[index] = freq;
+	boardConfiguration->fsioFrequency[index] = pwmFrequency;
 }
 
 void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_SUFFIX) {
