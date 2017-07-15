@@ -27,7 +27,19 @@ MAIN_RELAY_LOGIC=(time_since_boot < 2) | (vbatt > 5) | in_shutdown
 RPM_ABOVE_USER_SETTING_1=rpm > fsio_setting(1)
 
 # could be used for simple variable intake geometry setups or warning light or starter block
+RPM_ABOVE_USER_SETTING_1=rpm > fsio_setting(1)
+
 RPM_ABOVE_USER_SETTING_2=rpm > fsio_setting(2)
+
+RPM_ABOVE_5500_ON_OFF=rpm > 5500
+
+RPM_ABOVE_6000_ON_OFF=rpm > 6000
+
+RPM_ABOVE_1000_SOLENOID_70_DUTY=(rpm > 1000) * 0.7
+
+RPM_ABOVE_2000_SOLENOID_50_DUTY=(rpm > 2000) * 0.5
+
+RPM_ABOVE_6000_SOLENOID_80_DUTY=(rpm > 6000) * 0.8
 
 RPM_BELOW_USER_SETTING_1=rpm < fsio_setting(1)
 

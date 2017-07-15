@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2017-06-25_01_22_09
+// on 2017-07-14_22_00_24
 //
 //
 // in this file we define system FSIO expressions
@@ -38,8 +38,26 @@
 #define RPM_ABOVE_USER_SETTING_1 "rpm 1 fsio_setting >"
 // could be used for simple variable intake geometry setups or warning light or starter block
 
+// Human-readable: rpm > fsio_setting(1)
+#define RPM_ABOVE_USER_SETTING_1 "rpm 1 fsio_setting >"
+
 // Human-readable: rpm > fsio_setting(2)
 #define RPM_ABOVE_USER_SETTING_2 "rpm 2 fsio_setting >"
+
+// Human-readable: rpm > 5500
+#define RPM_ABOVE_5500_ON_OFF "rpm 5500 >"
+
+// Human-readable: rpm > 6000
+#define RPM_ABOVE_6000_ON_OFF "rpm 6000 >"
+
+// Human-readable: (rpm > 1000) * 0.7
+#define RPM_ABOVE_1000_SOLENOID_70_DUTY "rpm 1000 > 0.7 *"
+
+// Human-readable: (rpm > 2000) * 0.5
+#define RPM_ABOVE_2000_SOLENOID_50_DUTY "rpm 2000 > 0.5 *"
+
+// Human-readable: (rpm > 6000) * 0.8
+#define RPM_ABOVE_6000_SOLENOID_80_DUTY "rpm 6000 > 0.8 *"
 
 // Human-readable: rpm < fsio_setting(1)
 #define RPM_BELOW_USER_SETTING_1 "rpm 1 fsio_setting <"

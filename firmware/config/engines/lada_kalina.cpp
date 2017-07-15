@@ -56,6 +56,6 @@ void setLadaKalina(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->bc.fsio_setting[0] = 500;
 	// set_rpn_expression 1 "rpm 0 fsio_setting <"
-	setFsioExt(0, GPIOE_3, "rpm 1 fsio_setting <", 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExt(0, GPIOE_3, RPM_BELOW_USER_SETTING_1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 }

@@ -232,7 +232,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsioExt(0, GPIOE_3, "rpm 1 fsio_setting >", 150 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	// warning light
