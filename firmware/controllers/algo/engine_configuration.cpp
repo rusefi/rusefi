@@ -566,6 +566,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->mapMinBufferLength = 1;
 
+	engineConfiguration->iacRPMErrorThreshold = 0;
+	engineConfiguration->startOfCrankingPrimingPulse = 0;
+
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 

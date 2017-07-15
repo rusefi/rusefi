@@ -1114,8 +1114,10 @@
 #define targetVBatt_offset_hex 86c
 #define alternatorOffAboveTps_offset 2160
 #define alternatorOffAboveTps_offset_hex 870
-#define unusedalternatorControl_offset 2164
-#define unusedalternatorControl_offset_hex 874
+#define startOfCrankingPrimingPulse_offset 2164
+#define startOfCrankingPrimingPulse_offset_hex 874
+#define unusedalternatorControl_offset 2168
+#define unusedalternatorControl_offset_hex 878
 #define tpsAccelLength_offset 2184
 #define tpsAccelLength_offset_hex 888
 #define tpsAccelEnrichmentThreshold_offset 2188

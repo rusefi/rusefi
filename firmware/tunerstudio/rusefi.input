@@ -1603,6 +1603,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		panel = crankingFuel
 		panel = crankingIgnition
 		field = "Cranking Idle Air",					crankingIACposition
+		field = "Priming fuel pulse",					startOfCrankingPrimingPulse
 		panel = postCrankingEnrichment
 		field = ""
 		field = ""
