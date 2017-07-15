@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:20:22 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:30:50 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -809,8 +809,10 @@ public class Fields {
 	public static final int targetVBatt_offset = 2156;
 	public static final int alternatorOffAboveTps_offset = 2160;
 	public static final int alternatorOffAboveTps_offset_hex = 870;
-	public static final int unusedalternatorControl_offset = 2164;
-	public static final int unusedalternatorControl_offset_hex = 874;
+	public static final int startOfCrankingPrimingPulse_offset = 2164;
+	public static final int startOfCrankingPrimingPulse_offset_hex = 874;
+	public static final int unusedalternatorControl_offset = 2168;
+	public static final int unusedalternatorControl_offset_hex = 878;
 	public static final int tpsAccelLength_offset = 2184;
 	public static final int tpsAccelLength_offset_hex = 888;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2188;
@@ -1596,6 +1598,7 @@ public class Fields {
 	public static final Field IACRPMERRORTHRESHOLD = Field.create("IACRPMERRORTHRESHOLD", 2026, FieldType.INT);
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
+	public static final Field STARTOFCRANKINGPRIMINGPULSE = Field.create("STARTOFCRANKINGPRIMINGPULSE", 2164, FieldType.FLOAT);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2184, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 2188, FieldType.FLOAT);
 	public static final Field VVTOFFSET = Field.create("VVTOFFSET", 2192, FieldType.FLOAT);

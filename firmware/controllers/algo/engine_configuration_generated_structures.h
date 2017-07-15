@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:20:22 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:30:50 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1579,7 +1579,11 @@ typedef struct {
 	/**
 	 * offset 2164
 	 */
-	float unusedalternatorControl[5];
+	float startOfCrankingPrimingPulse;
+	/**
+	 * offset 2168
+	 */
+	float unusedalternatorControl[4];
 	/**
 	 * offset 2184
 	 */
@@ -2127,4 +2131,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:20:22 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:30:50 EDT 2017
