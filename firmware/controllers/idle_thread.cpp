@@ -153,15 +153,18 @@ percent_t getIdlePosition(void) {
 	return currentIdlePosition;
 }
 
-static float autoIdle(float cltCorrection) {
-	if (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > boardConfiguration->idlePidDeactivationTpsThreshold)
-		return currentIdlePosition;
+static float autoIdle(float cltCorrection, float iacThrottleOpenedPosition) {
+	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (tpsPos > boardConfiguration->idlePidDeactivationTpsThreshold)
+		return iacThrottleOpenedPosition;
 
 	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
 	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
 
-	return newValue;
+	percent_t interpolatedValue = interpolate(0.0, newValue, boardConfiguration->idlePidDeactivationTpsThreshold, iacThrottleOpenedPosition, tpsPos);
+
+	return interpolatedValue;
 }
 
 static msg_t ivThread(int param) {
@@ -215,7 +218,9 @@ static msg_t ivThread(int param) {
 			// let's re-apply CLT correction
 			iacPosition = manualIdleController(cltCorrection);
 		} else {
-			iacPosition = autoIdle(cltCorrection);
+			float additionalAir = 0; // todo: try this to smoothen the transition
+			float iacThrottleOpenedPosition = manualIdleController(cltCorrection) + additionalAir;
+			iacPosition = autoIdle(cltCorrection, iacThrottleOpenedPosition);
 		}
 
 		if (absF(iacPosition - currentIdlePosition) < 1) {
