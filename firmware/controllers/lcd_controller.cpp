@@ -116,25 +116,6 @@ void initLcdController(void) {
 	msObjectInit(&lcdLineStream, (uint8_t *) lcdLineBuffer, sizeof(lcdLineBuffer), 0);
 }
 
-static char * prepareVBattMapLine(char *buffer) {
-	char *ptr = buffer;
-	*ptr++ = 'V';
-	ptr = ftoa(ptr, getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 10.0f);
-
-	ptr = appendStr(ptr, " M");
-	ptr = ftoa(ptr, getRawMap(), 10.0f);
-	return ptr;
-}
-
-static char * prepareCltIatTpsLine(char *buffer) {
-	char *ptr = buffer;
-	*ptr++ = 'C';
-
-	ptr = appendStr(ptr, " TP");
-	ptr = itoa10(ptr, (int) getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
-	return ptr;
-}
-
 static const char* ignitionModeStr[] = { "1C", "IND", "WS" };
 static const char* injectionModeStr[] = { "Sim", "Seq", "Bch" };
 static const char* idleModeStr[] = { "I:A", "I:M" };
