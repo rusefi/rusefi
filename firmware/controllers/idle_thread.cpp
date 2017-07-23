@@ -226,7 +226,7 @@ static msg_t ivThread(int param) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
-				idlePid.postState(&tsOutputChannels);
+				idlePid.postState(&tsOutputChannels, 1000000);
 			} else {
 				tsOutputChannels.debugFloatField1 = iacPosition;
 			}

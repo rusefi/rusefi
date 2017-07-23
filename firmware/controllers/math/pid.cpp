@@ -109,6 +109,10 @@ float Pid::getOffset(void) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
+	postState(tsOutputChannels, 1);
+}
+
+void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
 	tsOutputChannels->debugFloatField1 = prevResult;
 	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
@@ -116,7 +120,7 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField5 = getD();
 	tsOutputChannels->debugFloatField6 = pid->minValue;
 	tsOutputChannels->debugFloatField7 = pid->maxValue;
-	tsOutputChannels->debugIntField1 = getP();
+	tsOutputChannels->debugIntField1 = getP() * pMult;
 	tsOutputChannels->debugIntField2 = getOffset();
 	tsOutputChannels->debugIntField3 = resetCounter;
 	tsOutputChannels->debugFloatField6 = dTerm;
