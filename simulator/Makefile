@@ -121,7 +121,6 @@ CSRC =  ${PORTSRC} \
         $(BOARDSRC) \
         $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
         $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-        $(CHIBIOS)/os/various/shell.c \
         $(UTILSRC) \
         main.c
 
