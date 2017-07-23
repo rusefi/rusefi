@@ -163,7 +163,6 @@ CSRC = $(STARTUPSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-	$(CHIBIOS)/os/various/shell.c \
 	${HW_MASS_STORAGE_SRC_C} \
 	$(UTILSRC) \
 	$(ENGINES_SRC) \
