@@ -38,10 +38,12 @@ int getRemainingStack(thread_t *otp) {
 
 	int remainingStack;
     if (ch.dbg.isr_cnt > 0) {
+remainingStack = 9999;
 		// ISR context
-		remainingStack = (int)(r13 - 1) - (int)&__main_stack_base__;
+// todo		remainingStack = (int)(r13 - 1) - (int)&__main_stack_base__;
 	} else {
-		remainingStack = (int)(r13 - 1) - (int)otp->p_stklimit;
+remainingStack = 9999;
+// todo		remainingStack = (int)(r13 - 1) - (int)otp->p_stklimit;
 	}
 	otp->remainingStack = remainingStack;
 	return remainingStack;

@@ -69,7 +69,7 @@
  */
 #define EFI_CLI_SUPPORT TRUE
 
-#define EFI_RTC TRUE
+#define EFI_RTC FALSE
 
 #define EFI_ALTERNATOR_CONTROL TRUE
 

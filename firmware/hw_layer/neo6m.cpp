@@ -84,7 +84,7 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 	int count = 0;
 
 	while (true) {
-		msg_t charbuf = chSequentialStreamGet(GPS_SERIAL_DEVICE);
+		msg_t charbuf = streamGet(GPS_SERIAL_DEVICE);
 		if (charbuf == 10 || count == GPS_MAX_STRING) {					// if 0xD,0xA or limit
 			if (count >= 1)
 				gps_str[--count] = '\0';					// delete 0xD
