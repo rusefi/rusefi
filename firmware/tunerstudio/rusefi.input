@@ -522,14 +522,14 @@ fileVersion = { 20161225 }
    
 gaugeCategory = Debug  
    debugFloatField1Gauge = debugFloatField1, "debug f1", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField2Gauge = debugFloatField2, "debug f2", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField3Gauge = debugFloatField3, "debug f3", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField4Gauge = debugFloatField4, "debug f4", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField5Gauge = debugFloatField5, "debug f5", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField6Gauge = debugFloatField6, "debug f6", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField2Gauge = debugFloatField2, "debug f2: iTerm", "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField3Gauge = debugFloatField3, "debug f3: prevError", "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField4Gauge = debugFloatField4, "debug f4: iParam", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField5Gauge = debugFloatField5, "debug f5: dParam", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField6Gauge = debugFloatField6, "debug f6: dTerm", "%",     -100,   100,     0,    0,    100,  100,   4,   4
    debugFloatField7Gauge = debugFloatField7, "debug f7", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugIntField1Gauge = debugIntField1, "debug i1", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField2Gauge = debugIntField2, "debug i2", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   debugIntField1Gauge = debugIntField1, "debug i1: pParam", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   debugIntField2Gauge = debugIntField2, "debug i2: offset", "%",     0,   100,     0,    0,    100,  100,   0,   0
    debugIntField3Gauge = debugIntField3, "debug i3", "%",     0,   100,     0,    0,    100,  100,   0,   0
    
 gaugeCategory = Sensors  
@@ -687,30 +687,30 @@ gaugeCategory = Fuel Data
 
 ; Alternator_PID: current integration term
 ; DBG_TPS_ACCEL: to TPS
-   entry = debugFloatField2,   "debug f2",float,"%.4f"
+   entry = debugFloatField2,   "debug f2: iTerm",float,"%.4f"
    
 ; Alternator_PID: previous error
 ; DBG_TPS_ACCEL: tps<>tps table value
-   entry = debugFloatField3,   "debug f3",float,"%.4f"
+   entry = debugFloatField3,   "debug f3: prevError",float,"%.4f"
    
 ; Alternator_PID: I setting
 ; DBG_TPS_ACCEL: extra fuel   
-   entry = debugFloatField4,   "debug f4",float,"%.4f"
+   entry = debugFloatField4,   "debug f4: iParam",float,"%.4f"
 
 ; Alternator_PID: D setting
-   entry = debugFloatField5,   "debug f5",float,"%.4f"
+   entry = debugFloatField5,   "debug f5: dParam",float,"%.4f"
 
 ; Alternator_PID: dTerm
-   entry = debugFloatField6,   "debug f6",float,"%.4f"
+   entry = debugFloatField6,   "debug f6: dTerm",float,"%.4f"
    
    entry = debugFloatField7,   "debug f7",float,"%.4f"
 
 
 ; Alternator_PID: P setting
-   entry = debugIntField1,   "debug i1",int,"%d"
+   entry = debugIntField1,   "debug i1: pParam",int,"%d"
 
 ; Alternator_PID: offset setting
-   entry = debugIntField2,   "debug i2",int,"%d"
+   entry = debugIntField2,   "debug i2: offset",int,"%d"
    
 ; Alternator_PID: PID reset counter   
    entry = debugIntField3,   "debug i3",int,"%d"
