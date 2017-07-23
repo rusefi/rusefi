@@ -105,9 +105,9 @@ custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     
 custom angle_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
-	float pFactor;;"value",      1,      0,       -1000, 1000,      5
-	float iFactor;;"value",      1,      0,       -1000, 1000,      5
-	float dFactor;;"value",      1,      0,       -1000, 1000,      5
+	float pFactor;;"value",      1,      0,       -10000, 10000,      7
+	float iFactor;;"value",      1,      0,       -10000, 10000,      7
+	float dFactor;;"value",      1,      0,       -10000, 10000,      7
 	int16_t offset;Linear addition to PID logic;"value",      1,      0,       0, 1000,      0
 	int16_t period;PID dTime;"ms",      1,      0,       0, 3000,      0
 	int16_t minValue;;"",        1,     0,  0,    3000.0,  3
@@ -317,8 +317,8 @@ float analogInputDividerCoefficient;+Coefficient of input voltage dividers on yo
 float vbattDividerCoeff;+Battery Voltage input resistor divider coefficient;"coef",    1,      0,    0.01,  99.0,        2
 adc_channel_e vbattAdcChannel;
 
-float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
-float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
+float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
+float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 
 adc_channel_e fuelLevelSensor;
 
