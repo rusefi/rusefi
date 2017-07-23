@@ -85,8 +85,6 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/rt/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
-include $(CHIBIOS)/os/hal/lib/streams/streams.mk
-include $(CHIBIOS)/os/various/shell/shell.mk
 
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
@@ -172,7 +170,7 @@ INCDIR = . \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
           $(PROJECT_DIR)/controllers \
-		  $(PROJECT_DIR)/hw_layer \
+          $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/development \
           $(PROJECT_DIR)/controllers/algo \

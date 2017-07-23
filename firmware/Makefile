@@ -236,11 +236,10 @@ INCDIR = $(PORTINC) \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/various/devices_lib/accel \
-    $(CHIBIOS_CONTRIB)/os/various \
+        $(CHIBIOS_CONTRIB)/os/various \
 	config/stm32f4ems \
 	config/engines \
 	config \
-	chibios/os/various \
 	ext \
 	ext_algo \
 	util \
