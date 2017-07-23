@@ -268,7 +268,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtMode = MIATA_NB2;
 	boardConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtDisplayInverted = true;
-	engineConfiguration->vvtOffset = 83;
+	engineConfiguration->vvtOffset = 98; // 2003 red car value
 
 	engineConfiguration->activateAuxPid1 = true; // todo: remove this field?
 	engineConfiguration->auxPidFrequency[0] = 300;
@@ -411,6 +411,7 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNA
 	memcpy(config->veLoadBins, ve18vvtLoadBins, sizeof(ve18vvtLoadBins));
 	copyFuelTable(mapBased18vvtVeTable_NA_fuel_rail, config->veTable);
 
+	engineConfiguration->vvtOffset = 83; // 2002 green car value
 
 	memcpy(config->afrRpmBins, targetAfrRpmBins, sizeof(targetAfrRpmBins));
 	memcpy(config->afrLoadBins, targetAfrLoadBins, sizeof(targetAfrLoadBins));
