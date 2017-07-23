@@ -24,8 +24,6 @@
 bool main_loop_started = false;
 
 static thread_t *cdtp;
-//static thread_t *shelltp1;
-//static thread_t *shelltp2;
 
 #define cputs(msg) chMsgSend(cdtp, (msg_t)msg)
 
