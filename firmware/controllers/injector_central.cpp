@@ -112,7 +112,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	isRunningBench = false;
 }
 
-static volatile bool needToRunBench = false;
+static volatile bool isBenchTestPending = false;
 static float onTime;
 static float offTime;
 static float delayMs;
@@ -129,7 +129,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 
 	brainPin = brainPinParam;
 	pinX = pinParam;
-	needToRunBench = true;
+	isBenchTestPending = true;
 }
 
 static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
@@ -213,10 +213,11 @@ static msg_t benchThread(int param) {
 	chRegSetThreadName("BenchThread");
 
 	while (true) {
-		while (!needToRunBench) {
+		// naive inter-thread communication - waiting for a flag
+		while (!isBenchTestPending) {
 			chThdSleepMilliseconds(200);
 		}
-		needToRunBench = false;
+		isBenchTestPending = false;
 		runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 	}
 #if defined __GNUC__
