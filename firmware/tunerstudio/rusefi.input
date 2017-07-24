@@ -521,13 +521,13 @@ fileVersion = { 20161225 }
    lastErrorCodeGauge = lastErrorCode, "error", "",     0,   8000,     0,    0,    8000,  8000,   0,   0
    
 gaugeCategory = Debug  
-   debugFloatField1Gauge = debugFloatField1, "debug f1", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField2Gauge = debugFloatField2, "debug f2: iTerm", "%",     -100,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField3Gauge = debugFloatField3, "debug f3: prevError", "%",     -100,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField4Gauge = debugFloatField4, "debug f4: iParam", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField5Gauge = debugFloatField5, "debug f5: dParam", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField6Gauge = debugFloatField6, "debug f6: dTerm", "%",     -100,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField7Gauge = debugFloatField7, "debug f7", "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField1Gauge = debugFloatField1, @@GAUGE_NAME_DEBUG_F1@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField2Gauge = debugFloatField2, @@GAUGE_NAME_DEBUG_F2@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField3Gauge = debugFloatField3, @@GAUGE_NAME_DEBUG_F3@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField4Gauge = debugFloatField4, @@GAUGE_NAME_DEBUG_F4@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField5Gauge = debugFloatField5, @@GAUGE_NAME_DEBUG_F5@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField6Gauge = debugFloatField6, @@GAUGE_NAME_DEBUG_F6@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField7Gauge = debugFloatField7, @@GAUGE_NAME_DEBUG_F7@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
    debugIntField1Gauge = debugIntField1, "debug i1: pParam", "%",     0,   100,     0,    0,    100,  100,   0,   0
    debugIntField2Gauge = debugIntField2, "debug i2: offset", "%",     0,   100,     0,    0,    100,  100,   0,   0
    debugIntField3Gauge = debugIntField3, "debug i3", "%",     0,   100,     0,    0,    100,  100,   0,   0
@@ -683,37 +683,37 @@ gaugeCategory = Fuel Data
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
 ; Alternator_PID: alternator duty cycle
 ; DBG_TPS_ACCEL: from TPS 
-   entry = debugFloatField1,   "debug f1",float,"%.4f"
+   entry = debugFloatField1,   @@GAUGE_NAME_DEBUG_F1@@,float,"%.4f"
 
 ; Alternator_PID: current integration term
 ; DBG_TPS_ACCEL: to TPS
-   entry = debugFloatField2,   "debug f2: iTerm",float,"%.4f"
+   entry = debugFloatField2,   @@GAUGE_NAME_DEBUG_F2@@,float,"%.4f"
    
 ; Alternator_PID: previous error
 ; DBG_TPS_ACCEL: tps<>tps table value
-   entry = debugFloatField3,   "debug f3: prevError",float,"%.4f"
+   entry = debugFloatField3,   @@GAUGE_NAME_DEBUG_F3@@,float,"%.4f"
    
 ; Alternator_PID: I setting
 ; DBG_TPS_ACCEL: extra fuel   
-   entry = debugFloatField4,   "debug f4: iParam",float,"%.4f"
+   entry = debugFloatField4,   @@GAUGE_NAME_DEBUG_F4@@,float,"%.4f"
 
 ; Alternator_PID: D setting
-   entry = debugFloatField5,   "debug f5: dParam",float,"%.4f"
+   entry = debugFloatField5,   @@GAUGE_NAME_DEBUG_F5@@,float,"%.4f"
 
 ; Alternator_PID: dTerm
-   entry = debugFloatField6,   "debug f6: dTerm",float,"%.4f"
+   entry = debugFloatField6,   @@GAUGE_NAME_DEBUG_F6@@,float,"%.4f"
    
-   entry = debugFloatField7,   "debug f7",float,"%.4f"
+   entry = debugFloatField7,   @@GAUGE_NAME_DEBUG_F7@@,float,"%.4f"
 
 
 ; Alternator_PID: P setting
-   entry = debugIntField1,   "debug i1: pParam",int,"%d"
+   entry = debugIntField1,   @@GAUGE_NAME_DEBUG_I1@@,int,"%d"
 
 ; Alternator_PID: offset setting
-   entry = debugIntField2,   "debug i2: offset",int,"%d"
+   entry = debugIntField2,   @@GAUGE_NAME_DEBUG_I2@@,int,"%d"
    
 ; Alternator_PID: PID reset counter   
-   entry = debugIntField3,   "debug i3",int,"%d"
+   entry = debugIntField3,   @@GAUGE_NAME_DEBUG_I3@@,int,"%d"
    
       
    entry = engineMode,   "mode",int,"%d"

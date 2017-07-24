@@ -233,18 +233,20 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 	if (fileFormat) {
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-		reportSensorF(log, fileFormat, "debugF1", "v", tsOutputChannels.debugFloatField1, 4);
-		reportSensorF(log, fileFormat, "debugF2", "v", tsOutputChannels.debugFloatField2, 4);
-		reportSensorF(log, fileFormat, "debugF3", "v", tsOutputChannels.debugFloatField3, 4);
-		reportSensorF(log, fileFormat, "debugF4", "v", tsOutputChannels.debugFloatField4, 4);
-		reportSensorF(log, fileFormat, "debugF5", "v", tsOutputChannels.debugFloatField5, 4);
-		reportSensorF(log, fileFormat, "debugF6", "v", tsOutputChannels.debugFloatField6, 4);
-		reportSensorF(log, fileFormat, "debugF7", "v", tsOutputChannels.debugFloatField7, 4);
+#define DEBUG_F_PRECISION 6
 
-		reportSensorI(log, fileFormat, "debugInt1", "v", tsOutputChannels.debugIntField1);
-		reportSensorI(log, fileFormat, "debugInt2", "v", tsOutputChannels.debugIntField2);
-		reportSensorI(log, fileFormat, "debugInt3", "v", tsOutputChannels.debugIntField3);
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField1, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField2, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField3, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField4, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField5, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField6, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField7, DEBUG_F_PRECISION);
+
+		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I1, "v", tsOutputChannels.debugIntField1);
+		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I2, "v", tsOutputChannels.debugIntField2);
+		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I3, "v", tsOutputChannels.debugIntField3);
 #endif /* EFI_TUNER_STUDIO */
 
 		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
