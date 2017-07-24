@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:30:50 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 23 20:33:56 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1097,6 +1097,16 @@ public class Fields {
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_IAC = "Idle Air Valve";
+	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
+	public static final String GAUGE_NAME_DEBUG_F2 = "debug f2: iTerm";
+	public static final String GAUGE_NAME_DEBUG_F3 = "debug f3: prevError";
+	public static final String GAUGE_NAME_DEBUG_F4 = "debug f4: iParam";
+	public static final String GAUGE_NAME_DEBUG_F5 = "debug f5: dParam";
+	public static final String GAUGE_NAME_DEBUG_F6 = "debug f6: dTerm";
+	public static final String GAUGE_NAME_DEBUG_F7 = "debug f7";
+	public static final String GAUGE_NAME_DEBUG_I1 = "debug i1: pParam";
+	public static final String GAUGE_NAME_DEBUG_I2 = "debug i2: offset";
+	public static final String GAUGE_NAME_DEBUG_I3 = "debug i3";
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
