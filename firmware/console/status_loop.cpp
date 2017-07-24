@@ -816,10 +816,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
-#endif
+#endif /* EFI_INTERNAL_FLASH */
+
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	tsOutputChannels->hasSdCard = isSdCardAlive();
-#endif
+#endif /* EFI_FILE_LOGGING */
+
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
