@@ -726,6 +726,7 @@ gaugeCategory = Fuel Data
    entry = clutchUpState,   @@INDICATOR_NAME_CLUTCH_UP@@,int,"%d"
    entry = clutchDownState,   @@INDICATOR_NAME_CLUTCH_DOWN@@,int,"%d"
    entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
+   entry = ind_fan, "radiator fan",int,"%d"
    
    
 ;     tpsADC          = U16,    "ADC",
