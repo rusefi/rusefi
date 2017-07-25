@@ -129,7 +129,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 
 	brainPin = brainPinParam;
 	pinX = pinParam;
-	isBenchTestPending = true;
+	isBenchTestPending = true; // let's signal bench thread to wake up
 }
 
 static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
@@ -152,8 +152,12 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
+static void fanBenchExt(const char *durationMs) {
+	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+}
+
 void fanBench(void) {
-	pinbench("0", "3000", "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+	fanBenchExt("3000");
 }
 
 void milBench(void) {
@@ -270,6 +274,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
+	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
 	addConsoleAction("milbench", milBench);
