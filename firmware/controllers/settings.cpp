@@ -441,7 +441,7 @@ static void printTemperatureInfo(void) {
 #endif /* EFI_ANALOG_SENSORS */
 }
 
-static void setCallFromPitStop(int durationMs) {
+void setCallFromPitStop(int durationMs) {
 	engine->callFromPitStopEndTime = currentTimeMillis() + durationMs;
 }
 
