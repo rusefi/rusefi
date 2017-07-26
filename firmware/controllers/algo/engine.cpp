@@ -106,6 +106,7 @@ void Engine::reset() {
 	withError = isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
+	fsioTimingAdjustment = 0;
 	isAlternatorControlEnabled = false;
 	callFromPitStopEndTime = 0;
 	wallFuelCorrection = 0;
