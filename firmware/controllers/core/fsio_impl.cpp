@@ -400,6 +400,9 @@ void runFsio(void) {
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
 		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic);
 	}
+	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
+
+	}
 
 }
 

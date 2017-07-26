@@ -347,6 +347,8 @@ public:
 
 	bool isRunningPwmTest;
 
+	float fsioTimingAdjustment;
+
 	/**
 	 * Are we experiencing knock right now?
 	 */
