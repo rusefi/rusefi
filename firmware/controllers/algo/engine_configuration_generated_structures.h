@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:30:50 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 25 20:21:45 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1234,7 +1234,7 @@ typedef struct {
 	bool useLinearIatSensor : 1;
 	/**
 	offset 1488 bit 11 */
-	bool unusedbit_9 : 1;
+	bool useFSIO16ForTimingAdjustment : 1;
 	/**
 	offset 1488 bit 12 */
 	bool unusedbit_10 : 1;
@@ -2131,4 +2131,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:30:50 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 25 20:21:45 EDT 2017
