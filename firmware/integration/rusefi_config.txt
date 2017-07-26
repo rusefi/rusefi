@@ -600,7 +600,7 @@ bit vvtDisplayInverted
 	bit canReadEnabled
 	bit canWriteEnabled
 	bit useLinearIatSensor
-	bit unusedbit_9
+	bit useFSIO16ForTimingAdjustment
 	bit unusedbit_10
 	bit isAlternatorControlEnabled
 	bit unusedBit__3
