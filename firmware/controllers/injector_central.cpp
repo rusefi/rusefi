@@ -32,6 +32,7 @@
 #include "engine_configuration.h"
 #include "pin_repository.h"
 #include "efiGpio.h"
+#include "settings.h"
 
 EXTERN_ENGINE
 ;
@@ -254,6 +255,10 @@ void runIoTest(int subsystem, int index) {
 		milBench();
 	} else if (subsystem == 0x17) {
 	} else if (subsystem == 0x20 && index == 0x3456) {
+		// call to pit
+		setCallFromPitStop(30000);
+	} else if (subsystem == 0x99) {
+		stopEngine();
 	}
 }
 
