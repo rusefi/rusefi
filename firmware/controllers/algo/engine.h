@@ -296,7 +296,10 @@ public:
 	/**
 	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT STOP' light
 	 */
-	floatms_t callFromPitStopEndTime;
+	efitime_t callFromPitStopEndTime;
+
+	// timestamp of most recent time RPM hard limit was triggered
+	efitime_t rpmHardLimitTimestamp;
 
 	/**
 	 * This flag indicated a big enough problem that engine control would be

@@ -1631,6 +1631,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		panel = TpsAccelPanel
 		field = "sucked off wall coefficient",          suckedOffCoef
 		field = "added to wall coef",                   addedToWallCoef
+		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
 		
 		
 ;			Flex Logic
