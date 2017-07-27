@@ -109,6 +109,7 @@ void Engine::reset() {
 	fsioTimingAdjustment = 0;
 	isAlternatorControlEnabled = false;
 	callFromPitStopEndTime = 0;
+	rpmHardLimitTimestamp = 0;
 	wallFuelCorrection = 0;
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
