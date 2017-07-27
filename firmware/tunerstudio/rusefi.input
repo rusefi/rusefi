@@ -82,6 +82,15 @@ enable2ndByteCanID = false
    gauge4		= veValueGauge
 
 
+[LoggerDefinition]
+
+  ; valid logger types: composite, tooth, trigger, csv
+  loggerDef = tooth, "Tooth Logger", tooth
+         dataReadCommand = "L"
+         dataReadTimeout = 15000 ; time in ms
+         dataReadyCondition = { toothLogReady }
+         dataLength = 256 ; in bytes, including headers, footers and data
+
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
@@ -171,6 +180,7 @@ fileVersion = { 20161225 }
       knockEverIndicator=bits,   U32,     72, [13:13], "true", "false";
       knockNowIndicator=bits,    U32,     72, [14:14], "true", "false";
       brakePedalIndicator=bits,  U32,     72, [15:15], "true", "false";
+      toothLogReady      =bits,  U32,     72, [16:16], "true", "false";
       vehicleSpeedKph = scalar,  F32,     76,        "kph",   1,       0.0;
       
       ind_tps_error   = bits,    U32,     80, [0:0], "true", "false";

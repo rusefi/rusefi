@@ -434,6 +434,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_FILE_RANGE
+			|| command == TS_TOOTH_COMMAND
 			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION;
 }
