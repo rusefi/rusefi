@@ -37,7 +37,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return GPIO_NULL;
 	if (brainPin > GPIO_UNASSIGNED || brainPin < 0) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msgbrainPin);
+		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
 	return PORTS[brainPin / PORT_SIZE];
