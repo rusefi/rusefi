@@ -431,8 +431,8 @@ void initMmcCard(void) {
 		return;
 	}
 
-	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort(boardConfiguration->sdCardCsPin);
-	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin(boardConfiguration->sdCardCsPin);
+	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", boardConfiguration->sdCardCsPin);
+	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", boardConfiguration->sdCardCsPin);
 /* todo: un-comment this one day. incompatible configuration change for existing users :(
 	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
 */

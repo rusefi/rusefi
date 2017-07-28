@@ -363,8 +363,8 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
-	ioportid_t port = getHwPort(brainPin);
-	int pin = getHwPin(brainPin);
+	ioportid_t port = getHwPort(msg, brainPin);
+	int pin = getHwPin(msg, brainPin);
 
 	/**
 	 * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
