@@ -147,7 +147,7 @@ endif
 
 # Define linker script file here
 ifeq ($(LDSCRIPT),)
-  LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
+  LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
 endif
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
