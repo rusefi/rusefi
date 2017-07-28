@@ -105,8 +105,8 @@ void initCJ125(Logging *sharedLogger) {
 	if (!boardConfiguration->isCJ125Enabled)
 		return;
 
-	cj125spicfg.ssport = getHwPort(boardConfiguration->cj125CsPin);
-	cj125spicfg.sspad = getHwPin(boardConfiguration->cj125CsPin);
+	cj125spicfg.ssport = getHwPort("cj125", boardConfiguration->cj125CsPin);
+	cj125spicfg.sspad = getHwPin("cj125", boardConfiguration->cj125CsPin);
 
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 

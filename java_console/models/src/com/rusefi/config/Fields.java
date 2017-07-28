@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jul 15 15:30:50 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 25 20:21:45 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -632,7 +632,7 @@ public class Fields {
 	public static final int canReadEnabled_offset = 1488;
 	public static final int canWriteEnabled_offset = 1488;
 	public static final int useLinearIatSensor_offset = 1488;
-	public static final int unusedbit_9_offset = 1488;
+	public static final int useFSIO16ForTimingAdjustment_offset = 1488;
 	public static final int unusedbit_10_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
 	public static final int unusedBit__3_offset = 1488;
@@ -1097,6 +1097,16 @@ public class Fields {
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_IAC = "Idle Air Valve";
+	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
+	public static final String GAUGE_NAME_DEBUG_F2 = "debug f2: iTerm";
+	public static final String GAUGE_NAME_DEBUG_F3 = "debug f3: prevError";
+	public static final String GAUGE_NAME_DEBUG_F4 = "debug f4: iParam";
+	public static final String GAUGE_NAME_DEBUG_F5 = "debug f5: dParam";
+	public static final String GAUGE_NAME_DEBUG_F6 = "debug f6: dTerm";
+	public static final String GAUGE_NAME_DEBUG_F7 = "debug f7";
+	public static final String GAUGE_NAME_DEBUG_I1 = "debug i1: pParam";
+	public static final String GAUGE_NAME_DEBUG_I2 = "debug i2: offset";
+	public static final String GAUGE_NAME_DEBUG_I3 = "debug i3";
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
@@ -1483,7 +1493,7 @@ public class Fields {
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1488, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1488, FieldType.BIT, 9);
 	public static final Field USELINEARIATSENSOR = Field.create("USELINEARIATSENSOR", 1488, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_9 = Field.create("UNUSEDBIT_9", 1488, FieldType.BIT, 11);
+	public static final Field USEFSIO16FORTIMINGADJUSTMENT = Field.create("USEFSIO16FORTIMINGADJUSTMENT", 1488, FieldType.BIT, 11);
 	public static final Field UNUSEDBIT_10 = Field.create("UNUSEDBIT_10", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);
 	public static final Field UNUSEDBIT__3 = Field.create("UNUSEDBIT__3", 1488, FieldType.BIT, 14);

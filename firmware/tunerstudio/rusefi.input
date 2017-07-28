@@ -82,6 +82,15 @@ enable2ndByteCanID = false
    gauge4		= veValueGauge
 
 
+[LoggerDefinition]
+
+  ; valid logger types: composite, tooth, trigger, csv
+  loggerDef = tooth, "Tooth Logger", tooth
+         dataReadCommand = "L"
+         dataReadTimeout = 15000 ; time in ms
+         dataReadyCondition = { toothLogReady }
+         dataLength = 256 ; in bytes, including headers, footers and data
+
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
@@ -171,6 +180,7 @@ fileVersion = { 20161225 }
       knockEverIndicator=bits,   U32,     72, [13:13], "true", "false";
       knockNowIndicator=bits,    U32,     72, [14:14], "true", "false";
       brakePedalIndicator=bits,  U32,     72, [15:15], "true", "false";
+      toothLogReady      =bits,  U32,     72, [16:16], "true", "false";
       vehicleSpeedKph = scalar,  F32,     76,        "kph",   1,       0.0;
       
       ind_tps_error   = bits,    U32,     80, [0:0], "true", "false";
@@ -521,15 +531,15 @@ fileVersion = { 20161225 }
    lastErrorCodeGauge = lastErrorCode, "error", "",     0,   8000,     0,    0,    8000,  8000,   0,   0
    
 gaugeCategory = Debug  
-   debugFloatField1Gauge = debugFloatField1, "debug f1", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField2Gauge = debugFloatField2, "debug f2", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField3Gauge = debugFloatField3, "debug f3", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField4Gauge = debugFloatField4, "debug f4", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField5Gauge = debugFloatField5, "debug f5", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField6Gauge = debugFloatField6, "debug f6", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugFloatField7Gauge = debugFloatField7, "debug f7", "%",     0,   100,     0,    0,    100,  100,   4,   4
-   debugIntField1Gauge = debugIntField1, "debug i1", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   debugIntField2Gauge = debugIntField2, "debug i2", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   debugFloatField1Gauge = debugFloatField1, @@GAUGE_NAME_DEBUG_F1@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField2Gauge = debugFloatField2, @@GAUGE_NAME_DEBUG_F2@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField3Gauge = debugFloatField3, @@GAUGE_NAME_DEBUG_F3@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField4Gauge = debugFloatField4, @@GAUGE_NAME_DEBUG_F4@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField5Gauge = debugFloatField5, @@GAUGE_NAME_DEBUG_F5@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField6Gauge = debugFloatField6, @@GAUGE_NAME_DEBUG_F6@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
+   debugFloatField7Gauge = debugFloatField7, @@GAUGE_NAME_DEBUG_F7@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
+   debugIntField1Gauge = debugIntField1, "debug i1: pParam", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   debugIntField2Gauge = debugIntField2, "debug i2: offset", "%",     0,   100,     0,    0,    100,  100,   0,   0
    debugIntField3Gauge = debugIntField3, "debug i3", "%",     0,   100,     0,    0,    100,  100,   0,   0
    
 gaugeCategory = Sensors  
@@ -683,37 +693,37 @@ gaugeCategory = Fuel Data
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
 ; Alternator_PID: alternator duty cycle
 ; DBG_TPS_ACCEL: from TPS 
-   entry = debugFloatField1,   "debug f1",float,"%.4f"
+   entry = debugFloatField1,   @@GAUGE_NAME_DEBUG_F1@@,float,"%.4f"
 
 ; Alternator_PID: current integration term
 ; DBG_TPS_ACCEL: to TPS
-   entry = debugFloatField2,   "debug f2",float,"%.4f"
+   entry = debugFloatField2,   @@GAUGE_NAME_DEBUG_F2@@,float,"%.4f"
    
 ; Alternator_PID: previous error
 ; DBG_TPS_ACCEL: tps<>tps table value
-   entry = debugFloatField3,   "debug f3",float,"%.4f"
+   entry = debugFloatField3,   @@GAUGE_NAME_DEBUG_F3@@,float,"%.4f"
    
 ; Alternator_PID: I setting
 ; DBG_TPS_ACCEL: extra fuel   
-   entry = debugFloatField4,   "debug f4",float,"%.4f"
+   entry = debugFloatField4,   @@GAUGE_NAME_DEBUG_F4@@,float,"%.4f"
 
 ; Alternator_PID: D setting
-   entry = debugFloatField5,   "debug f5",float,"%.4f"
+   entry = debugFloatField5,   @@GAUGE_NAME_DEBUG_F5@@,float,"%.4f"
 
 ; Alternator_PID: dTerm
-   entry = debugFloatField6,   "debug f6",float,"%.4f"
+   entry = debugFloatField6,   @@GAUGE_NAME_DEBUG_F6@@,float,"%.4f"
    
-   entry = debugFloatField7,   "debug f7",float,"%.4f"
+   entry = debugFloatField7,   @@GAUGE_NAME_DEBUG_F7@@,float,"%.4f"
 
 
 ; Alternator_PID: P setting
-   entry = debugIntField1,   "debug i1",int,"%d"
+   entry = debugIntField1,   @@GAUGE_NAME_DEBUG_I1@@,int,"%d"
 
 ; Alternator_PID: offset setting
-   entry = debugIntField2,   "debug i2",int,"%d"
+   entry = debugIntField2,   @@GAUGE_NAME_DEBUG_I2@@,int,"%d"
    
 ; Alternator_PID: PID reset counter   
-   entry = debugIntField3,   "debug i3",int,"%d"
+   entry = debugIntField3,   @@GAUGE_NAME_DEBUG_I3@@,int,"%d"
    
       
    entry = engineMode,   "mode",int,"%d"
@@ -726,6 +736,7 @@ gaugeCategory = Fuel Data
    entry = clutchUpState,   @@INDICATOR_NAME_CLUTCH_UP@@,int,"%d"
    entry = clutchDownState,   @@INDICATOR_NAME_CLUTCH_DOWN@@,int,"%d"
    entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
+   entry = ind_fan, "radiator fan",int,"%d"
    
    
 ;     tpsADC          = U16,    "ADC",
@@ -885,6 +896,7 @@ cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
 cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 cmd_call_from_pit            = "w\x00\x20\x34\x56"
+cmd_stop_engine              = "w\x00\x99\x00\x00"
 		
 		
 [UserDefined]
@@ -1630,6 +1642,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		panel = TpsAccelPanel
 		field = "sucked off wall coefficient",          suckedOffCoef
 		field = "added to wall coef",                   addedToWallCoef
+		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
 		
 		
 ;			Flex Logic
@@ -1703,6 +1716,19 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		field = "#2",									fsioFormulas2
 		field = "#3",									fsioFormulas3
 		field = "#4",									fsioFormulas4
+		field = "#5",									fsioFormulas5
+		field = "#6",									fsioFormulas6
+		field = "#7",									fsioFormulas7
+		field = "#8",									fsioFormulas8
+		field = "#9",									fsioFormulas9
+		field = "#10",									fsioFormulas10
+		field = "#11",									fsioFormulas11
+		field = "#12",									fsioFormulas12
+		field = "#13",									fsioFormulas13
+		field = "#14",									fsioFormulas14
+		field = "#15",									fsioFormulas15
+		field = "use FSIO #16 for timing adjustment",	useFSIO16ForTimingAdjustment
+		field = "#16",									fsioFormulas16
 		
 	dialog = fsioInputsDialog, "FSIO inputs"
 		field = "ADC #1",								fsioAdc1
@@ -1766,6 +1792,7 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 		commandButton = "Radiator Fan", cmd_test_radiator_fan
 		commandButton = "Check Engine", cmd_test_check_engine_light
 		commandButton = "Idle Air Valve", cmd_test_idle_valve          
+		commandButton = "Stop Engine", cmd_stop_engine          
 		
 	; bench test	
 	dialog = ioTest, "I-O Test", border

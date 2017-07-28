@@ -9,7 +9,8 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
-| 07/13/2017    | r14476    | bugdix #461: SAXParserException on console start-up due to damaged settings.xml file |
+| 07/24/2017    | r14513    | bugfix #307: TS bench test blinks three times |
+| 07/13/2017    | r14476    | bugfix #461: SAXParserException on console start-up due to damaged settings.xml file |
 | 07/09/2017    | r14473    | improvement: IAC solenoid frequencty changeable on the fly |
 | 06/19/2017    | r14393    | bugfix: pinMode, milMode |
 | 05/27/2017    | r14221    | improvement: ochGetCommand to support offset and count |

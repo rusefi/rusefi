@@ -860,8 +860,8 @@
 #define canWriteEnabled_offset_hex 5d0
 #define useLinearIatSensor_offset 1488
 #define useLinearIatSensor_offset_hex 5d0
-#define unusedbit_9_offset 1488
-#define unusedbit_9_offset_hex 5d0
+#define useFSIO16ForTimingAdjustment_offset 1488
+#define useFSIO16ForTimingAdjustment_offset_hex 5d0
 #define unusedbit_10_offset 1488
 #define unusedbit_10_offset_hex 5d0
 #define isAlternatorControlEnabled_offset 1488
@@ -1592,5 +1592,15 @@
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_IAC "Idle Air Valve"
+#define GAUGE_NAME_DEBUG_F1 "debug f1"
+#define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
+#define GAUGE_NAME_DEBUG_F3 "debug f3: prevError"
+#define GAUGE_NAME_DEBUG_F4 "debug f4: iParam"
+#define GAUGE_NAME_DEBUG_F5 "debug f5: dParam"
+#define GAUGE_NAME_DEBUG_F6 "debug f6: dTerm"
+#define GAUGE_NAME_DEBUG_F7 "debug f7"
+#define GAUGE_NAME_DEBUG_I1 "debug i1: pParam"
+#define GAUGE_NAME_DEBUG_I2 "debug i2: offset"
+#define GAUGE_NAME_DEBUG_I3 "debug i3"
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"

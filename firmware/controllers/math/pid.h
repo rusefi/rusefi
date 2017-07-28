@@ -37,6 +37,7 @@ public:
 	float getPrevError(void);
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
+	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
 #endif
 	float minResult;
 	float maxResult;

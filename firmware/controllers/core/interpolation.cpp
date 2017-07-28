@@ -108,7 +108,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 		/**
 		 * we could end up here for example while resetting bins while changing engine type
 		 */
-		warning(CUSTOM_OBD_12, "interpolate%s: Same x1 and x2 in interpolate: %f/%f", msg, x1, x2);
+		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: Same x1 and x2 in interpolate: %f/%f", msg, x1, x2);
 		return NAN;
 	}
 

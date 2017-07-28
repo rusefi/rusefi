@@ -322,8 +322,8 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	spiConfig->end_cb = NULL;
-	ioportid_t port = getHwPort(csPin);
-	ioportmask_t pin = getHwPin(csPin);
+	ioportid_t port = getHwPort("spi", csPin);
+	ioportmask_t pin = getHwPin("spi", csPin);
 	spiConfig->ssport = port;
 	spiConfig->sspad = pin;
 	efiSetPadMode("chip select", csPin, PAL_STM32_MODE_OUTPUT);

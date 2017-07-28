@@ -282,7 +282,7 @@ static void periodicSlowCallback(Engine *engine) {
 
 #if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
 	runFsio();
-#endif
+#endif /* EFI_PROD_CODE && EFI_FSIO */
 
 	cylinderCleanupControl(engine);
 

@@ -393,9 +393,15 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set idle_d 0
 	// set debug_mode 3
 	// set idle_rpm 1700
+	// see setDefaultIdleParameters
 
+	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
 	//set idle_offset 30
 	engineConfiguration->idleRpmPid.offset = 30;
+	engineConfiguration->idleRpmPid.pFactor = 0.07;
+	engineConfiguration->idleRpmPid.iFactor = 0.0001;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.period = 10;
 }
 
 void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

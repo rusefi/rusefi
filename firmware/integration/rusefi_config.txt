@@ -105,9 +105,9 @@ custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     
 custom angle_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
-	float pFactor;;"value",      1,      0,       -1000, 1000,      5
-	float iFactor;;"value",      1,      0,       -1000, 1000,      5
-	float dFactor;;"value",      1,      0,       -1000, 1000,      5
+	float pFactor;;"value",      1,      0,       -10000, 10000,      7
+	float iFactor;;"value",      1,      0,       -10000, 10000,      7
+	float dFactor;;"value",      1,      0,       -10000, 10000,      7
 	int16_t offset;Linear addition to PID logic;"value",      1,      0,       0, 1000,      0
 	int16_t period;PID dTime;"ms",      1,      0,       0, 3000,      0
 	int16_t minValue;;"",        1,     0,  0,    3000.0,  3
@@ -317,8 +317,8 @@ float analogInputDividerCoefficient;+Coefficient of input voltage dividers on yo
 float vbattDividerCoeff;+Battery Voltage input resistor divider coefficient;"coef",    1,      0,    0.01,  99.0,        2
 adc_channel_e vbattAdcChannel;
 
-float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
-float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
+float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
+float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 
 adc_channel_e fuelLevelSensor;
 
@@ -600,7 +600,7 @@ bit vvtDisplayInverted
 	bit canReadEnabled
 	bit canWriteEnabled
 	bit useLinearIatSensor
-	bit unusedbit_9
+	bit useFSIO16ForTimingAdjustment
 	bit unusedbit_10
 	bit isAlternatorControlEnabled
 	bit unusedBit__3
@@ -926,6 +926,19 @@ end_struct
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_IAC "Idle Air Valve"
+
+#define GAUGE_NAME_DEBUG_F1 "debug f1"
+#define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
+#define GAUGE_NAME_DEBUG_F3 "debug f3: prevError"
+#define GAUGE_NAME_DEBUG_F4 "debug f4: iParam"
+#define GAUGE_NAME_DEBUG_F5 "debug f5: dParam"
+#define GAUGE_NAME_DEBUG_F6 "debug f6: dTerm"
+#define GAUGE_NAME_DEBUG_F7 "debug f7"
+
+#define GAUGE_NAME_DEBUG_I1 "debug i1: pParam"
+#define GAUGE_NAME_DEBUG_I2 "debug i2: offset"
+#define GAUGE_NAME_DEBUG_I3 "debug i3"
+
 
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"

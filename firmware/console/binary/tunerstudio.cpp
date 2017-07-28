@@ -229,12 +229,16 @@ int getTunerStudioPageSize(int pageIndex) {
 	return 0;
 }
 
+static void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
+	sr5SendResponse(tsChannel, mode, NULL, 0);
+}
+
 void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
 	currentPageId = pageId;
 	scheduleMsg(&tsLogger, "PAGE %d", currentPageId);
-	sr5SendResponse(tsChannel, mode, NULL, 0);
+	sendOkResponse(tsChannel, mode);
 }
 
 static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
@@ -286,7 +290,7 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	memcpy(addr, content, count);
 	onlineTuneBytes(currentPageId, offset, count);
 
-	sr5SendResponse(tsChannel, mode, NULL, 0);
+	sendOkResponse(tsChannel, mode);
 }
 
 void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
@@ -430,6 +434,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_FILE_RANGE
+			|| command == TS_TOOTH_COMMAND
 			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION;
 }
@@ -821,9 +826,17 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		uint16_t subsystem = SWAP_UINT16(*(short*)&data[0]);
 		uint16_t index = SWAP_UINT16(*(short*)&data[2]);
 
+		if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
+			tsOutputChannels.debugIntField1++;
+			tsOutputChannels.debugIntField2 = subsystem;
+			tsOutputChannels.debugIntField3 = index;
+
+		}
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		runIoTest(subsystem, index);
-#endif
+#endif /* EFI_PROD_CODE */
+		sendOkResponse(tsChannel, TS_CRC);
 	} else {
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

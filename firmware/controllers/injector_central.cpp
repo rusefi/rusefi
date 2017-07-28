@@ -32,6 +32,7 @@
 #include "engine_configuration.h"
 #include "pin_repository.h"
 #include "efiGpio.h"
+#include "settings.h"
 
 EXTERN_ENGINE
 ;
@@ -112,7 +113,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	isRunningBench = false;
 }
 
-static volatile bool needToRunBench = false;
+static volatile bool isBenchTestPending = false;
 static float onTime;
 static float offTime;
 static float delayMs;
@@ -129,7 +130,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 
 	brainPin = brainPinParam;
 	pinX = pinParam;
-	needToRunBench = true;
+	isBenchTestPending = true; // let's signal bench thread to wake up
 }
 
 static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
@@ -152,8 +153,12 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
+static void fanBenchExt(const char *durationMs) {
+	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+}
+
 void fanBench(void) {
-	pinbench("0", "3000", "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+	fanBenchExt("3000");
 }
 
 void milBench(void) {
@@ -213,10 +218,11 @@ static msg_t benchThread(int param) {
 	chRegSetThreadName("BenchThread");
 
 	while (true) {
-		while (!needToRunBench) {
+		// naive inter-thread communication - waiting for a flag
+		while (!isBenchTestPending) {
 			chThdSleepMilliseconds(200);
 		}
-		needToRunBench = false;
+		isBenchTestPending = false;
 		runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 	}
 #if defined __GNUC__
@@ -249,6 +255,10 @@ void runIoTest(int subsystem, int index) {
 		milBench();
 	} else if (subsystem == 0x17) {
 	} else if (subsystem == 0x20 && index == 0x3456) {
+		// call to pit
+		setCallFromPitStop(30000);
+	} else if (subsystem == 0x99) {
+		stopEngine();
 	}
 }
 
@@ -269,6 +279,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
+	addConsoleActionS("fanbench2", fanBenchExt);
 	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
 	addConsoleAction("milbench", milBench);

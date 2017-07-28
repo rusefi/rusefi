@@ -158,8 +158,8 @@ public:
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
-ioportmask_t getHwPin(brain_pin_e brainPin);
-ioportid_t getHwPort(brain_pin_e brainPin);
+ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin);
+ioportid_t getHwPort(const char *msg, brain_pin_e brainPin);
 const char *portname(ioportid_t GPIOx);
 
 #endif /* EFI_GPIO_HARDWARE */

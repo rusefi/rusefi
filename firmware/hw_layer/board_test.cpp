@@ -114,8 +114,8 @@ int pinsCount = sizeof(BLINK_PINS) / sizeof(brain_pin_e);
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static void setCurrentPinValue(bool value) {
-	ioportid_t hwPort = getHwPort(currentPin);
-	uint32_t hwPin = getHwPin(currentPin);
+	ioportid_t hwPort = getHwPort("test", currentPin);
+	uint32_t hwPin = getHwPin("test", currentPin);
 	palWritePad(hwPort, hwPin, value);
 }
 

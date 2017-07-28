@@ -326,14 +326,15 @@ static const char * action2String(le_action_e action) {
 }
 
 static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
+	if (isRunningBenchTest()) {
+		return; // let's not mess with bench testing
+	}
+
 	if (element == NULL) {
-		warning(CUSTOM_OBD_11, "invalid expression for %s", msg);
+		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
 		int value = (int)calc.getValue2(pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
-			if (isRunningBenchTest()) {
-				return; // let's not mess with bench testing
-			}
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
 				scheduleMsg(logger, "calc %d: action %s value %f", i, action2String(calc.calcLogAction[i]), calc.calcLogValue[i]);
@@ -398,6 +399,9 @@ void runFsio(void) {
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
 		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic);
+	}
+	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
+
 	}
 
 }

@@ -6,6 +6,8 @@ import eu.hansolo.steelseries.tools.BackgroundColor;
 
 import java.util.ArrayList;
 
+import static com.rusefi.config.Fields.*;
+
 /**
  * @author Andrey Belomutskiy
  *         2/11/13
@@ -99,7 +101,7 @@ public enum Sensor {
     ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),
     DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
     actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
-    debugFloatField1(SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
+    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
     VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),
     FIRMWARE_VERSION(SensorCategory.OPERATIONS, FieldType.INT, 84, BackgroundColor.BLUE),
     CURRENT_VE(SensorCategory.FUEL, FieldType.FLOAT, 112, BackgroundColor.MUD),
@@ -116,15 +118,15 @@ public enum Sensor {
     CHARGE_AIR_MASS(SensorCategory.OPERATIONS, FieldType.FLOAT, 180, BackgroundColor.MUD),
     cltCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 184, BackgroundColor.MUD, 0, 5),
     runningFuel(SensorCategory.OPERATIONS, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
-    debugIntField1(SensorCategory.OPERATIONS, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
+    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.OPERATIONS, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
     injectorLagMs(SensorCategory.FUEL, FieldType.FLOAT, 196, BackgroundColor.MUD, 0, 15, "ms"),
 
-    debugFloatField2(SensorCategory.OPERATIONS, FieldType.FLOAT, 200, BackgroundColor.MUD, 0, 5),
-    debugFloatField3(SensorCategory.OPERATIONS, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
-    debugFloatField4(SensorCategory.OPERATIONS, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
-    debugFloatField5(SensorCategory.OPERATIONS, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
-    debugIntField2(SensorCategory.OPERATIONS, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
-    debugIntField3(SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
+    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.OPERATIONS, FieldType.FLOAT, 200, BackgroundColor.MUD, 0, 5),
+    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.OPERATIONS, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
+    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.OPERATIONS, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
+    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.OPERATIONS, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
+    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.OPERATIONS, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
+    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
 
     warningCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
     lastErrorCode(SensorCategory.OPERATIONS, FieldType.INT, 240, BackgroundColor.MUD, 0, 5),
@@ -136,8 +138,8 @@ public enum Sensor {
     vvtPosition(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 248, BackgroundColor.MUD, 0, 5),
     engineMode(SensorCategory.OPERATIONS, FieldType.INT, 252, BackgroundColor.MUD, 0, 5),
 
-    debugFloatField6(SensorCategory.OPERATIONS, FieldType.FLOAT, 256, BackgroundColor.MUD, 0, 5),
-    debugFloatField7(SensorCategory.OPERATIONS, FieldType.FLOAT, 260, BackgroundColor.MUD, 0, 5),
+    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.OPERATIONS, FieldType.FLOAT, 256, BackgroundColor.MUD, 0, 5),
+    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.OPERATIONS, FieldType.FLOAT, 260, BackgroundColor.MUD, 0, 5),
     coilDutyCycle(Fields.GAUGE_NAME_DWELL_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 272, BackgroundColor.MUD),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
@@ -208,7 +210,7 @@ public enum Sensor {
     }
 
     public static ArrayList<Sensor> getSensorsForCategory(String category) {
-        final ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+        final ArrayList<Sensor> sensors = new ArrayList<>();
 
         for (final Sensor sensor : values()) {
             if (sensor.category.getName().equals(category)) {

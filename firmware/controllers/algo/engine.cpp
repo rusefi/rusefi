@@ -106,8 +106,10 @@ void Engine::reset() {
 	withError = isEngineChartEnabled = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
+	fsioTimingAdjustment = 0;
 	isAlternatorControlEnabled = false;
 	callFromPitStopEndTime = 0;
+	rpmHardLimitTimestamp = 0;
 	wallFuelCorrection = 0;
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero

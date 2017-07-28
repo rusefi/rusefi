@@ -223,10 +223,12 @@ static msg_t ivThread(int param) {
 		}
 
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
-			tsOutputChannels.debugFloatField1 = iacPosition;
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 			if (engineConfiguration->idleMode == IM_AUTO) {
-				idlePid.postState(&tsOutputChannels);
+				// see also tsOutputChannels->idlePosition
+				idlePid.postState(&tsOutputChannels, 1000000);
+			} else {
+				tsOutputChannels.debugFloatField1 = iacPosition;
 			}
 #endif
 		}
