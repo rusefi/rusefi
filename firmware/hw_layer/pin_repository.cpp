@@ -107,11 +107,11 @@ const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
 	}
-	ioportid_t hwPort = getHwPort(brainPin);
+	ioportid_t hwPort = getHwPort("hostname", brainPin);
 	if (hwPort == GPIO_NULL) {
 		return "NONE";
 	}
-	int hwPin = getHwPin(brainPin);
+	int hwPin = getHwPin("hostname", brainPin);
 	portNameStream.eos = 0; // reset
 	chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
 	portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
@@ -162,8 +162,8 @@ bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 }
 
 const char * getPinFunction(brain_input_pin_e brainPin) {
-	ioportid_t port = getHwPort(brainPin);
-	ioportmask_t pin = getHwPin(brainPin);
+	ioportid_t port = getHwPort("getF", brainPin);
+	ioportmask_t pin = getHwPin("getF", brainPin);
 
 	int index = getIndex(port, pin);
 	return PIN_USED[index];
@@ -174,8 +174,8 @@ void unmarkPin(brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
-	ioportid_t port = getHwPort(brainPin);
-	ioportmask_t pin = getHwPin(brainPin);
+	ioportid_t port = getHwPort("unmark", brainPin);
+	ioportmask_t pin = getHwPin("unmark", brainPin);
 
 	int index = getIndex(port, pin);
 

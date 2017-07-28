@@ -92,14 +92,14 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 		return;
 	}
 
-	stepPort = getHwPort(stepPin);
-	this->stepPin = getHwPin(stepPin);
+	stepPort = getHwPort("step", stepPin);
+	this->stepPin = getHwPin("step", stepPin);
 
 	this->directionPinMode = directionPinMode;
 	this->directionPin.initPin("stepper dir", directionPin, &this->directionPinMode);
 
-	enablePort = getHwPort(enablePin);
-	this->enablePin = getHwPin(enablePin);
+	enablePort = getHwPort("enable", enablePin);
+	this->enablePin = getHwPin("enable", enablePin);
 
 	efiSetPadMode("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
 	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);

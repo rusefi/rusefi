@@ -431,8 +431,8 @@ void initHip9011(Logging *sharedLogger) {
 
 	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
 
-	hipSpiCfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
-	hipSpiCfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
+	hipSpiCfg.ssport = getHwPort("hip", boardConfiguration->hip9011CsPin);
+	hipSpiCfg.sspad = getHwPin("hip", boardConfiguration->hip9011CsPin);
 
 	intHold.initPin("hip int/hold", boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);

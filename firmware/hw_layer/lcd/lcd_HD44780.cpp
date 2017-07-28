@@ -76,21 +76,26 @@ static void lcdSleep(int period) {
 //static char txbuf[1];
 #define LCD_PORT_EXP_ADDR 0x20
 
+// todo: use this method wider!
+static void writePad(const char *msg, brain_pin_e pin, int bit) {
+	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
+}
+
 //-----------------------------------------------------------------------------
 static void lcd_HD44780_write(uint8_t data) {
 	if (engineConfiguration->displayMode == DM_HD44780) {
-		palWritePad(getHwPort(boardConfiguration->HD44780_db7), getHwPin(boardConfiguration->HD44780_db7),
+		writePad("lcd", boardConfiguration->HD44780_db7,
 				data & 0x80 ? 1 : 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db6), getHwPin(boardConfiguration->HD44780_db6),
+		writePad("lcd", boardConfiguration->HD44780_db6,
 				data & 0x40 ? 1 : 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db5), getHwPin(boardConfiguration->HD44780_db5),
+				writePad("lcd", boardConfiguration->HD44780_db5,
 				data & 0x20 ? 1 : 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db4), getHwPin(boardConfiguration->HD44780_db4),
+				writePad("lcd", boardConfiguration->HD44780_db4,
 				data & 0x10 ? 1 : 0);
 
-		palSetPad(getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e)); // En high
+		writePad("lcd", boardConfiguration->HD44780_e, 1); // En high
 		lcdSleep(10); // enable pulse must be >450ns
-		palClearPad(getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e)); // En low
+		writePad("lcd", boardConfiguration->HD44780_e, 0); // En low
 		lcdSleep(40); // commands need > 37us to settle
 	} else {
 
@@ -119,7 +124,7 @@ static void lcd_HD44780_write(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_write_command(uint8_t data) {
-	palClearPad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs));
+	palClearPad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs));
 
 	lcd_HD44780_write(data);
 	lcd_HD44780_write(data << 4);
@@ -127,13 +132,13 @@ void lcd_HD44780_write_command(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_write_data(uint8_t data) {
-	palSetPad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs));
+	palSetPad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs));
 
 	lcd_HD44780_write(data);
 	lcd_HD44780_write(data << 4);
 	currentColumn++;
 
-	palClearPad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs));
+	palClearPad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs));
 }
 
 //-----------------------------------------------------------------------------
@@ -195,12 +200,12 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 		efiSetPadMode("lcd DB6", boardConfiguration->HD44780_db6, PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("lcd DB7", boardConfiguration->HD44780_db7, PAL_MODE_OUTPUT_PUSHPULL);
 		// and zero values
-		palWritePad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db4), getHwPin(boardConfiguration->HD44780_db4), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db5), getHwPin(boardConfiguration->HD44780_db5), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db6), getHwPin(boardConfiguration->HD44780_db6), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db7), getHwPin(boardConfiguration->HD44780_db7), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_e), getHwPin("lcd", boardConfiguration->HD44780_e), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db4), getHwPin("lcd", boardConfiguration->HD44780_db4), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db5), getHwPin("lcd", boardConfiguration->HD44780_db5), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db6), getHwPin("lcd", boardConfiguration->HD44780_db6), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db7), getHwPin("lcd", boardConfiguration->HD44780_db7), 0);
 	}
 
 	chThdSleepMilliseconds(20); // LCD needs some time to wake up
