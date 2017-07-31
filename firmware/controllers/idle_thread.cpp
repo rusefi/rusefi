@@ -154,8 +154,10 @@ percent_t getIdlePosition(void) {
 }
 
 static float autoIdle(float cltCorrection) {
-	if (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > boardConfiguration->idlePidDeactivationTpsThreshold)
+	if (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > boardConfiguration->idlePidDeactivationTpsThreshold) {
+		// just leave IAC position as is
 		return currentIdlePosition;
+	}
 
 	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
