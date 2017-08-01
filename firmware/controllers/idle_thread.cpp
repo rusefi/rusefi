@@ -54,6 +54,9 @@ static StepperMotor iacMotor;
 
 static int adjustedTargetRpm;
 
+static uint32_t lastCrankingCyclesCounter = 0;
+static float lastCrankingIacPosition;
+
 /**
  * that's current position with CLT and IAT corrections
  */
@@ -213,11 +216,21 @@ static msg_t ivThread(int param) {
 		} else if (!engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			// during cranking it's always manual mode, PID would make no sence during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
-		} else if (engineConfiguration->idleMode == IM_MANUAL) {
-			// let's re-apply CLT correction
-			iacPosition = manualIdleController(cltCorrection);
+			// save cranking position & cycles counter for taper transition
+			lastCrankingIacPosition = iacPosition;
+			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
 		} else {
-			iacPosition = autoIdle(cltCorrection);
+			if (engineConfiguration->idleMode == IM_MANUAL) {
+				// let's re-apply CLT correction
+				iacPosition = manualIdleController(cltCorrection);
+			} else {
+				iacPosition = autoIdle(cltCorrection);
+			}
+			// taper transition from cranking to running (uint32_t to float conversion is safe here)
+			if (engineConfiguration->afterCrankingIACtaperDuration > 0)
+				iacPosition = interpolateClamped(lastCrankingCyclesCounter, lastCrankingIacPosition, 
+					lastCrankingCyclesCounter + engineConfiguration->afterCrankingIACtaperDuration, iacPosition, 
+					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
 		if (absF(iacPosition - currentIdlePosition) < 1) {
