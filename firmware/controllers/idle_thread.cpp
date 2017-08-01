@@ -227,9 +227,10 @@ static msg_t ivThread(int param) {
 				iacPosition = autoIdle(cltCorrection);
 			}
 			// taper transition from cranking to running (uint32_t to float conversion is safe here)
-			iacPosition = interpolateClamped(lastCrankingCyclesCounter, lastCrankingIacPosition, 
-				lastCrankingCyclesCounter + engineConfiguration->afterCrankingIACtaperDuration, iacPosition, 
-				engine->rpmCalculator.getRevolutionCounterSinceStart());
+			if (engineConfiguration->afterCrankingIACtaperDuration > 0)
+				iacPosition = interpolateClamped(lastCrankingCyclesCounter, lastCrankingIacPosition, 
+					lastCrankingCyclesCounter + engineConfiguration->afterCrankingIACtaperDuration, iacPosition, 
+					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
 		if (absF(iacPosition - currentIdlePosition) < 1) {
