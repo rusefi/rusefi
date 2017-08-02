@@ -1621,6 +1621,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
 		field = "Startup fuel prime duration",			startUpFuelPumpDuration
+		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
 		
 		
 	dialog = EngineLoadAccelPanel, "Engine Load"

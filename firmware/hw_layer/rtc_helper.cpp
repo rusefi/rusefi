@@ -13,7 +13,6 @@
 #include "rtc_helper.h"
 
 #if EFI_RTC || defined(__DOXYGEN__)
-#include "rtc.h"
 static LoggingWithStorage logger("RTC");
 static RTCDateTime timespec;
 
