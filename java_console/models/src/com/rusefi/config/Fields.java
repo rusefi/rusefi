@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 25 20:21:45 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Aug 02 07:34:07 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1084,6 +1084,7 @@ public class Fields {
 	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
 	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
+	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel";
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
@@ -1092,6 +1093,8 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_VR = "fuel: VE";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: last injection";
+	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
+	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";

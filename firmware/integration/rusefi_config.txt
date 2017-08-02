@@ -911,6 +911,8 @@ end_struct
 
 
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
+
 
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel"
@@ -920,6 +922,8 @@ end_struct
 #define GAUGE_NAME_FUEL_VR "fuel: VE"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: last injection"
+#define GAUGE_NAME_FUEL_BASE "fuel: base"
+#define GAUGE_NAME_FUEL_PID_CORR "fuel: correction"
 
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
