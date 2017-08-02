@@ -95,7 +95,7 @@ public enum Sensor {
     IAT(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 8, BackgroundColor.WHITE, -40, 150, "C"),
     TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"),
     CRANKING_BASE(SensorCategory.FUEL, FieldType.FLOAT, 44, BackgroundColor.MUD, 0, 30, "ms"),
-    FUEL_BASE(SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
+    FUEL_BASE(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     // todo: unify with TIMING
     ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),

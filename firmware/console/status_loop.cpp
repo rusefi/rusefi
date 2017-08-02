@@ -268,11 +268,11 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 	if (fileFormat) {
 		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-		reportSensorF(log, fileFormat, "f: base", "ms", fuelBase, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.injectorLag, 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.runningFuel), 2);
-		reportSensorF(log, fileFormat, "f: pid", "ms", ENGINE(engineState.fuelPidCorrection), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.fuelPidCorrection), 2);
 
 		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);
 		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
@@ -289,7 +289,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #endif /* EFI_PROD_CODE */
 
-	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
+	reportSensorF(log, fileFormat, GAUGE_NAME_KNOCK_COUNTER, "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, GAUGE_NAME_KNOCK_LEVEL, "v", engine->knockVolts, 2);
 
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
