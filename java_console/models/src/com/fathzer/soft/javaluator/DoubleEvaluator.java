@@ -116,6 +116,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 
 	public static final Function fsio_setting = new Function("fsio_setting", 1);
 	public static final Function if_function = new Function("if", 3);
+	public static final Function table_function = new Function("fsio_table", 3);
 
 
 	/** Returns a pseudo random number */
@@ -160,7 +161,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 
 	/** The whole set of predefined functions */
 	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
-			if_function, fsio_setting};
+			if_function, fsio_setting, table_function};
 	/** The whole set of predefined constants */
 	private static final Constant[] CONSTANTS = new Constant[]{TRUE, FALSE};
 	
@@ -362,7 +363,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 			result = Math.log10(arguments.next());
 		} else if (RANDOM.equals(function)) {
 			result = Math.random();
-		} else if (fsio_setting.equals(function) || if_function.equals(function)) {
+		} else if (fsio_setting.equals(function) || if_function.equals(function) || table_function.equals(function)) {
 			result = 333333.0;
 		} else {
 			result = super.evaluate(function, arguments, evaluationContext);
