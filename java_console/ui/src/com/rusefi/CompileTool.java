@@ -5,8 +5,6 @@ import com.fathzer.soft.javaluator.DoubleEvaluator;
 import java.io.*;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * http://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
  * <p/>
@@ -65,8 +63,13 @@ public class CompileTool {
 
         String expression = line.substring(indexOfEquals + 1).trim();
 
-        String rpn = DoubleEvaluator.process(expression).getPosftfixExpression();
+        String rpn;
+        try {
+            rpn = DoubleEvaluator.process(expression).getPosftfixExpression();
 
+        } catch (Throwable e) {
+            throw new IllegalStateException("For " + expression, e);
+        }
         bw.write("\n// Human-readable: " + expression + "\r\n");
         bw.write("#define " + name + " \"" + rpn + "\"\r\n");
     }
