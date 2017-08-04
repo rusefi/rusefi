@@ -748,6 +748,16 @@ typedef enum {
 } sensor_chart_e;
 
 typedef enum {
+	REVERSE = -1,
+	NEUTRAL = 0,
+	GEAR_1 = 1,
+	GEAR_2 = 2,
+	GEAR_3 = 3,
+	GEAR_4 = 4,
+
+} gear_e;
+
+typedef enum {
 	CUSTOM = 0,
 	Bosch0280218037 = 1,
 	Bosch0280218004 = 2,
