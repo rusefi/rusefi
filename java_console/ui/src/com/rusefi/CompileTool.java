@@ -12,6 +12,7 @@ import java.util.List;
  * 1/19/2017
  */
 public class CompileTool {
+    private static String NEWLINE = "\n";
     public static void run(List<String> args) throws IOException {
         System.out.println("Params " + args);
 
@@ -28,9 +29,9 @@ public class CompileTool {
         BufferedReader br = new BufferedReader(new FileReader(inputFileName));
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputFileName))) {
-            bw.write("// this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically\r\n");
-            bw.write("// from " + inputFileName + "\r\n");
-            bw.write("// on " + FileLog.getDate() + "\r\n//\r\n");
+            bw.write("// this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically" + NEWLINE);
+            bw.write("// from " + inputFileName + NEWLINE);
+            bw.write("// on " + FileLog.getDate() + NEWLINE + "//" + NEWLINE);
 
             String line;
             while ((line = br.readLine()) != null) {
@@ -48,7 +49,7 @@ public class CompileTool {
             return;
         if (line.charAt(0) == '#') {
             // forwarding comment into the output
-            bw.write("//" + line.substring(1) + "\r\n");
+            bw.write("//" + line.substring(1) + NEWLINE);
             return;
         }
 
@@ -70,8 +71,8 @@ public class CompileTool {
         } catch (Throwable e) {
             throw new IllegalStateException("For " + expression, e);
         }
-        bw.write("\n// Human-readable: " + expression + "\r\n");
-        bw.write("#define " + name + " \"" + rpn + "\"\r\n");
+        bw.write(NEWLINE + "// Human-readable: " + expression + NEWLINE);
+        bw.write("#define " + name + " \"" + rpn + "\"" + NEWLINE);
     }
 
 }
