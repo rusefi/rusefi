@@ -76,7 +76,7 @@
             <zipfileset src="lib/batik/batik-svggen.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-awt-util.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-util.jar" includes="**/*.class"/>
-            <zipfileset src="lib/jlatexmath-1.0.3.jar" includes="**/*.class **/*.xml **/*.ttf"/>
+            <zipfileset src="lib/jlatexmath-1.0.6.jar" includes="**/*.class **/*.xml **/*.ttf"/>
         </jar>
     </target>
 
