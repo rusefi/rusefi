@@ -100,7 +100,7 @@ public enum Sensor {
     // todo: unify with TIMING
     ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),
     DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
-    actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
+    actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, /*offset */ 64, BackgroundColor.MUD, 0, 30, "ms"),
     debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
     VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),
     FIRMWARE_VERSION(SensorCategory.OPERATIONS, FieldType.INT, 84, BackgroundColor.BLUE),
@@ -128,7 +128,7 @@ public enum Sensor {
     debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.OPERATIONS, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
     debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
 
-    warningCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
+    errorCodeCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
     lastErrorCode(SensorCategory.OPERATIONS, FieldType.INT, 240, BackgroundColor.MUD, 0, 5),
 
     RPM(SensorCategory.SENSOR_INPUTS, FieldType.INT, 0, BackgroundColor.RED, 0, 8000),
