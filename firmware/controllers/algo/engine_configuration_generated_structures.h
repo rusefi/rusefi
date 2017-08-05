@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 03 21:08:57 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 05 16:55:15 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1829,10 +1829,12 @@ typedef struct {
 	 */
 	float postCrankingDurationSec;
 	/**
+	 * todo: finish implementation #332
 	 * offset 2668
 	 */
 	ThermistorConf auxTempSensor1;
 	/**
+	 * todo: finish implementation #332
 	 * offset 2700
 	 */
 	ThermistorConf auxTempSensor2;
@@ -2140,4 +2142,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 03 21:08:57 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 05 16:55:15 EDT 2017
