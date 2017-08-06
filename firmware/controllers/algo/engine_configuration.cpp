@@ -254,7 +254,6 @@ static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
-		config->fsioFormulas[i][0] = 0;
 		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
@@ -565,6 +564,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setBosch0280218037(config);
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		config->fsioFormulas[i][0] = 0;
+	}
+
 
 	boardConfiguration->mapMinBufferLength = 1;
 
