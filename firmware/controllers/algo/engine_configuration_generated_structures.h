@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 05 16:55:15 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 06 19:42:16 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -646,6 +646,7 @@ typedef struct {
 	 */
 	spi_device_e max31855spiDevice;
 	/**
+	 * todo: rename to fsioOutputPins
 	 * offset 444
 	 */
 	brain_pin_e fsioPins[FSIO_COMMAND_COUNT];
@@ -797,6 +798,7 @@ typedef struct {
 	 */
 	pin_input_mode_e clutchUpPinMode;
 	/**
+	 * todo:not finshed
 	 * These input pins allow us to pull toggle buttons state
 	 * offset 796
 	 */
@@ -1702,9 +1704,10 @@ typedef struct {
 	 */
 	pin_output_mode_e dizzySparkOutputPinMode;
 	/**
+	 * todo: rename to fsioAnalogInputs
 	 * offset 2376
 	 */
-	adc_channel_e fsioAdc[FSIO_ADC_COUNT];
+	adc_channel_e fsioAdc[FSIO_ANALOG_INPUT_COUNT];
 	/**
 	 * Fixed timing, useful for TDC testing
 	 * offset 2392
@@ -2142,4 +2145,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 05 16:55:15 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 06 19:42:16 EDT 2017

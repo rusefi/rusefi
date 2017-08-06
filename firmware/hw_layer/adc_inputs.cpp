@@ -605,7 +605,7 @@ static void configureInputs(void) {
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 
-	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);
 	}
 }

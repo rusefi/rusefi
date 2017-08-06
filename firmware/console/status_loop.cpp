@@ -310,7 +310,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
 
-	for (int i = 0;i<FSIO_ADC_COUNT;i++) {
+	for (int i = 0;i<FSIO_ANALOG_INPUT_COUNT;i++) {
 		if (engineConfiguration->fsioAdc[i] != EFI_ADC_NONE) {
 			strcpy(buf, "adcX");
 			buf[3] = '0' + i;
