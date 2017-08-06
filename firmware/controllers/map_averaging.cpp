@@ -197,6 +197,17 @@ static void endAveraging(void *arg) {
 	mapAveragingPin.setLow();
 }
 
+static void applyMapMinBufferLength() {
+	// check range
+	mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
+	// reset index
+	averagedMapBufIdx = 0;
+	// fill with maximum values
+	for (int i = 0; i < mapMinBufferLength; i++) {
+		averagedMapRunningBuffer[i] = FLT_MAX;
+	}
+}
+
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
@@ -213,16 +224,8 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		return;
 	}
 
-	// 'mapMinBufferLength == 0' means not initialized
-	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength || mapMinBufferLength == 0) {
-		// check range
-		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
-		// reset index
-		averagedMapBufIdx = 0;
-		// fill with maximum values
-		for (int i = 0; i < mapMinBufferLength; i++) {
-			averagedMapRunningBuffer[i] = FLT_MAX;
-		}
+	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
+		applyMapMinBufferLength();
 	}
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
@@ -289,6 +292,7 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 
 	addTriggerEventListener(&mapAveragingCallback, "MAP averaging", engine);
 	addConsoleAction("faststat", showMapStats);
+	applyMapMinBufferLength();
 }
 
 #else
