@@ -26,7 +26,6 @@ ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel);
 
 adc_channel_e getAdcChannel(brain_pin_e pin);
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
-void doSlowAdc(void);
 
 int getAdcHardwareIndexByInternalIndex(int index);
 
