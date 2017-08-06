@@ -354,7 +354,7 @@ static void printAnalogInfo(void) {
 	if (hasMafSensor()) {
 		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	}
-	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
 		if (ch != EFI_ADC_NONE) {
 			printAnalogChannelInfo("fsio", ch);
