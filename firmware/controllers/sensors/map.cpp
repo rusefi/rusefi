@@ -187,6 +187,9 @@ static void digitalMapWidthCallback(void) {
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+
+extern int mapMinBufferLength;
+
 static void printMAPInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	scheduleMsg(logger, "instant value=%fkPa", getRawMap());
@@ -195,9 +198,10 @@ static void printMAPInfo(void) {
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		scheduleMsg(logger, "instant value=%fHz @ %s", mapFreq, hwPortname(boardConfiguration->frequencyReportingMapInputPin));
 	} else {
-		scheduleMsg(logger, "map type=%d/%s MAP=%fkPa", engineConfiguration->map.sensor.type,
+		scheduleMsg(logger, "map type=%d/%s MAP=%fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
-				getMap());
+				getMap(),
+				mapMinBufferLength);
 
 		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
 		static char pinNameBuffer[16];

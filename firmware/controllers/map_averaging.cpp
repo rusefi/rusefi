@@ -84,7 +84,7 @@ static float v_averagedMapValue;
 #define MAX_MAP_BUFFER_LENGTH (INJECTION_PIN_COUNT * 2)
 // in MAP units, not voltage!
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
-static int mapMinBufferLength = 0;
+int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 // this is 'minimal averaged' MAP
 static float currentPressure;
@@ -213,7 +213,8 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		return;
 	}
 
-	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
+	// 'mapMinBufferLength == 0' means not initialized
+	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength || mapMinBufferLength == 0) {
 		// check range
 		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
 		// reset index
