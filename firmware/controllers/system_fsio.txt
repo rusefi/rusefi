@@ -47,3 +47,5 @@ RPM_BELOW_USER_SETTING_1=rpm < fsio_setting(1)
 STARTER_BLOCK=rpm < cranking_rpm
 
 BOOST_CONTROLLER=fsio_table (3, rpm, map) / 100
+
+ANALOG_CONDITION=if(fsio_input (0) > 20, 0, 10) 
