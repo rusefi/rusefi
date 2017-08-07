@@ -13,12 +13,13 @@ import java.util.List;
  */
 public class CompileTool {
     private static String NEWLINE = "\n";
-    public static void run(List<String> args) throws IOException {
+
+    public static int run(List<String> args) throws IOException {
         System.out.println("Params " + args);
 
         if (args.size() != 2) {
             System.out.println("Please specify input file and output file name");
-            return;
+            return -1;
         }
 
         String inputFileName = args.get(0);
@@ -37,21 +38,24 @@ public class CompileTool {
             while ((line = br.readLine()) != null) {
                 line = line.trim();
 //            line = line.replaceAll("\\s+", " ");
+                bw.write(handleOneFsioLine(line));
 
-                handleOneFsioLine(line, bw);
             }
         }
         System.out.println("Done!");
+        return 0;
     }
 
-    private static void handleOneFsioLine(String line, BufferedWriter bw) throws IOException {
+    public static String handleOneFsioLine(String line) throws IOException {
         if (line.isEmpty())
-            return;
+            return "";
+        StringBuilder result = new StringBuilder();
         if (line.charAt(0) == '#') {
             // forwarding comment into the output
-            bw.write("//" + line.substring(1) + NEWLINE);
-            return;
+            result.append("//" + line.substring(1) + NEWLINE);
+            return result.toString();
         }
+
 
         int indexOfEquals = line.indexOf('=');
 
@@ -71,8 +75,8 @@ public class CompileTool {
         } catch (Throwable e) {
             throw new IllegalStateException("For " + expression, e);
         }
-        bw.write(NEWLINE + "// Human-readable: " + expression + NEWLINE);
-        bw.write("#define " + name + " \"" + rpn + "\"" + NEWLINE);
+        result.append(NEWLINE + "// Human-readable: " + expression + NEWLINE);
+        result.append("#define " + name + " \"" + rpn + "\"" + NEWLINE);
+        return result.toString();
     }
-
 }
