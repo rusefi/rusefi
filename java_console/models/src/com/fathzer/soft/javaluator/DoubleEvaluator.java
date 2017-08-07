@@ -4,9 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Locale;
+import java.util.*;
 
 /** An evaluator that is able to evaluate arithmetic expressions on real numbers.
  * <br>Built-in operators:<ul>
@@ -115,6 +113,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static final Function LOG = new Function("log", 1);
 
 	public static final Function fsio_setting = new Function("fsio_setting", 1);
+	public static final Function fsio_input = new Function("fsio_input", 1);
 	public static final Function if_function = new Function("if", 3);
 	public static final Function table_function = new Function("fsio_table", 3);
 
@@ -159,9 +158,17 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	/** The standard whole set of predefined operators */
 	private static final Operator[] OPERATORS = new Operator[]{NEGATE, NOT, NOT2, MORE, MORE_EQ, AND, AND2, OR, OR2, LESS, LESS_EQ, MINUS, PLUS, MULTIPLY, DIVIDE, EXPONENT, MODULO};
 
+	private static final List<Function> MISC_FUNCTIONS = Arrays.asList(if_function, fsio_setting, fsio_input, table_function);
+
 	/** The whole set of predefined functions */
-	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
-			if_function, fsio_setting, table_function};
+	private static final List<Function> FUNCTIONS = new ArrayList<>(
+			Arrays.asList(
+					new Function[]{
+							SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
+					}));
+	static {
+		FUNCTIONS.addAll(MISC_FUNCTIONS);
+	}
 	/** The whole set of predefined constants */
 	private static final Constant[] CONSTANTS = new Constant[]{TRUE, FALSE};
 	
@@ -191,7 +198,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static Parameters getDefaultParameters(Style style) {
 		Parameters result = new Parameters();
 		result.addOperators(Arrays.asList(OPERATORS));
-		result.addFunctions(Arrays.asList(FUNCTIONS));
+		result.addFunctions(FUNCTIONS);
 		result.addConstants(Arrays.asList(CONSTANTS));
 		result.addFunctionBracket(BracketPair.PARENTHESES);
 		result.addExpressionBracket(BracketPair.PARENTHESES);
@@ -363,7 +370,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 			result = Math.log10(arguments.next());
 		} else if (RANDOM.equals(function)) {
 			result = Math.random();
-		} else if (fsio_setting.equals(function) || if_function.equals(function) || table_function.equals(function)) {
+		} else if (MISC_FUNCTIONS.contains(function)) {
 			result = 333333.0;
 		} else {
 			result = super.evaluate(function, arguments, evaluationContext);
