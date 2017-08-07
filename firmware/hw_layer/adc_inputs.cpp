@@ -70,7 +70,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 // is there a reason to have this configurable?
 #define ADC_FAST_DEVICE ADCD2
 
-static int slowAdcCounter = 0;
+static volatile int slowAdcCounter = 0;
 static LoggingWithStorage logger("ADC");
 
 // todo: move this flag to Engine god object
@@ -544,6 +544,14 @@ static void printFullAdcReport(Logging *logger) {
 static void setAdcDebugReporting(int value) {
 	adcDebugReporting = value;
 	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
+}
+
+void waitForSlowAdc() {
+	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
+	// todo: use sync.objects?
+	while (slowAdcCounter < 1) {
+		chThdSleepMilliseconds(1);
+	}
 }
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
