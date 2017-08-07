@@ -289,7 +289,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	engineConfiguration->useFSIO16ForTimingAdjustment = true;
 	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PA3
 
-	config->fsioFormulas[15] = ANALOG_CONDITION;
+	strcpy(config->fsioFormulas[15], ANALOG_CONDITION);
 
 	// end of Ford Escort GT config
 }
