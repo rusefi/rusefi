@@ -91,13 +91,6 @@ Engine _engine CCM_OPTIONAL;
 Engine * engine = &_engine;
 #endif /* EFI_PROD_CODE */
 
-/**
- * I am not sure if this needs to be configurable.
- *
- * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
- */
-#define CLEANUP_MODE_TPS 90
-
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)

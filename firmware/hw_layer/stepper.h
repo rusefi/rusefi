@@ -14,7 +14,7 @@ class StepperMotor {
 public:
 	StepperMotor();
 	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, int totalSteps,
-			brain_pin_e enablePin);
+			brain_pin_e enablePin, Logging *sharedLogger);
 	void pulse();
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition();
