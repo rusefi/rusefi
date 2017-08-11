@@ -88,6 +88,7 @@ public:
 	int previousRpmValue;
 	/**
 	 * This is a performance optimization: let's pre-calulate this each time RPM changes
+	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs;
 	volatile efitime_t lastRpmEventTimeNt;
