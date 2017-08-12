@@ -91,6 +91,15 @@ enable2ndByteCanID = false
          dataReadyCondition = { toothLogReady }
          dataLength = 256 ; in bytes, including headers, footers and data
 
+       ; recordDef = headerLen, footerLen, recordLen
+       recordDef =   0,   0,   4; in bytes, the recordLen is for each record, currently limited to 4 bytes
+
+
+       recordField = PA3,               "Inj D",         3,  1, 1,   ""
+       recordField = PA2,               "Inj C",         2,  1, 1,   ""
+       recordField = PA1,               "Inj B",         1,  1, 1,   ""
+       recordField = PA0,               "Inj A",         0,  1, 1,   ""
+
 [VeAnalyze]
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
