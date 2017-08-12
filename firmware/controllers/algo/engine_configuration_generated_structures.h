@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 06 19:42:16 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1592,9 +1592,18 @@ typedef struct {
 	 */
 	int16_t unusedShortHere;
 	/**
+	 * Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value
 	 * offset 2172
 	 */
-	float unusedalternatorControl[3];
+	int16_t iacByTpsTaper;
+	/**
+	 * offset 2174
+	 */
+	int16_t unusedShort;
+	/**
+	 * offset 2176
+	 */
+	float unusedalternatorControl[2];
 	/**
 	 * offset 2184
 	 */
@@ -2145,4 +2154,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 06 19:42:16 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017

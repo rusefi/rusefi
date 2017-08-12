@@ -1120,8 +1120,12 @@
 #define afterCrankingIACtaperDuration_offset_hex 878
 #define unusedShortHere_offset 2170
 #define unusedShortHere_offset_hex 87a
-#define unusedalternatorControl_offset 2172
-#define unusedalternatorControl_offset_hex 87c
+#define iacByTpsTaper_offset 2172
+#define iacByTpsTaper_offset_hex 87c
+#define unusedShort_offset 2174
+#define unusedShort_offset_hex 87e
+#define unusedalternatorControl_offset 2176
+#define unusedalternatorControl_offset_hex 880
 #define tpsAccelLength_offset 2184
 #define tpsAccelLength_offset_hex 888
 #define tpsAccelEnrichmentThreshold_offset 2188

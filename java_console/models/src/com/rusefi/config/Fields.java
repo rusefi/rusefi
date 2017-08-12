@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Aug 06 19:42:16 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -814,7 +814,10 @@ public class Fields {
 	public static final int afterCrankingIACtaperDuration_offset = 2168;
 	public static final int afterCrankingIACtaperDuration_offset_hex = 878;
 	public static final int unusedShortHere_offset = 2170;
-	public static final int unusedalternatorControl_offset = 2172;
+	public static final int iacByTpsTaper_offset = 2172;
+	public static final int unusedShort_offset = 2174;
+	public static final int unusedalternatorControl_offset = 2176;
+	public static final int unusedalternatorControl_offset_hex = 880;
 	public static final int tpsAccelLength_offset = 2184;
 	public static final int tpsAccelLength_offset_hex = 888;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2188;
@@ -1616,6 +1619,8 @@ public class Fields {
 	public static final Field STARTOFCRANKINGPRIMINGPULSE = Field.create("STARTOFCRANKINGPRIMINGPULSE", 2164, FieldType.FLOAT);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 2168, FieldType.INT);
 	public static final Field UNUSEDSHORTHERE = Field.create("UNUSEDSHORTHERE", 2170, FieldType.INT);
+	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 2172, FieldType.INT);
+	public static final Field UNUSEDSHORT = Field.create("UNUSEDSHORT", 2174, FieldType.INT);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2184, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 2188, FieldType.FLOAT);
 	public static final Field VVTOFFSET = Field.create("VVTOFFSET", 2192, FieldType.FLOAT);
