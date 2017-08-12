@@ -379,7 +379,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * set_fsio_setting 3 65
 	 * set_fsio_setting 4 15
 	 */
-	boardConfiguration->fsio_setting[1] = 6200; // #2 RPM threshold
+	boardConfiguration->fsio_setting[1] = 6500; // #2 RPM threshold
 	boardConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
 	boardConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
 
@@ -443,7 +443,7 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNA
 	engineConfiguration->vvtOffset = 97;
 
 
-	engineConfiguration->rpmHardLimit = 6700; // we want to survive the race
+	engineConfiguration->rpmHardLimit = 7200; // we want to survive the race, but we also want some fun!
 
 	// set idle_position 30
 	boardConfiguration->manIdlePosition = 30;
