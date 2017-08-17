@@ -22,7 +22,7 @@ EXTERN_ENGINE;
 
 void initMemsPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->LIS302DLCsPin = GPIOE_3;
-	boardConfiguration->is_enabled_spi_1 = true;
+// 	boardConfiguration->is_enabled_spi_1 = true; // we have a conflict with PA5 input pin
 
 	// stm32f4discovery defaults
 	boardConfiguration->spi1mosiPin = GPIOA_7;
