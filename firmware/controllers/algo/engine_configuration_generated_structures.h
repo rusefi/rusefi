@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 17 02:29:38 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1603,7 +1603,11 @@ typedef struct {
 	/**
 	 * offset 2176
 	 */
-	float unusedalternatorControl[2];
+	brain_pin_e LIS302DLCsPin;
+	/**
+	 * offset 2180
+	 */
+	float unusedalternatorControl;
 	/**
 	 * offset 2184
 	 */
@@ -2154,4 +2158,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 17 02:29:38 EDT 2017
