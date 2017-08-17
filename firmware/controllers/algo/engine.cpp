@@ -93,6 +93,10 @@ Engine::Engine(persistent_config_s *config) {
 	reset();
 }
 
+Accelerometer::Accelerometer() {
+	x = y = z = 0;
+}
+
 SensorsState::SensorsState() {
 	reset();
 }
