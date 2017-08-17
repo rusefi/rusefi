@@ -15,6 +15,7 @@
 
 #include "mems.h"
 #include "lis302dl.h"
+#include "hardware.h"
 
 EXTERN_ENGINE;
 
@@ -26,11 +27,16 @@ void initMemsPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MEMS || defined(__DOXYGEN__)
 
 static SPIDriver *spip = &SPID1; // todo: make this configurable
+static spi_device_e device = SPI_DEVICE_1;
 static OutputPin memsCs;
 
 void initMems(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->LIS302DLCsPin == GPIOA_0)
+		return; // temporary code to handle old configurations
+	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)
+		return; // not used
 
-	engineConfiguration->LIS302DLCsPin = GPIOE_3; // temporary code
+	turnOnSpi(device);
 
 	memsCs.initPin("LIS302 CS", engineConfiguration->LIS302DLCsPin);
 

@@ -43,6 +43,8 @@
 #include "HIP9011.h"
 #endif
 
+#include "mems.h"
+
 #include "custom_engine.h"
 #include "engine_template.h"
 #include "acura_rsx.h"
@@ -932,6 +934,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->spi1mosiPin = GPIOB_5;
 	boardConfiguration->spi1misoPin = GPIOB_4;
 	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
+
+#if EFI_MEMS || defined(__DOXYGEN__)
+	// this would override some values from above
+	initMemsPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 
 	boardConfiguration->spi2mosiPin = GPIOB_15;
 	boardConfiguration->spi2misoPin = GPIOB_14;
