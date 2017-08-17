@@ -14,10 +14,35 @@
  */
 
 #include "mems.h"
+#include "lis302dl.h"
 
+EXTERN_ENGINE;
 
 void initMemsPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engineConfiguration->LIS302DLCsPin = GPIOE_3;
+	boardConfiguration->is_enabled_spi_1 = true;
+}
+
+#if EFI_MEMS || defined(__DOXYGEN__)
+
+static SPIDriver *spip = &SPID1; // todo: make this configurable
+static OutputPin memsCs;
+
+void initMems(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+
+	engineConfiguration->LIS302DLCsPin = GPIOE_3; // temporary code
+
+	memsCs.initPin("LIS302 CS", engineConfiguration->LIS302DLCsPin);
+
+
+	/* LIS302DL initialization.*/
+	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG1, 0x43);
+	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG2, 0x00);
+	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG3, 0x00);
+
+	int8_t x = (int8_t)lis302dlReadRegister(spip, LIS302DL_OUTX);
+	int8_t y = (int8_t)lis302dlReadRegister(spip, LIS302DL_OUTY);
 
 }
 
-
+#endif /* EFI_MEMS */

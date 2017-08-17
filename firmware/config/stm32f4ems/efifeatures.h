@@ -116,6 +116,10 @@
 
 #define EFI_CJ125 TRUE
 
+#if !defined(EFI_MEMS) || defined(__DOXYGEN__)
+ #define EFI_MEMS TRUE
+#endif
+
 #define EFI_INTERNAL_ADC TRUE
 
 #define EFI_DENSO_ADC FALSE

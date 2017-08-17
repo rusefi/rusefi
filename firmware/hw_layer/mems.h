@@ -9,7 +9,7 @@
 #define HW_LAYER_MEMS_H_
 
 #include "main.h"
-#include "engine_configuration.h"
+#include "engine.h"
 
 void initMemsPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
