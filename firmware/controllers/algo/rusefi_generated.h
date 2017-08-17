@@ -1124,8 +1124,10 @@
 #define iacByTpsTaper_offset_hex 87c
 #define unusedShort_offset 2174
 #define unusedShort_offset_hex 87e
-#define unusedalternatorControl_offset 2176
-#define unusedalternatorControl_offset_hex 880
+#define LIS302DLCsPin_offset 2176
+#define LIS302DLCsPin_offset_hex 880
+#define unusedalternatorControl_offset 2180
+#define unusedalternatorControl_offset_hex 884
 #define tpsAccelLength_offset 2184
 #define tpsAccelLength_offset_hex 888
 #define tpsAccelEnrichmentThreshold_offset 2188
