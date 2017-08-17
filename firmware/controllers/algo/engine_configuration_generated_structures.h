@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 25 20:21:45 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -646,6 +646,7 @@ typedef struct {
 	 */
 	spi_device_e max31855spiDevice;
 	/**
+	 * todo: rename to fsioOutputPins
 	 * offset 444
 	 */
 	brain_pin_e fsioPins[FSIO_COMMAND_COUNT];
@@ -797,6 +798,7 @@ typedef struct {
 	 */
 	pin_input_mode_e clutchUpPinMode;
 	/**
+	 * todo:not finshed
 	 * These input pins allow us to pull toggle buttons state
 	 * offset 796
 	 */
@@ -1233,6 +1235,7 @@ typedef struct {
 	offset 1488 bit 10 */
 	bool useLinearIatSensor : 1;
 	/**
+	 * See fsioTimingAdjustment
 	offset 1488 bit 11 */
 	bool useFSIO16ForTimingAdjustment : 1;
 	/**
@@ -1583,7 +1586,24 @@ typedef struct {
 	/**
 	 * offset 2168
 	 */
-	float unusedalternatorControl[4];
+	int16_t afterCrankingIACtaperDuration;
+	/**
+	 * offset 2170
+	 */
+	int16_t unusedShortHere;
+	/**
+	 * Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value
+	 * offset 2172
+	 */
+	int16_t iacByTpsTaper;
+	/**
+	 * offset 2174
+	 */
+	int16_t unusedShort;
+	/**
+	 * offset 2176
+	 */
+	float unusedalternatorControl[2];
 	/**
 	 * offset 2184
 	 */
@@ -1693,9 +1713,10 @@ typedef struct {
 	 */
 	pin_output_mode_e dizzySparkOutputPinMode;
 	/**
+	 * todo: rename to fsioAnalogInputs
 	 * offset 2376
 	 */
-	adc_channel_e fsioAdc[FSIO_ADC_COUNT];
+	adc_channel_e fsioAdc[FSIO_ANALOG_INPUT_COUNT];
 	/**
 	 * Fixed timing, useful for TDC testing
 	 * offset 2392
@@ -1820,10 +1841,12 @@ typedef struct {
 	 */
 	float postCrankingDurationSec;
 	/**
+	 * todo: finish implementation #332
 	 * offset 2668
 	 */
 	ThermistorConf auxTempSensor1;
 	/**
+	 * todo: finish implementation #332
 	 * offset 2700
 	 */
 	ThermistorConf auxTempSensor2;
@@ -2131,4 +2154,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 25 20:21:45 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017

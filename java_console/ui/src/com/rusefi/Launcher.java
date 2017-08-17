@@ -45,7 +45,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20170723;
+    public static final int CONSOLE_VERSION = 20170806;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -287,8 +287,23 @@ public class Launcher {
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
         if ("compile_fsio_file".equalsIgnoreCase(toolName)) {
-            CompileTool.run(Arrays.asList(args).subList(1, args.length));
+            /**
+             * re-packaging array which contains input and output file names
+             */
+            int returnCode = CompileTool.run(Arrays.asList(args).subList(1, args.length));
+            System.exit(returnCode);
             return;
+        }
+
+        if ("compile".equals(toolName)) {
+            if (args.length != 2) {
+                System.err.println("input expression parameter expected");
+                System.exit(-1);
+                return;
+            }
+            String input = args[1];
+            System.out.println(CompileTool.handleOneFsioLine(input));
+            System.exit(0);
         }
 
 
@@ -317,7 +332,7 @@ public class Launcher {
                 if (value != Fields.TS_FILE_VERSION) {
                     String message = "This copy of rusEfi console is not compatible with this version of firmware\r\n" +
                             "Console compatible with " + Fields.TS_FILE_VERSION + " while firmware compatible with " +
-                            (int)value;
+                            (int) value;
                     JOptionPane.showMessageDialog(Launcher.getFrame(), message);
                     assert wrongVersionListener != null;
                     SensorCentral.getInstance().removeListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);

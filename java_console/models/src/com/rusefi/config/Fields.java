@@ -1,10 +1,10 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jul 25 20:21:45 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 12 12:04:29 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
-	public static final int FSIO_ADC_COUNT = 4;
+	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
 	public static final int TS_OUTPUT_SIZE = 356;
 	public static final int TS_FILE_VERSION = 20161225;
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
@@ -811,8 +811,13 @@ public class Fields {
 	public static final int alternatorOffAboveTps_offset_hex = 870;
 	public static final int startOfCrankingPrimingPulse_offset = 2164;
 	public static final int startOfCrankingPrimingPulse_offset_hex = 874;
-	public static final int unusedalternatorControl_offset = 2168;
-	public static final int unusedalternatorControl_offset_hex = 878;
+	public static final int afterCrankingIACtaperDuration_offset = 2168;
+	public static final int afterCrankingIACtaperDuration_offset_hex = 878;
+	public static final int unusedShortHere_offset = 2170;
+	public static final int iacByTpsTaper_offset = 2172;
+	public static final int unusedShort_offset = 2174;
+	public static final int unusedalternatorControl_offset = 2176;
+	public static final int unusedalternatorControl_offset_hex = 880;
 	public static final int tpsAccelLength_offset = 2184;
 	public static final int tpsAccelLength_offset_hex = 888;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2188;
@@ -1084,6 +1089,7 @@ public class Fields {
 	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
 	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
+	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel";
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
@@ -1092,6 +1098,8 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_VR = "fuel: VE";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: last injection";
+	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
+	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
@@ -1609,6 +1617,10 @@ public class Fields {
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 2156, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 2160, FieldType.FLOAT);
 	public static final Field STARTOFCRANKINGPRIMINGPULSE = Field.create("STARTOFCRANKINGPRIMINGPULSE", 2164, FieldType.FLOAT);
+	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 2168, FieldType.INT);
+	public static final Field UNUSEDSHORTHERE = Field.create("UNUSEDSHORTHERE", 2170, FieldType.INT);
+	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 2172, FieldType.INT);
+	public static final Field UNUSEDSHORT = Field.create("UNUSEDSHORT", 2174, FieldType.INT);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2184, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 2188, FieldType.FLOAT);
 	public static final Field VVTOFFSET = Field.create("VVTOFFSET", 2192, FieldType.FLOAT);

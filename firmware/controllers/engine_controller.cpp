@@ -91,13 +91,6 @@ Engine _engine CCM_OPTIONAL;
 Engine * engine = &_engine;
 #endif /* EFI_PROD_CODE */
 
-/**
- * I am not sure if this needs to be configurable.
- *
- * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
- */
-#define CLEANUP_MODE_TPS 90
-
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
@@ -354,7 +347,7 @@ static void printAnalogInfo(void) {
 	if (hasMafSensor()) {
 		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	}
-	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
 		if (ch != EFI_ADC_NONE) {
 			printAnalogChannelInfo("fsio", ch);

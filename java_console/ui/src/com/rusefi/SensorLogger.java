@@ -71,7 +71,7 @@ public class SensorLogger {
             Sensor.debugIntField2,
             Sensor.debugIntField3,
 
-            Sensor.warningCounter,
+            Sensor.errorCodeCounter,
             Sensor.lastErrorCode,
 
     };

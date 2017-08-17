@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2017-07-14_22_00_24
+// on 2017-08-06_20_09_57
 //
 //
 // in this file we define system FSIO expressions
@@ -65,3 +65,9 @@
 
 // Human-readable: rpm < cranking_rpm
 #define STARTER_BLOCK "rpm cranking_rpm <"
+
+// Human-readable: fsio_table (3, rpm, map) / 100
+#define BOOST_CONTROLLER "3 rpm map fsio_table 100 /"
+
+// Human-readable: if(fsio_input (0) > 20, 0, 10)
+#define ANALOG_CONDITION "0 fsio_input 20 > 0 10 if"

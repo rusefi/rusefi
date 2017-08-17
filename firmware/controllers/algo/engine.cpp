@@ -148,6 +148,10 @@ FuelConsumptionState::FuelConsumptionState() {
 	accumulatedSecond = accumulatedMinute = -1;
 }
 
+TransmissionState::TransmissionState() {
+
+}
+
 EngineState::EngineState() {
 	dwellAngle = 0;
 	engineNoiseHipLevel = 0;

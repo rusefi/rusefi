@@ -5,8 +5,6 @@ import com.fathzer.soft.javaluator.DoubleEvaluator;
 import java.io.*;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * http://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
  * <p/>
@@ -14,12 +12,14 @@ import static org.junit.Assert.assertEquals;
  * 1/19/2017
  */
 public class CompileTool {
-    public static void run(List<String> args) throws IOException {
+    private static String NEWLINE = "\n";
+
+    public static int run(List<String> args) throws IOException {
         System.out.println("Params " + args);
 
         if (args.size() != 2) {
             System.out.println("Please specify input file and output file name");
-            return;
+            return -1;
         }
 
         String inputFileName = args.get(0);
@@ -30,29 +30,32 @@ public class CompileTool {
         BufferedReader br = new BufferedReader(new FileReader(inputFileName));
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputFileName))) {
-            bw.write("// this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically\r\n");
-            bw.write("// from " + inputFileName + "\r\n");
-            bw.write("// on " + FileLog.getDate() + "\r\n//\r\n");
+            bw.write("// this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically" + NEWLINE);
+            bw.write("// from " + inputFileName + NEWLINE);
+            bw.write("// on " + FileLog.getDate() + NEWLINE + "//" + NEWLINE);
 
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
 //            line = line.replaceAll("\\s+", " ");
+                bw.write(handleOneFsioLine(line));
 
-                handleOneFsioLine(line, bw);
             }
         }
         System.out.println("Done!");
+        return 0;
     }
 
-    private static void handleOneFsioLine(String line, BufferedWriter bw) throws IOException {
+    public static String handleOneFsioLine(String line) throws IOException {
         if (line.isEmpty())
-            return;
+            return "";
+        StringBuilder result = new StringBuilder();
         if (line.charAt(0) == '#') {
             // forwarding comment into the output
-            bw.write("//" + line.substring(1) + "\r\n");
-            return;
+            result.append("//" + line.substring(1) + NEWLINE);
+            return result.toString();
         }
+
 
         int indexOfEquals = line.indexOf('=');
 
@@ -65,10 +68,15 @@ public class CompileTool {
 
         String expression = line.substring(indexOfEquals + 1).trim();
 
-        String rpn = DoubleEvaluator.process(expression).getPosftfixExpression();
+        String rpn;
+        try {
+            rpn = DoubleEvaluator.process(expression).getPosftfixExpression();
 
-        bw.write("\n// Human-readable: " + expression + "\r\n");
-        bw.write("#define " + name + " \"" + rpn + "\"\r\n");
+        } catch (Throwable e) {
+            throw new IllegalStateException("For " + expression, e);
+        }
+        result.append(NEWLINE + "// Human-readable: " + expression + NEWLINE);
+        result.append("#define " + name + " \"" + rpn + "\"" + NEWLINE);
+        return result.toString();
     }
-
 }

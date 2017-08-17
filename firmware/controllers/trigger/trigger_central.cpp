@@ -98,6 +98,13 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		return;
 	}
 
+	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
+	if (cisnan(oneDegreeUs)) {
+		// we are here if we are getting VVT position signals while engine is not running
+		// for example if crank position sensor is broken :)
+		return;
+	}
+
 	TriggerCentral *tc = &engine->triggerCentral;
 
 	efitick_t nowNt = getTimeNowNt();
@@ -124,7 +131,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 
-	angle_t vvtPosition = NT2US(offsetNt) / engine->rpmCalculator.oneDegreeUs;
+	angle_t vvtPosition = NT2US(offsetNt) / oneDegreeUs;
 
 	// convert engine cycle angle into trigger cycle angle
 	vvtPosition -= tdcPosition();

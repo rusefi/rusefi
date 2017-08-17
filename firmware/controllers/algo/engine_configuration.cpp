@@ -247,13 +247,26 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 	}
 }
 
+static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+	for (int i = 0; i < AUX_PID_COUNT; i++) {
+		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
+	}
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
+		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
+		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
+	}
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
+		engineConfiguration->fsioAdc[i] = EFI_ADC_NONE;
+	}
+}
+
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	memset(activeConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &activeConfiguration->bc;
 
-	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
-		activeConfiguration->fsioAdc[i] = EFI_ADC_NONE;
-	}
+	setDefaultFsioParameters(activeConfiguration);
 
 	disableLCD(boardConfiguration);
 
@@ -516,18 +529,6 @@ static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
-static void setDefaultFsioParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (int i = 0; i < AUX_PID_COUNT; i++) {
-		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
-	}
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
-		config->fsioFormulas[i][0] = 0;
-		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
-		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
-	}
-}
-
 static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_6;
@@ -563,6 +564,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setBosch0280218037(config);
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		config->fsioFormulas[i][0] = 0;
+	}
+
 
 	boardConfiguration->mapMinBufferLength = 1;
 
@@ -857,8 +863,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
 	}
-
-	setDefaultFsioParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 

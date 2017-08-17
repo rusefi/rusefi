@@ -84,7 +84,7 @@ static float v_averagedMapValue;
 #define MAX_MAP_BUFFER_LENGTH (INJECTION_PIN_COUNT * 2)
 // in MAP units, not voltage!
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
-static int mapMinBufferLength = 0;
+int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 // this is 'minimal averaged' MAP
 static float currentPressure;
@@ -197,6 +197,17 @@ static void endAveraging(void *arg) {
 	mapAveragingPin.setLow();
 }
 
+static void applyMapMinBufferLength() {
+	// check range
+	mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
+	// reset index
+	averagedMapBufIdx = 0;
+	// fill with maximum values
+	for (int i = 0; i < mapMinBufferLength; i++) {
+		averagedMapRunningBuffer[i] = FLT_MAX;
+	}
+}
+
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
@@ -214,14 +225,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 	}
 
 	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
-		// check range
-		mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
-		// reset index
-		averagedMapBufIdx = 0;
-		// fill with maximum values
-		for (int i = 0; i < mapMinBufferLength; i++) {
-			averagedMapRunningBuffer[i] = FLT_MAX;
-		}
+		applyMapMinBufferLength();
 	}
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
@@ -288,6 +292,7 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 
 	addTriggerEventListener(&mapAveragingCallback, "MAP averaging", engine);
 	addConsoleAction("faststat", showMapStats);
+	applyMapMinBufferLength();
 }
 
 #else

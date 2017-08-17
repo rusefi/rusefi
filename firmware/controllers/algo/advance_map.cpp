@@ -87,11 +87,13 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
+		tsOutputChannels.debugFloatField3 = engine->fsioTimingAdjustment;
 #endif
 	}
 
 	float result = advanceMap.getValue((float) rpm, engineLoad)
 			+ iatCorrection
+			+ engine->fsioTimingAdjustment
 			+ engine->engineState.cltTimingCorrection
 			// todo: uncomment once we get useable knock   - engine->knockCount
 			;

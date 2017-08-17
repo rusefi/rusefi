@@ -15,7 +15,7 @@
 #define ignitionPin12logic 
 #define LE_COMMAND_LENGTH 200
 #define BLOCKING_FACTOR 400
-#define FSIO_ADC_COUNT 4
+#define FSIO_ANALOG_INPUT_COUNT 4
 #define TS_OUTPUT_SIZE 356
 #define TS_FILE_VERSION 20161225
 #define WARMUP_TARGET_AFR_SIZE 4
@@ -1116,8 +1116,16 @@
 #define alternatorOffAboveTps_offset_hex 870
 #define startOfCrankingPrimingPulse_offset 2164
 #define startOfCrankingPrimingPulse_offset_hex 874
-#define unusedalternatorControl_offset 2168
-#define unusedalternatorControl_offset_hex 878
+#define afterCrankingIACtaperDuration_offset 2168
+#define afterCrankingIACtaperDuration_offset_hex 878
+#define unusedShortHere_offset 2170
+#define unusedShortHere_offset_hex 87a
+#define iacByTpsTaper_offset 2172
+#define iacByTpsTaper_offset_hex 87c
+#define unusedShort_offset 2174
+#define unusedShort_offset_hex 87e
+#define unusedalternatorControl_offset 2176
+#define unusedalternatorControl_offset_hex 880
 #define tpsAccelLength_offset 2184
 #define tpsAccelLength_offset_hex 888
 #define tpsAccelEnrichmentThreshold_offset 2188
@@ -1579,6 +1587,7 @@
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
@@ -1587,6 +1596,8 @@
 #define GAUGE_NAME_FUEL_VR "fuel: VE"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: last injection"
+#define GAUGE_NAME_FUEL_BASE "fuel: base"
+#define GAUGE_NAME_FUEL_PID_CORR "fuel: correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"

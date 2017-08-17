@@ -21,11 +21,16 @@
  */
 #define NO_PWM 0
 
+
+// see useFSIO16ForTimingAdjustment
+#define MAGIC_OFFSET_FOR_TIMING_FSIO 15
+
 fsio8_Map3D_f32t fsioTable1("fsio#1");
 fsio8_Map3D_u8t fsioTable2("fsio#2");
 fsio8_Map3D_u8t fsioTable3("fsio#3");
 fsio8_Map3D_u8t fsioTable4("fsio#4");
 
+extern pin_output_mode_e DEFAULT_OUTPUT;
 
 /**
  * Here we define all rusEfi-specific methods
@@ -401,12 +406,16 @@ void runFsio(void) {
 		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic);
 	}
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
+		LEElement * element = fsioLogics[MAGIC_OFFSET_FOR_TIMING_FSIO];
 
+		if (element == NULL) {
+			warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", "timing");
+		} else {
+			engine->fsioTimingAdjustment = calc.getValue2(engine->fsioTimingAdjustment, element PASS_ENGINE_PARAMETER_SUFFIX);
+		}
 	}
 
 }
-
-static pin_output_mode_e defa = OM_DEFAULT;
 
 #endif /* EFI_PROD_CODE */
 
@@ -547,7 +556,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		if (brainPin != GPIO_UNASSIGNED) {
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), boardConfiguration->fsioPins[i], &defa);
+				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), boardConfiguration->fsioPins[i], &DEFAULT_OUTPUT);
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIOpwm", brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, applyPinState);
 			}

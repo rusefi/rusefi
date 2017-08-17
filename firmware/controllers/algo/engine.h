@@ -103,6 +103,12 @@ public:
 	int accumulatedMinute;
 };
 
+class TransmissionState {
+public:
+	TransmissionState();
+	gear_e gearSelectorPosition;
+};
+
 
 class EngineState {
 public:

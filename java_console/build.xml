@@ -8,7 +8,7 @@
     <target name="compile">
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
-               classpath="lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.3.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
+               classpath="lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
             <src path="autotest/src"/>
             <src path="io/src"/>
             <src path="models/src"/>
@@ -76,7 +76,7 @@
             <zipfileset src="lib/batik/batik-svggen.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-awt-util.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-util.jar" includes="**/*.class"/>
-            <zipfileset src="lib/jlatexmath-1.0.3.jar" includes="**/*.class **/*.xml **/*.ttf"/>
+            <zipfileset src="lib/jlatexmath-1.0.6.jar" includes="**/*.class **/*.xml **/*.ttf"/>
         </jar>
     </target>
 
