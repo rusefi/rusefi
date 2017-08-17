@@ -2,6 +2,7 @@
  * @file mems.cpp
  *
  * stm32f4discovery has MEMS LIS302DL
+ * www.st.com/resource/en/datasheet/lis302dl.pdf
  *
  * SPI1
  * LIS302DL_SPI_SCK PA5
@@ -22,6 +23,11 @@ EXTERN_ENGINE;
 void initMemsPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->LIS302DLCsPin = GPIOE_3;
 	boardConfiguration->is_enabled_spi_1 = true;
+
+	// stm32f4discovery defaults
+	boardConfiguration->spi1mosiPin = GPIOA_7;
+	boardConfiguration->spi1misoPin = GPIOA_6;
+	boardConfiguration->spi1sckPin = GPIOA_5;
 }
 
 #if EFI_MEMS || defined(__DOXYGEN__)
@@ -42,8 +48,8 @@ void initMems(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	/* LIS302DL initialization.*/
-	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG1, 0x43);
-	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG2, 0x00);
+	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG1, 0x47); // enable device, enable XYZ
+	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG2, 0x00); // 4 wire mode
 	lis302dlWriteRegister(spip, LIS302DL_CTRL_REG3, 0x00);
 
 	int8_t x = (int8_t)lis302dlReadRegister(spip, LIS302DL_OUTX);
