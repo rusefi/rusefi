@@ -22,6 +22,8 @@
 
 #define EFI_FSIO TRUE
 
+#define EFI_MEMS FALSE
+
 #define CONSOLE_MAX_ACTIONS 256
 
 #define EFI_SIMULATOR TRUE
