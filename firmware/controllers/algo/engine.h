@@ -67,6 +67,14 @@ private:
 	thermistor_conf_s currentConfig;
 };
 
+class Accelerometer {
+public:
+	Accelerometer();
+	float x; // G value
+	float y;
+	float z;
+};
+
 class SensorsState {
 public:
 	SensorsState();
@@ -80,6 +88,8 @@ public:
 	 */
 	float iat;
 	float clt;
+
+	Accelerometer accelerometer;
 
 	float vBatt;
 	float currentAfr;
