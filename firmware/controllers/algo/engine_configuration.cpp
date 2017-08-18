@@ -43,7 +43,7 @@
 #include "HIP9011.h"
 #endif
 
-#include "mems.h"
+#include "accelerometer.h"
 
 #include "custom_engine.h"
 #include "engine_template.h"
@@ -937,7 +937,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_MEMS || defined(__DOXYGEN__)
 	// this would override some values from above
-	initMemsPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	configureAccelerometerPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 	boardConfiguration->spi2mosiPin = GPIOB_15;
