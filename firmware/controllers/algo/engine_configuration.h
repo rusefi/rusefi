@@ -16,6 +16,11 @@
 #include "rusefi_types.h"
 #include "engine_configuration_generated_structures.h"
 
+#define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
+#define WARMUP_CLT_EXTRA_FUEL_CURVE config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE
+#define IAT_FUEL_CORRECTION_CURVE config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE
+#define INJECTOR_LAG_CURVE engineConfiguration->injector.battLagCorrBins, engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE
+
 #define MOCK_UNDEFINED -1
 
 // WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_32_BITS' hack
@@ -42,24 +47,29 @@ typedef struct {
 } persistent_config_container_s;
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
-void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setAfrMap(afr_table_t table, float value);
 void setMap(fuel_table_t table, float value);
-void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S);
-void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_S);
-void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_S);
-void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_S);
-void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_S);
-void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S);
+void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printFloatArray(const char *prefix, float array[], int size);
 
+// needed by bootloader
+void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 void rememberCurrentConfiguration(void);
-void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_F);
+void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getGlobalConfigurationVersion(void);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
 
+void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination);
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination);
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination);
 

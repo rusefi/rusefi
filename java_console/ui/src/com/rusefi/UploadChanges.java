@@ -1,9 +1,13 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.io.ConfigurationImageFile;
+import com.opensr5.io.ConfigurationImageFile;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.SerialIoStream;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.SettingsTab;
 import com.rusefi.ui.StatusWindow;
@@ -70,10 +74,14 @@ public class UploadChanges {
 
         final ConfigurationImage ci2 = ConfigurationImageFile.readFromFile("rusefi_configuration.bin");
 
-        final BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
+        final BinaryProtocol bp = BinaryProtocolHolder.create(logger, new SerialIoStream(serialPort, logger));
         bp.setController(ci1);
 
-        scheduleUpload(ci2, null);
+        scheduleUpload(ci2);
+    }
+
+    public static void scheduleUpload(final ConfigurationImage newVersion) {
+        scheduleUpload(newVersion, null);
     }
 
     public static void scheduleUpload(final ConfigurationImage newVersion, final Runnable afterUpload) {
@@ -83,7 +91,7 @@ public class UploadChanges {
             @Override
             public void run() {
                 try {
-                    BinaryProtocol.instance.uploadChanges(newVersion, logger);
+                    BinaryProtocolHolder.getInstance().get().uploadChanges(newVersion, logger);
                     if (afterUpload != null)
                         afterUpload.run();
                 } catch (InterruptedException | EOFException | SerialPortException e) {

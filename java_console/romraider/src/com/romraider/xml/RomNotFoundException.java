@@ -23,6 +23,7 @@ public final class RomNotFoundException extends Exception {
 
     private static final long serialVersionUID = -5434546006966986885L;
 
-    public RomNotFoundException() {
+    public RomNotFoundException(String msg) {
+        super(msg);
     }
 }

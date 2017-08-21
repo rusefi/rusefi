@@ -1,8 +1,11 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImage;
 import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCmd;
+import com.opensr5.io.ConfigurationImageFile;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -29,11 +32,11 @@ public class TableEditorPane extends JPanel {
 
             add(editor.getContent());
 
-            BinaryProtocol instance = BinaryProtocol.instance;
+            BinaryProtocol instance = BinaryProtocolHolder.getInstance().get();
             if (instance == null)
                 throw new NullPointerException("instance");
             ConfigurationImage image = instance.getController();
-            byte[] fileContent = image.getFileContent();
+            byte[] fileContent = ConfigurationImageFile.getFileContent(image);
             ECUEditor.openImage(fileContent);
         } catch (Exception e) {
             throw new IllegalStateException(e);

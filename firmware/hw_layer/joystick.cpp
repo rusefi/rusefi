@@ -37,19 +37,19 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	joyTotal++;
 	joystick_button_e button;
 	// todo: I guess it's time to reduce code duplication and start working with an array
-	if (channel == getHwPin(boardConfiguration->joystickCenterPin)) {
+	if (channel == getHwPin("joy", boardConfiguration->joystickCenterPin)) {
 		joyCenter++;
 		button = JB_CENTER;
-	} else if (channel == getHwPin(boardConfiguration->joystickAPin)) {
+	} else if (channel == getHwPin("joy", boardConfiguration->joystickAPin)) {
 		joyA++;
 		button = JB_BUTTON_A;
-	} else if (channel == getHwPin(boardConfiguration->joystickBPin)) {
+	} else if (channel == getHwPin("joy", boardConfiguration->joystickBPin)) {
 		joyB++;
 		button = JB_BUTTON_C;
-	} else if (channel == getHwPin(boardConfiguration->joystickCPin)) {
+	} else if (channel == getHwPin("joy", boardConfiguration->joystickCPin)) {
 		joyC++;
 		button = JB_BUTTON_B;
-	} else if (channel == getHwPin(boardConfiguration->joystickDPin)) {
+	} else if (channel == getHwPin("joy", boardConfiguration->joystickDPin)) {
 		joyD++;
 		button = JB_BUTTON_D;
 	} else {
@@ -58,6 +58,8 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	}
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	onJoystick(button);
+#else
+	UNUSED(button);
 #endif
 }
 
@@ -117,7 +119,7 @@ static uint32_t getExtMode(ioportid_t port) {
 	} else if (port == GPIOF) {
 		return EXT_MODE_GPIOF;
 	}
-	firmwareError(OBD_PCM_Processor_Fault, "Unsupported %d", port);
+	firmwareError(CUSTOM_ERR_EXT_MODE, "Unsupported %d", port);
 	return 0;
 }
 
@@ -125,8 +127,8 @@ static void applyPin(brain_pin_e pin) {
 	if (pin == GPIO_UNASSIGNED)
 		return;
 
-	int index = getHwPin(pin);
-	ioportid_t port = getHwPort(pin);
+	int index = getHwPin("joy", pin);
+	ioportid_t port = getHwPort("joy", pin);
 
 	extcfg.channels[index].mode = EXT_CH_MODE_RISING_EDGE | EXT_CH_MODE_AUTOSTART | getExtMode(port);
 	extcfg.channels[index].cb = extCallback;
@@ -151,11 +153,11 @@ void initJoystick(Logging *shared) {
 	applyPin(boardConfiguration->joystickCPin);
 	applyPin(boardConfiguration->joystickDPin);
 
-	mySetPadMode2("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy A", boardConfiguration->joystickAPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode2("joy D", boardConfiguration->joystickDPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy A", boardConfiguration->joystickAPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy D", boardConfiguration->joystickDPin, PAL_MODE_INPUT_PULLUP);
 
 	addConsoleAction("joystickinfo", joystickInfo);
 

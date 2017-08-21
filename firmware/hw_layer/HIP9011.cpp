@@ -67,8 +67,8 @@ static float hipValueMax = 0;
 
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
-static int correctResponse = 0;
-static int invalidResponse = 0;
+int correctResponsesCount = 0;
+int invalidResponsesCount = 0;
 static char pinNameBuffer[16];
 static float currentAngleWindowWidth;
 
@@ -102,9 +102,9 @@ SPI_CR1_MSTR |
 
 static void checkResponse(void) {
 	if (tx_buff[0] == rx_buff[0]) {
-		correctResponse++;
+		correctResponsesCount++;
 	} else {
-		invalidResponse++;
+		invalidResponsesCount++;
 	}
 }
 
@@ -115,9 +115,6 @@ static void checkResponse(void) {
 	spiExchange(driver, 1, tx_buff, rx_buff); \
 	spiUnselect(driver); \
 	checkResponse();
-
-// todo: make this configurable
-spi_device_e hipSpiDevice = SPI_DEVICE_2;
 
 static SPIDriver *driver;
 
@@ -152,12 +149,12 @@ static void showHipInfo(void) {
 	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
 	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
-	const char * msg = invalidResponse > 0 ? "NOT GOOD" : "ok";
+	const char * msg = invalidResponsesCount > 0 ? "NOT GOOD" : "ok";
 	scheduleMsg(logger, "spi=%s IntHold@%s/%d response count=%d incorrect response=%d %s",
-			getSpi_device_e(hipSpiDevice),
+			getSpi_device_e(engineConfiguration->hip9011SpiDevice),
 			hwPortname(boardConfiguration->hip9011IntHoldPin),
 			boardConfiguration->hip9011IntHoldPinMode,
-			correctResponse, invalidResponse,
+			correctResponsesCount, invalidResponsesCount,
 			msg);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
@@ -167,9 +164,9 @@ static void showHipInfo(void) {
 			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
 			boardConfiguration->useTpicAdvancedMode);
-	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(hipSpiDevice)));
-	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(hipSpiDevice)));
-	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(hipSpiDevice)));
+	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(engineConfiguration->hip9011SpiDevice)));
+	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
+	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
 
 	scheduleMsg(logger, "start %f end %f", engineConfiguration->knockDetectionWindowStart,
 			engineConfiguration->knockDetectionWindowEnd);
@@ -194,7 +191,7 @@ void setHip9011FrankensoPinout(void) {
 	// todo: convert this to rusEfi, hardware-independent enum
 	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
+	engineConfiguration->spi2MisoMode = PAL_STM32_PUPDR_PULLUP; // 32
 
 	boardConfiguration->hip9011Gain = 1;
 	engineConfiguration->knockVThreshold = 4;
@@ -213,7 +210,7 @@ static void startIntegration(void) {
 		 * until we are done integrating
 		 */
 		state = IS_INTEGRATING;
-		turnPinHigh(&intHold);
+		intHold.setHigh();
 	}
 }
 
@@ -223,7 +220,7 @@ static void endIntegration(void) {
 	 * engine cycle
 	 */
 	if (state == IS_INTEGRATING) {
-		turnPinLow(&intHold);
+		intHold.setLow();
 		state = WAITING_FOR_ADC_TO_SKIP;
 	}
 }
@@ -231,11 +228,11 @@ static void endIntegration(void) {
 /**
  * Shaft Position callback used to start or finish HIP integration
  */
-static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// this callback is invoked on interrupt thread
-	engine->m.beforeHipCb = GET_TIMESTAMP();
 	if (index != 0)
 		return;
+	engine->m.beforeHipCb = GET_TIMESTAMP();
 
 	int rpm = engine->rpmCalculator.rpmValue;
 	if (!isValidRpm(rpm))
@@ -376,7 +373,7 @@ static void hipStartupCode(void) {
 
 	chThdSleepMilliseconds(10);
 
-	if (correctResponse == 0) {
+	if (correctResponsesCount == 0) {
 		warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond");
 	}
 
@@ -434,12 +431,12 @@ void initHip9011(Logging *sharedLogger) {
 
 	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
 
-	hipSpiCfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
-	hipSpiCfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
+	hipSpiCfg.ssport = getHwPort("hip", boardConfiguration->hip9011CsPin);
+	hipSpiCfg.sspad = getHwPin("hip", boardConfiguration->hip9011CsPin);
 
-	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin,
+	intHold.initPin("hip int/hold", boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);
-	outputPinRegisterExt2("hip CS", &enginePins.hipCs, boardConfiguration->hip9011CsPin,
+	enginePins.hipCs.initPin("hip CS", boardConfiguration->hip9011CsPin,
 			&boardConfiguration->hip9011CsPinMode);
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
@@ -465,4 +462,4 @@ void initHip9011(Logging *sharedLogger) {
 	chThdCreateStatic(hipTreadStack, sizeof(hipTreadStack), NORMALPRIO, (tfunc_t) hipThread, NULL);
 }
 
-#endif
+#endif /* EFI_HIP_9011 */

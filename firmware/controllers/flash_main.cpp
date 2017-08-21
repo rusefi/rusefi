@@ -36,14 +36,19 @@ extern persistent_config_container_s persistentState;
 
 extern engine_configuration_s *engineConfiguration;
 
-#define FLASH_ADDR 0x08060000
+/**
+ * this address needs to be above 'flash' region available for firmware
+ * todo: an ideal solution would be to define this address in the .ld / .icf mapping file
+ */
+
+#define FLASH_ADDR 0x080E0000
 
 #define PERSISTENT_SIZE sizeof(persistent_config_container_s)
 
 /**
  * https://sourceforge.net/p/rusefi/tickets/335/
  *
- * Address of second cofig copy, rounded to 4K. 4K is the page size is it?
+ * Address of second config copy, rounded to 4K. 4K is the page size is it?
  *
  */
 #define FLASH_ADDR_SECOND_COPY (FLASH_ADDR + ((PERSISTENT_SIZE + 4095) & 0xFFFFF000))
@@ -71,8 +76,6 @@ void writeToFlashIfPending() {
 	writeToFlashNow();
 }
 
-extern uint32_t maxLockTime;
-
 void writeToFlashNow(void) {
 	scheduleMsg(logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
 	persistentState.size = PERSISTENT_SIZE;
@@ -93,7 +96,8 @@ void writeToFlashNow(void) {
 	} else {
 		scheduleMsg(logger, "Flashing failed");
 	}
-	maxLockTime = 0;
+	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
+	resetMaxValues();
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {
@@ -103,7 +107,7 @@ static bool isValidCrc(persistent_config_container_s *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 persisted_configuration_state_e flashState;
@@ -126,8 +130,8 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address, 
  * connectivity so no console output here
  */
 persisted_configuration_state_e readConfiguration(Logging * logger) {
-	efiAssert(getRemainingStack(chThdSelf()) > 256, "read f", PC_ERROR);
-
+	efiAssert(getRemainingStack(chThdGetSelfX()) > 256, "read f", PC_ERROR);
+	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
 	persisted_configuration_state_e result = doReadConfiguration(FLASH_ADDR, logger);
 	if (result != PC_OK) {
 		printMsg(logger, "Reading second configuration copy");
@@ -136,14 +140,14 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 
 	if (result == CRC_FAILED) {
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
-		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
+		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (result == INCOMPATIBLE_VERSION) {
-		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		/**
 		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 		 */
-		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
+		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();

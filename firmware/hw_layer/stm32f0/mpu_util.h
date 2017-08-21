@@ -7,7 +7,10 @@
 #ifndef MPU_UTIL_H_
 #define MPU_UTIL_H_
 
-#define baseHardwareInit() {}
+// we are lucky - all CAN pins use the same AF
+#define EFI_CAN_RX_AF 9
+#define EFI_CAN_TX_AF 9
 
+#define baseHardwareInit() {}
 
 #endif /* MPU_UTIL_H_ */

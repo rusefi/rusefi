@@ -24,7 +24,7 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
-#include "usb_msd.h"
+#include "hal_usb_msd.h"
 #include "usb_msd_cfg.h"
 
 #include "rtc_helper.h"
@@ -54,10 +54,14 @@ EXTERN_ENGINE;
 
 extern board_configuration_s *boardConfiguration;
 
-//static USBDriver *ms_usb_driver = &USBD1;
-//static USBMassStorageDriver UMSD1;
-//extern const USBConfig msd_usb_config;
-
+#if HAL_USE_USB_MSD
+#if STM32_USB_USE_OTG2
+  USBDriver *usb_driver = &USBD2;
+#else
+  USBDriver *usb_driver = &USBD1;
+#endif
+extern const USBConfig msdusbcfg;
+#endif /* HAL_USE_USB_MSD */
 
 
 #define PUSHPULLDELAY 500
@@ -178,7 +182,7 @@ static void createLogFile(void) {
 	if (err != FR_OK && err != FR_EXIST) {
 		unlockSpi();
 		sdStatus = SD_STATE_OPEN_FAILED;
-		warning(CUSTOM_ERR_6145, "SD: mount failed");
+		warning(CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
 		printError("FS mount failed", err);	// else - show error
 		return;
 	}
@@ -187,7 +191,7 @@ static void createLogFile(void) {
 	if (err) {
 		unlockSpi();
 		sdStatus = SD_STATE_SEEK_FAILED;
-		warning(CUSTOM_ERR_6146, "SD: seek failed");
+		warning(CUSTOM_ERR_SD_SEEK_FAILED, "SD: seek failed");
 		printError("Seek error", err);
 		return;
 	}
@@ -206,17 +210,6 @@ static void removeFile(const char *pathx) {
 
 	unlockSpi();
 }
-
-/*
-** return lower-case of c if upper-case, else c
-*/
-int mytolower(const char c)  {
-
-  if(c<='Z' &&  c>='A') return (c+32);
-  return (c);
-
-}
-
 
 int
     mystrncasecmp(const char *s1, const char *s2, size_t n)
@@ -328,11 +321,14 @@ static void MMCumount(void) {
 	f_sync(&FDLogFile);							// sync ALL
 	mmcDisconnect(&MMCD1);						// Brings the driver in a state safe for card removal.
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
-	f_mount(0, NULL);							// FATFS: Unregister work area prior to discard it
+	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	fs_ready = false;							// status = false
 	scheduleMsg(&logger, "MMC/SD card removed");
 }
+
+#define RAMDISK_BLOCK_SIZE    512U
+static uint8_t blkbuf[RAMDISK_BLOCK_SIZE];
 
 /*
  * MMC card mount.
@@ -344,42 +340,56 @@ static void MMCmount(void) {
 		scheduleMsg(&logger, "Error: Already mounted. \"umountsd\" first");
 		return;
 	}
-	// start to initialize MMC/SD
-	mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
+	if ((MMCD1.state == BLK_STOP) || (MMCD1.state == BLK_ACTIVE)) {
+		// looks like we would only get here after manual unmount with mmcStop? Do we really need to ever mmcStop?
+		// not sure if this code is needed
+		// start to initialize MMC/SD
+		mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
+	}
 
 	// Performs the initialization procedure on the inserted card.
 	lockSpi(SPI_NONE);
 	sdStatus = SD_STATE_CONNECTING;
-	if (mmcConnect(&MMCD1) != CH_SUCCESS) {
+	if (mmcConnect(&MMCD1) != HAL_SUCCESS) {
 		sdStatus = SD_STATE_NOT_CONNECTED;
 		warning(CUSTOM_OBD_MMC_ERROR, "Can't connect or mount MMC/SD");
 		unlockSpi();
 		return;
 	}
 
-	if (engineConfiguration->storageMode == MS_ALWAYS) {
-//		  BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+//	if (engineConfiguration->storageMode == MS_ALWAYS) {
+#if HAL_USE_USB_MSD
+	  msdObjectInit(&USBMSD1);
+
+	BaseBlockDevice *bbdp = (BaseBlockDevice*)&MMCD1;
+	  msdStart(&USBMSD1, usb_driver, bbdp, blkbuf, NULL);
+
 //		  const usb_msd_driver_state_t msd_driver_state = msdInit(ms_usb_driver, bbdp, &UMSD1, USB_MS_DATA_EP, USB_MSD_INTERFACE_NUMBER);
-//		  UMSD1.chp = NULL;
-//
-//		  /*Disconnect the USB Bus*/
-//		  usbDisconnectBus(ms_usb_driver);
-//		  chThdSleepMilliseconds(200);
+	//	  UMSD1.chp = NULL;
+
+		  /*Disconnect the USB Bus*/
+		  usbDisconnectBus(usb_driver);
+		  chThdSleepMilliseconds(200);
 //
 //		  /*Start the useful functions*/
 //		  msdStart(&UMSD1);
-//		  usbStart(ms_usb_driver, &msd_usb_config);
+		  usbStart(usb_driver, &msdusbcfg);
 //
-//		  /*Connect the USB Bus*/
-//		  usbConnectBus(ms_usb_driver);
-
-	}
+		  /*Connect the USB Bus*/
+		  usbConnectBus(usb_driver);
+#endif
+	//}
 
 
 	unlockSpi();
+#if HAL_USE_USB_MSD
+	sdStatus = SD_STATE_MOUNTED;
+	return;
+#endif
+
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));
-	if (f_mount(0, &MMC_FS) == FR_OK) {
+	if (f_mount(&MMC_FS, "/", 1) == FR_OK) {
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		createLogFile();
@@ -421,8 +431,11 @@ void initMmcCard(void) {
 		return;
 	}
 
-	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort(boardConfiguration->sdCardCsPin);
-	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin(boardConfiguration->sdCardCsPin);
+	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", boardConfiguration->sdCardCsPin);
+	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", boardConfiguration->sdCardCsPin);
+/* todo: un-comment this one day. incompatible configuration change for existing users :(
+	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
+*/
 
 	/**
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM
@@ -435,7 +448,7 @@ void initMmcCard(void) {
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
 
 	addConsoleAction("mountsd", MMCmount);
-	addConsoleActionS("appendToLog", appendToLog);
+	addConsoleActionS("appendtolog", appendToLog);
 	addConsoleAction("umountsd", MMCumount);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);

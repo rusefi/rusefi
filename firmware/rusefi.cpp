@@ -119,6 +119,10 @@
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+#include "bootloader/bootloader.h"
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+
 LoggingWithStorage sharedLogger("main");
 
 bool main_loop_started = false;
@@ -150,7 +154,8 @@ static void scheduleReboot(void) {
 }
 
 void runRusEfi(void) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 512, "init s");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 512, "init s");
+	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
 
@@ -161,12 +166,12 @@ void runRusEfi(void) {
 	 * while reading configuration
 	 */
 	initTriggerDecoderLogger(&sharedLogger);
-#endif
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	/**
 	 * we need to initialize table objects before default configuration can set values
 	 */
-	initDataStructures(PASS_ENGINE_PARAMETER_F);
+	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
 	 * First thing is reading configuration from flash memory.
@@ -194,12 +199,12 @@ void runRusEfi(void) {
 	 */
 	initHardware(&sharedLogger);
 
-	initStatusLoop(engine);
+	initStatusLoop();
 	/**
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
-	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_F);
+	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 	initTimePerfActions(&sharedLogger);
@@ -208,7 +213,7 @@ void runRusEfi(void) {
 #if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
 	initEngineEmulator(&sharedLogger, engine);
 #endif
-	startStatusThreads(engine);
+	startStatusThreads();
 
 	rememberCurrentConfiguration();
 
@@ -219,18 +224,19 @@ void runRusEfi(void) {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "stack#1");
+		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "stack#1");
 
 #if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)
 		// sensor state + all pending messages for our own dev console
-		updateDevConsoleState(engine);
+		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
 		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);
 	}
 }
 
-void chDbgStackOverflowPanic(Thread *otp) {
+void chDbgStackOverflowPanic(thread_t *otp) {
+	(void)otp;
 	strcpy(panicMessage, "stack overflow: ");
 #if defined(CH_USE_REGISTRY) || defined(__DOXYGEN__)
 	int p_name_len = strlen(otp->p_name);
@@ -240,14 +246,19 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-static char UNUSED_RAM_SIZE[25100];
+static char UNUSED_RAM_SIZE[14100];
 
-static char UNUSED_CCM_SIZE[9500] CCM_OPTIONAL;
+static char UNUSED_CCM_SIZE[16000] CCM_OPTIONAL;
 
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE[0] != 0)
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20170222;
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+	// make bootloader code happy too
+	if (initBootloader() != 0)
+		return 123;
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+	return 20170817;
 }

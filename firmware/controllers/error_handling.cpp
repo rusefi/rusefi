@@ -17,17 +17,11 @@
 #include <chprintf.h>
 static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
-extern OutputPin communicationPin;
-
-#endif
-
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 #define WARNING_BUFFER_SIZE 80
 static char warningBuffer[WARNING_BUFFER_SIZE];
 static bool isWarningStreamInitialized = false;
-
-
-
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 #include "lcd_HD44780.h"
@@ -60,7 +54,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	dbg_panic_file = file;
 	dbg_panic_line = line;
 #if CH_DBG_SYSTEM_STATE_CHECK || defined(__DOXYGEN__)
-	dbg_panic_msg = msg;
+	ch.dbg.panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -71,13 +65,13 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
-	lcdShowFatalMessage((char *) msg);
+	lcdShowPanicMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
 
 	if (!main_loop_started) {
 		print("fatal %s %s:%d\r\n", msg, file, line);
-		chThdSleepSeconds(1);
-		chSysHalt();
+//		chThdSleepSeconds(1);
+		chSysHalt("Main loop did not start");
 	}
 }
 
@@ -95,15 +89,18 @@ void addWarningCode(obd_code_e code) {
 	engine->engineState.lastErrorCode = code;
 }
 
+// todo: look into chsnprintf
 // todo: move to some util file & reuse for 'firmwareError' method
 void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	stream->eos = 0; // reset
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
 	stream->buffer[stream->eos] = 0;
 }
-#endif
+#else
+int unitTestWarningCounter = 0;
 
-int warningCounter = 0;
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
+
 
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
@@ -114,11 +111,11 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return true;
 
-#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
-	printf("warning %s\r\n", fmt);
-#endif
+#if EFI_SIMULATOR || defined(__DOXYGEN__)
+	printf("sim_warning %s\r\n", fmt);
+#endif /* EFI_SIMULATOR */
 
-#if EFI_SIMULATOR || EFI_PROD_CODE
+#if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
 	addWarningCode(code);
 
@@ -141,15 +138,15 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	append(&logger, DELIMETER);
 	scheduleLogging(&logger);
 #else
-	warningCounter++;
-	printf("Warning: ");
+	unitTestWarningCounter++;
+	printf("unit_test_warning: ");
 	va_list ap;
 	va_start(ap, fmt);
 	vprintf(fmt, ap);
 	va_end(ap);
 	printf("\r\n");
 
-#endif
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 	return false;
 }
 
@@ -157,23 +154,31 @@ char *getWarning(void) {
 	return warningBuffer;
 }
 
+
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
 uint32_t lastLockTime;
-uint32_t maxLockTime = 0;
+/**
+ * Maximum time before requesting lock and releasing lock at the end of critical section
+ */
+uint32_t maxLockedDuration = 0;
 
 void onLockHook(void) {
 	lastLockTime = GET_TIMESTAMP();
 }
 
 void onUnlockHook(void) {
-	uint32_t t = GET_TIMESTAMP() - lastLockTime;
-	if (t > maxLockTime) {
-		maxLockTime = t;
+	uint32_t lockedDuration = GET_TIMESTAMP() - lastLockTime;
+	if (lockedDuration > maxLockedDuration) {
+		maxLockedDuration = lockedDuration;
 	}
-//	if (t > 2800) {
+//	if (lockedDuration > 2800) {
 //		// un-comment this if you want a nice stop for a breakpoint
-//		maxLockTime = t + 1;
+//		maxLockedDuration = lockedDuration + 1;
 //	}
 }
+
+#endif /* EFI_CLOCK_LOCKS */
+
 
 void initErrorHandling(void) {
 #if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -199,6 +204,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		strncpy((char*) errorMessageBuffer, fmt, sizeof(errorMessageBuffer) - 1);
 		errorMessageBuffer[sizeof(errorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
+		// todo: look into chsnprintf once on Chibios 3
 		firmwareErrorMessageStream.eos = 0; // reset
 		va_list ap;
 		va_start(ap, fmt);
@@ -214,6 +220,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	va_start(ap, fmt);
 	vprintf(fmt, ap);
 	va_end(ap);
+	printf("\r\n");
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 	exit(-1);

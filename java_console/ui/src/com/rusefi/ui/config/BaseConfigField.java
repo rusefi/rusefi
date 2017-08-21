@@ -1,8 +1,9 @@
 package com.rusefi.ui.config;
 
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Field;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.ConnectionStatus;
@@ -41,7 +42,7 @@ public abstract class BaseConfigField {
     }
 
     private void processInitialValue(Field field) {
-        BinaryProtocol bp = BinaryProtocol.instance;
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getController();

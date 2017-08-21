@@ -49,6 +49,7 @@
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
 #include "engine_math.h"
+#include "spark_logic.h"
 #include "idle_thread.h"
 #include "engine_configuration.h"
 #include "rfiutil.h"
@@ -71,6 +72,7 @@ extern bool main_loop_started;
 #include "flash_main.h"
 #include "max31855.h"
 #include "vehicle_speed.h"
+#include "SingleTimerExecutor.h"
 #endif
 
 static bool subscription[(int) RO_LAST_ELEMENT];
@@ -85,9 +87,10 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif
 
 extern bool hasFirmwareErrorFlag;
+extern tunerstudio_counters_s tsState;
 #define FULL_LOGGING_KEY "fl"
 
-static char LOGGING_BUFFER[1400] CCM_OPTIONAL;
+static char LOGGING_BUFFER[1800] CCM_OPTIONAL;
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
@@ -95,7 +98,8 @@ static void setWarningEnabled(int value) {
 }
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-static char FILE_LOGGER[1000] CCM_OPTIONAL;
+// this one needs to be in main ram so that SD card SPI DMA works fine
+static char FILE_LOGGER[1000] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 #endif /* EFI_FILE_LOGGING */
 
@@ -155,7 +159,7 @@ static char buf[6];
  * This is useful if we are changing engine mode dynamically
  * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
  */
-static int packEngineMode(DECLARE_ENGINE_PARAMETER_F) {
+static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return (engineConfiguration->fuelAlgorithm << 4) +
 			(engineConfiguration->injectionMode << 2) +
 			engineConfiguration->ignitionMode;
@@ -177,32 +181,32 @@ static void printSensors(Logging *log, bool fileFormat) {
 #endif
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	reportSensorF(log, fileFormat, "int_temp", "C", getMCUInternalTemperature(), 2); // log column #3
+	reportSensorF(log, fileFormat, GAUGE_NAME_CPU_TEMP, "C", getMCUInternalTemperature(), 2); // log column #3
 #endif
 
-	reportSensorI(log, fileFormat, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_F)); // log column #3
+	reportSensorI(log, fileFormat, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE)); // log column #3
 
 	if (hasCltSensor()) {
-		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #4
+		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #4
 	}
 	if (hasTpsSensor()) {
-		reportSensorF(log, fileFormat, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2); // log column #5
+		reportSensorF(log, fileFormat, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #5
 	}
 
-	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
-		reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2); // log column #6
+	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		reportSensorF(log, fileFormat, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
 	}
 
 	if (hasIatSensor()) {
-		reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F), 2); // log column #7
+		reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #7
 	}
 
 	if (hasMafSensor()) {
-		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_F), 2);
-		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_F), 2);
+		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
+		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 	}
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
 //		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
@@ -213,97 +217,100 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #endif /* EFI_ANALOG_SENSORS */
 
-	if (hasAfrSensor(PASS_ENGINE_PARAMETER_F)) {
-		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(PASS_ENGINE_PARAMETER_F), 2);
+	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		reportSensorF(log, fileFormat, GAUGE_NAME_AFR, "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 	}
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	if (fileFormat) {
-		reportSensorF(log, fileFormat, "idle", "%", getIdlePosition(), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_IAC, "%", getIdlePosition(), 2);
 	}
 #endif /* EFI_IDLE_CONTROL */
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	reportSensorF(log, fileFormat, "target", "AFR", engine->engineState.targetAFR, 2);
+	reportSensorF(log, fileFormat, GAUGE_NAME_TARGET_AFR, "AFR", engine->engineState.targetAFR, 2);
 #endif /* EFI_ANALOG_SENSORS */
 
 	if (fileFormat) {
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-		reportSensorF(log, fileFormat, "debugF1", "v", tsOutputChannels.debugFloatField1, 4);
-		reportSensorF(log, fileFormat, "debugF2", "v", tsOutputChannels.debugFloatField2, 4);
-		reportSensorF(log, fileFormat, "debugF3", "v", tsOutputChannels.debugFloatField3, 4);
-		reportSensorF(log, fileFormat, "debugF4", "v", tsOutputChannels.debugFloatField4, 4);
-		reportSensorF(log, fileFormat, "debugF5", "v", tsOutputChannels.debugFloatField5, 4);
-		reportSensorF(log, fileFormat, "debugF6", "v", tsOutputChannels.debugFloatField6, 4);
-		reportSensorF(log, fileFormat, "debugF7", "v", tsOutputChannels.debugFloatField7, 4);
+#define DEBUG_F_PRECISION 6
 
-		reportSensorI(log, fileFormat, "debugInt1", "v", tsOutputChannels.debugIntField1);
-		reportSensorI(log, fileFormat, "debugInt2", "v", tsOutputChannels.debugIntField2);
-		reportSensorI(log, fileFormat, "debugInt3", "v", tsOutputChannels.debugIntField3);
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField1, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField2, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField3, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField4, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField5, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField6, DEBUG_F_PRECISION);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField7, DEBUG_F_PRECISION);
+
+		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I1, "v", tsOutputChannels.debugIntField1);
+		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I2, "v", tsOutputChannels.debugIntField2);
+		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I3, "v", tsOutputChannels.debugIntField3);
 #endif /* EFI_TUNER_STUDIO */
 
-		reportSensorF(log, fileFormat, "tCharge", "K", engine->engineState.tChargeK, 2); // log column #8
-		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
-			reportSensorF(log, fileFormat, "curVE", "%", veMap.getValue(rpm, getMap()), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
+		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VR, "%", veMap.getValue(rpm, getMap()), 2);
 		}
-		reportSensorF(log, fileFormat, "VVT", "deg", engine->triggerCentral.vvtPosition, 1);
+		reportSensorF(log, fileFormat, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
 	}
 
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", engineLoad, 2);
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
+	reportSensorF(log, fileFormat, GAUGE_NAME_ENGINE_LOAD, "x", engineLoad, 2);
 
 
-	reportSensorF(log, fileFormat, "dwell", "ms", ENGINE(engineState.sparkDwell), 2);
+	reportSensorF(log, fileFormat, GAUGE_COIL_DWELL_TIME, "ms", ENGINE(engineState.sparkDwell), 2);
 	if (fileFormat) {
-		reportSensorF(log, fileFormat, "timing", "deg", engine->engineState.timingAdvance, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_TIMING_ADVANCE, "deg", engine->engineState.timingAdvance, 2);
 
 	}
 
 	if (fileFormat) {
-		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
-		reportSensorF(log, fileFormat, "f: base", "ms", fuelBase, 2);
-		reportSensorF(log, fileFormat, "f: actual", "ms", ENGINE(actualLastInjection), 2);
-		reportSensorF(log, fileFormat, "f: lag", "ms", engine->engineState.injectorLag, 2);
-		reportSensorF(log, fileFormat, "f: running", "ms", ENGINE(engineState.runningFuel), 2);
-		reportSensorF(log, fileFormat, "f: pid", "ms", ENGINE(engineState.fuelPidCorrection), 2);
+		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.injectorLag, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.runningFuel), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.fuelPidCorrection), 2);
 
 		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);
 		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
 
-		reportSensorI(log, fileFormat, "version", "#", getRusEfiVersion());
+		reportSensorI(log, fileFormat, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 	}
 
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	if (hasVehicleSpeedSensor()) {
 		float vehicleSpeed = getVehicleSpeed();
-		reportSensorF(log, fileFormat, "vss", "kph", vehicleSpeed, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_VVS, "kph", vehicleSpeed, 2);
 		float sp2rpm = rpm == 0 ? 0 : vehicleSpeed / rpm;
 		reportSensorF(log, fileFormat, "sp2rpm", "x", sp2rpm, 2);
 	}
 #endif /* EFI_PROD_CODE */
 
-	reportSensorF(log, fileFormat, "knck_c", "count", engine->knockCount, 0);
-	reportSensorF(log, fileFormat, "knck_v", "v", engine->knockVolts, 2);
+	reportSensorF(log, fileFormat, GAUGE_NAME_KNOCK_COUNTER, "count", engine->knockCount, 0);
+	reportSensorF(log, fileFormat, GAUGE_NAME_KNOCK_LEVEL, "v", engine->knockVolts, 2);
 
 //	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
 
 	if (fileFormat) {
 		reportSensorF(log, fileFormat, "f: tps delta", "v", engine->tpsAccelEnrichment.getMaxDelta(), 2);
-		reportSensorF(log, fileFormat, "f: tps fuel", "ms", engine->engineState.tpsAccelEnrich, 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", engine->engineState.tpsAccelEnrich, 2);
 
 		reportSensorF(log, fileFormat, "f: el delta", "v", engine->engineLoadAccelEnrichment.getMaxDelta(), 2);
-		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
-			reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap(), 2);
+		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(), 2);
 		}
 
-		reportSensorF(log, fileFormat, "f: duty", "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_INJ_DUTY, "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_DWELL_DUTY, "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
 	}
 
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
 
-	for (int i = 0;i<FSIO_ADC_COUNT;i++) {
+	for (int i = 0;i<FSIO_ANALOG_INPUT_COUNT;i++) {
 		if (engineConfiguration->fsioAdc[i] != EFI_ADC_NONE) {
 			strcpy(buf, "adcX");
 			buf[3] = '0' + i;
@@ -311,8 +318,12 @@ static void printSensors(Logging *log, bool fileFormat) {
 		}
 	}
 
-	reportSensorI(log, fileFormat, "warn", "count", engine->engineState.warningCounter);
-	reportSensorI(log, fileFormat, "error", "code", engine->engineState.lastErrorCode);
+	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warningCounter);
+	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.lastErrorCode);
+
+	reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
+	reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
+	reportSensorI(log, fileFormat, INDICATOR_NAME_BRAKE_DOWN, "bool", engine->brakePedalState);
 
 }
 
@@ -341,7 +352,6 @@ static void printState(void) {
 //		ITM_SendChar(msg[i]);
 //	}
 
-	int rpm = getRpmE(engine);
 	if (subscription[(int) RO_TOTAL_REVOLUTION_COUNTER])
 		debugInt(&logger, "ckp_c", getCrankEventCounter());
 	if (subscription[(int) RO_RUNNING_REVOLUTION_COUNTER])
@@ -357,10 +367,6 @@ static void printState(void) {
 		debugInt(&logger, "wave_chart_current", 0);
 
 //	debugInt(&logger, "idl", getIdleSwitch());
-
-//	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
-
-//		float map = getMap();
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
@@ -429,17 +435,20 @@ static void printInfo(systime_t nowSeconds) {
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
 extern fatal_msg_t errorMessageBuffer;
+extern bool consoleInBinaryMode;
 
 /**
  * @brief Sends all pending data to dev console
  */
-void updateDevConsoleState(Engine *engine) {
+void updateDevConsoleState(void) {
 	if (!isCommandLineConsoleReady()) {
 		return;
 	}
 // looks like this is not needed anymore
 //	checkIfShouldHalt();
-	printPending();
+	if (!consoleInBinaryMode) {
+		printPending();
+	}
 
 	/**
 	 * this should go before the firmware error so that console can detect connection
@@ -496,7 +505,7 @@ void updateDevConsoleState(Engine *engine) {
 
 static void showFuelInfo2(float rpm, float engineLoad) {
 
-	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
+	float baseFuelMs = getBaseTableFuel((int) rpm, engineLoad);
 
 	float magicAir = getAirMass(engineConfiguration, 1, 100, convertCelsiusToKelvin(20));
 
@@ -513,9 +522,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
-	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(PASS_ENGINE_PARAMETER_F));
+	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	if (engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_F)) {
+	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float iatCorrection = engine->engineState.iatFuelCorrection;
 		float cltCorrection = engine->engineState.cltFuelCorrection;
 		floatms_t injectorLag = engine->engineState.injectorLag;
@@ -525,7 +534,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 		scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
 				injectorLag);
 
-		float value = getRunningFuel(baseFuelMs, (int) rpm PASS_ENGINE_PARAMETER);
+		float value = getRunningFuel(baseFuelMs PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(&logger2, "injection pulse width: %f", value);
 	}
 #endif
@@ -533,7 +542,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 static void showFuelInfo(void) {
-	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER_F));
+	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 #endif
 
@@ -545,29 +554,18 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
  */
 static THD_WORKING_AREA(blinkingStack, 128);
 
-// move this into EnginePins?
-OutputPin communicationPin; // blue LED on brain board by default
-OutputPin warningPin; // orange LED on brain board by default
-OutputPin runningPin; // green LED on brain board by default
-
-static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.checkEnginePin,
-		&enginePins.errorLedPin, &communicationPin, &enginePins.checkEnginePin };
-
-extern pin_output_mode_e DEFAULT_OUTPUT;
+static OutputPin *leds[] = { &enginePins.warningPin, &enginePins.runningPin, &enginePins.checkEnginePin,
+		&enginePins.errorLedPin, &enginePins.communicationPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	outputPinRegisterExt2("led: comm status", &communicationPin,
-			engineConfiguration->communicationPin, &DEFAULT_OUTPUT);
+	enginePins.communicationPin.initPin("led: comm status", engineConfiguration->communicationPin);
 	// we initialize this here so that we can blink it on start-up
-	outputPinRegisterExt2("MalfunctionIndicator", &enginePins.checkEnginePin, boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
-#endif
+	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin, &boardConfiguration->malfunctionIndicatorPinMode);
+
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
-	outputPinRegister("led: warning status", &warningPin, LED_WARNING_PORT,
-	LED_WARNING_PIN);
-	outputPinRegisterExt2("led: running status", &runningPin, engineConfiguration->runningPin,
-			&DEFAULT_OUTPUT);
+	enginePins.warningPin.initPin("led: warning status", LED_WARNING_BRAIN_PIN);
+	enginePins.runningPin.initPin("led: running status", engineConfiguration->runningPin);
 #endif /* EFI_WARNING_LED */
 }
 
@@ -631,16 +629,16 @@ static void blinkingThread(void *arg) {
 #endif
 
 		if (!hasFirmwareError() && !hasFirmwareErrorFlag) {
-			communicationPin.setValue(0);
+			enginePins.communicationPin.setValue(0);
 		}
-		warningPin.setValue(0);
+		enginePins.warningPin.setValue(0);
 		chThdSleepMilliseconds(delayMs);
 
-		communicationPin.setValue(1);
+		enginePins.communicationPin.setValue(1);
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 		if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
 			consoleByteArrived = false;
-			warningPin.setValue(1);
+			enginePins.warningPin.setValue(1);
 		}
 #endif
 		chThdSleepMilliseconds(delayMs);
@@ -656,27 +654,36 @@ static void lcdThread(void *arg) {
 	while (true) {
 		if (engineConfiguration->bc.useLcdScreen) {
 #if EFI_HD44780_LCD
-			updateHD44780lcd(engine);
+			updateHD44780lcd();
 #endif
 		}
 		chThdSleepMilliseconds(engineConfiguration->bc.lcdThreadPeriod);
 	}
 }
 
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
+extern int correctResponsesCount;
+extern int invalidResponsesCount;
+#endif /* EFI_HIP_9011 */
+
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S) {
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	int rpm = getRpmE(engine);
 #else
 	int rpm = 0;
 #endif
 
-	float tps = getTPS(PASS_ENGINE_PARAMETER_F);
-	float coolant = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
-	float intake = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	executorStatistics();
+#endif
 
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float coolant = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float intake = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
@@ -686,51 +693,63 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->coolantTemperature = coolant;
 	tsOutputChannels->intakeAirTemperature = intake;
 	tsOutputChannels->throttlePositon = tps;
-	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_F) : 0;
-    tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_F) : 0;
+	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
+    tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
           
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap();
 		tsOutputChannels->veValue = veMap.getValue(rpm, mapValue);
 		// todo: bug here? target afr could work based on real MAF?
 		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
-	tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_F);
-	if (hasVBatt(PASS_ENGINE_PARAMETER_F)) {
-		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
+	tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-	tsOutputChannels->tpsADC = getTPS12bitAdc(PASS_ENGINE_PARAMETER_F) / TPS_TS_CONVERSION;
+	tsOutputChannels->tpsADC = getTPS12bitAdc(PASS_ENGINE_PARAMETER_SIGNATURE) / TPS_TS_CONVERSION;
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
 	tsOutputChannels->engineLoad = engineLoad;
-	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
+
+	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
+		tsOutputChannels->debugFloatField4 = engine->rpmCalculator.getRpmAcceleration();
+	}
+
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
-	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_F) ? getPedalPosition(PASS_ENGINE_PARAMETER_F) : 0;
+	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->knockLevel = engine->knockVolts;
-	tsOutputChannels->fuelTankGauge = engine->engineState.fuelTankGauge;
+	tsOutputChannels->fuelTankGauge = engine->sensors.fuelTankGauge;
 
 	tsOutputChannels->hasFatalError = hasFirmwareError();
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
-	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER);
+	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	tsOutputChannels->fuelRunning = ENGINE(engineState.runningFuel);
 	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.fuelPidCorrection);
 	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
 	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
+	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
 	efitimesec_t now = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = now;
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
 	tsOutputChannels->isWarnNow = isWarningNow(now, true);
+	tsOutputChannels->isCltBroken = engine->isCltBroken;
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
+	} else if (engineConfiguration->debugMode == DBG_SR5_PROTOCOL) {
+		int _10_6 = 100000;
+		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * _10_6 +  tsState.totalCounter;
+		tsOutputChannels->debugIntField2 = tsState.outputChannelsCommandCounter * _10_6 + tsState.writeValueCommandCounter;
+		tsOutputChannels->debugIntField3 = tsState.readPageCommandsCounter * _10_6 + tsState.burnCommandCounter;
 	}
 
 	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
@@ -749,12 +768,19 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
 		}
 	} else if (engineConfiguration->debugMode == DBG_VEHICLE_SPEED_SENSOR) {
-		tsOutputChannels->debugIntField1 = engine->engineState.vssCounter;
+		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
 	} else if (engineConfiguration->debugMode == DBG_SD_CARD) {
 		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
 	} else if (engineConfiguration->debugMode == DBG_CRANKING_DETAILS) {
 		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	}
+
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels->debugIntField1 = correctResponsesCount;
+		tsOutputChannels->debugIntField2 = invalidResponsesCount;
+	}
+#endif /* EFI_HIP_9011 */
 
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
@@ -763,8 +789,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	// engine load acceleration
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
-		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap();
 	}
 	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
 
@@ -776,7 +802,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
 
-	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_F);
+	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
@@ -790,10 +816,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
-#endif
+#endif /* EFI_INTERNAL_FLASH */
+
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	tsOutputChannels->hasSdCard = isSdCardAlive();
-#endif
+#endif /* EFI_FILE_LOGGING */
+
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
@@ -808,8 +836,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
 
 #endif /* EFI_VEHICLE_SPEED */
-	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F));
-	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
+	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 #endif /* EFI_PROD_CODE */
 
 	tsOutputChannels->warningCounter = engine->engineState.warningCounter;
@@ -820,11 +848,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
-	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake PASS_ENGINE_PARAMETER);
+	tsOutputChannels->brakePedalState = engine->brakePedalState;
+
+	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake PASS_ENGINE_PARAMETER_SUFFIX);
 	float timing = engine->engineState.timingAdvance;
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);
+	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
 	tsOutputChannels->chargeAirMass = engine->engineState.airMass;
 }
 
@@ -832,7 +862,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
-	updateTunerStudioState(&tsOutputChannels PASS_ENGINE_PARAMETER);
+	updateTunerStudioState(&tsOutputChannels PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 #endif /* EFI_TUNER_STUDIO */
@@ -845,7 +875,7 @@ static void unsubscribe(int outputOrdinal) {
 	subscription[outputOrdinal] = false;
 }
 
-void initStatusLoop(Engine *engine) {
+void initStatusLoop(void) {
 	setFullLog(INITIAL_FULL_LOG);
 	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
 	addConsoleActionI("warn", setWarningEnabled);
@@ -871,9 +901,9 @@ void initStatusLoop(Engine *engine) {
 #endif /* EFI_PROD_CODE */
 }
 
-void startStatusThreads(Engine *engine) {
+void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
-	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, engine);
+	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, NULL);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initStatusLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);

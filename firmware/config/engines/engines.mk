@@ -23,6 +23,7 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/rover_v8.cpp \
 	$(PROJECT_DIR)/config/engines/mazda_323.cpp \
 	$(PROJECT_DIR)/config/engines/mazda_626.cpp \
+	$(PROJECT_DIR)/config/engines/prometheus.cpp \
 	$(PROJECT_DIR)/config/engines/saturn_ion.cpp \
 	$(PROJECT_DIR)/config/engines/sachs.cpp \
 	$(PROJECT_DIR)/config/engines/test_engine.cpp \

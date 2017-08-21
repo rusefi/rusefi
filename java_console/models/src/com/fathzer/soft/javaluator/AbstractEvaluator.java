@@ -135,7 +135,7 @@ public abstract class AbstractEvaluator<T> {
 			values.push(value!=null ? value : toValue(literal, evaluationContext));
 		} else if (token.isOperator()) {
 			Operator operator = token.getOperator();
-			rpnPush("deq", operator.getRpnSymbol());
+			rpnPush("deq", operator.getSymbol());
 			values.push(evaluate(operator, getArguments(values, operator.getOperandCount()), evaluationContext));
 		} else {
 			throw new IllegalArgumentException();
@@ -184,7 +184,7 @@ public abstract class AbstractEvaluator<T> {
 		System.out.println("doFunction " + function + " " + argCount);
 
 		if (function.getMinimumArgumentCount()>argCount || function.getMaximumArgumentCount()<argCount) {
-			throw new IllegalArgumentException("Invalid argument count for "+function.getName());
+			throw new IllegalArgumentException("Invalid argument count for "+function.getName() + " while " + argCount);
 		}
 		values.push(evaluate(function, getArguments(values, argCount), evaluationContext));
 	}
@@ -193,7 +193,7 @@ public abstract class AbstractEvaluator<T> {
 		// Be aware that arguments are in reverse order on the values stack.
 		// Don't forget to reorder them in the original order (the one they appear in the evaluated formula)
 		if (values.size()<nb) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Expected " + nb + " got " + values.size());
 		}
 		LinkedList<T> result = new LinkedList<T>();
 		for (int i = 0; i <nb ; i++) {
@@ -302,11 +302,11 @@ public abstract class AbstractEvaluator<T> {
 					throw new IllegalArgumentException("Parentheses mismatched");
 				}
 				if (!stack.isEmpty() && stack.peek().isFunction()) {
-					rpnPush("function", stack.peek().getLiteral());
+					rpnPush("function", stack.peek().getFunction().getName());
 					// If the token at the top of the stack is a function token, pop it
 					// onto the output queue.
 					int argCount = values.size()-previousValuesSize.pop();
-					doFunction(values, (Function)stack.pop().getFunction(), argCount, evaluationContext);
+					doFunction(values, stack.pop().getFunction(), argCount, evaluationContext);
 				}
 			} else if (token.isFunctionArgumentSeparator()) {
 				if (previous==null) {
@@ -384,8 +384,8 @@ public abstract class AbstractEvaluator<T> {
 			}
 			output(values, sc, evaluationContext);
 		}
-		if (values.size()!=1) {
-			throw new IllegalArgumentException();
+		if (values.size() != 1) {
+			throw new IllegalArgumentException(expression + ": Only one element expected "+ values);
 		}
 		Collections.reverse(stackRPN);
 
@@ -398,7 +398,7 @@ public abstract class AbstractEvaluator<T> {
 		stackRPN.push(s);
 	}
 
-	public String getRusEfi() {
+	public String getPosftfixExpression() {
 		List<String> list = new ArrayList<>(stackRPN);
 		ListIterator<String> li = list.listIterator(list.size());
 //		List<String> reverse = new ArrayList<>();

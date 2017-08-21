@@ -17,8 +17,9 @@
 #include "efitime.h"
 #include "efilib2.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "microsecond_timer.h"
+#include "tunerstudio_configuration.h"
 #endif
 
 #if (EFI_SIGNAL_EXECUTOR_ONE_TIMER && EFI_PROD_CODE )|| defined(__DOXYGEN__)
@@ -35,13 +36,12 @@ extern schfunc_t globalTimerCallback;
  */
 static efitime_t nextEventTimeNt = 0;
 
-uint32_t beforeHwSetTimer;
-uint32_t hwSetTimerTime;
+uint32_t hwSetTimerDuration;
 uint32_t lastExecutionCount;
 
 static void executorCallback(void *arg) {
 	(void)arg;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2y");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstck#2y");
 
 //	callbackTime = getTimeNowNt();
 //	if((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {
@@ -53,14 +53,16 @@ static void executorCallback(void *arg) {
 
 Executor::Executor() {
 	reentrantFlag = false;
+	doExecuteCounter = scheduleCounter = timerCallbackCounter = 0;
 	/**
 	 * todo: a good comment
 	 */
 	queue.setLateDelay(US2NT(100));
 }
 
-void Executor::scheduleByTime(const bool monitorReuse, scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
+void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
+	scheduleCounter++;
 //	if (delayUs < 0) {
 //		firmwareError(OBD_PCM_Processor_Fault, "Negative delayUs %s: %d", prefix, delayUs);
 //		return;
@@ -69,9 +71,10 @@ void Executor::scheduleByTime(const bool monitorReuse, scheduling_s *scheduling,
 //		callback(param);
 //		return;
 //	}
+	bool alreadyLocked = true;
 	if (!reentrantFlag) {
 		// this would guard the queue and disable interrupts
-		lockAnyContext();
+		alreadyLocked = lockAnyContext();
 	}
 	bool needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), callback, param);
 	if (!reentrantFlag) {
@@ -79,21 +82,25 @@ void Executor::scheduleByTime(const bool monitorReuse, scheduling_s *scheduling,
 		if (needToResetTimer) {
 			scheduleTimerCallback();
 		}
-		unlockAnyContext();
+		if (!alreadyLocked)
+			unlockAnyContext();
 	}
 }
 
 void Executor::onTimerCallback() {
-	lockAnyContext();
+	timerCallbackCounter++;
+	bool alreadyLocked = lockAnyContext();
 	doExecute();
 	scheduleTimerCallback();
-	unlockAnyContext();
+	if (!alreadyLocked)
+		unlockAnyContext();
 }
 
 /*
  * this private method is executed under lock
  */
 void Executor::doExecute() {
+	doExecuteCounter++;
 	/**
 	 * Let's execute actions we should execute at this point.
 	 * reentrantFlag takes care of the use case where the actions we are executing are scheduling
@@ -117,7 +124,7 @@ void Executor::doExecute() {
 	}
 	lastExecutionCount = totalExecuted;
 	if (!isLocked()) {
-		firmwareError(OBD_PCM_Processor_Fault, "Someone has stolen my lock");
+		firmwareError(CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
 		return;
 	}
 	reentrantFlag = false;
@@ -136,9 +143,9 @@ void Executor::scheduleTimerCallback() {
 	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
 	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
-	beforeHwSetTimer = GET_TIMESTAMP();
+	uint32_t beforeHwSetTimer = GET_TIMESTAMP();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
-	hwSetTimerTime = GET_TIMESTAMP() - beforeHwSetTimer;
+	hwSetTimerDuration = GET_TIMESTAMP() - beforeHwSetTimer;
 }
 
 /**
@@ -150,22 +157,31 @@ void Executor::scheduleTimerCallback() {
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-//	scheduling->name = prefix;
-	instance.scheduleByTime(monitorReuse, scheduling, getTimeNowUs() + delayUs, callback, param);
+void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	instance.scheduleByTime(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void scheduleByTime(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-//	scheduling->name = prefix;
-	instance.scheduleByTime(monitorReuse, scheduling, time, callback, param);
+void scheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
+	instance.scheduleByTime(scheduling, time, callback, param);
 }
 
 void initSignalExecutorImpl(void) {
 	globalTimerCallback = executorCallback;
-#if EFI_PROD_CODE
 	initMicrosecondTimer();
-#endif /* EFI_PROD_CODE */
 }
 
-#endif
+extern TunerStudioOutputChannels tsOutputChannels;
+#include "engine.h"
+EXTERN_ENGINE;
+
+
+void executorStatistics() {
+	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
+		tsOutputChannels.debugIntField1 = instance.timerCallbackCounter;
+		tsOutputChannels.debugIntField2 = instance.doExecuteCounter;
+		tsOutputChannels.debugIntField3 = instance.scheduleCounter;
+	}
+}
+
+#endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
 

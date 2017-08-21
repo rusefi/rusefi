@@ -1,6 +1,7 @@
 package com.rusefi.ui.config;
 
-import com.rusefi.config.Field;
+import com.opensr5.io.IniFileReader;
+import com.opensr5.io.RawIniFile;
 
 import java.io.*;
 import java.util.*;
@@ -29,29 +30,19 @@ public class IniFileModel {
 
     private void readIniFile() {
         File input = new File(FILENAME);
-        BufferedReader d = null;
-        try {
-            d = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
-        } catch (FileNotFoundException e) {
+        if (!input.exists()) {
             System.out.println("No such file: " + FILENAME);
             return;
         }
 
-
-        try {
-            String line;
-
-            State state = State.SKIPPING;
-
-            while ((line = d.readLine()) != null) {
-                handleLine(line);
+        RawIniFile content = IniFileReader.read(input);
 
 
-            }
-            finishDialog();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        for (RawIniFile.Line line : content.getLines()) {
+            handleLine(line);
         }
+
+        finishDialog();
     }
 
     private void finishDialog() {
@@ -65,9 +56,9 @@ public class IniFileModel {
         fields.clear();
     }
 
-    private void handleLine(String line) {
+    private void handleLine(RawIniFile.Line line) {
         try {
-            LinkedList<String> list = new LinkedList<>(Arrays.asList(split(line)));
+            LinkedList<String> list = new LinkedList<>(Arrays.asList(line.getTokens()));
 
             trim(list);
 
@@ -82,7 +73,7 @@ public class IniFileModel {
                 handleField(list);
             }
         } catch (RuntimeException e) {
-            throw new IllegalStateException("While [" + line + "]", e);
+            throw new IllegalStateException("While [" + line.getRawText() + "]", e);
         }
     }
 
@@ -122,33 +113,8 @@ public class IniFileModel {
         DIALOG
     }
 
-    public static String[] split(String str) {
-        ArrayList<String> strings = new ArrayList<>();
-        boolean inQuote = false;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (c == '\"' || isWhitespace(c) && !inQuote) {
-                if (c == '\"')
-                    inQuote = !inQuote;
-                if (!inQuote && sb.length() > 0) {
-                    strings.add(sb.toString());
-                    sb.delete(0, sb.length());
-                }
-            } else
-                sb.append(c);
-        }
-        if (sb.length() > 0)
-            strings.add(sb.toString());
 
-        return strings.toArray(new String[strings.size()]);
-    }
-
-    private static boolean isWhitespace(int c) {
-        return c == ' ' || c == '\t' || c == '=' || c == ',';
-    }
-
-    public static IniFileModel getinstance() {
+    public static IniFileModel getInstance() {
         return INSTANCE;
     }
 

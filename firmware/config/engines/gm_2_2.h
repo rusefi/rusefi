@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setGm2_2(DECLARE_ENGINE_PARAMETER_F);
+void setGm2_2(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_GM_2_2_H_ */

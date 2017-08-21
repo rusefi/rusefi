@@ -21,10 +21,9 @@
 #include "engine_configuration.h"
 #include "LocalVersionHolder.h"
 #include "trigger_central.h"
+#include "trigger_simulator.h"
 
-#if EFI_PROD_CODE
 #include "pwm_generator.h"
-#endif
 
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
 	primaryWheelState = false;
@@ -32,14 +31,11 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 	thirdWheelState = false;
 }
 
-// this is not the only place where we have 'isUpEvent'. todo: reuse
-static bool isRisingEdge[6] = { false, true, false, true, false, true };
-
 EXTERN_ENGINE
 ;
 
 static void fireShaftSignal(trigger_event_e signal) {
-	if (!engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal])
+	if (isUsefulSignal(signal, engineConfiguration))
 		hwHandleShaftSignal(signal);
 }
 
@@ -54,6 +50,8 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 	bool thirdWheelState = state->multiWave.waves[2].pinStates[prevIndex];
 	int new3rdWheelState = state->multiWave.waves[2].pinStates[stateIndex];
+
+	// todo: code duplication with TriggerStimulatorHelper::nextStep?
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
@@ -101,7 +99,7 @@ static LocalVersionHolder emulatorConfigVersion;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-void setTriggerEmulatorRPM(int rpm, Engine *engine) {
+void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
@@ -111,8 +109,8 @@ void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 		triggerSignal.periodNt = NAN;
 	} else {
 		float rpmM = getRpmMultiplier(engineConfiguration->operationMode);
-		float gRpm = rpm * rpmM / 60.0; // per minute converted to per second
-		triggerSignal.periodNt = US2NT(frequency2periodUs(gRpm));
+		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
+		triggerSignal.setFrequency(rPerSecond);
 	}
 #if EFI_ENGINE_SNIFFER
 	if (engine->isTestMode)
@@ -127,9 +125,9 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", emulatorConfigVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
-		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
+		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
-		TriggerShape *s = &engine->triggerShape;
+		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
 				s->wave.waves[2].pinStates };
 		copyPwmParameters(state, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates);
@@ -157,27 +155,27 @@ static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
 	}
 }
 
-static void setEmulatorAtIndex(int index, Engine *engine) {
+static void setEmulatorAtIndex(int index) {
 	stopEmulationAtIndex = index;
 }
 
-static void resumeStimulator(Engine *engine) {
+static void resumeStimulator() {
 	isEmulating = true;
 	stopEmulationAtIndex = DO_NOT_STOP;
 }
 
-void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine) {
+void initTriggerEmulatorLogic(Logging *sharedLogger) {
 	logger = sharedLogger;
 
-	TriggerShape *s = &engine->triggerShape;
-	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency, engine);
+	TriggerShape *s = &engine->triggerCentral.triggerShape;
+	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
 	pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
 			s->wave.waves[2].pinStates };
 	triggerSignal.weComplexInit("position sensor", s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
 
-	addConsoleActionIP("rpm", (VoidIntVoidPtr) setTriggerEmulatorRPM, engine);
-	addConsoleActionIP("stop_stimulator_at_index", (VoidIntVoidPtr) setEmulatorAtIndex, engine);
-	addConsoleActionP("resume_stimulator", (VoidPtr) resumeStimulator, engine);
+	addConsoleActionI("rpm", setTriggerEmulatorRPM);
+	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
+	addConsoleAction("resume_stimulator", resumeStimulator);
 }
-#endif
+#endif /* EFI_EMULATE_POSITION_SENSORS */

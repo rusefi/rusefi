@@ -9,6 +9,6 @@
 #define ZIL130_H_
 
 #include "engine.h"
-void setZil130(DECLARE_ENGINE_PARAMETER_F);
+void setZil130(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* ZIL130_H_ */

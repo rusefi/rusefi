@@ -10,6 +10,8 @@
 
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
+#include "datalogging.h"
+
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "tunerstudio_configuration.h"
 #endif
@@ -18,11 +20,12 @@ class Pid {
 
 public:
 	Pid();
-	Pid(pid_s *pid, float minResult, float maxResult);
-	void init(pid_s *pid, float minResult, float maxResult);
+	Pid(pid_s *pid);
+	void init(pid_s *pid);
 	bool isSame(pid_s *pid);
 
 	float getValue(float target, float input);
+	// todo: dTime should be taken from pid_s
 	float getValue(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
 	void reset(void);
@@ -34,15 +37,23 @@ public:
 	float getPrevError(void);
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
+	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
 #endif
-private:
-	pid_s *pid;
 	float minResult;
 	float maxResult;
-
 	float iTerm;
 	float dTerm; // we are remembering this only for debugging purposes
+	void showPidStatus(Logging *logging, const char*msg);
+	void sleep();
+	int resetCounter;
+private:
+	pid_s *pid;
+
 	float prevError;
+	// these are only used for logging
+	float prevTarget;
+	float prevInput;
+	float prevResult;
 };
 
 #endif /* PID_H_ */

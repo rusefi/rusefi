@@ -26,7 +26,7 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	bool isOverlapping;
 	int ownIndex;
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine;
 #endif
 	event_trigger_position_s injectionStart;
@@ -50,9 +50,12 @@ public:
 	 * @see globalSparkIdCoutner
 	 */
 	int sparkId;
+	/**
+	 * [0, specs.cylindersCount)
+	 */
 	int cylinderIndex;
 	char *name;
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine;
 #endif
 	IgnitionOutputPin *getOutputForLoggins();

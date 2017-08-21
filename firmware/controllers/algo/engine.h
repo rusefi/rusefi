@@ -43,8 +43,8 @@ public:
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
-	void addFuelEvents(DECLARE_ENGINE_PARAMETER_F);
-	bool addFuelEventsForCylinder(int i DECLARE_ENGINE_PARAMETER_S);
+	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool addFuelEventsForCylinder(int i DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
 	bool isReady;
@@ -67,12 +67,17 @@ private:
 	thermistor_conf_s currentConfig;
 };
 
-class EngineState {
+class Accelerometer {
 public:
-	EngineState();
-	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
-	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
+	Accelerometer();
+	float x; // G value
+	float y;
+	float z;
+};
 
+class SensorsState {
+public:
+	SensorsState();
 	/**
 	 * Performance optimization:
 	 * log() function needed for thermistor logic is relatively heavy, to avoid it we have these
@@ -83,6 +88,45 @@ public:
 	 */
 	float iat;
 	float clt;
+
+	Accelerometer accelerometer;
+
+	float vBatt;
+	float currentAfr;
+	/**
+	 * that's fuel in tank - just a gauge
+	 */
+	percent_t fuelTankGauge;
+
+	void reset();
+};
+
+class FuelConsumptionState {
+public:
+	FuelConsumptionState();
+	void addData(float durationMs);
+	float perSecondConsumption;
+	float perMinuteConsumption;
+	float perSecondAccumulator;
+	float perMinuteAccumulator;
+	int accumulatedSecond;
+	int accumulatedMinute;
+};
+
+class TransmissionState {
+public:
+	TransmissionState();
+	gear_e gearSelectorPosition;
+};
+
+
+class EngineState {
+public:
+	EngineState();
+	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+	FuelConsumptionState fuelConsumption;
 
 	efitick_t crankingTime;
 	efitick_t timeSinceCranking;
@@ -98,10 +142,6 @@ public:
 
 	float engineNoiseHipLevel;
 
-	/**
-	 * that's fuel in tank - just a gauge
-	 */
-	percent_t fuelTankGauge;
 
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
@@ -148,9 +188,7 @@ public:
 	float currentVE;
 	float targetAFR;
 
-	float currentAfr;
-
-	int vssCounter;
+	int vssEventCounter;
 	int totalLoggedBytes;
 
 
@@ -235,9 +273,9 @@ public:
 	Engine();
 	void setConfig(persistent_config_s *config);
 	void reset();
-	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_F);
+	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	OutputSignalPair fuelActuators[INJECTION_PIN_COUNT];
+	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
 	IgnitionEventList ignitionEvents;
 
 
@@ -245,7 +283,7 @@ public:
 	FuelSchedule injectionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
-	float fsioLastValue[LE_COMMAND_COUNT];
+	float fsioLastValue[FSIO_COMMAND_COUNT];
 
 	WallFuel wallFuel;
 
@@ -265,6 +303,25 @@ public:
 	 * based on current RPM and isAlternatorControlEnabled setting
 	 */
 	bool isAlternatorControlEnabled;
+
+	bool isCltBroken;
+
+
+//	floatms_t callToPitEndTime;
+
+	/**
+	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT STOP' light
+	 */
+	efitime_t callFromPitStopEndTime;
+
+	// timestamp of most recent time RPM hard limit was triggered
+	efitime_t rpmHardLimitTimestamp;
+
+	/**
+	 * This flag indicated a big enough problem that engine control would be
+	 * prohibited if this flag is set to true.
+	 */
+	bool withError;
 
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
@@ -300,13 +357,16 @@ public:
 	 */
 	floatms_t actualLastInjection;
 
-	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
-	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_F);
+	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	bool clutchUpState;
 	bool clutchDownState;
+	bool brakePedalState;
 
 	bool isRunningPwmTest;
+
+	float fsioTimingAdjustment;
 
 	/**
 	 * Are we experiencing knock right now?
@@ -334,7 +394,6 @@ public:
 	 */
 	bool isTestMode;
 
-	TriggerShape triggerShape;
 
 	/**
 	 * pre-calculated offset for given sequence index within engine cycle
@@ -351,6 +410,7 @@ public:
 
 	void onTriggerEvent(efitick_t nowNt);
 	EngineState engineState;
+	SensorsState sensors;
 	efitick_t lastTriggerEventTimeNt;
 
 
@@ -370,7 +430,7 @@ public:
 	 * value of 'triggerShape.getLength()'
 	 * pre-calculating this value is a performance optimization
 	 */
-	int engineCycleEventCount;
+	uint32_t engineCycleEventCount;
 
 	/**
 	 * fast spark dwell time interpolation helper
@@ -387,6 +447,17 @@ public:
 	void preCalculate();
 
 	void watchdog();
+
+	/**
+	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
+	 */
+	void checkShutdown();
+	
+	/**
+	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
+	   Returns true if some operations are in progress on background.
+	 */
+	bool isInShutdownMode();
 
 	monitoring_timestamps_s m;
 
@@ -411,16 +482,17 @@ private:
 class StartupFuelPumping {
 public:
 	StartupFuelPumping();
-	void update(DECLARE_ENGINE_PARAMETER_F);
+	void update(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	bool isTpsAbove50;
 	int pumpsCounter;
 private:
-	void setPumpsCounter(engine_configuration_s *engineConfiguration, int newValue);
+	void setPumpsCounter(int newValue);
 };
 
-void prepareShapes(DECLARE_ENGINE_PARAMETER_F);
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S);
-void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S);
-void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F);
+void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void assertEngineReference(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* H_ENGINE_H_ */

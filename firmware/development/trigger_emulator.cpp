@@ -27,10 +27,10 @@ extern PwmConfig triggerSignal;
 
 static OutputPin emulatorOutputs[3];
 
-void initTriggerEmulator(Logging *sharedLogger, Engine *engine) {
+EXTERN_ENGINE;
 
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
 
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
@@ -41,17 +41,17 @@ void initTriggerEmulator(Logging *sharedLogger, Engine *engine) {
 
 #if EFI_PROD_CODE
 	// todo: refactor, make this a loop
-	outputPinRegisterExt2("trg emulator ch1", triggerSignal.outputPins[0], boardConfiguration->triggerSimulatorPins[0],
+	triggerSignal.outputPins[0]->initPin("trg emulator ch1", boardConfiguration->triggerSimulatorPins[0],
 			&boardConfiguration->triggerSimulatorPinModes[0]);
 
-	outputPinRegisterExt2("trg emulator ch2", triggerSignal.outputPins[1], boardConfiguration->triggerSimulatorPins[1],
+	triggerSignal.outputPins[1]->initPin("trg emulator ch2", boardConfiguration->triggerSimulatorPins[1],
 			&boardConfiguration->triggerSimulatorPinModes[1]);
 
-	outputPinRegisterExt2("trg emulator ch3", triggerSignal.outputPins[2], boardConfiguration->triggerSimulatorPins[2],
+	triggerSignal.outputPins[2]->initPin("trg emulator ch3", boardConfiguration->triggerSimulatorPins[2],
 			&boardConfiguration->triggerSimulatorPinModes[2]);
 #endif /* EFI_PROD_CODE */
 
-	initTriggerEmulatorLogic(sharedLogger, engine);
+	initTriggerEmulatorLogic(sharedLogger);
 #else
 	print("No position sensor(s) emulation\r\n");
 #endif /* EFI_EMULATE_POSITION_SENSORS */

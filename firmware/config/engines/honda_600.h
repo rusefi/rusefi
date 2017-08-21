@@ -9,6 +9,6 @@
 #define CONFIG_ENGINES_HONDA_600_H_
 
 #include "engine.h"
-void setHonda600(DECLARE_ENGINE_PARAMETER_F);
+void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_HONDA_600_H_ */

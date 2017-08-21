@@ -11,15 +11,17 @@
 #include "test_logic_expression.h"
 #include "fsio_impl.h"
 #include "cli_registry.h"
+#include "engine_test_helper.h"
 
 #define TEST_POOL_SIZE 256
 
 static float mockCoolant;
 static float mockFan;
 static float mockRpm;
+static float mockCrankingRpm;
 static float mockTimeSinceBoot;
 
-float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
+float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return mockFan;
@@ -27,6 +29,8 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 		return mockCoolant;
 	case LE_METHOD_RPM:
 		return mockRpm;
+	case LE_METHOD_CRANKING_RPM:
+		return mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return mockTimeSinceBoot;
 	case LE_METHOD_FAN_ON_SETTING:
@@ -91,7 +95,11 @@ static void testExpression2(float selfValue, const char *line, float expected) {
 	print("Parsing [%s]", line);
 	assertTrueM("Not NULL expected", element != NULL);
 	LECalculator c;
-	assertEqualsM(line, expected, c.getValue2(selfValue, element, NULL));
+
+	EngineTestHelper eth(FORD_INLINE_6_1995);
+	EXPAND_EngineTestHelper;
+
+	assertEqualsM(line, expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 static void testExpression(const char *line, float expected) {
@@ -103,13 +111,16 @@ void testLogicExpressions(void) {
 
 	testParsing();
 
+	EngineTestHelper eth(FORD_INLINE_6_1995);
+	EXPAND_EngineTestHelper;
+
 	LECalculator c;
 
 	LEElement value1;
 	value1.init(LE_NUMERIC_VALUE, 123.0);
 	c.add(&value1);
 
-	assertEqualsM("123", 123.0, c.getValue(0, NULL));
+	assertEqualsM("123", 123.0, c.getValue(0 PASS_ENGINE_PARAMETER_SUFFIX));
 
 	LEElement value2;
 	value2.init(LE_NUMERIC_VALUE, 321.0);
@@ -118,7 +129,7 @@ void testLogicExpressions(void) {
 	LEElement value3;
 	value3.init(LE_OPERATOR_AND);
 	c.add(&value3);
-	assertEqualsM("123 and 321", 1.0, c.getValue(0, NULL));
+	assertEqualsM("123 and 321", 1.0, c.getValue(0 PASS_ENGINE_PARAMETER_SUFFIX));
 
 	/**
 	 * fuel_pump = (time_since_boot < 4 seconds) OR (rpm > 0)
@@ -183,7 +194,7 @@ void testLogicExpressions(void) {
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
 		assertTrueM("Not NULL expected", element != NULL);
 		LECalculator c;
-		assertEqualsM("that expression", 1, c.getValue2(0, element, NULL));
+		assertEqualsM("that expression", 1, c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX));
 
 		assertEquals(12, c.currentCalculationLogPosition);
 		assertEquals(102, c.calcLogAction[0]);
@@ -201,7 +212,16 @@ void testLogicExpressions(void) {
 
 	testExpression(FAN_CONTROL_LOGIC, 1);
 
+	{
+		mockRpm = 900;
+		mockCrankingRpm = 200;
+		testExpression("rpm", 900);
+		testExpression("cranking_rpm", 200);
+		testExpression(STARTER_BLOCK, 0);
+		testExpression("rpm cranking_rpm > ", 1);
+
+	}
 	mockRpm = 900;
-	testExpression(FUEL_PUMP_LOGIC, 1);
+	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
 
 }

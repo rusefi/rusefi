@@ -11,11 +11,11 @@
 #include "engine.h"
 #include "pin_repository.h"
 #include "stm32f4xx_hal_flash.h"
+#include "rfiutil.h"
 
 EXTERN_ENGINE;
 
 extern "C" {
-int getRemainingStack(thread_t *otp);
 void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
 }
 
@@ -26,16 +26,18 @@ extern uint32_t __main_stack_base__;
 #if defined __GNUC__
 // GCC version
 
+typedef struct port_intctx intctx_t;
+
 int getRemainingStack(thread_t *otp) {
 
 #if CH_DBG_ENABLE_STACK_CHECK
 	// this would dismiss coverity warning - see http://rusefi.com/forum/viewtopic.php?f=5&t=655
 	// coverity[uninit_use]
-	register struct intctx *r13 asm ("r13");
+	register intctx_t *r13 asm ("r13");
 	otp->activeStack = r13;
 
 	int remainingStack;
-	if (dbg_isr_cnt > 0) {
+    if (ch.dbg.isr_cnt > 0) {
 		// ISR context
 		remainingStack = (int)(r13 - 1) - (int)&__main_stack_base__;
 	} else {
@@ -53,13 +55,13 @@ int getRemainingStack(thread_t *otp) {
 extern uint32_t CSTACK$$Base; /* symbol created by the IAR linker */
 extern uint32_t IRQSTACK$$Base; /* symbol created by the IAR linker */
 
-int getRemainingStack(Thread *otp) {
+int getRemainingStack(thread_t *otp) {
 #if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
 	int remainingStack;
-	if (dbg_isr_cnt > 0) {
-		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)&IRQSTACK$$Base;
+	if (ch.dbg.isr_cnt > 0) {
+		remainingStack = (__get_SP() - sizeof(port_intctx)) - (int)&IRQSTACK$$Base;
 	} else {
-		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)otp->p_stklimit;
+		remainingStack = (__get_SP() - sizeof(port_intctx)) - (int)otp->p_stklimit;
 	}
 	otp->remainingStack = remainingStack;
 	return remainingStack;
@@ -70,35 +72,29 @@ int getRemainingStack(Thread *otp) {
 
 // IAR version
 
-#endif
+#endif /* GNU / IAR */
 
 void baseHardwareInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
-	DWT_CYCCNT = 0;
+        DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
 }
 
 void DebugMonitorVector(void) {
-
 	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
-
 	while (TRUE)
 		;
 }
 
 void UsageFaultVector(void) {
-
 	chDbgPanic3("UsageFaultVector", __FILE__, __LINE__);
-
 	while (TRUE)
 		;
 }
 
 void BusFaultVector(void) {
-
 	chDbgPanic3("BusFaultVector", __FILE__, __LINE__);
-
 	while (TRUE) {
 	}
 }
@@ -189,7 +185,7 @@ void HardFaultVector(void) {
 	);
 
 #else
-#endif        
+#endif /* 0 && defined __GNUC__ */
 
 	int cfsr = GET_CFSR();
 	if (cfsr & 0x1) {
@@ -281,9 +277,9 @@ void turnOnSpi(spi_device_e device) {
 		initSpiModule(&SPID1, getSckPin(device),
 				getMisoPin(device),
 				getMosiPin(device),
-				0,
-				0,
-				0);
+				engineConfiguration->spi1SckMode,
+				engineConfiguration->spi1MosiMode,
+				engineConfiguration->spi1MisoMode);
 #endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
@@ -303,9 +299,9 @@ void turnOnSpi(spi_device_e device) {
 		initSpiModule(&SPID3, getSckPin(device),
 				getMisoPin(device),
 				getMosiPin(device),
-				0,
-				0,
-				0);
+				engineConfiguration->spi3SckMode,
+				engineConfiguration->spi3MosiMode,
+				engineConfiguration->spi3MisoMode);
 #endif /* STM32_SPI_USE_SPI3 */
 	}
 }
@@ -316,20 +312,22 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		int mosiMode,
 		int misoMode) {
 
-	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) + sckMode);
+	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) + sckMode);
 
-	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) + mosiMode);
-	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) + misoMode);
+	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) + mosiMode);
+	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) + misoMode);
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	spiConfig->end_cb = NULL;
-	ioportid_t port = getHwPort(csPin);
-	ioportmask_t pin = getHwPin(csPin);
+	ioportid_t port = getHwPort("spi", csPin);
+	ioportmask_t pin = getHwPin("spi", csPin);
 	spiConfig->ssport = port;
 	spiConfig->sspad = pin;
-	mySetPadMode2("chip select", csPin, PAL_STM32_MODE_OUTPUT);
+	efiSetPadMode("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
+
+#endif /* HAL_USE_SPI */
 
 BOR_Level_t BOR_Get(void) {
 	FLASH_OBProgramInitTypeDef FLASH_Handle;
@@ -367,5 +365,39 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 	return BOR_Result_Ok;
 }
 
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
-#endif
+static bool isValidCan1RxPin(brain_pin_e pin) {
+	return pin == GPIOA_11 || pin == GPIOB_8 || pin == GPIOD_0;
+}
+
+static bool isValidCan1TxPin(brain_pin_e pin) {
+	return pin == GPIOA_12 || pin == GPIOB_9 || GPIOD_1;
+}
+
+static bool isValidCan2RxPin(brain_pin_e pin) {
+	return pin == GPIOB_5 || pin == GPIOB_12;
+}
+
+static bool isValidCan2TxPin(brain_pin_e pin) {
+	return pin == GPIOB_6 || pin == GPIOB_13;
+}
+
+bool isValidCanTxPin(brain_pin_e pin) {
+   return isValidCan1TxPin(pin) || isValidCan2TxPin(pin);
+}
+
+bool isValidCanRxPin(brain_pin_e pin) {
+   return isValidCan1RxPin(pin) || isValidCan2RxPin(pin);
+}
+
+CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+   if (isValidCan1RxPin(pinRx) && isValidCan1TxPin(pinTx))
+      return &CAND1;
+   if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
+      return &CAND2;
+   return NULL;
+}
+
+#endif /* EFI_CAN_SUPPORT */
+

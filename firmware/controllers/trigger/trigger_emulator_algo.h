@@ -21,6 +21,6 @@ public:
 	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
 };
 
-void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine);
+void initTriggerEmulatorLogic(Logging *sharedLogger);
 
 #endif /* TRIGGER_EMULATOR_ALGO_H_ */

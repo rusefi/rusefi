@@ -22,7 +22,6 @@
 #include "advance_map.h"
 #include "interpolation.h"
 #include "efilib2.h"
-#include "engine_configuration.h"
 #include "engine_math.h"
 
 EXTERN_ENGINE;
@@ -56,14 +55,14 @@ static const ignition_table_t defaultIatTiming = {
 		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
 };
 
-bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_S) {
+bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return  boardConfiguration->enabledStep1Limiter && rpm >= engineConfiguration->step1rpm;
 }
 
 /**
  * @return ignition timing angle advance before TDC
  */
-static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
+static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engine->m.beforeAdvance = GET_TIMESTAMP();
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
@@ -74,25 +73,27 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	engine->m.beforeZeroTest = GET_TIMESTAMP();
 	engine->m.zeroTestTime = GET_TIMESTAMP() - engine->m.beforeZeroTest;
 
-	if (isStep1Condition(rpm PASS_ENGINE_PARAMETER)) {
+	if (isStep1Condition(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		return engineConfiguration->step1timing;
 	}
 
 	float iatCorrection;
-	if (cisnan(engine->engineState.iat)) {
+	if (cisnan(engine->sensors.iat)) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->engineState.iat);
+		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->sensors.iat);
 	}
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
+		tsOutputChannels.debugFloatField3 = engine->fsioTimingAdjustment;
 #endif
 	}
 
 	float result = advanceMap.getValue((float) rpm, engineLoad)
 			+ iatCorrection
+			+ engine->fsioTimingAdjustment
 			+ engine->engineState.cltTimingCorrection
 			// todo: uncomment once we get useable knock   - engine->knockCount
 			;
@@ -100,13 +101,13 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	return result;
 }
 
-angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
+angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	angle_t angle;
-	if (isCrankingR(rpm)) {
+	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		angle = engineConfiguration->crankingTimingAngle;
 	} else {
 		if (CONFIG(timingMode) == TM_DYNAMIC) {
-			angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+			angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 		} else {
 			angle = engineConfiguration->fixedTiming;
 		}
@@ -116,13 +117,13 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	return angle;
 }
 
-void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_F) {
+void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTableBin2(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, -40, 110, 1);
 	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
 	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
 }
 
-void prepareTimingMap(DECLARE_ENGINE_PARAMETER_F) {
+void prepareTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
 	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
@@ -191,7 +192,7 @@ float getInitialAdvance(int rpm, float map, float advanceMax) {
 /**
  * this method builds a good-enough base timing advance map bases on a number of heuristics
  */
-void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_S) {
+void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY &&
 			engineConfiguration->fuelAlgorithm != LM_MAP) {
 		warning(CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");

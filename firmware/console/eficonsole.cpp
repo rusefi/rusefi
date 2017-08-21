@@ -32,11 +32,11 @@
 static LoggingWithStorage logger("console");
 
 static void myfatal(void) {
-	chDbgCheck(0, "my fatal");
+	chDbgCheck(0);
 }
 
 static void myerror(void) {
-	firmwareError(OBD_PCM_Processor_Fault, "firmwareError: %d", getRusEfiVersion());
+	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
 static void sayNothing(void) {
@@ -55,9 +55,6 @@ static void sayHello(void) {
 	scheduleMsg(&logger, "COMPILER=%s", __VERSION__);
 #ifdef CH_FREQUENCY
 	scheduleMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
-#endif
-#ifdef SERIAL_SPEED
-	scheduleMsg(&logger, "SERIAL_SPEED=%d", SERIAL_SPEED);
 #endif
 
 #ifdef CORTEX_MAX_KERNEL_PRIORITY
@@ -121,8 +118,8 @@ static void sayHello(void) {
  */
 static void cmd_threads(void) {
 #if CH_DBG_THREADS_PROFILING || defined(__DOXYGEN__)
-  static const char *states[] = { THD_STATE_NAMES };
-  Thread *tp;
+  static const char *states[] = { CH_STATE_NAMES };
+  thread_t *tp;
   
   scheduleMsg(&logger, "    addr    stack prio refs     state time");
   tp = chRegFirstThread();

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 17 02:29:38 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -20,8 +20,21 @@ typedef struct {
 	 * Linear addition to PID logic
 	 * offset 12
 	 */
-	float offset;
-	/** total size 16*/
+	int16_t offset;
+	/**
+	 * PID dTime
+	 * offset 14
+	 */
+	int16_t period;
+	/**
+	 * offset 16
+	 */
+	int16_t minValue;
+	/**
+	 * offset 18
+	 */
+	int16_t maxValue;
+	/** total size 20*/
 } pid_s;
 
 typedef struct {
@@ -164,10 +177,13 @@ typedef struct {
 	 */
 	float unusedlag;
 	/**
+	 * set_flat_injector_lag LAG
+	 * set_injector_lag VOLTAGE LAG
 	 * offset 8
 	 */
 	float battLagCorrBins[VBAT_INJECTOR_CURVE_SIZE];
 	/**
+	 * ms delay between injector open and close dead times
 	 * offset 40
 	 */
 	float battLagCorr[VBAT_INJECTOR_CURVE_SIZE];
@@ -471,7 +487,7 @@ typedef struct {
 	/**
 	 * offset 272
 	 */
-	int etbDT;
+	float fuelClosedLoopAfrLowThreshold;
 	/**
 	 * offset 276
 	 */
@@ -630,13 +646,14 @@ typedef struct {
 	 */
 	spi_device_e max31855spiDevice;
 	/**
+	 * todo: rename to fsioOutputPins
 	 * offset 444
 	 */
-	brain_pin_e fsioPins[LE_COMMAND_COUNT];
+	brain_pin_e fsioPins[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 508
 	 */
-	pin_output_mode_e gpioPinModes[LE_COMMAND_COUNT];
+	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 572
 	 */
@@ -644,11 +661,15 @@ typedef struct {
 	/**
 	 * offset 576
 	 */
-	int unused77;
+	int mapMinBufferLength;
 	/**
 	 * offset 580
 	 */
-	int unused78;
+	int16_t idlePidDeactivationTpsThreshold;
+	/**
+	 * offset 582
+	 */
+	int16_t idleStepperPulseDuration;
 	/**
 	 * offset 584
 	 */
@@ -677,7 +698,7 @@ typedef struct {
 	/**
 	 * offset 608
 	 */
-	fsio_pwm_freq_t fsioFrequency[LE_COMMAND_COUNT];
+	fsio_pwm_freq_t fsioFrequency[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 640
 	 */
@@ -693,7 +714,7 @@ typedef struct {
 	/**
 	 * offset 652
 	 */
-	fsio_setting_t fsio_setting[LE_COMMAND_COUNT];
+	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 716
 	 */
@@ -777,10 +798,11 @@ typedef struct {
 	 */
 	pin_input_mode_e clutchUpPinMode;
 	/**
+	 * todo:not finshed
 	 * These input pins allow us to pull toggle buttons state
 	 * offset 796
 	 */
-	brain_pin_e fsioDigitalInputs[LE_COMMAND_COUNT];
+	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 860
 	 */
@@ -968,6 +990,7 @@ typedef struct {
 	 */
 	float knockBandCustom;
 	/**
+	 * On single-coil or wasted spark setups you have to lower dwell at high RPM
 	 * offset 336
 	 */
 	float sparkDwellRpmBins[DWELL_CURVE_SIZE];
@@ -990,6 +1013,7 @@ typedef struct {
 	 */
 	int sensorSnifferRpmThreshold;
 	/**
+	 * set rpm_hard_limit X
 	 * offset 420
 	 */
 	int rpmHardLimit;
@@ -1084,6 +1108,7 @@ typedef struct {
 	 */
 	float vehicleSpeedCoef;
 	/**
+	 * set can_mode X
 	 * offset 492
 	 */
 	can_nbc_e canNbcType;
@@ -1145,11 +1170,7 @@ typedef struct {
 	/**
 	 * offset 572
 	 */
-	int16_t pedalPositionMin;
-	/**
-	 * offset 574
-	 */
-	int16_t pedalPositionMax;
+	float adcVcc;
 	/**
 	 * maximum total number of degrees to subtract from ignition advance
 	 * when knocking
@@ -1186,10 +1207,11 @@ typedef struct {
 	bool fuelClosedLoopCorrectionEnabled : 1;
 	/**
 	offset 1488 bit 2 */
-	bool unusedBit__5 : 1;
+	bool isVerboseIAC : 1;
 	/**
+	 * enable verbose_etb
 	offset 1488 bit 3 */
-	bool unusedBit__6 : 1;
+	bool isVerboseETB : 1;
 	/**
 	offset 1488 bit 4 */
 	bool useConstantDwellDuringCranking : 1;
@@ -1199,10 +1221,10 @@ typedef struct {
 	bool isEngineChartEnabled : 1;
 	/**
 	offset 1488 bit 6 */
-	bool unusedBit_7 : 1;
+	bool silentTriggerError : 1;
 	/**
 	offset 1488 bit 7 */
-	bool unusedBit__2 : 1;
+	bool useLinearCltSensor : 1;
 	/**
 	offset 1488 bit 8 */
 	bool canReadEnabled : 1;
@@ -1211,10 +1233,11 @@ typedef struct {
 	bool canWriteEnabled : 1;
 	/**
 	offset 1488 bit 10 */
-	bool unusedBit_123 : 1;
+	bool useLinearIatSensor : 1;
 	/**
+	 * See fsioTimingAdjustment
 	offset 1488 bit 11 */
-	bool unusedbit_9 : 1;
+	bool useFSIO16ForTimingAdjustment : 1;
 	/**
 	offset 1488 bit 12 */
 	bool unusedbit_10 : 1;
@@ -1304,6 +1327,7 @@ typedef struct {
 	bool twoWireBatchInjection : 1;
 	/**
 	 * VR sensors are only precise on rising front
+	 * enable trigger_only_front
 	offset 1500 bit 14 */
 	bool useOnlyRisingEdgeForTrigger : 1;
 	/**
@@ -1315,6 +1339,7 @@ typedef struct {
 	 */
 	uint32_t engineChartSize;
 	/**
+	 * set idle_rpm X
 	 * offset 1508
 	 */
 	int targetIdleRpm;
@@ -1368,7 +1393,7 @@ typedef struct {
 	/**
 	 * offset 1548
 	 */
-	pin_input_mode_e fsioInputModes[LE_COMMAND_COUNT];
+	pin_input_mode_e fsioInputModes[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 1612
 	 */
@@ -1386,6 +1411,7 @@ typedef struct {
 	 */
 	brain_pin_e stepperEnablePin;
 	/**
+	 * TODO: finish this #413
 	 * offset 1636
 	 */
 	float noAccelAfterHardLimitPeriodSecs;
@@ -1441,19 +1467,17 @@ typedef struct {
 	 */
 	float suckedOffCoef;
 	/**
-	 * TODO make suckedOffCoef an array by RPM
 	 * offset 1828
 	 */
-	float unused71[7];
+	pid_s alternatorControl;
 	/**
-	 * offset 1856
+	 * offset 1848
 	 */
-	float addedToWallCoef;
+	pid_s etb;
 	/**
-	 * TODO make addedToWallCoef an array by RPM
-	 * offset 1860
+	 * offset 1868
 	 */
-	float unused72[7];
+	pid_s warmupAfrPid;
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1888
@@ -1474,13 +1498,9 @@ typedef struct {
 	 */
 	pid_s idleRpmPid;
 	/**
-	 * offset 1916
-	 */
-	int idleDT;
-	/**
 	 * offset 1920
 	 */
-	idle_control_e idleControl;
+	float addedToWallCoef;
 	/**
 	 * blue LED on discovery by default
 	 * offset 1924
@@ -1521,7 +1541,25 @@ typedef struct {
 	/**
 	 * offset 2012
 	 */
-	pid_s etb;
+	float throttlePedalUpVoltage;
+	/**
+	 * Pedal in the floor
+	 * offset 2016
+	 */
+	float throttlePedalWOTVoltage;
+	/**
+	 * offset 2020
+	 */
+	pin_output_mode_e stepperDirectionPinMode;
+	/**
+	 * offset 2024
+	 */
+	int16_t startUpFuelPumpDuration;
+	/**
+	 * If RPM is close enough let's leave IAC alone
+	 * offset 2026
+	 */
+	int16_t iacRPMErrorThreshold;
 	/**
 	 * CLT-based target RPM for automatic idle controller
 	 * offset 2028
@@ -1532,6 +1570,7 @@ typedef struct {
 	 */
 	float cltIdleRpm[CLT_CURVE_SIZE];
 	/**
+	 * set targetvbatt VOLTS
 	 * offset 2156
 	 */
 	float targetVBatt;
@@ -1541,14 +1580,34 @@ typedef struct {
 	 */
 	float alternatorOffAboveTps;
 	/**
-	 * PID dTime
 	 * offset 2164
 	 */
-	int alternatorDT;
+	float startOfCrankingPrimingPulse;
 	/**
 	 * offset 2168
 	 */
-	pid_s alternatorControl;
+	int16_t afterCrankingIACtaperDuration;
+	/**
+	 * offset 2170
+	 */
+	int16_t unusedShortHere;
+	/**
+	 * Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value
+	 * offset 2172
+	 */
+	int16_t iacByTpsTaper;
+	/**
+	 * offset 2174
+	 */
+	int16_t unusedShort;
+	/**
+	 * offset 2176
+	 */
+	brain_pin_e LIS302DLCsPin;
+	/**
+	 * offset 2180
+	 */
+	float unusedalternatorControl;
 	/**
 	 * offset 2184
 	 */
@@ -1614,13 +1673,14 @@ typedef struct {
 	 */
 	float slowAdcAlpha;
 	/**
+	 * set debug_mode X
 	 * offset 2244
 	 */
 	debug_mode_e debugMode;
 	/**
 	 * offset 2248
 	 */
-	pid_s warmupAfrPid;
+	float unusedwarmupAfrPid[4];
 	/**
 	 * CLT-based target AFR for PID-based control
 	 * offset 2264
@@ -1657,9 +1717,10 @@ typedef struct {
 	 */
 	pin_output_mode_e dizzySparkOutputPinMode;
 	/**
+	 * todo: rename to fsioAnalogInputs
 	 * offset 2376
 	 */
-	adc_channel_e fsioAdc[FSIO_ADC_COUNT];
+	adc_channel_e fsioAdc[FSIO_ANALOG_INPUT_COUNT];
 	/**
 	 * Fixed timing, useful for TDC testing
 	 * offset 2392
@@ -1687,12 +1748,12 @@ typedef struct {
 	/**
 	 * offset 2412
 	 */
-	pid_dt auxPidDT[AUX_PID_COUNT];
+	int unused4[4];
 	/**
-	 * Extra idle while cranking
+	 * IAC cranking position
 	 * offset 2428
 	 */
-	float crankingIdleAdjustment;
+	int crankingIACposition;
 	/**
 	 * offset 2432
 	 */
@@ -1736,7 +1797,7 @@ typedef struct {
 	/**
 	 * offset 2488
 	 */
-	pid_s auxPid[AUX_PID_COUNT];
+	float unusedauxPid[16];
 	/**
 	 * set vvt_mode X
 	 * offset 2552
@@ -1784,10 +1845,12 @@ typedef struct {
 	 */
 	float postCrankingDurationSec;
 	/**
+	 * todo: finish implementation #332
 	 * offset 2668
 	 */
 	ThermistorConf auxTempSensor1;
 	/**
+	 * todo: finish implementation #332
 	 * offset 2700
 	 */
 	ThermistorConf auxTempSensor2;
@@ -1812,10 +1875,6 @@ typedef struct {
 	 */
 	pid_s fuelClosedLoopPid;
 	/**
-	 * offset 2756
-	 */
-	float fuelClosedLoopAfrLowThreshold;
-	/**
 	 * offset 2760
 	 */
 	float fuelClosedLoopAfrHighThreshold;
@@ -1836,7 +1895,55 @@ typedef struct {
 	/**
 	 * offset 2776
 	 */
-	int unused[68];
+	cfg_float_t_1f timing_offset_cylinder[IGNITION_PIN_COUNT];
+	/**
+	 * offset 2824
+	 */
+	pin_input_mode_e brakePedalPinMode;
+	/**
+	 * offset 2828
+	 */
+	float idlePidActivationTime;
+	/**
+	 * offset 2832
+	 */
+	spi_device_e sdCardSpiDevice;
+	/**
+	 * offset 2836
+	 */
+	pin_mode_e spi3SckMode;
+	/**
+	 * offset 2840
+	 */
+	pin_mode_e spi3MosiMode;
+	/**
+	 * offset 2844
+	 */
+	pin_mode_e spi3MisoMode;
+	/**
+	 * offset 2848
+	 */
+	pin_mode_e spi1SckMode;
+	/**
+	 * offset 2852
+	 */
+	pin_mode_e spi1MosiMode;
+	/**
+	 * offset 2856
+	 */
+	pin_mode_e spi1MisoMode;
+	/**
+	 * offset 2860
+	 */
+	brain_pin_e brakePedalPin;
+	/**
+	 * offset 2864
+	 */
+	pid_s auxPid[AUX_PID_COUNT];
+	/**
+	 * offset 2944
+	 */
+	int unusedEnd[26];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -1848,7 +1955,7 @@ typedef struct {
 	/**
 	 * offset 3048
 	 */
-	le_formula_t le_formulas[LE_COMMAND_COUNT];
+	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 6248
 	 */
@@ -2051,4 +2158,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Feb 22 21:26:04 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 17 02:29:38 EDT 2017

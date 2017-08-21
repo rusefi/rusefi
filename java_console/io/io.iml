@@ -9,9 +9,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jssc" level="project" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
-    <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" exported="" name="junit" level="project" />
     <orderEntry type="module" module-name="models" />
     <orderEntry type="module" module-name="logging" exported="" />
-    <orderEntry type="library" name="jcip-annotations" level="project" />
+    <orderEntry type="library" exported="" name="jcip-annotations" level="project" />
   </component>
 </module>

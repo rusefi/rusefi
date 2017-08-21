@@ -72,6 +72,8 @@
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "crc.h"
+#include "fl_protocol.h"
+#include "bluetooth.h"
 
 #include <string.h>
 #include "engine_configuration.h"
@@ -93,9 +95,6 @@ extern persistent_config_container_s persistentState;
 
 extern short currentPageId;
 
-// that's 3 seconds
-#define TS_READ_TIMEOUT MS2ST(3000)
-
 /**
  * note the use-case where text console port is switched into
  * binary port
@@ -112,21 +111,7 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-ts_channel_s tsChannel;
-
-static int ts_serial_ready(bool isConsoleRedirect) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (isCommandLineConsoleOverTTL() ^ isConsoleRedirect) {
-		// TS uses USB when console uses serial
-		return is_usb_serial_ready();
-	} else {
-		// TS uses serial when console uses USB
-		return true;
-	}
-#else
-	return true;
-#endif
-}
+static ts_channel_s tsChannel;
 
 static uint16_t BINARY_RESPONSE = (uint16_t) SWAP_UINT16(BINARY_SWITCH_TAG);
 
@@ -143,7 +128,7 @@ static void resetTs(void) {
 
 static void printErrorCounters(void) {
 	scheduleMsg(&tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	scheduleMsg(&tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
@@ -182,6 +167,17 @@ static void setTsSpeed(int value) {
 	boardConfiguration->tunerStudioSerialSpeed = value;
 	printTsStats();
 }
+
+#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+// Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
+static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
+	bluetoothStart(&tsChannel, BLUETOOTH_HC_05, baudRate, name, pinCode);
+}
+// Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
+static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
+	bluetoothStart(&tsChannel, BLUETOOTH_HC_06, baudRate, name, pinCode);
+}
+#endif  /* EFI_BLUETOOTH_SETUP */
 
 void tunerStudioDebug(const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
@@ -233,15 +229,20 @@ int getTunerStudioPageSize(int pageIndex) {
 	return 0;
 }
 
+static void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
+	sr5SendResponse(tsChannel, mode, NULL, 0);
+}
+
 void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
 	currentPageId = pageId;
 	scheduleMsg(&tsLogger, "PAGE %d", currentPageId);
-	tsSendResponse(tsChannel, mode, NULL, 0);
+	sendOkResponse(tsChannel, mode);
 }
 
 static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
+	UNUSED(currentPageId);
 	if (offset > sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
@@ -289,7 +290,7 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	memcpy(addr, content, count);
 	onlineTuneBytes(currentPageId, offset, count);
 
-	tsSendResponse(tsChannel, mode, NULL, 0);
+	sendOkResponse(tsChannel, mode);
 }
 
 void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
@@ -306,7 +307,7 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
 
 	scheduleMsg(&tsLogger, "CRC32 response: %x", crc);
 
-	tsSendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
+	sr5SendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
 }
 
 /**
@@ -315,6 +316,8 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
  */
 void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
 		uint8_t value) {
+	UNUSED(tsChannel);
+	UNUSED(mode);
 	tsState.writeValueCommandCounter++;
 
 	currentPageId = page;
@@ -349,7 +352,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 }
 
 static void sendErrorCode(ts_channel_s *tsChannel) {
-	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
 void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
@@ -377,7 +380,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 	}
 
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
-	tsSendResponse(tsChannel, mode, addr, count);
+	sr5SendResponse(tsChannel, mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
 //	scheduleMsg(&tsLogger, "Sending %d done", count);
 #endif
@@ -387,12 +390,12 @@ void requestBurn(void) {
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	setNeedToWriteConfiguration();
 #endif
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
 	if (mode == TS_CRC) {
-		tunerStudioWriteCrcPacket(tsChannel, responseCode, NULL, 0);
+		sr5WriteCrcPacket(tsChannel, responseCode, NULL, 0);
 	}
 }
 
@@ -422,6 +425,7 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 
 static TunerStudioReadRequest readRequest;
 static TunerStudioWriteChunkRequest writeChunkRequest;
+static TunerStudioOchRequest ochRequest;
 static short int pageIn;
 
 static bool isKnownCommand(char command) {
@@ -430,17 +434,19 @@ static bool isKnownCommand(char command) {
 			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_FILE_RANGE
+			|| command == TS_TOOTH_COMMAND
 			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION;
 }
 
-static uint8_t firstByte;
-static uint8_t secondByte;
 
 void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	int wasReady = false;
+
+	bool isFirstByte = true;
+
 	while (true) {
-		int isReady = ts_serial_ready(isConsoleRedirect);
+		int isReady = sr5IsReady(isConsoleRedirect);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
 			wasReady = false;
@@ -452,25 +458,40 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 //			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
 		}
 
-		tsState.tsCounter++;
+		tsState.totalCounter++;
 
-		int recieved = chnReadTimeout(tsChannel->channel, &firstByte, 1, TS_READ_TIMEOUT);
+		uint8_t firstByte;
+		int received = sr5ReadData(tsChannel, &firstByte, 1);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-			logMsg("recieved %d\r\n", recieved);
+			logMsg("received %d\r\n", received);
 #endif
 
 
-		if (recieved != 1) {
+		if (received != 1) {
 //			tunerStudioError("ERROR: no command");
+#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+			// assume there's connection loss and notify the bluetooth init code
+			bluetoothSoftwareDisconnectNotify();
+#endif  /* EFI_BLUETOOTH_SETUP */
 			continue;
 		}
 		onDataArrived();
+
+		if (isFirstByte) {
+			if (isStartOfFLProtocol(firstByte)) {
+
+			}
+
+		}
+		isFirstByte = false;
+
 //		scheduleMsg(logger, "Got first=%x=[%c]", firstByte, firstByte);
 		if (handlePlainCommand(tsChannel, firstByte))
 			continue;
 
-		recieved = chnReadTimeout(tsChannel->channel, &secondByte, 1, TS_READ_TIMEOUT);
-		if (recieved != 1) {
+		uint8_t secondByte;
+		received = sr5ReadData(tsChannel, &secondByte, 1);
+		if (received != 1) {
 			tunerStudioError("TS: ERROR: no second byte");
 			continue;
 		}
@@ -480,7 +501,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 		if (incomingPacketSize == BINARY_SWITCH_TAG) {
 			// we are here if we get a binary switch request while already in binary mode. We will just ignore it.
-			tunerStudioWriteData(tsChannel, (const uint8_t *) &BINARY_RESPONSE, 2);
+			sr5WriteData(tsChannel, (const uint8_t *) &BINARY_RESPONSE, 2);
 			continue;
 		}
 
@@ -491,8 +512,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 			continue;
 		}
 
-		recieved = chnReadTimeout(tsChannel->channel, (uint8_t* )tsChannel->crcReadBuffer, 1, TS_READ_TIMEOUT);
-		if (recieved != 1) {
+		received = sr5ReadData(tsChannel, (uint8_t* )tsChannel->crcReadBuffer, 1);
+		if (received != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
 		}
@@ -511,11 +532,11 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		recieved = chnReadTimeout(tsChannel->channel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
-				incomingPacketSize + CRC_VALUE_SIZE - 1, TS_READ_TIMEOUT);
+		received = sr5ReadData(tsChannel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
+				incomingPacketSize + CRC_VALUE_SIZE - 1);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
-		if (recieved != expectedSize) {
-			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", recieved,
+		if (received != expectedSize) {
+			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", received,
 					expectedSize, command);
 			tunerStudioError("ERROR: not enough bytes in stream");
 			sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_UNDERRUN);
@@ -552,9 +573,7 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	startTsPort();
-#endif
+	startTsPort(&tsChannel);
 
 	runBinaryProtocolLoop(&tsChannel, false);
 }
@@ -584,54 +603,73 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
-	tsSendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	sr5SendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
 }
 
 /**
  * @brief 'Output' command sends out a snapshot of current values
  */
-void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
+void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+
+
+	if (sizeof(TunerStudioOutputChannels) < offset + count) {
+		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
+		sendErrorCode(tsChannel);
+		return;
+	}
+
+
 	tsState.outputChannelsCommandCounter++;
 	prepareTunerStudioOutputs();
 	// this method is invoked too often to print any debug information
-	tsSendResponse(tsChannel, mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
+	sr5SendResponse(tsChannel, mode, ((const uint8_t *) &tsOutputChannels) + offset, count);
 }
 
+#define TEST_RESPONSE_TAG " ts_p_alive\r\n"
+
 void handleTestCommand(ts_channel_s *tsChannel) {
+	tsState.testCommandCounter++;
+	static char testOutputBuffer[12];
 	/**
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
-	tunerStudioWriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
+	sr5WriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.lastErrorCode, tsState.testCommandCounter);
+	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection
 	 * @see EngineState#TS_PROTOCOL_TAG
 	 */
-	tunerStudioWriteData(tsChannel, (const uint8_t *) " ts_p_alive\r\n", 8);
+	sr5WriteData(tsChannel, (const uint8_t *) TEST_RESPONSE_TAG, sizeof(TEST_RESPONSE_TAG));
 }
 
 extern CommandHandler console_line_callback;
 
-static void handleGetVersion(ts_channel_s *tsChannel) {
-
+static void handleGetVersion(ts_channel_s *tsChannel, ts_response_format_e mode) {
+	static char versionBuffer[32];
+	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	sr5SendResponse(tsChannel, mode, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
 static void handleGetText(ts_channel_s *tsChannel) {
+	tsState.textCommandCounter++;
+
 	int outputSize;
 	char *output = swapOutputBuffers(&outputSize);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
 
 static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
-	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
+	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
@@ -652,8 +690,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		handleTestCommand(tsChannel);
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&pageIn, sizeof(pageIn), TS_READ_TIMEOUT);
-		if (recieved != sizeof(pageIn)) {
+		int received = sr5ReadData(tsChannel, (uint8_t * )&pageIn, sizeof(pageIn));
+		if (received != sizeof(pageIn)) {
 			tunerStudioError("ERROR: not enough for PAGE");
 			return true;
 		}
@@ -662,7 +700,7 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	} else if (command == TS_BURN_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked BURN");
 		uint16_t page;
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&page, sizeof(page), TS_READ_TIMEOUT);
+		int recieved = sr5ReadData(tsChannel, (uint8_t * )&page, sizeof(page));
 		if (recieved != sizeof(page)) {
 			tunerStudioError("ERROR: Not enough for plain burn");
 			return true;
@@ -671,17 +709,15 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked CHUNK_WRITE");
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest),
-				TS_READ_TIMEOUT);
-		if (recieved != sizeof(writeChunkRequest)) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
+		int received = sr5ReadData(tsChannel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest));
+		if (received != sizeof(writeChunkRequest)) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", received);
 			tsState.errorCounter++;
 			return true;
 		}
-		recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count,
-				TS_READ_TIMEOUT);
-		if (recieved != writeChunkRequest.count) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved,
+		received = sr5ReadData(tsChannel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
+		if (received != writeChunkRequest.count) {
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", received,
 					writeChunkRequest.count);
 			tsState.errorCounter++;
 			return true;
@@ -693,24 +729,29 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&readRequest, sizeof(readRequest),
-				TS_READ_TIMEOUT);
-		if (recieved != sizeof(readRequest)) {
+		int received = sr5ReadData(tsChannel, (uint8_t * )&readRequest, sizeof(readRequest));
+		if (received != sizeof(readRequest)) {
 			tunerStudioError("Not enough for plain read header");
 			return true;
 		}
 		handlePageReadCommand(tsChannel, TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
 		return true;
 	} else if (command == TS_OUTPUT_COMMAND) {
+		int received = sr5ReadData(tsChannel, (uint8_t * )&ochRequest, sizeof(ochRequest));
+		if (received != sizeof(ochRequest)) {
+			tunerStudioError("Not enough for OutputChannelsCommand");
+			return true;
+		}
+
 		//scheduleMsg(logger, "Got naked Channels???");
-		handleOutputChannelsCommand(tsChannel, TS_PLAIN);
+		handleOutputChannelsCommand(tsChannel, TS_PLAIN, ochRequest.offset, ochRequest.count);
 		return true;
 	} else if (command == TS_LEGACY_HELLO_COMMAND) {
 		tunerStudioDebug("ignoring LEGACY_HELLO_COMMAND");
 		return true;
 	} else if (command == TS_COMMAND_F) {
 		tunerStudioDebug("not ignoring F");
-		tunerStudioWriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
+		sr5WriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
 		return true;
 	} else {
 		return false;
@@ -725,13 +766,15 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
 	} else if (command == TS_GET_FIRMWARE_VERSION) {
-		handleGetVersion(tsChannel);
+		handleGetVersion(tsChannel, TS_CRC);
 	} else if (command == TS_GET_TEXT) {
 		handleGetText(tsChannel);
 	} else if (command == TS_EXECUTE) {
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 	} else if (command == TS_OUTPUT_COMMAND) {
-		handleOutputChannelsCommand(tsChannel, TS_CRC);
+		uint16_t offset = *(uint16_t *) (data);
+		uint16_t count = *(uint16_t *) (data + 2);
+		handleOutputChannelsCommand(tsChannel, TS_CRC, offset, count);
 	} else if (command == TS_PAGE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		handlePageSelectCommand(tsChannel, TS_CRC, page);
@@ -783,9 +826,17 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		uint16_t subsystem = SWAP_UINT16(*(short*)&data[0]);
 		uint16_t index = SWAP_UINT16(*(short*)&data[2]);
 
+		if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
+			tsOutputChannels.debugIntField1++;
+			tsOutputChannels.debugIntField2 = subsystem;
+			tsOutputChannels.debugIntField3 = index;
+
+		}
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		runIoTest(subsystem, index);
-#endif
+#endif /* EFI_PROD_CODE */
+		sendOkResponse(tsChannel, TS_CRC);
 	} else {
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;
@@ -795,10 +846,10 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 void startTunerStudioConnectivity(void) {
 	if (sizeof(persistent_config_s) != getTunerStudioPageSize(0))
-		firmwareError(OBD_PCM_Processor_Fault, "TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
+		firmwareError(CUSTOM_OBD_TS_PAGE_MISMATCH, "TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
 
 	if (sizeof(TunerStudioOutputChannels) != TS_OUTPUT_SIZE)
-		firmwareError(OBD_PCM_Processor_Fault, "TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
+		firmwareError(CUSTOM_OBD_TS_OUTPUT_MISMATCH, "TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
 
 	memset(&tsState, 0, sizeof(tsState));
 	syncTunerStudioCopy();
@@ -806,8 +857,14 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("tsinfo", printTsStats);
 	addConsoleAction("reset_ts", resetTs);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
-
-	tsChannel.channel = getTsSerialDevice();
+	
+#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"
+	// Example: "bluetooth_hc06 38400 rusefi 1234"
+	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);
+	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
+	addConsoleAction("bluetooth_cancel", bluetoothCancel);
+#endif /* EFI_BLUETOOTH_SETUP */
 
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
 }

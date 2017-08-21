@@ -1,6 +1,6 @@
 package com.rusefi.binaryprotocol;
 
-import com.rusefi.Logger;
+import com.opensr5.Logger;
 import com.rusefi.Timeouts;
 import etch.util.CircularByteBuffer;
 import net.jcip.annotations.ThreadSafe;
@@ -9,6 +9,8 @@ import java.io.EOFException;
 import java.util.Arrays;
 
 /**
+ * Thread-safe byte queue with blocking {@link #waitForBytes} method
+ *
  * (c) Andrey Belomutskiy
  * 6/20/2015.
  */
@@ -39,13 +41,15 @@ public class IncomingDataBuffer {
     }
 
     /**
+     * Blocking method which would for specified amout of data
+     *
      * @return true in case of timeout, false if everything is fine
      */
-    public boolean waitForBytes(int count, long start, String msg) throws InterruptedException {
+    public boolean waitForBytes(String msg, long startTimestamp, int count) throws InterruptedException {
         logger.info("Waiting for " + count + " byte(s): " + msg);
         synchronized (cbb) {
             while (cbb.length() < count) {
-                int timeout = (int) (start + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());
+                int timeout = (int) (startTimestamp + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());
                 if (timeout <= 0) {
                     return true; // timeout. Sad face.
                 }

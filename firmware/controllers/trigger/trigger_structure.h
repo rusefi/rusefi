@@ -51,12 +51,13 @@ class TriggerState;
 class TriggerShape {
 public:
 	TriggerShape();
-	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_S);
+	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void findTriggerPosition(
-			event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
+			event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	bool isSynchronizationNeeded;
 	bool needSecondTriggerInput;
+	bool shapeDefinitionError;
 
 	/**
 	 * duty cycle for each individual trigger channel
@@ -105,7 +106,6 @@ public:
 	bool useOnlyPrimaryForSync;
 	/**
 	 * Should we use falls or rises for gap ratio detection?
-	 * todo: combine this flag with gapBothDirections?
 	 */
 	bool useRiseEdge;
 	/**
@@ -151,9 +151,9 @@ public:
 	 */
 	int size;
 
-	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_S);
+	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_S);
+	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX);
 	operation_mode_e getOperationMode();
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
@@ -170,11 +170,11 @@ public:
 	int getSize() const;
 
 	int getTriggerShapeSynchPointIndex();
-	void prepareShape(DECLARE_ENGINE_PARAMETER_F);
+	void prepareShape(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 private:
 	trigger_shape_helper h;
-	int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_S);
+	int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * index of synchronization event within TriggerShape
@@ -207,11 +207,11 @@ private:
 	angle_t getAngle(int phaseIndex) const;
 
 	angle_t getCycleDuration() const;
-	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_S);
+	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
-void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
+void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S);
+void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* TRIGGER_STRUCTURE_H_ */

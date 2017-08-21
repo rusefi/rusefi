@@ -6,36 +6,11 @@
  */
 
 #include <stdio.h>
-#include "idle_controller.h"
+
 #include "efitime.h"
 #include "engine_test_helper.h"
 #include "pid.h"
 
-void idleDebug(const char *msg, percent_t value) {
-	printf("%s\r\n", msg);
-}
-
-static IdleValveState is;
-
-void testIdleController(void) {
-	print("******************************************* testIdleController\r\n");
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
-
-	engineConfiguration->targetIdleRpm = 1200;
-
-	is.init(PASS_ENGINE_PARAMETER_F);
-
-	efitimems_t time = 0;
-
-	assertEqualsM("#1", 60.0, is.getIdle(900, time PASS_ENGINE_PARAMETER));
-
-	time += 2000;
-	assertEqualsM("idle#2", 60.5, is.getIdle(900, time PASS_ENGINE_PARAMETER));
-
-	time += 2000;
-	assertEqualsM("idke#3", 60.6, is.getIdle(1050, time PASS_ENGINE_PARAMETER));
-}
 
 void testPidController(void) {
 	print("******************************************* testPidController\r\n");
@@ -44,8 +19,11 @@ void testPidController(void) {
 	pidS.iFactor = 0.5;
 	pidS.dFactor = 0;
 	pidS.offset = 0;
+	pidS.minValue = 10;
+	pidS.maxValue = 90;
+	pidS.period = 1;
 
-	Pid pid(&pidS, 10, 90);
+	Pid pid(&pidS);
 
 	assertEqualsM("getValue#90", 90, pid.getValue(14, 12, 0.1));
 
@@ -62,5 +40,29 @@ void testPidController(void) {
 
 	assertEquals(10, pid.getValue(14, 16, 1));
 //	assertEquals(68, pid.getIntegration());
+
+
+
+	pidS.pFactor = 1;
+	pidS.iFactor = 0;
+	pidS.dFactor = 0;
+	pidS.offset = 0;
+	pidS.minValue = 0;
+	pidS.maxValue = 100;
+	pidS.period = 1;
+
+	pid.reset();
+
+	assertEqualsM("target=50, input=0", 50, pid.getValue(/*target*/50, /*input*/0));
+	assertEqualsM("target=50, input=0 iTerm", 0, pid.iTerm);
+
+	assertEqualsM("target=50, input=70", 0, pid.getValue(/*target*/50, /*input*/70));
+	assertEqualsM("target=50, input=70 iTerm", 0, pid.iTerm);
+
+	assertEqualsM("target=50, input=70 #2", 0, pid.getValue(/*target*/50, /*input*/70));
+	assertEqualsM("target=50, input=70 iTerm #2", 0, pid.iTerm);
+
+	assertEqualsM("target=50, input=50", 0, pid.getValue(/*target*/50, /*input*/50));
+	assertEqualsM("target=50, input=50 iTerm", 0, pid.iTerm);
 
 }

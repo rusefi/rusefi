@@ -1,12 +1,11 @@
 package com.rusefi.ui.fsio;
 
-import com.autsia.bracer.BracerParser;
+import com.fathzer.soft.javaluator.DoubleEvaluator;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 
 /**
  * (c) Andrey Belomutskiy
@@ -25,7 +24,7 @@ public class FlexibleControls {
         human2rpm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                process();
+                process(FlexibleControls.this.normalForm.getText());
             }
         });
 
@@ -37,17 +36,11 @@ public class FlexibleControls {
 
         normalForm.setText("(time_since_boot < 4) | (rpm > 0)");
 
-        process();
+        process(normalForm.getText());
     }
 
-    private void process() {
-        BracerParser bp = new BracerParser();
-        try {
-            bp.parse(normalForm.getText());
-        } catch (ParseException e) {
-           throw new IllegalStateException(e);
-        }
-        rpnForm.setText(bp.getRusEfi());
+    private void process(String text) {
+        rpnForm.setText(DoubleEvaluator.process(text).getPosftfixExpression());
     }
 
     public JPanel getPanel() {

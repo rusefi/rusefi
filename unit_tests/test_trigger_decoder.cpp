@@ -35,7 +35,7 @@
 extern int timeNow;
 extern float unitTestValue;
 extern float testMafValue;
-extern int warningCounter;
+extern int unitTestWarningCounter;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
 
@@ -47,26 +47,26 @@ void sendOutConfirmation(char *value, int i) {
 	// test implementation
 }
 
-int getTheAngle(engine_type_e engineType) {
+static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	EngineTestHelper eth(engineType);
 	EXPAND_EngineTestHelper;
 
-	initDataStructures(PASS_ENGINE_PARAMETER_F);
+	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	TriggerShape * shape = &eth.engine.triggerShape;
-	return findTriggerZeroEventIndex(&eth.engine.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER);
+	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
+	return findTriggerZeroEventIndex(&eth.engine.triggerCentral.triggerState, shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void testDodgeNeonDecoder(void) {
-	printf("*************************************************** testDodgeNeonDecoder\r\n");
+	printf("*************************************************** testDodgeNeonDecoder95\r\n");
 	initTriggerDecoder();
 
-	assertEqualsM("trigger zero index", 8, getTheAngle(DODGE_NEON_1995));
+	assertEqualsM("DODGE_NEON_1995: trigger zero index", 8, getTriggerZeroEventIndex(DODGE_NEON_1995));
 
 	EngineTestHelper eth(DODGE_NEON_1995);
 	EXPAND_EngineTestHelper;
 
-	TriggerShape * shape = &eth.engine.triggerShape;
+	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
 	assertEquals(8, shape->getTriggerShapeSynchPointIndex());
 
 	TriggerState state;
@@ -116,37 +116,37 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 void test1995FordInline6TriggerDecoder(void) {
 	printf("*************************************************** test1995FordInline6TriggerDecoder\r\n");
 
-	assertEqualsM("triggerIndex ", 0, getTheAngle(FORD_INLINE_6_1995));
+	assertEqualsM("triggerIndex ", 0, getTriggerZeroEventIndex(FORD_INLINE_6_1995));
 
 	initTriggerDecoder();
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
 
-	TriggerShape * shape = &eth.engine.triggerShape;
+	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
 
 	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
 
 	// this is needed to have valid CLT and IAT. todo: extract method
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	event_trigger_position_s position;
 	assertEqualsM("globalTriggerAngleOffset", 0, engineConfiguration->globalTriggerAngleOffset);
-	TRIGGER_SHAPE(findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertTriggerPosition(&position, 0, 0);
 
-	TRIGGER_SHAPE(findTriggerPosition(&position, 200 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&position, 200 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertTriggerPosition(&position, 3, 20);
 
-	TRIGGER_SHAPE(findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER));
+	TRIGGER_SHAPE(findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerShape();
 
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.fireTriggerEvents(48);
 	assertEquals(2000, eth.engine.rpmCalculator.rpmValue);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.fireTriggerEvents(48);
 
 	IgnitionEventList *ecl = &eth.engine.ignitionEvents;
@@ -161,42 +161,42 @@ void test1995FordInline6TriggerDecoder(void) {
 
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
 	int r = 10;
-	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
-	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
 	assertTrue(state.shaft_is_synchronized); // first signal rise synchronize
 	assertEquals(0, state.getCurrentIndex());
-	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(1, state.getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER);
+		state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 		assertEqualsM("even", i++, state.getCurrentIndex());
-		state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER);
+		state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 		assertEqualsM("odd", i++, state.getCurrentIndex());
 	}
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(10, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(11, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER);
+	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(0, state.getCurrentIndex()); // new revolution
 
-	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER));
+	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 void testFordAspire(void) {
 	printf("*************************************************** testFordAspire\r\n");
 
-	assertEquals(4, getTheAngle(FORD_ASPIRE_1996));
+	assertEqualsM("getTriggerZeroEventIndex", 4, getTriggerZeroEventIndex(FORD_ASPIRE_1996));
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
 
-	assertEquals(4, eth.engine.triggerShape.getTriggerShapeSynchPointIndex());
+	assertEqualsM("getTriggerShapeSynchPointIndex", 4, TRIGGER_SHAPE(getTriggerShapeSynchPointIndex()));
 
 	assertEquals(800, config->fuelRpmBins[0]);
 	assertEquals(7000, config->fuelRpmBins[15]);
@@ -204,26 +204,31 @@ void testFordAspire(void) {
 	engineConfiguration->crankingChargeAngle = 65;
 	engineConfiguration->crankingTimingAngle = 31;
 
-	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER));
-	assertEqualsM("running dwell", 4, getSparkDwell(2000 PASS_ENGINE_PARAMETER));
+	engine->rpmCalculator.setRpmValue(200 PASS_ENGINE_PARAMETER_SUFFIX);
+	assertEqualsM("cranking dwell", 54.166670, getSparkDwell(200 PASS_ENGINE_PARAMETER_SUFFIX));
+	engine->rpmCalculator.setRpmValue(2000 PASS_ENGINE_PARAMETER_SUFFIX);
+	assertEqualsM("running dwell", 4, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
 
-	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER));
+	engine->rpmCalculator.setRpmValue(6000 PASS_ENGINE_PARAMETER_SUFFIX);
+	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
+void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
 	printf("*************************************************** %s\r\n", msg);
 
 	EngineTestHelper eth(type);
 	EXPAND_EngineTestHelper;
 
-	initSpeedDensity(PASS_ENGINE_PARAMETER_F);
+	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	TriggerShape *t = &eth.engine.triggerShape;
+	TriggerShape *t = &eth.engine.triggerCentral.triggerShape;
+
+	assertFalseM("isError", t->shapeDefinitionError);
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
 
-	assertEqualsM("channel1duty", channel1duty, t->dutyCycle[0]);
-	assertEqualsM("channel2duty", channel2duty, t->dutyCycle[1]);
+	assertEqualsM5(msg, " channel1duty", channel1duty, t->dutyCycle[0], 0.0001);
+	assertEqualsM5(msg, " channel2duty", channel2duty, t->dutyCycle[1], 0.0001);
 }
 
 static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {
@@ -250,31 +255,31 @@ void testStartupFuelPumping(void) {
 	engine->engineConfiguration->tpsMax = 10;
 
 	mockTps = TPS_TS_CONVERSION * 6;
-	sf.update(PASS_ENGINE_PARAMETER_F);
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#1", 1, sf.pumpsCounter);
 
 	mockTps = TPS_TS_CONVERSION * 3;
-	sf.update(PASS_ENGINE_PARAMETER_F);
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pumpsCounter#2", 1, sf.pumpsCounter);
 
-	sf.update(PASS_ENGINE_PARAMETER_F);
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#3", 1, sf.pumpsCounter);
 
 	engine->rpmCalculator.mockRpm = 10;
-	sf.update(PASS_ENGINE_PARAMETER_F);
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#4", 0, sf.pumpsCounter);
 
 	mockTps = TPS_TS_CONVERSION * 7;
 	engine->rpmCalculator.mockRpm = 0;
-	sf.update(PASS_ENGINE_PARAMETER_F);
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#5", 1, sf.pumpsCounter);
 
 	mockTps = TPS_TS_CONVERSION * 3;
-	sf.update(PASS_ENGINE_PARAMETER_F);
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#6", 1, sf.pumpsCounter);
 
 	mockTps = TPS_TS_CONVERSION * 7;
-	sf.update(PASS_ENGINE_PARAMETER_F);
+	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }
 
@@ -312,18 +317,18 @@ void testRpmCalculator(void) {
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.applyTriggerShape();
 
-	setInjectorLag(0 PASS_ENGINE_PARAMETER);
+	setFlatInjectorLag(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timeNow = 0;
-	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	assertEquals(4, engine->triggerShape.triggerIndexByAngle[240]);
-	assertEquals(4, engine->triggerShape.triggerIndexByAngle[241]);
+	assertEquals(4, TRIGGER_SHAPE(triggerIndexByAngle[240]));
+	assertEquals(4, TRIGGER_SHAPE(triggerIndexByAngle[241]));
 
 	eth.fireTriggerEvents(48);
 
-	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	assertEqualsM("index #1", 15, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 
 
@@ -341,15 +346,15 @@ void testRpmCalculator(void) {
 	assertEqualsM("st value", 485000, st);
 
 	// todo: why is this required here? we already have one 'prepareOutputSignals' in constructor, what's wrong with it?
-	prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
+	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	assertEqualsM("fuel #1", 4.5450, eth.engine.fuelMs);
 	InjectionEvent *ie0 = &eth.engine.injectionEvents.elements[0];
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
@@ -378,11 +383,11 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 4, schedulingQueue.size());
 	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
@@ -390,19 +395,19 @@ void testRpmCalculator(void) {
 	assertEqualsM("3/3", st + 14777, schedulingQueue.getForUnitText(2)->momentX);
 	schedulingQueue.clear();
 
-	assertEquals(5, engine->triggerShape.triggerIndexByAngle[240]);
-	assertEquals(5, engine->triggerShape.triggerIndexByAngle[241]);
+	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
+	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 4.1", 0, schedulingQueue.size());
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 4.2", 4, schedulingQueue.size());
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 4.3", 4, schedulingQueue.size());
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
@@ -417,25 +422,25 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 5", 2, schedulingQueue.size());
 // todo: assert queue elements
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 6", 2, schedulingQueue.size());
 	assertEqualsM("6/0", st + 40944, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("6/1", st + 41444, schedulingQueue.getForUnitText(1)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 7", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 8", 4, schedulingQueue.size());
 	// todo: assert queue elements completely
 	assertEqualsM("8/0", st + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
@@ -444,12 +449,12 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 9", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER);
+	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("queue size 10", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 }
@@ -459,7 +464,7 @@ void testTriggerDecoder(void) {
 
 	persistent_config_s c;
 	Engine e(&c);
-	TriggerShape * s = &e.triggerShape;
+	TriggerShape * s = &e.triggerCentral.triggerShape;
 
 
 	persistent_config_s *config = &c;
@@ -468,7 +473,7 @@ void testTriggerDecoder(void) {
 	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
 	board_configuration_s *boardConfiguration = &c.engineConfiguration.bc;
 
-	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR PASS_ENGINE_PARAMETER);
+	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("shape size", s->getSize(), 4);
 	assertEquals(s->wave.switchTimes[0], 0.25);
 	assertEquals(s->wave.switchTimes[1], 0.5);
@@ -476,18 +481,26 @@ void testTriggerDecoder(void) {
 	assertEquals(s->wave.switchTimes[3], 1);
 
 	testDodgeNeonDecoder();
-	testTriggerDecoder2("dodge neon", DODGE_NEON_1995, 8, 0.4931, 0.2070);
+	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 8, 0.4931, 0.2070);
 
 	testFordAspire();
-	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.5000, 0.3841);
+	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0000, 0.5);
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
 	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
-	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4833, 0.0);
+	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);
 
 	test1995FordInline6TriggerDecoder();
+
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
+	testTriggerDecoder2("Miata 2003", MAZDA_MIATA_2003, 3, 0.0444, 0.0);
+
+	testTriggerDecoder2("Civic 4/0 both", TEST_CIVIC_4_0_BOTH, 0, 0.5000, 0.0);
+	testTriggerDecoder2("Civic 4/0 rise", TEST_CIVIC_4_0_RISE, 0, 0.5000, 0.0);
+
+	testTriggerDecoder2("test 2/1 both", TEST_ISSUE_366_BOTH, 0, 0.2500, 0.0);
+	testTriggerDecoder2("test 2/1 rise", TEST_ISSUE_366_RISE, 0, 0.0000, 0.0);
 
 	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.7500, 0.2500);
 	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
@@ -497,7 +510,9 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("testMiniCooper", MINI_COOPER_R50, 121, 0.5222, 0.4959);
 	testTriggerDecoder2("testRoverV8", ROVER_V8, 0, 0.4861, 0);
 
-	testTriggerDecoder2("SATURN_ION_2004", SATURN_ION_2004, 4, 0.5, 0.3841);
+	testTriggerDecoder2("SATURN_ION_2004", SATURN_ION_2004, 0, 0.9028, 0.0);
+
+	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9583, 0.0);
 
 	testTriggerDecoder2("test1+1", CUSTOM_ENGINE, 0, 0.7500, 0.2500);
 
@@ -506,36 +521,36 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("testAccordCd 2w", HONDA_ACCORD_CD_TWO_WIRES, 2, 0.9167, 0.5);
 	testTriggerDecoder2("testAccordCdDip", HONDA_ACCORD_CD_DIP, 27, 0.5000, 0.5000);
 
-	testTriggerDecoder2("testMitsu", MITSU_4G93, 3, 0.3750, 0.3889);
+	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
 	{
 		EngineTestHelper eth(MITSU_4G93);
 		EXPAND_EngineTestHelper;
 
-		initSpeedDensity(PASS_ENGINE_PARAMETER_F);
+		initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-		TriggerShape *t = &eth.engine.triggerShape;
-		assertEquals(56, t->eventAngles[1]);
-		assertEqualsM("index at 0", 0, t->triggerIndexByAngle[56]);
-		assertEqualsM("index at 1", 1, t->triggerIndexByAngle[57]);
-
-		assertEquals(270, t->eventAngles[5]);
-		assertEqualsM("index at 269", 4, t->triggerIndexByAngle[269]);
-		assertEqualsM("index at 270", 5, t->triggerIndexByAngle[270]);
-		assertEqualsM("index at 271", 5, t->triggerIndexByAngle[271]);
-
-		assertEquals(306, t->eventAngles[6]);
-		assertEquals(5, t->triggerIndexByAngle[305]);
-		assertEquals(6, t->triggerIndexByAngle[306]);
-		assertEquals(6, t->triggerIndexByAngle[307]);
-
-		assertEquals(666, t->eventAngles[11]);
-		assertEqualsM("index for 665", 10, t->triggerIndexByAngle[665]);
-		assertEqualsM("index for 668", 11, t->triggerIndexByAngle[668]);
+//		TriggerShape *t = &eth.engine.triggerShape;
+//		assertEquals(1, t->eventAngles[1]);
+//		assertEqualsM("index at 0", 0, t->triggerIndexByAngle[56]);
+//		assertEqualsM("index at 1", 1, t->triggerIndexByAngle[57]);
+//
+//		assertEquals(270, t->eventAngles[5]);
+//		assertEqualsM("index at 269", 4, t->triggerIndexByAngle[269]);
+//		assertEqualsM("index at 270", 5, t->triggerIndexByAngle[270]);
+//		assertEqualsM("index at 271", 5, t->triggerIndexByAngle[271]);
+//
+//		assertEquals(306, t->eventAngles[6]);
+//		assertEquals(5, t->triggerIndexByAngle[305]);
+//		assertEquals(6, t->triggerIndexByAngle[306]);
+//		assertEquals(6, t->triggerIndexByAngle[307]);
+//
+//		assertEquals(666, t->eventAngles[11]);
+//		assertEqualsM("index for 665", 10, t->triggerIndexByAngle[665]);
+//		assertEqualsM("index for 668", 11, t->triggerIndexByAngle[668]);
 
 
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
 		eth.persistentConfig.engineConfiguration.bc.sensorChartMode = SC_DETAILED_RPM;
-		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
+		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 //		assertEqualsM2("rpm#1", 16666.9746, eth.engine.triggerCentral.triggerState.instantRpmValue[0], 0.5);
 //		assertEqualsM2("rpm#2", 16666.3750, eth.engine.triggerCentral.triggerState.instantRpmValue[1], 0.5);
@@ -558,8 +573,8 @@ void testTriggerDecoder(void) {
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER);
-		prepareShapes(PASS_ENGINE_PARAMETER_F);
+		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+		prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		printTriggerDebug = false;
 	}
@@ -584,7 +599,7 @@ void assertEvent(const char *msg, int index, void *callback, efitime_t start, ef
 	scheduling_s *ev = schedulingQueue.getForUnitText(index);
 	assertEqualsM4(msg, "up/down", (void*)ev->callback == (void*) callback, 1);
 	assertEqualsM(msg, momentX, ev->momentX - start);
-	OutputSignalPair *pair = (OutputSignalPair *)ev->param;
+	InjectionSignalPair *pair = (InjectionSignalPair *)ev->param;
 	assertEqualsLM(msg, param, (long)pair->outputs[0]);
 }
 
@@ -619,12 +634,12 @@ static void setTestBug299small(EngineTestHelper *eth) {
 	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
 	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
 	// this is needed to update injectorLag
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	assertEqualsM("CLT", 70, engine->engineState.clt);
+	assertEqualsM("CLT", 70, engine->sensors.clt);
 
 	engineConfiguration->trigger.type = TT_ONE;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	eth->applyTriggerShape();
 
@@ -636,12 +651,12 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPAND_Engine
 
 
-	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	eth->fireTriggerEvents2(1, MS2US(20));
 	// still no RPM since need to cycles measure cycle duration
-	assertEqualsM("RPM#1", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM#1", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	eth->fireTriggerEvents2(1, MS2US(20));
-	assertEqualsM("RPM#2", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM#2", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
@@ -732,20 +747,20 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 
 	testMafValue = 0;
-	assertEqualsM("maf", 0, getMaf(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("maf", 0, getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	assertEqualsM("iatC", 1, engine->engineState.iatFuelCorrection);
 	assertEqualsM("cltC", 1, engine->engineState.cltFuelCorrection);
 	assertEqualsM("lag", 0, engine->engineState.injectorLag);
 
-	assertEqualsM("RPM", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	assertEqualsM("fuel#1", 1.5, engine->fuelMs);
 
-	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 	testMafValue = 3;
-	assertEqualsM("maf", 3, getMaf(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("maf", 3, getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 
 static void assertInjectors(const char *msg, int value0, int value1) {
@@ -770,9 +785,9 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 25);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("fuel#2", 12.5, engine->fuelMs);
-	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 	assertEqualsM("qs#1", 4, schedulingQueue.size());
 	timeNow += MS2US(20);
@@ -831,7 +846,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	/**
 	 * one more revolution
 	 */
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	t = &ENGINE(injectionEvents);
@@ -907,7 +922,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("Queue.size#03", 5, schedulingQueue.size());
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertInjectorUpEvent("07@0", 0, MS2US(7.5), 1);
 	assertInjectorDownEvent("07@1", 1, MS2US(10), 0);
 	assertInjectorUpEvent("07@2", 2, MS2US(17.5), 0);
@@ -931,15 +946,15 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("fuel#3", 17.5, engine->fuelMs);
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
-	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 
 	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315, false);
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	assertEqualsM("inj#0", 1, enginePins.injectors[0].currentLogicValue);
@@ -955,7 +970,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 
 	schedulingQueue.executeAll(timeNow);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -970,7 +985,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	schedulingQueue.executeAll(timeNow);
 	eth.firePrimaryTriggerRise();
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	t = &ENGINE(injectionEvents);
 
@@ -1011,9 +1026,9 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("Lfuel#2", 17.5, engine->fuelMs);
-	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 
 	assertEqualsM("Lqs#1", 4, schedulingQueue.size());
@@ -1075,9 +1090,9 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 4);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("Lfuel#4", 2, engine->fuelMs);
-	assertEqualsM("Lduty for maf=3", 10, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER));
+	assertEqualsM("Lduty for maf=3", 10, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 
 	eth.firePrimaryTriggerRise();
@@ -1118,22 +1133,22 @@ void testSparkReverseOrderBug319(void) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	setConstantDwell(45 PASS_ENGINE_PARAMETER);
+	setConstantDwell(45 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// this is needed to update injectorLag
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_F);
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	assertEqualsM("CLT", 70, engine->engineState.clt);
+	assertEqualsM("CLT", 70, engine->sensors.clt);
 
 	engineConfiguration->trigger.type = TT_ONE;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	eth.applyTriggerShape();
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	timeNow = 0;
-	setWholeTimingTable(0 PASS_ENGINE_PARAMETER);
+	setWholeTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -1149,7 +1164,7 @@ void testSparkReverseOrderBug319(void) {
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerFall();
 
-	assertEqualsM("RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
 	assertEqualsM("queue size", 7, schedulingQueue.size());
@@ -1179,7 +1194,7 @@ void testSparkReverseOrderBug319(void) {
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
 
-	assertEqualsM("RPM#2", 545, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM#2", 545, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	assertEqualsM("out-of-order #3", 0, enginePins.coils[3].outOfOrder);
 
@@ -1194,7 +1209,7 @@ void testSparkReverseOrderBug319(void) {
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
 
-	assertEqualsM("RPM#3", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM#3", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	assertEqualsM("out-of-order #5 on c4", 1, enginePins.coils[3].outOfOrder);
 
@@ -1209,7 +1224,7 @@ void testSparkReverseOrderBug319(void) {
 	eth.firePrimaryTriggerRise();
 	schedulingQueue.executeAll(timeNow);
 
-	assertEqualsM("RPM#4", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_F));
+	assertEqualsM("RPM#4", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	assertEqualsM("out-of-order #7", 1, enginePins.coils[3].outOfOrder);
 
@@ -1230,7 +1245,7 @@ void testMissedSpark299(void) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 4, warningCounter);
+	assertEqualsM("warningCounter#0", 4, unitTestWarningCounter);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -1266,8 +1281,8 @@ void testMissedSpark299(void) {
 
 	assertEquals(3000, eth.engine.rpmCalculator.rpmValue);
 
-	setWholeTimingTable(3 PASS_ENGINE_PARAMETER);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	setWholeTimingTable(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 	timeNow += MS2US(20);
@@ -1284,8 +1299,8 @@ void testMissedSpark299(void) {
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
 
-	setWholeTimingTable(-5 PASS_ENGINE_PARAMETER);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	setWholeTimingTable(-5 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	timeNow += MS2US(20);
 	eth.firePrimaryTriggerRise();
@@ -1301,5 +1316,5 @@ void testMissedSpark299(void) {
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNow);
 
-	assertEqualsM("warningCounter#1", 5, warningCounter);
+	assertEqualsM("warningCounter#1", 5, unitTestWarningCounter);
 }

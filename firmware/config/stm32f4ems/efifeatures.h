@@ -10,11 +10,13 @@
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
 
-#define EFI_GPIO TRUE
+#define EFI_GPIO_HARDWARE TRUE
 
 #define EFI_FSIO TRUE
 
 #define EFI_PWM_TESTER FALSE
+
+#define HAL_USE_USB_MSD FALSE
 
 #define EFI_USE_CCM TRUE
 
@@ -45,16 +47,15 @@
  */
 #define EFI_WAVE_ANALYZER TRUE
 
-//#define SERIAL_SPEED (8 * 115200)
-//#define SERIAL_SPEED (2 * 115200)
-//todo: make this configurable via Tuner Studio
-//todo: see uartConsoleSerialSpeed
-#define SERIAL_SPEED 115200
-
 /**
  * TunerStudio support.
  */
 #define EFI_TUNER_STUDIO TRUE
+
+/**
+ * Bluetooth UART setup support.
+ */
+#define EFI_BLUETOOTH_SETUP FALSE
 
 /**
  * TunerStudio debug output
@@ -115,6 +116,10 @@
 
 #define EFI_CJ125 TRUE
 
+#if !defined(EFI_MEMS) || defined(__DOXYGEN__)
+ #define EFI_MEMS TRUE
+#endif
+
 #define EFI_INTERNAL_ADC TRUE
 
 #define EFI_DENSO_ADC FALSE
@@ -124,6 +129,11 @@
 #define EFI_HD44780_LCD TRUE
 
 #define EFI_IDLE_CONTROL TRUE
+
+/**
+ * Control the main power relay based on measured ignition voltage (Vbatt)
+ */
+#define EFI_MAIN_RELAY_CONTROL FALSE
 
 #define EFI_PWM TRUE
 
@@ -145,7 +155,9 @@
  */
 #define EFI_FILE_LOGGING TRUE
 
+#ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
+#endif
 
 /**
  * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
@@ -197,47 +209,21 @@
 // todo: switch to continues ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
 
-#define EFI_CAN_DEVICE CAND2
-#define EFI_CAN_RX_AF 9
-#define EFI_CAN_TX_AF 9
-
-//#define EFI_CAN_DEVICE CAND1
-//#define EFI_CAN_RX_AF 9
-//#define EFI_CAN_TX_AF 9
-
-/**
- * This section is for bottom-left corner SPI
- */
-//#define SPI_CS1_PORT GPIOE
-//#define SPI_CS1_PIN 13
-//#define SPI_CS2_PORT GPIOE
-//#define SPI_CS2_PIN 14
-//#define SPI_CS3_PORT GPIOE
-//#define SPI_CS3_PIN 15
-//#define SPI_CS4_PORT GPIOD
-//#define SPI_CS4_PIN 10
-
 #define EFI_SPI1_AF 5
 
 #define EFI_SPI2_AF 5
 
-
 /**
  * This section is for right-side center SPI
  */
-// this is pointing into the sky for now - conflict with I2C
-#define SPI_CS2_PORT GPIOH
-// this is pointing into the sky for now - conflict with I2C
-#define SPI_CS2_PIN 0
-#define SPI_CS4_PORT GPIOD
-#define SPI_CS4_PIN 3
+
 #define EFI_SPI3_AF 6
+// todo: finish migration to sdCardSpiDevice one day
 #define MMC_CARD_SPI SPID3
 
-#define EFI_I2C_SCL_PORT GPIOB
-#define EFI_I2C_SCL_PIN 6
-#define EFI_I2C_SDA_PORT GPIOB
-#define EFI_I2C_SDA_PIN 7
+#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
+
+#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
 #define EFI_I2C_AF 4
 
 /**
@@ -264,24 +250,53 @@
  */
 
 
-// todo: start using consoleUartDevice
+// todo: start using consoleUartDevice? Not sure
+#ifndef EFI_CONSOLE_UART_DEVICE
 #define EFI_CONSOLE_UART_DEVICE (&SD3)
+#endif
 
-// todo: start using consoleSerialTxPin
+/**
+ * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'
+ *
+ * See also
+ *  STM32_SERIAL_USE_USARTx
+ *  STM32_UART_USE_USARTx
+ * in mcuconf.h
+ */
+#define TS_UART_DMA_MODE FALSE
+
+#define TS_DMA_UART_DEVICE (&UARTD3)
+#define TS_SERIAL_UART_DEVICE (&SD3)
+
+// todo: add DMA-mode for Console?
+#if TS_UART_DMA_MODE
+#undef EFI_CONSOLE_UART_DEVICE
+#endif
+
+// todo: start using consoleSerialTxPin? Not sure
+#ifndef EFI_CONSOLE_TX_PORT
 #define EFI_CONSOLE_TX_PORT GPIOC
+#endif
+#ifndef EFI_CONSOLE_TX_PIN
 #define EFI_CONSOLE_TX_PIN 10
-// todo: start using consoleSerialRxPin
+#endif
+// todo: start using consoleSerialRxPin? Not sure
+#ifndef EFI_CONSOLE_RX_PORT
 #define EFI_CONSOLE_RX_PORT GPIOC
+#endif
+#ifndef EFI_CONSOLE_RX_PIN
 #define EFI_CONSOLE_RX_PIN 11
+#endif
 // todo: this should be detected automatically based on pin selection
 #define EFI_CONSOLE_AF 7
 
 // todo: this should be detected automatically based on pin selection
 #define TS_SERIAL_AF 7
 
-#define LED_WARNING_PORT GPIOD
-#define LED_WARNING_PIN 13
+#define LED_WARNING_BRAIN_PIN GPIOD_13
 
+// LED_ERROR_BRAIN_PIN should match LED_ERROR_PORT/LED_ERROR_PIN
+#define LED_ERROR_BRAIN_PIN GPIOD_14
 #define LED_ERROR_PORT GPIOD
 #define LED_ERROR_PIN 14
 

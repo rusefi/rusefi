@@ -1,13 +1,15 @@
 package com.rusefi;
 
 
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.CommandQueue;
+import com.rusefi.io.ConnectionStatus;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 
 import static com.rusefi.TestingUtils.nextChart;
-import static com.rusefi.IoUtil.sendCommand;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
@@ -23,16 +25,29 @@ import static com.rusefi.waves.EngineReport.isCloseEnough;
 public class AutoTest {
     public static final int COMPLEX_COMMAND_RETRY = 10000;
     static int currentEngineType;
+    private static String fatalError;
 
     static void mainTestBody() {
+        MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
+            @Override
+            public void onMessage(Class clazz, String message) {
+                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX))
+                    fatalError = message;
+            }
+        });
+
         sendCommand("fl 1"); // just in case it was disabled
+        testCustomEngine();
         testMazdaMiata2003();
         test2003DodgeNeon();
         testFordAspire();
         test1995DodgeNeon();
         testMazdaProtege();
+// todo?        sendCommand("reboot"); // this would cause firmware in 5 seconds
+// todo?        sleep(10); // time to reboot
         testBmwE34();
         testSachs();
+        testRoverV8();
         testMitsu();
         testCamaro();
         testCitroenBerlingo();
@@ -41,8 +56,21 @@ public class AutoTest {
         testFordFiesta();
     }
 
+    private static void testCustomEngine() {
+        setEngineType(0);
+        sendCommand("set_toothed_wheel 4 0");
+//        sendCommand("enable trigger_only_front");
+//        changeRpm(100);
+//        changeRpm(1500);
+//        sendCommand("disable trigger_only_front");
+//        changeRpm(100);
+//        changeRpm(1500);
+    }
+
     private static void testMazdaMiata2003() {
         setEngineType(47);
+        sendCommand("get cranking_dwell"); // just test coverage
+//        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
     private static void testCamaro() {
@@ -241,6 +269,10 @@ public class AutoTest {
         assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.493, x + 540);
     }
 
+    private static void testRoverV8() {
+        setEngineType(10);
+    }
+
     private static void testFordFiesta() {
         setEngineType(4);
         EngineChart chart;
@@ -395,6 +427,15 @@ public class AutoTest {
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
     }
 
+    private static void sendCommand(String command) {
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
+    }
+
+    private static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
+        assertNull("Fatal not expected", fatalError);
+        IoUtil.sendCommand(command, retryTimeoutMs, totalTimeoutSeconds);
+    }
+
     private static void assertEquals(double expected, double actual) {
         assertEquals("", expected, actual);
     }
@@ -438,7 +479,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator(true);
+            IoUtil.launchSimulator(false);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();

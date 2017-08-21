@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ConnectionStatus {
     // todo: react to any message as connected? how to know if message from controller, not internal message?
-    private static final String FATAL_MESSAGE_PREFIX = "FATAL";
+    public static final String FATAL_MESSAGE_PREFIX = "FATAL";
     @NotNull
     private Value value = Value.NOT_CONNECTED;
 

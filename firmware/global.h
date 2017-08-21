@@ -8,11 +8,19 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 #include <ch.h>
 #include <hal.h>
+    
 #include <string.h>
 
+#ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+#endif
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
@@ -48,27 +56,27 @@ typedef unsigned int time_t;
 #define EFI_ERROR_CODE 0xffffffff
 
 #if EFI_USE_CCM && defined __GNUC__
-#define CCM_OPTIONAL __attribute__((section(".ccm")))
+#define MAIN_RAM __attribute__((section(".ram0")))
+#elif defined __GNUC__
+#define MAIN_RAM
+#else
+#define MAIN_RAM @ ".ram0"
+#endif
+
+
+/**
+ * rusEfi is placing some of data structures into CCM memory simply
+ * in order to use that memory - no magic about which RAM is faster etc.
+ *
+ * Please note that DMA does not work with CCM memory
+ */
+#if EFI_USE_CCM && defined __GNUC__
+#define CCM_OPTIONAL __attribute__((section(".ram4")))
 #elif defined __GNUC__
 #define CCM_OPTIONAL
 #else
-#define CCM_OPTIONAL @ ".ccm"
+#define CCM_OPTIONAL @ ".ram4"
 #endif
-
-// this stuff is about ChibiOS 2.6 > Migration
-typedef VirtualTimer virtual_timer_t;
-typedef EventListener event_listener_t;
-typedef Thread thread_t;
-typedef EventListener event_listener_t;
-typedef EventSource event_source_t;
-typedef VTList virtual_timers_list_t;
-typedef VirtualTimer virtual_timer_t;
-
-#define HAL_SUCCESS CH_SUCCESS
-#define HAL_FAILED CH_FAILED
-
-#define THD_WORKING_AREA WORKING_AREA
-#define THD_FUNCTION(tname, arg) void tname(void *arg)
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
@@ -76,9 +84,9 @@ typedef VirtualTimer virtual_timer_t;
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
  * optimization.
  *
- * rusEfi main processing happends on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large. Problem
+ * rusEfi main processing happens on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large. Problem
  * is that PORT_INT_REQUIRED_STACK is included within each user thread stack, thus this large stack multiplies
- * and this consumes a lot of valueable RAM. While forcing the comiler to inline helps to some degree,
+ * and this consumes a lot of valueable RAM. While forcing the compiler to inline helps to some degree,
  * it would be even better not to waste stack on passing the parameter.
  *
  * In the firmware we are using 'extern *Engine' - in the firmware Engine is a signleton
@@ -95,10 +103,14 @@ typedef VirtualTimer virtual_timer_t;
 		extern engine_configuration_s activeConfiguration; \
 		extern EnginePins enginePins
 
-#define DECLARE_ENGINE_PARAMETER_F void
-#define DECLARE_ENGINE_PARAMETER_S
-#define PASS_ENGINE_PARAMETER_F
-#define PASS_ENGINE_PARAMETER
+// Use this macro to declare a function which only takes magic references
+#define DECLARE_ENGINE_PARAMETER_SIGNATURE void
+// Use this version of the macro as the suffix if method has other parameters
+#define DECLARE_ENGINE_PARAMETER_SUFFIX
+// Pass this if only magic reference are needed
+#define PASS_ENGINE_PARAMETER_SIGNATURE
+// Pass this after some other parameters are passed
+#define PASS_ENGINE_PARAMETER_SUFFIX
 
 /**
  * this macro allows the compiled to figure out the complete static address, that's a performance
@@ -106,7 +118,7 @@ typedef VirtualTimer virtual_timer_t;
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) _engine.x
-#define TRIGGER_SHAPE(x) _engine.triggerShape.x
+#define TRIGGER_SHAPE(x) _engine.triggerCentral.triggerShape.x
 
 #else
 #define EXTERN_ENGINE
@@ -119,7 +131,15 @@ typedef VirtualTimer virtual_timer_t;
 #define ON_FATAL_ERROR() \
 		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1); \
 		turnAllPinsOff(); \
-		communicationPin.setValue(1);
+		enginePins.communicationPin.setValue(1);
 
+/*
+ * Stack debugging
+ */
+int getRemainingStack(thread_t *otp);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* GLOBAL_H_ */

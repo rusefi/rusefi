@@ -13,8 +13,8 @@
 #include "main.h"
 #include "engine_configuration.h"
 
-float getVRef(DECLARE_ENGINE_PARAMETER_F);
-float getVBatt(DECLARE_ENGINE_PARAMETER_F);
-bool hasVBatt(DECLARE_ENGINE_PARAMETER_F);
+float getVRef(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif

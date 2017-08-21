@@ -51,14 +51,14 @@ static bool intermediateLoggingBufferInited = false;
  */
 static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (logging->buffer == NULL) {
-		firmwareError(OBD_PCM_Processor_Fault, "Logging not initialized: %s", logging->name);
+		firmwareError(CUSTOM_ERR_LOGGING_NOT_READY, "Logging not initialized: %s", logging->name);
 		return true;
 	}
 
 	if (remainingSize(logging) < extraLen + 1) {
 #if EFI_PROD_CODE
 		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s", logging->name);
-#endif
+#endif /* EFI_PROD_CODE */
 		return true;
 	}
 	return false;
@@ -67,8 +67,8 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isError = validateBuffer(logging, extraLen);
-	if (isError) {
+	bool isCapacityProblem = validateBuffer(logging, extraLen);
+	if (isCapacityProblem) {
 		return;
 	}
 	strcpy(logging->linePointer, text);
@@ -82,29 +82,17 @@ void append(Logging *logging, const char *text) {
  * @note This method if fast because it does not validate much, be sure what you are doing
  */
 void appendFast(Logging *logging, const char *text) {
-//  todo: fix this implementation? this would be a one-pass implementation instead of a two-pass
-//	char c;
-//	char *s = (char *) text;
-//	do {
-//		c = *s++;
-//		*logging->linePointer++ = c;
-//	} while (c != '\0');
 	register char *s;
-	for (s = (char *) text; *s; ++s)
-		;
-	int extraLen = (s - text);
-
 	s = logging->linePointer;
 	while ((*s++ = *text++) != 0)
 		;
-
-//	strcpy(logging->linePointer, text);
-	logging->linePointer += extraLen;
+	logging->linePointer = s - 1;
 }
 
+// todo: look into chsnprintf once on Chibios 3
 static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	intermediateLoggingBuffer.eos = 0; // reset
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#1b");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
 	append(logging, (char *) intermediateLoggingBufferData);
@@ -114,9 +102,9 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
  * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
  */
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#5b");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
-		firmwareError(OBD_PCM_Processor_Fault, "intermediateLoggingBufferInited not inited!");
+		firmwareError(CUSTOM_ERR_BUFF_INIT_ERROR, "intermediateLoggingBufferInited not inited!");
 		return;
 	}
 	int wasLocked = lockAnyContext();
@@ -127,7 +115,7 @@ void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#4");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(logging, fmt, ap);
@@ -160,22 +148,22 @@ void appendFloat(Logging *logging, float value, int precision) {
 	 */
 	switch (precision) {
 	case 1:
-		appendPrintf(logging, "%..10f", value);
+		appendPrintf(logging, "%.1f", value);
 		break;
 	case 2:
-		appendPrintf(logging, "%..100f", value);
+		appendPrintf(logging, "%.2f", value);
 		break;
 	case 3:
-		appendPrintf(logging, "%..1000f", value);
+		appendPrintf(logging, "%.3f", value);
 		break;
 	case 4:
-		appendPrintf(logging, "%..10000f", value);
+		appendPrintf(logging, "%.4f", value);
 		break;
 	case 5:
-		appendPrintf(logging, "%..100000f", value);
+		appendPrintf(logging, "%.5f", value);
 		break;
 	case 6:
-		appendPrintf(logging, "%..1000000f", value);
+		appendPrintf(logging, "%.6f", value);
 		break;
 
 	default:
@@ -224,11 +212,6 @@ void printWithLength(char *line) {
 	consoleOutputBuffer((const uint8_t *) line, p - line);
 }
 
-void printLine(Logging *logging) {
-	printWithLength(logging->buffer);
-	resetLogging(logging);
-}
-
 void appendMsgPrefix(Logging *logging) {
 	append(logging, "msg" DELIMETER);
 }
@@ -240,7 +223,7 @@ void appendMsgPostfix(Logging *logging) {
 void resetLogging(Logging *logging) {
 	char *buffer = logging->buffer;
 	if (buffer == NULL) {
-		firmwareError(OBD_PCM_Processor_Fault, "Null buffer: %s", logging->name);
+		firmwareError(ERROR_NULL_BUFFER, "Null buffer: %s", logging->name);
 		return;
 	}
 	logging->linePointer = buffer;
@@ -252,7 +235,7 @@ void resetLogging(Logging *logging) {
  * This method should only be invoked on main thread because only the main thread can write to the console
  */
 void printMsg(Logging *logger, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#5o");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5o");
 //	resetLogging(logging); // I guess 'reset' is not needed here?
 	appendMsgPrefix(logger);
 
@@ -262,7 +245,8 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 	va_end(ap);
 
 	append(logger, DELIMETER);
-	printLine(logger);
+	printWithLength(logger->buffer);
+	resetLogging(logger);
 }
 
 /**

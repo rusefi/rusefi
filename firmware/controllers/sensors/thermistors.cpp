@@ -77,10 +77,20 @@ float getResistance(ThermistorConf *config, float voltage) {
 	return resistance;
 }
 
-float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
+float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
 	tm->setConfig(&config->config); // implementation checks if configuration has changed or not
 
 	float voltage = getVoltageDivided("term", config->adcChannel);
+	if (useLinear) {
+			// todo: fix this horrible code!
+			// should work as a short term fix.
+			// todo: move 'useLinearXXXSensor' into termistor configuration record
+		// yes, we use 'resistance' setting for 'voltage' here
+		return interpolate(config->config.resistance_1, config->config.tempC_1,
+				config->config.resistance_2, config->config.tempC_2,
+						voltage);
+
+	}
 	float resistance = getResistance(config, voltage);
 
 	float kelvinTemperature = tm->getKelvinTemperatureByResistance(resistance);
@@ -97,23 +107,27 @@ bool isValidIntakeAirTemperature(float temperature) {
 	return !cisnan(temperature) && temperature > -50 && temperature < 100;
 }
 
-bool hasCltSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
 }
 
 /**
  * @return coolant temperature, in Celsius
  */
-float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	if (!hasCltSensor(PASS_ENGINE_PARAMETER_F)) {
+float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (!hasCltSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		engine->isCltBroken = false;
 		return NO_CLT_SENSOR_TEMPERATURE;
 	}
- 	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
+ 	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve,
+ 			engineConfiguration->useLinearCltSensor);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %f", temperature);
+		engine->isCltBroken = true;
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
+	engine->isCltBroken = false;
 	return temperature;
 }
 
@@ -135,19 +149,23 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	float T2 = tc->tempC_2 + KELV;
 	float T3 = tc->tempC_3 + KELV;
 #if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "T1=%..100000f/T2=%..100000f/T3=%..100000f", T1, T2, T3);
+	scheduleMsg(logger, "T1=%.5f/T2=%.5f/T3=%.5f", T1, T2, T3);
 #endif
 
 	float L1 = logf(tc->resistance_1);
 	if (L1 == tc->resistance_1) {
-		firmwareError(CUSTOM_ERR_LOG_ERROR, "log is broken?");
+		/**
+		 * See https://github.com/rusefi/rusefi/issues/375
+		 * See https://sourceforge.net/p/rusefi/tickets/149/
+		 */
+		firmwareError(CUSTOM_ERR_NATURAL_LOGARITHM_ERROR, "Natural logarithm logf() is broken: %f", tc->resistance_1);
 	}
 	float L2 = logf(tc->resistance_2);
 	float L3 = logf(tc->resistance_3);
 #if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "R1=%..100000f/R2=%..100000f/R3=%..100000f", tc->resistance_1, tc->resistance_2,
+	scheduleMsg(logger, "R1=%.5f/R2=%.5f/R3=%.5f", tc->resistance_1, tc->resistance_2,
 			tc->resistance_3);
-	scheduleMsg(logger, "L1=%..100000f/L2=%..100000f/L3=%..100000f", L1, L2, L3);
+	scheduleMsg(logger, "L1=%.5f/L2=%.5f/L3=%.5f", L1, L2, L3);
 #endif
 
 	float Y1 = 1 / T1;
@@ -164,28 +182,31 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	s_h_a = Y1 - (s_h_b + L1 * L1 * s_h_c) * L1;
 
 #if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f", Y1, Y2, Y3);
-	scheduleMsg(logger, "U2=%..100000f/U3=%..100000f", U2, U3);
-	scheduleMsg(logger, "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f", curve->s_h_c, curve->s_h_b,
+	scheduleMsg(logger, "Y1=%.5f/Y2=%.5f/Y3=%.5f", Y1, Y2, Y3);
+	scheduleMsg(logger, "U2=%.5f/U3=%.5f", U2, U3);
+	scheduleMsg(logger, "s_h_c=%.5f/s_h_b=%.5f/s_h_a=%.5f", curve->s_h_c, curve->s_h_b,
 			curve->s_h_a);
 #endif
 }
 
-bool hasIatSensor(DECLARE_ENGINE_PARAMETER_F) {
+bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
 }
 
 /**
  * @return Celsius value
  */
-float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	if (!hasIatSensor(PASS_ENGINE_PARAMETER_F)) {
+float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (!hasIatSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		return NO_IAT_SENSOR_TEMPERATURE;
 	}
-	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve);
+	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve,
+			engineConfiguration->useLinearIatSensor);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+#if EFI_PROD_CODE || EFI_UNIT_TEST || defined(__DOXYGEN__)
 		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT %f", temperature);
+#endif /* EFI_PROD_CODE */
 		return LIMPING_MODE_IAT_TEMPERATURE;
 	}
 	return temperature;
@@ -219,7 +240,7 @@ static void testCltByR(float resistance) {
 }
 #endif
 
-void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 

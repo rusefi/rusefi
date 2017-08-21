@@ -7,4 +7,4 @@
 
 #include "engine.h"
 
-void setDaihatsu(DECLARE_ENGINE_PARAMETER_F);
+void setDaihatsu(DECLARE_ENGINE_PARAMETER_SIGNATURE);

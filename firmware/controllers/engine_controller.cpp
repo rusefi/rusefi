@@ -68,18 +68,10 @@
 #endif /* EFI_PROD_CODE */
 
 extern bool hasFirmwareErrorFlag;
+extern EnginePins enginePins;
 
-persistent_config_container_s persistentState CCM_OPTIONAL;
+EXTERN_ENGINE;
 
-persistent_config_s *config = &persistentState.persistentConfiguration;
-
-/**
- * todo: it really looks like these fields should become 'static', i.e. private
- * the whole 'extern ...' pattern is less then perfect, I guess the 'God object' Engine
- * would be a smaller evil. Whatever is needed should be passed into methods/modules/files as an explicit parameter.
- */
-engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
-board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 
 /**
  * CH_FREQUENCY is the number of system ticks in a second
@@ -93,38 +85,28 @@ static LoggingWithStorage logger("Engine Controller");
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 /**
- * todo: eliminate constructor parameter so that _engine could be moved to CCM_OPTIONAL
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
  */
 Engine _engine CCM_OPTIONAL;
 Engine * engine = &_engine;
 #endif /* EFI_PROD_CODE */
 
-/**
- * I am not sure if this needs to be configurable.
- *
- * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
- */
-#define CLEANUP_MODE_TPS 90
-
-extern OutputPin runningPin;
-
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	while (true) {
 		int rpm = getRpmE(engine);
-		int is_cranking = isCrankingR(rpm);
-		int is_running = rpm > 0 && !is_cranking;
+		int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		if (is_running) {
 			// blinking while running
-			runningPin.setValue(0);
+			enginePins.runningPin.setValue(0);
 			chThdSleepMilliseconds(50);
-			runningPin.setValue(1);
+			enginePins.runningPin.setValue(1);
 			chThdSleepMilliseconds(50);
 		} else {
 			// constant on while cranking and off if engine is stopped
-			runningPin.setValue(is_cranking);
+			enginePins.runningPin.setValue(is_cranking);
 			chThdSleepMilliseconds(100);
 		}
 	}
@@ -133,7 +115,7 @@ static msg_t csThread(void) {
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-Overflow64Counter halTime;
+static Overflow64Counter halTime;
 
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
@@ -145,19 +127,70 @@ efitimeus_t getTimeNowUs(void) {
 
 //todo: macro to save method invocation
 efitick_t getTimeNowNt(void) {
-	return halTime.get();
+#if EFI_PROD_CODE
+	bool alreadyLocked = lockAnyContext();
+	efitime_t localH = halTime.state.highBits;
+	uint32_t localLow = halTime.state.lowBits;
+
+	uint32_t value = GET_TIMESTAMP();
+
+	if (value < localLow) {
+		// new value less than previous value means there was an overflow in that 32 bit counter
+		localH += 0x100000000LL;
+	}
+
+	efitime_t result = localH + value;
+
+	if (!alreadyLocked) {
+		unlockAnyContext();
+	}
+	return result;
+#else
+// todo: why is this implementation not used?
+	/**
+	 * this method is lock-free and thread-safe, that's because the 'update' method
+	 * is atomic with a critical zone requirement.
+	 *
+	 * http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
+	 */
+	efitime_t localH;
+	efitime_t localH2;
+	uint32_t localLow;
+	int counter = 0;
+	do {
+		localH = halTime.state.highBits;
+		localLow = halTime.state.lowBits;
+		localH2 = halTime.state.highBits;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+		if (counter++ == 10000)
+			chDbgPanic("lock-free frozen");
+#endif /* EFI_PROD_CODE */
+	} while (localH != localH2);
+	/**
+	 * We need to take current counter after making a local 64 bit snapshot
+	 */
+	uint32_t value = GET_TIMESTAMP();
+
+	if (value < localLow) {
+		// new value less than previous value means there was an overflow in that 32 bit counter
+		localH += 0x100000000LL;
+	}
+
+	return localH + value;
+#endif
+
 }
 
 /**
  * number of SysClock ticks in one ms
  */
-#define TICKS_IN_MS  (CH_FREQUENCY / 1000)
+#define TICKS_IN_MS  (CH_CFG_ST_FREQUENCY / 1000)
 
 
 // todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
 	// todo: migrate to getTimeNowUs? or not?
-	return chTimeNow() / TICKS_IN_MS;
+	return chVTGetSystemTimeX() / TICKS_IN_MS;
 }
 
 // todo: this overflows pretty fast!
@@ -171,7 +204,7 @@ static void cylinderCleanupControl(Engine *engine) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_F) && getTPS(PASS_ENGINE_PARAMETER_F) > CLEANUP_MODE_TPS;
+		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
@@ -194,7 +227,7 @@ static void scheduleNextSlowInvocation(void) {
 	chVTSetAny(&periodicSlowTimer, MS2ST(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
 }
 
-static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
+static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->periodicFastCallback();
 
 	chVTSetAny(&periodicFastTimer, MS2ST(20), (vtfunc_t) &periodicFastCallback, engine);
@@ -207,19 +240,24 @@ static void resetAccel(void) {
 }
 
 static void periodicSlowCallback(Engine *engine) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowStckOnEv");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
 	bool alreadyLocked = lockAnyContext();
-	updateAndSet(&halTime.state, hal_lld_get_counter_value());
+	updateAndSet(&halTime.state, port_rt_get_counter_value());
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
 #endif
 
-	if (!engine->rpmCalculator.isRunning()) {
+	/**
+	 * Update engine RPM state if needed (check timeouts).
+	 */
+	engine->rpmCalculator.checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
 		writeToFlashIfPending();
 #endif
@@ -233,19 +271,20 @@ static void periodicSlowCallback(Engine *engine) {
 
 	engine->watchdog();
 	engine->updateSlowSensors();
+	engine->checkShutdown();
 
 #if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
 	runFsio();
-#endif
+#endif /* EFI_PROD_CODE && EFI_FSIO */
 
 	cylinderCleanupControl(engine);
 
 	scheduleNextSlowInvocation();
 }
 
-void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_F) {
+void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	scheduleNextSlowInvocation();
-	periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
@@ -308,7 +347,7 @@ static void printAnalogInfo(void) {
 	if (hasMafSensor()) {
 		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	}
-	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
 		if (ch != EFI_ADC_NONE) {
 			printAnalogChannelInfo("fsio", ch);
@@ -316,10 +355,10 @@ static void printAnalogInfo(void) {
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	}
-	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
+	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
@@ -372,7 +411,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of dev console API
 	 */
 	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setShort(const int offset, const int value) {
@@ -381,7 +420,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void getBit(int offset, int bit) {
@@ -412,7 +451,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_F);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void getFloat(int offset) {
@@ -423,7 +462,7 @@ static void getFloat(int offset) {
 	/**
 	 * this response is part of dev console API
 	 */
-	scheduleMsg(&logger, "float @%d is %..100000f", offset, value);
+	scheduleMsg(&logger, "float @%d is %.5f", offset, value);
 }
 
 static void setFloat(const char *offsetStr, const char *valueStr) {
@@ -511,7 +550,7 @@ static void getKnockInfo(void) {
 }
 
 // this method is used by real firmware and simulator
-void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initConfigActions();
 	initMockVoltage();
 
@@ -525,7 +564,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	// todo: this is a mess, remove code duplication with simulator
-	initSettings(engineConfiguration);
+	initSettings();
 #endif
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -537,17 +576,17 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	if (hasFirmwareError()) {
 		return;
 	}
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_F);
+	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_FSIO || defined(__DOXYGEN__)
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER);
+	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 	initAccelEnrichment(sharedLogger);
 
 }
 
-void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 	commonInitEngineController(sharedLogger);
 
@@ -557,7 +596,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initPwmGenerator();
 #endif
 
-	initAlgo(sharedLogger, engineConfiguration);
+	initAlgo(sharedLogger);
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
@@ -579,7 +618,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 // multiple issues with this	initMapAdjusterThread();
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (hasFirmwareError()) {
 		return;
@@ -592,12 +631,12 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
 	 * properly detect un-assigned output pins
 	 */
-	prepareShapes(PASS_ENGINE_PARAMETER_F);
+	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
 #if EFI_PWM_TESTER || defined(__DOXYGEN__)
 	initPwmTester();
-#endif
+#endif /* EFI_PWM_TESTER */
 
 	initMalfunctionCentral();
 
@@ -628,27 +667,27 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */
-		initMainEventListener(sharedLogger, engine);
+		initMainEventListener(sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
-	startIdleThread(sharedLogger, engine);
-#endif
+	startIdleThread(sharedLogger);
+#endif /* EFI_IDLE_CONTROL */
 
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 		addConsoleAction("knockinfo", getKnockInfo);
 	}
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("reset_accel", resetAccel);
-#endif
+#endif /* EFI_PROD_CODE */
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	initLcdController();
-#endif
+#endif /* EFI_HD44780_LCD */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initTachometer();
-#endif
+#endif /* EFI_PROD_CODE */
 }

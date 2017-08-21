@@ -35,7 +35,7 @@ bool assertNotInList(T *head, T*element) {
 			 * was not scheduled by angle but was scheduled by time. In case of scheduling
 			 * by time with slow RPM the whole next fast revolution might be within the wait period
 			 */
-			warning(CUSTOM_OBD_29, "re-adding element into event_queue");
+			warning(CUSTOM_RE_ADDING, "re-adding element into event_queue");
 			return true;
 		}
 	}
@@ -52,7 +52,6 @@ public:
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
-	bool insertTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param);
 	bool insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param);
 
 	int executeAll(efitime_t now);

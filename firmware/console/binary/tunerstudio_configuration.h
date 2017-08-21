@@ -72,8 +72,10 @@ typedef struct {
 	unsigned int clutchDownState : 1; // bit 12
 	unsigned int knockEverIndicator : 1; // bit 13
 	unsigned int knockNowIndicator : 1; // bit 14
+	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
+	unsigned int toothLogReady : 1; // bit 16
 	float vehicleSpeedKph; // 76
-	unsigned int isTpsError : 1; // bit 0
+	unsigned int isTpsError : 1; // bit 0, 80
 	unsigned int isCltError : 1; // bit 1
 	unsigned int isMapError : 1; // bit 2
 	unsigned int isIatError : 1; // bit 3
@@ -81,10 +83,11 @@ typedef struct {
 	unsigned int isTriggerError : 1; // bit 5
 	unsigned int hasFatalError : 1; // bit 6
 	unsigned int isWarnNow : 1; // bit 7
-	int tsConfigVersion;
-	egt_values_s egtValues;
-	float rpmAcceleration;
-	float massAirFlow;
+	unsigned int isCltBroken : 1; // bit 8
+	int tsConfigVersion; // 84
+	egt_values_s egtValues; // 88
+	float unusedOffset104; // 104
+	float massAirFlow; // 108
 	/**
 	 * Current volumetric efficiency
 	 */
@@ -100,9 +103,12 @@ typedef struct {
 	 */
 	float engineLoadAccelExtra; // offset 124
 	float tpsAccelFuel; // offset 128
-	float baroCorrection;
-	float pedalPosition;
-	float injectorDutyCycle;
+	float baroCorrection; // 132
+	float pedalPosition; // 138
+	/**
+	 * @see coilDutyCycle
+	 */
+	float injectorDutyCycle; // 140
 	int knockCount; // 144
 	float fuelTankGauge; // 148
 	float knockLevel; // 152
@@ -150,7 +156,11 @@ typedef struct {
 	float debugFloatField7; // 260
 	int firmwareVersion; // 264
 	float fuelPidCorrection; // 268
-	int unused3[21];
+	/**
+	 * @see injectorDutyCycle
+	 */
+	float coilDutyCycle; // 272
+	int unused3[20];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

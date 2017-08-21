@@ -32,6 +32,9 @@ void setTableBin(float array[], int size, float from, float to) {
 	setTableBin2(array, size, from, to, 0.01);
 }
 
+/**
+ * initialize RPM table axis using default RPM range
+ */
 void setRpmTableBin(float array[], int size) {
 	setRpmBin(array, size, 800, 7000);
 }

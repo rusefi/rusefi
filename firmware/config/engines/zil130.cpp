@@ -14,8 +14,8 @@
 
 EXTERN_ENGINE;
 
-void setZil130(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setZil130(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->specs.cylindersCount = 8;
 

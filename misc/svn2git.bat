@@ -15,13 +15,13 @@ rd /s /q %RUSEFI_GIT_PATH%\firmware
 rd /s /q %RUSEFI_GIT_PATH%\hardware
 rd /s /q %RUSEFI_GIT_PATH%\java_console
 rd /s /q %RUSEFI_GIT_PATH%\unit_tests
-rd /s /q %RUSEFI_GIT_PATH%\win32_functional_tests
+rd /s /q %RUSEFI_GIT_PATH%\simulator
 
 cp -r firmware %RUSEFI_GIT_PATH%
 cp -r hardware %RUSEFI_GIT_PATH%
 cp -r java_console %RUSEFI_GIT_PATH%
 cp -r unit_tests %RUSEFI_GIT_PATH%
-cp -r win32_functional_tests %RUSEFI_GIT_PATH%
+cp -r simulator %RUSEFI_GIT_PATH%
 rm -f %RUSEFI_GIT_PATH%/readme.*
 rm -f %RUSEFI_GIT_PATH%/README.*
 cp -r README.* %RUSEFI_GIT_PATH%

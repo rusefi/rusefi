@@ -1,8 +1,8 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
-import com.rusefi.Logger;
-import com.rusefi.io.DataListener;
+import com.opensr5.Logger;
+import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import jssc.SerialPort;
 import jssc.SerialPortException;
@@ -59,10 +59,10 @@ public class SerialIoStream implements IoStream {
     }
 
     @Override
-    public void setDataListener(DataListener listener) {
+    public void setInputListener(DataListener listener) {
         try {
             SerialPortReader reader = new SerialPortReader(serialPort, listener);
-            serialPort.addEventListener(reader);
+            serialPort.addEventListener(reader.getSerialPortEventListener());
             reader.readInitial();
         } catch (SerialPortException e) {
             throw new IllegalStateException(e);

@@ -19,28 +19,26 @@
 
 package com.romraider.util;
 
-import static com.romraider.Version.VERSION;
-import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
-import static javax.swing.JOptionPane.showMessageDialog;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-import com.rusefi.FileLog;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
 import com.romraider.Settings;
 import com.romraider.swing.JProgressPane;
 import com.romraider.xml.DOMSettingsBuilder;
 import com.romraider.xml.DOMSettingsUnmarshaller;
+import com.rusefi.FileLog;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import static com.romraider.Version.VERSION;
 
 public class SettingsManager {
     private static final String SETTINGS_FILE = "/settings.xml";
     private static final String USER_HOME =
-            System.getProperty("user.home") + "/.RomRaider";
+            System.getProperty("user.home") + "/.rusefi.RomRaider";
     private static final String START_DIR = System.getProperty("user.dir");
     private static String settingsDir = USER_HOME;
 
@@ -56,7 +54,7 @@ public class SettingsManager {
     private static Settings load() {
         Settings loadedSettings;
         try {
-            FileInputStream settingsFileIn = null;
+            FileInputStream settingsFileIn;
             try {
                 final File sf = new File(USER_HOME + SETTINGS_FILE);
                 settingsFileIn = new FileInputStream(sf);
@@ -72,11 +70,9 @@ public class SettingsManager {
             parser.parse(src);
             final Document doc = parser.getDocument();
             loadedSettings = domUms.unmarshallSettings(doc.getDocumentElement());
-        } catch (FileNotFoundException e) {
-            FileLog.MAIN.logLine("Settings file not found. Using default settings.");
+        } catch (SAXException | IOException e) {
+            FileLog.MAIN.logLine("Settings file not found or damaged. Using default settings.");
             loadedSettings = new Settings();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
         return loadedSettings;
     }

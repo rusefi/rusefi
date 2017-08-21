@@ -140,11 +140,33 @@ typedef enum {
 
 	HONDA_ACCORD_1_24_SHIFTED = 48,
 
-	ET_UNUSED = 49,
+	FRANKENSO_QA_ENGINE = 49,
+
+	/**
+	 * this is about unit-testing skipped wheel trigger
+	 */
+	TEST_CIVIC_4_0_BOTH = 50,
+
+	/**
+	 * this is about unit-testing skipped wheel trigger
+	 */
+	TEST_CIVIC_4_0_RISE = 51,
+
+
+	TEST_ISSUE_366_BOTH = 52,
+	TEST_ISSUE_366_RISE = 53,
+
+	MAZDA_MIATA_2003_BETTER = 54,
+
+	PROMETHEUS_DEFAULTS = 100,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
 
+
+/**
+ * @see http://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
+ */
 typedef enum {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
@@ -187,7 +209,7 @@ typedef enum {
 
 	TT_36_2_2_2 = 23,
 
-	TT_NISSAN = 24,
+	TT_NISSAN_SR20VE = 24,
 
 	TT_2JZ_3_34 = 25,
 
@@ -224,7 +246,9 @@ typedef enum {
 
 	TT_JEEP_18_2_2_2 = 37,
 
-	TT_UNUSED = 38, // this is used if we want to iterate over all trigger types
+	TT_NISSAN_SR20VE_360 = 38,
+
+	TT_UNUSED = 39, // this is used if we want to iterate over all trigger types
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -326,12 +350,6 @@ typedef enum {
 	IM_MANUAL = 1,
 	Force_4b_idle_mode = ENUM_32_BITS,
 } idle_mode_e;
-
-typedef enum {
-	IC_LINEAR = 0,
-	IC_PID = 1,
-	Force_4b_idle_control = ENUM_32_BITS,
-} idle_control_e;
 
 typedef enum {
 	/**
@@ -490,7 +508,13 @@ typedef enum {
 	 * same as innovate LC2
 	 * 0v->7.35afr, 5v->22.39
 	 */
-	ES_Innovate_MTX_L = 1, ES_14Point7_Free = 2,
+	ES_Innovate_MTX_L = 1,
+	/**
+	 * Same as AEM
+	 * 0v->10.0afr
+	 * 5v->20.0afr
+	 */
+	ES_14Point7_Free = 2,
 
 	ES_NarrowBand = 3,
 
@@ -649,23 +673,29 @@ typedef enum {
 	DBG_ALTERNATOR_PID = 0,
 	DBG_TPS_ACCEL = 1,
 	DBG_WARMUP_ENRICH = 2,
-	DBG_IDLE = 3,
+	DBG_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_INPUT = 5,
 	FSIO_ADC = 6,
 	AUX_PID_1 = 7,
+	/**
+	 * VVT position debugging - not VVT valve control
+	 */
 	DBG_VVT = 8,
 	DBG_CRANKING_DETAILS = 9,
 	DBG_IGNITION_TIMING = 10,
 	DBG_FUEL_PID_CORRECTION = 11,
 	DBG_VEHICLE_SPEED_SENSOR = 12,
 	DBG_SD_CARD = 13,
-	DM_14 = 14,
-	DM_15 = 15,
-	DM_16 = 16,
-	DM_17 = 17,
-	DM_18 = 18,
-	DM_19 = 19,
+	DBG_SR5_PROTOCOL = 14,
+	DBG_KNOCK = 15,
+	DBG_TRIGGER_SYNC = 16,
+	DBG_ELECTRONIC_THROTTLE = 17,
+	DBG_EXECUTOR = 18,
+	DBG_BENCH_TEST = 19,
+	DM_20 = 20,
+	DM_21 = 21,
+	DM_22 = 22,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -716,6 +746,16 @@ typedef enum {
 
 	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;
+
+typedef enum {
+	REVERSE = -1,
+	NEUTRAL = 0,
+	GEAR_1 = 1,
+	GEAR_2 = 2,
+	GEAR_3 = 3,
+	GEAR_4 = 4,
+
+} gear_e;
 
 typedef enum {
 	CUSTOM = 0,

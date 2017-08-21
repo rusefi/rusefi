@@ -2,7 +2,7 @@
 // by enum2string.jar tool
 
 #include "main.h"
-#include "io_pins.h"
+
 // auto-generated from../../firmware/\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
 
@@ -66,8 +66,6 @@ case DODGE_NEON_2003_CAM:
   return "NEON_2003_CAM";
 case DODGE_NEON_2003_CRANK:
   return "NEON_2003_CRANK";
-case ET_UNUSED:
-  return "ET_UNUSED";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -90,6 +88,8 @@ case HONDA_ACCORD_1_24_SHIFTED:
   return "HONDA_ACCORD_1_24_SHIFTED";
 case MAZDA_323:
   return "MAZDA_323";
+case FRANKENSO_QA_ENGINE:
+	return "QA";
 case MAZDA_626:
   return "MAZDA_626";
 case MAZDA_MIATA_NB1:
@@ -117,13 +117,23 @@ case SUBARU_2003_WRX:
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case MAZDA_MIATA_2003:
+	return "miata 2003 OLD";
+case MAZDA_MIATA_2003_BETTER:
 	return "miata 2003";
+case PROMETHEUS_DEFAULTS:
+	return "PROMETHEUS";
 case TEST_ENGINE_VVT:
   return "TEST_ENGINE_VVT";
 case VW_ABA:
   return "VW_ABA";
 case DODGE_STRATUS:
 	return "DODGE_STRATUS";
+case TEST_CIVIC_4_0_BOTH:
+case TEST_CIVIC_4_0_RISE:
+	return "civictest";
+case TEST_ISSUE_366_BOTH:
+case TEST_ISSUE_366_RISE:
+	return "unittest";
   }
  return NULL;
 }
@@ -201,14 +211,16 @@ case TT_DODGE_RAM:
 	return "TT_DODGE_RAM";
 case TT_UNUSED:
 	return "TT_UNUSED";
-case TT_NISSAN:
-	return "TT_NISSAN";
+case TT_NISSAN_SR20VE:
+	return "TT_NISSAN_SR20VE";
 case TT_2JZ_1_12:
 	return "TT_2JZ_1_12";
 case TT_2JZ_3_34:
 	return "TT_2JZ_3_34";
 case TT_ROVER_K:
 	return "TT_ROVER_K";
+case TT_NISSAN_SR20VE_360:
+	return "TT_NISSAN_SR20VE_360";
   }
  return NULL;
 }
@@ -316,17 +328,7 @@ case IM_MANUAL:
   }
  return NULL;
 }
-const char *getIdle_control_e(idle_control_e value){
-switch(value) {
-case Force_4b_idle_control:
-  return "Force_4b_idle_control";
-case IC_PID:
-  return "IC_PID";
-case IC_LINEAR:
-  return "IC_LINEAR";
-  }
- return NULL;
-}
+
 const char *getPin_output_mode_e(pin_output_mode_e value){
 switch(value) {
 case Force_4b_pin_output_mode:
@@ -396,6 +398,8 @@ case FO_1_10_9_4_3_6_5_8_7_2:
 	return "FO_1_10_9_4_3_6_5_8_7_2";
 case FO_1_7_5_11_3_9_6_12_2_8_4_10:
 	return "FO_1_7_5_11_3_9_6_12_2_8_4_10";
+case FO_1_7_4_10_2_8_6_12_3_9_5_11:
+	return "FO_1_7_4_10_2_8_6_12_3_9_5_11";
 case Force_4b_firing_order:
   return "Force_4b_firing_order";
   }

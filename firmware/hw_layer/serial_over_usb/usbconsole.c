@@ -14,10 +14,6 @@
 #include "usbcfg.h"
 #include "efifeatures.h"
 
-extern SerialUSBDriver SDU1;
-extern const SerialUSBConfig serusbcfg;
-extern const USBConfig usbcfg;
-
 void usb_serial_start(void) {
 	/*
 	 * Initializes a serial-over-USB CDC driver.
@@ -34,11 +30,13 @@ void usb_serial_start(void) {
 	chThdSleepMilliseconds(1500);
 	usbStart(serusbcfg.usbp, &usbcfg);
 	usbConnectBus(serusbcfg.usbp);
-
+	
+#if HAL_USE_SERIAL
 	/*
 	 * Activates the serial driver 2 using the driver default configuration.
 	 */
 	sdStart(&SD2, NULL);
+#endif
 }
 
 bool is_usb_serial_ready(void) {
@@ -50,4 +48,4 @@ bool is_usb_serial_ready(void) {
 	return false;
 }
 
-#endif
+#endif /* EFI_USB_SERIAL */

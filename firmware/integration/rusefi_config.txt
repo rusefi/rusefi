@@ -30,7 +30,10 @@ struct_no_prefix engine_configuration_s
 ! todo there is still a spot where this 200 is hard-coded
 #define LE_COMMAND_LENGTH 200
 
-#define FSIO_ADC_COUNT 4
+! see 'blockingFactor' in rusefi.ini
+#define BLOCKING_FACTOR 400
+
+#define FSIO_ANALOG_INPUT_COUNT 4
 
 ! this is here so that rusEfi console can access it, too
 #define TS_OUTPUT_SIZE 356
@@ -67,7 +70,7 @@ struct_no_prefix engine_configuration_s
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define LE_COMMAND_COUNT 16
+#define FSIO_COMMAND_COUNT 16
 #define AUX_PID_COUNT 4
 
 #define FUEL_RPM_COUNT 16
@@ -102,10 +105,13 @@ custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     
 custom angle_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
-	float pFactor;;"value",      1,      0,       -1000, 1000,      5
-	float iFactor;;"value",      1,      0,       -1000, 1000,      5
-	float dFactor;;"value",      1,      0,       -1000, 1000,      5
-	float offset;Linear addition to PID logic;"value",      1,      0,       0, 1000,      3
+	float pFactor;;"value",      1,      0,       -10000, 10000,      7
+	float iFactor;;"value",      1,      0,       -10000, 10000,      7
+	float dFactor;;"value",      1,      0,       -10000, 10000,      7
+	int16_t offset;Linear addition to PID logic;"value",      1,      0,       0, 1000,      0
+	int16_t period;PID dTime;"ms",      1,      0,       0, 3000,      0
+	int16_t minValue;;"",        1,     0,  0,    3000.0,  3
+	int16_t maxValue;;"",        1,     0,  0,    3000.0,  3
 end_struct
 
 struct cranking_parameters_s
@@ -113,8 +119,8 @@ float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust t
 int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold\nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr", "VSS", "SD card", "mode14", "mode15"
-custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:3], @@debug_mode_e_enum@@
+#define debug_mode_e_enum "Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25"
+custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:4], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
@@ -123,10 +129,17 @@ custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
 #define mass_storage_e_enum "Auto", "Always", "Never"
 custom mass_storage_e 4 bits, U32, @OFFSET@, [0:1], @@mass_storage_e_enum@@
 
-#define brain_input_pin_e_enum "INVALID", "INVALID", "PA2", "PA3", "INVALID", "PA5", "PA6", "PA7", "PA8", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID",  "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "PE6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID",    "NONE",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID"
+! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
+! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
+! https://github.com/ChibiOS/ChibiOS-Drivers/blob/master/inc/timcap_driver.h is an alternative driver if channels 3 & 4 really become an issue
+! todo: only one channel per timer is allowed for capture similtaniously, that's an STM32 limitation
+! todo: convert slow ADC to software scheduler and make TIM8 available
+! todo: maybe convert fast ADC to software scheduler as well? less sure about that
+
+#define brain_input_pin_e_enum "INVALID", "PA1", "PA2", "PA3", "INVALID", "PA5", "PA6", "PA7", "PA8", "PA9", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PA15",  "INVALID", "INVALID", "INVALID", "PB3", "PB4", "PB5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "PC7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "PE6", "INVALID", "INVALID", "PE9", "INVALID", "PE11", "INVALID", "INVALID", "INVALID", "INVALID",    "NONE",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID"
 custom brain_input_pin_e 4 bits,    U32,   @OFFSET@, [0:6], @@brain_input_pin_e_enum@@
 
-#define brain_pin_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15",  "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15",    "NONE",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID"
+#define brain_pin_e_enum       "PA0",     "PA1", "PA2", "PA3", "PA4",     "PA5", "PA6", "PA7", "PA8", "PA9", "PA10",     "PA11",   "PA12",    "PA13",    "PA14",    "PA15",  "PB0",     "PB1",     "PB2",     "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15",    "NONE",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",   "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID",    "INVALID"
 
 custom brain_pin_e 4 bits,    U32,   @OFFSET@, [0:6], @@brain_pin_e_enum@@
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
@@ -176,8 +189,8 @@ struct injector_s
 	float flow;+cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2
 	float unusedlag;
 
-float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;;"V",        1,     0,      0.0,    20.0,   2
-float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;;"ms/V",     1,     0,      0.0,    50.0,   2
+float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;set_flat_injector_lag LAG\nset_injector_lag VOLTAGE LAG;"volts",        1,     0,      0.0,    20.0,   2
+float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;ms delay between injector open and close dead times;"ms",     1,     0,      0.0,    50.0,   2
 
 end_struct
 
@@ -248,7 +261,7 @@ ThermistorConf iat;
 	float knockBandCustom;+kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
 
-float[DWELL_CURVE_SIZE] sparkDwellRpmBins;;"RPM",     1,   0.0,      0.0,  18000,   2
+float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On single-coil or wasted spark setups you have to lower dwell at high RPM;"RPM",     1,   0.0,      0.0,  18000,   2
 	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms",	   1,   0.0,      0.0,  30.0,    2
 
 struct_no_prefix specs_s
@@ -263,14 +276,14 @@ cylinders_count_t cylindersCount;
 ! FO_1_8_4_3_6_5_7_2 = 5
 ! FO_1_2_4_5_3 = 6
 
-custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:4], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "fo16", "fo17", "INVALID"
+custom firing_order_e 4 bits,    U32,    @OFFSET@, [0:4], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1_2_3_4_5_6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "fo17", "fo18", "fo19", "fo20", "INVALID"
 firing_order_e firingOrder;
 end_struct
 
     specs_s specs
 	float cylinderBore;+Cylinder diameter, in mm.;"mm",    1,      0,       0, 20000.0,        2
 int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",      1,     0,    0,30000,      0
-	int rpmHardLimit;;"rpm",    1,      0,       0, 20000.0,        2
+	int rpmHardLimit;set rpm_hard_limit X;"rpm",    1,      0,       0, 20000.0,        2
 
 
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY" 
@@ -304,15 +317,15 @@ float analogInputDividerCoefficient;+Coefficient of input voltage dividers on yo
 float vbattDividerCoeff;+Battery Voltage input resistor divider coefficient;"coef",    1,      0,    0.01,  99.0,        2
 adc_channel_e vbattAdcChannel;
 
-float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
-float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
+float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
+float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 
 adc_channel_e fuelLevelSensor;
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:1], "BMW", "FIAT", "VAG" , "MAZDA RX8"
-can_nbc_e canNbcType;
+can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriod;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
 
@@ -338,7 +351,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "trg38", "trg39", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "trg39", "trg40", "trg41", "trg42", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -364,9 +377,7 @@ custom spi_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "SPI1", "SPI2", "SPI3"
 	
 float globalFuelCorrection;;"coef",    1,      0.0,       0,  1000.0,        2
 
-
-int16_t pedalPositionMin;;"ADC",      1,     0,    0, 1023,      0
-int16_t pedalPositionMax;;"ADC",      1,     0,    0, 1023,      0
+	float adcVcc;;         "volts",    1,    0.0,       0,    4.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
 	adc_channel_e mafAdcChannel;See hasMafSensor	
 	
@@ -453,7 +464,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
 	ego_sensor_e afr_type;AFR, WBO, EGO - whatever you like to call it;
-	int etbDT;
+	float fuelClosedLoopAfrLowThreshold;;"ratio",        1,     0,  0,    100,  1
 	pin_output_mode_e hip9011CsPinMode;
 	brain_pin_e tachOutputPin;+This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	pin_output_mode_e tachOutputPinMode;
@@ -512,13 +523,14 @@ bit is_enabled_spi_2
 
 	spi_device_e max31855spiDevice;
 
-	brain_pin_e[LE_COMMAND_COUNT iterate] fsioPins;
-	pin_output_mode_e[LE_COMMAND_COUNT iterate] gpioPinModes;
+	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioPins;todo: rename to fsioOutputPins
+	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
 
 custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	uart_device_e consoleUartDevice;
-	int unused77;
-	int unused78;
+	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
+	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
+	int16_t idleStepperPulseDuration;;"ms",        1,     0,  0,    1000.0,  0
 	float nb2ratioFrom;;"value",      1,      0,       0, 1000,      5
 	float nb2ratioTo;;"value",      1,      0,       0, 1000,      5
 
@@ -531,13 +543,13 @@ custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 
 custom pid_dt 4 scalar, U32,  @OFFSET@, "ms",      1,      0,       0, 3000,      0
 custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,       0, 3000,      0
-	fsio_pwm_freq_t[LE_COMMAND_COUNT iterate] fsioFrequency;
+	fsio_pwm_freq_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
 
 	brain_pin_e hip9011CsPin;
 	brain_pin_e hip9011IntHoldPin;
 pin_output_mode_e hip9011IntHoldPinMode;
 custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  4
-	fsio_setting_t[LE_COMMAND_COUNT iterate] fsio_setting;
+	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
 	brain_pin_e spi1mosiPin;
 	brain_pin_e spi1misoPin;
 	brain_pin_e spi1sckPin;
@@ -568,27 +580,27 @@ brain_input_pin_e vehicleSpeedSensorInputPin;
 
 	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	pin_input_mode_e clutchUpPinMode;
-	brain_pin_e[LE_COMMAND_COUNT iterate] fsioDigitalInputs;These input pins allow us to pull toggle buttons state;
+	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finshed\nThese input pins allow us to pull toggle buttons state;
 
 brain_input_pin_e frequencyReportingMapInputPin;
 
 
 end_struct	
-custom le_formula_t 200 array, U08, @OFFSET@, [200],"char", 1, 0, 0.0, 3.0, 2
+custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
 board_configuration_s bc;
 bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled
-	bit unusedBit__5
-	bit unusedBit__6
+	bit isVerboseIAC
+	bit isVerboseETB;enable verbose_etb
 	bit useConstantDwellDuringCranking 
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
-	bit unusedBit_7
-	bit unusedBit__2
+	bit silentTriggerError
+	bit useLinearCltSensor
 	bit canReadEnabled
 	bit canWriteEnabled
-	bit unusedBit_123
-	bit unusedbit_9
+	bit useLinearIatSensor
+	bit useFSIO16ForTimingAdjustment;See fsioTimingAdjustment
 	bit unusedbit_10
 	bit isAlternatorControlEnabled
 	bit unusedBit__3
@@ -617,14 +629,14 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	bit isPrintTriggerSynchDetails;+enable trigger_details
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;+This is needed if batched injection and individual injector wiring\nenable two_wire_batch_injection
-	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front
+	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
 	bit twoWireBatchIgnition;+This is needed if batched igniton (waster spark) and individual coil wiring
 
 
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
 
-	int targetIdleRpm;;"RPM",      1,      0,       0, 7000,      0
+	int targetIdleRpm;set idle_rpm X;"RPM",      1,      0,       0, 7000,      0
 
 	adc_channel_e acSwitchAdc;A/C button input handled as analog input
 
@@ -646,14 +658,14 @@ float idleStepperReactionTime;;"ms",      1,      0,       1, 300,      0
 	float knockVThreshold;;"V",      1,      0,       1, 5,      2
 
 custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1	
-	pin_input_mode_e[LE_COMMAND_COUNT iterate] fsioInputModes;
+	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
 	
 	adc_channel_e externalKnockSenseAdc;
 	int[3] unsed2342342;
 	int idleStepperTotalSteps;;"count",      1,      0,       5, 3000,      0
 	brain_pin_e stepperEnablePin;
 
-float noAccelAfterHardLimitPeriodSecs;;"sec",      1,      0,       0, 60,      0
+float noAccelAfterHardLimitPeriodSecs;TODO: finish this #413;"sec",      1,      0,       0, 60,      0
 
 int mapAveragingSchedulingAtIndex;+At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
 
@@ -676,17 +688,16 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	int tachPulseTriggerIndex;+Trigger cycle index at which we start tach pulse (performance consideration);"index",     1,     0,    0.0,    360.0,  0
 	
 	float suckedOffCoef;;"%",        1,     0,    0.0,    300.0,  2
-	float[7] unused71;TODO make suckedOffCoef an array by RPM;
-	float addedToWallCoef;;"%",        1,     0,    0.0,    300.0,  2
-	float[7] unused72;TODO make addedToWallCoef an array by RPM;
+	pid_s alternatorControl;
+	pid_s etb;
+	pid_s warmupAfrPid;
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;
-	int idleDT;
-	idle_control_e idleControl;
+	float addedToWallCoef;;"%",        1,     0,    0.0,    300.0,  2
 	brain_pin_e communicationPin;blue LED on discovery by default	
 	brain_pin_e runningPin;green LED on discovery by default
 	brain_pin_e binarySerialTxPin;	
@@ -695,19 +706,32 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	brain_pin_e consoleSerialRxPin;todo: finish pin migration from hard-coded to configurable?
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM",      1,     0,   0.0,    18000,   2
-	pid_s etb;
+
+	float throttlePedalUpVoltage;;"voltage",      1,     0,    -6,   6,      2
+	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
+	pin_output_mode_e stepperDirectionPinMode;
+	
+	int16_t startUpFuelPumpDuration;;"seconds",        1,     0,  0,    6000,  0
+	int16_t iacRPMErrorThreshold;If RPM is close enough let's leave IAC alone;"C",        1,     0,  0,    1000,  0
+	
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
 	float[CLT_CURVE_SIZE] cltIdleRpm;;"RPM",      1,     0,      0.0,    400.0,   0
 	
-	float targetVBatt;;"Volts",      1,      0,       0,30,      1
+	float targetVBatt;set targetvbatt VOLTS;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
-	int alternatorDT;PID dTime;"ms",      1,      0,       0, 3000,      0
-	pid_s alternatorControl;
+	float startOfCrankingPrimingPulse;;"ms",        1,     0,    0, 200,     1
+	int16_t afterCrankingIACtaperDuration;;"cycles",        1,     0,  0,    5000,  0
+	int16_t unusedShortHere;;"seconds",        1,     0,  0,    6000,  0
+	
+	int16_t iacByTpsTaper;Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent",        1,     0,  0,    500,  0
+	int16_t unusedShort;
+	brain_pin_e LIS302DLCsPin; 
+	float unusedalternatorControl;
 	
 	int tpsAccelLength;;"cycles",        1,     0,    1, 200,     0
 	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
-	float vvtOffset;set vvt_offset X;"value",      1,      0,       -720, 1000,      5
+	float vvtOffset;set vvt_offset X;"value",      1,      0,       -720, 1000,      1
 	
 	int engineLoadAccelLength;;"cycles",        1,     0,    1, 200,     0
 	
@@ -724,8 +748,8 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
-	debug_mode_e debugMode;
-	pid_s warmupAfrPid;
+	debug_mode_e debugMode;set debug_mode X
+	float[4] unusedwarmupAfrPid;
 
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfrBins;CLT-based target AFR for PID-based control;"C",        1,     0,   -100.0,    250.0,  2
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfr;;"AFR",      1,     0,      0.0,    20.0,   2
@@ -738,14 +762,14 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 
 	brain_pin_e dizzySparkOutputPin;+This implementation makes a pulse every time one of the coils is charged. See also tachOutputPin
 	pin_output_mode_e dizzySparkOutputPinMode;
-	adc_channel_e[FSIO_ADC_COUNT iterate] fsioAdc;
+	adc_channel_e[FSIO_ANALOG_INPUT_COUNT iterate] fsioAdc;todo: rename to fsioAnalogInputs
 	float fixedTiming;Fixed timing, useful for TDC testing;"deg",      1,     0,   -720,    720,   2
 	float mapLowValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
 	brain_input_pin_e camInput;
-	pid_dt[AUX_PID_COUNT iterate] auxPidDT;
-	float crankingIdleAdjustment;Extra idle while cranking;"percent",      1,     0,   -100.0,    100,    
+	int[4] unused4;
+	int crankingIACposition;IAC cranking position;"percent",      1,     0,   -100.0,    100,    
 	float tChargeMinRpmMinTps;;"mult",        1,     0,  0,    3,  4
 	float tChargeMinRpmMaxTps;;"mult",        1,     0,  0,    3,  4
 	float tChargeMaxRpmMinTps;;"mult",        1,     0,  0,    3,  4
@@ -756,7 +780,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	mass_storage_e storageMode;
 	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
-	pid_s[AUX_PID_COUNT iterate] auxPid;
+	float[16] unusedauxPid;
 	vvt_mode_e vvtMode;set vvt_mode X
 	bi_quard_s biQuad;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C",        1,     0,   -100.0,    250.0,  1
@@ -768,26 +792,42 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float postCrankingTargetClt;;"Ñ",        1,     0,  0,    100,  0
 	float postCrankingFactor;;"mult",        1,     0,  0,    100,  4
 	float postCrankingDurationSec;;"seconds",        1,     0,  0,    100,  2
-	ThermistorConf auxTempSensor1;
-	ThermistorConf auxTempSensor2;
+	ThermistorConf auxTempSensor1;todo: finish implementation #332
+	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	int16_t fuelClosedLoopCltThreshold;;"C",        1,     0,  0,    100,  0
 	int16_t fuelClosedLoopTpsThreshold;;"%",        1,     0,  0,    100,  0
 	int16_t fuelClosedLoopRpmThreshold;;"rpm",        1,     0,  0,    5000,  0
-int16_t etbFreq;;"Hz",      1,     0,    0, 500,      10
+	int16_t etbFreq;;"Hz",      1,     0,    0, 1500,      0
 	pid_s fuelClosedLoopPid;
-	float fuelClosedLoopAfrLowThreshold;;"ratio",        1,     0,  0,    100,  1
 	float fuelClosedLoopAfrHighThreshold;;"ratio",        1,     0,  0,    100,  1
 	pin_mode_e stepperEnablePinMode;
 	adc_channel_e cj125ua;lampda input
 	adc_channel_e cj125ur;heater input
-	int[68] unused;
+	
+	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
+	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;
+
+	pin_input_mode_e brakePedalPinMode;
+	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1
+
+
+spi_device_e sdCardSpiDevice;
+	pin_mode_e spi3SckMode;
+	pin_mode_e spi3MosiMode;
+	pin_mode_e spi3MisoMode;
+	pin_mode_e spi1SckMode;
+	pin_mode_e spi1MosiMode;
+	pin_mode_e spi1MisoMode;
+brain_pin_e brakePedalPin
+	pid_s[AUX_PID_COUNT iterate] auxPid;
+	int[26] unusedEnd;
 	
 
 end_struct
 
 engine_configuration_s engineConfiguration;
 
-le_formula_t[LE_COMMAND_COUNT iterate] le_formulas;
+le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingMultiplier;
 	le_formula_t timingAdditive;
 
@@ -826,15 +866,15 @@ float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load",   1,   0.0,        0,  300.0,   
 float[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ve_table_t veTable;
-float[FUEL_LOAD_COUNT] veLoadBins;;"%",	1,   0.0,        0,  300.0,   2
+float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1,   0.0,        0,  300.0,   2
 float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 afr_table_t afrTable;		
-float[FUEL_LOAD_COUNT] afrLoadBins;;"%",	1,   0.0,        0,  300.0,   2
+float[FUEL_LOAD_COUNT] afrLoadBins;;"",	1,   0.0,        0,  300.0,   2
 float[FUEL_RPM_COUNT] afrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ! ve_table_t ve2Table;
-! float[FUEL_LOAD_COUNT] ve2LoadBins;;"%",	1,   0.0,        0,  300.0,   2
+! float[FUEL_LOAD_COUNT] ve2LoadBins;;"kPa",	1,   0.0,        0,  300.0,   2
 ! float[FUEL_RPM_COUNT] ve2RpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 tps_tps_table_t tpsTpsAccelTable;
@@ -858,3 +898,59 @@ float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	   1,      0,      0.0,  255,   0
 float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
 
 end_struct
+
+#define GAUGE_NAME_VERSION "firmware"
+#define GAUGE_NAME_VVT "VVT postion"
+#define GAUGE_NAME_TIMING_ADVANCE "timing"
+#define GAUGE_NAME_VVS "Vehicle Speed"
+#define GAUGE_NAME_VBAT "VBatt"
+#define GAUGE_NAME_ENGINE_LOAD "Engine Load"
+#define GAUGE_NAME_CPU_TEMP "CPU Temperature"
+
+#define INDICATOR_NAME_CLUTCH_UP "clutch: up"
+#define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
+#define INDICATOR_NAME_BRAKE_DOWN "brake: down"
+
+
+#define GAUGE_NAME_WARNING_LAST "warning: last"
+#define GAUGE_NAME_WARNING_COUNTER "warning: counter"
+
+
+#define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
+
+
+#define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
+#define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel"
+#define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
+#define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
+#define GAUGE_NAME_FUEL_IAT_CORR "fuel: IAT correction"
+#define GAUGE_NAME_FUEL_VR "fuel: VE"
+#define GAUGE_NAME_FUEL_RUNNING "fuel: running"
+#define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: last injection"
+#define GAUGE_NAME_FUEL_BASE "fuel: base"
+#define GAUGE_NAME_FUEL_PID_CORR "fuel: correction"
+
+#define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
+#define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
+#define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
+#define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_IAC "Idle Air Valve"
+
+#define GAUGE_NAME_DEBUG_F1 "debug f1"
+#define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
+#define GAUGE_NAME_DEBUG_F3 "debug f3: prevError"
+#define GAUGE_NAME_DEBUG_F4 "debug f4: iParam"
+#define GAUGE_NAME_DEBUG_F5 "debug f5: dParam"
+#define GAUGE_NAME_DEBUG_F6 "debug f6: dTerm"
+#define GAUGE_NAME_DEBUG_F7 "debug f7"
+
+#define GAUGE_NAME_DEBUG_I1 "debug i1: pParam"
+#define GAUGE_NAME_DEBUG_I2 "debug i2: offset"
+#define GAUGE_NAME_DEBUG_I3 "debug i3"
+
+
+
+#define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
+
+#define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"

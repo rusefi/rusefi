@@ -9,6 +9,11 @@
 
 #include "stm32f4xx_hal_flash_ex.h"
 
+// we are lucky - all CAN pins use the same AF
+#define EFI_CAN_RX_AF 9
+#define EFI_CAN_TX_AF 9
+
+// burnout or 'Burn Out'
 typedef enum {
 	BOR_Level_None = OB_BOR_OFF, // 0x0C=12  Supply voltage ranges from 1.62 to 2.10 V
 	BOR_Level_1 = OB_BOR_LEVEL1, // 0x08     Supply voltage ranges from 2.10 to 2.40 V
@@ -87,3 +92,7 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		int mosiMode,
 		int misoMode);
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
+
+bool isValidCanTxPin(brain_pin_e pin);
+bool isValidCanRxPin(brain_pin_e pin);
+CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);

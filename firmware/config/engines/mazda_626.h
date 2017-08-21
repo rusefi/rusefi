@@ -11,6 +11,6 @@
 
 #include "engine.h"
 
-void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_MAZDA_626_H_ */

@@ -17,7 +17,7 @@
 
 EXTERN_ENGINE;
 
-void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set_rpm_hard_limit 3000
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
 
@@ -75,7 +75,7 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 
 	// set_whole_fuel_map 3
-	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
+	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 // 10 deg before TDC is default timing
@@ -83,10 +83,10 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// VICS solenoid
 	/**
 	 * to test
-	 * set_fsio_setting 0 5000
+	 * set_fsio_setting 1 5000
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
 	// (self and (rpm > 4800)) OR (rpm > 5000)
-	// set_fsio_expression 1 "self rpm 4800 > & rpm 5000 > OR"
-//	setFsioExt(0, GPIOE_3, "self rpm 4800 > & rpm 5000 > OR", 150 PASS_ENGINE_PARAMETER);
+	// set_rpn_expression 1 "self rpm 4800 > & rpm 5000 > OR"
+//	setFsioExt(0, GPIOE_3, "self rpm 4800 > & rpm 5000 > OR", 150 PASS_ENGINE_PARAMETER_SUFFIX);
 }

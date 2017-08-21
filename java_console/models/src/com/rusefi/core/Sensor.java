@@ -1,9 +1,12 @@
 package com.rusefi.core;
 
 import com.rusefi.config.FieldType;
+import com.rusefi.config.Fields;
 import eu.hansolo.steelseries.tools.BackgroundColor;
 
 import java.util.ArrayList;
+
+import static com.rusefi.config.Fields.*;
 
 /**
  * @author Andrey Belomutskiy
@@ -91,21 +94,22 @@ public enum Sensor {
 
     IAT(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 8, BackgroundColor.WHITE, -40, 150, "C"),
     TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"),
-    FUEL_BASE(SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
+    CRANKING_BASE(SensorCategory.FUEL, FieldType.FLOAT, 44, BackgroundColor.MUD, 0, 30, "ms"),
+    FUEL_BASE(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     // todo: unify with TIMING
     ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),
-    DWELL(SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
-    actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, 64, BackgroundColor.MUD, 0, 30, "ms"),
-    debugFloatField1(SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
+    DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
+    actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, /*offset */ 64, BackgroundColor.MUD, 0, 30, "ms"),
+    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
     VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),
     FIRMWARE_VERSION(SensorCategory.OPERATIONS, FieldType.INT, 84, BackgroundColor.BLUE),
     CURRENT_VE(SensorCategory.FUEL, FieldType.FLOAT, 112, BackgroundColor.MUD),
 
     deltaTps(SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD),
     engineLoadAccelDelta(SensorCategory.FUEL, FieldType.FLOAT, 124, BackgroundColor.MUD),
-    tpsAccelFuel(SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
-    Injector_duty(SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
+    tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
+    injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
     wallFuelAmount(SensorCategory.FUEL, FieldType.FLOAT, 160, BackgroundColor.MUD),
     iatCorrection(SensorCategory.FUEL, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
     wallFuelCorrection(SensorCategory.FUEL, FieldType.FLOAT, 168, BackgroundColor.MUD),
@@ -114,17 +118,17 @@ public enum Sensor {
     CHARGE_AIR_MASS(SensorCategory.OPERATIONS, FieldType.FLOAT, 180, BackgroundColor.MUD),
     cltCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 184, BackgroundColor.MUD, 0, 5),
     runningFuel(SensorCategory.OPERATIONS, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
-    debugIntField1(SensorCategory.OPERATIONS, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
+    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.OPERATIONS, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
     injectorLagMs(SensorCategory.FUEL, FieldType.FLOAT, 196, BackgroundColor.MUD, 0, 15, "ms"),
 
-    debugFloatField2(SensorCategory.OPERATIONS, FieldType.FLOAT, 200, BackgroundColor.MUD, 0, 5),
-    debugFloatField3(SensorCategory.OPERATIONS, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
-    debugFloatField4(SensorCategory.OPERATIONS, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
-    debugFloatField5(SensorCategory.OPERATIONS, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
-    debugIntField2(SensorCategory.OPERATIONS, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
-    debugIntField3(SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
+    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.OPERATIONS, FieldType.FLOAT, 200, BackgroundColor.MUD, 0, 5),
+    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.OPERATIONS, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
+    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.OPERATIONS, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
+    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.OPERATIONS, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
+    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.OPERATIONS, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
+    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
 
-    warningCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
+    errorCodeCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
     lastErrorCode(SensorCategory.OPERATIONS, FieldType.INT, 240, BackgroundColor.MUD, 0, 5),
 
     RPM(SensorCategory.SENSOR_INPUTS, FieldType.INT, 0, BackgroundColor.RED, 0, 8000),
@@ -133,6 +137,10 @@ public enum Sensor {
     INT_TEMP(SensorCategory.OPERATIONS, FieldType.FLOAT, 244, BackgroundColor.MUD, 0, 5),
     vvtPosition(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 248, BackgroundColor.MUD, 0, 5),
     engineMode(SensorCategory.OPERATIONS, FieldType.INT, 252, BackgroundColor.MUD, 0, 5),
+
+    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.OPERATIONS, FieldType.FLOAT, 256, BackgroundColor.MUD, 0, 5),
+    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.OPERATIONS, FieldType.FLOAT, 260, BackgroundColor.MUD, 0, 5),
+    coilDutyCycle(Fields.GAUGE_NAME_DWELL_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 272, BackgroundColor.MUD),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
@@ -147,8 +155,8 @@ public enum Sensor {
     private final FieldType type;
     private final int offset;
 
-    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue, String units) {
-        name = name();
+    Sensor(String name, SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue, String units) {
+        this.name = name == null ? name() : name;
         this.type = type;
         this.offset = offset;
         this.category = category;
@@ -158,12 +166,24 @@ public enum Sensor {
         this.maxValue = maxValue;
     }
 
+    Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue, String units) {
+        this(null, category, type, offset, color, minValue, maxValue, units);
+    }
+
+    Sensor(String name, SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue) {
+        this(name, category, type, offset, color, minValue, maxValue, "n/a");
+    }
+
     Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color, double minValue, double maxValue) {
-        this(category, type, offset, color, minValue, maxValue, "n/a");
+        this(null, category, type, offset, color, minValue, maxValue);
     }
 
     Sensor(SensorCategory category, FieldType type, int offset, BackgroundColor color) {
-        this(category, type, offset, color, 0, 100);
+        this(null, category, type, offset, color);
+    }
+
+    Sensor(String name, SensorCategory category, FieldType type, int offset, BackgroundColor color) {
+        this(name, category, type, offset, color, 0, 100);
     }
 
     Sensor(String name, SensorCategory category) {
@@ -190,7 +210,7 @@ public enum Sensor {
     }
 
     public static ArrayList<Sensor> getSensorsForCategory(String category) {
-        final ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+        final ArrayList<Sensor> sensors = new ArrayList<>();
 
         for (final Sensor sensor : values()) {
             if (sensor.category.getName().equals(category)) {

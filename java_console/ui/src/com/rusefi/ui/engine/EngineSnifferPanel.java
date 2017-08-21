@@ -138,6 +138,7 @@ public class EngineSnifferPanel {
             lowerButtons.add(new BitConfigField(Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
             lowerButtons.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Frequency").getContent());
             lowerButtons.add(new ConfigField(Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
+            lowerButtons.add(new ConfigField(Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
             bottomPanel.add(lowerButtons, BorderLayout.NORTH);
         }
 
@@ -296,7 +297,7 @@ public class EngineSnifferPanel {
             // injection
             signalBody = Color.green;
         } else if (name.startsWith("map")) {
-            signalBody = Color.gray;
+            signalBody = Color.pink;
         } else {
             signalBody = Color.gray;
         }

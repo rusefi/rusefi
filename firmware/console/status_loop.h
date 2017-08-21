@@ -10,10 +10,10 @@
 
 #include "engine.h"
 
-void updateDevConsoleState(Engine *engine);
+void updateDevConsoleState(void);
 void prepareTunerStudioOutputs(void);
-void startStatusThreads(Engine *engine);
-void initStatusLoop(Engine *engine);
+void startStatusThreads(void);
+void initStatusLoop(void);
 void writeLogLine(void);
 bool getFullLog(void);
 void setFullLog(int value);

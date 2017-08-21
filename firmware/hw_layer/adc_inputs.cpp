@@ -70,7 +70,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 // is there a reason to have this configurable?
 #define ADC_FAST_DEVICE ADCD2
 
-static int slowAdcCounter = 0;
+static volatile int slowAdcCounter = 0;
 static LoggingWithStorage logger("ADC");
 
 // todo: move this flag to Engine god object
@@ -98,7 +98,10 @@ static ADCConversionGroup adcgrpcfgSlow = { FALSE, 0, adc_callback_slow, NULL,
 /* HW dependent part.*/
 ADC_TwoSamplingDelay_20Cycles,   // cr1
 		ADC_CR2_SWSTART, // cr2
-
+/**
+ * here we configure all possible channels for slow mode. Some channels would not actually
+ * be used hopefully that's fine to configure all possible channels.
+ */
 		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_SLOW) |
@@ -132,9 +135,28 @@ static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_ca
 ADC_TwoSamplingDelay_5Cycles,   // cr1
 		ADC_CR2_SWSTART, // cr2
 
-		0, // sample times for channels 10...18
-		   // todo: IS SOMETHING MISSING HERE?
-		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
+		/**
+		 * here we configure all possible channels for fast mode. Some channels would not actually
+         * be used hopefully that's fine to configure all possible channels.
+		 *
+		 */
+		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_FAST) |
+		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_FAST) |
+		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_FAST) |
+		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_FAST) |
+		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_FAST) |
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_FAST)
+		, // sample times for channels 10...18
+		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN2(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN3(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_FAST) |
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
 
 		0, // Conversion group sequence 13...16 + sequence length
 
@@ -148,7 +170,7 @@ AdcDevice fastAdc(&adcgrpcfg_fast);
 
 void doSlowAdc(void) {
 
-	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcSlow");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX())> 32, "lwStAdcSlow");
 
 #if EFI_INTERNAL_ADC
 
@@ -156,19 +178,19 @@ void doSlowAdc(void) {
 	 will be executed in parallel to the current PWM cycle and will
 	 terminate before the next PWM cycle.*/
 	slowAdc.conversionCount++;
-	chSysLockFromIsr()
+	chSysLockFromISR()
 	;
 	if (ADC_SLOW_DEVICE.state != ADC_READY &&
 	ADC_SLOW_DEVICE.state != ADC_COMPLETE &&
 	ADC_SLOW_DEVICE.state != ADC_ERROR) {
 		// todo: why and when does this happen? firmwareError(OBD_PCM_Processor_Fault, "ADC slow not ready?");
 		slowAdc.errorsCount++;
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 		;
 		return;
 	}
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
-	chSysUnlockFromIsr()
+	chSysUnlockFromISR()
 	;
 #endif
 }
@@ -179,7 +201,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 }
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
-	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcFast");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX())> 32, "lwStAdcFast");
 #if EFI_INTERNAL_ADC
 	(void) pwmp;
 
@@ -188,19 +210,19 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	 * will be executed in parallel to the current PWM cycle and will
 	 * terminate before the next PWM cycle.
 	 */
-	chSysLockFromIsr()
+	chSysLockFromISR()
 	;
 	if (ADC_FAST_DEVICE.state != ADC_READY &&
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
 		fastAdc.errorsCount++;
 		// todo: when? why? firmwareError(OBD_PCM_Processor_Fault, "ADC fast not ready?");
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 		;
 		return;
 	}
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
-	chSysUnlockFromIsr()
+	chSysUnlockFromISR()
 	;
 	fastAdc.conversionCount++;
 #endif
@@ -217,7 +239,7 @@ float getMCUInternalTemperature(void) {
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (hwChannel == EFI_ADC_NONE) {
-		warning(CUSTOM_OBD_ANALOG_INPUT_ERROR, "ADC: %s input is not configured", msg);
+		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
 #if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
@@ -253,9 +275,51 @@ PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
 /* HW dependent part.*/
 0, 0 };
 
-static void initAdcPin(ioportid_t port, int pin, const char *msg) {
-	print("adc %s\r\n", msg);
-	mySetPadMode("adc input", port, pin, PAL_MODE_INPUT_ANALOG);
+static void initAdcPin(brain_pin_e pin, const char *msg) {
+	// todo: migrate to scheduleMsg if we want this back print("adc %s\r\n", msg);
+
+	efiSetPadMode("adc input", pin, PAL_MODE_INPUT_ANALOG);
+}
+
+brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
+	// todo: replace this with an array :)
+	switch (hwChannel) {
+	case ADC_CHANNEL_IN0:
+		return GPIOA_0;
+	case ADC_CHANNEL_IN1:
+		return GPIOA_1;
+	case ADC_CHANNEL_IN2:
+		return GPIOA_2;
+	case ADC_CHANNEL_IN3:
+		return GPIOA_3;
+	case ADC_CHANNEL_IN4:
+		return GPIOA_4;
+	case ADC_CHANNEL_IN5:
+		return GPIOA_5;
+	case ADC_CHANNEL_IN6:
+		return GPIOA_6;
+	case ADC_CHANNEL_IN7:
+		return GPIOA_7;
+	case ADC_CHANNEL_IN8:
+		return GPIOB_0;
+	case ADC_CHANNEL_IN9:
+		return GPIOB_1;
+	case ADC_CHANNEL_IN10:
+		return GPIOC_0;
+	case ADC_CHANNEL_IN11:
+		return GPIOC_1;
+	case ADC_CHANNEL_IN12:
+		return GPIOC_2;
+	case ADC_CHANNEL_IN13:
+		return GPIOC_3;
+	case ADC_CHANNEL_IN14:
+		return GPIOC_4;
+	case ADC_CHANNEL_IN15:
+		return GPIOC_5;
+	default:
+		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
+		return GPIO_INVALID;
+	}
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
@@ -297,6 +361,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
+// deprecated - migrate to 'getAdcChannelBrainPin'
 ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
@@ -333,7 +398,7 @@ ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return NULL;
 	}
 }
@@ -348,6 +413,7 @@ const char * getAdcMode(adc_channel_e hwChannel) {
 	return "INACTIVE - need restart";
 }
 
+// deprecated - migrate to 'getAdcChannelBrainPin'
 int getAdcChannelPin(adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
@@ -384,16 +450,16 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return 5;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Unknown hw channel %d", hwChannel);
+		// todo: better error handling, that's input parameter validation
+		firmwareError(CUSTOM_ERR_ADC_CHANNEL, "Unknown hw channel %d", hwChannel);
 		return -1;
 	}
 }
 
 static void initAdcHwChannel(adc_channel_e hwChannel) {
-	ioportid_t port = getAdcChannelPort("adc", hwChannel);
-	int pin = getAdcChannelPin(hwChannel);
+	brain_pin_e pin = getAdcChannelBrainPin("adc", hwChannel);
 
-	initAdcPin(port, pin, "hw");
+	initAdcPin(pin, "hw");
 }
 
 int AdcDevice::size() {
@@ -480,10 +546,18 @@ static void setAdcDebugReporting(int value) {
 	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
 }
 
+void waitForSlowAdc() {
+	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
+	// todo: use sync.objects?
+	while (slowAdcCounter < 1) {
+		chThdSleepMilliseconds(1);
+	}
+}
+
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9c");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9c");
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {
@@ -512,7 +586,7 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 	}
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
 		getPinNameByAdcChannel(name, setting, errorMsgBuff);
-		firmwareError(OBD_PCM_Processor_Fault, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
+		firmwareError(CUSTOM_ERR_ADC_USED, "ADC mapping error: input %s for %s already used by %s?", errorMsgBuff, name, adcHwChannelUsage[setting]);
 	}
 
 	adcHwChannelUsage[setting] = name;
@@ -539,7 +613,7 @@ static void configureInputs(void) {
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 
-	for (int i = 0; i < FSIO_ADC_COUNT ; i++) {
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);
 	}
 }
@@ -547,14 +621,14 @@ static void configureInputs(void) {
 void initAdcInputs(bool boardTestMode) {
 	printMsg(&logger, "initAdcInputs()");
 	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(OBD_PCM_Processor_Fault, "ADC_BUF_DEPTH_FAST too high");
+		firmwareError(CUSTOM_ERR_ADC_DEPTH_FAST, "ADC_BUF_DEPTH_FAST too high");
 	if (ADC_BUF_DEPTH_SLOW > MAX_ADC_GRP_BUF_DEPTH)
-		firmwareError(OBD_PCM_Processor_Fault, "ADC_BUF_DEPTH_SLOW too high");
+		firmwareError(CUSTOM_ERR_ADC_DEPTH_SLOW, "ADC_BUF_DEPTH_SLOW too high");
 
 	configureInputs();
 
 	// migrate to 'enable adcdebug'
-	addConsoleActionI("adcDebug", &setAdcDebugReporting);
+	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
 	/*
@@ -582,12 +656,15 @@ void initAdcInputs(bool boardTestMode) {
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
+	pwmEnablePeriodicNotification(EFI_INTERNAL_SLOW_ADC_PWM);
+
 	if (boardConfiguration->isFastAdcEnabled) {
 		fastAdc.init();
 		/*
 		 * Initializes the PWM driver.
 		 */
 		pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
+		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
 	}
 
 	// ADC_CHANNEL_IN0 // PA0

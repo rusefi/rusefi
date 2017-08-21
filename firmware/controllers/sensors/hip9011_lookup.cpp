@@ -65,7 +65,7 @@ float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) {
 }
 
 int getIntegrationIndexByRpm(float rpm) {
-	int i = findIndex(rpmLookup, INT_LOOKUP_SIZE, (rpm));
+	int i = findIndexMsg("getIbR", rpmLookup, INT_LOOKUP_SIZE, (rpm));
 	return i == -1 ? INT_LOOKUP_SIZE - 1 : INT_LOOKUP_SIZE - i - 1;
 }
 
@@ -79,12 +79,12 @@ int getHip9011GainIndex(float gain) {
  * @param frequency knock frequencey, in kHz
  */
 int getHip9011BandIndex(float frequency) {
-	return findIndex(bandFreqLookup, BAND_LOOKUP_SIZE, frequency);
+	return findIndexMsg("freq", bandFreqLookup, BAND_LOOKUP_SIZE, frequency);
 }
 
 EXTERN_ENGINE;
 
-void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_F) {
+void initEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
 
 	engineConfiguration->knockNoise[0] = 2; // 800

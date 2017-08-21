@@ -56,7 +56,7 @@ void Table2D<SIZE>::preCalc(float *bin, float *values) {
 		float x1 = bin[i];
 		float x2 = bin[i + 1];
 		if (x1 == x2) {
-			warning(CUSTOM_OBD_15, "preCalc: Same x1 and x2 in interpolate: %f/%f", x1, x2);
+			warning(CUSTOM_INTEPOLATE_ERROR_4, "preCalc: Same x1 and x2 in interpolate: %f/%f", x1, x2);
 			return;
 		}
 
@@ -89,7 +89,7 @@ template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::getValue(float xRpm, float y) {
 	efiAssert(initialized, "map not initialized", NAN);
 	if (cisnan(y)) {
-		warning(CUSTOM_OBD_16, "%s: y is NaN", name);
+		warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
 		return NAN;
 	}
 	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis

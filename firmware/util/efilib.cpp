@@ -140,6 +140,9 @@ static char *ltoa_internal(char *p, long num, unsigned radix) {
 	return p;
 }
 
+/**
+ * @return pointer at the end zero symbol after the digits
+ */
 static char* itoa_signed(char *p, int num, unsigned radix) {
 	if (num < 0) {
 		*p++ = '-';
@@ -154,6 +157,8 @@ static char* itoa_signed(char *p, int num, unsigned radix) {
 
 /**
  * Integer to string
+ *
+ * @return pointer at the end zero symbol after the digits
  */
 char* itoa10(char *p, int num) {
 // todo: unit test
@@ -243,6 +248,13 @@ bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 		if (TO_LOWER(str1[i]) != TO_LOWER(str2[i]))
 			return false;
 	return true;
+}
+
+/*
+** return lower-case of c if upper-case, else c
+*/
+int mytolower(const char c) {
+  return TO_LOWER(c);
 }
 
 bool strEqual(const char *str1, const char *str2) {

@@ -92,14 +92,14 @@ public class LinkManager {
     /**
      * todo: should this be merged into {@link #start(String)} ?
      */
-    public static void open(LinkStateListener listener) {
+    public static void open(ConnectionStateListener listener) {
         if (connector == null)
             throw new NullPointerException("connector");
         connector.connect(listener);
     }
 
     public static void open() {
-        open(LinkStateListener.VOID);
+        open(ConnectionStateListener.VOID);
     }
 
     public static void send(String command, boolean fireEvent) throws InterruptedException {
@@ -122,26 +122,8 @@ public class LinkManager {
     }
 
     public static String unpackConfirmation(String message) {
-        return connector.unpackConfirmation(message);
-    }
-
-    public static interface LinkStateListener {
-        LinkStateListener VOID = new LinkStateListener() {
-            @Override
-            public void onConnectionFailed() {
-            }
-
-            @Override
-            public void onConnectionEstablished() {
-
-            }
-        };
-
-        void onConnectionFailed();
-
-        /**
-         * This method is invoked once we have connection & configuration from controller
-         */
-        void onConnectionEstablished();
+        if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
+            return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
+        return null;
     }
 }

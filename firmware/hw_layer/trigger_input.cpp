@@ -31,11 +31,13 @@ int vvtEventRiseCounter = 0;
 int vvtEventFallCounter = 0;
 
 static void cam_icu_width_callback(ICUDriver *icup) {
+    (void)icup;
 	vvtEventRiseCounter++;
 	hwHandleVvtCamSignal(TV_RISE);
 }
 
 static void cam_icu_period_callback(ICUDriver *icup) {
+    (void)icup;
 	vvtEventFallCounter++;
 	hwHandleVvtCamSignal(TV_FALL);
 }
@@ -50,7 +52,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 	if (hasFirmwareErrorFlag)
 		return;
 	int isPrimary = icup == primaryCrankDriver;
-	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
+	if (!isPrimary && !engine->triggerCentral.triggerShape.needSecondTriggerInput) {
 		return;
 	}
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
@@ -64,7 +66,7 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 	if (hasFirmwareErrorFlag)
 		return;
 	int isPrimary = icup == primaryCrankDriver;
-	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
+	if (!isPrimary && !engine->triggerCentral.triggerShape.needSecondTriggerInput) {
 		return;
 	}
 
@@ -80,14 +82,24 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 /**
  * the main purpose of this configuration structure is to specify the input interrupt callbacks
  */
-static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU clock frequency.   */
-shaft_icu_width_callback, shaft_icu_period_callback };
+static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW,
+                                  100000, /* 100kHz ICU clock frequency.   */
+                                  shaft_icu_width_callback,
+                                  shaft_icu_period_callback,
+                                  NULL,
+                                  ICU_CHANNEL_1,
+                                  0};
 
 /**
  * this is about VTTi and stuff kind of cam sensor
  */
-static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU clock frequency.   */
-cam_icu_width_callback, cam_icu_period_callback };
+static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW,
+                                100000, /* 100kHz ICU clock frequency.   */
+                                cam_icu_width_callback,
+                                cam_icu_period_callback,
+                                NULL,
+                                ICU_CHANNEL_1,
+                                0};
 
 
 static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUConfig *icucfg) {
@@ -111,7 +123,10 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 
 		efiIcuStart(driver, icucfg);
 		if (driver->state == ICU_READY) {
-			icuEnable(driver);
+			efiAssert(driver != NULL, "ti: driver is NULL", NULL);
+			efiAssert(driver->state == ICU_READY, "ti: driver not ready", NULL);
+            icuStartCapture(driver); // this would change state from READY to WAITING
+            icuEnableNotifications(driver);
 		} else {
 			// we would be here for example if same pin is used for multiple input capture purposes
 			firmwareError(CUSTOM_ERR_ICU_STATE, "ICU unexpected state [%s]", hwPortname(hwPin));
@@ -123,7 +138,8 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 static void turnOffTriggerInputPin(brain_pin_e hwPin) {
 	ICUDriver *driver = getInputCaptureDriver("trigger_off", hwPin);
 	if (driver != NULL) {
-		icuDisable(driver);
+        icuDisableNotifications(driver);
+        icuStopCapture(driver);
 		icuStop(driver);
 		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(hwPin));
 		unmarkPin(hwPin);

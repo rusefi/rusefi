@@ -14,13 +14,20 @@
 #include "obd_error_codes.h"
 #include "error_handling.h"
 
+#ifndef DEBUG_INTERPOLATION
+#define DEBUG_INTERPOLATION 0
+#endif
+
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 
 int findIndex(const float array[], int size, float value);
+int findIndexMsg(const char *msg, const float array[], int size, float value);
+void ensureArrayIsAscending(const char *msg, const float array[], int size);
 int findIndex2(const float array[], unsigned size, float value);
 float interpolate(float x1, float y1, float x2, float y2, float x);
+float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
-float interpolate2d(float value, float bin[], float values[], int size);
+float interpolate2d(const char *msg, float value, float bin[], float values[], int size);
 
 int needInterpolationLogging(void);
 
@@ -30,20 +37,20 @@ int needInterpolationLogging(void);
 template<typename vType>
 float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, vType* map[]) {
 	if (cisnan(x)) {
-		warning(CUSTOM_OBD_14, "%f: x is NaN in interpolate3d", x);
+		warning(CUSTOM_INTEPOLATE_ERROR_3, "%f: x is NaN in interpolate3d", x);
 		return NAN;
 	}
 	if (cisnan(y)) {
-		warning(CUSTOM_OBD_13, "%f: y is NaN in interpolate3d", y);
+		warning(CUSTOM_INTEPOLATE_ERROR_2, "%f: y is NaN in interpolate3d", y);
 		return NAN;
 	}
 
-	int xIndex = findIndex(xBin, xBinSize, x);
+	int xIndex = findIndexMsg("x", xBin, xBinSize, x);
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging())
 		printf("X index=%d\r\n", xIndex);
 #endif
-	int yIndex = findIndex(yBin, yBinSize, y);
+	int yIndex = findIndexMsg("y", yBin, yBinSize, y);
 	if (xIndex < 0 && yIndex < 0) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
@@ -139,7 +146,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	float result = interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
 	return result;
 }
-void setTableValue(float bins[], float values[], int size, float key, float value);
+void setCurveValue(float bins[], float values[], int size, float key, float value);
 void initInterpolation(Logging *sharedLogger);
 
 class FastInterpolation {

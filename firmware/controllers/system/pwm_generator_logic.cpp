@@ -75,6 +75,13 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	return NT2US(state->safe.startNt + timeToSwitchNt);
 }
 
+void PwmConfig::setFrequency(float frequency) {
+	/**
+	 * see #handleCycleStart()
+	 */
+	periodNt = US2NT(frequency2periodUs(frequency));
+}
+
 void PwmConfig::handleCycleStart() {
 	if (safe.phaseIndex == 0) {
 		if (cycleCallback != NULL) {
@@ -123,7 +130,7 @@ static efitimeus_t togglePwmState(PwmConfig *state) {
 	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(state);
 #if DEBUG_PWM
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
-#endif
+#endif /* DEBUG_PWM */
 	// signed value is needed here
 //	int64_t timeToSwitch = nextSwitchTimeUs - getTimeNowUs();
 //	if (timeToSwitch < 1) {
@@ -155,7 +162,7 @@ static void timerCallback(PwmConfig *state) {
 	efiAssertVoid(state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitimeus_t switchTimeUs = togglePwmState(state);
-	scheduleByTime(false, "pwm", &state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+	scheduleByTime(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
 	state->dbgNestingLevel--;
 }
 

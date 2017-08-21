@@ -1,10 +1,8 @@
 #ifndef _A_H_HEADER_
 #define _A_H_HEADER_
-// auto-generated from../../firmware/controllers/algo/io_pins.h
 
 
-#include "io_pins.h"
-// auto-generated from../../firmware/controllers/algo/rusefi_enums.h
+// supposed to be auto-generated from../../firmware/controllers/algo/rusefi_enums.h but not really
 
 
 #include "rusefi_enums.h"
@@ -20,7 +18,6 @@ const char *getDisplay_mode_e(display_mode_e value);
 const char *getLog_format_e(log_format_e value);
 const char *getIdle_mode_e(idle_mode_e value);
 const char *getPin_output_mode_e(pin_output_mode_e value);
-const char *getIdle_control_e(idle_control_e value);
 const char *getGpio_mode_e(gpio_mode_e value);
 const char *getPin_input_mode_e(pin_input_mode_e value);
 const char *getFiring_order_e(firing_order_e value);

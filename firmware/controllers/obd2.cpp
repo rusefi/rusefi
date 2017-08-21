@@ -47,7 +47,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 
 		setTxBit(5, 24 - PID_THROTTLE);
 
-		sendMessage();
+		sendCanMessage();
 	} else if (rx->data8[2] == PID_COOLANT_TEMP) {
 		scheduleMsg(&logger, "Got CLT request");
 
@@ -58,7 +58,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		txmsg.data8[1] = 0x41; // mode 1
 		txmsg.data8[2] = PID_COOLANT_TEMP;
 		txmsg.data8[3] = clt + 40;
-		sendMessage();
+		sendCanMessage();
 	} else if (rx->data8[2] == PID_RPM) {
 		scheduleMsg(&logger, "Got RPM request");
 		unsigned int rpm = 2000*4; //	rotation/min.	((A*256)+B)/4 todo: use real value
@@ -68,7 +68,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		txmsg.data8[2] = PID_RPM;
 		txmsg.data8[3] = ((rpm>>8) & 0xFF);
 		txmsg.data8[4] = ((rpm) & 0xFF);
-		sendMessage();
+		sendCanMessage();
 		
 	} else if (rx->data8[2] == PID_TIMING_ADVANCE) {
 		scheduleMsg(&logger, "Got timing request");
@@ -79,7 +79,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		txmsg.data8[1] = 0x41; // mode 1
 		txmsg.data8[2] = PID_INTAKE_MAP;
 		txmsg.data8[3] = 123; // todo: real speed
-		sendMessage();
+		sendCanMessage();
 	} else if (rx->data8[2] == PID_FUEL_PRESSURE) {
 		scheduleMsg(&logger, "Got fuel pressure request");
 	} else if (rx->data8[2] == PID_INTAKE_MAP) {
@@ -89,7 +89,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		txmsg.data8[1] = 0x41; // mode 1
 		txmsg.data8[2] = PID_INTAKE_MAP;
 		txmsg.data8[3] = 46; // todo: real MAP
-		sendMessage();
+		sendCanMessage();
 	} else {
 		scheduleMsg(&logger, "Got unhandled request");
 	}

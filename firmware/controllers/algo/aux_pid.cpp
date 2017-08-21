@@ -16,6 +16,7 @@
 #include "tunerstudio_configuration.h"
 #include "fsio_impl.h"
 #include "engine_math.h"
+#include "pin_repository.h"
 
 EXTERN_ENGINE
 ;
@@ -34,7 +35,7 @@ static SimplePwm auxPidPwm[AUX_PID_COUNT];
 static OutputPin auxPidPin[AUX_PID_COUNT];
 
 static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[0];
-static Pid auxPid(auxPidS, 0, 90);
+static Pid auxPid(auxPidS);
 static Logging *logger;
 
 static bool isEnabled(int index) {
@@ -51,30 +52,34 @@ static bool isEnabled(int index) {
 	}
 }
 
+static void pidReset(void) {
+	auxPid.reset();
+}
+
 static msg_t auxPidThread(int param) {
 	UNUSED(param);
 		chRegSetThreadName("AuxPidController");
 		while (true) {
-			int dt = maxI(10, engineConfiguration->auxPidDT[0]);
-			chThdSleepMilliseconds(dt);
+			auxPid.sleep();
 
-			if (parametersVersion.isOld())
-				auxPid.reset();
+			if (parametersVersion.isOld()) {
+				pidReset();
+			}
 
-			float rpm = engine->rpmCalculator.rpmValue;
+			float rpm = GET_RPM();
 
 			// todo: make this configurable?
 			bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
 
 			if (!enabledAtCurrentRpm) {
 				// we need to avoid accumulating iTerm while engine is not running
-				auxPid.reset();
+				pidReset();
 				continue;
 			}
 
 
-			float value = engine->triggerCentral.vvtPosition; // getVBatt(PASS_ENGINE_PARAMETER_F); // that's temporary
-			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
+			float value = engine->triggerCentral.vvtPosition; // getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE); // that's temporary
+			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 			float pwm = auxPid.getValue(targetValue, value);
 			if (engineConfiguration->isVerboseAuxPid1) {
@@ -84,7 +89,6 @@ static msg_t auxPidThread(int param) {
 
 
 			if (engineConfiguration->debugMode == AUX_PID_1) {
-				tsOutputChannels.debugFloatField1 = pwm;
 				auxPid.postState(&tsOutputChannels);
 				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
 			}
@@ -112,15 +116,25 @@ static void turnAuxPidOn(int index) {
 			engineConfiguration->auxPidFrequency[index], 0.1, applyPinState);
 }
 
+void startAuxPins(void) {
+	for (int i = 0;i <AUX_PID_COUNT;i++) {
+		turnAuxPidOn(i);
+	}
+}
+
+void stopAuxPins(void) {
+	for (int i = 0;i < AUX_PID_COUNT;i++) {
+		unmarkPin(activeConfiguration.auxPidPins[i]);
+	}
+}
+
 void initAuxPid(Logging *sharedLogger) {
 	chThdCreateStatic(auxPidThreadStack, sizeof(auxPidThreadStack), LOWPRIO,
 			(tfunc_t) auxPidThread, NULL);
 
 	logger = sharedLogger;
 
-	for (int i = 0;i< AUX_PID_COUNT;i++) {
-		turnAuxPidOn(i);
-	}
+	startAuxPins();
 }
 
 #endif

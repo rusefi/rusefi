@@ -13,6 +13,8 @@
 #include "main.h"
 void initAlternatorCtrl(Logging *sharedLogger);
 void setAltPFactor(float p);
+void setAltIFactor(float p);
+void setAltDFactor(float p);
 void showAltInfo(void);
 void setDefaultAlternatorParameters(void);
 

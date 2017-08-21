@@ -53,9 +53,9 @@ public:
 	void intTotalEventCounter();
 	efitime_t getTotalEventCounter();
 	efitime_t getStartOfRevolutionIndex();
-	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_S);
+	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	bool isValidIndex(DECLARE_ENGINE_PARAMETER_F);
+	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback cycleCallback;
 
@@ -82,11 +82,6 @@ public:
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	// we need two instances of TriggerState
-	// todo: re-imiplement as a sub-class to reduce memory consumption
-//	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
-//	float instantRpmValue[PWM_PHASE_MAX_COUNT];
-
 	/**
 	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle
 	 */
@@ -97,6 +92,8 @@ public:
 
 	void reset();
 	void resetRunningCounters();
+
+	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	uint32_t runningRevolutionCounter;
 	/**
@@ -115,8 +112,19 @@ private:
 	efitime_t prevCycleDuration;
 };
 
+
+/**
+ * the reason for sub-class is simply to save RAM but not having statisics in the trigger initialization instance
+ */
+class TriggerStateWithRunningStatistics : public TriggerState {
+public:
+	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	float instantRpmValue[PWM_PHASE_MAX_COUNT];
+	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+};
+
 angle_t getEngineCycle(operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
+uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 class Engine;
 
@@ -125,11 +133,5 @@ void initTriggerDecoderLogger(Logging *sharedLogger);
 
 bool isTriggerDecoderError(void);
 
-#define considerEventForGap() (!TRIGGER_SHAPE(useOnlyPrimaryForSync) || isPrimary)
-
-#define isLessImportant(type) ((TRIGGER_SHAPE(useRiseEdge) && type != TV_RISE) \
-		|| (!TRIGGER_SHAPE(useRiseEdge) && type != TV_FALL) \
-		|| (!considerEventForGap()) \
-	)
 
 #endif /* TRIGGER_DECODER_H_ */

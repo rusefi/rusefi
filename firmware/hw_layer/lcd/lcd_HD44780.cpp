@@ -76,21 +76,26 @@ static void lcdSleep(int period) {
 //static char txbuf[1];
 #define LCD_PORT_EXP_ADDR 0x20
 
+// todo: use this method wider!
+static void writePad(const char *msg, brain_pin_e pin, int bit) {
+	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
+}
+
 //-----------------------------------------------------------------------------
 static void lcd_HD44780_write(uint8_t data) {
 	if (engineConfiguration->displayMode == DM_HD44780) {
-		palWritePad(getHwPort(boardConfiguration->HD44780_db7), getHwPin(boardConfiguration->HD44780_db7),
+		writePad("lcd", boardConfiguration->HD44780_db7,
 				data & 0x80 ? 1 : 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db6), getHwPin(boardConfiguration->HD44780_db6),
+		writePad("lcd", boardConfiguration->HD44780_db6,
 				data & 0x40 ? 1 : 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db5), getHwPin(boardConfiguration->HD44780_db5),
+				writePad("lcd", boardConfiguration->HD44780_db5,
 				data & 0x20 ? 1 : 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db4), getHwPin(boardConfiguration->HD44780_db4),
+				writePad("lcd", boardConfiguration->HD44780_db4,
 				data & 0x10 ? 1 : 0);
 
-		palSetPad(getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e)); // En high
+		writePad("lcd", boardConfiguration->HD44780_e, 1); // En high
 		lcdSleep(10); // enable pulse must be >450ns
-		palClearPad(getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e)); // En low
+		writePad("lcd", boardConfiguration->HD44780_e, 0); // En low
 		lcdSleep(40); // commands need > 37us to settle
 	} else {
 
@@ -119,7 +124,7 @@ static void lcd_HD44780_write(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_write_command(uint8_t data) {
-	palClearPad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs));
+	palClearPad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs));
 
 	lcd_HD44780_write(data);
 	lcd_HD44780_write(data << 4);
@@ -127,13 +132,13 @@ void lcd_HD44780_write_command(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_write_data(uint8_t data) {
-	palSetPad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs));
+	palSetPad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs));
 
 	lcd_HD44780_write(data);
 	lcd_HD44780_write(data << 4);
 	currentColumn++;
 
-	palClearPad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs));
+	palClearPad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs));
 }
 
 //-----------------------------------------------------------------------------
@@ -180,7 +185,7 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 	addConsoleAction("lcdinfo", lcdInfo);
 
 	if (engineConfiguration->displayMode > DM_HD44780_OVER_PCF8574) {
-		firmwareError(OBD_PCM_Processor_Fault, "Unexpected displayMode %d", engineConfiguration->displayMode);
+		warning(CUSTOM_ERR_DISPLAY_MODE, "Unexpected displayMode %d", engineConfiguration->displayMode);
 		return;
 	}
 
@@ -188,19 +193,19 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 
 	if (engineConfiguration->displayMode == DM_HD44780) {
 		// initialize hardware lines
-		mySetPadMode2("lcd RS", boardConfiguration->HD44780_rs, PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode2("lcd E", boardConfiguration->HD44780_e, PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode2("lcd DB4", boardConfiguration->HD44780_db4, PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode2("lcd DB5", boardConfiguration->HD44780_db5, PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode2("lcd DB6", boardConfiguration->HD44780_db6, PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode2("lcd DB7", boardConfiguration->HD44780_db7, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("lcd RS", boardConfiguration->HD44780_rs, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("lcd E", boardConfiguration->HD44780_e, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("lcd DB4", boardConfiguration->HD44780_db4, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("lcd DB5", boardConfiguration->HD44780_db5, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("lcd DB6", boardConfiguration->HD44780_db6, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("lcd DB7", boardConfiguration->HD44780_db7, PAL_MODE_OUTPUT_PUSHPULL);
 		// and zero values
-		palWritePad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db4), getHwPin(boardConfiguration->HD44780_db4), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db5), getHwPin(boardConfiguration->HD44780_db5), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db6), getHwPin(boardConfiguration->HD44780_db6), 0);
-		palWritePad(getHwPort(boardConfiguration->HD44780_db7), getHwPin(boardConfiguration->HD44780_db7), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_rs), getHwPin("lcd", boardConfiguration->HD44780_rs), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_e), getHwPin("lcd", boardConfiguration->HD44780_e), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db4), getHwPin("lcd", boardConfiguration->HD44780_db4), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db5), getHwPin("lcd", boardConfiguration->HD44780_db5), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db6), getHwPin("lcd", boardConfiguration->HD44780_db6), 0);
+		palWritePad(getHwPort("lcd", boardConfiguration->HD44780_db7), getHwPin("lcd", boardConfiguration->HD44780_db7), 0);
 	}
 
 	chThdSleepMilliseconds(20); // LCD needs some time to wake up
@@ -231,10 +236,10 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 	printMsg(logger, "lcd_HD44780_init() done");
 }
 
-void lcdShowFatalMessage(char *message) {
+void lcdShowPanicMessage(char *message) {
 	BUSY_WAIT_DELAY = TRUE;
 	lcd_HD44780_set_position(0, 0);
-	lcd_HD44780_print_string("fatal\n");
+	lcd_HD44780_print_string("PANIC\n");
 	lcd_HD44780_print_string(message);
 }
 

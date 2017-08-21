@@ -10,7 +10,6 @@
 
 #include "global.h"
 #include "EfiWave.h"
-#include "io_pins.h"
 #include "scheduler.h"
 #include "efiGpio.h"
 
@@ -51,6 +50,7 @@ public:
 			pwm_cycle_callback *cycleCallback,
 			pwm_gen_callback *callback);
 
+	void setFrequency(float frequency);
 
 	void handleCycleStart();
 

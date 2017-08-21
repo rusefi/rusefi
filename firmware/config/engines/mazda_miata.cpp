@@ -127,7 +127,7 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 
 EXTERN_ENGINE;
 
-static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
+static void commonMiataNa(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;
 
@@ -135,8 +135,8 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	boardConfiguration->idle.solenoidFrequency = 160;
 
@@ -201,10 +201,10 @@ void common079721_2351(engine_configuration_s *engineConfiguration, board_config
 /**
  * Frankenstein board
  */
-void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
+void setMiata1990(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	common079721_2351(engineConfiguration, boardConfiguration);
 
-	commonMiataNa(PASS_ENGINE_PARAMETER_F);
+	commonMiataNa(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15
@@ -231,8 +231,8 @@ void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 
-static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
-	commonMiataNa(PASS_ENGINE_PARAMETER_F);
+static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	commonMiataNa(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.displacement = 1.839;
 
 	// set cranking_timing_angle 0
@@ -305,8 +305,8 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
  * Frankenso board
  * set engine_type 20
  */
-void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
-	setMiata1994_common(PASS_ENGINE_PARAMETER_F);
+void setMiata1994_d(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setMiata1994_common(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 	/**
 	 * This board was avoiding PE0 & PE1 mosfets altogether
@@ -320,8 +320,8 @@ void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 }
 
-void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
-	setMiata1994_common(PASS_ENGINE_PARAMETER_F);
+void setMiata1994_s(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setMiata1994_common(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
 
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
@@ -329,7 +329,7 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->acSwitchAdc = EFI_ADC_1; // PA1, W50 on Frankenso
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_3;
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * This board has PE0<>PD5 & PE1<>PD3 rewired in order to avoid Discovery issue
@@ -349,8 +349,6 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	//engineConfiguration->idleMode != IM_AUTO;
 	engineConfiguration->targetIdleRpm = 800;
 
-	engineConfiguration->fanOffTemperature = 90;
-	engineConfiguration->fanOnTemperature = 95;
 
 	engineConfiguration->tpsMax = 86;
 	engineConfiguration->tpsMin = 596;
@@ -366,8 +364,8 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 /**
  * Tom tomiata, Frankenstein board
  */
-void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
-	commonMiataNa(PASS_ENGINE_PARAMETER_F);
+void setMiata1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	commonMiataNa(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.displacement = 1.839;
 
 	copyFuelTable(miata_maf_fuel_table, config->fuelTable);

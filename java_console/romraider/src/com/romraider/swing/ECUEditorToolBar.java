@@ -35,8 +35,8 @@ import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.maps.Rom;
 import com.romraider.util.SettingsManager;
-import com.rusefi.ConfigurationImage;
-import com.rusefi.binaryprotocol.BinaryProtocolCmd;
+import com.opensr5.ConfigurationImage;
+import com.rusefi.UploadChanges;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.SettingsTab;
 
@@ -86,7 +86,7 @@ public class ECUEditorToolBar extends JToolBar {
                 Rom lastSelectedRom = ECUEditorManager.getECUEditor().getLastSelectedRom();
                 byte[] newVersion = ConfigurationImage.extractContent(lastSelectedRom.saveFile());
                 System.out.println("new version size: " + newVersion.length);
-                BinaryProtocolCmd.scheduleUpload(new ConfigurationImage(newVersion));
+                UploadChanges.scheduleUpload(new ConfigurationImage(newVersion));
             }
         });
         downloadImage.addActionListener(new ActionListener() {

@@ -1,10 +1,10 @@
 package com.fathzer.soft.javaluator;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.NumberFormat;
 import java.text.ParsePosition;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Locale;
+import java.util.*;
 
 /** An evaluator that is able to evaluate arithmetic expressions on real numbers.
  * <br>Built-in operators:<ul>
@@ -46,6 +46,13 @@ import java.util.Locale;
  * @see <a href="../../../license.html">License information</a>
  */
 public class DoubleEvaluator extends AbstractEvaluator<Double> {
+	@NotNull
+	public static DoubleEvaluator process(String expression) {
+        DoubleEvaluator evaluator = new DoubleEvaluator();
+        evaluator.evaluate(expression.toLowerCase());
+        return evaluator;
+    }
+
 	/** The order or operations (operator precedence) is not clearly defined, especially between the unary minus operator and exponentiation
 	 * operator (see <a href="http://en.wikipedia.org/wiki/Order_of_operations#Exceptions_to_the_standard">http://en.wikipedia.org/wiki/Order_of_operations</a>).
 	 * These constants define the operator precedence styles.
@@ -92,26 +99,32 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static final Function TANGENTH = new Function("tanh", 1);
 
 	/** Returns the minimum of n numbers (n>=1) */
-	public static final Function MIN = new Function("min", 1, Integer.MAX_VALUE);
+	public static final Function MIN = new Function("min", 2);
 	/** Returns the maximum of n numbers (n>=1) */
-	public static final Function MAX = new Function("max", 1, Integer.MAX_VALUE);
+	public static final Function MAX = new Function("max", 2);
 	/** Returns the sum of n numbers (n>=1) */
-	public static final Function SUM = new Function("sum", 1, Integer.MAX_VALUE);
+//	public static final Function SUM = new Function("sum", 2);
 	/** Returns the average of n numbers (n>=1) */
-	public static final Function AVERAGE = new Function("avg", 1, Integer.MAX_VALUE);
+//	public static final Function AVERAGE = new Function("avg", 2);
 
 	/** Returns the natural logarithm of a number */
 	public static final Function LN = new Function("ln", 1);
 	/** Returns the decimal logarithm of a number */
 	public static final Function LOG = new Function("log", 1);
-	
+
+	public static final Function fsio_setting = new Function("fsio_setting", 1);
+	public static final Function fsio_input = new Function("fsio_input", 1);
+	public static final Function if_function = new Function("if", 3);
+	public static final Function table_function = new Function("fsio_table", 3);
+
+
 	/** Returns a pseudo random number */
 	public static final Function RANDOM = new Function("random", 0);
 
 	/** The negate unary operator in the standard operator precedence.*/
-	public static final Operator NEGATE = new Operator("-", 1, Operator.Associativity.RIGHT, 3, "negate");
+	public static final Operator NEGATE = new Operator("negate", 1, Operator.Associativity.RIGHT, 3, "negate");
 	/** The negate unary operator in the Excel like operator precedence.*/
-	public static final Operator NEGATE_HIGH = new Operator("-", 1, Operator.Associativity.RIGHT, 5);
+//	public static final Operator NEGATE_HIGH = new Operator("-", 1, Operator.Associativity.RIGHT, 5);
 
 	/** The negate unary operator in the standard operator precedence.*/
 	public static final Operator NOT = new Operator("!", 1, Operator.Associativity.RIGHT, 3);
@@ -145,8 +158,17 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	/** The standard whole set of predefined operators */
 	private static final Operator[] OPERATORS = new Operator[]{NEGATE, NOT, NOT2, MORE, MORE_EQ, AND, AND2, OR, OR2, LESS, LESS_EQ, MINUS, PLUS, MULTIPLY, DIVIDE, EXPONENT, MODULO};
 
+	private static final List<Function> MISC_FUNCTIONS = Arrays.asList(if_function, fsio_setting, fsio_input, table_function);
+
 	/** The whole set of predefined functions */
-	private static final Function[] FUNCTIONS = new Function[]{SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, SUM, AVERAGE, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM};
+	private static final List<Function> FUNCTIONS = new ArrayList<>(
+			Arrays.asList(
+					new Function[]{
+							SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
+					}));
+	static {
+		FUNCTIONS.addAll(MISC_FUNCTIONS);
+	}
 	/** The whole set of predefined constants */
 	private static final Constant[] CONSTANTS = new Constant[]{TRUE, FALSE};
 	
@@ -176,11 +198,20 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	public static Parameters getDefaultParameters(Style style) {
 		Parameters result = new Parameters();
 		result.addOperators(Arrays.asList(OPERATORS));
-		result.addFunctions(Arrays.asList(FUNCTIONS));
+		result.addFunctions(FUNCTIONS);
 		result.addConstants(Arrays.asList(CONSTANTS));
 		result.addFunctionBracket(BracketPair.PARENTHESES);
 		result.addExpressionBracket(BracketPair.PARENTHESES);
 		return result;
+	}
+
+	public static Function getFunction(String token) {
+		for (Function function : FUNCTIONS) {
+			if (function.getName().equalsIgnoreCase(token)) {
+				return function;
+			}
+		}
+		return null;
 	}
 
 	private static Parameters getParameters() {
@@ -210,9 +241,9 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	protected Double toValue(String literal, Object evaluationContext) {
 		ParsePosition p = new ParsePosition(0);
 		Number result = FORMATTER.get().parse(literal, p);
-		if (p.getIndex()==0 || p.getIndex()!=literal.length()) {
-			return 666.0;
-//			throw new IllegalArgumentException(literal+" is not a number");
+		if (p.getIndex() == 0 || p.getIndex() != literal.length()) {
+			return 6666666.0; // let's return this magic in case of any function call
+//			throw new IllegalArgumentException(literal + " is not a number");
 		}
 		return result.doubleValue();
 	}
@@ -236,7 +267,7 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	 */
 	@Override
 	protected Double evaluate(Operator operator, Iterator<Double> operands, Object evaluationContext) {
-		if (NEGATE.equals(operator) || NEGATE_HIGH.equals(operator)) {
+		if (NEGATE.equals(operator)) {
 			return -operands.next();
 		} else if (NOT.equals(operator) || NOT2.equals(operator)) {
 			return boolean2double(operands.next() != 1.0);
@@ -320,25 +351,27 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 			while (arguments.hasNext()) {
 				result = Math.max(result, arguments.next());
 			}
-		} else if (SUM.equals(function)) {
-			result = 0.;
-			while (arguments.hasNext()) {
-				result = result + arguments.next();
-			}
-		} else if (AVERAGE.equals(function)) {
-			result = 0.;
-			int nb = 0;
-			while (arguments.hasNext()) {
-				result = result + arguments.next();
-				nb++;
-			}
-			result = result/nb;
+//		} else if (SUM.equals(function)) {
+//			result = 0.;
+//			while (arguments.hasNext()) {
+//				result = result + arguments.next();
+//			}
+//		} else if (AVERAGE.equals(function)) {
+//			result = 0.;
+//			int nb = 0;
+//			while (arguments.hasNext()) {
+//				result = result + arguments.next();
+//				nb++;
+//			}
+//			result = result/nb;
 		} else if (LN.equals(function)) {
 			result = Math.log(arguments.next());
 		} else if (LOG.equals(function)) {
 			result = Math.log10(arguments.next());
 		} else if (RANDOM.equals(function)) {
 			result = Math.random();
+		} else if (MISC_FUNCTIONS.contains(function)) {
+			result = 333333.0;
 		} else {
 			result = super.evaluate(function, arguments, evaluationContext);
 		}

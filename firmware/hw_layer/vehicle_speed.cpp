@@ -44,7 +44,7 @@ float getVehicleSpeed(void) {
 }
 
 static void vsAnaWidthCallback(void) {
-	engine->engineState.vssCounter++;
+	engine->engineState.vssEventCounter++;
 	efitick_t nowNt = getTimeNowNt();
 	vssDiff = nowNt - lastSignalTimeNt;
 	lastSignalTimeNt = nowNt;
@@ -56,7 +56,7 @@ static void speedInfo(void) {
 
 	scheduleMsg(logger, "c=%f eventCounter=%d speed=%f",
 			engineConfiguration->vehicleSpeedCoef,
-			engine->engineState.vssCounter,
+			engine->engineState.vssEventCounter,
 			getVehicleSpeed());
 	scheduleMsg(logger, "vss diff %d", vssDiff);
 
@@ -64,6 +64,14 @@ static void speedInfo(void) {
 
 bool hasVehicleSpeedSensor() {
 	return boardConfiguration->vehicleSpeedSensorInputPin != GPIO_UNASSIGNED;
+}
+
+void stopVSSPins(void) {
+	stopWaveAnalyzerDriver("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
+}
+
+void startVSSPins(void) {
+	// todo
 }
 
 void initVehicleSpeed(Logging *l) {
@@ -76,5 +84,10 @@ void initVehicleSpeed(Logging *l) {
 
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
 }
+#else  /* EFI_VEHICLE_SPEED */
 
+float getVehicleSpeed(void) {
+	// no VSS support
+	return 0;
+}
 #endif /* EFI_VEHICLE_SPEED */

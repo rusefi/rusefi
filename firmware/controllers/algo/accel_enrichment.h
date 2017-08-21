@@ -25,20 +25,20 @@ public:
 	/**
 	 * @return Extra engine load value for fuel logic calculation
 	 */
-	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_F);
+	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
-	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F);
-	int getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_F);
-	float getMaxDelta(DECLARE_ENGINE_PARAMETER_F);
+	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	int getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	float getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
-	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F);
+	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void reset();
 	void setLength(int length);
 	cyclic_buffer<float> cb;
-	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_S);
+	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 private:
 	float previousValue;
@@ -51,7 +51,7 @@ public:
 	 * @param target desired squirt duration
 	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
 	 */
-	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_S);
+	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
 	floatms_t getWallFuel(int injectorIndex);
 	void reset();
 private:
@@ -61,7 +61,7 @@ private:
 	floatms_t wallFuel[INJECTION_PIN_COUNT];
 };
 
-void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
+void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setEngineLoadAccelLen(int len);
 void setEngineLoadAccelThr(float value);

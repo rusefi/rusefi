@@ -7,13 +7,13 @@
  * @author Dmitry Sidin, (c) 2015
  */
 
+#include "main.h"
 #if DEBUG_FUEL
 #include <stdio.h>
 #endif
 
 #include <math.h>
 
-#include "main.h"
 #include "efilib2.h"
 #include "interpolation.h"
 
@@ -108,7 +108,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 		/**
 		 * we could end up here for example while resetting bins while changing engine type
 		 */
-		warning(CUSTOM_OBD_12, "interpolate%s: Same x1 and x2 in interpolate: %f/%f", msg, x1, x2);
+		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: Same x1 and x2 in interpolate: %f/%f", msg, x1, x2);
 		return NAN;
 	}
 
@@ -129,9 +129,23 @@ float interpolate(float x1, float y1, float x2, float y2, float x) {
 	return interpolateMsg("", x1, y1, x2, y2, x);
 }
 
+float interpolateClamped(float x1, float y1, float x2, float y2, float x) {
+	if (x <= x1)
+		return y1;
+	if (x >= x2)
+		return y2;
+
+	float a = INTERPOLATION_A(x1, y1, x2, y2);
+	float b = y1 - a * x1;
+	return a * x + b;
+}
+
+/**
+ * Another implementation, which one is faster?
+ */
 int findIndex2(const float array[], unsigned size, float value) {
-	efiAssert(!cisnan(value), "NaN in findIndex", 0);
-	efiAssert(size > 1, "NaN in findIndex", 0);
+	efiAssert(!cisnan(value), "NaN in findIndex2", 0);
+	efiAssert(size > 1, "size in findIndex", 0);
 //	if (size <= 1)
 //		return size && *array <= value ? 0 : -1;
 
@@ -153,12 +167,28 @@ int findIndex2(const float array[], unsigned size, float value) {
 	return i || *array <= value ? i : -1;
 }
 
+/**
+ * in order to use binary search we need to know that axis elements are sorted
+ */
+void ensureArrayIsAscending(const char *msg, const float array[], int size) {
+	for (int i = 0; i < size - 1; i ++) {
+		if (array[i] >= array[i+ 1]) {
+			firmwareError(CUSTOM_ERR_6538, "invalid axis %s at %f", msg, array[i]);
+		}
+	}
+}
+
 /** @brief	Binary search
  * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
+ *
+ * See also ensureArrayIsAscending
  */
-int findIndex(const float array[], int size, float value) {
-	efiAssert(!cisnan(value), "NaN in findIndex", 0);
+int findIndexMsg(const char *msg, const float array[], int size, float value) {
+	if (cisnan(value)) {
+		firmwareError(ERROR_NAN_FIND_INDEX, "NaN in findIndex%s", msg);
+		return 0;
+	}
 
 	if (value < array[0])
 		return -1;
@@ -197,11 +227,19 @@ int findIndex(const float array[], int size, float value) {
 	return middle;
 }
 
+int findIndex(const float array[], int size, float value) {
+	return findIndexMsg("", array, size, value);
+}
+
 /**
  * @brief	One-dimensional table lookup with linear interpolation
  */
-float interpolate2d(float value, float bin[], float values[], int size) {
-	int index = findIndex(bin, size, value);
+float interpolate2d(const char *msg, float value, float bin[], float values[], int size) {
+	if (isnan(value)) {
+		firmwareError(CUSTOM_OBD_55, "NaN in interpolate2d %s", msg);
+		return NAN;
+	}
+	int index = findIndexMsg("value", bin, size, value);
 
 	if (index == -1)
 		return values[0];
@@ -211,8 +249,11 @@ float interpolate2d(float value, float bin[], float values[], int size) {
 	return interpolateMsg("2d", bin[index], values[index], bin[index + 1], values[index + 1], value);
 }
 
-void setTableValue(float bins[], float values[], int size, float key, float value) {
-	int index = findIndex(bins, size, key);
+/**
+ * Sets specified value for specified key in a correction curve
+ */
+void setCurveValue(float bins[], float values[], int size, float key, float value) {
+	int index = findIndexMsg("tbVl", bins, size, key);
 	if (index == -1)
 		index = 0;
 	values[index] = value;

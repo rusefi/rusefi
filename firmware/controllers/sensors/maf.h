@@ -15,9 +15,9 @@
 #include "main.h"
 
 #define getMafT(ec) (getVoltageDivided("maf", ec->mafAdcChannel))
-float getMaf(DECLARE_ENGINE_PARAMETER_F);
-bool hasMafSensor(DECLARE_ENGINE_PARAMETER_F);
-float getRealMaf(DECLARE_ENGINE_PARAMETER_F);
+float getMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setBosch0280218037(persistent_config_s *engineConfiguration);
 void setBosch0280218004(persistent_config_s *engineConfiguration);

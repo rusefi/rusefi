@@ -14,16 +14,16 @@
 #include "table_helper.h"
 #include "engine.h"
 
-void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S);
+void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 
 #if EFI_ENABLE_ASSERTS
-#define assertAngleRange(angle, msg) if(angle > 10000000 || angle < -10000000) { firmwareError(OBD_PCM_Processor_Fault, "angle range %s %f", msg, angle);angle = 0;}
+#define assertAngleRange(angle, msg) if(angle > 10000000 || angle < -10000000) { firmwareError(ERROR_ANGLE_RANGE, "angle range %s %f", msg, angle);angle = 0;}
 #else
 #define assertAngleRange(angle, msg) {}
 #endif
 
-void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S);
+void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 
 /**
@@ -61,23 +61,22 @@ void setInjectorLag(float value DECLARE_ENGINE_PARAMETER_S);
 #define getOneDegreeTimeNt(rpm) (US2NT(1000000) * 60.0f / 360 / (rpm))
 
 floatms_t getCrankshaftRevolutionTimeMs(int rpm);
+floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#define isCrankingR(rpm) ((rpm) > 0 && (rpm) < CONFIG(cranking.rpm))
+float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F);
+floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_S);
+int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-int getCylinderId(firing_order_e firingOrder, int index);
-
-void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
-void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
-void setTimingRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
-void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
+void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setTimingRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 
 #define tdcPosition() \
-		(ENGINE(triggerShape.tdcPosition) + CONFIG(globalTriggerAngleOffset))
+		(ENGINE(triggerCentral.triggerShape.tdcPosition) + CONFIG(globalTriggerAngleOffset))
 
 #endif /* ENGINE_MATH_H_ */

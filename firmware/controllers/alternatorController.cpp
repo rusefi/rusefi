@@ -25,12 +25,9 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-extern pin_output_mode_e DEFAULT_OUTPUT;
-int alternatorPidResetCounter = 0;
-
 static SimplePwm alternatorControl;
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
-static Pid altPid(altPidS, 1, 90);
+static Pid altPid(altPidS);
 
 static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -43,44 +40,44 @@ extern TunerStudioOutputChannels tsOutputChannels;
 static bool currentPlainOnOffState = false;
 static bool shouldResetPid = false;
 
+static void pidReset(void) {
+	altPid.reset();
+}
+
 static msg_t AltCtrlThread(int param) {
 	UNUSED(param);
 	chRegSetThreadName("AlternatorController");
 	while (true) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (shouldResetPid) {
-			alternatorPidResetCounter++;
-			altPid.reset();
+			pidReset();
 			shouldResetPid = false;
 		}
 #endif
 
-		int dt = maxI(10, engineConfiguration->alternatorDT);
-		chThdSleepMilliseconds(dt);
+		altPid.sleep();
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
 			// but at least we would reflect latest state
-			tsOutputChannels.debugFloatField1 = currentAltDuty;
 			altPid.postState(&tsOutputChannels);
-			tsOutputChannels.debugIntField3 = alternatorPidResetCounter;
 		}
 #endif /* !EFI_UNIT_TEST */
 
 
 
 		// todo: migrate this to FSIO
-		bool alternatorShouldBeEnabledAtCurrentRpm = engine->rpmCalculator.rpmValue > engineConfiguration->cranking.rpm;
+		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
 		engine->isAlternatorControlEnabled = CONFIG(isAlternatorControlEnabled) && alternatorShouldBeEnabledAtCurrentRpm;
 
 		if (!engine->isAlternatorControlEnabled) {
 			// we need to avoid accumulating iTerm while engine is not running
-			altPid.reset();
+			pidReset();
 			continue;
 		}
 
-		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
+		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
 		if (boardConfiguration->onOffAlternatorLogic) {
@@ -115,17 +112,17 @@ static msg_t AltCtrlThread(int param) {
 void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
 			hwPortname(boardConfiguration->alternatorControlPin),
-			engineConfiguration->alternatorDT);
+			engineConfiguration->alternatorControl.period);
 	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_F), currentAltDuty,
+	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 
 void setAltPFactor(float p) {
 	engineConfiguration->alternatorControl.pFactor = p;
 	scheduleMsg(logger, "setAltPid: %f", p);
-	altPid.reset();
+	pidReset();
 	showAltInfo();
 }
 
@@ -150,7 +147,7 @@ void setDefaultAlternatorParameters(void) {
 
 	engineConfiguration->alternatorControl.offset = 0;
 	engineConfiguration->alternatorControl.pFactor = 30;
-	engineConfiguration->alternatorDT = 100;
+	engineConfiguration->alternatorControl.period = 100;
 }
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
@@ -164,8 +161,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 		return;
 
 	if (boardConfiguration->onOffAlternatorLogic) {
-		outputPinRegisterExt2("on/off alternator", &enginePins.alternatorPin, boardConfiguration->alternatorControlPin,
-				&DEFAULT_OUTPUT);
+		enginePins.alternatorPin.initPin("on/off alternator", boardConfiguration->alternatorControlPin);
 
 	} else {
 		startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,

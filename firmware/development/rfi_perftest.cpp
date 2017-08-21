@@ -12,7 +12,7 @@
 #include "eficonsole.h"
 #include "time.h"
 #include "engine_math.h"
-#include "gpio_helper.h"
+#include "efiGpio.h"
 #include "efilib2.h"
 #include "console_io.h"
 #include "engine.h"
@@ -303,9 +303,6 @@ void initTimePerfActions(Logging *sharedLogger) {
 	rtcStartTime = rtcGetTimeUnixSec(&RTCD1);
 #endif
 
-
-
-//	initOutputPin("test pad", &testOutput, TEST_PORT, TEST_PIN);
 	addConsoleActionI("perftest", runTests);
 
 	addConsoleAction("timeinfo", timeInfo);

@@ -1,11 +1,21 @@
 package com.fathzer.soft.javaluator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 /** An <a href="http://en.wikipedia.org/wiki/Operator_(mathematics)">operator</a>.
  * @author Jean-Marc Astesana
  * @see <a href="../../../license.html">License information</a>
  */
+@SuppressWarnings("WeakerAccess")
 public class Operator {
-	public final String rpnSymbol;
+	private final String rpnSymbol;
+	public static final List<String> _1_OPERATORS = new ArrayList<>();
+	public static final List<String> _2_OPERATORS = new ArrayList<>();
+
+	private static Set<String> symbols = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
 	/** An Operator's <a href="http://en.wikipedia.org/wiki/Operator_associativity">associativity</a>.
 	 */
@@ -32,11 +42,11 @@ public class Operator {
 	 * @throws IllegalArgumentException if operandCount if not 1 or 2 or if associativity is none
 	 * @throws NullPointerException if symbol or associativity are null
 	 */
-	public Operator(String symbol, int operandCount, Associativity associativity, int precedence) {
+	Operator(String symbol, int operandCount, Associativity associativity, int precedence) {
 		this(symbol, operandCount, associativity, precedence, null);
 	}
 
-	public Operator(String symbol, int operandCount, Associativity associativity, int precedence, String rpnSymbol) {
+	Operator(String symbol, int operandCount, Associativity associativity, int precedence, String rpnSymbol) {
 		this.rpnSymbol = rpnSymbol;
 		if (symbol==null || associativity==null) {
 			throw new NullPointerException();
@@ -54,6 +64,17 @@ public class Operator {
 		this.operandCount = operandCount;
 		this.associativity = associativity;
 		this.precedence = precedence;
+		if (operandCount == 1) {
+			_1_OPERATORS.add(symbol);
+		} else if (operandCount == 2) {
+			_2_OPERATORS.add(symbol);
+		} else {
+			throw new IllegalStateException("Unexpected operand count: " + symbol);
+		}
+
+		if (symbols.contains(symbol))
+			throw new IllegalStateException("Not unique symbol " + symbol);
+		symbols.add(symbol);
 	}
 
 	/** Gets the operator's symbol.
@@ -62,14 +83,6 @@ public class Operator {
 	public String getSymbol() {
 		return this.symbol;
 	}
-
-
-	public String getRpnSymbol() {
-		if (rpnSymbol != null)
-			return rpnSymbol;
-		return symbol;
-	}
-
 
 	/** Gets the operator's operand count. 
 	 * @return an integer
@@ -139,7 +152,6 @@ public class Operator {
 	@Override
 	public String toString() {
 		return "Operator{" +
-				"rpnSymbol='" + rpnSymbol + '\'' +
 				", symbol='" + symbol + '\'' +
 				", precedence=" + precedence +
 				", operandCount=" + operandCount +

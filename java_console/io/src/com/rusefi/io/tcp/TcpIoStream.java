@@ -1,7 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
-import com.rusefi.io.DataListener;
+import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 
@@ -44,7 +44,7 @@ public class TcpIoStream implements IoStream {
     }
 
     @Override
-    public void setDataListener(final DataListener listener) {
+    public void setInputListener(final DataListener listener) {
         LinkManager.IO_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {

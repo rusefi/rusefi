@@ -1,6 +1,7 @@
 package com.rusefi.io.serial;
 
-import com.rusefi.io.DataListener;
+import com.rusefi.io.ConnectionStateListener;
+import com.opensr5.io.DataListener;
 import com.rusefi.io.LinkManager;
 
 /**
@@ -18,7 +19,7 @@ class SerialManager {
             LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
         }
     };
-    public static LinkManager.LinkStateListener listener;
+    public static ConnectionStateListener listener;
 
     /*
     static String[] findSerialPorts() {

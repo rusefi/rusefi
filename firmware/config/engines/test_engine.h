@@ -9,7 +9,10 @@
 
 #include "engine_configuration.h"
 
-void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
-void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setTestEngineIssue366rise(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* TEST_ENGINE_H_ */

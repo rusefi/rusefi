@@ -18,12 +18,13 @@ typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, float> fsio8_Map3D_f32t;
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, uint8_t> fsio8_Map3D_u8t;
 
 
-float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
-void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S);
-void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S);
+float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
+void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void runFsio(void);
-void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void prepareFsio(void);
 
 #endif /* LE_FUNCTIONS_H_ */

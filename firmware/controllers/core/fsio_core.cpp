@@ -28,6 +28,7 @@ extern fsio8_Map3D_u8t fsioTable4;
 
 static fsio8_Map3D_u8t * fsio8t_tables[] = {NULL, NULL, &fsioTable2, &fsioTable3, &fsioTable4};
 
+EXTERN_ENGINE;
 
 LENameOrdinalPair * LE_FIRST = NULL;
 
@@ -75,12 +76,6 @@ void LEElement::clear() {
 	iValue = 0;
 }
 
-
-//void LEElement::init(le_action_e action, int iValue) {
-//	this->action = action;
-//	this->iValue = iValue;
-//}
-
 void LEElement::init(le_action_e action) {
 	this->action = action;
 }
@@ -124,7 +119,7 @@ static bool float2bool(float v) {
 
 float LECalculator::pop(le_action_e action) {
 	if (stack.size() == 0) {
-		warning(CUSTOM_OBD_5, "empty stack for action=%d", action);
+		warning(CUSTOM_EMPTY_FSIO_STACK, "empty stack for action=%d", action);
 		return NAN;
 	}
 	return stack.pop();
@@ -142,9 +137,9 @@ void LECalculator::push(le_action_e action, float value) {
 /**
  * @return true in case of error, false otherwise
  */
-bool LECalculator::processElement(Engine *engine, LEElement *element) {
+bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssert(getRemainingStack(chThdSelf()) > 64, "FSIO logic", false);
+	efiAssert(getRemainingStack(chThdGetSelfX()) > 64, "FSIO logic", false);
 #endif
 	switch (element->action) {
 
@@ -255,10 +250,10 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 	}
 		break;
 	case LE_METHOD_FSIO_SETTING: {
-		float i = pop(LE_METHOD_FSIO_SETTING);
-		int index = (int) i;
-		if (index >= 0 && index < LE_COMMAND_COUNT) {
-			push(element->action, engine->engineConfiguration->bc.fsio_setting[index]);
+		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
+		int index = (int) humanIndex - 1;
+		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
+			push(element->action, boardConfiguration->fsio_setting[index]);
 		} else {
 			push(element->action, NAN);
 		}
@@ -285,30 +280,30 @@ bool LECalculator::processElement(Engine *engine, LEElement *element) {
 	}
 		break;
 	case LE_METHOD_FSIO_ANALOG_INPUT:
-		push(element->action, getVoltage("fsio", engine->engineConfiguration->fsioAdc[0]));
+		push(element->action, getVoltage("fsio", engineConfiguration->fsioAdc[0]));
 		break;
 	case LE_METHOD_KNOCK:
 		push(element->action, engine->knockCount);
 		break;
 	case LE_UNDEFINED:
-		warning(CUSTOM_OBD_6, "FSIO undefined action");
+		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
 		return true;
 	default:
-		push(element->action, getLEValue(engine, &stack, element->action));
+		push(element->action, getEngineValue(element->action PASS_ENGINE_PARAMETER_SUFFIX));
 	}
 	return false;
 }
 
-float LECalculator::getValue2(float selfValue, LEElement *fistElementInList, Engine *engine) {
+float LECalculator::getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	reset(fistElementInList);
-	return getValue(selfValue, engine);
+	return getValue(selfValue PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 bool LECalculator::isEmpty() {
 	return first == NULL;
 }
 
-float LECalculator::getValue(float selfValue, Engine *engine) {
+float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (isEmpty()) {
 		warning(CUSTOM_NO_FSIO, "no FSIO code");
 		return NAN;
@@ -324,7 +319,7 @@ float LECalculator::getValue(float selfValue, Engine *engine) {
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
 		} else {
-			bool isError = processElement(engine, element);
+			bool isError = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
 			if (isError) {
 				// error already reported
 				return NAN;
@@ -334,7 +329,7 @@ float LECalculator::getValue(float selfValue, Engine *engine) {
 		counter++;
 	}
 	if (stack.size() != 1) {
-		warning(CUSTOM_OBD_8, "unexpected FSIO stack size: %d", stack.size());
+		warning(CUSTOM_FSIO_STACK_SIZE, "unexpected FSIO stack size: %d", stack.size());
 		return NAN;
 	}
 	return stack.pop();
@@ -357,7 +352,7 @@ int LEElementPool::getSize() {
 LEElement *LEElementPool::next() {
 	if (index >= size) {
 		// todo: this should not be a fatal error, just an error
-		firmwareError(OBD_PCM_Processor_Fault, "LE_ELEMENT_POOL_SIZE overflow");
+		firmwareError(CUSTOM_ERR_FSIO_POOL, "LE_ELEMENT_POOL_SIZE overflow");
 		return NULL;
 	}
 	LEElement *result = &pool[index++];
@@ -432,7 +427,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 				/**
 				 * Cannot recognize token
 				 */
-				warning((obd_code_e) 0, "unrecognized [%s]", parsingBuffer);
+				warning(CUSTOM_ERR_6536, "unrecognized [%s]", parsingBuffer);
 				return NULL;
 			}
 			n->init(action);

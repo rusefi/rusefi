@@ -1,5 +1,8 @@
 package com.rusefi.binaryprotocol;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.Logger;
+import com.opensr5.io.DataListener;
 import com.rusefi.*;
 import com.rusefi.config.FieldType;
 import com.rusefi.config.Fields;
@@ -27,29 +30,19 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 /**
  * (c) Andrey Belomutskiy
  * 3/6/2015
+ * @see BinaryProtocolHolder
  */
-public class BinaryProtocol {
-    // see BLOCKING_FACTOR in firmware code
-    private static final int BLOCKING_FACTOR = 400;
-    private static final byte RESPONSE_OK = 0;
-    private static final byte RESPONSE_BURN_OK = 0x04;
-    private static final byte RESPONSE_COMMAND_OK = 0x07;
+public class BinaryProtocol implements BinaryProtocolCommands {
+
+    private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     /**
-     * that's hex for "~\n", see BINARY_SWITCH_TAG in firmware source code
+     * This properly allows to switch to non-CRC32 mode
+     * todo: finish this feature, assuming we even need it.
      */
-    private static final int SWITCH_TO_BINARY_RESPONSE = 0x7e0a;
-    /**
-     * See SWITCH_TO_BINARY_COMMAND in firmware source code
-     */
-    private static final String SWITCH_TO_BINARY_COMMAND = "~";
-    public static final char COMMAND_OUTPUTS = 'O';
-    public static final char COMMAND_HELLO = 'S';
-    public static final char COMMAND_PROTOCOL = 'F';
-    public static final char COMMAND_CRC_CHECK_COMMAND = 'k';
-    public static final char COMMAND_PAGE = 'P';
-    public static final char COMMAND_READ = 'R';
-    public static final char COMMAND_CHUNK_WRITE = 'C';
-    public static final char COMMAND_BURN = 'B';
+    private static boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
+    static {
+        FileLog.MAIN.logLine(USE_PLAIN_PROTOCOL_PROPERTY + ": " + PLAIN_PROTOCOL);
+    }
 
     private final Logger logger;
     private final IoStream stream;
@@ -61,18 +54,16 @@ public class BinaryProtocol {
     private final Object imageLock = new Object();
     private ConfigurationImage controller;
 
-    // todo: fix this, this is HORRIBLE!
-    @Deprecated
-    public static BinaryProtocol instance;
     public boolean isClosed;
-    // todo: make a singleton?
-    public static byte[] currentOutputs;
+    /**
+     * Snapshot of current gauges status
+     * @see BinaryProtocolCommands#COMMAND_OUTPUTS
+     */
+    public byte[] currentOutputs;
 
-    public BinaryProtocol(final Logger logger, IoStream stream) {
+    protected BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
         this.stream = stream;
-
-        instance = this;
 
         incomingData = new IncomingDataBuffer(logger);
         DataListener streamDataListener = new DataListener() {
@@ -81,11 +72,7 @@ public class BinaryProtocol {
                 incomingData.addData(freshData);
             }
         };
-        stream.setDataListener(streamDataListener);
-    }
-
-    public BinaryProtocol(Logger logger, SerialPort serialPort) {
-        this(logger, new SerialIoStream(serialPort, logger));
+        stream.setInputListener(streamDataListener);
     }
 
     private static void sleep() {
@@ -156,7 +143,8 @@ public class BinaryProtocol {
                         LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
                             @Override
                             public void run() {
-                                requestOutputChannels();
+                                if (requestOutputChannels())
+                                	ConnectionWatchdog.onDataArrived();
                                 String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
@@ -177,6 +165,9 @@ public class BinaryProtocol {
         return logger;
     }
 
+    /**
+     * the whole dynamic 'switch to binary protocol' still does not work great
+     */
     public void switchToBinaryProtocol() {
         // we do not have reliable implementation yet :(
         for (int i = 0; i < 15; i++)
@@ -195,7 +186,7 @@ public class BinaryProtocol {
                 stream.write((SWITCH_TO_BINARY_COMMAND + "\n").getBytes());
                 // todo: document why is ioLock needed here?
                 synchronized (ioLock) {
-                    boolean isTimeout = incomingData.waitForBytes(2, start, "switch to binary");
+                    boolean isTimeout = incomingData.waitForBytes("switch to binary", start, 2);
                     if (isTimeout) {
                         logger.info(new Date() + ": Timeout waiting for switch response");
                         close();
@@ -256,7 +247,7 @@ public class BinaryProtocol {
     private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
-            boolean isTimeout = incomingData.waitForBytes(2, start, msg + " header");
+            boolean isTimeout = incomingData.waitForBytes(msg + " header", start, 2);
             if (isTimeout)
                 return null;
 
@@ -267,7 +258,7 @@ public class BinaryProtocol {
             if (!allowLongResponse && packetSize > Math.max(BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
                 return null;
 
-            isTimeout = incomingData.waitForBytes(packetSize + 4, start, msg + " body");
+            isTimeout = incomingData.waitForBytes(msg + " body", start, packetSize + 4);
             if (isTimeout)
                 return null;
 
@@ -338,7 +329,7 @@ public class BinaryProtocol {
         try {
             dropPending();
 
-            sendCrcPacket(packet);
+            sendPacket(packet);
             return receivePacket(msg, allowLongResponse);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
@@ -416,13 +407,18 @@ public class BinaryProtocol {
         }
     }
 
-    private void sendCrcPacket(byte[] command) throws IOException {
-        sendCrcPacket(command, logger, stream);
+    private void sendPacket(byte[] command) throws IOException {
+        sendPacket(command, logger, stream);
     }
 
-    public static void sendCrcPacket(byte[] command, Logger logger, IoStream stream) throws IOException {
-        byte[] packet = IoHelper.makeCrc32Packet(command);
-        logger.info("Sending packet " + printHexBinary(command));
+    public static void sendPacket(byte[] plainPacket, Logger logger, IoStream stream) throws IOException {
+        byte[] packet;
+        if (PLAIN_PROTOCOL) {
+            packet = plainPacket;
+        } else {
+            packet = IoHelper.makeCrc32Packet(plainPacket);
+        }
+        logger.info("Sending packet " + printHexBinary(plainPacket));
         stream.write(packet);
     }
 
@@ -475,12 +471,18 @@ public class BinaryProtocol {
         }
     }
 
-    public void requestOutputChannels() {
+    public boolean requestOutputChannels() {
         if (isClosed)
-            return;
-        byte[] response = executeCommand(new byte[]{COMMAND_OUTPUTS}, "output channels", false);
+            return false;
+
+        byte packet[] = new byte[5];
+        packet[0] = COMMAND_OUTPUTS;
+        putShort(packet, 1, 0); // offset
+        putShort(packet, 3, swap16(Fields.TS_OUTPUT_SIZE));
+
+        byte[] response = executeCommand(packet, "output channels", false);
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != RESPONSE_OK)
-            return;
+            return false;
 
         currentOutputs = response;
 
@@ -496,5 +498,6 @@ public class BinaryProtocol {
                 SensorCentral.getInstance().setValue(value, sensor);
             }
         }
+        return true;
     }
 }

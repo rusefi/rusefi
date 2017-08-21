@@ -7,7 +7,7 @@ package com.rusefi.io;
 public interface LinkConnector extends LinkDecoder {
     LinkConnector VOID = new LinkConnector() {
         @Override
-        public void connect(LinkManager.LinkStateListener listener) {
+        public void connect(ConnectionStateListener listener) {
         }
 
         @Override
@@ -27,20 +27,13 @@ public interface LinkConnector extends LinkDecoder {
         public String unpack(String packet) {
             return LinkDecoder.TEXT_PROTOCOL_DECODER.unpack(packet);
         }
-
-        @Override
-        public String unpackConfirmation(String message) {
-            return message;
-        }
     };
 
-    void connect(LinkManager.LinkStateListener listener);
+    void connect(ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
 
     void restart();
 
     boolean hasError();
-
-    String unpackConfirmation(String message);
 }

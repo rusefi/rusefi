@@ -23,6 +23,7 @@ public class BenchTestPane {
         content.add(createInjectorTest());
         content.add(createMILTest());
         content.add(createIdleTest());
+        content.add(createDizzyTest());
         content.add(new MessagesView().messagesScroll);
     }
 
@@ -37,10 +38,20 @@ public class BenchTestPane {
     }
 
     private Component createIdleTest() {
-        BenchTestPanel panel = new BenchTestPanel("Idle Valve", ("idle_valve.png")) {
+        BenchTestPanel panel = new BenchTestPanel("Idle Valve", "idle_valve.png") {
             @NotNull
             protected String getCommand() {
                 return "idlebench";
+            }
+        };
+        return panel.getContent();
+    }
+
+    private Component createDizzyTest() {
+        BenchTestPanel panel = new BenchTestPanel("Dizzy", "todo_image.png") {
+            @NotNull
+            protected String getCommand() {
+                return "dizzybench";
             }
         };
         return panel.getContent();

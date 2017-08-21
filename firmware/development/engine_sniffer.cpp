@@ -44,7 +44,7 @@ static histogram_s engineSnifferHisto;
 
 EXTERN_ENGINE
 ;
-extern uint32_t maxLockTime;
+extern uint32_t maxLockedDuration;
 
 /**
  * This is the number of events in the digital chart which would be displayed
@@ -103,7 +103,7 @@ bool WaveChart::isStartedTooLongAgo() {
 }
 
 bool WaveChart::isFull() {
-	return counter >= engineConfiguration->engineChartSize;
+	return counter >= CONFIG(engineChartSize);
 }
 
 static void printStatus(void) {
@@ -114,7 +114,9 @@ static void printStatus(void) {
 static void setChartActive(int value) {
 	engineConfiguration->isEngineChartEnabled = value;
 	printStatus();
-	maxLockTime = 0;
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+	maxLockedDuration = 0; // todo: why do we reset this here? why only this and not all metrics?
+#endif /* EFI_CLOCK_LOCKS */
 }
 
 void setChartSize(int newSize) {
@@ -163,15 +165,15 @@ static char timeBuffer[10];
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
-	if (skipUntilEngineCycle != 0 && engine->rpmCalculator.getRevolutionCounter() < skipUntilEngineCycle)
-		return;
-	efiAssertVoid(name!=NULL, "WC: NULL name");
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;
 	}
+	if (skipUntilEngineCycle != 0 && ENGINE(rpmCalculator.getRevolutionCounter()) < skipUntilEngineCycle)
+		return;
+	efiAssertVoid(name!=NULL, "WC: NULL name");
 
 #if EFI_PROD_CODE
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2c");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 32, "lowstck#2c");
 #endif
 
 	efiAssertVoid(isInitialized, "chart not initialized");

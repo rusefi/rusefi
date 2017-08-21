@@ -17,6 +17,7 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/neo6m.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \
+	$(PROJECT_DIR)/hw_layer/mems.cpp \
 	$(PROJECT_DIR)/hw_layer/lcd/lcd_HD44780.cpp \
  	$(PROJECT_DIR)/hw_layer/adc_inputs.cpp \
 	$(PROJECT_DIR)/hw_layer/board_test.cpp \
@@ -28,7 +29,6 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
-	$(PROJECT_DIR)/hw_layer/gpio_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/accelerometer.cpp

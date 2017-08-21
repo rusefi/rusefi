@@ -2,7 +2,7 @@
  * @file	global.h
  *
  * @date Nov 28, 2013
- * @author pc
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef GLOBAL_H_
@@ -41,10 +41,13 @@ typedef int bool_t;
 class Engine;
 #endif
 
-#define DECLARE_ENGINE_PARAMETER_F Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
-#define DECLARE_ENGINE_PARAMETER_S , Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
-#define PASS_ENGINE_PARAMETER_F engine, engineConfiguration, config, boardConfiguration
-#define PASS_ENGINE_PARAMETER , engine, engineConfiguration, config, boardConfiguration
+/**
+ * @see firmware/global.h for explanation
+ */
+#define DECLARE_ENGINE_PARAMETER_SIGNATURE Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
+#define DECLARE_ENGINE_PARAMETER_SUFFIX , Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
+#define PASS_ENGINE_PARAMETER_SIGNATURE engine, engineConfiguration, config, boardConfiguration
+#define PASS_ENGINE_PARAMETER_SUFFIX , engine, engineConfiguration, config, boardConfiguration
 
 #define EXPAND_Engine engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
 		persistent_config_s *config = engine->config; \
@@ -56,6 +59,6 @@ class Engine;
 
 #define CONFIG(x) engineConfiguration->x
 #define ENGINE(x) engine->x
-#define TRIGGER_SHAPE(x) engine->triggerShape.x
+#define TRIGGER_SHAPE(x) engine->triggerCentral.triggerShape.x
 
 #endif /* GLOBAL_H_ */

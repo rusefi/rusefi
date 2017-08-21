@@ -29,7 +29,7 @@ public class SettingsTab {
     }
 
     public void showContent() {
-        final Map<String, DialogModel> dialogs = IniFileModel.getinstance().getDialogs();
+        final Map<String, DialogModel> dialogs = IniFileModel.getInstance().getDialogs();
         if (dialogs.isEmpty()) {
             // todo: show error label
             return;
@@ -121,7 +121,7 @@ public class SettingsTab {
         dialog.setText(name);
         dialogBody.removeAll();
 
-        DialogModel m = IniFileModel.getinstance().getDialogs().get(name);
+        DialogModel m = IniFileModel.getInstance().getDialogs().get(name);
 
         dialogBody.setLayout(new GridLayout(m.getFields().size(), 1));
 

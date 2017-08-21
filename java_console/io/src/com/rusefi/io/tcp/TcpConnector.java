@@ -1,7 +1,9 @@
 package com.rusefi.io.tcp;
 
+import com.opensr5.io.DataListener;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.*;
 
@@ -80,7 +82,7 @@ public class TcpConnector implements LinkConnector {
      * this implementation is blocking
      */
     @Override
-    public void connect(LinkManager.LinkStateListener listener) {
+    public void connect(ConnectionStateListener listener) {
         FileLog.MAIN.logLine("Connecting to host=" + hostname + "/port=" + port);
         OutputStream os;
         BufferedInputStream stream;
@@ -106,9 +108,9 @@ public class TcpConnector implements LinkConnector {
                 rb.append(new String(freshData), LinkManager.ENCODER);
             }
         };
-//        ioStream.setDataListener(listener1);
+//        ioStream.setInputListener(listener1);
 
-        bp = new BinaryProtocol(FileLog.LOGGER, new TcpIoStream(stream, os));
+        bp = BinaryProtocolHolder.create(FileLog.LOGGER, new TcpIoStream(stream, os));
 
         boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {
@@ -147,14 +149,7 @@ public class TcpConnector implements LinkConnector {
 //            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 //        }
     }
-
-    @Override
-    public String unpackConfirmation(String message) {
-        if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
-            return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
-        return null;
-    }
-
+    
     public static Collection<String> getAvailablePorts() {
         return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.<String>emptyList();
     }

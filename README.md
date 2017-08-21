@@ -1,11 +1,29 @@
 current binaries are always available at http://rusefi.com/build_server/
 
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
+
+
+[![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/)
 
 #Releases
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
-| 02/22/2017    | r12980    | bugfix: false error message in case of single coin or simultaneous injection | 
+| 07/24/2017    | r14513    | bugfix #307: TS bench test blinks three times |
+| 07/13/2017    | r14476    | bugfix #461: SAXParserException on console start-up due to damaged settings.xml file |
+| 07/09/2017    | r14473    | improvement: IAC solenoid frequencty changeable on the fly |
+| 06/19/2017    | r14393    | bugfix: pinMode, milMode |
+| 05/27/2017    | r14221    | improvement: ochGetCommand to support offset and count |
+| 05/05/2017    | r13974    | bugfix #404: 36/1 FATAL error: angle range trgSync |
+| 05/03/2017    | r13967    | improvement: ChibiOS 3.2 |
+| 04/06/2017    | r13759    | major improvement #72: ChibiOS 3.1 |
+| 03/26/2017    | r13330    | super annoying bug #336 fixed |
+| 03/20/2017    | r13233    | improvements #375 & #376: hard FPU mode & migrating to fresh version of arm gcc |
+| 03/19/2017    | r13223    | bugfix #374: persistent configuration starts to touch firmware - settings would need to be reloaded |
+| 03/09/2017    | r13146    | bugfix #370: duty cycle vs error code 6050 |
+| 03/06/2017    | r13123    | bugfix #363: 2/1 skipped wheel is a corner-case |
+| 03/05/2017    | r13108    | bugfix #363: trigger front only processing |
+| 02/22/2017    | r12980    | bugfix: false error message in case of single coil or simultaneous injection | 
 | 02/22/2017    | r12973    | unused property 'custom Use Rise Edge' removed |
 | 02/22/2017    | r12972    | protocol signature changed to 'v0.02' (this would happen from time to time to ensure version match between console and TS project | 
 | 02/20/2017    | r12939    | https://github.com/rusefi/rusefi is now the official primary repository |
@@ -47,3 +65,10 @@ General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
 Facebook https://www.facebook.com/rusEfiECU
 
 youtube https://www.youtube.com/user/rusefi
+
+
+= How to build the code? =
+
+We now use submodules:
+
+git submodule update --init

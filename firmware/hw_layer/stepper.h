@@ -8,18 +8,18 @@
 #define STEPPER_H_
 
 #include "main.h"
+#include "efiGpio.h"
 
 class StepperMotor {
 public:
 	StepperMotor();
-	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps,
-			brain_pin_e enablePin);
+	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, int totalSteps,
+			brain_pin_e enablePin, Logging *sharedLogger);
 	void pulse();
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition();
 
-	ioportid_t directionPort;
-	ioportmask_t directionPin;
+	OutputPin directionPin;
 	int currentPosition;
 	float reactionTime;
 	int totalSteps;
@@ -30,6 +30,8 @@ private:
 
 	ioportid_t enablePort;
 	ioportmask_t enablePin;
+
+	pin_output_mode_e directionPinMode;
 
 	THD_WORKING_AREA(stThreadStack, UTILITY_THREAD_STACK_SIZE);
 };

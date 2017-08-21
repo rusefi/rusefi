@@ -1,13 +1,15 @@
 package com.rusefi.ui;
 
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
@@ -23,9 +25,12 @@ import java.awt.image.BufferedImage;
  * (c) Andrey Belomutskiy 2013-2017
  */
 public class FormulasPane {
+    private static final String NL = "\r\n \\\\ ";
+    private static final String NL2 = NL + "\\  " + NL; // two new lines
+    private static final String NL3 = NL2 + "\\  " + NL; // two new lines
+
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel centerProxy = new JPanel(new BorderLayout());
-    private final String newLine = "\r\n \\\\ ";
     private boolean isPaused;
 
     public FormulasPane() {
@@ -56,6 +61,12 @@ public class FormulasPane {
         top.add(pauseButton);
         content.add(top, BorderLayout.NORTH);
 
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        bottomPanel.add(new IntGaugeLabel("count", Sensor.errorCodeCounter));
+        bottomPanel.add(new IntGaugeLabel("error", Sensor.lastErrorCode));
+
+        content.add(bottomPanel, BorderLayout.SOUTH);
+
         updateFormula();
         new Timer(200, new ActionListener() {
             @Override
@@ -81,7 +92,7 @@ public class FormulasPane {
     }
 
     private void updateFormula() {
-        BinaryProtocol bp = BinaryProtocol.instance;
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getController();
@@ -94,7 +105,7 @@ public class FormulasPane {
             throw new IllegalStateException("Unexpected "+ algorithm);
         engine_load_mode_e algo = values[algorithm];
 
-        String acceleration = getAccelerationVariables(ci);
+        String acceleration = getAccelerationVariables(ci) + NL2;
 
         String page;
         if (algo == engine_load_mode_e.LM_SPEED_DENSITY) {
@@ -104,7 +115,7 @@ public class FormulasPane {
             double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
 
             String baseFuelStr = twoDecimals(Sensor.FUEL_BASE);
-            String baseFuel = "$Base_Fuel (ms) = lookup (" +
+            String baseFuel = "$Table_Fuel (ms) = lookup (" +
                     "(RPM = " + rpm + ", " +
                     "MAF = " + maf + ") = " +
                     baseFuelStr + "ms";
@@ -119,7 +130,7 @@ public class FormulasPane {
         }
 
         TeXFormula formula = new TeXFormula("\r\n" +
-                algo.title + newLine + newLine + newLine + page + "");
+                algo.title + NL3 + page + "");
         TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 20);
 
         BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -157,9 +168,9 @@ public class FormulasPane {
         String loadEnrichDelta = "$deltaLoad = max(currentLoad - previousLoad, length = " + elEnrichLength +
                 ") = " + elDelta + "$";
 
-        return tpsEnrichDelta + newLine +
-                tpsEnrich + newLine +
-                loadEnrichDelta + newLine;
+        return tpsEnrichDelta + NL +
+                tpsEnrich + NL +
+                loadEnrichDelta;
     }
 
     @NotNull
@@ -193,7 +204,7 @@ public class FormulasPane {
                 "$";
 
         String baseFuelStr = twoDecimals(Sensor.FUEL_BASE);
-        String baseFuel = "$Base_Fuel (ms) = \\frac{" +
+        String baseFuel = "$SD_Fuel (ms) = \\frac{" +
                 "($Airmass = " + chargeAirMass + ")" +
                 "}{" +
                 "(TargetAFR (" + rpm_map + ") = " + TARGET_AFR + ")" +
@@ -208,15 +219,15 @@ public class FormulasPane {
 
         String actualLastInjection = twoDecimals(Sensor.actualLastInjection);
         String injTime = "$Fuel (ms) = " +
-                "(Base_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" +
-                tempCorrections + getInjecctorLag() +
+                "(SD_Fuel (" + baseFuelStr + "ms) + Tps_Accel_Corr = (" + tpsAccel + "ms))" +
+                tempCorrections + NL + getInjecctorLag() +
                 " = " + actualLastInjection + "ms_per_injection$";
 
         return acceleration +
-                tCharge + newLine +
-                mCharge + newLine +
-                baseFuel + newLine +
-                injTime + newLine;
+                tCharge + NL3 +
+                mCharge + NL2 +
+                baseFuel + NL2 +
+                injTime + NL;
     }
 
     @NotNull

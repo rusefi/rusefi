@@ -14,8 +14,11 @@
 class Executor {
 public:
 	Executor();
-	void scheduleByTime(const bool monitorReuse, scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
+	void scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
 	void onTimerCallback();
+	int timerCallbackCounter;
+	int scheduleCounter;
+	int doExecuteCounter;
 private:
 	EventQueue queue;
 	bool reentrantFlag;
@@ -24,5 +27,6 @@ private:
 };
 
 void initSignalExecutorImpl(void);
+void executorStatistics();
 
 #endif /* SINGLETIMEREXECUTOR_H_ */

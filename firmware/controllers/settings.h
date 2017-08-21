@@ -11,10 +11,11 @@
 
 #include "engine.h"
 
-void initSettings(engine_configuration_s *engineConfiguration);
+void initSettings(void);
 void printSpiState(Logging *logger, board_configuration_s *boardConfiguration);
-void printConfiguration(engine_configuration_s *engineConfiguration);
+void printConfiguration(const engine_configuration_s *engineConfiguration);
 void stopEngine(void);
+void setCallFromPitStop(int durationMs);
 void setEngineType(int value);
 const char* getConfigurationName(engine_type_e engineType);
 

@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets;
 
+import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.rusefi.FileLog;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.storage.Node;
@@ -97,20 +99,67 @@ public class AnyCommand {
     }
 
     private void send() {
-        String cmd = text.getText();
-        for (String s : cmd.split("\n"))
-            doSend(s);
+        String multiLine = text.getText();
+        for (String line : multiLine.split("\n")) {
+            sendCommand(line);
+        }
     }
 
-    private void doSend(String cmd) {
-        if (!isValidInput(cmd))
+    private void sendCommand(String rawCommand) {
+        if (!isValidInput(rawCommand))
             return;
+        String cmd = prepareCommand(rawCommand);
         if (listener != null)
             listener.onSend();
         int timeout = CommandQueue.getTimeout(cmd);
         reentrant = true;
         CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
         reentrant = false;
+    }
+
+    public static String prepareCommand(String rawCommand) {
+        try {
+            if (rawCommand.startsWith("eval ")) {
+                return prepareEvalCommand(rawCommand);
+            } else if (rawCommand.startsWith("set_fsio_expression ")) {
+                return prepareSetFsioCommand(rawCommand);
+            } else {
+                return rawCommand;
+            }
+        } catch (Throwable e) {
+            FileLog.MAIN.log(e);
+            return rawCommand;
+        }
+    }
+
+    private static String prepareSetFsioCommand(String rawCommand) {
+        String[] parts = rawCommand.split(" ", 3);
+        if (parts.length != 3)
+            return rawCommand; // let's ignore invalid command
+        return "set_rpn_expression " + parts[1] + " " + quote(infix2postfix(unquote(parts[2])));
+    }
+
+    private static String prepareEvalCommand(String rawCommand) {
+        String[] parts = rawCommand.split(" ", 2);
+        if (parts.length != 2)
+            return rawCommand; // let's ignore invalid command
+
+        return "rpn_eval " + quote(infix2postfix(unquote(parts[1])));
+    }
+
+    private static String quote(String s) {
+        return "\"" + s + "\"";
+    }
+
+    private static String infix2postfix(String infixExpression) {
+        return DoubleEvaluator.process(infixExpression).getPosftfixExpression();
+    }
+
+    public static String unquote(String quoted) {
+        quoted = quoted.trim();
+        if (quoted.charAt(0) == '"')
+            return quoted.substring(1, quoted.length() - 1);
+        return quoted; // ignoring invalid input
     }
 
     private static boolean isValidInput(String text) {

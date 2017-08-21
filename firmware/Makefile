@@ -3,17 +3,18 @@
 # NOTE: Can be overridden externally.
 #
 
-PROJECT_DIR = .
-
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
 # for 'release' options see 'clean_compile_two_versions.bat' file
+
+ifeq ($(DEBUG_LEVEL_OPT),)
+  # this value would be used by default. For 'release' configuration override with '-O2' or something along these lines
+  DEBUG_LEVEL_OPT = -O0 -ggdb -g3 
+endif
 
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-#  USE_OPT = -O2 -ggdb -std=gnu99 -fomit-frame-pointer -falign-functions=16
-#  USE_OPT = $(RFLAGS) -O1 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
-  USE_OPT = $(EXTRA_PARAMS) $(RFLAGS) -O2        -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
 endif
 
 # C specific options here (added to USE_OPT).
@@ -33,7 +34,7 @@ endif
 
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
-  USE_LDOPT = 
+  USE_LDOPT =
 endif
 
 # Enable this if you want link time optimizations (LTO)
@@ -51,6 +52,16 @@ ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
 endif
 
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = no
+endif
+
+ifeq ($(USE_BOOTLOADER),)
+  USE_BOOTLOADER = no
+endif
+
 #
 # Build global options
 ##############################################################################
@@ -59,11 +70,21 @@ endif
 # Architecture or project specific options
 #
 
-USE_FPU = softfp
+# Stack size to be allocated to the Cortex-M process stack. This stack is
+# the stack used by the main() thread.
+ifeq ($(USE_PROCESS_STACKSIZE),)
+  USE_PROCESS_STACKSIZE = 0x0600
+endif
+
+# Stack size to the allocated to the Cortex-M main/exceptions stack. This
+# stack is used for processing interrupts and exceptions.
+ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
+  USE_EXCEPTIONS_STACKSIZE = 0x1000
+endif
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
-  USE_FPU = no
+  USE_FPU = softfp
 endif
 
 #
@@ -76,29 +97,33 @@ endif
 
 # Define project name here
 PROJECT = rusefi
+PROJECT_DIR = .
 
 # Imported source files and paths
-CHIBIOS = chibios
-#include $(CHIBIOS)/test/test.mk
+CHIBIOS = ChibiOS3
+CHIBIOS_CONTRIB = ChibiOS-Contrib
 
-#PROJECT_BOARD = OLIMEX_STM32_E407
-ifneq ($(PROJECT_BOARD),OLIMEX_STM32_E407)
-  PROJECT_BOARD = ST_STM32F4_DISCOVERY
+ifeq ($(PROJECT_BOARD),)
+  PROJECT_BOARD = ST_STM32F4
 endif
 DDEFS += -D$(PROJECT_BOARD)
 
-
-# Imported source files and paths
-include $(CHIBIOS)/boards/$(PROJECT_BOARD)/board.mk
-include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
-include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
-include $(CHIBIOS)/os/kernel/kernel.mk
-#include $(CHIBIOS)/os/various/cpp_wrappers/kernel.mk
+# Startup files.
+include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
+# HAL-OSAL files (optional).
+include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
+include $(CHIBIOS_CONTRIB)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+# RTOS files (optional).
+include $(CHIBIOS)/os/rt/rt.mk
+include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
 include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+
 include console/binary/tunerstudio.mk
-include ext/ext.mk
+include $(PROJECT_DIR)/ext/fatfs.mk
+
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
@@ -106,6 +131,7 @@ include development/development.mk
 include controllers/controllers.mk
 
 include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
 include $(PROJECT_DIR)/controllers/core/core.mk
@@ -115,31 +141,38 @@ include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/console/console.mk
 
+ifeq ($(USE_BOOTLOADER),yes)
+include $(PROJECT_DIR)/bootloader/bootloader.mk
+endif
 
 # Define linker script file here
-LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
+ifeq ($(LDSCRIPT),)
+  LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
+endif
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = $(PORTSRC) \
+CSRC = $(STARTUPSRC) \
 	$(KERNSRC) \
-	chibios/os/various/syscalls.c \
-	chibios/os/various/chprintf.c \
-	chibios/os/various/memstreams.c \
-	chibios/os/various/chrtclib.c  \
+	$(PORTSRC) \
+	$(OSALSRC) \
+	$(HALSRC) \
+	$(PLATFORMSRC) \
+	$(BOARDSRC) \
+	$(BOOTLOADERSRC) \
+	$(CHIBIOS)/os/various/syscalls.c \
+	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
 	${HW_MASS_STORAGE_SRC_C} \
 	$(UTILSRC) \
 	$(ENGINES_SRC) \
 	$(CONSOLESRC) \
-	$(HALSRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
 	$(CONTROLLERSSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
-	$(PLATFORMSRC) \
-	$(BOARDSRC) \
 	$(FATFSSRC) \
 	$(SYSTEMSRC)
 
@@ -151,6 +184,7 @@ CPPSRC = $(CHCPPSRC) \
 	$(DEV_SRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
+	$(BOARDSRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
@@ -185,24 +219,34 @@ TCSRC =
 TCPPSRC =
 
 # List ASM source files here
-ASMSRC = $(PORTASM)
+# List ASM source files here
+ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
-         $(HALINC) $(PLATFORMINC) $(BOARDINC) \
-         $(CHCPPINC) \
-         $(CHIBIOS)/os/various \
-         $(CHIBIOS)/os/various/devices_lib/accel \
+INCDIR = $(PORTINC) \
+	$(OSALINC) \
+	$(KERNINC) \
+	$(TESTINC) \
+	$(STARTUPINC) \
+	$(HALINC) \
+	$(PLATFORMINC) \
+	$(BOARDINC) \
+	$(BOOTLOADERINC) \
+	$(CHCPPINC) \
+	$(CHIBIOS)/os/hal/lib/streams \
+	$(CHIBIOS)/os/various \
+	$(CHIBIOS)/os/various/devices_lib/accel \
+        $(CHIBIOS_CONTRIB)/os/various \
 	config/stm32f4ems \
 	config/engines \
 	config \
-	chibios/os/various \
 	ext \
 	ext_algo \
 	util \
 	console_util \
 	console \
-	console/binary \
-	hw_layer \
+	$(PROJECT_DIR)/console/binary \
+	$(PROJECT_DIR)/console/fl_binary \
+	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/mass_storage \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
@@ -243,6 +287,7 @@ LD   = $(TRGT)gcc
 #LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
+AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
@@ -262,29 +307,6 @@ CPPWARN = -Wall -Wextra
 
 #
 # Compiler settings
-##############################################################################
-
-##############################################################################
-# Start of default section
-#
-
-# List all default C defines here, like -D_DEBUG=1
-DDEFS =
-
-# List all default ASM defines here, like -D_DEBUG=1
-DADEFS =
-
-# List all default directories to look for include files here
-DINCDIR =
-
-# List the default directory to look for the libraries here
-DLIBDIR =
-
-# List all default libraries here
-DLIBS =
-
-#
-# End of default section
 ##############################################################################
 
 ##############################################################################
@@ -310,5 +332,5 @@ ULIBS = -lm
 # End of user defines
 ##############################################################################
 
-RULESPATH = $(CHIBIOS)/os/ports/GCC/ARMCMx
+RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk

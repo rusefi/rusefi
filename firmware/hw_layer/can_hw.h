@@ -21,18 +21,19 @@
 #define CAN_BMW_E46_CLUSTER_STATUS_2 0x615
 #define CAN_FIAT_MOTOR_INFO 0x561
 #define CAN_MAZDA_RX_RPM_SPEED 0x201
+#define CAN_MAZDA_RX_STEERING_WARNING 0x300
 #define CAN_MAZDA_RX_STATUS_1 0x212
 #define CAN_MAZDA_RX_STATUS_2 0x420
 #define CAN_VAG_RPM 0x280
 #define CAN_VAG_CLT 0x289
 
 void initCan(void);
-void stopCanPins(DECLARE_ENGINE_PARAMETER_F);
-void startCanPins(DECLARE_ENGINE_PARAMETER_F);
+void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void commonTxInit(int eid);
-void sendMessage();
+void sendCanMessage();
 void setCanType(int type);
 void setTxBit(int offset, int index);
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F);
+void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CAN_HW_H_ */

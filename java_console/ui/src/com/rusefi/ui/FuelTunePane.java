@@ -6,13 +6,14 @@ import com.romraider.maps.Table;
 import com.romraider.maps.Table3D;
 import com.romraider.xml.RomAttributeParser;
 import com.rusefi.BinarySearch;
-import com.rusefi.ConfigurationImage;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.UploadChanges;
 import com.rusefi.autotune.FuelAutoTune;
 import com.rusefi.autotune.Result;
 import com.rusefi.autotune.stDataOnline;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -66,7 +67,7 @@ public class FuelTunePane {
         upload.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                uploadCurrentResukt();
+                uploadCurrentResult();
             }
         });
         clean.addActionListener(new ActionListener() {
@@ -93,7 +94,7 @@ public class FuelTunePane {
                 }
                 if (runJob) {
                     doJob();
-                    uploadCurrentResukt();
+                    uploadCurrentResult();
                 }
             }
         });
@@ -133,9 +134,9 @@ public class FuelTunePane {
         initTable(changeMap);
     }
 
-    private void uploadCurrentResukt() {
+    private void uploadCurrentResult() {
         byte[] newVeMap = FuelTunePane.this.newVeMap;
-        BinaryProtocol bp = BinaryProtocol.instance;
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
         if (newVeMap == null || bp == null)
             return;
         ConfigurationImage ci = bp.getController().clone();
@@ -312,7 +313,7 @@ public class FuelTunePane {
     }
 
     private byte[] reloadVeTable() {
-        BinaryProtocol bp = BinaryProtocol.instance;
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
 
         byte[] content = bp.getController().getContent();
         loadData(veTable.getXAxis(), content, veRpmOffset);
@@ -328,7 +329,7 @@ public class FuelTunePane {
     }
 
     private void loadArray(float[] array, int offset) {
-        BinaryProtocol bp = BinaryProtocol.instance;
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
         if (bp == null) {
             FileLog.MAIN.logLine("bp not ready");
             return;

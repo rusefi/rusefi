@@ -32,6 +32,7 @@
 #include "engine_configuration.h"
 #include "pin_repository.h"
 #include "efiGpio.h"
+#include "settings.h"
 
 EXTERN_ENGINE
 ;
@@ -39,13 +40,15 @@ EXTERN_ENGINE
 static Logging * logger;
 static bool isRunningBench = false;
 
+// todo: move into Engine object?
+// todo: looks like these flags are not currently used? dead functionality? unfinished functionality?
 static int is_injector_enabled[INJECTION_PIN_COUNT];
 
 bool isRunningBenchTest(void) {
 	return isRunningBench;
 }
 
-void assertCylinderId(int cylinderId, const char *msg) {
+static void assertCylinderId(int cylinderId, const char *msg) {
 	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->specs.cylindersCount;
 	if (!isValid) {
 		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
@@ -58,12 +61,12 @@ void assertCylinderId(int cylinderId, const char *msg) {
 /**
  * @param cylinderId - from 1 to NUMBER_OF_CYLINDERS
  */
-int isInjectorEnabled(int cylinderId) {
+static int isInjectorEnabled(int cylinderId) {
 	assertCylinderId(cylinderId, "isInjectorEnabled");
 	return is_injector_enabled[cylinderId - 1];
 }
 
-static void printStatus(void) {
+static void printInjectorsStatus(void) {
 	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
 		scheduleMsg(logger, "injector_%d_%d", isInjectorEnabled(id));
 	}
@@ -72,7 +75,7 @@ static void printStatus(void) {
 static void setInjectorEnabled(int id, int value) {
 	efiAssertVoid(id >= 0 && id < engineConfiguration->specs.cylindersCount, "injector id");
 	is_injector_enabled[id] = value;
-	printStatus();
+	printInjectorsStatus();
 }
 
 static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
@@ -110,7 +113,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	isRunningBench = false;
 }
 
-static volatile bool needToRunBench = false;
+static volatile bool isBenchTestPending = false;
 static float onTime;
 static float offTime;
 static float delayMs;
@@ -127,7 +130,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 
 	brainPin = brainPinParam;
 	pinX = pinParam;
-	needToRunBench = true;
+	isBenchTestPending = true; // let's signal bench thread to wake up
 }
 
 static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
@@ -150,8 +153,12 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
 }
 
+static void fanBenchExt(const char *durationMs) {
+	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+}
+
 void fanBench(void) {
-	pinbench("0", "3000", "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+	fanBenchExt("3000");
 }
 
 void milBench(void) {
@@ -198,6 +205,12 @@ static void sparkbench(const char * onTimeStr, const char *offTimeStr, const cha
 	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
+
+void dizzyBench(void) {
+	pinbench("300", "5", "400", "3", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin);
+}
+
+
 static THD_WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t benchThread(int param) {
@@ -205,10 +218,11 @@ static msg_t benchThread(int param) {
 	chRegSetThreadName("BenchThread");
 
 	while (true) {
-		while (!needToRunBench) {
+		// naive inter-thread communication - waiting for a flag
+		while (!isBenchTestPending) {
 			chThdSleepMilliseconds(200);
 		}
-		needToRunBench = false;
+		isBenchTestPending = false;
 		runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 	}
 #if defined __GNUC__
@@ -216,63 +230,13 @@ static msg_t benchThread(int param) {
 #endif
 }
 
-static void unregister(brain_pin_e currentPin, OutputPin *output) {
-	if (currentPin == GPIO_UNASSIGNED)
-		return;
-	scheduleMsg(logger, "unregistering %s", hwPortname(currentPin));
-	unmarkPin(currentPin);
-	output->unregister();
-}
-
-void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin, OutputPin *output) {
-	if (oldPin != newPin) {
-		unregister(oldPin, output);
-	}
-}
-
-void stopIgnitionPins(void) {
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		unregisterOutput(activeConfiguration.bc.ignitionPins[i],
-				engineConfiguration->bc.ignitionPins[i], output);
-	}
-}
-
-void stopInjectionPins(void) {
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		NamedOutputPin *output = &enginePins.injectors[i];
-		unregisterOutput(activeConfiguration.bc.injectionPins[i],
-				engineConfiguration->bc.injectionPins[i], output);
-	}
-}
-
-void startIgnitionPins(void) {
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		// todo: we need to check if mode has changed
-		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
-			outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i],
-				&boardConfiguration->ignitionPinMode);
-		}
-	}
-	// todo: we need to check if mode has changed
-	if (engineConfiguration->dizzySparkOutputPin != activeConfiguration.dizzySparkOutputPin) {
-		outputPinRegisterExt2("dizzy tach", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin,
-				&engineConfiguration->dizzySparkOutputPinMode);
-
-	}
-}
-
-void startInjectionPins(void) {
-	// todo: should we move this code closer to the injection logic?
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.injectors[i];
-		// todo: we need to check if mode has changed
-		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
-
-			outputPinRegisterExt2(output->name, output, boardConfiguration->injectionPins[i],
-					&boardConfiguration->injectionPinMode);
-		}
+void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
+	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
+		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
+		unmarkPin(oldPin);
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+		port = NULL;
+#endif /* EFI_PROD_CODE */
 	}
 }
 
@@ -290,6 +254,11 @@ void runIoTest(int subsystem, int index) {
 	} else if (subsystem == 0x16) {
 		milBench();
 	} else if (subsystem == 0x17) {
+	} else if (subsystem == 0x20 && index == 0x3456) {
+		// call to pit
+		setCallFromPitStop(30000);
+	} else if (subsystem == 0x99) {
+		stopEngine();
 	}
 }
 
@@ -297,19 +266,21 @@ void initInjectorCentral(Logging *sharedLogger) {
 	logger = sharedLogger;
 	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
 
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		is_injector_enabled[i] = true;
 	}
 
-	startInjectionPins();
-	startIgnitionPins();
+	enginePins.startInjectionPins();
+	enginePins.startIgnitionPins();
 
-	printStatus();
+	printInjectorsStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
 
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
+	addConsoleActionS("fanbench2", fanBenchExt);
+	addConsoleAction("dizzybench", dizzyBench); // this is useful for tach output testing
 
 	addConsoleAction("milbench", milBench);
 	addConsoleActionSSS("fuelbench", fuelbench);

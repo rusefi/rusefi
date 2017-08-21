@@ -34,8 +34,8 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleByTime(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	scheduleTask(monitorReuse, prefix, scheduling, time - getTimeNowUs(), callback, param);
+void scheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
+	scheduleTask(scheduling, time - getTimeNowUs(), callback, param);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
@@ -52,7 +52,7 @@ static void timerCallback(scheduling_s *scheduling) {
 
 }
 
-void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	int delaySt = MY_US2ST(delayUs);
 	if (delaySt <= 0) {
 		/**
@@ -62,21 +62,14 @@ void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *sch
 		return;
 	}
 
-	lockAnyContext();
+	bool alreadyLocked = lockAnyContext();
 	scheduling->callback = callback;
 	scheduling->param = param;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
 	if (isArmed) {
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
-		if (monitorReuse) {
-			/**
-			 * timer reuse is normal for example in case of sudden RPM increase
-			 */
-//		for (int i = 0;i<100;i++)
-			printf("%s: isArmed? why? sch=%d cb=%d p=%d\r\n", prefix, (int) scheduling, (int)callback, (int)param);
-			firmwareError(OBD_PCM_Processor_Fault, "armored\r\n");
-		}
-#endif /* EFI_SIMULATOR */
+		/**
+		 * timer reuse is normal for example in case of sudden RPM increase
+		 */
 		chVTResetI(&scheduling->timer);
 	}
 
@@ -89,7 +82,8 @@ void scheduleTask(const bool monitorReuse, const char *prefix, scheduling_s *sch
 #endif /* EFI_SIMULATOR */
 
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
-	unlockAnyContext();
+	if (!alreadyLocked)
+		unlockAnyContext();
 }
 
 void initSignalExecutorImpl(void) {

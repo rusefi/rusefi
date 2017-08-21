@@ -1,5 +1,7 @@
 /**
  * @file	efiGpio.h
+ * @brief	EFI-related GPIO code
+ *
  *
  * @date Sep 26, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -7,15 +9,17 @@
 #ifndef EFIGPIO_H_
 #define EFIGPIO_H_
 
-#include "main.h"
 #include "io_pins.h"
+#include "main.h"
 
-#define INITIAL_PIN_STATE -1
+void initPrimaryPins(void);
+void initOutputPins(void);
 
-// mode >= 0  is always true since that's an unsigned
-#define assertOMode(mode) { \
-	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
- }
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+void turnAllPinsOff(void);
+#else /* EFI_GPIO_HARDWARE */
+#define turnAllPinsOff() {}
+#endif /* EFI_GPIO_HARDWARE */
 
 /**
  * @brief   Single output pin reference and state
@@ -23,28 +27,49 @@
 class OutputPin {
 public:
 	OutputPin();
+	/**
+	 * initializes pin & registers it in pin repository
+	 */
+	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+	/**
+	 * same as above, with DEFAULT_OUTPUT mode
+	 */
+	void initPin(const char *msg, brain_pin_e brainPin);
+	/**
+	 * dissociates pin from this output and un-registers it in pin repository
+	 */
+	void unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin);
+
 	bool isInitialized();
+
 	void setValue(int logicValue);
-	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool getLogicValue();
-	void unregister();
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+
+
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	ioportid_t port;
 	uint8_t pin;
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_GPIO_HARDWARE */
 	int8_t currentLogicValue;
-	// 4 byte pointer is a bit of a memory waste here
-	pin_output_mode_e *modePtr;
 	/**
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
 	 */
+private:
+	// todo: inline this method?
+	void setDefaultPinState(pin_output_mode_e *defaultState);
+
+	// 4 byte pointer is a bit of a memory waste here
+	pin_output_mode_e *modePtr;
 };
+
 
 class NamedOutputPin : public OutputPin {
 public:
 	NamedOutputPin();
 	NamedOutputPin(const char *name);
+	void setHigh();
+	void setLow();
 	/**
 	 * @return true if pin was stopped
 	 */
@@ -77,6 +102,11 @@ public:
 	EnginePins();
 	void reset();
 	bool stopPins();
+	void unregisterPins();
+	void startInjectionPins();
+	void startIgnitionPins();
+	void stopInjectionPins();
+	void stopIgnitionPins();
 	OutputPin mainRelay;
 	OutputPin fanRelay;
 	OutputPin acRelay;
@@ -86,7 +116,11 @@ public:
 	/**
 	 * brain board RED LED by default
 	 */
-	OutputPin errorLedPin; //
+	OutputPin errorLedPin;
+	OutputPin communicationPin; // blue LED on brain board by default
+	OutputPin warningPin; // orange LED on brain board by default
+	OutputPin runningPin; // green LED on brain board by default
+
 	OutputPin idleSolenoidPin;
 	OutputPin alternatorPin;
 	/**
@@ -96,7 +130,7 @@ public:
 	NamedOutputPin tachOut;
 	OutputPin etbOutput1;
 	OutputPin etbOutput2;
-	OutputPin fsioOutputs[LE_COMMAND_COUNT];
+	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	OutputPin triggerDecoderErrorPin;
 	OutputPin hipCs;
 	OutputPin sdCsPin;
@@ -113,68 +147,24 @@ public:
 
 #define getElectricalValue0(mode) ((mode) == OM_INVERTED || (mode) == OM_OPENDRAIN_INVERTED)
 
-
 /**
  * it's a macro to be sure that stack is not used
  * @return 1 for OM_DEFAULT and OM_OPENDRAIN
  */
 #define getElectricalValue1(mode) ((mode) == OM_DEFAULT || (mode) == OM_OPENDRAIN)
 
-/**
- * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
- */
-
-#if EFI_PROD_CODE                                                                  \
-
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  palWritePad((outputPin)->port, (outputPin)->pin, (electricalValue));         \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-  }
-#else /* EFI_PROD_CODE */
-#define setPinValue(outputPin, electricalValue, logicValue)                        \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-  }
-#endif /* EFI_PROD_CODE */
-
 #define getElectricalValue(logicalValue, mode) \
 	(logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode))
 
-#if EFI_PROD_CODE
- #define isPinAssigned(output) ((output)->port != GPIO_NULL)
-#else
- #define isPinAssigned(output) (true)
-#endif
+#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
-#define doSetOutputPinValue(pin, logicValue) doSetOutputPinValue2((&outputs[pin]), logicValue)
+ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin);
+ioportid_t getHwPort(const char *msg, brain_pin_e brainPin);
+const char *portname(ioportid_t GPIOx);
 
+#endif /* EFI_GPIO_HARDWARE */
 
-#if EFI_PROD_CODE
-#define doSetOutputPinValue2(output, logicValue) {                                      \
-		if ((output)->port != GPIO_NULL) {                                                \
-			efiAssertVoid((output)->modePtr!=NULL, "pin mode not initialized");           \
-			pin_output_mode_e mode = *(output)->modePtr;                                  \
-			efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");  \
-			int eValue = getElectricalValue(logicValue, mode);                          \
-			setPinValue(output, eValue, logicValue);                                    \
-		}                                                                               \
-    }
-#else
-		#define doSetOutputPinValue2(output, logicValue) {                              \
-				pin_output_mode_e mode = OM_DEFAULT;                                    \
-				int eValue = getElectricalValue(logicValue, mode);                      \
-				setPinValue(output, eValue, logicValue);                                \
-		}
-#endif
-
-void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
-
-void turnPinHigh(NamedOutputPin *output);
-void turnPinLow(NamedOutputPin *output);
+brain_pin_e parseBrainPin(const char *str);
+const char *hwPortname(brain_pin_e brainPin);
 
 #endif /* EFIGPIO_H_ */

@@ -15,6 +15,25 @@ import java.util.TreeMap;
  * 2/15/2015
  */
 public class AverageAngles {
+    static String PRIMARY = "T_PRIMARY";
+    static String SECONDARY = "T_SECONDARY";
+    static String T_CHANNEL_3 = "T_CHANNEL_3";
+    private int count;
+
+    enum trigger_event_e {
+        SHAFT_PRIMARY_FALLING(PRIMARY),
+        SHAFT_PRIMARY_RISING(PRIMARY),
+        SHAFT_SECONDARY_FALLING(SECONDARY),
+        SHAFT_SECONDARY_RISING(SECONDARY),
+        SHAFT_3RD_FALLING(T_CHANNEL_3),
+        SHAFT_3RD_RISING(T_CHANNEL_3);
+
+        private String channel;
+
+        trigger_event_e(String channel) {
+            this.channel = channel;
+        }
+    }
 
     private static final int MAX_RPM_CHANGE = 20;
     private int rpmAtPrevChart;
@@ -37,6 +56,7 @@ public class AverageAngles {
     public void clear() {
         rpmAtPrevChart = -1;
         angleData.clear();
+        count = 0;
     }
 
     public void add(int rpm, String line) {
@@ -45,6 +65,7 @@ public class AverageAngles {
             rpmAtPrevChart = rpm;
             return;
         }
+        count ++;
         rpmAtPrevChart = rpm;
 
         String v[] = line.split("\\|");
@@ -54,7 +75,7 @@ public class AverageAngles {
 
         for (int i = 0; i < v.length / 2; i++) {
             Double angle = Double.parseDouble(v[2 * i]);
-            int signal = (int)Double.parseDouble(v[2 * i + 1]);
+            int signal = (int) Double.parseDouble(v[2 * i + 1]);
             if (Double.isNaN(angle)) {
                 System.out.println("Skipping due to NaN");
                 return;
@@ -75,7 +96,7 @@ public class AverageAngles {
     public void printReport(Appendable stream) throws IOException {
         List<AngleEvent> angles = new ArrayList<>();
 
-        stream.append("Based on " + angleData.size() + " charts\r\n");
+        stream.append("Based on " + count + " charts\r\n");
 
         stream.append("index,average,stdev,diff\r\n");
 
@@ -107,14 +128,24 @@ public class AverageAngles {
         double delta = 720 - lastValue;
         stream.append("And the " + angles.size() + " angles are:\r\n");
         for (AngleEvent v : angles) {
-            stream.append((delta + v.angle) + "\r\n");
+            stream.append(range720(delta + v.angle) + "\r\n");
         }
 
         stream.append("And the " + angles.size() + " lines of code are:\r\n");
         for (AngleEvent v : angles) {
-            String signal = (v.signal / 1000) % 2 == 0 ? "TV_FALL" : "TV_RISE";
-            stream.append("s->addEvent(" + (delta + v.angle) + ", ch, " + signal + ");\r\n");
+            int ckpSignalType = v.signal / 1000;
+            trigger_event_e event = trigger_event_e.values()[ckpSignalType];
+            String signal = ckpSignalType % 2 == 0 ? "TV_FALL" : "TV_RISE";
+            stream.append("s->addEvent2(" + range720(delta + v.angle) + ", " +
+                    event.channel +
+                    ", " + signal + " PASS_ENGINE_PARAMETER);\r\n");
         }
+    }
+
+    private double range720(double v) {
+        while (v > 720)
+            v -= 702;
+        return v;
     }
 
     private static class AngleEvent {

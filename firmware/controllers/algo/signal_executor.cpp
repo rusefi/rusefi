@@ -41,7 +41,7 @@ extern WaveChart waveChart;
 
 #include "efiGpio.h"
 
-OutputSignalPair::OutputSignalPair() {
+InjectionSignalPair::InjectionSignalPair() {
 	isScheduled = false;
 	memset(outputs, 0, sizeof(outputs));
 	event = NULL;
@@ -51,54 +51,6 @@ void initSignalExecutor(void) {
 	initSignalExecutorImpl();
 }
 
-void turnPinHigh(NamedOutputPin *output) {
-	efiAssertVoid(output!=NULL, "NULL @ turnPinHigh");
-#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
-//	signal->hi_time = hTimeNow();
-#endif /* EFI_DEFAILED_LOGGING */
-
-	// turn the output level ACTIVE
-	// todo: this XOR should go inside the setOutputPinValue method
-	doSetOutputPinValue2(output, true);
-
-	// sleep for the needed duration
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
-	// explicit check here is a performance optimization to speed up no-chart mode
-	if (ENGINE(isEngineChartEnabled)) {
-		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
-		const char *pinName = output->name;
-//	dbgDurr = hal_lld_get_counter_value() - dbgStart;
-
-		addEngineSniffferEvent(pinName, WC_UP);
-	}
-#endif /* EFI_ENGINE_SNIFFER */
-//	dbgDurr = hal_lld_get_counter_value() - dbgStart;
-}
-
-void turnPinLow(NamedOutputPin *output) {
-	efiAssertVoid(output!=NULL, "NULL turnPinLow");
-	// turn off the output
-	doSetOutputPinValue2(output, false);
-
-#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
-	systime_t after = hTimeNow();
-	debugInt(&signal->logging, "a_time", after - signal->hi_time);
-	scheduleLogging(&signal->logging);
-#endif /* EFI_DEFAILED_LOGGING */
-
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
-	if (ENGINE(isEngineChartEnabled)) {
-		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
-		const char *pinName = output->name;
-
-		addEngineSniffferEvent(pinName, WC_DOWN);
-	}
-#endif /* EFI_ENGINE_SNIFFER */
-}
-
 #if FUEL_MATH_EXTREME_LOGGING
 extern LoggingWithStorage sharedLogger;
 #endif /* FUEL_MATH_EXTREME_LOGGING */
-
-
-

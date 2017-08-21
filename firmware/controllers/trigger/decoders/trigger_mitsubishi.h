@@ -9,7 +9,7 @@
 
 #include "trigger_structure.h"
 
-void initializeMitsubishi4g18(TriggerShape *s DECLARE_ENGINE_PARAMETER_S);
-void configureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_S);
+void initializeMitsubishi4g18(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void configureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* TRIGGER_MITSUBISHI_H_ */

@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
@@ -44,12 +45,11 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20170222;
+    public static final int CONSOLE_VERSION = 20170806;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
-    public static final String FATAL_ERROR_PREFIX = "FATAL";
     private final String port;
     // todo: the logic around 'fatalError' could be implemented nicer
     private String fatalError;
@@ -131,7 +131,7 @@ public class Launcher {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(FATAL_ERROR_PREFIX))
+                if (message.startsWith(ConnectionStatus.FATAL_MESSAGE_PREFIX))
                     fatalError = message;
             }
         });
@@ -188,6 +188,10 @@ public class Launcher {
         if (true)
             tabbedPane.add("Fuel Tune", fuelTunePane.getContent());
 
+
+        if (!LinkManager.isLogViewer())
+            tabbedPane.add("Trigger Shape", new AverageAnglePanel().getPanel());
+
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
             if (selectedIndex < tabbedPane.getTabCount())
@@ -233,7 +237,7 @@ public class Launcher {
             }
         });
 
-        LinkManager.open(new LinkManager.LinkStateListener() {
+        LinkManager.open(new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
             }
@@ -274,7 +278,7 @@ public class Launcher {
         root.setProperty(TAB_INDEX, tabbedPane.getSelectedIndex());
         GaugesPanel.DetachedRepository.INSTANCE.saveConfig();
         getConfig().save();
-        BinaryProtocol bp = BinaryProtocol.instance;
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
         if (bp != null && !bp.isClosed)
             bp.close(); // it could be that serial driver wants to be closed explicitly
         System.exit(0);
@@ -283,8 +287,23 @@ public class Launcher {
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
         if ("compile_fsio_file".equalsIgnoreCase(toolName)) {
-            CompileTool.run(Arrays.asList(args).subList(1, args.length));
+            /**
+             * re-packaging array which contains input and output file names
+             */
+            int returnCode = CompileTool.run(Arrays.asList(args).subList(1, args.length));
+            System.exit(returnCode);
             return;
+        }
+
+        if ("compile".equals(toolName)) {
+            if (args.length != 2) {
+                System.err.println("input expression parameter expected");
+                System.exit(-1);
+                return;
+            }
+            String input = args[1];
+            System.out.println(CompileTool.handleOneFsioLine(input));
+            System.exit(0);
         }
 
 
@@ -313,7 +332,7 @@ public class Launcher {
                 if (value != Fields.TS_FILE_VERSION) {
                     String message = "This copy of rusEfi console is not compatible with this version of firmware\r\n" +
                             "Console compatible with " + Fields.TS_FILE_VERSION + " while firmware compatible with " +
-                            (int)value;
+                            (int) value;
                     JOptionPane.showMessageDialog(Launcher.getFrame(), message);
                     assert wrongVersionListener != null;
                     SensorCentral.getInstance().removeListener(Sensor.FIRMWARE_VERSION, wrongVersionListener);

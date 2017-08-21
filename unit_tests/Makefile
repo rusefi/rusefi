@@ -76,6 +76,7 @@ include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
+include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include test.mk
 
 # Define linker script file here
@@ -145,8 +146,10 @@ INCDIR = . \
 	$(PROJECT_DIR)/controllers/trigger \
 	$(PROJECT_DIR)/controllers/trigger/decoders \
 	$(PROJECT_DIR)/ext_algo \
-	../firmware/chibios/os/kernel/include \
-	../firmware/chibios/os/various \
+	$(PROJECT_DIR)/ChibiOS3/os/rt/include \
+	$(PROJECT_DIR)/ChibiOS3/os/hal/lib/streams \
+	$(PROJECT_DIR)/ChibiOS3/os/rt/various \
+	$(PROJECT_DIR)/hw_layer \
 	test_data_structures \
 	test_basic_math
 	

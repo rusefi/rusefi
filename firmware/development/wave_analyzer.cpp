@@ -152,7 +152,7 @@ WaveReader::WaveReader() {
 	last_wave_low_widthUs = 0;
 }
 
-static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void)ckpSignalType;
 	if (index != 0) {
 		return;

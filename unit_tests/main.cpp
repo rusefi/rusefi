@@ -29,7 +29,6 @@
 #include "trigger_central.h"
 #include "test_util.h"
 #include "map_resize.h"
-#include "test_event_registry.h"
 #include "engine_math.h"
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
@@ -53,7 +52,7 @@ efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-void assertEqualsM3(const char *prefix, const char *message, float expected, float actual, float EPS) {
+void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS) {
 	char msg[100];
 	strcpy(msg, prefix);
 	strcat(msg, message);
@@ -72,11 +71,11 @@ void assertEqualsM3(const char *prefix, const char *message, float expected, flo
 }
 
 void assertEqualsM2(const char *msg, float expected, float actual, float eps) {
-	assertEqualsM3("", msg, expected, actual, eps);
+	assertEqualsM5("", msg, expected, actual, eps);
 }
 
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual) {
-	assertEqualsM3(prefix, msg, expected, actual, 0.00001);
+	assertEqualsM5(prefix, msg, expected, actual, 0.00001);
 }
 
 void assertEqualsLM(const char *msg, long expected, long actual) {
@@ -122,13 +121,16 @@ extern int revolutionCounterSinceBootForUnitTest;
 int getRevolutionCounter(void) {
 	return revolutionCounterSinceBootForUnitTest;
 }
+extern bool printTriggerDebug;
 
 int main(void) {
+//	printTriggerDebug = true;
+
 	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
 	testFuelSchedulerBug299smallAndMedium();
-	testLogicExpressions();
+	testLogicExpressions(); // fsio
 	testOverflow64Counter();
 	testInterpolate3d();
 	testFindIndex();
@@ -138,7 +140,6 @@ int main(void) {
 	testFuelMap();
 	testEngineMath();
 	testIgnitionPlanning();
-	testEventRegistry();
 	testSensors();
 	testCyclicBuffer();
 	testCrc();
@@ -162,8 +163,6 @@ int main(void) {
 	testSpeedDensity();
 
 	testFLStack();
-
-	testIdleController();
 
 	testMenuTree();
 	testMafLookup();

@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* MAZDA_MIATA_NB1_H_ */

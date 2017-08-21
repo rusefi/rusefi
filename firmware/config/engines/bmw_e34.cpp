@@ -19,7 +19,7 @@
 EXTERN_ENGINE
 ;
 
-void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
+void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// chartsize 450
 	engineConfiguration->engineChartSize = 450;
 
@@ -52,14 +52,14 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	// Injection settings
-	setInjectorLag(1.15 PASS_ENGINE_PARAMETER);
+	setFlatInjectorLag(1.15 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->injector.flow = 750;
 
 	// General settings
 	boardConfiguration->tunerStudioSerialSpeed = 57600;
 	engineConfiguration->rpmHardLimit = 7000;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// for best performance at high RPM, we need to turn off 'Engine Sniffer' and 'Sensor Sniffer'
 	boardConfiguration->sensorChartMode = SC_OFF;
@@ -69,7 +69,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
 
-	setConstantDwell(3 PASS_ENGINE_PARAMETER); // a bit shorter dwell
+	setConstantDwell(3 PASS_ENGINE_PARAMETER_SUFFIX); // a bit shorter dwell
 	engineConfiguration->ignMathCalculateAtIndex = 14;
 
 	engineConfiguration->mapAveragingSchedulingAtIndex = 6;
@@ -93,7 +93,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
-	setWholeTimingTable(25 PASS_ENGINE_PARAMETER);
+	setWholeTimingTable(25 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 

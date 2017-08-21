@@ -17,6 +17,7 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 #include "pin_repository.h"
+#include "mpu_util.h"
 #include "engine_state.h"
 #include "engine_configuration.h"
 #include "vehicle_speed.h"
@@ -53,10 +54,6 @@ CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(6) };
 static CANRxFrame rxBuffer;
 CANTxFrame txmsg;
 
-//static CANDriver *getCanDevice() {
-//	if(board)
-//}
-
 static void printPacket(CANRxFrame *rx) {
 //	scheduleMsg(&logger, "CAN FMI %x", rx->FMI);
 //	scheduleMsg(&logger, "TIME %x", rx->TIME);
@@ -90,19 +87,31 @@ void commonTxInit(int eid) {
 	txmsg.DLC = 8;
 }
 
-void sendMessage2(int size) {
+/**
+ * send CAN message from txmsg buffer
+ */
+static void sendCanMessage2(int size) {
+	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
+			boardConfiguration->canTxPin);
+	if (device == NULL) {
+		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
+		return;
+	}
 	txmsg.DLC = size;
 	// 1 second timeout
-	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
-	if (result == RDY_OK) {
+	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
+	if (result == MSG_OK) {
 		canWriteOk++;
 	} else {
 		canWriteNotOk++;
 	}
 }
 
-void sendMessage() {
-	sendMessage2(8);
+/**
+ * send CAN message from txmsg buffer, using default packet size
+ */
+void sendCanMessage() {
+	sendCanMessage2(8);
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -111,34 +120,33 @@ static void canDashboardBMW(void) {
 	//BMW Dashboard
 	commonTxInit(CAN_BMW_E46_SPEED);
 	setShortValue(&txmsg, 10 * 8, 1);
-	sendMessage();
+	sendCanMessage();
 
 	commonTxInit(CAN_BMW_E46_RPM);
 	setShortValue(&txmsg, (int) (getRpmE(engine) * 6.4), 2);
-	sendMessage();
+	sendCanMessage();
 
 	commonTxInit(CAN_BMW_E46_DME2);
-	setShortValue(&txmsg, (int) ((engine->engineState.clt + 48.373) / 0.75), 1);
-	sendMessage();
+	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1);
+	sendCanMessage();
 }
 
 static void canMazdaRX8(void) {
-//	commonTxInit(0x300);
-//	sendMessage2(0);
+	commonTxInit(CAN_MAZDA_RX_STEERING_WARNING);
+	// todo: something needs to be set here? see http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Rx8_2004
+	sendCanMessage();
 
 	commonTxInit(CAN_MAZDA_RX_RPM_SPEED);
 
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	float kph = getVehicleSpeed();
 
 	setShortValue(&txmsg, SWAP_UINT16(getRpmE(engine) * 4), 0);
 	setShortValue(&txmsg, 0xFFFF, 2);
 	setShortValue(&txmsg, SWAP_UINT16((int )(100 * kph + 10000)), 4);
 	setShortValue(&txmsg, 0, 6);
-	sendMessage();
-#endif /* EFI_VEHICLE_SPEED */
+	sendCanMessage();
 
-	commonTxInit(CAN_MAZDA_RX_STATUS_2);
+	commonTxInit(CAN_MAZDA_RX_STATUS_1);
 	txmsg.data8[0] = 0xFE; //Unknown
 	txmsg.data8[1] = 0xFE; //Unknown
 	txmsg.data8[2] = 0xFE; //Unknown
@@ -147,36 +155,44 @@ static void canMazdaRX8(void) {
 	txmsg.data8[5] = 0x40; // TCS in combo with byte 3
 	txmsg.data8[6] = 0x00; // Unknown
 	txmsg.data8[7] = 0x00; // Unused
+	sendCanMessage();
 
 	commonTxInit(CAN_MAZDA_RX_STATUS_2);
-	txmsg.data8[0] = 0x98; //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
-	txmsg.data8[1] = 0x00; // something to do with trip meter 0x10, 0x11, 0x17 increments by 0.1 miles
+	txmsg.data8[0] = (uint8_t)(engine->sensors.clt + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
+	txmsg.data8[1] = ((int16_t)(engine->engineState.vssEventCounter*(engineConfiguration->vehicleSpeedCoef*0.277*2.58))) & 0xff;
 	txmsg.data8[2] = 0x00; // unknown
 	txmsg.data8[3] = 0x00; //unknown
 	txmsg.data8[4] = 0x01; //Oil Pressure (not really a gauge)
 	txmsg.data8[5] = 0x00; //check engine light
 	txmsg.data8[6] = 0x00; //Coolant, oil and battery
+	if ((getRpmE(engine)>0) && (engine->sensors.vBatt<13)) {
+		setTxBit(6, 6); // battery light
+	}
+	if (engine->sensors.clt > 105) {
+		setTxBit(6, 1); // coolant light, 101 - red zone, light means its get too hot
+	}
+	//oil pressure warning lamp bit is 7
 	txmsg.data8[7] = 0x00; //unused
-	sendMessage();
+	sendCanMessage();
 }
 
 static void canDashboardFiat(void) {
 	//Fiat Dashboard
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
-	setShortValue(&txmsg, (int) (engine->engineState.clt - 40), 3); //Coolant Temp
+	setShortValue(&txmsg, (int) (engine->sensors.clt - 40), 3); //Coolant Temp
 	setShortValue(&txmsg, getRpmE(engine) / 32, 6); //RPM
-	sendMessage();
+	sendCanMessage();
 }
 
 static void canDashboardVAG(void) {
 	//VAG Dashboard
 	commonTxInit(CAN_VAG_RPM);
 	setShortValue(&txmsg, getRpmE(engine) * 4, 2); //RPM
-	sendMessage();
+	sendCanMessage();
 
 	commonTxInit(CAN_VAG_CLT);
-	setShortValue(&txmsg, (int) ((engine->engineState.clt + 48.373) / 0.75), 1); //Coolant Temp
-	sendMessage();
+	setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 1); //Coolant Temp
+	sendCanMessage();
 }
 
 static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
@@ -199,9 +215,15 @@ static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
 }
 
 static void canRead(void) {
+	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
+			boardConfiguration->canTxPin);
+	if (device == NULL) {
+		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
+		return;
+	}
 //	scheduleMsg(&logger, "Waiting for CAN");
-	msg_t result = canReceive(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
-	if (result == RDY_TIMEOUT) {
+	msg_t result = canReceive(device, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
+	if (result == MSG_TIMEOUT) {
 		return;
 	}
 
@@ -215,6 +237,7 @@ static void writeStateToCan(void) {
 }
 
 static msg_t canThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("CAN");
 	while (true) {
 		if (engineConfiguration->canWriteEnabled)
@@ -257,28 +280,20 @@ void setCanType(int type) {
 
 #endif /* EFI_PROD_CODE */
 
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_F) {
+void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canReadEnabled = false;
 }
 
-void stopCanPins(DECLARE_ENGINE_PARAMETER_F) {
+void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	unmarkPin(activeConfiguration.bc.canTxPin);
 	unmarkPin(activeConfiguration.bc.canRxPin);
 }
 
-void startCanPins(DECLARE_ENGINE_PARAMETER_F) {
-	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
-}
-
-static bool isValidCanTxPin(brain_pin_e pin) {
-	return pin == GPIOB_6 || pin == GPIOD_1;
-}
-
-static bool isValidCanRxPin(brain_pin_e pin) {
-	return pin == GPIOB_12 || pin == GPIOD_0;
+void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	efiSetPadMode("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadMode("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 void initCan(void) {
@@ -303,9 +318,8 @@ void initCan(void) {
 	canStart(&CAND2, &canConfig);
 #else
 	canStart(&CAND1, &canConfig);
-#endif
+#endif /* STM32_CAN_USE_CAN2 */
 
-	canStart(&EFI_CAN_DEVICE, &canConfig);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);

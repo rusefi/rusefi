@@ -12,32 +12,36 @@ angle_t getEngineCycle(operation_mode_e operationMode) {
 }
 
 void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
-		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_S) {
+		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(totalTeethCount > 0, "total count");
 	efiAssertVoid(skippedCount >= 0, "skipped count");
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
 		float angleUp = engineCycle / totalTeethCount * (i + 1);
-		s->addEvent2(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight PASS_ENGINE_PARAMETER);
-		s->addEvent2(offset + angleUp, wheel, TV_FALL, filterLeft, filterRight PASS_ENGINE_PARAMETER);
+		s->addEvent2(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(offset + angleUp, wheel, TV_FALL, filterLeft, filterRight PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
-	s->addEvent2(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight PASS_ENGINE_PARAMETER);
-	s->addEvent2(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight PASS_ENGINE_PARAMETER);
+	s->addEvent2(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
-		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_S) {
-	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
+		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (totalTeethCount <= 0) {
+		warning(CUSTOM_OBD_TRIGGER_SHAPE, "totalTeethCount is zero or less: %d", totalTeethCount);
+		s->shapeDefinitionError = true;
+		return;
+	}
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->initialize(operationMode, false);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
-	s->isSynchronizationNeeded = (skippedCount != 0);
+	s->isSynchronizationNeeded = (totalTeethCount > 2) && (skippedCount != 0);
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
-	NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER);
+	NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
 }
 

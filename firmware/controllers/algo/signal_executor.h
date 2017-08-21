@@ -6,13 +6,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef SPARKOUT_H_
-#define SPARKOUT_H_
+#ifndef SIGNAL_EXECUTOR_H_
+#define SIGNAL_EXECUTOR_H_
 
 #include "rusefi_enums.h"
 #include "global.h"
 #include "efifeatures.h"
-#include "io_pins.h"
 #include "scheduler.h"
 #include "efiGpio.h"
 
@@ -28,9 +27,9 @@
 
 class InjectionEvent;
 
-class OutputSignalPair {
+class InjectionSignalPair {
 public:
-	OutputSignalPair();
+	InjectionSignalPair();
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
 
@@ -42,6 +41,7 @@ public:
 	 * TODO: make watchdog decrement relevant counter
 	 */
 	bool isScheduled;
+
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 
 	InjectionEvent *event;
@@ -51,4 +51,4 @@ void initSignalExecutor(void);
 
 void initSignalExecutorImpl(void);
 
-#endif /* SPARKOUT_H_ */
+#endif /* SIGNAL_EXECUTOR_H_ */

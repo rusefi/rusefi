@@ -25,6 +25,7 @@
 #include "engine_controller.h"
 #include "mmc_card.h"
 #include "idle_thread.h"
+#include "fuel_math.h"
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 
@@ -42,11 +43,14 @@ static MenuTree tree(&ROOT);
  */
 static MenuItem miRpm(tree.root, LL_RPM);
 static MenuItem miSensors(tree.root, "sensors");
+static MenuItem miFuelControl(tree.root, "fuel");
 static MenuItem miBench(tree.root, "bench test");
 static MenuItem miAbout(tree.root, "about");
 
 static MenuItem miTriggerErrors(&miRpm, LL_TRIGGER_ERRORS);
 static MenuItem miTriggerDuty(&miRpm, LL_TRIGGER_DUTY);
+
+static MenuItem miFuelCltCorr(&miFuelControl, LL_FUEL_CLT_CORRECTION);
 
 static MenuItem miClt(&miSensors, LL_CLT_TEMPERATURE);
 static MenuItem miIat(&miSensors, LL_IAT_TEMPERATURE);
@@ -112,25 +116,6 @@ void initLcdController(void) {
 	msObjectInit(&lcdLineStream, (uint8_t *) lcdLineBuffer, sizeof(lcdLineBuffer), 0);
 }
 
-static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
-	char *ptr = buffer;
-	*ptr++ = 'V';
-	ptr = ftoa(ptr, getVBatt(PASS_ENGINE_PARAMETER_F), 10.0f);
-
-	ptr = appendStr(ptr, " M");
-	ptr = ftoa(ptr, getRawMap(), 10.0f);
-	return ptr;
-}
-
-static char * prepareCltIatTpsLine(Engine *engine, char *buffer) {
-	char *ptr = buffer;
-	*ptr++ = 'C';
-
-	ptr = appendStr(ptr, " TP");
-	ptr = itoa10(ptr, (int) getTPS(PASS_ENGINE_PARAMETER_F));
-	return ptr;
-}
-
 static const char* ignitionModeStr[] = { "1C", "IND", "WS" };
 static const char* injectionModeStr[] = { "Sim", "Seq", "Bch" };
 static const char* idleModeStr[] = { "I:A", "I:M" };
@@ -188,11 +173,11 @@ static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char 
 //}
 
 static char buffer[MAX_LCD_WIDTH + 4];
-static char dateBuffer[30];
 
 static void lcdPrintf(const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
+	// todo: migrate to chsnprintf
 	lcdLineStream.eos = 0; // reset
 	chvprintf((BaseSequentialStream *) &lcdLineStream, fmt, ap);
 	lcdLineStream.buffer[lcdLineStream.eos] = 0; // terminator
@@ -228,10 +213,10 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %f", getCoolantTemperature(PASS_ENGINE_PARAMETER_F));
+		lcdPrintf("Coolant %f", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
+		lcdPrintf("Intake Air %f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
@@ -250,8 +235,12 @@ static void showLine(lcd_line_e line, int screenY) {
 
 		lcdPrintf("Throttle %s %f%%", buffer, getTPS());
 		return;
+	case LL_FUEL_CLT_CORRECTION:
+		lcdPrintf("CLT corr %fv", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+		return;
+
 	case LL_VBATT:
-		lcdPrintf("Battery %fv", getVBatt(PASS_ENGINE_PARAMETER_F));
+		lcdPrintf("Battery %fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_KNOCK:
 		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
@@ -268,14 +257,14 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 #endif
 	case LL_AFR:
-		if (hasAfrSensor(PASS_ENGINE_PARAMETER_F)) {
+		if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			lcdPrintf("AFR: %f", getAfr());
 		} else {
 			lcdPrintf("AFR: none");
 		}
 		return;
 	case LL_MAP:
-		if (hasMapSensor(PASS_ENGINE_PARAMETER_F)) {
+		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			lcdPrintf("MAP %f", getMap());
 		} else {
 			lcdPrintf("MAP: none");
@@ -283,14 +272,14 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 	case LL_MAF_V:
 		if (hasMafSensor()) {
-			lcdPrintf("MAF: %fv", getMaf(PASS_ENGINE_PARAMETER_F));
+			lcdPrintf("MAF: %fv", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
 		} else {
 			lcdPrintf("MAF: none");
 		}
 		return;
 	case LL_MAF_KG_HR:
 		if (hasMafSensor()) {
-			lcdPrintf("MAF: %f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_F));
+			lcdPrintf("MAF: %f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
 		} else {
 			lcdPrintf("MAF: none");
 		}
@@ -313,7 +302,7 @@ static void fillWithSpaces(void) {
 	}
 }
 
-void updateHD44780lcd(Engine *engine) {
+void updateHD44780lcd(void) {
 	MenuItem *p = tree.topVisible;
 	int screenY = 0;
 	for (; screenY < tree.linesCount && p != NULL; screenY++) {

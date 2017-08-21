@@ -1,5 +1,5 @@
 
-zip -j rusefi_simulator.zip win32_functional_tests/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
+zip -j rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 echo user u71977750-build> ftpcmd.dat
 echo XXX >> ftpcmd.dat

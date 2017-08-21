@@ -3,7 +3,7 @@
  *
  *
  * @date Aug 18, 2013
- * @author pc
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef ADC_EXTERNAL_H_

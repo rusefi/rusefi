@@ -19,7 +19,15 @@
 // https://my.st.com/public/STe2ecommunities/mcu/Lists/cortex_mx_stm32/Flat.aspx?RootFolder=https%3a%2f%2fmy.st.com%2fpublic%2fSTe2ecommunities%2fmcu%2fLists%2fcortex_mx_stm32%2fInterrupt%20on%20CEN%20bit%20setting%20in%20TIM7&FolderCTID=0x01200200770978C69A1141439FE559EB459D7580009C4E14902C3CDE46A77F0FFD06506F5B&currentviews=474
 
 #if (EFI_PROD_CODE && HAL_USE_GPT) || defined(__DOXYGEN__)
+#include "efilib2.h"
 
+/**
+ * Maximum duration of complete timer callback, all pending events together
+ * See also 'maxEventCallbackDuration' for maximum duration of one event
+ */
+uint32_t maxPrecisionCallbackDuration = 0;
+
+// must be one of 32 bit times
 #define GPTDEVICE GPTD5
 
 static volatile efitick_t lastSetTimerTimeNt;
@@ -52,13 +60,13 @@ void setHardwareUsTimer(int32_t timeUs) {
 	 */
 	if (timeUs <= 0) {
 		timerFreezeCounter++;
-		warning(CUSTOM_OBD_42, "local freeze cnt=%d", timerFreezeCounter);
+		warning(CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
 	}
 	if (timeUs < 2)
 		timeUs = 2; // for some reason '1' does not really work
 	efiAssertVoid(timeUs > 0, "not positive timeUs");
 	if (timeUs >= 10 * US_PER_SECOND) {
-		firmwareError(OBD_PCM_Processor_Fault, "setHardwareUsTimer() too long: %d", timeUs);
+		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too long: %d", timeUs);
 		return;
 	}
 
@@ -79,7 +87,7 @@ static void callback(GPTDriver *gptp) {
 	(void)gptp;
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
-		firmwareError(OBD_PCM_Processor_Fault, "NULL globalTimerCallback");
+		firmwareError(CUSTOM_ERR_NULL_TIMER_CALLBACK, "NULL globalTimerCallback");
 		return;
 	}
 	isTimerPending = false;
@@ -87,20 +95,25 @@ static void callback(GPTDriver *gptp) {
 //	// test code
 //	setOutputPinValue(LED_CRANKING, timerCallbackCounter % 2);
 //	int mod = timerCallbackCounter % 400;
-//	chSysLockFromIsr()
+//	chSysLockFromISR()
 //	;
 //	setHardwareUsTimer(400 - mod);
-//	chSysUnlockFromIsr()
+//	chSysUnlockFromISR()
 //	;
 
+	uint32_t before = GET_TIMESTAMP();
 	globalTimerCallback(NULL);
+	uint32_t precisionCallbackDuration = GET_TIMESTAMP() - before;
+	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
+		maxPrecisionCallbackDuration = precisionCallbackDuration;
+	}
 }
 
 static void usTimerWatchDog(void) {
 	if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 		strcpy(buff, "no_event");
 		itoa10(&buff[8], lastSetTimerValue);
-		firmwareError(OBD_PCM_Processor_Fault, buff);
+		firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
 		return;
 	}
 
@@ -127,7 +140,7 @@ static msg_t mwThread(int param) {
 
 static const GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 callback, /* Timer callback.*/
-0 };
+0, 0 };
 
 void initMicrosecondTimer(void) {
 

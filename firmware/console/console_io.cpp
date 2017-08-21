@@ -72,6 +72,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		short c = (short) chSequentialStreamGet(chp);
 		onDataArrived();
 
+#if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
 		if (isCommandLineConsoleOverTTL()) {
 			uint32_t flags;
 			chSysLock()
@@ -80,12 +81,11 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			flags = chEvtGetAndClearFlagsI(&consoleEventListener);
 			chSysUnlock()
 			;
-
 			if (flags & SD_OVERRUN_ERROR) {
 //				firmwareError(OBD_PCM_Processor_Fault, "serial overrun");
 			}
-
 		}
+#endif
 
 #if EFI_UART_ECHO_TEST_MODE
 		/**
@@ -138,7 +138,7 @@ bool isCommandLineConsoleOverTTL(void) {
 }
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
-static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
 
 bool consoleInBinaryMode = false;
@@ -151,7 +151,7 @@ void runConsoleLoop(ts_channel_s *console) {
 	}
 
 	while (true) {
-		efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#9e");
+		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstck#9e");
 		bool end = getConsoleLine((BaseSequentialStream*) console->channel, console->crcReadBuffer, sizeof(console->crcReadBuffer) - 3);
 		if (end) {
 			// firmware simulator is the only case when this happens
@@ -176,15 +176,15 @@ void runConsoleLoop(ts_channel_s *console) {
 #if EFI_PROD_CODE || EFI_EGT || defined(__DOXYGEN__)
 
 
-SerialDriver * getConsoleChannel(void) {
+BaseChannel * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
 	if (isCommandLineConsoleOverTTL()) {
-		return (SerialDriver *) EFI_CONSOLE_UART_DEVICE;
+		return (BaseChannel *) EFI_CONSOLE_UART_DEVICE;
 	}
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
-	return (SerialDriver *) &SDU1;
+	return (BaseChannel *) &SDU1;
 #else
 	return NULL;
 #endif /* HAL_USE_SERIAL_USB */
@@ -217,8 +217,8 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 
 
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
-	runConsoleLoop(&binaryConsole);
-
+	if (binaryConsole.channel != NULL)
+		runConsoleLoop(&binaryConsole);
 }
 
 // 10 seconds
@@ -256,9 +256,10 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 
 	if (isCommandLineConsoleOverTTL()) {
 		/*
-		 * Activates the serial using the driver default configuration (that's 38400)
+		 * Activates the serial
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC
 		 */
+		serialConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
 		sdStart(EFI_CONSOLE_UART_DEVICE, &serialConfig);
 
 // cannot use pin repository here because pin repository prints to console
@@ -284,30 +285,30 @@ bool lockAnyContext(void) {
 	int alreadyLocked = isLocked();
 	if (alreadyLocked)
 		return true;
+#if USE_PORT_LOCK
+	port_lock();
+#else /* #if USE_PORT_LOCK */
 	if (isIsrContext()) {
-		chSysLockFromIsr()
+		chSysLockFromISR()
 		;
 	} else {
 		chSysLock()
 		;
 	}
+#endif /* #if USE_PORT_LOCK */
 	return false;
 }
 
-bool lockOutputBuffer(void) {
-	return lockAnyContext();
-}
-
 void unlockAnyContext(void) {
+#if USE_PORT_LOCK
+	port_unlock();
+#else /* #if USE_PORT_LOCK */
 	if (isIsrContext()) {
-		chSysUnlockFromIsr()
+		chSysUnlockFromISR()
 		;
 	} else {
 		chSysUnlock()
 		;
 	}
-}
-
-void unlockOutputBuffer(void) {
-	unlockAnyContext();
+#endif /* #if USE_PORT_LOCK */
 }

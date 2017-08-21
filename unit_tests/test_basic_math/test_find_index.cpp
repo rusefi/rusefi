@@ -81,19 +81,19 @@ void testInterpolate2d(void) {
 	int result;
 
 	printf("Left size\r\n");
-	result = interpolate2d(0, bins4, values4, size);
+	result = interpolate2d("t", 0, bins4, values4, size);
 	assertEquals(1, result);
 
 	printf("Right size\r\n");
-	result = interpolate2d(10, bins4, values4, size);
+	result = interpolate2d("t", 10, bins4, values4, size);
 	assertEquals(400, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d(3, bins4, values4, size);
+	result = interpolate2d("t", 3, bins4, values4, size);
 	assertEquals(30, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d(3.5, bins4, values4, size);
+	result = interpolate2d("t", 3.5, bins4, values4, size);
 	assertEquals(215, result);
 }
 
@@ -110,10 +110,10 @@ void testSetTableValue(void) {
 
 	assertEquals(1, config.cltFuelCorr[0]);
 
-	setTableValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
+	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	assertEquals(1.5, config.cltFuelCorr[0]);
 
-	setTableValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
+	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
 	assertEquals(1.4, config.cltFuelCorr[0]);
 
 }

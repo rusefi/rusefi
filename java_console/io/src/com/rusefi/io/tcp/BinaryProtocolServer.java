@@ -2,6 +2,8 @@ package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolCommands;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.Fields;
 
@@ -17,7 +19,7 @@ import java.net.Socket;
  *         11/24/15
  */
 
-public class BinaryProtocolServer {
+public class BinaryProtocolServer implements BinaryProtocolCommands {
     private static final int PROXY_PORT = 2390;
     private static final String TS_OK = "\0";
 
@@ -27,6 +29,7 @@ public class BinaryProtocolServer {
     public static void start() {
         FileLog.MAIN.logLine("BinaryProtocolServer on " + PROXY_PORT);
         Runnable runnable = new Runnable() {
+            @SuppressWarnings("InfiniteLoopStatement")
             @Override
             public void run() {
                 ServerSocket serverSocket;
@@ -49,18 +52,20 @@ public class BinaryProtocolServer {
                         }, "proxy connection").start();
                     }
                 } catch (IOException e) {
+                    throw new IllegalStateException(e);
                 }
             }
         };
         new Thread(runnable, "BinaryProtocolServer").start();
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     private static void runProxy(Socket clientSocket) throws IOException {
         DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 
         while (true) {
             byte first = in.readByte();
-            if (first == BinaryProtocol.COMMAND_PROTOCOL) {
+            if (first == COMMAND_PROTOCOL) {
                 //System.out.println("Ignoring plain F command");
                 System.out.println("Got plain F command");
                 OutputStream outputStream = clientSocket.getOutputStream();
@@ -77,7 +82,9 @@ public class BinaryProtocolServer {
                 throw new IOException("Zero length not expected");
 
             byte[] packet = new byte[length];
-            in.read(packet);
+            int size = in.read(packet);
+            if (size != packet.length)
+                throw new IllegalStateException();
 
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet));
             byte command = (byte) dis.read();
@@ -89,25 +96,25 @@ public class BinaryProtocolServer {
 
 
             TcpIoStream stream = new TcpIoStream(clientSocket.getInputStream(), clientSocket.getOutputStream());
-            if (command == BinaryProtocol.COMMAND_HELLO) {
-                BinaryProtocol.sendCrcPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER, stream);
-            } else if (command == BinaryProtocol.COMMAND_PROTOCOL) {
+            if (command == COMMAND_HELLO) {
+                BinaryProtocol.sendPacket((TS_OK + TS_SIGNATURE).getBytes(), FileLog.LOGGER, stream);
+            } else if (command == COMMAND_PROTOCOL) {
 //                System.out.println("Ignoring crc F command");
-                BinaryProtocol.sendCrcPacket((TS_OK + TS_PROTOCOL).getBytes(), FileLog.LOGGER, stream);
-            } else if (command == BinaryProtocol.COMMAND_CRC_CHECK_COMMAND) {
+                BinaryProtocol.sendPacket((TS_OK + TS_PROTOCOL).getBytes(), FileLog.LOGGER, stream);
+            } else if (command == COMMAND_CRC_CHECK_COMMAND) {
                 short page = dis.readShort();
                 short offset = dis.readShort();
                 short count = dis.readShort(); // no swap here? interesting!
                 System.out.println("CRC check " + page + "/" + offset + "/" + count);
-                BinaryProtocol bp = BinaryProtocol.instance;
+                BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
                 int result = IoHelper.getCrc32(bp.getController().getContent(), offset, count);
                 ByteArrayOutputStream response = new ByteArrayOutputStream();
                 response.write(TS_OK.charAt(0));
                 new DataOutputStream(response).write(result);
-                BinaryProtocol.sendCrcPacket(response.toByteArray(), FileLog.LOGGER, stream);
-            } else if (command == BinaryProtocol.COMMAND_PAGE) {
-                BinaryProtocol.sendCrcPacket(TS_OK.getBytes(), FileLog.LOGGER, stream);
-            } else if (command == BinaryProtocol.COMMAND_READ) {
+                BinaryProtocol.sendPacket(response.toByteArray(), FileLog.LOGGER, stream);
+            } else if (command == COMMAND_PAGE) {
+                BinaryProtocol.sendPacket(TS_OK.getBytes(), FileLog.LOGGER, stream);
+            } else if (command == COMMAND_READ) {
                 short page = dis.readShort();
                 short offset = swap16(dis.readShort());
                 short count = swap16(dis.readShort());
@@ -115,20 +122,25 @@ public class BinaryProtocolServer {
                     FileLog.MAIN.logLine("Error: negative read request " + offset + "/" + count);
                 } else {
                     System.out.println("read " + page + "/" + offset + "/" + count);
-                    BinaryProtocol bp = BinaryProtocol.instance;
+                    BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
                     byte[] response = new byte[1 + count];
                     response[0] = (byte) TS_OK.charAt(0);
                     System.arraycopy(bp.getController().getContent(), offset, response, 1, count);
-                    BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+                    BinaryProtocol.sendPacket(response, FileLog.LOGGER, stream);
                 }
-            } else if (command == BinaryProtocol.COMMAND_OUTPUTS) {
+            } else if (command == COMMAND_OUTPUTS) {
+
+                if (System.currentTimeMillis() > 0)
+                    throw new UnsupportedOperationException("offset and count not supported see #429");
+                // todo: new version with offset and
 
                 byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
                 response[0] = (byte) TS_OK.charAt(0);
-                byte[] currentOutputs = BinaryProtocol.currentOutputs;
+                BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+                byte[] currentOutputs = bp.currentOutputs;
                 if (currentOutputs != null)
                     System.arraycopy(currentOutputs, 1, response, 1, Fields.TS_OUTPUT_SIZE);
-                BinaryProtocol.sendCrcPacket(response, FileLog.LOGGER, stream);
+                BinaryProtocol.sendPacket(response, FileLog.LOGGER, stream);
             } else {
                 FileLog.MAIN.logLine("Error: unknown command " + command);
             }

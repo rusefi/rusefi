@@ -1,6 +1,7 @@
 /**
  * @file pid.cpp
  *
+ * https://en.wikipedia.org/wiki/Feedback
  * http://en.wikipedia.org/wiki/PID_controller
  *
  * @date Sep 16, 2014
@@ -11,25 +12,26 @@
 #include "math.h"
 
 Pid::Pid() {
-    init(NULL, NAN, NAN);
+    init(NULL);
 }
 
-Pid::Pid(pid_s *pid, float minResult, float maxResult) {
-	init(pid, minResult, maxResult);
+Pid::Pid(pid_s *pid) {
+	init(pid);
 }
 
-void Pid::init(pid_s *pid, float minResult, float maxResult) {
+void Pid::init(pid_s *pid) {
 	this->pid = pid;
-	this->minResult = minResult;
-	this->maxResult = maxResult;
+	resetCounter = 0;
 
-	dTerm = iTerm = 0;
-	prevError = 0;
+	reset();
 }
 
 bool Pid::isSame(pid_s *pid) {
-	return this->pid->dFactor == pid->dFactor && this->pid->iFactor == pid->iFactor  &&
-			this->pid->offset == pid->offset && this->pid->pFactor == pid->pFactor;
+	return this->pid->pFactor == pid->pFactor
+			&& this->pid->iFactor == pid->iFactor
+			&& this->pid->dFactor == pid->dFactor
+			&& this->pid->offset == pid->offset
+			&& this->pid->period == pid->period;
 }
 
 float Pid::getValue(float target, float input) {
@@ -38,6 +40,8 @@ float Pid::getValue(float target, float input) {
 
 float Pid::getValue(float target, float input, float dTime) {
 	float error = target - input;
+	prevTarget = target;
+	prevInput = input;
 
 	float pTerm = pid->pFactor * error;
 	iTerm += pid->iFactor * dTime * error;
@@ -49,18 +53,20 @@ float Pid::getValue(float target, float input, float dTime) {
 	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
 	 * Here we limit the I-term #353
 	 */
-	if (iTerm > maxResult - (pTerm + dTerm + pid->offset))
-		iTerm = maxResult - (pTerm + dTerm + pid->offset);
+	if (iTerm > pid->maxValue)
+		iTerm = pid->maxValue;
 
-	if (iTerm < minResult - (pTerm + dTerm + pid->offset))
-		iTerm = minResult - (pTerm + dTerm + pid->offset);
+	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValye'
+	if (iTerm < -pid->maxValue)
+		iTerm = -pid->maxValue;
 
 	float result = pTerm + iTerm + dTerm + pid->offset;
-	if (result > maxResult) {
-		result = maxResult;
-	} else if (result < minResult) {
-		result = minResult;
+	if (result > pid->maxValue) {
+		result = pid->maxValue;
+	} else if (result < pid->minValue) {
+		result = pid->minValue;
 	}
+	prevResult = result;
 	return result;
 }
 
@@ -72,8 +78,9 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 }
 
 void Pid::reset(void) {
-	iTerm = 0;
-	prevError = 0;
+	dTerm = iTerm = 0;
+	prevResult = prevInput = prevTarget = prevError = 0;
+	resetCounter++;
 }
 
 float Pid::getP(void) {
@@ -102,12 +109,45 @@ float Pid::getOffset(void) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
+	postState(tsOutputChannels, 1);
+}
+
+void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
+	tsOutputChannels->debugFloatField1 = prevResult;
 	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();
 	tsOutputChannels->debugFloatField5 = getD();
-	tsOutputChannels->debugIntField1 = getP();
+	tsOutputChannels->debugFloatField6 = pid->minValue;
+	tsOutputChannels->debugFloatField7 = pid->maxValue;
+	tsOutputChannels->debugIntField1 = getP() * pMult;
 	tsOutputChannels->debugIntField2 = getOffset();
+	tsOutputChannels->debugIntField3 = resetCounter;
 	tsOutputChannels->debugFloatField6 = dTerm;
 }
 #endif
+
+void Pid::sleep() {
+#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
+	int period = maxI(10, pid->period);
+	chThdSleepMilliseconds(period);
+#endif /* EFI_UNIT_TEST */
+}
+
+void Pid::showPidStatus(Logging *logging, const char*msg) {
+	scheduleMsg(logging, "%s settings: offset=%d P=%.5f I=%.5f D=%.5f dT=%d",
+			msg,
+			pid->offset,
+			pid->pFactor,
+			pid->iFactor,
+			pid->dFactor,
+			pid->period);
+
+	scheduleMsg(logging, "%s status: value=%f input=%f/target=%f iTerm=%.5f dTerm=%.5f",
+			msg,
+			prevResult,
+			prevInput,
+			prevTarget,
+			iTerm, dTerm);
+
+}

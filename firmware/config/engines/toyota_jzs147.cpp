@@ -23,8 +23,8 @@
 
 EXTERN_ENGINE;
 
-static void common2jz(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F); // default pinout
+static void common2jz(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE); // default pinout
 
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
@@ -67,8 +67,8 @@ static void common2jz(DECLARE_ENGINE_PARAMETER_F) {
 
 }
 
-void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	common2jz(PASS_ENGINE_PARAMETER_F);
+void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	common2jz(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_2JZ_1_12;
@@ -95,8 +95,8 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 }
 
-void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_F) {
-	common2jz(PASS_ENGINE_PARAMETER_F);
+void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	common2jz(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	boardConfiguration->isSdCardEnabled = true;
 

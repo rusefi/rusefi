@@ -1,19 +1,51 @@
 #
 # in this file we define system FSIO expressions
 #
+# system_fsio.txt is input for compile_fsio_file tool, see gen_system_fsio.bat
+#
 # see http://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
 #
 # Jan 19, 2017
 # Andrey Belomutskiy, (c) 2012-2017
 #
 
-
-
 FAN_CONTROL_LOGIC=(fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting)
 
-# todo: start-up fuel pump priming time should probably be configurable?
-FUEL_PUMP_LOGIC=(time_since_boot < 4) | (rpm > 0)
+FUEL_PUMP_LOGIC=(time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
 
 ALTERNATOR_LOGIC=vbatt < 14.5
 
 AC_RELAY_LOGIC=ac_on_switch
+
+# Combined RPM, CLT and VBATT warning light
+COMBINED_WARNING_LIGHT=(rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
+
+#needed by EFI_MAIN_RELAY_CONTROL
+MAIN_RELAY_LOGIC=(time_since_boot < 2) | (vbatt > 5) | in_shutdown
+
+# could be used for simple variable intake geometry setups or warning light or starter block
+RPM_ABOVE_USER_SETTING_1=rpm > fsio_setting(1)
+
+# could be used for simple variable intake geometry setups or warning light or starter block
+RPM_ABOVE_USER_SETTING_1=rpm > fsio_setting(1)
+
+RPM_ABOVE_USER_SETTING_2=rpm > fsio_setting(2)
+
+RPM_ABOVE_5500_ON_OFF=rpm > 5500
+
+RPM_ABOVE_6000_ON_OFF=rpm > 6000
+
+RPM_ABOVE_1000_SOLENOID_70_DUTY=(rpm > 1000) * 0.7
+
+RPM_ABOVE_2000_SOLENOID_50_DUTY=(rpm > 2000) * 0.5
+
+RPM_ABOVE_6000_SOLENOID_80_DUTY=(rpm > 6000) * 0.8
+
+RPM_BELOW_USER_SETTING_1=rpm < fsio_setting(1)
+
+# starter block using configurable parameter
+STARTER_BLOCK=rpm < cranking_rpm
+
+BOOST_CONTROLLER=fsio_table (3, rpm, map) / 100
+
+ANALOG_CONDITION=if(fsio_input (0) > 20, 0, 10) 

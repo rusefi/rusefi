@@ -34,30 +34,6 @@ static ioportid_t ports[7] = {GPIOA,
 };
 
 PinRepository::PinRepository() {
-
-}
-
-/**
- * @deprecated - use hwPortname() instead
- */
-const char *portname(ioportid_t GPIOx) {
-	if (GPIOx == GPIOA)
-		return "PA";
-	if (GPIOx == GPIOB)
-		return "PB";
-	if (GPIOx == GPIOC)
-		return "PC";
-	if (GPIOx == GPIOD)
-		return "PD";
-#if defined(STM32F4XX)
-	if (GPIOx == GPIOE)
-		return "PE";
-	if (GPIOx == GPIOH)
-		return "PH";
-#endif
-	if (GPIOx == GPIOF)
-		return "PF";
-	return "unknown";
 }
 
 static int getPortIndex(ioportid_t port) {
@@ -131,11 +107,11 @@ const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
 	}
-	ioportid_t hwPort = getHwPort(brainPin);
+	ioportid_t hwPort = getHwPort("hostname", brainPin);
 	if (hwPort == GPIO_NULL) {
 		return "NONE";
 	}
-	int hwPin = getHwPin(brainPin);
+	int hwPin = getHwPin("hostname", brainPin);
 	portNameStream.eos = 0; // reset
 	chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
 	portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
@@ -155,59 +131,20 @@ void initPinRepository(void) {
 	addConsoleAction("pins", reportPins);
 }
 
-/**
- * See also unmarkPin()
- */
-static inline void markUsed(int index, const char *msg) {
-	PIN_USED[index] = msg;
-	totalPinsUsed++;
-}
-
-void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode) {
-	mySetPadMode(msg, getHwPort(pin), getHwPin(pin), mode);
-}
-
-iomode_t getInputMode(pin_input_mode_e mode) {
-	switch (mode) {
-	case PI_PULLUP:
-		return PAL_MODE_INPUT_PULLUP;
-	case PI_PULLDOWN:
-		return PAL_MODE_INPUT_PULLDOWN;
-	case PI_DEFAULT:
-	default:
-		return PAL_MODE_INPUT;
-	}
-}
-
 static int getIndex(ioportid_t port, ioportmask_t pin) {
 	int portIndex = getPortIndex(port);
 	return portIndex * PORT_SIZE + pin;
 }
 
-const char * getPinFunction(brain_input_pin_e brainPin) {
-	ioportid_t port = getHwPort(brainPin);
-	ioportmask_t pin = getHwPin(brainPin);
-
-	int index = getIndex(port, pin);
-	return PIN_USED[index];
-}
-
 /**
- * This method would set an error condition if pin is already used
+ * See also unmarkPin()
+ * @return true if this pin was already used, false otherwise
  */
-void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
+bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 	if (!initialized) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return;
+		return false;
 	}
-	if (port == GPIO_NULL)
-		return;
-	print("%s on %s:%d\r\n", msg, portname(port), pin);
-
-	appendPrintf(&logger, "msg,%s", msg);
-	appendPrintf(&logger, " on %s%d%s", portname(port), pin, DELIMETER);
-	printLine(&logger);
-
 	int index = getIndex(port, pin);
 
 	if (PIN_USED[index] != NULL) {
@@ -217,19 +154,28 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 		 */
 //		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
 		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
-		return;
+		return true;
 	}
-	markUsed(index, msg);
-
-	palSetPadMode(port, pin, mode);
+	PIN_USED[index] = msg;
+	totalPinsUsed++;
+	return false;
 }
+
+const char * getPinFunction(brain_input_pin_e brainPin) {
+	ioportid_t port = getHwPort("getF", brainPin);
+	ioportmask_t pin = getHwPin("getF", brainPin);
+
+	int index = getIndex(port, pin);
+	return PIN_USED[index];
+}
+
 
 void unmarkPin(brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
-	ioportid_t port = getHwPort(brainPin);
-	ioportmask_t pin = getHwPin(brainPin);
+	ioportid_t port = getHwPort("unmark", brainPin);
+	ioportmask_t pin = getHwPin("unmark", brainPin);
 
 	int index = getIndex(port, pin);
 
@@ -239,27 +185,3 @@ void unmarkPin(brain_pin_e brainPin) {
 	}
 }
 
-/**
- * This method would crash the program if pin is already in use
- */
-void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
-	efiAssertVoid(initialized, "repo not initialized");
-
-	int index = getIndex(port, pin);
-
-	if (PIN_USED[index] != NULL) {
-		print("!!!!!!!!!!!!! Already used [%s] %d\r\n", msg, pin);
-		print("!!!!!!!!!!!!! Already used by [%s]\r\n", PIN_USED[index]);
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "pin already used");
-		return;
-	}
-	markUsed(index, msg);
-	palSetPadMode(port, pin, mode);
-}
-
-void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
-	  efiAssertVoid((icup->state == ICU_STOP) || (icup->state == ICU_READY),
-	              "input already used?");
-
-	icuStart(icup, config);
-}

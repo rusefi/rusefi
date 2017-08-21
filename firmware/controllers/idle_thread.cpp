@@ -25,7 +25,6 @@
  */
 
 #include "main.h"
-#include "idle_controller.h"
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
 #include "idle_thread.h"
@@ -35,6 +34,7 @@
 #include "stepper.h"
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#include "allsensors.h"
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -43,21 +43,24 @@ extern TunerStudioOutputChannels tsOutputChannels;
 EXTERN_ENGINE
 ;
 
+static bool shouldResetPid = false;
+
+static Pid idlePid(&engineConfiguration->idleRpmPid);
+
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid;
 
 static StepperMotor iacMotor;
 
-/**
- * that's the position with CLT and IAT corrections
- */
-static float actualIdlePosition = -100.0f;
+static int adjustedTargetRpm;
+
+static uint32_t lastCrankingCyclesCounter = 0;
+static float lastCrankingIacPosition;
 
 /**
- * Idle level calculation algorithm lives in idle_controller.cpp
- * todo: replace this with a PID regulator?
+ * that's current position with CLT and IAT corrections
  */
-static IdleValveState idlePositionController;
+static percent_t currentIdlePosition = -100.0f;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
@@ -67,6 +70,7 @@ static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", idleModeStr,
 			getIdlePosition(), boolToString(boardConfiguration->useStepperIdle));
+
 	if (boardConfiguration->useStepperIdle) {
 		scheduleMsg(logger, "directionPin=%s reactionTime=%f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
 				engineConfiguration->idleStepperReactionTime);
@@ -78,58 +82,39 @@ static void showIdleInfo(void) {
 		scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idle.solenoidFrequency,
 				hwPortname(boardConfiguration->idle.solenoidPin));
 	}
-	scheduleMsg(logger, "mode=%s", getIdle_control_e(engineConfiguration->idleControl));
-	if (engineConfiguration->idleControl == IC_PID) {
-		scheduleMsg(logger, "idle P=%f I=%f D=%f dT=%d", engineConfiguration->idleRpmPid.pFactor,
-				engineConfiguration->idleRpmPid.iFactor,
-				engineConfiguration->idleRpmPid.dFactor,
-				engineConfiguration->idleDT);
+
+
+	if (engineConfiguration->idleMode == IM_AUTO) {
+		idlePid.showPidStatus(logger, "idle");
 	}
 }
 
-void setIdleControlEnabled(int value) {
+void setIdleMode(idle_mode_e value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
 
-static void setIdleValvePwm(percent_t value) {
-	/**
-	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
-	 * todo: unify?
-	 */
-	idleSolenoid.setSimplePwmDutyCycle(value / 100);
+static void applyIACposition(percent_t position) {
+	if (boardConfiguration->useStepperIdle) {
+		iacMotor.setTargetPosition(position / 100 * engineConfiguration->idleStepperTotalSteps);
+	} else {
+		/**
+		 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
+		 * todo: unify?
+		 */
+		idleSolenoid.setSimplePwmDutyCycle(position / 100.0);
+	}
 }
 
-static void manualIdleController(int positionPercent) {
-	// todo: this is not great that we have to write into configuration here
-	boardConfiguration->manIdlePosition = positionPercent;
+static float manualIdleController(float cltCorrection) {
 
-	if (isCranking()) {
-		positionPercent += engineConfiguration->crankingIdleAdjustment;
-	}
-
-	percent_t cltCorrectedPosition = interpolate2d(engine->engineState.clt, config->cltIdleCorrBins, config->cltIdleCorr,
-	CLT_CURVE_SIZE) / PERCENT_MULT * positionPercent;
+	percent_t correctedPosition = cltCorrection * boardConfiguration->manIdlePosition;
 
 	// let's put the value into the right range
-	cltCorrectedPosition = maxF(cltCorrectedPosition, 0.01);
-	cltCorrectedPosition = minF(cltCorrectedPosition, 99.9);
+	correctedPosition = maxF(correctedPosition, 0.01);
+	correctedPosition = minF(correctedPosition, 99.9);
 
-	if (engineConfiguration->debugMode == DBG_IDLE) {
-		tsOutputChannels.debugFloatField1 = actualIdlePosition;
-	}
-
-	if (absF(cltCorrectedPosition - actualIdlePosition) < 1) {
-		return; // value is pretty close, let's leave the poor valve alone
-	}
-	actualIdlePosition = cltCorrectedPosition;
-
-
-	if (boardConfiguration->useStepperIdle) {
-		iacMotor.setTargetPosition(cltCorrectedPosition / 100 * engineConfiguration->idleStepperTotalSteps);
-	} else {
-		setIdleValvePwm(cltCorrectedPosition);
-	}
+	return correctedPosition;
 }
 
 void setIdleValvePosition(int positionPercent) {
@@ -137,10 +122,11 @@ void setIdleValvePosition(int positionPercent) {
 		return;
 	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
 	showIdleInfo();
-	manualIdleController(positionPercent);
+	// todo: this is not great that we have to write into configuration here
+	boardConfiguration->manIdlePosition = positionPercent;
 }
 
-static int idlePositionBeforeBlip;
+static int blipIdlePosition;
 static efitimeus_t timeToStopBlip = 0;
 static efitimeus_t timeToStopIdleTest = 0;
 
@@ -148,12 +134,10 @@ static efitimeus_t timeToStopIdleTest = 0;
  * I use this questionable feature to tune acceleration enrichment
  */
 static void blipIdle(int idlePosition, int durationMs) {
-	// todo: add 'blip' feature for automatic target control
 	if (timeToStopBlip != 0) {
 		return; // already in idle blip
 	}
-	idlePositionBeforeBlip = boardConfiguration->manIdlePosition;
-	setIdleValvePosition(idlePosition);
+	blipIdlePosition = idlePosition;
 	timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
 }
 
@@ -165,32 +149,24 @@ static void finishIdleTestIfNeeded() {
 static void undoIdleBlipIfNeeded() {
 	if (timeToStopBlip != 0 && getTimeNowUs() > timeToStopBlip) {
 		timeToStopBlip = 0;
-		setIdleValvePosition(idlePositionBeforeBlip);
 	}
 }
-
-static percent_t currentIdleValve = -1;
 
 percent_t getIdlePosition(void) {
-	if (engineConfiguration->idleMode == IM_AUTO) {
-		return currentIdleValve;
-	} else {
-		return boardConfiguration->manIdlePosition;
-	}
+	return currentIdlePosition;
 }
 
-static void autoIdle() {
-	efitimems_t now = currentTimeMillis();
-
-	percent_t newValue = idlePositionController.getIdle(getRpmE(engine), now PASS_ENGINE_PARAMETER);
-
-	if (currentIdleValve != newValue) {
-		currentIdleValve = newValue;
-
-		// todo: looks like in auto mode stepper value is not set, only solenoid?
-
-		setIdleValvePwm(newValue);
+static float autoIdle(float cltCorrection) {
+	if (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > boardConfiguration->idlePidDeactivationTpsThreshold) {
+		// just leave IAC position as is
+		return currentIdlePosition;
 	}
+
+	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
+
+	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
+
+	return newValue;
 }
 
 static msg_t ivThread(int param) {
@@ -204,28 +180,82 @@ static msg_t ivThread(int param) {
 	 */
 
 	while (true) {
-		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
+		idlePid.sleep();  // in both manual and auto mode same period is used
+
+		if (shouldResetPid) {
+			idlePid.reset();
+//			alternatorPidResetCounter++;
+			shouldResetPid = false;
+		}
+
+
 
 		// this value is not used yet
 		if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
-			engine->clutchDownState = palReadPad(getHwPort(boardConfiguration->clutchDownPin),
-					getHwPin(boardConfiguration->clutchDownPin));
+			engine->clutchDownState = efiReadPin(boardConfiguration->clutchDownPin);
 		}
 		if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
-			engine->clutchUpState = palReadPad(getHwPort(boardConfiguration->clutchUpPin),
-					getHwPin(boardConfiguration->clutchUpPin));
+			engine->clutchUpState = efiReadPin(boardConfiguration->clutchUpPin);
+		}
+
+		if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+			engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
 		}
 
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		if (engineConfiguration->idleMode == IM_MANUAL) {
-			// let's re-apply CLT correction
-			manualIdleController(boardConfiguration->manIdlePosition);
+		float clt = engine->sensors.clt;
+		float cltCorrection = cisnan(clt) ? 1 : interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr,
+		CLT_CURVE_SIZE) / PERCENT_MULT;
+
+		float iacPosition;
+
+		if (timeToStopBlip != 0) {
+			iacPosition = blipIdlePosition;
+		} else if (!engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			// during cranking it's always manual mode, PID would make no sence during cranking
+			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
+			// save cranking position & cycles counter for taper transition
+			lastCrankingIacPosition = iacPosition;
+			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
 		} else {
-			autoIdle();
+			if (engineConfiguration->idleMode == IM_MANUAL) {
+				// let's re-apply CLT correction
+				iacPosition = manualIdleController(cltCorrection);
+			} else {
+				iacPosition = autoIdle(cltCorrection);
+			}
+			// taper transition from cranking to running (uint32_t to float conversion is safe here)
+			if (engineConfiguration->afterCrankingIACtaperDuration > 0)
+				iacPosition = interpolateClamped(lastCrankingCyclesCounter, lastCrankingIacPosition, 
+					lastCrankingCyclesCounter + engineConfiguration->afterCrankingIACtaperDuration, iacPosition, 
+					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
+		if (absF(iacPosition - currentIdlePosition) < 1) {
+			continue; // value is pretty close, let's leave the poor valve alone
+		}
+
+		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+			if (engineConfiguration->idleMode == IM_AUTO) {
+				// see also tsOutputChannels->idlePosition
+				idlePid.postState(&tsOutputChannels, 1000000);
+			} else {
+				tsOutputChannels.debugFloatField1 = iacPosition;
+			}
+#endif
+		}
+
+		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
+			idlePid.showPidStatus(logger, "idle");
+
+		}
+
+		currentIdlePosition = iacPosition;
+
+		applyIACposition(currentIdlePosition);
 	}
 #if defined __GNUC__
 	return -1;
@@ -233,12 +263,18 @@ static msg_t ivThread(int param) {
 }
 
 void setTargetIdleRpm(int value) {
-	idlePositionController.setTargetRpm(value);
+	engineConfiguration->targetIdleRpm = value;
 	scheduleMsg(logger, "target idle RPM %d", value);
+	showIdleInfo();
 }
 
 static void apply(void) {
-//	idleMath.updateFactors(engineConfiguration->idlePFactor, engineConfiguration->idleIFactor, engineConfiguration->idleDFactor, engineConfiguration->idleDT);
+	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+}
+
+void setIdleOffset(float value)  {
+	engineConfiguration->idleRpmPid.offset = value;
+	showIdleInfo();
 }
 
 void setIdlePFactor(float value) {
@@ -260,9 +296,14 @@ void setIdleDFactor(float value) {
 }
 
 void setIdleDT(int value) {
-	engineConfiguration->idleDT = value;
+	engineConfiguration->idleRpmPid.period = value;
 	apply();
 	showIdleInfo();
+}
+
+void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
+	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
+	idleSolenoid.setFrequency(boardConfiguration->idle.solenoidFrequency);
 }
 
 void startIdleBench(void) {
@@ -275,7 +316,7 @@ void setDefaultIdleParameters(void) {
 	engineConfiguration->idleRpmPid.pFactor = 0.1f;
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
-	engineConfiguration->idleDT = 10;
+	engineConfiguration->idleRpmPid.period = 10;
 }
 
 static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
@@ -284,7 +325,7 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
 	if (!value /* always allow turning solenoid off */ ||
-			(engine->rpmCalculator.rpmValue != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
+			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			) {
 		output->setValue(value);
 	}
@@ -292,9 +333,9 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 
 static void initIdleHardware() {
 	if (boardConfiguration->useStepperIdle) {
-		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin,
-				engineConfiguration->idleStepperReactionTime, engineConfiguration->idleStepperTotalSteps,
-				engineConfiguration->stepperEnablePin);
+		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin, 
+				engineConfiguration->stepperDirectionPinMode, engineConfiguration->idleStepperReactionTime, 
+				engineConfiguration->idleStepperTotalSteps, engineConfiguration->stepperEnablePin, logger);
 	} else {
 		/**
 		 * Start PWM for idleValvePin
@@ -305,31 +346,34 @@ static void initIdleHardware() {
 	}
 }
 
-void startIdleThread(Logging*sharedLogger, Engine *engine) {
+void startIdleThread(Logging*sharedLogger) {
 	logger = sharedLogger;
 
 	// todo: re-initialize idle pins on the fly
 	initIdleHardware();
 
-	idlePositionController.init();
-	scheduleMsg(logger, "initial idle %d", idlePositionController.value);
+	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet
-	if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED)
-		mySetPadMode2("clutch down switch", boardConfiguration->clutchDownPin,
+	if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
+		efiSetPadMode("clutch down switch", boardConfiguration->clutchDownPin,
 				getInputMode(boardConfiguration->clutchDownPinMode));
+	}
 
-	if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED)
-		mySetPadMode2("clutch up switch", boardConfiguration->clutchUpPin,
+	if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
+		efiSetPadMode("clutch up switch", boardConfiguration->clutchUpPin,
 				getInputMode(boardConfiguration->clutchUpPinMode));
+	}
+
+	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
+				getInputMode(engineConfiguration->brakePedalPinMode));
+	}
 
 	addConsoleAction("idleinfo", showIdleInfo);
-
-
-	addConsoleActionI("set_idle_enabled", (VoidInt) setIdleControlEnabled);
 
 	addConsoleActionII("blipidle", blipIdle);
 

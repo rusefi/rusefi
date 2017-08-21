@@ -1,9 +1,12 @@
 <roms>
+
+<!-- @@generator_message@@ -->
+
     <rom>
         <romid>
             <xmlid>RUSEFI</xmlid>
             <internalidaddress>0</internalidaddress>
-            <internalidstring>RUSEFI0.1</internalidstring>
+            <internalidstring>OPEN_SR5_0.1</internalidstring>
             <ecuid>RUSEFI</ecuid>
             <make>rusEfi</make>
             <model>rusEfi</model>

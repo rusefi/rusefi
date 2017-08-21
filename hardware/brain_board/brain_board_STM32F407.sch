@@ -18,8 +18,8 @@ $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "2017-01-20"
-Rev "R0.3"
+Date "2017-02-18"
+Rev "R0.4"
 Comp "rusEFI by Art_Electro"
 Comment1 ""
 Comment2 ""
@@ -1116,7 +1116,7 @@ U 1 1 52D15D96
 P 3100 7700
 F 0 "JP1" H 3100 7850 60  0000 C CNN
 F 1 "JUMPER" H 3100 7620 40  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 3100 7700 60  0001 C CNN
+F 2 "rusEFI_LIB:SM0805_jumper" H 3100 7700 60  0001 C CNN
 F 3 "" H 3100 7700 60  0000 C CNN
 	1    3100 7700
 	1    0    0    -1  
@@ -1127,7 +1127,7 @@ U 1 1 52D15DA3
 P 3100 8025
 F 0 "JP2" H 3100 8175 60  0000 C CNN
 F 1 "JUMPER" H 3100 7945 40  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 3100 8025 60  0001 C CNN
+F 2 "rusEFI_LIB:SM0805_jumper" H 3100 8025 60  0001 C CNN
 F 3 "" H 3100 8025 60  0000 C CNN
 	1    3100 8025
 	1    0    0    -1  
@@ -1138,7 +1138,7 @@ U 1 1 52D15DC3
 P 3100 8700
 F 0 "JP4" H 3100 8850 60  0000 C CNN
 F 1 "JUMPER" H 3100 8620 40  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 3100 8700 60  0001 C CNN
+F 2 "rusEFI_LIB:SM0805_jumper" H 3100 8700 60  0001 C CNN
 F 3 "" H 3100 8700 60  0000 C CNN
 	1    3100 8700
 	1    0    0    -1  
@@ -1149,7 +1149,7 @@ U 1 1 52D15DD0
 P 3100 8350
 F 0 "JP3" H 3100 8500 60  0000 C CNN
 F 1 "JUMPER" H 3100 8270 40  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 3100 8350 60  0001 C CNN
+F 2 "rusEFI_LIB:SM0805_jumper" H 3100 8350 60  0001 C CNN
 F 3 "" H 3100 8350 60  0000 C CNN
 	1    3100 8350
 	1    0    0    -1  

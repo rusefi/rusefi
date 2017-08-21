@@ -18,7 +18,12 @@ public class GccMapReader {
     private static final Pattern p2 = Pattern.compile(".*0x(\\S*)(.*)");
 
     public static void main(String[] args) throws IOException {
-        BufferedReader fr = new BufferedReader(new FileReader("rusefi.map"));
+        if (args.length!=1) {
+            System.err.println("file name parameter expected");
+            System.exit(-1);
+        }
+        String fileName = args[0];
+        BufferedReader fr = new BufferedReader(new FileReader(fileName));
 
         String line;
         List<String> lines = new ArrayList<String>();

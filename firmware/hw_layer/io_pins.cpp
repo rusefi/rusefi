@@ -1,6 +1,7 @@
 /**
  * @file	io_pins.cpp
- * @brief	It could be that the main purpose of this file is the status LED blinking
+ * @brief	his file is about general input/output utility methods, not much EFI-specifics
+ *
  *
  * @date Jan 24, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -12,19 +13,17 @@
 #include "efiGpio.h"
 
 #include "pin_repository.h"
-#include "gpio_helper.h"
 #include "status_loop.h"
 #include "engine_configuration.h"
 #include "console_io.h"
+
+EXTERN_ENGINE;
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 #include "main_trigger_callback.h"
 #endif /* EFI_ENGINE_CONTROL */
 
-extern board_configuration_s *boardConfiguration;
-
 static LoggingWithStorage logger("io_pins");
-
 
 extern EnginePins enginePins;
 
@@ -34,144 +33,68 @@ static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, G
 static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 #endif
 
-pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
-pin_output_mode_e OPENDRAIN_OUTPUT = OM_OPENDRAIN;
-
-/**
- * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
- */
-static void outputPinRegisterExt(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin,
-		pin_output_mode_e *outputMode) {
-#if EFI_GPIO
-	if (port == GPIO_NULL) {
-		// that's for GRIO_NONE
-		output->port = port;
-		return;
-	}
-
-	assertOMode(*outputMode);
-	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
-	PAL_MODE_OUTPUT_PUSHPULL :
-																				PAL_MODE_OUTPUT_OPENDRAIN;
-
-	initOutputPinExt(msg, output, port, pin, mode);
-
-	output->setDefaultPinState(outputMode);
-#endif
-}
-
-ioportid_t getHwPort(brain_pin_e brainPin) {
+ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return GPIO_NULL;
 	if (brainPin > GPIO_UNASSIGNED || brainPin < 0) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "Invalid brain_pin_e: %d", brainPin);
+		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
 	return PORTS[brainPin / PORT_SIZE];
 }
 
-ioportmask_t getHwPin(brain_pin_e brainPin) {
+ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return EFI_ERROR_CODE;
 	if (brainPin > GPIO_UNASSIGNED || brainPin < 0) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "Invalid brain_pin_e: %d", brainPin);
+		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return EFI_ERROR_CODE;
 	}
 	return brainPin % PORT_SIZE;
 }
 
-void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
-	if (brainPin == GPIO_UNASSIGNED)
-		return;
-	ioportid_t hwPort = getHwPort(brainPin);
-	int hwPin = getHwPin(brainPin);
-
-	outputPinRegisterExt(msg, output, hwPort, hwPin, outputMode);
+bool efiReadPin(brain_pin_e pin) {
+	return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
 }
-
-void outputPinRegister(const char *msg, OutputPin *output, ioportid_t port, uint32_t pin) {
-	outputPinRegisterExt(msg, output, port, pin, &DEFAULT_OUTPUT);
-}
-
-extern OutputPin checkEnginePin;
-
-void initPrimaryPins(void) {
-	outputPinRegister("led: ERROR status", &enginePins.errorLedPin, LED_ERROR_PORT, LED_ERROR_PIN);
-}
-
-void initOutputPins(void) {
-	/**
-	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
-	 */
-// todo: it's too late to clear now? this breaks default status LEDs
-// todo: fix this?
-//	memset(&outputs, 0, sizeof(outputs));
-//	outputPinRegister("ext led 1", LED_EXT_1, EXTRA_LED_1_PORT, EXTRA_LED_1_PIN);
-//	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
-//	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
-//	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
-
-// todo: are these needed here? todo: make configurable
-//	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
-//	outputPinRegister("spi CS2", SPI_CS_2, SPI_CS2_PORT, SPI_CS2_PIN);
-//	outputPinRegister("spi CS3", SPI_CS_3, SPI_CS3_PORT, SPI_CS3_PIN);
-//	outputPinRegister("spi CS4", SPI_CS_4, SPI_CS4_PORT, SPI_CS4_PIN);
-#if HAL_USE_SPI || defined(__DOXYGEN__)
-	outputPinRegisterExt2("spi CS5", &enginePins.sdCsPin, boardConfiguration->sdCardCsPin, &DEFAULT_OUTPUT);
-#endif
-
-	// todo: should we move this code closer to the fuel pump logic?
-	outputPinRegisterExt2("fuel pump relay", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
-
-	outputPinRegisterExt2("main relay", &enginePins.mainRelay, boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
-
-	outputPinRegisterExt2("fan relay", &enginePins.fanRelay, boardConfiguration->fanPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("o2 heater", &enginePins.o2heater, boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("A/C relay", &enginePins.acRelay, boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
-
-	// digit 1
-	/*
-	 ledRegister(LED_HUGE_0, GPIOB, 2);
-	 ledRegister(LED_HUGE_1, GPIOE, 7);
-	 ledRegister(LED_HUGE_2, GPIOE, 8);
-	 ledRegister(LED_HUGE_3, GPIOE, 9);
-	 ledRegister(LED_HUGE_4, GPIOE, 10);
-	 ledRegister(LED_HUGE_5, GPIOE, 11);
-	 ledRegister(LED_HUGE_6, GPIOE, 12);
-
-	 // digit 2
-	 ledRegister(LED_HUGE_7, GPIOE, 13);
-	 ledRegister(LED_HUGE_8, GPIOE, 14);
-	 ledRegister(LED_HUGE_9, GPIOE, 15);
-	 ledRegister(LED_HUGE_10, GPIOB, 10);
-	 ledRegister(LED_HUGE_11, GPIOB, 11);
-	 ledRegister(LED_HUGE_12, GPIOB, 12);
-	 ledRegister(LED_HUGE_13, GPIOB, 13);
-
-	 // digit 3
-	 ledRegister(LED_HUGE_14, GPIOE, 0);
-	 ledRegister(LED_HUGE_15, GPIOE, 2);
-	 ledRegister(LED_HUGE_16, GPIOE, 4);
-	 ledRegister(LED_HUGE_17, GPIOE, 6);
-	 ledRegister(LED_HUGE_18, GPIOE, 5);
-	 ledRegister(LED_HUGE_19, GPIOE, 3);
-	 ledRegister(LED_HUGE_20, GPIOE, 1);
-	 */
-}
-
-#if EFI_GPIO
 
 /**
- * This method is part of fatal error handling.
- * Please note that worst case scenario the pins might get re-enabled by some other code :(
- * The whole method is pretty naive, but that's at least something.
+ * This method would set an error condition if pin is already used
  */
-void turnAllPinsOff(void) {
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
-		enginePins.injectors[i].setValue(false);
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
+	ioportid_t port = getHwPort(msg, brainPin);
+	ioportmask_t pin = getHwPin(msg, brainPin);
+
+	if (port == GPIO_NULL) {
+		return;
 	}
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
-		enginePins.coils[i].setValue(false);
+
+	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
+
+	bool wasUsed = markUsed(port, pin, msg);
+	if (wasUsed) {
+		return;
+	}
+
+	palSetPadMode(port, pin, mode);
+}
+
+iomode_t getInputMode(pin_input_mode_e mode) {
+	switch (mode) {
+	case PI_PULLUP:
+		return PAL_MODE_INPUT_PULLUP;
+	case PI_PULLDOWN:
+		return PAL_MODE_INPUT_PULLDOWN;
+	case PI_DEFAULT:
+	default:
+		return PAL_MODE_INPUT;
 	}
 }
-#endif
+
+#if HAL_USE_ICU || defined(__DOXYGEN__)
+void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
+	  efiAssertVoid((icup->state == ICU_STOP) || (icup->state == ICU_READY),
+	              "input already used?");
+
+	icuStart(icup, config);
+}
+#endif /* HAL_USE_ICU */

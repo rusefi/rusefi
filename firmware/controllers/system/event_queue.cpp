@@ -16,7 +16,7 @@
 #include "efitime.h"
 #include "efilib2.h"
 
-int maxHowFarOff = 0;
+uint32_t maxSchedulingPrecisionLoss = 0;
 
 scheduling_s::scheduling_s() {
 	callback = NULL;
@@ -35,13 +35,10 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	return assertNotInList<scheduling_s>(head, scheduling);
 }
 
-bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
-	return insertTask(false, "*", scheduling, timeX, callback, param);
-}
 /**
  * @return true if inserted into the head of the list
  */
-bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
+bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
@@ -50,14 +47,10 @@ bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, schedul
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
 	if (scheduling->isScheduled) {
-		if (monitorReuse) {
-			warning(CUSTOM_OBD_SCH_REUSE, "reuse [%s]", prefix);
-		}
-
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
 		printf("Already scheduled now %d\r\n", (int)timeX);
-#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
+#endif /* EFI_UNIT_TEST */
 		return false;
 	}
 
@@ -68,7 +61,7 @@ bool EventQueue::insertTask(const bool monitorReuse, const char *prefix, schedul
 
 	if (head == NULL || timeX < head->momentX) {
 		LL_PREPEND(head, scheduling);
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 		return true;
@@ -113,8 +106,11 @@ efitime_t EventQueue::getNextEventTime(efitime_t nowX) {
 }
 
 static scheduling_s * longScheduling;
-uint32_t maxEventQueueTime = 0;
-uint32_t lastEventQueueTime;
+/**
+ * See also maxPrecisionCallbackDuration for total hw callback time
+ */
+uint32_t maxEventCallbackDuration = 0;
+static uint32_t lastEventCallbackDuration;
 
 /**
  * Invoke all pending actions prior to specified timestamp
@@ -133,7 +129,7 @@ int EventQueue::executeAll(efitime_t now) {
 	{
 		efiAssert(current->callback != NULL, "callback==null1", 0);
 		if (++listIterationCounter > QUEUE_LENGTH_LIMIT) {
-			firmwareError(OBD_PCM_Processor_Fault, "Is this list looped?");
+			firmwareError(CUSTOM_LIST_LOOP, "Is this list looped?");
 			return false;
 		}
 		if (current->momentX <= now) {
@@ -156,7 +152,7 @@ int EventQueue::executeAll(efitime_t now) {
 			break;
 		}
 	}
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	assertListIsSorted();
 #endif
 
@@ -169,19 +165,19 @@ int EventQueue::executeAll(efitime_t now) {
 		efiAssert(current->callback != NULL, "callback==null2", 0);
 		uint32_t before = GET_TIMESTAMP();
 		current->isScheduled = false;
-		int howFarOff = now - current->momentX;
-		maxHowFarOff = maxI(maxHowFarOff, howFarOff);
+		uint32_t howFarOff = now - current->momentX;
+		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		printf("execute current=%d param=%d\r\n", (long)current, (long)current->param);
 #endif
 		current->callback(current->param);
 		// even with overflow it's safe to subtract here
-		lastEventQueueTime = GET_TIMESTAMP() - before;
-		if (lastEventQueueTime > maxEventQueueTime)
-			maxEventQueueTime = lastEventQueueTime;
-		if (lastEventQueueTime > 2000) {
+		lastEventCallbackDuration = GET_TIMESTAMP() - before;
+		if (lastEventCallbackDuration > maxEventCallbackDuration)
+			maxEventCallbackDuration = lastEventCallbackDuration;
+		if (lastEventCallbackDuration > 2000) {
 			longScheduling = current;
-			lastEventQueueTime++;
+// what is this line about?			lastEventCallbackDuration++;
 		}
 	}
 	return executionCounter;

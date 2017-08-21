@@ -9,7 +9,7 @@
 
 #include "engine.h"
 
-float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_S);
+float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setDetaultVETable(persistent_config_s *config);
 float getAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK);
 float sdMath(engine_configuration_s *engineConfiguration, float airMass, float AFR);
@@ -18,8 +18,8 @@ float sdMath(engine_configuration_s *engineConfiguration, float airMass, float A
 
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)
 
-void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F);
-void initSpeedDensity(DECLARE_ENGINE_PARAMETER_F);
-floatms_t getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
+void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* SPEED_DENSITY_H_ */

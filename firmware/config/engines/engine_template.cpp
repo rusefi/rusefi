@@ -10,6 +10,6 @@
 
 EXTERN_ENGINE;
 
-void setEngineTemplateConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
+void setEngineTemplateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }

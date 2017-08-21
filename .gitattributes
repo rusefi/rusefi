@@ -6,12 +6,26 @@
 * text=auto
 
 # Explicitly declare text files you want to always be normalized and converted
-# to native line endings on checkout.
-*.c text
-*.cpp text
-*.h text
-*.xml text
+# to Unix line endings on checkout.
+*.c text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.xml text eol=lf
+*.mk text eol=lf
+*.java text eol=lf
+*.bat text eol=lf
+*.iml text eol=lf
+*.txt text eol=lf
+*.ini text eol=lf
+
+# KiCad files
+*.dsn text eol=lf
+*.kicad_pcb text eol=lf
+*.net text eol=lf
+*.pro text eol=lf
+*.sch text eol=lf
 
 # Denote all files that are truly binary and should not be modified.
 *.png binary
 *.jpg binary
+

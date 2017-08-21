@@ -3,14 +3,14 @@ rem This script would compile firmware, dev console and win32 simulator into a s
 rem This script depends on Cygwin tools: zip
 rem
 
-echo Hello rusEfi build full bundle
+echo build_current_bundle.bat: Hello rusEfi build full bundle
 
 java -version
 
 echo %date% %time%
 
-echo Building win32 functional tests
-cd win32_functional_tests
+echo build_current_bundle.bat: Building win32 functional tests
+cd simulator
 gcc -v
 make -v
 cd ..
@@ -19,11 +19,18 @@ cd ..
 
 cd firmware
 echo %date% %time%
-echo "CD to ${PWD}"
-echo Building firmware
+
+
+echo Erasing chip
+call flash_erase
+
+
+echo build_current_bundle.bat: Building firmware
 rm -fR .dep
 rm -fR build
-java -jar ../java_tools/version2header.jar
+git submodule update --init
+
+call update_version.bat
 
 call clean_compile_two_versions.bat
 if not exist deliver/rusefi_release.hex echo FAILED RELEASE
@@ -45,7 +52,7 @@ if not exist java_console_binary/rusefi_console.jar echo CONSOLE COMPILATION FAI
 if not exist java_console_binary/rusefi_console.jar exit -1
 
 echo Building rusefi simulator
-cd win32_functional_tests
+cd simulator
 
 mkdir out
 rm -rf build
@@ -71,7 +78,7 @@ echo %folder%
 mkdir %folder%
 
 cp java_console_binary/rusefi_console.jar %folder%
-cp win32_functional_tests/build/rusefi_simulator.exe %folder%
+cp simulator/build/rusefi_simulator.exe %folder%
 cp firmware/tunerstudio/rusefi.ini %folder%
 
 cp firmware/svnversion.h %folder%
@@ -114,8 +121,9 @@ cd ..
 cd ..                                                             
 pwd
 
-
-zip -j rusefi_simulator.zip win32_functional_tests/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
+echo "Making rusefi_simulator.zip"
+pwd
+zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 
 echo open ftp://u71977750-build:%RUSEFI_BUILD_FTP_PASS%@rusefi.com/ > ftp_commands.txt
@@ -127,9 +135,15 @@ echo put rusefi_simulator.zip >> ftp_commands.txt
 echo put rusefi_console.zip >> ftp_commands.txt
 echo exit >> ftp_commands.txt
 
+cd temp
+call winscp.com /script=../ftp_commands.txt
+IF NOT ERRORLEVEL 0 echo winscp error DETECTED
+IF NOT ERRORLEVEL 0 EXIT /B 1
 
+
+cd ..
 echo %date% %time%
-echo "DONE here"
-
+echo "build_current_bundle: DONE here"
+pwd
 
 

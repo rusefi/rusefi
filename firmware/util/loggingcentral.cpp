@@ -23,7 +23,7 @@ typedef char log_buf_t[DL_OUTPUT_BUFFER];
  */
 static char *accumulationBuffer;
 
-static log_buf_t pendingBuffers0 CCM_OPTIONAL;
+static log_buf_t pendingBuffers0;
 static log_buf_t pendingBuffers1;
 
 /**
@@ -73,7 +73,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	int expectedOutputSize;
 #endif /* EFI_ENABLE_ASSERTS */
 	{ // start of critical section
-		lockOutputBuffer();
+		bool alreadyLocked = lockOutputBuffer();
 		/**
 		 * we cannot output under syslock, we simply rotate which buffer is which
 		 */
@@ -88,20 +88,23 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 		accumulatedSize = 0;
 		accumulationBuffer[0] = 0;
 
-		unlockOutputBuffer();
+		if (!alreadyLocked) {
+			unlockOutputBuffer();
+		}
 	} // end of critical section
 
 	*actualOutputBufferSize = efiStrlen(outputBuffer);
 #if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
 	if (*actualOutputBufferSize != expectedOutputSize) {
-		firmwareError(OBD_PCM_Processor_Fault, "out constr %d/%d", *actualOutputBufferSize, expectedOutputSize);
+		int sizeToShow = minI(10, *actualOutputBufferSize);
+		int offsetToShow = *actualOutputBufferSize - sizeToShow;
+		firmwareError(ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d/%d [%s]", *actualOutputBufferSize, expectedOutputSize,
+				&outputBuffer[offsetToShow]);
 		return NULL;
 	}
 #endif /* EFI_ENABLE_ASSERTS */
 	return outputBuffer;
 }
-
-extern bool consoleInBinaryMode;
 
 /**
  * This method actually sends all the pending data to the communication layer.
@@ -109,8 +112,6 @@ extern bool consoleInBinaryMode;
  * actual data to console in order to avoid concurrent access to serial hardware.
  */
 void printPending(void) {
-	if (consoleInBinaryMode)
-		return;
 	int actualOutputBufferSize;
 	char *output = swapOutputBuffers(&actualOutputBufferSize);
 

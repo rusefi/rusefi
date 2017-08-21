@@ -4,7 +4,7 @@ cd ../firmware
 call flash_erase
 echo Compiling firmware
 pwd
-call compile.bat
+call compile_and_program.bat
 
 if not exist build/rusefi.bin echo FAILED TO COMPILE
 if not exist build/rusefi.bin exit -1

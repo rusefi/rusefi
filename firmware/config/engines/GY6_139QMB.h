@@ -11,6 +11,6 @@
 
 #include "engine.h"
 
-void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
+void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* GY6_139QMB_H_ */

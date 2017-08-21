@@ -13,7 +13,7 @@
 
 EXTERN_ENGINE;
 
-void setDaihatsu(DECLARE_ENGINE_PARAMETER_F) {
+void setDaihatsu(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_36_2_2_2;
 
 	engineConfiguration->specs.cylindersCount = 3;

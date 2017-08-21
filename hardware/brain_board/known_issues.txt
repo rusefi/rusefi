@@ -2,10 +2,14 @@
 2)  RESOLVED IN R0.2 add vertical USB connector option (same as on Frankenso)
 3)  RESOLVED IN R0.2 use stlink 5x2 header
 4)  RESOLVED IN R0.2 renamed sm32f407_Board to STM32F407_Brain_Board
-5)                  change LED to use SM0806_Jumpers
+5)  RESOLVED IN R0.4 Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JP1, JP2, JP3 & JP4 to "SM0805_jumper"
 6)  RESOLVED IN R0.2 Change Fuse to match frankenso
 7)  RESOLVED IN R0.2 set solder mask to 0.003 inches, per OSHPark suggestion. 
 8)  RESOLVED IN R0.3 Check if there is a chance to match discovery board reset button location
 9)  RESOLVED IN R0.3 Move push buttons to match the STM32F407 Discovery board's locations. 
 10) RESOLVED IN R0.3 Changed diodes to 0805 diodes. 
+11) RESOLVED IN R0.4 Added zone cut outs such that boards can have engraved serial numbers.
+12)                  as another approach to #5 problem, maybe we can add traces connecting JP1, JP2, JP3 & JP4 pads? On the back? By defult the trace would be used, if desired trace could be removed with a knife?
+13)                  RESET and USER button HUGE silkscreen is needed
+
 

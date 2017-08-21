@@ -88,7 +88,7 @@ public class SensorCentral {
         addDoubleSensor("tp", Sensor.TPS, es);
         addDoubleSensor("pps", Sensor.TPS, es);
         addDoubleSensor("error", Sensor.lastErrorCode, es);
-        addDoubleSensor("warn", Sensor.warningCounter, es);
+        addDoubleSensor("warn", Sensor.errorCodeCounter, es);
         addDoubleSensor("knck_c", Sensor.knockCount, es);
         addDoubleSensor("knck_v", Sensor.KnockValue, es);
         addDoubleSensor("target", Sensor.TARGET_AFR, es);

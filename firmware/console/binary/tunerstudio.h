@@ -27,7 +27,9 @@ typedef struct {
 	int crc32CheckCommandCounter;
 	int writeChunkCommandCounter;
 	int errorCounter;
-	int tsCounter;
+	int totalCounter;
+	int textCommandCounter;
+	int testCommandCounter;
 } tunerstudio_counters_s;
 
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
@@ -48,7 +50,7 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 void tunerStudioDebug(const char *msg);
 void tunerStudioError(const char *msg);
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S);
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printTsStats(void);
 void requestBurn(void);
 
@@ -67,6 +69,13 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect);
 #endif
 
 typedef pre_packed struct
+	post_packed {
+		short int offset;
+		short int count;
+	} TunerStudioOchRequest;
+
+
+	typedef pre_packed struct
 	post_packed {
 		short int page;
 		short int offset;

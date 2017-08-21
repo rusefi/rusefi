@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setCamaro4(DECLARE_ENGINE_PARAMETER_F);
+void setCamaro4(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_CHEVROLET_CAMARO_4_H_ */

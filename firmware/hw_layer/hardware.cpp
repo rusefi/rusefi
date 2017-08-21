@@ -24,7 +24,10 @@
 #include "mpu_util.h"
 
 #if EFI_PROD_CODE
+//#include "usb_msd.h"
+
 #include "AdcConfiguration.h"
+#include "electronic_throttle.h"
 #include "board_test.h"
 #include "mcp3208.h"
 #include "HIP9011.h"
@@ -39,7 +42,8 @@
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "CJ125.h"
-#endif
+#include "aux_pid.h"
+#endif /* EFI_PROD_CODE */
 
 #if EFI_SPEED_DENSITY
 #include "map_averaging.h"
@@ -53,7 +57,7 @@ EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
 
-static Mutex spiMtx;
+static mutex_t spiMtx;
 
 int maxNesting = 0;
 
@@ -69,16 +73,19 @@ bool rtcWorks = true;
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lockSpi");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lockSpi");
 	// todo: different locks for different SPI devices!
 	chMtxLock(&spiMtx);
 }
 
 void unlockSpi(void) {
-	chMtxUnlock();
+	chMtxUnlock(&spiMtx);
 }
 
 static void initSpiModules(board_configuration_s *boardConfiguration) {
+	if (boardConfiguration->is_enabled_spi_1) {
+		 turnOnSpi(SPI_DEVICE_1);
+	}
 	if (boardConfiguration->is_enabled_spi_2) {
 		turnOnSpi(SPI_DEVICE_2);
 	}
@@ -106,7 +113,7 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 		return &SPID3;
 	}
 #endif
-	firmwareError(OBD_PCM_Processor_Fault, "Unexpected SPI device: %d", spiDevice);
+	firmwareError(CUSTOM_ERR_UNEXPECTED_SPI, "Unexpected SPI device: %d", spiDevice);
 	return NULL;
 }
 #endif
@@ -119,10 +126,8 @@ void initI2Cmodule(void) {
 	i2cInit();
 	i2cStart(&I2CD1, &i2cfg);
 
-	mySetPadMode("I2C clock", EFI_I2C_SCL_PORT, EFI_I2C_SCL_PIN,
-	PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
-	mySetPadMode("I2C data", EFI_I2C_SDA_PORT, EFI_I2C_SDA_PIN,
-	PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
+	efiSetPadMode("I2C clock", EFI_I2C_SCL_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
+	efiSetPadMode("I2C data", EFI_I2C_SDA_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 }
 
 //static char txbuf[1];
@@ -154,7 +159,7 @@ extern int tpsFastAdc;
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck12a");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "lowstck12a");
 
 	(void) buffer;
 	(void) n;
@@ -166,7 +171,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		/**
 		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
 		 */
-		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9b");
+		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9b");
 
 #if EFI_MAP_AVERAGING
 		mapAveragingCallback(fastAdc.samples[fastMapSampleIndex]);
@@ -195,6 +200,7 @@ static void calcFastAdcIndexes(void) {
 }
 
 static void adcConfigListener(Engine *engine) {
+	// todo: something is not right here - looks like should be a callback for each configuration change?
 	calcFastAdcIndexes();
 }
 
@@ -226,9 +232,15 @@ void applyNewHardwareSettings(void) {
 	
         // all 'stop' methods need to go before we begin starting pins
        
-    stopInjectionPins();
-	stopIgnitionPins();
+	enginePins.stopInjectionPins();
+    enginePins.stopIgnitionPins();
 	stopCanPins();
+	bool etbRestartNeeded = isETBRestartNeeded();
+	if (etbRestartNeeded) {
+		stopETBPins();
+	}
+	stopVSSPins();
+	stopAuxPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
 		stopSpi(SPI_DEVICE_1);
@@ -250,41 +262,17 @@ void applyNewHardwareSettings(void) {
 
 	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
 
+	enginePins.unregisterPins();
 
-	unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin,
-			&enginePins.fuelPumpRelay);
-	unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin, &enginePins.fanRelay);
-	unregisterOutput(activeConfiguration.bc.hip9011CsPin,
-			engineConfiguration->bc.hip9011CsPin, &enginePins.hipCs);
-	unregisterOutput(activeConfiguration.bc.triggerErrorPin,
-		engineConfiguration->bc.triggerErrorPin, &enginePins.triggerDecoderErrorPin);
-	unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin,
-			&enginePins.sdCsPin);
-	unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
-			engineConfiguration->bc.etbDirectionPin1, &enginePins.etbOutput1);
-	unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
-			engineConfiguration->bc.etbDirectionPin2, &enginePins.etbOutput2);
-	unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
-			engineConfiguration->bc.malfunctionIndicatorPin, &enginePins.checkEnginePin);
-	unregisterOutput(activeConfiguration.dizzySparkOutputPin,
-			engineConfiguration->dizzySparkOutputPin, &enginePins.dizzyOutput);
-	unregisterOutput(activeConfiguration.bc.tachOutputPin,
-			engineConfiguration->bc.tachOutputPin, &enginePins.tachOut);
-	unregisterOutput(activeConfiguration.bc.idle.solenoidPin,
-			engineConfiguration->bc.idle.solenoidPin, &enginePins.idleSolenoidPin);
 
-	for (int i = 0;i < LE_COMMAND_COUNT;i++)
-		unregisterOutput(activeConfiguration.bc.fsioPins[i],
-				engineConfiguration->bc.fsioPins[i], &enginePins.fsioOutputs[i]);
-
-	unregisterOutput(activeConfiguration.bc.alternatorControlPin,
-			engineConfiguration->bc.alternatorControlPin, &enginePins.alternatorPin);
-	unregisterOutput(activeConfiguration.bc.mainRelayPin,
-			engineConfiguration->bc.mainRelayPin, &enginePins.mainRelay);
-
-	startInjectionPins();
-	startIgnitionPins();
+	enginePins.startInjectionPins();
+	enginePins.startIgnitionPins();
 	startCanPins();
+	if (etbRestartNeeded) {
+		startETBPins();
+	}
+	startVSSPins();
+	startAuxPins();
 
 	adcConfigListener(engine);
 }
@@ -300,7 +288,7 @@ void showBor(void) {
 }
 
 void initHardware(Logging *l) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "init h");
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "init h");
 	sharedLogger = l;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	efiAssertVoid(engineConfiguration!=NULL, "engineConfiguration");
@@ -311,7 +299,7 @@ void initHardware(Logging *l) {
 	// 10 extra seconds to re-flash the chip
 	//flashProtect();
 
-	chMtxInit(&spiMtx);
+	chMtxObjectInit(&spiMtx);
 
 #if EFI_HISTOGRAMS
 	/**
@@ -340,15 +328,25 @@ void initHardware(Logging *l) {
 	 */
 	if (SHOULD_INGORE_FLASH()) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+		resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 		writeToFlashNow();
 	} else {
 		readFromFlash();
 	}
 #else
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
+	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
+
+#if EFI_HD44780_LCD
+//	initI2Cmodule();
+	lcd_HD44780_init(sharedLogger);
+	if (hasFirmwareError())
+		return;
+
+	lcd_HD44780_print_string(VCS_VERSION);
+
+#endif /* EFI_HD44780_LCD */
 
 	if (hasFirmwareError()) {
 		return;
@@ -358,14 +356,17 @@ void initHardware(Logging *l) {
 	initTriggerDecoder();
 #endif
 
-	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
-	PAL_MODE_INPUT_PULLUP);
-	bool isBoardTestMode_b = (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)));
+	bool isBoardTestMode_b;
+	if (boardConfiguration->boardTestModeJumperPin != GPIO_UNASSIGNED) {
+		efiSetPadMode("board test", boardConfiguration->boardTestModeJumperPin,
+		PAL_MODE_INPUT_PULLUP);
+		isBoardTestMode_b = (!efiReadPin(boardConfiguration->boardTestModeJumperPin));
 
-	// we can now relese this pin, it is actually used as output sometimes
-	unmarkPin(boardConfiguration->boardTestModeJumperPin);
-
-
+		// we can now relese this pin, it is actually used as output sometimes
+		unmarkPin(boardConfiguration->boardTestModeJumperPin);
+	} else {
+		isBoardTestMode_b = false;
+	}
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	initAdcInputs(isBoardTestMode_b);
@@ -393,7 +394,7 @@ void initHardware(Logging *l) {
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	// todo: figure out better startup logic
-	initTriggerCentral(sharedLogger, engine);
+	initTriggerCentral(sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 	turnOnHardware(sharedLogger);
@@ -423,19 +424,12 @@ void initHardware(Logging *l) {
 	initAdcDriver();
 #endif
 
-#if EFI_HD44780_LCD
-//	initI2Cmodule();
-	lcd_HD44780_init(sharedLogger);
-	if (hasFirmwareError())
-		return;
-
-	lcd_HD44780_print_string(VCS_VERSION);
-
-#endif /* EFI_HD44780_LCD */
-
 #if HAL_USE_I2C || defined(__DOXYGEN__)
 	addConsoleActionII("i2c", sendI2Cbyte);
 #endif
+
+
+//	USBMassStorageDriver UMSD1;
 
 //	while (true) {
 //		for (int addr = 0x20; addr < 0x28; addr++) {

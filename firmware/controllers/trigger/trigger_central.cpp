@@ -20,6 +20,7 @@
 #include "efilib2.h"
 #include "settings.h"
 #include "engine_math.h"
+#include "LocalVersionHolder.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -41,12 +42,13 @@ static histogram_s triggerCallbackHistogram;
 #endif /* EFI_HISTOGRAMS */
 
 static Logging *logger;
+static LocalVersionHolder triggerVersion;
 
-efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_F) {
+efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->triggerCentral.triggerState.getTotalEventCounter();
 }
 
-efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_F) {
+efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->triggerCentral.triggerState.getStartOfRevolutionIndex();
 }
 
@@ -78,6 +80,10 @@ uint32_t triggerMaxDuration = 0;
 
 static bool isInsideTriggerHandler = false;
 
+/**
+ * true if most recent configuration change has changed any of the trigger settings
+ */
+static bool isTriggerConfigChanged = false;
 
 efitick_t previousVvtCamTime = 0;
 efitick_t previousVvtCamDuration = 0;
@@ -92,10 +98,16 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		return;
 	}
 
+	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
+	if (cisnan(oneDegreeUs)) {
+		// we are here if we are getting VVT position signals while engine is not running
+		// for example if crank position sensor is broken :)
+		return;
+	}
+
 	TriggerCentral *tc = &engine->triggerCentral;
 
 	efitick_t nowNt = getTimeNowNt();
-
 
 	if (engineConfiguration->vvtMode == MIATA_NB2) {
 		uint32_t currentDuration = nowNt - previousVvtCamTime;
@@ -119,7 +131,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 
 	efitick_t offsetNt = nowNt - tc->timeAtVirtualZeroNt;
 
-	angle_t vvtPosition = NT2US(offsetNt) / engine->rpmCalculator.oneDegreeUs;
+	angle_t vvtPosition = NT2US(offsetNt) / oneDegreeUs;
 
 	// convert engine cycle angle into trigger cycle angle
 	vvtPosition -= tdcPosition();
@@ -171,8 +183,8 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#8");
-	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER);
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#8");
+	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
 	triggerDuration = GET_TIMESTAMP() - triggerHanlderEntryTime;
 	isInsideTriggerHandler = false;
@@ -207,7 +219,12 @@ static char shaft_signal_msg_index[15];
 static bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { CRANK1, CRANK1, CRANK2, CRANK2, CRANK3, CRANK3 };
 
-static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!ENGINE(isEngineChartEnabled)) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
+		return; // engineSnifferRpmThreshold is accounted for inside ENGINE(isEngineChartEnabled)
+	}
+
+
 	itoa10(&shaft_signal_msg_index[2], index);
 	bool isUp = isUpEvent[(int) ckpSignalType];
 	shaft_signal_msg_index[0] = isUp ? 'u' : 'd';
@@ -220,8 +237,14 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	}
 }
 
-void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_S) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(engine!=NULL, "configuration");
+
+	if (triggerShape.shapeDefinitionError) {
+		// trigger is broken, we cannot do anything here
+		warning(CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
+		return;
+	}
 
 	nowNt = getTimeNowNt();
 
@@ -246,7 +269,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(signal, nowNt PASS_ENGINE_PARAMETER);
+	triggerState.decodeTriggerEvent(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
@@ -267,14 +290,14 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	if (triggerIndexForListeners == 0) {
 		timeAtVirtualZeroNt = nowNt;
 	}
-	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER);
+	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (!triggerState.shaft_is_synchronized) {
 		// we should not propagate event if we do not know where we are
 		return;
 	}
 
-	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_F)) {
+	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 #if TRIGGER_EXTREME_LOGGING || defined(__DOXYGEN__)
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -284,7 +307,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		 */
 		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
 			ShaftPositionListener listener = (ShaftPositionListener) triggerListeneres.callbacks[i];
-			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER);
+			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 
 	}
@@ -309,7 +332,7 @@ EXTERN_ENGINE
 
 static void triggerShapeInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	TriggerShape *s = &engine->triggerShape;
+	TriggerShape *s = &engine->triggerCentral.triggerShape;
 	scheduleMsg(logger, "useRise=%s", boolToString(s->useRiseEdge));
 	scheduleMsg(logger, "gap from %f to %f", s->syncRatioFrom, s->syncRatioTo);
 
@@ -354,8 +377,8 @@ void printAllTriggers() {
 		engineConfiguration->trigger.type = tt;
 		engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
-		TriggerShape *s = &engine->triggerShape;
-		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER);
+		TriggerShape *s = &engine->triggerCentral.triggerShape;
+		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 		fprintf(fp, "TRIGGERTYPE %d %d %s %f\r\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 
@@ -381,28 +404,48 @@ void printAllTriggers() {
 extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
-extern uint32_t maxLockTime;
-extern uint32_t maxEventQueueTime;
 extern uint32_t hipLastExecutionCount;
-extern uint32_t hwSetTimerTime;
+extern uint32_t hwSetTimerDuration;
 
-extern int maxHowFarOff;
+extern uint32_t maxLockedDuration;
+extern uint32_t maxEventCallbackDuration;
+
+#if (EFI_PROD_CODE) || defined(__DOXYGEN__)
+extern uint32_t maxPrecisionCallbackDuration;
+#endif /* EFI_PROD_CODE  */
+
+extern uint32_t maxSchedulingPrecisionLoss;
 extern uint32_t *cyccnt;
 
 extern int vvtEventRiseCounter;
 extern int vvtEventFallCounter;
 
+void resetMaxValues() {
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+	maxEventCallbackDuration = triggerMaxDuration = 0;
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
+
+	maxSchedulingPrecisionLoss = 0;
+
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+	maxLockedDuration = 0;
+#endif /* EFI_CLOCK_LOCKS */
+
+#if (EFI_PROD_CODE) || defined(__DOXYGEN__)
+	maxPrecisionCallbackDuration = 0;
+#endif /* EFI_PROD_CODE  */
+}
+
 void triggerInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
-	TriggerShape *ts = &engine->triggerShape;
+	TriggerShape *ts = &engine->triggerCentral.triggerShape;
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s gapBothDirections=%s useOnlyFirstChannel=%s tdcOffset=%d",
+	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%d",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
-			boolToString(TRIGGER_SHAPE(gapBothDirections)),
-			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), ENGINE(triggerShape.tdcPosition));
+			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), TRIGGER_SHAPE(tdcPosition));
 
 	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
 		scheduleMsg(logger, "total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
@@ -412,16 +455,16 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(0),
 			engine->triggerCentral.getHwEventCounter(1));
 
-	if (engine->triggerShape.needSecondTriggerInput) {
+	if (ts->needSecondTriggerInput) {
 		scheduleMsg(logger, "trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
 				engine->triggerCentral.getHwEventCounter(3));
 	}
-	scheduleMsg(logger, "expected cycle events %d/%d/%d", ts->expectedEventCount[0],
-			engine->triggerShape.expectedEventCount[1], ts->expectedEventCount[2]);
+	scheduleMsg(logger, "expected cycle events %d/%d/%d", TRIGGER_SHAPE(expectedEventCount[0]),
+			TRIGGER_SHAPE(expectedEventCount[1]), TRIGGER_SHAPE(expectedEventCount[2]));
 
 	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
-			boolToString(engine->triggerShape.needSecondTriggerInput));
-	scheduleMsg(logger, "expected duty #0=%f/#1=%f", ts->dutyCycle[0], ts->dutyCycle[1]);
+			boolToString(TRIGGER_SHAPE(needSecondTriggerInput)));
+	scheduleMsg(logger, "expected duty #0=%f/#1=%f", TRIGGER_SHAPE(dutyCycle[0]), TRIGGER_SHAPE(dutyCycle[1]));
 
 	scheduleMsg(logger, "synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
@@ -429,11 +472,11 @@ void triggerInfo(void) {
 			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engineConfiguration->directSelfStimulation));
 
-	if (ts->isSynchronizationNeeded) {
+	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
 		scheduleMsg(logger, "gap from %f to %f", ts->syncRatioFrom, ts->syncRatioTo);
 	}
 
-#endif
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
@@ -449,7 +492,7 @@ void triggerInfo(void) {
 			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[0]),
 			boardConfiguration->triggerSimulatorFrequency);
 
-	if (engine->triggerShape.needSecondTriggerInput) {
+	if (ts->needSecondTriggerInput) {
 		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
@@ -465,8 +508,7 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
 
-	scheduleMsg(logger, "zeroTestTime=%d maxHowFarOff=%d", engine->m.zeroTestTime, maxHowFarOff);
-	maxHowFarOff = 0;
+	scheduleMsg(logger, "zeroTestTime=%d maxSchedulingPrecisionLoss=%d", engine->m.zeroTestTime, maxSchedulingPrecisionLoss);
 
 	scheduleMsg(logger, "advanceLookupTime=%d now=%d fuelCalcTime=%d",
 			engine->m.advanceLookupTime, *cyccnt,
@@ -483,15 +525,18 @@ void triggerInfo(void) {
 			engine->m.rpmCbTime,
 			engine->m.mainTriggerCallbackTime);
 
-	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
-	maxLockTime = 0;
-	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
+#endif /* EFI_CLOCK_LOCKS */
+
+	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);
 
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
-	scheduleMsg(logger, "hwSetTimerTime %d", hwSetTimerTime);
+	scheduleMsg(logger, "hwSetTimerDuration=%d", hwSetTimerDuration);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
-	triggerMaxDuration = 0;
+	scheduleMsg(logger, "maxPrecisionCallbackDuration=%d", maxPrecisionCallbackDuration);
+	resetMaxValues();
 
 #endif /* EFI_PROD_CODE */
 }
@@ -509,7 +554,42 @@ static void resetRunningTriggerCounters() {
 #endif
 }
 
-void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
+#define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
+
+void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration) {
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+	isTriggerConfigChanged = COMPARE_CONFIG_PARAMS(trigger.type) ||
+		COMPARE_CONFIG_PARAMS(operationMode) ||
+		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
+		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
+		COMPARE_CONFIG_PARAMS(trigger.customTotalToothCount) ||
+		COMPARE_CONFIG_PARAMS(trigger.customSkippedToothCount) ||
+		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[0]) ||
+		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[1]) ||
+		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[2]) ||
+		COMPARE_CONFIG_PARAMS(camInput) ||
+		COMPARE_CONFIG_PARAMS(vvtMode) ||
+		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
+		COMPARE_CONFIG_PARAMS(vvtOffset) ||
+		COMPARE_CONFIG_PARAMS(vvtDisplayInverted) ||
+		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
+		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
+		COMPARE_CONFIG_PARAMS(nbVvtIndex);
+#endif /* EFI_PROD_CODE */
+}
+
+/**
+ * @returns true if configuration just changed, and if that change has affected trigger
+ */
+bool checkIfTriggerConfigChanged(void) {
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+	return triggerVersion.isOld() && isTriggerConfigChanged;
+#else
+	return triggerVersion.isOld();
+#endif /* EFI_PROD_CODE */
+}
+
+void initTriggerCentral(Logging *sharedLogger) {
 	logger = sharedLogger;
 	strcpy((char*) shaft_signal_msg_index, "x_");
 

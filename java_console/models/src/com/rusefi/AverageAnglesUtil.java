@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.opensr5.Logger;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
