@@ -1261,6 +1261,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "date")) {
+		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);
 #endif
 	}
