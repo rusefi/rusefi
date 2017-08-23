@@ -229,8 +229,8 @@ public class Launcher {
                 setTitle();
                 UiUtils.trueRepaint(tabbedPane); // this would repaint status label
                 if (ConnectionStatus.INSTANCE.getValue() == ConnectionStatus.Value.CONNECTED) {
-                    long unixTime = System.currentTimeMillis() / 1000L;
-                    long withOffset = unixTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
+                    long unixGmtTime = System.currentTimeMillis() / 1000L;
+                    long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
                     CommandQueue.getInstance().write("set date " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
                             InvocationConfirmationListener.VOID, false);
                 }
