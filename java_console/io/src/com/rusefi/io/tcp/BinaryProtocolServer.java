@@ -35,7 +35,12 @@ public class BinaryProtocolServer implements BinaryProtocolCommands {
                 ServerSocket serverSocket;
                 try {
                     serverSocket = new ServerSocket(PROXY_PORT, 1);
+                } catch (IOException e) {
+                    FileLog.MAIN.logException("Error binding server socket", e);
+                    return;
+                }
 
+                try {
                     while (true) {
                         // Wait for a connection
                         final Socket clientSocket = serverSocket.accept();

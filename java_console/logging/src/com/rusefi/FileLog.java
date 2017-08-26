@@ -114,6 +114,7 @@ public enum FileLog {
 
     public void logException(String msg, Throwable e) {
         logLine(msg + e);
+        log(e);
         e.printStackTrace();
     }
 }
