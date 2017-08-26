@@ -70,7 +70,7 @@
 #define STM32_HSE_ENABLED                   TRUE
 
 // rusEfi would automatically detect if we have 32768 quarts osc - see 'rtcWorks'
-#define STM32_LSE_ENABLED                   TRUE
+#define STM32_LSE_ENABLED                   FALSE
 
 #define STM32_CLOCK48_REQUIRED              TRUE
 #define STM32_SW                            STM32_SW_PLL
