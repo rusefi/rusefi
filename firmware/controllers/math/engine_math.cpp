@@ -132,7 +132,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return false;
 	}
-	const angle_t baseAngle = injectionOffset - injectionDuration;
+	angle_t baseAngle = injectionOffset - injectionDuration;
 	efiAssert(!cisnan(baseAngle), "NaN baseAngle", false);
 	assertAngleRange(baseAngle, "baseAngle_r");
 
