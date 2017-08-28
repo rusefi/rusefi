@@ -236,9 +236,11 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOC_6;
+
+
 
 	boardConfiguration->alternatorControlPin = GPIOE_10;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
