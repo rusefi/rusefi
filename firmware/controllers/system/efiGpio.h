@@ -134,6 +134,7 @@ public:
 	OutputPin triggerDecoderErrorPin;
 	OutputPin hipCs;
 	OutputPin sdCsPin;
+	OutputPin accelerometerCs;
 
 	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
 	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
