@@ -240,6 +240,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOC_6;
 
+	boardConfiguration->is_enabled_spi_1 = true;
 
 
 	boardConfiguration->alternatorControlPin = GPIOE_10;
