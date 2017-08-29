@@ -1531,6 +1531,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "pin",									tachOutputPin
 		field = "pin mode",								tachOutputPinMode
 		field = "rise at trigger index",				tachPulseTriggerIndex
+		fiedl = "pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
 		field = "pulse duration",						tachPulseDuractionMs
 
 

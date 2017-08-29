@@ -27,7 +27,14 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 		return;
 	}
 	enginePins.tachOut.setHigh();
-	scheduleTask(&tachTurnSignalOff, (int)MS2US(engineConfiguration->tachPulseDuractionMs), (schfunc_t) &turnTachPinLow, NULL);
+	float durationMs;
+	if (engineConfiguration->tachPulseDurationAsDutyCycle) {
+		// todo: implement tachPulseDurationAsDutyCycle
+		durationMs = engineConfiguration->tachPulseDuractionMs;
+	} else {
+		durationMs = engineConfiguration->tachPulseDuractionMs;
+	}
+	scheduleTask(&tachTurnSignalOff, (int)MS2US(durationMs), (schfunc_t) &turnTachPinLow, NULL);
 }
 
 void initTachometer(void) {

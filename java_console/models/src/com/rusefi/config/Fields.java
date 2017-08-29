@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 17 02:29:38 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 20:53:46 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -633,7 +633,7 @@ public class Fields {
 	public static final int canWriteEnabled_offset = 1488;
 	public static final int useLinearIatSensor_offset = 1488;
 	public static final int useFSIO16ForTimingAdjustment_offset = 1488;
-	public static final int unusedbit_10_offset = 1488;
+	public static final int tachPulseDurationAsDutyCycle_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
 	public static final int unusedBit__3_offset = 1488;
 	public static final int unusedbit_8_offset = 1488;
@@ -1504,7 +1504,7 @@ public class Fields {
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1488, FieldType.BIT, 9);
 	public static final Field USELINEARIATSENSOR = Field.create("USELINEARIATSENSOR", 1488, FieldType.BIT, 10);
 	public static final Field USEFSIO16FORTIMINGADJUSTMENT = Field.create("USEFSIO16FORTIMINGADJUSTMENT", 1488, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_10 = Field.create("UNUSEDBIT_10", 1488, FieldType.BIT, 12);
+	public static final Field TACHPULSEDURATIONASDUTYCYCLE = Field.create("TACHPULSEDURATIONASDUTYCYCLE", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);
 	public static final Field UNUSEDBIT__3 = Field.create("UNUSEDBIT__3", 1488, FieldType.BIT, 14);
 	public static final Field UNUSEDBIT_8 = Field.create("UNUSEDBIT_8", 1488, FieldType.BIT, 15);
