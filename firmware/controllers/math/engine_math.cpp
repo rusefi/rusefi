@@ -134,6 +134,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	}
 	angle_t baseAngle = injectionOffset - injectionDuration;
 	efiAssert(!cisnan(baseAngle), "NaN baseAngle", false);
+	assertAngleRange(baseAngle, "baseAngle_r");
 
 	int index;
 

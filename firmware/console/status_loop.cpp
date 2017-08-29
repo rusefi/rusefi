@@ -201,6 +201,10 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #7
 	}
 
+
+	reportSensorF(log, fileFormat, GAUGE_NAME_ACCEL_X, "G", engine->sensors.accelerometer.x, 3);
+	reportSensorF(log, fileFormat, GAUGE_NAME_ACCEL_Y, "G", engine->sensors.accelerometer.y, 3);
+
 	if (hasMafSensor()) {
 		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
@@ -696,6 +700,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
           
+
+    tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
+    tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
+
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap();
 		tsOutputChannels->veValue = veMap.getValue(rpm, mapValue);

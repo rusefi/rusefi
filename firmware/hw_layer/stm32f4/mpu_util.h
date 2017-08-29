@@ -91,6 +91,9 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		int sckMode,
 		int mosiMode,
 		int misoMode);
+/**
+ * @see getSpiDevice
+ */
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 
 bool isValidCanTxPin(brain_pin_e pin);

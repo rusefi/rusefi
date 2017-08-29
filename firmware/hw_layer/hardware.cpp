@@ -22,6 +22,7 @@
 #include "eficonsole.h"
 #include "max31855.h"
 #include "mpu_util.h"
+#include "accelerometer.h"
 
 #if EFI_PROD_CODE
 //#include "usb_msd.h"
@@ -404,23 +405,25 @@ void initHardware(Logging *l) {
 	initSpiModules(boardConfiguration);
 #endif
 
-#if EFI_HIP_9011
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
 	initHip9011(sharedLogger);
 #endif /* EFI_HIP_9011 */
 
-#if EFI_FILE_LOGGING
+#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
+
+	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 //	initFixedLeds();
 
 	//	initBooleanInputs();
 
-#if EFI_UART_GPS
+#if EFI_UART_GPS || defined(__DOXYGEN__)
 	initGps();
 #endif
 
-#if ADC_SNIFFER
+#if ADC_SNIFFER || defined(__DOXYGEN__)
 	initAdcDriver();
 #endif
 

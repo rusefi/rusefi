@@ -862,8 +862,8 @@
 #define useLinearIatSensor_offset_hex 5d0
 #define useFSIO16ForTimingAdjustment_offset 1488
 #define useFSIO16ForTimingAdjustment_offset_hex 5d0
-#define unusedbit_10_offset 1488
-#define unusedbit_10_offset_hex 5d0
+#define tachPulseDurationAsDutyCycle_offset 1488
+#define tachPulseDurationAsDutyCycle_offset_hex 5d0
 #define isAlternatorControlEnabled_offset 1488
 #define isAlternatorControlEnabled_offset_hex 5d0
 #define unusedBit__3_offset 1488
@@ -1583,6 +1583,9 @@
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
+#define GAUGE_NAME_ACCEL_X "Acceleration: X"
+#define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
+#define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"

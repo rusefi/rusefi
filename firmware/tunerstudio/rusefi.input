@@ -253,6 +253,8 @@ fileVersion = { 20161225 }
       firmwareVersion = scalar,U32,     264, "version_f",           1,         0
       fuelPidCorrection        = scalar,  F32,     268,              "ms",           1,         0
       coilDutyCycle        = scalar,  F32,     272,              "perc",           1,         0
+      accelerationX        = scalar,  S16,     276,              "G",           0.01,         0
+      accelerationY        = scalar,  S16,     276,              "G",           0.01,         0
 
 ; todo: generate this section programatically
 	LM_PLAIN_MAF = {0},
@@ -578,6 +580,8 @@ gaugeCategory = Sensors
    internalMcuTemperatureGauge = internalMcuTemperature, "internal temperature", "C",     0,   100,     0,    0,    100,  100,   0,   0
    VSSGauge          = vehicleSpeedKph,     "Speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
    pedalPositionGauge = pedalPosition,"Throttle Pedal Position",        "%",        0,    120,      10,     10,     100,   100,   1,   1
+   accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
 
 gaugeCategory = Spark Data  
    ignadvGauge = ignitionAdvance,       "Ignition Advance 1",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
@@ -686,6 +690,9 @@ gaugeCategory = Fuel Data
    entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
+
+   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f"
+   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f"
 
    entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
    entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
@@ -1424,6 +1431,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
 		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
+		field = "LIS302DLCsPin",						LIS302DLCsPin, {is_enabled_spi_1 == 1}
 
 	dialog = fuelClosedLoopDialog, "Fuel closed-loop correction"
 		field = "Enabled",								fuelClosedLoopCorrectionEnabled
@@ -1524,6 +1532,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "pin",									tachOutputPin
 		field = "pin mode",								tachOutputPinMode
 		field = "rise at trigger index",				tachPulseTriggerIndex
+		field = "pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
 		field = "pulse duration",						tachPulseDuractionMs
 
 

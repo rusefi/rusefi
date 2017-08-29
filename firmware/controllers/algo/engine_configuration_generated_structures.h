@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 17 02:29:38 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 20:53:46 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1240,7 +1240,7 @@ typedef struct {
 	bool useFSIO16ForTimingAdjustment : 1;
 	/**
 	offset 1488 bit 12 */
-	bool unusedbit_10 : 1;
+	bool tachPulseDurationAsDutyCycle : 1;
 	/**
 	offset 1488 bit 13 */
 	bool isAlternatorControlEnabled : 1;
@@ -1708,7 +1708,7 @@ typedef struct {
 	 */
 	float mapAccelTaperMult[MAP_ACCEL_TAPER];
 	/**
-	 * This implementation makes a pulse every time one of the coils is charged. See also tachOutputPin
+	 * This implementation makes a pulse every time one of the coils is charged, using coil dwell for pulse width. See also tachOutputPin
 	 * offset 2368
 	 */
 	brain_pin_e dizzySparkOutputPin;
@@ -2158,4 +2158,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Aug 17 02:29:38 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 20:53:46 EDT 2017

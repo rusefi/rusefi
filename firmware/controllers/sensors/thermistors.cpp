@@ -234,7 +234,7 @@ static void testCltByR(float resistance) {
 		return;
 	}
 
-	// we expect slowPeriodicCallback to already update configuration in the curve helper class see setConfig
+	// we expect periodicSlowCallback to already update configuration in the curve helper class see setConfig
 	float kTemp = engine->engineState.cltCurve.getKelvinTemperatureByResistance(resistance);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
 }

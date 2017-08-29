@@ -51,6 +51,7 @@
 #include "fuel_math.h"
 #include "settings.h"
 #include "aux_pid.h"
+#include "accelerometer.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
@@ -95,7 +96,6 @@ static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	while (true) {
-		int rpm = getRpmE(engine);
 		int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		if (is_running) {
