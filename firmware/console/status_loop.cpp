@@ -696,6 +696,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
           
+
+    tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
+    tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
+
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap();
 		tsOutputChannels->veValue = veMap.getValue(rpm, mapValue);
