@@ -527,17 +527,21 @@ static void printFullAdcReport(Logging *logger) {
 		appendMsgPrefix(logger);
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
-		ioportid_t port = getAdcChannelPort("print", hwIndex);
-		int pin = getAdcChannelPin(hwIndex);
 
-		int adcValue = slowAdc.getAdcValueByIndex(index);
-		appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
-		appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
-		float volts = adcToVolts(adcValue);
-		appendPrintf(logger, " v=%f", volts);
+		if(hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR)
+		{
+			ioportid_t port = getAdcChannelPort("print", hwIndex);
+			int pin = getAdcChannelPin(hwIndex);
 
-		appendMsgPostfix(logger);
-		scheduleLogging(logger);
+			int adcValue = slowAdc.getAdcValueByIndex(index);
+			appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
+			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
+			float volts = adcToVolts(adcValue);
+			appendPrintf(logger, " v=%f", volts);
+
+			appendMsgPostfix(logger);
+			scheduleLogging(logger);
+		}
 	}
 }
 
