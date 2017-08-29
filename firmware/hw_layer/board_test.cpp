@@ -21,6 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define ADC_VCC 3.3f
+
 #include "main.h"
 #include "board_test.h"
 #include "rusefi_enums.h"
@@ -39,6 +41,8 @@ static bool isTimeForNextStep(int copy) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 extern AdcDevice slowAdc;
 extern AdcDevice fastAdc;
+
+
 
 static void processAdcPin(AdcDevice *adc, int index) {
 	adc_channel_e hwIndex = adc->getAdcHardwareIndexByInternalIndex(index);
