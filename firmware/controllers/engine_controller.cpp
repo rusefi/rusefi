@@ -279,10 +279,6 @@ static void periodicSlowCallback(Engine *engine) {
 
 	cylinderCleanupControl(engine);
 
-#if EFI_MEMS || defined(__DOXYGEN__)
-	accelerometerPeriodicCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_MEMS */
-
 	scheduleNextSlowInvocation();
 }
 

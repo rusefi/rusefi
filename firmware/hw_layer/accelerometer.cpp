@@ -54,9 +54,21 @@ void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_MEMS || defined(__DOXYGEN__)
 
-void accelerometerPeriodicCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int8_t x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);
-	int8_t y = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTY);
+static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
+
+static msg_t ivThread(int param) {
+	(void) param;
+	chRegSetThreadName("Acc SPI");
+	while (true) {
+		// has to be a thread since we want to use blocking method - blocking method only available in threads, not in interrupt handler
+		// todo: migrate to async SPI API?
+		engine->sensors.accelerometer.x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);
+		engine->sensors.accelerometer.y = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTY);
+	}
+
+#if defined __GNUC__
+	return -1;
+#endif
 }
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -65,6 +77,8 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)
 		return; // not used
 
+	if (!boardConfiguration->is_enabled_spi_1)
+		return; // temporary
 	// todo: driver = getSpiDevice(device);
 
 	turnOnSpi(device);
@@ -81,17 +95,16 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	lis302dlWriteRegister(driver, LIS302DL_CTRL_REG2, 0x00); // 4 wire mode
 	lis302dlWriteRegister(driver, LIS302DL_CTRL_REG3, 0x00);
 
-
+	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 }
 
 #endif /* EFI_MEMS */
 
 
-
 float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return 0;
+	return engine->sensors.accelerometer.x;
 }
 
 float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return 0;
+	return engine->sensors.accelerometer.y;
 }
