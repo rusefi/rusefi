@@ -862,8 +862,8 @@
 #define useLinearIatSensor_offset_hex 5d0
 #define useFSIO16ForTimingAdjustment_offset 1488
 #define useFSIO16ForTimingAdjustment_offset_hex 5d0
-#define unusedbit_10_offset 1488
-#define unusedbit_10_offset_hex 5d0
+#define tachPulseDurationAsDutyCycle_offset 1488
+#define tachPulseDurationAsDutyCycle_offset_hex 5d0
 #define isAlternatorControlEnabled_offset 1488
 #define isAlternatorControlEnabled_offset_hex 5d0
 #define unusedBit__3_offset 1488
