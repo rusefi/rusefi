@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 20:53:46 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 22:50:54 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1085,6 +1085,9 @@ public class Fields {
 	public static final String GAUGE_NAME_VBAT = "VBatt";
 	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
+	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
+	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
+	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "clutch: up";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "clutch: down";
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "brake: down";

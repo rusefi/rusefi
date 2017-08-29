@@ -64,6 +64,7 @@ static msg_t ivThread(int param) {
 		// todo: migrate to async SPI API?
 		engine->sensors.accelerometer.x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);
 		engine->sensors.accelerometer.y = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTY);
+		chThdSleepMilliseconds(20);
 	}
 
 #if defined __GNUC__
