@@ -14,6 +14,7 @@
 void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void accelerometerPeriodicCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 /**
  * Acceleration/braking
  */

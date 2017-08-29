@@ -160,7 +160,9 @@ typedef struct {
 	 * @see injectorDutyCycle
 	 */
 	float coilDutyCycle; // 272
-	int unused3[20];
+	int16_t accelerationX; // 276
+	int16_t accelerationY; // 278
+	int unused3[19];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
