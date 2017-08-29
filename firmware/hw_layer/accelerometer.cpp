@@ -55,11 +55,11 @@ void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MEMS || defined(__DOXYGEN__)
 
 void accelerometerPeriodicCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-//	int8_t x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);
-//	int8_t y = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTY);
+	int8_t x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);
+	int8_t y = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTY);
 }
 
-void initMems(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->LIS302DLCsPin == GPIOA_0)
 		return; // temporary code to handle old configurations
 	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)
@@ -87,10 +87,6 @@ void initMems(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_MEMS */
 
 
-
-void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-
-}
 
 float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return 0;
