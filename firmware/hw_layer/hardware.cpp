@@ -22,6 +22,7 @@
 #include "eficonsole.h"
 #include "max31855.h"
 #include "mpu_util.h"
+#include "accelerometer.h"
 
 #if EFI_PROD_CODE
 //#include "usb_msd.h"
@@ -412,6 +413,8 @@ void initHardware(Logging *l) {
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
+
+	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 //	initFixedLeds();
 
 	//	initBooleanInputs();
