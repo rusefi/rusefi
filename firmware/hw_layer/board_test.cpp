@@ -21,6 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define ADC_VCC 3.3f
+
 #include "main.h"
 #include "board_test.h"
 #include "rusefi_enums.h"
