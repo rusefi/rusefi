@@ -1,6 +1,6 @@
 echo I am unit_tests.bat
 
-FTP_SERVER=home451478433.1and1-data.host
+set FTP_SERVER=home451478433.1and1-data.host
 
 cd firmware
 
