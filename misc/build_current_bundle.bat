@@ -3,7 +3,7 @@ rem This script would compile firmware, dev console and win32 simulator into a s
 rem This script depends on Cygwin tools: zip
 rem
 
-FTP_SERVER=home451478433.1and1-data.host
+set FTP_SERVER=home451478433.1and1-data.host
 
 echo build_current_bundle.bat: Hello rusEfi build full bundle
 
