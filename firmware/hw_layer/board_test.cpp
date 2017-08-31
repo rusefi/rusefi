@@ -28,6 +28,7 @@
 #include "efiGpio.h"
 #include "adc_inputs.h"
 #include "AdcConfiguration.h"
+#include "engine.h"
 
 static volatile int stepCoutner = 0;
 static volatile brain_pin_e currentPin = GPIO_UNASSIGNED;
@@ -39,6 +40,8 @@ static bool isTimeForNextStep(int copy) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 extern AdcDevice slowAdc;
 extern AdcDevice fastAdc;
+
+EXTERN_ENGINE;
 
 static void processAdcPin(AdcDevice *adc, int index) {
 	adc_channel_e hwIndex = adc->getAdcHardwareIndexByInternalIndex(index);
