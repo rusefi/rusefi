@@ -11,7 +11,7 @@
 // it is important that this constant is a float, not double literal
 #ifndef ADC_VCC
 // todo: migrate to engineConfiguration->adcVcc under https://github.com/rusefi/rusefi/issues/442
-#define ADC_VCC 3.0f
+#define ADC_VCC (engineConfiguration->adcVcc)
 #endif /* ADC_VCC */
 #define ADC_MAX_VALUE 4095
 
