@@ -1190,6 +1190,13 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif
 }
 
+void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
+		engineConfiguration->adcVcc = 3.0f;
+	}
+
+}
+
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "apply c");
