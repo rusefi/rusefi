@@ -11,13 +11,16 @@
 #ifndef CONTROLLERS_MATH_PID_AUTO_TUNE_H_
 #define CONTROLLERS_MATH_PID_AUTO_TUNE_H_
 
+#include "main.h"
+#include "rusefi_types.h"
+
 class PID_AutoTune {
 public:
 	PID_AutoTune();
 	void reset();
 	void FinishUp();
-	int Runtime();
-	bool isMax, isMin;
+	int Runtime(Logging *logging);
+//	bool isMax, isMin;
 	/**
 	 * sensor position
 	 */
@@ -33,14 +36,16 @@ public:
 	float noiseBand;
 	//int controlType = 1;
 	bool running;
-	unsigned int peak1, peak2, lastTime;
+	efitimems_t currentPeakTime, prevPeakTime;
+//	unsigned int peak1, peak2, lastTime;
 	//int sampleTime;
 	int nLookBack;
 	int peakType; // todo: convert to enum
 	float lastInputs[101];
 	float peaks[10];
 	int peakCount;
-	bool justchanged;
+	int dataPointsCount;
+	//bool justchanged; //
 	bool justevaled;
 	float absMax, absMin;
 	float oStep;
