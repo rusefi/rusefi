@@ -7,6 +7,7 @@
 
 
 #include "main.h"
+#include "test_pid_auto.h"
 
 efitimems_t mockTimeMs = 0;
 
@@ -14,4 +15,7 @@ efitimems_t currentTimeMillis(void) {
 	return mockTimeMs;
 }
 
+void testPidAutoZigZag() {
+	mockTimeMs = 0;
 
+}
