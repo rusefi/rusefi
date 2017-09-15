@@ -75,9 +75,9 @@ int PID_AutoTune::Runtime(Logging *logging) {
 	for (int i = nLookBack - 1; i >= 0; i--) {
 		float val = lastInputs[i];
 		if (isMax)
-			isMax = input > val;
+			isMax = input >= val;
 		if (isMin)
-			isMin = input < val;
+			isMin = input <= val;
 		lastInputs[i + 1] = lastInputs[i];
 	}
 	lastInputs[0] = input;
