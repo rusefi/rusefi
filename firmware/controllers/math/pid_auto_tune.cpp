@@ -13,6 +13,8 @@ PID_AutoTune::PID_AutoTune() {
 	nLookBack = 50;
 	oStep = 10;
 	noiseBand = 0.5;
+	Ku = NAN;
+	Pu = NAN;
 }
 
 void PID_AutoTune::FinishUp() {
@@ -123,8 +125,8 @@ int PID_AutoTune::Runtime(Logging *logging) {
 	}
 
 	if (directionJustChanged && peakCount > 2) { //we've transitioned.  check if we can autotune based on the last peaks
-		float avgSeparation = (absF(peaks[peakCount - 1] - peaks[peakCount - 2])
-				+ absF(peaks[peakCount - 2] - peaks[peakCount - 3])) / 2;
+		float avgSeparation = (absF(peaks[peakCount - 0] - peaks[peakCount - 1])
+				+ absF(peaks[peakCount - 1] - peaks[peakCount - 2])) / 2;
 		if (avgSeparation < 0.05 * (absMax - absMin)) {
 			FinishUp();
 			running = false;

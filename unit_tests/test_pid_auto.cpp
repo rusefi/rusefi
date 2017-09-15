@@ -56,13 +56,20 @@ void testPidAutoZigZag() {
 		at.input = zigZagValue(mockTimeMs);
 		at.Runtime(&logging);
 	}
-	assertEqualsM("peakCount", 1, at.peakCount);
+	assertEqualsM("peakCount@21", 1, at.peakCount);
 
 	for (;mockTimeMs<=41;mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		at.Runtime(&logging);
 	}
-	assertEqualsM("peakCount", 2, at.peakCount);
+	assertEqualsM("peakCount@41", 2, at.peakCount);
+	assertEqualsM("Pu@41", 1, cisnan(at.Pu));
 
+	for (;mockTimeMs<=60;mockTimeMs++) {
+		at.input = zigZagValue(mockTimeMs);
+		at.Runtime(&logging);
+	}
+	assertEqualsM("peakCount@60", 3, at.peakCount);
+	assertEqualsM("Pu@60", 0.02, at.Pu);
 
 }
