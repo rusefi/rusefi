@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-
 #include "main.h"
 #include "test_pid_auto.h"
 #include "pid_auto_tune.h"
@@ -18,11 +17,12 @@ efitimems_t currentTimeMillis(void) {
 
 Logging logging;
 
+static float zigZagOffset = 0;
 static zigZagValue(int index) {
 	int i = index % 20;
 	if ( i <= 10)
-		 return i * 10;
-	return (20 - i) * 10;
+	return i * 10 + zigZagOffset;
+	return (20 - i) * 10 + zigZagOffset;
 
 }
 
@@ -43,7 +43,7 @@ void testPidAutoZigZag() {
 	assertEqualsLM("max@1", 10, at.absMax);
 	assertEqualsM("peakCount", 0, at.peakCount);
 
-	for (;mockTimeMs<=11;mockTimeMs++) {
+	for (; mockTimeMs <= 11; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		at.Runtime(&logging);
 
@@ -52,24 +52,32 @@ void testPidAutoZigZag() {
 	assertEqualsLM("max@11", 100, at.absMax);
 	assertEqualsM("peakCount", 0, at.peakCount);
 
-	for (;mockTimeMs<=21;mockTimeMs++) {
+	for (; mockTimeMs <= 21; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		at.Runtime(&logging);
 	}
 	assertEqualsM("peakCount@21", 1, at.peakCount);
 
-	for (;mockTimeMs<=41;mockTimeMs++) {
+	for (; mockTimeMs <= 41; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		at.Runtime(&logging);
 	}
 	assertEqualsM("peakCount@41", 2, at.peakCount);
 	assertEqualsM("Pu@41", 1, cisnan(at.Pu));
 
-	for (;mockTimeMs<=60;mockTimeMs++) {
+	for (; mockTimeMs <= 60; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		at.Runtime(&logging);
 	}
 	assertEqualsM("peakCount@60", 3, at.peakCount);
 	assertEqualsM("Pu@60", 0.02, at.Pu);
+
+//	zigZagOffset = 10;
+
+	for (; mockTimeMs <= 80; mockTimeMs++) {
+		at.input = zigZagValue(mockTimeMs);
+		at.Runtime(&logging);
+	}
+	assertEqualsM("peakCount@80", 1, at.peakCount);
 
 }
