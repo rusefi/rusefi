@@ -108,6 +108,7 @@ void SensorsState::reset() {
 
 void Engine::reset() {
 	withError = isEngineChartEnabled = false;
+	etbAutoTune = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
 	fsioTimingAdjustment = 0;
