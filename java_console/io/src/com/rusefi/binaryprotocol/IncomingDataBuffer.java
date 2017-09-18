@@ -41,12 +41,12 @@ public class IncomingDataBuffer {
     }
 
     /**
-     * Blocking method which would for specified amout of data
+     * Blocking method which would wait for specified amount of data
      *
      * @return true in case of timeout, false if everything is fine
      */
-    public boolean waitForBytes(String msg, long startTimestamp, int count) throws InterruptedException {
-        logger.info("Waiting for " + count + " byte(s): " + msg);
+    public boolean waitForBytes(String loggingMessage, long startTimestamp, int count) throws InterruptedException {
+        logger.info(loggingMessage + ": waiting for " + count + " byte(s)");
         synchronized (cbb) {
             while (cbb.length() < count) {
                 int timeout = (int) (startTimestamp + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());

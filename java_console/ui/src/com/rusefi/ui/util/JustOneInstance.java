@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
+ * This class is used to figure out if we have multiple instances of rusEfi console running
+ *
  * (c) Andrey Belomutskiy
  * 5/4/2015
  */
