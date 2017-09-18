@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.io.LinkManager;
+
 import static com.rusefi.AutoTest.*;
 
 /**
@@ -46,7 +48,7 @@ public class RealHwTest {
         if (args.length == 1 || args.length == 2) {
             port = args[0];
         } else if (args.length == 0) {
-            port = IoUtil.getDefaultPort();
+            port = LinkManager.getDefaultPort();
         } else {
             System.out.println("Only one optional argument expected: port number");
             port = null;

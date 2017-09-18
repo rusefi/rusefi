@@ -4,8 +4,10 @@ import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
+import jssc.SerialPortList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 /**
@@ -13,6 +15,30 @@ import java.util.concurrent.*;
  *         3/3/14
  */
 public class LinkManager {
+    @NotNull
+    public static CountDownLatch connect(String port) {
+        start(port);
+        final CountDownLatch connected = new CountDownLatch(1);
+        open(new ConnectionStateListener() {
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("CONNECTION FAILED, did you specify the right port name?");
+                System.exit(-1);
+            }
+
+            @Override
+            public void onConnectionEstablished() {
+                connected.countDown();
+            }
+        });
+        try {
+            connected.await(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
+        return connected;
+    }
+
     public enum LogLevel {
         INFO,
         DEBUG,
@@ -44,6 +70,9 @@ public class LinkManager {
     });
     public static final String LOG_VIEWER = "log viewer";
     public static final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
+    /**
+     * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
+     */
     public static final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             COMMUNICATION_QUEUE,
@@ -51,7 +80,8 @@ public class LinkManager {
                 @Override
                 public Thread newThread(Runnable r) {
                     Thread t = Executors.defaultThreadFactory().newThread(r);
-                    t.setName("communication executor");;
+                    t.setName("communication executor");
+                    ;
                     return t;
                 }
             });
@@ -125,5 +155,20 @@ public class LinkManager {
         if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
             return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
         return null;
+    }
+
+    /**
+     * @return null if no port located
+     */
+    public static String getDefaultPort() {
+        String[] ports = SerialPortList.getPortNames();
+        if (ports.length == 0) {
+            System.out.println("Port not specified and no ports found");
+            return null;
+        }
+        String port = ports[ports.length - 1];
+        System.out.println("Using last of " + ports.length + " port(s)");
+        System.out.println("All ports: " + Arrays.toString(ports));
+        return port;
     }
 }
