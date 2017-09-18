@@ -67,7 +67,7 @@ int PID_AutoTune::Runtime(Logging *logging) {
 		output = outputStart + oStep;
 
 	if (output != prevOutput) {
-		scheduleMsg(logging, "direction change");
+		scheduleMsg(logging, "direction change %f", output);
 	}
 
 
