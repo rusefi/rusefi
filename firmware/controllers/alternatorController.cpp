@@ -31,7 +31,7 @@ static Pid altPid(altPidS);
 
 static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static float currentAltDuty;
+static percent_t currentAltDuty;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;

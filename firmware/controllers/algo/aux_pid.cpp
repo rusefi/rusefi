@@ -81,7 +81,7 @@ static msg_t auxPidThread(int param) {
 			float value = engine->triggerCentral.vvtPosition; // getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE); // that's temporary
 			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-			float pwm = auxPid.getValue(targetValue, value);
+			percent_t pwm = auxPid.getValue(targetValue, value);
 			if (engineConfiguration->isVerboseAuxPid1) {
 				scheduleMsg(logger, "aux duty: %f/value=%f/p=%f/i=%f/d=%f int=%f", pwm, value,
 						auxPid.getP(), auxPid.getI(), auxPid.getD(), auxPid.getIntegration());
