@@ -63,6 +63,8 @@ static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
 //static FastInterpolation dodgeNeon2003(0.5 /* volts */, 0 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 
+static FastInterpolation densoToyota(3.7 - 2 /* volts */, 33.322271 /* kPa */, 3.7 /* volts */ , 100 /* kPa */);
+
 /**
  * We hold a reference to current decoder to reduce code branching
  * to lookup decoder each time we need to decode
@@ -88,7 +90,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_GM_3_BAR:
 		return gm3bar.getValue(voltage);
 	case MT_TOYOTA_89420_02010:
-		// todo: add calibration
+		return densoToyota.getValue(voltage);
 	case MT_MPX4100:
 		return mpx4100.getValue(voltage);
 	default:
