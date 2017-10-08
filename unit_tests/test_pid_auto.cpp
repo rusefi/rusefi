@@ -80,4 +80,5 @@ void testPidAutoZigZag() {
 	}
 	assertEqualsM("peakCount@80", 1, at.peakCount);
 
+	// todo: test the same code with noisy zig-zag function
 }
