@@ -2,6 +2,7 @@
  * pid_auto_tune.h
  *
  * http://brettbeauregard.com/blog/2012/01/arduino-pid-autotune-library/
+ * https://www.ripublication.com/ijeer17/ijeerv9n6_02.pdf
  *
  *
  *  Created on: Sep 13, 2017
