@@ -74,8 +74,6 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
 	trigger_event_e signal =
 			isPrimary ? SHAFT_PRIMARY_FALLING : SHAFT_SECONDARY_FALLING;
-	if (CONFIG(useOnlyRisingEdgeForTrigger))
-		return;
 	hwHandleShaftSignal(signal);
 }
 

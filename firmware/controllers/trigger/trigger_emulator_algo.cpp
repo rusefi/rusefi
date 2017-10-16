@@ -34,11 +34,6 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 EXTERN_ENGINE
 ;
 
-static void fireShaftSignal(trigger_event_e signal) {
-	if (isUsefulSignal(signal, engineConfiguration))
-		hwHandleShaftSignal(signal);
-}
-
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	int prevIndex = (stateIndex + state->phaseCount - 1) % state->phaseCount;
 
@@ -55,17 +50,17 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
-		fireShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
+		hwHandleShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
 		secondaryWheelState = newSecondaryWheelState;
-		fireShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+		hwHandleShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
 		thirdWheelState = new3rdWheelState;
-		fireShaftSignal(thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
+		hwHandleShaftSignal(thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
 	}
 
 	//	print("hello %d\r\n", chTimeNow());
