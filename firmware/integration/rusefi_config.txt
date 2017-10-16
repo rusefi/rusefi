@@ -603,8 +603,8 @@ bit vvtDisplayInverted
 	bit useFSIO16ForTimingAdjustment;See fsioTimingAdjustment
 	bit tachPulseDurationAsDutyCycle
 	bit isAlternatorControlEnabled
-	bit unusedBit__3
-	bit unusedbit_8
+	bit invertPrimaryTriggerSignal
+	bit invertSecondaryTriggerSignal
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
 bit step1fuelCutEnable
