@@ -57,7 +57,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 	}
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
 	// todo: add support for 3rd channel
-	trigger_event_e signal = isPrimary ? SHAFT_PRIMARY_RISING : SHAFT_SECONDARY_RISING;
+	trigger_event_e signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
 
 	hwHandleShaftSignal(signal);
 }
@@ -73,7 +73,7 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 	// todo: add support for 3rd channel
 	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
 	trigger_event_e signal =
-			isPrimary ? SHAFT_PRIMARY_FALLING : SHAFT_SECONDARY_FALLING;
+			isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	hwHandleShaftSignal(signal);
 }
 
