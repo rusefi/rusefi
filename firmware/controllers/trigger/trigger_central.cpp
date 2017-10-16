@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "engine_math.h"
 #include "LocalVersionHolder.h"
+#include "trigger_simulator.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -178,6 +179,9 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 }
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+	if (!isUsefulSignal(signal, engineConfiguration)) {
+		return;
+	}
 	triggerHanlderEntryTime = GET_TIMESTAMP();
 	isInsideTriggerHandler = true;
 	if (triggerReentraint > maxTriggerReentraint)
