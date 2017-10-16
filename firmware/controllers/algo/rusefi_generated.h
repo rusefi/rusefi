@@ -866,10 +866,10 @@
 #define tachPulseDurationAsDutyCycle_offset_hex 5d0
 #define isAlternatorControlEnabled_offset 1488
 #define isAlternatorControlEnabled_offset_hex 5d0
-#define unusedBit__3_offset 1488
-#define unusedBit__3_offset_hex 5d0
-#define unusedbit_8_offset 1488
-#define unusedbit_8_offset_hex 5d0
+#define invertPrimaryTriggerSignal_offset 1488
+#define invertPrimaryTriggerSignal_offset_hex 5d0
+#define invertSecondaryTriggerSignal_offset 1488
+#define invertSecondaryTriggerSignal_offset_hex 5d0
 #define cutFuelOnHardLimit_offset 1488
 #define cutFuelOnHardLimit_offset_hex 5d0
 #define cutSparkOnHardLimit_offset 1488
