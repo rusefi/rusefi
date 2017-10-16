@@ -52,7 +52,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 	if (hasFirmwareErrorFlag)
 		return;
 	int isPrimary = icup == primaryCrankDriver;
-	if (!isPrimary && !engine->triggerCentral.triggerShape.needSecondTriggerInput) {
+	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
 		return;
 	}
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
@@ -66,7 +66,7 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 	if (hasFirmwareErrorFlag)
 		return;
 	int isPrimary = icup == primaryCrankDriver;
-	if (!isPrimary && !engine->triggerCentral.triggerShape.needSecondTriggerInput) {
+	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
 		return;
 	}
 
