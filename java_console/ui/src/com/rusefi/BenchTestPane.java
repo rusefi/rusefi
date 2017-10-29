@@ -48,7 +48,7 @@ public class BenchTestPane {
     }
 
     private Component createDizzyTest() {
-        BenchTestPanel panel = new BenchTestPanel("Dizzy", "todo_image.png") {
+        BenchTestPanel panel = new BenchTestPanel("Dizzy", "dizzy.jpg") {
             @NotNull
             protected String getCommand() {
                 return "dizzybench";
