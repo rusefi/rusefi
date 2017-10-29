@@ -127,6 +127,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	floatms_t fuelMs = ENGINE(fuelMs);
 	efiAssert(!cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
+	efiAssert(!cisnan(injectionDuration), "NaN injectionDuration", false);
+	assertAngleRange(injectionDuration, "injectionDuration_r");
 	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
