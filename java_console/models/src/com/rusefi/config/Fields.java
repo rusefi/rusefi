@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Oct 16 14:44:28 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 15:48:05 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -10,6 +10,7 @@ public class Fields {
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_WINDOW_SIZE = 8;
+	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int CLT_TIMING_CURVE_SIZE = 8;
