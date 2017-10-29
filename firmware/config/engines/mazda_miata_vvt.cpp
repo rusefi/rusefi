@@ -284,6 +284,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 
+	// high-side driver with +12v VP jumper
 	engineConfiguration->dizzySparkOutputPin = GPIOE_8; // tachometer
 
 	// set global_trigger_offset_angle 0
