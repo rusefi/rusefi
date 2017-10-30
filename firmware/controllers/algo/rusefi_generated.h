@@ -57,7 +57,7 @@
 #define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY"
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "trg39", "trg40", "trg41", "trg42", "INVALID"
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX"
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "mode12", "mode13", "mode14", "mode15", "mode16", "mode17", "mode18", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25", "mode26", "mode27", "mode28", "mode29", "mode30", "mode31", "PULLUP", "mode33", "mode34", "mode35"
 #define engineConfiguration_offset 0
 #define engineConfiguration_offset_hex 0
@@ -1233,8 +1233,10 @@
 #define cj125SpiDevice_offset_hex 9b0
 #define cj125CsPinMode_offset 2484
 #define cj125CsPinMode_offset_hex 9b4
-#define unusedauxPid_offset 2488
-#define unusedauxPid_offset_hex 9b8
+#define narrowToWideOxygenBins_offset 2488
+#define narrowToWideOxygenBins_offset_hex 9b8
+#define narrowToWideOxygen_offset 2520
+#define narrowToWideOxygen_offset_hex 9d8
 #define vvtMode_offset 2552
 #define vvtMode_offset_hex 9f8
 #define biQuad_offset 2556

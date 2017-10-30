@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 15:48:05 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 20:03:49 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -894,7 +894,8 @@ public class Fields {
 	public static final int storageMode_offset = 2476;
 	public static final int cj125SpiDevice_offset = 2480;
 	public static final int cj125CsPinMode_offset = 2484;
-	public static final int unusedauxPid_offset = 2488;
+	public static final int narrowToWideOxygenBins_offset = 2488;
+	public static final int narrowToWideOxygen_offset = 2520;
 	public static final int vvtMode_offset = 2552;
 	public static final int biQuad_offset = 2556;
 	public static final int biQuad_a0_offset = 2556;
@@ -1319,7 +1320,7 @@ public class Fields {
 	public static final Field CJ125CSPIN = Field.create("CJ125CSPIN", 880, FieldType.INT, brain_pin_e);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 884, FieldType.FLOAT);
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 888, FieldType.FLOAT);
-	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX"};
+	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 892, FieldType.INT, ego_sensor_e);
 	public static final Field FUELCLOSEDLOOPAFRLOWTHRESHOLD = Field.create("FUELCLOSEDLOOPAFRLOWTHRESHOLD", 896, FieldType.FLOAT);
 	public static final Field HIP9011CSPINMODE = Field.create("HIP9011CSPINMODE", 900, FieldType.INT, pin_output_mode_e);
