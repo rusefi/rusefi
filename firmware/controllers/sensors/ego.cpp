@@ -17,6 +17,10 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	float volts = getVoltageDivided("ego", sensor->hwChannel);
 
+	if (boardConfiguration->afr_type == ES_NarrowBand) {
+		return interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen, NARROW_BAND_WIDE_BAND_CONVERSION_SIZE);
+	}
+
 	return interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
 			+ engineConfiguration->egoValueShift;
 }

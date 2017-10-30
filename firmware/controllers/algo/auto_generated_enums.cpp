@@ -531,6 +531,8 @@ case ES_NarrowBand:
   return "ES_NarrowBand";
 case ES_PLX:
 	return "ES_PLX";
+case ES_Custom:
+	return "ES_Custom";
 case Force_4b_ego_sensor:
   return "Force_4b_ego_sensor";
   }

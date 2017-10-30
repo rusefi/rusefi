@@ -520,6 +520,8 @@ typedef enum {
 
 	ES_PLX = 4,
 
+	ES_Custom = 5,
+
 	Force_4b_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
