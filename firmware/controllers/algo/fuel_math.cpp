@@ -164,10 +164,12 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
+	float postCrankingFuelCorrection = ENGINE(engineState.postCrankingFuelCorrection);
 	efiAssert(!cisnan(iatCorrection), "NaN iatCorrection", 0);
 	efiAssert(!cisnan(cltCorrection), "NaN cltCorrection", 0);
+	efiAssert(!cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
-	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection + ENGINE(engineState.fuelPidCorrection);
+	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection * postCrankingFuelCorrection + ENGINE(engineState.fuelPidCorrection);
 	efiAssert(!cisnan(runningFuel), "NaN runningFuel", 0);
 	ENGINE(engineState.runningFuel) = runningFuel;
 
