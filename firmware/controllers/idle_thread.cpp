@@ -226,6 +226,11 @@ static msg_t ivThread(int param) {
 			} else {
 				iacPosition = autoIdle(cltCorrection);
 			}
+			
+			percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+			float additionalAir = (float)engineConfiguration->iacByTpsTaper;
+			iacPosition += interpolateClamped(0.0f, 0.0f, boardConfiguration->idlePidDeactivationTpsThreshold, additionalAir, tpsPos);
+
 			// taper transition from cranking to running (uint32_t to float conversion is safe here)
 			if (engineConfiguration->afterCrankingIACtaperDuration > 0)
 				iacPosition = interpolateClamped(lastCrankingCyclesCounter, lastCrankingIacPosition, 
