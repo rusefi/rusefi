@@ -21,6 +21,7 @@
 typedef enum {
 	BLUETOOTH_HC_05,
 	BLUETOOTH_HC_06,
+	BLUETOOTH_SPP,
 } bluetooth_module_e;
 
 /**
