@@ -193,6 +193,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		crankingTime = nowNt;
+		timeSinceCranking = 0.0f;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
@@ -221,6 +222,18 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	} else {
 		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+	// post-cranking fuel enrichment.
+	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
+	if (engineConfiguration->postCrankingFactor > 0.01f) {
+		// convert to microsecs and then to seconds
+		float timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
+		// use interpolation for correction taper
+		postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor, 
+			engineConfiguration->postCrankingDurationSec, 1.0f, timeSinceCrankingInSecs);
+	} else {
+		postCrankingFuelCorrection = 1.0f;
 	}
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
