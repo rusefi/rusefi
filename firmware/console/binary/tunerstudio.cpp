@@ -177,6 +177,10 @@ static void bluetoothHC05(const char *baudRate, const char *name, const char *pi
 static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
 	bluetoothStart(&tsChannel, BLUETOOTH_HC_06, baudRate, name, pinCode);
 }
+// Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
+static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
+	bluetoothStart(&tsChannel, BLUETOOTH_SPP, baudRate, name, pinCode);
+}
 #endif  /* EFI_BLUETOOTH_SETUP */
 
 void tunerStudioDebug(const char *msg) {
@@ -863,6 +867,7 @@ void startTunerStudioConnectivity(void) {
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
 	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);
 	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
+	addConsoleActionSSS("bluetooth_spp", bluetoothSPP);
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 
