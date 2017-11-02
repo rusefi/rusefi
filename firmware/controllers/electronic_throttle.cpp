@@ -59,8 +59,11 @@
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "pwm_generator.h"
+#include "pid_auto_tune.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 static bool shouldResetPid = false;
+
+static PID_AutoTune autoTune;
 
 static LoggingWithStorage logger("ETB");
 /**
@@ -82,7 +85,7 @@ static Pid pid(&engineConfiguration->etb);
 
 static float prevTps;
 
-static float currentEtbDuty;
+static percent_t currentEtbDuty;
 
 static bool wasEtbBraking = false;
 
@@ -93,6 +96,15 @@ static msg_t etbThread(void *arg) {
 			pid.reset();
 //			alternatorPidResetCounter++;
 			shouldResetPid = false;
+		}
+
+		if (engine->etbAutoTune) {
+			autoTune.Runtime(&logger);
+
+			etbPwmUp.setSimplePwmDutyCycle(autoTune.output);
+
+			pid.sleep();
+			continue;
 		}
 
 
@@ -141,6 +153,9 @@ static void setThrottleConsole(int level) {
 
 static void showEthInfo(void) {
 	static char pinNameBuffer[16];
+
+	scheduleMsg(&logger, "etbAutoTune=%d",
+			engine->etbAutoTune);
 
 	scheduleMsg(&logger, "throttlePedal=%f %f/%f @%s",
 			getPedalPosition(),
@@ -227,6 +242,16 @@ void startETBPins(void) {
 	outputDirectionClose.initPin("etb dir close", boardConfiguration->etbDirectionPin2);
 }
 
+static void setTempOutput(float value) {
+	autoTune.output = value;
+
+}
+
+static void setTempStep(float value) {
+	autoTune.oStep = value;
+
+}
+
 void initElectronicThrottle(void) {
 	// these two lines are controlling direction
 //	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
@@ -239,7 +264,10 @@ void initElectronicThrottle(void) {
 
 	startETBPins();
 
-	addConsoleActionI("e", setThrottleConsole);
+	addConsoleActionI("set_etb", setThrottleConsole);
+
+	addConsoleActionF("set_etb_output", setTempOutput);
+	addConsoleActionF("set_etb_step", setTempStep);
 
 	apply();
 

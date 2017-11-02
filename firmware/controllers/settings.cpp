@@ -857,6 +857,8 @@ static void setSpiMode(int index, bool mode) {
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
+		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "constant_dwell")) {
 		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "binary_mode_console")) {

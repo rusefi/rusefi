@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 22:50:54 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 20:03:49 EDT 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -10,6 +10,7 @@ public class Fields {
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_WINDOW_SIZE = 8;
+	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int CLT_TIMING_CURVE_SIZE = 8;
@@ -635,8 +636,8 @@ public class Fields {
 	public static final int useFSIO16ForTimingAdjustment_offset = 1488;
 	public static final int tachPulseDurationAsDutyCycle_offset = 1488;
 	public static final int isAlternatorControlEnabled_offset = 1488;
-	public static final int unusedBit__3_offset = 1488;
-	public static final int unusedbit_8_offset = 1488;
+	public static final int invertPrimaryTriggerSignal_offset = 1488;
+	public static final int invertSecondaryTriggerSignal_offset = 1488;
 	public static final int cutFuelOnHardLimit_offset = 1488;
 	public static final int cutSparkOnHardLimit_offset = 1488;
 	public static final int step1fuelCutEnable_offset = 1488;
@@ -893,7 +894,8 @@ public class Fields {
 	public static final int storageMode_offset = 2476;
 	public static final int cj125SpiDevice_offset = 2480;
 	public static final int cj125CsPinMode_offset = 2484;
-	public static final int unusedauxPid_offset = 2488;
+	public static final int narrowToWideOxygenBins_offset = 2488;
+	public static final int narrowToWideOxygen_offset = 2520;
 	public static final int vvtMode_offset = 2552;
 	public static final int biQuad_offset = 2556;
 	public static final int biQuad_a0_offset = 2556;
@@ -1318,7 +1320,7 @@ public class Fields {
 	public static final Field CJ125CSPIN = Field.create("CJ125CSPIN", 880, FieldType.INT, brain_pin_e);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 884, FieldType.FLOAT);
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 888, FieldType.FLOAT);
-	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX"};
+	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 892, FieldType.INT, ego_sensor_e);
 	public static final Field FUELCLOSEDLOOPAFRLOWTHRESHOLD = Field.create("FUELCLOSEDLOOPAFRLOWTHRESHOLD", 896, FieldType.FLOAT);
 	public static final Field HIP9011CSPINMODE = Field.create("HIP9011CSPINMODE", 900, FieldType.INT, pin_output_mode_e);
@@ -1509,8 +1511,8 @@ public class Fields {
 	public static final Field USEFSIO16FORTIMINGADJUSTMENT = Field.create("USEFSIO16FORTIMINGADJUSTMENT", 1488, FieldType.BIT, 11);
 	public static final Field TACHPULSEDURATIONASDUTYCYCLE = Field.create("TACHPULSEDURATIONASDUTYCYCLE", 1488, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1488, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT__3 = Field.create("UNUSEDBIT__3", 1488, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_8 = Field.create("UNUSEDBIT_8", 1488, FieldType.BIT, 15);
+	public static final Field INVERTPRIMARYTRIGGERSIGNAL = Field.create("INVERTPRIMARYTRIGGERSIGNAL", 1488, FieldType.BIT, 14);
+	public static final Field INVERTSECONDARYTRIGGERSIGNAL = Field.create("INVERTSECONDARYTRIGGERSIGNAL", 1488, FieldType.BIT, 15);
 	public static final Field CUTFUELONHARDLIMIT = Field.create("CUTFUELONHARDLIMIT", 1488, FieldType.BIT, 16);
 	public static final Field CUTSPARKONHARDLIMIT = Field.create("CUTSPARKONHARDLIMIT", 1488, FieldType.BIT, 17);
 	public static final Field STEP1FUELCUTENABLE = Field.create("STEP1FUELCUTENABLE", 1488, FieldType.BIT, 18);

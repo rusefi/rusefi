@@ -287,6 +287,7 @@ public:
 
 	WallFuel wallFuel;
 
+	bool etbAutoTune;
 	/**
 	 * That's the list of pending spark firing events
 	 */

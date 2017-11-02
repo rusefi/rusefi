@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 20:53:46 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 20:03:49 EDT 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1246,10 +1246,10 @@ typedef struct {
 	bool isAlternatorControlEnabled : 1;
 	/**
 	offset 1488 bit 14 */
-	bool unusedBit__3 : 1;
+	bool invertPrimaryTriggerSignal : 1;
 	/**
 	offset 1488 bit 15 */
-	bool unusedbit_8 : 1;
+	bool invertSecondaryTriggerSignal : 1;
 	/**
 	offset 1488 bit 16 */
 	bool cutFuelOnHardLimit : 1;
@@ -1795,9 +1795,14 @@ typedef struct {
 	 */
 	pin_output_mode_e cj125CsPinMode;
 	/**
+	 * Narrow Band WBO Approximation
 	 * offset 2488
 	 */
-	float unusedauxPid[16];
+	float narrowToWideOxygenBins[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE];
+	/**
+	 * offset 2520
+	 */
+	float narrowToWideOxygen[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE];
 	/**
 	 * set vvt_mode X
 	 * offset 2552
@@ -2158,4 +2163,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Aug 28 20:53:46 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 20:03:49 EDT 2017

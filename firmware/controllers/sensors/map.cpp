@@ -63,11 +63,15 @@ static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
 //static FastInterpolation dodgeNeon2003(0.5 /* volts */, 0 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 static FastInterpolation dodgeNeon2003(0.4 /* volts */, 15.34 /* kPa */, 4.5 /* volts */ , 100 /* kPa */);
 
+static FastInterpolation densoToyota(3.7 - 2 /* volts */, 33.322271 /* kPa */, 3.7 /* volts */ , 100 /* kPa */);
+
 /**
  * We hold a reference to current decoder to reduce code branching
  * to lookup decoder each time we need to decode
  */
 static FastInterpolation *mapDecoder;
+
+static FastInterpolation *getDecoder(air_pressure_sensor_type_e type);
 
 float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (mapConfig->type) {
@@ -76,23 +80,16 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 		return interpolate(engineConfiguration->mapLowValueVoltage, mapConfig->lowValue,
 				engineConfiguration->mapHighValueVoltage, mapConfig->highValue, voltage);
 	case MT_DENSO183:
-		return denso183.getValue(voltage);
 	case MT_MPX4250:
-		return mpx4250.getValue(voltage);
 	case MT_HONDA3BAR:
-		return honda3bar.getValue(voltage);
 	case MT_DODGE_NEON_2003:
-		return dodgeNeon2003.getValue(voltage);
 	case MT_SUBY_DENSO:
-		return subyDenso.getValue(voltage);
 	case MT_GM_3_BAR:
-		return gm3bar.getValue(voltage);
 	case MT_TOYOTA_89420_02010:
-		// todo: add calibration
 	case MT_MPX4100:
-		return mpx4100.getValue(voltage);
+		return getDecoder(mapConfig->type)->getValue(voltage);
 	default:
-		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: %d", mapConfig->type);
+		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: p %d", mapConfig->type);
 		return NAN;
 	}
 }
@@ -166,8 +163,10 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &subyDenso;
 	case MT_GM_3_BAR:
 		return &gm3bar;
+	case MT_TOYOTA_89420_02010:
+		return &densoToyota;
 	default:
-		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: %d", type);
+		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: d %d", type);
 		return &customMap;
 	}
 }

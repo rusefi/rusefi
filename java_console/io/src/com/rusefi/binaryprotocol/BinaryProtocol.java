@@ -436,7 +436,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
 
 
     /**
-     * This method blocks until a confirmation is received
+     * This method blocks until a confirmation is received or {@link Timeouts#BINARY_IO_TIMEOUT} is reached
      *
      * @return true in case of timeout, false if got proper confirmation
      */

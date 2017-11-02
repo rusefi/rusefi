@@ -21,6 +21,7 @@
 #include "test_fuel_map.h"
 #include "fuel_math.h"
 #include "test_logic_expression.h"
+#include "test_pid_auto.h"
 #include "engine_configuration.h"
 
 #include "test_idle_controller.h"
@@ -126,6 +127,7 @@ extern bool printTriggerDebug;
 int main(void) {
 //	printTriggerDebug = true;
 
+	testPidAutoZigZag();
 	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();

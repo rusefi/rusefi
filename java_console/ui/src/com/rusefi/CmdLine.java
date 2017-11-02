@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.io.LinkManager;
+
 /**
  * (c) Andrey Belomutskiy 2013-2017
  * 2/22/2015
@@ -12,7 +14,7 @@ public class CmdLine {
         }
         String command = args[0];
         if (args.length == 1) {
-            String port = IoUtil.getDefaultPort();
+            String port = LinkManager.getDefaultPort();
             if (port == null)
                 return;
             executeCommand(command, port);

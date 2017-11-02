@@ -1,3 +1,6 @@
+# rusEFI
+A GPL open-source DIY ECU
+
 current binaries are always available at http://rusefi.com/build_server/
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
@@ -5,7 +8,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 [![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/)
 
-#Releases
+# Releases
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
@@ -51,24 +54,19 @@ current binaries are always available at http://rusefi.com/build_server/
 | 07/05/2013	| r10	    | Second CKP, sequential injection.
 | 06/19/2013	| r9	    | Initial version - batch injection & ignition with advance table lookup.
 	
+# Links
 
+ * Wiki: http://rusefi.com
+ * Forum http://rusefi.com/forum
+ * Doxygen documentation is available at http://rusefi.com/docs/html
+ * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
+ * Facebook https://www.facebook.com/rusEfiECU
+ * YouTube: https://www.youtube.com/user/rusefi
 
-Wiki http://rusefi.com
+# Building the Code
 
-Forum rusefi.com/forum
-
-Doxygen documentation is availble at http://rusefi.com/docs/html
-
-General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
-
-
-Facebook https://www.facebook.com/rusEfiECU
-
-youtube https://www.youtube.com/user/rusefi
-
-
-= How to build the code? =
+## Cloning the repository
 
 We now use submodules:
 
-git submodule update --init
+`git submodule update --init`

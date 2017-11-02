@@ -4,13 +4,10 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
-import jssc.SerialPortList;
 
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -151,45 +148,14 @@ public class IoUtil {
         }
     }
 
-    /**
-     * @return null if no port located
-     */
-    static String getDefaultPort() {
-        String[] ports = SerialPortList.getPortNames();
-        if (ports.length == 0) {
-            System.out.println("Port not specified and no ports found");
-            return null;
-        }
-        String port = ports[ports.length - 1];
-        System.out.println("Using last of " + ports.length + " port(s)");
-        System.out.println("All ports: " + Arrays.toString(ports));
-        return port;
-    }
-
     static void realHardwareConnect(String port) {
-        LinkManager.start(port);
-        final CountDownLatch connected = new CountDownLatch(1);
-        LinkManager.open(new ConnectionStateListener() {
-            @Override
-            public void onConnectionFailed() {
-                System.out.println("CONNECTION FAILED, did you specify the right port name?");
-                System.exit(-1);
-            }
-
-            @Override
-            public void onConnectionEstablished() {
-                connected.countDown();
-            }
-        });
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(EngineState.OUTPIN_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
-        try {
-            connected.await(60, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+
+        final CountDownLatch connected = LinkManager.connect(port);
         if (connected.getCount() > 0)
             throw new IllegalStateException("Not connected in time");
     }
+
 }
