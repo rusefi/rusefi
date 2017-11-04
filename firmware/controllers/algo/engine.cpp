@@ -335,10 +335,11 @@ void Engine::watchdog() {
 		return;
 	}
 	efitick_t nowNt = getTimeNowNt();
+#ifndef RPM_LOW_THRESHOLD
+#define RPM_LOW_THRESHOLD 240
+#endif
+#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
 	/**
-	 * Lowest possible cranking is about 240 RPM, that's 4 revolutions per second.
-	 * 0.25 second is 250000 uS
-	 *
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 *
@@ -346,7 +347,7 @@ void Engine::watchdog() {
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
 	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerEventTimeNt;
-	if (timeSinceLastTriggerEvent < US2NT(250000LL)) {
+	if (timeSinceLastTriggerEvent < US2NT(REVOLUTION_TIME_HIGH_THRESHOLD)) {
 		return;
 	}
 	isSpinning = false;
