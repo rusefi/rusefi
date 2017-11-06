@@ -133,20 +133,20 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float theoreticalInjectionLength;
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-	int numberOfCylinders = getNumberOfInjections(isCranking ?
+	int numberOfInjections = getNumberOfInjections(isCranking ?
 			engineConfiguration->crankingInjectionMode :
 			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
-	if (numberOfCylinders == 0) {
+	if (numberOfInjections == 0) {
 		warning(CUSTOM_CONFIG_NOT_READY, "config not ready");
 		return 0; // we can end up here during configuration reset
 	}
 	if (isCranking) {
-		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE) / numberOfCylinders;
+		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE) / numberOfInjections;
 		efiAssert(!cisnan(theoreticalInjectionLength), "NaN cranking theoreticalInjectionLength", 0);
 	} else {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		floatms_t fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
-		theoreticalInjectionLength = fuelPerCycle / numberOfCylinders;
+		theoreticalInjectionLength = fuelPerCycle / numberOfInjections;
 		efiAssert(!cisnan(theoreticalInjectionLength), "NaN fuelPerCycle", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("baseFuel=%f fuelPerCycle=%f theoreticalInjectionLength=%f\t\n",
