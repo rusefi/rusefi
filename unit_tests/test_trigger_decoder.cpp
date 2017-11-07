@@ -1019,7 +1019,17 @@ void testDifferentInjectionModes(void) {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
 	setTestBug299(&eth);
+	assertEqualsM("Lqs#0", 4, schedulingQueue.size());
 
+	// set fuel map values - extract method?
+	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
+	assertEquals(8, engineLoadIndex);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
+
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injectionMode IM_BATCH", (int)IM_BATCH, (int)engineConfiguration->injectionMode);
+	assertEqualsM("Lfuel#2", 20, engine->injectionDuration);
 }
 
 void testFuelSchedulerBug299smallAndLarge(void) {
@@ -1030,6 +1040,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	setTestBug299(&eth);
 	assertEqualsM("Lqs#0", 4, schedulingQueue.size());
 
+	// set fuel map values - extract method?
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	assertEquals(8, engineLoadIndex);
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
