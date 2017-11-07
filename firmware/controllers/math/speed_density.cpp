@@ -51,10 +51,14 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
  */
 #define GAS_R 0.28705
 
-float getAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
+float getCycleAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
 	// todo: pre-calculate cylinder displacement to save one division
-	float cylinderDisplacement = engineConfiguration->specs.displacement / engineConfiguration->specs.cylindersCount;
+	float cylinderDisplacement = engineConfiguration->specs.displacement;
 	return (cylinderDisplacement * VE * MAP) / (GAS_R * tempK);
+}
+
+float getCylinderAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
+	return getCycleAirMass(engineConfiguration, VE, MAP, tempK) / engineConfiguration->specs.cylindersCount;
 }
 
 /**
@@ -96,7 +100,7 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 	efiAssert(!cisnan(adjustedMap), "NaN adjustedMap", 0);
 
-	float airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
+	float airMass = getCylinderAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
 	efiAssert(!cisnan(airMass), "NaN airMass", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("map=%f adjustedMap=%f airMass=%f\t\n",

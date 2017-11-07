@@ -31,7 +31,7 @@ void testSpeedDensity(void) {
 
 	eth.ec->injector.flow = gramm_second_to_cc_minute(5.303);
 
-	float airMass = getAirMass(eth.ec, 0.92, 98, 293.16);
+	float airMass = getCylinderAirMass(eth.ec, 0.92, 98, 293.16);
 
 	assertEquals(0.9371, airMass);
 
