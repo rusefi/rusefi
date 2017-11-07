@@ -445,6 +445,8 @@ case IM_SEQUENTIAL:
   return "IM_SEQUENTIAL";
 case IM_SIMULTANEOUS:
   return "IM_SIMULTANEOUS";
+case IM_SINGLE_POINT:
+	return "IM_SINGLE_POINT";
   }
  return NULL;
 }
