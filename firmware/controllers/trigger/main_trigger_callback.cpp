@@ -212,9 +212,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	 * wetting coefficient works the same way for any injection mode, or is something
 	 * x2 or /2?
 	 */
-	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->outputs[0]->injectorIndex, ENGINE(fuelMs) PASS_ENGINE_PARAMETER_SUFFIX);
+	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->outputs[0]->injectorIndex, ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
-	printf("fuel fuelMs=%f adjusted=%f\t\n", ENGINE(fuelMs), injectionDuration);
+	printf("fuel injectionDuration=%f adjusted=%f\t\n", ENGINE(injectionDuration), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -376,7 +376,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
 		InjectionEvent *event = &fs->elements[injEventIndex];

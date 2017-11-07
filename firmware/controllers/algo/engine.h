@@ -346,8 +346,9 @@ public:
 	/**
 	 * Each individual fuel injection duration for current engine cycle, without wall wetting
 	 * including everything including injector lag, both cranking and running
+	 * @see getInjectionDuration()
 	 */
-	floatms_t fuelMs;
+	floatms_t injectionDuration;
 	/**
 	 * fuel injection time correction to account for wall wetting effect, for current cycle
 	 */

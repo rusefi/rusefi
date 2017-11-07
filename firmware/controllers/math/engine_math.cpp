@@ -124,7 +124,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	 * todo: since this method is not invoked within trigger event handler and
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
-	floatms_t fuelMs = ENGINE(fuelMs);
+	floatms_t fuelMs = ENGINE(injectionDuration);
 	efiAssert(!cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
 	efiAssert(!cisnan(injectionDuration), "NaN injectionDuration", false);

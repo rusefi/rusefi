@@ -141,7 +141,7 @@ void Engine::reset() {
 
 
 	timeOfLastKnockEvent = 0;
-	fuelMs = 0;
+	injectionDuration = 0;
 	clutchDownState = clutchUpState = brakePedalState = false;
 	memset(&m, 0, sizeof(m));
 
@@ -427,7 +427,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
-	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
 }
