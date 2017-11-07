@@ -1013,6 +1013,15 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	testMafValue = 0;
 }
 
+void testDifferentInjectionModes(void) {
+	printf("*************************************************** testDifferentInjectionModes\r\n");
+
+	EngineTestHelper eth(TEST_ENGINE);
+	EXPAND_EngineTestHelper
+	setTestBug299(&eth);
+
+}
+
 void testFuelSchedulerBug299smallAndLarge(void) {
 	printf("*************************************************** testFuelSchedulerBug299 small to large\r\n");
 
