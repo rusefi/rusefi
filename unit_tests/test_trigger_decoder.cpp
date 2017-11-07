@@ -350,7 +350,7 @@ void testRpmCalculator(void) {
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	assertEqualsM("fuel #1", 4.5450, eth.engine.fuelMs);
+	assertEqualsM("fuel #1", 4.5450, eth.engine.injectionDuration);
 	InjectionEvent *ie0 = &eth.engine.injectionEvents.elements[0];
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
@@ -358,7 +358,7 @@ void testRpmCalculator(void) {
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel #2", 4.5450, eth.engine.fuelMs);
+	assertEqualsM("fuel #2", 4.5450, eth.engine.injectionDuration);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
 	assertEqualsM("size #2", 1, ilist->isReady);
 	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
@@ -411,7 +411,7 @@ void testRpmCalculator(void) {
 	assertEqualsM("queue size 4.3", 4, schedulingQueue.size());
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel #3", 4.5450, eth.engine.fuelMs);
+	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
@@ -755,7 +755,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	assertEqualsM("RPM", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	assertEqualsM("fuel#1", 1.5, engine->fuelMs);
+	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
 
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
@@ -786,7 +786,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("fuel#2", 12.5, engine->fuelMs);
+	assertEqualsM("fuel#2", 12.5, engine->injectionDuration);
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 	assertEqualsM("qs#1", 4, schedulingQueue.size());
@@ -947,7 +947,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("fuel#3", 17.5, engine->fuelMs);
+	assertEqualsM("fuel#3", 17.5, engine->injectionDuration);
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
@@ -1027,7 +1027,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("Lfuel#2", 17.5, engine->fuelMs);
+	assertEqualsM("Lfuel#2", 17.5, engine->injectionDuration);
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 
@@ -1091,7 +1091,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("Lfuel#4", 2, engine->fuelMs);
+	assertEqualsM("Lfuel#4", 2, engine->injectionDuration);
 	assertEqualsM("Lduty for maf=3", 10, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 
