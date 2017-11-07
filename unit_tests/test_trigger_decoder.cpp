@@ -1013,6 +1013,12 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	testMafValue = 0;
 }
 
+static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	engineConfiguration->injectionMode = (injection_mode_e) value;
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+
 void testDifferentInjectionModes(void) {
 	printf("*************************************************** testDifferentInjectionModes\r\n");
 
@@ -1029,7 +1035,19 @@ void testDifferentInjectionModes(void) {
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("injectionMode IM_BATCH", (int)IM_BATCH, (int)engineConfiguration->injectionMode);
-	assertEqualsM("Lfuel#2", 20, engine->injectionDuration);
+	assertEqualsM("injection while batch", 20, engine->injectionDuration);
+
+	setInjectionMode((int)IM_SIMULTANEOUS PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injection while simultaneous", 10, engine->injectionDuration);
+
+	setInjectionMode((int)IM_SEQUENTIAL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injection while IM_SEQUENTIAL", 40, engine->injectionDuration);
+
+	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injection while IM_SINGLE_POINT", 40, engine->injectionDuration);
 }
 
 void testFuelSchedulerBug299smallAndLarge(void) {
