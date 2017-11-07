@@ -142,7 +142,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (mode == IM_SIMULTANEOUS) {
+	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
 		index = 0;
 	} else if (mode == IM_SEQUENTIAL) {
 		index = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;

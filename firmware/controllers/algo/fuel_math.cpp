@@ -109,6 +109,7 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX)
 	case IM_SIMULTANEOUS:
 		return engineConfiguration->specs.cylindersCount;
 	case IM_SEQUENTIAL:
+	case IM_SINGLE_POINT:
 		return 1;
 	case IM_BATCH:
 		return 2;
