@@ -13,6 +13,7 @@ current binaries are always available at http://rusefi.com/build_server/
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
 | 11/06/2017    | r14733    | improvement #487: single-point injection mode |
+| 10/26/2017    | r14700    | improvement #385: narrow band to wide band conversion table |
 | 07/24/2017    | r14513    | bugfix #307: TS bench test blinks three times |
 | 07/13/2017    | r14476    | bugfix #461: SAXParserException on console start-up due to damaged settings.xml file |
 | 07/09/2017    | r14473    | improvement: IAC solenoid frequencty changeable on the fly |
