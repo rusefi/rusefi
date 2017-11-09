@@ -148,14 +148,14 @@ fileVersion = { 20161225 }
 
       RPMValue        = scalar,  U32,      0,             "RPM",            1,   0.00000
 #if CELSIUS
-      coolant         = scalar,  F32,      4,              "°C",            1,       0.0
+      coolant         = scalar,  F32,      4,              "ï¿½C",            1,       0.0
 #else
-      coolant         = scalar,  F32,      4,              "°F",         {9/5},  17.77777
+      coolant         = scalar,  F32,      4,              "ï¿½F",         {9/5},  17.77777
 #endif
 #if CELSIUS
-      intake          = scalar,  F32,      8,              "°C",            1,       0.0
+      intake          = scalar,  F32,      8,              "ï¿½C",            1,       0.0
 #else
-      intake          = scalar,  F32,      8,              "°F",         {9/5},  17.77777
+      intake          = scalar,  F32,      8,              "ï¿½F",         {9/5},  17.77777
 #endif
       TPSValue        = scalar,  F32,     12,               "%",            1,         0
       MAFValue        = scalar,  F32,     16,               "V",            1,         0
@@ -204,14 +204,14 @@ fileVersion = { 20161225 }
       ind_hasFatalError=bits,    U32,     80, [6:6], "true", "false";
       ind_isWarnNow    =bits,    U32,     80, [7:7], "true", "false";
       firmwareTsVersion = scalar,U32,     84, "version_p",           1,         0
-      egt1            = scalar,  S16,     88, "°C",           1,         0
-      egt2            = scalar,  S16,     90, "°C",           1,         0
-      egt3            = scalar,  S16,     92, "°C",           1,         0
-      egt4            = scalar,  S16,     94, "°C",           1,         0
-      egt5            = scalar,  S16,     96, "°C",           1,         0
-      egt6            = scalar,  S16,     98, "°C",           1,         0
-      egt7            = scalar,  S16,    100, "°C",           1,         0
-      egt8            = scalar,  S16,    102, "°C",           1,         0
+      egt1            = scalar,  S16,     88, "ï¿½C",           1,         0
+      egt2            = scalar,  S16,     90, "ï¿½C",           1,         0
+      egt3            = scalar,  S16,     92, "ï¿½C",           1,         0
+      egt4            = scalar,  S16,     94, "ï¿½C",           1,         0
+      egt5            = scalar,  S16,     96, "ï¿½C",           1,         0
+      egt6            = scalar,  S16,     98, "ï¿½C",           1,         0
+      egt7            = scalar,  S16,    100, "ï¿½C",           1,         0
+      egt8            = scalar,  S16,    102, "ï¿½C",           1,         0
       rpmAcceleration = scalar,  F32,    104, "dRpm",         1,         0
       massAirFlowValue= scalar,  F32,    108, "Kg/h",         1,         0
       veValue         = scalar,  F32,    112, "ratio",        1,         0
@@ -255,6 +255,7 @@ fileVersion = { 20161225 }
       coilDutyCycle        = scalar,  F32,     272,              "perc",           1,         0
       accelerationX        = scalar,  S16,     276,              "G",           0.01,         0
       accelerationY        = scalar,  S16,     276,              "G",           0.01,         0
+	  oilPressure		   = scalar,  F32,     280,				 "kPa",			1, 0.0
 
 ; todo: generate this section programatically
 	LM_PLAIN_MAF = {0},
@@ -548,9 +549,9 @@ fileVersion = { 20161225 }
 
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
 #if CELSIUS
-   tChargeGauge          = tCharge,     "Charge Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   tChargeGauge          = tCharge,     "Charge Temp",        "ï¿½C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   tChargeGauge          = tCharge,     "Charge Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
+   tChargeGauge          = tCharge,     "Charge Temp",        "ï¿½F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
 
 
@@ -595,20 +596,21 @@ gaugeCategory = Debug
 gaugeCategory = Sensors  
    RPMGauge        = RPMValue,           "Engine Speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
 #if CELSIUS
-   CLTGauge          = coolant,       "Coolant Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   CLTGauge          = coolant,       "Coolant Temp",        "ï¿½C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   CLTGauge          = coolant,       "Coolant Temp",        "°F",      -40,    285,       5,     35,     205,   230,   1,   1
+   CLTGauge          = coolant,       "Coolant Temp",        "ï¿½F",      -40,    285,       5,     35,     205,   230,   1,   1
 #endif
 #if CELSIUS
-   IATGauge          = intake,     "Intake Air Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   IATGauge          = intake,     "Intake Air Temp",        "ï¿½C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   IATGauge          = intake,     "Intake Air Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
+   IATGauge          = intake,     "Intake Air Temp",        "ï¿½F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
    TPSGauge			 = TPSValue,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
    afr1Gauge         = AFRValue, "Air:Fuel Ratio 1",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
    MAFGauge			 = MAFValue,          "Mass Air Flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
    VBattGauge        = VBatt,      "Battery Voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
    MAPGauge     	 = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
+   OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
    tpsADCGauge       = tpsADC,             "tps ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
    atmPresCGauge     = baroPressure,          "Baro",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
    vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
@@ -726,6 +728,7 @@ gaugeCategory = Fuel Data
    entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
    entry = coolant,         "CLT",         float,  "%.2f"
    entry = intake,          "IAT",         float,  "%.2f"
+   entry = oilPressure,		"Oil Press",   float,  "%.1f"
    entry = TPSValue,             "TPS",         float,  "%.2f"
    entry = MAFValue,             "MAF",         float,  "%.2f"
    entry = MAPValue,        "MAP",         float,  "%.1f"
@@ -847,6 +850,7 @@ gaugeCategory = Fuel Data
 		subMenu = egoSettings,				"EGO Sensor Settings"
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
 		subMenu = egtInputs,				"EGT inputs"
+		subMenu = oilPressureSensor,		"Oil Pressure Sensor Settings"
 		subMenu = energySystems,			"Battery and Alternator Settings"
 		subMenu = auxPidDialog,				"Aux PID"
 		subMenu = speedSensor,				"Speed Sensor Settings"
@@ -1142,7 +1146,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->Aux1 Thermistor Settings
 	dialog = auxTempSensor1_thermistor, "aux1 Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "!Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor1_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor1_resistance_1
@@ -1162,7 +1166,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->Aux2 Thermistor Settings
 	dialog = auxTempSensor2_thermistor, "aux1 Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "!Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor2_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor2_resistance_1
@@ -1280,7 +1284,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->CLT Thermistor Settings
 	dialog = clt_thermistor, "CLT Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "!Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
 		field = ""
 		field = "Lowest temperature",  					clt_tempC_1		
 		field = "Resistance @ LT",         	   			clt_resistance_1
@@ -1301,7 +1305,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->IAT Thermistor Settings
 	dialog = iat_thermistor, "IAT Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "!Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
 		field = ""
 		field = "Lowest temperature",                   iat_tempC_1		
 		field = "Resistance @ LT",         	   			iat_resistance_1
@@ -1318,6 +1322,17 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = iatSensor, "", yAxis
 		panel = iat_thermistor,		North
 		panel = iatSensor_IO,		South
+
+	dialog = oilp_settings, "Oil Pressure Sensor Settings"
+		field = "low voltage",							oilPressure_v1
+		field = "low pressure",							oilPressure_value1
+		field = "high voltage",							oilPressure_v2
+		field = "high pressure",						oilPressure_value2
+	dialog = oilp_IO, "Oil Pressure Sensor I/O"
+		field = "Oil Pressure ADC input",				oilPressure_hwChannel
+	dialog = oilPressureSensor, "", yAxis
+		panel = oilp_settings, North
+		panel = oilp_IO, South
 
 ;			Engine->MAP Sensor Settings
 	dialog = mapSensorVDlg, "Voltage Sensor Settings", xAxis		

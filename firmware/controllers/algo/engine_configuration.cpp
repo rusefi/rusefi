@@ -759,6 +759,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
+	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
+	
+	engineConfiguration->oilPressure.v1 = 0.5f;
+	engineConfiguration->oilPressure.v1 = 4.5f;
+	engineConfiguration->oilPressure.value1 = 0;
+	engineConfiguration->oilPressure.value2 = 689.476f;	// 100psi = 689.476kPa
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->specs.cylindersCount = 4;

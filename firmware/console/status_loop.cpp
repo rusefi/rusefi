@@ -699,7 +699,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->throttlePositon = tps;
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
-          
+    tsOutputChannels->oilPressure = engine->sensors.oilPressure;
 
     tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
     tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
