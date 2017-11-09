@@ -419,8 +419,27 @@ typedef enum {
 	Force_4b_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
+/**
+ * @see getNumberOfInjections
+ */
 typedef enum {
-	IM_SIMULTANEOUS = 0, IM_SEQUENTIAL = 1, IM_BATCH = 2,
+	/**
+	 * each cylinder has it's own injector but they all works in parallel
+	 */
+	IM_SIMULTANEOUS = 0,
+	/**
+	 * each cylinder has it's own injector, each injector is wired separately
+	 */
+	IM_SEQUENTIAL = 1,
+	/**
+	 * each cylinder has it's own injector but these injectors work in pairs. Injectors could be wired in pairs or separately.
+	 */
+	IM_BATCH = 2,
+	/**
+	 * only one injector located in throttle body
+	 */
+	IM_SINGLE_POINT = 3,
+
 
 	Force_4b_injection_mode = ENUM_32_BITS,
 } injection_mode_e;

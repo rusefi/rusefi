@@ -141,7 +141,7 @@ void Engine::reset() {
 
 
 	timeOfLastKnockEvent = 0;
-	fuelMs = 0;
+	injectionDuration = 0;
 	clutchDownState = clutchUpState = brakePedalState = false;
 	memset(&m, 0, sizeof(m));
 
@@ -193,6 +193,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		crankingTime = nowNt;
+		timeSinceCranking = 0.0f;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
@@ -221,6 +222,18 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	} else {
 		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+	// post-cranking fuel enrichment.
+	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
+	if (engineConfiguration->postCrankingFactor > 0.01f) {
+		// convert to microsecs and then to seconds
+		float timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
+		// use interpolation for correction taper
+		postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor, 
+			engineConfiguration->postCrankingDurationSec, 1.0f, timeSinceCrankingInSecs);
+	} else {
+		postCrankingFuelCorrection = 1.0f;
 	}
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -322,10 +335,11 @@ void Engine::watchdog() {
 		return;
 	}
 	efitick_t nowNt = getTimeNowNt();
+#ifndef RPM_LOW_THRESHOLD
+#define RPM_LOW_THRESHOLD 240
+#endif
+#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
 	/**
-	 * Lowest possible cranking is about 240 RPM, that's 4 revolutions per second.
-	 * 0.25 second is 250000 uS
-	 *
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 *
@@ -333,7 +347,7 @@ void Engine::watchdog() {
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
 	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerEventTimeNt;
-	if (timeSinceLastTriggerEvent < US2NT(250000LL)) {
+	if (timeSinceLastTriggerEvent < US2NT(REVOLUTION_TIME_HIGH_THRESHOLD)) {
 		return;
 	}
 	isSpinning = false;
@@ -413,7 +427,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
-	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
 }

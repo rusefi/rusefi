@@ -964,6 +964,8 @@ static void disableSpi(int index) {
 
 void stopEngine(void) {
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	// let's close injectors or else if these happen to be open right now
+	enginePins.stopPins();
 }
 
 static void printAllInfo(void) {

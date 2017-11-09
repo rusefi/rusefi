@@ -117,7 +117,7 @@ public enum Sensor {
     TARGET_AFR(SensorCategory.OPERATIONS, FieldType.FLOAT, 176, BackgroundColor.MUD),
     CHARGE_AIR_MASS(SensorCategory.OPERATIONS, FieldType.FLOAT, 180, BackgroundColor.MUD),
     cltCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 184, BackgroundColor.MUD, 0, 5),
-    runningFuel(SensorCategory.OPERATIONS, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
+    runningFuel(SensorCategory.FUEL, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
     debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.OPERATIONS, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
     injectorLagMs(SensorCategory.FUEL, FieldType.FLOAT, 196, BackgroundColor.MUD, 0, 15, "ms"),
 

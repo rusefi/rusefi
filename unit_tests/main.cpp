@@ -127,6 +127,7 @@ extern bool printTriggerDebug;
 int main(void) {
 //	printTriggerDebug = true;
 
+	testDifferentInjectionModes();
 	testPidAutoZigZag();
 	testMissedSpark299();
 	testSparkReverseOrderBug319();

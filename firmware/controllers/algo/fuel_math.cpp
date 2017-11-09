@@ -70,7 +70,10 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 1000 * fuelMassGramm / injectorFlowRate;
 }
 
-// todo: rename this method since it's now base+TPSaccel
+/**
+ * per-cylinder fuel amount
+ * todo: rename this method since it's now base+TPSaccel
+ */
 floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE));
 	efiAssert(!cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
@@ -101,17 +104,18 @@ angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 /**
- * Number of injections into each cylinder per engine cycle
+ * Number of injections using each injector per engine cycle
  * @see getNumberOfSparks
  */
 int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (mode) {
 	case IM_SIMULTANEOUS:
+	case IM_SINGLE_POINT:
 		return engineConfiguration->specs.cylindersCount;
-	case IM_SEQUENTIAL:
-		return 1;
 	case IM_BATCH:
 		return 2;
+	case IM_SEQUENTIAL:
+		return 1;
 	default:
 		firmwareError(CUSTOM_ERR_INVALID_INJECTION_MODE, "Unexpected injection_mode_e %d", mode);
 		return 1;
@@ -122,37 +126,43 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX)
  * @see getCoilDutyCycle
  */
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	floatms_t totalPerCycle = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
+	floatms_t totalInjectiorAmountPerCycle = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	return 100 * totalPerCycle / engineCycleDuration;
+	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
 /**
  * @returns	Length of each individual fuel injection, in milliseconds
+ *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float theoreticalInjectionLength;
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
-	int numberOfCylinders = getNumberOfInjections(isCranking ?
+	injection_mode_e mode = isCranking ?
 			engineConfiguration->crankingInjectionMode :
-			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
-	if (numberOfCylinders == 0) {
+			engineConfiguration->injectionMode;
+	int numberOfInjections = getNumberOfInjections(mode PASS_ENGINE_PARAMETER_SUFFIX);
+	if (numberOfInjections == 0) {
 		warning(CUSTOM_CONFIG_NOT_READY, "config not ready");
 		return 0; // we can end up here during configuration reset
 	}
+	floatms_t fuelPerCycle;
 	if (isCranking) {
-		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE) / numberOfCylinders;
-		efiAssert(!cisnan(theoreticalInjectionLength), "NaN cranking theoreticalInjectionLength", 0);
+		fuelPerCycle = getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
+		efiAssert(!cisnan(fuelPerCycle), "NaN cranking fuelPerCycle", 0);
 	} else {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-		floatms_t fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
-		theoreticalInjectionLength = fuelPerCycle / numberOfCylinders;
-		efiAssert(!cisnan(theoreticalInjectionLength), "NaN fuelPerCycle", 0);
+		fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
+		efiAssert(!cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
-	printf("baseFuel=%f fuelPerCycle=%f theoreticalInjectionLength=%f\t\n",
-			baseFuel, fuelPerCycle, theoreticalInjectionLength);
+	printf("baseFuel=%f fuelPerCycle=%f \t\n",
+			baseFuel, fuelPerCycle);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 	}
+	if (mode == IM_SINGLE_POINT) {
+		// here we convert per-cylinder fuel amount into total engine amount since the single injector serves all cylinders
+		fuelPerCycle *= engineConfiguration->specs.cylindersCount;
+	}
+	floatms_t theoreticalInjectionLength = fuelPerCycle / numberOfInjections;
 	floatms_t injectorLag = ENGINE(engineState.injectorLag);
 	if (cisnan(injectorLag)) {
 		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
@@ -164,10 +174,12 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
+	float postCrankingFuelCorrection = ENGINE(engineState.postCrankingFuelCorrection);
 	efiAssert(!cisnan(iatCorrection), "NaN iatCorrection", 0);
 	efiAssert(!cisnan(cltCorrection), "NaN cltCorrection", 0);
+	efiAssert(!cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
-	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection + ENGINE(engineState.fuelPidCorrection);
+	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection * postCrankingFuelCorrection + ENGINE(engineState.fuelPidCorrection);
 	efiAssert(!cisnan(runningFuel), "NaN runningFuel", 0);
 	ENGINE(engineState.runningFuel) = runningFuel;
 

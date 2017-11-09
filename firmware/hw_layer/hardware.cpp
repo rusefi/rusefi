@@ -413,8 +413,9 @@ void initHardware(Logging *l) {
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
-
+#if EFI_MEMS || defined(__DOXYGEN__)
 	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 //	initFixedLeds();
 
 	//	initBooleanInputs();

@@ -288,7 +288,7 @@ fileVersion = { 20161225 }
       gauge       = RPMValue
 
 	curve = narrowToWideOxygenCurve, "Narrow to Wideband approximation"
-      columnLabel = "Voltage", "V"
+      columnLabel = "Voltage", "AFR"
       xAxis       =  0, 6, 10
       yAxis       =  0,  28, 10
       xBins       = narrowToWideOxygenBins
@@ -1356,7 +1356,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 
 ;			Engine->EGO Sensor Settings
 	dialog = egoSettings_sensor,	"EGO Sensor Settings"
-		fiedl = "Type",									afr_type
+		field = "Type",									afr_type
 ; todo: only use these values for custom!		
 		field = "low voltage", 							afr_v1
 		field = "low value", 							afr_value1

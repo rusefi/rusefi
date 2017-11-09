@@ -46,6 +46,8 @@ static void runCommands() {
 	if (!btProcessIsStarted)
 		return;
 	
+	chThdSleepMilliseconds(1000);	// safety
+
 	// Store current serial port speed - we're going to change it
 	int savedSerialSpeed = boardConfiguration->tunerStudioSerialSpeed;
 	
@@ -90,7 +92,8 @@ static void runCommands() {
 		// waiting for an answer
 		bool wasAnswer = false;
 		if (sr5ReadDataTimeout(tsChannel, buffer, 2, btModuleTimeout) == 2) {
-			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K');
+			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K') || 
+				(buffer[0] == '+' && (buffer[1] >= 'A' && buffer[1] <= 'Z'));
 		}
 
 		// wait 1 second and skip all remaining response bytes from the bluetooth module
@@ -231,6 +234,12 @@ void bluetoothStart(ts_channel_s *tsChan, bluetooth_module_e moduleType, const c
 		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c", '0' + setBaudIdx);
 		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s", name);
 		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s", pinCode);
+		break;
+	case BLUETOOTH_SPP:
+		chsnprintf(cmdHello, sizeof(cmdHello), "AT\r\n");
+		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c\r\n", '0' + setBaudIdx);
+		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s\r\n", name);
+		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s\r\n", pinCode);
 		break;
 	default:
 		// todo: add support for other BT module types
