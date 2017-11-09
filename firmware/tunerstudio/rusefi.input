@@ -150,12 +150,12 @@ fileVersion = { 20161225 }
 #if CELSIUS
       coolant         = scalar,  F32,      4,              "°C",            1,       0.0
 #else
-      coolant         = scalar,  F32,      4,              "�F",         {9/5},  17.77777
+      coolant         = scalar,  F32,      4,              "°F",         {9/5},  17.77777
 #endif
 #if CELSIUS
       intake          = scalar,  F32,      8,              "°C",            1,       0.0
 #else
-      intake          = scalar,  F32,      8,              "�F",         {9/5},  17.77777
+      intake          = scalar,  F32,      8,              "°F",         {9/5},  17.77777
 #endif
       TPSValue        = scalar,  F32,     12,               "%",            1,         0
       MAFValue        = scalar,  F32,     16,               "V",            1,         0
@@ -551,7 +551,7 @@ fileVersion = { 20161225 }
 #if CELSIUS
    tChargeGauge          = tCharge,     "Charge Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   tChargeGauge          = tCharge,     "Charge Temp",        "�F",      -40,    285,       5,     35,     205,   230,  1,   1
+   tChargeGauge          = tCharge,     "Charge Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
 
 
@@ -598,12 +598,12 @@ gaugeCategory = Sensors
 #if CELSIUS
    CLTGauge          = coolant,       "Coolant Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   CLTGauge          = coolant,       "Coolant Temp",        "�F",      -40,    285,       5,     35,     205,   230,   1,   1
+   CLTGauge          = coolant,       "Coolant Temp",        "°F",      -40,    285,       5,     35,     205,   230,   1,   1
 #endif
 #if CELSIUS
    IATGauge          = intake,     "Intake Air Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   IATGauge          = intake,     "Intake Air Temp",        "�F",      -40,    285,       5,     35,     205,   230,  1,   1
+   IATGauge          = intake,     "Intake Air Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
    TPSGauge			 = TPSValue,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
    afr1Gauge         = AFRValue, "Air:Fuel Ratio 1",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
