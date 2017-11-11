@@ -177,6 +177,14 @@ float resistance_3;;"Ohm",      1,     0,    0, 200000,     1
 	float bias_resistor;;"Ohm",      1,     0,    0, 200000,     1
 end_struct
 
+struct oil_pressure_config_s @brief Oil pressure sensor interpolation
+	adc_channel_e hwChannel;
+	float v1;;         "volts",    1,    0.0,       0,    10.0,        2
+	float value1;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	float v2;;         "volts",    1,    0.0,       0,    10.0,        2
+	float value2;;     "kPa",    1,      0.0,       0,  1000.0,        2
+end_struct
+
 struct ThermistorConf @brief Thermistor curve parameters
 	thermistor_conf_s config;
 	adc_channel_e adcChannel;
@@ -823,7 +831,10 @@ spi_device_e sdCardSpiDevice;
 	pin_mode_e spi1MisoMode;
 brain_pin_e brakePedalPin
 	pid_s[AUX_PID_COUNT iterate] auxPid;
-	int[26] unusedEnd;
+
+	oil_pressure_config_s oilPressure;
+
+	int[21] unusedEnd;
 	
 
 end_struct
@@ -849,7 +860,7 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"%",      1,     0,      0.0,    500.0,   2
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] cltIdleCorr;;"%",      1,     0,      0.0,    500.0,   2
 
-float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/h = 1 ft³/m;"kg/hour", 1, 0, -500.0, 4000.0, 2
+float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/h = 1 ftï¿½/m;"kg/hour", 1, 0, -500.0, 4000.0, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;; "V", 1, 0, -5.0, 150.0, 2
 
 angle_table_t ignitionIatCorrTable;

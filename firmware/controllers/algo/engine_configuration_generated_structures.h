@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 20:03:49 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 09 13:37:49 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -146,6 +146,34 @@ typedef struct {
 	float bias_resistor;
 	/** total size 28*/
 } thermistor_conf_s;
+
+/**
+ * @brief Oil pressure sensor interpolation
+
+*/
+typedef struct {
+	/**
+	 * offset 0
+	 */
+	adc_channel_e hwChannel;
+	/**
+	 * offset 4
+	 */
+	float v1;
+	/**
+	 * offset 8
+	 */
+	float value1;
+	/**
+	 * offset 12
+	 */
+	float v2;
+	/**
+	 * offset 16
+	 */
+	float value2;
+	/** total size 20*/
+} oil_pressure_config_s;
 
 /**
  * @brief Thermistor curve parameters
@@ -1948,7 +1976,11 @@ typedef struct {
 	/**
 	 * offset 2944
 	 */
-	int unusedEnd[26];
+	oil_pressure_config_s oilPressure;
+	/**
+	 * offset 2964
+	 */
+	int unusedEnd[21];
 	/** total size 3048*/
 } engine_configuration_s;
 
@@ -2012,7 +2044,7 @@ typedef struct {
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
 	 * kg/hour value.
-	 * By the way 2.081989116 kg/h = 1 ft³/m
+	 * By the way 2.081989116 kg/h = 1 ftÂ³/m
 	 * offset 7160
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
@@ -2163,4 +2195,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 20:03:49 EDT 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 09 13:37:49 EST 2017
