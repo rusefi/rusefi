@@ -1,5 +1,12 @@
 /**
  * @author Andrey Belomutskiy, (c) 2012-2017
+ *
+ * EGO Exhaust Gas Oxygen, also known as AFR Air/Fuel Ratio :)
+ *
+ * At the moment linear external widebands are supported, also there is a 8-point interpolation curve to emulate a wide-band with a narrow-band sensor.
+ *
+ * rusEfi does not have it's own wide-band controller as of Nov 2017
+ *
  */
 #include "ego.h"
 #include "interpolation.h"
