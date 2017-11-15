@@ -89,6 +89,11 @@ public:
 	float iat;
 	float clt;
 
+	/**
+	 * Oil pressure in kPa
+	 */
+	float oilPressure;
+
 	Accelerometer accelerometer;
 
 	float vBatt;
