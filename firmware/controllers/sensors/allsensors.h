@@ -19,6 +19,7 @@
 #include "ego.h"
 #include "voltage.h"
 #include "thermistors.h"
+#include "oil_pressure.h"
 #include "adc_inputs.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR

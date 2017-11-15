@@ -365,6 +365,8 @@ static void printAnalogInfo(void) {
 		printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
 	}
 
+	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
+
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVoltage("vbatt", engineConfiguration->vbattAdcChannel),
