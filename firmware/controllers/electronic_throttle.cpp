@@ -83,7 +83,7 @@ EXTERN_ENGINE;
 
 static Pid pid(&engineConfiguration->etb);
 
-static float prevTps;
+//static float prevTps;
 
 static percent_t currentEtbDuty;
 
@@ -108,14 +108,15 @@ static msg_t etbThread(void *arg) {
 		}
 
 
-		percent_t throttlePedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
-		percent_t tps = getTPS();
+		percent_t targetPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-		currentEtbDuty = pid.getValue(throttlePedal, getTPS());
+		percent_t actualThrottlePosition = getTPS();
+
+		currentEtbDuty = pid.getValue(targetPosition, actualThrottlePosition);
 
 		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
 
-		bool needEtbBraking = absF(throttlePedal - tps) < 3;
+		bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
 		if (needEtbBraking != wasEtbBraking) {
 			scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
 			wasEtbBraking = needEtbBraking;
