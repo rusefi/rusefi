@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.EtbTestSequence;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
@@ -24,6 +25,7 @@ public class BenchTestPane {
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createDizzyTest());
+        content.add(UiUtils.wrap(new EtbTestSequence().getButton()));
         content.add(new MessagesView().messagesScroll);
     }
 
