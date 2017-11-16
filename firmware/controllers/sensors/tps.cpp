@@ -9,10 +9,19 @@
 #include "allsensors.h"
 
 #if !EFI_PROD_CODE
-	int mockTps;
+	static int mockTps;
 #endif
 
 	EXTERN_ENGINE;
+
+/**
+ * this allows unit tests to simulate TPS position
+ */
+void setMockTpsPosition(percent_t tpsPosition) {
+#if !EFI_PROD_CODE
+	mockTps = TPS_TS_CONVERSION * tpsPosition;
+#endif
+}
 
 /**
  * We are using one instance for read and another for modification, this is how we get lock-free thread-safety
@@ -94,8 +103,9 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
-	if (mockTps != MOCK_UNDEFINED)
+	if (mockTps != MOCK_UNDEFINED) {
 		return mockTps;
+	}
 #endif
 	if (engineConfiguration->tpsAdcChannel == EFI_ADC_NONE)
 		return -1;
