@@ -31,6 +31,7 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setMockTpsPosition(percent_t tpsPosition);
+void setMockPedalPosition(percent_t value);
 
 typedef struct {
 	efitimeus_t prevTime;
