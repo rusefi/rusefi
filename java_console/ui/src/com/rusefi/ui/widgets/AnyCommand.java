@@ -48,12 +48,9 @@ public class AnyCommand {
         });
         content.add(go);
 
-        CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
-            @Override
-            public void onCommand(String command) {
-                if (listenToCommands && !reentrant)
-                    text.setText(command);
-            }
+        CommandQueue.getInstance().addListener(command -> {
+            if (listenToCommands && !reentrant)
+                text.setText(command);
         });
 
         text.getDocument().addDocumentListener(new DocumentListener() {
