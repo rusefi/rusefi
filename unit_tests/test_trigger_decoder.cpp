@@ -240,8 +240,6 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 
 extern EventQueue schedulingQueue;
 
-extern int mockTps;
-
 void testStartupFuelPumping(void) {
 	printf("*************************************************** testStartupFuelPumping\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
@@ -254,11 +252,11 @@ void testStartupFuelPumping(void) {
 	engine->engineConfiguration->tpsMin = 0;
 	engine->engineConfiguration->tpsMax = 10;
 
-	mockTps = TPS_TS_CONVERSION * 6;
+	setMockTpsPosition(6);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#1", 1, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 3;
+	setMockTpsPosition(3);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pumpsCounter#2", 1, sf.pumpsCounter);
 
@@ -269,16 +267,16 @@ void testStartupFuelPumping(void) {
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#4", 0, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 7;
+	setMockTpsPosition(7);
 	engine->rpmCalculator.mockRpm = 0;
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#5", 1, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 3;
+	setMockTpsPosition(3);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#6", 1, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 7;
+	setMockTpsPosition(7);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }
