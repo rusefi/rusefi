@@ -1107,6 +1107,7 @@ typedef struct {
 } command_f_s;
 
 command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
+		{"mock_pedal_position", setMockPedalPosition},
 		{"mock_maf_voltage", setMafVoltage},
 		{"mock_afr_voltage", setAfrVoltage},
 		{"mock_tps_voltage", setTpsVoltage},
