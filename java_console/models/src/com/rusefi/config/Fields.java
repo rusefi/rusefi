@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Oct 29 20:03:49 EDT 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 09 13:37:49 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1002,7 +1002,13 @@ public class Fields {
 	public static final int auxPid4_period_offset = 2938;
 	public static final int auxPid4_minValue_offset = 2940;
 	public static final int auxPid4_maxValue_offset = 2942;
-	public static final int unusedEnd_offset = 2944;
+	public static final int oilPressure_offset = 2944;
+	public static final int oilPressure_hwChannel_offset = 2944;
+	public static final int oilPressure_v1_offset = 2948;
+	public static final int oilPressure_value1_offset = 2952;
+	public static final int oilPressure_v2_offset = 2956;
+	public static final int oilPressure_value2_offset = 2960;
+	public static final int unusedEnd_offset = 2964;
 	public static final int fsioFormulas1_offset = 3048;
 	public static final int fsioFormulas2_offset = 3248;
 	public static final int fsioFormulas3_offset = 3448;
@@ -1773,6 +1779,11 @@ public class Fields {
 	public static final Field AUXPID4_PERIOD = Field.create("AUXPID4_PERIOD", 2938, FieldType.INT);
 	public static final Field AUXPID4_MINVALUE = Field.create("AUXPID4_MINVALUE", 2940, FieldType.INT);
 	public static final Field AUXPID4_MAXVALUE = Field.create("AUXPID4_MAXVALUE", 2942, FieldType.INT);
+	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 2944, FieldType.INT, adc_channel_e);
+	public static final Field OILPRESSURE_V1 = Field.create("OILPRESSURE_V1", 2948, FieldType.FLOAT);
+	public static final Field OILPRESSURE_VALUE1 = Field.create("OILPRESSURE_VALUE1", 2952, FieldType.FLOAT);
+	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2956, FieldType.FLOAT);
+	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2960, FieldType.FLOAT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 3048, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 3248, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 3448, FieldType.INT);
