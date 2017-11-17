@@ -78,9 +78,9 @@ public class EngineState {
 
         SensorCentral.getInstance().initialize(this);
 
-//        SensorStats.start(Sensor.CLT, Sensor.COOLANT_WIDTH);
-//        SensorStats.start(Sensor.IAT, Sensor.INTAKE_AIR_WIDTH);
-        SensorStats.start(Sensor.VREF, Sensor.VREF_WIDTH);
+//        SensorStats.startRangeMeasurement(Sensor.CLT, Sensor.COOLANT_WIDTH);
+//        SensorStats.startRangeMeasurement(Sensor.IAT, Sensor.INTAKE_AIR_WIDTH);
+        SensorStats.startRangeMeasurement(Sensor.VREF, Sensor.VREF_WIDTH);
 
         SensorStats.startStandardDeviation(Sensor.DWELL0, Sensor.DWELL0_SD);
         SensorStats.startDelta(Sensor.INJECTOR_1_DWELL, Sensor.INJECTOR_2_DWELL, Sensor.INJ_1_2_DELTA);

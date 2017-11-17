@@ -9,7 +9,12 @@ import com.rusefi.waves.EngineReport;
  * (c) Andrey Belomutskiy
  */
 public class SensorStats {
-    public static void start(final Sensor source, final Sensor destination) {
+
+    /**
+     * here we listen of source sensor
+     * and on each 10th update post the difference between min and max values to widthDestination
+     */
+    public static void startRangeMeasurement(final Sensor source, final Sensor widthDestination) {
         SensorCentral.getInstance().addListener(source, new SensorCentral.SensorListener() {
 
             int counter;
@@ -27,7 +32,7 @@ public class SensorStats {
                     counter = 0;
                     double width = max - min;
 
-                    SensorCentral.getInstance().setValue(width, destination);
+                    SensorCentral.getInstance().setValue(width, widthDestination);
 
                     min = Double.MAX_VALUE;
                     max = Double.MIN_VALUE;
