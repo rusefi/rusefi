@@ -15,6 +15,7 @@ import com.rusefi.autotune.stDataOnline;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Fields;
+import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.config.BaseConfigField;
@@ -282,7 +283,7 @@ public class FuelTunePane {
     }
 
     public void showContent() {
-        final SensorCentral sc = SensorCentral.getInstance();
+        final ISensorCentral sc = SensorCentral.getInstance();
         sc.addListener(Sensor.RPM, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
