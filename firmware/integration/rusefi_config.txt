@@ -54,6 +54,8 @@ struct_no_prefix engine_configuration_s
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
 
+#define AUX_DIGITAL_VALVE_COUNT 2
+
 #define IAT_CURVE_SIZE 16
 
 #define VBAT_INJECTOR_CURVE_SIZE 8

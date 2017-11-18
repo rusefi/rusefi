@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 09 13:37:49 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Nov 18 10:06:23 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1192,6 +1192,7 @@ typedef struct {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
+	 * set_global_fuel_correction X
 	 * offset 568
 	 */
 	float globalFuelCorrection;
@@ -2195,4 +2196,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 09 13:37:49 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Nov 18 10:06:23 EST 2017
