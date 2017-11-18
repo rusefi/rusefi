@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 09 13:37:49 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Nov 18 10:06:23 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -14,6 +14,7 @@ public class Fields {
 	public static final int CLT_CURVE_SIZE = 16;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int CLT_TIMING_CURVE_SIZE = 8;
+	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int IAT_CURVE_SIZE = 16;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int DWELL_CURVE_SIZE = 8;
