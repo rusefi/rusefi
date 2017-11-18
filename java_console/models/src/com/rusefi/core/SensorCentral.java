@@ -88,6 +88,11 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
+    public ValueSource getValueSource(Sensor sensor) {
+        return () -> SensorCentral.this.getValue(sensor);
+    }
+
+    @Override
     public void initialize(EngineState es) {
         addDoubleSensor(RPM_KEY, Sensor.RPM, es);
         addDoubleSensor("mat", Sensor.IAT, es);
