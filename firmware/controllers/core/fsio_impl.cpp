@@ -185,7 +185,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 		scheduleMsg(logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	boardConfiguration->fsioPins[index] = pin;
+	boardConfiguration->fsioOutputPins[index] = pin;
 	scheduleMsg(logger, "FSIO output pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 #endif /* EFI_PROD_CODE */
@@ -196,7 +196,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
  * index is between zero and LE_COMMAND_LENGTH-1
  */
 void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	boardConfiguration->fsioPins[index] = pin;
+	boardConfiguration->fsioOutputPins[index] = pin;
 	int len = strlen(exp);
 	if (len >= LE_COMMAND_LENGTH) {
 		return;
@@ -212,7 +212,7 @@ void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMET
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	userPool.reset();
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
+		brain_pin_e brainPin = boardConfiguration->fsioOutputPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
 			const char *formula = config->fsioFormulas[i];
@@ -276,14 +276,14 @@ static const char *getGpioPinName(int index) {
  * @param index from zero for (FSIO_COMMAND_COUNT - 1)
  */
 static void handleFsio(Engine *engine, int index) {
-	if (boardConfiguration->fsioPins[index] == GPIO_UNASSIGNED)
+	if (boardConfiguration->fsioOutputPins[index] == GPIO_UNASSIGNED)
 		return;
 
 	bool isPwmMode = boardConfiguration->fsioFrequency[index] != NO_PWM;
 
 	float fvalue;
 	if (fsioLogics[index] == NULL) {
-		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(boardConfiguration->fsioPins[index]));
+		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(boardConfiguration->fsioOutputPins[index]));
 		fvalue = NAN;
 	} else {
 		fvalue = calc.getValue2(engine->fsioLastValue[index], fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
@@ -359,9 +359,9 @@ static void setFsioFrequency(int index, int frequency) {
 	}
 	boardConfiguration->fsioFrequency[index] = frequency;
 	if (frequency == 0) {
-		scheduleMsg(logger, "FSIO output #%d@%s set to on/off mode", index + 1, hwPortname(boardConfiguration->fsioPins[index]));
+		scheduleMsg(logger, "FSIO output #%d@%s set to on/off mode", index + 1, hwPortname(boardConfiguration->fsioOutputPins[index]));
 	} else {
-		scheduleMsg(logger, "Setting FSIO frequency %dHz on #%d@%s", frequency, index + 1, hwPortname(boardConfiguration->fsioPins[index]));
+		scheduleMsg(logger, "Setting FSIO frequency %dHz on #%d@%s", frequency, index + 1, hwPortname(boardConfiguration->fsioOutputPins[index]));
 	}
 }
 
@@ -458,7 +458,7 @@ static void showFsioInfo(void) {
 			 * is the fact that the target audience is more software developers
 			 */
 			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", (i + 1), exp,
-					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
+					hwPortname(boardConfiguration->fsioOutputPins[i]), boardConfiguration->fsioFrequency[i],
 					engine->fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
@@ -551,12 +551,12 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
+		brain_pin_e brainPin = boardConfiguration->fsioOutputPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), boardConfiguration->fsioPins[i], &DEFAULT_OUTPUT);
+				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), boardConfiguration->fsioOutputPins[i], &DEFAULT_OUTPUT);
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIOpwm", brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, applyPinState);
 			}

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Nov 18 10:06:23 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 19 10:16:10 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -674,10 +674,10 @@ typedef struct {
 	 */
 	spi_device_e max31855spiDevice;
 	/**
-	 * todo: rename to fsioOutputPins
+	 * todo: mor comments
 	 * offset 444
 	 */
-	brain_pin_e fsioPins[FSIO_COMMAND_COUNT];
+	brain_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 508
 	 */
@@ -2196,4 +2196,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Nov 18 10:06:23 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 19 10:16:10 EST 2017

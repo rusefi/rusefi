@@ -255,7 +255,7 @@ static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration
 		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
+		boardConfiguration->fsioOutputPins[i] = GPIO_UNASSIGNED;
 		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
