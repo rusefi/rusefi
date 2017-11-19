@@ -136,6 +136,9 @@ typedef enum {
 
 	DODGE_NEON_2003_CRANK = 46,
 
+	/**
+	 * proper NB2 setup, 2003 red test mule car
+	 */
 	MAZDA_MIATA_2003 = 47,
 
 	HONDA_ACCORD_1_24_SHIFTED = 48,
@@ -156,7 +159,11 @@ typedef enum {
 	TEST_ISSUE_366_BOTH = 52,
 	TEST_ISSUE_366_RISE = 53,
 
-	MAZDA_MIATA_2003_BETTER = 54,
+	/**
+	 * green Hunchback race car - VVT engine on a NA body with NA return fuel lines which
+	 * means different fuel pressure situation
+	 */
+	MAZDA_MIATA_2003_NA_RAIL = 54,
 
 	PROMETHEUS_DEFAULTS = 100,
 

@@ -117,9 +117,9 @@ case SUBARU_2003_WRX:
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case MAZDA_MIATA_2003:
-	return "miata 2003 OLD";
-case MAZDA_MIATA_2003_BETTER:
 	return "miata 2003";
+case MAZDA_MIATA_2003_NA_RAIL:
+	return "miata 2003 NArail";
 case PROMETHEUS_DEFAULTS:
 	return "PROMETHEUS";
 case TEST_ENGINE_VVT:
