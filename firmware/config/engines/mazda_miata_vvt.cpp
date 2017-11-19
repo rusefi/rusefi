@@ -408,7 +408,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.period = 10;
 }
 
-void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: there should be a better way?
