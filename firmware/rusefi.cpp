@@ -248,7 +248,7 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 
 static char UNUSED_RAM_SIZE[8000];
 
-static char UNUSED_CCM_SIZE[12000] CCM_OPTIONAL;
+static char UNUSED_CCM_SIZE[14000] CCM_OPTIONAL;
 
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE[0] != 0)
