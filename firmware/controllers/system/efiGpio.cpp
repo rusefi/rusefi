@@ -102,8 +102,8 @@ void EnginePins::unregisterPins() {
 			engineConfiguration->bc.idle.solenoidPin);
 
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
-		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioPins[i],
-				engineConfiguration->bc.fsioPins[i]);
+		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioOutputPins[i],
+				engineConfiguration->bc.fsioOutputPins[i]);
 	}
 
 	alternatorPin.unregisterOutput(activeConfiguration.bc.alternatorControlPin,
