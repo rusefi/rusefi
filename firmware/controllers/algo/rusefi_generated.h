@@ -1162,8 +1162,12 @@
 #define slowAdcAlpha_offset_hex 8c0
 #define debugMode_offset 2244
 #define debugMode_offset_hex 8c4
-#define unusedwarmupAfrPid_offset 2248
-#define unusedwarmupAfrPid_offset_hex 8c8
+#define auxValves1_offset 2248
+#define auxValves1_offset_hex 8c8
+#define auxValves2_offset 2252
+#define auxValves2_offset_hex 8cc
+#define unusedwarmupAfrPid_offset 2256
+#define unusedwarmupAfrPid_offset_hex 8d0
 #define warmupTargetAfrBins_offset 2264
 #define warmupTargetAfrBins_offset_hex 8d8
 #define warmupTargetAfr_offset 2280

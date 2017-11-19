@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 19 10:16:10 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 19 11:03:59 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -842,7 +842,9 @@ public class Fields {
 	public static final int tpsDecelEnleanmentMultiplier_offset = 2236;
 	public static final int slowAdcAlpha_offset = 2240;
 	public static final int debugMode_offset = 2244;
-	public static final int unusedwarmupAfrPid_offset = 2248;
+	public static final int auxValves1_offset = 2248;
+	public static final int auxValves2_offset = 2252;
+	public static final int unusedwarmupAfrPid_offset = 2256;
 	public static final int warmupTargetAfrBins_offset = 2264;
 	public static final int warmupTargetAfr_offset = 2280;
 	public static final int warmupAfrThreshold_offset = 2296;
@@ -1654,6 +1656,8 @@ public class Fields {
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2240, FieldType.FLOAT);
 	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2244, FieldType.INT, debug_mode_e);
+	public static final Field AUXVALVES1 = Field.create("AUXVALVES1", 2248, FieldType.INT, brain_pin_e);
+	public static final Field AUXVALVES2 = Field.create("AUXVALVES2", 2252, FieldType.INT, brain_pin_e);
 	public static final Field WARMUPAFRTHRESHOLD = Field.create("WARMUPAFRTHRESHOLD", 2296, FieldType.FLOAT);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2300, FieldType.FLOAT);
 	public static final Field DIZZYSPARKOUTPUTPIN = Field.create("DIZZYSPARKOUTPUTPIN", 2368, FieldType.INT, brain_pin_e);

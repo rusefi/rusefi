@@ -535,7 +535,7 @@ bit is_enabled_spi_2
 
 	spi_device_e max31855spiDevice;
 
-	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: mor comments
+	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
 
 custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
@@ -761,7 +761,8 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float tpsDecelEnleanmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
 	debug_mode_e debugMode;set debug_mode X
-	float[4] unusedwarmupAfrPid;
+	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
+	float[2] unusedwarmupAfrPid;
 
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfrBins;CLT-based target AFR for PID-based control;"C",        1,     0,   -100.0,    250.0,  2
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfr;;"AFR",      1,     0,      0.0,    20.0,   2
