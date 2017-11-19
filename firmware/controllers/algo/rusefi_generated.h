@@ -1448,8 +1448,10 @@
 #define oilPressure_v2_offset_hex b5c
 #define oilPressure_value2_offset 2912
 #define oilPressure_value2_offset_hex b60
-#define unusedEnd_offset 2916
-#define unusedEnd_offset_hex b64
+#define accelerometerSpiDevice_offset 2916
+#define accelerometerSpiDevice_offset_hex b64
+#define unusedEnd_offset 2920
+#define unusedEnd_offset_hex b68
 #define fsioFormulas1_offset 6672
 #define fsioFormulas1_offset_hex 1a10
 #define fsioFormulas2_offset 6872

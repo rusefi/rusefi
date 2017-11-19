@@ -826,7 +826,8 @@ brain_pin_e brakePedalPin
 
 	oil_pressure_config_s oilPressure;
 
-	int[939] unusedEnd;
+spi_device_e accelerometerSpiDevice;
+	int[938] unusedEnd;
 	
 
 end_struct
