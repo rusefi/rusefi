@@ -245,6 +245,16 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	sendOkResponse(tsChannel, mode);
 }
 
+/**
+ * Some changes like changing VE table or timing table are applied right away, meaning
+ * that the values are copied from communication copy into actual engine control copy right away.
+ * We call these parameters 'soft parameters'
+ *
+ * This is needed to support TS online auto-tune.
+ *
+ * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
+ * would be increased and much more complicated logic would be executed.
+ */
 static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
 	UNUSED(currentPageId);
 	if (offset > sizeof(engine_configuration_s)) {
