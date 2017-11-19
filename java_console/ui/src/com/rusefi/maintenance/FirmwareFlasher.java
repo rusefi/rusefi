@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.ui.OlderDiscoveryChecbbox;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +16,6 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     public static final String IMAGE_RELEASE_FILE = "rusefi_release.bin";
     static final String OPENOCD_EXE = "openocd/openocd.exe";
     static final String BINARY_LOCATION = ".";
-    static final String OPENOCD_CMD = BINARY_LOCATION + File.separator +  OPENOCD_EXE + " -f openocd/stm32f429disc1.cfg";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
     private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
@@ -47,12 +48,17 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         });
     }
 
+    public static String getOpenovdCommad() {
+        String cfg = OlderDiscoveryChecbbox.olderMode ? "stm32f4discovery.cfg" : "stm32f429disc1.cfg";
+        return BINARY_LOCATION + File.separator +  OPENOCD_EXE + " -f openocd/" + cfg;
+    }
+
     private void doFlashFirmware() {
         if (!new File(fileName).exists()) {
             wnd.appendMsg(fileName + " not found, cannot proceed !!!");
             return;
         }
-        StringBuffer error = executeCommand(OPENOCD_CMD + " -c \"program " +
+        StringBuffer error = executeCommand(getOpenovdCommad() + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"");
         if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {

@@ -10,7 +10,7 @@ public class EraseChip extends ProcessStatusWindow {
     private final JButton button = new JButton("Erase Chip");
 
     private static final String FLASH_SIZE = "0x0100000";
-    private static final String OPEN_OCD_COMMAND = FirmwareFlasher.OPENOCD_CMD +
+    private static final String OPEN_OCD_COMMAND = FirmwareFlasher.getOpenovdCommad() +
             " -c init -c targets -c \"halt\" -c \"flash erase_address 0x08000000 " + FLASH_SIZE + "\" -c shutdown";
 
     public EraseChip() {

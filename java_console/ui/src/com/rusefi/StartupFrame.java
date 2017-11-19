@@ -6,6 +6,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.EraseChip;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.ProcessStatusWindow;
+import com.rusefi.ui.OlderDiscoveryChecbbox;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -133,6 +134,7 @@ public class StartupFrame {
 
         if (ProcessStatusWindow.isWindows()) {
             leftPanel.add(new HorizontalLine());
+            leftPanel.add(new OlderDiscoveryChecbbox().getButton());
             leftPanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_DEBUG_FILE, "Program Firmware/Debug").getButton());
             leftPanel.add(new HorizontalLine());
             leftPanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_RELEASE_FILE, "Program Firmware/Release").getButton());
