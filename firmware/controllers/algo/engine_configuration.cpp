@@ -292,6 +292,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 
 	engineConfiguration->sdCardSpiDevice = SPI_NONE;
 	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
+	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
 
 	engineConfiguration->cj125ua = EFI_ADC_NONE;
 	engineConfiguration->cj125ur = EFI_ADC_NONE;

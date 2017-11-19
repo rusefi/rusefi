@@ -24,8 +24,7 @@
 EXTERN_ENGINE;
 
 #if EFI_MEMS || defined(__DOXYGEN__)
-static SPIDriver *driver = &SPID1; // todo: make this configurable
-static spi_device_e device = SPI_DEVICE_1;
+static SPIDriver *driver;
 
 /*
  * SPI1 configuration structure.
@@ -78,9 +77,9 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (!boardConfiguration->is_enabled_spi_1)
 		return; // temporary
-	// todo: driver = getSpiDevice(device);
+	driver = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
 
-	turnOnSpi(device);
+	turnOnSpi(engineConfiguration->accelerometerSpiDevice);
 	spiStart(driver, &accelerometerCfg);
 	initSpiCs((SPIConfig *)driver->config, engineConfiguration->LIS302DLCsPin);
 
