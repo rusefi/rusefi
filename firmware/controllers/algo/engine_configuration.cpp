@@ -280,6 +280,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		engineConfiguration->auxValves[i] = GPIO_UNASSIGNED;
 	}
+	engineConfiguration->LIS302DLCsPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
