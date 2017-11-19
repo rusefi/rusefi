@@ -82,7 +82,6 @@ public class ConfigDefinition {
 
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
-        writeTsSizeForJavaConsole(totalTsSize, javaConsolePath);
         processTextTemplate(inputPath + File.separator + ROM_RAIDER_XML, javaConsolePath + File.separator + ROM_RAIDER_XML);
     }
 
@@ -124,28 +123,6 @@ public class ConfigDefinition {
             line = VariableRegistry.INSTANCE.processLine(line);
             fw.write(line + ConfigDefinition.EOL);
         }
-        fw.close();
-    }
-
-    // todo: re-implement using VariableRegistry and a template?
-    private static void writeTsSizeForJavaConsole(int totalTsSize, String javaConsoleIoFolderPath) throws IOException {
-        String fileName = javaConsoleIoFolderPath +
-                File.separator + "io" +
-                File.separator + "src" +
-                File.separator + "com" +
-                File.separator + "rusefi" +
-                File.separator + "TsPageSize.java";
-        File f = new File(fileName);
-
-        System.out.println("Writing for console to " + fileName);
-
-        FileWriter fw = new FileWriter(f);
-
-        fw.write("package com.rusefi;" + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        fw.write("public interface TsPageSize {" + ConfigDefinition.EOL);
-        fw.write("    int IMAGE_SIZE = " + totalTsSize + ";" + ConfigDefinition.EOL);
-        fw.write("}" + ConfigDefinition.EOL);
-
         fw.close();
     }
 
