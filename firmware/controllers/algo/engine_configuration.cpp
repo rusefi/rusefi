@@ -277,6 +277,10 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
+		engineConfiguration->auxValves[i] = GPIO_UNASSIGNED;
+	}
+
 	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
