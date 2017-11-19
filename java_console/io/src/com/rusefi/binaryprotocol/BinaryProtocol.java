@@ -3,15 +3,15 @@ package com.rusefi.binaryprotocol;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
-import com.rusefi.*;
+import com.rusefi.ConfigurationImageDiff;
+import com.rusefi.FileLog;
+import com.rusefi.Timeouts;
 import com.rusefi.config.FieldType;
 import com.rusefi.config.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
-import com.rusefi.io.serial.SerialIoStream;
-import jssc.SerialPort;
 import jssc.SerialPortException;
 
 import java.io.EOFException;
@@ -122,7 +122,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
         switchToBinaryProtocol();
-        readImage(TsPageSize.IMAGE_SIZE);
+        readImage(Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
             return false;
 
