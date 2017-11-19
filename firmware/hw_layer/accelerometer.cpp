@@ -73,8 +73,6 @@ static msg_t ivThread(int param) {
 }
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->LIS302DLCsPin == GPIOA_0)
-		return; // temporary code to handle old configurations
 	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)
 		return; // not used
 
