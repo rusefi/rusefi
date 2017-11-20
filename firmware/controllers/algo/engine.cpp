@@ -79,9 +79,9 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void Engine::onTriggerEvent(efitick_t nowNt) {
+void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	isSpinning = true;
-	lastTriggerEventTimeNt = nowNt;
+	lastTriggerToothEventTimeNt = nowNt;
 }
 
 Engine::Engine() {
@@ -120,7 +120,7 @@ void Engine::reset() {
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
-	lastTriggerEventTimeNt = 0;
+	lastTriggerToothEventTimeNt = 0;
 	isCylinderCleanupMode = false;
 	engineCycleEventCount = 0;
 	stopEngineRequestTimeNt = 0;
@@ -339,6 +339,8 @@ void Engine::watchdog() {
 #ifndef RPM_LOW_THRESHOLD
 #define RPM_LOW_THRESHOLD 240
 #endif
+// note that we are ignoring the number of tooth here - we
+// check for duration between tooth as if we only have one tooth per revolution which is not the case
 #define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
 	/**
 	 * todo: better watch dog implementation should be implemented - see
@@ -347,7 +349,7 @@ void Engine::watchdog() {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerEventTimeNt;
+	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerToothEventTimeNt;
 	if (timeSinceLastTriggerEvent < US2NT(REVOLUTION_TIME_HIGH_THRESHOLD)) {
 		return;
 	}
@@ -357,7 +359,7 @@ void Engine::watchdog() {
 	scheduleMsg(&logger, "engine has STOPPED");
 	scheduleMsg(&logger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
 			(int)(nowNt >> 32), (int)nowNt,
-			(int)(lastTriggerEventTimeNt >> 32), (int)lastTriggerEventTimeNt,
+			(int)(lastTriggerToothEventTimeNt >> 32), (int)lastTriggerToothEventTimeNt,
 			(int)timeSinceLastTriggerEvent
 			);
 	triggerInfo();
