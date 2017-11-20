@@ -333,7 +333,7 @@ void updateHD44780lcd(void) {
 	}
 
 
-	const char * message = hasFirmwareErrorFlag ? (char *)&errorMessageBuffer : getWarning();
+	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarning();
 	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);

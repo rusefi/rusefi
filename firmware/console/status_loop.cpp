@@ -462,7 +462,7 @@ void updateDevConsoleState(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		scheduleMsg(&logger, "FATAL error: %s", errorMessageBuffer);
+		scheduleMsg(&logger, "FATAL error: %s", getFirmwareError());
 		warningEnabled = false;
 		scheduleLogging(&logger);
 		return;
