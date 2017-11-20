@@ -12,6 +12,8 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 11/19/2017    | r14766    | improvement #496: console flasher to support older boards |
+| 11/19/2017    | r14760    | improvement #495: incomppatible change - larger settings area |
 | 11/06/2017    | r14733    | improvement #487: single-point injection mode |
 | 10/26/2017    | r14700    | improvement #385: narrow band to wide band conversion table |
 | 07/24/2017    | r14513    | bugfix #307: TS bench test blinks three times |
