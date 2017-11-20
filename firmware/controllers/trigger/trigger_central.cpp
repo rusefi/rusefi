@@ -445,7 +445,7 @@ void triggerInfo(void) {
 
 	TriggerShape *ts = &engine->triggerCentral.triggerShape;
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%d",
+	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%f",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
@@ -484,8 +484,8 @@ void triggerInfo(void) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
-		scheduleMsg(logger, "VVT input: %s mode %d", hwPortname(engineConfiguration->camInput),
-				engineConfiguration->vvtMode);
+		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInput),
+				getVvt_mode_e(engineConfiguration->vvtMode));
 		scheduleMsg(logger, "VVT event counters: %d/%d", vvtEventRiseCounter, vvtEventFallCounter);
 
 	}
