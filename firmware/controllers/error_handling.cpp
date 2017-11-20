@@ -36,7 +36,8 @@ EXTERN_ENGINE;
 extern int warningEnabled;
 extern bool main_loop_started;
 
-fatal_msg_t errorMessageBuffer;
+// todo: rename to fatalErrorMessage?
+static fatal_msg_t errorMessageBuffer;
 bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;

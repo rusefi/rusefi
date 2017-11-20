@@ -25,23 +25,26 @@ void addWarningCode(obd_code_e code);
  * Something is wrong, but we can live with it: some minor sensor is disconnected
  * or something like that
  *
+ * see also firmwareError()
  */
 bool warning(obd_code_e code, const char *fmt, ...);
-bool isWarningNow(efitimesec_t now, bool forIndicator);
 
 typedef uint8_t fatal_msg_t[200];
 /**
- * Something really bad had happened - firmware cannot function
+ * Something really bad had happened - firmware cannot function, we cannot run the engine
  *
- * todo: better method name?
+ * see also warning()
  */
 void firmwareError(obd_code_e code, const char *fmt, ...);
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
+bool isWarningNow(efitimesec_t now, bool forIndicator);
+// todo: rename to getFatalErrorMessage
 char *getFirmwareError(void);
 
 void initErrorHandling(void);
+// todo: rename to getWarningMessage?
 char *getWarning(void);
 
 // todo: better place for this shared declaration?
