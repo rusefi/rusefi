@@ -252,7 +252,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 
 	nowNt = getTimeNowNt();
 
-	engine->onTriggerEvent(nowNt);
+	engine->onTriggerSignalEvent(nowNt);
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
