@@ -8,6 +8,18 @@
 
 #include "main.h"
 #include "rusefi_enums.h"
+
+const char *getVvt_mode_e(vvt_mode_e value) {
+	switch(value) {
+	case MIATA_NB2:
+		return "MIATA_NB2";
+
+	default: return "no_test";
+	}
+	return NULL;
+}
+
+
 const char *getTiming_mode_e(timing_mode_e value) {
 	switch(value) {
 	case Internal_ForceMyEnumIntSize_timing_mode:
