@@ -10,11 +10,12 @@ import static com.rusefi.AutoTest.*;
  * 2/22/2015
  */
 public class RealHwTest {
+    private static final int STARTUP_SLEEP = 45;
     private static final long SECOND = 1000L;
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("Sleeping to give OS time to connect VCP driver");
-        Thread.sleep(45 * SECOND);
+        System.out.println("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
+        Thread.sleep(STARTUP_SLEEP * SECOND);
         long start = System.currentTimeMillis();
         String port = startRealHardwareTest(args);
 
