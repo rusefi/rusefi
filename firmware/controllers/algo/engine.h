@@ -415,10 +415,13 @@ public:
 	 */
 	int ignitionPin[IGNITION_PIN_COUNT];
 
-	void onTriggerEvent(efitick_t nowNt);
+	/**
+	 * this is invoked each time we register a trigger tooth signal
+	 */
+	void onTriggerSignalEvent(efitick_t nowNt);
 	EngineState engineState;
 	SensorsState sensors;
-	efitick_t lastTriggerEventTimeNt;
+	efitick_t lastTriggerToothEventTimeNt;
 
 
 	/**
