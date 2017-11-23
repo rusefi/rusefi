@@ -82,6 +82,9 @@ struct_no_prefix engine_configuration_s
 
 #define FSIO_TABLE_8 8
 
+#define FSIO_CURVE_8 8
+#define FSIO_CURVE_16 16
+
 #define TPS_TPS_ACCEL_TABLE 8
 #define MAP_ACCEL_TAPER 8
 
@@ -827,7 +830,15 @@ brain_pin_e brakePedalPin
 	oil_pressure_config_s oilPressure;
 
 spi_device_e accelerometerSpiDevice;
-	int[938] unusedEnd;
+	float[FSIO_CURVE_16] fsioCurve1Bins;;"x",        1,     0,   -999,    1000.0,  3
+	float[FSIO_CURVE_16] fsioCurve1;;"y",      1,     0,      -999,    1000.0,   3
+	float[FSIO_CURVE_16] fsioCurve2Bins;;"x",        1,     0,   -999,    1000.0,  3
+	float[FSIO_CURVE_16] fsioCurve2;;"y",      1,     0,      -999,    1000.0,   3
+	float[FSIO_CURVE_8] fsioCurve3Bins;;"x",        1,     0,   -999,    1000.0,  3
+	float[FSIO_CURVE_8] fsioCurve3;;"y",      1,     0,      -999,    1000.0,   3
+	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
+	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
+	int[842] unusedEnd;
 	
 
 end_struct

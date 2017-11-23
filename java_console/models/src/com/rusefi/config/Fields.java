@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 19 15:18:42 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 23 02:36:23 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -33,6 +33,8 @@ public class Fields {
 	public static final int FUEL_RPM_COUNT = 16;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FSIO_TABLE_8 = 8;
+	public static final int FSIO_CURVE_8 = 8;
+	public static final int FSIO_CURVE_16 = 16;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int MAP_ACCEL_TAPER = 8;
 	public static final int BARO_CORR_SIZE = 4;
@@ -973,7 +975,15 @@ public class Fields {
 	public static final int oilPressure_v2_offset = 2908;
 	public static final int oilPressure_value2_offset = 2912;
 	public static final int accelerometerSpiDevice_offset = 2916;
-	public static final int unusedEnd_offset = 2920;
+	public static final int fsioCurve1Bins_offset = 2920;
+	public static final int fsioCurve1_offset = 2984;
+	public static final int fsioCurve2Bins_offset = 3048;
+	public static final int fsioCurve2_offset = 3112;
+	public static final int fsioCurve3Bins_offset = 3176;
+	public static final int fsioCurve3_offset = 3208;
+	public static final int fsioCurve4Bins_offset = 3240;
+	public static final int fsioCurve4_offset = 3272;
+	public static final int unusedEnd_offset = 3304;
 	public static final int fsioFormulas1_offset = 6672;
 	public static final int fsioFormulas2_offset = 6872;
 	public static final int fsioFormulas3_offset = 7072;

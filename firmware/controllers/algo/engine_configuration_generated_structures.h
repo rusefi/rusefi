@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 19 15:18:42 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 23 02:36:23 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1953,7 +1953,39 @@ typedef struct {
 	/**
 	 * offset 2920
 	 */
-	int unusedEnd[938];
+	float fsioCurve1Bins[FSIO_CURVE_16];
+	/**
+	 * offset 2984
+	 */
+	float fsioCurve1[FSIO_CURVE_16];
+	/**
+	 * offset 3048
+	 */
+	float fsioCurve2Bins[FSIO_CURVE_16];
+	/**
+	 * offset 3112
+	 */
+	float fsioCurve2[FSIO_CURVE_16];
+	/**
+	 * offset 3176
+	 */
+	float fsioCurve3Bins[FSIO_CURVE_8];
+	/**
+	 * offset 3208
+	 */
+	float fsioCurve3[FSIO_CURVE_8];
+	/**
+	 * offset 3240
+	 */
+	float fsioCurve4Bins[FSIO_CURVE_8];
+	/**
+	 * offset 3272
+	 */
+	float fsioCurve4[FSIO_CURVE_8];
+	/**
+	 * offset 3304
+	 */
+	int unusedEnd[842];
 	/** total size 6672*/
 } engine_configuration_s;
 
@@ -2168,4 +2200,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Nov 19 15:18:42 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 23 02:36:23 EST 2017
