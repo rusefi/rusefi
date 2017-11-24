@@ -1,6 +1,7 @@
 /*
  * @file    adc_external.h
  *
+ * external ADC is probably broken, at least there is a major mess
  *
  * @date Aug 18, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017

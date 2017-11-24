@@ -26,7 +26,7 @@
 
 #include "main.h"
 #include "engine_sniffer.h"
-#include "adc_math.h"
+#include "adc_inputs.h"
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 

@@ -23,7 +23,7 @@
 #include "adc_inputs.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#include "adc_math.h"
+#include "adc_inputs.h"
 #endif
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
