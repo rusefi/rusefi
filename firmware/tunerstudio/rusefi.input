@@ -391,7 +391,7 @@ fileVersion = { 20161225 }
       yBins       = crankingCycleCoef
 
 
-	curve = cltIdleCurve, "Warmup IAC position manual Multiplier"
+	curve = cltIdleCurve, "Warmup Idle multipplier"
       columnLabel = "Coolant", "Multiplier"
       xAxis       = -40, 120, 10
       yAxis       =  0,  50, 100
@@ -877,7 +877,7 @@ gaugeCategory = Fuel Data
 		subMenu = warmupFuelDialog,			"Warmup fuel closed-loop"
 		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
-		subMenu = cltIdleCurve,				"Warmup IAC position manual Multiplier"
+		subMenu = cltIdleCurve,				"Warmup Idle multipplier"
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
 		subMenu = std_separator
 		subMenu = fuelTableDialog,			"Fuel Table", 0, {fuelAlgorithm != LM_SPEED_DENSITY}
@@ -1419,6 +1419,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "#Automatic Mode is still Alpha Version"
 		field = "Manual mode",							idleMode
 		field = "Cranking Idle Air",					crankingIACposition
+		field = "# Warmup Idle multipplier is apploed to target RPM"
 		field = "Auto target",							targetIdleRpm, { idleMode == 0}
 		field = "idle P",								idleRpmPid_pFactor, { idleMode == 0}
 		field = "idle I",								idleRpmPid_iFactor, { idleMode == 0}

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 23 02:36:23 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Nov 24 15:40:28 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1353,6 +1353,7 @@ typedef struct {
 	uint32_t engineChartSize;
 	/**
 	 * set idle_rpm X
+	 * See also cltIdleCorr
 	 * offset 1492
 	 */
 	int targetIdleRpm;
@@ -2039,11 +2040,12 @@ typedef struct {
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
-	 * CLT-based idle position multiplier for simple manual idle controller
+	 * CLT-based idle position multiplier for simple manual idle controller, or target RPM multiplier for PID-based idle
 	 * offset 10656
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
+	 *  CLT-based idle position multiplier for simple manual idle controller, or target RPM multiplier for PID-based idle
 	 * offset 10720
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
@@ -2200,4 +2202,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 23 02:36:23 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Nov 24 15:40:28 EST 2017
