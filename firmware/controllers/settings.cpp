@@ -24,6 +24,7 @@
 #include "engine_math.h"
 #include "alternatorController.h"
 #include "idle_thread.h"
+#include "allsensors.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "vehicle_speed.h"
