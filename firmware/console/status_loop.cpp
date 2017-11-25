@@ -769,7 +769,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
 		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
 
-	} else if (engineConfiguration->debugMode == FSIO_ADC) {
+	} else if (engineConfiguration->debugMode == DBG_FSIO_ADC) {
 		// todo: implement a proper loop
 		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
 			strcpy(buf, "adcX");

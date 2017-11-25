@@ -88,7 +88,7 @@ static msg_t auxPidThread(int param) {
 			}
 
 
-			if (engineConfiguration->debugMode == AUX_PID_1) {
+			if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
 				auxPid.postState(&tsOutputChannels);
 				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
 			}
