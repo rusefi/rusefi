@@ -704,8 +704,8 @@ typedef enum {
 	DBG_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_INPUT = 5,
-	FSIO_ADC = 6,
-	AUX_PID_1 = 7,
+	DBG_FSIO_ADC = 6,
+	DBG_AUX_PID_1 = 7,
 	/**
 	 * VVT position debugging - not VVT valve control
 	 */
@@ -721,9 +721,9 @@ typedef enum {
 	DBG_ELECTRONIC_THROTTLE = 17,
 	DBG_EXECUTOR = 18,
 	DBG_BENCH_TEST = 19,
-	DM_20 = 20,
-	DM_21 = 21,
-	DM_22 = 22,
+	DBG__20 = 20,
+	DBG__21 = 21,
+	DBG__22 = 22,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
