@@ -150,8 +150,8 @@
 147) RESOLVED IN R0.5 Add 232 TX and RX connection points for external MAX232 or equiv chip SEE P701
 148)                  route NC located next to PD15 to 3.3V battery+ / RTC mod / see viewtopic.php?f=4&t=460
 149)                  INJ12 MCU trace is to close to PCB edge refence http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=390
-150)                  Q701 and Q1001 should use same not obsolete chip
-
+150)                  Diodes like D16 to D23 would be better if they were connected to the other side of the W## connections. 
+151) RESOLVED IN R0.5.1 Q701 and Q1001 should use same not obsolete chip, changed to Q1001 from SQ2301ES-T1-GE3 to SI2323DS-T1-E3
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
