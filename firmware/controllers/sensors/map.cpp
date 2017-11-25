@@ -7,7 +7,7 @@
 #include "main.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
-#include "adc_inputs.h"
+#include "analog_input.h"
 #include "interpolation.h"
 #include "error_handling.h"
 #include "map.h"

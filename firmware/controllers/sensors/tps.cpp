@@ -1,12 +1,10 @@
 /**
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
-#include "main.h"
+#include "engine.h"
 #include "tps.h"
-#include "engine_configuration.h"
 #include "interpolation.h"
-#include "adc_inputs.h"
-#include "allsensors.h"
+#include "analog_input.h"
 
 	EXTERN_ENGINE;
 

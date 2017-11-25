@@ -10,8 +10,8 @@
  */
 #include "ego.h"
 #include "interpolation.h"
-#include "adc_inputs.h"
 #include "engine.h"
+#include "analog_input.h"
 
 EXTERN_ENGINE;
 

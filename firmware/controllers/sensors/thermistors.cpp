@@ -12,7 +12,7 @@
 
 #include "main.h"
 #include "thermistors.h"
-#include "adc_inputs.h"
+#include "analog_input.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
 

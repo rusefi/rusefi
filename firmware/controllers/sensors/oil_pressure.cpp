@@ -1,9 +1,10 @@
 /**
  *  @author Matthew Kennedy, (c) 2017
  */
+#include "main.h"
 #include "oil_pressure.h"
 #include "interpolation.h"
-#include "adc_inputs.h"
+#include "analog_input.h"
 #include "engine.h"
 
 EXTERN_ENGINE;

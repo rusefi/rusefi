@@ -22,9 +22,7 @@
 #include "oil_pressure.h"
 #include "adc_inputs.h"
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-#include "adc_inputs.h"
-#endif
+#include "analog_input.h"
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
