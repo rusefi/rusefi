@@ -60,6 +60,13 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PA
 
 	floatms_t adjustedFuelPulse = (target - suckedOffWallsAmount) / (1 - addedToWallCoef);
 
+	// We can't inject a negative amount of fuel
+	// If this goes below zero we will be over-fueling slightly,
+	// but that's ok.
+	if(adjustedFuelPulse < 0) {
+		adjustedFuelPulse = 0;
+	}
+
 	float addedToWallsAmount = adjustedFuelPulse * addedToWallCoef;
 	wallFuel[injectorIndex] += addedToWallsAmount - suckedOffWallsAmount;
 	engine->wallFuelCorrection = adjustedFuelPulse - target;
