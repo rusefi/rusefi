@@ -58,6 +58,7 @@
 #include "event_queue.h"
 #include "engine.h"
 #include "efilib2.h"
+#include "aux_valves.h"
 
 EXTERN_ENGINE
 ;
@@ -534,6 +535,8 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "null engine");
 	initSparkLogic(logger);
+
+	initAuxValves(logger);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);
