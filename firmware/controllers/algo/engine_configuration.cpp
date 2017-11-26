@@ -606,6 +606,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTableBin2(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
 	setTableBin2(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
 
+	setTableBin2(engineConfiguration->fsioCurve1Bins, FSIO_CURVE_16, 0, 100, 1);
+	setTableBin2(engineConfiguration->fsioCurve2Bins, FSIO_CURVE_16, 0, 100, 1);
+	setTableBin2(engineConfiguration->fsioCurve3Bins, FSIO_CURVE_8, 0, 100, 1);
+	setTableBin2(engineConfiguration->fsioCurve4Bins, FSIO_CURVE_8, 0, 100, 1);
+
+
 	setDefaultWarmupIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setDefaultWarmupFuelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
