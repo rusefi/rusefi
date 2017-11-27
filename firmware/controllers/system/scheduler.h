@@ -26,6 +26,9 @@ public:
 	bool isScheduled;
 };
 
+/**
+ * see also scheduleByAngle
+ */
 void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
 void scheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param);
 
