@@ -272,6 +272,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();
+	enginePins.startAuxValves();
 
 	printInjectorsStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
