@@ -147,6 +147,8 @@ public:
 
 	float engineNoiseHipLevel;
 
+	float auxValveStart;
+	float auxValveEnd;
 
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;

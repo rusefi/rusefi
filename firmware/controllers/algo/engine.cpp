@@ -21,6 +21,7 @@
 #include "advance_map.h"
 #include "efilib2.h"
 #include "settings.h"
+#include "aux_valves.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
@@ -180,6 +181,7 @@ EngineState::EngineState() {
 	baroCorrection = timingAdvance = 0;
 	sparkDwell = mapAveragingDuration = 0;
 	totalLoggedBytes = injectionOffset = 0;
+	auxValveStart = auxValveEnd = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -199,6 +201,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
+	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	int rpm = GET_RPM();
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -356,7 +359,7 @@ void Engine::watchdog() {
 	}
 	isSpinning = false;
 	ignitionEvents.isReady = false;
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	scheduleMsg(&logger, "engine has STOPPED");
 	scheduleMsg(&logger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
 			(int)(nowNt >> 32), (int)nowNt,
