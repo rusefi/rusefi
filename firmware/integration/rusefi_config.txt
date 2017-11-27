@@ -165,9 +165,9 @@ end_struct
 
 struct MAP_sensor_config_s @brief MAP averaging configuration
 float[MAP_ANGLE_SIZE] samplingAngleBins;;"RPM",      1,     0,   0.0,    18000,   2
-float[MAP_ANGLE_SIZE] samplingAngle;@brief MAP averaging sampling start angle, by RPM;"deg",      1,     0,   0.0,    90,   2
+float[MAP_ANGLE_SIZE] samplingAngle;@brief MAP averaging sampling start angle, by RPM;"deg",      1,     0,   -180,    180,   2
 float[MAP_WINDOW_SIZE] samplingWindowBins;;"RPM",      1,     0,   0.0,    18000,   2
-float[MAP_WINDOW_SIZE] samplingWindow;@brief MAP averaging angle duration, by RPM;"deg",      1,     0,   0.0,    90,   2
+float[MAP_WINDOW_SIZE] samplingWindow;@brief MAP averaging angle duration, by RPM;"deg",      1,     0,   0,    180,   2
 air_pressure_sensor_config_s sensor
 end_struct
 
