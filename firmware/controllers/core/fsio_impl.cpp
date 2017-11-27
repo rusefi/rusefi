@@ -494,7 +494,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 #endif
 }
 
-static void setFsioExpression(const char *indexStr, const char *quotedLine, Engine *engine) {
+static void setFsioExpression(const char *indexStr, const char *quotedLine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
@@ -508,7 +508,7 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine, Engi
 	}
 
 	scheduleMsg(logger, "setting user out #%d to [%s]", index + 1, l);
-	strcpy(engine->config->fsioFormulas[index], l);
+	strcpy(config->fsioFormulas[index], l);
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	showFsioInfo();
@@ -579,7 +579,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_PROD_CODE */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleActionSS("set_rpn_expression", (VoidCharPtrCharPtr) setFsioExpression);
+	addConsoleActionSS("set_rpn_expression", setFsioExpression);
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);
 	addConsoleAction("fsioinfo", showFsioInfo);
 	addConsoleActionS("rpn_eval", (VoidCharPtr) rpnEval);
