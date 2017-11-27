@@ -139,7 +139,7 @@ enable2ndByteCanID = false
 [OutputChannels]
 
 ; see TS_FILE_VERSION in firmware code
-fileVersion = { 20161225 }
+fileVersion = { 20171101 }
 
    ochGetCommand    = "O%2o%2c"
 
