@@ -12,9 +12,22 @@
 EXTERN_ENGINE
 ;
 
+static scheduling_s turnOnEvent[AUX_DIGITAL_VALVE_COUNT][2];
+static scheduling_s turnOffEvent[AUX_DIGITAL_VALVE_COUNT][2];
+
+static void turnOn(void *arg) {
+
+}
 static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+	if (index != 2) {
+		return;
+	}
+	int rpm = ENGINE(rpmCalculator.rpmValue);
 
+	scheduleByAngle(rpm, &turnOnEvent[0][0], engine->engineState.auxValveStart, (schfunc_t)&turnOn, NULL, &engine->rpmCalculator);
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
 void initAuxValves(Logging *sharedLogger) {
@@ -23,7 +36,7 @@ void initAuxValves(Logging *sharedLogger) {
 		return;
 	}
 	addTriggerEventListener(auxValveTriggerCallback, "tach", engine);
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 }
 
 void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
