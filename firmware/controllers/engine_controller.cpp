@@ -491,31 +491,31 @@ static void setMockVoltage(int hwChannel, float voltage) {
 	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
 }
 
-void setCltVoltage(float voltage) {
+void setMockCltVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->clt.adcChannel, voltage);
 }
 
-void setIatVoltage(float voltage) {
+void setMockIatVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->iat.adcChannel, voltage);
 }
 
-void setMafVoltage(float voltage) {
+void setMockMafVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
 }
 
-void setAfrVoltage(float voltage) {
+void setMockAfrVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
 }
 
-void setTpsVoltage(float voltage) {
+void setMockTpsVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->tpsAdcChannel, voltage);
 }
 
-void setMapVoltage(float voltage) {
+void setMockMapVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
 }
 
-void setVBattVoltage(float voltage) {
+void setMockVBattVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage);
 }
 
