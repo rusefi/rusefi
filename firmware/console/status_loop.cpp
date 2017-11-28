@@ -432,6 +432,10 @@ static void printInfo(systime_t nowSeconds) {
 
 		printOutPin(enginePins.injectors[i].name, boardConfiguration->injectionPins[i]);
 	}
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
+		printOutPin(enginePins.auxValve[i].name, engineConfiguration->auxValves[i]);
+	}
+
 #endif /* EFI_PROD_CODE */
 
 }
