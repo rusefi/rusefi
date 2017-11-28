@@ -1107,14 +1107,14 @@ typedef struct {
 	VoidFloat callback;
 } command_f_s;
 
-command_f_s commandsF[] = {{"mock_iat_voltage", setIatVoltage},
+command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"mock_pedal_position", setMockPedalPosition},
-		{"mock_maf_voltage", setMafVoltage},
-		{"mock_afr_voltage", setAfrVoltage},
-		{"mock_tps_voltage", setTpsVoltage},
+		{"mock_maf_voltage", setMockMafVoltage},
+		{"mock_afr_voltage", setMockAfrVoltage},
+		{"mock_tps_voltage", setMockTpsVoltage},
 		{"mock_map_voltage", setMapVoltage},
-		{"mock_vbatt_voltage", setVBattVoltage},
-		{"mock_clt_voltage", setCltVoltage},
+		{"mock_vbatt_voltage", setMockVBattVoltage},
+		{"mock_clt_voltage", setMockCltVoltage},
 		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},

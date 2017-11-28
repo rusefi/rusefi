@@ -758,6 +758,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * _10_6 +  tsState.totalCounter;
 		tsOutputChannels->debugIntField2 = tsState.outputChannelsCommandCounter * _10_6 + tsState.writeValueCommandCounter;
 		tsOutputChannels->debugIntField3 = tsState.readPageCommandsCounter * _10_6 + tsState.burnCommandCounter;
+	} else if (engineConfiguration->debugMode == DBG__AUX_VALVES) {
+		tsOutputChannels->debugFloatField1 = engine->engineState.auxValveStart;
+		tsOutputChannels->debugFloatField2 = engine->engineState.auxValveEnd;
 	}
 
 	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
