@@ -28,7 +28,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setMockVBattVoltage(float voltage);
-void setMapVoltage(float voltage);
+void setMockMapVoltage(float voltage);
 void setMockTpsVoltage(float voltage);
 void setMockAfrVoltage(float voltage);
 void setMockMafVoltage(float voltage);
