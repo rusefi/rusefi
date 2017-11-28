@@ -299,14 +299,14 @@ fileVersion = { 20171101 }
    curve = fsioCurve1, "FSIO Curve #1"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
-      yAxis       = -5,  5, 10
+      yAxis       = -155,  150, 10
       xBins       = fsioCurve1Bins
       yBins       = fsioCurve1
       
    curve = fsioCurve2, "FSIO Curve #2"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
-      yAxis       = -5,  5, 10
+      yAxis       = -150,  150, 10
       xBins       = fsioCurve2Bins
       yBins       = fsioCurve2
 
@@ -1297,6 +1297,24 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "FSIO dig inp #7",						fsioDigitalInputs7
 		field = "FSIO dig inp #8",						fsioDigitalInputs8
 		field = "FSIO dig inp #9",						fsioDigitalInputs9
+		field = "output #1", 							fsioOutputPins1
+		field = "output #2", 							fsioOutputPins2
+		field = "output #3", 							fsioOutputPins3
+		field = "output #4", 							fsioOutputPins4
+		field = "output #5", 							fsioOutputPins5
+		field = "output #6", 							fsioOutputPins6
+		field = "output #7", 							fsioOutputPins7
+		field = "output #8", 							fsioOutputPins8
+		field = "output #9", 							fsioOutputPins9
+		field = "output #10", 							fsioOutputPins10
+		field = "output #11", 							fsioOutputPins11
+		field = "output #12", 							fsioOutputPins12
+		field = "output #13", 							fsioOutputPins13
+		field = "output #14", 							fsioOutputPins14
+		field = "output #15", 							fsioOutputPins15
+		field = "output #16", 							fsioOutputPins16
+		field = "aux valve #1", 						auxValves1
+		field = "aux valve #2", 						auxValves2
 
 
 

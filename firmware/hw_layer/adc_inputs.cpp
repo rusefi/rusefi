@@ -192,7 +192,7 @@ void doSlowAdc(void) {
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
 	chSysUnlockFromISR()
 	;
-#endif
+#endif /* EFI_INTERNAL_ADC */
 }
 
 static void pwmpcb_slow(PWMDriver *pwmp) {
@@ -225,7 +225,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	chSysUnlockFromISR()
 	;
 	fastAdc.conversionCount++;
-#endif
+#endif /* EFI_INTERNAL_ADC */
 }
 
 float getMCUInternalTemperature(void) {
@@ -242,11 +242,11 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
-#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
+#if EFI_ENABLE_MOCK_ADC
 	if (engine->engineState.mockAdcState.hasMockAdc[hwChannel])
 		return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
 
-#endif
+#endif /* EFI_ENABLE_MOCK_ADC */
 
 
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
