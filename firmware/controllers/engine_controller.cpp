@@ -521,11 +521,11 @@ void setMockVBattVoltage(float voltage) {
 
 static void initMockVoltage(void) {
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-	setCltVoltage(2);
+	setMockCltVoltage(2);
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-	setIatVoltage(2);
+	setMockIatVoltage(2);
 #endif /* EFI_SIMULATOR */
 
 }
