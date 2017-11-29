@@ -1997,3 +1997,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
 	    
+[Tools]
+ ;addTool = toolName, PanelName
+ addTool = veTableGenerator, "VE Table Generator", veTableTbl
+ addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
+ 
