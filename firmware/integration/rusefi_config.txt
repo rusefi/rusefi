@@ -3,6 +3,14 @@
 ! this file is processed by ../java_tools/config_definition.jar tool
 ! comments start with '!'
 !
+! See also ../tunerstudio/readme.txt
+!
+! Q: How to add new fields?
+! A: Find an 'unused' bit or unused int (usually the huge unusedEnd[] array at the end
+!    rename the bit or subsctitute unused intereger with any new fields of the same size
+!    invoke gen_config.bat to apply the tools which would generate .h and .ini files
+!
+!
 ! each field is declared as
 ! type name;comment
 
