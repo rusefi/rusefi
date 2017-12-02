@@ -16,6 +16,7 @@
 #include "aux_valves.h"
 #include "allsensors.h"
 #include "trigger_central.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE
 ;
@@ -48,13 +49,16 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		NamedOutputPin *output = &enginePins.auxValve[valveIndex];
 
 		for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
-			float extra = phaseIndex * 360 + valveIndex * 180;
+			angle_t extra = phaseIndex * 360 + valveIndex * 180;
+			angle_t onTime = extra + engine->engineState.auxValveStart;
+			fixAngle(onTime, "onTime");
 			scheduleByAngle(rpm, &turnOnEvent[valveIndex][phaseIndex],
-					extra + engine->engineState.auxValveStart,
+					onTime,
 					(schfunc_t) &turnOn, output, &engine->rpmCalculator);
-
+			angle_t offTime = extra + engine->engineState.auxValveEnd;
+			fixAngle(offTime, "offTime");
 			scheduleByAngle(rpm, &turnOffEvent[valveIndex][phaseIndex],
-					extra + engine->engineState.auxValveEnd,
+					offTime,
 					(schfunc_t) &turnOff, output, &engine->rpmCalculator);
 
 		}
