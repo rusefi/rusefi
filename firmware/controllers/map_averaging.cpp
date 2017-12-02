@@ -241,8 +241,8 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		}
 
 		angle_t samplingEnd = samplingStart + samplingDuration;
-		fixAngle(samplingEnd, "samplingEnd");
 		if (!cisnan(samplingEnd)) {
+			fixAngle(samplingEnd, "samplingEnd");
 			// only if value is already prepared
 			int structIndex = getRevolutionCounter() % 2;
 			// todo: schedule this based on closest trigger event, same as ignition works
