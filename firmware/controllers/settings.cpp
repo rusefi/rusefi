@@ -1097,6 +1097,14 @@ static void getValue(const char *paramStr) {
 #endif
 }
 
+static void setFsioCurve1Value(float value) {
+	setTableBin2(engineConfiguration->fsioCurve1, FSIO_CURVE_16, value, value, 1);
+}
+
+static void setFsioCurve2Value(float value) {
+	setTableBin2(engineConfiguration->fsioCurve2, FSIO_CURVE_16, value, value, 1);
+}
+
 typedef struct {
 	const char *token;
 	VoidInt callback;
@@ -1115,6 +1123,8 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"mock_map_voltage", setMockMapVoltage},
 		{"mock_vbatt_voltage", setMockVBattVoltage},
 		{"mock_clt_voltage", setMockCltVoltage},
+		{"fsio_curve_1_value", setFsioCurve1Value},
+		{"fsio_curve_2_value", setFsioCurve2Value},
 		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
