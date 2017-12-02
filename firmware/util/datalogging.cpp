@@ -49,7 +49,7 @@ static bool intermediateLoggingBufferInited = false;
 /**
  * @returns true if data does not fit into this buffer
  */
-static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
+static ALWAYS_INLINE bool validateBuffer(Logging *logging, const char *text, uint32_t extraLen) {
 	if (logging->buffer == NULL) {
 		firmwareError(CUSTOM_ERR_LOGGING_NOT_READY, "Logging not initialized: %s", logging->name);
 		return true;
@@ -57,7 +57,8 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 
 	if (remainingSize(logging) < extraLen + 1) {
 #if EFI_PROD_CODE
-		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s", logging->name);
+		const char * msg = extraLen > 50 ? "(long)" : text;
+		warning(CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d [%s]", logging->name, extraLen, msg);
 #endif /* EFI_PROD_CODE */
 		return true;
 	}
@@ -67,7 +68,7 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isCapacityProblem = validateBuffer(logging, extraLen);
+	bool isCapacityProblem = validateBuffer(logging, text, extraLen);
 	if (isCapacityProblem) {
 		return;
 	}
