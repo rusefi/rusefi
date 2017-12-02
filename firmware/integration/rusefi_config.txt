@@ -3,6 +3,14 @@
 ! this file is processed by ../java_tools/config_definition.jar tool
 ! comments start with '!'
 !
+!
+! rusEfi configuration consistes of two parts:
+! First part is engine_configuration_s area, followed by a few tuning tables
+!
+! The only difference her is that engine_configuration_s area does not support hot modification while tuning tables could
+! be modified without burning changes
+!
+!
 ! See also ../tunerstudio/readme.txt
 !
 ! Q: How to add new fields?
