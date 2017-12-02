@@ -279,11 +279,13 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		printf("scheduling injection angle=%f/delay=%f injectionDuration=%f\r\n", event->injectionStart.angleOffset, injectionStartDelayUs, injectionDuration);
 #endif
 
-		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS injection
+		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS/IM_SINGLE_POINT injection
 		// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
 		if (rpm > 2 * engineConfiguration->cranking.rpm) {
 			const char *outputName = event->outputs[0]->name;
-			if (prevOutputName == outputName && engineConfiguration->injectionMode != IM_SIMULTANEOUS) {
+			if (prevOutputName == outputName
+					&& engineConfiguration->injectionMode != IM_SIMULTANEOUS
+					&& engineConfiguration->injectionMode != IM_SINGLE_POINT) {
 				warning(CUSTOM_OBD_SKIPPED_FUEL, "looks like skipped fuel event %d %s", getRevolutionCounter(), outputName);
 			}
 			prevOutputName = outputName;
