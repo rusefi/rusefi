@@ -13,4 +13,3 @@
 13)                  RESET and USER button HUGE silkscreen is needed
 14)                  silkscreen area for board unique number engraving
 
-
