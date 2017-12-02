@@ -30,9 +30,13 @@ void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
  */
-#define fixAngle(angle, msg)														\
+#define fixAngle(angle, msg)											    \
 	{																		\
-		assertAngleRange(angle, msg);											\
+   	    if (cisnan(angle)) {                                                \
+		   firmwareError(CUSTOM_ERR_6516, "angle NaN %s", msg);             \
+		   angle = 0;                                                       \
+	    }                                                                   \
+		assertAngleRange(angle, msg);										\
 		float engineCycleDurationLocalCopy = ENGINE(engineCycle);	        \
 		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
 		/*       as a performance optimization?*/                           \
