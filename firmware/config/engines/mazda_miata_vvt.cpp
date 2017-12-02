@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  * http://rusefi.com/forum/viewtopic.php?f=3&t=1095
  *
- * todo: try ZM-DE 2000 protege 36/1 trigger wheel
+ * todo: try ZM-DE 2000 protege 36/1 trigger wheel ZM 01-11-408
  *
  *
  * Based on http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board#Default_Pinout
