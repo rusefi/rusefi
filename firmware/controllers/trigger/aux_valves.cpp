@@ -32,10 +32,12 @@ static void turnOff(NamedOutputPin *output) {
 	output->setLow();
 }
 
+#define SCHEDULING_TRIGGER_INDEX 2
+
 static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
-	if (index != 2) {
+	if (index != SCHEDULING_TRIGGER_INDEX) {
 		return;
 	}
 	int rpm = ENGINE(rpmCalculator.rpmValue);
@@ -49,7 +51,12 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		NamedOutputPin *output = &enginePins.auxValve[valveIndex];
 
 		for (int phaseIndex = 0; phaseIndex < 2; phaseIndex++) {
-			angle_t extra = phaseIndex * 360 + valveIndex * 180;
+			// todo: at the moment this logic is assuming four-stroke 720-degree engine cycle
+			angle_t extra = phaseIndex * 360 // cycle opens twice per 720 engine cycle
+					+ valveIndex * 180 // 2nd valve is operating at 180 offset to first
+					+ tdcPosition() // engine cycle position to trigger cycle position conversion
+					- ENGINE(triggerCentral.triggerShape.eventAngles[SCHEDULING_TRIGGER_INDEX])
+					;
 			angle_t onTime = extra + engine->engineState.auxValveStart;
 			fixAngle(onTime, "onTime");
 			scheduleByAngle(rpm, &turnOnEvent[valveIndex][phaseIndex],
