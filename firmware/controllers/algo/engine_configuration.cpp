@@ -29,20 +29,8 @@
 #include "engine_math.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#include "electronic_throttle.h"
-#include "idle_thread.h"
-#include "alternatorController.h"
-#include "hardware.h"
-#include "board.h"
-#endif /* EFI_PROD_CODE */
 
 #include "hip9011_lookup.h"
-
-#if EFI_PROD_CODE
-#include "HIP9011.h"
-#endif
-
 #include "accelerometer.h"
 
 #include "custom_engine.h"
@@ -93,11 +81,20 @@
 #include "zil130.h"
 #include "honda_600.h"
 
-EXTERN_ENGINE;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "electronic_throttle.h"
+#include "idle_thread.h"
+#include "alternatorController.h"
+#include "hardware.h"
+#include "board.h"
+#include "HIP9011.h"
+#endif /* EFI_PROD_CODE */
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 #include "tunerstudio.h"
 #endif
+
+EXTERN_ENGINE;
 
 //#define TS_DEFAULT_SPEED 115200
 #define TS_DEFAULT_SPEED 38400
