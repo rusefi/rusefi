@@ -471,7 +471,8 @@ brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal 
 	brain_pin_e gps_rx_pin;
 	brain_pin_e gps_tx_pin;
 
-	int triggerSimulatorFrequency;;"Rpm",     1,      0,       0,30000,      0
+! todo: rename to triggerSimulatorRpm
+	int triggerSimulatorFrequency;rpm X;"Rpm",     1,      0,       0,30000,      0
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	brain_pin_e[DIGIPOT_COUNT iterate] digitalPotentiometerChipSelect;
