@@ -188,6 +188,26 @@
             </table>
         </table>
 
+        <table type="2D" name="FSIO Curve #1" storageaddress="@@fsioCurve1_offset_hex@@"
+        category="FSIO"
+               sizex="@@FSIO_CURVE_16@@" storagetype="float" endian="big">
+            <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
+                     fineincrement=".01" coarseincrement="0.1"/>
+            <table type="X Axis" storageaddress="@@fsioCurve1Bins_offset_hex@@" storagetype="float" endian="big">
+                <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+        </table>
+
+        <table type="2D" name="FSIO Curve #2" storageaddress="@@fsioCurve2_offset_hex@@"
+        category="FSIO"
+               sizex="@@FSIO_CURVE_16@@" storagetype="float" endian="big">
+            <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
+                     fineincrement=".01" coarseincrement="0.1"/>
+            <table type="X Axis" storageaddress="@@fsioCurve2Bins_offset_hex@@" storagetype="float" endian="big">
+                <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
+            </table>
+        </table>
+
         <table type="2D" name="Coolant temperature-based extra idle air" storageaddress="@@cltIdleCorr_offset_hex@@"
                sizex="@@CLT_CURVE_SIZE@@" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
