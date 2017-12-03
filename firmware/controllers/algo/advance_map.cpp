@@ -107,6 +107,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 }
 
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efiAssert(!cisnan(engineLoad), "engineLoad", 0);
 	angle_t angle;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// Interpolate the cranking timing angle to the earlier running angle for faster engine start
