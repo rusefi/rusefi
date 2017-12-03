@@ -162,15 +162,15 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	boardConfiguration->injectionPins[0] = GPIOB_7; // #1
-	boardConfiguration->injectionPins[1] = GPIOB_8; // #2
-	boardConfiguration->injectionPins[2] = GPIOB_9; // #3
-	boardConfiguration->injectionPins[3] = GPIOC_13; // #4
+	boardConfiguration->injectionPins[0] = GPIOB_7; // injector in default pinout
+	boardConfiguration->injectionPins[1] = GPIOB_8; // injector in default pinout
+	boardConfiguration->injectionPins[2] = GPIOB_9; // injector in default pinout
+	boardConfiguration->injectionPins[3] = GPIOC_13;
 
 	boardConfiguration->injectionPins[4] = GPIOD_3;
 	boardConfiguration->injectionPins[5] = GPIOD_5;
 	boardConfiguration->injectionPins[6] = GPIOD_7;
-	boardConfiguration->injectionPins[7] = GPIOE_2;
+	boardConfiguration->injectionPins[7] = GPIOE_2; // injector in default pinout
 	boardConfiguration->injectionPins[8] = GPIOE_3;
 	boardConfiguration->injectionPins[9] = GPIOE_4;
 	boardConfiguration->injectionPins[10] = GPIOE_5;
@@ -182,12 +182,12 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOE_10;
-	boardConfiguration->ignitionPins[3] = GPIOE_8;
+	boardConfiguration->ignitionPins[0] = GPIOC_9; // coil in default pinout
+	boardConfiguration->ignitionPins[1] = GPIOC_7; // coil in default pinout
+	boardConfiguration->ignitionPins[2] = GPIOE_10; // coil in default pinout
+	boardConfiguration->ignitionPins[3] = GPIOE_8; // Miata VVT tach
 
-	boardConfiguration->ignitionPins[4] = GPIOE_14;
+	boardConfiguration->ignitionPins[4] = GPIOE_14; // coil in default pinout
 	boardConfiguration->ignitionPins[5] = GPIOE_12;
 	boardConfiguration->ignitionPins[6] = GPIOD_8;
 	boardConfiguration->ignitionPins[7] = GPIOD_9;
