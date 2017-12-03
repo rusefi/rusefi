@@ -14,14 +14,15 @@
 #include "main_trigger_callback.h"
 #include "datalogging.h"
 #include "engine_configuration.h"
-#if EFI_PROD_CODE
-#include "pwm_generator.h"
-#include "pin_repository.h"
-#endif
 #include "io_pins.h"
 #include "trigger_emulator_algo.h"
 #include "trigger_central.h"
 #include "settings.h"
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "pwm_generator.h"
+#include "pin_repository.h"
+#endif /* EFI_PROD_CODE */
 
 extern PwmConfig triggerSignal;
 
@@ -39,7 +40,7 @@ void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	triggerSignal.outputPins[1] = &emulatorOutputs[1];
 	triggerSignal.outputPins[2] = &emulatorOutputs[2];
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	// todo: refactor, make this a loop
 	triggerSignal.outputPins[0]->initPin("trg emulator ch1", boardConfiguration->triggerSimulatorPins[0],
 			&boardConfiguration->triggerSimulatorPinModes[0]);
