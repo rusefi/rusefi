@@ -142,7 +142,7 @@ float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust t
 int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold\nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25"
+#define debug_mode_e_enum "Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test", "Aux Valves", "ADC", "mode22", "mode23", "mode24", "mode25"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:4], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
@@ -802,7 +802,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V",        1,     0,   -10.0,    10.0,  3
-	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   1
+	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2
 	vvt_mode_e vvtMode;set vvt_mode X
 	bi_quard_s biQuad;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C",        1,     0,   -100.0,    250.0,  1
