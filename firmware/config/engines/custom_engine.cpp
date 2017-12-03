@@ -3,6 +3,7 @@
  *
  *
  * set engine_type 49
+ * FRANKENSO_QA_ENGINE
  * See also DEFAULT_ENGINE_TYPE
  * Frankenso QA 12 cylinder engine
  *
@@ -196,6 +197,9 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[5] = GPIOE_12;
 	boardConfiguration->ignitionPins[6] = GPIOD_8;
 	boardConfiguration->ignitionPins[7] = GPIOD_9;
+
+	boardConfiguration->ignitionPins[8] = GPIOE_0; // brain board, not discovery
+	boardConfiguration->ignitionPins[9] = GPIOE_1; // brain board, not discovery
 
 }
 
