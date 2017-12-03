@@ -33,7 +33,7 @@ void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define fixAngle(angle, msg)											    \
 	{																		\
    	    if (cisnan(angle)) {                                                \
-		   firmwareError(CUSTOM_ERR_6516, "angle NaN %s", msg);             \
+		   firmwareError(CUSTOM_ERR_ANGLE, "angle NaN %s", msg);            \
 		   angle = 0;                                                       \
 	    }                                                                   \
 		assertAngleRange(angle, msg);										\

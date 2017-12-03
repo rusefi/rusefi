@@ -427,7 +427,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 				/**
 				 * Cannot recognize token
 				 */
-				warning(CUSTOM_ERR_6536, "unrecognized [%s]", parsingBuffer);
+				warning(CUSTOM_ERR_PARSING_ERROR, "unrecognized [%s]", parsingBuffer);
 				return NULL;
 			}
 			n->init(action);
