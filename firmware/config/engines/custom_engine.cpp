@@ -16,11 +16,11 @@
 #include "honda_accord.h"
 #include "allsensors.h"
 #include "engine_math.h"
-#include "trigger_emulator.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "trigger_emulator.h"
 #include "can_hw.h"
-#endif
+#endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE;
 
@@ -154,7 +154,9 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	setTriggerEmulatorRPM(300); // lower RPM for slower blinking
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
