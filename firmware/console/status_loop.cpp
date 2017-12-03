@@ -725,10 +725,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_ANALOG_SENSORS */
 	tsOutputChannels->engineLoad = engineLoad;
 
-	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
-		tsOutputChannels->debugFloatField4 = engine->rpmCalculator.getRpmAcceleration();
-	}
-
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
@@ -755,19 +751,22 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isWarnNow = isWarningNow(now, true);
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
 
-	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
+	switch (engineConfiguration->debugMode)	{
+	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
-	} else if (engineConfiguration->debugMode == DBG_SR5_PROTOCOL) {
-		int _10_6 = 100000;
+		break;
+	case DBG_SR5_PROTOCOL: {
+		const int _10_6 = 100000;
 		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * _10_6 +  tsState.totalCounter;
 		tsOutputChannels->debugIntField2 = tsState.outputChannelsCommandCounter * _10_6 + tsState.writeValueCommandCounter;
 		tsOutputChannels->debugIntField3 = tsState.readPageCommandsCounter * _10_6 + tsState.burnCommandCounter;
-	} else if (engineConfiguration->debugMode == DBG__AUX_VALVES) {
+		break;
+		}
+	case DBG_AUX_VALVES:
 		tsOutputChannels->debugFloatField1 = engine->engineState.auxValveStart;
 		tsOutputChannels->debugFloatField2 = engine->engineState.auxValveEnd;
-	}
-
-	if (engineConfiguration->debugMode == DBG_TRIGGER_INPUT) {
+		break;
+	case DBG_TRIGGER_INPUT:
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
 		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
@@ -775,28 +774,42 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
 		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
-
-	} else if (engineConfiguration->debugMode == DBG_FSIO_ADC) {
+		tsOutputChannels->debugFloatField4 = engine->rpmCalculator.getRpmAcceleration();
+		break;
+	case DBG_FSIO_ADC:
 		// todo: implement a proper loop
 		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
 			strcpy(buf, "adcX");
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
 		}
-	} else if (engineConfiguration->debugMode == DBG_VEHICLE_SPEED_SENSOR) {
+		break;
+	case DBG_VEHICLE_SPEED_SENSOR:
 		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
-	} else if (engineConfiguration->debugMode == DBG_SD_CARD) {
+		break;
+	case DBG_SD_CARD:
 		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
-	} else if (engineConfiguration->debugMode == DBG_CRANKING_DETAILS) {
+		break;
+	case DBG_CRANKING_DETAILS:
 		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
-	}
-
+		break;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
-	if (engineConfiguration->debugMode == DBG_KNOCK) {
+	case DBG_KNOCK:
 		tsOutputChannels->debugIntField1 = correctResponsesCount;
 		tsOutputChannels->debugIntField2 = invalidResponsesCount;
-	}
+		break;
 #endif /* EFI_HIP_9011 */
-
+	case DBG_ADC:
+		tsOutputChannels->debugFloatField1 = (engineConfiguration->vbattAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel) : 0.0f;
+		tsOutputChannels->debugFloatField2 = (engineConfiguration->tpsAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("tps", engineConfiguration->tpsAdcChannel) : 0.0f;
+		tsOutputChannels->debugFloatField3 = (engineConfiguration->mafAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("maf", engineConfiguration->mafAdcChannel) : 0.0f;
+		tsOutputChannels->debugFloatField4 = (engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel) : 0.0f;
+		tsOutputChannels->debugFloatField5 = (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("clt", engineConfiguration->clt.adcChannel) : 0.0f;
+		tsOutputChannels->debugFloatField6 = (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("iat", engineConfiguration->iat.adcChannel) : 0.0f;
+		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
+		break;
+	default:
+		;
+	}
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
 	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuelCorrection);

@@ -723,9 +723,11 @@ typedef enum {
 	DBG_ELECTRONIC_THROTTLE = 17,
 	DBG_EXECUTOR = 18,
 	DBG_BENCH_TEST = 19,
-	DBG__AUX_VALVES = 20,
-	DBG__21 = 21,
+	DBG_AUX_VALVES = 20,
+	DBG_ADC = 21,
+	
 	DBG__22 = 22,
+	DBG__23 = 23,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
