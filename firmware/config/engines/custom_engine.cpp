@@ -18,9 +18,12 @@
 #include "engine_math.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-#include "trigger_emulator.h"
 #include "can_hw.h"
 #endif /* EFI_PROD_CODE */
+
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#include "trigger_emulator.h"
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 
 EXTERN_ENGINE;
 
@@ -124,7 +127,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 12;
 
 	engineConfiguration->displayMode = DM_NONE;
-#else
+#else /* EFI_PWM_TESTER */
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
@@ -139,7 +142,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	// set_ignition_pin 4 PE10
 	boardConfiguration->ignitionPins[3] = GPIOE_10;
-#endif
+#endif /* EFI_PWM_TESTER */
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
