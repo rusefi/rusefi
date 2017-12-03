@@ -2,7 +2,9 @@
  * @file	custom_engine.cpp
  *
  *
- * set engine_type 49 Frankenso QA 12 cylinder engine
+ * set engine_type 49
+ * See also DEFAULT_ENGINE_TYPE
+ * Frankenso QA 12 cylinder engine
  *
  * @date Jan 18, 2015
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -143,7 +145,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE
 	enableFrankensoCan();
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
