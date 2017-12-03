@@ -1168,6 +1168,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MAZDA_MIATA_2003_NA_RAIL:
 		setMazdaMiata2003EngineConfigurationNaFuelRail(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
+	case MAZDA_MIATA_2003_BOARD_TEST:
+		setMazdaMiata2003EngineConfigurationBoardTest(PASS_ENGINE_PARAMETER_SIGNATURE);
+		break;
 	case PROMETHEUS_DEFAULTS:
 		setPrometheusDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;

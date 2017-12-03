@@ -456,3 +456,8 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIG
 	boardConfiguration->manIdlePosition = 30;
 	engineConfiguration->crankingIACposition = 65;
 }
+
+void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+}

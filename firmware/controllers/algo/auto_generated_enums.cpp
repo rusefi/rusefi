@@ -132,6 +132,8 @@ case MAZDA_MIATA_2003:
 	return "miata 2003";
 case MAZDA_MIATA_2003_NA_RAIL:
 	return "miata 2003 NArail";
+case MAZDA_MIATA_2003_BOARD_TEST:
+	return "miata 2003 bt";
 case PROMETHEUS_DEFAULTS:
 	return "PROMETHEUS";
 case TEST_ENGINE_VVT:
