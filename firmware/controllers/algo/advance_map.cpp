@@ -112,7 +112,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		// Interpolate the cranking timing angle to the earlier running angle for faster engine start
 		angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 		// interpolate not from zero, but starting from min. possible rpm detected
-		if (rpm < minCrankingRpm)
+		if (rpm < minCrankingRpm || minCrankingRpm == 0)
 			minCrankingRpm = rpm;
 		angle = interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, CONFIG(cranking.rpm), crankingToRunningTransitionAngle, rpm);
 	} else {
