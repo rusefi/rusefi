@@ -155,6 +155,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
 	boardConfiguration->triggerSimulatorFrequency = 300;
+	engineConfiguration->cranking.rpm = 100;
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
