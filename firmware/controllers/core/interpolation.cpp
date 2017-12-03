@@ -173,7 +173,7 @@ int findIndex2(const float array[], unsigned size, float value) {
 void ensureArrayIsAscending(const char *msg, const float array[], int size) {
 	for (int i = 0; i < size - 1; i ++) {
 		if (array[i] >= array[i+ 1]) {
-			firmwareError(CUSTOM_ERR_6538, "invalid axis %s at %f", msg, array[i]);
+			firmwareError(CUSTOM_ERR_AXIS_ORDER, "invalid axis %s at %f", msg, array[i]);
 		}
 	}
 }

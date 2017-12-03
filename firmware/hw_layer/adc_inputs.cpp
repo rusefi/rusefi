@@ -317,7 +317,7 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC_5;
 	default:
-		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return GPIO_INVALID;
 	}
 }
@@ -398,7 +398,7 @@ ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return NULL;
 	}
 }
