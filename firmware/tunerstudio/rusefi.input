@@ -1479,6 +1479,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "pid min",								idleRpmPid_minValue, { idleMode == 0}
 		field = "pid max",								idleRpmPid_maxValue, { idleMode == 0}
 		field = "pid TPS deactivation",					idlePidDeactivationTpsThreshold, { idleMode == 0}
+		field = "pid RPM deactivation (upper limit)",	idlePidDeactivationRPMMultiplier, { idleMode == 0}
+		field = "pid RPM activation (lower limit)",		idlePidActivationRPMMultiplier, { idleMode == 0}
 		field = "RPM error to deactivate IAC pid",		iacRPMErrorThreshold, { idleMode == 0}
 		field = "iacByTpsTaper",						iacByTpsTaper;
 		field = "verbose",								isVerboseIAC

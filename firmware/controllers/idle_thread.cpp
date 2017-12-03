@@ -44,6 +44,7 @@ EXTERN_ENGINE
 ;
 
 static bool shouldResetPid = false;
+static bool autoIdleEnabled = false;
 
 static Pid idlePid(&engineConfiguration->idleRpmPid);
 
@@ -52,8 +53,6 @@ static SimplePwm idleSolenoid;
 
 static StepperMotor iacMotor;
 
-static int adjustedTargetRpm;
-
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
@@ -61,6 +60,7 @@ static float lastCrankingIacPosition;
  * that's current position with CLT and IAT corrections
  */
 static percent_t currentIdlePosition = -100.0f;
+static percent_t baseIdlePosition = currentIdlePosition;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
@@ -91,6 +91,7 @@ static void showIdleInfo(void) {
 
 void setIdleMode(idle_mode_e value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
+	autoIdleEnabled = engineConfiguration->idleMode == IM_AUTO;
 	showIdleInfo();
 }
 
@@ -158,13 +159,36 @@ percent_t getIdlePosition(void) {
 
 static float autoIdle(float cltCorrection) {
 	if (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > boardConfiguration->idlePidDeactivationTpsThreshold) {
-		// just leave IAC position as is
-		return currentIdlePosition;
+		autoIdleEnabled = false;
+		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
+		return baseIdlePosition;
 	}
 
-	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
+	int adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
+	int rpm = getRpmE(engine);
 
-	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
+	// Deactivate PID if RPM is higher than upper limit and TPS threshold is useless (ex. engine braking).
+	// We use multiplier instead of fixed RPM limit because of cltCorrection
+	if (CONFIG(idlePidDeactivationRPMMultiplier) > 0 && rpm > (adjustedTargetRpm * CONFIG(idlePidDeactivationRPMMultiplier) / 100)) {
+		autoIdleEnabled = false;
+		// we cannot just leave IAC position as is because RPM could be high 
+		return manualIdleController(cltCorrection);
+	}
+
+	// Check if it's time to activate PID back if RPM is within the lower range (idlePidActivationRPMMultiplier < idlePidDeactivationRPMMultiplier).
+	// Also an engine inertia compensation when quickly releasing the throttle pedal and TPS threshold is premature.
+	if (CONFIG(idlePidActivationRPMMultiplier) > 0 && rpm > (adjustedTargetRpm * CONFIG(idlePidActivationRPMMultiplier) / 100)) {
+		if (!autoIdleEnabled)
+			return manualIdleController(cltCorrection);
+	}
+	
+	autoIdleEnabled = true;
+
+	percent_t newValue = idlePid.getValue(adjustedTargetRpm, rpm, engineConfiguration->idleRpmPid.period);
+
+	// use the same limits as in manualIdleController()
+	newValue = maxF(newValue, 0.01);
+	newValue = minF(newValue, 99.9);
 
 	return newValue;
 }
@@ -172,6 +196,8 @@ static float autoIdle(float cltCorrection) {
 static msg_t ivThread(int param) {
 	(void) param;
 	chRegSetThreadName("IdleValve");
+
+	autoIdleEnabled = (engineConfiguration->idleMode == IM_AUTO);
 
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
@@ -213,12 +239,14 @@ static msg_t ivThread(int param) {
 
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
+			baseIdlePosition = iacPosition;
 		} else if (!engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			// during cranking it's always manual mode, PID would make no sence during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
 			// save cranking position & cycles counter for taper transition
 			lastCrankingIacPosition = iacPosition;
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
+			baseIdlePosition = iacPosition;
 		} else {
 			if (engineConfiguration->idleMode == IM_MANUAL) {
 				// let's re-apply CLT correction
@@ -226,6 +254,9 @@ static msg_t ivThread(int param) {
 			} else {
 				iacPosition = autoIdle(cltCorrection);
 			}
+
+			// store 'base' iacPosition without adjustments
+			baseIdlePosition = iacPosition;
 			
 			percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 			float additionalAir = (float)engineConfiguration->iacByTpsTaper;

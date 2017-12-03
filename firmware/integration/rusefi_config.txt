@@ -854,7 +854,11 @@ spi_device_e accelerometerSpiDevice;
 	float[FSIO_CURVE_8] fsioCurve3;;"y",      1,     0,      -999,    1000.0,   3
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
-	int[842] unusedEnd;
+
+	int16_t idlePidDeactivationRPMMultiplier;Idle PID deactivation RPM (upper limit), in percent between 0 and 1000 of TargetIdleRPM;"%",        1,     0,  0,    1000,  0
+	int16_t idlePidActivationRPMMultiplier;Idle PID activation RPM (lower limit), in percent between 0 and 1000 of TargetIdleRPM;"%",        1,     0,  0,    1000,  0
+
+	int[841] unusedEnd;
 	
 
 end_struct
