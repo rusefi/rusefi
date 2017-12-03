@@ -22,10 +22,6 @@
 #include "can_hw.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
-#include "trigger_emulator.h"
-#endif /* EFI_EMULATE_POSITION_SENSORS */
-
 EXTERN_ENGINE;
 
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
@@ -158,9 +154,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
-	setTriggerEmulatorRPM(300); // lower RPM for slower blinking
-#endif /* EFI_EMULATE_POSITION_SENSORS */
+	boardConfiguration->triggerSimulatorFrequency = 300;
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
