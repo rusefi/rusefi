@@ -1,0 +1,9 @@
+rusEfi is trying to use latest stable ChibiOS with minimal changes
+
+At the moment rusEfi custom version of ChibiOS has the following changes:
+
+1) LSE auto-detection, see rusefi_lse_fix.h see LSE_TIMEOUT
+
+2) ?
+
+3) ?
