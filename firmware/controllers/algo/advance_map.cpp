@@ -33,6 +33,8 @@ extern TunerStudioOutputChannels tsOutputChannels;
 static ign_Map3D_t advanceMap("advance");
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
+static int minCrankingRpm = 0;
+
 static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
 
 //880	1260	1640	2020	2400	2780	3000	3380	3760	4140	4520	5000	5700	6500	7200	8000
@@ -65,6 +67,7 @@ bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(timingMode) == TM_FIXED)
 		return engineConfiguration->fixedTiming;
+
 	engine->m.beforeAdvance = GET_TIMESTAMP();
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
@@ -106,7 +109,12 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	angle_t angle;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		angle = engineConfiguration->crankingTimingAngle;
+		// Interpolate the cranking timing angle to the earlier running angle for faster engine start
+		angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		// interpolate not from zero, but starting from min. possible rpm detected
+		if (rpm < minCrankingRpm || minCrankingRpm == 0)
+			minCrankingRpm = rpm;
+		angle = interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, CONFIG(cranking.rpm), crankingToRunningTransitionAngle, rpm);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	}
