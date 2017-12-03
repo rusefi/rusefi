@@ -63,6 +63,8 @@ bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @return ignition timing angle advance before TDC
  */
 static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (CONFIG(timingMode) == TM_FIXED)
+		return engineConfiguration->fixedTiming;
 	engine->m.beforeAdvance = GET_TIMESTAMP();
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
@@ -106,11 +108,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		angle = engineConfiguration->crankingTimingAngle;
 	} else {
-		if (CONFIG(timingMode) == TM_DYNAMIC) {
-			angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-		} else {
-			angle = engineConfiguration->fixedTiming;
-		}
+		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	angle -= engineConfiguration->ignitionOffset;
 	fixAngle(angle, "getAdvance");
