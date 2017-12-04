@@ -93,7 +93,7 @@ public:
 	void reset();
 	void resetRunningCounters();
 
-	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	uint32_t runningRevolutionCounter;
 	/**
@@ -127,7 +127,7 @@ public:
 	 */
 	float instantRpmValue[PWM_PHASE_MAX_COUNT];
 	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

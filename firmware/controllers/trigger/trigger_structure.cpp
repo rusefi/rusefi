@@ -208,7 +208,7 @@ void TriggerState::resetRunningCounters() {
 	runningOrderingErrorCounter = 0;
 }
 
-void TriggerState::runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// empty base implementation
 }
 
@@ -237,7 +237,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	return instantRpm;
 }
 
-void TriggerStateWithRunningStatistics::runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
 		int prevIndex;
 		float instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
