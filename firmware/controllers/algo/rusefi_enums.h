@@ -378,7 +378,7 @@ typedef enum {
 } pin_output_mode_e;
 
 typedef enum {
-
+	// todo: drop this unused enum?
 	Force_4b_gpio_mode = ENUM_32_BITS,
 } gpio_mode_e;
 
@@ -726,8 +726,11 @@ typedef enum {
 	DBG_AUX_VALVES = 20,
 	DBG_ADC = 21,
 	
-	DBG__22 = 22,
-	DBG__23 = 23,
+	DBG_22 = 22,
+	DBG_23 = 23,
+	DBG_24 = 24,
+	DBG_25 = 25,
+	DBG_26 = 26,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
