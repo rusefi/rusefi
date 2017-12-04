@@ -1,6 +1,11 @@
 /**
  * @file lcd_controller.cpp
  *
+ * LCD is a tree-like set of menues controlled by a joystick. At the moment three actions are supported:
+ *  "next item"
+ *  "enter sub-menu"
+ *  "return one level up"
+ *
  * @date Aug 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
