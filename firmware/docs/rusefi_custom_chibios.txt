@@ -14,13 +14,7 @@ At the moment rusEfi custom version of ChibiOS has the following changes:
 
 6) Changes around "FLOAT_PRECISION" and ftoa() in os/hal/lib/streams/chprintf.c
 
-7) Move "(i2cp->state == I2C_STOP)" check in os/hal/ports/STM32/LLD/I2Cv*/i2c_lld.c
-
 8) Use local "struct tm *t" in os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c
-
-9) Remove some osalDbgAssert() in os/hal/ports/STM32/LLD/SPIv*/spi_lld.c
-
-10) Fix "gptp->tim->ARR = (uint32_t)(interval - 1);" in os/hal/ports/STM32/LLD/TIMv1/gpt_lld.c
 
 11) Fixes for UART4-UART8, USART_ISR_* flags USART_CR1_M in os/hal/ports/STM32/LLD/USARTv2/serial_lld.c and os/hal/ports/STM32/LLD/USARTv2/uart_lld.c
 
@@ -33,10 +27,6 @@ At the moment rusEfi custom version of ChibiOS has the following changes:
 15) Use QueryPerformanceCounter() instead of POSIX gettimeofday() in os/rt/ports/SIMIA32/chcore.c
 
 16) Change chSysHalt() and remove maxNesting in os/rt/src/chdebug.c
-
-17) Remove some of EXT_CH_MODE_DISABLED in testhal/STM32/STM32F3xx/EXT/main.c
-
-18) Change adcgrpcfg1 flags, palSetLineMode & minor fixes in testhal/STM32/STM32L4xx/GPT-ADC/main.c
 
 New files: 
 	os/common/startup/SIMIA32/compilers/GCC/rules.mk
