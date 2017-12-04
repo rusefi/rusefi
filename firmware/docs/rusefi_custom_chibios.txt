@@ -8,8 +8,6 @@ At the moment rusEfi custom version of ChibiOS has the following changes:
 
 3) Uncommented "ASMXOBJS" support in os/common/ports/ARMCMx/compilers/GCC/rules.mk
 
-4) Removed "__attribute__((weak))" in os/common/ports/ARMCMx/compilers/GCC/vectors.c
-
 5) Support for half/timeout-ISR for UART-DMA in /os/hal/include/uart.h and os/hal/ports/STM32/LLD/USARTv1/uart_lld.*
 
 6) Changes around "FLOAT_PRECISION" and ftoa() in os/hal/lib/streams/chprintf.c
@@ -17,8 +15,6 @@ At the moment rusEfi custom version of ChibiOS has the following changes:
 8) Use local "struct tm *t" in os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c
 
 11) Fixes for UART4-UART8, USART_ISR_* flags USART_CR1_M in os/hal/ports/STM32/LLD/USARTv2/serial_lld.c and os/hal/ports/STM32/LLD/USARTv2/uart_lld.c
-
-12) Use _usb_reset() instead of usb_lld_reset() in os/hal/ports/STM32/LLD/USBv1/usb_lld.c
 
 13) ON_LOCK_HOOK fix in os/rt/include/chdebug.h
 
