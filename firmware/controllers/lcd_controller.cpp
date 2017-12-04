@@ -6,6 +6,12 @@
  *  "enter sub-menu"
  *  "return one level up"
  *
+ * In case of a 20x4 display top three lines are three menu items you can scroll through and
+ * bottom line is error or warning line.
+ *
+ * By default the first line shows current RPM and time since boot in seconds.
+ * The "more" symbol points at the currently selected menu item.
+ *
  * @date Aug 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
