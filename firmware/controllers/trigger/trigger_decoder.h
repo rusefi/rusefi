@@ -118,8 +118,15 @@ private:
  */
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
+	/**
+	 * timestamp of each trigger wheel tooth
+	 */
 	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	/**
+	 * instant RPM calculated at this trigger wheel tooth
+	 */
 	float instantRpmValue[PWM_PHASE_MAX_COUNT];
+	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 

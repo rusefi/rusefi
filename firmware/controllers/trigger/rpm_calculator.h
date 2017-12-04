@@ -79,15 +79,22 @@ public:
 	uint32_t getRevolutionCounter(void);
 	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	uint32_t getRevolutionCounterSinceStart(void);
+	/**
+	 * RPM rate of change between current RPM and RPM measured during previous engine cycle
+	 * see also SC_RPM_ACCEL
+	 */
 	float getRpmAcceleration();
 	/**
 	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
 	 * Zero if engine is not running
 	 */
 	volatile int rpmValue;
+	/**
+	 * this is RPM on previous engine cycle.
+	 */
 	int previousRpmValue;
 	/**
-	 * This is a performance optimization: let's pre-calulate this each time RPM changes
+	 * This is a performance optimization: let's pre-calculate this each time RPM changes
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs;
