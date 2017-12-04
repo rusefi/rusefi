@@ -392,7 +392,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		}
 	}
 
-	runtimeStatistics(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 }
 
