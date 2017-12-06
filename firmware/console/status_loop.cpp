@@ -807,6 +807,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField6 = (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("iat", engineConfiguration->iat.adcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
 		break;
+	case DBG_22:
+		int prevIndex;
+		{
+			float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&prevIndex, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+			tsOutputChannels->debugFloatField1 = instantRpm;
+			tsOutputChannels->debugFloatField2 = instantRpm / engine->rpmCalculator.rpmValue;
+		}
+		break;
 	default:
 		;
 	}
