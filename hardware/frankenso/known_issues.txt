@@ -152,6 +152,10 @@
 149)                  INJ12 MCU trace is to close to PCB edge refence http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=390
 150)                  Diodes like D16 to D23 would be better if they were connected to the other side of the W## connections. 
 151) RESOLVED IN R0.5.1 Q701 and Q1001 should use same not obsolete chip, changed to Q1001 from SQ2301ES-T1-GE3 to SI2323DS-T1-E3
+152)                  R170 unify part number with R102/R103/R104
+153)                  unify 0805 LED packages in order to simplify BOM - no need to have any LED-0805_A like D2 while D1005 is LED-0805
+
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
