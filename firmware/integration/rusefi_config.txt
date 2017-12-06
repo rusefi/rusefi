@@ -67,6 +67,8 @@ struct_no_prefix engine_configuration_s
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 
 #define CLT_CURVE_SIZE 16
+#define CRANKING_CLT_IDLE_CURVE_SIZE 8
+
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
 
@@ -647,7 +649,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	bit secondTriggerChannelEnabled
 	bit needSecondTriggerInputDeprecated
 	bit isMapAveragingEnabled
-	bit anotherUnusedBit1
+	bit overrideCrankingIacSetting
 	bit anotherUnusedBit2
 	bit isTunerStudioEnabled
 	bit isWaveAnalyzerEnabled

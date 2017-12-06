@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 03 18:27:46 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 06 18:45:34 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1311,7 +1311,7 @@ typedef struct {
 	bool isMapAveragingEnabled : 1;
 	/**
 	offset 1484 bit 6 */
-	bool anotherUnusedBit1 : 1;
+	bool overrideCrankingIacSetting : 1;
 	/**
 	offset 1484 bit 7 */
 	bool anotherUnusedBit2 : 1;
@@ -2203,4 +2203,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 03 18:27:46 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 06 18:45:34 EST 2017
