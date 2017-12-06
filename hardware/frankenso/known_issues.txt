@@ -152,10 +152,12 @@
 149)                  INJ12 MCU trace is to close to PCB edge refence http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=390
 150)                  Diodes like D16 to D23 would be better if they were connected to the other side of the W## connections. 
 151) RESOLVED IN R0.5.1 Q701 and Q1001 should use same not obsolete chip, changed to Q1001 from SQ2301ES-T1-GE3 to SI2323DS-T1-E3
-152)                  R170 unify part number with R102/R103/R104
-153)                  unify 0805 LED packages in order to simplify BOM - no need to have any LED-0805_A like D2 while D1005 is LED-0805
-
-
+152) RESOLVED IN R0.5.2 R170 unify part number with R102/R103/R104, Change 5K to 5k, so they combine in the frankenso.csv BOM export. 
+153) RESOLVED IN R0.5.2 unify 0805 LED packages in order to simplify BOM - no need to have any LED-0805_A like D2 while D1005 is LED-0805 this combines them in the frankenso.csv BOM.
+154) RESOLVED IN R0.5.2 Change X1 value from CRYSTAL, to 8MHz such that the frankenso.csv BOM combines these items. 
+155) RESOLVED IN R0.5.2 Change R137, etc, from 1K to 1k to combine them in the  frankenso.csv BOM. 
+156) RESOLVED IN R0.5.2 Change Q701 value to 20V, to combine them in frankenso.csv BOM. 
+156) RESOLVED IN R0.5.2 Change several values which have the field designation like mfg# into MFG#, which allows combining items in frankenso.csv BOM.
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
