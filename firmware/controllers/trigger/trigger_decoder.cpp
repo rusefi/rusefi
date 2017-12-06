@@ -67,7 +67,7 @@ static Logging * logger;
 
 efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
 // the boolean flag is a performance optimization so that complex comparison is avoided if no error
-bool someSortOfTriggerError = false;
+static bool someSortOfTriggerError = false;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -335,7 +335,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				someSortOfTriggerError = true;
 
 				totalTriggerErrorCounter++;
-				if (engineConfiguration->isPrintTriggerSynchDetails || someSortOfTriggerError) {
+				if (CONFIG(isPrintTriggerSynchDetails) || someSortOfTriggerError) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 					scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 							currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
