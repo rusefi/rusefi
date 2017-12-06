@@ -23,6 +23,7 @@
 #define MAP_WINDOW_SIZE 8
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 #define CLT_CURVE_SIZE 16
+#define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
 #define AUX_DIGITAL_VALVE_COUNT 2
@@ -892,8 +893,8 @@
 #define needSecondTriggerInputDeprecated_offset_hex 5cc
 #define isMapAveragingEnabled_offset 1484
 #define isMapAveragingEnabled_offset_hex 5cc
-#define anotherUnusedBit1_offset 1484
-#define anotherUnusedBit1_offset_hex 5cc
+#define overrideCrankingIacSetting_offset 1484
+#define overrideCrankingIacSetting_offset_hex 5cc
 #define anotherUnusedBit2_offset 1484
 #define anotherUnusedBit2_offset_hex 5cc
 #define isTunerStudioEnabled_offset 1484
