@@ -158,6 +158,10 @@
 155) RESOLVED IN R0.5.2 Change R137, etc, from 1K to 1k to combine them in the  frankenso.csv BOM. 
 156) RESOLVED IN R0.5.2 Change Q701 value to 20V, to combine them in frankenso.csv BOM. 
 156) RESOLVED IN R0.5.2 Change several values which have the field designation like mfg# into MFG#, which allows combining items in frankenso.csv BOM.
+157)                  Special field/flag for native stm34-related components to simplify BOM if using external brain board
+158)                  add "virtual" or DNP note to all non-PCB headers like P31 P32 P48 P53 P49 P50 P55 P56 P57 P58
+159)                  unify DNP labels for all real but DNP components
+160)                  unify part number and value for most test points like P15 P24 P25 P10 P1002 W63 W64 P1502 etc
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
