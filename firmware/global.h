@@ -114,7 +114,7 @@ typedef unsigned int time_t;
 
 /**
  * this macro allows the compiled to figure out the complete static address, that's a performance
- * optimization
+ * optimization which is hopefully useful at least for anything trigger-related
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) _engine.x
