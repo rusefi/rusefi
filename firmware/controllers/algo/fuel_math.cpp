@@ -101,8 +101,10 @@ angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (isnan(engineLoad)) {
 		return 0; // error already reported
 	}
-	angle_t result = fuelPhaseMap.getValue(rpm, engineLoad) + CONFIG(extraInjectionOffset);
-	fixAngle(result, "inj offset");
+	angle_t value = fuelPhaseMap.getValue(rpm, engineLoad);
+	efiAssert(!cisnan(value), "inj offset#1", 0);
+	angle_t result =  value + CONFIG(extraInjectionOffset);
+	fixAngle(result, "inj offset#2");
 	return result;
 }
 
