@@ -237,7 +237,7 @@ int findIndex(const float array[], int size, float value) {
  */
 float interpolate2d(const char *msg, float value, float bin[], float values[], int size) {
 	if (isnan(value)) {
-		firmwareError(CUSTOM_OBD_55, "NaN in interpolate2d %s", msg);
+		firmwareError(CUSTOM_INTERPOLATE_NAN, "NaN in interpolate2d %s", msg);
 		return NAN;
 	}
 	int index = findIndexMsg("value", bin, size, value);
