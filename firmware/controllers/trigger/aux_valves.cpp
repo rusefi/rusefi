@@ -100,5 +100,12 @@ void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->engineState.auxValveEnd = interpolate2d("aux", x,
 			engineConfiguration->fsioCurve2Bins,
 			engineConfiguration->fsioCurve2, FSIO_CURVE_16);
+
+	if (engine->engineState.auxValveStart >= engine->engineState.auxValveEnd) {
+		// this is a fatal error to make this really visible
+		firmwareError(CUSTOM_AUX_OUT_OF_ORDER, "out of order at %f %f %f", x,
+				engine->engineState.auxValveStart,
+				engine->engineState.auxValveEnd);
+	}
 }
 
