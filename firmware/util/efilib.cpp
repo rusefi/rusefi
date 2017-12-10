@@ -22,7 +22,7 @@ int minI(int i1, int i2) {
 }
 
 /*
-float efiFloat(float value, float precision) {
+float efiFloor(float value, float precision) {
 	int a = (int) (value / precision);
 	return a * precision;
 }
