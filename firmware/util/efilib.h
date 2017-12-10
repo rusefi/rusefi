@@ -51,6 +51,10 @@ int atoi(const char *string);
   
 int absI(int32_t value);
 float absF(float value);
+/**
+ * Rounds value to specified precision.
+ * @param precision some pow of 10 value - for example, 100 for two digit precision
+ */
 float efiRound(float value, float precision);
 int maxI(int i1, int i2);
 int minI(int i1, int i2);

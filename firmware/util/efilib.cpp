@@ -21,8 +21,15 @@ int minI(int i1, int i2) {
 	return i1 < i2 ? i1 : i2;
 }
 
-float efiRound(float value, float precision) {
+/*
+float efiFloat(float value, float precision) {
 	int a = (int) (value / precision);
+	return a * precision;
+}
+*/
+
+float efiRound(float value, float precision) {
+	float a = rintf (value / precision);
 	return a * precision;
 }
 
