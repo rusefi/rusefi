@@ -58,9 +58,9 @@ void testIgnitionMapGenerator(void) {
 	setRpmBin(rpmBin, 16, 800, 7000);
 	assertEquals(650, rpmBin[0]);
 	assertEqualsM("@1", 800, rpmBin[1]);
-	assertEqualsM("@2", 1050, rpmBin[2]);
-	assertEqualsM("@3", 1300, rpmBin[3]);
-	assertEqualsM("@14", 4050, rpmBin[14]);
+	assertEqualsM("@2", 1100, rpmBin[2]);
+	assertEqualsM("rpm@3", 1400, rpmBin[3]);
+	assertEqualsM("rpm@14", 4700, rpmBin[14]);
 	assertEquals(7000, rpmBin[15]);
 
 
