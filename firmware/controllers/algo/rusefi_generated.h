@@ -24,8 +24,12 @@
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 #define CLT_CURVE_SIZE 16
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
+#define CLT_CRANKING_CURVE_SIZE 8
+#define IDLE_ADVANCE_CURVE_SIZE 8
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
+#define IDLE_VE_CURVE_SIZE 8
+#define IDLE_ADVANCE_CURVE_SIZE 
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define IAT_CURVE_SIZE 16
 #define VBAT_INJECTOR_CURVE_SIZE 8
@@ -895,14 +899,14 @@
 #define isMapAveragingEnabled_offset_hex 5cc
 #define overrideCrankingIacSetting_offset 1484
 #define overrideCrankingIacSetting_offset_hex 5cc
-#define anotherUnusedBit2_offset 1484
-#define anotherUnusedBit2_offset_hex 5cc
+#define useSeparateAdvanceForIdle_offset 1484
+#define useSeparateAdvanceForIdle_offset_hex 5cc
 #define isTunerStudioEnabled_offset 1484
 #define isTunerStudioEnabled_offset_hex 5cc
 #define isWaveAnalyzerEnabled_offset 1484
 #define isWaveAnalyzerEnabled_offset_hex 5cc
-#define anotherUnusedBit212_offset 1484
-#define anotherUnusedBit212_offset_hex 5cc
+#define useSeparateVeForIdle_offset 1484
+#define useSeparateVeForIdle_offset_hex 5cc
 #define isPrintTriggerSynchDetails_offset 1484
 #define isPrintTriggerSynchDetails_offset_hex 5cc
 #define isManualSpinningMode_offset 1484
@@ -1471,6 +1475,18 @@
 #define fsioCurve4_offset_hex cc8
 #define unusedEnd_offset 3304
 #define unusedEnd_offset_hex ce8
+#define cltCrankingCorrBins_offset 6480
+#define cltCrankingCorrBins_offset_hex 1950
+#define cltCrankingCorr _offset 6512
+#define cltCrankingCorr _offset_hex 1970
+#define idleAdvanceBins_offset 6544
+#define idleAdvanceBins_offset_hex 1990
+#define idleAdvance _offset 6576
+#define idleAdvance _offset_hex 19b0
+#define idleVeBins_offset 6608
+#define idleVeBins_offset_hex 19d0
+#define idleVe_offset 6640
+#define idleVe_offset_hex 19f0
 #define fsioFormulas1_offset 6672
 #define fsioFormulas1_offset_hex 1a10
 #define fsioFormulas2_offset 6872

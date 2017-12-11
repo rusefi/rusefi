@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 03 07:45:31 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 10:13:39 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -12,8 +12,12 @@ public class Fields {
 	public static final int MAP_WINDOW_SIZE = 8;
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
+	public static final int CRANKING_CLT_IDLE_CURVE_SIZE = 8;
+	public static final int CLT_CRANKING_CURVE_SIZE = 8;
+	public static final int IDLE_ADVANCE_CURVE_SIZE = 8;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int CLT_TIMING_CURVE_SIZE = 8;
+	public static final int IDLE_VE_CURVE_SIZE = 8;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int IAT_CURVE_SIZE = 16;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
@@ -613,11 +617,11 @@ public class Fields {
 	public static final int secondTriggerChannelEnabled_offset = 1484;
 	public static final int needSecondTriggerInputDeprecated_offset = 1484;
 	public static final int isMapAveragingEnabled_offset = 1484;
-	public static final int anotherUnusedBit1_offset = 1484;
-	public static final int anotherUnusedBit2_offset = 1484;
+	public static final int overrideCrankingIacSetting_offset = 1484;
+	public static final int useSeparateAdvanceForIdle_offset = 1484;
 	public static final int isTunerStudioEnabled_offset = 1484;
 	public static final int isWaveAnalyzerEnabled_offset = 1484;
-	public static final int anotherUnusedBit212_offset = 1484;
+	public static final int useSeparateVeForIdle_offset = 1484;
 	public static final int isPrintTriggerSynchDetails_offset = 1484;
 	public static final int isManualSpinningMode_offset = 1484;
 	public static final int twoWireBatchInjection_offset = 1484;
@@ -984,6 +988,15 @@ public class Fields {
 	public static final int fsioCurve4Bins_offset = 3240;
 	public static final int fsioCurve4_offset = 3272;
 	public static final int unusedEnd_offset = 3304;
+	public static final int cltCrankingCorrBins_offset = 6480;
+	public static final int cltCrankingCorrBins_offset_hex = 1950;
+	public static final int cltCrankingCorr _offset = 6512;
+	public static final int cltCrankingCorr _offset_hex = 1970;
+	public static final int idleAdvanceBins_offset = 6544;
+	public static final int idleAdvanceBins_offset_hex = 1990;
+	public static final int idleAdvance _offset = 6576;
+	public static final int idleVeBins_offset = 6608;
+	public static final int idleVe_offset = 6640;
 	public static final int fsioFormulas1_offset = 6672;
 	public static final int fsioFormulas2_offset = 6872;
 	public static final int fsioFormulas3_offset = 7072;
@@ -1509,11 +1522,11 @@ public class Fields {
 	public static final Field SECONDTRIGGERCHANNELENABLED = Field.create("SECONDTRIGGERCHANNELENABLED", 1484, FieldType.BIT, 3);
 	public static final Field NEEDSECONDTRIGGERINPUTDEPRECATED = Field.create("NEEDSECONDTRIGGERINPUTDEPRECATED", 1484, FieldType.BIT, 4);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1484, FieldType.BIT, 5);
-	public static final Field ANOTHERUNUSEDBIT1 = Field.create("ANOTHERUNUSEDBIT1", 1484, FieldType.BIT, 6);
-	public static final Field ANOTHERUNUSEDBIT2 = Field.create("ANOTHERUNUSEDBIT2", 1484, FieldType.BIT, 7);
+	public static final Field OVERRIDECRANKINGIACSETTING = Field.create("OVERRIDECRANKINGIACSETTING", 1484, FieldType.BIT, 6);
+	public static final Field USESEPARATEADVANCEFORIDLE = Field.create("USESEPARATEADVANCEFORIDLE", 1484, FieldType.BIT, 7);
 	public static final Field ISTUNERSTUDIOENABLED = Field.create("ISTUNERSTUDIOENABLED", 1484, FieldType.BIT, 8);
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1484, FieldType.BIT, 9);
-	public static final Field ANOTHERUNUSEDBIT212 = Field.create("ANOTHERUNUSEDBIT212", 1484, FieldType.BIT, 10);
+	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1484, FieldType.BIT, 10);
 	public static final Field ISPRINTTRIGGERSYNCHDETAILS = Field.create("ISPRINTTRIGGERSYNCHDETAILS", 1484, FieldType.BIT, 11);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1484, FieldType.BIT, 12);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1484, FieldType.BIT, 13);
