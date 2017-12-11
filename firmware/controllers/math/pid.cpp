@@ -56,7 +56,7 @@ float Pid::getValue(float target, float input, float dTime) {
 	if (iTerm > pid->maxValue)
 		iTerm = pid->maxValue;
 
-	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValye'
+	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValue'
 	if (iTerm < -pid->maxValue)
 		iTerm = -pid->maxValue;
 
