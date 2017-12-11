@@ -30,7 +30,11 @@ public class VariableRegistry extends TreeMap<String, String> {
         super(String.CASE_INSENSITIVE_ORDER);
     }
 
-    public String processLine(String line) {
+    /**
+     * This methos replaces variables references like @@var@@ with actual values
+     * An exception is thrown if we do not have such variable
+     */
+    public String applyVariables(String line) {
         Matcher m;
         while ((m = VAR.matcher(line)).find()) {
             String key = m.group(2);
