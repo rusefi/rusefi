@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 10:13:39 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 11:22:10 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -990,11 +990,11 @@ public class Fields {
 	public static final int unusedEnd_offset = 3304;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
-	public static final int cltCrankingCorr _offset = 6512;
-	public static final int cltCrankingCorr _offset_hex = 1970;
+	public static final int cltCrankingCorr_offset = 6512;
+	public static final int cltCrankingCorr_offset_hex = 1970;
 	public static final int idleAdvanceBins_offset = 6544;
 	public static final int idleAdvanceBins_offset_hex = 1990;
-	public static final int idleAdvance _offset = 6576;
+	public static final int idleAdvance_offset = 6576;
 	public static final int idleVeBins_offset = 6608;
 	public static final int idleVe_offset = 6640;
 	public static final int fsioFormulas1_offset = 6672;

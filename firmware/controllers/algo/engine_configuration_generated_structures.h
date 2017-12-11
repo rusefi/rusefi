@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 10:13:39 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 11:22:10 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2005,7 +2005,7 @@ typedef struct {
 	 * CLT-based cranking position multiplier for simple manual idle controller
 	 * offset 6512
 	 */
-	float cltCrankingCorr [CLT_CRANKING_CURVE_SIZE];
+	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE];
 	/**
 	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
 	 * offset 6544
@@ -2015,7 +2015,7 @@ typedef struct {
 	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
 	 * offset 6576
 	 */
-	float idleAdvance [IDLE_ADVANCE_CURVE_SIZE];
+	float idleAdvance[IDLE_ADVANCE_CURVE_SIZE];
 	/**
 	 * Optional VE table for Idle (see useSeparateVEForIdle)
 	 * offset 6608
@@ -2233,4 +2233,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 10:13:39 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 11:22:10 EST 2017
