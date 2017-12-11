@@ -17,7 +17,7 @@ import static com.rusefi.ConfigDefinition.EOL;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, null, false, null, null, 1, null, false);
+    public static final ConfigField VOID = new ConfigField("", null, false, null, null, 1, null, false);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\s([\\w\\d]+))?\\])?";
     private static final String namePattern = "[[\\w\\d\\s_]]+";
@@ -51,6 +51,9 @@ public class ConfigField {
 
     public ConfigField(String name, String comment, boolean isBit, String arraySizeAsText, String type,
                        int arraySize, String tsInfo, boolean isIterate) {
+        if (name == null)
+            throw new NullPointerException(comment + " " + isBit + " " + type);
+        assertNoWhitespaces(name);
         this.name = name;
         this.comment = comment;
         this.isBit = isBit;
@@ -66,6 +69,11 @@ public class ConfigField {
         this.isIterate = isIterate;
     }
 
+    public static void assertNoWhitespaces(String name) {
+        if (name.contains(" ") || name.contains("\t"))
+            throw new IllegalArgumentException("Invalid name: " + name);
+    }
+
     /**
      * @see ConfigDefinitionTest#testParseLine()
      */
@@ -74,7 +82,7 @@ public class ConfigField {
         if (!matcher.matches())
             return null;
 
-        String name = matcher.group(6);
+        String name = matcher.group(6).trim();
         String comment = matcher.group(8);
         String type = matcher.group(1);
         int arraySize;

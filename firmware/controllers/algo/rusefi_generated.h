@@ -1477,12 +1477,12 @@
 #define unusedEnd_offset_hex ce8
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
-#define cltCrankingCorr _offset 6512
-#define cltCrankingCorr _offset_hex 1970
+#define cltCrankingCorr_offset 6512
+#define cltCrankingCorr_offset_hex 1970
 #define idleAdvanceBins_offset 6544
 #define idleAdvanceBins_offset_hex 1990
-#define idleAdvance _offset 6576
-#define idleAdvance _offset_hex 19b0
+#define idleAdvance_offset 6576
+#define idleAdvance_offset_hex 19b0
 #define idleVeBins_offset 6608
 #define idleVeBins_offset_hex 19d0
 #define idleVe_offset 6640
