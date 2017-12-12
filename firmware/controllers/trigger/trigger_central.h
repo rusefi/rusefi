@@ -54,7 +54,7 @@ efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void hwHandleShaftSignal(trigger_event_e signal);
 void hwHandleVvtCamSignal(trigger_value_e front);
-float getTriggerDutyCycle(int index);
+
 void initTriggerCentral(Logging *sharedLogger);
 void printAllCallbacksHistogram(void);
 void printAllTriggers();
