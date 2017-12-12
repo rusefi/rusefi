@@ -109,7 +109,7 @@ private:
 	efitime_t totalEventCountBase;
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
-	efitime_t prevCycleDuration;
+
 };
 
 

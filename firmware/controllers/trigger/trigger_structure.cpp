@@ -183,7 +183,6 @@ void TriggerState::reset() {
 	currentDuration = 0;
 	curSignal = SHAFT_PRIMARY_FALLING;
 	prevSignal = SHAFT_PRIMARY_FALLING;
-	prevCycleDuration = 0;
 	startOfCycleNt = 0;
 
 	resetRunningCounters();

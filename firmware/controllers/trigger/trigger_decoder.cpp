@@ -80,11 +80,7 @@ bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return currentCycle.current_index < TRIGGER_SHAPE(size);
 }
 
-float TriggerState::getTriggerDutyCycle(int index) {
-	float time = prevTotalTime[index];
 
-	return 100 * time / prevCycleDuration;
-}
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
@@ -121,7 +117,6 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 		cycleCallback(this); \
 	} \
 	memcpy(prevTotalTime, currentCycle.totalTimeNt, sizeof(prevTotalTime)); \
-	prevCycleDuration = nowNt - startOfCycleNt; \
 	startOfCycleNt = nowNt; \
 	resetCurrentCycleState(); \
 	intTotalEventCounter(); \
