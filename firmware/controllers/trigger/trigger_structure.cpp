@@ -188,7 +188,7 @@ void TriggerState::reset() {
 	resetRunningCounters();
 	resetCurrentCycleState();
 	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
-	memset(prevTotalTime, 0, sizeof(prevTotalTime));
+
 	totalEventCountBase = 0;
 	isFirstEvent = true;
 }
