@@ -75,11 +75,7 @@ public:
 	efitime_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
-	/**
-	 * Total time result for previous trigger cycle
-	 * See totalTimeNt
-	 */
-	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
+
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	/**

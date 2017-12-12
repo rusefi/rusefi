@@ -116,7 +116,6 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	if (cycleCallback != NULL) { \
 		cycleCallback(this); \
 	} \
-	memcpy(prevTotalTime, currentCycle.totalTimeNt, sizeof(prevTotalTime)); \
 	startOfCycleNt = nowNt; \
 	resetCurrentCycleState(); \
 	intTotalEventCounter(); \
