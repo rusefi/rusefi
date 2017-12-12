@@ -162,6 +162,10 @@
 158)                  add "virtual" or DNP note to all non-PCB headers like P31 P32 P48 P53 P49 P50 P55 P56 P57 P58
 159)                  unify DNP labels for all real but DNP components
 160)                  unify part number and value for most test points like P15 P24 P25 P10 P1002 W63 W64 P1502 etc
+161)                  unify FB1 and FB701 footprint
+162)                  unify useful 0R jumpers packages and part numbers JP471 JPO1 JPO6 JPO6 W1002 W1003
+163)                  unify large-resistance resistors to same value? R231 R241 R251 R271 R351 R166
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
