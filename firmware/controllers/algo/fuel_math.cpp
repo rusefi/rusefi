@@ -128,6 +128,7 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX)
 }
 
 /**
+ * This is more like MOSFET duty cycle since durations include injector lag
  * @see getCoilDutyCycle
  */
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
