@@ -175,9 +175,6 @@ static void printSensors(Logging *log, bool fileFormat) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	rpm = getRpmE(engine);
 	reportSensorI(log, fileFormat, "rpm", "RPM", rpm); // log column 2
-
-//	reportSensorF(log, fileFormat, "TRG_0_DUTY", "%", getTriggerDutyCycle(0), 2);
-//	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
 #endif
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
