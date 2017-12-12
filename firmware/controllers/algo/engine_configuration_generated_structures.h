@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 06 18:45:34 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 11:22:10 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1314,7 +1314,7 @@ typedef struct {
 	bool overrideCrankingIacSetting : 1;
 	/**
 	offset 1484 bit 7 */
-	bool anotherUnusedBit2 : 1;
+	bool useSeparateAdvanceForIdle : 1;
 	/**
 	offset 1484 bit 8 */
 	bool isTunerStudioEnabled : 1;
@@ -1323,7 +1323,7 @@ typedef struct {
 	bool isWaveAnalyzerEnabled : 1;
 	/**
 	offset 1484 bit 10 */
-	bool anotherUnusedBit212 : 1;
+	bool useSeparateVeForIdle : 1;
 	/**
 	 * enable trigger_details
 	offset 1484 bit 11 */
@@ -1987,8 +1987,8 @@ typedef struct {
 	/**
 	 * offset 3304
 	 */
-	int unusedEnd[842];
-	/** total size 6672*/
+	int unusedEnd[794];
+	/** total size 6480*/
 } engine_configuration_s;
 
 typedef struct {
@@ -1996,6 +1996,36 @@ typedef struct {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * CLT-based cranking position multiplier for simple manual idle controller
+	 * offset 6480
+	 */
+	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE];
+	/**
+	 * CLT-based cranking position multiplier for simple manual idle controller
+	 * offset 6512
+	 */
+	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE];
+	/**
+	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
+	 * offset 6544
+	 */
+	float idleAdvanceBins[IDLE_ADVANCE_CURVE_SIZE];
+	/**
+	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
+	 * offset 6576
+	 */
+	float idleAdvance[IDLE_ADVANCE_CURVE_SIZE];
+	/**
+	 * Optional VE table for Idle (see useSeparateVEForIdle)
+	 * offset 6608
+	 */
+	float idleVeBins[IDLE_VE_CURVE_SIZE];
+	/**
+	 *  Optional VE table for Idle (see useSeparateVEForIdle)
+	 * offset 6640
+	 */
+	float idleVe[IDLE_VE_CURVE_SIZE];
 	/**
 	 * offset 6672
 	 */
@@ -2203,4 +2233,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 06 18:45:34 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Dec 11 11:22:10 EST 2017

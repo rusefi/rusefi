@@ -120,7 +120,7 @@ public class ConfigDefinition {
 
         String line;
         while ((line = fr.readLine()) != null) {
-            line = VariableRegistry.INSTANCE.processLine(line);
+            line = VariableRegistry.INSTANCE.applyVariables(line);
             fw.write(line + ConfigDefinition.EOL);
         }
         fw.close();
@@ -149,7 +149,7 @@ public class ConfigDefinition {
                 prefix.append(line + ConfigDefinition.EOL);
 
             if (isAfterEndTag)
-                postfix.append(VariableRegistry.INSTANCE.processLine(line) + ConfigDefinition.EOL);
+                postfix.append(VariableRegistry.INSTANCE.applyVariables(line) + ConfigDefinition.EOL);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
@@ -206,7 +206,7 @@ public class ConfigDefinition {
                 String customSize = line.substring(0, index);
 
                 String tunerStudioLine = line.substring(index).trim();
-                tunerStudioLine = VariableRegistry.INSTANCE.processLine(tunerStudioLine);
+                tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
                 int size;
                 try {
                     size = Integer.parseInt(customSize);
