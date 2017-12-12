@@ -546,12 +546,6 @@ void triggerInfo(void) {
 #endif /* EFI_PROD_CODE */
 }
 
-#if ! EFI_UNIT_TEST
-float getTriggerDutyCycle(int index) {
-	return engine->triggerCentral.triggerState.getTriggerDutyCycle(index);
-}
-#endif
-
 static void resetRunningTriggerCounters() {
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 	engine->triggerCentral.resetCounters();
