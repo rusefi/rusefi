@@ -4,7 +4,10 @@ import com.rusefi.config.FieldType;
 import com.rusefi.config.Fields;
 import eu.hansolo.steelseries.tools.BackgroundColor;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.rusefi.config.Fields.*;
 
@@ -209,8 +212,8 @@ public enum Sensor {
         offset = -1;
     }
 
-    public static ArrayList<Sensor> getSensorsForCategory(String category) {
-        final ArrayList<Sensor> sensors = new ArrayList<>();
+    public static Collection<Sensor> getSensorsForCategory(String category) {
+        final Set<Sensor> sensors = new TreeSet<>(Comparator.comparing(o -> o.getName().toLowerCase()));
 
         for (final Sensor sensor : values()) {
             if (sensor.category.getName().equals(category)) {
