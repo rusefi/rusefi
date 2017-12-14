@@ -30,7 +30,7 @@ public enum Sensor {
     MAF("MAF", SensorCategory.SENSOR_INPUTS, "Volts", 4),
     MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
 
-    PPS("pedal", SensorCategory.SENSOR_INPUTS, "%", 100),
+    PPS("pedal", SensorCategory.SENSOR_INPUTS, "%", 100), // pedal position sensor
     knockCount("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
     KnockValue("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
 
@@ -61,6 +61,8 @@ public enum Sensor {
     DWELL2("Input dwl #3", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
     DWELL3("Input dwl #4", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
     DWELL0_SD("Input d #1", SensorCategory.SNIFFING, "std dev", 100),
+
+    ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
 
 
     TOTAL_DWELL0("Input tdwl #1", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
@@ -96,7 +98,7 @@ public enum Sensor {
     FUEL_LAG("F Lag", SensorCategory.FUEL, "", 0, 30),
 
     IAT(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 8, BackgroundColor.WHITE, -40, 150, "C"),
-    TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"),
+    TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"), // throttle position sensor
     CRANKING_BASE(SensorCategory.FUEL, FieldType.FLOAT, 44, BackgroundColor.MUD, 0, 30, "ms"),
     FUEL_BASE(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
     T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
