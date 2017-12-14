@@ -114,6 +114,8 @@ private:
  */
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
+	TriggerStateWithRunningStatistics();
+	float instantRpm;
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
