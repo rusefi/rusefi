@@ -1,6 +1,9 @@
 package com.rusefi.ui.widgets;
 
 import com.rusefi.FileLog;
+import com.rusefi.SensorSnifferCentral;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
 
 import javax.swing.*;
@@ -19,17 +22,34 @@ import java.util.concurrent.TimeUnit;
  */
 public class EtbTestSequence {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private boolean isStarted;
+
+    private ClosedLoopControlQualityMetric metric = new ClosedLoopControlQualityMetric(
+            SensorCentral.getInstance().getValueSource(Sensor.PPS),
+            SensorCentral.getInstance().getValueSource(Sensor.TPS),
+            Sensor.ETB_CONTROL_QUALITY
+    );
 
     private final static long SECOND = 1000;
 
     private final JButton button = new JButton("ETB Test");
 
-    private static EtbTarget FIRST_STEP = new EtbTarget(SECOND, 0)
+    private static EtbTarget FIRST_STEP = new EtbTarget(SECOND, 0);
+
+    static {
+        FIRST_STEP
             .addNext(5 * SECOND, 30)
             .addNext(10 * SECOND, 50);
+    }
 
     public EtbTestSequence() {
-        button.addActionListener(e -> FIRST_STEP.execute(executor));
+        button.addActionListener(e -> {
+            if (!isStarted) {
+                metric.start();
+                isStarted = true;
+            }
+            FIRST_STEP.execute(executor);
+        });
     }
 
     public JButton getButton() {
