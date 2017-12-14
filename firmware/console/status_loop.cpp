@@ -807,7 +807,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_22:
 		int prevIndex;
 		{
-			float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&prevIndex, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+			float instantRpm = engine->triggerCentral.triggerState.instantRpm;
 			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / engine->rpmCalculator.rpmValue;
 		}

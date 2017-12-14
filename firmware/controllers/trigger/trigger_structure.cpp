@@ -211,12 +211,17 @@ void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SU
 	// empty base implementation
 }
 
+TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() {
+	instantRpm = 0;
+}
+
 float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
 	/**
 	 * Here we calculate RPM based on last 90 degrees
 	 */
-	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
-	// todo: make this '90' depend on cylinder count?
+	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[current_index]);
+	// todo: make this '90' depend on cylinder count or trigger shape?
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle");
 	// todo: prevIndex should be pre-calculated
@@ -230,16 +235,20 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	fixAngle(angleDiff, "angleDiff");
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
-	instantRpmValue[currentCycle.current_index] = instantRpm;
-	timeOfLastEvent[currentCycle.current_index] = nowNt;
+	instantRpmValue[current_index] = instantRpm;
+	timeOfLastEvent[current_index] = nowNt;
 
 	return instantRpm;
 }
 
 void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (engineConfiguration->debugMode == DBG_22) {
+		int prevIndex;
+		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
 		int prevIndex;
-		float instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
