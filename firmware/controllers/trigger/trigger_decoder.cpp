@@ -51,6 +51,8 @@
 EXTERN_ENGINE
 ;
 
+static TriggerState initState CCM_OPTIONAL;
+
 static cyclic_buffer<int> errorDetection;
 static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
 
@@ -79,8 +81,6 @@ bool isTriggerDecoderError(void) {
 bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return currentCycle.current_index < TRIGGER_SHAPE(size);
 }
-
-
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
@@ -389,77 +389,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 }
-
-void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
-
-	const float crankW = 360 / 3 / 2;
-
-
-	trigger_wheel_e crank = T_SECONDARY;
-
-	s->addEvent2(10, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(50, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-
-	float a = 2 * crankW;
-
-	// #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	// #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	// #3/3
-	a += crankW;
-	a += crankW;
-
-	// 2nd #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	// 2nd #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->isSynchronizationNeeded = false;
-}
-
-void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float engineCycle = getEngineCycle(operationMode);
-
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
-	s->addEvent2(180, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(360, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->addEvent2(540, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
-}
-
-void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
-	int totalTeethCount = 60;
-	int skippedCount = 2;
-
-	s->addEvent2(2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(20, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
-
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
-}
-
-static TriggerState initState CCM_OPTIONAL;
 
 /**
  * External logger is needed because at this point our logger is not yet initialized
