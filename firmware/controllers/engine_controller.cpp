@@ -274,7 +274,7 @@ static void periodicSlowCallback(Engine *engine) {
 	engine->checkShutdown();
 
 #if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
-	runFsio();
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_FSIO */
 
 	cylinderCleanupControl(engine);
