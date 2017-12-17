@@ -272,23 +272,25 @@ static const char *getGpioPinName(int index) {
 	return NULL;
 }
 
+float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (fsioLogics[index] == NULL) {
+		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(boardConfiguration->fsioOutputPins[index]));
+		return NAN;
+	} else {
+		return calc.getValue2(engine->fsioLastValue[index], fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+}
+
 /**
  * @param index from zero for (FSIO_COMMAND_COUNT - 1)
  */
-static void handleFsio(Engine *engine, int index) {
+static void handleFsio(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (boardConfiguration->fsioOutputPins[index] == GPIO_UNASSIGNED)
 		return;
 
 	bool isPwmMode = boardConfiguration->fsioFrequency[index] != NO_PWM;
 
-	float fvalue;
-	if (fsioLogics[index] == NULL) {
-		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(boardConfiguration->fsioOutputPins[index]));
-		fvalue = NAN;
-	} else {
-		fvalue = calc.getValue2(engine->fsioLastValue[index], fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	engine->fsioLastValue[index] = fvalue;
+	engine->fsioLastValue[index] = getFsioOutputValue(index PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (isPwmMode) {
 		fsioPwm[index].setSimplePwmDutyCycle(fvalue);
@@ -365,9 +367,12 @@ static void setFsioFrequency(int index, int frequency) {
 	}
 }
 
-void runFsio(void) {
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		handleFsio(engine, i);
+/**
+ * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
+ */
+void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	for (int index = 0; index < FSIO_COMMAND_COUNT; index++) {
+		handleFsio(index PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 #if EFI_FUEL_PUMP || defined(__DOXYGEN__)
