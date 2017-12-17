@@ -57,7 +57,6 @@
 #include "engine.h"
 #include "lcd_controller.h"
 #include "settings.h"
-#include "rusefi_outputs.h"
 
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
@@ -78,8 +77,6 @@ extern bool main_loop_started;
 #if EFI_FSIO || defined(__DOXYGEN__)
 #include "fsio_impl.h"
 #endif /* EFI_FSIO */
-
-static bool subscription[(int) RO_LAST_ELEMENT];
 
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
@@ -357,19 +354,7 @@ static void printState(void) {
 //		ITM_SendChar(msg[i]);
 //	}
 
-	if (subscription[(int) RO_TOTAL_REVOLUTION_COUNTER])
-		debugInt(&logger, "ckp_c", getCrankEventCounter());
-	if (subscription[(int) RO_RUNNING_REVOLUTION_COUNTER])
-		debugInt(&logger, "ckp_r", engine->triggerCentral.triggerState.runningRevolutionCounter);
 
-	if (subscription[(int) RO_RUNNING_TRIGGER_ERROR])
-		debugInt(&logger, "trg_r_errors", engine->triggerCentral.triggerState.runningTriggerErrorCounter);
-
-	if (subscription[(int) RO_RUNNING_ORDERING_TRIGGER_ERROR])
-		debugInt(&logger, "trg_r_order_errors", engine->triggerCentral.triggerState.runningOrderingErrorCounter);
-
-	if (subscription[(int) RO_WAVE_CHART_CURRENT_SIZE])
-		debugInt(&logger, "wave_chart_current", 0);
 
 //	debugInt(&logger, "idl", getIdleSwitch());
 
@@ -785,7 +770,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		}
 		break;
 	case DBG_FSIO_EXPRESSION:
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_PROD_CODE && EFI_FSIO || defined(__DOXYGEN__)
 		tsOutputChannels->debugFloatField1 = getFsioOutputValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField2 = getFsioOutputValue(1 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField3 = getFsioOutputValue(2 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -820,7 +805,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
 		break;
 	case DBG_INSTANT_RPM:
-		int prevIndex;
 		{
 			float instantRpm = engine->triggerCentral.triggerState.instantRpm;
 			tsOutputChannels->debugFloatField1 = instantRpm;
@@ -915,14 +899,6 @@ void prepareTunerStudioOutputs(void) {
 
 #endif /* EFI_TUNER_STUDIO */
 
-static void subscribe(int outputOrdinal) {
-	subscription[outputOrdinal] = true;
-}
-
-static void unsubscribe(int outputOrdinal) {
-	subscription[outputOrdinal] = false;
-}
-
 void initStatusLoop(void) {
 	setFullLog(INITIAL_FULL_LOG);
 	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
@@ -934,15 +910,7 @@ void initStatusLoop(void) {
 #endif
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	subscription[(int) RO_TRG1_DUTY] = true;
-	subscription[(int) RO_TRG2_DUTY] = true;
-	subscription[(int) RO_TRG3_DUTY] = false;
-	subscription[(int) RO_TRG4_DUTY] = false;
-	subscription[(int) RO_TOTAL_REVOLUTION_COUNTER] = true;
-	subscription[(int) RO_RUNNING_REVOLUTION_COUNTER] = false;
 
-	addConsoleActionI("subscribe", subscribe);
-	addConsoleActionI("unsubscribe", unsubscribe);
 	addConsoleActionI("set_led_blinking_period", setBlinkingPeriod);
 
 	addConsoleAction("status", printStatus);
