@@ -289,3 +289,8 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 
 	return baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
 }
+
+float getFuelRate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// todo: L/h
+	return 0.0f;
+}
