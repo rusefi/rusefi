@@ -16,5 +16,6 @@
 
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setTriggerEmulatorRPM(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration);
 
 #endif /* DIST_EMULATOR_H_ */
