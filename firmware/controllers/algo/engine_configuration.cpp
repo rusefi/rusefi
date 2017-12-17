@@ -90,6 +90,10 @@
 #include "HIP9011.h"
 #endif /* EFI_PROD_CODE */
 
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#include "trigger_emulator.h"
+#endif /* EFI_EMULATE_POSITION_SENSORS */
+
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 #include "tunerstudio.h"
 #endif
@@ -172,7 +176,9 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	onConfigurationChangeTriggerCallback(&activeConfiguration);
 #endif /* EFI_SHAFT_POSITION_INPUT */
-
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 	rememberCurrentConfiguration();
 }
 

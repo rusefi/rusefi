@@ -30,6 +30,14 @@ static OutputPin emulatorOutputs[3];
 
 EXTERN_ENGINE;
 
+void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
+	if (engineConfiguration->bc.triggerSimulatorFrequency ==
+			previousConfiguration->bc.triggerSimulatorFrequency) {
+		return;
+	}
+	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency);
+}
+
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 
