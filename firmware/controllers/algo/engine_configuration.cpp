@@ -993,6 +993,21 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardConfigurationOverrides();
 #endif
+
+	/**
+	 * to test:
+	 * set_fsio_setting 1 5000
+	 * set_fsio_output_pin 1 PE3
+	 * set debug_mode 23
+	 * writeconfig
+	 * <reboot ECU>
+	 * fsioinfo
+	 */
+	boardConfiguration->fsio_setting[0] = 5000;
+	// simple warning light as default configuration
+	// set_fsio_expression 1 "rpm > fsio_setting(1)"
+	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_ENGINE_PARAMETER_SUFFIX);
+
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {

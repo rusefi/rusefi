@@ -2,6 +2,9 @@
  * @file fsio_impl.cpp
  * @brief FSIO as it's used for GPIO
  *
+ * set debug_mode 23
+ * https://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
+ *
  * @date Oct 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
@@ -173,6 +176,8 @@ static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 	scheduleMsg(logger, "FSIO aux pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
+static void showFsioInfo(void);
+
 static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
@@ -187,6 +192,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	}
 	boardConfiguration->fsioOutputPins[index] = pin;
 	scheduleMsg(logger, "FSIO output pin #%d [%s]", (index + 1), hwPortname(pin));
+	showFsioInfo();
 }
 #endif /* EFI_PROD_CODE */
 
@@ -195,13 +201,13 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 /**
  * index is between zero and LE_COMMAND_LENGTH-1
  */
-void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setFsioExt(int index, brain_pin_e pin, const char * formula, int pwmFrequency DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	boardConfiguration->fsioOutputPins[index] = pin;
-	int len = strlen(exp);
+	int len = strlen(formula);
 	if (len >= LE_COMMAND_LENGTH) {
 		return;
 	}
-	strcpy(config->fsioFormulas[index], exp);
+	strcpy(config->fsioFormulas[index], formula);
 	boardConfiguration->fsioFrequency[index] = pwmFrequency;
 }
 
@@ -285,8 +291,10 @@ float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @param index from zero for (FSIO_COMMAND_COUNT - 1)
  */
 static void handleFsio(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (boardConfiguration->fsioOutputPins[index] == GPIO_UNASSIGNED)
+	if (boardConfiguration->fsioOutputPins[index] == GPIO_UNASSIGNED) {
+		engine->fsioLastValue[index] = NAN;
 		return;
+	}
 
 	bool isPwmMode = boardConfiguration->fsioFrequency[index] != NO_PWM;
 
