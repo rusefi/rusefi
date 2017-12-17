@@ -699,6 +699,9 @@ typedef enum {
 	Force_4b_brain_pin_e = ENUM_32_BITS,
 } brain_pin_e;
 
+/**
+ * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
+ */
 typedef enum {
 	DBG_ALTERNATOR_PID = 0,
 	DBG_TPS_ACCEL = 1,
