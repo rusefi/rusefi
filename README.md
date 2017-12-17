@@ -12,6 +12,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 12/17/2017    | r14892    | bugfix #513: console: erase on older chips does not work |
 | 11/26/2017    | r14789    | bugfix #500: set_rpn_expression command is broken |
 | 11/23/2017    | r14779    | bugfix #497: engine does not start with SD card |
 | 11/19/2017    | r14766    | improvement #496: console flasher to support older boards |
