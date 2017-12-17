@@ -290,7 +290,8 @@ static void handleFsio(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	bool isPwmMode = boardConfiguration->fsioFrequency[index] != NO_PWM;
 
-	engine->fsioLastValue[index] = getFsioOutputValue(index PASS_ENGINE_PARAMETER_SUFFIX);
+	float fvalue = getFsioOutputValue(index PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->fsioLastValue[index] = fvalue;
 
 	if (isPwmMode) {
 		fsioPwm[index].setSimplePwmDutyCycle(fvalue);
