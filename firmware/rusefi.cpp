@@ -250,6 +250,9 @@ static char UNUSED_RAM_SIZE[7000];
 
 static char UNUSED_CCM_SIZE[14000] CCM_OPTIONAL;
 
+/**
+ * See also VCS_VERSION
+ */
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE[0] != 0)
 		return 123; // this is here to make the compiler happy about the unused array
