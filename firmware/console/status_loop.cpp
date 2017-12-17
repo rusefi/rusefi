@@ -738,6 +738,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
 
 	switch (engineConfiguration->debugMode)	{
+	case DBG_STATUS:
+		tsOutputChannels->debugFloatField1 = getTimeNowSeconds();
+		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
+		break;
 	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 		break;
