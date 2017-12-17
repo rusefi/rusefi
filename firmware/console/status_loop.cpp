@@ -73,7 +73,11 @@ extern bool main_loop_started;
 #include "max31855.h"
 #include "vehicle_speed.h"
 #include "SingleTimerExecutor.h"
-#endif
+#endif /* EFI_PROD_CODE */
+
+#if EFI_FSIO || defined(__DOXYGEN__)
+#include "fsio_impl.h"
+#endif /* EFI_FSIO */
 
 static bool subscription[(int) RO_LAST_ELEMENT];
 
@@ -780,6 +784,17 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
 		}
 		break;
+	case DBG_FSIO_EXPRESSION:
+#if EFI_FSIO || defined(__DOXYGEN__)
+		tsOutputChannels->debugFloatField1 = getFsioOutputValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField2 = getFsioOutputValue(1 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField3 = getFsioOutputValue(2 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField4 = getFsioOutputValue(3 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField5 = getFsioOutputValue(4 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField6 = getFsioOutputValue(5 PASS_ENGINE_PARAMETER_SUFFIX);
+		tsOutputChannels->debugFloatField7 = getFsioOutputValue(6 PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_FSIO */
+		break;
 	case DBG_VEHICLE_SPEED_SENSOR:
 		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
 		break;
@@ -804,7 +819,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField6 = (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("iat", engineConfiguration->iat.adcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
 		break;
-	case DBG_22:
+	case DBG_INSTANT_RPM:
 		int prevIndex;
 		{
 			float instantRpm = engine->triggerCentral.triggerState.instantRpm;

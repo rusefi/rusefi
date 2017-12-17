@@ -242,7 +242,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 }
 
 void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (engineConfiguration->debugMode == DBG_22) {
+	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
 		int prevIndex;
 		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}

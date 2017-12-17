@@ -726,8 +726,8 @@ typedef enum {
 	DBG_AUX_VALVES = 20,
 	DBG_ADC = 21,
 	
-	DBG_22 = 22,
-	DBG_23 = 23,
+	DBG_INSTANT_RPM = 22,
+	DBG_FSIO_EXPRESSION = 23,
 	DBG_24 = 24,
 	DBG_25 = 25,
 	DBG_26 = 26,
