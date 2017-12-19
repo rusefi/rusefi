@@ -59,12 +59,15 @@
 #include "engine.h"
 #include "efilib2.h"
 #include "aux_valves.h"
+#include "backup_ram.h"
 
 EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
 
 static const char *prevOutputName = NULL;
+
+static InjectionEvent primeInjEvent;
 
 static Logging *logger;
 #if ! EFI_UNIT_TEST
@@ -512,6 +515,47 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	}
 }
 
+// Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
+static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
+	// So we check and update the ignition switch counter in non-volatile backup-RAM
+	uint32_t ignSwitchCounter = backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
+	// if we're just toying with the ignition switch, give it another chance eventually...
+	if (ignSwitchCounter > 10)
+		ignSwitchCounter = 0;
+	// start prime injection if this is a 'fresh start'
+	if (ignSwitchCounter == 0) {
+    	// fill-in the prime event struct
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+    	primeInjEvent.engine = engine;
+#endif
+    	primeInjEvent.ownIndex = 0;
+    	primeInjEvent.isSimultanious = true;
+
+    	scheduling_s *sDown = &ENGINE(fuelActuators[0]).signalTimerDown;
+    	startSimultaniousInjection(&primeInjEvent);
+		efitimeus_t turnOffTime = getTimeNowUs() + MS2US(CONFIG(startOfCrankingPrimingPulse));
+		scheduleTask(sDown, turnOffTime, (schfunc_t) &endSimultaniousInjection, &primeInjEvent);
+	}
+	// we'll reset it later when the engine starts
+	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
+#endif /* EFI_PROD_CODE */
+}
+
+void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	static bool counterWasReset = false;
+	if (counterWasReset)
+		return;
+
+	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
+		counterWasReset = true;
+	}
+#endif /* EFI_PROD_CODE */
+}
+
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "engine_sniffer.h"
 #endif
@@ -554,6 +598,11 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 #endif /* EFI_HISTOGRAMS */
 
 	addTriggerEventListener(mainTriggerCallback, "main loop", engine);
+
+    // We start prime injection pulse at the early init stage - don't wait for the engine to start spinning!
+    if (CONFIG(startOfCrankingPrimingPulse) > 0)
+    	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 }
 
 #endif /* EFI_ENGINE_CONTROL */
