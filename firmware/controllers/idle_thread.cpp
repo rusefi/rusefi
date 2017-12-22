@@ -46,7 +46,7 @@ EXTERN_ENGINE
 static bool shouldResetPid = false;
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
-// Use new PIC with CIC integrator
+// Use new PID with CIC integrator
 static PidCic idlePid(&engineConfiguration->idleRpmPid);
 #else
 static Pid idlePid(&engineConfiguration->idleRpmPid);
@@ -173,7 +173,7 @@ static float autoIdle(float cltCorrection) {
 	// get Target RPM for Auto-PID from a separate table
 	float clt = engine->sensors.clt;
 	int adjustedTargetRpm = cisnan(clt) ? 0 : interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
-	// use fixed parameter is there's a problem with the table
+	// use fixed parameter if there's a problem with the table
 	if (adjustedTargetRpm == 0)
 		adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
 
