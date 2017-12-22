@@ -19,7 +19,10 @@ typedef enum {
 	BACKUP_STEPPER_POS,
 	/**
 	 * Ignition switch counter, 8-bit (stored in BKP0R 16..23)
-	 * Used for prime injection pulse.
+	 * The counter stores the number of times the ignition switch is turned on. Used for prime injection pulse.
+	 * We need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
+	 * So we check and update the ignition switch counter in non-volatile backup-RAM.
+	 * See startPrimeInjectionPulse() in controllers/trigger/main_trigger_callback.cpp
 	 */
 	BACKUP_IGNITION_SWITCH_COUNTER,
 } backup_ram_e;
