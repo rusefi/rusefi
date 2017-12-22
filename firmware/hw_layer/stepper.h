@@ -9,7 +9,6 @@
 
 #include "main.h"
 #include "efiGpio.h"
-#include "backup_ram.h"
 
 class StepperMotor {
 public:
