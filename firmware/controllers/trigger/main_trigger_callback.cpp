@@ -526,15 +526,15 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		ignSwitchCounter = 0;
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
-    	// fill-in the prime event struct
+		// fill-in the prime event struct
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-    	primeInjEvent.engine = engine;
+		primeInjEvent.engine = engine;
 #endif
-    	primeInjEvent.ownIndex = 0;
-    	primeInjEvent.isSimultanious = true;
+		primeInjEvent.ownIndex = 0;
+		primeInjEvent.isSimultanious = true;
 
-    	scheduling_s *sDown = &ENGINE(fuelActuators[0]).signalTimerDown;
-    	startSimultaniousInjection(&primeInjEvent);
+		scheduling_s *sDown = &ENGINE(fuelActuators[0]).signalTimerDown;
+		startSimultaniousInjection(&primeInjEvent);
 		efitimeus_t turnOffTime = getTimeNowUs() + MS2US(CONFIG(startOfCrankingPrimingPulse));
 		scheduleTask(sDown, turnOffTime, (schfunc_t) &endSimultaniousInjection, &primeInjEvent);
 	}
