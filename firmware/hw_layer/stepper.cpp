@@ -20,11 +20,11 @@ static Logging *logger;
 
 static void saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data
-	RTCD1.rtc->BKP0R = (pos + 1);
+	backupRamSave(BACKUP_STEPPER_POS, pos + 1);
 }
 
 static int loadStepperPos() {
-	return (int)RTCD1.rtc->BKP0R - 1;
+	return (int)backupRamLoad(BACKUP_STEPPER_POS) - 1;
 }
 
 static msg_t stThread(StepperMotor *motor) {
