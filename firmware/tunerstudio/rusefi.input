@@ -112,7 +112,7 @@ enable2ndByteCanID = false
 #else
        veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
 #endif
- ;lambdaTargetTables = afrTable1Tbl, afrTable2Tbl, afrTSCustom
+       lambdaTargetTables = afrTableTbl, afrTSCustom
 
        ; filter =  Name,        "DisplayName", outputChannel, operator, defaultVal, userAdjustable
         filter = minRPMFilter, "Minimum RPM", RPMValue,           <       , 500,      , true
@@ -419,13 +419,45 @@ fileVersion = { 20171101 }
       yBins       = crankingCycleCoef
 
 
-	curve = cltIdleCurve, "Warmup Idle multipplier"
+	curve = cltIdleCurve, "Warmup Idle multiplier"
       columnLabel = "Coolant", "Multiplier"
       xAxis       = -40, 120, 10
       yAxis       =  0,  50, 100
       xBins       = cltIdleCorrBins, coolant
       yBins       = cltIdleCorr
       gauge       = CLTGauge
+
+	curve = cltCrankingCurve, "Cranking IAC multiplier"
+      columnLabel = "Coolant", "Multiplier"
+      xAxis       = -40, 120, 10
+      yAxis       =  0,  50, 100
+      xBins       = cltCrankingCorrBins, coolant
+      yBins       = cltCrankingCorr
+      gauge       = CLTGauge
+
+	curve = cltIdleRPMCurve, "Idle Target RPM"
+      columnLabel = "Coolant", "RPM"
+      xAxis       = -40, 120, 10
+      yAxis       =  0,  0, 8000
+      xBins       = cltIdleRpmBins, coolant
+      yBins       = cltIdleRpm, RPMValue
+      gauge       = CLTGauge
+
+	curve = idleAdvanceCurve, "Idle Advance Angle"
+      columnLabel = "RPM", "degrees"
+      xAxis       = 0, 8000, 1000
+      yAxis       = -100, 100, 10
+      xBins       = idleAdvanceBins, RPMValue
+      yBins       = idleAdvance
+      gauge       = RPMGauge
+
+	curve = idleVeCurve, "Idle VE"
+      columnLabel = "RPM", "%"
+      xAxis       = 0, 8000, 1000
+      yAxis       = 0, 250, 10
+      xBins       = idleVeBins, RPMValue
+      yBins       = idleVe
+      gauge       = afr1Gauge
 
 	curve = warmupTargetAfrCurve, "CLT-based target AFR"
       columnLabel = "Coolant", "Correction"
@@ -901,15 +933,18 @@ gaugeCategory = Fuel Data
 		subMenu = crankingCltCurve,	    	"Cranking Coolant Temp Multiplier"
 		subMenu = crankingTpsCurve,	    	"Cranking TPS Multiplier"
 		subMenu = crankingDurationCurve,	"Cranking Duration Multiplier"
+		subMenu = cltCrankingCurve,			"Cranking IAC multiplier", 0, {overrideCrankingIacSetting == 1}
 		subMenu = std_separator
 		subMenu = warmupFuelDialog,			"Warmup fuel closed-loop"
 		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
-		subMenu = cltIdleCurve,				"Warmup Idle multipplier"
+		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
+		subMenu = cltIdleRPMCurve,			"Idle Target RPM", 0, {idleMode == 0}
 		subMenu = std_separator
 		subMenu = fuelTableDialog,			"Fuel Table", 0, {fuelAlgorithm != LM_SPEED_DENSITY}
         subMenu = veTableDialog,           	"VE Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
+        subMenu = idleVeCurve,              "Idle VE Table", 0, {useSeparateVeForIdle == 1}
         subMenu = afrTableTbl,          	"Target AFR Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
         subMenu = injPhaseTableTbl,         "Injection Phase"           
@@ -919,7 +954,8 @@ gaugeCategory = Fuel Data
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
         subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
 		subMenu = std_separator
-		subMenu = ignitionTableTbl,			"Ignition Table"
+		subMenu = ignitionTableTbl,			"Ignition Advance Table"
+		subMenu = idleAdvanceCurve,			"Idle Ignition Advance Table", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
 		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = std_separator
@@ -1468,6 +1504,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = idleSettings, "", yAxis
 		field = "#Automatic Mode is still Alpha Version"
 		field = "Manual mode",							idleMode
+		field = "Use separate Advance Table for idle",	useSeparateAdvanceForIdle
+		field = "Use separate VE Table for idle",		useSeparateVeForIdle
 		field = "Cranking Idle Air",					crankingIACposition
 		field = "# Warmup Idle multipplier is apploed to target RPM"
 		field = "Auto target",							targetIdleRpm, { idleMode == 0}
@@ -1776,6 +1814,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = ""
 		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
+		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting
 		field = "Startup fuel prime duration",			startUpFuelPumpDuration
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
 		
