@@ -26,4 +26,8 @@ void seTurnPinHigh(InjectionSignalPair *pair);
 void seTurnPinLow(InjectionSignalPair *pair);
 
 float getFuel(int rpm, float key);
+
+// reset injection switch counter if the engine started spinning
+void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 #endif /* MAIN_LOOP_H_ */
