@@ -1,4 +1,4 @@
-update=12/16/2017 4:12:16 PM
+update=12/24/2017 5:39:33 AM
 version=1
 last_client=kicad
 [cvpcb]
@@ -32,16 +32,6 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.381
 BoardOutlineThickness=0.381
 ModuleOutlineThickness=0.381
-[schematic_editor]
-version=1
-PageLayoutDescrFile=C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/rusefi_lib/Border.kicad_wks
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [eeschema]
 version=1
 LibDir=
@@ -78,3 +68,13 @@ LibName29=contrib
 LibName30=valves
 LibName31=symbols/966595-1
 LibName32=symbols/963356-1
+[schematic_editor]
+version=1
+PageLayoutDescrFile=C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/rusefi_lib/Border.kicad_wks
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
