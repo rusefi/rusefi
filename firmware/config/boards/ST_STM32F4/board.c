@@ -136,6 +136,13 @@ void setBoardConfigurationOverrides(void) {
 }
 
 /**
+ * @brief   Board-specific pin configuration code overrides. Needed by bootloader code.
+ * @todo    Add your board-specific code, if any.
+ */
+void setPinConfigurationOverrides(void) {
+}
+
+/**
  * @brief   Board-specific Serial configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
