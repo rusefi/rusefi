@@ -370,6 +370,11 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fatalErrorPin = GPIOD_14;
 	engineConfiguration->warninigPin = GPIOD_13;
 	engineConfiguration->configResetPin = GPIOB_1;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
+	// needed also by bootloader code
+	setPinConfigurationOverrides();
+#endif
 }
 
 // needed also by bootloader code
