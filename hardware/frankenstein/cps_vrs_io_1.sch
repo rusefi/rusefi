@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -29,13 +29,18 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:LMV324IDR
 LIBS:logo
 LIBS:logo_flipped
-LIBS:project_specific_libs
 LIBS:art-electro-conn
 LIBS:art-electro-ic
-EELAYER 27 0
+LIBS:LMV324IDR
+LIBS:conn_16
+LIBS:fds2734
+LIBS:tc4427
+LIBS:MAX9926-9927
+LIBS:max9939
+LIBS:frankenstein-cache
+EELAYER 25 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
