@@ -11,11 +11,12 @@
 #include <string.h>
 
 size_t flashSectorSize(flashsector_t sector) {
-	if (sector <= 3)
+	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
+	if (sector <= 3 || (sector >= 12 && sector <= 15))
 		return 16 * 1024;
-	else if (sector == 4)
+	else if (sector == 4 || sector == 16)
 		return 64 * 1024;
-	else if (sector >= 5 && sector <= 11)
+	else if ((sector >= 5 && sector <= 11) || (sector >= 17 && sector <= 23))
 		return 128 * 1024;
 	return 0;
 }
@@ -83,13 +84,16 @@ int flashSectorErase(flashsector_t sector) {
 	FLASH->CR |= FLASH_CR_PSIZE_VALUE;
 
 	/* Start deletion of sector.
-	 * SNB(3:1) is defined as:
-	 * 0000 sector 0
-	 * 0001 sector 1
+	 * SNB(4:1) is defined as:
+	 * 00000 sector 0
+	 * 00001 sector 1
 	 * ...
-	 * 1011 sector 11
+	 * 01011 sector 11 (the end of 1st bank, 1Mb border)
+	 * 01100 sector 12 (start of 2nd bank)
+	 * ...
+	 * 10111 sector 23 (the end of 2nd bank, 2Mb border)
 	 * others not allowed */
-	FLASH->CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3);
+	FLASH->CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3 | FLASH_CR_SNB_4);
 	if (sector & 0x1)
 		FLASH->CR |= FLASH_CR_SNB_0;
 	if (sector & 0x2)
@@ -98,6 +102,8 @@ int flashSectorErase(flashsector_t sector) {
 		FLASH->CR |= FLASH_CR_SNB_2;
 	if (sector & 0x8)
 		FLASH->CR |= FLASH_CR_SNB_3;
+	if (sector & 0x10)
+		FLASH->CR |= FLASH_CR_SNB_4;
 	FLASH->CR |= FLASH_CR_SER;
 	FLASH->CR |= FLASH_CR_STRT;
 
