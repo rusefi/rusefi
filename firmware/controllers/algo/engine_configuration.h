@@ -59,6 +59,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printFloatArray(const char *prefix, float array[], int size);
 
 // needed by bootloader
+void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
