@@ -188,8 +188,8 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
-		engineConfiguration->sparkDwellValues[i] = dwellMs;
 	}
+	setTableBin2(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 3);
 }
 
 void setAfrMap(afr_table_t table, float value) {
@@ -370,6 +370,11 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fatalErrorPin = GPIOD_14;
 	engineConfiguration->warninigPin = GPIOD_13;
 	engineConfiguration->configResetPin = GPIOB_1;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
+	// needed also by bootloader code
+	setPinConfigurationOverrides();
+#endif
 }
 
 // needed also by bootloader code
@@ -549,6 +554,11 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
+}
+
+void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setTableBin2(engineConfiguration->cltIdleRpmBins, DWELL_CURVE_SIZE, -40, 90, 0);
+	setTableBin2(engineConfiguration->cltIdleRpm, DWELL_CURVE_SIZE, rpm, rpm, 0);
 }
 
 /**
@@ -836,7 +846,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set idle_position 50
 	boardConfiguration->manIdlePosition = 50;
 	engineConfiguration->crankingIACposition = 50;
-	engineConfiguration->targetIdleRpm = 1200;
+	setTargetRpmCurve(1200 PASS_ENGINE_PARAMETER_SUFFIX);
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 

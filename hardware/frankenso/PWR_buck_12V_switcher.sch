@@ -55,6 +55,7 @@ LIBS:mos_n_numbered-pins
 LIBS:crystal(mc306)
 LIBS:pololu_a4988
 LIBS:Pololu_DRV8880
+LIBS:fuse_BOM_only_no_pins
 LIBS:frankenso-cache
 EELAYER 25 0
 EELAYER END
@@ -195,12 +196,12 @@ F 6 "sky-macau.com,5633100308" H 5650 6500 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   1    0   
 $EndComp
 $Comp
-L FUSE F1001
+L FUSE-Part F1001
 U 1 1 58F64B7B
 P 3850 6150
 F 0 "F1001" H 3950 6200 40  0000 C CNN
 F 1 "2A" H 3750 6100 40  0000 C CNN
-F 2 "Symbols:Symbol_CC-PublicDomain_SilkScreenTop_Big" H 3850 6150 60  0001 C CNN
+F 2 "rusEFI_LIB:Blank" H 3850 6150 60  0001 C CNN
 F 3 "~" H 3850 6150 60  0000 C CNN
 F 4 "Littelfuse ,0297002.WXNV" H 3850 6150 60  0001 C CNN "MFG,MFG#"
 F 5 "DIGI,F986-ND" H 3850 6150 60  0001 C CNN "VEND1,VEND1#"
@@ -532,6 +533,4 @@ Wire Notes Line
 	4100 6400 4100 6150
 Wire Notes Line
 	3600 6250 3600 6150
-NoConn ~ 4100 6150
-NoConn ~ 3600 6150
 $EndSCHEMATC

@@ -1,4 +1,4 @@
-update=5/7/2017 11:59:23 AM
+update=12/24/2017 6:38:50 AM
 version=1
 last_client=kicad
 [cvpcb]
@@ -87,6 +87,7 @@ LibName53=mos_n_numbered-pins
 LibName54=crystal(mc306)
 LibName55=pololu_a4988
 LibName56=Pololu_DRV8880
+LibName57=fuse_BOM_only_no_pins
 [schematic_editor]
 version=1
 PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks

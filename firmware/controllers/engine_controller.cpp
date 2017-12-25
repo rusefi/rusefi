@@ -262,6 +262,8 @@ static void periodicSlowCallback(Engine *engine) {
 		writeToFlashIfPending();
 #endif
 		resetAccel();
+	} else {
+		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 	if (versionForConfigurationListeners.isOld()) {

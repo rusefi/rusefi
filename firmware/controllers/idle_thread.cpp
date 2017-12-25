@@ -172,23 +172,24 @@ static float autoIdle(float cltCorrection) {
 
 	// get Target RPM for Auto-PID from a separate table
 	float clt = engine->sensors.clt;
-	int adjustedTargetRpm = cisnan(clt) ? 0 : interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
-	// use fixed parameter if there's a problem with the table
-	if (adjustedTargetRpm == 0)
-		adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
+	int targetRpm;
+	if (cisnan(clt)) {
+		// error is already reported, let's take first value from the table should be good enough error handing solution
+		targetRpm = CONFIG(cltIdleRpm)[0];
+	} else {
+		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
+	}
+
+	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
-	// this returns not an actual IAC position, but an incremental delta.
-	percent_t newValue = idlePid.getRawValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
-
-	// add delta to the base IAC position, with a smooth taper for TPS transients
+	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
+	// So we add this delta to the base IAC position, with a smooth taper for TPS transients.
 	newValue = baseIdlePosition + interpolateClamped(0.0f, newValue, boardConfiguration->idlePidDeactivationTpsThreshold, 0.0f, tpsPos);
 
 	// apply the PID limits
 	newValue = maxF(newValue, CONFIG(idleRpmPid.minValue));
 	newValue = minF(newValue, CONFIG(idleRpmPid.maxValue));
-#else
-	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
 	return newValue;
@@ -305,7 +306,7 @@ static msg_t ivThread(int param) {
 }
 
 void setTargetIdleRpm(int value) {
-	engineConfiguration->targetIdleRpm = value;
+	setTargetRpmCurve(value PASS_ENGINE_PARAMETER_SUFFIX);
 	scheduleMsg(logger, "target idle RPM %d", value);
 	showIdleInfo();
 }

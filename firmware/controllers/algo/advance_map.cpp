@@ -23,6 +23,7 @@
 #include "interpolation.h"
 #include "efilib2.h"
 #include "engine_math.h"
+#include "tps.h"
 
 EXTERN_ENGINE;
 
@@ -102,6 +103,15 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 			+ engine->engineState.cltTimingCorrection
 			// todo: uncomment once we get useable knock   - engine->knockCount
 			;
+	
+	// get advance from the separate table for Idle
+	if (CONFIG(useSeparateAdvanceForIdle)) {
+		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
+		// interpolate between idle table and normal (running) table using TPS threshold
+		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		result = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, result, tps);
+	}
+
 	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
 	return result;
 }

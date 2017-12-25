@@ -918,8 +918,8 @@
 #define twoWireBatchIgnition_offset_hex 5cc
 #define engineChartSize_offset 1488
 #define engineChartSize_offset_hex 5d0
-#define targetIdleRpm_offset 1492
-#define targetIdleRpm_offset_hex 5d4
+#define unusedIdleRpm_offset 1492
+#define unusedIdleRpm_offset_hex 5d4
 #define acSwitchAdc_offset 1496
 #define acSwitchAdc_offset_hex 5d8
 #define ignMathCalculateAtIndex_offset 1500

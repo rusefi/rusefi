@@ -347,7 +347,7 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->acIdleRpmBump = 200;
 
 	//engineConfiguration->idleMode != IM_AUTO;
-	engineConfiguration->targetIdleRpm = 800;
+	setTargetRpmCurve(800 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	engineConfiguration->tpsMax = 86;

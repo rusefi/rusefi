@@ -16,6 +16,10 @@
 #include "tunerstudio_configuration.h"
 #endif
 
+// See PidCic below
+#define PID_AVG_BUF_SIZE_SHIFT 5
+#define PID_AVG_BUF_SIZE (1<<PID_AVG_BUF_SIZE_SHIFT) // 32*sizeof(float)
+
 class Pid {
 
 public:
@@ -26,9 +30,11 @@ public:
 
 	float getValue(float target, float input);
 	// todo: dTime should be taken from pid_s
-	float getValue(float target, float input, float dTime);
+	virtual float getValue(float target, float input, float dTime);
+	// doesn't limit the result (used in incremental CIC PID, see below)
+	float getRawValue(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
-	void reset(void);
+	virtual void reset(void);
 	float getP(void);
 	float getI(void);
 	float getD(void);
@@ -54,6 +60,37 @@ private:
 	float prevTarget;
 	float prevInput;
 	float prevResult;
+
+private:
+	virtual void updateITerm(float value);
+};
+
+
+/**
+ * A PID impl. with a modified cascaded integrator-comb (CIC) filtering.
+ * Used for incremental auto-IAC control. See autoIdle() in idle_thread.cpp
+ *
+ * https://rusefi.com/forum/viewtopic.php?f=9&t=1315
+ */
+class PidCic : public Pid {
+
+public:
+	PidCic();
+	PidCic(pid_s *pid);
+
+	virtual void reset(void);
+	virtual float getValue(float target, float input, float dTime);
+	
+private:
+	// Circular running-average buffer for I-term, used by CIC-like filter
+	float iTermBuf[PID_AVG_BUF_SIZE];
+	// Needed by averaging (smoothing) of iTerm sums
+	float iTermInvNum;
+	// Total PID iterations (>240 days max. for 10ms update period)
+	int totalItermCnt;
+
+private:
+	virtual void updateITerm(float value);
 };
 
 #endif /* PID_H_ */
