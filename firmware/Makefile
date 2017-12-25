@@ -15,7 +15,7 @@ endif
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # in case of  gcc-arm-none-eabi-7-2017-q4-major also need:
-# -Wno-error=implicit-fallthrough
+# -Wno-error=implicit-fallthrough -Wno-error=bool-operation -Wno-error=int-in-bool
 # see https://github.com/rusefi/rusefi/issues/517
   USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
 endif
