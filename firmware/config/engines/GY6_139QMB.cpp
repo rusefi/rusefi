@@ -82,7 +82,7 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->cranking.rpm = 1100;
-	engineConfiguration->targetIdleRpm = 2000;
+	setTargetRpmCurve(2000 PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->analogInputDividerCoefficient = 1;
 	engineConfiguration->fuelAlgorithm = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 45;
