@@ -48,7 +48,7 @@ typedef struct {
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setTargetRpmCurve(int rpm PASS_ENGINE_PARAMETER_SUFFIX);
+void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setAfrMap(afr_table_t table, float value);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX);

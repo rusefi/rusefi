@@ -556,7 +556,7 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }
 
-void setTargetRpmCurve(int rpm PASS_ENGINE_PARAMETER_SUFFIX) {
+void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTableBin2(engineConfiguration->cltIdleRpmBins, DWELL_CURVE_SIZE, -40, 90, 0);
 	setTableBin2(engineConfiguration->cltIdleRpm, DWELL_CURVE_SIZE, rpm, rpm, 0);
 }
