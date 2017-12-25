@@ -38,29 +38,23 @@ float Pid::getValue(float target, float input) {
 	return getValue(target, input, 1);
 }
 
-float Pid::getValue(float target, float input, float dTime) {
+float Pid::getRawValue(float target, float input, float dTime) {
 	float error = target - input;
 	prevTarget = target;
 	prevInput = input;
 
 	float pTerm = pid->pFactor * error;
-	iTerm += pid->iFactor * dTime * error;
+	updateITerm(pid->iFactor * dTime * error);
 	dTerm = pid->dFactor / dTime * (error - prevError);
 
 	prevError = error;
 
-	/**
-	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
-	 * Here we limit the I-term #353
-	 */
-	if (iTerm > pid->maxValue)
-		iTerm = pid->maxValue;
+	return pTerm + iTerm + dTerm + pid->offset;
+}
 
-	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValue'
-	if (iTerm < -pid->maxValue)
-		iTerm = -pid->maxValue;
+float Pid::getValue(float target, float input, float dTime) {
+	float result = getRawValue(target, input, dTime);
 
-	float result = pTerm + iTerm + dTerm + pid->offset;
 	if (result > pid->maxValue) {
 		result = pid->maxValue;
 	} else if (result < pid->minValue) {
@@ -150,4 +144,62 @@ void Pid::showPidStatus(Logging *logging, const char*msg) {
 			prevTarget,
 			iTerm, dTerm);
 
+}
+
+void Pid::updateITerm(float value) {
+	iTerm += value;
+	/**
+	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
+	 * Here we limit the I-term #353
+	 */
+	if (iTerm > pid->maxValue * 100)
+		iTerm = pid->maxValue * 100;
+
+	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValye'
+	if (iTerm < -pid->maxValue * 100)
+		iTerm = -pid->maxValue * 100;
+}
+
+
+PidCic::PidCic() {
+	// call our derived reset()
+	reset();
+}
+
+PidCic::PidCic(pid_s *pid) : Pid(pid) {
+	// call our derived reset()
+	reset();
+}
+
+void PidCic::reset(void) {
+	Pid::reset();
+
+	totalItermCnt = 0;
+	for (int i = 0; i < PID_AVG_BUF_SIZE; i++)
+		iTermBuf[i] = 0;
+	iTermInvNum = 1.0f / (float)PID_AVG_BUF_SIZE;
+}
+
+float PidCic::getValue(float target, float input, float dTime) {
+	return getRawValue(target, input, dTime);
+}
+
+void PidCic::updateITerm(float value) {
+	// use a variation of cascaded integrator-comb (CIC) filtering to get non-overflow iTerm
+	totalItermCnt++;
+	int localBufPos = (totalItermCnt >> PID_AVG_BUF_SIZE_SHIFT) % PID_AVG_BUF_SIZE;
+	int localPrevBufPos = ((totalItermCnt - 1) >> PID_AVG_BUF_SIZE_SHIFT) % PID_AVG_BUF_SIZE;
+	
+	// reset old buffer cell
+	if (localPrevBufPos != localBufPos)
+		iTermBuf[localBufPos] = 0;
+	// integrator stage
+	iTermBuf[localBufPos] += value;
+	
+	// return moving average of all sums, to smoothen the result
+	float iTermSum = 0;
+	for (int i = 0; i < PID_AVG_BUF_SIZE; i++) {
+		iTermSum += iTermBuf[i];
+	}
+	iTerm = iTermSum * iTermInvNum;
 }
