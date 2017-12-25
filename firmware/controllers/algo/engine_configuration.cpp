@@ -188,8 +188,8 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
-		engineConfiguration->sparkDwellValues[i] = dwellMs;
 	}
+	setTableBin2(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 3);
 }
 
 void setAfrMap(afr_table_t table, float value) {
@@ -556,6 +556,11 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }
 
+void setTargetRpmCurve(int rpm PASS_ENGINE_PARAMETER_SUFFIX) {
+	setTableBin2(engineConfiguration->cltIdleRpmBins, DWELL_CURVE_SIZE, -40, 90, 0);
+	setTableBin2(engineConfiguration->cltIdleRpm, DWELL_CURVE_SIZE, rpm, rpm, 0);
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
@@ -841,7 +846,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set idle_position 50
 	boardConfiguration->manIdlePosition = 50;
 	engineConfiguration->crankingIACposition = 50;
-	engineConfiguration->targetIdleRpm = 1200;
+	setTargetRpmCurve(1200 PASS_ENGINE_PARAMETER_SUFFIX);
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 

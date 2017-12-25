@@ -52,8 +52,6 @@ static SimplePwm idleSolenoid;
 
 static StepperMotor iacMotor;
 
-static int adjustedTargetRpm;
-
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
@@ -162,9 +160,17 @@ static float autoIdle(float cltCorrection) {
 		return currentIdlePosition;
 	}
 
-	adjustedTargetRpm = engineConfiguration->targetIdleRpm * cltCorrection;
+	// get Target RPM for Auto-PID from a separate table
+	float clt = engine->sensors.clt;
+	int targetRpm;
+	if (cisnan(clt)) {
+		// error is already reported, let's take first value from the table should be good enough error handing solution
+		targetRpm = CONFIG(cltIdleRpm)[0];
+	} else {
+		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
+	}
 
-	percent_t newValue = idlePid.getValue(adjustedTargetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
+	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
 
 	return newValue;
 }
@@ -268,7 +274,7 @@ static msg_t ivThread(int param) {
 }
 
 void setTargetIdleRpm(int value) {
-	engineConfiguration->targetIdleRpm = value;
+	setTargetRpmCurve(value PASS_ENGINE_PARAMETER_SUFFIX);
 	scheduleMsg(logger, "target idle RPM %d", value);
 	showIdleInfo();
 }
