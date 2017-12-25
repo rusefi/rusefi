@@ -189,7 +189,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
 	}
-	setTableBin2(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 3);
+	setTableBin2(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 0.01);
 }
 
 void setAfrMap(afr_table_t table, float value) {
