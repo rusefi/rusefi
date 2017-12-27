@@ -1507,8 +1507,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Use separate Advance Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
 		field = "Cranking Idle Air",					crankingIACposition
-		field = "# Warmup Idle multipplier is apploed to target RPM"
-		field = "Auto target",							targetIdleRpm, { idleMode == 0}
+;		field = "# Warmup Idle multipplier is apploed to target RPM"
+;		field = "Auto target",							targetIdleRpm, { idleMode == 0}
 		field = "idle P",								idleRpmPid_pFactor, { idleMode == 0}
 		field = "idle I",								idleRpmPid_iFactor, { idleMode == 0}
 		field = "idle D",								idleRpmPid_dFactor, { idleMode == 0}
