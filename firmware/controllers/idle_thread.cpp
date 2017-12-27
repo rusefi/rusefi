@@ -45,7 +45,12 @@ EXTERN_ENGINE
 
 static bool shouldResetPid = false;
 
+#if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
+// Use new PID with CIC integrator
+static PidCic idlePid(&engineConfiguration->idleRpmPid);
+#else
 static Pid idlePid(&engineConfiguration->idleRpmPid);
+#endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid;
@@ -59,6 +64,10 @@ static float lastCrankingIacPosition;
  * that's current position with CLT and IAT corrections
  */
 static percent_t currentIdlePosition = -100.0f;
+/**
+ * the same as currentIdlePosition, but without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
+ */
+static percent_t baseIdlePosition = currentIdlePosition;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%f", msg, value);
@@ -155,9 +164,10 @@ percent_t getIdlePosition(void) {
 }
 
 static float autoIdle(float cltCorrection) {
-	if (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > boardConfiguration->idlePidDeactivationTpsThreshold) {
-		// just leave IAC position as is
-		return currentIdlePosition;
+	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (tpsPos > boardConfiguration->idlePidDeactivationTpsThreshold) {
+		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
+		return baseIdlePosition;
 	}
 
 	// get Target RPM for Auto-PID from a separate table
@@ -171,6 +181,16 @@ static float autoIdle(float cltCorrection) {
 	}
 
 	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
+
+#if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
+	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
+	// So we add this delta to the base IAC position, with a smooth taper for TPS transients.
+	newValue = baseIdlePosition + interpolateClamped(0.0f, newValue, boardConfiguration->idlePidDeactivationTpsThreshold, 0.0f, tpsPos);
+
+	// apply the PID limits
+	newValue = maxF(newValue, CONFIG(idleRpmPid.minValue));
+	newValue = minF(newValue, CONFIG(idleRpmPid.maxValue));
+#endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
 	return newValue;
 }
@@ -212,19 +232,28 @@ static msg_t ivThread(int param) {
 		undoIdleBlipIfNeeded();
 
 		float clt = engine->sensors.clt;
-		float cltCorrection = cisnan(clt) ? 1 : interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr,
-		CLT_CURVE_SIZE) / PERCENT_MULT;
+		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		float cltCorrection;
+		if (cisnan(clt))
+			cltCorrection = 1.0f;
+		// Use separate CLT correction table for cranking
+		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning)
+			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE) / PERCENT_MULT;
+		else
+			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
 
 		float iacPosition;
 
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
-		} else if (!engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			baseIdlePosition = iacPosition;
+		} else if (!isRunning) {
 			// during cranking it's always manual mode, PID would make no sence during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
 			// save cranking position & cycles counter for taper transition
 			lastCrankingIacPosition = iacPosition;
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
+			baseIdlePosition = iacPosition;
 		} else {
 			if (engineConfiguration->idleMode == IM_MANUAL) {
 				// let's re-apply CLT correction
@@ -232,6 +261,9 @@ static msg_t ivThread(int param) {
 			} else {
 				iacPosition = autoIdle(cltCorrection);
 			}
+			
+			// store 'base' iacPosition without adjustments
+			baseIdlePosition = iacPosition;
 			
 			percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 			float additionalAir = (float)engineConfiguration->iacByTpsTaper;
