@@ -667,7 +667,8 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
 
-	int unusedIdleRpm;set idle_rpm X\nSee also cltIdleCorr;"RPM",      1,      0,       0, 7000,      0
+	int16_t idlePidRpmUpperLimit;;"RPM",      1,      0,       0, 9000,      0
+    int16_t unusedInt16;
 
 	adc_channel_e acSwitchAdc;A/C button input handled as analog input
 
@@ -743,7 +744,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	pin_output_mode_e stepperDirectionPinMode;
 	
 	int16_t startUpFuelPumpDuration;;"seconds",        1,     0,  0,    6000,  0
-	int16_t iacRPMErrorThreshold;If RPM is close enough let's leave IAC alone;"C",        1,     0,  0,    1000,  0
+	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone;"C",        1,     0,  0,    1000,  0
 	
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2

@@ -918,8 +918,10 @@
 #define twoWireBatchIgnition_offset_hex 5cc
 #define engineChartSize_offset 1488
 #define engineChartSize_offset_hex 5d0
-#define unusedIdleRpm_offset 1492
-#define unusedIdleRpm_offset_hex 5d4
+#define idlePidRpmUpperLimit_offset 1492
+#define idlePidRpmUpperLimit_offset_hex 5d4
+#define unusedInt16_offset 1494
+#define unusedInt16_offset_hex 5d6
 #define acSwitchAdc_offset 1496
 #define acSwitchAdc_offset_hex 5d8
 #define ignMathCalculateAtIndex_offset 1500
@@ -1104,8 +1106,8 @@
 #define stepperDirectionPinMode_offset_hex 7d4
 #define startUpFuelPumpDuration_offset 2008
 #define startUpFuelPumpDuration_offset_hex 7d8
-#define iacRPMErrorThreshold_offset 2010
-#define iacRPMErrorThreshold_offset_hex 7da
+#define idlePidRpmDeadZone_offset 2010
+#define idlePidRpmDeadZone_offset_hex 7da
 #define cltIdleRpmBins_offset 2012
 #define cltIdleRpmBins_offset_hex 7dc
 #define cltIdleRpm_offset 2076

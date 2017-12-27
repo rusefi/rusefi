@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 24 21:42:02 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 26 11:24:20 EST 2017
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1353,11 +1353,13 @@ typedef struct {
 	 */
 	uint32_t engineChartSize;
 	/**
-	 * set idle_rpm X
-	 * See also cltIdleCorr
 	 * offset 1492
 	 */
-	int unusedIdleRpm;
+	int16_t idlePidRpmUpperLimit;
+	/**
+	 * offset 1494
+	 */
+	int16_t unusedInt16;
 	/**
 	 * A/C button input handled as analog input
 	 * offset 1496
@@ -1574,7 +1576,7 @@ typedef struct {
 	 * If RPM is close enough let's leave IAC alone
 	 * offset 2010
 	 */
-	int16_t iacRPMErrorThreshold;
+	int16_t idlePidRpmDeadZone;
 	/**
 	 * CLT-based target RPM for automatic idle controller
 	 * offset 2012
@@ -2233,4 +2235,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 24 21:42:02 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 26 11:24:20 EST 2017

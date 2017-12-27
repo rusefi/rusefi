@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 24 21:42:02 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 26 11:24:20 EST 2017
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -628,7 +628,8 @@ public class Fields {
 	public static final int useOnlyRisingEdgeForTrigger_offset = 1484;
 	public static final int twoWireBatchIgnition_offset = 1484;
 	public static final int engineChartSize_offset = 1488;
-	public static final int unusedIdleRpm_offset = 1492;
+	public static final int idlePidRpmUpperLimit_offset = 1492;
+	public static final int unusedInt16_offset = 1494;
 	public static final int acSwitchAdc_offset = 1496;
 	public static final int ignMathCalculateAtIndex_offset = 1500;
 	public static final int acCutoffLowRpm_offset = 1504;
@@ -767,7 +768,7 @@ public class Fields {
 	public static final int throttlePedalWOTVoltage_offset = 2000;
 	public static final int stepperDirectionPinMode_offset = 2004;
 	public static final int startUpFuelPumpDuration_offset = 2008;
-	public static final int iacRPMErrorThreshold_offset = 2010;
+	public static final int idlePidRpmDeadZone_offset = 2010;
 	public static final int cltIdleRpmBins_offset = 2012;
 	public static final int cltIdleRpm_offset = 2076;
 	public static final int targetVBatt_offset = 2140;
@@ -1533,7 +1534,8 @@ public class Fields {
 	public static final Field USEONLYRISINGEDGEFORTRIGGER = Field.create("USEONLYRISINGEDGEFORTRIGGER", 1484, FieldType.BIT, 14);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1484, FieldType.BIT, 15);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1488, FieldType.INT);
-	public static final Field UNUSEDIDLERPM = Field.create("UNUSEDIDLERPM", 1492, FieldType.INT);
+	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1492, FieldType.INT);
+	public static final Field UNUSEDINT16 = Field.create("UNUSEDINT16", 1494, FieldType.INT);
 	public static final Field ACSWITCHADC = Field.create("ACSWITCHADC", 1496, FieldType.INT, adc_channel_e);
 	public static final Field IGNMATHCALCULATEATINDEX = Field.create("IGNMATHCALCULATEATINDEX", 1500, FieldType.INT);
 	public static final Field ACCUTOFFLOWRPM = Field.create("ACCUTOFFLOWRPM", 1504, FieldType.INT);
@@ -1616,7 +1618,7 @@ public class Fields {
 	public static final Field THROTTLEPEDALWOTVOLTAGE = Field.create("THROTTLEPEDALWOTVOLTAGE", 2000, FieldType.FLOAT);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 2004, FieldType.INT, pin_output_mode_e);
 	public static final Field STARTUPFUELPUMPDURATION = Field.create("STARTUPFUELPUMPDURATION", 2008, FieldType.INT);
-	public static final Field IACRPMERRORTHRESHOLD = Field.create("IACRPMERRORTHRESHOLD", 2010, FieldType.INT);
+	public static final Field IDLEPIDRPMDEADZONE = Field.create("IDLEPIDRPMDEADZONE", 2010, FieldType.INT);
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 2140, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 2144, FieldType.FLOAT);
 	public static final Field STARTOFCRANKINGPRIMINGPULSE = Field.create("STARTOFCRANKINGPRIMINGPULSE", 2148, FieldType.FLOAT);
