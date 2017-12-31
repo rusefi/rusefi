@@ -170,7 +170,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		break;
 	case PID_FUEL_RATE:
 		scheduleMsg(&logger, "Got fuel rate request");
-		obdSendValue(1, pid, 2, getFuelRate(PASS_ENGINE_PARAMETER_SIGNATURE) * 20.0f);	//	L/h.	(A*256+B)/20
+		obdSendValue(1, pid, 2, engine->engineState.fuelConsumption.perSecondConsumption * 20.0f);	//	L/h.	(A*256+B)/20
 		break;
 	default:
 		scheduleMsg(&logger, "Got unhandled request (PID 0x%02x)", pid);
