@@ -47,6 +47,8 @@ extern fuel_Map3D_t ve2Map;
 extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
+static float fuelRate = 0.0f;
+
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
@@ -290,7 +292,11 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 	return baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
 }
 
-float getFuelRate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// todo: L/h
-	return 0.0f;
+float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (timePeriod <= 0.0f)
+		return 0.0f;
+	float timePeriodMs = (float)NT2US(timePeriod) / 1000.0f;
+	float fuelRate = totalInjDuration / timePeriodMs;
+	const float cc_min_to_L_h = 60.0f / 1000.0f;
+	return fuelRate * CONFIG(injector.flow) * cc_min_to_L_h;
 }
