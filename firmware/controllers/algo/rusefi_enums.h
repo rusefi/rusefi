@@ -218,6 +218,11 @@ typedef enum {
 
 	TT_36_2_2_2 = 23,
 
+	/**
+	 * only the 4 tooth signal, without the 360 signal
+	 * 8,2,2,2 Nissan pattern
+	 * See also TT_NISSAN_SR20VE_360
+	 */
 	TT_NISSAN_SR20VE = 24,
 
 	TT_2JZ_3_34 = 25,
@@ -255,6 +260,9 @@ typedef enum {
 
 	TT_JEEP_18_2_2_2 = 37,
 
+	/*
+	 * See also TT_NISSAN_SR20VE
+	 */
 	TT_NISSAN_SR20VE_360 = 38,
 
 	TT_UNUSED = 39, // this is used if we want to iterate over all trigger types
