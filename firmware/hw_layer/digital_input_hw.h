@@ -24,11 +24,13 @@ typedef struct {
 } digital_input_s;
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin);
-digital_input_s *initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
+
+digital_input_s *addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 void startInputDriver(digital_input_s *hw, bool isActiveHigh);
+void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
+
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin);
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin);
-void stopWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 
 #endif
 
