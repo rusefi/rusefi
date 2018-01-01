@@ -83,12 +83,6 @@ void initVehicleSpeed(Logging *l) {
 	addConsoleAction("speedinfo", speedInfo);
 	startVSSPins();
 }
-
-void initVehicleSpeed(Logging *l) {
-	logger = l;
-	addConsoleAction("speedinfo", speedInfo);
-	startVSSPins();
-}
 #else  /* EFI_VEHICLE_SPEED */
 
 float getVehicleSpeed(void) {
