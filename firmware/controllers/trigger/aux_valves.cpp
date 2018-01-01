@@ -93,6 +93,10 @@ void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	float x = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (cisnan(x)) {
+		// error should be already reported by now
+		return;
+	}
 	engine->engineState.auxValveStart = interpolate2d("aux", x,
 			engineConfiguration->fsioCurve1Bins,
 			engineConfiguration->fsioCurve1, FSIO_CURVE_16);
