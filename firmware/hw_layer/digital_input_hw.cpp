@@ -183,7 +183,10 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
-digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
+/**
+ * takes next digital_input_s from the registeredIcus pool
+ */
+digital_input_s * addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 
 	digital_input_s *hw = registeredIcus.add();
@@ -196,7 +199,10 @@ digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) 
 	return hw;
 }
 
-void stopWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
+/**
+ * turns pin off and returns digital_input_s back into registeredIcus pool
+ */
+void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}

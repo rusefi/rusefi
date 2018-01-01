@@ -152,7 +152,30 @@ void Engine::reset() {
 FuelConsumptionState::FuelConsumptionState() {
 	perSecondConsumption = perSecondAccumulator = 0;
 	perMinuteConsumption = perMinuteAccumulator = 0;
-	accumulatedSecond = accumulatedMinute = -1;
+	accumulatedSecondPrevNt = accumulatedMinutePrevNt = getTimeNowNt();
+}
+
+void FuelConsumptionState::addData(float durationMs) {
+	if (durationMs > 0.0f) {
+		perSecondAccumulator += durationMs;
+		perMinuteAccumulator += durationMs;
+	}
+}
+
+void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efitick_t deltaNt = nowNt - accumulatedSecondPrevNt;
+	if (deltaNt >= US2NT(US_PER_SECOND_LL)) {
+		perSecondConsumption = getFuelRate(perSecondAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
+		perSecondAccumulator = 0;
+		accumulatedSecondPrevNt = nowNt;
+	}
+
+	deltaNt = nowNt - accumulatedMinutePrevNt;
+	if (deltaNt >= US2NT(US_PER_SECOND_LL * 60)) {
+		perMinuteConsumption = getFuelRate(perMinuteAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
+		perMinuteAccumulator = 0;
+		accumulatedMinutePrevNt = nowNt;
+	}
 }
 
 TransmissionState::TransmissionState() {
@@ -228,6 +251,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
+
+	// update fuel consumption states
+	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
