@@ -99,11 +99,18 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (cisnan(rpm)) {
+		return 0; // error already reported
+	}
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (isnan(engineLoad)) {
+	if (cisnan(engineLoad)) {
 		return 0; // error already reported
 	}
 	angle_t value = fuelPhaseMap.getValue(rpm, engineLoad);
+	if (cisnan(value)) {
+		firmwareError(CUSTOM_ERR_ASSERT, "inj offset#1 %f %f", rpm, engineLoad)
+		return 0;
+	}
 	efiAssert(!cisnan(value), "inj offset#1", 0);
 	angle_t result =  value + CONFIG(extraInjectionOffset);
 	fixAngle(result, "inj offset#2");
