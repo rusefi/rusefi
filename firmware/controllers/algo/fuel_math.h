@@ -36,6 +36,8 @@ floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 floatms_t getCrankingFuel3(float coolantTemperature, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-float getFuelRate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+// convert injection duration (Ms/Nt) to fuel rate (L/h)
+float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* FUEL_MAP_H_ */

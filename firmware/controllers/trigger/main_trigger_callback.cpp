@@ -232,6 +232,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		warning(CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION, "Too long cranking fuel injection %fms", injectionDuration);
 	}
 
+	// Store 'pure' injection duration (w/o injector lag) for fuel rate calc.
+	engine->engineState.fuelConsumption.addData(injectionDuration - ENGINE(engineState.injectorLag));
+	
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
