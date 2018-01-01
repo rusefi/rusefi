@@ -238,7 +238,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		digital_input_s* digitalMapInput = initWaveAnalyzerDriver("map freq", boardConfiguration->frequencyReportingMapInputPin);
+		digital_input_s* digitalMapInput = addWaveAnalyzerDriver("map freq", boardConfiguration->frequencyReportingMapInputPin);
 		startInputDriver(digitalMapInput, true);
 
 		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);

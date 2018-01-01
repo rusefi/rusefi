@@ -67,22 +67,21 @@ bool hasVehicleSpeedSensor() {
 }
 
 void stopVSSPins(void) {
-	stopWaveAnalyzerDriver("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
+	removeWaveAnalyzerDriver("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
 }
 
 void startVSSPins(void) {
-	// todo
+	if (!hasVehicleSpeedSensor())
+		return;
+	digital_input_s* vehicleSpeedInput = addWaveAnalyzerDriver("VSS", boardConfiguration->vehicleSpeedSensorInputPin);
+	startInputDriver(vehicleSpeedInput, true);
+	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
 }
 
 void initVehicleSpeed(Logging *l) {
 	logger = l;
 	addConsoleAction("speedinfo", speedInfo);
-	if (!hasVehicleSpeedSensor())
-		return;
-	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver("VSS", boardConfiguration->vehicleSpeedSensorInputPin);
-	startInputDriver(vehicleSpeedInput, true);
-
-	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
+	startVSSPins();
 }
 #else  /* EFI_VEHICLE_SPEED */
 

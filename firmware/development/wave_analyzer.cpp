@@ -123,7 +123,7 @@ static void initWave(const char *name, int index) {
 	WaveReader *reader = &readers[index];
 	reader->name = name;
 
-	reader->hw = initWaveAnalyzerDriver("wave input", brainPin);
+	reader->hw = addWaveAnalyzerDriver("wave input", brainPin);
 
 
 	reader->hw->widthListeners.registerCallback((VoidInt) waAnaWidthCallback, (void*) reader);
