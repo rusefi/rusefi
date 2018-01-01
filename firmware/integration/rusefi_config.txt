@@ -819,8 +819,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float autoTuneTpsRocThreshold;
 	float autoTuneTpsQuietPeriod;
 	float postCrankingTargetClt;;"C",        1,     0,  0,    100,  0
-	float postCrankingFactor;;"mult",        1,     0,  0,    100,  4
-	float postCrankingDurationSec;;"seconds",        1,     0,  0,    100,  2
+	float postCrankingFactor;Fuel multiplier taper, see also postCrankingDurationSec;"mult",        1,     0,  0,    100,  4
+	float postCrankingDurationSec;See also postCrankingFactor;"seconds",        1,     0,  0,    100,  2
 	ThermistorConf auxTempSensor1;todo: finish implementation #332
 	ThermistorConf auxTempSensor2;todo: finish implementation #332
 	int16_t fuelClosedLoopCltThreshold;;"C",        1,     0,  0,    100,  0
