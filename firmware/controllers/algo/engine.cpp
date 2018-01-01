@@ -162,7 +162,7 @@ void FuelConsumptionState::addData(float durationMs) {
 	}
 }
 
-void FuelConsumptionState::update(efitick_t nowNt) {
+void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t deltaNt = nowNt - accumulatedSecondPrevNt;
 	if (deltaNt >= US2NT(US_PER_SECOND_LL)) {
 		perSecondConsumption = getFuelRate(perSecondAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
@@ -253,7 +253,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// update fuel consumption states
-	fuelConsumption.update(nowNt);
+	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)

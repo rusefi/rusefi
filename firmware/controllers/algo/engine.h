@@ -110,7 +110,7 @@ class FuelConsumptionState {
 public:
 	FuelConsumptionState();
 	void addData(float durationMs);
-	void update(efitick_t nowNt);
+	void update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float perSecondConsumption;
 	float perMinuteConsumption;
 	float perSecondAccumulator;
