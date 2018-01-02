@@ -117,7 +117,10 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
+	if (!isWarningStreamInitialized) {
+		firmwareError(CUSTOM_ERR_ASSERT, "warn stream not initialized for %d", code);
+		return false;
+	}
 	addWarningCode(code);
 
 	efitimesec_t now = getTimeNowSeconds();
