@@ -517,6 +517,7 @@ fileVersion = { 20171101 }
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
+; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
    table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel",   1
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
@@ -1077,10 +1078,12 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = fuelTableRight
 
 	dialog = tChargeSettings, "tChart Settings"
-		field = "MinRpm MinTps", tChargeMinRpmMinTps
-		field = "MinRpm MaxTps", tChargeMinRpmMaxTps
-		field = "MaxRpm MinTps", tChargeMaxRpmMinTps
-		field = "MaxRpm MaxTps", tChargeMaxRpmMaxTps
+	    field = "We use these coefficients to approximate air/fuel charge temperate"
+	    field = "based on CLT and IAT, depending on RPM and TPM"
+		field = "minRPM minTPS", tChargeMinRpmMinTps
+		field = "minRPM maxTPS", tChargeMinRpmMaxTps
+		field = "maxRPM minTPS", tChargeMaxRpmMinTps
+		field = "maxRPM maxTPS", tChargeMaxRpmMaxTps
 
 	dialog = baseInjection, "Injection"
 		field = "Enabled",						isInjectionEnabled
