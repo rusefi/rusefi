@@ -29,6 +29,9 @@ static efitick_t prevWidthTimeNt = 0;
 
 static float mapFreq = 0;
 
+// See 'useFixedBaroCorrFromMap'
+static float storedInitialBaroPressure = NAN;
+
 /**
  * @brief	MAP value decoded for a 1.83 Honda sensor
  * -6.64kPa at zero volts
@@ -107,6 +110,18 @@ float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 /**
+ * This function checks if Baro/MAP sensor value is inside of expected range
+ * @return unchanged mapKPa parameter or NaN
+ */
+float validateBaroMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	const float atmoPressure = 100.0f;
+	const float atmoPressureRange = 15.0f;	// 85..115
+	if (cisnan(mapKPa) || absF(mapKPa - atmoPressure) > atmoPressureRange)
+		return NAN;
+	return mapKPa;
+}
+
+/**
  * @brief	MAP value decoded according to current settings
  * @returns kPa value
  */
@@ -134,8 +149,12 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
+/**
+ * Returns true if a real Baro sensor is present.
+ * Also if 'useFixedBaroCorrFromMap' option is enabled, and we have the initial pressure value stored and passed validation.
+ */
 bool hasBaroSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE;
+	return engineConfiguration->baroSensor.hwChannel != EFI_ADC_NONE || !cisnan(storedInitialBaroPressure);
 }
 
 bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -143,6 +162,9 @@ bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// Override the real Baro sensor with the stored initial MAP value, if the option is set.
+	if (CONFIG(useFixedBaroCorrFromMap))
+		return storedInitialBaroPressure;
 	float voltage = getVoltageDivided("baro", engineConfiguration->baroSensor.hwChannel);
 	return decodePressure(voltage, &engineConfiguration->baroSensor PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -244,6 +266,18 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
 	}
 
+	if (CONFIG(useFixedBaroCorrFromMap)) {
+		// Read initial MAP sensor value and store it for Baro correction.
+		storedInitialBaroPressure = getRawMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		scheduleMsg(logger, "Get initial baro MAP pressure = %fkPa", storedInitialBaroPressure);
+		// validate if it's within a reasonable range (the engine should not be spinning etc.)
+		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure);
+		if (!cisnan(storedInitialBaroPressure))
+			scheduleMsg(logger, "Using this fixed MAP pressure to override the baro correction!");
+		else
+			scheduleMsg(logger, "The baro pressure is invalid. The fixed baro correction will be disabled!");
+	}
+	
 	addConsoleAction("mapinfo", printMAPInfo);
 #endif
 }
