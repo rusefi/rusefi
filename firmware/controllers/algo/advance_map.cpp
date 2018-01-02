@@ -97,20 +97,22 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 #endif
 	}
 
-	float result = advanceMap.getValue((float) rpm, engineLoad)
-			+ iatCorrection
-			+ engine->fsioTimingAdjustment
-			+ engine->engineState.cltTimingCorrection
-			// todo: uncomment once we get useable knock   - engine->knockCount
-			;
+	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 	
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle)) {
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		result = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, result, tps);
+		advanceAngle = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
 	}
+
+	float result = advanceAngle
+			+ iatCorrection
+			+ engine->fsioTimingAdjustment
+			+ engine->engineState.cltTimingCorrection
+			// todo: uncomment once we get useable knock   - engine->knockCount
+			;
 
 	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
 	return result;
