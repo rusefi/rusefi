@@ -47,8 +47,6 @@ extern fuel_Map3D_t ve2Map;
 extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
-static float fuelRate = 0.0f;
-
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
