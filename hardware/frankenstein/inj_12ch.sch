@@ -472,7 +472,7 @@ F 3 "" H 8075 1475 60  0001 C CNN
 $EndComp
 Text Label 8075 725  0    60   ~ 0
 5V
-Text Notes 8625 875  0    60   ~ 0
+Text Notes 8600 1450 0    60   ~ 0
 OPTION FOR IGNITION DRIVER\n75 OHM   1/2 WATT\n\n\n\n\n100 OHM    1 WATT
 Text Label 14975 1750 2    60   ~ 0
 INJ-11
