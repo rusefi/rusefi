@@ -510,7 +510,7 @@ void testTriggerDecoder(void) {
 
 	testTriggerDecoder2("SATURN_ION_2004", SATURN_ION_2004, 0, 0.9028, 0.0);
 
-	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9583, 0.0);
+	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9611, 0.0);
 
 	testTriggerDecoder2("test1+1", CUSTOM_ENGINE, 0, 0.7500, 0.2500);
 
