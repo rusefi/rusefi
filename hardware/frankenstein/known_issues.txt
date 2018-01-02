@@ -6,7 +6,7 @@
 6)                  rename 'inj-X' to 'low-X' to reduce confusion?
 7)                  draw VBatt wiring on the back of the board?
 8)                  VP label silkscreen should be improved
-9) resolved in 0.1.1 "5v 5v GND" silkscreen on the back is wrong - one of the pins is 3v. todo: check power silkscreen on the front
+9) resolved in 0.1.2 "5v 5v GND" silkscreen on the back is wrong - one of the pins is 3v. todo: check power silkscreen on the front
 
 10)                  a jumper to connect VP to +5
 11)                  a jumper to connect W211 to PC6

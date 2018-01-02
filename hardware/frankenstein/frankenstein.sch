@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -29,21 +29,26 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:LMV324IDR
 LIBS:logo
 LIBS:logo_flipped
-LIBS:project_specific_libs
 LIBS:art-electro-conn
 LIBS:art-electro-ic
-EELAYER 27 0
+LIBS:LMV324IDR
+LIBS:conn_16
+LIBS:fds2734
+LIBS:tc4427
+LIBS:MAX9926-9927
+LIBS:max9939
+LIBS:frankenstein-cache
+EELAYER 25 0
 EELAYER END
-$Descr A4 11693 8268
+$Descr A 11000 8500
 encoding utf-8
 Sheet 1 8
 Title ""
-Date "8 feb 2014"
-Rev ""
-Comp ""
+Date "2017-12-27"
+Rev "R0.1.2"
+Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
 Comment3 ""
@@ -74,7 +79,7 @@ F0 "can_brd_1" 50
 F1 "can_brd_1.sch" 50
 $EndSheet
 $Sheet
-S 9650 3250 500  450 
+S 8900 2925 500  450 
 U 52DBFCF9
 F0 "frankenstein_foundation" 50
 F1 "frankenstein_foundation.sch" 50
