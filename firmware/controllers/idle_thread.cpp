@@ -163,7 +163,7 @@ percent_t getIdlePosition(void) {
 	return currentIdlePosition;
 }
 
-static float autoIdle(float cltCorrection) {
+static float autoIdle(float cltCorrection, float manualIdlePosition) {
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (tpsPos > boardConfiguration->idlePidDeactivationTpsThreshold) {
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
@@ -180,7 +180,12 @@ static float autoIdle(float cltCorrection) {
 		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
 	}
 
-	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
+	// check if within the dead zone
+	int rpm = getRpmE(engine);
+	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone))
+		return baseIdlePosition;
+
+	percent_t newValue = idlePid.getValue(targetRpm, rpm, engineConfiguration->idleRpmPid.period);
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
 	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
@@ -191,6 +196,14 @@ static float autoIdle(float cltCorrection) {
 	newValue = maxF(newValue, CONFIG(idleRpmPid.minValue));
 	newValue = minF(newValue, CONFIG(idleRpmPid.maxValue));
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+
+	// Interpolate to the manual position when RPM is close to the upper RPM limit (if idlePidRpmUpperLimit is set).
+	// This smoothly disables auto-pid, but we don't want RPM to get stuck.
+	// So we shouldn't just leave IAC at baseIdlePosition as in case of TPS deactivation threshold. Instead, we use the manual position.
+	int idlePidRpmLowerLimit = targetRpm + CONFIG(idlePidRpmDeadZone);
+	if (CONFIG(idlePidRpmUpperLimit) > idlePidRpmLowerLimit) {
+		newValue = interpolateClamped(idlePidRpmLowerLimit, newValue, CONFIG(idlePidRpmUpperLimit), manualIdlePosition, rpm);
+	}
 
 	return newValue;
 }
@@ -255,11 +268,12 @@ static msg_t ivThread(int param) {
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
 			baseIdlePosition = iacPosition;
 		} else {
+			float manualIdlePosition = manualIdleController(cltCorrection);
 			if (engineConfiguration->idleMode == IM_MANUAL) {
 				// let's re-apply CLT correction
-				iacPosition = manualIdleController(cltCorrection);
+				iacPosition = manualIdlePosition;
 			} else {
-				iacPosition = autoIdle(cltCorrection);
+				iacPosition = autoIdle(cltCorrection, manualIdlePosition);
 			}
 			
 			// store 'base' iacPosition without adjustments
