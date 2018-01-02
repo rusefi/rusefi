@@ -21,7 +21,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 
 	s->tdcPosition = 630;
 
-	float w = 5;
+	float width = 4;
 	s->setTriggerSynchronizationGap2(9.67 * 0.75, 16);
 
 	float left = 0;
@@ -30,7 +30,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 	int total = 360; // 360 on cam, over 720 crank degree
 
 	float base = 180;
-	right = base - 15;
+	right = base - 4 * width;
 
 	if (with2nd) {
 		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
@@ -52,7 +52,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 	base += 180;
 
 	left = right;
-	right = base - w;
+	right = base - width;
 	if (with2nd) {
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 //				left, right PASS_ENGINE_PARAMETER_SUFFIX);
@@ -69,7 +69,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 
 	base += 180;
 	left = right;
-	right = base - w;
+	right = base - width;
 	if (with2nd) {
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 //				left, right PASS_ENGINE_PARAMETER_SUFFIX);
@@ -86,7 +86,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 
 	base += 180;
 	left = right;
-	right = base - w;
+	right = base - width;
 
 	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 	left = right;
