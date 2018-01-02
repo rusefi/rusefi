@@ -538,7 +538,12 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		scheduling_s *sDown = &ENGINE(fuelActuators[0]).signalTimerDown;
 		startSimultaniousInjection(&primeInjEvent);
-		efitimeus_t turnOffTime = getTimeNowUs() + MS2US(CONFIG(startOfCrankingPrimingPulse));
+		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
+		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
+		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
+		float pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse), 
+			CONFIG(primeInjFalloffTemperature), 0.0f, ENGINE(sensors.clt));
+		efitimeus_t turnOffTime = getTimeNowUs() + MS2US((int)efiRound(pulseLength, 1.0f));
 		scheduleTask(sDown, turnOffTime, (schfunc_t) &endSimultaniousInjection, &primeInjEvent);
 	}
 	// we'll reset it later when the engine starts
