@@ -668,7 +668,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
 
 	int16_t idlePidRpmUpperLimit;;"RPM",      1,      0,       0, 9000,      0
-    int16_t unusedInt16;
+    int16_t primeInjFalloffTemperature;Prime injection pulse falloff temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 
 	adc_channel_e acSwitchAdc;A/C button input handled as analog input
 
@@ -744,7 +744,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	pin_output_mode_e stepperDirectionPinMode;
 	
 	int16_t startUpFuelPumpDuration;;"seconds",        1,     0,  0,    6000,  0
-	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone;"C",        1,     0,  0,    1000,  0
+	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone;"RPM",        1,     0,  0,    1000,  0
 	
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
@@ -861,7 +861,18 @@ spi_device_e accelerometerSpiDevice;
 	float[FSIO_CURVE_8] fsioCurve3;;"y",      1,     0,      -999,    1000.0,   3
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
-	int[794] unusedEnd;
+
+	bit useFixedBaroCorrFromMap
+	bit unusedBit1
+	bit unusedBit2
+	bit unusedBit3
+	bit unusedBit4
+	bit unusedBit5
+	bit unusedBit6
+	bit unusedBit7
+!   ...unusedBit31
+
+	int[793] unusedEnd;
 	
 
 end_struct
