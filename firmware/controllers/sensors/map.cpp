@@ -272,10 +272,11 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		scheduleMsg(logger, "Get initial baro MAP pressure = %fkPa", storedInitialBaroPressure);
 		// validate if it's within a reasonable range (the engine should not be spinning etc.)
 		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure);
-		if (!cisnan(storedInitialBaroPressure))
+		if (!cisnan(storedInitialBaroPressure)) {
 			scheduleMsg(logger, "Using this fixed MAP pressure to override the baro correction!");
-		else
+		} else {
 			scheduleMsg(logger, "The baro pressure is invalid. The fixed baro correction will be disabled!");
+		}
 	}
 	
 	addConsoleAction("mapinfo", printMAPInfo);
