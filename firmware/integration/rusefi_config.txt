@@ -405,7 +405,7 @@ custom spi_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "SPI1", "SPI2", "SPI3"
 	spi_device_e hip9011SpiDevice;
 	
 	
-float globalFuelCorrection;set_global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
+float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
 
 	float adcVcc;;         "volts",    1,    0.0,       0,    4.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
