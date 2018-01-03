@@ -199,10 +199,11 @@ static float autoIdle(float cltCorrection, float manualIdlePosition) {
 
 	// Interpolate to the manual position when RPM is close to the upper RPM limit (if idlePidRpmUpperLimit is set).
 	// This smoothly disables auto-pid, but we don't want RPM to get stuck.
-	// So we shouldn't just leave IAC at baseIdlePosition as in case of TPS deactivation threshold. Instead, we use the manual position.
-	int idlePidRpmLowerLimit = targetRpm + CONFIG(idlePidRpmDeadZone);
-	if (CONFIG(idlePidRpmUpperLimit) > idlePidRpmLowerLimit) {
-		newValue = interpolateClamped(idlePidRpmLowerLimit, newValue, CONFIG(idlePidRpmUpperLimit), manualIdlePosition, rpm);
+	// So we shouldn't just leave IAC at baseIdlePosition as in case of TPS deactivation threshold. Instead, we use the manual position as a temporary solution.
+	// Eventually we'll use a real calculated and stored IAC position instead of the manual one.
+	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
+	if (CONFIG(idlePidRpmUpperLimit) > 0) {
+		newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), manualIdlePosition, rpm);
 	}
 
 	return newValue;
