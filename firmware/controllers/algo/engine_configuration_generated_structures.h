@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jan 02 21:23:52 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 03 07:47:04 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1431,13 +1431,15 @@ typedef struct {
 	 */
 	uint32_t engineChartSize;
 	/**
+	 * Relative to the target idle RPM
 	 * offset 1492
 	 */
 	int16_t idlePidRpmUpperLimit;
 	/**
+	 * Prime injection pulse falloff temperature threshold, in Celsuis
 	 * offset 1494
 	 */
-	int16_t unusedInt16;
+	int16_t primeInjFalloffTemperature;
 	/**
 	 * A/C button input handled as analog input
 	 * offset 1496
@@ -2315,4 +2317,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jan 02 21:23:52 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 03 07:47:04 EST 2018
