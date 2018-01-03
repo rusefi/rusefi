@@ -1128,6 +1128,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
+		{"global_fuel_correction", setGlobalFuelCorrection},
 		{"cranking_fuel", setCrankingFuel},
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
@@ -1290,8 +1291,6 @@ void initSettings(void) {
 	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("info", printAllInfo);
-
-	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
 	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);
