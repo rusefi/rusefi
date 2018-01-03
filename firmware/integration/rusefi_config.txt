@@ -692,7 +692,7 @@ bit unused_1484_bit_21
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
 
-	int16_t idlePidRpmUpperLimit;;"RPM",      1,      0,       0, 9000,      0
+	int16_t idlePidRpmUpperLimit;+Relative to the target idle RPM;"RPM",      1,      0,       0, 9000,      0
     int16_t primeInjFalloffTemperature;Prime injection pulse falloff temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 
 	adc_channel_e acSwitchAdc;A/C button input handled as analog input
