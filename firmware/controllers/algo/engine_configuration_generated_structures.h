@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 31 19:34:05 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jan 02 21:23:52 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -633,6 +633,45 @@ typedef struct {
 	 * Use rise or fall signal front
 	offset 376 bit 17 */
 	bool vvtCamSensorUseRise : 1;
+	/**
+	offset 376 bit 18 */
+	bool unused_board_984_18 : 1;
+	/**
+	offset 376 bit 19 */
+	bool unused_board_984_19 : 1;
+	/**
+	offset 376 bit 20 */
+	bool unused_board_984_20 : 1;
+	/**
+	offset 376 bit 21 */
+	bool unused_board_984_21 : 1;
+	/**
+	offset 376 bit 22 */
+	bool unused_board_984_22 : 1;
+	/**
+	offset 376 bit 23 */
+	bool unused_board_984_23 : 1;
+	/**
+	offset 376 bit 24 */
+	bool unused_board_984_24 : 1;
+	/**
+	offset 376 bit 25 */
+	bool unused_board_984_25 : 1;
+	/**
+	offset 376 bit 26 */
+	bool unused_board_984_26 : 1;
+	/**
+	offset 376 bit 27 */
+	bool unused_board_984_27 : 1;
+	/**
+	offset 376 bit 28 */
+	bool unused_board_984_28 : 1;
+	/**
+	offset 376 bit 29 */
+	bool unused_board_984_29 : 1;
+	/**
+	offset 376 bit 30 */
+	bool unused_board_984_30 : 1;
 	/**
 	 * offset 380
 	 */
@@ -1280,6 +1319,27 @@ typedef struct {
 	offset 1472 bit 20 */
 	bool hasFrequencyReportingMapSensor : 1;
 	/**
+	offset 1472 bit 21 */
+	bool unused_bit_1472_21 : 1;
+	/**
+	offset 1472 bit 22 */
+	bool unused_bit_1472_22 : 1;
+	/**
+	offset 1472 bit 23 */
+	bool unused_bit_1472_23 : 1;
+	/**
+	offset 1472 bit 24 */
+	bool unused_bit_1472_24 : 1;
+	/**
+	offset 1472 bit 25 */
+	bool unused_bit_1472_25 : 1;
+	/**
+	offset 1472 bit 26 */
+	bool unused_bit_1472_26 : 1;
+	/**
+	offset 1472 bit 27 */
+	bool unused_bit_1472_27 : 1;
+	/**
 	 * offset 1476
 	 */
 	adc_channel_e hipOutputChannel;
@@ -1348,6 +1408,24 @@ typedef struct {
 	 * This is needed if batched igniton (waster spark) and individual coil wiring
 	offset 1484 bit 15 */
 	bool twoWireBatchIgnition : 1;
+	/**
+	offset 1484 bit 16 */
+	bool useFixedBaroCorrFromMap : 1;
+	/**
+	offset 1484 bit 17 */
+	bool unused_1484_bit_17 : 1;
+	/**
+	offset 1484 bit 18 */
+	bool unused_1484_bit_18 : 1;
+	/**
+	offset 1484 bit 19 */
+	bool unused_1484_bit_19 : 1;
+	/**
+	offset 1484 bit 20 */
+	bool unused_1484_bit_20 : 1;
+	/**
+	offset 1484 bit 21 */
+	bool unused_1484_bit_21 : 1;
 	/**
 	 * offset 1488
 	 */
@@ -2237,4 +2315,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 31 19:34:05 EST 2017
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jan 02 21:23:52 EST 2018

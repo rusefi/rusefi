@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Dec 26 11:24:20 EST 2017
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jan 02 21:23:52 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -398,6 +398,19 @@ public class Fields {
 	public static final int onOffAlternatorLogic_offset = 984;
 	public static final int isCJ125Enabled_offset = 984;
 	public static final int vvtCamSensorUseRise_offset = 984;
+	public static final int unused_board_984_18_offset = 984;
+	public static final int unused_board_984_19_offset = 984;
+	public static final int unused_board_984_20_offset = 984;
+	public static final int unused_board_984_21_offset = 984;
+	public static final int unused_board_984_22_offset = 984;
+	public static final int unused_board_984_23_offset = 984;
+	public static final int unused_board_984_24_offset = 984;
+	public static final int unused_board_984_25_offset = 984;
+	public static final int unused_board_984_26_offset = 984;
+	public static final int unused_board_984_27_offset = 984;
+	public static final int unused_board_984_28_offset = 984;
+	public static final int unused_board_984_29_offset = 984;
+	public static final int unused_board_984_30_offset = 984;
 	public static final int logicAnalyzerPins1_offset = 988;
 	public static final int logicAnalyzerPins2_offset = 992;
 	public static final int logicAnalyzerPins3_offset = 996;
@@ -609,6 +622,13 @@ public class Fields {
 	public static final int step1fuelCutEnable_offset = 1472;
 	public static final int step1SparkCutEnable_offset = 1472;
 	public static final int hasFrequencyReportingMapSensor_offset = 1472;
+	public static final int unused_bit_1472_21_offset = 1472;
+	public static final int unused_bit_1472_22_offset = 1472;
+	public static final int unused_bit_1472_23_offset = 1472;
+	public static final int unused_bit_1472_24_offset = 1472;
+	public static final int unused_bit_1472_25_offset = 1472;
+	public static final int unused_bit_1472_26_offset = 1472;
+	public static final int unused_bit_1472_27_offset = 1472;
 	public static final int hipOutputChannel_offset = 1476;
 	public static final int idleMode_offset = 1480;
 	public static final int isInjectionEnabled_offset = 1484;
@@ -627,6 +647,12 @@ public class Fields {
 	public static final int twoWireBatchInjection_offset = 1484;
 	public static final int useOnlyRisingEdgeForTrigger_offset = 1484;
 	public static final int twoWireBatchIgnition_offset = 1484;
+	public static final int useFixedBaroCorrFromMap_offset = 1484;
+	public static final int unused_1484_bit_17_offset = 1484;
+	public static final int unused_1484_bit_18_offset = 1484;
+	public static final int unused_1484_bit_19_offset = 1484;
+	public static final int unused_1484_bit_20_offset = 1484;
+	public static final int unused_1484_bit_21_offset = 1484;
 	public static final int engineChartSize_offset = 1488;
 	public static final int idlePidRpmUpperLimit_offset = 1492;
 	public static final int unusedInt16_offset = 1494;
@@ -1364,6 +1390,19 @@ public class Fields {
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 984, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 984, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 984, FieldType.BIT, 17);
+	public static final Field UNUSED_BOARD_984_18 = Field.create("UNUSED_BOARD_984_18", 984, FieldType.BIT, 18);
+	public static final Field UNUSED_BOARD_984_19 = Field.create("UNUSED_BOARD_984_19", 984, FieldType.BIT, 19);
+	public static final Field UNUSED_BOARD_984_20 = Field.create("UNUSED_BOARD_984_20", 984, FieldType.BIT, 20);
+	public static final Field UNUSED_BOARD_984_21 = Field.create("UNUSED_BOARD_984_21", 984, FieldType.BIT, 21);
+	public static final Field UNUSED_BOARD_984_22 = Field.create("UNUSED_BOARD_984_22", 984, FieldType.BIT, 22);
+	public static final Field UNUSED_BOARD_984_23 = Field.create("UNUSED_BOARD_984_23", 984, FieldType.BIT, 23);
+	public static final Field UNUSED_BOARD_984_24 = Field.create("UNUSED_BOARD_984_24", 984, FieldType.BIT, 24);
+	public static final Field UNUSED_BOARD_984_25 = Field.create("UNUSED_BOARD_984_25", 984, FieldType.BIT, 25);
+	public static final Field UNUSED_BOARD_984_26 = Field.create("UNUSED_BOARD_984_26", 984, FieldType.BIT, 26);
+	public static final Field UNUSED_BOARD_984_27 = Field.create("UNUSED_BOARD_984_27", 984, FieldType.BIT, 27);
+	public static final Field UNUSED_BOARD_984_28 = Field.create("UNUSED_BOARD_984_28", 984, FieldType.BIT, 28);
+	public static final Field UNUSED_BOARD_984_29 = Field.create("UNUSED_BOARD_984_29", 984, FieldType.BIT, 29);
+	public static final Field UNUSED_BOARD_984_30 = Field.create("UNUSED_BOARD_984_30", 984, FieldType.BIT, 30);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 988, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 992, FieldType.INT, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 996, FieldType.INT, brain_input_pin_e);
@@ -1515,6 +1554,13 @@ public class Fields {
 	public static final Field STEP1FUELCUTENABLE = Field.create("STEP1FUELCUTENABLE", 1472, FieldType.BIT, 18);
 	public static final Field STEP1SPARKCUTENABLE = Field.create("STEP1SPARKCUTENABLE", 1472, FieldType.BIT, 19);
 	public static final Field HASFREQUENCYREPORTINGMAPSENSOR = Field.create("HASFREQUENCYREPORTINGMAPSENSOR", 1472, FieldType.BIT, 20);
+	public static final Field UNUSED_BIT_1472_21 = Field.create("UNUSED_BIT_1472_21", 1472, FieldType.BIT, 21);
+	public static final Field UNUSED_BIT_1472_22 = Field.create("UNUSED_BIT_1472_22", 1472, FieldType.BIT, 22);
+	public static final Field UNUSED_BIT_1472_23 = Field.create("UNUSED_BIT_1472_23", 1472, FieldType.BIT, 23);
+	public static final Field UNUSED_BIT_1472_24 = Field.create("UNUSED_BIT_1472_24", 1472, FieldType.BIT, 24);
+	public static final Field UNUSED_BIT_1472_25 = Field.create("UNUSED_BIT_1472_25", 1472, FieldType.BIT, 25);
+	public static final Field UNUSED_BIT_1472_26 = Field.create("UNUSED_BIT_1472_26", 1472, FieldType.BIT, 26);
+	public static final Field UNUSED_BIT_1472_27 = Field.create("UNUSED_BIT_1472_27", 1472, FieldType.BIT, 27);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1476, FieldType.INT, adc_channel_e);
 	public static final Field IDLEMODE = Field.create("IDLEMODE", 1480, FieldType.INT);
 	public static final Field ISINJECTIONENABLED = Field.create("ISINJECTIONENABLED", 1484, FieldType.BIT, 0);
@@ -1533,6 +1579,12 @@ public class Fields {
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1484, FieldType.BIT, 13);
 	public static final Field USEONLYRISINGEDGEFORTRIGGER = Field.create("USEONLYRISINGEDGEFORTRIGGER", 1484, FieldType.BIT, 14);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1484, FieldType.BIT, 15);
+	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1484, FieldType.BIT, 16);
+	public static final Field UNUSED_1484_BIT_17 = Field.create("UNUSED_1484_BIT_17", 1484, FieldType.BIT, 17);
+	public static final Field UNUSED_1484_BIT_18 = Field.create("UNUSED_1484_BIT_18", 1484, FieldType.BIT, 18);
+	public static final Field UNUSED_1484_BIT_19 = Field.create("UNUSED_1484_BIT_19", 1484, FieldType.BIT, 19);
+	public static final Field UNUSED_1484_BIT_20 = Field.create("UNUSED_1484_BIT_20", 1484, FieldType.BIT, 20);
+	public static final Field UNUSED_1484_BIT_21 = Field.create("UNUSED_1484_BIT_21", 1484, FieldType.BIT, 21);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1488, FieldType.INT);
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1492, FieldType.INT);
 	public static final Field UNUSEDINT16 = Field.create("UNUSEDINT16", 1494, FieldType.INT);
