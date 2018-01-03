@@ -886,18 +886,7 @@ spi_device_e accelerometerSpiDevice;
 	float[FSIO_CURVE_8] fsioCurve3;;"y",      1,     0,      -999,    1000.0,   3
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
-
-	bit useFixedBaroCorrFromMap
-	bit unusedBit1
-	bit unusedBit2
-	bit unusedBit3
-	bit unusedBit4
-	bit unusedBit5
-	bit unusedBit6
-	bit unusedBit7
-!   ...unusedBit31
-
-	int[793] unusedEnd;
+	int[794] unusedEnd;
 	
 
 end_struct
