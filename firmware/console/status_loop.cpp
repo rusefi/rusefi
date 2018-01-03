@@ -876,10 +876,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 #endif /* EFI_PROD_CODE */
 
-#if 0
-	// todo: add output variable 'fuelConsumptionPerHour'
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
-#endif
 	
 	tsOutputChannels->warningCounter = engine->engineState.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.lastErrorCode;

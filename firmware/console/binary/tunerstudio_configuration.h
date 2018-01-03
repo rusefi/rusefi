@@ -163,7 +163,8 @@ typedef struct {
 	int16_t accelerationX; // 276
 	int16_t accelerationY; // 278
 	float oilPressure;	// 280
-	int unused3[18];
+	float fuelConsumptionPerHour; // 284
+	int unused3[17];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
