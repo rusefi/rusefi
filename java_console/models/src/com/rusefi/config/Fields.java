@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Jan 02 21:23:52 EST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 03 07:47:04 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -655,7 +655,7 @@ public class Fields {
 	public static final int unused_1484_bit_21_offset = 1484;
 	public static final int engineChartSize_offset = 1488;
 	public static final int idlePidRpmUpperLimit_offset = 1492;
-	public static final int unusedInt16_offset = 1494;
+	public static final int primeInjFalloffTemperature_offset = 1494;
 	public static final int acSwitchAdc_offset = 1496;
 	public static final int ignMathCalculateAtIndex_offset = 1500;
 	public static final int acCutoffLowRpm_offset = 1504;
@@ -1587,7 +1587,7 @@ public class Fields {
 	public static final Field UNUSED_1484_BIT_21 = Field.create("UNUSED_1484_BIT_21", 1484, FieldType.BIT, 21);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1488, FieldType.INT);
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1492, FieldType.INT);
-	public static final Field UNUSEDINT16 = Field.create("UNUSEDINT16", 1494, FieldType.INT);
+	public static final Field PRIMEINJFALLOFFTEMPERATURE = Field.create("PRIMEINJFALLOFFTEMPERATURE", 1494, FieldType.INT);
 	public static final Field ACSWITCHADC = Field.create("ACSWITCHADC", 1496, FieldType.INT, adc_channel_e);
 	public static final Field IGNMATHCALCULATEATINDEX = Field.create("IGNMATHCALCULATEATINDEX", 1500, FieldType.INT);
 	public static final Field ACCUTOFFLOWRPM = Field.create("ACCUTOFFLOWRPM", 1504, FieldType.INT);

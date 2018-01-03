@@ -972,8 +972,8 @@
 #define engineChartSize_offset_hex 5d0
 #define idlePidRpmUpperLimit_offset 1492
 #define idlePidRpmUpperLimit_offset_hex 5d4
-#define unusedInt16_offset 1494
-#define unusedInt16_offset_hex 5d6
+#define primeInjFalloffTemperature_offset 1494
+#define primeInjFalloffTemperature_offset_hex 5d6
 #define acSwitchAdc_offset 1496
 #define acSwitchAdc_offset_hex 5d8
 #define ignMathCalculateAtIndex_offset 1500
