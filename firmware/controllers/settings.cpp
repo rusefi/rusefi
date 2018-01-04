@@ -1042,6 +1042,7 @@ plain_get_float_s getF_plain[] = {
 		{"ignition_offset", &engineConfiguration->ignitionOffset},
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
+		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
 		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
 		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
 		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
@@ -1095,6 +1096,9 @@ static void getValue(const char *paramStr) {
 		printDateTime();
 	}
 #endif
+	else {
+		scheduleMsg(&logger, "unexpcted here: %s", paramStr);
+	}
 }
 
 static void setFsioCurve1Value(float value) {
