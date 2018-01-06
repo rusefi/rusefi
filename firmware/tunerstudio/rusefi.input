@@ -146,6 +146,9 @@ fileVersion = { 20171101 }
 ; see TS_OUTPUT_SIZE in console source code
    ochBlockSize     = 356
 
+;
+; see TunerStudioOutputChannels struct
+;
       RPMValue        = scalar,  U32,      0,             "RPM",            1,   0.00000
 #if CELSIUS
       coolant         = scalar,  F32,      4,              "°C",            1,       0.0
@@ -256,6 +259,10 @@ fileVersion = { 20171101 }
       accelerationX        = scalar,  S16,     276,              "G",           0.01,         0
       accelerationY        = scalar,  S16,     276,              "G",           0.01,         0
 	  oilPressure		   = scalar,  F32,     280,				 "kPa",			1, 0.0
+      fuelConsumptionPerHour=scalar,  F32,     284,				 "kPa",			1, 0.0
+;
+; see TunerStudioOutputChannels struct
+;
 
 ; todo: generate this section programatically
 	LM_PLAIN_MAF = {0},
@@ -672,6 +679,7 @@ gaugeCategory = Sensors
    VBattGauge        = VBatt,      "Battery Voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
    MAPGauge     	 = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
    OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
+   fuelConsumptionPerHourGauge=fuelConsumptionPerHour,  "f","kPa",        0,    750,      35,     75,     550,   700,   0,   0	
    tpsADCGauge       = tpsADC,             "tps ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
    atmPresCGauge     = baroPressure,          "Baro",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
    vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
