@@ -539,7 +539,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (algo == LM_ALPHA_N) {
 		setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (algo == LM_SPEED_DENSITY) {
-		setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 3);
+		setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 3);
 		buildTimingMap(35 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }

@@ -151,7 +151,7 @@ void setTableBin(float array[], int size, float from, float to);
 
 #define setArrayValues(array, size, value) setTableBin(array, size, value, value)
 
-void setTableBin2(float array[], int size, float from, float to, float precision);
+void setLinearCurve(float array[], int size, float from, float to, float precision);
 void setRpmTableBin(float array[], int size);
 
 #endif /* TABLE_HELPER_H_ */

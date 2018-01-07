@@ -189,7 +189,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
 	}
-	setTableBin2(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 0.01);
+	setLinearCurve(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 0.01);
 }
 
 void setAfrMap(afr_table_t table, float value) {
@@ -221,9 +221,9 @@ void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setTableBin2(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setTableBin2(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setTableBin2(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setLinearCurve(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setLinearCurve(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 }
 
 void setTimingMap(ignition_table_t map, float value) {
@@ -474,8 +474,8 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setTableBin2(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
-	setTableBin2(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
+	setLinearCurve(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
+	setLinearCurve(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
 
 	config->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
@@ -557,8 +557,8 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setTableBin2(engineConfiguration->cltIdleRpmBins, DWELL_CURVE_SIZE, -40, 90, 0);
-	setTableBin2(engineConfiguration->cltIdleRpm, DWELL_CURVE_SIZE, rpm, rpm, 0);
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, DWELL_CURVE_SIZE, -40, 90, 0);
+	setLinearCurve(engineConfiguration->cltIdleRpm, DWELL_CURVE_SIZE, rpm, rpm, 0);
 }
 
 /**
@@ -616,17 +616,17 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.minValue = 10;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setTableBin2(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
-	setTableBin2(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
+	setLinearCurve(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
+	setLinearCurve(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
 
-	setTableBin2(engineConfiguration->fsioCurve1Bins, FSIO_CURVE_16, 0, 100, 1);
-	setTableBin2(engineConfiguration->fsioCurve1, FSIO_CURVE_16, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1Bins, FSIO_CURVE_16, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, 0, 100, 1);
 
-	setTableBin2(engineConfiguration->fsioCurve2Bins, FSIO_CURVE_16, 0, 100, 1);
-	setTableBin2(engineConfiguration->fsioCurve2, FSIO_CURVE_16, 30, 170, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2Bins, FSIO_CURVE_16, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, 30, 170, 1);
 
-	setTableBin2(engineConfiguration->fsioCurve3Bins, FSIO_CURVE_8, 0, 100, 1);
-	setTableBin2(engineConfiguration->fsioCurve4Bins, FSIO_CURVE_8, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve3Bins, FSIO_CURVE_8, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve4Bins, FSIO_CURVE_8, 0, 100, 1);
 
 
 	setDefaultWarmupIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -645,10 +645,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	setTableBin2(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
-	setTableBin2(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
-	setTableBin2(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000, 1);
-	setTableBin2(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
+	setLinearCurve(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
+	setLinearCurve(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
+	setLinearCurve(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000, 1);
+	setLinearCurve(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -661,19 +661,19 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setTableBin2(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
-	setTableBin2(engineConfiguration->mapAccelTaperMult, FSIO_TABLE_8, 1, 1, 1);
+	setLinearCurve(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
+	setLinearCurve(engineConfiguration->mapAccelTaperMult, FSIO_TABLE_8, 1, 1, 1);
 
-	setTableBin2(config->tpsTpsAccelFromRpmBins, FSIO_TABLE_8, 0, 100, 10);
-	setTableBin2(config->tpsTpsAccelToRpmBins, FSIO_TABLE_8, 0, 100, 10);
+	setLinearCurve(config->tpsTpsAccelFromRpmBins, FSIO_TABLE_8, 0, 100, 10);
+	setLinearCurve(config->tpsTpsAccelToRpmBins, FSIO_TABLE_8, 0, 100, 10);
 
-	setTableBin2(config->fsioTable1LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable1LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable1RpmBins, FSIO_TABLE_8);
-	setTableBin2(config->fsioTable2LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable2LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable2RpmBins, FSIO_TABLE_8);
-	setTableBin2(config->fsioTable3LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable3LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable3RpmBins, FSIO_TABLE_8);
-	setTableBin2(config->fsioTable4LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable4LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable4RpmBins, FSIO_TABLE_8);
 
 	initEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
