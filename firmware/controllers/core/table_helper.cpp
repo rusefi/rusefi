@@ -15,7 +15,7 @@
  */
 void setLinearCurve(float array[], int size, float from, float to, float precision) {
 	for (int i = 0; i < size; i++) {
-		float value = interpolateMsg("setTable", 0, from, size - 1, to, i);
+		float value = interpolateMsg("setLinearCurve", 0, from, size - 1, to, i);
 		/**
 		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
 		 */

@@ -517,8 +517,12 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
+/**
+ * see also setTargetRpmCurve()
+ */
 static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// todo: set bins
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, -40, 140, 10);
+
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
@@ -556,9 +560,12 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }
 
+/**
+ * see also setDefaultIdleSpeedTarget()
+ */
 void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, DWELL_CURVE_SIZE, -40, 90, 0);
-	setLinearCurve(engineConfiguration->cltIdleRpm, DWELL_CURVE_SIZE, rpm, rpm, 0);
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, -40, 90, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, rpm, rpm, 10);
 }
 
 /**
@@ -728,9 +735,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->warmupTargetAfrBins[3] = 60;
 	engineConfiguration->warmupTargetAfr[3] = 14.5;
 
-	setDefaultIdleSpeedTarget(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
 	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
 	engineConfiguration->fuelClosedLoopCltThreshold = 70;
 	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
@@ -739,8 +743,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
 	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
 
-	engineConfiguration->cranking.baseFuel = 5;
-	engineConfiguration->startUpFuelPumpDuration = 4;
+	/**
+	 * Idle control defaults
+	 */
+	setDefaultIdleSpeedTarget(PASS_ENGINE_PARAMETER_SIGNATURE);
+	//	setTargetRpmCurve(1200 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->idleRpmPid.pFactor = 0.05;
 	engineConfiguration->idleRpmPid.iFactor = 0.002;
@@ -749,11 +756,30 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.maxValue = 95;
 	boardConfiguration->idlePidDeactivationTpsThreshold = 2;
 
-	engineConfiguration->analogInputDividerCoefficient = 2;
+	boardConfiguration->idleStepperPulseDuration = 10;
+	boardConfiguration->idle.solenoidFrequency = 200;
+	// set idle_position 50
+	boardConfiguration->manIdlePosition = 50;
+	engineConfiguration->crankingIACposition = 50;
+//	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->idleMode = IM_MANUAL;
 
+	boardConfiguration->useStepperIdle = false;
+
+	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	/**
+	 * Cranking defaults
+	 */
+	engineConfiguration->startUpFuelPumpDuration = 4;
+	engineConfiguration->cranking.baseFuel = 5;
 	engineConfiguration->crankingChargeAngle = 70;
+
+
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;
+
+	engineConfiguration->analogInputDividerCoefficient = 2;
 
 	// performance optimization
 	boardConfiguration->sensorChartMode = SC_OFF;
@@ -841,22 +867,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
-	boardConfiguration->idleStepperPulseDuration = 10;
-	boardConfiguration->idle.solenoidFrequency = 200;
-	// set idle_position 50
-	boardConfiguration->manIdlePosition = 50;
-	engineConfiguration->crankingIACposition = 50;
-	setTargetRpmCurve(1200 PASS_ENGINE_PARAMETER_SUFFIX);
-//	engineConfiguration->idleMode = IM_AUTO;
-	engineConfiguration->idleMode = IM_MANUAL;
 
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 
-	boardConfiguration->useStepperIdle = false;
-
-	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)

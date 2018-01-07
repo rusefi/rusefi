@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 06 10:47:12 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 07 12:06:45 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1591,6 +1591,7 @@ typedef struct {
 	 */
 	int step1RpmWindow;
 	/**
+	 * See cltIdleRpmBins
 	 * offset 1884
 	 */
 	pid_s idleRpmPid;
@@ -1663,6 +1664,7 @@ typedef struct {
 	 */
 	float cltIdleRpmBins[CLT_CURVE_SIZE];
 	/**
+	 * See idleRpmPid
 	 * offset 2076
 	 */
 	float cltIdleRpm[CLT_CURVE_SIZE];
@@ -2317,4 +2319,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 06 10:47:12 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 07 12:06:45 EST 2018
