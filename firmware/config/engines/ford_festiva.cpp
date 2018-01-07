@@ -146,7 +146,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 9;
 
-	setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 105, 5);
+	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 105, 5);
 	setWholeTimingTable(10 PASS_ENGINE_PARAMETER_SUFFIX);
 	// set_whole_fuel_map 5
 	setWholeFuelMap(5 PASS_ENGINE_PARAMETER_SUFFIX);

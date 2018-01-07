@@ -10,7 +10,7 @@
 #include "efilib.h"
 #include "interpolation.h"
 
-void setTableBin2(float array[], int size, float from, float to, float precision) {
+void setLinearCurve(float array[], int size, float from, float to, float precision) {
 	for (int i = 0; i < size; i++) {
 		float value = interpolateMsg("setTable", 0, from, size - 1, to, i);
 		/**
@@ -29,7 +29,7 @@ void setRpmBin(float array[], int size, float idleRpm, float topRpm) {
 }
 
 void setTableBin(float array[], int size, float from, float to) {
-	setTableBin2(array, size, from, to, 0.01);
+	setLinearCurve(array, size, from, to, 0.01);
 }
 
 /**

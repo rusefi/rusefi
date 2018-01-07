@@ -131,14 +131,14 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	veMap.setAll(80);
 
 //	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
-//	setTableBin2(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
+//	setLinearCurve(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 //	ve2Map.setAll(0.81);
 
 	setRpmTableBin(config->afrRpmBins, FUEL_RPM_COUNT);
 	afrMap.setAll(14.7);
 
 	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
-	setTableBin2(engineConfiguration->baroCorrPressureBins, BARO_CORR_SIZE, 75, 105, 1);
+	setLinearCurve(engineConfiguration->baroCorrPressureBins, BARO_CORR_SIZE, 75, 105, 1);
 	memcpy(engineConfiguration->baroCorrTable, default_baro_corr, sizeof(default_baro_corr));
 }
 
