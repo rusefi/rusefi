@@ -445,14 +445,14 @@ fileVersion = { 20171101 }
 	curve = cltIdleRPMCurve, "Idle Target RPM"
       columnLabel = "Coolant", "RPM"
       xAxis       = -40, 120, 10
-      yAxis       =  0,  0, 8000
+      yAxis       =  0, 8000, 10
       xBins       = cltIdleRpmBins, coolant
       yBins       = cltIdleRpm, RPMValue
       gauge       = CLTGauge
 
 	curve = idleAdvanceCurve, "Idle Advance Angle"
       columnLabel = "RPM", "degrees"
-      xAxis       = 0, 8000, 1000
+      xAxis       = 0, 8000, 10
       yAxis       = -100, 100, 10
       xBins       = idleAdvanceBins, RPMValue
       yBins       = idleAdvance
@@ -460,7 +460,7 @@ fileVersion = { 20171101 }
 
 	curve = idleVeCurve, "Idle VE"
       columnLabel = "RPM", "%"
-      xAxis       = 0, 8000, 1000
+      xAxis       = 0, 8000, 10
       yAxis       = 0, 250, 10
       xBins       = idleVeBins, RPMValue
       yBins       = idleVe
@@ -926,7 +926,6 @@ gaugeCategory = Fuel Data
 		subMenu = tachSettings,				"Tachometer output"
 		subMenu = std_separator
 		subMenu = fanSetting,				"Fan Settings"
-		subMenu = idleSettings,				"Idle Settings"
 		subMenu = mainRealay,				"Main Relay Settings"
 		subMenu = fuelPump,					"Fuel Pump Settings"
 		subMenu = malfunction,				"MIL Settings"
@@ -949,6 +948,7 @@ gaugeCategory = Fuel Data
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
 		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
+		subMenu = idleSettings,				"Idle Settings"
 		subMenu = cltIdleRPMCurve,			"Idle Target RPM", 0, {idleMode == 0}
 		subMenu = std_separator
 		subMenu = fuelTableDialog,			"Fuel Table", 0, {fuelAlgorithm != LM_SPEED_DENSITY}
@@ -1495,12 +1495,12 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
         field = "CS #8", 								max31855_cs8
 
 ;			Engine->idle Settings	
-	dialog = idleSolenoid, "solenoid"
+	dialog = idleSolenoid, "Solenoid"
 		field = "Idle Solenoid Pin Mode",   	  	    idle_solenoidPinMode, !useStepperIdle
 		field = "Idle Solenoid Pin",					idle_solenoidPin, !useStepperIdle
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 	
-	dialog = idleStepper, "stepper"
+	dialog = idleStepper, "Stepper"
 		field = "Idle Stepper Step",					idle_stepperStepPin, useStepperIdle
 		field = "Idle Stepper Dir",						idle_stepperDirectionPin, useStepperIdle
 		field = "Idle Stepper Enable",					stepperEnablePin, useStepperIdle
@@ -1508,34 +1508,37 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		
-	dialog = idleType, "Type idle valve",	border
+	dialog = idleHwType, "Idle Valve Hardware",	border
+		field = "use stepper",							useStepperIdle
 		panel = idleSolenoid,				West
 		panel = idleStepper,				East
 		
+	dialog = idlePidSettings, "PID control"	
+		field = "P-factor",								idleRpmPid_pFactor
+		field = "I-factor",								idleRpmPid_iFactor
+		field = "D-factor",								idleRpmPid_dFactor
+		field = "Offset",								idleRpmPid_offset
+		field = "Min",									idleRpmPid_minValue
+		field = "Max",									idleRpmPid_maxValue
+		
+		
 	dialog = idleSettings, "", yAxis
-		field = "#Automatic Mode is still Alpha Version"
-		field = "Manual mode",							idleMode
+		field = "!Automatic Mode is now Beta Version"
+		field = "Idle control mode",					idleMode
 		field = "Use separate Advance Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
 		field = "Cranking Idle Air",					crankingIACposition
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
-;		field = "# Warmup Idle multipplier is apploed to target RPM"
-;		field = "Auto target",							targetIdleRpm, { idleMode == 0}
-		field = "idle P",								idleRpmPid_pFactor, { idleMode == 0}
-		field = "idle I",								idleRpmPid_iFactor, { idleMode == 0}
-		field = "idle D",								idleRpmPid_dFactor, { idleMode == 0}
-		field = "idle offset",							idleRpmPid_offset, { idleMode == 0}
+		field = "#See Idle Target RPM Curve"
+		panel = idlePidSettings, { idleMode == 0}
 		field = "period",								idleRpmPid_period
-		field = "pid min",								idleRpmPid_minValue, { idleMode == 0}
-		field = "pid max",								idleRpmPid_maxValue, { idleMode == 0}
 		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone, { idleMode == 0}
 		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit, { idleMode == 0}
 		field = "iacByTpsTaper",						iacByTpsTaper;
 		field = "verbose",								isVerboseIAC
 		slider = "Manual Idle Position",				manIdlePosition, horizontal
 		field = ""
-		field = "use stepper",							useStepperIdle
-		panel = idleType
+		panel = idleHwType
 
 ;			Engine->Fan Settings
 	dialog = fanSetting, "Fan Settings"
