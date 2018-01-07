@@ -252,6 +252,7 @@ float interpolate2d(const char *msg, float value, float bin[], float values[], i
 
 /**
  * Sets specified value for specified key in a correction curve
+ * see also setLinearCurve()
  */
 void setCurveValue(float bins[], float values[], int size, float key, float value) {
 	int index = findIndexMsg("tbVl", bins, size, key);

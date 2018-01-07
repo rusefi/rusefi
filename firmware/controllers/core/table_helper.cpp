@@ -10,6 +10,9 @@
 #include "efilib.h"
 #include "interpolation.h"
 
+/**
+ * @param precision for example '0.1' for one digit fractional part
+ */
 void setLinearCurve(float array[], int size, float from, float to, float precision) {
 	for (int i = 0; i < size; i++) {
 		float value = interpolateMsg("setTable", 0, from, size - 1, to, i);
