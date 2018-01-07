@@ -1,0 +1,13 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP BOSCH_88PIN_02X44
+D BOSCH 88-Pin ECU Connector
+K connector
+$ENDCMP
+#
+$CMP IRLR3103
+D 30V Vds, N-Channel MOSFET, TO-252
+K N-Channel MOSFET
+$ENDCMP
+#
+#End Doc Library
