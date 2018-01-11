@@ -959,7 +959,7 @@ gaugeCategory = Fuel Data
         subMenu = injPhaseTableTbl,         "Injection Phase"           
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
 		subMenu = std_separator
-		subMenu = fuelClosedLoopDialog, 	"Fuel closed-loop correction"
+		subMenu = fuelClosedLoopDialog, 	"Fuel short-term closed-loop correction"
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
         subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
 		subMenu = std_separator
@@ -1618,7 +1618,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
 		field = "LIS302DLCsPin",						LIS302DLCsPin, {is_enabled_spi_1 == 1}
 
-	dialog = fuelClosedLoopDialog, "Fuel closed-loop correction"
+	dialog = fuelClosedLoopDialog, "Fuel short-term closed-loop correction"
+		field = "#This is just the cherry on the cake once you have good VE table"
 		field = "Enabled",								fuelClosedLoopCorrectionEnabled
 		field = "!No correction below these value"
 		field = "CLT - low threshod", 					fuelClosedLoopCltThreshold, {fuelClosedLoopCorrectionEnabled == 1}
