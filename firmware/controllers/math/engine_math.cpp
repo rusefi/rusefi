@@ -289,6 +289,8 @@ int TriggerShape::findAngleIndex(float target DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(!cisnan(angleOffset), "findAngle#1");
+	efiAssertVoid(!cisnan(ENGINE(triggerCentral.triggerShape.tdcPosition)), "tdcPos#1")
+	efiAssertVoid(!cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
 	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition();
 	efiAssertVoid(!cisnan(angleOffset), "findAngle#2");
