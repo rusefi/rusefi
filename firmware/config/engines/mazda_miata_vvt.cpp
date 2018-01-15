@@ -28,7 +28,7 @@
  * VVT solenoid on aux PID#1      PE3
  * warning light                  PE6
  *
- *
+ * idle solenoid                  PC13 on middle harness plug. diodes seem to be in the harness
  */
 
 #include "mazda_miata_vvt.h"
