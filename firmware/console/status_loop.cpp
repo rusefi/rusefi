@@ -701,7 +701,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
 		tsOutputChannels->manifoldAirPressure = mapValue;
 	}
-	tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
