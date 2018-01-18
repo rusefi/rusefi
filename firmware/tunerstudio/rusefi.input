@@ -1822,6 +1822,10 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Post-Cranking factor", 				postCrankingFactor
 		field = "Duraction", 				postCrankingDurationSec
 		
+	dialog = primingFuelPulsePanel, "Priming fuel pulse"
+		field = "Duration at -40C degrees",	startOfCrankingPrimingPulse
+		field = "Falloff temperature", primeInjFalloffTemperature
+		
 		
 ;			Tuning->Cranking
 	dialog = crankingDialog, "Cranking"				
@@ -1829,14 +1833,13 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = crankingFuel
 		panel = crankingIgnition
 		field = "Cranking Idle Air",					crankingIACposition
-		field = "Priming fuel pulse at -40C degrees",	startOfCrankingPrimingPulse
-		field = "Primimg fuel pulse falloff temperature", primeInjFalloffTemperature
+		panel = primingFuelPulsePanel
 		panel = postCrankingEnrichment
 		field = ""
 		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
 		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting
-		field = "Startup fuel prime duration",			startUpFuelPumpDuration
+		field = "Startup fuel pump prime",				startUpFuelPumpDuration
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
 		
 		
