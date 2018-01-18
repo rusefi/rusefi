@@ -544,10 +544,8 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			CONFIG(primeInjFalloffTemperature), 0.0f, ENGINE(sensors.clt));
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
-			// todo: why do we round to whole number of milliseconds here?
-			efitimeus_t turnOffTime = getTimeNowUs() + MS2US((int)efiRound(pulseLength, 1.0f));
-			// todo: we have a bug here for sure since 'scheduleTask' does it's own 'getTimeNowUs()'
-			scheduleTask(sDown, turnOffTime, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
+			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);
+			scheduleTask(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
 		}
 	}
 	// we'll reset it later when the engine starts
