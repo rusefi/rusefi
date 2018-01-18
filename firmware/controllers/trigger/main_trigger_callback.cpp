@@ -83,13 +83,15 @@ extern TunerStudioOutputChannels tsOutputChannels;
 //#define RAM_METHOD_PREFIX
 //#endif
 
-static void startSimultaniousInjection(InjectionEvent *event) {
-	(void)event;
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	Engine *engine = event->engine;
-#endif
+static void startSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setHigh();
+	}
+}
+
+static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
+	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
+		enginePins.injectors[i].setLow();
 	}
 }
 
@@ -98,9 +100,7 @@ static void endSimultaniousInjection(InjectionEvent *event) {
 	Engine *engine = event->engine;
 	EXPAND_Engine;
 #endif
-	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
-		enginePins.injectors[i].setLow();
-	}
+	endSimultaniousInjectionOnlyTogglePins(engine);
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
@@ -276,7 +276,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;
 
-		scheduleTask(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, event);
+		scheduleTask(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
 		scheduleTask(sDown, (int) injectionStartDelayUs + durationUs,
 					(schfunc_t) &endSimultaniousInjection, event);
 
@@ -537,14 +537,18 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		primeInjEvent.isSimultanious = true;
 
 		scheduling_s *sDown = &ENGINE(fuelActuators[0]).signalTimerDown;
-		startSimultaniousInjection(&primeInjEvent);
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
-		float pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse), 
+		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
 			CONFIG(primeInjFalloffTemperature), 0.0f, ENGINE(sensors.clt));
-		efitimeus_t turnOffTime = getTimeNowUs() + MS2US((int)efiRound(pulseLength, 1.0f));
-		scheduleTask(sDown, turnOffTime, (schfunc_t) &endSimultaniousInjection, &primeInjEvent);
+		if (pulseLength > 0) {
+			startSimultaniousInjection(engine);
+			// todo: why do we round to whole number of milliseconds here?
+			efitimeus_t turnOffTime = getTimeNowUs() + MS2US((int)efiRound(pulseLength, 1.0f));
+			// todo: we have a bug here for sure since 'scheduleTask' does it's own 'getTimeNowUs()'
+			scheduleTask(sDown, turnOffTime, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
+		}
 	}
 	// we'll reset it later when the engine starts
 	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
