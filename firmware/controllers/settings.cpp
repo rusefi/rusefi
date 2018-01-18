@@ -1147,6 +1147,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"engine_load_accel_multiplier", setEngineLoadAccelMult},
 		{"engine_decel_threshold", setDecelThr},
 		{"engine_decel_multiplier", setDecelMult},
+		{"flat_injector_lag", setFlatInjectorLag},
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		{"mock_vehicle_speed", setMockVehicleSpeed},
 		{"idle_offset", setIdleOffset},
