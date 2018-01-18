@@ -817,7 +817,7 @@ gaugeCategory = Fuel Data
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
 
 
-   entry = injectorLagMs,   @@GAUGE_NAME_INJECTOR_LAG, float,  "%.3f"
+   entry = injectorLagMs,   @@GAUGE_NAME_INJECTOR_LAG@@, float,  "%.3f"
    entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
    entry = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, float,  "%.3f"
    entry = baseFuel,	    "fuel: base",  float,  "%.2f"
@@ -882,7 +882,7 @@ gaugeCategory = Fuel Data
    entry = debugIntField3,   @@GAUGE_NAME_DEBUG_I3@@,int,"%d"
    
       
-   entry = engineMode,   "mode",int,"%d"
+   entry = engineMode,   "Engine Mode",int,"%d"
    entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
    entry = lastErrorCode,   @@GAUGE_NAME_WARNING_LAST@@,int,"%d"
    entry = internalMcuTemperature,   @@GAUGE_NAME_CPU_TEMP@@,float,"%.2f"
