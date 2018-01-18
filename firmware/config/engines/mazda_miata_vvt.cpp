@@ -12,8 +12,11 @@
  *
  * Based on http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board#Default_Pinout
  *
- * Better board pinout
+ * Hunchback - VVT engine with NA fuel rail
  * set engine_type 54
+ *
+ * board #70 - red car, hunchback compatibel
+ * set engine_type 55
  *
  * Crank   primary trigger        PA5 (3E in Miata board)       white
  * Cam     vvt input              PC6 (3G in Miata board)       blue
@@ -367,12 +370,17 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
+	// see setCustomEngineConfiguration
+	// map.sensor.hwChannel = EFI_ADC_0; blue jumper wire
+	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	/**
 	 * PA4 Wideband O2 Sensor
 	 */
-	// todo: re-wire the board to use default input channel!
+	// todo: re-wire the board to use "Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM"
+	//engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
+
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
@@ -457,7 +465,18 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIG
 	engineConfiguration->crankingIACposition = 65;
 }
 
+/**
+ * red car setting with default 1991/1995 miata harness
+ * board #70 - closer to default miata harness
+ *
+ */
 void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	boardConfiguration->ignitionPins[2] = GPIOC_7;
+
+	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
+	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
 }
