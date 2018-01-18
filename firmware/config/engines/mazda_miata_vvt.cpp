@@ -370,9 +370,13 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
-	// see setCustomEngineConfiguration
-	// map.sensor.hwChannel = EFI_ADC_0; blue jumper wire
+	// todo: blue jumper wire - what is it?!
 	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
+
+
+	// see setCustomEngineConfiguration
+	// map.sensor.hwChannel = EFI_ADC_0; W53
+
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	/**
@@ -475,7 +479,7 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_ENGINE_PARAMETER_SIGN
 
 	boardConfiguration->ignitionPins[2] = GPIOC_7;
 
-	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
+	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM. Make sure 500K pull-down on Frankenso
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
