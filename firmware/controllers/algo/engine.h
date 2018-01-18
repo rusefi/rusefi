@@ -176,7 +176,7 @@ public:
 	float cltFuelCorrection;
 	float postCrankingFuelCorrection;
 	/**
-	 * Global injector lag + injectorLag(VBatt)
+	 * injectorLag(VBatt)
 	 *
 	 * this value depends on a slow-changing VBatt value, so
 	 * we update it once in a while

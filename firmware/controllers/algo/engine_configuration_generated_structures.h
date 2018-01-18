@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 07 12:06:45 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 17 18:44:14 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1082,6 +1082,7 @@ typedef struct {
 	/**
 	 * 'batched' means two injectors are wired together
 	 * set injection_mode X
+	 * See also twoWireBatchInjection
 	 * offset 428
 	 */
 	injection_mode_e injectionMode;
@@ -2319,4 +2320,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 07 12:06:45 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 17 18:44:14 EST 2018
