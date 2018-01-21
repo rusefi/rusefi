@@ -5,7 +5,7 @@
  * http://en.wikipedia.org/wiki/PID_controller
  *
  * @date Sep 16, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "pid.h"

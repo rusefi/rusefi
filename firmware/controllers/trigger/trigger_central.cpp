@@ -3,7 +3,7 @@
  * Here we have a bunch of higher-level methods which are not directly related to actual signal decoding
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

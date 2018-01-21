@@ -2,7 +2,7 @@
  * @file	mpu_util.cpp
  *
  * @date Jul 27, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

@@ -6,7 +6,7 @@
  * and a couple of median values for a series of measurments.
  *
  * @date Dec 18, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include <string.h>

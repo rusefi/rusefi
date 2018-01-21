@@ -17,7 +17,7 @@
  * http://rusefi.com/wiki/index.php?title=Manual:Software:Fuel_Control
  * @date Apr 21, 2014
  * @author Dmitry Sidin
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

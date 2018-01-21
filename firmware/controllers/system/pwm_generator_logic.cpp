@@ -5,7 +5,7 @@
  * It constantly sets timer to that next toggle time, then sets the timer again from the callback, and so on.
  *
  * @date Mar 2, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

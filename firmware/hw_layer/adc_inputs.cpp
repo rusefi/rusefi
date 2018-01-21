@@ -8,7 +8,7 @@
  * Fast ADC group is used for TPS, MAP, MAF HIP
  *
  * @date Jan 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

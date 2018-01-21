@@ -11,7 +11,7 @@
  * see testConsoleLogic()
  *
  * @date Nov 15, 2012
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include <stdarg.h>

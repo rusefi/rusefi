@@ -2,7 +2,7 @@
  * @file	trigger_structure.cpp
  *
  * @date Jan 20, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
