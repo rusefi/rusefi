@@ -109,36 +109,32 @@ void PwmConfig::handleCycleStart() {
 	}
 }
 
-efitimeus_t PwmConfig::togglePwmState() {
-	return 0;
-}
-
 /**
  * @return Next time for signal toggle
  */
-static efitimeus_t togglePwmState(PwmConfig *state) {
+efitimeus_t PwmConfig::togglePwmState() {
 #if DEBUG_PWM
-	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", state->safe.phaseIndex, state->safe.iteration);
-	scheduleMsg(&logger, "state->period=%f state->safe.period=%f", state->period, state->safe.period);
+	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
+	scheduleMsg(&logger, "period=%f safe.period=%f", period, safe.period);
 #endif
 
-	if (cisnan(state->periodNt)) {
+	if (cisnan(periodNt)) {
 		/**
 		 * NaN period means PWM is paused
 		 */
 		return getTimeNowUs() + MS2US(100);
 	}
 
-	state->handleCycleStart();
+	handleCycleStart();
 
 	/**
 	 * Here is where the 'business logic' - the actual pin state change is happening
 	 */
 	// callback state index is offset by one. todo: why? can we simplify this?
-	int cbStateIndex = state->safe.phaseIndex == 0 ? state->phaseCount - 1 : state->safe.phaseIndex - 1;
-	state->stateChangeCallback(state, cbStateIndex);
+	int cbStateIndex = safe.phaseIndex == 0 ? phaseCount - 1 : safe.phaseIndex - 1;
+	stateChangeCallback(this, cbStateIndex);
 
-	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(state);
+	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(this);
 #if DEBUG_PWM
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
@@ -157,10 +153,10 @@ static efitimeus_t togglePwmState(PwmConfig *state) {
 //		timeToSwitch = 10;
 //	}
 
-	state->safe.phaseIndex++;
-	if (state->safe.phaseIndex == state->phaseCount) {
-		state->safe.phaseIndex = 0; // restart
-		state->safe.iteration++;
+	safe.phaseIndex++;
+	if (safe.phaseIndex == phaseCount) {
+		safe.phaseIndex = 0; // restart
+		safe.iteration++;
 	}
 	return nextSwitchTimeUs;
 }
@@ -172,7 +168,7 @@ static void timerCallback(PwmConfig *state) {
 	state->dbgNestingLevel++;
 	efiAssertVoid(state->dbgNestingLevel < 25, "PWM nesting issue");
 
-	efitimeus_t switchTimeUs = togglePwmState(state);
+	efitimeus_t switchTimeUs = state->togglePwmState();
 	scheduleByTime(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
 	state->dbgNestingLevel--;
 }
