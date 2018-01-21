@@ -1,9 +1,15 @@
 /*
  * @file afm2mapConverter.cpp
  *
+ * Helper code for https://github.com/rusefi/rusefi/issues/538 conversion RPM,MAP>MAF to RPM,MAF>MAP
  * @author Andrey Belomutskiy, (c) 2012-2018
  * @date Jan 20, 2018
  */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "afm2mapConverter.h"
+#include "table_helper.h"
 
 #define ASIZE 16
 
@@ -30,3 +36,25 @@ static const float afr2map[ASIZE][ASIZE]= {
 {/* 15 8000.000	*//* 0 500.0*/0.450,	/* 1 1000.0*/0.450,	/* 2 1500.0*/0.430,	/* 3 2000.0*/0.360,	/* 4 2500.0*/0.320,	/* 5 3000.0*/0.330,	/* 6 3500.0*/0.310,	/* 7 4000.0*/0.300,	/* 8 4500.0*/0.290,	/* 9 5000.0*/0.290,	/* 10 5500.0*/0.280,	/* 11 6000.0*/0.270,	/* 12 6500.0*/0.270,	/* 13 7000.0*/0.260,	/* 14 7500.0*/0.230,	/* 15 8000.0*/0.230,	},
 };
 
+float PSI_BINS[ASIZE];
+float V_BINS[ASIZE];
+
+void printConvertedTable() {
+	printf("printConvertedTable for miata 1.6\n");
+
+	setLinearCurve(V_BINS, ASIZE, 0.2, 4.5	, 0.01);
+	for (int i = 0; i< ASIZE;i++) {
+		printf("%f, ", V_BINS[i]);
+	}
+	printf("\n");
+
+
+	setLinearCurve(PSI_BINS, ASIZE, -14.5, 18	,0.1);
+	for (int i = 0; i< ASIZE;i++) {
+		printf("%f, ", PSI_BINS[i]);
+	}
+	printf("\n");
+
+
+
+}

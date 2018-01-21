@@ -25,7 +25,7 @@
 #include "engine_configuration.h"
 
 #include "test_idle_controller.h"
-
+#include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
 #include "test_util.h"
@@ -176,8 +176,9 @@ int main(void) {
 	testTriggerDecoder();
 
 	//	resizeMap();
-	printf("Success 20161031\r\n");
+	printf("Success 20180120\r\n");
 	printAllTriggers();
+//	printConvertedTable();
 	return EXIT_SUCCESS;
 }
 
