@@ -706,8 +706,8 @@
 #define mapMinBufferLength_offset_hex 4a0
 #define idlePidDeactivationTpsThreshold_offset 1188
 #define idlePidDeactivationTpsThreshold_offset_hex 4a4
-#define idleStepperPulseDuration_offset 1190
-#define idleStepperPulseDuration_offset_hex 4a6
+#define unusedPD_offset 1190
+#define unusedPD_offset_hex 4a6
 #define nb2ratioFrom_offset 1192
 #define nb2ratioFrom_offset_hex 4a8
 #define nb2ratioTo_offset 1196

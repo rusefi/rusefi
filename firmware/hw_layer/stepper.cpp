@@ -65,7 +65,7 @@ static msg_t stThread(StepperMotor *motor) {
 		int currentPosition = motor->currentPosition;
 
 		if (targetPosition == currentPosition) {
-			chThdSleepMilliseconds(boardConfiguration->idleStepperPulseDuration);
+			chThdSleepMilliseconds(motor->reactionTime);
 			continue;
 		}
 		bool isIncrementing = targetPosition > currentPosition;
@@ -111,9 +111,9 @@ void StepperMotor::pulse() {
 	palWritePad(enablePort, enablePin, false); // ebable stepper
 
 	palWritePad(stepPort, stepPin, true);
-	chThdSleepMilliseconds(boardConfiguration->idleStepperPulseDuration);
+	chThdSleepMilliseconds(reactionTime);
 	palWritePad(stepPort, stepPin, false);
-	chThdSleepMilliseconds(boardConfiguration->idleStepperPulseDuration);
+	chThdSleepMilliseconds(reactionTime);
 
 	palWritePad(enablePort, enablePin, true); // disable stepper
 }
