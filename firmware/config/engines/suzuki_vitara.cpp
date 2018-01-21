@@ -3,7 +3,7 @@
  *
  * set engine_type 36
  *
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  * @date Oct 17, 2015
  */
 

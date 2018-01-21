@@ -4,7 +4,7 @@
  * set engine_type 47
  *
  * @date Oct 4, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  * http://rusefi.com/forum/viewtopic.php?f=3&t=1095
  *
  * todo: try ZM-DE 2000 protege 36/1 trigger wheel ZM 01-11-408

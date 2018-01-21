@@ -4,7 +4,7 @@
  * engine_type 5
  *
  * @date Oct 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

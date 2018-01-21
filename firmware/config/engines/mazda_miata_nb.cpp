@@ -9,7 +9,7 @@
  * http://rusefi.com/forum/viewtopic.php?t=987
  *
  * @date Feb 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "mazda_miata_nb.h"

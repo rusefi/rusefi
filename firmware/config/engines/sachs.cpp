@@ -5,7 +5,7 @@
  * http://rusefi.com/forum/viewtopic.php?f=3&t=396
  *
  * @date Jan 26, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "sachs.h"
