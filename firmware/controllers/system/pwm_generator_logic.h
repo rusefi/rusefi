@@ -50,6 +50,9 @@ public:
 			pwm_cycle_callback *cycleCallback,
 			pwm_gen_callback *callback);
 
+	/**
+	 * @param use NAN frequency to pause PWM
+	 */
 	void setFrequency(float frequency);
 
 	void handleCycleStart();
@@ -59,9 +62,10 @@ public:
 	multi_wave_s multiWave;
 	/**
 	 * float value of PWM period
-	 * PWM generation is not happening while this value is zero
+	 * PWM generation is not happening while this value is NAN
 	 */
 	float periodNt;
+	efitimeus_t togglePwmState();
 
 	int dbgNestingLevel;
 

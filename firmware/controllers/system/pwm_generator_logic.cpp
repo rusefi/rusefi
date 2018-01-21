@@ -48,9 +48,11 @@ void PwmConfig::init(float *st, single_wave_s *waves) {
 }
 
 /**
+ * This method allows you to change duty cycle on the fly
  * @param dutyCycle value between 0 and 1
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
+	efiAssertVoid(dutyCycle >= 0 && dutyCycle <= 1, "spwd:dutyCycle");
 	multiWave.setSwitchTime(0, dutyCycle);
 }
 
@@ -76,6 +78,11 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 }
 
 void PwmConfig::setFrequency(float frequency) {
+	if (cisnan(frequency)) {
+		// explicit code just to be sure
+		periodNt = NAN;
+		return;
+	}
 	/**
 	 * see #handleCycleStart()
 	 */
@@ -100,6 +107,10 @@ void PwmConfig::handleCycleStart() {
 #endif
 		}
 	}
+}
+
+efitimeus_t PwmConfig::togglePwmState() {
+	return 0;
 }
 
 /**
