@@ -1287,7 +1287,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "brakePedalPin",						brakePedalPin
 
 	dialog = allPins2
-		field = "Tachometer output Pin",						tachOutputPin
+		field = "Tachometer output Pin",					tachOutputPin
 		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
 		field = "O2 heater pin",						o2heaterPin
 		field = "Idle Solenoid Pin",					idle_solenoidPin
@@ -1295,7 +1295,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Idle Stepper Dir Mode",				stepperDirectionPinMode
 		field = "Idle Stepper Step",					idle_stepperStepPin
 		field = "Idle Stepper Enable",					stepperEnablePin
-		field = "Idle Stepper Pulse",					idleStepperPulseDuration
 		field = "Fuel Pump Pin",						fuelPumpPin
 		field = "ETB Dir #1",							etbDirectionPin1
 		field = "ETB Dir #2",							etbDirectionPin2

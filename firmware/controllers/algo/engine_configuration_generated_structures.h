@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 17 18:44:14 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 21 12:13:41 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -721,7 +721,7 @@ typedef struct {
 	/**
 	 * offset 582
 	 */
-	int16_t idleStepperPulseDuration;
+	int16_t unusedPD;
 	/**
 	 * offset 584
 	 */
@@ -1651,6 +1651,7 @@ typedef struct {
 	 */
 	pin_output_mode_e stepperDirectionPinMode;
 	/**
+	 * on ECU start turn fuel pump on to build fuel pressure
 	 * offset 2008
 	 */
 	int16_t startUpFuelPumpDuration;
@@ -1834,7 +1835,7 @@ typedef struct {
 	 */
 	brain_input_pin_e camInput;
 	/**
-	 * IAC cranking position
+	 * IAC position during cranking
 	 * offset 2380
 	 */
 	int crankingIACposition;
@@ -2320,4 +2321,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 17 18:44:14 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 21 12:13:41 EST 2018

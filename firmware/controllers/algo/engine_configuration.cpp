@@ -756,7 +756,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.maxValue = 95;
 	boardConfiguration->idlePidDeactivationTpsThreshold = 2;
 
-	boardConfiguration->idleStepperPulseDuration = 10;
 	boardConfiguration->idle.solenoidFrequency = 200;
 	// set idle_position 50
 	boardConfiguration->manIdlePosition = 50;

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 10 22:53:42 EST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 21 12:13:41 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -492,7 +492,7 @@ public class Fields {
 	public static final int consoleUartDevice_offset = 1180;
 	public static final int mapMinBufferLength_offset = 1184;
 	public static final int idlePidDeactivationTpsThreshold_offset = 1188;
-	public static final int idleStepperPulseDuration_offset = 1190;
+	public static final int unusedPD_offset = 1190;
 	public static final int nb2ratioFrom_offset = 1192;
 	public static final int nb2ratioTo_offset = 1196;
 	public static final int triggerErrorPin_offset = 1200;
@@ -1453,7 +1453,7 @@ public class Fields {
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 1180, FieldType.INT);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 1184, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 1188, FieldType.INT);
-	public static final Field IDLESTEPPERPULSEDURATION = Field.create("IDLESTEPPERPULSEDURATION", 1190, FieldType.INT);
+	public static final Field UNUSEDPD = Field.create("UNUSEDPD", 1190, FieldType.INT);
 	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 1192, FieldType.FLOAT);
 	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 1196, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 1200, FieldType.INT, brain_pin_e);
