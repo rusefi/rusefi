@@ -37,24 +37,28 @@ public class TS2C {
         String loadSectionName = args[1];
         String rpmSectionName = args[2];
         String tableName = args[3];
-
-        BufferedReader r = readAndScroll(fileName, loadSectionName);
-
         size = Integer.parseInt(args.length > 4 ? args[4] : "16");
-        loadCount = size;
-        loadBins = new float[loadCount];
-        readAxle(loadBins, r);
-        r = readAndScroll(fileName, rpmSectionName);
-        rpmCount = size;
-        rpmBins = new float[rpmCount];
-        readAxle(rpmBins, r);
+
+        if (!loadSectionName.equalsIgnoreCase("none")) {
+            BufferedReader r = readAndScroll(fileName, loadSectionName);
+
+            loadCount = size;
+            loadBins = new float[loadCount];
+            readAxle(loadBins, r);
+        }
+        if (!rpmSectionName.equalsIgnoreCase("none")) {
+            BufferedReader r = readAndScroll(fileName, rpmSectionName);
+            rpmCount = size;
+            rpmBins = new float[rpmCount];
+            readAxle(rpmBins, r);
+        }
 
         table = new float[size][];
         for (int i = 0; i < size; i++) {
             table[i] = new float[size];
         }
 
-        r = readAndScroll(fileName, tableName);
+        BufferedReader r = readAndScroll(fileName, tableName);
         readTable(table, r);
 
         BufferedWriter w = new BufferedWriter(new FileWriter("output.c"));
@@ -94,12 +98,17 @@ public class TS2C {
             writeLine(valueSource, w, loadIndex);
     }
 
-    private static BufferedReader readAndScroll(String fileName, String sectionName) throws IOException {
+    /**
+     * @param fileName text file to open
+     * @param magicStringKey magic string content to scroll to
+     * @return Reader after the magicStringKey line
+     */
+    private static BufferedReader readAndScroll(String fileName, String magicStringKey) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
-        System.out.println("Reading from " + fileName + ", scrolling to " + sectionName);
+        System.out.println("Reading from " + fileName + ", scrolling to " + magicStringKey);
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.contains(sectionName)) {
+            if (line.contains(magicStringKey)) {
                 System.out.println("Found " + line);
                 break;
             }
@@ -134,12 +143,17 @@ public class TS2C {
             if (line.isEmpty())
                 continue;
 
-            String[] values = line.split(" ");
+            String[] values = line.split("\\s");
             if (values.length != size)
-                throw new IllegalStateException("Unexpected line: " + line);
+                throw new IllegalStateException("Expected " + size + " but got " + Arrays.toString(values) + ". Unexpected line: " + line);
 
             for (int i = 0; i < size; i++) {
-                table[index][i] = Float.parseFloat(values[i]);
+                String str = values[i];
+                try {
+                    table[index][i] = Float.parseFloat(str);
+                } catch (NumberFormatException e) {
+                    throw new IllegalStateException("While reading " + str, e);
+                }
             }
             System.out.println("Got line " + index + ": " + Arrays.toString(table[index]));
             index++;
