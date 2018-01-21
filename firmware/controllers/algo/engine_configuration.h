@@ -50,6 +50,9 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setAfrMap(afr_table_t table, float value);
+/**
+ * See also setLinearCurve()
+ */
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
