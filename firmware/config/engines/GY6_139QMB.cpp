@@ -4,7 +4,7 @@
  *
  * @date Feb 13, 2014
  * @author rus084, (c) 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

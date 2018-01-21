@@ -6,7 +6,7 @@
  * set engine_type 16
  *
  * @date Aug 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "fsio_impl.h"

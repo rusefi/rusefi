@@ -4,7 +4,7 @@
  * set engine_type 39
  *
  * @date  Jan 21, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "lada_kalina.h"

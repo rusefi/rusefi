@@ -10,7 +10,7 @@
  *
  *
  * @date Dec 20, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "chevrolet_c20_1973.h"
