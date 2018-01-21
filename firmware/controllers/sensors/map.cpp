@@ -1,4 +1,5 @@
 /**
+ * @file map.cpp
  *
  * See also map_averaging.cpp
  *

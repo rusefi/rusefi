@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include "afm2mapConverter.h"
 #include "table_helper.h"
+#include "interpolation.h"
+#include "map.h"
 
 #define ASIZE 16
 
@@ -37,24 +39,60 @@ static const float afr2map[ASIZE][ASIZE]= {
 };
 
 float PSI_BINS[ASIZE];
-float V_BINS[ASIZE];
+/**
+ * see maf2map.cpp#voltageBins
+ */
+const float V_BINS[ASIZE] = {0.23, 0.3, 0.4, 0.5,
+		0.6, 0.7, 0.8, 1.0,
+		1.1, 1.2, 1.5, 2.0,
+		2.5, 3, 3.5, 4.5};
 
 void printConvertedTable() {
 	printf("printConvertedTable for miata 1.6\n");
 
-	setLinearCurve(V_BINS, ASIZE, 0.2, 4.5	, 0.01);
+//	setLinearCurve(V_BINS, ASIZE, 0.2, 4.5	, 0.01);
 	for (int i = 0; i< ASIZE;i++) {
 		printf("%f, ", V_BINS[i]);
 	}
 	printf("\n");
 
 
-	setLinearCurve(PSI_BINS, ASIZE, -14.5, 18	,0.1);
+	setLinearCurve(PSI_BINS, ASIZE, PSI2KPA(18), PSI2KPA(-14.5), 0.1); // we invert PSI scale since voltage is inverted below
 	for (int i = 0; i< ASIZE;i++) {
 		printf("%f, ", PSI_BINS[i]);
 	}
 	printf("\n");
 
+
+	for (int rpmIndex = 0; rpmIndex< ASIZE;rpmIndex++) {
+		float rpmValue = rpmBins[rpmIndex];
+
+		float vValues[ASIZE];
+		for (int vIndex = 0; vIndex< ASIZE;vIndex++) {
+			// fliping indexes to get proper ascending sorting
+			vValues[ASIZE - 1 - vIndex] = afr2map[vIndex][rpmIndex];
+		}
+
+//		printf("vArray for %f\n", rpmValue);
+//		for (int i = 0; i< ASIZE;i++) {
+//			printf("/*psi=%f v=*/ %f, ", PSI_BINS[i], vValues[i]);
+//		}
+//		printf("\n");
+
+
+//		float psiValues[ASIZE];
+		for (int vIndex = 0; vIndex< ASIZE;vIndex++) {
+
+			float volts = V_BINS[vIndex];
+
+			float psiValue = interpolate2d("conv", volts, vValues, PSI_BINS, ASIZE);
+
+//			psiValues[vIndex] = psiValue;
+			printf("/*v=%f kpa=*/ %f, ", volts, psiValue);
+
+		}
+		printf("\n");
+	}
 
 
 }
