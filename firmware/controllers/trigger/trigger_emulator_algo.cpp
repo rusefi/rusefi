@@ -101,7 +101,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
 	if (rpm == 0) {
-		triggerSignal.periodNt = NAN;
+		triggerSignal.setFrequency(NAN);
 	} else {
 		float rpmM = getRpmMultiplier(engineConfiguration->operationMode);
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
