@@ -60,11 +60,6 @@ public:
 
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	multi_wave_s multiWave;
-	/**
-	 * float value of PWM period
-	 * PWM generation is not happening while this value is NAN
-	 */
-	float periodNt;
 	efitimeus_t togglePwmState();
 
 	int dbgNestingLevel;
@@ -86,6 +81,12 @@ public:
 	 * this main callback is invoked when it's time to switch level on any of the output channels
 	 */
 	pwm_gen_callback *stateChangeCallback;
+private:
+	/**
+	 * float value of PWM period
+	 * PWM generation is not happening while this value is NAN
+	 */
+	float periodNt;
 };
 
 
