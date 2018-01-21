@@ -2,7 +2,7 @@
  * @file	efilib2.cpp
  *
  * @date Apr 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "efilib2.h"

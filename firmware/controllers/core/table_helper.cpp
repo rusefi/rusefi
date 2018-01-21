@@ -3,7 +3,7 @@
  * @brief	Helper methods related to 3D & 2D tables manipulation (maps and curves)
  *
  * @date Jul 6, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "table_helper.h"

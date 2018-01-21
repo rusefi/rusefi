@@ -4,7 +4,7 @@
  *
  *
  * @date Nov 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "engine.h"

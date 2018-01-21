@@ -5,7 +5,7 @@
  * See void onJoystick(joystick_button_e button)
  *
  * @date Jan 2, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "engine_configuration.h"

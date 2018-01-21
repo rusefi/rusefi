@@ -5,7 +5,7 @@
  * http://en.wikipedia.org/wiki/OBD-II_PIDs
  *
  * @date Jun 9, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

@@ -2,7 +2,7 @@
  * @file trigger_simulator.cpp
  *
  * @date Sep 23, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

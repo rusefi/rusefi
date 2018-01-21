@@ -1,5 +1,5 @@
 /**
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * EGO Exhaust Gas Oxygen, also known as AFR Air/Fuel Ratio :)
  *

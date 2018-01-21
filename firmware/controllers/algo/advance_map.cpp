@@ -2,7 +2,7 @@
  * @file	advance_map.cpp
  *
  * @date Mar 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

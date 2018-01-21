@@ -6,7 +6,7 @@
  * https://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
  *
  * @date Oct 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

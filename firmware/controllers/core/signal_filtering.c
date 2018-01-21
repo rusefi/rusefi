@@ -2,7 +2,7 @@
  * @file signal_filtering.c
  *
  * @date Aug 5, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #ifndef SIGNAL_FILTERING_C_

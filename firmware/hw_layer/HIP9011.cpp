@@ -28,7 +28,7 @@
  * max SPI frequency: 5MHz max
  *
  * @date Nov 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  * @Spilly
  */
 

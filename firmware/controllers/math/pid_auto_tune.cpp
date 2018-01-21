@@ -2,7 +2,7 @@
  * pid_auto_tune.cpp
  *
  *  Created on: Sep 13, 2017
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "pid_auto_tune.h"

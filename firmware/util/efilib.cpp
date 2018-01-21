@@ -4,7 +4,7 @@
  * We cannot use stdlib because we do not have malloc - so, we have to implement these functions
  *
  * @date Feb 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include <string.h>
