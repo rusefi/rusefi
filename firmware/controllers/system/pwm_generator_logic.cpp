@@ -52,7 +52,9 @@ void PwmConfig::init(float *st, single_wave_s *waves) {
  * @param dutyCycle value between 0 and 1
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
-	efiAssertVoid(dutyCycle >= 0 && dutyCycle <= 1, "spwd:dutyCycle");
+	if (dutyCycle < 0 || dutyCycle > 1) {
+		firmwareError(CUSTOM_ERR_ASSERT_VOID, "spwd:dutyCycle %f", dutyCycle);
+	}
 	multiWave.setSwitchTime(0, dutyCycle);
 }
 
