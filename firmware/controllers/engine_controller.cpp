@@ -66,6 +66,7 @@
 #include "lcd_controller.h"
 #include "pin_repository.h"
 #include "tachometer.h"
+#include "CJ125.h"
 #endif /* EFI_PROD_CODE */
 
 extern bool hasFirmwareErrorFlag;
@@ -607,6 +608,14 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		initWaveAnalyzer(sharedLogger);
 	}
 #endif /* EFI_WAVE_ANALYZER */
+
+#if EFI_CJ125 || defined(__DOXYGEN__)
+	/**
+	 * this uses SimplePwm which depends on scheduler, has to be initialized after scheduler
+	 */
+	initCJ125(sharedLogger);
+#endif
+
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	/**

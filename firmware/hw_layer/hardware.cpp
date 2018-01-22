@@ -42,7 +42,6 @@
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
-#include "CJ125.h"
 #include "aux_pid.h"
 #endif /* EFI_PROD_CODE */
 
@@ -455,10 +454,6 @@ void initHardware(Logging *l) {
 #endif
 
 	calcFastAdcIndexes();
-
-#if EFI_CJ125 || defined(__DOXYGEN__)
-	initCJ125(sharedLogger);
-#endif
 
 	printMsg(sharedLogger, "initHardware() OK!");
 }
