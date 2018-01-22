@@ -550,12 +550,16 @@ static void setAdcDebugReporting(int value) {
 	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
 }
 
-void waitForSlowAdc() {
+void waitForSlowAdc(int lastAdcCounter) {
 	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
 	// todo: use sync.objects?
-	while (slowAdcCounter < 1) {
+	while (slowAdcCounter <= lastAdcCounter) {
 		chThdSleepMilliseconds(1);
 	}
+}
+
+int getSlowAdcCounter() {
+	return slowAdcCounter;
 }
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
@@ -617,6 +621,11 @@ static void configureInputs(void) {
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
+
+	if (boardConfiguration->isCJ125Enabled) {
+		addChannel("cj125ur", engineConfiguration->cj125ur, ADC_SLOW);
+		addChannel("cj125ua", engineConfiguration->cj125ua, ADC_SLOW);
+	}
 
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);
