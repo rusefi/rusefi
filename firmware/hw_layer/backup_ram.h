@@ -25,6 +25,14 @@ typedef enum {
 	 * See startPrimeInjectionPulse() in controllers/trigger/main_trigger_callback.cpp
 	 */
 	BACKUP_IGNITION_SWITCH_COUNTER,
+	/**
+	 * CJ125 Calibration data (16bit)
+	 */
+	BACKUP_CJ125_CALIBRATION_LAMBDA,
+	/**
+	 * CJ125 Calibration data (16bit)
+	 */
+	BACKUP_CJ125_CALIBRATION_HEATER,
 } backup_ram_e;
 
 
