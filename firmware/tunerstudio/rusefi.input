@@ -1601,6 +1601,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "ChipSelect pin",						cj125CsPin, {isCJ125Enabled == 1}
 		field = "ChipSelect mode",						cj125CsPinMode, {isCJ125Enabled == 1}
 		field = "SPI device",							cj125SpiDevice
+		field = "Heater pin",							wboHeaterPin, {isCJ125Enabled == 1}
 		field = "UA input",								cj125ua, {isCJ125Enabled == 1}
 		field = "UR input",								cj125ur, {isCJ125Enabled == 1}
 		
