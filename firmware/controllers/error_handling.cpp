@@ -102,6 +102,18 @@ int unitTestWarningCounter = 0;
 
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
+void printWarning(const char *fmt, va_list ap) {
+	resetLogging(&logger); // todo: is 'reset' really needed here?
+	appendMsgPrefix(&logger);
+
+	append(&logger, WARNING_PREFIX);
+
+	printToStream(&warningStream, fmt, ap);
+
+	append(&logger, warningBuffer);
+	append(&logger, DELIMETER);
+	scheduleLogging(&logger);
+}
 
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
@@ -128,19 +140,10 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 		return true; // we just had another warning, let's not spam
 	engine->engineState.timeOfPreviousWarning = now;
 
-	resetLogging(&logger); // todo: is 'reset' really needed here?
-	appendMsgPrefix(&logger);
-
-	append(&logger, WARNING_PREFIX);
-
 	va_list ap;
 	va_start(ap, fmt);
-	printToStream(&warningStream, fmt, ap);
+	printWarning(fmt, ap);
 	va_end(ap);
-
-	append(&logger, warningBuffer);
-	append(&logger, DELIMETER);
-	scheduleLogging(&logger);
 #else
 	unitTestWarningCounter++;
 	printf("unit_test_warning: ");
@@ -197,6 +200,12 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
 	addWarningCode(code);
+#ifdef EFI_PRINT_ERRORS_AS_WARNINGS
+	va_list ap;
+	va_start(ap, fmt);
+	printWarning(fmt, ap);
+	va_end(ap);
+#endif
 	ON_FATAL_ERROR()
 	;
 	hasFirmwareErrorFlag = true;
