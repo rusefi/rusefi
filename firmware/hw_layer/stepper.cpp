@@ -30,8 +30,6 @@ static int loadStepperPos() {
 static msg_t stThread(StepperMotor *motor) {
 	chRegSetThreadName("stepper");
 
-	motor->directionPin.setValue(false);
-
 	// try to get saved stepper position (-1 for no data)
 	motor->currentPosition = loadStepperPos();
 
@@ -59,6 +57,10 @@ static msg_t stThread(StepperMotor *motor) {
 		motor->currentPosition = 0;
 		saveStepperPos(motor->currentPosition);
 	}
+
+	// The initial target position should correspond to the saved stepper position.
+	// Idle thread starts later and sets a new target position.
+	motor->setTargetPosition(motor->currentPosition);
 
 	while (true) {
 		int targetPosition = motor->getTargetPosition();
@@ -141,6 +143,10 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 	efiSetPadMode("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
 	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
 	palWritePad(this->enablePort, enablePin, true); // disable stepper
+
+	// All pins must be 0 for correct hardware startup (e.g. stepper auto-disabling circuit etc.).
+	palWritePad(this->stepPort, this->stepPin, false);
+	this->directionPin.setValue(false);
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
 }
