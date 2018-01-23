@@ -59,6 +59,16 @@ extern bool hasFirmwareErrorFlag;
 
 static mutex_t spiMtx;
 
+/**
+ * this depends on patch to chdebug.c
++extern int maxNesting;
+   ch.dbg.isr_cnt++;
++  if (ch.dbg.isr_cnt > maxNesting)
++          maxNesting = ch.dbg.isr_cnt;
+   port_unlock_from_isr();
+ *
+ */
+// todo: rename this to 'rusefiMaxISRNesting' one day
 int maxNesting = 0;
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
