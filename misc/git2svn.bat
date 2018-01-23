@@ -1,9 +1,17 @@
+# depends on
+# mkdir -p C:\stuff\rusefi.git2svn\git
+# cd C:\stuff\rusefi.git2svn\git
+# git clone https://github.com/rusefi/rusefi
+# cd C:\stuff\rusefi.git2svn\git\rusefi
+#
+#
+
 
 
 echo This script should be executed from the root of rusEfi master GITHUB local copy
 pwd 
 
-echo Updating from SVN
+echo Updating from GIT
 call git fetch --all
 call git reset --hard origin/master
 IF NOT ERRORLEVEL echo ERROR git pull-ing
@@ -15,7 +23,10 @@ set RUSEFI_SVN_W_PATH=..\..\svn
 set RUSEFI_GIT_PATH=../git/rusefi
 
 
+mkdir -p %RUSEFI_SVN_PATH%"
+echo "Going to %RUSEFI_SVN_PATH%" 
 cd %RUSEFI_SVN_PATH%
+echo Updating from SVN
 svn up
 cd %RUSEFI_GIT_PATH%
 
