@@ -28,7 +28,7 @@
  *
  *
  * @date Oct 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -177,6 +177,10 @@ static void bluetoothHC05(const char *baudRate, const char *name, const char *pi
 static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
 	bluetoothStart(&tsChannel, BLUETOOTH_HC_06, baudRate, name, pinCode);
 }
+// Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
+static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
+	bluetoothStart(&tsChannel, BLUETOOTH_SPP, baudRate, name, pinCode);
+}
 #endif  /* EFI_BLUETOOTH_SETUP */
 
 void tunerStudioDebug(const char *msg) {
@@ -241,6 +245,16 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	sendOkResponse(tsChannel, mode);
 }
 
+/**
+ * Some changes like changing VE table or timing table are applied right away, meaning
+ * that the values are copied from communication copy into actual engine control copy right away.
+ * We call these parameters 'soft parameters'
+ *
+ * This is needed to support TS online auto-tune.
+ *
+ * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
+ * would be increased and much more complicated logic would be executed.
+ */
 static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
 	UNUSED(currentPageId);
 	if (offset > sizeof(engine_configuration_s)) {
@@ -863,6 +877,7 @@ void startTunerStudioConnectivity(void) {
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
 	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);
 	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
+	addConsoleActionSSS("bluetooth_spp", bluetoothSPP);
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 

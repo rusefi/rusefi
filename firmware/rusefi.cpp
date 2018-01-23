@@ -3,7 +3,7 @@
  * @brief Initialization code and main status reporting look
  *
  * @date Dec 25, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 /**
@@ -235,6 +235,15 @@ void runRusEfi(void) {
 	}
 }
 
+/**
+ * this depends on chcore.h patch
++void chDbgStackOverflowPanic(thread_t *otp);
++
+-    chSysHalt("stack overflow");                                            \
++    chDbgStackOverflowPanic(otp);                                           \
+
+ *
+ */
 void chDbgStackOverflowPanic(thread_t *otp) {
 	(void)otp;
 	strcpy(panicMessage, "stack overflow: ");
@@ -246,10 +255,13 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-static char UNUSED_RAM_SIZE[14100];
+static char UNUSED_RAM_SIZE[7000];
 
-static char UNUSED_CCM_SIZE[16000] CCM_OPTIONAL;
+static char UNUSED_CCM_SIZE[14000] CCM_OPTIONAL;
 
+/**
+ * See also VCS_VERSION
+ */
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE[0] != 0)
 		return 123; // this is here to make the compiler happy about the unused array
@@ -260,5 +272,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20170806;
+	return 20180122;
 }

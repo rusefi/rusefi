@@ -12,7 +12,7 @@
     (nets 32)
   )
 
-  (page B)
+  (page A)
   (title_block
     (title "CJ125 Wide O2 ")
     (date 2017-01-30)

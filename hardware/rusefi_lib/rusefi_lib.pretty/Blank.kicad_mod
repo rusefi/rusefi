@@ -1,0 +1,11 @@
+(module Blank (layer F.Cu) (tedit 5A3F8F8C)
+  (descr blank)
+  (tags blank)
+  (attr smd)
+  (fp_text reference blank (at 0 -1) (layer F.SilkS) hide
+    (effects (font (size 0.635 0.635) (thickness 0.10922)))
+  )
+  (fp_text value blank (at 0 1) (layer F.SilkS) hide
+    (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+  )
+)

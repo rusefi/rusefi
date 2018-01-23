@@ -11,5 +11,7 @@ TEST_SRC_CPP = test_util.cpp \
 	test_speed_density.cpp \
 	test_signal_executor.cpp \
 	test_sensors.cpp \
-	test_accel_enrichment.cpp
+	test_pid_auto.cpp \
+	test_accel_enrichment.cpp \
+	afm2mapConverter.cpp
 	

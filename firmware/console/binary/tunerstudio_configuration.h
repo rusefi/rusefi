@@ -23,6 +23,7 @@ typedef struct {
  * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
  */
 typedef struct {
+	/* see also [OutputChannels] in rusefi.input */
 	// primary instrument cluster gauges
 	int rpm; // size 4, offset 0
 	/**
@@ -160,7 +161,12 @@ typedef struct {
 	 * @see injectorDutyCycle
 	 */
 	float coilDutyCycle; // 272
-	int unused3[20];
+	int16_t accelerationX; // 276
+	int16_t accelerationY; // 278
+	float oilPressure;	// 280
+	float fuelConsumptionPerHour; // 284
+	int unused3[17];
+	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

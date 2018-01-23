@@ -1,6 +1,6 @@
 #include "main.h"
 #include "engine.h"
-#include "adc_inputs.h"
+#include "analog_input.h"
 #include "maf.h"
 
 EXTERN_ENGINE

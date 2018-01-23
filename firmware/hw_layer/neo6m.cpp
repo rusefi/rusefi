@@ -7,7 +7,7 @@
  * Technically any UART GPS should work with this driver since NMEA protocol is pretty common anyway
  *
  * @date Dec 28, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  * Kot_dnz 2014
  */
 
@@ -50,13 +50,13 @@ static void printGpsInfo(void) {
 	scheduleMsg(&logging, "GPS RX %s", hwPortname(boardConfiguration->gps_rx_pin));
 	scheduleMsg(&logging, "GPS TX %s", hwPortname(boardConfiguration->gps_tx_pin));
 
-	scheduleMsg(&logging, "m=%d,e=%d: vehicle speed = %f\r\n", gpsMesagesCount, uartErrors, getCurrentSpeed());
+	scheduleMsg(&logging, "m=%d,e=%d: vehicle speed = %.2f\r\n", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
 	float sec = currentTimeMillis() / 1000.0;
-	scheduleMsg(&logging, "communication speed: %f", gpsMesagesCount / sec);
+	scheduleMsg(&logging, "communication speed: %.2f", gpsMesagesCount / sec);
 
-	print("GPS latitude = %f\r\n", GPSdata.latitude);
-	print("GPS longitude = %f\r\n", GPSdata.longitude);
+	print("GPS latitude = %.2f\r\n", GPSdata.latitude);
+	print("GPS longitude = %.2f\r\n", GPSdata.longitude);
 }
 
 static struct tm curTm;

@@ -12,7 +12,7 @@
  * set engine_type 24
  *
  * @date Apr 11, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "fsio_impl.h"
@@ -347,7 +347,7 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->acIdleRpmBump = 200;
 
 	//engineConfiguration->idleMode != IM_AUTO;
-	engineConfiguration->targetIdleRpm = 800;
+	setTargetRpmCurve(800 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 	engineConfiguration->tpsMax = 86;

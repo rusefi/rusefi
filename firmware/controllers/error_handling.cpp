@@ -2,7 +2,7 @@
  * @file error_handling.cpp
  *
  * @date Apr 1, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -36,7 +36,8 @@ EXTERN_ENGINE;
 extern int warningEnabled;
 extern bool main_loop_started;
 
-fatal_msg_t errorMessageBuffer;
+// todo: rename to fatalErrorMessage?
+static fatal_msg_t errorMessageBuffer;
 bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
@@ -91,16 +92,29 @@ void addWarningCode(obd_code_e code) {
 
 // todo: look into chsnprintf
 // todo: move to some util file & reuse for 'firmwareError' method
-void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
+static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	stream->eos = 0; // reset
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
 	stream->buffer[stream->eos] = 0;
 }
+
+static void printWarning(const char *fmt, va_list ap) {
+	resetLogging(&logger); // todo: is 'reset' really needed here?
+	appendMsgPrefix(&logger);
+
+	append(&logger, WARNING_PREFIX);
+
+	printToStream(&warningStream, fmt, ap);
+
+	append(&logger, warningBuffer);
+	append(&logger, DELIMETER);
+	scheduleLogging(&logger);
+}
+
 #else
 int unitTestWarningCounter = 0;
 
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
-
 
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
@@ -116,7 +130,10 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssert(isWarningStreamInitialized, "warn stream not initialized", false);
+	if (!isWarningStreamInitialized) {
+		firmwareError(CUSTOM_ERR_ASSERT, "warn stream not initialized for %d", code);
+		return false;
+	}
 	addWarningCode(code);
 
 	efitimesec_t now = getTimeNowSeconds();
@@ -124,19 +141,10 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 		return true; // we just had another warning, let's not spam
 	engine->engineState.timeOfPreviousWarning = now;
 
-	resetLogging(&logger); // todo: is 'reset' really needed here?
-	appendMsgPrefix(&logger);
-
-	append(&logger, WARNING_PREFIX);
-
 	va_list ap;
 	va_start(ap, fmt);
-	printToStream(&warningStream, fmt, ap);
+	printWarning(fmt, ap);
 	va_end(ap);
-
-	append(&logger, warningBuffer);
-	append(&logger, DELIMETER);
-	scheduleLogging(&logger);
 #else
 	unitTestWarningCounter++;
 	printf("unit_test_warning: ");
@@ -162,6 +170,15 @@ uint32_t lastLockTime;
  */
 uint32_t maxLockedDuration = 0;
 
+/**
+ * this depends on chdebug.h patch
+ #if CH_DBG_SYSTEM_STATE_CHECK == TRUE
+-#define _dbg_enter_lock() (ch.dbg.lock_cnt = (cnt_t)1)
+-#define _dbg_leave_lock() (ch.dbg.lock_cnt = (cnt_t)0)
++#define _dbg_enter_lock() {(ch.dbg.lock_cnt = (cnt_t)1);  ON_LOCK_HOOK;}
++#define _dbg_leave_lock() {ON_UNLOCK_HOOK;(ch.dbg.lock_cnt = (cnt_t)0);}
+ #endif
+ */
 void onLockHook(void) {
 	lastLockTime = GET_TIMESTAMP();
 }
@@ -193,6 +210,12 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
 	addWarningCode(code);
+#ifdef EFI_PRINT_ERRORS_AS_WARNINGS
+	va_list ap;
+	va_start(ap, fmt);
+	printWarning(fmt, ap);
+	va_end(ap);
+#endif
 	ON_FATAL_ERROR()
 	;
 	hasFirmwareErrorFlag = true;

@@ -9,7 +9,7 @@
  * Read-only communication over 5MHz SPI
  *
  * @date Sep 17, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -135,7 +135,7 @@ static void egtRead(void) {
 	if (code != MC_INVALID) {
 		int refBits = ((egtPacket & 0xFFFF) / 16); // bits 15:4
 		float refTemp = refBits / 16.0;
-		scheduleMsg(logger, "reference temperature %f", refTemp);
+		scheduleMsg(logger, "reference temperature %.2f", refTemp);
 
 		scheduleMsg(logger, "EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
 	}

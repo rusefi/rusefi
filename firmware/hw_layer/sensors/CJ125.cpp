@@ -4,7 +4,7 @@
  * Based on Jeff "Turbo SOB" work
  *
  * @date: Jun 24, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  */
 
@@ -27,11 +27,7 @@ static Logging *logger;
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
 
-
 static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
-
-// todo: make this configurable
-spi_device_e cj125SpiDevice = SPI_DEVICE_2;
 
 static SPIDriver *driver;
 

@@ -2,7 +2,7 @@
  * @file	test_trigger_decoder.cpp
  *
  * @date Dec 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -240,8 +240,6 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 
 extern EventQueue schedulingQueue;
 
-extern int mockTps;
-
 void testStartupFuelPumping(void) {
 	printf("*************************************************** testStartupFuelPumping\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
@@ -254,11 +252,11 @@ void testStartupFuelPumping(void) {
 	engine->engineConfiguration->tpsMin = 0;
 	engine->engineConfiguration->tpsMax = 10;
 
-	mockTps = TPS_TS_CONVERSION * 6;
+	setMockTpsPosition(6);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#1", 1, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 3;
+	setMockTpsPosition(3);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pumpsCounter#2", 1, sf.pumpsCounter);
 
@@ -269,16 +267,16 @@ void testStartupFuelPumping(void) {
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#4", 0, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 7;
+	setMockTpsPosition(7);
 	engine->rpmCalculator.mockRpm = 0;
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#5", 1, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 3;
+	setMockTpsPosition(3);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#6", 1, sf.pumpsCounter);
 
-	mockTps = TPS_TS_CONVERSION * 7;
+	setMockTpsPosition(7);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }
@@ -350,7 +348,7 @@ void testRpmCalculator(void) {
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	assertEqualsM("fuel #1", 4.5450, eth.engine.fuelMs);
+	assertEqualsM("fuel #1", 4.5450, eth.engine.injectionDuration);
 	InjectionEvent *ie0 = &eth.engine.injectionEvents.elements[0];
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
@@ -358,7 +356,7 @@ void testRpmCalculator(void) {
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel #2", 4.5450, eth.engine.fuelMs);
+	assertEqualsM("fuel #2", 4.5450, eth.engine.injectionDuration);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
 	assertEqualsM("size #2", 1, ilist->isReady);
 	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
@@ -411,7 +409,7 @@ void testRpmCalculator(void) {
 	assertEqualsM("queue size 4.3", 4, schedulingQueue.size());
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel #3", 4.5450, eth.engine.fuelMs);
+	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
@@ -512,7 +510,7 @@ void testTriggerDecoder(void) {
 
 	testTriggerDecoder2("SATURN_ION_2004", SATURN_ION_2004, 0, 0.9028, 0.0);
 
-	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9583, 0.0);
+	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9611, 0.0);
 
 	testTriggerDecoder2("test1+1", CUSTOM_ENGINE, 0, 0.7500, 0.2500);
 
@@ -755,7 +753,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	assertEqualsM("RPM", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	assertEqualsM("fuel#1", 1.5, engine->fuelMs);
+	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
 
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
@@ -786,7 +784,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("fuel#2", 12.5, engine->fuelMs);
+	assertEqualsM("fuel#2", 12.5, engine->injectionDuration);
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 	assertEqualsM("qs#1", 4, schedulingQueue.size());
@@ -947,7 +945,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("fuel#3", 17.5, engine->fuelMs);
+	assertEqualsM("fuel#3", 17.5, engine->injectionDuration);
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
@@ -1013,6 +1011,43 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	testMafValue = 0;
 }
 
+static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	engineConfiguration->injectionMode = (injection_mode_e) value;
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+
+void testDifferentInjectionModes(void) {
+	printf("*************************************************** testDifferentInjectionModes\r\n");
+
+	EngineTestHelper eth(TEST_ENGINE);
+	EXPAND_EngineTestHelper
+	setTestBug299(&eth);
+	assertEqualsM("Lqs#0", 4, schedulingQueue.size());
+
+	// set fuel map values - extract method?
+	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
+	assertEquals(8, engineLoadIndex);
+	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 40);
+	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 40);
+
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injectionMode IM_BATCH", (int)IM_BATCH, (int)engineConfiguration->injectionMode);
+	assertEqualsM("injection while batch", 20, engine->injectionDuration);
+
+	setInjectionMode((int)IM_SIMULTANEOUS PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injection while simultaneous", 10, engine->injectionDuration);
+
+	setInjectionMode((int)IM_SEQUENTIAL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injection while IM_SEQUENTIAL", 40, engine->injectionDuration);
+
+	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("injection while IM_SINGLE_POINT", 40, engine->injectionDuration);
+}
+
 void testFuelSchedulerBug299smallAndLarge(void) {
 	printf("*************************************************** testFuelSchedulerBug299 small to large\r\n");
 
@@ -1021,13 +1056,14 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	setTestBug299(&eth);
 	assertEqualsM("Lqs#0", 4, schedulingQueue.size());
 
+	// set fuel map values - extract method?
 	int engineLoadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, testMafValue);
 	assertEquals(8, engineLoadIndex);
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("Lfuel#2", 17.5, engine->fuelMs);
+	assertEqualsM("Lfuel#2", 17.5, engine->injectionDuration);
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 
@@ -1091,7 +1127,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 4);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("Lfuel#4", 2, engine->fuelMs);
+	assertEqualsM("Lfuel#4", 2, engine->injectionDuration);
 	assertEqualsM("Lduty for maf=3", 10, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 

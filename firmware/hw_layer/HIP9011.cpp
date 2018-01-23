@@ -28,7 +28,7 @@
  * max SPI frequency: 5MHz max
  *
  * @date Nov 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  * @Spilly
  */
 
@@ -135,7 +135,7 @@ static void showHipInfo(void) {
 	}
 
 	printSpiState(logger, boardConfiguration);
-	scheduleMsg(logger, "enabled=%s state=%d bore=%fmm freq=%fkHz PaSDO=%d",
+	scheduleMsg(logger, "enabled=%s state=%d bore=%.2fmm freq=%.2fkHz PaSDO=%d",
 			boolToString(boardConfiguration->isHip9011Enabled),
 			state,
 			engineConfiguration->cylinderBore, getBand(),
@@ -143,9 +143,9 @@ static void showHipInfo(void) {
 
 	char *outputName = getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, hipPinNameBuffer);
 
-	scheduleMsg(logger, "band_index=%d gain %f/index=%d output=%s", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex,
+	scheduleMsg(logger, "band_index=%d gain %.2f/index=%d output=%s", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex,
 			outputName);
-	scheduleMsg(logger, "integrator index=%d knockVThreshold=%f knockCount=%d maxKnockSubDeg=%f",
+	scheduleMsg(logger, "integrator index=%d knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
 	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
 	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
@@ -158,7 +158,7 @@ static void showHipInfo(void) {
 			msg);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
-	scheduleMsg(logger, "hip %fv/last=%f@%s/max=%f adv=%d",
+	scheduleMsg(logger, "hip %.2fv/last=%.2f@%s/max=%.2f adv=%d",
 			engine->knockVolts,
 			getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
 			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
@@ -168,7 +168,7 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
 	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
 
-	scheduleMsg(logger, "start %f end %f", engineConfiguration->knockDetectionWindowStart,
+	scheduleMsg(logger, "start %.2f end %.2f", engineConfiguration->knockDetectionWindowStart,
 			engineConfiguration->knockDetectionWindowEnd);
 
 	hipValueMax = 0;

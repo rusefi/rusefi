@@ -11,7 +11,7 @@
  * todo: one emulator should be enough! another one should be eliminated
  *
  * @date Mar 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 #include "main.h"
 
@@ -34,11 +34,6 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 EXTERN_ENGINE
 ;
 
-static void fireShaftSignal(trigger_event_e signal) {
-	if (isUsefulSignal(signal, engineConfiguration))
-		hwHandleShaftSignal(signal);
-}
-
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	int prevIndex = (stateIndex + state->phaseCount - 1) % state->phaseCount;
 
@@ -55,17 +50,17 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
-		fireShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
+		hwHandleShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
 		secondaryWheelState = newSecondaryWheelState;
-		fireShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+		hwHandleShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
 		thirdWheelState = new3rdWheelState;
-		fireShaftSignal(thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
+		hwHandleShaftSignal(thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
 	}
 
 	//	print("hello %d\r\n", chTimeNow());
@@ -106,7 +101,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
 	if (rpm == 0) {
-		triggerSignal.periodNt = NAN;
+		triggerSignal.setFrequency(NAN);
 	} else {
 		float rpmM = getRpmMultiplier(engineConfiguration->operationMode);
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second

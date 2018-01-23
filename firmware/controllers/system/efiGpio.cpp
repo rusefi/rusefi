@@ -3,7 +3,7 @@
  * @brief	EFI-related GPIO code
  *
  * @date Sep 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -33,6 +33,8 @@ static const char *sparkNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c
 static const char *injectorNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
+static const char *auxValveNames[INJECTION_PIN_COUNT] = { "a1", "a2"};
+
 EnginePins::EnginePins() {
 	dizzyOutput.name = DIZZY_NAME;
 	tachOut.name = TACH_NAME;
@@ -43,6 +45,9 @@ EnginePins::EnginePins() {
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
+	}
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
+		enginePins.auxValve[i].name = auxValveNames[i];
 	}
 }
 
@@ -75,6 +80,9 @@ bool EnginePins::stopPins() {
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		result |= injectors[i].stop();
 	}
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
+		result |= auxValve[i].stop();
+	}
 	return result;
 }
 
@@ -87,6 +95,7 @@ void EnginePins::unregisterPins() {
 		engineConfiguration->bc.triggerErrorPin);
 
 	sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
+	accelerometerCs.unregisterOutput(activeConfiguration.LIS302DLCsPin, engineConfiguration->LIS302DLCsPin);
 	etbOutput1.unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
 			engineConfiguration->bc.etbDirectionPin1);
 	etbOutput2.unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
@@ -101,8 +110,8 @@ void EnginePins::unregisterPins() {
 			engineConfiguration->bc.idle.solenoidPin);
 
 	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
-		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioPins[i],
-				engineConfiguration->bc.fsioPins[i]);
+		fsioOutputs[i].unregisterOutput(activeConfiguration.bc.fsioOutputPins[i],
+				engineConfiguration->bc.fsioOutputPins[i]);
 	}
 
 	alternatorPin.unregisterOutput(activeConfiguration.bc.alternatorControlPin,
@@ -138,6 +147,15 @@ void EnginePins::stopInjectionPins(void) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
 				engineConfiguration->bc.injectionPins[i]);
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::startAuxValves(void) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.auxValve[i];
+		output->initPin(output->name, engineConfiguration->auxValves[i]);
 	}
 #endif /* EFI_PROD_CODE */
 }

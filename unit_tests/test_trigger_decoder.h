@@ -11,6 +11,7 @@
 void testTriggerDecoder(void);
 void testFuelSchedulerBug299smallAndMedium(void);
 void testFuelSchedulerBug299smallAndLarge(void);
+void testDifferentInjectionModes(void);
 void testSparkReverseOrderBug319(void);
 void testMissedSpark299(void);
 void testRpmCalculator(void);

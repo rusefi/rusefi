@@ -9,7 +9,7 @@ public enum SensorCategory {
 
     private final String name;
 
-    private SensorCategory(String name) {
+    SensorCategory(String name) {
         this.name = name;
     }
 

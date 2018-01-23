@@ -4,7 +4,7 @@
  * set engine_type 32
  *
  * @date May 24, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

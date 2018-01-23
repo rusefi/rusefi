@@ -5,7 +5,7 @@
  * By default this is enabled by grounding PB0
  *
  * @date Mar 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -28,6 +28,7 @@
 #include "efiGpio.h"
 #include "adc_inputs.h"
 #include "AdcConfiguration.h"
+#include "engine.h"
 
 static volatile int stepCoutner = 0;
 static volatile brain_pin_e currentPin = GPIO_UNASSIGNED;
@@ -39,6 +40,8 @@ static bool isTimeForNextStep(int copy) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 extern AdcDevice slowAdc;
 extern AdcDevice fastAdc;
+
+EXTERN_ENGINE;
 
 static void processAdcPin(AdcDevice *adc, int index) {
 	adc_channel_e hwIndex = adc->getAdcHardwareIndexByInternalIndex(index);
@@ -55,7 +58,7 @@ static void processAdcPin(AdcDevice *adc, int index) {
 
 //		print("ADC%d val= %d%s", hwIndex, value, DELIMETER);
 		float volts = adcToVolts(adcValue) * 2;
-		print("v=%f  adc=%d  c=%d (hit 'n'<ENTER> for next step\r\n", volts, adcValue, c++);
+		print("v=%.2f  adc=%d  c=%d (hit 'n'<ENTER> for next step\r\n", volts, adcValue, c++);
 
 		chThdSleepMilliseconds(300);
 

@@ -5,9 +5,13 @@ import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.core.ResponseBuffer;
-import com.rusefi.io.*;
+import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.LinkConnector;
+import com.rusefi.io.LinkManager;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +25,7 @@ public class TcpConnector implements LinkConnector {
     public static final String LOCALHOST = "localhost";
     private final int port;
     private final String hostname;
-    //    private IoStream ioStream;
+
     private BinaryProtocol bp;
 
     public TcpConnector(String port) {
@@ -41,26 +45,27 @@ public class TcpConnector implements LinkConnector {
             return false;
         }
     }
-/*
-    public static String doUnpackConfirmation(String message) {
-        String confirmation = message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
-        int index = confirmation.indexOf(":");
-        if (index < 0) {
-            return null;
+
+    /*
+        public static String doUnpackConfirmation(String message) {
+            String confirmation = message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
+            int index = confirmation.indexOf(":");
+            if (index < 0) {
+                return null;
+            }
+            String number = confirmation.substring(index + 1);
+            int length;
+            try {
+                length = Integer.parseInt(number);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+            if (length != index) {
+                return null;
+            }
+            return confirmation.substring(0, length);
         }
-        String number = confirmation.substring(index + 1);
-        int length;
-        try {
-            length = Integer.parseInt(number);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-        if (length != index) {
-            return null;
-        }
-        return confirmation.substring(0, length);
-    }
-    */
+        */
     static class InvalidTcpPort extends Exception {
     }
 
@@ -78,6 +83,7 @@ public class TcpConnector implements LinkConnector {
         String[] portParts = port.split(":");
         return (portParts.length == 1 ? LOCALHOST : portParts[0].length() > 0 ? portParts[0] : LOCALHOST);
     }
+
     /**
      * this implementation is blocking
      */
@@ -92,7 +98,9 @@ public class TcpConnector implements LinkConnector {
             stream = new BufferedInputStream(socket.getInputStream());
 //            ioStream = new TcpIoStream(os, stream);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to connect to simulator: " + hostname + "/" + port, e);
+            listener.onConnectionFailed();
+            FileLog.MAIN.logLine("Failed to connect to " + hostname + "/port=" + port);
+            return;
         }
 
         final ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
@@ -138,6 +146,11 @@ public class TcpConnector implements LinkConnector {
 
     @Override
     public void send(String command, boolean fireEvent) throws InterruptedException {
+        if (bp == null) {
+            FileLog.MAIN.logLine("Not connected");
+            return;
+        }
+
         bp.doSend(command, fireEvent);
 //        String command = LinkManager.encodeCommand(text);
 //        FileLog.MAIN.logLine("Writing " + command);
@@ -149,7 +162,7 @@ public class TcpConnector implements LinkConnector {
 //            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 //        }
     }
-    
+
     public static Collection<String> getAvailablePorts() {
         return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.<String>emptyList();
     }

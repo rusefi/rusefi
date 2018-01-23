@@ -6,7 +6,7 @@
  * express myself in C/C++. I am open for suggestions :)
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -21,6 +21,7 @@
 #include "advance_map.h"
 #include "efilib2.h"
 #include "settings.h"
+#include "aux_valves.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
@@ -46,7 +47,7 @@ MockAdcState::MockAdcState() {
 
 #if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
 void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
-	scheduleMsg(&logger, "fake voltage: channel %d value %f", hwChannel, voltage);
+	scheduleMsg(&logger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
 	hasMockAdc[hwChannel] = true;
@@ -68,6 +69,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	// todo: move this logic somewhere to sensors folder?
 	if (engineConfiguration->fuelLevelSensor != EFI_ADC_NONE) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
 		sensors.fuelTankGauge = interpolate(boardConfiguration->fuelLevelEmptyTankVoltage, 0,
@@ -79,9 +81,9 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void Engine::onTriggerEvent(efitick_t nowNt) {
+void Engine::onTriggerSignalEvent(efitick_t nowNt) {
 	isSpinning = true;
-	lastTriggerEventTimeNt = nowNt;
+	lastTriggerToothEventTimeNt = nowNt;
 }
 
 Engine::Engine() {
@@ -91,6 +93,10 @@ Engine::Engine() {
 Engine::Engine(persistent_config_s *config) {
 	setConfig(config);
 	reset();
+}
+
+Accelerometer::Accelerometer() {
+	x = y = z = 0;
 }
 
 SensorsState::SensorsState() {
@@ -104,6 +110,7 @@ void SensorsState::reset() {
 
 void Engine::reset() {
 	withError = isEngineChartEnabled = false;
+	etbAutoTune = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
 	fsioTimingAdjustment = 0;
@@ -115,7 +122,7 @@ void Engine::reset() {
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
-	lastTriggerEventTimeNt = 0;
+	lastTriggerToothEventTimeNt = 0;
 	isCylinderCleanupMode = false;
 	engineCycleEventCount = 0;
 	stopEngineRequestTimeNt = 0;
@@ -136,7 +143,7 @@ void Engine::reset() {
 
 
 	timeOfLastKnockEvent = 0;
-	fuelMs = 0;
+	injectionDuration = 0;
 	clutchDownState = clutchUpState = brakePedalState = false;
 	memset(&m, 0, sizeof(m));
 
@@ -145,7 +152,30 @@ void Engine::reset() {
 FuelConsumptionState::FuelConsumptionState() {
 	perSecondConsumption = perSecondAccumulator = 0;
 	perMinuteConsumption = perMinuteAccumulator = 0;
-	accumulatedSecond = accumulatedMinute = -1;
+	accumulatedSecondPrevNt = accumulatedMinutePrevNt = getTimeNowNt();
+}
+
+void FuelConsumptionState::addData(float durationMs) {
+	if (durationMs > 0.0f) {
+		perSecondAccumulator += durationMs;
+		perMinuteAccumulator += durationMs;
+	}
+}
+
+void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efitick_t deltaNt = nowNt - accumulatedSecondPrevNt;
+	if (deltaNt >= US2NT(US_PER_SECOND_LL)) {
+		perSecondConsumption = getFuelRate(perSecondAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
+		perSecondAccumulator = 0;
+		accumulatedSecondPrevNt = nowNt;
+	}
+
+	deltaNt = nowNt - accumulatedMinutePrevNt;
+	if (deltaNt >= US2NT(US_PER_SECOND_LL * 60)) {
+		perMinuteConsumption = getFuelRate(perMinuteAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
+		perMinuteAccumulator = 0;
+		accumulatedMinutePrevNt = nowNt;
+	}
 }
 
 TransmissionState::TransmissionState() {
@@ -174,11 +204,13 @@ EngineState::EngineState() {
 	baroCorrection = timingAdvance = 0;
 	sparkDwell = mapAveragingDuration = 0;
 	totalLoggedBytes = injectionOffset = 0;
+	auxValveStart = auxValveEnd = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->sensors.oilPressure = getOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	warmupTargetAfr = interpolate2d("warm", engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
 			engineConfiguration->warmupTargetAfr, WARMUP_TARGET_AFR_SIZE);
@@ -188,14 +220,18 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		crankingTime = nowNt;
+		timeSinceCranking = 0.0f;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
+	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	int rpm = GET_RPM();
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
-	engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	iatFuelCorrection = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SUFFIX);
@@ -216,6 +252,21 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	} else {
 		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+	// update fuel consumption states
+	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// post-cranking fuel enrichment.
+	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
+	if (engineConfiguration->postCrankingFactor > 0.01f) {
+		// convert to microsecs and then to seconds
+		float timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
+		// use interpolation for correction taper
+		postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor, 
+			engineConfiguration->postCrankingDurationSec, 1.0f, timeSinceCrankingInSecs);
+	} else {
+		postCrankingFuelCorrection = 1.0f;
 	}
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -239,7 +290,14 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		/**
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 		 */
-		currentVE = baroCorrection * veMap.getValue(rpm, map) * 0.01;
+		float rawVe = veMap.getValue(rpm, map);
+		// get VE from the separate table for Idle
+		if (CONFIG(useSeparateVeForIdle)) {
+			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
+			// interpolate between idle table and normal (running) table using TPS threshold
+			rawVe = interpolateClamped(0.0f, idleVe, boardConfiguration->idlePidDeactivationTpsThreshold, rawVe, tps);
+		}
+		currentVE = baroCorrection * rawVe * 0.01;
 		targetAFR = afrMap.getValue(rpm, map);
 	} else {
 		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
@@ -317,27 +375,30 @@ void Engine::watchdog() {
 		return;
 	}
 	efitick_t nowNt = getTimeNowNt();
+#ifndef RPM_LOW_THRESHOLD
+#define RPM_LOW_THRESHOLD 240
+#endif
+// note that we are ignoring the number of tooth here - we
+// check for duration between tooth as if we only have one tooth per revolution which is not the case
+#define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
 	/**
-	 * Lowest possible cranking is about 240 RPM, that's 4 revolutions per second.
-	 * 0.25 second is 250000 uS
-	 *
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 *
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerEventTimeNt;
-	if (timeSinceLastTriggerEvent < US2NT(250000LL)) {
+	efitick_t timeSinceLastTriggerEvent = nowNt - lastTriggerToothEventTimeNt;
+	if (timeSinceLastTriggerEvent < US2NT(REVOLUTION_TIME_HIGH_THRESHOLD)) {
 		return;
 	}
 	isSpinning = false;
 	ignitionEvents.isReady = false;
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	scheduleMsg(&logger, "engine has STOPPED");
 	scheduleMsg(&logger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
 			(int)(nowNt >> 32), (int)nowNt,
-			(int)(lastTriggerEventTimeNt >> 32), (int)lastTriggerEventTimeNt,
+			(int)(lastTriggerToothEventTimeNt >> 32), (int)lastTriggerToothEventTimeNt,
 			(int)timeSinceLastTriggerEvent
 			);
 	triggerInfo();
@@ -374,7 +435,6 @@ bool Engine::isInShutdownMode() {
 }
 
 injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.rpmValue;
 	return rpmCalculator.isCranking(PASS_ENGINE_PARAMETER_SIGNATURE) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 }
 
@@ -408,7 +468,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
-	ENGINE(fuelMs) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
 }
@@ -423,7 +483,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 		pumpsCounter = newValue;
 
 		if (pumpsCounter == PUMPS_TO_PRIME) {
-			scheduleMsg(&logger, "let's squirt prime pulse %f", pumpsCounter);
+			scheduleMsg(&logger, "let's squirt prime pulse %.2f", pumpsCounter);
 			pumpsCounter = 0;
 		} else {
 			scheduleMsg(&logger, "setPumpsCounter %d", pumpsCounter);

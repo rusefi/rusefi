@@ -1,0 +1,552 @@
+diff -uwr Chibios.16_rusefi/.git/FETCH_HEAD Chibios.16_original/.git/FETCH_HEAD
+--- Chibios.16_rusefi/.git/FETCH_HEAD	2018-01-23 12:09:57.943028800 -0500
++++ Chibios.16_original/.git/FETCH_HEAD	2018-01-23 12:09:57.277990800 -0500
+@@ -1,10 +1,9 @@
+-93fdc45672692a73b3734b0e77f5978944477a2b		branch 'stable_rusefi' of https://github.com/rusefi/ChibiOS
++c8198eb36c2174484141f0119f720bcf0468a0b9		branch 'stable_16.1.x' of https://github.com/rusefi/ChibiOS
+ b263680b98fbb41e939ce62e55916254ece4acc7	not-for-merge	branch 'master' of https://github.com/rusefi/ChibiOS
+ a4b2c113e74e026dfc7cc02060b32ab3f047ae8d	not-for-merge	branch 'revert-10-master' of https://github.com/rusefi/ChibiOS
+ e61ff3aa1c1fd0f1057e08ae4551abbc01595550	not-for-merge	branch 'stable_1.0.x' of https://github.com/rusefi/ChibiOS
+ 3957b74f871e2ac11b8447aa067b1cece4861970	not-for-merge	branch 'stable_1.2.x' of https://github.com/rusefi/ChibiOS
+ 06c45ae2ef94ff95bbdab317bc53aebe7c51aacc	not-for-merge	branch 'stable_1.4.x' of https://github.com/rusefi/ChibiOS
+-c8198eb36c2174484141f0119f720bcf0468a0b9	not-for-merge	branch 'stable_16.1.x' of https://github.com/rusefi/ChibiOS
+ c71ef710730191f767d077bc660142b1c8984915	not-for-merge	branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
+ c71ef710730191f767d077bc660142b1c8984915	not-for-merge	branch 'stable_17.6.x' of https://github.com/rusefi/ChibiOS
+ e324eb668a8399c5e5342d3111d175f42f14b50b	not-for-merge	branch 'stable_2.0.x' of https://github.com/rusefi/ChibiOS
+@@ -13,4 +12,5 @@
+ 0b0e793cc832373af431029878bc4b6f8c3e5fa5	not-for-merge	branch 'stable_2.6.x' of https://github.com/rusefi/ChibiOS
+ 7596c99a218929e8c93341e2afa353134b64e233	not-for-merge	branch 'stable_3.0.x' of https://github.com/rusefi/ChibiOS
+ a21bf76fe0b033ce00052f30ccec286a422d9654	not-for-merge	branch 'stable_log_issue' of https://github.com/rusefi/ChibiOS
++93fdc45672692a73b3734b0e77f5978944477a2b	not-for-merge	branch 'stable_rusefi' of https://github.com/rusefi/ChibiOS
+ 454717f06820c73845dac29dc95b72fbe7165704	not-for-merge	branch 'trunk' of https://github.com/rusefi/ChibiOS
+diff -uwr Chibios.16_rusefi/.git/HEAD Chibios.16_original/.git/HEAD
+--- Chibios.16_rusefi/.git/HEAD	2018-01-23 11:25:49.489545900 -0500
++++ Chibios.16_original/.git/HEAD	2018-01-23 11:24:49.134093800 -0500
+@@ -1 +1 @@
+-ref: refs/heads/stable_rusefi
++ref: refs/heads/stable_16.1.x
+diff -uwr Chibios.16_rusefi/.git/ORIG_HEAD Chibios.16_original/.git/ORIG_HEAD
+--- Chibios.16_rusefi/.git/ORIG_HEAD	2018-01-23 12:09:57.990031500 -0500
++++ Chibios.16_original/.git/ORIG_HEAD	2018-01-23 12:09:57.324993400 -0500
+@@ -1 +1 @@
+-02f9f87361e018ce50bfe19dd9927012b9d97db8
++c8198eb36c2174484141f0119f720bcf0468a0b9
+diff -uwr Chibios.16_rusefi/.git/config Chibios.16_original/.git/config
+--- Chibios.16_rusefi/.git/config	2018-01-23 11:25:49.499546500 -0500
++++ Chibios.16_original/.git/config	2018-01-23 11:24:49.141094200 -0500
+@@ -8,6 +8,6 @@
+ [remote "origin"]
+ 	url = https://github.com/rusefi/ChibiOS
+ 	fetch = +refs/heads/*:refs/remotes/origin/*
+-[branch "stable_rusefi"]
++[branch "stable_16.1.x"]
+ 	remote = origin
+-	merge = refs/heads/stable_rusefi
++	merge = refs/heads/stable_16.1.x
+Binary files Chibios.16_rusefi/.git/index and Chibios.16_original/.git/index differ
+diff -uwr Chibios.16_rusefi/.git/logs/HEAD Chibios.16_original/.git/logs/HEAD
+--- Chibios.16_rusefi/.git/logs/HEAD	2018-01-23 12:09:58.083036800 -0500
++++ Chibios.16_original/.git/logs/HEAD	2018-01-23 11:24:49.138094000 -0500
+@@ -1,2 +1 @@
+-0000000000000000000000000000000000000000 02f9f87361e018ce50bfe19dd9927012b9d97db8 rusefi <arro239+rusefi@gmail.com> 1516724749 -0500	clone: from https://github.com/rusefi/ChibiOS
+-02f9f87361e018ce50bfe19dd9927012b9d97db8 93fdc45672692a73b3734b0e77f5978944477a2b rusefi <arro239+rusefi@gmail.com> 1516727398 -0500	pull: Fast-forward
++0000000000000000000000000000000000000000 c8198eb36c2174484141f0119f720bcf0468a0b9 rusefi <arro239+rusefi@gmail.com> 1516724689 -0500	clone: from https://github.com/rusefi/ChibiOS
+Only in Chibios.16_original/.git/logs/refs/heads: stable_16.1.x
+Only in Chibios.16_rusefi/.git/logs/refs/heads: stable_rusefi
+diff -uwr Chibios.16_rusefi/.git/logs/refs/remotes/origin/HEAD Chibios.16_original/.git/logs/refs/remotes/origin/HEAD
+--- Chibios.16_rusefi/.git/logs/refs/remotes/origin/HEAD	2018-01-23 11:25:49.487545800 -0500
++++ Chibios.16_original/.git/logs/refs/remotes/origin/HEAD	2018-01-23 11:24:49.133093700 -0500
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516724749 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516724689 -0500	clone: from https://github.com/rusefi/ChibiOS
+Only in Chibios.16_original/.git/refs/heads: stable_16.1.x
+Only in Chibios.16_rusefi/.git/refs/heads: stable_rusefi
+diff -uwr Chibios.16_rusefi/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h Chibios.16_original/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h
+--- Chibios.16_rusefi/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h	2018-01-23 11:25:50.422599300 -0500
++++ Chibios.16_original/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h	2018-01-23 11:24:50.558175200 -0500
+@@ -67,7 +67,7 @@
+ #define STM32_ADC_USE_ADC1                  FALSE
+ #define STM32_ADC_USE_ADC2                  FALSE
+ #define STM32_ADC_ADC1_DMA_STREAM           STM32_DMA_STREAM_ID(1, 1)
+-#define STM32_ADC_ADC2_DMA_STREAM           STM32_DMA_STREAM_ID(1, 2)
++#define STM32_ADC_ADC2_DMA_STREAM           STM32_DMA_STREAM_ID(2, 1)
+ #define STM32_ADC_ADC1_DMA_PRIORITY         2
+ #define STM32_ADC_ADC2_DMA_PRIORITY         2
+ #define STM32_ADC_ADC12_IRQ_PRIORITY        5
+Only in Chibios.16_original: doc
+diff -uwr Chibios.16_rusefi/os/common/ports/ARMCMx/compilers/GCC/rules.mk Chibios.16_original/os/common/ports/ARMCMx/compilers/GCC/rules.mk
+--- Chibios.16_rusefi/os/common/ports/ARMCMx/compilers/GCC/rules.mk	2018-01-23 11:25:50.907627000 -0500
++++ Chibios.16_original/os/common/ports/ARMCMx/compilers/GCC/rules.mk	2018-01-23 11:24:51.324219100 -0500
+@@ -93,9 +93,8 @@
+ TCOBJS    := $(addprefix $(OBJDIR)/, $(notdir $(TCSRC:.c=.o)))
+ TCPPOBJS  := $(addprefix $(OBJDIR)/, $(notdir $(TCPPSRC:.cpp=.o)))
+ ASMOBJS   := $(addprefix $(OBJDIR)/, $(notdir $(ASMSRC:.s=.o)))
+-#ASMXOBJS  := $(addprefix $(OBJDIR)/, $(notdir $(ASMXSRC:.S=.o)))
+-#OBJS	  := $(ASMXOBJS) $(ASMOBJS) $(ACOBJS) $(TCOBJS) $(ACPPOBJS) $(TCPPOBJS)
+-OBJS	  :=             $(ASMOBJS) $(ACOBJS) $(TCOBJS) $(ACPPOBJS) $(TCPPOBJS)
++ASMXOBJS  := $(addprefix $(OBJDIR)/, $(notdir $(ASMXSRC:.S=.o)))
++OBJS	  := $(ASMXOBJS) $(ASMOBJS) $(ACOBJS) $(TCOBJS) $(ACPPOBJS) $(TCPPOBJS)
+ 
+ # Paths
+ IINCDIR   := $(patsubst %,-I%,$(INCDIR) $(DINCDIR) $(UINCDIR))
+@@ -227,14 +226,14 @@
+ 	@$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
+ endif
+ 
+-#$(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
+-#ifeq ($(USE_VERBOSE_COMPILE),yes)
+-#	@echo
+-#	$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
+-#else
+-#	@echo Compiling $(<F)
+-#	@$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
+-#endif
++$(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
++ifeq ($(USE_VERBOSE_COMPILE),yes)
++	@echo
++	$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
++else
++	@echo Compiling $(<F)
++	@$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
++endif
+ 
+ $(BUILDDIR)/$(PROJECT).elf: $(OBJS) $(LDSCRIPT)
+ ifeq ($(USE_VERBOSE_COMPILE),yes)
+Only in Chibios.16_rusefi/os/common: startup
+diff -uwr Chibios.16_rusefi/os/hal/include/uart.h Chibios.16_original/os/hal/include/uart.h
+--- Chibios.16_rusefi/os/hal/include/uart.h	2018-01-23 11:25:52.187700200 -0500
++++ Chibios.16_original/os/hal/include/uart.h	2018-01-23 11:24:53.586348400 -0500
+@@ -185,23 +185,6 @@
+ #define _uart_wakeup_rx_error_isr(uartp)
+ #endif /* !UART_USE_WAIT */
+ 
+-#if (UART_USE_WAIT == TRUE) || defined(__DOXYGEN__)
+-/**
+- * @brief   Wakes up the waiting thread in case of RX timeout.
+- *
+- * @param[in] uartp     pointer to the @p UARTDriver object
+- *
+- * @notapi
+- */
+-#define _uart_wakeup_rx_timeout_isr(uartp) {                                \
+-  osalSysLockFromISR();                                                     \
+-  osalThreadResumeI(&(uartp)->threadrx, MSG_TIMEOUT);                       \
+-  osalSysUnlockFromISR();                                                   \
+-}
+-#else /* !UART_USE_WAIT */
+-#define _uart_wakeup_rx_timeout_isr(uartp)
+-#endif /* !UART_USE_WAIT */
+-
+ /**
+  * @brief   Common ISR code for early TX.
+  * @details This code handles the portable part of the ISR code:
+@@ -275,27 +258,6 @@
+ }
+ 
+ /**
+- * @brief   Common ISR code for RX half-transfer data.
+- * @details This code handles the portable part of the ISR code:
+- *          - Callback invocation.
+- *          - Waiting thread wakeup, if any.
+- *          - Driver state transitions.
+- *          .
+- * @note    This macro is meant to be used in the low level drivers
+- *          implementation only.
+- *
+- * @param[in] uartp     pointer to the @p UARTDriver object
+- * @param[in] full      flag set to 1 for the second half, and 0 for the first half
+- *
+- * @notapi
+- */
+-#define _uart_rx_half_isr_code(uartp, full) {                               \
+-  if ((uartp)->config->rxhalf_cb != NULL)                                   \
+-    (uartp)->config->rxhalf_cb(uartp, full);                                \
+-}
+-
+-
+-/**
+  * @brief   Common ISR code for RX error.
+  * @details This code handles the portable part of the ISR code:
+  *          - Callback invocation.
+@@ -317,6 +279,7 @@
+   _uart_wakeup_rx_error_isr(uartp);                                         \
+ }
+ 
++
+ /**
+  * @brief   Common ISR code for RX on idle.
+  * @details This code handles the portable part of the ISR code:
+@@ -335,28 +298,6 @@
+   if ((uartp)->config->rxchar_cb != NULL)                                   \
+     (uartp)->config->rxchar_cb(uartp, (uartp)->rxbuf);                      \
+ }
+-
+-/**
+- * @brief   Timeout ISR code for receiver.
+- * @details This code handles the portable part of the ISR code:
+- *          - Callback invocation.
+- *          - Waiting thread wakeup, if any.
+- *          - Driver state transitions.
+- *          .
+- * @note    This macro is meant to be used in the low level drivers
+- *          implementation only.
+- *
+- * @param[in] uartp     pointer to the @p UARTDriver object
+- *
+- * @notapi
+- */
+-#define _uart_timeout_isr_code(uartp) {                                     \
+-  if ((uartp)->config->timeout_cb != NULL) {                                \
+-    (uartp)->config->timeout_cb(uartp);                                     \
+-  }                                                                         \
+-  _uart_wakeup_rx_timeout_isr(uartp);                                       \
+-}
+-
+ /** @} */
+ 
+ /*===========================================================================*/
+diff -uwr Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c Chibios.16_original/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c
+--- Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c	2018-01-23 11:25:52.592723400 -0500
++++ Chibios.16_original/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c	2018-01-23 11:24:54.074376400 -0500
+@@ -137,7 +137,7 @@
+   t = localtime_r((time_t *)&(tv_sec), &tim);
+   osalDbgAssert(t != NULL, "conversion failed");
+ #else
+-  t = localtime(&tv_sec);
++  struct tm *t = localtime(&tv_sec);
+   memcpy(&tim, t, sizeof(struct tm));
+ #endif
+ 
+diff -uwr Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c
+--- Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c	2018-01-23 11:25:52.594723500 -0500
++++ Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c	2018-01-23 11:24:54.079376600 -0500
+@@ -27,7 +27,6 @@
+  */
+ 
+ #include "hal.h"
+-#include "rusefi_lse_fix.h"
+ 
+ #if HAL_USE_RTC || defined(__DOXYGEN__)
+ 
+@@ -76,11 +75,10 @@
+  * @notapi
+  */
+ static void rtc_enter_init(void) {
+-         int counter = 0;
++
+   RTCD1.rtc->ISR |= RTC_ISR_INIT;
+-  while ((RTCD1.rtc->ISR & RTC_ISR_INITF) == 0 && ++counter < LSE_TIMEOUT)
++  while ((RTCD1.rtc->ISR & RTC_ISR_INITF) == 0)
+     ;
+-
+ }
+ 
+ /**
+@@ -349,16 +347,13 @@
+   rtc_enter_init();
+   rtcp->rtc->TR = tr;
+   rtcp->rtc->DR = dr;
+-  rtcp->rtc->CR = (rtcp->rtc->CR & ~(1U << RTC_CR_BKP_OFFSET)) |
+-                  (timespec->dstflag << RTC_CR_BKP_OFFSET);
++  rtcp->rtc->CR |= timespec->dstflag << RTC_CR_BKP_OFFSET;
+   rtc_exit_init();
+ 
+   /* Leaving a reentrant critical zone.*/
+   osalSysRestoreStatusX(sts);
+ }
+ 
+-extern bool rtcWorks;
+-
+ /**
+  * @brief   Get current time.
+  * @note    The function can be called from any context.
+@@ -379,13 +374,10 @@
+   /* Entering a reentrant critical zone.*/
+   sts = osalSysGetStatusAndLockX();
+ 
+-  int counter = 0;                                                         \
+   /* Synchronization with the RTC and reading the registers, note
+      DR must be read last.*/
+-  while ((rtcp->rtc->ISR & RTC_ISR_RSF) == 0 && rtcWorks && ++counter <LSE_TIMEOUT)
++  while ((rtcp->rtc->ISR & RTC_ISR_RSF) == 0)
+     ;
+-  if (counter==LSE_TIMEOUT) {rtcWorks = false; }                           \
+-
+ #if STM32_RTC_HAS_SUBSECONDS
+   ssr = rtcp->rtc->SSR;
+ #endif /* STM32_RTC_HAS_SUBSECONDS */
+diff -uwr Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h
+--- Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h	2018-01-23 11:25:52.595723600 -0500
++++ Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h	2018-01-23 11:24:54.081376800 -0500
+@@ -29,7 +29,6 @@
+ #ifndef _RTC_LLD_H_
+ #define _RTC_LLD_H_
+ 
+-
+ #if HAL_USE_RTC || defined(__DOXYGEN__)
+ 
+ /*===========================================================================*/
+Only in Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2: rusefi_lse_fix.h
+diff -uwr Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c
+--- Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c	2018-01-23 11:25:52.722730900 -0500
++++ Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c	2018-01-23 11:24:54.143380300 -0500
+@@ -226,11 +226,6 @@
+   /* Mustn't ever set TCIE here - if done, it causes an immediate
+      interrupt.*/
+   cr1 = USART_CR1_UE | USART_CR1_PEIE | USART_CR1_TE | USART_CR1_RE;
+-
+-  /* Add Idle interrupt if needed */
+-  if (uartp->config->timeout_cb != NULL)
+-  	cr1 |= USART_CR1_IDLEIE;
+-
+   u->CR1 = uartp->config->cr1 | cr1;
+ 
+   /* Starting the receiver idle loop.*/
+@@ -259,14 +254,7 @@
+        received character and then the driver stays in the same state.*/
+     _uart_rx_idle_code(uartp);
+   }
+-  /* DMA half-transter interrupt handling - for the 1st/2nd half transfers. */
+-  else if (uartp->config->rxhalf_cb != NULL) {
+-    if ((flags & STM32_DMA_ISR_HTIF) != 0) {
+-    	_uart_rx_half_isr_code(uartp, 0);
+-    } else if ((flags & STM32_DMA_ISR_TCIF) != 0) {
+-    	_uart_rx_half_isr_code(uartp, 1);
+-    }
+-  } else {
++  else {
+     /* Receiver in active state, a callback is generated, if enabled, after
+        a completed transfer.*/
+     dmaStreamDisable(uartp->dmarx);
+@@ -324,11 +312,6 @@
+     /* End of transmission, a callback is generated.*/
+     _uart_tx2_isr_code(uartp);
+   }
+-
+-  /* Idle interrupt sources are only checked if enabled in CR1.*/
+-  if ((sr & USART_SR_IDLE) && (cr1 & USART_CR1_IDLEIE)) {
+-    _uart_timeout_isr_code(uartp);
+-  }
+ }
+ 
+ /*===========================================================================*/
+@@ -795,14 +778,8 @@
+   /* RX DMA channel preparation.*/
+   dmaStreamSetMemory0(uartp->dmarx, rxbuf);
+   dmaStreamSetTransactionSize(uartp->dmarx, n);
+-
+-  uint32_t mode = STM32_DMA_CR_DIR_P2M | STM32_DMA_CR_MINC | STM32_DMA_CR_TCIE;
+-
+-  /* DMA half-transfer interrupt & circular mode, if needed */
+-  if (uartp->config->rxhalf_cb != NULL)
+-    mode |= STM32_DMA_CR_HTIE | STM32_DMA_CR_CIRC;
+-
+-  dmaStreamSetMode(uartp->dmarx, uartp->dmamode | mode);
++  dmaStreamSetMode(uartp->dmarx, uartp->dmamode    | STM32_DMA_CR_DIR_P2M |
++                                 STM32_DMA_CR_MINC | STM32_DMA_CR_TCIE);
+ 
+   /* Starting transfer.*/
+   dmaStreamEnable(uartp->dmarx);
+diff -uwr Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h
+--- Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h	2018-01-23 11:25:52.724731000 -0500
++++ Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h	2018-01-23 11:24:54.145380400 -0500
+@@ -461,14 +461,6 @@
+ typedef void (*uartecb_t)(UARTDriver *uartp, uartflags_t e);
+ 
+ /**
+- * @brief   Receive Half-transfer UART notification callback type.
+- *
+- * @param[in] uartp     pointer to the @p UARTDriver object
+- * @param[in] full      flag set to 1 for the second half, and 0 for the first half
+- */
+-typedef void (*uarthcb_t)(UARTDriver *uartp, uartflags_t full);
+-
+-/**
+  * @brief   Driver configuration structure.
+  * @note    It could be empty on some architectures.
+  */
+@@ -510,16 +502,6 @@
+    * @brief Initialization value for the CR3 register.
+    */
+   uint16_t                  cr3;
+-  /* Additional (optional) handlers. Placed here for the struct compatibility.*/
+-  /**
+-   * @brief   Receiver timeout (idle) callback.
+-   * @details Handles an idle interrupt for USARTv1.
+-   */
+-  uartcb_t                  timeout_cb;
+-  /**
+-   * @brief Half-transfer receive buffer callback.
+-   */
+-  uarthcb_t                 rxhalf_cb;
+ } UARTConfig;
+ 
+ /**
+diff -uwr Chibios.16_rusefi/os/hal/ports/STM32/STM32F4xx/hal_lld.c Chibios.16_original/os/hal/ports/STM32/STM32F4xx/hal_lld.c
+--- Chibios.16_rusefi/os/hal/ports/STM32/STM32F4xx/hal_lld.c	2018-01-23 11:25:52.934743000 -0500
++++ Chibios.16_original/os/hal/ports/STM32/STM32F4xx/hal_lld.c	2018-01-23 11:24:54.577405100 -0500
+@@ -23,7 +23,6 @@
+  */
+ 
+ #include "hal.h"
+-#include "rusefi_lse_fix.h"
+ 
+ /*===========================================================================*/
+ /* Driver local definitions.                                                 */
+@@ -64,9 +63,6 @@
+     RCC->BDCR = 0;
+   }
+ 
+-  extern bool rtcWorks;
+-
+-
+ #if STM32_LSE_ENABLED
+ #if defined(STM32_LSE_BYPASS)
+   /* LSE Bypass.*/
+@@ -75,8 +71,7 @@
+   /* No LSE Bypass.*/
+   RCC->BDCR |= RCC_BDCR_LSEON;
+ #endif
+-  int waitCounter = 0;
+-  while ((RCC->BDCR & RCC_BDCR_LSERDY) == 0 && rtcWorks && ++waitCounter <LSE_TIMEOUT)
++  while ((RCC->BDCR & RCC_BDCR_LSERDY) == 0)
+     ;                                       /* Waits until LSE is stable.   */
+ #endif
+ 
+Only in Chibios.16_rusefi/os/hal/ports/simulator: posix
+diff -uwr Chibios.16_rusefi/os/rt/include/chdebug.h Chibios.16_original/os/rt/include/chdebug.h
+--- Chibios.16_rusefi/os/rt/include/chdebug.h	2018-01-23 11:25:53.640783400 -0500
++++ Chibios.16_original/os/rt/include/chdebug.h	2018-01-23 11:24:55.635465600 -0500
+@@ -121,8 +121,8 @@
+ /*===========================================================================*/
+ 
+ #if CH_DBG_SYSTEM_STATE_CHECK == TRUE
+-#define _dbg_enter_lock() {(ch.dbg.lock_cnt = (cnt_t)1);  ON_LOCK_HOOK;}
+-#define _dbg_leave_lock() {ON_UNLOCK_HOOK;(ch.dbg.lock_cnt = (cnt_t)0);}
++#define _dbg_enter_lock() (ch.dbg.lock_cnt = (cnt_t)1)
++#define _dbg_leave_lock() (ch.dbg.lock_cnt = (cnt_t)0)
+ #endif
+ 
+ /* When the state checker feature is disabled then the following functions
+diff -uwr Chibios.16_rusefi/os/rt/ports/ARM/chcore.h Chibios.16_original/os/rt/ports/ARM/chcore.h
+--- Chibios.16_rusefi/os/rt/ports/ARM/chcore.h	2018-01-23 11:25:53.682785800 -0500
++++ Chibios.16_original/os/rt/ports/ARM/chcore.h	2018-01-23 11:24:55.676468000 -0500
+@@ -28,8 +28,6 @@
+ #ifndef _CHCORE_H_
+ #define _CHCORE_H_
+ 
+-#include "chdebug.h"
+-
+ /*===========================================================================*/
+ /* Module constants.                                                         */
+ /*===========================================================================*/
+@@ -290,8 +288,6 @@
+ #define PORT_FAST_IRQ_HANDLER(id)                                           \
+   __attribute__((interrupt("FIQ"))) void id(void)
+ 
+-void chDbgStackOverflowPanic(thread_t *otp);
+-
+ /**
+  * @brief   Performs a context switch between two threads.
+  * @details This is the most critical code in any port, this function
+@@ -309,7 +305,7 @@
+ #define port_switch(ntp, otp) {                                             \
+   register struct port_intctx *r13 asm ("r13");                             \
+   if ((stkalign_t *)(r13 - 1) < otp->p_stklimit)                            \
+-    chDbgStackOverflowPanic(otp);                                           \
++    chSysHalt("stack overflow");                                            \
+   _port_switch_thumb(ntp, otp);                                             \
+ }
+ #else
+@@ -322,7 +318,7 @@
+ #define port_switch(ntp, otp) {                                             \
+   register struct port_intctx *r13 asm ("r13");                             \
+   if ((stkalign_t *)(r13 - 1) < otp->p_stklimit)                            \
+-    chDbgStackOverflowPanic(otp);                                           \
++  chSysHalt("stack overflow");                                              \
+   _port_switch_arm(ntp, otp);                                               \
+ }
+ #else
+diff -uwr Chibios.16_rusefi/os/rt/ports/SIMIA32/chcore.c Chibios.16_original/os/rt/ports/SIMIA32/chcore.c
+--- Chibios.16_rusefi/os/rt/ports/SIMIA32/chcore.c	2018-01-23 11:25:53.752789800 -0500
++++ Chibios.16_original/os/rt/ports/SIMIA32/chcore.c	2018-01-23 11:24:55.737471500 -0500
+@@ -25,12 +25,7 @@
+  * @{
+  */
+ 
+-#if defined(WIN32) 
+   #include <windows.h>
+-#else
+-  #include <stdlib.h>
+-  #include <sys/time.h>
+-#endif
+ 
+ #include "ch.h"
+ 
+@@ -114,18 +109,11 @@
+  * @return              The realtime counter value.
+  */
+ rtcnt_t port_rt_get_counter_value(void) {
+-#if defined(WIN32)
+   LARGE_INTEGER n;
+ 
+   QueryPerformanceCounter(&n);
+ 
+   return (rtcnt_t)(n.QuadPart / 1000LL);
+-#else // POSIX
+-  struct timeval tv;
+-
+-  gettimeofday(&tv, NULL);
+-  return (rtcnt_t)(tv.tv_usec);
+-#endif
+ }
+ 
+ /** @} */
+diff -uwr Chibios.16_rusefi/os/rt/src/chdebug.c Chibios.16_original/os/rt/src/chdebug.c
+--- Chibios.16_rusefi/os/rt/src/chdebug.c	2018-01-23 11:25:53.770790800 -0500
++++ Chibios.16_original/os/rt/src/chdebug.c	2018-01-23 11:24:55.745471900 -0500
+@@ -85,8 +85,6 @@
+ /* Module local definitions.                                                 */
+ /*===========================================================================*/
+ 
+-extern int maxNesting;
+-
+ /*===========================================================================*/
+ /* Module exported variables.                                                */
+ /*===========================================================================*/
+@@ -152,7 +150,7 @@
+ void _dbg_check_lock(void) {
+ 
+   if ((ch.dbg.isr_cnt != (cnt_t)0) || (ch.dbg.lock_cnt != (cnt_t)0)) {
+-    chSysHalt("SV#4 misplaced chSysLock()");
++    chSysHalt("SV#4");
+   }
+   _dbg_enter_lock();
+ }
+@@ -178,7 +176,7 @@
+ void _dbg_check_lock_from_isr(void) {
+ 
+   if ((ch.dbg.isr_cnt <= (cnt_t)0) || (ch.dbg.lock_cnt != (cnt_t)0)) {
+-    chSysHalt("SV#6 misplaced chSysLockFromISR()");
++    chSysHalt("SV#6");
+   }
+   _dbg_enter_lock();
+ }
+@@ -208,8 +206,6 @@
+     chSysHalt("SV#8");
+   }
+   ch.dbg.isr_cnt++;
+-  if (ch.dbg.isr_cnt > maxNesting)
+-          maxNesting = ch.dbg.isr_cnt;
+   port_unlock_from_isr();
+ }
+ 
+@@ -239,7 +235,7 @@
+ void chDbgCheckClassI(void) {
+ 
+   if ((ch.dbg.isr_cnt < (cnt_t)0) || (ch.dbg.lock_cnt <= (cnt_t)0)) {
+-    chSysHalt("SV#10 misplaced I-class function");
++    chSysHalt("SV#10");
+   }
+ }
+ 

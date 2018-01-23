@@ -3,7 +3,7 @@
  * @brief
  *
  * @date Jul 13, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -124,9 +124,11 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	 * todo: since this method is not invoked within trigger event handler and
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
-	floatms_t fuelMs = ENGINE(fuelMs);
+	floatms_t fuelMs = ENGINE(injectionDuration);
 	efiAssert(!cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
+	efiAssert(!cisnan(injectionDuration), "NaN injectionDuration", false);
+	assertAngleRange(injectionDuration, "injectionDuration_r");
 	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
@@ -134,21 +136,22 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	}
 	angle_t baseAngle = injectionOffset - injectionDuration;
 	efiAssert(!cisnan(baseAngle), "NaN baseAngle", false);
+	assertAngleRange(baseAngle, "baseAngle_r");
 
-	int index;
+	int injectorIndex;
 
 	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (mode == IM_SIMULTANEOUS) {
-		index = 0;
+	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
+		injectorIndex = 0;
 	} else if (mode == IM_SEQUENTIAL) {
-		index = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+		injectorIndex = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
 	} else if (mode == IM_BATCH) {
 		// does not look exactly right, not too consistent with IM_SEQUENTIAL
-		index = i % (engineConfiguration->specs.cylindersCount / 2);
+		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
 	} else {
 		warning(CUSTOM_OBD_UNEXPECTED_INJECTION_MODE, "Unexpected injection mode %d", mode);
-		index = 0;
+		injectorIndex = 0;
 	}
 
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
@@ -169,13 +172,13 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		/**
 		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 		 */
-		int secondIndex = index + (CONFIG(specs.cylindersCount) / 2);
+		int secondIndex = injectorIndex + (CONFIG(specs.cylindersCount) / 2);
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
 		secondOutput = NULL;
 	}
 
-	InjectorOutputPin *output = &enginePins.injectors[index];
+	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
 
 	if (!isSimultanious && !output->isInitialized()) {
 		// todo: extract method for this index math
@@ -199,9 +202,10 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		return false;
 	}
 
+	efiAssert(!cisnan(angle), "findAngle#3", false);
 	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER_SUFFIX));
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	printf("registerInjectionEvent angle=%f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.eventIndex, index);
+	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.eventIndex, injectorIndex);
 #endif
 	return true;
 }
@@ -246,7 +250,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {
 		// this could happen during engine configuration reset
-		warning(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %f at rpm=%d", dwellMs, rpm);
+		warning(CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %.2f at rpm=%d", dwellMs, rpm);
 		return 0;
 	}
 	return dwellMs;
@@ -284,14 +288,18 @@ int TriggerShape::findAngleIndex(float target DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efiAssertVoid(!cisnan(angleOffset), "findAngle#1");
+	efiAssertVoid(!cisnan(ENGINE(triggerCentral.triggerShape.tdcPosition)), "tdcPos#1")
+	efiAssertVoid(!cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
 	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition();
+	efiAssertVoid(!cisnan(angleOffset), "findAngle#2");
 	fixAngle(angleOffset, "addFuel#2");
 
 	int index = triggerIndexByAngle[(int)angleOffset];
 	angle_t eventAngle = eventAngles[index];
 	if (angleOffset < eventAngle) {
-		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %f/%f", angleOffset, eventAngle);
+		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angleOffset, eventAngle);
 		return;
 	}
 
@@ -533,7 +541,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (algo == LM_ALPHA_N) {
 		setTimingLoadBin(20, 120 PASS_ENGINE_PARAMETER_SUFFIX);
 	} else if (algo == LM_SPEED_DENSITY) {
-		setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 3);
+		setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 3);
 		buildTimingMap(35 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }

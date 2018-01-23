@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -29,13 +29,18 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:LMV324IDR
 LIBS:logo
 LIBS:logo_flipped
-LIBS:project_specific_libs
 LIBS:art-electro-conn
 LIBS:art-electro-ic
-EELAYER 27 0
+LIBS:LMV324IDR
+LIBS:conn_16
+LIBS:fds2734
+LIBS:tc4427
+LIBS:MAX9926-9927
+LIBS:max9939
+LIBS:frankenstein-cache
+EELAYER 25 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
@@ -467,7 +472,7 @@ F 3 "" H 8075 1475 60  0001 C CNN
 $EndComp
 Text Label 8075 725  0    60   ~ 0
 5V
-Text Notes 8625 875  0    60   ~ 0
+Text Notes 8600 1450 0    60   ~ 0
 OPTION FOR IGNITION DRIVER\n75 OHM   1/2 WATT\n\n\n\n\n100 OHM    1 WATT
 Text Label 14975 1750 2    60   ~ 0
 INJ-11

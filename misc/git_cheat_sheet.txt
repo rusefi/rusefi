@@ -38,6 +38,9 @@ git remote -v
 
 =========================================
 https://help.github.com/articles/syncing-a-fork/
+git fetch upstream
+git merge upstream/stable_17.6.x
+git push
 
 
 http://stackoverflow.com/questions/9646167/clean-up-a-fork-and-restart-it-from-the-upstream

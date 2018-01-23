@@ -1,18 +1,31 @@
 /**
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
-#include "main.h"
+#include "engine.h"
 #include "tps.h"
-#include "engine_configuration.h"
 #include "interpolation.h"
-#include "adc_inputs.h"
-#include "allsensors.h"
-
-#if !EFI_PROD_CODE
-	int mockTps;
-#endif
+#include "analog_input.h"
 
 	EXTERN_ENGINE;
+
+#if !EFI_PROD_CODE
+	static int mockTps;
+#endif /* EFI_PROD_CODE */
+
+static percent_t mockPedalPosition = MOCK_UNDEFINED;
+
+/**
+ * this allows unit tests to simulate TPS position
+ */
+void setMockTpsPosition(percent_t tpsPosition) {
+#if !EFI_PROD_CODE
+	mockTps = TPS_TS_CONVERSION * tpsPosition;
+#endif
+}
+
+void setMockPedalPosition(percent_t value) {
+	mockPedalPosition = value;
+}
 
 /**
  * We are using one instance for read and another for modification, this is how we get lock-free thread-safety
@@ -66,13 +79,13 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		// too much noise with simulator
-		warning(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "TPS too low: %f", result);
+		warning(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "TPS too low: %.2f", result);
 #endif /* EFI_PROD_CODE */
 	}
 	if (result > engineConfiguration->tpsErrorDetectionTooHigh) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		// too much noise with simulator
-		warning(OBD_Throttle_Position_Sensor_Range_Performance_Problem, "TPS too high: %f", result);
+		warning(OBD_Throttle_Position_Sensor_Range_Performance_Problem, "TPS too high: %.2f", result);
 #endif /* EFI_PROD_CODE */
 	}
 
@@ -94,8 +107,9 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
-	if (mockTps != MOCK_UNDEFINED)
+	if (mockTps != MOCK_UNDEFINED) {
 		return mockTps;
+	}
 #endif
 	if (engineConfiguration->tpsAdcChannel == EFI_ADC_NONE)
 		return -1;
@@ -123,6 +137,9 @@ bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (mockPedalPosition != MOCK_UNDEFINED) {
+		return mockPedalPosition;
+	}
 	float voltage = getVoltageDivided("pPS", engineConfiguration->pedalPositionChannel);
 	float result = interpolate(engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 

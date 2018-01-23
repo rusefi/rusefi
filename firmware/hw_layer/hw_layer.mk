@@ -11,6 +11,7 @@ HW_LAYER_EMS = $(HW_LAYER_EGT) \
 	$(PROJECT_DIR)/hw_layer/stm32f4/stm32f4xx_hal_flash_ex.c
 		
 HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
+	$(PROJECT_DIR)/hw_layer/accelerometer.cpp \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input_hw.cpp \
@@ -30,5 +31,5 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
-	$(PROJECT_DIR)/hw_layer/accelerometer.cpp
+	$(PROJECT_DIR)/hw_layer/backup_ram.cpp
 	

@@ -3,7 +3,7 @@
  * @brief	Linear interpolation algorithms
  *
  * @date Oct 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  * @author Dmitry Sidin, (c) 2015
  */
 
@@ -81,7 +81,7 @@ FastInterpolation::FastInterpolation(float x1, float y1, float x2, float y2) {
 
 void FastInterpolation::init(float x1, float y1, float x2, float y2) {
 	if (x1 == x2) {
-		firmwareError(CUSTOM_ERR_INTERPOLATE, "init: Same x1 and x2 in interpolate: %f/%f", x1, x2);
+		firmwareError(CUSTOM_ERR_INTERPOLATE, "init: Same x1 and x2 in interpolate: %.2f/%.2f", x1, x2);
 		return;
 	}
 	a = INTERPOLATION_A(x1, y1, x2, y2);
@@ -108,7 +108,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 		/**
 		 * we could end up here for example while resetting bins while changing engine type
 		 */
-		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: Same x1 and x2 in interpolate: %f/%f", msg, x1, x2);
+		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: Same x1 and x2 in interpolate: %.2f/%.2f", msg, x1, x2);
 		return NAN;
 	}
 
@@ -119,8 +119,8 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 	float b = y1 - a * x1;
 	float result = a * x + b;
 #if	DEBUG_FUEL
-	printf("x1=%f y1=%f x2=%f y2=%f\r\n", x1, y1, x2, y2);
-	printf("a=%f b=%f result=%f\r\n", a, b, result);
+	printf("x1=%.2f y1=%.2f x2=%.2f y2=%.2f\r\n", x1, y1, x2, y2);
+	printf("a=%.2f b=%.2f result=%.2f\r\n", a, b, result);
 #endif
 	return result;
 }
@@ -173,7 +173,8 @@ int findIndex2(const float array[], unsigned size, float value) {
 void ensureArrayIsAscending(const char *msg, const float array[], int size) {
 	for (int i = 0; i < size - 1; i ++) {
 		if (array[i] >= array[i+ 1]) {
-			firmwareError(CUSTOM_ERR_6538, "invalid axis %s at %f", msg, array[i]);
+			// todo: this should become a warning under https://github.com/rusefi/rusefi/issues/440
+			firmwareError(CUSTOM_ERR_AXIS_ORDER, "invalid axis %s at %.2f", msg, array[i]);
 		}
 	}
 }
@@ -210,10 +211,19 @@ int findIndexMsg(const char *msg, const float array[], int size, float value) {
 		// ?
 		middle = (left + right) / 2;
 
-//		print("left=%d middle=%d right=%d: %f\r\n", left, middle, right, array[middle]);
+//		print("left=%d middle=%d right=%d: %.2f\r\n", left, middle, right, array[middle]);
 
 		if (middle == left)
 			break;
+
+		if (middle != 0 && array[middle - 1] > array[middle]) {
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+			firmwareError(CUSTOM_ERR_6147, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
+#else
+			warning(CUSTOM_ERR_6147, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
+
+#endif /* EFI_UNIT_TEST */
+		}
 
 		if (value < array[middle]) {
 			right = middle;
@@ -236,7 +246,7 @@ int findIndex(const float array[], int size, float value) {
  */
 float interpolate2d(const char *msg, float value, float bin[], float values[], int size) {
 	if (isnan(value)) {
-		firmwareError(CUSTOM_OBD_55, "NaN in interpolate2d %s", msg);
+		firmwareError(CUSTOM_INTERPOLATE_NAN, "NaN in interpolate2d %s", msg);
 		return NAN;
 	}
 	int index = findIndexMsg("value", bin, size, value);
@@ -251,6 +261,7 @@ float interpolate2d(const char *msg, float value, float bin[], float values[], i
 
 /**
  * Sets specified value for specified key in a correction curve
+ * see also setLinearCurve()
  */
 void setCurveValue(float bins[], float values[], int size, float key, float value) {
 	int index = findIndexMsg("tbVl", bins, size, key);

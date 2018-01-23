@@ -4,7 +4,7 @@
  * This class is a copy-paste of alternatorController.cpp TODO: do something about it? extract more common logic?
  *
  * @date Jun 26, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "aux_pid.h"
@@ -81,14 +81,14 @@ static msg_t auxPidThread(int param) {
 			float value = engine->triggerCentral.vvtPosition; // getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE); // that's temporary
 			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-			float pwm = auxPid.getValue(targetValue, value);
+			percent_t pwm = auxPid.getValue(targetValue, value);
 			if (engineConfiguration->isVerboseAuxPid1) {
-				scheduleMsg(logger, "aux duty: %f/value=%f/p=%f/i=%f/d=%f int=%f", pwm, value,
+				scheduleMsg(logger, "aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", pwm, value,
 						auxPid.getP(), auxPid.getI(), auxPid.getD(), auxPid.getIntegration());
 			}
 
 
-			if (engineConfiguration->debugMode == AUX_PID_1) {
+			if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
 				auxPid.postState(&tsOutputChannels);
 				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
 			}

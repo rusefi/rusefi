@@ -136,6 +136,9 @@ typedef enum {
 
 	DODGE_NEON_2003_CRANK = 46,
 
+	/**
+	 * proper NB2 setup, 2003 red test mule car
+	 */
 	MAZDA_MIATA_2003 = 47,
 
 	HONDA_ACCORD_1_24_SHIFTED = 48,
@@ -156,7 +159,13 @@ typedef enum {
 	TEST_ISSUE_366_BOTH = 52,
 	TEST_ISSUE_366_RISE = 53,
 
-	MAZDA_MIATA_2003_BETTER = 54,
+	/**
+	 * green Hunchback race car - VVT engine on a NA body with NA return fuel lines which
+	 * means different fuel pressure situation
+	 */
+	MAZDA_MIATA_2003_NA_RAIL = 54,
+
+	MAZDA_MIATA_2003_BOARD_TEST = 55,
 
 	PROMETHEUS_DEFAULTS = 100,
 
@@ -209,6 +218,11 @@ typedef enum {
 
 	TT_36_2_2_2 = 23,
 
+	/**
+	 * only the 4 tooth signal, without the 360 signal
+	 * 8,2,2,2 Nissan pattern
+	 * See also TT_NISSAN_SR20VE_360
+	 */
 	TT_NISSAN_SR20VE = 24,
 
 	TT_2JZ_3_34 = 25,
@@ -246,6 +260,9 @@ typedef enum {
 
 	TT_JEEP_18_2_2_2 = 37,
 
+	/*
+	 * See also TT_NISSAN_SR20VE
+	 */
 	TT_NISSAN_SR20VE_360 = 38,
 
 	TT_UNUSED = 39, // this is used if we want to iterate over all trigger types
@@ -369,7 +386,7 @@ typedef enum {
 } pin_output_mode_e;
 
 typedef enum {
-
+	// todo: drop this unused enum?
 	Force_4b_gpio_mode = ENUM_32_BITS,
 } gpio_mode_e;
 
@@ -419,8 +436,27 @@ typedef enum {
 	Force_4b_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
+/**
+ * @see getNumberOfInjections
+ */
 typedef enum {
-	IM_SIMULTANEOUS = 0, IM_SEQUENTIAL = 1, IM_BATCH = 2,
+	/**
+	 * each cylinder has it's own injector but they all works in parallel
+	 */
+	IM_SIMULTANEOUS = 0,
+	/**
+	 * each cylinder has it's own injector, each injector is wired separately
+	 */
+	IM_SEQUENTIAL = 1,
+	/**
+	 * each cylinder has it's own injector but these injectors work in pairs. Injectors could be wired in pairs or separately.
+	 */
+	IM_BATCH = 2,
+	/**
+	 * only one injector located in throttle body
+	 */
+	IM_SINGLE_POINT = 3,
+
 
 	Force_4b_injection_mode = ENUM_32_BITS,
 } injection_mode_e;
@@ -519,6 +555,8 @@ typedef enum {
 	ES_NarrowBand = 3,
 
 	ES_PLX = 4,
+
+	ES_Custom = 5,
 
 	Force_4b_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
@@ -669,6 +707,9 @@ typedef enum {
 	Force_4b_brain_pin_e = ENUM_32_BITS,
 } brain_pin_e;
 
+/**
+ * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
+ */
 typedef enum {
 	DBG_ALTERNATOR_PID = 0,
 	DBG_TPS_ACCEL = 1,
@@ -676,8 +717,8 @@ typedef enum {
 	DBG_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_INPUT = 5,
-	FSIO_ADC = 6,
-	AUX_PID_1 = 7,
+	DBG_FSIO_ADC = 6,
+	DBG_AUX_PID_1 = 7,
 	/**
 	 * VVT position debugging - not VVT valve control
 	 */
@@ -693,9 +734,17 @@ typedef enum {
 	DBG_ELECTRONIC_THROTTLE = 17,
 	DBG_EXECUTOR = 18,
 	DBG_BENCH_TEST = 19,
-	DM_20 = 20,
-	DM_21 = 21,
-	DM_22 = 22,
+	DBG_AUX_VALVES = 20,
+	DBG_ADC = 21,
+	
+	DBG_INSTANT_RPM = 22,
+	DBG_FSIO_EXPRESSION = 23,
+	DBG_STATUS = 24,
+	DBG_25 = 25,
+	DBG_26 = 26,
+	DBG_27 = 27,
+	DBG_28 = 28,
+	DBG_29 = 29,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;

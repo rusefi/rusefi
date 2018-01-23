@@ -6,6 +6,7 @@
 
 
 #include "rusefi_enums.h"
+const char *getVvt_mode_e(vvt_mode_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getEngine_type_e(engine_type_e value);
 const char *getTrigger_type_e(trigger_type_e value);

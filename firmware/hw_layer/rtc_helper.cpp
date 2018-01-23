@@ -3,7 +3,7 @@
  * @brief Real Time Clock helper
  *
  * @date Feb 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include <string.h> 
@@ -15,6 +15,8 @@
 #if EFI_RTC || defined(__DOXYGEN__)
 static LoggingWithStorage logger("RTC");
 static RTCDateTime timespec;
+
+extern bool rtcWorks;
 
 #endif /* EFI_RTC */
 
@@ -78,6 +80,9 @@ static void put2(int offset, char *lcd_str, int value) {
 	}
 }
 
+/**
+ * @return true if we seem to know current date, false if no valid RTC state
+ */
 bool dateToStringShort(char *lcd_str) {
 #if EFI_RTC || defined(__DOXYGEN__)
 	strcpy(lcd_str, "0000_000000\0");
@@ -88,9 +93,9 @@ bool dateToStringShort(char *lcd_str) {
 		lcd_str[0] = 0;
 		return false;
 	}
-	put2(0, lcd_str, timp.tm_mon + 1);
-	put2(2, lcd_str, timp.tm_mday);
-	put2(5, lcd_str, timp.tm_hour);
+	put2(0, lcd_str, timp.tm_mon + 1); // months since January	0-11
+	put2(2, lcd_str, timp.tm_mday); // day of the month	1-31
+	put2(5, lcd_str, timp.tm_hour); // hours since midnight	0-23
 	put2(7, lcd_str, timp.tm_min);
 	put2(9, lcd_str, timp.tm_sec);
 
@@ -136,8 +141,8 @@ void printDateTime(void) {
 		date_get_tm(&timp);
 
 		appendMsgPrefix(&logger);
-		appendPrintf(&logger, "Current RTC time in GMT is: %04u-%02u-%02u %02u:%02u:%02u", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
-				timp.tm_min, timp.tm_sec);
+		appendPrintf(&logger, "Current RTC localtime is: %04u-%02u-%02u %02u:%02u:%02u w=%d", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
+				timp.tm_min, timp.tm_sec, rtcWorks);
 		appendMsgPostfix(&logger);
 		scheduleLogging(&logger);
 	}

@@ -67,6 +67,14 @@ private:
 	thermistor_conf_s currentConfig;
 };
 
+class Accelerometer {
+public:
+	Accelerometer();
+	float x; // G value
+	float y;
+	float z;
+};
+
 class SensorsState {
 public:
 	SensorsState();
@@ -80,6 +88,13 @@ public:
 	 */
 	float iat;
 	float clt;
+
+	/**
+	 * Oil pressure in kPa
+	 */
+	float oilPressure;
+
+	Accelerometer accelerometer;
 
 	float vBatt;
 	float currentAfr;
@@ -95,12 +110,13 @@ class FuelConsumptionState {
 public:
 	FuelConsumptionState();
 	void addData(float durationMs);
+	void update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float perSecondConsumption;
 	float perMinuteConsumption;
 	float perSecondAccumulator;
 	float perMinuteAccumulator;
-	int accumulatedSecond;
-	int accumulatedMinute;
+	efitick_t accumulatedSecondPrevNt;
+	efitick_t accumulatedMinutePrevNt;
 };
 
 class TransmissionState {
@@ -132,6 +148,8 @@ public:
 
 	float engineNoiseHipLevel;
 
+	float auxValveStart;
+	float auxValveEnd;
 
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
@@ -158,7 +176,7 @@ public:
 	float cltFuelCorrection;
 	float postCrankingFuelCorrection;
 	/**
-	 * Global injector lag + injectorLag(VBatt)
+	 * injectorLag(VBatt)
 	 *
 	 * this value depends on a slow-changing VBatt value, so
 	 * we update it once in a while
@@ -277,6 +295,7 @@ public:
 
 	WallFuel wallFuel;
 
+	bool etbAutoTune;
 	/**
 	 * That's the list of pending spark firing events
 	 */
@@ -335,8 +354,9 @@ public:
 	/**
 	 * Each individual fuel injection duration for current engine cycle, without wall wetting
 	 * including everything including injector lag, both cranking and running
+	 * @see getInjectionDuration()
 	 */
-	floatms_t fuelMs;
+	floatms_t injectionDuration;
 	/**
 	 * fuel injection time correction to account for wall wetting effect, for current cycle
 	 */
@@ -398,10 +418,13 @@ public:
 	 */
 	int ignitionPin[IGNITION_PIN_COUNT];
 
-	void onTriggerEvent(efitick_t nowNt);
+	/**
+	 * this is invoked each time we register a trigger tooth signal
+	 */
+	void onTriggerSignalEvent(efitick_t nowNt);
 	EngineState engineState;
 	SensorsState sensors;
-	efitick_t lastTriggerEventTimeNt;
+	efitick_t lastTriggerToothEventTimeNt;
 
 
 	/**
@@ -484,5 +507,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void assertEngineReference(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* H_ENGINE_H_ */

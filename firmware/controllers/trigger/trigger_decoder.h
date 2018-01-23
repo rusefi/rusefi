@@ -75,11 +75,7 @@ public:
 	efitime_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
-	/**
-	 * Total time result for previous trigger cycle
-	 * See totalTimeNt
-	 */
-	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
+
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	/**
@@ -93,7 +89,7 @@ public:
 	void reset();
 	void resetRunningCounters();
 
-	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	uint32_t runningRevolutionCounter;
 	/**
@@ -109,7 +105,7 @@ private:
 	efitime_t totalEventCountBase;
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
-	efitime_t prevCycleDuration;
+
 };
 
 
@@ -118,9 +114,18 @@ private:
  */
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
+	TriggerStateWithRunningStatistics();
+	float instantRpm;
+	/**
+	 * timestamp of each trigger wheel tooth
+	 */
 	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	/**
+	 * instant RPM calculated at this trigger wheel tooth
+	 */
 	float instantRpmValue[PWM_PHASE_MAX_COUNT];
-	virtual void runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

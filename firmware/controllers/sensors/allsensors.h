@@ -19,11 +19,11 @@
 #include "ego.h"
 #include "voltage.h"
 #include "thermistors.h"
+#include "oil_pressure.h"
+#include "flex_fuel.h"
 #include "adc_inputs.h"
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-#include "adc_math.h"
-#endif
+#include "analog_input.h"
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 

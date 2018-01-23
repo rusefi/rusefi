@@ -8,6 +8,18 @@
 
 #include "main.h"
 #include "rusefi_enums.h"
+
+const char *getVvt_mode_e(vvt_mode_e value) {
+	switch(value) {
+	case MIATA_NB2:
+		return "MIATA_NB2";
+
+	default: return "no_test";
+	}
+	return NULL;
+}
+
+
 const char *getTiming_mode_e(timing_mode_e value) {
 	switch(value) {
 	case Internal_ForceMyEnumIntSize_timing_mode:
@@ -117,9 +129,11 @@ case SUBARU_2003_WRX:
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case MAZDA_MIATA_2003:
-	return "miata 2003 OLD";
-case MAZDA_MIATA_2003_BETTER:
 	return "miata 2003";
+case MAZDA_MIATA_2003_NA_RAIL:
+	return "miata 2003 NArail";
+case MAZDA_MIATA_2003_BOARD_TEST:
+	return "miata 2003 bt";
 case PROMETHEUS_DEFAULTS:
 	return "PROMETHEUS";
 case TEST_ENGINE_VVT:
@@ -445,6 +459,8 @@ case IM_SEQUENTIAL:
   return "IM_SEQUENTIAL";
 case IM_SIMULTANEOUS:
   return "IM_SIMULTANEOUS";
+case IM_SINGLE_POINT:
+	return "IM_SINGLE_POINT";
   }
  return NULL;
 }
@@ -531,6 +547,8 @@ case ES_NarrowBand:
   return "ES_NarrowBand";
 case ES_PLX:
 	return "ES_PLX";
+case ES_Custom:
+	return "ES_Custom";
 case Force_4b_ego_sensor:
   return "Force_4b_ego_sensor";
   }

@@ -82,7 +82,6 @@ public class ConfigDefinition {
 
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
-        writeTsSizeForJavaConsole(totalTsSize, javaConsolePath);
         processTextTemplate(inputPath + File.separator + ROM_RAIDER_XML, javaConsolePath + File.separator + ROM_RAIDER_XML);
     }
 
@@ -121,31 +120,9 @@ public class ConfigDefinition {
 
         String line;
         while ((line = fr.readLine()) != null) {
-            line = VariableRegistry.INSTANCE.processLine(line);
+            line = VariableRegistry.INSTANCE.applyVariables(line);
             fw.write(line + ConfigDefinition.EOL);
         }
-        fw.close();
-    }
-
-    // todo: re-implement using VariableRegistry and a template?
-    private static void writeTsSizeForJavaConsole(int totalTsSize, String javaConsoleIoFolderPath) throws IOException {
-        String fileName = javaConsoleIoFolderPath +
-                File.separator + "io" +
-                File.separator + "src" +
-                File.separator + "com" +
-                File.separator + "rusefi" +
-                File.separator + "TsPageSize.java";
-        File f = new File(fileName);
-
-        System.out.println("Writing for console to " + fileName);
-
-        FileWriter fw = new FileWriter(f);
-
-        fw.write("package com.rusefi;" + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        fw.write("public interface TsPageSize {" + ConfigDefinition.EOL);
-        fw.write("    int IMAGE_SIZE = " + totalTsSize + ";" + ConfigDefinition.EOL);
-        fw.write("}" + ConfigDefinition.EOL);
-
         fw.close();
     }
 
@@ -172,7 +149,7 @@ public class ConfigDefinition {
                 prefix.append(line + ConfigDefinition.EOL);
 
             if (isAfterEndTag)
-                postfix.append(VariableRegistry.INSTANCE.processLine(line) + ConfigDefinition.EOL);
+                postfix.append(VariableRegistry.INSTANCE.applyVariables(line) + ConfigDefinition.EOL);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
@@ -229,7 +206,7 @@ public class ConfigDefinition {
                 String customSize = line.substring(0, index);
 
                 String tunerStudioLine = line.substring(index).trim();
-                tunerStudioLine = VariableRegistry.INSTANCE.processLine(tunerStudioLine);
+                tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
                 int size;
                 try {
                     size = Integer.parseInt(customSize);

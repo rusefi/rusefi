@@ -11,7 +11,7 @@
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
  *
  * @date Dec 16, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -322,7 +322,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//engineConfiguration->fuelAlgorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTableBin2(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 1);
+	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 1);
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 

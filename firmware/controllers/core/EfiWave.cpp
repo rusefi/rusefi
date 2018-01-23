@@ -2,7 +2,7 @@
  * @file	EfiWave.cpp
  *
  * @date May 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -51,12 +51,12 @@ float multi_wave_s::getSwitchTime(int index) const {
 
 void checkSwitchTimes2(int size, float *switchTimes) {
 	if (switchTimes[size - 1] != 1) {
-		firmwareError(CUSTOM_ERR_WAVE_1, "last switch time has to be 1 not %f", switchTimes[size - 1]);
+		firmwareError(CUSTOM_ERR_WAVE_1, "last switch time has to be 1 not %.2f", switchTimes[size - 1]);
 		return;
 	}
 	for (int i = 0; i < size - 1; i++) {
 		if (switchTimes[i] >= switchTimes[i + 1]) {
-			firmwareError(CUSTOM_ERR_WAVE_2, "invalid switchTimes @%d: %f/%f", i, switchTimes[i], switchTimes[i + 1]);
+			firmwareError(CUSTOM_ERR_WAVE_2, "invalid switchTimes @%d: %.2f/%.2f", i, switchTimes[i], switchTimes[i + 1]);
 		}
 	}
 }

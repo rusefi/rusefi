@@ -10,7 +10,7 @@
  *
  *
  * @date Oct 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -19,7 +19,7 @@
 
 #include "fsio_core.h"
 #include "fsio_impl.h"
-#include "adc_inputs.h"
+#include "analog_input.h"
 
 extern fsio8_Map3D_f32t fsioTable1;
 extern fsio8_Map3D_u8t fsioTable2;
@@ -427,7 +427,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 				/**
 				 * Cannot recognize token
 				 */
-				warning(CUSTOM_ERR_6536, "unrecognized [%s]", parsingBuffer);
+				warning(CUSTOM_ERR_PARSING_ERROR, "unrecognized [%s]", parsingBuffer);
 				return NULL;
 			}
 			n->init(action);

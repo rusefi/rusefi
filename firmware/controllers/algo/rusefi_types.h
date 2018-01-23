@@ -38,6 +38,8 @@ typedef int pid_dt;
  * We use a signed type here so that subtraction result is a proper negative value.
  * A typical use-case negative result is when we do 'timeNow() - timeOfEvent' where timeOfEvent
  * is actually after timeNow() due to interrupt context switches
+ *
+ * See getTimeNowNt()
  */
 typedef int64_t efitime_t;
 

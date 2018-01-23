@@ -3,16 +3,19 @@
  * @brief	Helper methods related to 3D & 2D tables manipulation (maps and curves)
  *
  * @date Jul 6, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "table_helper.h"
 #include "efilib.h"
 #include "interpolation.h"
 
-void setTableBin2(float array[], int size, float from, float to, float precision) {
+/**
+ * @param precision for example '0.1' for one digit fractional part
+ */
+void setLinearCurve(float array[], int size, float from, float to, float precision) {
 	for (int i = 0; i < size; i++) {
-		float value = interpolateMsg("setTable", 0, from, size - 1, to, i);
+		float value = interpolateMsg("setLinearCurve", 0, from, size - 1, to, i);
 		/**
 		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
 		 */
@@ -29,7 +32,7 @@ void setRpmBin(float array[], int size, float idleRpm, float topRpm) {
 }
 
 void setTableBin(float array[], int size, float from, float to) {
-	setTableBin2(array, size, from, to, 0.01);
+	setLinearCurve(array, size, from, to, 0.01);
 }
 
 /**

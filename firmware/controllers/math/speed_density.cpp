@@ -4,7 +4,7 @@
  * See http://rusefi.com/wiki/index.php?title=Manual:Software:Fuel_Control#Speed_Density for details
  *
  * @date May 29, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -28,12 +28,20 @@ baroCorr_Map3D_t baroCorrMap("baro");
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
 float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (cisnan(coolantTemp) || cisnan(airTemp)) {
+		warning(CUSTOM_ERR_6147, "t-getTCharge NaN");
+		return coolantTemp;
+	}
 	float minRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMinRpmMinTps, tpMax,
 			engineConfiguration->tChargeMinRpmMaxTps, tps);
 	float maxRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMaxRpmMinTps, tpMax,
 			engineConfiguration->tChargeMaxRpmMaxTps, tps);
 
 	float Tcharge_coff = interpolate(rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
+	if (cisnan(Tcharge_coff)) {
+		warning(CUSTOM_ERR_6148, "t2-getTCharge NaN");
+		return coolantTemp;
+	}
 
 	float Tcharge = coolantTemp * (1 - Tcharge_coff) + airTemp * Tcharge_coff;
 
@@ -51,10 +59,14 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
  */
 #define GAS_R 0.28705
 
-float getAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
+float getCycleAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
 	// todo: pre-calculate cylinder displacement to save one division
-	float cylinderDisplacement = engineConfiguration->specs.displacement / engineConfiguration->specs.cylindersCount;
+	float cylinderDisplacement = engineConfiguration->specs.displacement;
 	return (cylinderDisplacement * VE * MAP) / (GAS_R * tempK);
+}
+
+float getCylinderAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
+	return getCycleAirMass(engineConfiguration, VE, MAP, tempK) / engineConfiguration->specs.cylindersCount;
 }
 
 /**
@@ -96,10 +108,10 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 	efiAssert(!cisnan(adjustedMap), "NaN adjustedMap", 0);
 
-	float airMass = getAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
+	float airMass = getCylinderAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
 	efiAssert(!cisnan(airMass), "NaN airMass", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
-	printf("map=%f adjustedMap=%f airMass=%f\t\n",
+	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
 			map, adjustedMap, engine->engineState.airMass);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
@@ -119,14 +131,14 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	veMap.setAll(80);
 
 //	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
-//	setTableBin2(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
+//	setLinearCurve(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 //	ve2Map.setAll(0.81);
 
 	setRpmTableBin(config->afrRpmBins, FUEL_RPM_COUNT);
 	afrMap.setAll(14.7);
 
 	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
-	setTableBin2(engineConfiguration->baroCorrPressureBins, BARO_CORR_SIZE, 75, 105, 1);
+	setLinearCurve(engineConfiguration->baroCorrPressureBins, BARO_CORR_SIZE, 75, 105, 1);
 	memcpy(engineConfiguration->baroCorrTable, default_baro_corr, sizeof(default_baro_corr));
 }
 

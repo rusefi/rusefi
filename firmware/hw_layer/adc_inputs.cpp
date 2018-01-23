@@ -8,7 +8,7 @@
  * Fast ADC group is used for TPS, MAP, MAF HIP
  *
  * @date Jan 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -192,7 +192,7 @@ void doSlowAdc(void) {
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
 	chSysUnlockFromISR()
 	;
-#endif
+#endif /* EFI_INTERNAL_ADC */
 }
 
 static void pwmpcb_slow(PWMDriver *pwmp) {
@@ -225,7 +225,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	chSysUnlockFromISR()
 	;
 	fastAdc.conversionCount++;
-#endif
+#endif /* EFI_INTERNAL_ADC */
 }
 
 float getMCUInternalTemperature(void) {
@@ -242,11 +242,11 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
-#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
+#if EFI_ENABLE_MOCK_ADC
 	if (engine->engineState.mockAdcState.hasMockAdc[hwChannel])
 		return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
 
-#endif
+#endif /* EFI_ENABLE_MOCK_ADC */
 
 
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
@@ -317,7 +317,7 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC_5;
 	default:
-		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return GPIO_INVALID;
 	}
 }
@@ -398,7 +398,7 @@ ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError(CUSTOM_ERR_6516, "Unknown hw channel %d [%s]", hwChannel, msg);
+		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
 		return NULL;
 	}
 }
@@ -513,7 +513,7 @@ void AdcDevice::enableChannelAndPin(adc_channel_e hwChannel) {
 static void printAdcValue(adc_channel_e channel) {
 	int value = getAdcValue("print", channel);
 	float volts = adcToVoltsDivided(value);
-	scheduleMsg(&logger, "adc voltage : %f", volts);
+	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
 
 adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) {
@@ -527,17 +527,21 @@ static void printFullAdcReport(Logging *logger) {
 		appendMsgPrefix(logger);
 
 		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
-		ioportid_t port = getAdcChannelPort("print", hwIndex);
-		int pin = getAdcChannelPin(hwIndex);
 
-		int adcValue = slowAdc.getAdcValueByIndex(index);
-		appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
-		appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
-		float volts = adcToVolts(adcValue);
-		appendPrintf(logger, " v=%f", volts);
+		if(hwIndex != EFI_ADC_NONE && hwIndex != EFI_ADC_ERROR)
+		{
+			ioportid_t port = getAdcChannelPort("print", hwIndex);
+			int pin = getAdcChannelPin(hwIndex);
 
-		appendMsgPostfix(logger);
-		scheduleLogging(logger);
+			int adcValue = slowAdc.getAdcValueByIndex(index);
+			appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
+			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
+			float volts = adcToVolts(adcValue);
+			appendPrintf(logger, " v=%.2f", volts);
+
+			appendMsgPostfix(logger);
+			scheduleLogging(logger);
+		}
 	}
 }
 
@@ -546,12 +550,16 @@ static void setAdcDebugReporting(int value) {
 	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
 }
 
-void waitForSlowAdc() {
+void waitForSlowAdc(int lastAdcCounter) {
 	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
 	// todo: use sync.objects?
-	while (slowAdcCounter < 1) {
+	while (slowAdcCounter <= lastAdcCounter) {
 		chThdSleepMilliseconds(1);
 	}
+}
+
+int getSlowAdcCounter() {
+	return slowAdcCounter;
 }
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
@@ -611,7 +619,13 @@ static void configureInputs(void) {
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
+	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
+
+	if (boardConfiguration->isCJ125Enabled) {
+		addChannel("cj125ur", engineConfiguration->cj125ur, ADC_SLOW);
+		addChannel("cj125ua", engineConfiguration->cj125ua, ADC_SLOW);
+	}
 
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);

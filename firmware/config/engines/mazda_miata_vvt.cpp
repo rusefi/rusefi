@@ -4,16 +4,19 @@
  * set engine_type 47
  *
  * @date Oct 4, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  * http://rusefi.com/forum/viewtopic.php?f=3&t=1095
  *
- * todo: try ZM-DE 2000 protege 36/1 trigger wheel
+ * todo: try ZM-DE 2000 protege 36/1 trigger wheel ZM 01-11-408
  *
  *
  * Based on http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board#Default_Pinout
  *
- * Better board pinout
+ * Hunchback - VVT engine with NA fuel rail
  * set engine_type 54
+ *
+ * board #70 - red car, hunchback compatibel
+ * set engine_type 55
  *
  * Crank   primary trigger        PA5 (3E in Miata board)       white
  * Cam     vvt input              PC6 (3G in Miata board)       blue
@@ -28,7 +31,7 @@
  * VVT solenoid on aux PID#1      PE3
  * warning light                  PE6
  *
- *
+ * idle solenoid                  PC13 on middle harness plug. diodes seem to be in the harness
  */
 
 #include "mazda_miata_vvt.h"
@@ -236,14 +239,20 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+//	boardConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
+	boardConfiguration->triggerInputPins[0] = GPIOA_5; // board still not modified
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOC_6;
+
+//	boardConfiguration->is_enabled_spi_1 = true;
+
+
+	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
 
 	boardConfiguration->alternatorControlPin = GPIOE_10;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 	// enable altdebug
 	engineConfiguration->targetVBatt = 13.8;
@@ -281,6 +290,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 
+	// high-side driver with +12v VP jumper
 	engineConfiguration->dizzySparkOutputPin = GPIOE_8; // tachometer
 
 	// set global_trigger_offset_angle 0
@@ -360,12 +370,21 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
+	// todo: blue jumper wire - what is it?!
+	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
+
+
+	// see setCustomEngineConfiguration
+	// map.sensor.hwChannel = EFI_ADC_0; W53
+
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	/**
 	 * PA4 Wideband O2 Sensor
 	 */
-	// todo: re-wire the board to use default input channel!
+	// todo: re-wire the board to use "Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM"
+	//engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
+
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
@@ -404,7 +423,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.period = 10;
 }
 
-void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: there should be a better way?
@@ -448,4 +467,20 @@ void setMazdaMiata2003EngineConfigurationNewBoard(DECLARE_ENGINE_PARAMETER_SIGNA
 	// set idle_position 30
 	boardConfiguration->manIdlePosition = 30;
 	engineConfiguration->crankingIACposition = 65;
+}
+
+/**
+ * red car setting with default 1991/1995 miata harness
+ * board #70 - closer to default miata harness
+ *
+ */
+void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	boardConfiguration->ignitionPins[2] = GPIOC_7;
+
+	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM. Make sure 500K pull-down on Frankenso
+	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
 }

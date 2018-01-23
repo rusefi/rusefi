@@ -11,5 +11,5 @@
 11) RESOLVED IN R0.4 Added zone cut outs such that boards can have engraved serial numbers.
 12)                  as another approach to #5 problem, maybe we can add traces connecting JP1, JP2, JP3 & JP4 pads? On the back? By defult the trace would be used, if desired trace could be removed with a knife?
 13)                  RESET and USER button HUGE silkscreen is needed
-
+14)                  silkscreen area for board unique number engraving
 

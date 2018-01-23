@@ -5,7 +5,7 @@
  *
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -51,6 +51,7 @@
 #include "fuel_math.h"
 #include "settings.h"
 #include "aux_pid.h"
+#include "accelerometer.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
@@ -65,6 +66,7 @@
 #include "lcd_controller.h"
 #include "pin_repository.h"
 #include "tachometer.h"
+#include "CJ125.h"
 #endif /* EFI_PROD_CODE */
 
 extern bool hasFirmwareErrorFlag;
@@ -95,7 +97,6 @@ static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	while (true) {
-		int rpm = getRpmE(engine);
 		int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		if (is_running) {
@@ -262,6 +263,8 @@ static void periodicSlowCallback(Engine *engine) {
 		writeToFlashIfPending();
 #endif
 		resetAccel();
+	} else {
+		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 	if (versionForConfigurationListeners.isOld()) {
@@ -274,7 +277,7 @@ static void periodicSlowCallback(Engine *engine) {
 	engine->checkShutdown();
 
 #if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
-	runFsio();
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_FSIO */
 
 	cylinderCleanupControl(engine);
@@ -320,7 +323,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	scheduleMsg(&logger, "%s ADC%d %s %s adc=%f/input=%fv/divider=%f", name, hwChannel, getAdcMode(hwChannel),
+	scheduleMsg(&logger, "%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif
 }
@@ -332,7 +335,7 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 }
 
 static void printAnalogInfo(void) {
-	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
+	scheduleMsg(&logger, "analogInputDividerCoefficient: %.2f", engineConfiguration->analogInputDividerCoefficient);
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
@@ -364,6 +367,8 @@ static void printAnalogInfo(void) {
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 		printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
 	}
+
+	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
 
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
@@ -489,41 +494,41 @@ static void setMockVoltage(int hwChannel, float voltage) {
 	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
 }
 
-void setCltVoltage(float voltage) {
+void setMockCltVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->clt.adcChannel, voltage);
 }
 
-void setIatVoltage(float voltage) {
+void setMockIatVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->iat.adcChannel, voltage);
 }
 
-void setMafVoltage(float voltage) {
+void setMockMafVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
 }
 
-void setAfrVoltage(float voltage) {
+void setMockAfrVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
 }
 
-void setTpsVoltage(float voltage) {
+void setMockTpsVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->tpsAdcChannel, voltage);
 }
 
-void setMapVoltage(float voltage) {
+void setMockMapVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
 }
 
-void setVBattVoltage(float voltage) {
+void setMockVBattVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage);
 }
 
 static void initMockVoltage(void) {
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-	setCltVoltage(2);
+	setMockCltVoltage(2);
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
-	setIatVoltage(2);
+	setMockIatVoltage(2);
 #endif /* EFI_SIMULATOR */
 
 }
@@ -604,6 +609,14 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	}
 #endif /* EFI_WAVE_ANALYZER */
 
+#if EFI_CJ125 || defined(__DOXYGEN__)
+	/**
+	 * this uses SimplePwm which depends on scheduler, has to be initialized after scheduler
+	 */
+	initCJ125(sharedLogger);
+#endif
+
+
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	/**
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
@@ -661,6 +674,8 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		initMapAveraging(sharedLogger, engine);
 	}
 #endif /* EFI_MAP_AVERAGING */
+
+	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	if (boardConfiguration->isEngineControlEnabled) {

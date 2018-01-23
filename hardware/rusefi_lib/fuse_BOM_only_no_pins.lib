@@ -1,0 +1,19 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# FUSE-Part
+#
+DEF FUSE-Part F 0 10 Y Y 1 F N
+F0 "F" 100 50 40 H V C CNN
+F1 "FUSE-Part" -100 -50 40 H V C CNN
+F2 "" 0 0 60 H V C CNN
+F3 "" 0 0 60 H V C CNN
+DRAW
+A -75 0 75 1 1799 0 1 0 N 0 0 -150 0
+A 75 0 75 -1799 -1 0 1 0 N 0 0 150 0
+P 2 0 1 0 -250 0 -150 0 N
+P 2 0 1 0 150 0 250 0 N
+ENDDRAW
+ENDDEF
+#
+#End Library

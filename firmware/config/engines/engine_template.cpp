@@ -2,7 +2,7 @@
  * @file engine_template.cpp
  *
  * @date
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "engine_template.h"

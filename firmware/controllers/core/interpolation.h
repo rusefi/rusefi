@@ -37,11 +37,11 @@ int needInterpolationLogging(void);
 template<typename vType>
 float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, vType* map[]) {
 	if (cisnan(x)) {
-		warning(CUSTOM_INTEPOLATE_ERROR_3, "%f: x is NaN in interpolate3d", x);
+		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;
 	}
 	if (cisnan(y)) {
-		warning(CUSTOM_INTEPOLATE_ERROR_2, "%f: y is NaN in interpolate3d", y);
+		warning(CUSTOM_INTEPOLATE_ERROR_2, "%.2f: y is NaN in interpolate3d", y);
 		return NAN;
 	}
 
@@ -49,13 +49,13 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging())
 		printf("X index=%d\r\n", xIndex);
-#endif
+#endif /* DEBUG_INTERPOLATION */
 	int yIndex = findIndexMsg("y", yBin, yBinSize, y);
 	if (xIndex < 0 && yIndex < 0) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("X and Y are smaller than smallest cell in table: %d\r\n", xIndex);
-#endif
+#endif /* DEBUG_INTERPOLATION */
 		return map[0][0];
 	}
 
@@ -63,7 +63,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("X is smaller than smallest cell in table: %dr\n", xIndex);
-#endif
+#endif /* DEBUG_INTERPOLATION */
 		if (yIndex == yBinSize - 1)
 			return map[0][yIndex];
 		float keyMin = yBin[yIndex];
@@ -78,7 +78,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("Y is smaller than smallest cell in table: %d\r\n", yIndex);
-#endif
+#endif /* DEBUG_INTERPOLATION */
 		// no interpolation should be fine here.
 		return map[xIndex][0];
 	}
@@ -87,7 +87,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("X and Y are larger than largest cell in table: %d %d\r\n", xIndex, yIndex);
-#endif
+#endif /* DEBUG_INTERPOLATION */
 		return map[xBinSize - 1][yBinSize - 1];
 	}
 
@@ -95,7 +95,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("TODO BETTER LOGGING x overflow %d\r\n", yIndex);
-#endif
+#endif /* DEBUG_INTERPOLATION */
 		// todo: implement better handling - y interpolation
 		return map[xBinSize - 1][yIndex];
 	}
@@ -104,7 +104,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("Y is larger than largest cell in table: %d\r\n", yIndex);
-#endif
+#endif /* DEBUG_INTERPOLATION */
 		// todo: implement better handling - x interpolation
 		return map[xIndex][yBinSize - 1];
 	}
@@ -123,10 +123,10 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {
-		printf("X=%f:\r\nrange %f - %f\r\n", x, xMin, xMax);
-		printf("X interpolation range %f   %f result %f\r\n", rpmMinKeyMinValue, rpmMaxKeyMinValue, keyMinValue);
+		printf("X=%.2f:\r\nrange %.2f - %.2f\r\n", x, xMin, xMax);
+		printf("X interpolation range %.2f   %.2f result %.2f\r\n", rpmMinKeyMinValue, rpmMaxKeyMinValue, keyMinValue);
 	}
-#endif
+#endif /* DEBUG_INTERPOLATION */
 
 	int keyMaxIndex = yIndex + 1;
 	float keyMin = yBin[yIndex];
@@ -138,10 +138,10 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {
-		printf("key=%f:\r\nrange %f - %f\r\n", y, keyMin, keyMax);
-		printf("key interpolation range %f   %f result %f\r\n", rpmMinKeyMaxValue, rpmMaxKeyMaxValue, keyMaxValue);
+		printf("key=%.2f:\r\nrange %.2f - %.2f\r\n", y, keyMin, keyMax);
+		printf("key interpolation range %.2f   %.2f result %.2f\r\n", rpmMinKeyMaxValue, rpmMaxKeyMaxValue, keyMaxValue);
 	}
-#endif
+#endif /* DEBUG_INTERPOLATION */
 
 	float result = interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
 	return result;

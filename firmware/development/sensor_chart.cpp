@@ -2,7 +2,7 @@
  * @file	sensor_chart.cpp
  *
  * @date Dec 20, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "sensor_chart.h"
@@ -62,7 +62,7 @@ void scAddData(float angle, float value) {
 	}
 
 	if (remainingSize(&logging) > 100) {
-		appendPrintf(&logging, "%f|%f|", angle, value);
+		appendPrintf(&logging, "%.2f|%.2f|", angle, value);
 	}
 }
 

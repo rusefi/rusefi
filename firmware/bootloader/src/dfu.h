@@ -6,7 +6,7 @@
 // This is where the bootloader starts
 #define BOOTLOADER_ADDR    0x08000000
 // Bootloader code max. size, in bytes
-#define BOOTLOADER_SIZE    0x4000
+#define BOOTLOADER_SIZE    0x8000
 // Number of sectors for the bootloader
 #define BOOTLOADER_NUM_SECTORS (BOOTLOADER_SIZE/0x4000)
 
@@ -32,7 +32,7 @@
 #define DFU_ACK_BYTE       0x79  // Acknowledge byte ID
 #define DFU_NACK_BYTE      0x1F  // Not-Acknowledge byte ID
 
-#define DFU_SR5_TIMEOUT_FIRST  MS2ST(100)
+#define DFU_SR5_TIMEOUT_FIRST  MS2ST(200)
 #define DFU_SR5_TIMEOUT_NORMAL MS2ST(1000)
 
 #define MCU_REVISION_MASK  0xfff // MCU Revision ID is needed by DFU protocol

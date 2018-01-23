@@ -3,7 +3,7 @@
  * @brief	Utility method related to the engine configuration data structure.
  *
  * @date Nov 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -29,19 +29,9 @@
 #include "engine_math.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#include "electronic_throttle.h"
-#include "idle_thread.h"
-#include "alternatorController.h"
-#include "hardware.h"
-#include "board.h"
-#endif /* EFI_PROD_CODE */
 
 #include "hip9011_lookup.h"
-
-#if EFI_PROD_CODE
-#include "HIP9011.h"
-#endif
+#include "accelerometer.h"
 
 #include "custom_engine.h"
 #include "engine_template.h"
@@ -91,11 +81,24 @@
 #include "zil130.h"
 #include "honda_600.h"
 
-EXTERN_ENGINE;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "electronic_throttle.h"
+#include "idle_thread.h"
+#include "alternatorController.h"
+#include "hardware.h"
+#include "board.h"
+#include "HIP9011.h"
+#endif /* EFI_PROD_CODE */
+
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#include "trigger_emulator.h"
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 #include "tunerstudio.h"
 #endif
+
+EXTERN_ENGINE;
 
 //#define TS_DEFAULT_SPEED 115200
 #define TS_DEFAULT_SPEED 38400
@@ -173,7 +176,9 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	onConfigurationChangeTriggerCallback(&activeConfiguration);
 #endif /* EFI_SHAFT_POSITION_INPUT */
-
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 	rememberCurrentConfiguration();
 }
 
@@ -183,8 +188,8 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
-		engineConfiguration->sparkDwellValues[i] = dwellMs;
 	}
+	setLinearCurve(engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE, dwellMs, dwellMs, 0.01);
 }
 
 void setAfrMap(afr_table_t table, float value) {
@@ -216,9 +221,9 @@ void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setTableBin2(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setTableBin2(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setTableBin2(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setLinearCurve(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setLinearCurve(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 }
 
 void setTimingMap(ignition_table_t map, float value) {
@@ -253,7 +258,7 @@ static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration
 		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
+		boardConfiguration->fsioOutputPins[i] = GPIO_UNASSIGNED;
 		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
@@ -275,6 +280,12 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
+		engineConfiguration->auxValves[i] = GPIO_UNASSIGNED;
+	}
+	engineConfiguration->LIS302DLCsPin = GPIO_UNASSIGNED;
+	engineConfiguration->flexFuelSensor = GPIO_UNASSIGNED;
+
 	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
@@ -285,6 +296,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 
 	engineConfiguration->sdCardSpiDevice = SPI_NONE;
 	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
+	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
 
 	engineConfiguration->cj125ua = EFI_ADC_NONE;
 	engineConfiguration->cj125ur = EFI_ADC_NONE;
@@ -359,6 +371,11 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fatalErrorPin = GPIOD_14;
 	engineConfiguration->warninigPin = GPIOD_13;
 	engineConfiguration->configResetPin = GPIOB_1;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
+	// needed also by bootloader code
+	setPinConfigurationOverrides();
+#endif
 }
 
 // needed also by bootloader code
@@ -458,8 +475,8 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setTableBin2(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
-	setTableBin2(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
+	setLinearCurve(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
+	setLinearCurve(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
 
 	config->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
@@ -501,8 +518,12 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
+/**
+ * see also setTargetRpmCurve()
+ */
 static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// todo: set bins
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, -40, 140, 10);
+
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
@@ -541,6 +562,14 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 /**
+ * see also setDefaultIdleSpeedTarget()
+ */
+void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, -40, 90, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, rpm, rpm, 10);
+}
+
+/**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
  * overridden by engine-specific defaults and the settings are saved in flash memory.
@@ -572,7 +601,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->mapMinBufferLength = 1;
 
-	engineConfiguration->iacRPMErrorThreshold = 0;
+	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
 	engineConfiguration->acCutoffLowRpm = 700;
@@ -595,8 +624,18 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.minValue = 10;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setTableBin2(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
-	setTableBin2(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
+	setLinearCurve(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
+	setLinearCurve(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
+
+	setLinearCurve(engineConfiguration->fsioCurve1Bins, FSIO_CURVE_16, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve1, FSIO_CURVE_16, 0, 100, 1);
+
+	setLinearCurve(engineConfiguration->fsioCurve2Bins, FSIO_CURVE_16, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve2, FSIO_CURVE_16, 30, 170, 1);
+
+	setLinearCurve(engineConfiguration->fsioCurve3Bins, FSIO_CURVE_8, 0, 100, 1);
+	setLinearCurve(engineConfiguration->fsioCurve4Bins, FSIO_CURVE_8, 0, 100, 1);
+
 
 	setDefaultWarmupIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -614,10 +653,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	setTableBin2(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
-	setTableBin2(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
-	setTableBin2(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000, 1);
-	setTableBin2(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
+	setLinearCurve(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
+	setLinearCurve(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
+	setLinearCurve(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000, 1);
+	setLinearCurve(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -630,19 +669,19 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setTableBin2(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
-	setTableBin2(engineConfiguration->mapAccelTaperMult, FSIO_TABLE_8, 1, 1, 1);
+	setLinearCurve(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
+	setLinearCurve(engineConfiguration->mapAccelTaperMult, FSIO_TABLE_8, 1, 1, 1);
 
-	setTableBin2(config->tpsTpsAccelFromRpmBins, FSIO_TABLE_8, 0, 100, 10);
-	setTableBin2(config->tpsTpsAccelToRpmBins, FSIO_TABLE_8, 0, 100, 10);
+	setLinearCurve(config->tpsTpsAccelFromRpmBins, FSIO_TABLE_8, 0, 100, 10);
+	setLinearCurve(config->tpsTpsAccelToRpmBins, FSIO_TABLE_8, 0, 100, 10);
 
-	setTableBin2(config->fsioTable1LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable1LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable1RpmBins, FSIO_TABLE_8);
-	setTableBin2(config->fsioTable2LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable2LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable2RpmBins, FSIO_TABLE_8);
-	setTableBin2(config->fsioTable3LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable3LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable3RpmBins, FSIO_TABLE_8);
-	setTableBin2(config->fsioTable4LoadBins, FSIO_TABLE_8, 20, 120, 10);
+	setLinearCurve(config->fsioTable4LoadBins, FSIO_TABLE_8, 20, 120, 10);
 	setRpmTableBin(config->fsioTable4RpmBins, FSIO_TABLE_8);
 
 	initEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -697,9 +736,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->warmupTargetAfrBins[3] = 60;
 	engineConfiguration->warmupTargetAfr[3] = 14.5;
 
-	setDefaultIdleSpeedTarget(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
 	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
 	engineConfiguration->fuelClosedLoopCltThreshold = 70;
 	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
@@ -708,8 +744,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelClosedLoopAfrHighThreshold = 19.8;
 	engineConfiguration->fuelClosedLoopPid.pFactor = -0.1;
 
-	engineConfiguration->cranking.baseFuel = 5;
-	engineConfiguration->startUpFuelPumpDuration = 4;
+	/**
+	 * Idle control defaults
+	 */
+	setDefaultIdleSpeedTarget(PASS_ENGINE_PARAMETER_SIGNATURE);
+	//	setTargetRpmCurve(1200 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->idleRpmPid.pFactor = 0.05;
 	engineConfiguration->idleRpmPid.iFactor = 0.002;
@@ -718,11 +757,29 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.maxValue = 95;
 	boardConfiguration->idlePidDeactivationTpsThreshold = 2;
 
-	engineConfiguration->analogInputDividerCoefficient = 2;
+	boardConfiguration->idle.solenoidFrequency = 200;
+	// set idle_position 50
+	boardConfiguration->manIdlePosition = 50;
+	engineConfiguration->crankingIACposition = 50;
+//	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->idleMode = IM_MANUAL;
 
+	boardConfiguration->useStepperIdle = false;
+
+	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	/**
+	 * Cranking defaults
+	 */
+	engineConfiguration->startUpFuelPumpDuration = 4;
+	engineConfiguration->cranking.baseFuel = 5;
 	engineConfiguration->crankingChargeAngle = 70;
+
+
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;
+
+	engineConfiguration->analogInputDividerCoefficient = 2;
 
 	// performance optimization
 	boardConfiguration->sensorChartMode = SC_OFF;
@@ -757,6 +814,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
+	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
+	
+	engineConfiguration->oilPressure.v1 = 0.5f;
+	engineConfiguration->oilPressure.v2 = 4.5f;
+	engineConfiguration->oilPressure.value1 = 0;
+	engineConfiguration->oilPressure.value2 = 689.476f;	// 100psi = 689.476kPa
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->specs.cylindersCount = 4;
@@ -804,22 +867,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
-	boardConfiguration->idleStepperPulseDuration = 10;
-	boardConfiguration->idle.solenoidFrequency = 200;
-	// set idle_position 50
-	boardConfiguration->manIdlePosition = 50;
-	engineConfiguration->crankingIACposition = 50;
-	engineConfiguration->targetIdleRpm = 1200;
-//	engineConfiguration->idleMode = IM_AUTO;
-	engineConfiguration->idleMode = IM_MANUAL;
 
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 
-	boardConfiguration->useStepperIdle = false;
-
-	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -933,6 +985,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->spi1misoPin = GPIOB_4;
 	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
 
+#if EFI_MEMS || defined(__DOXYGEN__)
+	// this would override some values from above
+	configureAccelerometerPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
+
 	boardConfiguration->spi2mosiPin = GPIOB_15;
 	boardConfiguration->spi2misoPin = GPIOB_14;
 	boardConfiguration->spi2sckPin = GPIOB_13;
@@ -967,6 +1024,21 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardConfigurationOverrides();
 #endif
+
+	/**
+	 * to test:
+	 * set_fsio_setting 1 5000
+	 * set_fsio_output_pin 1 PE3
+	 * set debug_mode 23
+	 * writeconfig
+	 * <reboot ECU>
+	 * fsioinfo
+	 */
+	boardConfiguration->fsio_setting[0] = 5000;
+	// simple warning light as default configuration
+	// set_fsio_expression 1 "rpm > fsio_setting(1)"
+	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_ENGINE_PARAMETER_SUFFIX);
+
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -1136,8 +1208,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
-	case MAZDA_MIATA_2003_BETTER:
-		setMazdaMiata2003EngineConfigurationNewBoard(PASS_ENGINE_PARAMETER_SIGNATURE);
+	case MAZDA_MIATA_2003_NA_RAIL:
+		setMazdaMiata2003EngineConfigurationNaFuelRail(PASS_ENGINE_PARAMETER_SIGNATURE);
+		break;
+	case MAZDA_MIATA_2003_BOARD_TEST:
+		setMazdaMiata2003EngineConfigurationBoardTest(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case PROMETHEUS_DEFAULTS:
 		setPrometheusDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -1181,6 +1256,13 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
 #endif
+}
+
+void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
+		engineConfiguration->adcVcc = 3.0f;
+	}
+
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {

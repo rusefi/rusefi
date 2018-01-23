@@ -4,7 +4,7 @@
  *
  *
  * @date Sep 19, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include <main.h>
@@ -151,6 +151,7 @@ persisted_configuration_state_e readConfiguration(Logging * logger) {
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
+	validateConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	return result;
 }
 

@@ -150,7 +150,25 @@
 147) RESOLVED IN R0.5 Add 232 TX and RX connection points for external MAX232 or equiv chip SEE P701
 148)                  route NC located next to PD15 to 3.3V battery+ / RTC mod / see viewtopic.php?f=4&t=460
 149)                  INJ12 MCU trace is to close to PCB edge refence http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=390
-
+150)                  Diodes like D16 to D23 would be better if they were connected to the other side of the W## connections. 
+151) RESOLVED IN R0.5.1 Q701 and Q1001 should use same not obsolete chip, changed to Q1001 from SQ2301ES-T1-GE3 to SI2323DS-T1-E3
+152) RESOLVED IN R0.5.2 R170 unify part number with R102/R103/R104, Change 5K to 5k, so they combine in the frankenso.csv BOM export. 
+153) RESOLVED IN R0.5.2 unify 0805 LED packages in order to simplify BOM - no need to have any LED-0805_A like D2 while D1005 is LED-0805 this combines them in the frankenso.csv BOM.
+154) RESOLVED IN R0.5.2 Change X1 value from CRYSTAL, to 8MHz such that the frankenso.csv BOM combines these items. 
+155) RESOLVED IN R0.5.2 Change R137, etc, from 1K to 1k to combine them in the  frankenso.csv BOM. 
+156) RESOLVED IN R0.5.2 Change Q701 value to 20V, to combine them in frankenso.csv BOM. 
+156) RESOLVED IN R0.5.2 Change several values which have the field designation like mfg# into MFG#, which allows combining items in frankenso.csv BOM.
+157)                  Special field/flag for native stm34-related components to simplify BOM if using external brain board
+158)                  add "virtual" or DNP note to all non-PCB headers like P31 P32 P48 P53 P49 P50 P55 P56 P57 P58
+159)                  unify DNP labels for all real but DNP components
+160)                  unify part number and value for most test points like P15 P24 P25 P10 P1002 W63 W64 P1502 etc
+161)                  unify FB1 and FB701 footprint
+162)                  unify useful 0R jumpers packages and part numbers JP471 JPO1 JPO6 JPO6 W1002 W1003. See also #166
+163)                  unify large-resistance resistors to same value? R231 R241 R251 R271 R351 R166
+164) RESOLVED IN R0.5.1 The POS file was missing a couple componets. New POS uses "Force INSERT atribute for all SMD footprints"
+165) RESOLVED IN R0.5.2 remove test_module1501 to reduce confusion. Module was a test footprint, combining multiple other footprints into one. 
+166)                    convert to TEST package to facilitate fabrication: W1002, W1003, JPO1, JPO4 & JPO5
+167)                    convert away from TEST package to reduce the change of mistaken fabrication: P1001 & W101 
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

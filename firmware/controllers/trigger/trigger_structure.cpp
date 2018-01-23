@@ -2,7 +2,7 @@
  * @file	trigger_structure.cpp
  *
  * @date Jan 20, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -183,13 +183,12 @@ void TriggerState::reset() {
 	currentDuration = 0;
 	curSignal = SHAFT_PRIMARY_FALLING;
 	prevSignal = SHAFT_PRIMARY_FALLING;
-	prevCycleDuration = 0;
 	startOfCycleNt = 0;
 
 	resetRunningCounters();
 	resetCurrentCycleState();
 	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
-	memset(prevTotalTime, 0, sizeof(prevTotalTime));
+
 	totalEventCountBase = 0;
 	isFirstEvent = true;
 }
@@ -208,36 +207,57 @@ void TriggerState::resetRunningCounters() {
 	runningOrderingErrorCounter = 0;
 }
 
-void TriggerState::runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// empty base implementation
 }
 
-void TriggerStateWithRunningStatistics::runtimeStatistics(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
-		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
-		// todo: make this '90' depend on cylinder count?
-		angle_t prevAngle = currentAngle - 90;
-		fixAngle(prevAngle, "prevAngle");
-		// todo: prevIndex should be pre-calculated
-		int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)prevAngle]);
-		// now let's get precise angle for that event
-		prevAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
-		uint32_t time = nowNt - timeOfLastEvent[prevIndex];
-		angle_t angleDiff = currentAngle - prevAngle;
-		// todo: angle diff should be pre-calculated
-		fixAngle(angleDiff, "angleDiff");
+TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() {
+	instantRpm = 0;
+}
 
-		float r = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
+float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
+	/**
+	 * Here we calculate RPM based on last 90 degrees
+	 */
+	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[current_index]);
+	// todo: make this '90' depend on cylinder count or trigger shape?
+	angle_t previousAngle = currentAngle - 90;
+	fixAngle(previousAngle, "prevAngle");
+	// todo: prevIndex should be pre-calculated
+	*prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)previousAngle]);
+
+	// now let's get precise angle for that event
+	angle_t prevIndexAngle = TRIGGER_SHAPE(eventAngles[*prevIndex]);
+	uint32_t time = nowNt - timeOfLastEvent[*prevIndex];
+	angle_t angleDiff = currentAngle - prevIndexAngle;
+	// todo: angle diff should be pre-calculated
+	fixAngle(angleDiff, "angleDiff");
+
+	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
+	instantRpmValue[current_index] = instantRpm;
+	timeOfLastEvent[current_index] = nowNt;
+
+	return instantRpm;
+}
+
+void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
+		int prevIndex;
+		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
+		int prevIndex;
+		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
 		if (boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
-			scAddData(currentAngle, r);
+			scAddData(currentAngle, instantRpm);
 		} else {
-			scAddData(currentAngle, r / instantRpmValue[prevIndex]);
+			scAddData(currentAngle, instantRpm / instantRpmValue[prevIndex]);
 		}
 #endif /* EFI_SENSOR_CHART */
-		instantRpmValue[currentCycle.current_index] = r;
-		timeOfLastEvent[currentCycle.current_index] = nowNt;
 	}
 }
 
@@ -332,7 +352,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
-		printf("addEvent2 %f i=%d r/f=%d\r\n", angle, waveIndex, stateParam);
+		printf("addEvent2 %.2f i=%d r/f=%d\r\n", angle, waveIndex, stateParam);
 	}
 #endif
 
@@ -363,7 +383,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: %f and %f, size=%d", angle, previousAngle, size);
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: %.2f and %.2f, size=%d", angle, previousAngle, size);
 			shapeDefinitionError = true;
 			return;
 		}
@@ -472,7 +492,7 @@ void TriggerShape::setTriggerSynchronizationGap2(float syncRatioFrom, float sync
 	this->syncRatioTo = syncRatioTo;
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
-		printf("setTriggerSynchronizationGap2 %f %f\r\n", syncRatioFrom, syncRatioTo);
+		printf("setTriggerSynchronizationGap2 %.2f %.2f\r\n", syncRatioFrom, syncRatioTo);
 	}
 #endif /* EFI_UNIT_TEST */
 }

@@ -3,7 +3,7 @@
  *
  * @date Dec 28, 2013
  * @author Kot_dnz
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * default pinouts in case of SPI2 connected to MMC: PB13 - SCK, PB14 - MISO, PB15 - MOSI, PD4 - CS, 3.3v
  * default pinouts in case of SPI3 connected to MMC: PB3  - SCK, PB4  - MISO, PB5  - MOSI, PD4 - CS, 3.3v
@@ -80,7 +80,7 @@ SPI_BaudRatePrescaler_256 };
 
 /* MMC/SD over SPI driver configuration.*/
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp
-static MMCConfig mmccfg = { &MMC_CARD_SPI, &ls_spicfg, &hs_spicfg };
+static MMCConfig mmccfg = { NULL, &ls_spicfg, &hs_spicfg };
 
 #define FILE_LOG_DELAY 200
 
@@ -433,9 +433,7 @@ void initMmcCard(void) {
 
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", boardConfiguration->sdCardCsPin);
 	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", boardConfiguration->sdCardCsPin);
-/* todo: un-comment this one day. incompatible configuration change for existing users :(
 	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
-*/
 
 	/**
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM

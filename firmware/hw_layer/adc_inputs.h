@@ -1,6 +1,6 @@
 /**
  * @file	adc_inputs.h
- * @brief	Low level ADC code
+ * @brief	Low level internal ADC code
  *
  * @date Jan 14, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -10,9 +10,9 @@
 #define ADC_INPUTS_H_
 
 #include "main.h"
-#include "adc_math.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
+#include "adc_math.h"
 
 const char * getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs(bool boardTestMode);
@@ -28,7 +28,9 @@ adc_channel_e getAdcChannel(brain_pin_e pin);
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
 
 // wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc();
+void waitForSlowAdc(int lastAdcCounter = 0);
+// get a number of completed slowADC samples
+int getSlowAdcCounter();
 
 int getAdcHardwareIndexByInternalIndex(int index);
 

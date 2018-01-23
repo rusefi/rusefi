@@ -5,7 +5,7 @@
  * and average the value within a specified angle position window for each cylinder
  *
  * @date Dec 11, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -241,8 +241,8 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 		}
 
 		angle_t samplingEnd = samplingStart + samplingDuration;
-		fixAngle(samplingEnd, "samplingEnd");
 		if (!cisnan(samplingEnd)) {
+			fixAngle(samplingEnd, "samplingEnd");
 			// only if value is already prepared
 			int structIndex = getRevolutionCounter() % 2;
 			// todo: schedule this based on closest trigger event, same as ignition works

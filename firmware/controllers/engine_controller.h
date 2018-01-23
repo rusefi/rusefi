@@ -27,12 +27,12 @@ void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void setVBattVoltage(float voltage);
-void setMapVoltage(float voltage);
-void setTpsVoltage(float voltage);
-void setAfrVoltage(float voltage);
-void setMafVoltage(float voltage);
-void setIatVoltage(float voltage);
-void setCltVoltage(float voltage);
+void setMockVBattVoltage(float voltage);
+void setMockMapVoltage(float voltage);
+void setMockTpsVoltage(float voltage);
+void setMockAfrVoltage(float voltage);
+void setMockMafVoltage(float voltage);
+void setMockIatVoltage(float voltage);
+void setMockCltVoltage(float voltage);
 
 #endif /* ENGINE_STATUS_H_ */

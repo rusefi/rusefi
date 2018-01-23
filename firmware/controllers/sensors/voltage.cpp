@@ -4,12 +4,12 @@
  *
  *
  * @date Nov 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
 #include "engine.h"
-#include "adc_inputs.h"
+#include "analog_input.h"
 #include "voltage.h"
 
 EXTERN_ENGINE;

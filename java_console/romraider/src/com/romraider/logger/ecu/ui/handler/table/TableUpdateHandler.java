@@ -75,7 +75,7 @@ public final class TableUpdateHandler {
         };
 
 
-        SensorCentral.getInstance().anySensorListener = new SensorCentral.SensorListener2() {
+        SensorCentral.getInstance().setAnySensorListener(new SensorCentral.SensorListener2() {
             @Override
             public void onSensorUpdate(final Sensor sensor, double value) {
                 ResponseImpl r = new ResponseImpl();
@@ -131,7 +131,7 @@ public final class TableUpdateHandler {
                 TableUpdateHandler.getInstance().handleDataUpdate(r);
 
             }
-        };
+        });
     }
 
     private TableUpdateHandler() {

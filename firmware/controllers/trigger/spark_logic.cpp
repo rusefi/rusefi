@@ -2,7 +2,7 @@
  * @file spark_logic.cpp
  *
  * @date Sep 15, 2016
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "engine_math.h"
@@ -126,7 +126,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
 	if (cisnan(dwellMs) || dwellMs <= 0) {
-		warning(CUSTOM_DWELL, "invalid dwell to handle: %f at %d", dwellMs, rpm);
+		warning(CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
 		return;
 	}
 
@@ -135,7 +135,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-		scheduleMsg(logger, "Negative spark delay=%f", chargeDelayUs);
+		scheduleMsg(logger, "Negative spark delay=%.2f", chargeDelayUs);
 #endif /* EFI_PROD_CODE */
 		chargeDelayUs = 0;
 		return;
@@ -172,6 +172,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
 	 */
+	efiAssertVoid(!cisnan(iEvent->advance), "findAngle#4");
 	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, iEvent->advance PASS_ENGINE_PARAMETER_SUFFIX));
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -243,7 +244,9 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFI
 	event->outputs[1] = secondOutput;
 	event->advance = localAdvance;
 
-	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER_SUFFIX));
+	angle_t a = localAdvance - dwellAngle;
+	efiAssertVoid(!cisnan(a), "findAngle#5");
+	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, a PASS_ENGINE_PARAMETER_SUFFIX));
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.eventIndex);
@@ -262,9 +265,9 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 
 	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		list->elements[cylinderIndex].engine = engine;
-#endif
+#endif /* EFI_UNIT_TEST */
 		prepareIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	list->isReady = true;
@@ -290,7 +293,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 		warning(CUSTOM_ZERO_DWELL, "dwell is zero?");
 	}
 	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
-		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %f", engine->engineState.dwellAngle);
+		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %.2f", engine->engineState.dwellAngle);
 	}
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that

@@ -55,6 +55,7 @@ LIBS:mos_n_numbered-pins
 LIBS:crystal(mc306)
 LIBS:pololu_a4988
 LIBS:Pololu_DRV8880
+LIBS:fuse_BOM_only_no_pins
 LIBS:frankenso-cache
 EELAYER 25 0
 EELAYER END
@@ -62,8 +63,8 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 15 15
 Title "frankenso"
-Date "2017-04-22"
-Rev "0.5"
+Date "2017-12-06"
+Rev "0.5.1"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""

@@ -31,7 +31,7 @@
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
  * @date Dec 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -59,8 +59,11 @@
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "pwm_generator.h"
+#include "pid_auto_tune.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 static bool shouldResetPid = false;
+
+static PID_AutoTune autoTune;
 
 static LoggingWithStorage logger("ETB");
 /**
@@ -80,9 +83,9 @@ EXTERN_ENGINE;
 
 static Pid pid(&engineConfiguration->etb);
 
-static float prevTps;
+//static float prevTps;
 
-static float currentEtbDuty;
+static percent_t currentEtbDuty;
 
 static bool wasEtbBraking = false;
 
@@ -95,15 +98,25 @@ static msg_t etbThread(void *arg) {
 			shouldResetPid = false;
 		}
 
+		if (engine->etbAutoTune) {
+			autoTune.Runtime(&logger);
 
-		percent_t throttlePedal = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
-		percent_t tps = getTPS();
+			etbPwmUp.setSimplePwmDutyCycle(autoTune.output);
 
-		currentEtbDuty = pid.getValue(throttlePedal, getTPS());
+			pid.sleep();
+			continue;
+		}
+
+
+		percent_t targetPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+		percent_t actualThrottlePosition = getTPS();
+
+		currentEtbDuty = pid.getValue(targetPosition, actualThrottlePosition);
 
 		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
 
-		bool needEtbBraking = absF(throttlePedal - tps) < 3;
+		bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
 		if (needEtbBraking != wasEtbBraking) {
 			scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
 			wasEtbBraking = needEtbBraking;
@@ -136,21 +149,24 @@ static void setThrottleConsole(int level) {
 
 	float dc = 0.01 + (minI(level, 98)) / 100.0;
 	etbPwmUp.setSimplePwmDutyCycle(dc);
-	print("st = %f\r\n", dc);
+	print("st = %.2f\r\n", dc);
 }
 
 static void showEthInfo(void) {
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "throttlePedal=%f %f/%f @%s",
+	scheduleMsg(&logger, "etbAutoTune=%d",
+			engine->etbAutoTune);
+
+	scheduleMsg(&logger, "throttlePedal=%.2f %.2f/%.2f @%s",
 			getPedalPosition(),
 			engineConfiguration->throttlePedalUpVoltage,
 			engineConfiguration->throttlePedalWOTVoltage,
 			getPinNameByAdcChannel("tPedal", engineConfiguration->pedalPositionChannel, pinNameBuffer));
 
-	scheduleMsg(&logger, "TPS=%f", getTPS());
+	scheduleMsg(&logger, "TPS=%.2f", getTPS());
 
-	scheduleMsg(&logger, "etbControlPin1=%s duty=%f freq=%d",
+	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
 			hwPortname(boardConfiguration->etbControlPin1),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
@@ -227,6 +243,16 @@ void startETBPins(void) {
 	outputDirectionClose.initPin("etb dir close", boardConfiguration->etbDirectionPin2);
 }
 
+static void setTempOutput(float value) {
+	autoTune.output = value;
+
+}
+
+static void setTempStep(float value) {
+	autoTune.oStep = value;
+
+}
+
 void initElectronicThrottle(void) {
 	// these two lines are controlling direction
 //	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
@@ -239,7 +265,10 @@ void initElectronicThrottle(void) {
 
 	startETBPins();
 
-	addConsoleActionI("e", setThrottleConsole);
+	addConsoleActionI("set_etb", setThrottleConsole);
+
+	addConsoleActionF("set_etb_output", setTempOutput);
+	addConsoleActionF("set_etb_step", setTempStep);
 
 	apply();
 

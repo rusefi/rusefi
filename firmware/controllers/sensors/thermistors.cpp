@@ -2,7 +2,7 @@
  * @file thermistors.cpp
  *
  * @date Feb 17, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 /**
@@ -12,7 +12,7 @@
 
 #include "main.h"
 #include "thermistors.h"
-#include "adc_inputs.h"
+#include "analog_input.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
 
@@ -123,7 +123,7 @@ float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  			engineConfiguration->useLinearCltSensor);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %f", temperature);
+		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %.2f", temperature);
 		engine->isCltBroken = true;
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
@@ -158,7 +158,7 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 		 * See https://github.com/rusefi/rusefi/issues/375
 		 * See https://sourceforge.net/p/rusefi/tickets/149/
 		 */
-		firmwareError(CUSTOM_ERR_NATURAL_LOGARITHM_ERROR, "Natural logarithm logf() is broken: %f", tc->resistance_1);
+		firmwareError(CUSTOM_ERR_NATURAL_LOGARITHM_ERROR, "Natural logarithm logf() is broken: %.2f", tc->resistance_1);
 	}
 	float L2 = logf(tc->resistance_2);
 	float L3 = logf(tc->resistance_3);
@@ -205,7 +205,7 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 #if EFI_PROD_CODE || EFI_UNIT_TEST || defined(__DOXYGEN__)
-		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT %f", temperature);
+		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT %.2f", temperature);
 #endif /* EFI_PROD_CODE */
 		return LIMPING_MODE_IAT_TEMPERATURE;
 	}
@@ -234,9 +234,9 @@ static void testCltByR(float resistance) {
 		return;
 	}
 
-	// we expect slowPeriodicCallback to already update configuration in the curve helper class see setConfig
+	// we expect periodicSlowCallback to already update configuration in the curve helper class see setConfig
 	float kTemp = engine->engineState.cltCurve.getKelvinTemperatureByResistance(resistance);
-	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
+	scheduleMsg(logger, "for R=%.2f we have %.2f", resistance, (kTemp - KELV));
 }
 #endif
 

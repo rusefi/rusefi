@@ -2,10 +2,13 @@
  * @file	custom_engine.cpp
  *
  *
- * set engine_type 49 Frankenso QA 12 cylinder engine
+ * set engine_type 49
+ * FRANKENSO_QA_ENGINE
+ * See also DEFAULT_ENGINE_TYPE
+ * Frankenso QA 12 cylinder engine
  *
  * @date Jan 18, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 #ifndef CONFIG_ENGINES_CUSTOM_ENGINE_CPP_
 #define CONFIG_ENGINES_CUSTOM_ENGINE_CPP_
@@ -15,9 +18,9 @@
 #include "allsensors.h"
 #include "engine_math.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "can_hw.h"
-#endif
+#endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE;
 
@@ -121,7 +124,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 12;
 
 	engineConfiguration->displayMode = DM_NONE;
-#else
+#else /* EFI_PWM_TESTER */
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
@@ -136,18 +139,23 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	// set_ignition_pin 4 PE10
 	boardConfiguration->ignitionPins[3] = GPIOE_10;
-#endif
+#endif /* EFI_PWM_TESTER */
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 #if EFI_PROD_CODE
 	enableFrankensoCan();
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
+
+	boardConfiguration->triggerSimulatorFrequency = 300;
+	engineConfiguration->cranking.rpm = 100;
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
@@ -155,15 +163,15 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	boardConfiguration->injectionPins[0] = GPIOB_7; // #1
-	boardConfiguration->injectionPins[1] = GPIOB_8; // #2
-	boardConfiguration->injectionPins[2] = GPIOB_9; // #3
-	boardConfiguration->injectionPins[3] = GPIOC_13; // #4
+	boardConfiguration->injectionPins[0] = GPIOB_7; // injector in default pinout
+	boardConfiguration->injectionPins[1] = GPIOB_8; // injector in default pinout
+	boardConfiguration->injectionPins[2] = GPIOB_9; // injector in default pinout
+	boardConfiguration->injectionPins[3] = GPIOC_13;
 
 	boardConfiguration->injectionPins[4] = GPIOD_3;
 	boardConfiguration->injectionPins[5] = GPIOD_5;
 	boardConfiguration->injectionPins[6] = GPIOD_7;
-	boardConfiguration->injectionPins[7] = GPIOE_2;
+	boardConfiguration->injectionPins[7] = GPIOE_2; // injector in default pinout
 	boardConfiguration->injectionPins[8] = GPIOE_3;
 	boardConfiguration->injectionPins[9] = GPIOE_4;
 	boardConfiguration->injectionPins[10] = GPIOE_5;
@@ -175,15 +183,18 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOE_10;
-	boardConfiguration->ignitionPins[3] = GPIOE_8;
+	boardConfiguration->ignitionPins[0] = GPIOC_9; // coil in default pinout
+	boardConfiguration->ignitionPins[1] = GPIOC_7; // coil in default pinout
+	boardConfiguration->ignitionPins[2] = GPIOE_10; // coil in default pinout
+	boardConfiguration->ignitionPins[3] = GPIOE_8; // Miata VVT tach
 
-	boardConfiguration->ignitionPins[4] = GPIOE_14;
+	boardConfiguration->ignitionPins[4] = GPIOE_14; // coil in default pinout
 	boardConfiguration->ignitionPins[5] = GPIOE_12;
 	boardConfiguration->ignitionPins[6] = GPIOD_8;
 	boardConfiguration->ignitionPins[7] = GPIOD_9;
+
+	boardConfiguration->ignitionPins[8] = GPIOE_0; // brain board, not discovery
+	boardConfiguration->ignitionPins[9] = GPIOE_1; // brain board, not discovery
 
 }
 

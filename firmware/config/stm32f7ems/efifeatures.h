@@ -126,6 +126,8 @@
 
 #define EFI_IDLE_CONTROL TRUE
 
+#define EFI_IDLE_INCREMENTAL_PID_CIC FALSE
+
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
@@ -214,8 +216,6 @@
  */
 
 #define EFI_SPI3_AF 6
-// todo: finish migration to sdCardSpiDevice one day
-#define MMC_CARD_SPI SPID3
 
 #define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
 

@@ -1,8 +1,19 @@
 /**
  * @file lcd_controller.cpp
  *
+ * LCD is a tree-like set of menues controlled by a joystick. At the moment three actions are supported:
+ *  "next item"
+ *  "enter sub-menu"
+ *  "return one level up"
+ *
+ * In case of a 20x4 display top three lines are three menu items you can scroll through and
+ * bottom line is error or warning line.
+ *
+ * By default the first line shows current RPM and time since boot in seconds.
+ * The "more" symbol points at the currently selected menu item.
+ *
  * @date Aug 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -213,10 +224,10 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %f", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Coolant %.2f", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
@@ -225,7 +236,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf(getInjection_mode_e(engineConfiguration->injectionMode));
 		return;
 	case LL_ING_FLOW:
-		lcdPrintf("Inj %fcc", engineConfiguration->injector.flow);
+		lcdPrintf("Inj %.2fcc", engineConfiguration->injector.flow);
 		return;
 	case LL_IGNITION:
 		lcdPrintf(getIgnition_mode_e(engineConfiguration->ignitionMode));
@@ -233,24 +244,24 @@ static void showLine(lcd_line_e line, int screenY) {
 	case LL_TPS:
 		getPinNameByAdcChannel("tps", engineConfiguration->tpsAdcChannel, buffer);
 
-		lcdPrintf("Throttle %s %f%%", buffer, getTPS());
+		lcdPrintf("Throttle %s %.2f%%", buffer, getTPS());
 		return;
 	case LL_FUEL_CLT_CORRECTION:
-		lcdPrintf("CLT corr %fv", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("CLT corr %.2fv", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 
 	case LL_VBATT:
-		lcdPrintf("Battery %fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Battery %.2fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_KNOCK:
 		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
-		lcdPrintf("Knock %s %fv", buffer, engine->knockVolts);
+		lcdPrintf("Knock %s %.2fv", buffer, engine->knockVolts);
 		return;
 
 #if	EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	case LL_BARO:
 		if (hasBaroSensor()) {
-			lcdPrintf("Baro: %f", getBaroPressure());
+			lcdPrintf("Baro: %.2f", getBaroPressure());
 		} else {
 			lcdPrintf("Baro: none");
 		}
@@ -258,28 +269,28 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 	case LL_AFR:
 		if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("AFR: %f", getAfr());
+			lcdPrintf("AFR: %.2f", getAfr());
 		} else {
 			lcdPrintf("AFR: none");
 		}
 		return;
 	case LL_MAP:
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("MAP %f", getMap());
+			lcdPrintf("MAP %.2f", getMap());
 		} else {
 			lcdPrintf("MAP: none");
 		}
 		return;
 	case LL_MAF_V:
 		if (hasMafSensor()) {
-			lcdPrintf("MAF: %fv", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
+			lcdPrintf("MAF: %.2fv", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
 		} else {
 			lcdPrintf("MAF: none");
 		}
 		return;
 	case LL_MAF_KG_HR:
 		if (hasMafSensor()) {
-			lcdPrintf("MAF: %f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
+			lcdPrintf("MAF: %.2f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
 		} else {
 			lcdPrintf("MAF: none");
 		}
@@ -333,7 +344,7 @@ void updateHD44780lcd(void) {
 	}
 
 
-	const char * message = hasFirmwareErrorFlag ? (char *)&errorMessageBuffer : getWarning();
+	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarning();
 	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);

@@ -4,7 +4,7 @@
  * We cannot use stdlib because we do not have malloc - so, we have to implement these functions
  *
  * @date Feb 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include <string.h>
@@ -12,6 +12,7 @@
 #include "efilib.h"
 #include "datalogging.h"
 #include "histogram.h"
+#include "error_handling.h"
 
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
@@ -21,8 +22,20 @@ int minI(int i1, int i2) {
 	return i1 < i2 ? i1 : i2;
 }
 
-float efiRound(float value, float precision) {
+/*
+float efiFloor(float value, float precision) {
 	int a = (int) (value / precision);
+	return a * precision;
+}
+*/
+
+/**
+ *
+ * @param precision for example '0.1' for one digit fractional part
+ */
+float efiRound(float value, float precision) {
+	efiAssert(precision != 0, "zero precision", NAN);
+	float a = rintf (value / precision);
 	return a * precision;
 }
 

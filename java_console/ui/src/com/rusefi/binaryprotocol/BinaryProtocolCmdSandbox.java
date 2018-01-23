@@ -5,8 +5,8 @@ import com.opensr5.Logger;
 import com.opensr5.io.ConfigurationImageFile;
 import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.RomRaiderWrapper;
-import com.rusefi.TsPageSize;
 import com.rusefi.UploadChanges;
+import com.rusefi.config.Fields;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStream;
 import jssc.SerialPort;
@@ -39,7 +39,7 @@ public class BinaryProtocolCmdSandbox {
         logger.info("Binary looks good!");
         bp.switchToBinaryProtocol();
 
-        bp.readImage(TsPageSize.IMAGE_SIZE);
+        bp.readImage(Fields.TOTAL_CONFIG_SIZE);
         //
 //        image.saveToFile("rusefi_configuration.bin");
 //

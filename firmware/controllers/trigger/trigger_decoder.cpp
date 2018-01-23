@@ -2,7 +2,7 @@
  * @file	trigger_decoder.cpp
  *
  * @date Dec 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -51,6 +51,8 @@
 EXTERN_ENGINE
 ;
 
+static TriggerState initState CCM_OPTIONAL;
+
 static cyclic_buffer<int> errorDetection;
 static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
 
@@ -67,7 +69,7 @@ static Logging * logger;
 
 efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
 // the boolean flag is a performance optimization so that complex comparison is avoided if no error
-bool someSortOfTriggerError = false;
+static bool someSortOfTriggerError = false;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -78,12 +80,6 @@ bool isTriggerDecoderError(void) {
 
 bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return currentCycle.current_index < TRIGGER_SHAPE(size);
-}
-
-float TriggerState::getTriggerDutyCycle(int index) {
-	float time = prevTotalTime[index];
-
-	return 100 * time / prevCycleDuration;
 }
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
@@ -120,8 +116,6 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	if (cycleCallback != NULL) { \
 		cycleCallback(this); \
 	} \
-	memcpy(prevTotalTime, currentCycle.totalTimeNt, sizeof(prevTotalTime)); \
-	prevCycleDuration = nowNt - startOfCycleNt; \
 	startOfCycleNt = nowNt; \
 	resetCurrentCycleState(); \
 	intTotalEventCounter(); \
@@ -202,11 +196,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 // todo: skip a number of signal from the beginning
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-//	scheduleMsg(&logger, "from %f to %f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothed_previous_duration);
-//	scheduleMsg(&logger, "ratio %f", 1.0 * currentDuration/ shaftPositionState->toothed_previous_duration);
+//	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothed_previous_duration);
+//	scheduleMsg(&logger, "ratio %.2f", 1.0 * currentDuration/ shaftPositionState->toothed_previous_duration);
 #else
 		if (printTriggerDebug) {
-			printf("ratio %f: current=%d previous=%d\r\n", 1.0 * currentDuration / toothed_previous_duration,
+			printf("ratio %.2f: current=%d previous=%d\r\n", 1.0 * currentDuration / toothed_previous_duration,
 				currentDuration, toothed_previous_duration);
 		}
 #endif
@@ -249,15 +243,17 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
 				float gap3 = 1.0 * durationBeforePrevious / thirdPreviousDuration;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-				scheduleMsg(logger, "%d: gap=%f/%f/%f @ %d while expected %f/%f and %f/%f error=%d",
+				scheduleMsg(logger, "%d: cur=%.2f/prev=%.2f/3rd=%.2f @ %d while expected from %.2f to %.2f and 2nd from %.2f to %.2f and 3rd from %.2f to %.2f error=%d",
 						getTimeNowSeconds(),
 						gap, prevGap, gap3,
 						currentCycle.current_index,
 						TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo),
-						TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo), someSortOfTriggerError);
+						TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo),
+						TRIGGER_SHAPE(thirdSyncRatioFrom), TRIGGER_SHAPE(thirdSyncRatioTo),
+						someSortOfTriggerError);
 #else
 				actualSynchGap = gap;
-				print("current gap %f/%f/%f c=%d prev=%d\r\n", gap, prevGap, gap3, currentDuration, toothed_previous_duration);
+				print("current gap %.2f/%.2f/%.2f c=%d prev=%d\r\n", gap, prevGap, gap3, currentDuration, toothed_previous_duration);
 #endif /* EFI_PROD_CODE */
 			}
 
@@ -333,7 +329,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				someSortOfTriggerError = true;
 
 				totalTriggerErrorCounter++;
-				if (engineConfiguration->isPrintTriggerSynchDetails || someSortOfTriggerError) {
+				if (CONFIG(isPrintTriggerSynchDetails) || someSortOfTriggerError) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 					scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 							currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
@@ -390,80 +386,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		}
 	}
 
-	runtimeStatistics(signal, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 }
-
-void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
-
-	const float crankW = 360 / 3 / 2;
-
-
-	trigger_wheel_e crank = T_SECONDARY;
-
-	s->addEvent2(10, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(50, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-
-	float a = 2 * crankW;
-
-	// #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	// #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	// #3/3
-	a += crankW;
-	a += crankW;
-
-	// 2nd #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	// 2nd #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->isSynchronizationNeeded = false;
-}
-
-void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float engineCycle = getEngineCycle(operationMode);
-
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
-	s->addEvent2(180, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(360, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->addEvent2(540, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
-}
-
-void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-
-	int totalTeethCount = 60;
-	int skippedCount = 2;
-
-	s->addEvent2(2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(20, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
-
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
-
-	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
-}
-
-static TriggerState initState CCM_OPTIONAL;
 
 /**
  * External logger is needed because at this point our logger is not yet initialized

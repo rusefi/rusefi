@@ -4,7 +4,7 @@
  * MINI_COOPER_R50 = 13
  *
  * @date Apr 9, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "MiniCooperR50.h"

@@ -3,7 +3,7 @@
  * @brief   Hardware package entry point
  *
  * @date May 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -22,6 +22,7 @@
 #include "eficonsole.h"
 #include "max31855.h"
 #include "mpu_util.h"
+#include "accelerometer.h"
 
 #if EFI_PROD_CODE
 //#include "usb_msd.h"
@@ -41,7 +42,6 @@
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
-#include "CJ125.h"
 #include "aux_pid.h"
 #endif /* EFI_PROD_CODE */
 
@@ -59,6 +59,16 @@ extern bool hasFirmwareErrorFlag;
 
 static mutex_t spiMtx;
 
+/**
+ * this depends on patch to chdebug.c
++extern int maxNesting;
+   ch.dbg.isr_cnt++;
++  if (ch.dbg.isr_cnt > maxNesting)
++          maxNesting = ch.dbg.isr_cnt;
+   port_unlock_from_isr();
+ *
+ */
+// todo: rename this to 'rusefiMaxISRNesting' one day
 int maxNesting = 0;
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
@@ -404,23 +414,26 @@ void initHardware(Logging *l) {
 	initSpiModules(boardConfiguration);
 #endif
 
-#if EFI_HIP_9011
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
 	initHip9011(sharedLogger);
 #endif /* EFI_HIP_9011 */
 
-#if EFI_FILE_LOGGING
+#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
+#if EFI_MEMS || defined(__DOXYGEN__)
+	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 //	initFixedLeds();
 
 	//	initBooleanInputs();
 
-#if EFI_UART_GPS
+#if EFI_UART_GPS || defined(__DOXYGEN__)
 	initGps();
 #endif
 
-#if ADC_SNIFFER
+#if ADC_SNIFFER || defined(__DOXYGEN__)
 	initAdcDriver();
 #endif
 
@@ -451,10 +464,6 @@ void initHardware(Logging *l) {
 #endif
 
 	calcFastAdcIndexes();
-
-#if EFI_CJ125 || defined(__DOXYGEN__)
-	initCJ125(sharedLogger);
-#endif
 
 	printMsg(sharedLogger, "initHardware() OK!");
 }

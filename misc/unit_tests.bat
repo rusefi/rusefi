@@ -1,5 +1,7 @@
 echo I am unit_tests.bat
 
+set FTP_SERVER=home451478433.1and1-data.host
+
 cd firmware
 
 git submodule update --init
@@ -47,4 +49,4 @@ zip -j firmware/build/rusefi_firmware.zip firmware/svnversion.h firmware/build/r
 
 echo Now uploading only firmware
 
-ncftpput -u u71977750-build -p %RUSEFI_BUILD_FTP_PASS% rusefi.com separate_files firmware/build/rusefi_firmware.zip
+ncftpput -u u71977750-build -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip

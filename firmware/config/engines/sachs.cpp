@@ -5,7 +5,7 @@
  * http://rusefi.com/forum/viewtopic.php?f=3&t=396
  *
  * @date Jan 26, 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "sachs.h"
@@ -83,8 +83,8 @@ void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: extract a method? figure out something smarter
 	setFuelRpmBin(800, 15000 PASS_ENGINE_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 15000 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTableBin2(config->veRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
-	setTableBin2(config->afrRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
+	setLinearCurve(config->veRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
+	setLinearCurve(config->afrRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
 
 	engineConfiguration->hasFrequencyReportingMapSensor = true;
 	boardConfiguration->frequencyReportingMapInputPin = GPIOC_6;

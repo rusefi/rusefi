@@ -8,7 +8,7 @@
  * Both external events (see wave_analyzer.c) and internal (see signal executors) are supported
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -26,7 +26,7 @@
 
 #include "main.h"
 #include "engine_sniffer.h"
-#include "adc_math.h"
+#include "adc_inputs.h"
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 

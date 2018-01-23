@@ -1,3 +1,6 @@
+# rusEFI
+A GPL open-source DIY ECU
+
 current binaries are always available at http://rusefi.com/build_server/
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
@@ -5,10 +8,19 @@ current binaries are always available at http://rusefi.com/build_server/
 
 [![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/)
 
-#Releases
+# Releases
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 01/07/2018    | r14952    | usability & minor bugfix #532 idle defaults are broken |
+| 12/17/2017    | r14892    | bugfix #513: console: erase on older chips does not work |
+| 11/26/2017    | r14789    | bugfix #500: set_rpn_expression command is broken |
+| 11/23/2017    | r14779    | bugfix #497: engine does not start with SD card |
+| 11/19/2017    | r14766    | improvement #496: console flasher to support older boards |
+| 11/19/2017    | r14760    | improvement #495: incomppatible change - larger settings area |
+| 11/06/2017    | r14733    | improvement #487: single-point injection mode |
+| 10/26/2017    | r14700    | improvement #385: narrow band to wide band conversion table |
+| 08/31/2017    |           | improvement #442: ADC_VCC should be configurable |
 | 07/24/2017    | r14513    | bugfix #307: TS bench test blinks three times |
 | 07/13/2017    | r14476    | bugfix #461: SAXParserException on console start-up due to damaged settings.xml file |
 | 07/09/2017    | r14473    | improvement: IAC solenoid frequencty changeable on the fly |
@@ -51,24 +63,19 @@ current binaries are always available at http://rusefi.com/build_server/
 | 07/05/2013	| r10	    | Second CKP, sequential injection.
 | 06/19/2013	| r9	    | Initial version - batch injection & ignition with advance table lookup.
 	
+# Links
 
+ * Wiki: http://rusefi.com
+ * Forum http://rusefi.com/forum
+ * Doxygen documentation is available at http://rusefi.com/docs/html
+ * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
+ * Facebook https://www.facebook.com/rusEfiECU
+ * YouTube: https://www.youtube.com/user/rusefi
 
-Wiki http://rusefi.com
+# Building the Code
 
-Forum rusefi.com/forum
-
-Doxygen documentation is availble at http://rusefi.com/docs/html
-
-General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
-
-
-Facebook https://www.facebook.com/rusEfiECU
-
-youtube https://www.youtube.com/user/rusefi
-
-
-= How to build the code? =
+## Cloning the repository
 
 We now use submodules:
 
-git submodule update --init
+`git submodule update --init`

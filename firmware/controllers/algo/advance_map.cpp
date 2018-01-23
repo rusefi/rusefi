@@ -2,7 +2,7 @@
  * @file	advance_map.cpp
  *
  * @date Mar 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -23,6 +23,7 @@
 #include "interpolation.h"
 #include "efilib2.h"
 #include "engine_math.h"
+#include "tps.h"
 
 EXTERN_ENGINE;
 
@@ -32,6 +33,8 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 static ign_Map3D_t advanceMap("advance");
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
+
+static int minCrankingRpm = 0;
 
 static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
 
@@ -63,6 +66,9 @@ bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @return ignition timing angle advance before TDC
  */
 static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (CONFIG(timingMode) == TM_FIXED)
+		return engineConfiguration->fixedTiming;
+
 	engine->m.beforeAdvance = GET_TIMESTAMP();
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
@@ -77,6 +83,21 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		return engineConfiguration->step1timing;
 	}
 
+	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
+	
+	// get advance from the separate table for Idle
+	if (CONFIG(useSeparateAdvanceForIdle)) {
+		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
+		// interpolate between idle table and normal (running) table using TPS threshold
+		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		advanceAngle = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
+	}
+
+	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
+	return advanceAngle;
+}
+
+static angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection;
 	if (cisnan(engine->sensors.iat)) {
 		iatCorrection = 0;
@@ -90,35 +111,37 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		tsOutputChannels.debugFloatField3 = engine->fsioTimingAdjustment;
 #endif
 	}
-
-	float result = advanceMap.getValue((float) rpm, engineLoad)
-			+ iatCorrection
-			+ engine->fsioTimingAdjustment
-			+ engine->engineState.cltTimingCorrection
-			// todo: uncomment once we get useable knock   - engine->knockCount
-			;
-	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
-	return result;
+	
+	return iatCorrection
+		+ engine->fsioTimingAdjustment
+		+ engine->engineState.cltTimingCorrection
+		// todo: uncomment once we get useable knock   - engine->knockCount
+		;
 }
 
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (cisnan(engineLoad)) {
+		return 0; // any error should already be reported
+	}
 	angle_t angle;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		angle = engineConfiguration->crankingTimingAngle;
+		// Interpolate the cranking timing angle to the earlier running angle for faster engine start
+		angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		// interpolate not from zero, but starting from min. possible rpm detected
+		if (rpm < minCrankingRpm || minCrankingRpm == 0)
+			minCrankingRpm = rpm;
+		angle = interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, CONFIG(cranking.rpm), crankingToRunningTransitionAngle, rpm);
 	} else {
-		if (CONFIG(timingMode) == TM_DYNAMIC) {
-			angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-		} else {
-			angle = engineConfiguration->fixedTiming;
-		}
+		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+	angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	angle -= engineConfiguration->ignitionOffset;
 	fixAngle(angle, "getAdvance");
 	return angle;
 }
 
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setTableBin2(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, -40, 110, 1);
+	setLinearCurve(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, -40, 110, 1);
 	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
 	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
 }

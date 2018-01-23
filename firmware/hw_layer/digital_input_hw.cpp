@@ -3,7 +3,7 @@
  * @brief	Helper methods related to Input Capture Unit (ICU)
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "digital_input_hw.h"
@@ -95,23 +95,23 @@ static uint32_t getAlternateFunctions(ICUDriver *driver) {
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	switch (hwPin) {
 	case GPIOA_2: // TIM9
-	case GPIOA_5:
-	case GPIOA_6:
-	case GPIOA_8:
+	case GPIOA_5: // TIM2 stm32f4discovery/Frankenso default
+	case GPIOA_6: // TIM3
+	case GPIOA_8: // TIM1
 	case GPIOA_15: // TIM2
-	case GPIOC_6:
-	case GPIOE_5:
+	case GPIOC_6: // TIM3 or TIM8 stm32f4discovery/Frankenso default
+	case GPIOE_5: // TIM9
 	case GPIOE_9: // TIM1
 		return ICU_CHANNEL_1;
 
 	case GPIOA_1: // TIM2
 	case GPIOA_3: // TIM9
-	case GPIOA_7:
+	case GPIOA_7: // TIM3
 	case GPIOA_9: // TIM1
 	case GPIOB_3: // TIM2
 	case GPIOB_5: // TIM2
-	case GPIOC_7: // TIM3
-	case GPIOE_6:
+	case GPIOC_7: // TIM3 or TIM8
+	case GPIOE_6: // TIM9
 	case GPIOE_11: // TIM1
 		return ICU_CHANNEL_2;
 	default:
@@ -183,7 +183,10 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
-digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
+/**
+ * takes next digital_input_s from the registeredIcus pool
+ */
+digital_input_s * addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 
 	digital_input_s *hw = registeredIcus.add();
@@ -196,7 +199,10 @@ digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) 
 	return hw;
 }
 
-void stopWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
+/**
+ * turns pin off and returns digital_input_s back into registeredIcus pool
+ */
+void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}

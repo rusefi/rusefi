@@ -21,10 +21,11 @@
 #include "test_fuel_map.h"
 #include "fuel_math.h"
 #include "test_logic_expression.h"
+#include "test_pid_auto.h"
 #include "engine_configuration.h"
 
 #include "test_idle_controller.h"
-
+#include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
 #include "test_util.h"
@@ -126,6 +127,8 @@ extern bool printTriggerDebug;
 int main(void) {
 //	printTriggerDebug = true;
 
+	testDifferentInjectionModes();
+	testPidAutoZigZag();
 	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
@@ -173,8 +176,9 @@ int main(void) {
 	testTriggerDecoder();
 
 	//	resizeMap();
-	printf("Success 20161031\r\n");
+	printf("Success 20180120\r\n");
 	printAllTriggers();
+//	printConvertedTable();
 	return EXIT_SUCCESS;
 }
 

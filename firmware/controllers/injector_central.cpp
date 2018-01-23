@@ -4,7 +4,7 @@
  *
  *
  * @date Sep 8, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -84,18 +84,18 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	int onTimeSt = onTimeMs < 1 ? 1 : MS2ST(onTimeMs);
 	int offTimeSt = offTimeMs < 1 ? 1 : MS2ST(offTimeMs);
 	if (delaySt < 0) {
-		scheduleMsg(logger, "Invalid delay %f", delayMs);
+		scheduleMsg(logger, "Invalid delay %.2f", delayMs);
 		return;
 	}
 	if (onTimeSt <= 0) {
-		scheduleMsg(logger, "Invalid onTime %f", onTimeMs);
+		scheduleMsg(logger, "Invalid onTime %.2f", onTimeMs);
 		return;
 	}
 	if (offTimeSt <= 0) {
-		scheduleMsg(logger, "Invalid offTime %f", offTimeMs);
+		scheduleMsg(logger, "Invalid offTime %.2f", offTimeMs);
 		return;
 	}
-	scheduleMsg(logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTimeMs, offTimeMs, count);
+	scheduleMsg(logger, "Running bench: ON_TIME=%.2f ms OFF_TIME=%.2fms Counter=%d", onTimeMs, offTimeMs, count);
 	scheduleMsg(logger, "output on %s", hwPortname(brainPin));
 
 	if (delaySt != 0) {
@@ -272,6 +272,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();
+	enginePins.startAuxValves();
 
 	printInjectorsStatus();
 	addConsoleActionII("injector", setInjectorEnabled);

@@ -4,7 +4,7 @@
  *
  * @date Feb 13, 2014
  * @author rus084, (c) 2015
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
@@ -82,7 +82,7 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->cranking.rpm = 1100;
-	engineConfiguration->targetIdleRpm = 2000;
+	setTargetRpmCurve(2000 PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->analogInputDividerCoefficient = 1;
 	engineConfiguration->fuelAlgorithm = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 45;
