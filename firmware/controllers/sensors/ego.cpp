@@ -12,6 +12,7 @@
 #include "interpolation.h"
 #include "engine.h"
 #include "analog_input.h"
+#include "cyclic_buffer.h"
 
 EXTERN_ENGINE;
 
