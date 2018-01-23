@@ -102,7 +102,7 @@ int unitTestWarningCounter = 0;
 
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
-void printWarning(const char *fmt, va_list ap) {
+static void printWarning(const char *fmt, va_list ap) {
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);
 
