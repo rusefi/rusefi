@@ -58,7 +58,7 @@ static void processAdcPin(AdcDevice *adc, int index) {
 
 //		print("ADC%d val= %d%s", hwIndex, value, DELIMETER);
 		float volts = adcToVolts(adcValue) * 2;
-		print("v=%f  adc=%d  c=%d (hit 'n'<ENTER> for next step\r\n", volts, adcValue, c++);
+		print("v=%.2f  adc=%d  c=%d (hit 'n'<ENTER> for next step\r\n", volts, adcValue, c++);
 
 		chThdSleepMilliseconds(300);
 

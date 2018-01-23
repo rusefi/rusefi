@@ -54,7 +54,7 @@ static void speedInfo(void) {
 	scheduleMsg(logger, "VSS input at %s",
 			hwPortname(boardConfiguration->vehicleSpeedSensorInputPin));
 
-	scheduleMsg(logger, "c=%f eventCounter=%d speed=%f",
+	scheduleMsg(logger, "c=%.2f eventCounter=%d speed=%.2f",
 			engineConfiguration->vehicleSpeedCoef,
 			engine->engineState.vssEventCounter,
 			getVehicleSpeed());

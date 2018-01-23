@@ -137,7 +137,7 @@ void Pid::showPidStatus(Logging *logging, const char*msg) {
 			pid->dFactor,
 			pid->period);
 
-	scheduleMsg(logging, "%s status: value=%f input=%f/target=%f iTerm=%.5f dTerm=%.5f",
+	scheduleMsg(logging, "%s status: value=%.2f input=%.2f/target=%.2f iTerm=%.5f dTerm=%.5f",
 			msg,
 			prevResult,
 			prevInput,

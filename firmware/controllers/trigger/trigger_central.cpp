@@ -120,13 +120,13 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		previousVvtCamTime = nowNt;
 
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
-			scheduleMsg(logger, "vvt ratio %f", ratio);
+			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
 		if (ratio < boardConfiguration->nb2ratioFrom || ratio > boardConfiguration->nb2ratioTo) {
 			return;
 		}
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
-			scheduleMsg(logger, "looks good: vvt ratio %f", ratio);
+			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
 	}
 
@@ -339,10 +339,10 @@ static void triggerShapeInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
 	scheduleMsg(logger, "useRise=%s", boolToString(s->useRiseEdge));
-	scheduleMsg(logger, "gap from %f to %f", s->syncRatioFrom, s->syncRatioTo);
+	scheduleMsg(logger, "gap from %.2f to %.2f", s->syncRatioFrom, s->syncRatioTo);
 
 	for (int i = 0; i < s->getSize(); i++) {
-		scheduleMsg(logger, "event %d %f", i, s->eventAngles[i]);
+		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
 	}
 #endif
 }
@@ -385,16 +385,16 @@ void printAllTriggers() {
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-		fprintf(fp, "TRIGGERTYPE %d %d %s %f\r\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
+		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\r\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 
-		fprintf(fp, "# duty %f %f\r\n", s->dutyCycle[0], s->dutyCycle[1]);
+		fprintf(fp, "# duty %.2f %.2f\r\n", s->dutyCycle[0], s->dutyCycle[1]);
 
 		for (int i = 0; i < s->getLength(); i++) {
 
 			int triggerDefinitionCoordinate = (s->getTriggerShapeSynchPointIndex() + i) % s->getSize();
 
 
-			fprintf(fp, "event %d %d %f\r\n", i, s->triggerSignals[triggerDefinitionCoordinate], s->eventAngles[i]);
+			fprintf(fp, "event %d %d %.2f\r\n", i, s->triggerSignals[triggerDefinitionCoordinate], s->eventAngles[i]);
 		}
 
 	}
@@ -446,7 +446,7 @@ void triggerInfo(void) {
 
 	TriggerShape *ts = &engine->triggerCentral.triggerShape;
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%f",
+	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
@@ -469,7 +469,7 @@ void triggerInfo(void) {
 
 	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(needSecondTriggerInput)));
-	scheduleMsg(logger, "expected duty #0=%f/#1=%f", TRIGGER_SHAPE(dutyCycle[0]), TRIGGER_SHAPE(dutyCycle[1]));
+	scheduleMsg(logger, "expected duty #0=%.2f/#1=%.2f", TRIGGER_SHAPE(dutyCycle[0]), TRIGGER_SHAPE(dutyCycle[1]));
 
 	scheduleMsg(logger, "synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
@@ -478,7 +478,7 @@ void triggerInfo(void) {
 			boolToString(engineConfiguration->directSelfStimulation));
 
 	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
-		scheduleMsg(logger, "gap from %f to %f", ts->syncRatioFrom, ts->syncRatioTo);
+		scheduleMsg(logger, "gap from %.2f to %.2f", ts->syncRatioFrom, ts->syncRatioTo);
 	}
 
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */

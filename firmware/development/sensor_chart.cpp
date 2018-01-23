@@ -62,7 +62,7 @@ void scAddData(float angle, float value) {
 	}
 
 	if (remainingSize(&logging) > 100) {
-		appendPrintf(&logging, "%f|%f|", angle, value);
+		appendPrintf(&logging, "%.2f|%.2f|", angle, value);
 	}
 }
 

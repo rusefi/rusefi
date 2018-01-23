@@ -168,7 +168,7 @@ void appendFloat(Logging *logging, float value, int precision) {
 		break;
 
 	default:
-		appendPrintf(logging, "%f", value);
+		appendPrintf(logging, "%.2f", value);
 	}
 }
 

@@ -66,7 +66,7 @@ void printFloatArray(const char *prefix, float array[], int size) {
 	appendMsgPrefix(&logger);
 	appendPrintf(&logger, prefix);
 	for (int j = 0; j < size; j++) {
-		appendPrintf(&logger, "%f ", array[j]);
+		appendPrintf(&logger, "%.2f ", array[j]);
 	}
 	appendMsgPostfix(&logger);
 	scheduleLogging(&logger);
@@ -209,9 +209,9 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
 
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-//		print("line %d (%f): ", k, engineConfiguration->fuelKeyBins[k]);
+//		print("line %d (%.2f): ", k, engineConfiguration->fuelKeyBins[k]);
 //		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-//			print("%f ", engineConfiguration->fuelTable[k][r]);
+//			print("%.2f ", engineConfiguration->fuelTable[k][r]);
 //		}
 //		print("\r\n");
 	}
@@ -232,16 +232,16 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
 			engineConfiguration->operationMode);
 
-	scheduleMsg(&logger, "globalTriggerAngleOffset=%f", engineConfiguration->globalTriggerAngleOffset);
+	scheduleMsg(&logger, "globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 
 	scheduleMsg(&logger, "=== cranking ===");
 	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->cranking.rpm);
 	scheduleMsg(&logger, "cranking injection %s", getInjection_mode_e(engineConfiguration->crankingInjectionMode));
 
 	if (engineConfiguration->useConstantDwellDuringCranking) {
-		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%f", engineConfiguration->ignitionDwellForCrankingMs);
+		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%.2f", engineConfiguration->ignitionDwellForCrankingMs);
 	} else {
-		scheduleMsg(&logger, "cranking charge charge angle=%f fire at %f", engineConfiguration->crankingChargeAngle,
+		scheduleMsg(&logger, "cranking charge charge angle=%.2f fire at %.2f", engineConfiguration->crankingChargeAngle,
 				engineConfiguration->crankingTimingAngle);
 	}
 
@@ -253,10 +253,10 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	if (engineConfiguration->timingMode == TM_FIXED) {
 		scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	}
-	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionOffset);
+	scheduleMsg(&logger, "ignitionOffset=%.2f", engineConfiguration->ignitionOffset);
 
 	scheduleMsg(&logger, "=== injection ===");
-	scheduleMsg(&logger, "injection %s offset=%f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
+	scheduleMsg(&logger, "injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
 			(double) engineConfiguration->extraInjectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
 
 	printOutputs(engineConfiguration);
@@ -389,15 +389,15 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 
 	thermistor_conf_s *tc = &config->config;
 
-	scheduleMsg(&logger, "%s volts=%f Celsius=%f sensorR=%f on channel %d", msg, voltage, t, r, adcChannel);
+	scheduleMsg(&logger, "%s volts=%.2f Celsius=%.2f sensorR=%.2f on channel %d", msg, voltage, t, r, adcChannel);
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(msg, adcChannel, pinNameBuffer));
-	scheduleMsg(&logger, "C=%f/R=%f C=%f/R=%f C=%f/R=%f",
+	scheduleMsg(&logger, "C=%.2f/R=%.2f C=%.2f/R=%.2f C=%.2f/R=%.2f",
 			tc->tempC_1, tc->resistance_1,
 			tc->tempC_2, tc->resistance_2,
 			tc->tempC_3, tc->resistance_3);
 
 	// %.5f
-	scheduleMsg(&logger, "bias resistor=%fK A=%.5f B=%.5f C=%.5f", tc->bias_resistor / 1000,
+	scheduleMsg(&logger, "bias resistor=%.2fK A=%.5f B=%.5f C=%.5f", tc->bias_resistor / 1000,
 			tm->s_h_a, tm->s_h_b, tm->s_h_c);
 	scheduleMsg(&logger, "==============================");
 }
@@ -410,10 +410,10 @@ static void printTPSInfo(void) {
 	}
 	static char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
+	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
 			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tpsAdcChannel, pinNameBuffer));
 #endif /* EFI_PROD_CODE */
-	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS12bitAdc() / TPS_TS_CONVERSION, getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS12bitAdc() / TPS_TS_CONVERSION, getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
 			getTpsRateOfChange());
 }
 
@@ -436,7 +436,7 @@ static void printTemperatureInfo(void) {
 	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
 			hwPortname(boardConfiguration->acRelayPin));
 
-	scheduleMsg(&logger, "warmupPID=%d corr=%f", boardConfiguration->useWarmupPidAfr,
+	scheduleMsg(&logger, "warmupPID=%d corr=%.2f", boardConfiguration->useWarmupPidAfr,
 			engine->engineState.cltFuelCorrection);
 
 #endif /* EFI_ANALOG_SENSORS */
@@ -471,13 +471,13 @@ static void setRpmHardLimit(int value) {
 
 static void setCrankingIACExtra(float percent) {
 	engineConfiguration->crankingIACposition = percent;
-	scheduleMsg(&logger, "cranking_iac %f", percent);
+	scheduleMsg(&logger, "cranking_iac %.2f", percent);
 
 }
 
 static void setCrankingFuel(float timeMs) {
 	engineConfiguration->cranking.baseFuel = timeMs;
-	scheduleMsg(&logger, "cranking_fuel %f", timeMs);
+	scheduleMsg(&logger, "cranking_fuel %.2f", timeMs);
 
 	printTemperatureInfo();
 }
@@ -567,7 +567,7 @@ static void setCrankingChargeAngle(float value) {
 static void setGlobalFuelCorrection(float value) {
 	if (value < 0.01 || value > 50)
 		return;
-	scheduleMsg(&logger, "setting fuel mult=%f", value);
+	scheduleMsg(&logger, "setting fuel mult=%.2f", value);
 	engineConfiguration->globalFuelCorrection = value;
 }
 
@@ -577,7 +577,7 @@ static void setCltBias(float value) {
 
 static void setFanSetting(float onTempC, float offTempC) {
 	if (onTempC <= offTempC) {
-		scheduleMsg(&logger, "ON temp [%f] should be above OFF temp [%f]", onTempC, offTempC);
+		scheduleMsg(&logger, "ON temp [%.2f] should be above OFF temp [%.2f]", onTempC, offTempC);
 		return;
 	}
 	engineConfiguration->fanOnTemperature = onTempC;
@@ -594,7 +594,7 @@ static void setVBattDivider(float value) {
 
 static void setWholeTimingMap(float value) {
 	// todo: table helper?
-	scheduleMsg(&logger, "Setting whole timing map to %f", value);
+	scheduleMsg(&logger, "Setting whole timing map to %.2f", value);
 	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
 		for (int r = 0; r < IGN_RPM_COUNT; r++) {
 			config->ignitionTable[l][r] = value;
@@ -603,17 +603,17 @@ static void setWholeTimingMap(float value) {
 }
 
 static void setWholePhaseMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole injection phase map to %f", value);
+	scheduleMsg(&logger, "Setting whole injection phase map to %.2f", value);
 	setMap(config->injectionPhase, value);
 }
 
 static void setWholeTimingMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole timing advance map to %f", value);
+	scheduleMsg(&logger, "Setting whole timing advance map to %.2f", value);
 	setWholeTimingMap(value);
 }
 
 static void setWholeVeCmd(float value) {
-	scheduleMsg(&logger, "Setting whole VE map to %f", value);
+	scheduleMsg(&logger, "Setting whole VE map to %.2f", value);
 	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting VE map not in SD mode is pointless");
 	}
@@ -621,7 +621,7 @@ static void setWholeVeCmd(float value) {
 }
 
 static void setWholeFuelMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole fuel map to %f", value);
+	scheduleMsg(&logger, "Setting whole fuel map to %.2f", value);
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
@@ -820,7 +820,7 @@ static void setTimingMap(const char * rpmStr, const char *loadStr, const char *v
 	loadIndex = loadIndex < 0 ? 0 : loadIndex;
 
 	config->ignitionTable[loadIndex][rpmIndex] = value;
-	scheduleMsg(&logger, "Setting timing map entry %d:%d to %f", rpmIndex, loadIndex, value);
+	scheduleMsg(&logger, "Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
 }
 
 static void setFuelMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
@@ -834,7 +834,7 @@ static void setFuelMap(const char * rpmStr, const char *loadStr, const char *val
 	loadIndex = loadIndex < 0 ? 0 : loadIndex;
 
 	config->fuelTable[loadIndex][rpmIndex] = value;
-	scheduleMsg(&logger, "Setting fuel map entry %d:%d to %f", rpmIndex, loadIndex, value);
+	scheduleMsg(&logger, "Setting fuel map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
 }
 
 static void setSpiMode(int index, bool mode) {
@@ -1067,7 +1067,7 @@ static void getValue(const char *paramStr) {
 	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
 		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
 			float value = *currentF->value;
-			scheduleMsg(&logger, "%s value: %f", currentF->token, value);
+			scheduleMsg(&logger, "%s value: %.2f", currentF->token, value);
 			return;
 		}
 		currentF++;
@@ -1086,7 +1086,7 @@ static void getValue(const char *paramStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
 		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
-		scheduleMsg(&logger, "global_trigger_offset=%f", engineConfiguration->globalTriggerAngleOffset);
+		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
 		scheduleMsg(&logger, "isHip9011Enabled=%d", boardConfiguration->isHip9011Enabled);
 	}

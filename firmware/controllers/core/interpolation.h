@@ -37,11 +37,11 @@ int needInterpolationLogging(void);
 template<typename vType>
 float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, vType* map[]) {
 	if (cisnan(x)) {
-		warning(CUSTOM_INTEPOLATE_ERROR_3, "%f: x is NaN in interpolate3d", x);
+		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;
 	}
 	if (cisnan(y)) {
-		warning(CUSTOM_INTEPOLATE_ERROR_2, "%f: y is NaN in interpolate3d", y);
+		warning(CUSTOM_INTEPOLATE_ERROR_2, "%.2f: y is NaN in interpolate3d", y);
 		return NAN;
 	}
 
@@ -123,8 +123,8 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {
-		printf("X=%f:\r\nrange %f - %f\r\n", x, xMin, xMax);
-		printf("X interpolation range %f   %f result %f\r\n", rpmMinKeyMinValue, rpmMaxKeyMinValue, keyMinValue);
+		printf("X=%.2f:\r\nrange %.2f - %.2f\r\n", x, xMin, xMax);
+		printf("X interpolation range %.2f   %.2f result %.2f\r\n", rpmMinKeyMinValue, rpmMaxKeyMinValue, keyMinValue);
 	}
 #endif /* DEBUG_INTERPOLATION */
 
@@ -138,8 +138,8 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {
-		printf("key=%f:\r\nrange %f - %f\r\n", y, keyMin, keyMax);
-		printf("key interpolation range %f   %f result %f\r\n", rpmMinKeyMaxValue, rpmMaxKeyMaxValue, keyMaxValue);
+		printf("key=%.2f:\r\nrange %.2f - %.2f\r\n", y, keyMin, keyMax);
+		printf("key interpolation range %.2f   %.2f result %.2f\r\n", rpmMinKeyMaxValue, rpmMaxKeyMaxValue, keyMaxValue);
 	}
 #endif /* DEBUG_INTERPOLATION */
 

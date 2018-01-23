@@ -70,16 +70,16 @@ static percent_t currentIdlePosition = -100.0f;
 static percent_t baseIdlePosition = currentIdlePosition;
 
 void idleDebug(const char *msg, percent_t value) {
-	scheduleMsg(logger, "idle debug: %s%f", msg, value);
+	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
 }
 
 static void showIdleInfo(void) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", idleModeStr,
+	scheduleMsg(logger, "idleMode=%s position=%.2f isStepper=%s", idleModeStr,
 			getIdlePosition(), boolToString(boardConfiguration->useStepperIdle));
 
 	if (boardConfiguration->useStepperIdle) {
-		scheduleMsg(logger, "directionPin=%s reactionTime=%f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
+		scheduleMsg(logger, "directionPin=%s reactionTime=%.2f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
 				engineConfiguration->idleStepperReactionTime);
 		scheduleMsg(logger, "stepPin=%s steps=%d", hwPortname(boardConfiguration->idle.stepperStepPin),
 				engineConfiguration->idleStepperTotalSteps);

@@ -96,7 +96,7 @@ static msg_t AltCtrlThread(int param) {
 
 		currentAltDuty = altPid.getValue(targetVoltage, vBatt);
 		if (boardConfiguration->isVerboseAlternator) {
-			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, vBatt,
+			scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
 		}
 
@@ -113,15 +113,15 @@ void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
 			hwPortname(boardConfiguration->alternatorControlPin),
 			engineConfiguration->alternatorControl.period);
-	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControl.pFactor,
+	scheduleMsg(logger, "p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
+	scheduleMsg(logger, "vbatt=%.2f/duty=%.2f/target=%.2f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 
 void setAltPFactor(float p) {
 	engineConfiguration->alternatorControl.pFactor = p;
-	scheduleMsg(logger, "setAltPid: %f", p);
+	scheduleMsg(logger, "setAltPid: %.2f", p);
 	pidReset();
 	showAltInfo();
 }

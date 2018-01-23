@@ -79,7 +79,7 @@ void startEmulator(void) {
 
 //static void printAdvance(int rpm, int maf100) {
 //	float advance = getAdvance(rpm, maf100 / 100.0);
-//	print("advance for %d rpm %d maf100: %f\r\n", rpm, maf100, advance);
+//	print("advance for %d rpm %d maf100: %.2f\r\n", rpm, maf100, advance);
 //}
 
 static void initECUstimulator(Engine *engine) {

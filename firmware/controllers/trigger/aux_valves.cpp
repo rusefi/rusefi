@@ -107,7 +107,7 @@ void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (engine->engineState.auxValveStart >= engine->engineState.auxValveEnd) {
 		// this is a fatal error to make this really visible
-		firmwareError(CUSTOM_AUX_OUT_OF_ORDER, "out of order at %f %f %f", x,
+		firmwareError(CUSTOM_AUX_OUT_OF_ORDER, "out of order at %.2f %.2f %.2f", x,
 				engine->engineState.auxValveStart,
 				engine->engineState.auxValveEnd);
 	}

@@ -353,7 +353,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
-				scheduleMsg(logger, "calc %d: action %s value %f", i, action2String(calc.calcLogAction[i]), calc.calcLogValue[i]);
+				scheduleMsg(logger, "calc %d: action %s value %.2f", i, action2String(calc.calcLogAction[i]), calc.calcLogValue[i]);
 			}
 
 			scheduleMsg(logger, "setPin %s %s", msg, value ? "on" : "off");
@@ -438,7 +438,7 @@ static void showFsio(const char *msg, LEElement *element) {
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
 	while (element != NULL) {
-		scheduleMsg(logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
+		scheduleMsg(logger, "action %d: fValue=%.2f iValue=%d", element->action, element->fValue, element->iValue);
 		element = element->next;
 	}
 	scheduleMsg(logger, "<end>");
@@ -471,17 +471,17 @@ static void showFsioInfo(void) {
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
 			 * is the fact that the target audience is more software developers
 			 */
-			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", (i + 1), exp,
+			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%.2f", (i + 1), exp,
 					hwPortname(boardConfiguration->fsioOutputPins[i]), boardConfiguration->fsioFrequency[i],
 					engine->fsioLastValue[i]);
-//			scheduleMsg(logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
+//			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		float v = boardConfiguration->fsio_setting[i];
 		if (!cisnan(v)) {
-			scheduleMsg(logger, "user property #%d: %f", i + 1, v);
+			scheduleMsg(logger, "user property #%d: %.2f", i + 1, v);
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
@@ -539,7 +539,7 @@ static void rpnEval(char *line) {
 		scheduleMsg(logger, "parsing failed");
 	} else {
 		float result = evalCalc.getValue2(0, e PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleMsg(logger, "Evaluate result: %f", result);
+		scheduleMsg(logger, "Evaluate result: %.2f", result);
 	}
 #endif
 }

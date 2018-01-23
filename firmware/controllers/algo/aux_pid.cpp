@@ -83,7 +83,7 @@ static msg_t auxPidThread(int param) {
 
 			percent_t pwm = auxPid.getValue(targetValue, value);
 			if (engineConfiguration->isVerboseAuxPid1) {
-				scheduleMsg(logger, "aux duty: %f/value=%f/p=%f/i=%f/d=%f int=%f", pwm, value,
+				scheduleMsg(logger, "aux duty: %.2f/value=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", pwm, value,
 						auxPid.getP(), auxPid.getI(), auxPid.getD(), auxPid.getIntegration());
 			}
 

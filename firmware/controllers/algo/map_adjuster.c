@@ -52,10 +52,10 @@ static int adjustCell(int i, int j, void (*callback)(int, float, float)) {
 
 	if (value < TARGET_MIN_AFR) {
 		float currentMult = adjustments.values[i][j];
-//		printf("adj %d %d. cur=%f\r\n", i, j, currentMult);
+//		printf("adj %d %d. cur=%.2f\r\n", i, j, currentMult);
 		float newValue = maxF(0.1, MULT_STEP_DOWN * currentMult);
 		adjustments.values[i][j] = newValue;
-//		printf("adj %d %d. new=%f\r\n", i, j, adjustments.values[i][j]);
+//		printf("adj %d %d. new=%.2f\r\n", i, j, adjustments.values[i][j]);
 		if (callback != NULL)
 			callback(MAX_RPM * i / AVG_TAB_SIZE, 1.0 * MAX_KEY * j / AVG_TAB_SIZE, newValue);
 		return 1;

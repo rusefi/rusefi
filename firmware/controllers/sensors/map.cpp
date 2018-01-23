@@ -104,7 +104,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
  */
 float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorDetectionTooLow) || mapKPa > CONFIG(mapErrorDetectionTooHigh)) {
-		warning(OBD_Manifold_Absolute_Pressure_Circuit_Malfunction, "unexpected MAP value: %f", mapKPa);
+		warning(OBD_Manifold_Absolute_Pressure_Circuit_Malfunction, "unexpected MAP value: %.2f", mapKPa);
 		return 0;
 	}
 	return mapKPa;
@@ -214,13 +214,13 @@ extern int mapMinBufferLength;
 
 static void printMAPInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	scheduleMsg(logger, "instant value=%fkPa", getRawMap());
+	scheduleMsg(logger, "instant value=%.2fkPa", getRawMap());
 
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		scheduleMsg(logger, "instant value=%fHz @ %s", mapFreq, hwPortname(boardConfiguration->frequencyReportingMapInputPin));
+		scheduleMsg(logger, "instant value=%.2fHz @ %s", mapFreq, hwPortname(boardConfiguration->frequencyReportingMapInputPin));
 	} else {
-		scheduleMsg(logger, "map type=%d/%s MAP=%fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
+		scheduleMsg(logger, "map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 				getMap(),
 				mapMinBufferLength);
@@ -228,10 +228,10 @@ static void printMAPInfo(void) {
 		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
 		static char pinNameBuffer[16];
 
-		scheduleMsg(logger, "MAP %fv @%s", getVoltage("mapinfo", mapAdc),
+		scheduleMsg(logger, "MAP %.2fv @%s", getVoltage("mapinfo", mapAdc),
 				getPinNameByAdcChannel("map", mapAdc, pinNameBuffer));
 		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "at %fv=%f at %fv=%f",
+			scheduleMsg(logger, "at %.2fv=%.2f at %.2fv=%.2f",
 					engineConfiguration->mapLowValueVoltage,
 					engineConfiguration->map.sensor.lowValue,
 					engineConfiguration->mapHighValueVoltage,
@@ -240,9 +240,9 @@ static void printMAPInfo(void) {
 	}
 
 	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		scheduleMsg(logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
+		scheduleMsg(logger, "baro type=%d value=%.2f", engineConfiguration->baroSensor.type, getBaroPressure());
 		if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
-			scheduleMsg(logger, "min=%f@%f max=%f@%f",
+			scheduleMsg(logger, "min=%.2f@%.2f max=%.2f@%.2f",
 					engineConfiguration->baroSensor.lowValue,
 					engineConfiguration->mapLowValueVoltage,
 					engineConfiguration->baroSensor.highValue,
@@ -270,7 +270,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(useFixedBaroCorrFromMap)) {
 		// Read initial MAP sensor value and store it for Baro correction.
 		storedInitialBaroPressure = getRawMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-		scheduleMsg(logger, "Get initial baro MAP pressure = %fkPa", storedInitialBaroPressure);
+		scheduleMsg(logger, "Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
 		// validate if it's within a reasonable range (the engine should not be spinning etc.)
 		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure);
 		if (!cisnan(storedInitialBaroPressure)) {
