@@ -12,8 +12,80 @@
 #include "interpolation.h"
 #include "engine.h"
 #include "analog_input.h"
+#include "cyclic_buffer.h"
 
 EXTERN_ENGINE;
+
+#ifdef EFI_NARROW_EGO_AVERAGING
+// Needed by narrow EGOs (see updateEgoAverage()).
+// getAfr() is called at ~50Hz, so we store at most (1<<3)*32 EGO values for ~5 secs.
+#define EGO_AVG_SHIFT 3
+#define EGO_AVG_BUF_SIZE 32 // 32*sizeof(float)
+
+static bool useAveraging = false;
+// Circular running-average buffer, used by CIC-like averaging filter
+static cyclic_buffer<float, EGO_AVG_BUF_SIZE> egoAfrBuf;
+// Total ego iterations (>240 days max. for 10ms update period)
+static int totalEgoCnt = 0;
+// We need this to calculate the real number of values stored in the buffer.
+static int prevEgoCnt = 0;
+
+// todo: move it to engineConfiguration
+static const float stoichAfr = 14.7f;
+static const float maxAfrDeviation = 5.0f;	// 9.7..19.7
+static const int minAvgSize = (EGO_AVG_BUF_SIZE / 2);	// ~0.6 sec for 20ms period of 'fast' callback, and it matches a lag time of most narrow EGOs
+static const int maxAvgSize = (EGO_AVG_BUF_SIZE - 1);	// the whole buffer
+
+// we store the last measured AFR value to predict the current averaging window size
+static float lastAfr = stoichAfr;
+
+
+void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// Our averaging is intended for use only with Narrow EGOs.
+	if (boardConfiguration->afr_type == ES_NarrowBand) {
+		totalEgoCnt = prevEgoCnt = 0;
+		egoAfrBuf.clear();
+		useAveraging = true;
+	}
+}
+
+static float updateEgoAverage(float afr) {
+	// use a variation of cascaded integrator-comb (CIC) filtering
+	totalEgoCnt++;
+	int localBufPos = (totalEgoCnt >> EGO_AVG_SHIFT) % EGO_AVG_BUF_SIZE;
+	int localPrevBufPos = ((totalEgoCnt - 1) >> EGO_AVG_SHIFT) % EGO_AVG_BUF_SIZE;
+	
+	// reset old buffer cell
+	if (localPrevBufPos != localBufPos) {
+		egoAfrBuf.elements[localBufPos] = 0;
+		// Remove (1 << EGO_AVG_SHIFT) elements from our circular buffer (except for the 1st cycle).
+		if (totalEgoCnt >= (EGO_AVG_BUF_SIZE << EGO_AVG_SHIFT))
+			prevEgoCnt += (1 << EGO_AVG_SHIFT);
+	}
+	// integrator stage
+	egoAfrBuf.elements[localBufPos] += afr;
+	
+	// Change window size depending on |AFR-stoich| deviation.
+	// The narrow EGO is very noisy when AFR is close to shoich.
+	// And we need the fastest EGO response when AFR has the extreme deviation (way too lean/rich).
+	float avgSize = maxAvgSize;//interpolateClamped(minAvgSize, maxAfrDeviation, maxAvgSize, 0.0f, absF(lastAfr - stoichAfr));
+	// choose the number of recently filled buffer cells for averaging
+	int avgCnt = (int)efiRound(avgSize, 1.0f) << EGO_AVG_SHIFT;
+	// limit averaging count to the real stored count
+	int startAvgCnt = maxI(totalEgoCnt - avgCnt, prevEgoCnt);
+	
+	// return moving average of N last sums
+	float egoAfrSum = 0;
+	for (int i = (totalEgoCnt >> EGO_AVG_SHIFT); i >= (startAvgCnt >> EGO_AVG_SHIFT); i--) {
+		egoAfrSum += egoAfrBuf.elements[i % EGO_AVG_BUF_SIZE];
+	}
+	// we divide by a real number of stored values to get an exact average
+	return egoAfrSum / float(totalEgoCnt - startAvgCnt);
+}
+#else
+void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+}
+#endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
@@ -25,7 +97,14 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float volts = getVoltageDivided("ego", sensor->hwChannel);
 
 	if (boardConfiguration->afr_type == ES_NarrowBand) {
-		return interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen, NARROW_BAND_WIDE_BAND_CONVERSION_SIZE);
+		float afr = interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen, NARROW_BAND_WIDE_BAND_CONVERSION_SIZE);
+#ifdef EFI_NARROW_EGO_AVERAGING
+		if (useAveraging)
+			afr = updateEgoAverage(afr);
+		return (lastAfr = afr);
+#else
+		return afr;
+#endif
 	}
 
 	return interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)

@@ -675,6 +675,8 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	}
 #endif /* EFI_MAP_AVERAGING */
 
+	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	if (boardConfiguration->isEngineControlEnabled) {
 		/**
