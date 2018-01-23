@@ -53,7 +53,7 @@ void PwmConfig::init(float *st, single_wave_s *waves) {
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	if (dutyCycle < 0 || dutyCycle > 1) {
-		firmwareError(CUSTOM_ERR_ASSERT_VOID, "spwd:dutyCycle %f", dutyCycle);
+		firmwareError(CUSTOM_ERR_ASSERT_VOID, "spwd:dutyCycle %.2f", dutyCycle);
 	}
 	multiWave.setSwitchTime(0, dutyCycle);
 }
@@ -64,7 +64,7 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	float switchTime = state->multiWave.getSwitchTime(state->safe.phaseIndex);
 	float periodNt = state->safe.periodNt;
 #if DEBUG_PWM
-	scheduleMsg(&logger, "iteration=%d switchTime=%f period=%f", iteration, switchTime, period);
+	scheduleMsg(&logger, "iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
 #endif
 
 	/**
@@ -117,7 +117,7 @@ void PwmConfig::handleCycleStart() {
 efitimeus_t PwmConfig::togglePwmState() {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
-	scheduleMsg(&logger, "period=%f safe.period=%f", period, safe.period);
+	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.period);
 #endif
 
 	if (cisnan(periodNt)) {
@@ -186,7 +186,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 		state->multiWave.setSwitchTime(phaseIndex, switchTimes[phaseIndex]);
 
 		for (int waveIndex = 0; waveIndex < waveCount; waveIndex++) {
-//			print("output switch time index (%d/%d) at %f to %d\r\n", phaseIndex,waveIndex,
+//			print("output switch time index (%d/%d) at %.2f to %d\r\n", phaseIndex,waveIndex,
 //					switchTimes[phaseIndex], pinStates[waveIndex][phaseIndex]);
 			state->multiWave.waves[waveIndex].pinStates[phaseIndex] = pinStates[waveIndex][phaseIndex];
 		}

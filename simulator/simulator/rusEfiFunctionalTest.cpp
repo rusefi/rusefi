@@ -64,9 +64,9 @@ static void runChprintfTest() {
 	msObjectInit(&testStream, (uint8_t *) testBuffer, sizeof(testBuffer), 0);
 
 
-// it's a very, very long and mostly forgotten story how this became our %f precision format
+// it's a very, very long and mostly forgotten story how this became our %.2f precision format
 	testStream.eos = 0; // reset
-	chprintf((BaseSequentialStream*)&testStream, "%f/%.4f/%.4f", 0.239f, 239.932, 0.1234);
+	chprintf((BaseSequentialStream*)&testStream, "%.2f/%.4f/%.4f", 0.239f, 239.932, 0.1234);
 	testStream.buffer[testStream.eos] = 0;
 
 	assertString(testBuffer, "0.23/239.9320/0.1234");
@@ -87,8 +87,8 @@ static void runChprintfTest() {
 	}
 	{
 		LoggingWithStorage testLogging("test");
-		appendPrintf(&testLogging, "a%fb", -1.2);
-		assertString(testLogging.buffer, "a-1.20b");
+		appendPrintf(&testLogging, "a%.2fb%fc", -1.2, -3.4);
+		assertString(testLogging.buffer, "a-1.20b-3.400000095c");
 	}
 
 }

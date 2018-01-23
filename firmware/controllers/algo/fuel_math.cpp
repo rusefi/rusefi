@@ -106,7 +106,7 @@ angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	angle_t value = fuelPhaseMap.getValue(rpm, engineLoad);
 	if (cisnan(value)) {
-		firmwareError(CUSTOM_ERR_ASSERT, "inj offset#1 %f %f", rpm, engineLoad);
+		firmwareError(CUSTOM_ERR_ASSERT, "inj offset#1 %.2f %.2f", rpm, engineLoad);
 		return 0;
 	}
 	efiAssert(!cisnan(value), "inj offset#1", 0);
@@ -167,7 +167,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
 		efiAssert(!cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
-	printf("baseFuel=%f fuelPerCycle=%f \t\n",
+	printf("baseFuel=%.2f fuelPerCycle=%.2f \t\n",
 			baseFuel, fuelPerCycle);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 	}
@@ -206,7 +206,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(vBatt)) {
-		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
+		warning(OBD_System_Voltage_Malfunction, "vBatt=%.2f", vBatt);
 		return 0;
 	}
 	float vBattCorrection = interpolate2d("lag", vBatt, INJECTOR_LAG_CURVE);

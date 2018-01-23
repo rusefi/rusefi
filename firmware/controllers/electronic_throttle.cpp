@@ -149,7 +149,7 @@ static void setThrottleConsole(int level) {
 
 	float dc = 0.01 + (minI(level, 98)) / 100.0;
 	etbPwmUp.setSimplePwmDutyCycle(dc);
-	print("st = %f\r\n", dc);
+	print("st = %.2f\r\n", dc);
 }
 
 static void showEthInfo(void) {
@@ -158,15 +158,15 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "etbAutoTune=%d",
 			engine->etbAutoTune);
 
-	scheduleMsg(&logger, "throttlePedal=%f %f/%f @%s",
+	scheduleMsg(&logger, "throttlePedal=%.2f %.2f/%.2f @%s",
 			getPedalPosition(),
 			engineConfiguration->throttlePedalUpVoltage,
 			engineConfiguration->throttlePedalWOTVoltage,
 			getPinNameByAdcChannel("tPedal", engineConfiguration->pedalPositionChannel, pinNameBuffer));
 
-	scheduleMsg(&logger, "TPS=%f", getTPS());
+	scheduleMsg(&logger, "TPS=%.2f", getTPS());
 
-	scheduleMsg(&logger, "etbControlPin1=%s duty=%f freq=%d",
+	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
 			hwPortname(boardConfiguration->etbControlPin1),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);

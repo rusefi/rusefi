@@ -513,7 +513,7 @@ void AdcDevice::enableChannelAndPin(adc_channel_e hwChannel) {
 static void printAdcValue(adc_channel_e channel) {
 	int value = getAdcValue("print", channel);
 	float volts = adcToVoltsDivided(value);
-	scheduleMsg(&logger, "adc voltage : %f", volts);
+	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
 
 adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) {
@@ -537,7 +537,7 @@ static void printFullAdcReport(Logging *logger) {
 			appendPrintf(logger, " ch%d %s%d", index, portname(port), pin);
 			appendPrintf(logger, " ADC%d 12bit=%d", hwIndex, adcValue);
 			float volts = adcToVolts(adcValue);
-			appendPrintf(logger, " v=%f", volts);
+			appendPrintf(logger, " v=%.2f", volts);
 
 			appendMsgPostfix(logger);
 			scheduleLogging(logger);

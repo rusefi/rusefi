@@ -126,7 +126,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
 	if (cisnan(dwellMs) || dwellMs <= 0) {
-		warning(CUSTOM_DWELL, "invalid dwell to handle: %f at %d", dwellMs, rpm);
+		warning(CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
 		return;
 	}
 
@@ -135,7 +135,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-		scheduleMsg(logger, "Negative spark delay=%f", chargeDelayUs);
+		scheduleMsg(logger, "Negative spark delay=%.2f", chargeDelayUs);
 #endif /* EFI_PROD_CODE */
 		chargeDelayUs = 0;
 		return;
@@ -293,7 +293,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 		warning(CUSTOM_ZERO_DWELL, "dwell is zero?");
 	}
 	if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
-		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %f", engine->engineState.dwellAngle);
+		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %.2f", engine->engineState.dwellAngle);
 	}
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that

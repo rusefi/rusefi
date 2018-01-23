@@ -35,7 +35,7 @@ void applyPinState(PwmConfig *state, int stateIndex) {
 void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 	efiAssertVoid(dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 	if (frequency < 1) {
-		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %f", frequency);
+		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
 		return;
 	}
 

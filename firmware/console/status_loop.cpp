@@ -503,33 +503,33 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	float magicAir = getCylinderAirMass(engineConfiguration, 1, 100, convertCelsiusToKelvin(20));
 
-	scheduleMsg(&logger, "SD magic fuel %f", sdMath(engineConfiguration, magicAir, 14.7));
-	scheduleMsg(&logger, "inj flow %fcc/min displacement %fL", engineConfiguration->injector.flow,
+	scheduleMsg(&logger, "SD magic fuel %.2f", sdMath(engineConfiguration, magicAir, 14.7));
+	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "injection phase=%f/global fuel correction=%f", getinjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getinjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
 
-	scheduleMsg(&logger2, "baro correction=%f", engine->engineState.baroCorrection);
+	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
-	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE));
+	scheduleMsg(&logger, "base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
+	scheduleMsg(&logger2, "cranking fuel: %.2f", getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float iatCorrection = engine->engineState.iatFuelCorrection;
 		float cltCorrection = engine->engineState.cltFuelCorrection;
 		floatms_t injectorLag = engine->engineState.injectorLag;
-		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
-		scheduleMsg(&logger2, "baseFuel=%f", baseFuelMs);
+		scheduleMsg(&logger2, "rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
+		scheduleMsg(&logger2, "baseFuel=%.2f", baseFuelMs);
 
-		scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
+		scheduleMsg(&logger2, "iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
 				injectorLag);
 
 		float value = getRunningFuel(baseFuelMs PASS_ENGINE_PARAMETER_SUFFIX);
-		scheduleMsg(&logger2, "injection pulse width: %f", value);
+		scheduleMsg(&logger2, "injection pulse width: %.2f", value);
 	}
 #endif
 }

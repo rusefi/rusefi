@@ -47,7 +47,7 @@ MockAdcState::MockAdcState() {
 
 #if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
 void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
-	scheduleMsg(&logger, "fake voltage: channel %d value %f", hwChannel, voltage);
+	scheduleMsg(&logger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
 	hasMockAdc[hwChannel] = true;
@@ -483,7 +483,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 		pumpsCounter = newValue;
 
 		if (pumpsCounter == PUMPS_TO_PRIME) {
-			scheduleMsg(&logger, "let's squirt prime pulse %f", pumpsCounter);
+			scheduleMsg(&logger, "let's squirt prime pulse %.2f", pumpsCounter);
 			pumpsCounter = 0;
 		} else {
 			scheduleMsg(&logger, "setPumpsCounter %d", pumpsCounter);
