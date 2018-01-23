@@ -19,7 +19,7 @@ static const short CB_MAX_SIZE = 128;
 
 #define BUFFER_MAX_VALUE 200123
 
-template<typename T>
+template<typename T, size_t maxSize = CB_MAX_SIZE>
 class cyclic_buffer
 {
   public:
@@ -44,7 +44,7 @@ class cyclic_buffer
     int getSize();
     int getCount();
     void clear();
-    volatile T elements[CB_MAX_SIZE];
+    volatile T elements[maxSize];
     volatile int currentIndex;
 
   private:
@@ -56,24 +56,24 @@ class cyclic_buffer
     int size;
 };
 
-template<typename T>
-cyclic_buffer<T>::cyclic_buffer() {
-  baseC(CB_MAX_SIZE);
+template<typename T, size_t maxSize>
+cyclic_buffer<T, maxSize>::cyclic_buffer() {
+  baseC(maxSize);
 }
 
-template<typename T>
-cyclic_buffer<T>::cyclic_buffer(int size) {
+template<typename T, size_t maxSize>
+cyclic_buffer<T, maxSize>::cyclic_buffer(int size) {
   baseC(size);
 }
 
-template<typename T>
-void cyclic_buffer<T>::baseC(int size) {
+template<typename T, size_t maxSize>
+void cyclic_buffer<T, maxSize>::baseC(int size) {
 	currentIndex = 0;
 	setSize(size);
 }
 
-template<typename T>
-cyclic_buffer<T>::cyclic_buffer(const cyclic_buffer& cb) {
+template<typename T, size_t maxSize>
+cyclic_buffer<T, maxSize>::cyclic_buffer(const cyclic_buffer& cb) {
 	//Deep copy the data
 	currentIndex = cb.currentIndex;
 	count = cb.count;
@@ -83,13 +83,13 @@ cyclic_buffer<T>::cyclic_buffer(const cyclic_buffer& cb) {
 	}
 }
 
-template<typename T>
-cyclic_buffer<T>::~cyclic_buffer() {
+template<typename T, size_t maxSize>
+cyclic_buffer<T, maxSize>::~cyclic_buffer() {
 	//No dynamic allocation - safe to leave
 }
 
-//template<typename T>
-//cyclic_buffer& cyclic_buffer<T>::operator=(const cyclic_buffer<T>& rhCb) {
+//template<typename T, size_t maxSize>
+//cyclic_buffer& cyclic_buffer<T, maxSize>::operator=(const cyclic_buffer<T, maxSize>& rhCb) {
 //	//Deep copy
 //	currentIndex = rhCb.currentIndex;
 //	count = rhCb.count;
@@ -99,8 +99,8 @@ cyclic_buffer<T>::~cyclic_buffer() {
 //	return *this;
 //}
 
-template<typename T>
-void cyclic_buffer<T>::add(T value) {
+template<typename T, size_t maxSize>
+void cyclic_buffer<T, maxSize>::add(T value) {
 	elements[currentIndex] = value;
 
 	++currentIndex;
@@ -111,24 +111,24 @@ void cyclic_buffer<T>::add(T value) {
 	++count;
 }
 
-template<typename T>
-void cyclic_buffer<T>::setSize(int size) {
+template<typename T, size_t maxSize>
+void cyclic_buffer<T, maxSize>::setSize(int size) {
 	clear();
-	this->size = size < CB_MAX_SIZE ? size : CB_MAX_SIZE;
+	this->size = size < maxSize ? size : maxSize;
 }
 
-template<typename T>
-int cyclic_buffer<T>::getSize() {
+template<typename T, size_t maxSize>
+int cyclic_buffer<T, maxSize>::getSize() {
 	return size;
 }
 
-template<typename T>
-int cyclic_buffer<T>::getCount() {
+template<typename T, size_t maxSize>
+int cyclic_buffer<T, maxSize>::getCount() {
 	return count;
 }
 
-template<typename T>
-T cyclic_buffer<T>::get(int index) {
+template<typename T, size_t maxSize>
+T cyclic_buffer<T, maxSize>::get(int index) {
 	while (index < 0) {
 		index += size;
 	}
@@ -138,8 +138,8 @@ T cyclic_buffer<T>::get(int index) {
 	return elements[index];
 }
 
-template<typename T>
-T cyclic_buffer<T>::maxValue(int length) {
+template<typename T, size_t maxSize>
+T cyclic_buffer<T, maxSize>::maxValue(int length) {
 	if (length > count) {
 		// not enough data in buffer
 		length = count;
@@ -159,8 +159,8 @@ T cyclic_buffer<T>::maxValue(int length) {
 	return result;
 }
 
-template<typename T>
-T cyclic_buffer<T>::minValue(int length) {
+template<typename T, size_t maxSize>
+T cyclic_buffer<T, maxSize>::minValue(int length) {
 	if (length > count) {
 		length = count;
 	}
@@ -179,8 +179,8 @@ T cyclic_buffer<T>::minValue(int length) {
 	return result;
 }
 
-template<typename T>
-T cyclic_buffer<T>::sum(int length) {
+template<typename T, size_t maxSize>
+T cyclic_buffer<T, maxSize>::sum(int length) {
 	if (length > count) {
 		length = count;
 	}
@@ -200,8 +200,8 @@ T cyclic_buffer<T>::sum(int length) {
 	return result;
 }
 
-template<typename T>
-void cyclic_buffer<T>::clear() {
+template<typename T, size_t maxSize>
+void cyclic_buffer<T, maxSize>::clear() {
 	memset((void*) elements, 0, sizeof(elements)); // I would usually use static_cast, but due to the elements being volatile we cannot.
 	count = 0;
 	currentIndex = 0;
