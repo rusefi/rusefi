@@ -1,11 +1,4 @@
-# depends on
-# mkdir -p C:\stuff\rusefi.git2svn\git
-# cd C:\stuff\rusefi.git2svn\git
-# git clone https://github.com/rusefi/rusefi
-# cd C:\stuff\rusefi.git2svn\git\rusefi
-#
-#
-
+rem See also git2svn_init.bat
 
 
 echo This script should be executed from the root of rusEfi master GITHUB local copy
