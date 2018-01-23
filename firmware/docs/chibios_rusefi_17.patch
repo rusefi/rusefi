@@ -1,0 +1,52 @@
+diff -uwr Chibios.17_original/.git/FETCH_HEAD Chibios.17_rusefi/.git/FETCH_HEAD
+--- Chibios.17_original/.git/FETCH_HEAD	2018-01-23 13:35:28.466478000 -0500
++++ Chibios.17_rusefi/.git/FETCH_HEAD	2018-01-23 13:36:20.103431400 -0500
+@@ -1,11 +1,11 @@
+-c71ef710730191f767d077bc660142b1c8984915		branch 'stable_17.6.x' of https://github.com/rusefi/ChibiOS
++c71ef710730191f767d077bc660142b1c8984915		branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
+ b263680b98fbb41e939ce62e55916254ece4acc7	not-for-merge	branch 'master' of https://github.com/rusefi/ChibiOS
+ a4b2c113e74e026dfc7cc02060b32ab3f047ae8d	not-for-merge	branch 'revert-10-master' of https://github.com/rusefi/ChibiOS
+ e61ff3aa1c1fd0f1057e08ae4551abbc01595550	not-for-merge	branch 'stable_1.0.x' of https://github.com/rusefi/ChibiOS
+ 3957b74f871e2ac11b8447aa067b1cece4861970	not-for-merge	branch 'stable_1.2.x' of https://github.com/rusefi/ChibiOS
+ 06c45ae2ef94ff95bbdab317bc53aebe7c51aacc	not-for-merge	branch 'stable_1.4.x' of https://github.com/rusefi/ChibiOS
+ c8198eb36c2174484141f0119f720bcf0468a0b9	not-for-merge	branch 'stable_16.1.x' of https://github.com/rusefi/ChibiOS
+-c71ef710730191f767d077bc660142b1c8984915	not-for-merge	branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
++c71ef710730191f767d077bc660142b1c8984915	not-for-merge	branch 'stable_17.6.x' of https://github.com/rusefi/ChibiOS
+ e324eb668a8399c5e5342d3111d175f42f14b50b	not-for-merge	branch 'stable_2.0.x' of https://github.com/rusefi/ChibiOS
+ c807840cdcec4e09b3fd0d2268370d9a317f0b90	not-for-merge	branch 'stable_2.2.x' of https://github.com/rusefi/ChibiOS
+ 062803674562e117754c051992535d69a3762573	not-for-merge	branch 'stable_2.4.x' of https://github.com/rusefi/ChibiOS
+diff -uwr Chibios.17_original/.git/HEAD Chibios.17_rusefi/.git/HEAD
+--- Chibios.17_original/.git/HEAD	2018-01-23 13:35:05.866185300 -0500
++++ Chibios.17_rusefi/.git/HEAD	2018-01-23 13:36:11.715951700 -0500
+@@ -1 +1 @@
+-ref: refs/heads/stable_17.6.x
++ref: refs/heads/stable_17.6.rusefi
+diff -uwr Chibios.17_original/.git/config Chibios.17_rusefi/.git/config
+--- Chibios.17_original/.git/config	2018-01-23 13:35:05.874185700 -0500
++++ Chibios.17_rusefi/.git/config	2018-01-23 13:36:11.730952500 -0500
+@@ -8,6 +8,6 @@
+ [remote "origin"]
+ 	url = https://github.com/rusefi/ChibiOS
+ 	fetch = +refs/heads/*:refs/remotes/origin/*
+-[branch "stable_17.6.x"]
++[branch "stable_17.6.rusefi"]
+ 	remote = origin
+-	merge = refs/heads/stable_17.6.x
++	merge = refs/heads/stable_17.6.rusefi
+Binary files Chibios.17_original/.git/index and Chibios.17_rusefi/.git/index differ
+diff -uwr Chibios.17_original/.git/logs/HEAD Chibios.17_rusefi/.git/logs/HEAD
+--- Chibios.17_original/.git/logs/HEAD	2018-01-23 13:35:05.872185600 -0500
++++ Chibios.17_rusefi/.git/logs/HEAD	2018-01-23 13:36:11.721952000 -0500
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 c71ef710730191f767d077bc660142b1c8984915 rusefi <arro239+rusefi@gmail.com> 1516732505 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 c71ef710730191f767d077bc660142b1c8984915 rusefi <arro239+rusefi@gmail.com> 1516732571 -0500	clone: from https://github.com/rusefi/ChibiOS
+Only in Chibios.17_rusefi/.git/logs/refs/heads: stable_17.6.rusefi
+Only in Chibios.17_original/.git/logs/refs/heads: stable_17.6.x
+diff -uwr Chibios.17_original/.git/logs/refs/remotes/origin/HEAD Chibios.17_rusefi/.git/logs/refs/remotes/origin/HEAD
+--- Chibios.17_original/.git/logs/refs/remotes/origin/HEAD	2018-01-23 13:35:05.864185200 -0500
++++ Chibios.17_rusefi/.git/logs/refs/remotes/origin/HEAD	2018-01-23 13:36:11.712951500 -0500
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516732505 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516732571 -0500	clone: from https://github.com/rusefi/ChibiOS
+Only in Chibios.17_rusefi/.git/refs/heads: stable_17.6.rusefi
+Only in Chibios.17_original/.git/refs/heads: stable_17.6.x
