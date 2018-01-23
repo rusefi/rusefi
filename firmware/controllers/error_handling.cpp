@@ -92,15 +92,11 @@ void addWarningCode(obd_code_e code) {
 
 // todo: look into chsnprintf
 // todo: move to some util file & reuse for 'firmwareError' method
-void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
+static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
 	stream->eos = 0; // reset
 	chvprintf((BaseSequentialStream *) stream, fmt, ap);
 	stream->buffer[stream->eos] = 0;
 }
-#else
-int unitTestWarningCounter = 0;
-
-#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 static void printWarning(const char *fmt, va_list ap) {
 	resetLogging(&logger); // todo: is 'reset' really needed here?
@@ -114,6 +110,11 @@ static void printWarning(const char *fmt, va_list ap) {
 	append(&logger, DELIMETER);
 	scheduleLogging(&logger);
 }
+
+#else
+int unitTestWarningCounter = 0;
+
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
