@@ -78,7 +78,6 @@ uint32_t remainingSize(Logging *logging);
 
 void printMsg(Logging *logging, const char *fmt, ...);
 void appendPrintf(Logging *logging, const char *fmt, ...);
-void vappendPrintf(Logging *logging, const char *fmt, va_list arg);
 void append(Logging *logging, const char *text);
 void appendFast(Logging *logging, const char *text);
 
