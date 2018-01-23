@@ -170,6 +170,15 @@ uint32_t lastLockTime;
  */
 uint32_t maxLockedDuration = 0;
 
+/**
+ * this depends on chdebug.h patch
+ #if CH_DBG_SYSTEM_STATE_CHECK == TRUE
+-#define _dbg_enter_lock() (ch.dbg.lock_cnt = (cnt_t)1)
+-#define _dbg_leave_lock() (ch.dbg.lock_cnt = (cnt_t)0)
++#define _dbg_enter_lock() {(ch.dbg.lock_cnt = (cnt_t)1);  ON_LOCK_HOOK;}
++#define _dbg_leave_lock() {ON_UNLOCK_HOOK;(ch.dbg.lock_cnt = (cnt_t)0);}
+ #endif
+ */
 void onLockHook(void) {
 	lastLockTime = GET_TIMESTAMP();
 }

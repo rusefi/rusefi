@@ -235,6 +235,15 @@ void runRusEfi(void) {
 	}
 }
 
+/**
+ * this depends on chcore.h patch
++void chDbgStackOverflowPanic(thread_t *otp);
++
+-    chSysHalt("stack overflow");                                            \
++    chDbgStackOverflowPanic(otp);                                           \
+
+ *
+ */
 void chDbgStackOverflowPanic(thread_t *otp) {
 	(void)otp;
 	strcpy(panicMessage, "stack overflow: ");
