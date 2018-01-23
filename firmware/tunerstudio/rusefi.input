@@ -1707,6 +1707,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "!todo: move MAF channel to maf curve dialog"
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "Baro ADC input", 						baroSensor_hwChannel
+		field = "Flex Fuel",							flexFuelSensor
 		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
 		field = "Analog divider",						analogInputDividerCoefficient
 		field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
