@@ -83,6 +83,21 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		return engineConfiguration->step1timing;
 	}
 
+	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
+	
+	// get advance from the separate table for Idle
+	if (CONFIG(useSeparateAdvanceForIdle)) {
+		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
+		// interpolate between idle table and normal (running) table using TPS threshold
+		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		advanceAngle = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
+	}
+
+	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
+	return advanceAngle;
+}
+
+static angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection;
 	if (cisnan(engine->sensors.iat)) {
 		iatCorrection = 0;
@@ -96,26 +111,12 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		tsOutputChannels.debugFloatField3 = engine->fsioTimingAdjustment;
 #endif
 	}
-
-	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 	
-	// get advance from the separate table for Idle
-	if (CONFIG(useSeparateAdvanceForIdle)) {
-		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
-		// interpolate between idle table and normal (running) table using TPS threshold
-		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
-	}
-
-	float result = advanceAngle
-			+ iatCorrection
-			+ engine->fsioTimingAdjustment
-			+ engine->engineState.cltTimingCorrection
-			// todo: uncomment once we get useable knock   - engine->knockCount
-			;
-
-	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
-	return result;
+	return iatCorrection
+		+ engine->fsioTimingAdjustment
+		+ engine->engineState.cltTimingCorrection
+		// todo: uncomment once we get useable knock   - engine->knockCount
+		;
 }
 
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -133,6 +134,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+	angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	angle -= engineConfiguration->ignitionOffset;
 	fixAngle(angle, "getAdvance");
 	return angle;
