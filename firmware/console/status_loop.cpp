@@ -253,7 +253,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VR, "%", engine->engineState.currentVE * 100.0f, 2);
+			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VR, "%", engine->engineState.currentVE * PERCENT_MULT, 2);
 		}
 		reportSensorF(log, fileFormat, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
 	}
@@ -696,7 +696,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap();
-		tsOutputChannels->veValue = engine->engineState.currentVE * 100.0f;//veMap.getValue(rpm, mapValue);
+		tsOutputChannels->veValue = engine->engineState.currentVE * PERCENT_MULT;
 		// todo: bug here? target afr could work based on real MAF?
 		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
 		tsOutputChannels->manifoldAirPressure = mapValue;
