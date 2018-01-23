@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 21 12:13:41 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 22 23:24:40 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2075,7 +2075,11 @@ typedef struct {
 	/**
 	 * offset 3304
 	 */
-	int unusedEnd[794];
+	brain_input_pin_e flexFuelSensor;
+	/**
+	 * offset 3308
+	 */
+	int unusedEnd[793];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2321,4 +2325,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 21 12:13:41 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 22 23:24:40 EST 2018

@@ -20,6 +20,7 @@
 #include "voltage.h"
 #include "thermistors.h"
 #include "oil_pressure.h"
+#include "flex_fuel.h"
 #include "adc_inputs.h"
 
 #include "analog_input.h"
