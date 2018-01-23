@@ -23,7 +23,7 @@ EXTERN_ENGINE;
 
 static bool useAveraging = false;
 // Circular running-average buffer, used by CIC-like averaging filter
-static float egoAfrBuf[EGO_AVG_BUF_SIZE];
+static cyclic_buffer<float, EGO_AVG_BUF_SIZE> egoAfrBuf;
 // Total ego iterations (>240 days max. for 10ms update period)
 static int totalEgoCnt = 0;
 // We need this to calculate the real number of values stored in the buffer.
@@ -43,8 +43,7 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Our averaging is intended for use only with Narrow EGOs.
 	if (boardConfiguration->afr_type == ES_NarrowBand) {
 		totalEgoCnt = prevEgoCnt = 0;
-		for (int i = 0; i < EGO_AVG_BUF_SIZE; i++)
-			egoAfrBuf[i] = 0;
+		egoAfrBuf.clear();
 		useAveraging = true;
 	}
 }
@@ -57,13 +56,13 @@ static float updateEgoAverage(float afr) {
 	
 	// reset old buffer cell
 	if (localPrevBufPos != localBufPos) {
-		egoAfrBuf[localBufPos] = 0;
+		egoAfrBuf.elements[localBufPos] = 0;
 		// Remove (1 << EGO_AVG_SHIFT) elements from our circular buffer (except for the 1st cycle).
 		if (totalEgoCnt >= (EGO_AVG_BUF_SIZE << EGO_AVG_SHIFT))
 			prevEgoCnt += (1 << EGO_AVG_SHIFT);
 	}
 	// integrator stage
-	egoAfrBuf[localBufPos] += afr;
+	egoAfrBuf.elements[localBufPos] += afr;
 	
 	// Change window size depending on |AFR-stoich| deviation.
 	// The narrow EGO is very noisy when AFR is close to shoich.
@@ -77,7 +76,7 @@ static float updateEgoAverage(float afr) {
 	// return moving average of N last sums
 	float egoAfrSum = 0;
 	for (int i = (totalEgoCnt >> EGO_AVG_SHIFT); i >= (startAvgCnt >> EGO_AVG_SHIFT); i--) {
-		egoAfrSum += egoAfrBuf[i % EGO_AVG_BUF_SIZE];
+		egoAfrSum += egoAfrBuf.elements[i % EGO_AVG_BUF_SIZE];
 	}
 	// we divide by a real number of stored values to get an exact average
 	return egoAfrSum / float(totalEgoCnt - startAvgCnt);
