@@ -1,12 +1,39 @@
+diff -uwr Chibios.16_original/.git/FETCH_HEAD Chibios.16_rusefi/.git/FETCH_HEAD
+--- Chibios.16_original/.git/FETCH_HEAD	2018-01-23 12:09:57.277990800 -0500
++++ Chibios.16_rusefi/.git/FETCH_HEAD	2018-01-23 12:09:57.943028800 -0500
+@@ -1,9 +1,10 @@
+-c8198eb36c2174484141f0119f720bcf0468a0b9		branch 'stable_16.1.x' of https://github.com/rusefi/ChibiOS
++93fdc45672692a73b3734b0e77f5978944477a2b		branch 'stable_rusefi' of https://github.com/rusefi/ChibiOS
+ b263680b98fbb41e939ce62e55916254ece4acc7	not-for-merge	branch 'master' of https://github.com/rusefi/ChibiOS
+ a4b2c113e74e026dfc7cc02060b32ab3f047ae8d	not-for-merge	branch 'revert-10-master' of https://github.com/rusefi/ChibiOS
+ e61ff3aa1c1fd0f1057e08ae4551abbc01595550	not-for-merge	branch 'stable_1.0.x' of https://github.com/rusefi/ChibiOS
+ 3957b74f871e2ac11b8447aa067b1cece4861970	not-for-merge	branch 'stable_1.2.x' of https://github.com/rusefi/ChibiOS
+ 06c45ae2ef94ff95bbdab317bc53aebe7c51aacc	not-for-merge	branch 'stable_1.4.x' of https://github.com/rusefi/ChibiOS
++c8198eb36c2174484141f0119f720bcf0468a0b9	not-for-merge	branch 'stable_16.1.x' of https://github.com/rusefi/ChibiOS
+ c71ef710730191f767d077bc660142b1c8984915	not-for-merge	branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
+ c71ef710730191f767d077bc660142b1c8984915	not-for-merge	branch 'stable_17.6.x' of https://github.com/rusefi/ChibiOS
+ e324eb668a8399c5e5342d3111d175f42f14b50b	not-for-merge	branch 'stable_2.0.x' of https://github.com/rusefi/ChibiOS
+@@ -12,5 +13,4 @@
+ 0b0e793cc832373af431029878bc4b6f8c3e5fa5	not-for-merge	branch 'stable_2.6.x' of https://github.com/rusefi/ChibiOS
+ 7596c99a218929e8c93341e2afa353134b64e233	not-for-merge	branch 'stable_3.0.x' of https://github.com/rusefi/ChibiOS
+ a21bf76fe0b033ce00052f30ccec286a422d9654	not-for-merge	branch 'stable_log_issue' of https://github.com/rusefi/ChibiOS
+-93fdc45672692a73b3734b0e77f5978944477a2b	not-for-merge	branch 'stable_rusefi' of https://github.com/rusefi/ChibiOS
+ 454717f06820c73845dac29dc95b72fbe7165704	not-for-merge	branch 'trunk' of https://github.com/rusefi/ChibiOS
 diff -uwr Chibios.16_original/.git/HEAD Chibios.16_rusefi/.git/HEAD
---- Chibios.16_original/.git/HEAD	2018-01-23 10:57:52.077603400 -0500
-+++ Chibios.16_rusefi/.git/HEAD	2018-01-23 11:00:01.595011400 -0500
+--- Chibios.16_original/.git/HEAD	2018-01-23 11:24:49.134093800 -0500
++++ Chibios.16_rusefi/.git/HEAD	2018-01-23 11:25:49.489545900 -0500
 @@ -1 +1 @@
 -ref: refs/heads/stable_16.1.x
 +ref: refs/heads/stable_rusefi
+diff -uwr Chibios.16_original/.git/ORIG_HEAD Chibios.16_rusefi/.git/ORIG_HEAD
+--- Chibios.16_original/.git/ORIG_HEAD	2018-01-23 12:09:57.324993400 -0500
++++ Chibios.16_rusefi/.git/ORIG_HEAD	2018-01-23 12:09:57.990031500 -0500
+@@ -1 +1 @@
+-c8198eb36c2174484141f0119f720bcf0468a0b9
++02f9f87361e018ce50bfe19dd9927012b9d97db8
 diff -uwr Chibios.16_original/.git/config Chibios.16_rusefi/.git/config
---- Chibios.16_original/.git/config	2018-01-23 10:57:52.096604500 -0500
-+++ Chibios.16_rusefi/.git/config	2018-01-23 11:00:01.612012400 -0500
+--- Chibios.16_original/.git/config	2018-01-23 11:24:49.141094200 -0500
++++ Chibios.16_rusefi/.git/config	2018-01-23 11:25:49.499546500 -0500
 @@ -8,6 +8,6 @@
  [remote "origin"]
  	url = https://github.com/rusefi/ChibiOS
@@ -18,24 +45,25 @@ diff -uwr Chibios.16_original/.git/config Chibios.16_rusefi/.git/config
 +	merge = refs/heads/stable_rusefi
 Binary files Chibios.16_original/.git/index and Chibios.16_rusefi/.git/index differ
 diff -uwr Chibios.16_original/.git/logs/HEAD Chibios.16_rusefi/.git/logs/HEAD
---- Chibios.16_original/.git/logs/HEAD	2018-01-23 10:57:52.082603700 -0500
-+++ Chibios.16_rusefi/.git/logs/HEAD	2018-01-23 11:00:01.604011900 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 c8198eb36c2174484141f0119f720bcf0468a0b9 rusefi <arro239+rusefi@gmail.com> 1516723072 -0500	clone: from https://github.com/rusefi/ChibiOS
-+0000000000000000000000000000000000000000 02f9f87361e018ce50bfe19dd9927012b9d97db8 rusefi <arro239+rusefi@gmail.com> 1516723201 -0500	clone: from https://github.com/rusefi/ChibiOS
+--- Chibios.16_original/.git/logs/HEAD	2018-01-23 11:24:49.138094000 -0500
++++ Chibios.16_rusefi/.git/logs/HEAD	2018-01-23 12:09:58.083036800 -0500
+@@ -1 +1,2 @@
+-0000000000000000000000000000000000000000 c8198eb36c2174484141f0119f720bcf0468a0b9 rusefi <arro239+rusefi@gmail.com> 1516724689 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 02f9f87361e018ce50bfe19dd9927012b9d97db8 rusefi <arro239+rusefi@gmail.com> 1516724749 -0500	clone: from https://github.com/rusefi/ChibiOS
++02f9f87361e018ce50bfe19dd9927012b9d97db8 93fdc45672692a73b3734b0e77f5978944477a2b rusefi <arro239+rusefi@gmail.com> 1516727398 -0500	pull: Fast-forward
 Only in Chibios.16_original/.git/logs/refs/heads: stable_16.1.x
 Only in Chibios.16_rusefi/.git/logs/refs/heads: stable_rusefi
 diff -uwr Chibios.16_original/.git/logs/refs/remotes/origin/HEAD Chibios.16_rusefi/.git/logs/refs/remotes/origin/HEAD
---- Chibios.16_original/.git/logs/refs/remotes/origin/HEAD	2018-01-23 10:57:52.075603300 -0500
-+++ Chibios.16_rusefi/.git/logs/refs/remotes/origin/HEAD	2018-01-23 11:00:01.591011200 -0500
+--- Chibios.16_original/.git/logs/refs/remotes/origin/HEAD	2018-01-23 11:24:49.133093700 -0500
++++ Chibios.16_rusefi/.git/logs/refs/remotes/origin/HEAD	2018-01-23 11:25:49.487545800 -0500
 @@ -1 +1 @@
--0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516723072 -0500	clone: from https://github.com/rusefi/ChibiOS
-+0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516723201 -0500	clone: from https://github.com/rusefi/ChibiOS
+-0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516724689 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516724749 -0500	clone: from https://github.com/rusefi/ChibiOS
 Only in Chibios.16_original/.git/refs/heads: stable_16.1.x
 Only in Chibios.16_rusefi/.git/refs/heads: stable_rusefi
 diff -uwr Chibios.16_original/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h Chibios.16_rusefi/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h
---- Chibios.16_original/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h	2018-01-23 10:57:53.109662500 -0500
-+++ Chibios.16_rusefi/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h	2018-01-23 11:00:03.925144700 -0500
+--- Chibios.16_original/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h	2018-01-23 11:24:50.558175200 -0500
++++ Chibios.16_rusefi/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h	2018-01-23 11:25:50.422599300 -0500
 @@ -67,7 +67,7 @@
  #define STM32_ADC_USE_ADC1                  FALSE
  #define STM32_ADC_USE_ADC2                  FALSE
@@ -47,8 +75,8 @@ diff -uwr Chibios.16_original/demos/STM32/RT-STM32F334R8-NUCLEO/mcuconf.h Chibio
  #define STM32_ADC_ADC12_IRQ_PRIORITY        5
 Only in Chibios.16_original: doc
 diff -uwr Chibios.16_original/os/common/ports/ARMCMx/compilers/GCC/rules.mk Chibios.16_rusefi/os/common/ports/ARMCMx/compilers/GCC/rules.mk
---- Chibios.16_original/os/common/ports/ARMCMx/compilers/GCC/rules.mk	2018-01-23 10:57:54.326732100 -0500
-+++ Chibios.16_rusefi/os/common/ports/ARMCMx/compilers/GCC/rules.mk	2018-01-23 11:00:05.616241400 -0500
+--- Chibios.16_original/os/common/ports/ARMCMx/compilers/GCC/rules.mk	2018-01-23 11:24:51.324219100 -0500
++++ Chibios.16_rusefi/os/common/ports/ARMCMx/compilers/GCC/rules.mk	2018-01-23 11:25:50.907627000 -0500
 @@ -93,8 +93,9 @@
  TCOBJS    := $(addprefix $(OBJDIR)/, $(notdir $(TCSRC:.c=.o)))
  TCPPOBJS  := $(addprefix $(OBJDIR)/, $(notdir $(TCPPSRC:.cpp=.o)))
@@ -86,8 +114,8 @@ diff -uwr Chibios.16_original/os/common/ports/ARMCMx/compilers/GCC/rules.mk Chib
  ifeq ($(USE_VERBOSE_COMPILE),yes)
 Only in Chibios.16_rusefi/os/common: startup
 diff -uwr Chibios.16_original/os/hal/include/uart.h Chibios.16_rusefi/os/hal/include/uart.h
---- Chibios.16_original/os/hal/include/uart.h	2018-01-23 10:57:57.236898500 -0500
-+++ Chibios.16_rusefi/os/hal/include/uart.h	2018-01-23 11:00:08.770421800 -0500
+--- Chibios.16_original/os/hal/include/uart.h	2018-01-23 11:24:53.586348400 -0500
++++ Chibios.16_rusefi/os/hal/include/uart.h	2018-01-23 11:25:52.187700200 -0500
 @@ -185,6 +185,23 @@
  #define _uart_wakeup_rx_error_isr(uartp)
  #endif /* !UART_USE_WAIT */
@@ -177,57 +205,9 @@ diff -uwr Chibios.16_original/os/hal/include/uart.h Chibios.16_rusefi/os/hal/inc
  /** @} */
  
  /*===========================================================================*/
-diff -uwr Chibios.16_original/os/hal/lib/streams/chprintf.c Chibios.16_rusefi/os/hal/lib/streams/chprintf.c
---- Chibios.16_original/os/hal/lib/streams/chprintf.c	2018-01-23 10:57:57.246899100 -0500
-+++ Chibios.16_rusefi/os/hal/lib/streams/chprintf.c	2018-01-23 11:00:08.779422300 -0500
-@@ -32,7 +32,9 @@
- #include "memstreams.h"
- 
- #define MAX_FILLER 11
--#define FLOAT_PRECISION 9
-+#define MAX_FLOAT_PRECISION 9
-+#define DEFAULT_FLOAT_PRECISION 2
-+
- 
- static char *long_to_string_with_divisor(char *p,
-                                          long num,
-@@ -73,15 +75,22 @@
- }
- 
- #if CHPRINTF_USE_FLOAT
--static const long pow10[FLOAT_PRECISION] = {
-+static const long pow10[MAX_FLOAT_PRECISION] = {
-     10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
- };
- 
- static char *ftoa(char *p, double num, unsigned long precision) {
-+  if (num < 0) {
-+    *p++ = '-';
-+    return ftoa(p, -num, precision);
-+  }
-   long l;
- 
--  if ((precision == 0) || (precision > FLOAT_PRECISION))
--    precision = FLOAT_PRECISION;
-+  if (precision == 0) {
-+    precision = DEFAULT_FLOAT_PRECISION;
-+  } else if (precision > MAX_FLOAT_PRECISION) {
-+    precision = MAX_FLOAT_PRECISION;
-+  }
-   precision = pow10[precision - 1];
- 
-   l = (long)num;
-@@ -131,6 +140,7 @@
-   char tmpbuf[MAX_FILLER + 1];
- #endif
- 
-+
-   while (true) {
-     c = *fmt++;
-     if (c == 0)
 diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c
---- Chibios.16_original/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c	2018-01-23 10:57:57.547916300 -0500
-+++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c	2018-01-23 11:00:09.534465500 -0500
+--- Chibios.16_original/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c	2018-01-23 11:24:54.074376400 -0500
++++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c	2018-01-23 11:25:52.592723400 -0500
 @@ -137,7 +137,7 @@
    t = localtime_r((time_t *)&(tv_sec), &tim);
    osalDbgAssert(t != NULL, "conversion failed");
@@ -238,8 +218,8 @@ diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/RTCv1/rtc_lld.c Chibios.16_
  #endif
  
 diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c
---- Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c	2018-01-23 10:57:57.550916500 -0500
-+++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c	2018-01-23 11:00:09.539465800 -0500
+--- Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c	2018-01-23 11:24:54.079376600 -0500
++++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c	2018-01-23 11:25:52.594723500 -0500
 @@ -27,6 +27,7 @@
   */
  
@@ -296,8 +276,8 @@ diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.c Chibios.16_
    ssr = rtcp->rtc->SSR;
  #endif /* STM32_RTC_HAS_SUBSECONDS */
 diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h
---- Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h	2018-01-23 10:57:57.552916600 -0500
-+++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h	2018-01-23 11:00:09.539465800 -0500
+--- Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h	2018-01-23 11:24:54.081376800 -0500
++++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h	2018-01-23 11:25:52.595723600 -0500
 @@ -29,6 +29,7 @@
  #ifndef _RTC_LLD_H_
  #define _RTC_LLD_H_
@@ -308,8 +288,8 @@ diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/RTCv2/rtc_lld.h Chibios.16_
  /*===========================================================================*/
 Only in Chibios.16_rusefi/os/hal/ports/STM32/LLD/RTCv2: rusefi_lse_fix.h
 diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c
---- Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c	2018-01-23 10:57:58.743984700 -0500
-+++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c	2018-01-23 11:00:09.632471100 -0500
+--- Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c	2018-01-23 11:24:54.143380300 -0500
++++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c	2018-01-23 11:25:52.722730900 -0500
 @@ -226,6 +226,11 @@
    /* Mustn't ever set TCIE here - if done, it causes an immediate
       interrupt.*/
@@ -368,8 +348,8 @@ diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c Chibios.
    /* Starting transfer.*/
    dmaStreamEnable(uartp->dmarx);
 diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h
---- Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h	2018-01-23 10:57:58.744984800 -0500
-+++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h	2018-01-23 11:00:09.634471300 -0500
+--- Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h	2018-01-23 11:24:54.145380400 -0500
++++ Chibios.16_rusefi/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h	2018-01-23 11:25:52.724731000 -0500
 @@ -461,6 +461,14 @@
  typedef void (*uartecb_t)(UARTDriver *uartp, uartflags_t e);
  
@@ -403,8 +383,8 @@ diff -uwr Chibios.16_original/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h Chibios.
  
  /**
 diff -uwr Chibios.16_original/os/hal/ports/STM32/STM32F4xx/hal_lld.c Chibios.16_rusefi/os/hal/ports/STM32/STM32F4xx/hal_lld.c
---- Chibios.16_original/os/hal/ports/STM32/STM32F4xx/hal_lld.c	2018-01-23 10:57:59.529029600 -0500
-+++ Chibios.16_rusefi/os/hal/ports/STM32/STM32F4xx/hal_lld.c	2018-01-23 11:00:09.802480900 -0500
+--- Chibios.16_original/os/hal/ports/STM32/STM32F4xx/hal_lld.c	2018-01-23 11:24:54.577405100 -0500
++++ Chibios.16_rusefi/os/hal/ports/STM32/STM32F4xx/hal_lld.c	2018-01-23 11:25:52.934743000 -0500
 @@ -23,6 +23,7 @@
   */
  
@@ -435,8 +415,8 @@ diff -uwr Chibios.16_original/os/hal/ports/STM32/STM32F4xx/hal_lld.c Chibios.16_
  
 Only in Chibios.16_rusefi/os/hal/ports/simulator: posix
 diff -uwr Chibios.16_original/os/rt/include/chdebug.h Chibios.16_rusefi/os/rt/include/chdebug.h
---- Chibios.16_original/os/rt/include/chdebug.h	2018-01-23 10:58:01.217126200 -0500
-+++ Chibios.16_rusefi/os/rt/include/chdebug.h	2018-01-23 11:00:10.660529900 -0500
+--- Chibios.16_original/os/rt/include/chdebug.h	2018-01-23 11:24:55.635465600 -0500
++++ Chibios.16_rusefi/os/rt/include/chdebug.h	2018-01-23 11:25:53.640783400 -0500
 @@ -121,8 +121,8 @@
  /*===========================================================================*/
  
@@ -449,8 +429,8 @@ diff -uwr Chibios.16_original/os/rt/include/chdebug.h Chibios.16_rusefi/os/rt/in
  
  /* When the state checker feature is disabled then the following functions
 diff -uwr Chibios.16_original/os/rt/ports/ARM/chcore.h Chibios.16_rusefi/os/rt/ports/ARM/chcore.h
---- Chibios.16_original/os/rt/ports/ARM/chcore.h	2018-01-23 10:58:01.685153000 -0500
-+++ Chibios.16_rusefi/os/rt/ports/ARM/chcore.h	2018-01-23 11:00:10.670530500 -0500
+--- Chibios.16_original/os/rt/ports/ARM/chcore.h	2018-01-23 11:24:55.676468000 -0500
++++ Chibios.16_rusefi/os/rt/ports/ARM/chcore.h	2018-01-23 11:25:53.682785800 -0500
 @@ -28,6 +28,8 @@
  #ifndef _CHCORE_H_
  #define _CHCORE_H_
@@ -488,8 +468,8 @@ diff -uwr Chibios.16_original/os/rt/ports/ARM/chcore.h Chibios.16_rusefi/os/rt/p
  }
  #else
 diff -uwr Chibios.16_original/os/rt/ports/SIMIA32/chcore.c Chibios.16_rusefi/os/rt/ports/SIMIA32/chcore.c
---- Chibios.16_original/os/rt/ports/SIMIA32/chcore.c	2018-01-23 10:58:01.836161600 -0500
-+++ Chibios.16_rusefi/os/rt/ports/SIMIA32/chcore.c	2018-01-23 11:00:10.710532800 -0500
+--- Chibios.16_original/os/rt/ports/SIMIA32/chcore.c	2018-01-23 11:24:55.737471500 -0500
++++ Chibios.16_rusefi/os/rt/ports/SIMIA32/chcore.c	2018-01-23 11:25:53.752789800 -0500
 @@ -25,7 +25,12 @@
   * @{
   */
@@ -523,8 +503,8 @@ diff -uwr Chibios.16_original/os/rt/ports/SIMIA32/chcore.c Chibios.16_rusefi/os/
  
  /** @} */
 diff -uwr Chibios.16_original/os/rt/src/chdebug.c Chibios.16_rusefi/os/rt/src/chdebug.c
---- Chibios.16_original/os/rt/src/chdebug.c	2018-01-23 10:58:01.849162300 -0500
-+++ Chibios.16_rusefi/os/rt/src/chdebug.c	2018-01-23 11:00:10.736534300 -0500
+--- Chibios.16_original/os/rt/src/chdebug.c	2018-01-23 11:24:55.745471900 -0500
++++ Chibios.16_rusefi/os/rt/src/chdebug.c	2018-01-23 11:25:53.770790800 -0500
 @@ -85,6 +85,8 @@
  /* Module local definitions.                                                 */
  /*===========================================================================*/
