@@ -178,7 +178,7 @@ public final class RomAttributeParser {
             else if (input.substring(input.length() - 2).equalsIgnoreCase("mb")) {
                 return Integer.parseInt(input.substring(0, input.length() - 2)) * 1024 * 1024;
             }
-            throw new NumberFormatException();
+            throw new NumberFormatException("While parsing [" + input + "]");
         }
     }
 
