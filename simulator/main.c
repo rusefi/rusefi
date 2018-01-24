@@ -62,7 +62,8 @@ static void termination_handler(eventid_t id) {
 
 	cputs("Init: shell on SD1 terminated");
 	chSysLock();
-	chOQResetI(&SD1.oqueue);
+    oqResetI(&SD1.oqueue);
+    chSchRescheduleS();
 	chSysUnlock();
 
 	// todo: 2nd port for TS
@@ -99,7 +100,8 @@ static void sd1_handler(eventid_t id) {
 		cputs("Init: disconnection on SD1");
 		isSerialOverTcpReady = FALSE;
 		chSysLock();
-		chIQResetI(&SD1.iqueue);
+	    iqResetI(&SD1.iqueue);
+	    chSchRescheduleS();
 		chSysUnlock();
 	}
 }
@@ -120,7 +122,8 @@ static void sd2_handler(eventid_t id) {
 	if (flags & CHN_DISCONNECTED) {
 		cputs("Init: disconnection on SD2");
 		chSysLock();
-		chIQResetI(&SD2.iqueue);
+	    iqResetI(&SD2.iqueue);
+	    chSchRescheduleS();
 		chSysUnlock();
 	}
 }
@@ -153,7 +156,9 @@ int main(void) {
 	/*
 	 * Console thread started.
 	 */
-	cdtp = chThdCreateFromHeap(NULL, CONSOLE_WA_SIZE, NORMALPRIO + 1, console_thread, NULL);
+	cdtp = chThdCreateFromHeap(NULL, CONSOLE_WA_SIZE,
+			"sim",
+			NORMALPRIO + 1, console_thread, NULL);
 
 	/*
 	 * Initializing connection/disconnection events.
