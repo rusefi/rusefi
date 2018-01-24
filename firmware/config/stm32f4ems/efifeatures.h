@@ -157,7 +157,7 @@
 /**
  * Do we need file logging (like SD card) logic?
  */
-#define EFI_FILE_LOGGING TRUE
+#define EFI_FILE_LOGGING FALSE
 
 #ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
