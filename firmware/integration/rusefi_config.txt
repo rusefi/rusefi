@@ -186,9 +186,9 @@ end_struct
 
 struct MAP_sensor_config_s @brief MAP averaging configuration
 float[MAP_ANGLE_SIZE] samplingAngleBins;;"",      1,     0,   0.0,    18000,   2
-float[MAP_ANGLE_SIZE] samplingAngle;@brief MAP averaging sampling start angle, by RPM;"deg",      1,     0,   -180,    180,   2
+float[MAP_ANGLE_SIZE] samplingAngle;@brief MAP averaging sampling start angle, by RPM;"deg",      1,     0,   -720,    720,   2
 float[MAP_WINDOW_SIZE] samplingWindowBins;;"",      1,     0,   0.0,    18000,   2
-float[MAP_WINDOW_SIZE] samplingWindow;@brief MAP averaging angle duration, by RPM;"deg",      1,     0,   0,    180,   2
+float[MAP_WINDOW_SIZE] samplingWindow;@brief MAP averaging angle duration, by RPM;"deg",      1,     0,   -720,    720,   2
 air_pressure_sensor_config_s sensor
 end_struct
 
@@ -542,7 +542,7 @@ bit is_enabled_spi_2
 	bit onOffAlternatorLogic;
 	bit isCJ125Enabled
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
-	bit unused_board_984_18
+	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
 	bit unused_board_984_19
 	bit unused_board_984_20
 	bit unused_board_984_21
