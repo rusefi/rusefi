@@ -19,7 +19,7 @@
 #define SWITCH_TO_BINARY_COMMAND "~"
 
 #define PROTOCOL  "001"
-#define TS_SIGNATURE "MShift v0.02"
+#define TS_SIGNATURE "rusEFI v1.04"
 
 #define TS_RESPONSE_OK 0x00
 #define TS_RESPONSE_BURN_OK 0x04
