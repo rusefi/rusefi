@@ -15,7 +15,7 @@
  * queryCommand:
  * 		Communication initialization command. TunerStudio sends a single byte H
  * 		ECU response:
- * 			One of the known ECU id strings. We are using "MShift v0.01" id string.
+ * 			One of the known ECU id strings.
  *
  * ochGetCommand:
  * 		Request for output channels state.TunerStudio sends a single byte O
