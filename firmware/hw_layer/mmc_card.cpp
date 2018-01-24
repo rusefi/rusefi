@@ -230,9 +230,6 @@ int
             return (0);
     }
 
-
-static char lfNameBuff[100];
-
 static void listDirectory(const char *path) {
 
 	if (!fs_ready) {
@@ -255,10 +252,7 @@ static void listDirectory(const char *path) {
 	int i = strlen(path);
 	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
 		FILINFO fno;
-#if _USE_LFN
-  fno.lfname = lfNameBuff;
-  fno.lfsize = sizeof(lfNameBuff);
-#endif
+
 		res = f_readdir(&dir, &fno);
 		if (res != FR_OK || fno.fname[0] == 0)
 			break;
