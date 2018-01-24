@@ -231,7 +231,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType,
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
 
-	int samplingCount = CONFIG(measureMapOnlyInOneCylinder) ? 1 : engineConfiguration->specs.cylindersCount;
+	int samplingCount = boardConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->specs.cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
 		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
