@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 22 23:24:40 EST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 24 08:54:20 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -398,7 +398,7 @@ public class Fields {
 	public static final int onOffAlternatorLogic_offset = 984;
 	public static final int isCJ125Enabled_offset = 984;
 	public static final int vvtCamSensorUseRise_offset = 984;
-	public static final int unused_board_984_18_offset = 984;
+	public static final int measureMapOnlyInOneCylinder_offset = 984;
 	public static final int unused_board_984_19_offset = 984;
 	public static final int unused_board_984_20_offset = 984;
 	public static final int unused_board_984_21_offset = 984;
@@ -1391,7 +1391,7 @@ public class Fields {
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 984, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 984, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 984, FieldType.BIT, 17);
-	public static final Field UNUSED_BOARD_984_18 = Field.create("UNUSED_BOARD_984_18", 984, FieldType.BIT, 18);
+	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 984, FieldType.BIT, 18);
 	public static final Field UNUSED_BOARD_984_19 = Field.create("UNUSED_BOARD_984_19", 984, FieldType.BIT, 19);
 	public static final Field UNUSED_BOARD_984_20 = Field.create("UNUSED_BOARD_984_20", 984, FieldType.BIT, 20);
 	public static final Field UNUSED_BOARD_984_21 = Field.create("UNUSED_BOARD_984_21", 984, FieldType.BIT, 21);

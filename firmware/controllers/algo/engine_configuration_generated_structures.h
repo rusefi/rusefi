@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 22 23:24:40 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 24 08:58:08 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -634,8 +634,9 @@ typedef struct {
 	offset 376 bit 17 */
 	bool vvtCamSensorUseRise : 1;
 	/**
+	 * Useful for individual intakes
 	offset 376 bit 18 */
-	bool unused_board_984_18 : 1;
+	bool measureMapOnlyInOneCylinder : 1;
 	/**
 	offset 376 bit 19 */
 	bool unused_board_984_19 : 1;
@@ -2325,4 +2326,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 22 23:24:40 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 24 08:58:08 EST 2018
