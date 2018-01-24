@@ -69,7 +69,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			continue;
 		}
 
-		short c = (short) chSequentialStreamGet(chp);
+		short c = (short) streamGet(chp);
 		onDataArrived();
 
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)

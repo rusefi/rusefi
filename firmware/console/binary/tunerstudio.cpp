@@ -273,9 +273,9 @@ static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
  * read log file content for rusEfi console
  */
 static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
-#endif
+#endif /* EFI_FILE_LOGGING */
 }
 
 /**

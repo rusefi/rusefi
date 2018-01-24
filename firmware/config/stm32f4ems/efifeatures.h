@@ -69,7 +69,7 @@
  */
 #define EFI_CLI_SUPPORT TRUE
 
-#define EFI_RTC TRUE
+#define EFI_RTC FALSE
 
 #define EFI_ALTERNATOR_CONTROL TRUE
 
@@ -157,7 +157,7 @@
 /**
  * Do we need file logging (like SD card) logic?
  */
-#define EFI_FILE_LOGGING TRUE
+#define EFI_FILE_LOGGING FALSE
 
 #ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE

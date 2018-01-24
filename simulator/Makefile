@@ -83,7 +83,7 @@ include $(CHIBIOS)/os/hal/boards/simulator/board.mk
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
-include $(CHIBIOS)/os/rt/ports/SIMIA32/compilers/GCC/port.mk
+include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
 
 ifeq ($(OS),Windows_NT)
@@ -156,6 +156,7 @@ CPPSRC = $(UTILSRC_CPP) \
 ASMSRC = $(PORTASM)
 
 INCDIR = . \
+          $(CHIBIOS)/os/license \
           $(PORTINC) \
           $(KERNINC) \
           $(OSALINC) \
