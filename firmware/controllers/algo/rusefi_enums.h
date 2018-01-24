@@ -28,7 +28,7 @@
 
 // I believe that TunerStudio curve editor has a bug with F32 support
 // because of that bug we cannot have '1.05' for 5% extra multiplier
-#define PERCENT_MULT 100.0
+#define PERCENT_MULT 100.0f
 
 typedef enum {
 	CUSTOM_ENGINE = 0,
