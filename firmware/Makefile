@@ -103,7 +103,7 @@ PROJECT = rusefi
 PROJECT_DIR = .
 
 # Imported source files and paths
-CHIBIOS = ChibiOS3
+CHIBIOS = ChibiOS4
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
 ifeq ($(PROJECT_BOARD),)

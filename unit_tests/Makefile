@@ -131,7 +131,7 @@ TCPPSRC =
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
-CHIBIOS=$(PROJECT_DIR)/ChibiOS3
+CHIBIOS=$(PROJECT_DIR)/ChibiOS4
 
 INCDIR = . \
 	$(PROJECT_DIR)/util \
