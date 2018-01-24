@@ -41,7 +41,7 @@ static void tsCopyDataFromDMA() {
 	// we need to update the current readPos
 	int newReadPos = tsUartDma.readPos;
 	for (int i = newReadPos; i < dmaPos; ) {
-		if (chIQPutI(&tsUartDma.fifoRxQueue, tsUartDma.dmaBuffer[newReadPos]) != Q_OK) {
+		if (iqPutI(&tsUartDma.fifoRxQueue, tsUartDma.dmaBuffer[newReadPos]) != Q_OK) {
 			break; // todo: ignore overflow?
 		}
 		// the read position should always stay inside the buffer range
@@ -99,7 +99,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 #if TS_UART_DMA_MODE
 			print("Using UART-DMA mode");
 			// init FIFO queue
-			chIQObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
+			iqObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
 			
 			// start DMA driver
 			tsDmaUartConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
@@ -184,7 +184,7 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout) {
 #if TS_UART_DMA_MODE || defined(__DOXYGEN__)
 	UNUSED(tsChannel);
-	return (int)chIQReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, timeout);
+	return (int)iqReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, timeout);
 #else /* TS_UART_DMA_MODE */
 	if (tsChannel->channel == NULL)
 		return 0;
