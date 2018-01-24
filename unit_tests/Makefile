@@ -131,6 +131,8 @@ TCPPSRC =
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
+CHIBIOS=$(PROJECT_DIR)/ChibiOS3
+
 INCDIR = . \
 	$(PROJECT_DIR)/util \
 	$(PROJECT_DIR)/config/engines \
@@ -143,9 +145,10 @@ INCDIR = . \
 	$(PROJECT_DIR)/controllers/trigger \
 	$(PROJECT_DIR)/controllers/trigger/decoders \
 	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/ChibiOS3/os/rt/include \
-	$(PROJECT_DIR)/ChibiOS3/os/hal/lib/streams \
-	$(PROJECT_DIR)/ChibiOS3/os/rt/various \
+	$(CHIBIOS)/os/rt/include \
+	$(CHIBIOS)/os/rt/various \
+	$(CHIBIOS)/os/hal/lib/streams \
+	$(CHIBIOS)/os/hal/include \
 	$(PROJECT_DIR)/hw_layer \
 	test_data_structures \
 	test_basic_math
