@@ -74,7 +74,7 @@ PROJECT = rusefi_simulator
 PROJECT_DIR = ../firmware
 
 # Imported source files and paths
-CHIBIOS = ../firmware/ChibiOS3
+CHIBIOS = ../firmware/ChibiOS4
 
 # Startup files.
 # HAL-OSAL files (optional).
