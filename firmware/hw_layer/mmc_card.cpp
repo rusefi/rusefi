@@ -91,8 +91,15 @@ static FATFS MMC_FS;
 
 static LoggingWithStorage logger("mmcCard");
 
+static int fatFsErrors = 0;
+
 // print FAT error function
 static void printError(const char *str, FRESULT f_error) {
+	if (fatFsErrors++ > 16) {
+		// no reason to spam the console
+		return;
+	}
+
 	scheduleMsg(&logger, "FATfs Error \"%s\" %d", str, f_error);
 }
 
