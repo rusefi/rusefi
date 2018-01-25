@@ -337,7 +337,7 @@ public class FuelTunePane {
         }
         for (int i = 0; i < array.length; i++)
             array[i] = BaseConfigField.getByteBuffer(bp.getController(), offset + 4 * i).getFloat();
-        System.out.println("Loaded " + Arrays.toString(array));
+        System.out.println("FuelTunePane: Loaded " + Arrays.toString(array));
     }
 
     public Component getContent() {
