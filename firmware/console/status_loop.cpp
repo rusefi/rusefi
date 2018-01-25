@@ -193,6 +193,21 @@ static void printSensors(Logging *log, bool fileFormat) {
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, fileFormat, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
 	}
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
+//		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
+	}
+#endif /* EFI_ANALOG_SENSORS */
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+	if (hasBaroSensor()) {
+		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);
+	}
+#endif /* EFI_ANALOG_SENSORS */
+
+	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		reportSensorF(log, fileFormat, GAUGE_NAME_AFR, "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
+	}
 
 
 	if (!fileFormat) {
@@ -214,21 +229,6 @@ static void printSensors(Logging *log, bool fileFormat) {
 	if (hasMafSensor()) {
 		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-	}
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
-//		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
-	}
-#endif /* EFI_ANALOG_SENSORS */
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (hasBaroSensor()) {
-		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);
-	}
-#endif /* EFI_ANALOG_SENSORS */
-
-	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, fileFormat, GAUGE_NAME_AFR, "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 	}
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
