@@ -45,7 +45,7 @@ public class TcpIoStream implements IoStream {
 
     @Override
     public void setInputListener(final DataListener listener) {
-        LinkManager.IO_EXECUTOR.execute(new Runnable() {
+        LinkManager.TCP_READ_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 Thread.currentThread().setName("TCP connector loop");

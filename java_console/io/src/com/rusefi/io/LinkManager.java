@@ -59,7 +59,12 @@ public class LinkManager {
         }
     };
 
-    public final static Executor IO_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
+    /**
+     * Threading of the whole input/output does not look healthy at all!
+     *
+     * @see #COMMUNICATION_EXECUTOR
+     */
+    public final static Executor TCP_READ_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override
         public Thread newThread(@NotNull Runnable r) {
             Thread t = new Thread(r);
@@ -72,6 +77,7 @@ public class LinkManager {
     public static final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
+     * @see #TCP_READ_EXECUTOR
      */
     public static final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
@@ -85,6 +91,22 @@ public class LinkManager {
                     return t;
                 }
             });
+    private static Thread COMMUNICATION_THREAD;
+
+    static {
+        COMMUNICATION_EXECUTOR.submit(new Runnable() {
+            @Override
+            public void run() {
+                COMMUNICATION_THREAD = Thread.currentThread();
+            }
+        });
+    }
+
+    public static void assertCommunicationThread() {
+//        if (Thread.currentThread() != COMMUNICATION_THREAD)
+//            throw new IllegalStateException("Communication on wrong thread");
+    }
+
     public static EngineState engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
         @Override
         public void beforeLine(String fullLine) {
