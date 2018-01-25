@@ -51,6 +51,7 @@ public class IncomingDataBuffer {
             while (cbb.length() < count) {
                 int timeout = (int) (startTimestamp + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());
                 if (timeout <= 0) {
+                    logger.info(loggingMessage + ": timeout. Got only " + cbb.length());
                     return true; // timeout. Sad face.
                 }
                 cbb.wait(timeout);
