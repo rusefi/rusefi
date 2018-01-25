@@ -177,12 +177,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	rpm = getRpmE(engine);
 	reportSensorI(log, fileFormat, "rpm", "RPM", rpm); // log column 2
 #endif
-
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	reportSensorF(log, fileFormat, GAUGE_NAME_CPU_TEMP, "C", getMCUInternalTemperature(), 2); // log column #3
-#endif
-
-	reportSensorI(log, fileFormat, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE)); // log column #3
+	// why do we still send data into console in text mode?
 
 	if (hasCltSensor()) {
 		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #4
@@ -191,13 +186,29 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #5
 	}
 
+	if (hasIatSensor()) {
+		reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #7
+	}
+
+
+	if (!fileFormat) {
+		return;
+	}
+
+	// below are the more advanced data points which only go into log file
+
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	reportSensorF(log, fileFormat, GAUGE_NAME_CPU_TEMP, "C", getMCUInternalTemperature(), 2); // log column #3
+#endif
+
+	reportSensorI(log, fileFormat, "mode", "v", packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE)); // log column #3
+
+
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, fileFormat, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
 	}
 
-	if (hasIatSensor()) {
-		reportSensorF(log, fileFormat, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #7
-	}
 
 
 	reportSensorF(log, fileFormat, GAUGE_NAME_ACCEL_X, "G", engine->sensors.accelerometer.x, 3);
@@ -224,16 +235,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
-	if (fileFormat) {
-		reportSensorF(log, fileFormat, GAUGE_NAME_IAC, "%", getIdlePosition(), 2);
-	}
+	reportSensorF(log, fileFormat, GAUGE_NAME_IAC, "%", getIdlePosition(), 2);
 #endif /* EFI_IDLE_CONTROL */
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	reportSensorF(log, fileFormat, GAUGE_NAME_TARGET_AFR, "AFR", engine->engineState.targetAFR, 2);
 #endif /* EFI_ANALOG_SENSORS */
 
-	if (fileFormat) {
 
 #define DEBUG_F_PRECISION 6
 
@@ -256,19 +264,15 @@ static void printSensors(Logging *log, bool fileFormat) {
 			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VR, "%", engine->engineState.currentVE * PERCENT_MULT, 2);
 		}
 		reportSensorF(log, fileFormat, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
-	}
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	reportSensorF(log, fileFormat, GAUGE_NAME_ENGINE_LOAD, "x", engineLoad, 2);
 
 
 	reportSensorF(log, fileFormat, GAUGE_COIL_DWELL_TIME, "ms", ENGINE(engineState.sparkDwell), 2);
-	if (fileFormat) {
-		reportSensorF(log, fileFormat, GAUGE_NAME_TIMING_ADVANCE, "deg", engine->engineState.timingAdvance, 2);
+	reportSensorF(log, fileFormat, GAUGE_NAME_TIMING_ADVANCE, "deg", engine->engineState.timingAdvance, 2);
 
-	}
 
-	if (fileFormat) {
 		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
@@ -280,7 +284,6 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
 
 		reportSensorI(log, fileFormat, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
-	}
 
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	if (hasVehicleSpeedSensor()) {
@@ -291,12 +294,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #endif /* EFI_PROD_CODE */
 
+
 	reportSensorF(log, fileFormat, GAUGE_NAME_KNOCK_COUNTER, "count", engine->knockCount, 0);
 	reportSensorF(log, fileFormat, GAUGE_NAME_KNOCK_LEVEL, "v", engine->knockVolts, 2);
 
-//	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
+	//	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
 
-	if (fileFormat) {
+
 		reportSensorF(log, fileFormat, "f: tps delta", "v", engine->tpsAccelEnrichment.getMaxDelta(), 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", engine->engineState.tpsAccelEnrich, 2);
 
@@ -307,7 +311,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_INJ_DUTY, "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_DWELL_DUTY, "%", getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
-	}
+
 
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
@@ -320,12 +324,12 @@ static void printSensors(Logging *log, bool fileFormat) {
 		}
 	}
 
-	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warningCounter);
-	reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.lastErrorCode);
+		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warningCounter);
+		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.lastErrorCode);
 
-	reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
-	reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
-	reportSensorI(log, fileFormat, INDICATOR_NAME_BRAKE_DOWN, "bool", engine->brakePedalState);
+		reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
+		reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
+		reportSensorI(log, fileFormat, INDICATOR_NAME_BRAKE_DOWN, "bool", engine->brakePedalState);
 
 }
 
