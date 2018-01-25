@@ -167,7 +167,19 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 #else
 	if (tsChannel->channel == NULL)
 		return;
-	int transferred = chnWriteTimeout(tsChannel->channel, buffer, size, BINARY_IO_TIMEOUT);
+
+//	int transferred = chnWriteTimeout(tsChannel->channel, buffer, size, BINARY_IO_TIMEOUT);
+	// temporary attempt to work around #553
+	// instead of one huge packet let's try sending a few smaller packets
+	int transferred = 0;
+	int stillToTransfer = size;
+	while (stillToTransfer > 0) {
+		int thisTransferSize = minI(stillToTransfer, 1024);
+		transferred += chnWriteTimeout(tsChannel->channel, buffer, thisTransferSize, BINARY_IO_TIMEOUT);
+		buffer += thisTransferSize;
+		stillToTransfer -= thisTransferSize;
+	}
+
 #endif
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
