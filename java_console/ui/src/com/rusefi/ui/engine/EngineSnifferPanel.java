@@ -58,10 +58,10 @@ public class EngineSnifferPanel {
         @Override
         public Dimension getPreferredSize() {
             Dimension d = chartPanel.getSize();
-            System.out.println("chartPanel size " + d);
+//            System.out.println("chartPanel size " + d);
             Dimension s = super.getPreferredSize();
             Dimension dimension = new Dimension((int) (d.width * zoomControl.getZoomProvider().getZoomValue()), s.height);
-            System.out.println("imagePanel getPreferredSize" + dimension);
+//            System.out.println("imagePanel getPreferredSize" + dimension);
             return dimension;
         }
     };

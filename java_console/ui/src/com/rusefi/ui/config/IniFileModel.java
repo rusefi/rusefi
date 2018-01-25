@@ -85,7 +85,7 @@ public class IniFileModel {
         String key = list.isEmpty() ? null : list.removeFirst();
 
         fields.add(new DialogModel.Field(key, uiLabel));
-        System.out.println("Field label=[" + uiLabel + "] : key=[" + key + "]");
+        System.out.println("IniFileModel: Field label=[" + uiLabel + "] : key=[" + key + "]");
     }
 
     private void handleDialog(LinkedList<String> list) {
@@ -100,7 +100,7 @@ public class IniFileModel {
 
         dialogId = keyword;
         dialogUiName = name;
-        System.out.println("Dialog key=" + keyword + ": name=[" + name + "]");
+        System.out.println("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "]");
     }
 
     private void trim(LinkedList<String> list) {
