@@ -174,7 +174,7 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	int transferred = 0;
 	int stillToTransfer = size;
 	while (stillToTransfer > 0) {
-		int thisTransferSize = minI(stillToTransfer, 1024);
+		int thisTransferSize = minI(stillToTransfer, 768);
 		transferred += chnWriteTimeout(tsChannel->channel, buffer, thisTransferSize, BINARY_IO_TIMEOUT);
 		buffer += thisTransferSize;
 		stillToTransfer -= thisTransferSize;
