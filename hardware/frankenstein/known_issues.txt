@@ -7,9 +7,8 @@
 7)                  draw VBatt wiring on the back of the board?
 8)                  VP label silkscreen should be improved
 9) resolved in 0.1.2 "5v 5v GND" silkscreen on the back is wrong - one of the pins is 3v. todo: check power silkscreen on the front
-
 10)                  a jumper to connect VP to +5
 11)                  a jumper to connect W211 to PC6
 12)                  a jumper to connect W212 to PA5
-
 13)                  Knock should use 100k and 3.3nF caps. See changes found in Frankenso R0.5
+14)                 PB8 PB9 PE0 silkscreen on the back is upside down
