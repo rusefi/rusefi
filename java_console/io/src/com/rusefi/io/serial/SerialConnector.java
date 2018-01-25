@@ -20,7 +20,7 @@ public class SerialConnector implements LinkConnector {
         FileLog.MAIN.logLine("SerialConnector: connecting");
         SerialManager.listener = listener;
         FileLog.MAIN.logLine("scheduleOpening");
-        LinkManager.IO_EXECUTOR.execute(new Runnable() {
+        LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 FileLog.MAIN.logLine("scheduleOpening>openPort");
@@ -31,7 +31,7 @@ public class SerialConnector implements LinkConnector {
 
     @Override
     public void restart() {
-        LinkManager.IO_EXECUTOR.execute(new Runnable() {
+        LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 MessagesCentral.getInstance().postMessage(SerialManager.class, "Restarting serial IO");
