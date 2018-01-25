@@ -205,13 +205,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #endif /* EFI_ANALOG_SENSORS */
 
-	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, fileFormat, GAUGE_NAME_AFR, "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
-	}
-
 
 	if (!fileFormat) {
 		return;
+	}
+
+	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		reportSensorF(log, fileFormat, GAUGE_NAME_AFR, "AFR", getAfr(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 	}
 
 	// below are the more advanced data points which only go into log file
