@@ -327,13 +327,12 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         if (isClosed)
             return null;
         try {
+            LinkManager.assertCommunicationThread();
             dropPending();
 
             sendPacket(packet);
             return receivePacket(msg, allowLongResponse);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             logger.error(msg + ": executeCommand failed: " + e);
             close();
             return null;
@@ -457,7 +456,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         return true;
     }
 
-    public String requestPendingMessages() {
+    private String requestPendingMessages() {
         if (isClosed)
             return null;
         try {
@@ -467,7 +466,8 @@ public class BinaryProtocol implements BinaryProtocolCommands {
             //        System.out.println(result);
             return new String(response, 1, response.length - 1);
         } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
+            FileLog.MAIN.log(e);
+            return null;
         }
     }
 
