@@ -413,7 +413,7 @@ public class AutoTest {
         IoUtil.changeRpm(2000);
         nextChart();
         chart = nextChart();
-        assertEquals(69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
+        assertEquals("MAP",69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
         assertWave(false, msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.577, 0.1, 0.1, x + 180);
