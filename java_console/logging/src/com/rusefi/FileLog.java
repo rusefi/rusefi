@@ -75,13 +75,14 @@ public enum FileLog {
     }
 
     public synchronized void logLine(String fullLine) {
-        System.out.println(fullLine);
+        String withDate = new Date() + END_OF_TIMESTAND_TAG + fullLine;
+        System.out.println(withDate);
         if (suspendLogging)
             return;
         if (fileLog == null)
             return;
         try {
-            fileLog.write((new Date() + END_OF_TIMESTAND_TAG + fullLine + "\r\n").getBytes());
+            fileLog.write((withDate + "\r\n").getBytes());
             fileLog.flush();
         } catch (IOException e) {
             throw new IllegalStateException(e);

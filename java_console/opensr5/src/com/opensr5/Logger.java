@@ -10,7 +10,7 @@ public interface Logger {
     Logger CONSOLE = new Logger() {
         @Override
         public void trace(String msg) {
-            System.out.println(msg);
+            System.out.println(new Date() + " " + msg);
         }
 
         @Override
