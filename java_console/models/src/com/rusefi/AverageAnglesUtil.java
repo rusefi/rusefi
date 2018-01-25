@@ -56,7 +56,7 @@ public class AverageAnglesUtil {
             line = p[0];
 
             aa.add(currentRpm, line);
-            logger.info(line);
+            logger.info("Got " + line);
         }
 
         String report = aa.getReport();
