@@ -68,7 +68,7 @@ static int isInjectorEnabled(int cylinderId) {
 
 static void printInjectorsStatus(void) {
 	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
-		scheduleMsg(logger, "injector_%d_%d", isInjectorEnabled(id));
+		scheduleMsg(logger, "injector_%d: %d", id, isInjectorEnabled(id));
 	}
 }
 
