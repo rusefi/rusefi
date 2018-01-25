@@ -132,7 +132,7 @@ public class SettingsTab {
             Field field = Field.VALUES.get(f.getKey().toUpperCase());
             if (field == null)
                 throw new NullPointerException("No field for " + f.getKey());
-            System.out.println(field);
+//            System.out.println("Located " + field);
 
             JComponent control;
             if (field.getType() == FieldType.BIT) {
