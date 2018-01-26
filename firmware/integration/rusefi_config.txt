@@ -173,7 +173,7 @@ custom brain_pin_e 4 bits,    U32,   @OFFSET@, [0:6], @@brain_pin_e_enum@@
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
 custom pin_output_mode_e 4 bits,    U32,   @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:2]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "INVALID"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:2]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "INVALID"
 #define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 custom adc_channel_e 4 bits, U32, @OFFSET@, [0:4]  @@adc_channel_e_enum@@
 
