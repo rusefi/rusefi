@@ -51,6 +51,10 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PA
 	if (cisnan(target)) {
 		return target;
 	}
+	// disable this correction for cranking
+	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		return target;
+	}
 	float addedToWallCoef = CONFIG(addedToWallCoef);
 
 	/**
