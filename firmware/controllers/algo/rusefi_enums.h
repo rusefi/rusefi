@@ -271,18 +271,22 @@ typedef enum {
 } trigger_type_e;
 
 typedef enum {
-	ADC_OFF = 0, ADC_SLOW = 1, ADC_FAST = 2,
+	ADC_OFF = 0,
+	ADC_SLOW = 1,
+	ADC_FAST = 2,
 
 	Force_4b_adc_channel_mode = ENUM_32_BITS,
 } adc_channel_mode_e;
 
 typedef enum {
-	TV_FALL = 0, TV_RISE = 1
+	TV_FALL = 0,
+	TV_RISE = 1
 } trigger_value_e;
 
 // todo: better names?
 typedef enum {
-	T_PRIMARY = 0, T_SECONDARY = 1,
+	T_PRIMARY = 0,
+	T_SECONDARY = 1,
 	// todo: I really do not want to call this 'tertiary'. maybe we should rename all of these?
 	T_CHANNEL_3 = 2,
 	T_NONE = 15
@@ -336,7 +340,9 @@ typedef enum {
 } engine_load_mode_e;
 
 typedef enum {
-	DM_NONE = 0, DM_HD44780 = 1, DM_HD44780_OVER_PCF8574 = 2,
+	DM_NONE = 0,
+	DM_HD44780 = 1,
+	DM_HD44780_OVER_PCF8574 = 2,
 
 	Force_4b_display_mode = ENUM_32_BITS,
 
@@ -380,7 +386,8 @@ typedef enum {
 	/**
 	 * logical OFF is floating, logical ON is GND
 	 */
-	OM_OPENDRAIN = 2, OM_OPENDRAIN_INVERTED = 3,
+	OM_OPENDRAIN = 2,
+	OM_OPENDRAIN_INVERTED = 3,
 
 	Force_4b_pin_output_mode = ENUM_32_BITS,
 } pin_output_mode_e;
@@ -391,7 +398,9 @@ typedef enum {
 } gpio_mode_e;
 
 typedef enum {
-	PI_DEFAULT = 0, PI_PULLUP = 1, PI_PULLDOWN = 2,
+	PI_DEFAULT = 0,
+	PI_PULLUP = 1,
+	PI_PULLDOWN = 2,
 
 	Force_4b_pin_input_mode = ENUM_32_BITS,
 } pin_input_mode_e;
@@ -431,7 +440,8 @@ typedef enum {
 	/**
 	 * in this mode we use as many coils as we have cylinders
 	 */
-	IM_INDIVIDUAL_COILS = 1, IM_WASTED_SPARK = 2,
+	IM_INDIVIDUAL_COILS = 1,
+	IM_WASTED_SPARK = 2,
 
 	Force_4b_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
@@ -465,7 +475,8 @@ typedef enum {
  * @brief Ignition Mode while cranking
  */
 typedef enum {
-	CIM_DEFAULT = 0, CIM_FIXED_ANGLE = 1,
+	CIM_DEFAULT = 0,
+	CIM_FIXED_ANGLE = 1,
 
 	Force_4b_cranking_ignition_mode = ENUM_32_BITS,
 } cranking_ignition_mode_e;
@@ -750,11 +761,14 @@ typedef enum {
 } debug_mode_e;
 
 typedef enum {
-	MT_CUSTOM = 0, MT_DENSO183 = 1,
+	MT_CUSTOM = 0,
+	MT_DENSO183 = 1,
 	/**
 	 * 20 to 250 kPa (2.9 to 36.3 psi) 0.2 to 4.9 V OUTPUT
 	 */
-	MT_MPX4250 = 2, MT_HONDA3BAR = 3, MT_DODGE_NEON_2003 = 4,
+	MT_MPX4250 = 2,
+	MT_HONDA3BAR = 3,
+	MT_DODGE_NEON_2003 = 4,
 	/**
 	 * 22012AA090
 	 */
@@ -787,7 +801,9 @@ typedef enum {
 } air_pressure_sensor_type_e;
 
 typedef enum {
-	CD_OFF = 0, CD_USE_CAN1 = 1, CD_USE_CAN2 = 2,
+	CD_OFF = 0,
+	CD_USE_CAN1 = 1,
+	CD_USE_CAN2 = 2,
 
 	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_32_BITS,
 } can_device_mode_e;
@@ -797,7 +813,8 @@ typedef enum {
 	/**
 	 * You would use this value if you want to see a detailed graph of your trigger events
 	 */
-	SC_TRIGGER = 1, SC_MAP = 2,
+	SC_TRIGGER = 1,
+	SC_MAP = 2,
 	SC_RPM_ACCEL = 3,
 	SC_DETAILED_RPM = 4,
 
@@ -805,7 +822,7 @@ typedef enum {
 } sensor_chart_e;
 
 typedef enum {
-	REVERSE = -1,
+//todo fix enum generator  java tool to support negative	REVERSE = -1,
 	NEUTRAL = 0,
 	GEAR_1 = 1,
 	GEAR_2 = 2,
