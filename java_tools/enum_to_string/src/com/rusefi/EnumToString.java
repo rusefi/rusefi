@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import java.io.*;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -17,21 +18,22 @@ public class EnumToString {
     private final static StringBuilder header = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            System.out.println("Please specify one parameter: path to firmware folder");
+        if (args.length != 2) {
+            System.out.println("Please specify two parameters: path to firmware folder and path to output folder");
             return;
         }
-        String path = args[0];
+        String inputPath = args[0];
+        String outputPath = args[1];
 
         header.append("#ifndef _A_H_HEADER_\r\n");
         header.append("#define _A_H_HEADER_\r\n");
 
-        process(path + File.separator + "controllers/algo/io_pins.h");
-        process(path + File.separator + "controllers/algo/rusefi_enums.h");
+//        process(path + File.separator + "controllers/algo/io_pins.h");
+        process(inputPath + File.separator + "controllers/algo/rusefi_enums.h");
 
         header.append("#endif /*_A_H_HEADER_ */\r\n");
 
-        writeResult("auto_generated_enums");
+        writeResult(outputPath + File.separator + "auto_generated_enums");
     }
 
     private static void writeResult(String outFileName) throws IOException {
@@ -48,7 +50,12 @@ public class EnumToString {
         BufferedReader reader;
 
         String header = "// auto-generated from" + inFileName + "\r\n" +
-                "// by enum2string.jar tool\r\n\r\n";
+                "// by enum2string.jar tool\r\n" +
+                "// on " + new Date() +"\r\n" +
+                "// see also gen_config_and_enums.bat\r\n" +
+                "\r\n" +
+                "\r\n" +
+                "\r\n";
         result.append(header);
         EnumToString.header.append(header);
 
