@@ -775,6 +775,14 @@ typedef enum {
 	 */
 	MT_TOYOTA_89420_02010 = 8,
 
+	/**
+	 * 20 to 250 kPa (2.9 to 36.3 psi) 0.25 to 4.875 OUTPUT
+	 * More precise calibration data for new NXP sensor revisions MPX4250A and MPXA4250A.
+	 * For an old Freescale MPX4250D use "MT_MPX4250".
+	 * See https://www.nxp.com/docs/en/data-sheet/MPX4250A.pdf
+	 */
+	MT_MPX4250A = 9, 
+	
 	Force_4b_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 
