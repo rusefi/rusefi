@@ -1528,8 +1528,10 @@
 #define fsioCurve4_offset_hex cc8
 #define flexFuelSensor_offset 3304
 #define flexFuelSensor_offset_hex ce8
-#define unusedEnd_offset 3308
-#define unusedEnd_offset_hex cec
+#define test557pin_offset 3308
+#define test557pin_offset_hex cec
+#define unusedEnd_offset 3312
+#define unusedEnd_offset_hex cf0
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512

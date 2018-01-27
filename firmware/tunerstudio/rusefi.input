@@ -1306,6 +1306,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Aux Pin #2",							auxPidPins2
 		field = "Aux Pin #3",							auxPidPins3
 		field = "Aux Pin #4",							auxPidPins4
+		field = "test557pin",							test557pin
 		
 
 

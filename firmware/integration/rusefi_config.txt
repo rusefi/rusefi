@@ -887,7 +887,8 @@ spi_device_e accelerometerSpiDevice;
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 brain_input_pin_e flexFuelSensor;
-	int[793] unusedEnd;
+brain_pin_e test557pin
+	int[792] unusedEnd;
 	
 
 end_struct
