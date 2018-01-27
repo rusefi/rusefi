@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Jan 24 08:54:20 EST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 26 22:46:29 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1015,7 +1015,8 @@ public class Fields {
 	public static final int fsioCurve4Bins_offset = 3240;
 	public static final int fsioCurve4_offset = 3272;
 	public static final int flexFuelSensor_offset = 3304;
-	public static final int unusedEnd_offset = 3308;
+	public static final int test557pin_offset = 3308;
+	public static final int unusedEnd_offset = 3312;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1830,6 +1831,7 @@ public class Fields {
 	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2912, FieldType.FLOAT);
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2916, FieldType.INT);
 	public static final Field FLEXFUELSENSOR = Field.create("FLEXFUELSENSOR", 3304, FieldType.INT, brain_input_pin_e);
+	public static final Field TEST557PIN = Field.create("TEST557PIN", 3308, FieldType.INT, brain_pin_e);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
