@@ -215,6 +215,8 @@ void runRusEfi(void) {
 #endif
 	startStatusThreads();
 
+	test557init();
+
 	rememberCurrentConfiguration();
 
 	print("Running main loop\r\n");
@@ -272,5 +274,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20180126;
+	return 20180127;
 }

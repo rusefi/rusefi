@@ -20,9 +20,44 @@
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "can_hw.h"
+#include "scheduler.h"
 #endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE;
+
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+static int periodIndex = 0;
+
+static OutputPin testPin;
+scheduling_s *scheduling;
+
+static int test557[] = {100, 100, 200, 200, 500, 500, 500, 5000};
+#define TEST_LEN 8
+
+efitimeus_t testTime;
+
+static void toggleTestAndScheduleNext() {
+	testPin.toggle();
+	periodIndex = (periodIndex + 1) % TEST_LEN;
+	testTime += test557[periodIndex];
+	scheduleByTimestamp(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+
+}
+
+void test557init(void) {
+	if (engineConfiguration->test557pin == GPIO_UNASSIGNED ||
+			engineConfiguration->test557pin == GPIOA_0) {
+		return;
+	}
+
+	testPin.initPin("test", engineConfiguration->test557pin);
+	testPin.setValue(0);
+	testTime = getTimeNowUs();
+	toggleTestAndScheduleNext();
+
+}
+#endif /* EFI_PROD_CODE */
 
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_rs = GPIOE_7;

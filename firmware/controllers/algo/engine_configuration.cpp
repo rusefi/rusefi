@@ -285,6 +285,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	}
 	engineConfiguration->LIS302DLCsPin = GPIO_UNASSIGNED;
 	engineConfiguration->flexFuelSensor = GPIO_UNASSIGNED;
+	engineConfiguration->test557pin = GPIO_UNASSIGNED;
 
 	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
