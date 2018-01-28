@@ -30,6 +30,9 @@
 // because of that bug we cannot have '1.05' for 5% extra multiplier
 #define PERCENT_MULT 100.0f
 
+/**
+ * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
+ */
 typedef enum {
 	CUSTOM_ENGINE = 0,
 	AUDI_AAN = 1,
