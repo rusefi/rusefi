@@ -294,6 +294,10 @@ bool OutputPin::isInitialized() {
 #endif /* EFI_GPIO_HARDWARE */
 }
 
+void OutputPin::oggle() {
+	setValue(!getLogicValue());
+
+}
 void OutputPin::setValue(int logicValue) {
 #if EFI_PROD_CODE
 	if (port != GPIO_NULL) {
