@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 26 22:46:29 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 21:16:58 EET 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -722,7 +722,7 @@ typedef struct {
 	/**
 	 * offset 582
 	 */
-	int16_t unusedPD;
+	int16_t stepperParkingExtraSteps;
 	/**
 	 * offset 584
 	 */
@@ -2330,4 +2330,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 26 22:46:29 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 21:16:58 EET 2018
