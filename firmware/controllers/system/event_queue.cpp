@@ -60,12 +60,14 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {
+		// here we insert into head of the linked list
 		LL_PREPEND(head, scheduling);
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 		return true;
 	} else {
+		// here we know we are not in the head of the list, let's find the position - linear search
 		scheduling_s *insertPosition = head;
 		while (insertPosition->next != NULL && insertPosition->next->momentX < timeX) {
 			insertPosition = insertPosition->next;
