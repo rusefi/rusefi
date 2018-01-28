@@ -127,4 +127,15 @@ void initCJ125(Logging *sharedLogger) {
 
 }
 
+void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
+}
+
+float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return 0.0f;
+}
+
+bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return false;
+}
+
 #endif /* EFI_CJ125 */

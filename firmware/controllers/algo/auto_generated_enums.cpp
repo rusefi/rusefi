@@ -707,8 +707,8 @@ case GPIO_UNASSIGNED:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_25:
-  return "DBG_25";
+case DBG_CJ125:
+  return "DBG_CJ125";
 case DBG_26:
   return "DBG_26";
 case DBG_27:

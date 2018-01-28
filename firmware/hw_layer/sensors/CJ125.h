@@ -17,6 +17,9 @@
 
 
 void initCJ125(Logging *shared);
+void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
+float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 typedef enum {
 CJ125_IDLE = 0
