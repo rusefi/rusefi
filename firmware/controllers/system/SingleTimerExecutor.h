@@ -14,7 +14,7 @@
 class Executor {
 public:
 	Executor();
-	void scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
+	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
 	void onTimerCallback();
 	int timerCallbackCounter;
 	int scheduleCounter;
