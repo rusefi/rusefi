@@ -49,9 +49,9 @@ static msg_t stThread(StepperMotor *motor) {
 		 * I believe it's safer to retract the valve for parking - at least on a bench I've seen valves
 		 * disassembling themselves while pushing too far out.
 		 *
-		 * Use 10% more steps to compensate step skipping by some old motors.
+		 * Add extra steps to compensate step skipping by some old motors.
 		 */
-		int numParkingSteps = (int)efiRound(1.1f * motor->totalSteps, 1.0f);
+		int numParkingSteps = (int)efiRound((1.0f + (float)boardConfiguration->stepperParkingExtraSteps / PERCENT_MULT) * motor->totalSteps, 1.0f);
 		for (int i = 0; i < numParkingSteps; i++) {
 			motor->pulse();
 		}
