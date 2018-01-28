@@ -106,13 +106,16 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	postState(tsOutputChannels, 1);
 }
 
+/**
+ * see https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
+ */
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
 	tsOutputChannels->debugFloatField1 = prevResult;
 	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();
 	tsOutputChannels->debugFloatField5 = getD();
-	tsOutputChannels->debugFloatField6 = pid->minValue;
+//	tsOutputChannels->debugFloatField6 = pid->minValue;
 	tsOutputChannels->debugFloatField7 = pid->maxValue;
 	tsOutputChannels->debugIntField1 = getP() * pMult;
 	tsOutputChannels->debugIntField2 = getOffset();
