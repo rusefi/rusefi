@@ -30,7 +30,7 @@ EXTERN_ENGINE;
 static int periodIndex = 0;
 
 static OutputPin testPin;
-scheduling_s *scheduling;
+scheduling_s scheduling;
 
 static int test557[] = {100, 100, 200, 200, 500, 500, 500, 5000};
 #define TEST_LEN 8
@@ -41,7 +41,7 @@ static void toggleTestAndScheduleNext() {
 	testPin.toggle();
 	periodIndex = (periodIndex + 1) % TEST_LEN;
 	testTime += test557[periodIndex];
-	scheduleByTimestamp(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+	scheduleByTimestamp(&scheduling, testTime, (schfunc_t) &scheduleByTimestamp, NULL);
 
 }
 
