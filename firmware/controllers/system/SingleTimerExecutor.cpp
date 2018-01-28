@@ -60,7 +60,7 @@ Executor::Executor() {
 	queue.setLateDelay(US2NT(100));
 }
 
-void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
+void Executor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
 	scheduleCounter++;
 //	if (delayUs < 0) {
@@ -149,7 +149,7 @@ void Executor::scheduleTimerCallback() {
 }
 
 /**
- * @brief Schedule an event
+ * @brief Schedule an event at specific delay after now
  *
  * Invokes event callback after the specified amount of time.
  *
@@ -157,12 +157,17 @@ void Executor::scheduleTimerCallback() {
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	instance.scheduleByTime(scheduling, getTimeNowUs() + delayUs, callback, param);
+void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	instance.scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void scheduleByTime(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	instance.scheduleByTime(scheduling, time, callback, param);
+/**
+ * @brief Schedule an event at specified timestamp
+ *
+ * @param [in] timeUs absolute time of the event, since ECU boot
+ */
+void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
+	instance.scheduleByTimestamp(scheduling, time, callback, param);
 }
 
 void initSignalExecutorImpl(void) {

@@ -294,7 +294,7 @@ bool OutputPin::isInitialized() {
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-void OutputPin::oggle() {
+void OutputPin::toggle() {
 	setValue(!getLogicValue());
 
 }

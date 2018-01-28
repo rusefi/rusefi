@@ -18,15 +18,15 @@ EventQueue schedulingQueue;
 
 bool_t debugSignalExecutor = false;
 
-void scheduleTask(scheduling_s *scheduling, int delayUs,
+void scheduleForLater(scheduling_s *scheduling, int delayUs,
 		schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleTask %d\r\n", delayUs);
 	}
-	scheduleByTime(scheduling, getTimeNowUs() + delayUs, callback, param);
+	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void scheduleByTime(scheduling_s *scheduling,
+void scheduleByTimestamp(scheduling_s *scheduling,
 		efitimeus_t time, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", time);
