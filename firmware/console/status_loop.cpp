@@ -72,6 +72,7 @@ extern bool main_loop_started;
 #include "max31855.h"
 #include "vehicle_speed.h"
 #include "SingleTimerExecutor.h"
+#include "CJ125.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_FSIO || defined(__DOXYGEN__)
@@ -802,6 +803,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField2 = invalidResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
+#if EFI_CJ125 || defined(__DOXYGEN__)
+	case DBG_CJ125:
+		cjPostState(tsOutputChannels);
+		break;
+#endif /* EFI_CJ125 */
 	case DBG_ADC:
 		tsOutputChannels->debugFloatField1 = (engineConfiguration->vbattAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField2 = (engineConfiguration->tpsAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("tps", engineConfiguration->tpsAdcChannel) : 0.0f;
