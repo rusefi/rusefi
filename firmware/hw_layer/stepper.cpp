@@ -48,19 +48,22 @@ static msg_t stThread(StepperMotor *motor) {
 		 *
 		 * I believe it's safer to retract the valve for parking - at least on a bench I've seen valves
 		 * disassembling themselves while pushing too far out.
+		 *
+		 * Use 10% more steps to compensate step skipping by some old motors.
 		 */
-		for (int i = 0; i < motor->totalSteps; i++) {
+		int numParkingSteps = (int)efiRound(1.1f * motor->totalSteps, 1.0f);
+		for (int i = 0; i < numParkingSteps; i++) {
 			motor->pulse();
 		}
 
 		// set & save zero stepper position after the parking completion
 		motor->currentPosition = 0;
 		saveStepperPos(motor->currentPosition);
+	} else {
+		// The initial target position should correspond to the saved stepper position.
+		// Idle thread starts later and sets a new target position.
+		motor->setTargetPosition(motor->currentPosition);
 	}
-
-	// The initial target position should correspond to the saved stepper position.
-	// Idle thread starts later and sets a new target position.
-	motor->setTargetPosition(motor->currentPosition);
 
 	while (true) {
 		int targetPosition = motor->getTargetPosition();
@@ -71,7 +74,7 @@ static msg_t stThread(StepperMotor *motor) {
 			continue;
 		}
 		bool isIncrementing = targetPosition > currentPosition;
-		motor->directionPin.setValue(isIncrementing);
+		motor->setDirection(isIncrementing);
 		if (isIncrementing) {
 			motor->currentPosition++;
 		} else {
@@ -107,6 +110,16 @@ int StepperMotor::getTargetPosition() {
 
 void StepperMotor::setTargetPosition(int targetPosition) {
 	this->targetPosition = targetPosition;
+}
+
+void StepperMotor::setDirection(bool isIncrementing) {
+	if (isIncrementing != this->currentDirection) {
+		// compensate stepper motor inertia
+		chThdSleepMilliseconds(reactionTime);
+		this->currentDirection = isIncrementing;
+	}
+		
+	directionPin.setValue(isIncrementing);
 }
 
 void StepperMotor::pulse() {
@@ -147,6 +160,7 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 	// All pins must be 0 for correct hardware startup (e.g. stepper auto-disabling circuit etc.).
 	palWritePad(this->stepPort, this->stepPin, false);
 	this->directionPin.setValue(false);
+	this->currentDirection = false;
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
 }

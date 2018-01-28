@@ -19,9 +19,11 @@ public:
 	void pulse();
 	void setTargetPosition(int targetPosition);
 	int getTargetPosition();
+	void setDirection(bool isIncrementing);
 
 	OutputPin directionPin;
 	int currentPosition;
+	bool currentDirection;
 	float reactionTime;
 	int totalSteps;
 private:
