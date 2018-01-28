@@ -43,6 +43,7 @@ public:
 	bool isInitialized();
 
 	void setValue(int logicValue);
+	void toggle();
 	bool getLogicValue();
 
 
