@@ -14,6 +14,10 @@
 #include "analog_input.h"
 #include "cyclic_buffer.h"
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "CJ125.h"
+#endif /* EFI_PROD_CODE */
+
 EXTERN_ENGINE;
 
 #ifdef EFI_NARROW_EGO_AVERAGING
@@ -88,10 +92,20 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_CJ125 || defined(__DOXYGEN__)
+	if (boardConfiguration->isCJ125Enabled) {
+		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+#endif /* EFI_CJ125 */
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
 }
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_CJ125 || defined(__DOXYGEN__)
+	if (boardConfiguration->isCJ125Enabled) {
+		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+#endif /* EFI_CJ125 */
 	afr_sensor_s * sensor = &CONFIG(afr);
 
 	float volts = getVoltageDivided("ego", sensor->hwChannel);
