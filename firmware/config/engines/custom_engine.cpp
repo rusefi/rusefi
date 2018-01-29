@@ -32,8 +32,8 @@ static int periodIndex = 0;
 static OutputPin testPin;
 scheduling_s scheduling;
 
-static int test557[] = {100, 100, 200, 200, 500, 500, 500, 5000};
-#define TEST_LEN 8
+static int test557[] = {5, 5, 10, 10, 20, 20, 50, 50, 100, 100, 200, 200, 500, 500, 500, 500};
+#define TEST_LEN 16
 
 efitimeus_t testTime;
 
