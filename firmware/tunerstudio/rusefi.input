@@ -1512,6 +1512,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
+		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
 		
 	dialog = idleHwType, "Idle Valve Hardware",	border
 		field = "use stepper",							useStepperIdle

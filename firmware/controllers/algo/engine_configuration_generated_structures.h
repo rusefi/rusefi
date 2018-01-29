@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 21:16:58 EET 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 22:17:49 EET 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -639,7 +639,7 @@ typedef struct {
 	bool measureMapOnlyInOneCylinder : 1;
 	/**
 	offset 376 bit 19 */
-	bool unused_board_984_19 : 1;
+	bool stepperForceParkingEveryRestart : 1;
 	/**
 	offset 376 bit 20 */
 	bool unused_board_984_20 : 1;
@@ -2330,4 +2330,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 21:16:58 EET 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 22:17:49 EET 2018
