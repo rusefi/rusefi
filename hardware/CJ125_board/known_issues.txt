@@ -4,4 +4,5 @@
  4) RESOLVED IN R0.3 add a note describing UR (R8) and UA (R15) low pass filter / slew rate limiter
  5) RESOLVED IN R0.3 Correct C9 should match C2 for 1kHz low pass filter. 
  6) RESOLVED IN R0.3 R12 is not routed right
- 7)                  voltage divider on UR and UA channels, 5V --> 3V
+ 7)                  voltage divider on UR and UA channels, 5V --> 3V (not clear if we need this)
+ 8)                  Remove R3 (connect ends) and remove C3

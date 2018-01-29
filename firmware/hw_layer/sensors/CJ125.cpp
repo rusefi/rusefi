@@ -14,6 +14,9 @@
 
 #if EFI_CJ125 || defined(__DOXYGEN__)
 
+// looks like 3v range should be enough, divider not needed
+#define EFI_CJ125_DIRECTLY_CONNECTED_UR TRUE
+
 #include "pin_repository.h"
 #include "hardware.h"
 #include "adc_inputs.h"
