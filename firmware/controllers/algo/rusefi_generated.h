@@ -580,8 +580,8 @@
 #define vvtCamSensorUseRise_offset_hex 3d8
 #define measureMapOnlyInOneCylinder_offset 984
 #define measureMapOnlyInOneCylinder_offset_hex 3d8
-#define unused_board_984_19_offset 984
-#define unused_board_984_19_offset_hex 3d8
+#define stepperForceParkingEveryRestart_offset 984
+#define stepperForceParkingEveryRestart_offset_hex 3d8
 #define unused_board_984_20_offset 984
 #define unused_board_984_20_offset_hex 3d8
 #define unused_board_984_21_offset 984
