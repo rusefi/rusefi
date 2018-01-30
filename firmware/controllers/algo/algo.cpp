@@ -39,8 +39,4 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initAlgo(Logging *sharedLogger) {
 	initInterpolation(sharedLogger);
-#if EFI_SIMULATOR
-	// todo: this is a mess, remove code duplication with PROD
-	initSettings();
-#endif
 }
