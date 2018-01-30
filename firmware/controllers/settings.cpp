@@ -1290,6 +1290,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 }
 
 void initSettings(void) {
+#if EFI_SIMULATOR
+	printf("initSettings\n");
+#endif
+
 	// todo: start saving values into flash right away?
 
 	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
@@ -1308,7 +1312,6 @@ void initSettings(void) {
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
 	addConsoleActionSSS("set_fuel_map", setFuelMap);
 
-	addConsoleActionF("set_whole_timing_map", setWholeTimingMap);
 	addConsoleActionSSS("set_timing_map", setTimingMap);
 
 	addConsoleAction("stopengine", (Void) stopEngine);
