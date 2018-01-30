@@ -556,6 +556,9 @@ static void getKnockInfo(void) {
 
 // this method is used by real firmware and simulator
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_SIMULATOR
+	printf("commonInitEngineController\n");
+#endif
 	initConfigActions();
 	initMockVoltage();
 
@@ -592,6 +595,9 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 }
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_SIMULATOR
+	printf("initEngineContoller\n");
+#endif
 	addConsoleAction("analoginfo", printAnalogInfo);
 	commonInitEngineController(sharedLogger);
 

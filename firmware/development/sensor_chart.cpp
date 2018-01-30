@@ -71,6 +71,9 @@ static void setSensorChartFrequency(int value) {
 }
 
 void initSensorChart(void) {
+#if EFI_SIMULATOR
+	printf("initSensorChart\n");
+#endif
 	addConsoleActionI("set_sensor_chart_freq", setSensorChartFrequency);
 
 	initialized = true;
