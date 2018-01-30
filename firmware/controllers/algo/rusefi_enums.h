@@ -755,7 +755,7 @@ typedef enum {
 	DBG_FSIO_EXPRESSION = 23,
 	DBG_STATUS = 24,
 	DBG_CJ125 = 25,
-	DBG_26 = 26,
+	DBG_CAN = 26,
 	DBG_27 = 27,
 	DBG_28 = 28,
 	DBG_29 = 29,

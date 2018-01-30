@@ -8,6 +8,8 @@
 #ifndef CAN_HW_H_
 #define CAN_HW_H_
 
+#include "tunerstudio_configuration.h"
+
 // CAN Bus ID for broadcast
 /**
  * e46 data is from http://forums.bimmerforums.com/forum/showthread.php?1887229
@@ -35,5 +37,6 @@ void sendCanMessage();
 void setCanType(int type);
 void setTxBit(int offset, int index);
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void postCanState(TunerStudioOutputChannels *tsOutputChannels);
 
 #endif /* CAN_HW_H_ */
