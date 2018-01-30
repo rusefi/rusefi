@@ -57,8 +57,8 @@
 #include "engine.h"
 #include "lcd_controller.h"
 #include "settings.h"
+#include "can_hw.h"
 
-extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
 
@@ -808,6 +808,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		cjPostState(tsOutputChannels);
 		break;
 #endif /* EFI_CJ125 */
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+	case DBG_CAN:
+		postCanState(tsOutputChannels);
+		break;
+#endif /* EFI_CAN_SUPPORT */
 	case DBG_ADC:
 		tsOutputChannels->debugFloatField1 = (engineConfiguration->vbattAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField2 = (engineConfiguration->tpsAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("tps", engineConfiguration->tpsAdcChannel) : 0.0f;

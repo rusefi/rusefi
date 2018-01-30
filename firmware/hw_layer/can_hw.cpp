@@ -16,14 +16,16 @@
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
+
+#endif /* EFI_PROD_CODE */
+
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+
 #include "pin_repository.h"
 #include "mpu_util.h"
 #include "engine_state.h"
 #include "engine_configuration.h"
 #include "vehicle_speed.h"
-#endif /* EFI_PROD_CODE */
-
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
 EXTERN_ENGINE
 ;
@@ -113,8 +115,6 @@ static void sendCanMessage2(int size) {
 void sendCanMessage() {
 	sendCanMessage2(8);
 }
-
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 static void canDashboardBMW(void) {
 	//BMW Dashboard
@@ -278,7 +278,11 @@ void setCanType(int type) {
 	canInfo();
 }
 
-#endif /* EFI_PROD_CODE */
+void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
+	tsOutputChannels->debugIntField1 = isCanEnabled ? canReadCounter : -1;
+	tsOutputChannels->debugIntField2 = isCanEnabled ? canWriteOk : -1;
+	tsOutputChannels->debugIntField3 = isCanEnabled ? canWriteNotOk : -1;
+}
 
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canTxPin = GPIOB_6;
@@ -305,12 +309,9 @@ void initCan(void) {
 			firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(boardConfiguration->canRxPin));
 	}
 
-
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("caninfo", canInfo);
 	if (!isCanEnabled)
 		return;
-#endif /* EFI_PROD_CODE */
 
 #if STM32_CAN_USE_CAN2 || defined(__DOXYGEN__)
 	// CAN1 is required for CAN2
@@ -320,13 +321,10 @@ void initCan(void) {
 	canStart(&CAND1, &canConfig);
 #endif /* STM32_CAN_USE_CAN2 */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);
 
 	startCanPins();
 
-#endif /* EFI_PROD_CODE */
 }
 
 #endif /* EFI_CAN_SUPPORT */

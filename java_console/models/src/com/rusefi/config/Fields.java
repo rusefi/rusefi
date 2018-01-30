@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 21:16:58 EET 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 29 19:16:26 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -399,7 +399,7 @@ public class Fields {
 	public static final int isCJ125Enabled_offset = 984;
 	public static final int vvtCamSensorUseRise_offset = 984;
 	public static final int measureMapOnlyInOneCylinder_offset = 984;
-	public static final int unused_board_984_19_offset = 984;
+	public static final int stepperForceParkingEveryRestart_offset = 984;
 	public static final int unused_board_984_20_offset = 984;
 	public static final int unused_board_984_21_offset = 984;
 	public static final int unused_board_984_22_offset = 984;
@@ -1393,7 +1393,7 @@ public class Fields {
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 984, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 984, FieldType.BIT, 17);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 984, FieldType.BIT, 18);
-	public static final Field UNUSED_BOARD_984_19 = Field.create("UNUSED_BOARD_984_19", 984, FieldType.BIT, 19);
+	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 984, FieldType.BIT, 19);
 	public static final Field UNUSED_BOARD_984_20 = Field.create("UNUSED_BOARD_984_20", 984, FieldType.BIT, 20);
 	public static final Field UNUSED_BOARD_984_21 = Field.create("UNUSED_BOARD_984_21", 984, FieldType.BIT, 21);
 	public static final Field UNUSED_BOARD_984_22 = Field.create("UNUSED_BOARD_984_22", 984, FieldType.BIT, 22);
@@ -1694,7 +1694,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2208, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2212, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2216, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test", "Aux Valves", "ADC", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "mode26", "mode27", "mode28", "mode29"};
+	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test", "Aux Valves", "ADC", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "mode27", "mode28", "mode29"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2220, FieldType.INT, debug_mode_e);
 	public static final Field AUXVALVES1 = Field.create("AUXVALVES1", 2224, FieldType.INT, brain_pin_e);
 	public static final Field AUXVALVES2 = Field.create("AUXVALVES2", 2228, FieldType.INT, brain_pin_e);

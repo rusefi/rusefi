@@ -12,6 +12,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 01/29/2018    | r15514    | improvement #215: CJ125 wideband contoller |
 | 01/23/2018    | r15442    | improvement #463: ChibiOS 17 / 4 |
 | 01/07/2018    | r14952    | usability & minor bugfix #532 idle defaults are broken |
 | 12/17/2017    | r14892    | bugfix #513: console: erase on older chips does not work |
