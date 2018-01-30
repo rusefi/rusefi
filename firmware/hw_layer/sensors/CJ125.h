@@ -17,6 +17,9 @@
 #define	INIT_REG2_RD					0x7E // Read Initialization Register 2
 
 /**********************************************************************************
+ * Courtesy "Turbo SOB"
+ * http://www.turbo-mopar.com/forums/showthread.php?77041-Wideband-O2-Controller-Project-with-EGT-A2D-DAQ-Diagnostic-Etc&p=1110559#post1110559
+
     INIT_REG1 - CJ125 Initialization Register 1
         00x000x0
         ||||||||---- VL - Pump Current Sense Amplifier - 0 = x8, 1 = x17
@@ -40,6 +43,40 @@
         |||--------- Unused
         ||---------- PA - Pump Current Control - Set to 0 to be active
         |----------- ENABLE/HOLD - Must be set to 1 to enable
+***********************************************************************************/
+
+/**********************************************************************************
+    INIT_REG2 - CJ125 Initialization Register 1
+        xxx00000
+        ||||||||---- PR0 - Reference Pump Current (10 uA)
+        |||||||----- PR1 - Reference Pump Current (20 uA)
+        ||||||------ PR2 - Reference Pump Current (40 uA)
+        |||||------- PR3 - Reference Pump Current (80 uA)
+        ||||-------- ENSCUN - Enables diagnostics for pin UN of the CJ125
+        |||--------- Unused
+        ||---------- Unused
+        |----------- Unused
+***********************************************************************************/
+
+/**********************************************************************************
+    DIAG_REG - CJ125 Diagnostic Register Definition (Read Only)
+        00000000
+        ||||||||---- Sensor VM Diagnostic Bit 0
+        |||||||----- Sensor VM Diagnostic Bit 1
+        ||||||------ Sensor UN Diagnostic Bit 0
+        |||||------- Sensor UN Diagnostic Bit 1
+        ||||-------- Sensor IA/IP Diagnostic Bit 0
+        |||--------- Sensor IA/IP Diagnostic Bit 1
+                            00 = Short circuit to ground
+                            01 = Low Battery
+                            10 = Short circuit to Vbatt
+                            11 = No Failure
+        ||---------- Ext. Heater DIAHD Diagnostic Bit
+        |----------- Ext. Heater DIAHG Diagnostic Bit
+                            00 = Short circuit to ground
+                            01 = Open Load
+                            10 = Short circuit to Vbatt
+                            11 = No Failure
 ***********************************************************************************/
 
 #define	CJ125_INIT1_NORMAL_8			0x88 // 0b10001000 (Normal mode, Amplification 8)
