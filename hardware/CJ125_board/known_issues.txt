@@ -7,4 +7,4 @@
  7)                  voltage divider on UR and UA channels, 5V --> 3V (not clear if we need this on the little board - we can always use external divider)
  8) RESOLVED IN R0.3 R3 is now 0R and C3 is now DNP. These are here incase a filter is needed, as shown in some of the OEM's documentation. 
  9)                  enlarge silkscreen font - current font is too small
-10)                  match Frankenso GND/3v/5v pinout and provide 3 extra holes in corners just for flat moutning
+10)                  match Frankenso GND/3v/5v pinout and provide 3 extra holes in corners just for flat mounting
