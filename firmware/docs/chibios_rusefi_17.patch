@@ -1,30 +1,36 @@
 diff -uwr Chibios.17_original/.git/FETCH_HEAD Chibios.17_rusefi/.git/FETCH_HEAD
---- Chibios.17_original/.git/FETCH_HEAD	2018-01-24 08:20:18.695415300 -0500
-+++ Chibios.17_rusefi/.git/FETCH_HEAD	2018-01-24 08:20:21.271562600 -0500
+--- Chibios.17_original/.git/FETCH_HEAD	2018-01-30 21:31:37.600033400 -0500
++++ Chibios.17_rusefi/.git/FETCH_HEAD	2018-01-30 21:41:12.360907800 -0500
 @@ -1,11 +1,11 @@
 -5b4a1f5837a83f32fd5e5e439eaa370cc7399237		branch 'stable_17.6.x' of https://github.com/rusefi/ChibiOS
-+ff149b9786e391cbad6fb8580a45911b0f76c753		branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
++da33521329932cb7a0bb494dd3df9c1c9bd9af1a		branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
  b263680b98fbb41e939ce62e55916254ece4acc7	not-for-merge	branch 'master' of https://github.com/rusefi/ChibiOS
  a4b2c113e74e026dfc7cc02060b32ab3f047ae8d	not-for-merge	branch 'revert-10-master' of https://github.com/rusefi/ChibiOS
  e61ff3aa1c1fd0f1057e08ae4551abbc01595550	not-for-merge	branch 'stable_1.0.x' of https://github.com/rusefi/ChibiOS
  3957b74f871e2ac11b8447aa067b1cece4861970	not-for-merge	branch 'stable_1.2.x' of https://github.com/rusefi/ChibiOS
  06c45ae2ef94ff95bbdab317bc53aebe7c51aacc	not-for-merge	branch 'stable_1.4.x' of https://github.com/rusefi/ChibiOS
  c8198eb36c2174484141f0119f720bcf0468a0b9	not-for-merge	branch 'stable_16.1.x' of https://github.com/rusefi/ChibiOS
--ff149b9786e391cbad6fb8580a45911b0f76c753	not-for-merge	branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
+-da33521329932cb7a0bb494dd3df9c1c9bd9af1a	not-for-merge	branch 'stable_17.6.rusefi' of https://github.com/rusefi/ChibiOS
 +5b4a1f5837a83f32fd5e5e439eaa370cc7399237	not-for-merge	branch 'stable_17.6.x' of https://github.com/rusefi/ChibiOS
  e324eb668a8399c5e5342d3111d175f42f14b50b	not-for-merge	branch 'stable_2.0.x' of https://github.com/rusefi/ChibiOS
  c807840cdcec4e09b3fd0d2268370d9a317f0b90	not-for-merge	branch 'stable_2.2.x' of https://github.com/rusefi/ChibiOS
  062803674562e117754c051992535d69a3762573	not-for-merge	branch 'stable_2.4.x' of https://github.com/rusefi/ChibiOS
 diff -uwr Chibios.17_original/.git/HEAD Chibios.17_rusefi/.git/HEAD
---- Chibios.17_original/.git/HEAD	2018-01-23 13:35:05.866185300 -0500
-+++ Chibios.17_rusefi/.git/HEAD	2018-01-23 13:36:11.715951700 -0500
+--- Chibios.17_original/.git/HEAD	2018-01-30 21:25:23.689646900 -0500
++++ Chibios.17_rusefi/.git/HEAD	2018-01-30 21:33:39.406000300 -0500
 @@ -1 +1 @@
 -ref: refs/heads/stable_17.6.x
 +ref: refs/heads/stable_17.6.rusefi
+diff -uwr Chibios.17_original/.git/ORIG_HEAD Chibios.17_rusefi/.git/ORIG_HEAD
+--- Chibios.17_original/.git/ORIG_HEAD	2018-01-30 21:32:00.640351200 -0500
++++ Chibios.17_rusefi/.git/ORIG_HEAD	2018-01-30 21:41:17.857222200 -0500
+@@ -1 +1 @@
+-5b4a1f5837a83f32fd5e5e439eaa370cc7399237
++da33521329932cb7a0bb494dd3df9c1c9bd9af1a
 diff -uwr Chibios.17_original/.git/config Chibios.17_rusefi/.git/config
---- Chibios.17_original/.git/config	2018-01-23 13:43:23.353639900 -0500
-+++ Chibios.17_rusefi/.git/config	2018-01-23 13:52:32.424045000 -0500
-@@ -8,9 +8,9 @@
+--- Chibios.17_original/.git/config	2018-01-30 21:25:23.731649300 -0500
++++ Chibios.17_rusefi/.git/config	2018-01-30 21:33:39.550008500 -0500
+@@ -9,6 +9,6 @@
  [remote "origin"]
  	url = https://github.com/rusefi/ChibiOS
  	fetch = +refs/heads/*:refs/remotes/origin/*
@@ -33,147 +39,26 @@ diff -uwr Chibios.17_original/.git/config Chibios.17_rusefi/.git/config
  	remote = origin
 -	merge = refs/heads/stable_17.6.x
 +	merge = refs/heads/stable_17.6.rusefi
- [remote "upstream"]
- 	url = https://github.com/ChibiOS/ChibiOS.git
- 	fetch = +refs/heads/*:refs/remotes/upstream/*
 Binary files Chibios.17_original/.git/index and Chibios.17_rusefi/.git/index differ
 diff -uwr Chibios.17_original/.git/logs/HEAD Chibios.17_rusefi/.git/logs/HEAD
---- Chibios.17_original/.git/logs/HEAD	2018-01-23 13:50:03.269513800 -0500
-+++ Chibios.17_rusefi/.git/logs/HEAD	2018-01-24 08:20:24.104724700 -0500
-@@ -1,2 +1,3 @@
--0000000000000000000000000000000000000000 c71ef710730191f767d077bc660142b1c8984915 rusefi <arro239+rusefi@gmail.com> 1516732505 -0500	clone: from https://github.com/rusefi/ChibiOS
--c71ef710730191f767d077bc660142b1c8984915 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusefi <arro239+rusefi@gmail.com> 1516733403 -0500	merge upstream/stable_17.6.x: Fast-forward
-+0000000000000000000000000000000000000000 c71ef710730191f767d077bc660142b1c8984915 rusefi <arro239+rusefi@gmail.com> 1516732571 -0500	clone: from https://github.com/rusefi/ChibiOS
-+c71ef710730191f767d077bc660142b1c8984915 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusefi <arro239+rusefi@gmail.com> 1516733579 -0500	merge upstream/stable_17.6.x: Fast-forward
-+5b4a1f5837a83f32fd5e5e439eaa370cc7399237 ff149b9786e391cbad6fb8580a45911b0f76c753 rusefi <arro239+rusefi@gmail.com> 1516800024 -0500	pull: Fast-forward
+--- Chibios.17_original/.git/logs/HEAD	2018-01-30 21:25:23.711648200 -0500
++++ Chibios.17_rusefi/.git/logs/HEAD	2018-01-30 21:33:39.538007800 -0500
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusEfi <russianefi@gmail.com> 1517365523 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 da33521329932cb7a0bb494dd3df9c1c9bd9af1a rusEfi <russianefi@gmail.com> 1517366019 -0500	clone: from https://github.com/rusefi/ChibiOS
 Only in Chibios.17_rusefi/.git/logs/refs/heads: stable_17.6.rusefi
 Only in Chibios.17_original/.git/logs/refs/heads: stable_17.6.x
 diff -uwr Chibios.17_original/.git/logs/refs/remotes/origin/HEAD Chibios.17_rusefi/.git/logs/refs/remotes/origin/HEAD
---- Chibios.17_original/.git/logs/refs/remotes/origin/HEAD	2018-01-23 13:35:05.864185200 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/origin/HEAD	2018-01-23 13:36:11.712951500 -0500
+--- Chibios.17_original/.git/logs/refs/remotes/origin/HEAD	2018-01-30 21:25:23.687646800 -0500
++++ Chibios.17_rusefi/.git/logs/refs/remotes/origin/HEAD	2018-01-30 21:33:39.283993300 -0500
 @@ -1 +1 @@
--0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516732505 -0500	clone: from https://github.com/rusefi/ChibiOS
-+0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusefi <arro239+rusefi@gmail.com> 1516732571 -0500	clone: from https://github.com/rusefi/ChibiOS
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/origin/stable_17.6.rusefi Chibios.17_rusefi/.git/logs/refs/remotes/origin/stable_17.6.rusefi
---- Chibios.17_original/.git/logs/refs/remotes/origin/stable_17.6.rusefi	2018-01-24 08:20:18.694415200 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/origin/stable_17.6.rusefi	2018-01-24 08:20:21.265562300 -0500
-@@ -1 +1,2 @@
--c71ef710730191f767d077bc660142b1c8984915 ff149b9786e391cbad6fb8580a45911b0f76c753 rusefi <arro239+rusefi@gmail.com> 1516800018 -0500	pull: fast-forward
-+c71ef710730191f767d077bc660142b1c8984915 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusefi <arro239+rusefi@gmail.com> 1516733587 -0500	update by push
-+5b4a1f5837a83f32fd5e5e439eaa370cc7399237 ff149b9786e391cbad6fb8580a45911b0f76c753 rusefi <arro239+rusefi@gmail.com> 1516800021 -0500	pull: fast-forward
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/origin/stable_17.6.x Chibios.17_rusefi/.git/logs/refs/remotes/origin/stable_17.6.x
---- Chibios.17_original/.git/logs/refs/remotes/origin/stable_17.6.x	2018-01-23 13:50:25.632792900 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/origin/stable_17.6.x	2018-01-24 08:20:21.270562600 -0500
-@@ -1 +1 @@
--c71ef710730191f767d077bc660142b1c8984915 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusefi <arro239+rusefi@gmail.com> 1516733425 -0500	update by push
-+c71ef710730191f767d077bc660142b1c8984915 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusefi <arro239+rusefi@gmail.com> 1516800021 -0500	pull: fast-forward
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/chibistudio_trunk Chibios.17_rusefi/.git/logs/refs/remotes/upstream/chibistudio_trunk
---- Chibios.17_original/.git/logs/refs/remotes/upstream/chibistudio_trunk	2018-01-23 13:44:41.465107700 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/chibistudio_trunk	2018-01-23 13:52:53.076226200 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 f58a65901fb40bea6d9a377af4eef2614e6d0d67 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 f58a65901fb40bea6d9a377af4eef2614e6d0d67 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/kernel_3_alt_vt_dev Chibios.17_rusefi/.git/logs/refs/remotes/upstream/kernel_3_alt_vt_dev
---- Chibios.17_original/.git/logs/refs/remotes/upstream/kernel_3_alt_vt_dev	2018-01-23 13:44:41.471108000 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/kernel_3_alt_vt_dev	2018-01-23 13:52:53.083226600 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 51e985ee0ddf42d10215955f8c022b031370037d rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 51e985ee0ddf42d10215955f8c022b031370037d rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/kernel_3_dev Chibios.17_rusefi/.git/logs/refs/remotes/upstream/kernel_3_dev
---- Chibios.17_original/.git/logs/refs/remotes/upstream/kernel_3_dev	2018-01-23 13:44:41.478108400 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/kernel_3_dev	2018-01-23 13:52:53.089227000 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 14e7e9d22621d1438de919c69117d921e45eee14 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 14e7e9d22621d1438de919c69117d921e45eee14 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/master Chibios.17_rusefi/.git/logs/refs/remotes/upstream/master
---- Chibios.17_original/.git/logs/refs/remotes/upstream/master	2018-01-23 13:44:41.480108500 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/master	2018-01-23 13:52:53.095227300 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 4892c06e60e5a94d16cd40da532651b40e48b568 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 4892c06e60e5a94d16cd40da532651b40e48b568 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/revert-10-master Chibios.17_rusefi/.git/logs/refs/remotes/upstream/revert-10-master
---- Chibios.17_original/.git/logs/refs/remotes/upstream/revert-10-master	2018-01-23 13:44:41.482108600 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/revert-10-master	2018-01-23 13:52:53.103227800 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 a4b2c113e74e026dfc7cc02060b32ab3f047ae8d rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 a4b2c113e74e026dfc7cc02060b32ab3f047ae8d rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_1.0.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_1.0.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_1.0.x	2018-01-23 13:44:41.487108900 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_1.0.x	2018-01-23 13:52:53.110228200 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 e61ff3aa1c1fd0f1057e08ae4551abbc01595550 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 e61ff3aa1c1fd0f1057e08ae4551abbc01595550 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_1.2.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_1.2.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_1.2.x	2018-01-23 13:44:41.493109300 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_1.2.x	2018-01-23 13:52:53.117228600 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 3957b74f871e2ac11b8447aa067b1cece4861970 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 3957b74f871e2ac11b8447aa067b1cece4861970 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_1.4.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_1.4.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_1.4.x	2018-01-23 13:44:41.501109700 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_1.4.x	2018-01-23 13:52:53.124229000 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 06c45ae2ef94ff95bbdab317bc53aebe7c51aacc rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 06c45ae2ef94ff95bbdab317bc53aebe7c51aacc rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_16.1.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_16.1.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_16.1.x	2018-01-23 13:44:41.507110100 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_16.1.x	2018-01-23 13:52:53.130229300 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 a7f2766e1a44359d2ee3a9bf219f223c9d9d5a60 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 a7f2766e1a44359d2ee3a9bf219f223c9d9d5a60 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_17.6.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_17.6.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_17.6.x	2018-01-23 13:44:41.514110500 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_17.6.x	2018-01-23 13:52:53.136229600 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 5b4a1f5837a83f32fd5e5e439eaa370cc7399237 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.0.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.0.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.0.x	2018-01-23 13:44:41.520110800 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.0.x	2018-01-23 13:52:53.143230000 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 e324eb668a8399c5e5342d3111d175f42f14b50b rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 e324eb668a8399c5e5342d3111d175f42f14b50b rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.2.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.2.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.2.x	2018-01-23 13:44:41.527111200 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.2.x	2018-01-23 13:52:53.163231200 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 c807840cdcec4e09b3fd0d2268370d9a317f0b90 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 c807840cdcec4e09b3fd0d2268370d9a317f0b90 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.4.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.4.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.4.x	2018-01-23 13:44:41.533111600 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.4.x	2018-01-23 13:52:53.170231600 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 062803674562e117754c051992535d69a3762573 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 062803674562e117754c051992535d69a3762573 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.6.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.6.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_2.6.x	2018-01-23 13:44:41.540112000 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_2.6.x	2018-01-23 13:52:53.177232000 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 0b0e793cc832373af431029878bc4b6f8c3e5fa5 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 0b0e793cc832373af431029878bc4b6f8c3e5fa5 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/stable_3.0.x Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_3.0.x
---- Chibios.17_original/.git/logs/refs/remotes/upstream/stable_3.0.x	2018-01-23 13:44:41.546112300 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/stable_3.0.x	2018-01-23 13:52:53.184232400 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 7596c99a218929e8c93341e2afa353134b64e233 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 7596c99a218929e8c93341e2afa353134b64e233 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/trunk Chibios.17_rusefi/.git/logs/refs/remotes/upstream/trunk
---- Chibios.17_original/.git/logs/refs/remotes/upstream/trunk	2018-01-23 13:44:41.553112700 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/trunk	2018-01-23 13:52:53.191232800 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 7c499f04330b0a471dd9775c040c0fab5ed23230 rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 7c499f04330b0a471dd9775c040c0fab5ed23230 rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
-diff -uwr Chibios.17_original/.git/logs/refs/remotes/upstream/utils_dev Chibios.17_rusefi/.git/logs/refs/remotes/upstream/utils_dev
---- Chibios.17_original/.git/logs/refs/remotes/upstream/utils_dev	2018-01-23 13:44:41.560113100 -0500
-+++ Chibios.17_rusefi/.git/logs/refs/remotes/upstream/utils_dev	2018-01-23 13:52:53.199233200 -0500
-@@ -1 +1 @@
--0000000000000000000000000000000000000000 d19be72d72b955806f421ef02d8511ffbcb0f3ba rusefi <arro239+rusefi@gmail.com> 1516733081 -0500	fetch upstream: storing head
-+0000000000000000000000000000000000000000 d19be72d72b955806f421ef02d8511ffbcb0f3ba rusefi <arro239+rusefi@gmail.com> 1516733573 -0500	fetch upstream: storing head
+-0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusEfi <russianefi@gmail.com> 1517365523 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 b263680b98fbb41e939ce62e55916254ece4acc7 rusEfi <russianefi@gmail.com> 1517366019 -0500	clone: from https://github.com/rusefi/ChibiOS
 Only in Chibios.17_rusefi/.git/refs/heads: stable_17.6.rusefi
 Only in Chibios.17_original/.git/refs/heads: stable_17.6.x
 diff -uwr Chibios.17_original/os/hal/include/hal_uart.h Chibios.17_rusefi/os/hal/include/hal_uart.h
---- Chibios.17_original/os/hal/include/hal_uart.h	2018-01-23 13:35:21.020052000 -0500
-+++ Chibios.17_rusefi/os/hal/include/hal_uart.h	2018-01-24 08:20:24.033720600 -0500
+--- Chibios.17_original/os/hal/include/hal_uart.h	2018-01-30 21:27:32.434010700 -0500
++++ Chibios.17_rusefi/os/hal/include/hal_uart.h	2018-01-30 21:36:52.840064100 -0500
 @@ -275,6 +275,26 @@
  }
  
@@ -202,8 +87,8 @@ diff -uwr Chibios.17_original/os/hal/include/hal_uart.h Chibios.17_rusefi/os/hal
   * @details This code handles the portable part of the ISR code:
   *          - Callback invocation.
 diff -uwr Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c Chibios.17_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
---- Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2018-01-23 13:50:03.039500700 -0500
-+++ Chibios.17_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2018-01-24 08:20:24.035720700 -0500
+--- Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2018-01-30 21:27:40.457469600 -0500
++++ Chibios.17_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2018-01-30 21:37:06.091822000 -0500
 @@ -226,6 +226,11 @@
    /* Mustn't ever set TCIE here - if done, it causes an immediate
       interrupt.*/
@@ -262,8 +147,8 @@ diff -uwr Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c Chib
    /* Starting transfer.*/
    dmaStreamEnable(uartp->dmarx);
 diff -uwr Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h Chibios.17_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
---- Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2018-01-23 13:35:23.099171000 -0500
-+++ Chibios.17_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2018-01-24 08:20:24.038720900 -0500
+--- Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2018-01-30 21:27:40.460469800 -0500
++++ Chibios.17_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2018-01-30 21:37:06.388839000 -0500
 @@ -463,6 +463,14 @@
  typedef void (*uartecb_t)(UARTDriver *uartp, uartflags_t e);
  
@@ -296,3 +181,19 @@ diff -uwr Chibios.17_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h Chib
  } UARTConfig;
  
  /**
+diff -uwr Chibios.17_original/os/rt/include/chdebug.h Chibios.17_rusefi/os/rt/include/chdebug.h
+--- Chibios.17_original/os/rt/include/chdebug.h	2018-01-30 21:27:57.446441300 -0500
++++ Chibios.17_rusefi/os/rt/include/chdebug.h	2018-01-30 21:37:18.955557800 -0500
+@@ -60,9 +60,10 @@
+ /* Module macros.                                                            */
+ /*===========================================================================*/
+ 
++//rusEfi additional hooks
+ #if CH_DBG_SYSTEM_STATE_CHECK == TRUE
+-#define _dbg_enter_lock() (ch.dbg.lock_cnt = (cnt_t)1)
+-#define _dbg_leave_lock() (ch.dbg.lock_cnt = (cnt_t)0)
++#define _dbg_enter_lock() {(ch.dbg.lock_cnt = (cnt_t)1);  ON_LOCK_HOOK;}
++#define _dbg_leave_lock() {ON_UNLOCK_HOOK;(ch.dbg.lock_cnt = (cnt_t)0);}
+ #endif
+ 
+ /* When the state checker feature is disabled then the following functions
