@@ -12,6 +12,7 @@
 	static int mockTps;
 #endif /* EFI_PROD_CODE */
 
+// set mock_pedal_position X
 static percent_t mockPedalPosition = MOCK_UNDEFINED;
 
 /**
