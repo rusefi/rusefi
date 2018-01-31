@@ -50,6 +50,7 @@
 #include "histogram.h"
 #include "fuel_math.h"
 #include "histogram.h"
+#include "engine_controller.h"
 #include "efiGpio.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
