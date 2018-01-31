@@ -518,6 +518,13 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	}
 }
 
+// Check if the engine is not stopped or cylinder cleanup is activated
+static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE))
+		return true;
+	return CONFIG(isCylinderCleanupEnabled) && (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS);
+}
+
 // Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
 static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -527,6 +534,10 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// if we're just toying with the ignition switch, give it another chance eventually...
 	if (ignSwitchCounter > 10)
 		ignSwitchCounter = 0;
+	// If we're going to skip this pulse, then save the counter as 0.
+	// That's because we'll definitely need the prime pulse next time (either due to the cylinder cleanup or the engine spinning)
+	if (isPrimeInjectionPulseSkipped(PASS_ENGINE_PARAMETER_SIGNATURE))
+		ignSwitchCounter = -1;
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
 		// fill-in the prime event struct
