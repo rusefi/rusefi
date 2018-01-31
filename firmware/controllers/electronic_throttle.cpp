@@ -27,6 +27,7 @@
  * enable verbose_etb
  * disable verbose_etb
  * ethinfo
+ * set mock_pedal_position X
  *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
