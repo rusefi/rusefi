@@ -10,6 +10,6 @@
 
 #include "engine.h"
 
-void setMazdaMiataNA8Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setMazdaMiataNA8Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_MAZDA_MIATA_NA8_H_ */
