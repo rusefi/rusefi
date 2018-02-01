@@ -87,6 +87,8 @@ case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA_1_6:
   return "MIATA_NA_1_6";
+case MAZDA_MIATA_NA8:
+  return "MAZDA_MIATA_NA8";
 case MINI_COOPER_R50:
   return "MINI_COOPER_R50";
 case MITSU_4G93:

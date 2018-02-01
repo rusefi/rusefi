@@ -1100,6 +1100,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setZil130(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA_1_6:
+	case MAZDA_MIATA_NA8:
 		setMiataNA_1_6_Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case TEST_CIVIC_4_0_BOTH:
