@@ -7,6 +7,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
+#include "mazda_miata_na8.h"
+
+void setMazdaMiataNA8Configuration(PASS_ENGINE_PARAMETER_SIGNATURE) {
+
+}
 
 
 
