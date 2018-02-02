@@ -118,7 +118,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
-	if (emulatorConfigVersion.isOld() && isEmulatorConfigChanged) {
+	if (emulatorConfigVersion.isOld() && (isEmulatorConfigChanged || isTriggerConfigChanged)) {
 #else
 	if (emulatorConfigVersion.isOld()) {
 #endif /* EFI_PROD_CODE */
