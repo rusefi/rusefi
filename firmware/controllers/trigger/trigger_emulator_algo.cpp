@@ -80,6 +80,7 @@ static single_wave_s sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], wave
 static float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 
 PwmConfig triggerSignal(switchTimesBuffer, sr);
+bool isEmulatorConfigChanged = false;
 
 #define DO_NOT_STOP 999999999
 
@@ -116,7 +117,11 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 static void updateTriggerShapeIfNeeded(PwmConfig *state) {
+#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+	if (emulatorConfigVersion.isOld() && isEmulatorConfigChanged) {
+#else
 	if (emulatorConfigVersion.isOld()) {
+#endif /* EFI_PROD_CODE */
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", emulatorConfigVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 

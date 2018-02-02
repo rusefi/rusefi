@@ -25,14 +25,15 @@
 #endif /* EFI_PROD_CODE */
 
 extern PwmConfig triggerSignal;
+extern bool isEmulatorConfigChanged;
 
 static OutputPin emulatorOutputs[3];
 
 EXTERN_ENGINE;
 
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration) {
-	if (engineConfiguration->bc.triggerSimulatorFrequency ==
-			previousConfiguration->bc.triggerSimulatorFrequency) {
+	isEmulatorConfigChanged = engineConfiguration->bc.triggerSimulatorFrequency != previousConfiguration->bc.triggerSimulatorFrequency;
+	if (!isEmulatorConfigChanged) {
 		return;
 	}
 	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency);
