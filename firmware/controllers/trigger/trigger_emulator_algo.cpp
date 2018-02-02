@@ -120,6 +120,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", emulatorConfigVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
+		// kludge: this line affects not trigger emulation but actual trigger consumption
 		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
