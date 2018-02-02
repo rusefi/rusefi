@@ -70,6 +70,7 @@ struct_no_prefix engine_configuration_s
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CLT_CRANKING_CURVE_SIZE 8
 #define IDLE_ADVANCE_CURVE_SIZE 8
+#define CRANKING_ADVANCE_CURVE_SIZE 4
 
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
@@ -683,8 +684,8 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
 	bit twoWireBatchIgnition;+This is needed if batched igniton (waster spark) and individual coil wiring
 bit useFixedBaroCorrFromMap
-bit unused_1484_bit_17
-bit unused_1484_bit_18
+bit useSeparateAdvanceForCranking
+bit useAdvanceCorrectionsForCranking
 bit unused_1484_bit_19
 bit unused_1484_bit_20
 bit unused_1484_bit_21
@@ -888,7 +889,11 @@ spi_device_e accelerometerSpiDevice;
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 brain_input_pin_e flexFuelSensor;
 brain_pin_e test557pin
-	int[792] unusedEnd;
+
+float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
+float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
+
+	int[784] unusedEnd;
 	
 
 end_struct
