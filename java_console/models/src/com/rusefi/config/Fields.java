@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 29 19:16:26 EST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 01 08:34:19 EET 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -15,6 +15,7 @@ public class Fields {
 	public static final int CRANKING_CLT_IDLE_CURVE_SIZE = 8;
 	public static final int CLT_CRANKING_CURVE_SIZE = 8;
 	public static final int IDLE_ADVANCE_CURVE_SIZE = 8;
+	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int CLT_TIMING_CURVE_SIZE = 8;
 	public static final int IDLE_VE_CURVE_SIZE = 8;
@@ -648,8 +649,8 @@ public class Fields {
 	public static final int useOnlyRisingEdgeForTrigger_offset = 1484;
 	public static final int twoWireBatchIgnition_offset = 1484;
 	public static final int useFixedBaroCorrFromMap_offset = 1484;
-	public static final int unused_1484_bit_17_offset = 1484;
-	public static final int unused_1484_bit_18_offset = 1484;
+	public static final int useSeparateAdvanceForCranking_offset = 1484;
+	public static final int useAdvanceCorrectionsForCranking_offset = 1484;
 	public static final int unused_1484_bit_19_offset = 1484;
 	public static final int unused_1484_bit_20_offset = 1484;
 	public static final int unused_1484_bit_21_offset = 1484;
@@ -1016,7 +1017,9 @@ public class Fields {
 	public static final int fsioCurve4_offset = 3272;
 	public static final int flexFuelSensor_offset = 3304;
 	public static final int test557pin_offset = 3308;
-	public static final int unusedEnd_offset = 3312;
+	public static final int crankingAdvanceBins_offset = 3312;
+	public static final int crankingAdvance_offset = 3328;
+	public static final int unusedEnd_offset = 3344;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1582,8 +1585,8 @@ public class Fields {
 	public static final Field USEONLYRISINGEDGEFORTRIGGER = Field.create("USEONLYRISINGEDGEFORTRIGGER", 1484, FieldType.BIT, 14);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1484, FieldType.BIT, 15);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1484, FieldType.BIT, 16);
-	public static final Field UNUSED_1484_BIT_17 = Field.create("UNUSED_1484_BIT_17", 1484, FieldType.BIT, 17);
-	public static final Field UNUSED_1484_BIT_18 = Field.create("UNUSED_1484_BIT_18", 1484, FieldType.BIT, 18);
+	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1484, FieldType.BIT, 17);
+	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1484, FieldType.BIT, 18);
 	public static final Field UNUSED_1484_BIT_19 = Field.create("UNUSED_1484_BIT_19", 1484, FieldType.BIT, 19);
 	public static final Field UNUSED_1484_BIT_20 = Field.create("UNUSED_1484_BIT_20", 1484, FieldType.BIT, 20);
 	public static final Field UNUSED_1484_BIT_21 = Field.create("UNUSED_1484_BIT_21", 1484, FieldType.BIT, 21);

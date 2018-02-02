@@ -26,6 +26,7 @@
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CLT_CRANKING_CURVE_SIZE 8
 #define IDLE_ADVANCE_CURVE_SIZE 8
+#define CRANKING_ADVANCE_CURVE_SIZE 4
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
 #define IDLE_VE_CURVE_SIZE 8
@@ -958,10 +959,10 @@
 #define twoWireBatchIgnition_offset_hex 5cc
 #define useFixedBaroCorrFromMap_offset 1484
 #define useFixedBaroCorrFromMap_offset_hex 5cc
-#define unused_1484_bit_17_offset 1484
-#define unused_1484_bit_17_offset_hex 5cc
-#define unused_1484_bit_18_offset 1484
-#define unused_1484_bit_18_offset_hex 5cc
+#define useSeparateAdvanceForCranking_offset 1484
+#define useSeparateAdvanceForCranking_offset_hex 5cc
+#define useAdvanceCorrectionsForCranking_offset 1484
+#define useAdvanceCorrectionsForCranking_offset_hex 5cc
 #define unused_1484_bit_19_offset 1484
 #define unused_1484_bit_19_offset_hex 5cc
 #define unused_1484_bit_20_offset 1484
@@ -1530,8 +1531,12 @@
 #define flexFuelSensor_offset_hex ce8
 #define test557pin_offset 3308
 #define test557pin_offset_hex cec
-#define unusedEnd_offset 3312
-#define unusedEnd_offset_hex cf0
+#define crankingAdvanceBins_offset 3312
+#define crankingAdvanceBins_offset_hex cf0
+#define crankingAdvance_offset 3328
+#define crankingAdvance_offset_hex d00
+#define unusedEnd_offset 3344
+#define unusedEnd_offset_hex d10
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512

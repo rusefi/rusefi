@@ -466,6 +466,14 @@ fileVersion = { 20171101 }
       xBins       = idleVeBins, RPMValue
       yBins       = idleVe
       gauge       = afr1Gauge
+    
+	curve = crankingAdvanceCurve, "Cranking Advance Angle"
+      columnLabel = "RPM", "degrees"
+      xAxis       = 0, 8000, 10
+      yAxis       = -100, 100, 10
+      xBins       = crankingAdvanceBins, RPMValue
+      yBins       = crankingAdvance
+      gauge       = RPMGauge
 
 	curve = warmupTargetAfrCurve, "CLT-based target AFR"
       columnLabel = "Coolant", "Correction"
@@ -968,6 +976,7 @@ gaugeCategory = Fuel Data
 		subMenu = std_separator
 		subMenu = ignitionTableTbl,			"Ignition Advance Table"
 		subMenu = idleAdvanceCurve,			"Idle Ignition Advance Table", 0, {useSeparateAdvanceForIdle == 1}
+		subMenu = crankingAdvanceCurve,		"Cranking Ignition Advance Table", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
 		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = std_separator
@@ -1818,6 +1827,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		
 	dialog = crankingIgnition, "Ignition"
 		field = "Advance", 								crankingTimingAngle
+		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
+		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
         field = "Use fixed Dwell?",         			useConstantDwellDuringCranking
         field = "Fixed Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
 		field = "Charge Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}

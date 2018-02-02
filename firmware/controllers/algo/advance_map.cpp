@@ -119,22 +119,37 @@ static angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		;
 }
 
+/**
+ * @return ignition timing angle advance before TDC for Cranking
+ */
+static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// get advance from the separate table for Cranking
+	if (CONFIG(useSeparateAdvanceForCranking)) {
+		return interpolate2d("crankingAdvance", rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance), CRANKING_ADVANCE_CURVE_SIZE);
+	}
+
+	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
+	angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	// interpolate not from zero, but starting from min. possible rpm detected
+	if (rpm < minCrankingRpm || minCrankingRpm == 0)
+		minCrankingRpm = rpm;
+	return interpolateClamped(minCrankingRpm, CONFIG(crankingTimingAngle), CONFIG(cranking.rpm), crankingToRunningTransitionAngle, rpm);
+}
+
+
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(engineLoad)) {
 		return 0; // any error should already be reported
 	}
 	angle_t angle;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		// Interpolate the cranking timing angle to the earlier running angle for faster engine start
-		angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-		// interpolate not from zero, but starting from min. possible rpm detected
-		if (rpm < minCrankingRpm || minCrankingRpm == 0)
-			minCrankingRpm = rpm;
-		angle = interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, CONFIG(cranking.rpm), crankingToRunningTransitionAngle, rpm);
+		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		if (CONFIG(useAdvanceCorrectionsForCranking))
+			angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	angle -= engineConfiguration->ignitionOffset;
 	fixAngle(angle, "getAdvance");
 	return angle;
