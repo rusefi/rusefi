@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 22:17:49 EET 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 01 08:34:19 EET 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1415,10 +1415,10 @@ typedef struct {
 	bool useFixedBaroCorrFromMap : 1;
 	/**
 	offset 1484 bit 17 */
-	bool unused_1484_bit_17 : 1;
+	bool useSeparateAdvanceForCranking : 1;
 	/**
 	offset 1484 bit 18 */
-	bool unused_1484_bit_18 : 1;
+	bool useAdvanceCorrectionsForCranking : 1;
 	/**
 	offset 1484 bit 19 */
 	bool unused_1484_bit_19 : 1;
@@ -2082,9 +2082,19 @@ typedef struct {
 	 */
 	brain_pin_e test557pin;
 	/**
+	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	 * offset 3312
 	 */
-	int unusedEnd[792];
+	float crankingAdvanceBins[CRANKING_ADVANCE_CURVE_SIZE];
+	/**
+	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
+	 * offset 3328
+	 */
+	float crankingAdvance[CRANKING_ADVANCE_CURVE_SIZE];
+	/**
+	 * offset 3344
+	 */
+	int unusedEnd[784];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2330,4 +2340,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 28 22:17:49 EET 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 01 08:34:19 EET 2018

@@ -517,6 +517,15 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	config->crankingCycleCoef[7] = 0.5;
 	config->crankingCycleBins[7] = 77;
 
+	engineConfiguration->crankingAdvance[0] = 0;
+	engineConfiguration->crankingAdvanceBins[0] = 0;
+	engineConfiguration->crankingAdvance[1] = 0;
+	engineConfiguration->crankingAdvanceBins[0] = 200;
+	engineConfiguration->crankingAdvance[2] = 0;
+	engineConfiguration->crankingAdvanceBins[0] = 400;
+	engineConfiguration->crankingAdvance[3] = 0;
+	engineConfiguration->crankingAdvanceBins[0] = 1000;
+
 }
 
 /**
