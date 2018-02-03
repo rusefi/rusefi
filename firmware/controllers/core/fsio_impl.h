@@ -26,6 +26,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX);
 void prepareFsio(void);
 
 #endif /* LE_FUNCTIONS_H_ */
