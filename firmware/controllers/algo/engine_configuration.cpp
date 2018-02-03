@@ -1282,7 +1282,7 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
 
-	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);

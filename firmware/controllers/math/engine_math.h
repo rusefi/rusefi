@@ -16,6 +16,8 @@
 
 void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+#define assertEngineReference() efiAssertVoid(engine != NULL, "engine is NULL")
+
 
 #if EFI_ENABLE_ASSERTS
 #define assertAngleRange(angle, msg) if(angle > 10000000 || angle < -10000000) { firmwareError(ERROR_ANGLE_RANGE, "angle range %s %.2f", msg, angle);angle = 0;}

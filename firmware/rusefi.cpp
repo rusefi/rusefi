@@ -156,7 +156,7 @@ static void scheduleReboot(void) {
 
 void runRusEfi(void) {
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 512, "init s");
-	assertEngineReference(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEngineReference();
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
 
