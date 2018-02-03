@@ -10,10 +10,19 @@
 
 #include "stdbool.h"
 
+/**
+ * this
+ */
 class LocalVersionHolder {
 public:
 	LocalVersionHolder();
 
+	/**
+	 * Calling this method changes the internal state of the class - each consumer interested in tracking
+	 * changes should have it's own instance of this class
+	 *
+	 * @return true if getGlobalConfigurationVersion() has changed since last time we've invoked this method
+	 */
 	bool isOld();
 	int getVersion();
 
