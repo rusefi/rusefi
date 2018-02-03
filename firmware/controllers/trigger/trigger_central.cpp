@@ -555,7 +555,7 @@ static void resetRunningTriggerCounters() {
 #define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	bool changedNow = COMPARE_CONFIG_PARAMS(trigger.type) ||
+	bool changed = COMPARE_CONFIG_PARAMS(trigger.type) ||
 		COMPARE_CONFIG_PARAMS(operationMode) ||
 		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
 		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
@@ -572,7 +572,10 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
-	isTriggerConfigChanged = isTriggerConfigChanged || changedNow;
+	if (changed) {
+		refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	isTriggerConfigChanged = isTriggerConfigChanged || changed;
 }
 
 /**
