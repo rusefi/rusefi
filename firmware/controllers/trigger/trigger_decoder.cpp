@@ -42,6 +42,7 @@
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 #include "trigger_universal.h"
+#include "rfiutil.h"
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
@@ -395,6 +396,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
  */
 void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
+#if !EFI_UNIT_TEST
+	// we have a confusing threading model so some synchronization would not hurt
+	bool alreadyLocked = lockAnyContext();
+#endif /* EFI_UNIT_TEST */
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "init t");
 	scheduleMsg(logger, "initializeTriggerShape(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
@@ -565,15 +571,23 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	default:
 		shapeDefinitionError = true;
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
-		return;
 	}
-	wave.checkSwitchTimes(getSize());
-	/**
-	 * this instance is used only to initialize 'this' TriggerShape instance
-	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
-	 */
-	initState.reset();
-	calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER_SUFFIX);
+	if (!shapeDefinitionError) {
+		wave.checkSwitchTimes(getSize());
+		/**
+	 	 * this instance is used only to initialize 'this' TriggerShape instance
+	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
+	 	 */
+		initState.reset();
+		calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	version++;
+
+#if !EFI_UNIT_TEST
+	if (!alreadyLocked) {
+		unlockAnyContext();
+	}
+#endif
 }
 
 static void onFindIndex(TriggerState *state) {

@@ -573,7 +573,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
 	if (changed) {
-//		refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	isTriggerConfigChanged = isTriggerConfigChanged || changed;
 }
@@ -582,11 +582,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
  * @returns true if configuration just changed, and if that change has affected trigger
  */
 bool checkIfTriggerConfigChanged(void) {
-#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	return triggerVersion.isOld() && isTriggerConfigChanged;
-#else
-	return triggerVersion.isOld();
-#endif /* EFI_PROD_CODE */
 }
 
 void initTriggerCentral(Logging *sharedLogger) {

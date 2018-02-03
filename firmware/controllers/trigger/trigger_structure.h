@@ -60,6 +60,12 @@ public:
 	bool shapeDefinitionError;
 
 	/**
+	 * this variable is incremented after each trigger shape redefinition
+	 * See also
+	 */
+	int version;
+
+	/**
 	 * duty cycle for each individual trigger channel
 	 */
 	float dutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
