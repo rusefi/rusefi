@@ -19,7 +19,6 @@
 
 #include "trigger_emulator_algo.h"
 #include "engine_configuration.h"
-#include "LocalVersionHolder.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 
@@ -87,7 +86,7 @@ static int stopEmulationAtIndex = DO_NOT_STOP;
 static bool isEmulating = true;
 
 static Logging *logger;
-static LocalVersionHolder emulatorConfigVersion;
+static int atTriggerVersion = 0;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -116,12 +115,11 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 static void updateTriggerShapeIfNeeded(PwmConfig *state) {
-	if (emulatorConfigVersion.isOld()) {
-		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", emulatorConfigVersion.getVersion(),
+	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
+		atTriggerVersion = engine->triggerCentral.triggerShape.version;
+		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
-		// kludge: this line affects not trigger emulation but actual trigger consumption
-		refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
