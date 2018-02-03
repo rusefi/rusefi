@@ -83,12 +83,13 @@ uint32_t triggerMaxDuration = 0;
 static bool isInsideTriggerHandler = false;
 
 /**
- * true if most recent configuration change has changed any of the trigger settings
+ * true if a recent configuration change has changed any of the trigger settings which
+ * we have not adjusted for yet
  */
 static bool isTriggerConfigChanged = false;
 
-efitick_t previousVvtCamTime = 0;
-efitick_t previousVvtCamDuration = 0;
+static efitick_t previousVvtCamTime = 0;
+static efitick_t previousVvtCamDuration = 0;
 
 void hwHandleVvtCamSignal(trigger_value_e front) {
 	if (ENGINE(isEngineChartEnabled)) {
@@ -555,9 +556,8 @@ static void resetRunningTriggerCounters() {
 
 #define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
 
-void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration) {
-#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
-	isTriggerConfigChanged = COMPARE_CONFIG_PARAMS(trigger.type) ||
+void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	bool changedNow = COMPARE_CONFIG_PARAMS(trigger.type) ||
 		COMPARE_CONFIG_PARAMS(operationMode) ||
 		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
 		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
@@ -574,7 +574,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
-#endif /* EFI_PROD_CODE */
+	isTriggerConfigChanged = isTriggerConfigChanged || changedNow;
 }
 
 /**
