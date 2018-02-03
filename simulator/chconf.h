@@ -339,7 +339,10 @@
  *
  * @note    The default is @p FALSE.
  */
-#define CH_DBG_SYSTEM_STATE_CHECK           FALSE
+#define CH_DBG_SYSTEM_STATE_CHECK           TRUE
+
+  #define ON_LOCK_HOOK
+  #define ON_UNLOCK_HOOK
 
 #define USE_PORT_LOCK TRUE
 
