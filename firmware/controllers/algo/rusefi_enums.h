@@ -248,6 +248,11 @@ typedef enum {
 	// crank-based in case your cam is broken
 	TT_DODGE_NEON_2003_CRANK = 32,
 
+	/**
+	 * this takes care of crank sensor, VVT sensor should be configured separately
+	 * for VVT simulated trigger signal we have https://github.com/rusefi/rusefi/issues/566 gap
+	 * See also TT_MAZDA_MIATA_VVT_TEST
+	 */
 	TT_MIATA_VVT = 33,
 
 	/**
