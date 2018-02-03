@@ -612,7 +612,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		isInitializingTrigger = false;
 		return syncIndex;
 	}
-	efiAssert(state->getTotalRevolutionCounter() == 1, "totalRevolutionCounter", EFI_ERROR_CODE);
+	efiAssert(state->getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
