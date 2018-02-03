@@ -121,7 +121,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
 		// kludge: this line affects not trigger emulation but actual trigger consumption
-		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,

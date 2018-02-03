@@ -179,6 +179,9 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
+
+	onConfigurationChangeFsioCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
+
 	rememberCurrentConfiguration();
 }
 
@@ -1276,12 +1279,7 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "apply c");
-	scheduleMsg(logger, "applyNonPersistentConfiguration()");
-#endif
-
+void refreshTriggerShape(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
@@ -1292,6 +1290,17 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 		return;
 	}
 	engine->engineCycleEventCount = engine->triggerCentral.triggerShape.getLength();
+}
+
+void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "apply c");
+	scheduleMsg(logger, "applyNonPersistentConfiguration()");
+#endif
+
+	assertEngineReference();
+	refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+
 #if EFI_FSIO || defined(__DOXYGEN__)
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif

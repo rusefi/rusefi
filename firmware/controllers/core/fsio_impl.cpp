@@ -232,6 +232,12 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_FSIO || defined(__DOXYGEN__)
+	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
+}
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 static SimplePwm fsioPwm[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
