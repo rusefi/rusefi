@@ -7,9 +7,11 @@
 
 #include "LocalVersionHolder.h"
 
+/**
+ * we rely on external source of global version
+ */
 int getGlobalConfigurationVersion(void);
 
-//ctor
 LocalVersionHolder::LocalVersionHolder() {
 	/**
 	 * we want local version to be 'old' on instantiation
