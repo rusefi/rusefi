@@ -39,6 +39,12 @@ WaveChart waveChart;
 
 EXTERN_ENGINE;
 
+/**
+ * true if a recent configuration change has changed any of the trigger settings which
+ * we have not adjusted for yet
+ */
+static bool isTriggerConfigChanged = false;
+
 #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 static histogram_s triggerCallbackHistogram;
 #endif /* EFI_HISTOGRAMS */
@@ -72,8 +78,6 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 uint32_t triggerHanlderEntryTime;
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-EXTERN_ENGINE
-;
 
 int triggerReentraint = 0;
 int maxTriggerReentraint = 0;
@@ -81,12 +85,6 @@ uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
 static bool isInsideTriggerHandler = false;
-
-/**
- * true if a recent configuration change has changed any of the trigger settings which
- * we have not adjusted for yet
- */
-static bool isTriggerConfigChanged = false;
 
 static efitick_t previousVvtCamTime = 0;
 static efitick_t previousVvtCamDuration = 0;
