@@ -39,6 +39,7 @@ trigger_shape_helper::trigger_shape_helper() {
 
 TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
+	version = 0;
 	initialize(OM_NONE, false);
 	wave.waves = h.waves;
 
