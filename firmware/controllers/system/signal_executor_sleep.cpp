@@ -82,8 +82,9 @@ void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback,
 #endif /* EFI_SIMULATOR */
 
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
-	if (!alreadyLocked)
+	if (!alreadyLocked) {
 		unlockAnyContext();
+	}
 }
 
 void initSignalExecutorImpl(void) {
