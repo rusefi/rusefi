@@ -579,6 +579,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
 	#endif
 	}
+	// we do not want to miss two updates in a row
 	isTriggerConfigChanged = isTriggerConfigChanged || changed;
 }
 
@@ -586,7 +587,9 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
  * @returns true if configuration just changed, and if that change has affected trigger
  */
 bool checkIfTriggerConfigChanged(void) {
-	return triggerVersion.isOld() && isTriggerConfigChanged;
+	bool result = triggerVersion.isOld() && isTriggerConfigChanged;
+	isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
+	return result;
 }
 
 void initTriggerCentral(Logging *sharedLogger) {
