@@ -580,6 +580,12 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	 	 */
 		initState.reset();
 		calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER_SUFFIX);
+
+		if (engine->triggerCentral.triggerShape.getSize() == 0) {
+			firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
+			return;
+		}
+		engine->engineCycleEventCount = getLength();
 	}
 	version++;
 

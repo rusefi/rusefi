@@ -1285,11 +1285,6 @@ void refreshTriggerShape(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
-	if (engine->triggerCentral.triggerShape.getSize() == 0) {
-		firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
-		return;
-	}
-	engine->engineCycleEventCount = engine->triggerCentral.triggerShape.getLength();
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
