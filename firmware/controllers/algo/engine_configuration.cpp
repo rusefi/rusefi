@@ -1279,14 +1279,6 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-void refreshTriggerShape(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	assertEngineReference();
-
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
-}
-
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "apply c");
@@ -1294,7 +1286,10 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 #endif
 
 	assertEngineReference();
-	refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 
 #if EFI_FSIO || defined(__DOXYGEN__)
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
