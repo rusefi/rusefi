@@ -573,7 +573,11 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
 	if (changed) {
-		refreshTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		assertEngineReference();
+
+	#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+		engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+	#endif
 	}
 	isTriggerConfigChanged = isTriggerConfigChanged || changed;
 }
