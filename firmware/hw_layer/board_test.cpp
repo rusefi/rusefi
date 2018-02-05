@@ -194,7 +194,7 @@ static void blinkAllOutputPins() {
 
 void initBoardTest(void) {
 	is_board_test_mode = true;
-	addConsoleAction("n", nextStep);
+	addConsoleAction("n", nextTestStep);
 	addConsoleActionI("set", setIndex);
 
 	btInitOutputPins();
