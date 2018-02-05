@@ -75,13 +75,13 @@ static void waitForKey(void) {
 	}
 }
 
-static void nextStep(void) {
+static void nextTestStep(void) {
 	stepCoutner++;
 }
 
 static void setIndex(int index) {
 	currentIndex = index;
-	nextStep();
+	nextTestStep();
 }
 
 static brain_pin_e BLINK_PINS[] = {
