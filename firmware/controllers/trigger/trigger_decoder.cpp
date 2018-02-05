@@ -638,7 +638,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 #endif
 }
 
-static void onFindIndex(TriggerState *state) {
+static void onFindIndexCallback(TriggerState *state) {
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		// todo: that's not the best place for this intermediate data storage, fix it!
 		state->expectedTotalTime[i] = state->currentCycle.totalTimeNt[i];
@@ -688,7 +688,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	 *
 	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
-	state->triggerCycleCallback = onFindIndex;
+	state->triggerCycleCallback = onFindIndexCallback;
 
 	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
 
