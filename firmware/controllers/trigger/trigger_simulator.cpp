@@ -80,8 +80,8 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 	}
 }
 
-void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t syncIndex, TriggerState *state, TriggerShape * shape,
-		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t syncIndex, TriggerState *state, TriggerShape * shape
+		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
 	 * let's feed two more cycles to validate shape definition

@@ -690,7 +690,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	 */
 	state->triggerCycleCallback = onFindIndexCallback;
 
-	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
+	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape PASS_ENGINE_PARAMETER_SUFFIX);
 
 	isInitializingTrigger = false;
 	return syncIndex % shape->getSize();
