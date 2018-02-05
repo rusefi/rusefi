@@ -151,6 +151,22 @@ void TriggerState::reset() {
 int TriggerState::getCurrentIndex() {
 	return currentCycle.current_index;
 }
+
+void TriggerState::incrementTotalEventCounter() {
+	totalRevolutionCounter++;
+}
+
+bool TriggerState::isEvenRevolution() {
+	return totalRevolutionCounter & 1;
+}
+
+void TriggerState::resetCurrentCycleState() {
+	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
+	memset(currentCycle.timeOfPreviousEventNt, 0, sizeof(currentCycle.timeOfPreviousEventNt));
+	memset(currentCycle.totalTimeNt, 0, sizeof(currentCycle.totalTimeNt));
+	currentCycle.current_index = 0;
+}
+
 /**
  * @brief Trigger decoding happens here
  * This method is invoked every time we have a fall or rise on one of the trigger sensors.
