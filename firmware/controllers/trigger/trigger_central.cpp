@@ -386,7 +386,7 @@ void printAllTriggers() {
 
 		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\r\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 
-		fprintf(fp, "# duty %.2f %.2f\r\n", s->dutyCycle[0], s->dutyCycle[1]);
+		fprintf(fp, "# duty %.2f %.2f\r\n", s->expectedDutyCycle[0], s->expectedDutyCycle[1]);
 
 		for (int i = 0; i < s->getLength(); i++) {
 
