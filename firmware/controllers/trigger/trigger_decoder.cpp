@@ -113,18 +113,6 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 	PRINT_INC_INDEX; \
 }
 
-#define nextRevolution() { \
-	if (triggerCycleCallback != NULL) { \
-		triggerCycleCallback(this); \
-	} \
-	startOfCycleNt = nowNt; \
-	resetCurrentCycleState(); \
-	incrementTotalEventCounter(); \
-	runningRevolutionCounter++; \
-	totalEventCountBase += TRIGGER_SHAPE(size); \
-}
-
-
 #define considerEventForGap() (!TRIGGER_SHAPE(useOnlyPrimaryForSync) || isPrimary)
 
 #define needToSkipFall(type) ((!TRIGGER_SHAPE(gapBothDirections)) && (( TRIGGER_SHAPE(useRiseEdge)) && (type != TV_RISE)))
@@ -132,7 +120,37 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 
 #define isLessImportant(type) (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap()) )
 
+TriggerState::TriggerState() {
+	reset();
+}
 
+void TriggerState::reset() {
+	triggerCycleCallback = NULL;
+	shaft_is_synchronized = false;
+	toothed_previous_time = 0;
+	toothed_previous_duration = 0;
+	durationBeforePrevious = 0;
+	thirdPreviousDuration = 0;
+
+	totalRevolutionCounter = 0;
+	totalTriggerErrorCounter = 0;
+	orderingErrorCounter = 0;
+	currentDuration = 0;
+	curSignal = SHAFT_PRIMARY_FALLING;
+	prevSignal = SHAFT_PRIMARY_FALLING;
+	startOfCycleNt = 0;
+
+	resetRunningCounters();
+	resetCurrentCycleState();
+	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
+
+	totalEventCountBase = 0;
+	isFirstEvent = true;
+}
+
+int TriggerState::getCurrentIndex() {
+	return currentCycle.current_index;
+}
 /**
  * @brief Trigger decoding happens here
  * This method is invoked every time we have a fall or rise on one of the trigger sensors.
@@ -354,7 +372,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			nextTriggerEvent()
 			;
 
-			nextRevolution();
+
+	if (triggerCycleCallback != NULL) {
+		triggerCycleCallback(this);
+	}
+	startOfCycleNt = nowNt;
+	resetCurrentCycleState();
+	incrementTotalEventCounter();
+	runningRevolutionCounter++;
+	totalEventCountBase += TRIGGER_SHAPE(size);
+
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 			if (printTriggerDebug) {
