@@ -166,38 +166,6 @@ void multi_wave_s::setSwitchTime(int index, float value) {
 	switchTimes[index] = value;
 }
 
-TriggerState::TriggerState() {
-	reset();
-}
-
-void TriggerState::reset() {
-	triggerCycleCallback = NULL;
-	shaft_is_synchronized = false;
-	toothed_previous_time = 0;
-	toothed_previous_duration = 0;
-	durationBeforePrevious = 0;
-	thirdPreviousDuration = 0;
-
-	totalRevolutionCounter = 0;
-	totalTriggerErrorCounter = 0;
-	orderingErrorCounter = 0;
-	currentDuration = 0;
-	curSignal = SHAFT_PRIMARY_FALLING;
-	prevSignal = SHAFT_PRIMARY_FALLING;
-	startOfCycleNt = 0;
-
-	resetRunningCounters();
-	resetCurrentCycleState();
-	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
-
-	totalEventCountBase = 0;
-	isFirstEvent = true;
-}
-
-int TriggerState::getCurrentIndex() {
-	return currentCycle.current_index;
-}
-
 efitime_t TriggerState::getStartOfRevolutionIndex() {
 	return totalEventCountBase;
 }
