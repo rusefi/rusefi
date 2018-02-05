@@ -18,8 +18,8 @@ public:
 	uint32_t findTriggerSyncPoint(TriggerShape * shape,
 			TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	void assertSyncPositionAndSetDutyCycle(const uint32_t index, TriggerState *state, TriggerShape * shape,
-			trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void assertSyncPositionAndSetDutyCycle(const uint32_t index, TriggerState *state, TriggerShape * shape
+			DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 private:
 	// send next event so that we can see how state reacts
