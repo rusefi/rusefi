@@ -45,7 +45,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 	bool thirdWheelState = state->multiWave.waves[2].pinStates[prevIndex];
 	int new3rdWheelState = state->multiWave.waves[2].pinStates[stateIndex];
 
-	// todo: code duplication with TriggerStimulatorHelper::nextStep?
+	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;

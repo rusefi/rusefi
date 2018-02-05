@@ -15,13 +15,15 @@ class TriggerStimulatorHelper {
 public:
 	TriggerStimulatorHelper();
 
-	uint32_t doFindTrigger(TriggerShape * shape,
-			trigger_config_s const*triggerConfig, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-	void nextStep(TriggerState *state, TriggerShape * shape, int i, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+	uint32_t findTriggerSyncPoint(TriggerShape * shape,
+			TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	void assertSyncPositionAndSetDutyCycle(const uint32_t index, TriggerState *state, TriggerShape * shape,
 			trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+private:
+	// send next event so that we can see how state reacts
+	void feedSimulatedEvent(TriggerState *state, TriggerShape * shape, int i DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration);

@@ -29,8 +29,8 @@ bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfig
 extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
-void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape, int i,
-		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerShape * shape, int i
+		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int stateIndex = i % shape->getSize();
 	int prevIndex = (stateIndex + shape->getSize() - 1 ) % shape->getSize();
 
@@ -50,7 +50,7 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
-		printf("nextStep: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
+		printf("feedSimulatedEvent: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
 				secondaryWheelState, newSecondaryWheelState );
 	}
 #endif /* EFI_UNIT_TEST */
@@ -82,10 +82,12 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape
 
 void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t syncIndex, TriggerState *state, TriggerShape * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int startIndex = syncIndex + 1;
 
-	for (uint32_t i = startIndex; i <= syncIndex + 2 * shape->getSize(); i++) {
-		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
+	/**
+	 * let's feed two more cycles to validate shape definition
+	 */
+	for (uint32_t i = syncIndex + 1; i <= syncIndex + 2 * shape->getSize(); i++) {
+		feedSimulatedEvent(state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	int revolutionCounter = state->getTotalRevolutionCounter();
 	if (revolutionCounter != 3) {
@@ -103,10 +105,10 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t s
 /**
  * @return trigger synchronization point index, or error code if not found
  */
-uint32_t TriggerStimulatorHelper::doFindTrigger(TriggerShape * shape,
-		trigger_config_s const*triggerConfig, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerShape * shape,
+		 TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-		nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
+		feedSimulatedEvent(state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (state->shaft_is_synchronized)
 			return i;
