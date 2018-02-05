@@ -47,7 +47,7 @@ public:
 
 	void weComplexInit(const char *msg,
 			int phaseCount, float *swithcTimes, int waveCount, pin_state_t **pinStates,
-			pwm_cycle_callback *cycleCallback,
+			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
 	/**
@@ -75,7 +75,7 @@ public:
 	/**
 	 * this callback is invoked before each wave generation cycle
 	 */
-	pwm_cycle_callback *cycleCallback;
+	pwm_cycle_callback *pwmCycleCallback;
 
 	/**
 	 * this main callback is invoked when it's time to switch level on any of the output channels

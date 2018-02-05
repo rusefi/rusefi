@@ -30,7 +30,7 @@ void PwmConfig::baseConstructor() {
 	periodNt = NAN;
 	memset(&outputPins, 0, sizeof(outputPins));
 	phaseCount = 0;
-	cycleCallback = NULL;
+	pwmCycleCallback = NULL;
 	stateChangeCallback = NULL;
 }
 
@@ -93,8 +93,8 @@ void PwmConfig::setFrequency(float frequency) {
 
 void PwmConfig::handleCycleStart() {
 	if (safe.phaseIndex == 0) {
-		if (cycleCallback != NULL) {
-			cycleCallback(this);
+		if (pwmCycleCallback != NULL) {
+			pwmCycleCallback(this);
 		}
 		efiAssertVoid(periodNt != 0, "period not initialized");
 		if (safe.periodNt != periodNt || safe.iteration == ITERATION_LIMIT) {
@@ -194,7 +194,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 }
 
 void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTimes, int waveCount,
-		pin_state_t **pinStates, pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
+		pin_state_t **pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 
 	efiAssertVoid(periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {
@@ -208,7 +208,7 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 	efiAssertVoid(waveCount > 0, "waveCount should be positive");
 	checkSwitchTimes2(phaseCount, switchTimes);
 
-	this->cycleCallback = cycleCallback;
+	this->pwmCycleCallback = pwmCycleCallback;
 	this->stateChangeCallback = stateChangeCallback;
 
 	multiWave.waveCount = waveCount;
