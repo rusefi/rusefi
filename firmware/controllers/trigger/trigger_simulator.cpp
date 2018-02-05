@@ -96,7 +96,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t s
 	shape->shapeDefinitionError = false;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		shape->dutyCycle[i] = 1.0 * state->expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
+		shape->expectedDutyCycle[i] = 1.0 * state->expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
 	}
 }
 

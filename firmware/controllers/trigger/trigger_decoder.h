@@ -41,23 +41,29 @@ typedef struct {
 	uint32_t totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
 } current_cycle_state_s;
 
+/**
+ * @see TriggerShape for trigger wheel shape deginition
+ */
 class TriggerState {
 public:
 	TriggerState();
+	/**
+	 * current trigger processing index, between zero and #size
+	 */
 	int getCurrentIndex();
 	int getTotalRevolutionCounter();
 	/**
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
 	bool isEvenRevolution();
-	void intTotalEventCounter();
+	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter();
 	efitime_t getStartOfRevolutionIndex();
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float getTriggerDutyCycle(int index);
-	TriggerStateCallback cycleCallback;
+	TriggerStateCallback triggerCycleCallback;
 
 	/**
 	 * TRUE if we know where we are
