@@ -114,12 +114,12 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 }
 
 #define nextRevolution() { \
-	if (cycleCallback != NULL) { \
-		cycleCallback(this); \
+	if (triggerCycleCallback != NULL) { \
+		triggerCycleCallback(this); \
 	} \
 	startOfCycleNt = nowNt; \
 	resetCurrentCycleState(); \
-	intTotalEventCounter(); \
+	incrementTotalEventCounter(); \
 	runningRevolutionCounter++; \
 	totalEventCountBase += TRIGGER_SHAPE(size); \
 }
@@ -645,7 +645,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	 *
 	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
-	state->cycleCallback = onFindIndex;
+	state->triggerCycleCallback = onFindIndex;
 
 	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
 

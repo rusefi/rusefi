@@ -148,7 +148,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			 * let's increase the trigger event counter, that would adjust the state of
 			 * virtual crank-based trigger
 			 */
-			tc->triggerState.intTotalEventCounter();
+			tc->triggerState.incrementTotalEventCounter();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (engineConfiguration->debugMode == DBG_VVT) {
 				tsOutputChannels.debugIntField1++;
@@ -160,7 +160,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		if (isEven) {
 			// see above comment
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-			tc->triggerState.intTotalEventCounter();
+			tc->triggerState.incrementTotalEventCounter();
 			if (engineConfiguration->debugMode == DBG_VVT) {
 				tsOutputChannels.debugIntField1++;
 			}
@@ -172,7 +172,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
 		while (tc->triggerState.getTotalRevolutionCounter() % 4 != engineConfiguration->nbVvtIndex) {
-			tc->triggerState.intTotalEventCounter();
+			tc->triggerState.incrementTotalEventCounter();
 		}
 	}
 
@@ -468,7 +468,7 @@ void triggerInfo(void) {
 
 	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(TRIGGER_SHAPE(needSecondTriggerInput)));
-	scheduleMsg(logger, "expected duty #0=%.2f/#1=%.2f", TRIGGER_SHAPE(dutyCycle[0]), TRIGGER_SHAPE(dutyCycle[1]));
+	scheduleMsg(logger, "expected duty #0=%.2f/#1=%.2f", TRIGGER_SHAPE(expectedDutyCycle[0]), TRIGGER_SHAPE(expectedDutyCycle[1]));
 
 	scheduleMsg(logger, "synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),

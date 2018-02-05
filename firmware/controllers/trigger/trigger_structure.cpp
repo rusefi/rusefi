@@ -101,7 +101,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
 	isSynchronizationNeeded = true; // that's default value
 	this->needSecondTriggerInput = needSecondTriggerInput;
-	memset(dutyCycle, 0, sizeof(dutyCycle));
+	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
 	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 	setTriggerSynchronizationGap(2);
@@ -171,7 +171,7 @@ TriggerState::TriggerState() {
 }
 
 void TriggerState::reset() {
-	cycleCallback = NULL;
+	triggerCycleCallback = NULL;
 	shaft_is_synchronized = false;
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
@@ -271,7 +271,7 @@ int TriggerState::getTotalRevolutionCounter() {
 }
 
 
-void TriggerState::intTotalEventCounter() {
+void TriggerState::incrementTotalEventCounter() {
 	totalRevolutionCounter++;
 }
 
@@ -419,7 +419,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	int index = wave.waveIndertionAngle(angle, size);
 
 	// shifting existing data
-	// todo: does this logic actually work? I think it does not!
+	// todo: does this logic actually work? I think it does not! due to broken state handling
 	for (int i = size - 1; i >= index; i--) {
 		for (int j = 0; j < PWM_PHASE_MAX_WAVE_PER_PWM; j++) {
 			wave.waves[j].pinStates[i + 1] = wave.getChannelState(j, index);
