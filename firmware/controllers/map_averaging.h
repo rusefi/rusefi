@@ -17,6 +17,7 @@ void mapAveragingCallback(adcsample_t newValue);
 #endif
 
 void initMapAveraging(Logging *sharedLogger, Engine *engine);
+void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* EFI_MAP_AVERAGING */
 

@@ -59,7 +59,7 @@ static volatile int measurementsPerRevolutionCounter = 0;
 static volatile int measurementsPerRevolution = 0;
 
 /**
- * In this lock-free imlementation 'readIndex' is always pointing
+ * In this lock-free implementation 'readIndex' is always pointing
  * to the consistent copy of accumulator and counter pair
  */
 static int readIndex = 0;
@@ -206,6 +206,30 @@ static void applyMapMinBufferLength() {
 	for (int i = 0; i < mapMinBufferLength; i++) {
 		averagedMapRunningBuffer[i] = FLT_MAX;
 	}
+}
+
+void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	int rpm = engine->rpmCalculator.rpmValue;
+	if (isValidRpm(rpm)) {
+		MAP_sensor_config_s * c = &engineConfiguration->map;
+		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
+
+		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
+
+		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+			angle_t cylinderOffset = getEngineCycle(engineConfiguration->operationMode) * i / engineConfiguration->specs.cylindersCount;
+			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
+			fixAngle(cylinderStart, "cylinderStart");
+			engine->engineState.mapAveragingStart[i] = cylinderStart;
+		}
+		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
+	} else {
+		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+			engine->engineState.mapAveragingStart[i] = NAN;
+		}
+		engine->engineState.mapAveragingDuration = NAN;
+	}
+
 }
 
 /**
