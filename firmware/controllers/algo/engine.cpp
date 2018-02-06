@@ -22,6 +22,7 @@
 #include "efilib2.h"
 #include "settings.h"
 #include "aux_valves.h"
+#include "map_averaging.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
@@ -440,31 +441,15 @@ injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNAT
  * so that trigger event handler/IO scheduler tasks are faster.
  */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.rpmValue;
 
-	if (isValidRpm(rpm)) {
-		MAP_sensor_config_s * c = &engineConfiguration->map;
-		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
-
-		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
-
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-			angle_t cylinderOffset = getEngineCycle(engineConfiguration->operationMode) * i / engineConfiguration->specs.cylindersCount;
-			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
-			fixAngle(cylinderStart, "cylinderStart");
-			engine->engineState.mapAveragingStart[i] = cylinderStart;
-		}
-		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
-	} else {
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-			engine->engineState.mapAveragingStart[i] = NAN;
-		}
-		engine->engineState.mapAveragingDuration = NAN;
-	}
+#if EFI_MAP_AVERAGING
+	refreshMapAveragingPreCalc(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
+	int rpm = rpmCalculator.rpmValue;
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
