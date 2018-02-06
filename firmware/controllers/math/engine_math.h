@@ -73,6 +73,14 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+ignition_mode_e getIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+/**
+ * This lightweight method is invoked in case of a configuration change or initialization.
+ * But also it's used for "Spinning-up to Cranking" transition.
+ */
+void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);

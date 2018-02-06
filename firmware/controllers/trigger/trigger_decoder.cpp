@@ -167,6 +167,12 @@ void TriggerState::resetCurrentCycleState() {
 	currentCycle.current_index = 0;
 }
 
+void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	shaft_is_synchronized = false;
+	// Needed for early instant-RPM detection
+	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 /**
  * @brief Trigger decoding happens here
  * This method is invoked every time we have a fall or rise on one of the trigger sensors.
@@ -432,6 +438,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
+	// Needed for early instant-RPM detection
+	engine->rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**

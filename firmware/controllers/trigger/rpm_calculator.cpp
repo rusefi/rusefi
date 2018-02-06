@@ -35,6 +35,11 @@
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+// See RpmCalculator::checkIfSpinning()
+#ifndef NO_RPM_EVENTS_TIMEOUT_SECS
+#define NO_RPM_EVENTS_TIMEOUT_SECS 2
+#endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
+
 EXTERN_ENGINE
 ;
 
@@ -49,8 +54,9 @@ RpmCalculator::RpmCalculator() {
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
 	rpmValue = 0;
-	assignRpmValue(0);
+	oneDegreeUs = NAN;
 	state = STOPPED;
+	isSpinning = false;
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
@@ -62,11 +68,17 @@ RpmCalculator::RpmCalculator() {
 }
 
 bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return state == STOPPED;
+	// Spinning-up with zero RPM means that the engine is not ready yet, and is treated as 'stopped'.
+	return state == STOPPED || (state == SPINNING_UP && rpmValue == 0);
+}
+
+bool RpmCalculator::isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return state == SPINNING_UP;
 }
 
 bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return state == CRANKING;
+	// Spinning-up with non-zero RPM is suitable for all engine math, as good as cranking
+	return state == CRANKING || (state == SPINNING_UP && rpmValue > 0);
 }
 
 /**
@@ -95,39 +107,40 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool noEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
+	bool noEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(NO_RPM_EVENTS_TIMEOUT_SECS * US_PER_SECOND_LL); // Anything below 60 rpm is not running
 	if (noEventsForTooLong) {
-		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return false;
 	}
 
 	return true;
 }
 
-void RpmCalculator::assignRpmValue(int value) {
+void RpmCalculator::assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	previousRpmValue = rpmValue;
 	rpmValue = value;
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
 	} else {
 		oneDegreeUs = getOneDegreeTimeUs(rpmValue);
+		if (previousRpmValue == 0) {
+			/**
+			 * this would make sure that we have good numbers for first cranking revolution
+			 * #275 cranking could be improved
+			 */
+			ENGINE(periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE));
+		}
 	}
 }
 
 void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	assignRpmValue(value);
-	if (previousRpmValue == 0 && rpmValue > 0) {
-		/**
-		 * this would make sure that we have good numbers for first cranking revolution
-		 * #275 cranking could be improved
-		 */
-		ENGINE(periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE));
-	}
+	assignRpmValue(value PASS_ENGINE_PARAMETER_SUFFIX);
+	// Change state
 	if (rpmValue == 0) {
 		state = STOPPED;
 	} else if (rpmValue >= CONFIG(cranking.rpm)) {
 		state = RUNNING;
-	} else if (state == STOPPED) {
+	} else if (state == STOPPED || state == SPINNING_UP) {
 		/**
 		 * We are here if RPM is above zero but we have not seen running RPM yet.
 		 * This gives us cranking hysteresis - a drop of RPM during running is still running, not cranking.
@@ -159,10 +172,33 @@ float RpmCalculator::getRpmAcceleration() {
 void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
-		assignRpmValue(0);
+		assignRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(logger, "engine stopped");
 	}
 	state = STOPPED;
+}
+
+void RpmCalculator::setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	isSpinning = false;
+	setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if ! EFI_UNIT_TEST
+	if (!boardConfiguration->isFasterEngineSpinUpEnabled)
+		return;
+	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
+	if (isStopped(PASS_ENGINE_PARAMETER_SIGNATURE) && !isSpinning) {
+		state = SPINNING_UP;
+		isSpinning = true;
+	}
+	// update variables needed by early instant RPM calc.
+	if (isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	// Update ignition pin indices if needed
+	prepareIgnitionPinIndices(getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* ! EFI_UNIT_TEST */
 }
 
 /**
@@ -195,9 +231,10 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstckRCL");
 #endif
 
+	RpmCalculator *rpmState = &engine->rpmCalculator;
+
 	if (index == 0) {
 		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
-		RpmCalculator *rpmState = &engine->rpmCalculator;
 
 		bool hadRpmRecently = rpmState->checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -234,6 +271,17 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 #endif
 
+#if ! EFI_UNIT_TEST
+	// Replace 'normal' RPM with instant RPM for the initial spin-up period
+	if (rpmState->isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		int prevIndex;
+		int iRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		rpmState->assignRpmValue(iRpm PASS_ENGINE_PARAMETER_SUFFIX);
+#if 0
+		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, iRpm);
+#endif
+	}
+#endif /* ! EFI_UNIT_TEST */
 }
 
 static scheduling_s tdcScheduler[2];

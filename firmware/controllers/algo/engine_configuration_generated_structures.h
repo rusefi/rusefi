@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 01 08:34:19 EET 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 06 16:59:01 EET 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -642,7 +642,7 @@ typedef struct {
 	bool stepperForceParkingEveryRestart : 1;
 	/**
 	offset 376 bit 20 */
-	bool unused_board_984_20 : 1;
+	bool isFasterEngineSpinUpEnabled : 1;
 	/**
 	offset 376 bit 21 */
 	bool unused_board_984_21 : 1;
@@ -2340,4 +2340,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 01 08:34:19 EET 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 06 16:59:01 EET 2018

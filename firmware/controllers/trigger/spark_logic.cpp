@@ -81,7 +81,7 @@ static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (GET_RPM() > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->name;
-		if (prevSparkName == outputName && engineConfiguration->ignitionMode != IM_ONE_COIL) {
+		if (prevSparkName == outputName && getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) != IM_ONE_COIL) {
 			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
 		}
 		prevSparkName = outputName;
@@ -230,7 +230,7 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFI
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
 	IgnitionOutputPin *secondOutput;
-	if (CONFIG(ignitionMode) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
+	if (getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
 		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex PASS_ENGINE_PARAMETER_SUFFIX));
 		secondOutput = &enginePins.coils[secondCoilIndex];
@@ -288,7 +288,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 	 */
 	float maxAllowedDwellAngle = (int) (getEngineCycle(engineConfiguration->operationMode) / 2); // the cast is about making Coverity happy
 
-	if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
+	if (getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) == IM_ONE_COIL) {
 		maxAllowedDwellAngle = getEngineCycle(engineConfiguration->operationMode) / engineConfiguration->specs.cylindersCount / 1.1;
 	}
 
@@ -381,7 +381,7 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @see getInjectorDutyCycle
  */
 percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	floatms_t totalPerCycle = 1/**getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)*/ * getNumberOfSparks(engineConfiguration->ignitionMode PASS_ENGINE_PARAMETER_SUFFIX);
+	floatms_t totalPerCycle = 1/**getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)*/ * getNumberOfSparks(getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }

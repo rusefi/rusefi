@@ -1857,6 +1857,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting
 		field = "Startup fuel pump prime",				startUpFuelPumpDuration
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
+		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
 		
 		
 	dialog = EngineLoadAccelPanel, "Engine Load (alpha version)"

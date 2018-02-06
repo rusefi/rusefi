@@ -182,6 +182,12 @@ void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SU
 
 TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() {
 	instantRpm = 0;
+	prevInstantRpmValue = 0;
+	// avoid ill-defined instant RPM when the data is not gathered yet
+	efitime_t nowNt = getTimeNowNt();
+	for (int i = 0; i < PWM_PHASE_MAX_COUNT; i++) {
+		timeOfLastEvent[i] = nowNt;
+	}
 }
 
 float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -207,7 +213,16 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	instantRpmValue[current_index] = instantRpm;
 	timeOfLastEvent[current_index] = nowNt;
 
+	// This fixes early RPM instability based on incomplete data
+	if (instantRpm < RPM_LOW_THRESHOLD)
+		return prevInstantRpmValue;
+	prevInstantRpmValue = instantRpm;
+
 	return instantRpm;
+}
+
+void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	timeOfLastEvent[currentCycle.current_index] = nowNt;
 }
 
 void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {

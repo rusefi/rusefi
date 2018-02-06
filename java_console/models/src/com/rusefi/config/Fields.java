@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 01 08:34:19 EET 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 06 16:59:01 EET 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -401,7 +401,7 @@ public class Fields {
 	public static final int vvtCamSensorUseRise_offset = 984;
 	public static final int measureMapOnlyInOneCylinder_offset = 984;
 	public static final int stepperForceParkingEveryRestart_offset = 984;
-	public static final int unused_board_984_20_offset = 984;
+	public static final int isFasterEngineSpinUpEnabled_offset = 984;
 	public static final int unused_board_984_21_offset = 984;
 	public static final int unused_board_984_22_offset = 984;
 	public static final int unused_board_984_23_offset = 984;
@@ -1397,7 +1397,7 @@ public class Fields {
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 984, FieldType.BIT, 17);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 984, FieldType.BIT, 18);
 	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 984, FieldType.BIT, 19);
-	public static final Field UNUSED_BOARD_984_20 = Field.create("UNUSED_BOARD_984_20", 984, FieldType.BIT, 20);
+	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 984, FieldType.BIT, 20);
 	public static final Field UNUSED_BOARD_984_21 = Field.create("UNUSED_BOARD_984_21", 984, FieldType.BIT, 21);
 	public static final Field UNUSED_BOARD_984_22 = Field.create("UNUSED_BOARD_984_22", 984, FieldType.BIT, 22);
 	public static final Field UNUSED_BOARD_984_23 = Field.create("UNUSED_BOARD_984_23", 984, FieldType.BIT, 23);
