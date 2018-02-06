@@ -18,6 +18,7 @@ void mapAveragingAdcCallback(adcsample_t newValue);
 
 void initMapAveraging(Logging *sharedLogger, Engine *engine);
 void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void postMapState(TunerStudioOutputChannels *tsOutputChannels);
 
 #endif /* EFI_MAP_AVERAGING */
 

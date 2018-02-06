@@ -713,8 +713,8 @@ case DBG_CJ125:
   return "DBG_CJ125";
 case DBG_CAN:
   return "DBG_CAN";
-case DBG_27:
-  return "DBG_27";
+case DBG_MAP:
+  return "DBG_MAP";
 case DBG_28:
   return "DBG_28";
 case DBG_29:

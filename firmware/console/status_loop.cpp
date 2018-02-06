@@ -75,6 +75,10 @@ extern bool main_loop_started;
 #include "CJ125.h"
 #endif /* EFI_PROD_CODE */
 
+#if EFI_MAP_AVERAGING
+#include "map_averaging.h"
+#endif
+
 #if EFI_FSIO || defined(__DOXYGEN__)
 #include "fsio_impl.h"
 #endif /* EFI_FSIO */
@@ -808,6 +812,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		cjPostState(tsOutputChannels);
 		break;
 #endif /* EFI_CJ125 */
+#if EFI_MAP_AVERAGING
+		case DBG_MAP:
+		postMapState(tsOutputChannels);
+		break;
+#endif /* EFI_MAP_AVERAGING */
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 	case DBG_CAN:
 		postCanState(tsOutputChannels);
