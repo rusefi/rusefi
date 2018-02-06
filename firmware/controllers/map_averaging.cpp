@@ -125,7 +125,7 @@ static void startAveraging(void *arg) {
  * @note This method is invoked OFTEN, this method is a potential bottle-next - the implementation should be
  * as fast as possible
  */
-void mapAveragingCallback(adcsample_t adcValue) {
+void mapAveragingAdcCallback(adcsample_t adcValue) {
 	if (!isAveraging && ENGINE(sensorChartMode) != SC_MAP) {
 		return;
 	}
@@ -235,7 +235,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
-static void mapAveragingCallback(trigger_event_e ckpEventType,
+static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);
@@ -316,7 +316,7 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 //	endTimer[0].name = "map end0";
 //	endTimer[1].name = "map end1";
 
-	addTriggerEventListener(&mapAveragingCallback, "MAP averaging", engine);
+	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
 	addConsoleAction("faststat", showMapStats);
 	applyMapMinBufferLength();
 }
