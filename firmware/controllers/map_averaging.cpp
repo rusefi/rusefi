@@ -69,7 +69,7 @@ static int counters[2];
 /**
  * Running MAP accumulator - sum of all measurements within averaging window
  */
-static volatile float mapAccumulator = 0;
+static volatile float mapAdcAccumulator = 0;
 /**
  * Running counter of measurements to consider for averaging
  */
@@ -110,7 +110,7 @@ static void startAveraging(void *arg) {
 	bool wasLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
-	mapAccumulator = 0;
+	mapAdcAccumulator = 0;
 	mapMeasurementsCounter = 0;
 	isAveraging = true;
 	if (!wasLocked)
@@ -163,7 +163,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	;
 	// with locking we would have a consistent state
 
-	mapAccumulator += adcValue;
+	mapAdcAccumulator += adcValue;
 	mapMeasurementsCounter++;
 	if (!alreadyLocked)
 		unlockAnyContext();
@@ -177,8 +177,7 @@ static void endAveraging(void *arg) {
 	isAveraging = false;
 	// with locking we would have a consistent state
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	v_averagedMapValue = adcToVoltsDivided(
-			mapAccumulator / mapMeasurementsCounter);
+	v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
 	// todo: move out of locked context?
 	averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
 	// increment circular running buffer index
@@ -206,6 +205,12 @@ static void applyMapMinBufferLength() {
 	for (int i = 0; i < mapMinBufferLength; i++) {
 		averagedMapRunningBuffer[i] = FLT_MAX;
 	}
+}
+
+void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
+	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
+	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
+	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 
 void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -267,20 +272,25 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		}
 
 		angle_t samplingEnd = samplingStart + samplingDuration;
-		if (!cisnan(samplingEnd)) {
-			fixAngle(samplingEnd, "samplingEnd");
-			// only if value is already prepared
-			int structIndex = getRevolutionCounter() % 2;
-			// todo: schedule this based on closest trigger event, same as ignition works
-			scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
-					startAveraging, NULL, &engine->rpmCalculator);
-			scheduleByAngle(rpm, &endTimer[i][structIndex], samplingEnd,
-					endAveraging, NULL, &engine->rpmCalculator);
-			engine->m.mapAveragingCbTime = GET_TIMESTAMP()
-					- engine->m.beforeMapAveragingCb;
-		}
-	}
 
+		if (cisnan(samplingEnd)) {
+			// todo: when would this happen?
+			warning(CUSTOM_ERR_6549, "no map angles");
+			return;
+		}
+
+
+		fixAngle(samplingEnd, "samplingEnd");
+		// only if value is already prepared
+		int structIndex = getRevolutionCounter() % 2;
+		// todo: schedule this based on closest trigger event, same as ignition works
+		scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
+				startAveraging, NULL, &engine->rpmCalculator);
+		scheduleByAngle(rpm, &endTimer[i][structIndex], samplingEnd,
+				endAveraging, NULL, &engine->rpmCalculator);
+		engine->m.mapAveragingCbTime = GET_TIMESTAMP()
+				- engine->m.beforeMapAveragingCb;
+	}
 }
 
 static void showMapStats(void) {
