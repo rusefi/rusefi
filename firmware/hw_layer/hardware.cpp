@@ -184,7 +184,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9b");
 
 #if EFI_MAP_AVERAGING
-		mapAveragingCallback(fastAdc.samples[fastMapSampleIndex]);
+		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 		if (boardConfiguration->isHip9011Enabled) {
