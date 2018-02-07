@@ -86,8 +86,11 @@ static float v_averagedMapValue;
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
-// this is 'minimal averaged' MAP
-static float currentPressure;
+// we need this 'NO_VALUE_YET' to properly handle transition from engine not running to engine already running
+// but prior to first processed result
+#define NO_VALUE_YET -100
+// this is 'minimal averaged' MAP within avegaging window
+static float currentPressure = NO_VALUE_YET;
 
 EXTERN_ENGINE
 ;
@@ -210,6 +213,7 @@ static void applyMapMinBufferLength() {
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
+	tsOutputChannels->debugFloatField3 = currentPressure;
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 
@@ -309,7 +313,7 @@ float getMap(void) {
 	}
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (!isValidRpm(engine->rpmCalculator.rpmValue))
+	if (!isValidRpm(engine->rpmCalculator.rpmValue) || currentPressure == NO_VALUE_YET)
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
 	return validateMap(currentPressure);
 #else
