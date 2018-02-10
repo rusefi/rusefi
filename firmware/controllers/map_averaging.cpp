@@ -180,18 +180,22 @@ static void endAveraging(void *arg) {
 	isAveraging = false;
 	// with locking we would have a consistent state
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
-	// todo: move out of locked context?
-	averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
-	// increment circular running buffer index
-	averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
-	// find min. value (only works for pressure values, not raw voltages!)
-	float minPressure = averagedMapRunningBuffer[0];
-	for (int i = 1; i < mapMinBufferLength; i++) {
-		if (averagedMapRunningBuffer[i] < minPressure)
-			minPressure = averagedMapRunningBuffer[i];
+	if (mapMeasurementsCounter > 0) {
+		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
+		// todo: move out of locked context?
+		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
+		// increment circular running buffer index
+		averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+		// find min. value (only works for pressure values, not raw voltages!)
+		float minPressure = averagedMapRunningBuffer[0];
+		for (int i = 1; i < mapMinBufferLength; i++) {
+			if (averagedMapRunningBuffer[i] < minPressure)
+				minPressure = averagedMapRunningBuffer[i];
+		}
+		currentPressure = minPressure;
+	} else {
+		warning(CUSTOM_ERR_6548, "No MAP values");
 	}
-	currentPressure = minPressure;
 #endif
 	if (!wasLocked)
 		unlockAnyContext();
