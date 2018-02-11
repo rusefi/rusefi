@@ -140,9 +140,8 @@
 138) RESOLVED IN R0.5 Verified diode polarities, new KICAD libs flipped pin 1
 139) RESOLVED IN R0.5 Change D1004 from VS-50WQ04FNPBF to VS-50WQ04FN-M3
 140) RESOLVED IN R0.5 D1006 "alt diode for D1004" app note needs to get back to power supply page
-
 141) RESOLVED IN R0.5 add an app note regarding not having separate injector/analog/else GND on Frankenso (NOTE ADDED TO PAGE 15)
-142) RESOLVED IN R0.5 Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JPO1, JPO4 JPO5 "SM0805_jumper"
+142) ++++++ re-check this ++++++ RESOLVED IN R0.5 Some fab shops do not like soldering 0R 0805 on JUMPER footprint. Need to convert JPO1, JPO4 JPO5 "SM0805_jumper"
 143)                  move D12-D23 schematics to outputs page, add note mentioning that needed for IAC/VVT but not for injectors
 144) RESOLVED IN R0.5 HL7 & HL8 silkscreen is missing
 145) RESOLVED IN R0.4.3 HI/LO net names are confusing, and jumbled. 
@@ -170,6 +169,7 @@
 166)                  convert to TEST package to facilitate fabrication: W1002, W1003, JPO1, JPO4 & JPO5
 167)                  convert away from TEST package to reduce the change of mistaken fabrication: P1001 & W101 
 168)                  now that all mounting holes align let's move back side traces away from top-right and bottom-right mounting points. See https://rusefi.com/forum/viewtopic.php?f=4&t=569&p=28199#p28199
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
