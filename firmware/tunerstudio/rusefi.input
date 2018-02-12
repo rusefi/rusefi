@@ -294,7 +294,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  8, 10
       xBins       = knockNoiseRpmBins, RPMValue
       yBins       = knockNoise
-      gauge       = RPMValue
+      gauge       = RPMGauge
 
 	curve = narrowToWideOxygenCurve, "Narrow to Wideband approximation"
       columnLabel = "Voltage", "AFR"
@@ -345,7 +345,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  30, 10
       xBins       = sparkDwellRpmBins, RPMValue
       yBins       = sparkDwellValues
-      gauge       = RPMValue
+      gauge       = RPMGauge
     
    curve = map_samplingAngleCurve, "MAP Sampling Start Angle"
       columnLabel = "RPM", "Angle"
@@ -353,7 +353,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingAngleBins, RPMValue
       yBins       = map_samplingAngle
-      gauge       = RPMValue
+      gauge       = RPMGauge
    
    curve = map_samplingWindowCurve, "MAP Sampling Duration"
       columnLabel = "RPM", "Window"
@@ -361,7 +361,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingWindowBins, RPMValue
       yBins       = map_samplingWindow
-      gauge       = RPMValue
+      gauge       = RPMGauge
 
    curve = injectorsDeadTime, "Injector Dead Time by VBatt"
       columnLabel = "Voltage", "Dead Time"
@@ -1097,7 +1097,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = fuelTableGaugesPanel
 		panel = fuelTableRight
 
-	dialog = tChargeSettings, "tChart Settings"
+	dialog = tChargeSettings, "tCharge Settings"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
 		field = "minRPM minTPS", tChargeMinRpmMinTps
