@@ -173,7 +173,7 @@
 
 167)                  convert away from TEST package to reduce the change of mistaken fabrication: P1001 & W101 
 168)                  now that all mounting holes align let's move back side traces away from top-right and bottom-right mounting points. See https://rusefi.com/forum/viewtopic.php?f=4&t=569&p=28199#p28199
-
+169) RESOLVED IN R0.5.2 BOM inductor should be 68uH
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
