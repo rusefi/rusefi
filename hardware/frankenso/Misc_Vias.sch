@@ -63,8 +63,8 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 15 15
 Title "frankenso"
-Date "2017-12-06"
-Rev "0.5.1"
+Date "2018-02-24"
+Rev "0.5.3"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -1087,69 +1087,4 @@ Text Notes 4300 10400 0    60   ~ 0
 See below links about barriers in GND planes. The current loops in the layout do not appear to need barriers. \n\nhttp://rusefi.com/wiki/index.php?title=Manual:Hardware:PCB_design_rules\nhttp://www.maximintegrated.com/en/app-notes/index.mvp/id/5450
 Text GLabel 2525 9200 2    60   Input ~ 0
 12V-SNUB
-$Comp
-L MINI-USB-5P-3400020P1 test_module1501
-U 1 1 592613E7
-P 11025 7750
-F 0 "test_module1501" H 11025 8200 60  0000 C CNN
-F 1 "MINI-USB_RCTP_V-T_B_and_HW-MU-5F-23" V 11025 7750 50  0001 C CNN
-F 2 "rusEFI_LIB:MINI-USB_RCTP_V-T_B_and_HW-MU-5F-23" H 11025 7750 60  0001 C CNN
-F 3 "" H 11025 7750 60  0000 C CNN
-	1    11025 7750
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P1502
-U 1 1 59261A29
-P 11425 7700
-F 0 "P1502" H 11625 7700 50  0000 C CNN
-F 1 "CONN_01X01" V 11525 7700 50  0001 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x01_Pitch1.27mm" H 11425 7700 50  0001 C CNN
-F 3 "" H 11425 7700 50  0000 C CNN
-	1    11425 7700
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X02 P1504
-U 1 1 59261B2F
-P 11425 8050
-F 0 "P1504" H 11625 8050 50  0000 C CNN
-F 1 "CONN_01X01" V 11525 8050 50  0001 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm" H 11425 8050 50  0001 C CNN
-F 3 "" H 11425 8050 50  0000 C CNN
-	1    11425 8050
-	1    0    0    1   
-$EndComp
-$Comp
-L CONN_01X02 P1501
-U 1 1 5926248F
-P 11425 7550
-F 0 "P1501" H 11625 7550 50  0000 C CNN
-F 1 "CONN_01X01" V 11525 7550 50  0001 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm" H 11425 7550 50  0001 C CNN
-F 3 "" H 11425 7550 50  0000 C CNN
-	1    11425 7550
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X02 P1503
-U 1 1 59262549
-P 11425 7850
-F 0 "P1503" H 11625 7850 50  0000 C CNN
-F 1 "CONN_01X01" V 11525 7850 50  0001 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch1.27mm" H 11425 7850 50  0001 C CNN
-F 3 "" H 11425 7850 50  0000 C CNN
-	1    11425 7850
-	1    0    0    1   
-$EndComp
-Text Label 11225 8100 2    60   ~ 0
-GND
-Wire Notes Line
-	10550 7200 11850 7200
-Wire Notes Line
-	11850 7200 11850 8200
-Wire Notes Line
-	11850 8200 10550 8200
-Wire Notes Line
-	10550 8200 10550 7200
 $EndSCHEMATC
