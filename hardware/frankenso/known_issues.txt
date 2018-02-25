@@ -169,11 +169,12 @@
 
 164) RESOLVED IN R0.5.1 The POS file was missing a couple componets. New POS uses "Force INSERT atribute for all SMD footprints"
 165) RESOLVED IN R0.5.2 remove test_module1501 to reduce confusion. Module was a test footprint, combining multiple other footprints into one. 
-166) RESOLVED IN R0.5.3 JPO1, JPO4 & JPO5
+166) RESOLVED IN R0.5.3 W1002, W1003, JPO1, JPO4 & JPO5
 , had footprint SIL-2 which is now rusEFI_LIB:SM0805_jumper this causes the assembler to install the 0R jumpers. 
 167) RESOLVED IN R0.5.3 W23 & W101 had footprint SM0805_jumper which is now Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm this causes the assembler to not install a 0R jumper.
 168)                  now that all mounting holes align let's move back side traces away from top-right and bottom-right mounting points. See https://rusefi.com/forum/viewtopic.php?f=4&t=569&p=28199#p28199
 169)                  Make Q1002 have better thermal properties. 
+171)                  Q1002 seems to be thermally limited to about 0.7A. 
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
