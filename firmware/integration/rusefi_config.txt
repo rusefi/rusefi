@@ -51,6 +51,8 @@ struct_no_prefix engine_configuration_s
 
 #define FSIO_ANALOG_INPUT_COUNT 4
 
+#define SERVO_COUNT 8
+
 ! this is here so that rusEfi console can access it, too
 #define TS_OUTPUT_SIZE 356
 
@@ -893,7 +895,8 @@ brain_pin_e test557pin
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
 
-	int[784] unusedEnd;
+	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
+	int[776] unusedEnd;
 	
 
 end_struct
