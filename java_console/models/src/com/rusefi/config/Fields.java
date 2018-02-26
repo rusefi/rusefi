@@ -1,10 +1,11 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Feb 01 08:34:19 EET 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 25 20:46:04 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
 	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
+	public static final int SERVO_COUNT = 8;
 	public static final int TS_OUTPUT_SIZE = 356;
 	public static final int TS_FILE_VERSION = 20171101;
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
@@ -1019,7 +1020,15 @@ public class Fields {
 	public static final int test557pin_offset = 3308;
 	public static final int crankingAdvanceBins_offset = 3312;
 	public static final int crankingAdvance_offset = 3328;
-	public static final int unusedEnd_offset = 3344;
+	public static final int servoOutputPins1_offset = 3344;
+	public static final int servoOutputPins2_offset = 3348;
+	public static final int servoOutputPins3_offset = 3352;
+	public static final int servoOutputPins4_offset = 3356;
+	public static final int servoOutputPins5_offset = 3360;
+	public static final int servoOutputPins6_offset = 3364;
+	public static final int servoOutputPins7_offset = 3368;
+	public static final int servoOutputPins8_offset = 3372;
+	public static final int unusedEnd_offset = 3376;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1697,7 +1706,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2208, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2212, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2216, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test", "Aux Valves", "ADC", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "mode27", "mode28", "mode29"};
+	public static final String[] debug_mode_e = {"Alternator_PID", "TPS accel enrich", "Warmup PID", "IDLE", "EL accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT PID", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test", "Aux Valves", "ADC", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "mode28", "mode29"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2220, FieldType.INT, debug_mode_e);
 	public static final Field AUXVALVES1 = Field.create("AUXVALVES1", 2224, FieldType.INT, brain_pin_e);
 	public static final Field AUXVALVES2 = Field.create("AUXVALVES2", 2228, FieldType.INT, brain_pin_e);
@@ -1835,6 +1844,14 @@ public class Fields {
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2916, FieldType.INT);
 	public static final Field FLEXFUELSENSOR = Field.create("FLEXFUELSENSOR", 3304, FieldType.INT, brain_input_pin_e);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3308, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS1 = Field.create("SERVOOUTPUTPINS1", 3344, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS2 = Field.create("SERVOOUTPUTPINS2", 3348, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS3 = Field.create("SERVOOUTPUTPINS3", 3352, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS4 = Field.create("SERVOOUTPUTPINS4", 3356, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS5 = Field.create("SERVOOUTPUTPINS5", 3360, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS6 = Field.create("SERVOOUTPUTPINS6", 3364, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS7 = Field.create("SERVOOUTPUTPINS7", 3368, FieldType.INT, brain_pin_e);
+	public static final Field SERVOOUTPUTPINS8 = Field.create("SERVOOUTPUTPINS8", 3372, FieldType.INT, brain_pin_e);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
