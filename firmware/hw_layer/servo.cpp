@@ -33,13 +33,24 @@ static int countServos() {
 
 }
 
+static scheduling_s servoTurnSignalOff;
+
+// todo: extract common 'pin off' callback?
+static void servoTachPinLow(void) {
+	pin.setValue(false);
+}
+
 static msg_t seThread(void *arg) {
 	(void)arg;
 	chRegSetThreadName("servo");
 	while (true) {
-		int count = countServos();
+		pin.setValue(1);
+		float durationMs = 1.3;
 
-		chThdSleepMilliseconds(19 - 2 * count);
+		scheduleForLater(&servoTurnSignalOff, (int)MS2US(durationMs), (schfunc_t) &servoTachPinLow, NULL);
+
+
+		chThdSleepMilliseconds(19);
 	}
 	return 0;
 }
