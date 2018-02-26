@@ -107,7 +107,7 @@ static bool isGpsEnabled() {
 }
 
 void initGps(void) {
-	if(!isGpsEnabled())
+	if (!isGpsEnabled())
 		return;
 
 

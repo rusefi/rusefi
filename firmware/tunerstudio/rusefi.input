@@ -1299,6 +1299,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
+		field = "servo#1",								servoOutputPins1
 
 	dialog = allPins2
 		field = "Tachometer output Pin",					tachOutputPin
