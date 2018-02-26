@@ -147,8 +147,8 @@
 145) RESOLVED IN R0.4.3 HI/LO net names are confusing, and jumbled. 
 146) RESOLVED IN R0.5 HI/LO 2 silk screen is on wrong harness pin. 
 147) RESOLVED IN R0.5 Add 232 TX and RX connection points for external MAX232 or equiv chip SEE P701
-148)                  route NC located next to PD15 to 3.3V battery+ / RTC mod / see viewtopic.php?f=4&t=460
-149)                  INJ12 MCU trace is to close to PCB edge refence http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=390
+148) RESOLVED IN R0.5.3 route NC located next to PD15 to 3.3V battery+ / RTC mod / see viewtopic.php?f=4&t=460
+149) RESOLVED IN R0.5.3 INJ12 MCU trace is to close to PCB edge refence http://rusefi.com/forum/viewtopic.php?f=4&t=569&start=390
 150)                  Diodes like D16 to D23 would be better if they were connected to the other side of the W## connections. 
 151) RESOLVED IN R0.5.1 Q701 and Q1001 should use same not obsolete chip, changed to Q1001 from SQ2301ES-T1-GE3 to SI2323DS-T1-E3
 152) RESOLVED IN R0.5.2 R170 unify part number with R102/R103/R104, Change 5K to 5k, so they combine in the frankenso.csv BOM export. 
@@ -157,13 +157,13 @@
 155) RESOLVED IN R0.5.2 Change R137, etc, from 1K to 1k to combine them in the  frankenso.csv BOM. 
 156) RESOLVED IN R0.5.2 Change Q701 value to 20V, to combine them in frankenso.csv BOM. 
 156) RESOLVED IN R0.5.2 Change several values which have the field designation like mfg# into MFG#, which allows combining items in frankenso.csv BOM.
-157)                  Special field/flag for native stm34-related components to simplify BOM if using external brain board
-158)                  add "virtual" or DNP note to all non-PCB headers like P31 P32 P48 P53 P49 P50 P55 P56 P57 P58
-159)                  unify DNP labels for all real but DNP components
-160)                  unify part number and value for most test points like P15 P24 P25 P10 P1002 W63 W64 P1502 etc
-161)                  unify FB1 and FB701 footprint
+157) RESOLVED IN R0.5.3 Special field/flag for native stm34-related components to simplify BOM if using external brain board
+158) RESOLVED IN R0.5.3 add "virtual" or DNP note to all non-PCB headers like P31 P32 P48 P53 P49 P50 P55 P56 P57 P58
+159) RESOLVED IN R0.5.3 unify DNP labels for all real but DNP components
+160) RESOLVED IN R0.5.3 unify part number and value for most test points like P15 P24 P25 P10 P1002 W63 W64 P1502 etc
+161) RESOLVED IN R0.5.3 unify FB1 and FB701 footprint
 
-162)                  unify useful 0R jumpers packages and part numbers JP471 JPO1 JPO6 JPO6 W1002 W1003
+162) RESOLVED IN R0.5.3 unify useful 0R jumpers packages and part numbers JP471 JPO1 JPO6 JPO6 W1002 W1003
 . See also #166
 163)                  unify large-resistance resistors to same value? R231 R241 R251 R271 R351 R166
 
@@ -172,9 +172,9 @@
 166) RESOLVED IN R0.5.3 W1002, W1003, JPO1, JPO4 & JPO5
 , had footprint SIL-2 which is now rusEFI_LIB:SM0805_jumper this causes the assembler to install the 0R jumpers. 
 167) RESOLVED IN R0.5.3 W23 & W101 had footprint SM0805_jumper which is now Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm this causes the assembler to not install a 0R jumper.
-168)                  now that all mounting holes align let's move back side traces away from top-right and bottom-right mounting points. See https://rusefi.com/forum/viewtopic.php?f=4&t=569&p=28199#p28199
-169)                  Make Q1002 have better thermal properties. 
-171)                  Q1002 seems to be thermally limited to about 0.7A. 
+168) RESOLVED IN R0.5.3 now that all mounting holes align let's move back side traces away from top-right and bottom-right mounting points. See https://rusefi.com/forum/viewtopic.php?f=4&t=569&p=28199#p28199
+169) RESOLVED IN R0.5.2 BOM inductor should be 68uH
+170) RESOLVED IN R0.5.3 Q1002 seems to be thermally limited to about 0.7A. Make Q1002 have better thermal properties. I hope this helps make the thermal better.
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
