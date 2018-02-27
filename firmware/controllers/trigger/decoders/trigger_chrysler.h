@@ -14,6 +14,8 @@
 #define CHRYSLER_NGC6_GAP 1.5
 
 void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 void configureNeon2003TriggerShapeCam(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);

@@ -475,6 +475,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_DODGE_NEON_1995:
+	case TT_DODGE_NEON_1995_ONLY_CRANK:
 		configureNeon1995TriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
