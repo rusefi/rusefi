@@ -417,11 +417,15 @@ typedef enum {
 	Force_4b_pin_input_mode = ENUM_32_BITS,
 } pin_input_mode_e;
 
+#define CRANK_MODE_MULTIPLIER 2.0f
+
 // todo: better enum name
 typedef enum {
 	OM_NONE = 0,
 	/**
-	 * 720 degree engine cycle but trigger is defined using a 360 cycle which is when repeated
+	 * 720 degree engine cycle but trigger is defined using a 360 cycle which is when repeated.
+	 * For historical reasons we have a pretty weird approach where one crank trigger revolution is
+	 * defined as if it's stretched to 720 degress. See CRANK_MODE_MULTIPLIER
 	 */
 	FOUR_STROKE_CRANK_SENSOR = 1,
 	/**
