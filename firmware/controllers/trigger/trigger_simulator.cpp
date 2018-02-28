@@ -31,6 +31,7 @@ extern bool printTriggerDebug;
 
 void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerShape * shape, int i
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efiAssertVoid(shape->getSize() > 0, "size not zero");
 	int stateIndex = i % shape->getSize();
 	int prevIndex = (stateIndex + shape->getSize() - 1 ) % shape->getSize();
 
