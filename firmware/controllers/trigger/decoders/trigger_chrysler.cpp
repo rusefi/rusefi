@@ -447,6 +447,7 @@ static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s DE
 }
 
 void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 
 	configureNeon1995TriggerShapeCommon(false, s PASS_ENGINE_PARAMETER_SUFFIX);
 }
