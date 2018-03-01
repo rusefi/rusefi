@@ -337,7 +337,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: %.2f and %.2f, size=%d", angle, previousAngle, size);
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f and prev=%.2f, size=%d", angle, previousAngle, size);
 			shapeDefinitionError = true;
 			return;
 		}
