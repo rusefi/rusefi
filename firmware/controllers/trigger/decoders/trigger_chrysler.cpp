@@ -32,7 +32,7 @@ void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER
 	s->useRiseEdge = true;
 
 	s->setTriggerSynchronizationGap(3);
-	int m = 2;
+	int m = CRANK_MODE_MULTIPLIER;
 
 	s->addEvent2(m * 25, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(m * 30, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
@@ -394,44 +394,46 @@ static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s DE
 	trigger_wheel_e crank = withCam ? T_SECONDARY : T_PRIMARY;
 
 	// voodoo magic - we always need 720 at the end
-	int base = 720 - 560;
+	int base = withCam ? 720 - 560 : 360 - 135;
 
-	s->addEvent2(base - 720 + 600, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base - 720 + 604, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base - 720 + 616, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base - 720 + 620, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base - 720 + 643, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base - 720 + 648, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base - 720 + 671, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base - 720 + 676, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	float m = withCam ? 1 : 2;
 
-	if (withCam)
+	s->addEvent2(m * (base - 120), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base - 116), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base - 720 + 616), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base - 100), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base - 720 + 643), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base - 720 + 648), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base - 720 + 671), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base - 44), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+
+	if (withCam) {
 		s->addEvent2(base + 0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	s->addEvent2(m * (base + 20), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base + 60), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base + 75), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base + 79), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base + 101), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base + 106), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base + 130), crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(m * (base + 135), crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	s->addEvent2(base + 20, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 60, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 75, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 79, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 101, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 106, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 130, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 135, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	if (withCam)
+	if (withCam) {
 		s->addEvent2(base + 200, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX); // width = 150
 
-	s->addEvent2(base + 236, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 239, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 250, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 255, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 277, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 282, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 305, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(base + 310, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 236, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 239, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 250, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 255, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 277, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 282, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 305, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent2(base + 310, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->addEvent2(base + 374, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (withCam)
+//	if (withCam)
 		s->addEvent2(base + 395, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX); // width =
 
 	s->addEvent2(base + 418, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
@@ -442,12 +444,15 @@ static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s DE
 	s->addEvent2(base + 492, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(base + 497, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (withCam)
+//	if (withCam)
 		s->addEvent2(base + 560, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX); // width =
+
+	}
 }
 
 void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
+	s->setTriggerSynchronizationGap(3.79);
 
 	configureNeon1995TriggerShapeCommon(false, s PASS_ENGINE_PARAMETER_SUFFIX);
 }

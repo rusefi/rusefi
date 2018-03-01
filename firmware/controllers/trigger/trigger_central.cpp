@@ -384,6 +384,8 @@ void printAllTriggers() {
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
+		efiAssertVoid(!s->shapeDefinitionError, "trigger error");
+
 		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 
 		fprintf(fp, "# duty %.2f %.2f\n", s->expectedDutyCycle[0], s->expectedDutyCycle[1]);
