@@ -65,8 +65,10 @@ public class TriggerImage {
     }
 
     private static void generateImages(String workingFolder, TriggerPanel trigger) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(workingFolder + File.separator + INPUT_FILE_NAME));
+        String fileName = workingFolder + File.separator + INPUT_FILE_NAME;
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
 
+        System.out.println("Reading " + fileName);
         String line;
         while ((line = br.readLine()) != null) {
             if (line.trim().startsWith("#")) {
@@ -85,6 +87,7 @@ public class TriggerImage {
         String idStr = tokens[1];
         String eventCountStr = tokens[2];
         String triggerName = tokens[3];
+        System.out.println("Processing " + line + " " + idStr);
         triggerPanel.tdcPosition = Double.parseDouble(tokens[4]);
         int eventCount = Integer.parseInt(eventCountStr);
         int id = Integer.parseInt(idStr);
@@ -152,6 +155,8 @@ public class TriggerImage {
             if (line.trim().startsWith("#"))
                 continue;
             tokens = line.split(" ");
+            if (tokens.length < 4)
+                throw new IllegalStateException("Unexpected [" + line + "]");
             String signalStr = tokens[2];
             int signal = Integer.parseInt(signalStr);
             String angleStr = tokens[3];
