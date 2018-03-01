@@ -44,6 +44,7 @@ public class UiUtils {
 
     public static void saveImage(String fileName, Component component) {
         BufferedImage img = getScreenShot(component);
+        System.out.println("Saving " + fileName);
         try {
             ImageIO.write(img, "png", new File(fileName));
         } catch (IOException e) {
