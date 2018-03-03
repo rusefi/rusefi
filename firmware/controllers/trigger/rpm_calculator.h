@@ -100,10 +100,6 @@ public:
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
 	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
-	/**
-	 * The same as setRpmValue() but without state change
-	 */
-	void assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	uint32_t getRevolutionCounterSinceStart(void);
 	/**
 	 * RPM rate of change between current RPM and RPM measured during previous engine cycle
@@ -131,6 +127,10 @@ private:
 	 */
 	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+	/**
+	 * The same as setRpmValue() but without state change
+	 */
+	void assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.

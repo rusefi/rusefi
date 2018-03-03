@@ -9,5 +9,6 @@
 
 #include "main.h"
 
+void initServo(void);
 
 #endif /* HW_LAYER_SERVO_H_ */

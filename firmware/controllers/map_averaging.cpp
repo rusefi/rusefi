@@ -86,8 +86,11 @@ static float v_averagedMapValue;
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
-// this is 'minimal averaged' MAP
-static float currentPressure;
+// we need this 'NO_VALUE_YET' to properly handle transition from engine not running to engine already running
+// but prior to first processed result
+#define NO_VALUE_YET -100
+// this is 'minimal averaged' MAP within avegaging window
+static float currentPressure = NO_VALUE_YET;
 
 EXTERN_ENGINE
 ;
@@ -177,18 +180,22 @@ static void endAveraging(void *arg) {
 	isAveraging = false;
 	// with locking we would have a consistent state
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
-	// todo: move out of locked context?
-	averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
-	// increment circular running buffer index
-	averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
-	// find min. value (only works for pressure values, not raw voltages!)
-	float minPressure = averagedMapRunningBuffer[0];
-	for (int i = 1; i < mapMinBufferLength; i++) {
-		if (averagedMapRunningBuffer[i] < minPressure)
-			minPressure = averagedMapRunningBuffer[i];
+	if (mapMeasurementsCounter > 0) {
+		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
+		// todo: move out of locked context?
+		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
+		// increment circular running buffer index
+		averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+		// find min. value (only works for pressure values, not raw voltages!)
+		float minPressure = averagedMapRunningBuffer[0];
+		for (int i = 1; i < mapMinBufferLength; i++) {
+			if (averagedMapRunningBuffer[i] < minPressure)
+				minPressure = averagedMapRunningBuffer[i];
+		}
+		currentPressure = minPressure;
+	} else {
+		warning(CUSTOM_ERR_6548, "No MAP values");
 	}
-	currentPressure = minPressure;
 #endif
 	if (!wasLocked)
 		unlockAnyContext();
@@ -210,6 +217,7 @@ static void applyMapMinBufferLength() {
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
+	tsOutputChannels->debugFloatField3 = currentPressure;
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 
@@ -309,7 +317,7 @@ float getMap(void) {
 	}
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (!isValidRpm(engine->rpmCalculator.rpmValue))
+	if (!isValidRpm(engine->rpmCalculator.rpmValue) || currentPressure == NO_VALUE_YET)
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
 	return validateMap(currentPressure);
 #else

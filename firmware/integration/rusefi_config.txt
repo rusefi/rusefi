@@ -51,6 +51,8 @@ struct_no_prefix engine_configuration_s
 
 #define FSIO_ANALOG_INPUT_COUNT 4
 
+#define SERVO_COUNT 8
+
 ! this is here so that rusEfi console can access it, too
 #define TS_OUTPUT_SIZE 356
 
@@ -387,7 +389,7 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom bool32_t 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "trg39", "trg40", "trg41", "trg42", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus",  "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "trg40", "trg41", "trg42", "INVALID"
 
 custom trigger_type_e 4 bits,    U32,   @OFFSET@, [0:5], @@trigger_type_e_enum@@
 	trigger_type_e type;set trigger_type X
@@ -893,7 +895,8 @@ brain_pin_e test557pin
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
 
-	int[784] unusedEnd;
+	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
+	int[776] unusedEnd;
 	
 
 end_struct

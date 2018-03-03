@@ -13,7 +13,7 @@ void configureGmTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// all angles are x2 here - so, 5 degree width is 10
 	float w = 10;
 
-	float m = 2.0;
+	float m = CRANK_MODE_MULTIPLIER;
 
 	s->addEvent2(m * 60 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(m * 60, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
@@ -51,6 +51,7 @@ void initGmLS24(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	/**
 	 * based on http://rusefi.com/forum/viewtopic.php?f=3&t=936&start=30 logs
+	 * todo: do we have one cycle or two cycles here? where is CRANK_MODE_MULTIPLIER?
 	 */
 	s->addEvent2(22.2733333333334, ch, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(27.59333333333338, ch, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);

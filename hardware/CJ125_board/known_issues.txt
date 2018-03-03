@@ -9,4 +9,4 @@
  9)                  enlarge silkscreen font - current font is too small
 10)                  match Frankenso GND/3v/5v pinout
 11) RESOLVED IN R0.3 provide 4 extra holes in corners just for flat mounting
-12)                  power ON status LED, heater intensity LED
+12) RESOLVED IN R0.3 power ON status LED, heater intensity LED

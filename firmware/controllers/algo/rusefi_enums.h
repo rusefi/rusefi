@@ -275,7 +275,9 @@ typedef enum {
 	 */
 	TT_NISSAN_SR20VE_360 = 38,
 
-	TT_UNUSED = 39, // this is used if we want to iterate over all trigger types
+	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
+
+	TT_UNUSED = 40, // this is used if we want to iterate over all trigger types
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
@@ -415,11 +417,15 @@ typedef enum {
 	Force_4b_pin_input_mode = ENUM_32_BITS,
 } pin_input_mode_e;
 
+#define CRANK_MODE_MULTIPLIER 2.0f
+
 // todo: better enum name
 typedef enum {
 	OM_NONE = 0,
 	/**
-	 * 720 degree engine cycle but trigger is defined using a 360 cycle which is when repeated
+	 * 720 degree engine cycle but trigger is defined using a 360 cycle which is when repeated.
+	 * For historical reasons we have a pretty weird approach where one crank trigger revolution is
+	 * defined as if it's stretched to 720 degress. See CRANK_MODE_MULTIPLIER
 	 */
 	FOUR_STROKE_CRANK_SENSOR = 1,
 	/**

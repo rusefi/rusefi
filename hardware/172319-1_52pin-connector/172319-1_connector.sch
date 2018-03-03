@@ -1,0 +1,245 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+EELAYER 25 0
+EELAYER END
+$Descr A 11000 8500
+encoding utf-8
+Sheet 1 1
+Title "ECU adapter"
+Date "2017-12-16"
+Rev "R0.1"
+Comp "rusEFI by DAECU"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L CONN_02X26 P2
+U 1 1 5A803B13
+P 4050 4125
+F 0 "P2" H 4050 5475 50  0000 C CNN
+F 1 "CONN_02X26" V 4050 4125 50  0000 C CNN
+F 2 "rusEFI_Lib:172319-1_connector" H 4050 3425 50  0001 C CNN
+F 3 "" H 4050 3425 50  0000 C CNN
+	1    4050 4125
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_02X26 P1
+U 1 1 5A803BA1
+P 3550 4125
+F 0 "P1" H 3550 5475 50  0000 C CNN
+F 1 "CONN_02X26" V 3550 4125 50  0000 C CNN
+F 2 "rusEFI_Lib:172319-1_connector" H 3550 3425 50  0001 C CNN
+F 3 "" H 3550 3425 50  0000 C CNN
+	1    3550 4125
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 2875 3300 2925
+Wire Wire Line
+	3300 2925 4300 2925
+Wire Wire Line
+	4300 2925 4300 2875
+Wire Wire Line
+	3300 2975 3300 3025
+Wire Wire Line
+	3300 3025 4300 3025
+Wire Wire Line
+	4300 3025 4300 2975
+Wire Wire Line
+	3300 3075 3300 3125
+Wire Wire Line
+	3300 3125 4300 3125
+Wire Wire Line
+	4300 3125 4300 3075
+Wire Wire Line
+	3300 3175 3300 3225
+Wire Wire Line
+	3300 3225 4300 3225
+Wire Wire Line
+	4300 3225 4300 3175
+Wire Wire Line
+	3300 3275 3300 3325
+Wire Wire Line
+	3300 3325 4300 3325
+Wire Wire Line
+	4300 3325 4300 3275
+Wire Wire Line
+	3300 3375 3300 3425
+Wire Wire Line
+	3300 3425 4300 3425
+Wire Wire Line
+	4300 3425 4300 3375
+Wire Wire Line
+	3300 3475 3300 3525
+Wire Wire Line
+	3300 3525 4300 3525
+Wire Wire Line
+	4300 3525 4300 3475
+Wire Wire Line
+	3300 3575 3300 3625
+Wire Wire Line
+	3300 3625 4300 3625
+Wire Wire Line
+	4300 3625 4300 3575
+Wire Wire Line
+	3300 3675 3300 3725
+Wire Wire Line
+	3300 3725 4300 3725
+Wire Wire Line
+	4300 3725 4300 3675
+Wire Wire Line
+	3300 3775 3300 3825
+Wire Wire Line
+	3300 3825 4300 3825
+Wire Wire Line
+	4300 3825 4300 3775
+Wire Wire Line
+	3300 3875 3300 3925
+Wire Wire Line
+	3300 3925 4300 3925
+Wire Wire Line
+	4300 3925 4300 3875
+Wire Wire Line
+	3300 3975 3300 4025
+Wire Wire Line
+	3300 4025 4300 4025
+Wire Wire Line
+	4300 4025 4300 3975
+Wire Wire Line
+	3300 4075 3300 4125
+Wire Wire Line
+	3300 4125 4300 4125
+Wire Wire Line
+	4300 4125 4300 4075
+Wire Wire Line
+	3300 4175 3300 4225
+Wire Wire Line
+	3300 4225 4300 4225
+Wire Wire Line
+	4300 4225 4300 4175
+Wire Wire Line
+	3300 4275 3300 4325
+Wire Wire Line
+	3300 4325 4300 4325
+Wire Wire Line
+	4300 4325 4300 4275
+Wire Wire Line
+	3300 4375 3300 4425
+Wire Wire Line
+	3300 4425 4300 4425
+Wire Wire Line
+	4300 4425 4300 4375
+Wire Wire Line
+	3300 4475 3300 4525
+Wire Wire Line
+	3300 4525 4300 4525
+Wire Wire Line
+	4300 4525 4300 4475
+Wire Wire Line
+	3300 4575 3300 4625
+Wire Wire Line
+	3300 4625 4300 4625
+Wire Wire Line
+	4300 4625 4300 4575
+Wire Wire Line
+	3300 4675 3300 4725
+Wire Wire Line
+	3300 4725 4300 4725
+Wire Wire Line
+	4300 4725 4300 4675
+Wire Wire Line
+	3300 4775 3300 4825
+Wire Wire Line
+	3300 4825 4300 4825
+Wire Wire Line
+	4300 4825 4300 4775
+Wire Wire Line
+	3300 4875 3300 4925
+Wire Wire Line
+	3300 4925 4300 4925
+Wire Wire Line
+	4300 4925 4300 4875
+Wire Wire Line
+	3300 4975 3300 5025
+Wire Wire Line
+	3300 5025 4300 5025
+Wire Wire Line
+	4300 5025 4300 4975
+Wire Wire Line
+	3300 5075 3300 5125
+Wire Wire Line
+	3300 5125 4300 5125
+Wire Wire Line
+	4300 5125 4300 5075
+Wire Wire Line
+	3300 5175 3300 5225
+Wire Wire Line
+	3300 5225 4300 5225
+Wire Wire Line
+	4300 5225 4300 5175
+Wire Wire Line
+	3300 5275 3300 5325
+Wire Wire Line
+	3300 5325 4300 5325
+Wire Wire Line
+	4300 5325 4300 5275
+Wire Wire Line
+	3300 5375 3300 5425
+Wire Wire Line
+	3300 5425 4300 5425
+Wire Wire Line
+	4300 5425 4300 5375
+$Comp
+L CONN_01X01 P3
+U 1 1 5A803FEA
+P 6100 5425
+F 0 "P3" H 6100 5525 50  0000 C CNN
+F 1 "CONN_01X01" V 6200 5425 50  0001 C CNN
+F 2 "Connect:1pin" H 6100 5425 50  0001 C CNN
+F 3 "" H 6100 5425 50  0000 C CNN
+	1    6100 5425
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR01
+U 1 1 5A804084
+P 6100 5625
+F 0 "#PWR01" H 6100 5375 50  0001 C CNN
+F 1 "GND" H 6100 5475 50  0000 C CNN
+F 2 "" H 6100 5625 50  0000 C CNN
+F 3 "" H 6100 5625 50  0000 C CNN
+	1    6100 5625
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

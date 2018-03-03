@@ -294,7 +294,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  8, 10
       xBins       = knockNoiseRpmBins, RPMValue
       yBins       = knockNoise
-      gauge       = RPMValue
+      gauge       = RPMGauge
 
 	curve = narrowToWideOxygenCurve, "Narrow to Wideband approximation"
       columnLabel = "Voltage", "AFR"
@@ -345,7 +345,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  30, 10
       xBins       = sparkDwellRpmBins, RPMValue
       yBins       = sparkDwellValues
-      gauge       = RPMValue
+      gauge       = RPMGauge
     
    curve = map_samplingAngleCurve, "MAP Sampling Start Angle"
       columnLabel = "RPM", "Angle"
@@ -353,7 +353,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingAngleBins, RPMValue
       yBins       = map_samplingAngle
-      gauge       = RPMValue
+      gauge       = RPMGauge
    
    curve = map_samplingWindowCurve, "MAP Sampling Duration"
       columnLabel = "RPM", "Window"
@@ -361,7 +361,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingWindowBins, RPMValue
       yBins       = map_samplingWindow
-      gauge       = RPMValue
+      gauge       = RPMGauge
 
    curve = injectorsDeadTime, "Injector Dead Time by VBatt"
       columnLabel = "Voltage", "Dead Time"
@@ -917,9 +917,6 @@ gaugeCategory = Fuel Data
 		subMenu = engineChars,				"Base Engine Settings"
 		subMenu = triggerConfiguration,		"Trigger Configuration"
 		subMenu = std_separator
-		subMenu = injectionSettings,		"Injection Settings"
-		subMenu = ignitionSettings,			"Ignition Settings"
-		subMenu = std_separator
 		subMenu = analogInputs,				"Analog inputs"
 		subMenu = cltSensor,				"CLT Sensor Settings"
 		subMenu = iatSensor,				"IAT Sensor Settings"
@@ -944,6 +941,25 @@ gaugeCategory = Fuel Data
 		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)"
 		subMenu = spiFunction,				"SPI Settings"
 		subMenu = etbDialog,				"Electronic Thtottle Body (alpha version)"
+		
+	menu = "Injection"
+		subMenu = injectionSettings,		"Injection Settings"
+		subMenu = std_separator
+		subMenu = fuelTableDialog,			"Fuel Table", 0, {fuelAlgorithm != LM_SPEED_DENSITY}
+		subMenu = veTableDialog,			"VE Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = afrTableTbl,				"Target AFR Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = injPhaseTableTbl,			"Injection Phase"
+		subMenu = std_separator
+		subMenu = warmupFuelDialog,			"Warmup fuel closed-loop"
+		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
+		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
+		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
+
+	menu = "Ignition"
+		subMenu = ignitionSettings,			"Ignition Settings"
+		subMenu = ignitionTableTbl,			"Ignition Advance Table"
+		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
+		
 	menu = "Tuning"
 		subMenu = generalSettings,			"General"
 		subMenu = monitoringSettings,		"rusEfi Console Settings"
@@ -953,28 +969,17 @@ gaugeCategory = Fuel Data
 		subMenu = crankingTpsCurve,	    	"Cranking TPS Multiplier"
 		subMenu = crankingDurationCurve,	"Cranking Duration Multiplier"
 		subMenu = cltCrankingCurve,			"Cranking IAC multiplier", 0, {overrideCrankingIacSetting == 1}
-		subMenu = std_separator
-		subMenu = warmupFuelDialog,			"Warmup fuel closed-loop"
-		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
-		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
-		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
-		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
 		subMenu = idleSettings,				"Idle Settings"
 		subMenu = cltIdleRPMCurve,			"Idle Target RPM", 0, {idleMode == 0}
 		subMenu = std_separator
-		subMenu = fuelTableDialog,			"Fuel Table", 0, {fuelAlgorithm != LM_SPEED_DENSITY}
-        subMenu = veTableDialog,           	"VE Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
         subMenu = idleVeCurve,              "Idle VE Table", 0, {useSeparateVeForIdle == 1}
-        subMenu = afrTableTbl,          	"Target AFR Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
-        subMenu = injPhaseTableTbl,         "Injection Phase"           
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
 		subMenu = std_separator
 		subMenu = fuelClosedLoopDialog, 	"Fuel short-term closed-loop correction"
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
         subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
 		subMenu = std_separator
-		subMenu = ignitionTableTbl,			"Ignition Advance Table"
 		subMenu = idleAdvanceCurve,			"Idle Ignition Advance Table", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = crankingAdvanceCurve,		"Cranking Ignition Advance Table", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
@@ -1097,7 +1102,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = fuelTableGaugesPanel
 		panel = fuelTableRight
 
-	dialog = tChargeSettings, "tChart Settings"
+	dialog = tChargeSettings, "tCharge Settings"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
 		field = "minRPM minTPS", tChargeMinRpmMinTps
@@ -1294,6 +1299,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
+		field = "servo#1",								servoOutputPins1
 
 	dialog = allPins2
 		field = "Tachometer output Pin",					tachOutputPin

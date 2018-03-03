@@ -63,8 +63,8 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 9 15
 Title "frankenso"
-Date "2017-12-06"
-Rev "0.5.1"
+Date "2018-02-24"
+Rev "0.5.3"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -80,8 +80,8 @@ F 0 "P1002" H 7830 6700 40  0000 L CNN
 F 1 "CONN_1" H 7750 6755 30  0001 C CNN
 F 2 "SIL-1" V 1130 2600 60  0001 C CNN
 F 3 "" H 7750 6700 60  0001 C CNN
-F 4 "DO NOT POPULATE,DNP" V 1130 2600 60  0001 C CNN "MFG,MFG#"
-F 5 "DO NOT POPULATE,DNP" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
+F 4 "DNP,DNP" V 1130 2600 60  0001 C CNN "MFG,MFG#"
+F 5 "DNP,DNP" V 1130 2600 60  0001 C CNN "VEND1,VEND1#"
 	1    7750 6700
 	-1   0    0    1   
 $EndComp
@@ -217,8 +217,8 @@ F 1 "DIODESCH" H 8100 6550 40  0001 C CNN
 F 2 "Diode_DO-41_SOD81_Vertical_AnodeUp" H 8100 6650 60  0001 C CNN
 F 3 "~" H 8100 6650 60  0000 C CNN
 F 4 "ONSEMI,MR854G" H 8100 6650 60  0001 C CNN "MFG,MFG#"
-F 5 "sky-macau.com,1438219496" H 8100 6650 60  0001 C CNN "VEND2,VEND2#"
-F 6 "digi,MR854GOS-ND" H 8100 6650 60  0001 C CNN "vend1,vend1#"
+F 5 "digi,MR854GOS-ND" H 8100 6650 60  0001 C CNN "VEND1,VEND1#"
+F 6 "sky-macau.com,1438219496" H 8100 6650 60  0001 C CNN "VEND2,VEND2#"
 	1    8100 6650
 	0    -1   1    0   
 $EndComp
@@ -262,8 +262,8 @@ F 0 "P901" H 3530 6250 40  0000 L CNN
 F 1 "CONN_1" H 3450 6305 30  0001 C CNN
 F 2 "SIL-1" H 3450 6250 60  0001 C CNN
 F 3 "" H 3450 6250 60  0000 C CNN
-F 4 "dnp,dnp" H 3450 6250 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 3450 6250 60  0001 C CNN "Field5"
+F 4 "DNP,dnp" H 3450 6250 60  0001 C CNN "MFG,MFG#"
+F 5 "DNP,dnp" H 3450 6250 60  0001 C CNN "VEND1,VEND1#"
 	1    3450 6250
 	-1   0    0    1   
 $EndComp
@@ -275,8 +275,8 @@ F 0 "P902" H 5730 6250 40  0000 L CNN
 F 1 "CONN_1" H 5650 6305 30  0001 C CNN
 F 2 "SIL-1" H 5650 6250 60  0001 C CNN
 F 3 "" H 5650 6250 60  0000 C CNN
-F 4 "dnp,dnp" H 5650 6250 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 5650 6250 60  0001 C CNN "Field5"
+F 4 "DNP,dnp" H 5650 6250 60  0001 C CNN "MFG,MFG#"
+F 5 "DNP,dnp" H 5650 6250 60  0001 C CNN "VEND1,VEND1#"
 	1    5650 6250
 	0    -1   -1   0   
 $EndComp
@@ -419,8 +419,8 @@ Wire Wire Line
 Connection ~ 4600 6600
 Text Notes 850  5350 0    60   ~ 0
 Brief overview\n-- Q1002, R1003, D1002 preform an active transient protection. It will suppress voltages up to 200V down to 19V.\n-- Q1001, R1001, D1001 preform a reverse polarity protection. If the input signal is the wrong polarity, the gate will not conduct which will prevent current from flowing. \n-- D1003 is a second transient suppressor, it would catch faster transients allowing a brief amount of time for Q1002 to preform it's duty. \n-- L1003 is a choke, it simple prevents switching noise from going up the power wire where it can get into other circuits. \n-- C1001 is a bulk cap, it simply stores energy locally such that the regulator can draw large currents in short periods of time. \n-- U1001 and the components to the right, are a buck style switching regulator, that will pull the 5V line up to 5V. It will not pull it down from 5V if there is an external voltage. \nThe U1001 circuit has been designed for 3A output and up to 20V input, but typically 14.4V or 12.4V input. L1001 wants to be about 68uH to 100uH with less than 0.3 ohms resistance. 
-Text Notes 9750 6100 0    60   ~ 0
-5V  5mVp-p 3A\nSuggested \nexternal wires\n18awg min
+Text Notes 9750 6375 0    60   ~ 0
+5V  5mVp-p 1A\nSuggested \nexternal wires \n18awg min
 Text Notes 3400 6000 0    60   ~ 0
 200V surge, 18V to 7V typical. \nSuggested mininium 16awg \nUpstream 1A fuse littel fuse 0287001
 $Comp
@@ -447,7 +447,7 @@ F 2 "INDUCTOR_V" H 8600 6450 60  0001 C CNN
 F 3 "" H 8600 6450 60  0001 C CNN
 F 4 "BOURNS,5800-680-RC" V 8600 6450 60  0001 C CNN "MFG,MFG#"
 F 5 "digi,M8288-ND" V 8600 6450 60  0001 C CNN "VEND1,VEND1#"
-F 6 "sky-macau.com,2258345334" V 8600 6450 60  0001 C CNN "VEND2,VEND2#"
+F 6 "sky-macau.com,9900528212" V 8600 6450 60  0001 C CNN "VEND2,VEND2#"
 	1    8600 6450
 	0    -1   -1   0   
 $EndComp
@@ -461,7 +461,7 @@ F 2 "INDUCTOR_V" H 9350 6450 60  0001 C CNN
 F 3 "" H 9350 6450 60  0001 C CNN
 F 4 "BOURNS,5800-680-RC" V 9350 6450 60  0001 C CNN "MFG,MFG#"
 F 5 "digi,M8288-ND" V 9350 6450 60  0001 C CNN "VEND1,VEND1#"
-F 6 "sky-macau.com,2258345334" V 9350 6450 60  0001 C CNN "VEND2,VEND2#"
+F 6 "sky-macau.com,9900528212" V 9350 6450 60  0001 C CNN "VEND2,VEND2#"
 	1    9350 6450
 	0    -1   -1   0   
 $EndComp
@@ -476,7 +476,7 @@ F 1 "DIODESCH" H 8300 6550 40  0001 C CNN
 F 2 "DPAK2" H 8300 6650 60  0001 C CNN
 F 3 "~" H 8300 6650 60  0000 C CNN
 F 4 "VISHAY,VS-50WQ04FN-M3" H 8300 6650 60  0001 C CNN "MFG,MFG#"
-F 5 "DIGI,VS-50WQ04FN-M3-ND" H 8300 6650 60  0001 C CNN "vend1,vend1#"
+F 5 "DIGI,VS-50WQ04FN-M3-ND" H 8300 6650 60  0001 C CNN "VEND1,VEND1#"
 	1    8300 6650
 	0    -1   -1   0   
 $EndComp
@@ -511,8 +511,8 @@ F 0 "FB901" H 3650 6475 40  0000 L CNN
 F 1 "CONN_1" H 3750 6455 30  0001 C CNN
 F 2 "rusEFI_LIB:KeyStone_3557" H 3750 6400 60  0001 C CNN
 F 3 "" H 3750 6400 60  0000 C CNN
-F 4 "dnp,dnp" H 3750 6400 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 3750 6400 60  0001 C CNN "Field5"
+F 4 "DNP,dnp" H 3750 6400 60  0001 C CNN "MFG,MFG#"
+F 5 "DNP,dnp" H 3750 6400 60  0001 C CNN "VEND1,VEND1#"
 	1    3750 6400
 	1    0    0    1   
 $EndComp
@@ -524,8 +524,8 @@ F 0 "FB902" H 4025 6475 40  0000 R CNN
 F 1 "CONN_1" H 3950 6455 30  0001 C CNN
 F 2 "rusEFI_LIB:KeyStone_3557" H 3950 6400 60  0001 C CNN
 F 3 "" H 3950 6400 60  0000 C CNN
-F 4 "dnp,dnp" H 3950 6400 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 3950 6400 60  0001 C CNN "Field5"
+F 4 "DNP,dnp" H 3950 6400 60  0001 C CNN "MFG,MFG#"
+F 5 "DNP,dnp" H 3950 6400 60  0001 C CNN "VEND1,VEND1#"
 	1    3950 6400
 	-1   0    0    1   
 $EndComp
@@ -533,4 +533,6 @@ Wire Notes Line
 	4100 6400 4100 6150
 Wire Notes Line
 	3600 6250 3600 6150
+Text Notes 9725 7200 0    60   ~ 0
+3A possible with \nmore expensive \ncomponents. 
 $EndSCHEMATC
