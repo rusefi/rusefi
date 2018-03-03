@@ -35,6 +35,11 @@
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+// See RpmCalculator::checkIfSpinning()
+#ifndef NO_RPM_EVENTS_TIMEOUT_SECS
+#define NO_RPM_EVENTS_TIMEOUT_SECS 2
+#endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
+
 EXTERN_ENGINE
 ;
 
@@ -49,7 +54,7 @@ RpmCalculator::RpmCalculator() {
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
 	rpmValue = 0;
-	assignRpmValue(0);
+	assignRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 	state = STOPPED;
 
 	// we need this initial to have not_running at first invocation
@@ -95,8 +100,8 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool noEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(2 * US_PER_SECOND_LL); // Anything below 60 rpm is not running
-	if (noEventsForTooLong) {
+	bool noRpmEventsForTooLong = nowNt - lastRpmEventTimeNt >= US2NT(NO_RPM_EVENTS_TIMEOUT_SECS * US_PER_SECOND_LL); // Anything below 60 rpm is not running
+	if (noRpmEventsForTooLong) {
 		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return false;
 	}
@@ -104,7 +109,7 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
-void RpmCalculator::assignRpmValue(int value) {
+void RpmCalculator::assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	previousRpmValue = rpmValue;
 	rpmValue = value;
 	if (rpmValue <= 0) {
@@ -115,7 +120,7 @@ void RpmCalculator::assignRpmValue(int value) {
 }
 
 void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	assignRpmValue(value);
+	assignRpmValue(value PASS_ENGINE_PARAMETER_SUFFIX);
 	if (previousRpmValue == 0 && rpmValue > 0) {
 		/**
 		 * this would make sure that we have good numbers for first cranking revolution
@@ -159,7 +164,7 @@ float RpmCalculator::getRpmAcceleration() {
 void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
-		assignRpmValue(0);
+		assignRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 		scheduleMsg(logger, "engine stopped");
 	}
 	state = STOPPED;
