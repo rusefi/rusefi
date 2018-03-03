@@ -53,8 +53,10 @@ RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
-	rpmValue = 0;
-	assignRpmValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	// todo: reuse assignRpmValue() method which needs PASS_ENGINE_PARAMETER_SUFFIX
+	// which we cannot provide inside this parameter-less consutructor. need a solution for this minor mess
+	previousRpmValue = rpmValue = 0;
+	oneDegreeUs = NAN;
 	state = STOPPED;
 
 	// we need this initial to have not_running at first invocation

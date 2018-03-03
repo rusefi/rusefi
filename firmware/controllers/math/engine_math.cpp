@@ -511,7 +511,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_UNIT_TEST
 	printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
 			getIgnition_mode_e(engineConfiguration->ignitionMode));
-#endif
+#endif /* EFI_UNIT_TEST */
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
