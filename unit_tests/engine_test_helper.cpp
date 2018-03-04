@@ -15,7 +15,7 @@
 #include "advance_map.h"
 #include "event_queue.h"
 
-extern int timeNow;
+extern int timeNowUs;
 extern EnginePins enginePins;
 extern EventQueue schedulingQueue;
 extern int unitTestWarningCounter;
@@ -79,9 +79,9 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 
 void EngineTestHelper::fireTriggerEvents2(int count, int duration) {
 	for (int i = 0; i < count; i++) {
-		timeNow += duration;
+		timeNowUs += duration;
 		firePrimaryTriggerRise();
-		timeNow += duration;
+		timeNowUs += duration;
 		firePrimaryTriggerFall();
 	}
 }

@@ -15,6 +15,7 @@ void testPlainCrankingWithoutAdvancedFeatures() {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
 
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
