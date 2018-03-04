@@ -19,7 +19,7 @@ public:
 	void firePrimaryTriggerRise();
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
-	void fireTriggerEvents2(int count, int duration);
+	void fireTriggerEvents2(int count, int durationUs);
 
 	persistent_config_s persistentConfig;
 	Engine engine;
