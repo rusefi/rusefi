@@ -167,6 +167,10 @@ void TriggerState::resetCurrentCycleState() {
 	currentCycle.current_index = 0;
 }
 
+void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	shaft_is_synchronized = false;
+}
+
 /**
  * @brief Trigger decoding happens here
  * This method is invoked every time we have a fall or rise on one of the trigger sensors.
