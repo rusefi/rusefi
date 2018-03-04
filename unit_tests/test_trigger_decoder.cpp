@@ -329,8 +329,6 @@ void testRpmCalculator(void) {
 	assertEqualsM("index #1", 15, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 
 
-	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
-	assertEqualsM("queue size/0", 0, schedulingQueue.size());
 	eth.clearQueue();
 
 	debugSignalExecutor = true;
@@ -655,7 +653,6 @@ static void setTestBug299(EngineTestHelper *eth) {
 	eth->fireTriggerEvents2(1, MS2US(20));
 	assertEqualsM("RPM#2", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	eth->clearQueue();
 
 	/**
