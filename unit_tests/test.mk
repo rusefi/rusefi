@@ -1,4 +1,5 @@
 TEST_SRC_CPP = test_util.cpp \
+	unit_test_framework.cpp \
 	boards.cpp \
 	test_basic_math/test_find_index.cpp \
 	test_basic_math/test_interpolation_3d.cpp \
