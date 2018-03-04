@@ -20,6 +20,7 @@ public:
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEvents2(int count, int durationUs);
+	void clearQueue();
 
 	persistent_config_s persistentConfig;
 	Engine engine;

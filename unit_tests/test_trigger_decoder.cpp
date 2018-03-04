@@ -331,7 +331,7 @@ void testRpmCalculator(void) {
 
 	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	assertEqualsM("queue size/0", 0, schedulingQueue.size());
-	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
+	eth.clearQueue();
 
 	debugSignalExecutor = true;
 
@@ -618,7 +618,7 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
-	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
+	eth->clearQueue();
 
 	assertEquals(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
@@ -656,7 +656,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("RPM#2", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
-	engine->iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
+	eth->clearQueue();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle

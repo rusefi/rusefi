@@ -91,8 +91,12 @@ void EngineTestHelper::fireTriggerEvents2(int count, int durationUs) {
 	}
 }
 
+void EngineTestHelper::clearQueue() {
+	engine.iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
+}
+
 void EngineTestHelper::fireTriggerEvents(int count) {
-	fireTriggerEvents2(count, 5000); // 5ms
+	fireTriggerEvents2(count, MS2US(5)); // 5ms
 }
 
 void EngineTestHelper::applyTriggerShape() {
