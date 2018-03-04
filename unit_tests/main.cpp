@@ -44,10 +44,10 @@ typedef int32_t         msg_t;
 static engine_configuration_s ec;
 engine_configuration_s *engineConfiguration = &ec;
 
-int timeNow = 0;
+int timeNowUs = 0;
 
 efitimeus_t getTimeNowUs(void) {
-	return timeNow;
+	return timeNowUs;
 }
 
 efitick_t getTimeNowNt(void) {
