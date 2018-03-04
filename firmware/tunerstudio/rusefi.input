@@ -999,7 +999,7 @@ gaugeCategory = Fuel Data
 		subMenu = ignitionIatCorrTableMap,	"Ignition Intake Air Temp correction"
 
 	menu = "Racing Features"
-		subMenu = smLaunchControl,           "Launch Control"
+		subMenu = smLaunchControl,           "Launch Control NOT WORKING"
 		subMenu	= std_separator
 
 	  menu = "Board"
@@ -2073,7 +2073,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	    field = "Engine chart size", 					engineChartSize
 
 				;			Racing Features->Launch Control
-	dialog = smLaunchControl, "Launch Control Settings"
+	dialog = smLaunchControl, "Launch Control Settings NOT WORKING"
 		field = "RPM Step1 Limit",         	    		step1rpm
 		field = "Launch RPM Window"                     step1RpmWindow
 		field = "Step1 Ignition Advance",				step1timing
