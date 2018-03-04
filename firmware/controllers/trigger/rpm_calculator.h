@@ -37,6 +37,11 @@ typedef enum {
 	 */
 	STOPPED,
 	/**
+	 * The engine is spinning up (reliable RPM is not detected yet).
+	 * In this state, rpmValue is >= 0 (can be zero).
+	 */
+	SPINNING_UP,
+	/**
 	 * The engine is cranking (0 < RPM < cranking.rpm)
 	 */
 	CRANKING,
@@ -105,6 +110,9 @@ private:
 	 */
 	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+	/**
+	 * The same as setRpmValue() but without state change
+	 */
 	void assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
