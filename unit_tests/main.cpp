@@ -28,11 +28,13 @@
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
+#include "test_startOfCrankingPrimingPulse.h"
 #include "test_util.h"
 #include "map_resize.h"
 #include "engine_math.h"
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
+
 
 typedef int32_t         msg_t;
 
@@ -72,6 +74,8 @@ int main(void) {
 	testOverflow64Counter();
 	testInterpolate3d();
 	testFindIndex();
+	testPlainCrankingWithoutAdvancedFeatures();
+	testStartOfCrankingPrimingPulse();
 	testInterpolate2d();
 	testGpsParser();
 	testMisc();

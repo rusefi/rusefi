@@ -26,7 +26,6 @@
 #include "main_trigger_callback.h"
 #include "engine.h"
 #include "advance_map.h"
-#include "engine_test_helper.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
@@ -615,7 +614,7 @@ static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int inject
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
 }
 
-static void setTestBug299small(EngineTestHelper *eth) {
+void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
@@ -644,7 +643,7 @@ static void setTestBug299small(EngineTestHelper *eth) {
 }
 
 static void setTestBug299(EngineTestHelper *eth) {
-	setTestBug299small(eth);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
@@ -1277,7 +1276,7 @@ void testMissedSpark299(void) {
 	EXPAND_EngineTestHelper
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-	setTestBug299small(&eth);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 

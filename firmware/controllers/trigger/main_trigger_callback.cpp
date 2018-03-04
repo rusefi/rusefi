@@ -526,7 +526,10 @@ static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return CONFIG(isCylinderCleanupEnabled) && (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS);
 }
 
-// Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
+/**
+ * Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
+ * See testStartOfCrankingPrimingPulse()
+ */
 static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
