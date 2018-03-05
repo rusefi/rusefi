@@ -50,10 +50,21 @@ void testStartOfCrankingPrimingPulse() {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
+	// this -70 value comes from CLT error handling code
+	assertEqualsM("CLT#1", 70, engine->sensors.clt);
+
+	// we need below freezing temperature to get prime fuel
+	// todo: less cruel CLT value assignment which would survive 'updateSlowSensors'
+	engine->sensors.clt = -10;
+	// this is needed to update injectorLag
+//	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+//	assertEqualsM("CLT#2", -10, engine->sensors.clt);
+
+
 	// prod code invokes this on ECU start, here we have to mimic this behavior
 	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
-	assertEqualsM("prime fuel", 0, schedulingQueue.size());
+	assertEqualsM("prime fuel", 1, schedulingQueue.size());
 }
 
