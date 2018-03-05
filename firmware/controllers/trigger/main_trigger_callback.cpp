@@ -249,18 +249,18 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "handleFuel totalPerCycle=%.2f", totalPerCycle);
-	scheduleMsg(logger, "handleFuel engineCycleDuration=%.2f", engineCycleDuration);
+//	scheduleMsg(logger, "handleFuel totalPerCycle=%.2f", totalPerCycle);
+//	scheduleMsg(logger, "handleFuel engineCycleDuration=%.2f", engineCycleDuration);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
 #if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->output->name,
-			eventIndex,
+	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->outputs[0]->name,
+			injEventIndex,
 			injectionDuration,
 			getRevolutionCounter());
-	scheduleMsg(logger, "handleFuel pin=%s delay=%.2f %d", event->output->name, injectionStartDelayUs,
+	scheduleMsg(logger, "handleFuel pin=%s delay=%.2f %d", event->outputs[0]->name, injectionStartDelayUs,
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
