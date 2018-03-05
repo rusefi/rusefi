@@ -19,6 +19,7 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 int isIgnitionTimingError(void);
+void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void showMainHistogram(void);
 

@@ -530,11 +530,15 @@ static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
  * See testStartOfCrankingPrimingPulse()
  */
-static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	uint32_t ignSwitchCounter = backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
+#else /* EFI_PROD_CODE */
+	uint32_t ignSwitchCounter = 0;
+#endif /* EFI_PROD_CODE */
+
 	// if we're just toying with the ignition switch, give it another chance eventually...
 	if (ignSwitchCounter > 10)
 		ignSwitchCounter = 0;
@@ -547,7 +551,7 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// fill-in the prime event struct
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		primeInjEvent.engine = engine;
-#endif
+#endif /* EFI_UNIT_TEST */
 		primeInjEvent.ownIndex = 0;
 		primeInjEvent.isSimultanious = true;
 
@@ -563,6 +567,7 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			scheduleForLater(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
 		}
 	}
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	// we'll reset it later when the engine starts
 	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
 #endif /* EFI_PROD_CODE */
