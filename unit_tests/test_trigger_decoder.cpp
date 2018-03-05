@@ -589,18 +589,22 @@ void assertEvent(const char *msg, int index, void *callback, efitime_t start, ef
 	scheduling_s *ev = schedulingQueue.getForUnitText(index);
 	assertEqualsM4(msg, " up/down", (void*)ev->callback == (void*) callback, 1);
 	assertEqualsM(msg, momentX, ev->momentX - start);
-	InjectionSignalPair *pair = (InjectionSignalPair *)ev->param;
-	assertEqualsLM(msg, param, (long)pair->outputs[0]);
+	InjectionSignalPair *eventPair = (InjectionSignalPair *)ev->param;
+
+	InjectionSignalPair *expectedPair = (InjectionSignalPair *)param;
+
+	assertEqualsLM(msg, expectedPair->outputs[0], (long)eventPair->outputs[0]);
+// but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
 }
 
 void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	InjectionSignalPair *pair = &ENGINE(fuelActuators[injectorIndex]);
-	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, timeNowUs, momentX, (long)pair->outputs[0]);
+	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, timeNowUs, momentX, (long)pair);
 }
 
 void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	InjectionSignalPair *pair = &ENGINE(fuelActuators[injectorIndex]);
-	assertEvent(msg, eventIndex, (void*)seTurnPinLow, timeNowUs, momentX, (long)pair->outputs[0]);
+	assertEvent(msg, eventIndex, (void*)seTurnPinLow, timeNowUs, momentX, (long)pair);
 }
 
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
