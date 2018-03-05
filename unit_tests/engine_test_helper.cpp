@@ -19,10 +19,13 @@ extern int timeNowUs;
 extern EnginePins enginePins;
 extern EventQueue schedulingQueue;
 extern int unitTestWarningCounter;
+extern float testMafValue;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	ec = &persistentConfig.engineConfiguration;
 	unitTestWarningCounter = 0;
+
+	testMafValue = 0;
 
 	schedulingQueue.clear();
 	enginePins.reset();
