@@ -22,6 +22,8 @@ int isIgnitionTimingError(void);
 
 void showMainHistogram(void);
 
+void startSimultaniousInjection(Engine *engine);
+void endSimultaniousInjectionOnlyTogglePins(Engine *engine);
 void seTurnPinHigh(InjectionSignalPair *pair);
 void seTurnPinLow(InjectionSignalPair *pair);
 

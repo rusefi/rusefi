@@ -84,13 +84,13 @@ extern TunerStudioOutputChannels tsOutputChannels;
 //#define RAM_METHOD_PREFIX
 //#endif
 
-static void startSimultaniousInjection(Engine *engine) {
+void startSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setHigh();
 	}
 }
 
-static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
+void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setLow();
 	}
