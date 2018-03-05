@@ -581,6 +581,10 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
 	#endif
 	}
+#if EFI_DEFAILED_LOGGING
+	scheduleMsg(logger, "isTriggerConfigChanged=%d", isTriggerConfigChanged);
+#endif /* EFI_DEFAILED_LOGGING */
+
 	// we do not want to miss two updates in a row
 	isTriggerConfigChanged = isTriggerConfigChanged || changed;
 }
