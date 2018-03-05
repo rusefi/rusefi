@@ -647,11 +647,13 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("setTestBug299 EL", 0, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("setTestBug299 IAT", 30, engine->sensors.iat);
 	eth->fireTriggerEvents2(1, MS2US(20));
 	// still no RPM since need to cycles measure cycle duration
-	assertEqualsM("RPM#1", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("setTestBug299: RPM#1", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	eth->fireTriggerEvents2(1, MS2US(20));
-	assertEqualsM("RPM#2", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("setTestBug299: RPM#2", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth->clearQueue();
 
@@ -666,7 +668,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #1 |........|.......#|........|.......#|
 	assertEqualsM("qs#00", 4, schedulingQueue.size());
 	assertEqualsM("rev cnt#3", 3, engine->rpmCalculator.getRevolutionCounter());
-	assertInjectorUpEvent("1@0", 0, MS2US(8.5), 0);
+	assertInjectorUpEvent("setTestBug299: 1@0", 0, MS2US(8.5), 0);
 	assertInjectorDownEvent("@1", 1, MS2US(10), 0);
 	assertInjectorUpEvent("1@2", 2, MS2US(18.5), 1);
 	assertInjectorDownEvent("1@3", 3, MS2US(20), 1);
@@ -747,7 +749,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("cltC", 1, engine->engineState.cltFuelCorrection);
 	assertEqualsM("lag", 0, engine->engineState.injectorLag);
 
-	assertEqualsM("RPM", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("setTestBug299: RPM", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
 
@@ -1196,10 +1198,10 @@ void testSparkReverseOrderBug319(void) {
 	timeNowUs += MS2US(20);
 	eth.firePrimaryTriggerFall();
 
-	assertEqualsM("RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("testSparkReverseOrderBug319: RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
-	assertEqualsM("queue size", 7, schedulingQueue.size());
+	assertEqualsM("testSparkReverseOrderBug319: queue size", 3, schedulingQueue.size());
 	schedulingQueue.executeAll(timeNowUs);
 	printf("***************************************************\r\n");
 
