@@ -35,14 +35,10 @@
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
 
-
 typedef int32_t         msg_t;
 
 #include "hal_streams.h"
 #include "memstreams.h"
-
-static engine_configuration_s ec;
-engine_configuration_s *engineConfiguration = &ec;
 
 int timeNowUs = 0;
 
@@ -53,6 +49,8 @@ efitimeus_t getTimeNowUs(void) {
 efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
+
+LoggingWithStorage sharedLogger("main");
 
 extern int revolutionCounterSinceBootForUnitTest;
 
