@@ -34,8 +34,8 @@ void testPlainCrankingWithoutAdvancedFeatures() {
 	// two simultaneous injections
 	assertEqualsM("plain#2", 4, schedulingQueue.size());
 
-//	assertEvent("sim start", 0, (void*)startSimultaniousInjection, timeNowUs, 97975, engine);
-//	assertEvent("sim end", 1, (void*)endSimultaniousInjection, timeNowUs, 100000, 3);
+	assertEvent5("sim start", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
+	assertEvent5("sim end", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
 }
 
 
@@ -49,5 +49,11 @@ void testStartOfCrankingPrimingPulse() {
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	// prod code invokes this on ECU start, here we have to mimic this behavior
+	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+
+	assertEqualsM("prime fuel", 0, schedulingQueue.size());
 }
 
