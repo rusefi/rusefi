@@ -31,6 +31,7 @@ extern "C"
 #define CH_FREQUENCY 1000
 
 typedef int bool_t;
+typedef uint32_t systime_t;
 
 void chDbgAssert(int c, char *msg, void *arg);
 
