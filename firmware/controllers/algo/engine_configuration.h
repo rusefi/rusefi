@@ -67,7 +67,7 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-void rememberCurrentConfiguration(void);
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getGlobalConfigurationVersion(void);
 

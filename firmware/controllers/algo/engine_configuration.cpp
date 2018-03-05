@@ -137,7 +137,7 @@ engine_configuration_s activeConfiguration;
 
 extern engine_configuration_s *engineConfiguration;
 
-void rememberCurrentConfiguration(void) {
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 }
 
@@ -149,12 +149,17 @@ int getGlobalConfigurationVersion(void) {
 	return globalConfigurationVersion;
 }
 
+extern LoggingWithStorage sharedLogger;
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	globalConfigurationVersion++;
+#if EFI_DEFAILED_LOGGING
+	scheduleMsg(&sharedLogger, "set globalConfigurationVersion=%d", globalConfigurationVersion);
+#endif /* EFI_DEFAILED_LOGGING */
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
  */
@@ -182,7 +187,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	onConfigurationChangeFsioCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
 
-	rememberCurrentConfiguration();
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 /**
