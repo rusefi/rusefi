@@ -1203,7 +1203,7 @@ void testSparkReverseOrderBug319(void) {
 	assertEqualsM("testSparkReverseOrderBug319: RPM", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
-	assertEqualsM("testSparkReverseOrderBug319: queue size", 3, schedulingQueue.size());
+	assertEqualsM("testSparkReverseOrderBug319: queue size", 7, schedulingQueue.size());
 	schedulingQueue.executeAll(timeNowUs);
 	printf("***************************************************\r\n");
 
