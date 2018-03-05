@@ -584,12 +584,18 @@ void testTriggerDecoder(void) {
 
 extern fuel_Map3D_t fuelMap;
 
-void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
+scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX) {
 	assertTrueM(msg, schedulingQueue.size() > index);
-	scheduling_s *ev = schedulingQueue.getForUnitText(index);
-	assertEqualsM4(msg, " up/down", (void*)ev->callback == (void*) callback, 1);
-	assertEqualsM(msg, momentX, ev->momentX - start);
-	InjectionSignalPair *eventPair = (InjectionSignalPair *)ev->param;
+	scheduling_s *event = schedulingQueue.getForUnitText(index);
+	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
+	assertEqualsM(msg, momentX, event->momentX - start);
+	return event;
+}
+
+void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
+	scheduling_s *event = assertEvent5(msg, index, callback, start, momentX);
+
+	InjectionSignalPair *eventPair = (InjectionSignalPair *)event->param;
 
 	InjectionSignalPair *expectedPair = (InjectionSignalPair *)param;
 
@@ -617,15 +623,13 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
+	timeNowUs = 0;
 	eth->clearQueue();
 
 	assertEquals(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->injectionMode = IM_BATCH;
-
-	timeNowUs = 0;
-	schedulingQueue.clear();
 
 	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
 	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
