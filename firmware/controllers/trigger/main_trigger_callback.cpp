@@ -90,13 +90,13 @@ void startSimultaniousInjection(Engine *engine) {
 	}
 }
 
-void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
+static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setLow();
 	}
 }
 
-static void endSimultaniousInjection(InjectionEvent *event) {
+void endSimultaniousInjection(InjectionEvent *event) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = event->engine;
 	EXPAND_Engine;
