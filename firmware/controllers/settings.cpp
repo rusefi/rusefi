@@ -492,6 +492,11 @@ static void setGlobalTriggerAngleOffset(float value) {
 	doPrintConfiguration();
 }
 
+static void setCrankingPrimingPulse(float value) {
+	engineConfiguration->startOfCrankingPrimingPulse = value;
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -1143,6 +1148,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
+		{"cranking_priming_pulse", setCrankingPrimingPulse},
 		{"engine_load_accel_threshold", setEngineLoadAccelThr},
 		{"engine_load_accel_multiplier", setEngineLoadAccelMult},
 		{"engine_decel_threshold", setDecelThr},
