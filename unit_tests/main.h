@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "unit_test_framework.h"
 
 #include "global.h"
 #include "error_handling.h"
@@ -42,18 +43,6 @@ void print(const char *fmt, ...);
 #define DEBUG_INTERPOLATION 1
 
 #define chDbgCheck(x, y) chDbgAssert(x, y, NULL)
-
-void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
-void assertEqualsM(const char *msg, float expected, float actual);
-void assertEqualsLM(const char *msg, long expected, long actual);
-void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
-void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS);
-void assertEquals(float expected, float actual);
-void assertTrue(float actual);
-void assertTrueM(const char *msg, float actual);
-void assertFalse(float actual);
-void assertFalseM(const char *msg, float actual);
-
 
 #define systicks2ms(x) (0)
 
