@@ -13,6 +13,7 @@
 #include "io_pins.h"
 #include "utlist.h"
 #include "event_queue.h"
+#include "unit_test_framework.h"
 
 EventQueue schedulingQueue;
 

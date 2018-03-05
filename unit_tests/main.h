@@ -11,9 +11,9 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "unit_test_framework.h"
-
+#include "efitime.h"
 #include "global.h"
+
 #include "error_handling.h"
 #include "efifeatures.h"
 
@@ -39,8 +39,6 @@ void chDbgAssert(int c, char *msg, void *arg);
 void print(const char *fmt, ...);
 
 #define TICKS_IN_MS 100
-
-#define DEBUG_INTERPOLATION 1
 
 #define chDbgCheck(x, y) chDbgAssert(x, y, NULL)
 

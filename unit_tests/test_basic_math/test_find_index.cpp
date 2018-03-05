@@ -8,8 +8,7 @@
 #include "main.h"
 #include "engine_math.h"
 #include "interpolation.h"
-#include <stdio.h>
-#include "engine_configuration.h"
+#include "unit_test_framework.h"
 
 static int testIndex(const int expected, const float array[], int size, float value) {
 	assertEquals(expected, findIndex(array, size, value));
