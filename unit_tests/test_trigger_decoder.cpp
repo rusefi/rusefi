@@ -291,11 +291,6 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 extern bool_t debugSignalExecutor;
 extern EnginePins enginePins;
 
-// todo: move method body here after merge
-void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
-void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
-void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
-
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 	timeNowUs = 0;
@@ -592,7 +587,7 @@ extern fuel_Map3D_t fuelMap;
 void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
 	assertTrueM(msg, schedulingQueue.size() > index);
 	scheduling_s *ev = schedulingQueue.getForUnitText(index);
-	assertEqualsM4(msg, "up/down", (void*)ev->callback == (void*) callback, 1);
+	assertEqualsM4(msg, " up/down", (void*)ev->callback == (void*) callback, 1);
 	assertEqualsM(msg, momentX, ev->momentX - start);
 	InjectionSignalPair *pair = (InjectionSignalPair *)ev->param;
 	assertEqualsLM(msg, param, (long)pair->outputs[0]);
