@@ -632,9 +632,11 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth) {
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	assertEqualsM("CLT", 70, engine->sensors.clt);
+	assertEqualsM("trigger #1", 0, readIfTriggerConfigChangedForUnitTest());
 
 	engineConfiguration->trigger.type = TT_ONE;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	assertEqualsM("trigger #2", 1, readIfTriggerConfigChangedForUnitTest());
 
 	eth->applyTriggerShape();
 
