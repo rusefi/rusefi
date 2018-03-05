@@ -8,7 +8,7 @@
 #ifndef UNIT_TEST_FRAMEWORK_H_
 #define UNIT_TEST_FRAMEWORK_H_
 
-#include "efitime.h"
+#include "engine.h"
 
 void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);
@@ -22,7 +22,7 @@ void assertFalse(float actual);
 void assertFalseM(const char *msg, float actual);
 
 void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
-void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
-void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
+void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* UNIT_TEST_FRAMEWORK_H_ */

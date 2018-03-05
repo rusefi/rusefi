@@ -14,6 +14,7 @@
 
 #include "malfunction_central.h"
 #include "cli_registry.h"
+#include "unit_test_framework.h"
 
 #include "nmea.h"
 #include "efilib2.h"
