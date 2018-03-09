@@ -175,7 +175,7 @@
 168) RESOLVED IN R0.5.3 now that all mounting holes align let's move back side traces away from top-right and bottom-right mounting points. See https://rusefi.com/forum/viewtopic.php?f=4&t=569&p=28199#p28199
 169) RESOLVED IN R0.5.2 BOM inductor should be 68uH
 170) RESOLVED IN R0.5.3 Q1002 seems to be thermally limited to about 0.7A. Make Q1002 have better thermal properties. I hope this helps make the thermal better.
-171)                    Fix the 3D, such that 3D works. 
+171) RESOLVED IN R0.5.3 Fix the 3D, such that 3D works. 
 
 
 For honda add-on / rewiring board
