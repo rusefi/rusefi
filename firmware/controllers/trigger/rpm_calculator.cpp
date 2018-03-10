@@ -141,6 +141,7 @@ void RpmCalculator::assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	assignRpmValue(value PASS_ENGINE_PARAMETER_SUFFIX);
+	spinning_state_e oldState = state;
 	// Change state
 	if (rpmValue == 0) {
 		state = STOPPED;
@@ -153,6 +154,17 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		 */
 		state = CRANKING;
 	}
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	// This presumably fixes injection mode change for cranking-to-running transition.
+	// 'isSimultanious' flag should be updated for events if injection modes differ for cranking and running.
+	if (state != oldState) {
+		engine->injectionEvents.addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+#endif
+}
+
+spinning_state_e RpmCalculator::getState(void) {
+	return state;
 }
 
 void RpmCalculator::onNewEngineCycle() {
@@ -190,7 +202,6 @@ void RpmCalculator::setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if ! EFI_UNIT_TEST
 	if (!boardConfiguration->isFasterEngineSpinUpEnabled)
 		return;
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
@@ -204,7 +215,6 @@ void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 	}
 	// Update ignition pin indices if needed
 	prepareIgnitionPinIndices(getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* ! EFI_UNIT_TEST */
 }
 
 /**
@@ -277,7 +287,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 #endif
 
-#if ! EFI_UNIT_TEST
 	// Replace 'normal' RPM with instant RPM for the initial spin-up period
 	if (rpmState->isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		int prevIndex;
@@ -289,7 +298,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, iRpm);
 #endif
 	}
-#endif /* ! EFI_UNIT_TEST */
 }
 
 static scheduling_s tdcScheduler[2];

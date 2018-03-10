@@ -209,6 +209,10 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	// todo: angle diff should be pre-calculated
 	fixAngle(angleDiff, "angleDiff");
 
+	// just for safety
+	if (time == 0)
+		return prevInstantRpmValue;
+
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 	instantRpmValue[current_index] = instantRpm;
 	timeOfLastEvent[current_index] = nowNt;

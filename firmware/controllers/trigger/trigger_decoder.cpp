@@ -439,7 +439,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Needed for early instant-RPM detection
-	engine->rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	if (!isInitializingTrigger) {
+		engine->rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 }
 
 /**
@@ -648,6 +650,9 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		unlockAnyContext();
 	}
 #endif
+
+	// Moved here from mainTriggerCallback()
+	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void onFindIndexCallback(TriggerState *state) {
