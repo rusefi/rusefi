@@ -15,7 +15,7 @@
 #include "error_handling.h"
 
 #ifndef DEBUG_INTERPOLATION
-#define DEBUG_INTERPOLATION 0
+#define DEBUG_INTERPOLATION FALSE
 #endif
 
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))

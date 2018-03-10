@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 03 08:46:57 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 04 23:08:53 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1682,6 +1682,8 @@ typedef struct {
 	 */
 	float alternatorOffAboveTps;
 	/**
+	 * Prime pulse duration in ms
+	 * set cranking_priming_pulse X
 	 * offset 2148
 	 */
 	float startOfCrankingPrimingPulse;
@@ -2345,4 +2347,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 03 08:46:57 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 04 23:08:53 EST 2018

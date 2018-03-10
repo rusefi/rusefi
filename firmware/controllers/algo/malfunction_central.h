@@ -9,14 +9,13 @@
 #ifndef MALFUNCTION_CENTRAL_H_
 #define MALFUNCTION_CENTRAL_H_
 
+#include "main.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-
-
-#include "main.h"
 #include "obd_error_codes.h"
 
 #define MAX_ERROR_CODES_COUNT 10

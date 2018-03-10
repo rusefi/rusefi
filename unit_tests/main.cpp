@@ -28,6 +28,7 @@
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
+#include "test_startOfCrankingPrimingPulse.h"
 #include "test_util.h"
 #include "map_resize.h"
 #include "engine_math.h"
@@ -39,82 +40,17 @@ typedef int32_t         msg_t;
 #include "hal_streams.h"
 #include "memstreams.h"
 
-static engine_configuration_s ec;
-engine_configuration_s *engineConfiguration = &ec;
-
-int timeNow = 0;
+int timeNowUs = 0;
 
 efitimeus_t getTimeNowUs(void) {
-	return timeNow;
+	return timeNowUs;
 }
 
 efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS) {
-	char msg[100];
-	strcpy(msg, prefix);
-	strcat(msg, message);
-	if (cisnan(actual) && !cisnan(expected)) {
-		printf("Assert failed: %s %.4f while expected %.4f\r\n", msg, actual, expected);
-		exit(-1);
-	}
-
-	float delta = absF(actual - expected);
-	if (delta > EPS) {
-		printf("delta: %.7f\r\n", delta);
-		printf("Unexpected: %s %.4f while expected %.4f\r\n", msg, actual, expected);
-		exit(-1);
-	}
-	printf("Validated %s: %f\r\n", msg, expected);
-}
-
-void assertEqualsM2(const char *msg, float expected, float actual, float eps) {
-	assertEqualsM5("", msg, expected, actual, eps);
-}
-
-void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual) {
-	assertEqualsM5(prefix, msg, expected, actual, 0.00001);
-}
-
-void assertEqualsLM(const char *msg, long expected, long actual) {
-	if (expected != actual) {
-		printf("Assert failed: %s %d while expected %d\r\n", msg, actual, expected);
-		exit(-1);
-	}
-}
-
-void assertEqualsM(const char *msg, float expected, float actual) {
-	assertEqualsM2(msg, expected, actual, 0.0001);
-}
-
-void assertEquals(float expected, float actual) {
-	assertEqualsM("", expected, actual);
-}
-
-void assertTrueM(const char *msg, float actual) {
-	assertEqualsM(msg, TRUE, actual);
-}
-
-void assertTrue(float actual) {
-	assertTrueM("", actual);
-}
-
-void assertFalseM(const char *msg, float actual) {
-	assertEqualsM(msg, FALSE, actual);
-}
-
-void assertFalse(float actual) {
-	assertFalseM("", actual);
-}
-
-void chDbgAssert(int c, char *msg, void *arg) {
-	if (!c) {
-		printf("assert failed: %s\r\n", msg);
-		exit(-1);
-	}
-}
+LoggingWithStorage sharedLogger("main");
 
 extern int revolutionCounterSinceBootForUnitTest;
 
@@ -136,6 +72,8 @@ int main(void) {
 	testOverflow64Counter();
 	testInterpolate3d();
 	testFindIndex();
+	testPlainCrankingWithoutAdvancedFeatures();
+	testStartOfCrankingPrimingPulse();
 	testInterpolate2d();
 	testGpsParser();
 	testMisc();
@@ -186,10 +124,6 @@ void print(const char *format, ...) {
 	va_start(ap, format);
 	vprintf(format, ap);
 	va_end(ap);
-}
-
-bool isCranking(void) {
-	return 0;
 }
 
 void initLogging(LoggingWithStorage *logging, const char *name) {

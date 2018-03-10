@@ -15,14 +15,19 @@
 #include "advance_map.h"
 #include "event_queue.h"
 
-extern int timeNow;
+extern int timeNowUs;
 extern EnginePins enginePins;
 extern EventQueue schedulingQueue;
 extern int unitTestWarningCounter;
+extern float testMafValue;
+extern engine_configuration_s activeConfiguration;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	ec = &persistentConfig.engineConfiguration;
 	unitTestWarningCounter = 0;
+
+	testMafValue = 0;
+	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
 	schedulingQueue.clear();
 	enginePins.reset();
@@ -77,17 +82,28 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 }
 
-void EngineTestHelper::fireTriggerEvents2(int count, int duration) {
+/**
+ * Sends specified number of rise/fall trigger events, with specified amount of time between those.
+ *
+ * This is helpful for TT_ONE trigger wheel decoder and probably other decoders as well.
+ */
+void EngineTestHelper::fireTriggerEvents2(int count, int durationUs) {
 	for (int i = 0; i < count; i++) {
-		timeNow += duration;
+		timeNowUs += durationUs;
 		firePrimaryTriggerRise();
-		timeNow += duration;
+		timeNowUs += durationUs;
 		firePrimaryTriggerFall();
 	}
 }
 
+void EngineTestHelper::clearQueue() {
+	schedulingQueue.executeAll(99999999); // this is needed to clear 'isScheduled' flag
+	assertEqualsM("queue size/0", 0, schedulingQueue.size());
+	engine.iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
+}
+
 void EngineTestHelper::fireTriggerEvents(int count) {
-	fireTriggerEvents2(count, 5000); // 5ms
+	fireTriggerEvents2(count, MS2US(5)); // 5ms
 }
 
 void EngineTestHelper::applyTriggerShape() {

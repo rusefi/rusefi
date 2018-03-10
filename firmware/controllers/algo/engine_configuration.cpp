@@ -137,7 +137,7 @@ engine_configuration_s activeConfiguration;
 
 extern engine_configuration_s *engineConfiguration;
 
-void rememberCurrentConfiguration(void) {
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 }
 
@@ -149,12 +149,17 @@ int getGlobalConfigurationVersion(void) {
 	return globalConfigurationVersion;
 }
 
+extern LoggingWithStorage sharedLogger;
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	globalConfigurationVersion++;
+#if EFI_DEFAILED_LOGGING
+	scheduleMsg(&sharedLogger, "set globalConfigurationVersion=%d", globalConfigurationVersion);
+#endif /* EFI_DEFAILED_LOGGING */
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
  */
@@ -182,7 +187,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	onConfigurationChangeFsioCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
 
-	rememberCurrentConfiguration();
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 /**
@@ -270,15 +275,15 @@ static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration
 	}
 }
 
-void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
-	memset(activeConfiguration, 0, sizeof(engine_configuration_s));
-	board_configuration_s *boardConfiguration = &activeConfiguration->bc;
+void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
+	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
-	setDefaultFsioParameters(activeConfiguration);
+	setDefaultFsioParameters(engineConfiguration);
 
 	disableLCD(boardConfiguration);
 
-	activeConfiguration->camInput = GPIO_UNASSIGNED;
+	engineConfiguration->camInput = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
@@ -315,7 +320,7 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
 	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
 
-	activeConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
+	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->acRelayPinMode = OM_DEFAULT;

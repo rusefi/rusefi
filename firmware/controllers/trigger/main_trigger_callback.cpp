@@ -84,7 +84,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 //#define RAM_METHOD_PREFIX
 //#endif
 
-static void startSimultaniousInjection(Engine *engine) {
+void startSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setHigh();
 	}
@@ -96,7 +96,7 @@ static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 	}
 }
 
-static void endSimultaniousInjection(InjectionEvent *event) {
+void endSimultaniousInjection(InjectionEvent *event) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = event->engine;
 	EXPAND_Engine;
@@ -249,18 +249,18 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "handleFuel totalPerCycle=%.2f", totalPerCycle);
-	scheduleMsg(logger, "handleFuel engineCycleDuration=%.2f", engineCycleDuration);
+//	scheduleMsg(logger, "handleFuel totalPerCycle=%.2f", totalPerCycle);
+//	scheduleMsg(logger, "handleFuel engineCycleDuration=%.2f", engineCycleDuration);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
 #if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
-	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->output->name,
-			eventIndex,
+	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->outputs[0]->name,
+			injEventIndex,
 			injectionDuration,
 			getRevolutionCounter());
-	scheduleMsg(logger, "handleFuel pin=%s delay=%.2f %d", event->output->name, injectionStartDelayUs,
+	scheduleMsg(logger, "handleFuel pin=%s delay=%.2f %d", event->outputs[0]->name, injectionStartDelayUs,
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
@@ -521,17 +521,24 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 
 // Check if the engine is not stopped or cylinder cleanup is activated
 static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE))
+	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return true;
 	return CONFIG(isCylinderCleanupEnabled) && (getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS);
 }
 
-// Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
-static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+/**
+ * Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
+ * See testStartOfCrankingPrimingPulse()
+ */
+void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	uint32_t ignSwitchCounter = backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
+#else /* EFI_PROD_CODE */
+	uint32_t ignSwitchCounter = 0;
+#endif /* EFI_PROD_CODE */
+
 	// if we're just toying with the ignition switch, give it another chance eventually...
 	if (ignSwitchCounter > 10)
 		ignSwitchCounter = 0;
@@ -544,7 +551,7 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// fill-in the prime event struct
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		primeInjEvent.engine = engine;
-#endif
+#endif /* EFI_UNIT_TEST */
 		primeInjEvent.ownIndex = 0;
 		primeInjEvent.isSimultanious = true;
 
@@ -560,6 +567,7 @@ static void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			scheduleForLater(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
 		}
 	}
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	// we'll reset it later when the engine starts
 	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
 #endif /* EFI_PROD_CODE */

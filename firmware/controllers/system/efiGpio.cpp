@@ -229,9 +229,9 @@ void NamedOutputPin::setLow() {
 	setValue(false);
 
 #if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
-	systime_t after = hTimeNow();
-	debugInt(&signal->logging, "a_time", after - signal->hi_time);
-	scheduleLogging(&signal->logging);
+//	systime_t after = getTimeNowUs();
+//	debugInt(&signal->logging, "a_time", after - signal->hi_time);
+//	scheduleLogging(&signal->logging);
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)

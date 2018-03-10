@@ -11,6 +11,7 @@
 #include "trigger_central.h"
 #include "rpm_calculator.h"
 #include "main_trigger_callback.h"
+#include "unit_test_framework.h"
 
 class EngineTestHelper {
 public:
@@ -19,7 +20,8 @@ public:
 	void firePrimaryTriggerRise();
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
-	void fireTriggerEvents2(int count, int duration);
+	void fireTriggerEvents2(int count, int durationUs);
+	void clearQueue();
 
 	persistent_config_s persistentConfig;
 	Engine engine;

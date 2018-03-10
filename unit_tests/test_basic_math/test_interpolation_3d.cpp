@@ -8,11 +8,11 @@
  */
 
 #include "test_interpolation_3d.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "interpolation.h"
 #include "main.h"
+#include "unit_test_framework.h"
 
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
 float mafBins[4] = { 1, 2, 3, 4 };
