@@ -35,6 +35,9 @@ EXTERN_ENGINE
 
 extern EnginePins enginePins;
 
+// Store current ignition mode for prepareIgnitionPinIndices()
+static ignition_mode_e ignitionModeForPinIndices;
+
 floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
 }
@@ -461,7 +464,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	switch (CONFIG(ignitionMode)) {
+	switch (getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 	case IM_ONE_COIL:
 		return 0;
 		break;
@@ -477,6 +480,25 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
 		return 0;
 	}
+}
+
+void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (ignitionMode != ignitionModeForPinIndices) {
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
+			ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+#endif /* EFI_ENGINE_CONTROL */
+		ignitionModeForPinIndices = ignitionMode;
+	}
+}
+
+ignition_mode_e getIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ignition_mode_e ignitionMode = CONFIG(ignitionMode);
+	// In spin-up cranking mode we don't have full phase sync. info yet, so wasted spark mode is better
+	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)))
+		ignitionMode = IM_WASTED_SPARK;
+	return ignitionMode;
 }
 
 void TriggerShape::prepareShape(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -515,8 +537,9 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
-		ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+
+	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
 	TRIGGER_SHAPE(prepareShape(PASS_ENGINE_PARAMETER_SIGNATURE));
 }

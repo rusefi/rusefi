@@ -478,8 +478,9 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		if (checkIfTriggerConfigChanged()) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild ignition schedule
 			engine->injectionEvents.isReady = false;
-			// todo: move 'triggerIndexByAngle' change into trigger initialization, why is it invoked from here if it's only about trigger shape & optimization?
-			prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
+			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
+			// see initializeTriggerShape() -> prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE)
+
 			// we need this to apply new 'triggerIndexByAngle' values
 			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}

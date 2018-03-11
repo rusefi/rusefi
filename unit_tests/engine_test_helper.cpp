@@ -70,6 +70,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
+	resetTriggerConfigChangedForUnitTest();
 }
 
 void EngineTestHelper::firePrimaryTriggerRise() {

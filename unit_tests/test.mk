@@ -5,6 +5,7 @@ TEST_SRC_CPP = test_util.cpp \
 	test_basic_math/test_interpolation_3d.cpp \
 	test_data_structures/test_engine_math.cpp \
 	test_startOfCrankingPrimingPulse.cpp \
+	test_fasterEngineSpinningUp.cpp \
 	test_idle_controller.cpp \
 	test_trigger_decoder.cpp \
 	test_fuel_map.cpp \

@@ -376,9 +376,6 @@ void Engine::watchdog() {
 		return;
 	}
 	efitick_t nowNt = getTimeNowNt();
-#ifndef RPM_LOW_THRESHOLD
-#define RPM_LOW_THRESHOLD 240
-#endif
 // note that we are ignoring the number of tooth here - we
 // check for duration between tooth as if we only have one tooth per revolution which is not the case
 #define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)

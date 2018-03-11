@@ -315,8 +315,9 @@ void testRpmCalculator(void) {
 	timeNowUs = 0;
 	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	assertEquals(4, TRIGGER_SHAPE(triggerIndexByAngle[240]));
-	assertEquals(4, TRIGGER_SHAPE(triggerIndexByAngle[241]));
+	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
+	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
+	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));
 
 	eth.fireTriggerEvents(48);
 
@@ -619,7 +620,7 @@ static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int inject
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
 }
 
-void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth) {
+void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
@@ -629,7 +630,10 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth) {
 	assertEquals(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
 	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->injectionMode = IM_BATCH;
+	// a bit of flexibility - the mode may be changed by some tests
+	engineConfiguration->injectionMode = injMode;
+	// set cranking mode (it's used by getCurrentInjectionMode())
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 
 	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
 	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);

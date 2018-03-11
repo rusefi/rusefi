@@ -602,6 +602,10 @@ bool readIfTriggerConfigChangedForUnitTest(void) {
 	return isTriggerConfigChanged;
 }
 
+void resetTriggerConfigChangedForUnitTest(void) {
+	isTriggerConfigChanged = false;
+}
+
 void initTriggerCentral(Logging *sharedLogger) {
 	logger = sharedLogger;
 	strcpy((char*) shaft_signal_msg_index, "x_");

@@ -29,6 +29,7 @@
 #include "test_signal_executor.h"
 #include "trigger_central.h"
 #include "test_startOfCrankingPrimingPulse.h"
+#include "test_fasterEngineSpinningUp.h"
 #include "test_util.h"
 #include "map_resize.h"
 #include "engine_math.h"
@@ -74,6 +75,7 @@ int main(void) {
 	testFindIndex();
 	testPlainCrankingWithoutAdvancedFeatures();
 	testStartOfCrankingPrimingPulse();
+	testFasterEngineSpinningUp();
 	testInterpolate2d();
 	testGpsParser();
 	testMisc();

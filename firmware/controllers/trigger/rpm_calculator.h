@@ -29,6 +29,10 @@
 #define NOISY_RPM -1
 #define UNREALISTIC_RPM 30000
 
+#ifndef RPM_LOW_THRESHOLD
+#define RPM_LOW_THRESHOLD 240
+#endif
+
 #ifdef __cplusplus
 
 typedef enum {
@@ -66,7 +70,11 @@ public:
 	 */
 	bool isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
-	 * Returns true if the engine is cranking
+	 * Returns true if the engine is spinning up
+	 */
+	bool isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	/**
+	 * Returns true if the engine is cranking OR spinning up
 	 */
 	bool isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
@@ -76,6 +84,20 @@ public:
 
 	bool checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+	/**
+	 * This accessor is used in unit-tests.
+	 */
+	spinning_state_e getState(void);
+
+	/**
+	 * Should be called on every trigger event when the engine is just starting to spin up.
+	 */
+	void setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	/**
+	 * Called if the synchronization is lost due to a trigger timeout.
+	 */
+	void setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
@@ -83,6 +105,11 @@ public:
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
 	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+	/**
+	 * The same as setRpmValue() but without state change.
+	 * We need this to be public because of calling rpmState->assignRpmValue() from rpmShaftPositionCallback()
+	 */
+	void assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	uint32_t getRevolutionCounterSinceStart(void);
 	/**
 	 * RPM rate of change between current RPM and RPM measured during previous engine cycle
@@ -111,10 +138,6 @@ private:
 	void setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
-	 * The same as setRpmValue() but without state change
-	 */
-	void assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
-	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
 	 */
@@ -125,6 +148,12 @@ private:
 	volatile uint32_t revolutionCounterSinceStart;
 
 	spinning_state_e state;
+
+	/**
+	 * True if the engine is spinning (regardless of its state), i.e. if shaft position changes.
+	 * Needed by spinning-up logic.
+	 */
+	bool isSpinning;
 };
 
 /**
