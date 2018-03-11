@@ -134,8 +134,17 @@ public:
 	 * instant RPM calculated at this trigger wheel tooth
 	 */
 	float instantRpmValue[PWM_PHASE_MAX_COUNT];
+	/**
+	 * Stores last non-zero instant RPM value to fix early instability
+	 */
+	float prevInstantRpmValue;
 	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	/**
+	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
+	 * Needed for early spin-up RPM detection.
+	 */
+	void setLastEventTimeForInstantRpm(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
