@@ -31,9 +31,9 @@
   (pad G4 smd rect (at -7.101 -6.895) (size 1.524 1.524) (layers F.Cu F.Paste F.Mask))
   (pad "" thru_hole circle (at 3.407 4.886) (size 0.889 0.889) (drill 0.762) (layers *.Cu *.Mask F.SilkS))
   (pad "" thru_hole circle (at 3.407 -3.114) (size 0.889 0.889) (drill 0.762) (layers *.Cu *.Mask F.SilkS))
-  (model ../rusefi_lib/3d/9P-SMD-W-RING.wrl
-    (at (xyz -0.323 -0.33 -0.025))
-    (scale (xyz 10 10 10))
+  (model ${RUSLIB}/3d/micro_sd.wrl
+    (at (xyz 0 0 0))
+    (scale (xyz 1 1 1))
     (rotate (xyz 0 0 0))
   )
 )

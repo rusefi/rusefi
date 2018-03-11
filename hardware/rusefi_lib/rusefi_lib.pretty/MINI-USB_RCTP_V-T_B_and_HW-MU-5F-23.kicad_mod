@@ -1,4 +1,4 @@
-(module MINI-USB_RCTP_V-T_B (layer F.Cu) (tedit 58646CC6)
+(module MINI-USB_RCTP_V-T_B_and_HW-MU-5F-23 (layer F.Cu) (tedit 58646CC6)
   (descr OPL)
   (tags "USB MINI 5 SMD-1")
   (attr smd)
@@ -22,4 +22,9 @@
   (pad 6 thru_hole oval (at 0 1.75 90) (size 1.016 2.6162) (drill oval 0.508 2.1082) (layers *.Cu *.Mask F.SilkS))
   (pad 6 thru_hole oval (at -1.9 -1.75 90) (size 1.016 2.6162) (drill oval 0.508 2.1082) (layers *.Cu *.Mask))
   (pad 6 thru_hole oval (at 2.4 -1.75 90) (size 1.016 2.6162) (drill oval 0.508 2.1082) (layers *.Cu *.Mask F.SilkS))
+  (model ${RUSLIB}/3d/USB_Vert_C-1734753-1.wrl
+    (at (xyz 0 0 0))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 0))
+  )
 )

@@ -1,4 +1,4 @@
-(module KS_3557 (layer F.Cu) (tedit 5905095B)
+(module KeyStone_3557 (layer F.Cu) (tedit 5905095B)
   (fp_text reference REF** (at 4.445 -3.175) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
@@ -18,4 +18,9 @@
   (fp_line (start 13.462 1.7526) (end 13.462 -1.7526) (layer F.SilkS) (width 0.15))
   (pad 1 thru_hole circle (at 0 -1.7526) (size 2.2098 2.2098) (drill 1.60274) (layers *.Cu *.Mask))
   (pad 1 thru_hole circle (at 0 1.7526) (size 2.2098 2.2098) (drill 1.60274) (layers *.Cu *.Mask))
+  (model ${RUSLIB}/3d/keystone-3557.wrl
+    (at (xyz 0 0 0))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 0))
+  )
 )
