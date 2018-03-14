@@ -454,6 +454,8 @@ void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s DECLARE_ENGINE_PARAM
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 	s->setTriggerSynchronizationGap(3.79);
 
+	s->tdcPosition = 279;
+
 	configureNeon1995TriggerShapeCommon(false, s PASS_ENGINE_PARAMETER_SUFFIX);
 }
 

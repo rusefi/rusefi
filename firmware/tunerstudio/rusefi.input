@@ -1174,6 +1174,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
 		field = "Injector Flow",			injector_flow
+		field = "!phase offset is usually not needed"
 		field = "phase offset",				extraInjectionOffset
 		
 	dialog = injIO, "Injector Output",	yAxis
