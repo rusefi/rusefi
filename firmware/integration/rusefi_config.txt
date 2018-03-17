@@ -548,7 +548,7 @@ bit is_enabled_spi_2
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled
-	bit unused_board_984_21
+	bit coastingFuelCutEnabled
 	bit unused_board_984_22
 	bit unused_board_984_23
 	bit unused_board_984_24
@@ -896,7 +896,12 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance t
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
 
 	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
-	int[776] unusedEnd;
+	int16_t coastingFuelCutRpmHigh;
+	int16_t coastingFuelCutRpmLow;
+	int16_t coastingFuelCutTps;percent between 0 and 100
+	int16_t unusedInt;
+	
+	int[774] unusedEnd;
 	
 
 end_struct
