@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 04 23:08:53 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 17 19:54:04 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -645,7 +645,7 @@ typedef struct {
 	bool isFasterEngineSpinUpEnabled : 1;
 	/**
 	offset 376 bit 21 */
-	bool unused_board_984_21 : 1;
+	bool coastingFuelCutEnabled : 1;
 	/**
 	offset 376 bit 22 */
 	bool unused_board_984_22 : 1;
@@ -2101,7 +2101,24 @@ typedef struct {
 	/**
 	 * offset 3376
 	 */
-	int unusedEnd[776];
+	int16_t coastingFuelCutRpmHigh;
+	/**
+	 * offset 3378
+	 */
+	int16_t coastingFuelCutRpmLow;
+	/**
+	 * percent between 0 and 100
+	 * offset 3380
+	 */
+	int16_t coastingFuelCutTps;
+	/**
+	 * offset 3382
+	 */
+	int16_t unusedInt;
+	/**
+	 * offset 3384
+	 */
+	int unusedEnd[774];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2347,4 +2364,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 04 23:08:53 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 17 19:54:04 EDT 2018

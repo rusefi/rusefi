@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 03 08:46:57 EST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 17 19:54:04 EDT 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -403,7 +403,7 @@ public class Fields {
 	public static final int measureMapOnlyInOneCylinder_offset = 984;
 	public static final int stepperForceParkingEveryRestart_offset = 984;
 	public static final int isFasterEngineSpinUpEnabled_offset = 984;
-	public static final int unused_board_984_21_offset = 984;
+	public static final int coastingFuelCutEnabled_offset = 984;
 	public static final int unused_board_984_22_offset = 984;
 	public static final int unused_board_984_23_offset = 984;
 	public static final int unused_board_984_24_offset = 984;
@@ -1028,7 +1028,11 @@ public class Fields {
 	public static final int servoOutputPins6_offset = 3364;
 	public static final int servoOutputPins7_offset = 3368;
 	public static final int servoOutputPins8_offset = 3372;
-	public static final int unusedEnd_offset = 3376;
+	public static final int coastingFuelCutRpmHigh_offset = 3376;
+	public static final int coastingFuelCutRpmLow_offset = 3378;
+	public static final int coastingFuelCutTps_offset = 3380;
+	public static final int unusedInt_offset = 3382;
+	public static final int unusedEnd_offset = 3384;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1407,7 +1411,7 @@ public class Fields {
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 984, FieldType.BIT, 18);
 	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 984, FieldType.BIT, 19);
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 984, FieldType.BIT, 20);
-	public static final Field UNUSED_BOARD_984_21 = Field.create("UNUSED_BOARD_984_21", 984, FieldType.BIT, 21);
+	public static final Field COASTINGFUELCUTENABLED = Field.create("COASTINGFUELCUTENABLED", 984, FieldType.BIT, 21);
 	public static final Field UNUSED_BOARD_984_22 = Field.create("UNUSED_BOARD_984_22", 984, FieldType.BIT, 22);
 	public static final Field UNUSED_BOARD_984_23 = Field.create("UNUSED_BOARD_984_23", 984, FieldType.BIT, 23);
 	public static final Field UNUSED_BOARD_984_24 = Field.create("UNUSED_BOARD_984_24", 984, FieldType.BIT, 24);
@@ -1852,6 +1856,10 @@ public class Fields {
 	public static final Field SERVOOUTPUTPINS6 = Field.create("SERVOOUTPUTPINS6", 3364, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS7 = Field.create("SERVOOUTPUTPINS7", 3368, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS8 = Field.create("SERVOOUTPUTPINS8", 3372, FieldType.INT, brain_pin_e);
+	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 3376, FieldType.INT);
+	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 3378, FieldType.INT);
+	public static final Field COASTINGFUELCUTTPS = Field.create("COASTINGFUELCUTTPS", 3380, FieldType.INT);
+	public static final Field UNUSEDINT = Field.create("UNUSEDINT", 3382, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
