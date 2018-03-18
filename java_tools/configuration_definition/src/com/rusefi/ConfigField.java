@@ -175,7 +175,7 @@ public class ConfigField {
 
             tsPosition += size;
         } else if (tsInfo == null) {
-            tsHeader.write(";skipping " + prefix + name + " offset " + tsPosition);
+            tsHeader.write(";no TS info - skipping " + prefix + name + " offset " + tsPosition);
             tsPosition += arraySize * elementSize;
         } else if (arraySize != 1) {
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= array, ");
