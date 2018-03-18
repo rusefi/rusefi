@@ -896,9 +896,9 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance t
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
 
 	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
-	int16_t coastingFuelCutRpmHigh;
-	int16_t coastingFuelCutRpmLow;
-	int16_t coastingFuelCutTps;percent between 0 and 100
+	int16_t coastingFuelCutRpmHigh;;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutRpmLow;;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutTps;percent between 0 and 100;"%",        1,     0,  0,    100,  0
 	int16_t unusedInt;
 	
 	int[774] unusedEnd;
