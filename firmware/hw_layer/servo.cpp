@@ -3,6 +3,11 @@
  *
  * http://rusefi.com/wiki/index.php?title=Hardware:Servo_motor
  *
+ * SG90 pinout:
+ * brown  GND
+ * red    VCC
+ * orange PWM signal
+ *
  * @date Jan 3, 2015
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
@@ -46,9 +51,9 @@ static msg_t seThread(void *arg) {
 	while (true) {
 		pin.setValue(1);
 
-		percent_t position = 10 * (getTimeNowSeconds() % 10);
+		percent_t position = 10 * (getTimeNowSeconds() % 11); // 0, 10, .., 90, 100
 
-		float durationMs = 1 + position * 0.01;
+		float durationMs = 1 + position * 0.01f;
 
 		scheduleForLater(&servoTurnSignalOff, (int)MS2US(durationMs), (schfunc_t) &servoTachPinLow, NULL);
 
