@@ -378,6 +378,8 @@ public:
 
 	float fsioTimingAdjustment;
 
+	float servoValues[SERVO_COUNT];
+
 	/**
 	 * Are we experiencing knock right now?
 	 */
