@@ -652,16 +652,17 @@ bit vvtDisplayInverted
 	bit isAlternatorControlEnabled
 	bit invertPrimaryTriggerSignal
 	bit invertSecondaryTriggerSignal
+	
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
 bit step1fuelCutEnable
 bit step1SparkCutEnable
 bit hasFrequencyReportingMapSensor;
-bit unused_bit_1472_21;
-bit unused_bit_1472_22
-bit unused_bit_1472_23;
-bit unused_bit_1472_24;
-bit unused_bit_1472_25;
+	bit useFSIO8ForServo1
+	bit useFSIO9ForServo2
+	bit useFSIO10ForServo3
+	bit useFSIO11ForServo4
+	bit useFSIO12ForServo5
 bit unused_bit_1472_26;
 bit unused_bit_1472_27;
 	adc_channel_e hipOutputChannel;

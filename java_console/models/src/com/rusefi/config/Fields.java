@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 17 19:54:04 EDT 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 18 11:56:18 EDT 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -624,11 +624,11 @@ public class Fields {
 	public static final int step1fuelCutEnable_offset = 1472;
 	public static final int step1SparkCutEnable_offset = 1472;
 	public static final int hasFrequencyReportingMapSensor_offset = 1472;
-	public static final int unused_bit_1472_21_offset = 1472;
-	public static final int unused_bit_1472_22_offset = 1472;
-	public static final int unused_bit_1472_23_offset = 1472;
-	public static final int unused_bit_1472_24_offset = 1472;
-	public static final int unused_bit_1472_25_offset = 1472;
+	public static final int useFSIO8ForServo1_offset = 1472;
+	public static final int useFSIO9ForServo2_offset = 1472;
+	public static final int useFSIO10ForServo3_offset = 1472;
+	public static final int useFSIO11ForServo4_offset = 1472;
+	public static final int useFSIO12ForServo5_offset = 1472;
 	public static final int unused_bit_1472_26_offset = 1472;
 	public static final int unused_bit_1472_27_offset = 1472;
 	public static final int hipOutputChannel_offset = 1476;
@@ -1572,11 +1572,11 @@ public class Fields {
 	public static final Field STEP1FUELCUTENABLE = Field.create("STEP1FUELCUTENABLE", 1472, FieldType.BIT, 18);
 	public static final Field STEP1SPARKCUTENABLE = Field.create("STEP1SPARKCUTENABLE", 1472, FieldType.BIT, 19);
 	public static final Field HASFREQUENCYREPORTINGMAPSENSOR = Field.create("HASFREQUENCYREPORTINGMAPSENSOR", 1472, FieldType.BIT, 20);
-	public static final Field UNUSED_BIT_1472_21 = Field.create("UNUSED_BIT_1472_21", 1472, FieldType.BIT, 21);
-	public static final Field UNUSED_BIT_1472_22 = Field.create("UNUSED_BIT_1472_22", 1472, FieldType.BIT, 22);
-	public static final Field UNUSED_BIT_1472_23 = Field.create("UNUSED_BIT_1472_23", 1472, FieldType.BIT, 23);
-	public static final Field UNUSED_BIT_1472_24 = Field.create("UNUSED_BIT_1472_24", 1472, FieldType.BIT, 24);
-	public static final Field UNUSED_BIT_1472_25 = Field.create("UNUSED_BIT_1472_25", 1472, FieldType.BIT, 25);
+	public static final Field USEFSIO8FORSERVO1 = Field.create("USEFSIO8FORSERVO1", 1472, FieldType.BIT, 21);
+	public static final Field USEFSIO9FORSERVO2 = Field.create("USEFSIO9FORSERVO2", 1472, FieldType.BIT, 22);
+	public static final Field USEFSIO10FORSERVO3 = Field.create("USEFSIO10FORSERVO3", 1472, FieldType.BIT, 23);
+	public static final Field USEFSIO11FORSERVO4 = Field.create("USEFSIO11FORSERVO4", 1472, FieldType.BIT, 24);
+	public static final Field USEFSIO12FORSERVO5 = Field.create("USEFSIO12FORSERVO5", 1472, FieldType.BIT, 25);
 	public static final Field UNUSED_BIT_1472_26 = Field.create("UNUSED_BIT_1472_26", 1472, FieldType.BIT, 26);
 	public static final Field UNUSED_BIT_1472_27 = Field.create("UNUSED_BIT_1472_27", 1472, FieldType.BIT, 27);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1476, FieldType.INT, adc_channel_e);

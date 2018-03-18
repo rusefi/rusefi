@@ -382,6 +382,17 @@ static void setFsioFrequency(int index, int frequency) {
 	}
 }
 
+static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	LEElement * element = fsioLogics[8 - 1 + servoIndex];
+
+	if (element == NULL) {
+		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", "servo");
+	} else {
+		engine->servoValues[servoIndex] = calc.getValue2(engine->servoValues[servoIndex], element PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+}
+
+
 /**
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
@@ -433,6 +444,23 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		} else {
 			engine->fsioTimingAdjustment = calc.getValue2(engine->fsioTimingAdjustment, element PASS_ENGINE_PARAMETER_SUFFIX);
 		}
+	}
+
+
+	if (engineConfiguration->useFSIO8ForServo1) {
+		useFsioForServo(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	if (engineConfiguration->useFSIO9ForServo2) {
+		useFsioForServo(1 PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	if (engineConfiguration->useFSIO10ForServo3) {
+		useFsioForServo(2 PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	if (engineConfiguration->useFSIO11ForServo4) {
+		useFsioForServo(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	if (engineConfiguration->useFSIO12ForServo5) {
+		useFsioForServo(4 PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 }
