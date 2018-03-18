@@ -69,10 +69,6 @@ enable2ndByteCanID = false
 ; CONFIG_DEFINITION_END
 	
 
-[SettingContextHelp]
-
-	fuelAlgorithm = "See also http://rusefi.com/fuel"
-
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
    cursorDepth     =   2 ; Same as spot depth.
@@ -918,27 +914,15 @@ gaugeCategory = Fuel Data
 		subMenu = triggerConfiguration,		"Trigger Configuration"
 		subMenu = std_separator
 		subMenu = analogInputs,				"Analog inputs"
-		subMenu = cltSensor,				"CLT Sensor Settings"
-		subMenu = iatSensor,				"IAT Sensor Settings"
-		subMenu = auxTempSensor1Sensor,		"AuxTemp1 Sensor Settings"
-		subMenu = auxTempSensor2Sensor,		"AuxTemp2 Sensor Settings"
-		subMenu = mapSettings,				"MAP Sensor Settings"
-		subMenu = mafDecodingCurve,			"MAF Sensor Settings"
-		subMenu = egoSettings,				"EGO Sensor Settings"
-		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
 		subMenu = egtInputs,				"EGT inputs"
-		subMenu = oilPressureSensor,		"Oil Pressure Sensor Settings"
 		subMenu = energySystems,			"Battery and Alternator Settings"
 		subMenu = auxPidDialog,				"Aux PID"
-		subMenu = speedSensor,				"Speed Sensor Settings"
 		subMenu = tachSettings,				"Tachometer output"
 		subMenu = std_separator
 		subMenu = fanSetting,				"Fan Settings"
 		subMenu = mainRealay,				"Main Relay Settings"
 		subMenu = fuelPump,					"Fuel Pump Settings"
 		subMenu = malfunction,				"MIL Settings"
-		subMenu = hipFunction,				"hip9011 Settings (knock decoder) (alpha version)"
-		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)"
 		subMenu = spiFunction,				"SPI Settings"
 		subMenu = etbDialog,				"Electronic Thtottle Body (alpha version)"
 		
@@ -1014,6 +998,25 @@ gaugeCategory = Fuel Data
 		subMenu = fsioCurve2,			    "FSIO Curve #2"
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
+
+menuDialog = main
+	menu = "&Sensors"
+		subMenu = cltSensor,				"CLT Sensor Settings"
+		subMenu = iatSensor,				"IAT Sensor Settings"
+		subMenu = auxTempSensor1Sensor,		"AuxTemp1 Sensor Settings"
+		subMenu = auxTempSensor2Sensor,		"AuxTemp2 Sensor Settings"
+		subMenu = std_separator
+		subMenu = mapSettings,				"MAP Sensor Settings"
+		subMenu = mafDecodingCurve,			"MAF Sensor Settings"
+		subMenu = std_separator
+		subMenu = egoSettings,				"EGO Sensor Settings"
+		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
+		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)"
+		subMenu = std_separator
+		subMenu = hipFunction,				"HIP9011 Settings (knock sensor) (alpha version)"			
+		subMenu = speedSensor,				"Vehicle Speed Sensor Settings"
+		subMenu = oilPressureSensor,		"Oil Pressure Sensor Settings"			
+
 		subMenu	= std_separator
 	 	subMenu = connection,            	"Connection"
 		subMenu = joystickPanel,		"Joystick"
