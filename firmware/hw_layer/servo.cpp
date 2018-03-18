@@ -51,9 +51,12 @@ static msg_t seThread(void *arg) {
 	while (true) {
 		pin.setValue(1);
 
-		percent_t position = 10 * (getTimeNowSeconds() % 11); // 0, 10, .., 90, 100
 
-		float durationMs = 1 + position * 0.01f;
+		percent_t position = (currentTimeMillis() / 5) % 200;
+		if (position > 100)
+			 position = 200 - position;
+
+		float durationMs = 0 + position * 0.02f;
 
 		scheduleForLater(&servoTurnSignalOff, (int)MS2US(durationMs), (schfunc_t) &servoTachPinLow, NULL);
 
