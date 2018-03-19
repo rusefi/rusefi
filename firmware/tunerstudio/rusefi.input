@@ -68,6 +68,9 @@ enable2ndByteCanID = false
 
 ; CONFIG_DEFINITION_END
 	
+[SettingContextHelp]
+
+	fuelAlgorithm = "See also http://rusefi.com/fuel"
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
@@ -147,14 +150,14 @@ fileVersion = { 20171101 }
 ;
       RPMValue        = scalar,  U32,      0,             "RPM",            1,   0.00000
 #if CELSIUS
-      coolant         = scalar,  F32,      4,              "캜",            1,       0.0
+      coolant         = scalar,  F32,      4,              "째C",            1,       0.0
 #else
-      coolant         = scalar,  F32,      4,              "캟",         {9/5},  17.77777
+      coolant         = scalar,  F32,      4,              "째F",         {9/5},  17.77777
 #endif
 #if CELSIUS
-      intake          = scalar,  F32,      8,              "캜",            1,       0.0
+      intake          = scalar,  F32,      8,              "째C",            1,       0.0
 #else
-      intake          = scalar,  F32,      8,              "캟",         {9/5},  17.77777
+      intake          = scalar,  F32,      8,              "째F",         {9/5},  17.77777
 #endif
       TPSValue        = scalar,  F32,     12,               "%",            1,         0
       MAFValue        = scalar,  F32,     16,               "V",            1,         0
@@ -203,14 +206,14 @@ fileVersion = { 20171101 }
       ind_hasFatalError=bits,    U32,     80, [6:6], "true", "false";
       ind_isWarnNow    =bits,    U32,     80, [7:7], "true", "false";
       firmwareTsVersion = scalar,U32,     84, "version_p",           1,         0
-      egt1            = scalar,  S16,     88, "캜",           1,         0
-      egt2            = scalar,  S16,     90, "캜",           1,         0
-      egt3            = scalar,  S16,     92, "캜",           1,         0
-      egt4            = scalar,  S16,     94, "캜",           1,         0
-      egt5            = scalar,  S16,     96, "캜",           1,         0
-      egt6            = scalar,  S16,     98, "캜",           1,         0
-      egt7            = scalar,  S16,    100, "캜",           1,         0
-      egt8            = scalar,  S16,    102, "캜",           1,         0
+      egt1            = scalar,  S16,     88, "째C",           1,         0
+      egt2            = scalar,  S16,     90, "째C",           1,         0
+      egt3            = scalar,  S16,     92, "째C",           1,         0
+      egt4            = scalar,  S16,     94, "째C",           1,         0
+      egt5            = scalar,  S16,     96, "째C",           1,         0
+      egt6            = scalar,  S16,     98, "째C",           1,         0
+      egt7            = scalar,  S16,    100, "째C",           1,         0
+      egt8            = scalar,  S16,    102, "째C",           1,         0
       rpmAcceleration = scalar,  F32,    104, "dRpm",         1,         0
       massAirFlowValue= scalar,  F32,    108, "Kg/h",         1,         0
       veValue         = scalar,  F32,    112, "ratio",        1,         0
@@ -622,9 +625,9 @@ fileVersion = { 20171101 }
 
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
 #if CELSIUS
-   tChargeGauge          = tCharge,     "Charge Temp",        "캜",      -40,    140,     -15,      1,      95,   110,   1,   1
+   tChargeGauge          = tCharge,     "Charge Temp",        "째C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   tChargeGauge          = tCharge,     "Charge Temp",        "캟",      -40,    285,       5,     35,     205,   230,  1,   1
+   tChargeGauge          = tCharge,     "Charge Temp",        "째F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
 
 
@@ -669,14 +672,14 @@ gaugeCategory = Debug
 gaugeCategory = Sensors  
    RPMGauge        = RPMValue,           "Engine Speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
 #if CELSIUS
-   CLTGauge          = coolant,       "Coolant Temp",        "캜",      -40,    140,     -15,      1,      95,   110,   1,   1
+   CLTGauge          = coolant,       "Coolant Temp",        "째C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   CLTGauge          = coolant,       "Coolant Temp",        "캟",      -40,    285,       5,     35,     205,   230,   1,   1
+   CLTGauge          = coolant,       "Coolant Temp",        "째F",      -40,    285,       5,     35,     205,   230,   1,   1
 #endif
 #if CELSIUS
-   IATGauge          = intake,     "Intake Air Temp",        "캜",      -40,    140,     -15,      1,      95,   110,   1,   1
+   IATGauge          = intake,     "Intake Air Temp",        "째C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   IATGauge          = intake,     "Intake Air Temp",        "캟",      -40,    285,       5,     35,     205,   230,  1,   1
+   IATGauge          = intake,     "Intake Air Temp",        "째F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
    TPSGauge			 = TPSValue,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
    afr1Gauge         = AFRValue, "Air:Fuel Ratio 1",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
@@ -1246,7 +1249,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->Aux1 Thermistor Settings
 	dialog = auxTempSensor1_thermistor, "aux1 Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40캜, 0캜 and 100캜"
+		field = "!Typical temperatures is -40째C, 0째C and 100째C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor1_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor1_resistance_1
@@ -1266,7 +1269,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->Aux2 Thermistor Settings
 	dialog = auxTempSensor2_thermistor, "aux1 Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40캜, 0캜 and 100캜"
+		field = "!Typical temperatures is -40째C, 0째C and 100째C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor2_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor2_resistance_1
@@ -1407,7 +1410,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->CLT Thermistor Settings
 	dialog = clt_thermistor, "CLT Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40캜, 0캜 and 100캜"
+		field = "!Typical temperatures is -40째C, 0째C and 100째C"
 		field = ""
 		field = "Lowest temperature",  					clt_tempC_1		
 		field = "Resistance @ LT",         	   			clt_resistance_1
@@ -1428,7 +1431,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->IAT Thermistor Settings
 	dialog = iat_thermistor, "IAT Thermistor Settings"
 		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40캜, 0캜 and 100캜"
+		field = "!Typical temperatures is -40째C, 0째C and 100째C"
 		field = ""
 		field = "Lowest temperature",                   iat_tempC_1		
 		field = "Resistance @ LT",         	   			iat_resistance_1
