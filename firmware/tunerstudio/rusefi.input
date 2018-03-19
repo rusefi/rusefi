@@ -67,6 +67,8 @@ enable2ndByteCanID = false
 ; this section will be generated automatically by ConfigDefinition.jar based on rusefi_config.txt
 
 ; CONFIG_DEFINITION_END	
+
+
 [SettingContextHelp]
 
 	fuelAlgorithm = "See also http://rusefi.com/fuel"
