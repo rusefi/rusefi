@@ -1002,6 +1002,7 @@ menuDialog = main
 
 menuDialog = main
 	menu = "&Controller"
+		subMenu = sensorInputs,				"Sensor Inputs"
 		subMenu = analogInputSettings,		"Analog Input Settings"
 		subMenu = egtInputs,				"EGT Inputs"
 		subMenu = tachSettings,				"Tachometer output"
@@ -1275,6 +1276,49 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = auxTempSensor2Sensor, "", yAxis
 		panel = auxTempSensor2_thermistor,		North
 		panel = auxTempSensor2Sensor_IO,		South
+		
+;			Sensor Inputs
+	dialog = otherSensorInputs,					"Other Sensor Inputs"		
+		field = "aux1 TempSensor ADC input",			auxTempSensor1_adcChannel
+		field = "aux1 Bias Resistor Value",       		auxTempSensor1_bias_resistor
+		field = "aux2 TempSensor ADC input",			auxTempSensor2_adcChannel
+		field = "aux2 Bias Resistor Value",    	   		auxTempSensor2_bias_resistor
+		field = "Accelerator position sensor", 			pedalPositionChannel
+		field = "Oil Pressure ADC input",				oilPressure_hwChannel
+		field = "fuelLevelSensor", 						fuelLevelSensor
+		field = "Baro ADC input", 						baroSensor_hwChannel
+		field = "Flex Fuel",							flexFuelSensor
+		field = "Vehicle speed sensor",					vehicleSpeedSensorInputPin
+		field = "clutchDownPin",						clutchDownPin
+		field = "clutchUpPin",							clutchUpPin
+		field = "brakePedalPin",						brakePedalPin
+		
+	dialog = mainSensorInputs,					"Main Sensor Inputs"
+		field = "MAP ADC input", 						map_sensor_hwChannel, {hasFrequencyReportingMapSensor == 0}
+		field = "MAP Freq",								frequencyReportingMapInputPin, {hasFrequencyReportingMapSensor == 1}
+		field = "MAF ADC input", 						mafAdcChannel
+		field = "CLT ADC input", 						clt_adcChannel
+		field = "CLT Bias Resistor Value",	    		clt_bias_resistor
+		field = "IAT ADC input", 						iat_adcChannel
+		field = "IAT Bias Resistor Value",	    		iat_bias_resistor
+		field = "AFR ADC input", 						afr_hwChannel
+		field = "vBatt ADC input", 						vbattAdcChannel
+		field = "Throttle position sensor",				tpsAdcChannel
+		
+	dialog = triggerInputs,					"Trigger Inputs"
+		field = "!ECU reboot needed to apply these settings"
+		field = "#Cam is primary if you have cam sensor"
+		field = "Primary channel", 						triggerInputPins1
+		field = "Invert Primary",						invertPrimaryTriggerSignal
+		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Cam Sync/VVT input",					camInput
+		
+	    
+	dialog = sensorInputs, "", xAxis
+		panel = triggerInputs,		West
+		panel = mainSensorInputs,		Center
+		panel = otherSensorInputs,		East
 
 	dialog = allPins1
 		field = "MAP ADC input", 						map_sensor_hwChannel
