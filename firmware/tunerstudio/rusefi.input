@@ -937,8 +937,13 @@ menuDialog = main
 
 	menu = "Ignition"
 		subMenu = ignitionSettings,			"Ignition Settings"
+		subMenu = dwellSettings,			"Dwell time"
+		subMenu = ignitionCylExtra,			"Ignition Cylinder Extra"
+		subMenu = std_separator
 		subMenu = ignitionTableTbl,			"Ignition Advance Table"
+		subMenu = std_separator
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
+		subMenu = ignitionIatCorrTableTbl,	"Ignition IAT correction Table"
 		
 	menu = "Tuning"
 		subMenu = generalSettings,			"General"
@@ -1008,6 +1013,7 @@ menuDialog = main
 		subMenu = tachSettings,				"Tachometer output"
 		subMenu = idlehw,					"Idle Valve Hardware"
 		subMenu	= std_separator
+		subMenu = ignitionOutputSettings,	"Ignition Outputs"
 		subMenu = deviceOutputSettings,		"Actuator Outputs"
 		subMenu	= std_separator
 		subMenu = joystickPanel,			"Joystick"
@@ -1113,7 +1119,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "#Batch injection with individual wiring"
 		field = "Two wire batch",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
 
-	dialog = baseIgnition, "Ignition"		
+	dialog = ignitionSettings, "Ignition Settings"
 		field = "Enabled",						isIgnitionEnabled
 		field = "Mode",							ignitionMode, {isIgnitionEnabled == 1}
 		field = "#Wasted spark with individual coils"
@@ -1132,7 +1138,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = ""
 		field = "Firing Order",							firingOrder
 		panel = baseInjection
-		panel = baseIgnition
 
 ;			Engine->Trigger configuration
 	dialog = triggerConfiguration_settings,	"Settings Trigger"
@@ -1232,10 +1237,11 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
 		field = "Dizzy out Pin Mode",                   dizzySparkOutputPinMode 
 		
-	dialog = ignitionSettings, "", xAxis
-		panel = ignitionOutputs,	West
+	dialog = ignitionOutputSettings, "", xAxis
+		panel = ignitionOutputs
+	
+	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection,	Center
-		panel = ignitionCylExtra,	East
 		
 ;			Engine->Aux1 Thermistor Settings
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
