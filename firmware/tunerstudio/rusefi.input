@@ -924,16 +924,20 @@ menuDialog = main
 		
 	menu = "Injection"
 		subMenu = injectionSettings,		"Injection Settings"
+		subMenu = injectionDeadTime,		"Injector Dead Time"
 		subMenu = std_separator
 		subMenu = fuelTableDialog,			"Fuel Table", 0, {fuelAlgorithm != LM_SPEED_DENSITY}
 		subMenu = veTableDialog,			"VE Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = afrTableTbl,				"Target AFR Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = injPhaseTableTbl,			"Injection Phase"
+		subMenu = injPhaseTableTbl,         "Injection Phase Table"
 		subMenu = std_separator
 		subMenu = warmupFuelDialog,			"Warmup fuel closed-loop"
 		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
 		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
+		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
+		subMenu = std_separator
+		subMenu = fuelClosedLoopDialog, 	"Fuel short-term closed-loop correction"
 
 	menu = "Ignition"
 		subMenu = ignitionSettings,			"Ignition Settings"
@@ -1013,6 +1017,7 @@ menuDialog = main
 		subMenu = tachSettings,				"Tachometer output"
 		subMenu = idlehw,					"Idle Valve Hardware"
 		subMenu	= std_separator
+		subMenu = injectorOutputSettings,	"Injector Outputs"
 		subMenu = ignitionOutputSettings,	"Ignition Outputs"
 		subMenu = deviceOutputSettings,		"Actuator Outputs"
 		subMenu	= std_separator
@@ -1113,7 +1118,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "maxRPM minTPS", tChargeMaxRpmMinTps
 		field = "maxRPM maxTPS", tChargeMaxRpmMaxTps
 
-	dialog = baseInjection, "Injection"
+	dialog = baseInjection, "General"
 		field = "Enabled",						isInjectionEnabled
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
@@ -1137,7 +1142,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "debug fields",							debugMode
 		field = ""
 		field = "Firing Order",							firingOrder
-		panel = baseInjection
 
 ;			Engine->Trigger configuration
 	dialog = triggerConfiguration_settings,	"Settings Trigger"
@@ -1179,7 +1183,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "!phase offset is usually not needed"
 		field = "phase offset",				extraInjectionOffset
 		
-	dialog = injIO, "Injector Output",	yAxis
+	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "!ECU reboot needed to apply these settings"
 		field = "injection Pin Mode",       			injectionPinMode
 		field = "Injection Pin 1",						injectionPins1
@@ -1195,12 +1199,11 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Injection Pin 11 ",					injectionPins11, {cylindersCount > 10}
 		field = "Injection Pin 12 ",					injectionPins12, {cylindersCount > 11}	
 	
-	dialog = injectorSetting, "", yAxis
-		panel = injChars,				North
-		panel = injIO,					East
+	dialog = injectionSettings,	""
+		panel = baseInjection
+		panel = injChars
 		
-	dialog = injectionSettings,	"",	xAxis
-		panel = injectorSetting,		West
+	dialog = injectionDeadTime,	"", yAxis
 		panel = injectorsDeadTime,		East
 
 	dialog = ignitionCylExtra, "Ignition Cylinder Extra"
