@@ -1198,7 +1198,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = injectorSetting,		West
 		panel = injectorsDeadTime,		East
 
-	dialog = ignitionCylExtra, "Ignition Cyliner Extra"
+	dialog = ignitionCylExtra, "Ignition Cylinder Extra"
 		field = "Extra cyl #1",                       timing_offset_cylinder1
 		field = "Extra cyl #2",                       timing_offset_cylinder2, {cylindersCount > 1}
 		field = "Extra cyl #3",                       timing_offset_cylinder3, {cylindersCount > 2}
