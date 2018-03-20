@@ -1429,8 +1429,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 
 ;			Sensors->CLT Sensor Settings
 	dialog = clt_thermistor, "CLT Sensor Settings"
-		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Here is three pairs of thermistor temperature and his resistance."
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",  					clt_tempC_1		
 		field = "Resistance @ LT",         	   			clt_resistance_1
@@ -1449,8 +1449,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 
 ;			Sensors->IAT Sensor Settings
 	dialog = iat_thermistor, "IAT Sensor Settings"
-		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Here is three pairs of thermistor temperature and his resistance."
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",                   iat_tempC_1		
 		field = "Resistance @ LT",         	   			iat_resistance_1
