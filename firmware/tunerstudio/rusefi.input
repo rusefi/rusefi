@@ -909,22 +909,18 @@ gaugeCategory = Fuel Data
 
 [Menu]
 
-	menu = "Engine"
+menuDialog = main
+	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base Engine Settings"
 		subMenu = triggerConfiguration,		"Trigger Configuration"
 		subMenu = std_separator
-		subMenu = analogInputs,				"Analog inputs"
-		subMenu = egtInputs,				"EGT inputs"
 		subMenu = energySystems,			"Battery and Alternator Settings"
-		subMenu = auxPidDialog,				"Aux PID"
-		subMenu = tachSettings,				"Tachometer output"
 		subMenu = std_separator
 		subMenu = fanSetting,				"Fan Settings"
-		subMenu = mainRealay,				"Main Relay Settings"
-		subMenu = fuelPump,					"Fuel Pump Settings"
 		subMenu = malfunction,				"MIL Settings"
-		subMenu = spiFunction,				"SPI Settings"
 		subMenu = etbDialog,				"Electronic Thtottle Body (alpha version)"
+		subMenu = std_separator
+		subMenu = std_realtime,    			"&Realtime Display",              0	
 		
 	menu = "Injection"
 		subMenu = injectionSettings,		"Injection Settings"
@@ -946,7 +942,6 @@ gaugeCategory = Fuel Data
 		
 	menu = "Tuning"
 		subMenu = generalSettings,			"General"
-		subMenu = monitoringSettings,		"rusEfi Console Settings"
 		subMenu = std_separator
 		subMenu = crankingDialog,           "Cranking"
 		subMenu = crankingCltCurve,	    	"Cranking Coolant Temp Multiplier"
@@ -968,8 +963,6 @@ gaugeCategory = Fuel Data
 		subMenu = crankingAdvanceCurve,		"Cranking Ignition Advance Table", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
 		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = std_separator
-		subMenu = std_realtime,    "&Realtime Display",              0
 		subMenu = tChargeSettings, "tCharge Settings"
 		subMenu = std_separator
 		subMenu = smLaunchControl,           "Launch Control"
@@ -1007,12 +1000,22 @@ menuDialog = main
 		subMenu = speedSensor,				"Vehicle Speed Sensor Settings"
 		subMenu = oilPressureSensor,		"Oil Pressure Sensor Settings"			
 
+menuDialog = main
+	menu = "&Controller"
+		subMenu = analogInputSettings,		"Analog Input Settings"
+		subMenu = egtInputs,				"EGT Inputs"
+		subMenu = tachSettings,				"Tachometer output"
+		subMenu = idlehw,					"Idle Valve Hardware"
+		subMenu = mainRealay,				"Main Relay Settings"
+		subMenu = fuelPump,					"Fuel Pump Settings"
+		subMenu	= std_separator
+		subMenu = joystickPanel,			"Joystick"
+		subMenu = ecuStimulator,			"ECU stimulator"
+		subMenu = spiFunction,				"SPI Settings"
+		subMenu = monitoringSettings,		"rusEfi Console Settings"
 		subMenu	= std_separator
 	 	subMenu = connection,            	"Connection"
-		subMenu = joystickPanel,		"Joystick"
-		subMenu = std_separator
 		subMenu = ioTest,					"I-O Test"
-		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = allPins,					"Full pinout"
 
 [ControllerCommands]
@@ -1272,7 +1275,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = auxTempSensor2Sensor, "", yAxis
 		panel = auxTempSensor2_thermistor,		North
 		panel = auxTempSensor2Sensor_IO,		South
-
 
 	dialog = allPins1
 		field = "MAP ADC input", 						map_sensor_hwChannel
@@ -1716,7 +1718,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "revolution to speed mult",				vehicleSpeedCoef
 
 ;			Engine->Other inputs	
-	dialog = analogInputs, "Analog inputs"
+	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
 		field = "TPS ADC input", 						tpsAdcChannel
 		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow
