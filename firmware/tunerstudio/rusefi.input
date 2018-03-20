@@ -1007,8 +1007,8 @@ menuDialog = main
 		subMenu = egtInputs,				"EGT Inputs"
 		subMenu = tachSettings,				"Tachometer output"
 		subMenu = idlehw,					"Idle Valve Hardware"
-		subMenu = mainRealay,				"Main Relay Settings"
-		subMenu = fuelPump,					"Fuel Pump Settings"
+		subMenu	= std_separator
+		subMenu = deviceOutputSettings,		"Actuator Outputs"
 		subMenu	= std_separator
 		subMenu = joystickPanel,			"Joystick"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1609,28 +1609,21 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = fanSetting, "Fan Settings"
 		field = "Fan On Temperature",					fanOnTemperature
 		field = "Fan Off Temperature",					fanOffTemperature
-		field = ""
+		
+;			Controller->Actuator Outputs
+	dialog = deviceOutputSettings, "Actuator Outputs"
 		field = "!ECU reboot needed to apply these settings"
 		field = "Fan Pin Mode",							fanPinMode
 		field = "Fan Pin",								fanPin
-
-;			Engine->Main Relay Settings
-	dialog = mainRealay,	"Main Relay Settings"
-		field = "!ECU reboot needed to apply these settings"
 		field = "Main Relay Mode",			         	mainRelayPinMode	
 		field = "Main Relay Pin",  						mainRelayPin
-		
-;			Engine->Fuel Pump Settings
-	dialog = fuelPump,	"Fuel Pump Settings"
-		field = "!ECU reboot needed to apply these settings"
 		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
 		field = "Fuel Pump Pin",						fuelPumpPin
+		field = "Check Engine Pin Mode",				         	malfunctionIndicatorPinMode	
+		field = "Check Engine Pin",         						malfunctionIndicatorPin
 		
 ;			Engine->MIL Settings
 	dialog = malfunction,	"Check Engine Settings"
-		field = "!ECU reboot needed to apply these settings"
-		field = "Check Engine Pin Mode",				         	malfunctionIndicatorPinMode	
-		field = "Check Engine Pin",         						malfunctionIndicatorPin
 		field = "Warning Period",									warningPeriod
 
 ;			Engine->hip9011 Settings
