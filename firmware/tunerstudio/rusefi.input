@@ -2003,16 +2003,16 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
 				
-	dialog = veTableDialogNorth
-		field = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
-		field = "http://rusefi.com/fuel"
+	help = veTableDialogHelp, "Volumetric Efficiency"
+        text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
+        webHelp = "http://rusefi.com/fuel"
 				
-	dialog = veTableDialog, "VE Table"
-		panel = veTableDialogNorth, North
+	dialog = veTableDialog
+		topicHelp = "veTableDialogHelp"
 		panel = veTableTbl, South
 				
 	dialog = veTableDialog3D, "VE Table"
-		panel = veTableDialogNorth, North
+		topicHelp = "veTableDialogHelp"
 		panel = veTableMap, South
 				
 	dialog = etbDialog, "Electronic Thtottle Body (alpha)"			
