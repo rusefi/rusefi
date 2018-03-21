@@ -427,8 +427,10 @@ static msg_t cjThread(void)
 		cjSetMode(lambda > 1.0f ? CJ125_MODE_NORMAL_17 : CJ125_MODE_NORMAL_8);
 #endif
 
+#if 0
 		// Update console output variables
 		cjPostState(&tsOutputChannels);
+#endif
 
 		switch (state) {
 		case CJ125_PREHEAT:
