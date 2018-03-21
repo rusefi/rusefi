@@ -934,7 +934,6 @@ menuDialog = main
 		subMenu = warmupFuelDialog,			"Warmup fuel closed-loop"
 		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
-		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
 		subMenu = std_separator
 		subMenu = fuelClosedLoopDialog, 	"Fuel short-term closed-loop correction"
@@ -949,27 +948,31 @@ menuDialog = main
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
 		subMenu = ignitionIatCorrTableTbl,	"Ignition IAT correction Table"
 		
-	menu = "Tuning"
+	menu = "&Cranking"
+		subMenu = crankingDialog,           "Cranking Settings"
 		subMenu = std_separator
-		subMenu = crankingDialog,           "Cranking"
-		subMenu = crankingCltCurve,	    	"Cranking Coolant Temp Multiplier"
+		subMenu = crankingCltCurve,	    	"Cranking Coolant Temp Fuel Multiplier"
+		subMenu = crankingDurationCurve,	"Cranking Fuel Duration Multiplier"	
+		subMenu = crankingAdvanceCurve,		"Cranking Ignition Advance", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = crankingTpsCurve,	    	"Cranking TPS Multiplier"
-		subMenu = crankingDurationCurve,	"Cranking Duration Multiplier"
-		subMenu = cltCrankingCurve,			"Cranking IAC multiplier", 0, {overrideCrankingIacSetting == 1}
-		subMenu = idleSettings,				"Idle Settings"
-		subMenu = cltIdleRPMCurve,			"Idle Target RPM", 0, {idleMode == 0}
 		subMenu = std_separator
-        subMenu = idleVeCurve,              "Idle VE Table", 0, {useSeparateVeForIdle == 1}
-		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
+		subMenu = cltCrankingCurve,			"Cranking IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
+		
+	menu = "&Idle"
+		subMenu = idleSettings,				"Idle Settings"
+		subMenu = std_separator	
+		subMenu = cltIdleRPMCurve,			"Idle Target RPM", 0, {idleMode == 0}
+		subMenu = idleVeCurve,              "Idle VE", 0, {useSeparateVeForIdle == 1}
+		subMenu = idleAdvanceCurve,			"Idle Ignition Advance", 0, {useSeparateAdvanceForIdle == 1}
+		subMenu = std_separator
+		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
+
+	menu = "Tuning"
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
 		subMenu = std_separator
-		subMenu = fuelClosedLoopDialog, 	"Fuel short-term closed-loop correction"
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
         subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
 		subMenu = std_separator
-		subMenu = idleAdvanceCurve,			"Idle Ignition Advance Table", 0, {useSeparateAdvanceForIdle == 1}
-		subMenu = crankingAdvanceCurve,		"Cranking Ignition Advance Table", 0, {useSeparateAdvanceForCranking == 1}
-		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
 		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = tChargeSettings, "tCharge Settings"
 		subMenu = std_separator
@@ -1550,46 +1553,49 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 	
 	dialog = idleStepper, "Stepper"
-		field = "Idle Stepper Step",					idle_stepperStepPin, useStepperIdle
-		field = "Idle Stepper Dir",						idle_stepperDirectionPin, useStepperIdle
-		field = "Idle Stepper Enable",					stepperEnablePin, useStepperIdle
-		field = "Idle Stepper Enable mode",				stepperEnablePinMode, useStepperIdle
+		field = "Idle Stepper Step Pin",				idle_stepperStepPin, useStepperIdle
+		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin, useStepperIdle
+		field = "Idle Stepper Enable Pin",				stepperEnablePin, useStepperIdle
+		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
 		
 	dialog = idleHwType, "Idle Valve Hardware",	border
-		field = "use stepper",							useStepperIdle
 		panel = idleSolenoid,				West
 		panel = idleStepper,				East
 		
-	dialog = idlePidSettings, "PID control"	
+				
+	dialog = idlehw, "", yAxis
+	field = "!ECU reboot needed to apply these settings"
+		field = "Use Stepper",				useStepperIdle
+		panel = idleHwType
+		
+	dialog = idlePidSettings, "PID IAC Control"	
+		field = "#See Idle Target RPM Curve"
 		field = "P-factor",								idleRpmPid_pFactor
 		field = "I-factor",								idleRpmPid_iFactor
 		field = "D-factor",								idleRpmPid_dFactor
 		field = "Offset",								idleRpmPid_offset
 		field = "Min",									idleRpmPid_minValue
 		field = "Max",									idleRpmPid_maxValue
+		field = "period",								idleRpmPid_period
+		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone, { idleMode == 0}
+		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit, { idleMode == 0}
 		
 		
 	dialog = idleSettings, "", yAxis
 		field = "!Automatic Mode is now Beta Version"
-		field = "Idle control mode",					idleMode
-		field = "Use separate Advance Table for idle",	useSeparateAdvanceForIdle
+		field = "Idle IAC control mode",					idleMode
+		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
-		field = "Cranking Idle Air",					crankingIACposition
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
-		field = "#See Idle Target RPM Curve"
 		panel = idlePidSettings, { idleMode == 0}
-		field = "period",								idleRpmPid_period
-		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone, { idleMode == 0}
-		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit, { idleMode == 0}
-		field = "iacByTpsTaper",						iacByTpsTaper;
+		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;
 		field = "verbose",								isVerboseIAC
-		slider = "Manual Idle Position",				manIdlePosition, horizontal
-		field = ""
-		panel = idleHwType
+		field = "#See Warmup idle multiplier"
+		slider = "Manual IAC Position",				manIdlePosition, horizontal
 
 ;			Engine->Fan Settings
 	dialog = fanSetting, "Fan Settings"
@@ -1854,9 +1860,13 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Injection Mode",						crankingInjectionMode
 		field = "Base Fuel Pulse Width", 				cranking_baseFuel
 		
+	dialog = crankingIAC, "IAC"
+		field = "Cranking IAC position",					crankingIACposition
+		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
+		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting	
 		
 	dialog = crankingIgnition, "Ignition"
-		field = "Advance", 								crankingTimingAngle
+		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
 		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
         field = "Use fixed Dwell?",         			useConstantDwellDuringCranking
@@ -1873,20 +1883,17 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Falloff temperature", primeInjFalloffTemperature
 		
 		
-;			Tuning->Cranking
-	dialog = crankingDialog, "Cranking"				
+;			Cranking->Cranking Settings
+	dialog = crankingDialog, "Cranking Settings"
 		field = "Cranking RPM limit",                	cranking_rpm
-		panel = crankingFuel
 		panel = crankingIgnition
-		field = "Cranking Idle Air",					crankingIACposition
+		panel = crankingIAC
+		panel = crankingFuel
 		panel = primingFuelPulsePanel
 		panel = postCrankingEnrichment
-		field = ""
-		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
-		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting
 		field = "Startup fuel pump prime",				startUpFuelPumpDuration
-		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
+		field = ""
 		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
 		
 		
