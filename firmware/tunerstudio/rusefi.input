@@ -1553,27 +1553,36 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 	
 	dialog = idleStepper, "Stepper"
-		field = "Idle Stepper Step",					idle_stepperStepPin, useStepperIdle
-		field = "Idle Stepper Dir",						idle_stepperDirectionPin, useStepperIdle
-		field = "Idle Stepper Enable",					stepperEnablePin, useStepperIdle
-		field = "Idle Stepper Enable mode",				stepperEnablePinMode, useStepperIdle
+		field = "Idle Stepper Step Pin",				idle_stepperStepPin, useStepperIdle
+		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin, useStepperIdle
+		field = "Idle Stepper Enable Pin",				stepperEnablePin, useStepperIdle
+		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
 		
 	dialog = idleHwType, "Idle Valve Hardware",	border
-		field = "use stepper",							useStepperIdle
 		panel = idleSolenoid,				West
 		panel = idleStepper,				East
 		
-	dialog = idlePidSettings, "PID control"	
+				
+	dialog = idlehw, "", yAxis
+	field = "!ECU reboot needed to apply these settings"
+		field = "Use Stepper",				useStepperIdle
+		panel = idleHwType
+		
+	dialog = idlePidSettings, "PID IAC Control"	
+		field = "#See Idle Target RPM Curve"
 		field = "P-factor",								idleRpmPid_pFactor
 		field = "I-factor",								idleRpmPid_iFactor
 		field = "D-factor",								idleRpmPid_dFactor
 		field = "Offset",								idleRpmPid_offset
 		field = "Min",									idleRpmPid_minValue
 		field = "Max",									idleRpmPid_maxValue
+		field = "period",								idleRpmPid_period
+		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone, { idleMode == 0}
+		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit, { idleMode == 0}
 		
 		
 	dialog = idleSettings, "", yAxis
@@ -1587,7 +1596,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "verbose",								isVerboseIAC
 		field = "#See Warmup idle multiplier"
 		slider = "Manual IAC Position",				manIdlePosition, horizontal
-		panel = idleHwType
 
 ;			Engine->Fan Settings
 	dialog = fanSetting, "Fan Settings"
@@ -1856,7 +1864,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Cranking IAC position",					crankingIACposition
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
 		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting	
-		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle		
 		
 	dialog = crankingIgnition, "Ignition"
 		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
