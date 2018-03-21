@@ -1239,10 +1239,10 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection,	Center
 		
-;			Engine->Aux1 Thermistor Settings
+;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
-		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Here is three pairs of thermistor temperature and his resistance."
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor1_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor1_resistance_1
@@ -1253,10 +1253,10 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Highest temperature",				 	auxTempSensor1_tempC_3
 		field = "Resistance @ HT",         	    		auxTempSensor1_resistance_3
 
-;			Engine->Aux2 Thermistor Settings
+;			Sensors->AUX2 Thermistor Sensor Setting
 	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
-		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Here is three pairs of thermistor temperature and his resistance."
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor2_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor2_resistance_1
