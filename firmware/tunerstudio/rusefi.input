@@ -967,13 +967,13 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
 
-	menu = "Tuning"
+	menu = "&Tuning"
+		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
+		subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel Table"
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
 		subMenu = std_separator
-		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
-        subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
+		subMenu = baroCorrTbl,				"Baro Correction Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = std_separator
-		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = tChargeSettings, "tCharge Settings"
 		subMenu = std_separator
 		subMenu = smLaunchControl,           "Launch Control"
@@ -1829,9 +1829,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Engine Sniffer", 						isEngineChartEnabled			
 		field = "  Threshold", 							engineSnifferRpmThreshold
 		
-				
-				
-;			Tuning->General
 	dialog = generalSettings, "General"
 		field = "http://rusefi.com/support"
 		field = "RPM Hard Limit",         	    		rpmHardLimit
