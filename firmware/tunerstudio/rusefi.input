@@ -1480,10 +1480,9 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = oilp_settings
 		gauge = OilPressGauge
 
-;			Engine->MAP Sensor Settings
-	dialog = mapSensorVDlg, "Voltage Sensor Settings", xAxis		
-	    field = "MAP ADC input", 						map_sensor_hwChannel, {hasFrequencyReportingMapSensor == 0}
-		field = "Map type", map_sensor_type, 			{hasFrequencyReportingMapSensor == 0}
+;			Sensors->MAP Sensor Settings
+	dialog = mapSensorVDlg, "Voltage Sensor Settings", yAxis		
+		field = "MAP type", map_sensor_type, 			{hasFrequencyReportingMapSensor == 0}
 		field = "MAP value low point",  		        map_sensor_lowValue, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
 		field = "MAP voltage low point", 	 		    mapLowValueVoltage, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
 		field = "MAP value high point",               	map_sensor_highValue, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
@@ -1491,30 +1490,25 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Use minimal value of",					mapMinBufferLength
 		field = "Measure Map Only In One Cylinder",		measureMapOnlyInOneCylinder
 
-	dialog = mapSensorFDlg, "Frequency Sensor Settings", xAxis		
-		field = "pin",		frequencyReportingMapInputPin, {hasFrequencyReportingMapSensor == 1}
+	dialog = mapSensorFDlg, "Frequency Sensor Settings", yAxis
 		field = "0 kPa freq",		mapFrequency0Kpa, {hasFrequencyReportingMapSensor == 1}
 		field = "100 kpa freq",		mapFrequency100Kpa, {hasFrequencyReportingMapSensor == 1}
-
-	dialog = mapCurves, "", border		
-	    panel = map_samplingAngleCurve,	West
-		panel = map_samplingWindowCurve,	East
 
 	dialog = mapSwitch, "MAP input type"
 	    field = "frequency-based MAP",				hasFrequencyReportingMapSensor
 	    
-	dialog = mapVandF, "V and F"	    
-		panel = mapSensorVDlg, 		North
-		panel = mapSensorFDlg,		South
+	dialog = mapSwitchAndSettings, "", yAxis
+		panel = mapSwitch
+		panel = mapSensorVDlg
+		panel = mapSensorFDlg
 	
-	dialog = mapSwitchAndSettings, "Switch and Settings"
-		field = "!ECU reboot needed to apply pin assignment"
-		panel = mapSwitch, 		North
-		panel = mapVandF,		South
+	dialog = mapCurves, "", yAxis
+	    panel = map_samplingAngleCurve
+		panel = map_samplingWindowCurve
 		
-	dialog = mapSettings, "MAP Sensor Settings", border
-		panel = mapCurves,		North
-		panel = mapSwitchAndSettings,		South
+	dialog = mapSettings, "", xAxis
+		panel = mapCurves
+		panel = mapSwitchAndSettings
 
 ;			Engine->EGO Sensor Settings
 	dialog = egoSettings_sensor,	"EGO Sensor Settings"
