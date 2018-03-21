@@ -934,7 +934,6 @@ menuDialog = main
 		subMenu = warmupFuelDialog,			"Warmup fuel closed-loop"
 		subMenu = cltFuelCorrCurve,			"Warmup fuel manual Multiplier", 0, {useWarmupPidAfr == 0}
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target", 0, {useWarmupPidAfr == 1}
-		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
 		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
 		subMenu = std_separator
 		subMenu = fuelClosedLoopDialog, 	"Fuel short-term closed-loop correction"
@@ -959,20 +958,21 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = cltCrankingCurve,			"Cranking IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
 		
-	menu = "Tuning"
+	menu = "&Idle"
 		subMenu = idleSettings,				"Idle Settings"
+		subMenu = std_separator	
 		subMenu = cltIdleRPMCurve,			"Idle Target RPM", 0, {idleMode == 0}
+		subMenu = idleVeCurve,              "Idle VE", 0, {useSeparateVeForIdle == 1}
+		subMenu = idleAdvanceCurve,			"Idle Ignition Advance", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = std_separator
-        subMenu = idleVeCurve,              "Idle VE Table", 0, {useSeparateVeForIdle == 1}
-		subMenu = iatFuelCorrCurve,			"Intake air temperature fuel Multiplier"
+		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
+
+	menu = "Tuning"
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
 		subMenu = std_separator
-		subMenu = fuelClosedLoopDialog, 	"Fuel short-term closed-loop correction"
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
         subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
 		subMenu = std_separator
-		subMenu = idleAdvanceCurve,			"Idle Ignition Advance Table", 0, {useSeparateAdvanceForIdle == 1}
-		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
 		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = tChargeSettings, "tCharge Settings"
 		subMenu = std_separator
@@ -1578,19 +1578,15 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		
 	dialog = idleSettings, "", yAxis
 		field = "!Automatic Mode is now Beta Version"
-		field = "Idle control mode",					idleMode
-		field = "Use separate Advance Table for idle",	useSeparateAdvanceForIdle
+		field = "Idle IAC control mode",					idleMode
+		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
-		field = "#See Idle Target RPM Curve"
 		panel = idlePidSettings, { idleMode == 0}
-		field = "period",								idleRpmPid_period
-		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone, { idleMode == 0}
-		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit, { idleMode == 0}
-		field = "iacByTpsTaper",						iacByTpsTaper;
+		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;
 		field = "verbose",								isVerboseIAC
-		slider = "Manual Idle Position",				manIdlePosition, horizontal
-		field = ""
+		field = "#See Warmup idle multiplier"
+		slider = "Manual IAC Position",				manIdlePosition, horizontal
 		panel = idleHwType
 
 ;			Engine->Fan Settings
