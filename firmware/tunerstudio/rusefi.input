@@ -1345,19 +1345,23 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Idle Stepper Step",					idle_stepperStepPin
 		field = "Idle Stepper Enable",					stepperEnablePin
 		field = "Fuel Pump Pin",						fuelPumpPin
+		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
 		field = "ETB Dir #1",							etbDirectionPin1
 		field = "ETB Dir #2",							etbDirectionPin2
 		field = "ETB Control #1",						etbControlPin1	
 		field = "ETB Control #2",						etbControlPin2	
 		field = "SD CS Pin",							sdCardCsPin
 		field = "Check Engine Pin",						malfunctionIndicatorPin
+		field = "Check Engine Pin Mode",				malfunctionIndicatorPinMode
 		field = "Aux Pin #1",							auxPidPins1
 		field = "Aux Pin #2",							auxPidPins2
 		field = "Aux Pin #3",							auxPidPins3
 		field = "Aux Pin #4",							auxPidPins4
 		field = "test557pin",							test557pin
-		
-
+		field = "Fan Pin",								fanPin
+		field = "Fan Pin Mode",							fanPinMode
+		field = "Main Relay Pin",  						mainRelayPin
+		field = "Main Relay Mode",			         	mainRelayPinMode
 
 	dialog = allPins3
 		field = "Injection Pin 1",						injectionPins1
