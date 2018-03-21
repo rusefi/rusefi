@@ -949,13 +949,17 @@ menuDialog = main
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
 		subMenu = ignitionIatCorrTableTbl,	"Ignition IAT correction Table"
 		
-	menu = "Tuning"
+	menu = "&Cranking"
+		subMenu = crankingDialog,           "Cranking Settings"
 		subMenu = std_separator
-		subMenu = crankingDialog,           "Cranking"
-		subMenu = crankingCltCurve,	    	"Cranking Coolant Temp Multiplier"
+		subMenu = crankingCltCurve,	    	"Cranking Coolant Temp Fuel Multiplier"
+		subMenu = crankingDurationCurve,	"Cranking Fuel Duration Multiplier"	
+		subMenu = crankingAdvanceCurve,		"Cranking Ignition Advance", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = crankingTpsCurve,	    	"Cranking TPS Multiplier"
-		subMenu = crankingDurationCurve,	"Cranking Duration Multiplier"
-		subMenu = cltCrankingCurve,			"Cranking IAC multiplier", 0, {overrideCrankingIacSetting == 1}
+		subMenu = std_separator
+		subMenu = cltCrankingCurve,			"Cranking IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
+		
+	menu = "Tuning"
 		subMenu = idleSettings,				"Idle Settings"
 		subMenu = cltIdleRPMCurve,			"Idle Target RPM", 0, {idleMode == 0}
 		subMenu = std_separator
@@ -968,7 +972,6 @@ menuDialog = main
         subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
 		subMenu = std_separator
 		subMenu = idleAdvanceCurve,			"Idle Ignition Advance Table", 0, {useSeparateAdvanceForIdle == 1}
-		subMenu = crankingAdvanceCurve,		"Cranking Ignition Advance Table", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = ignitionIatCorrTableTbl,	"Ignition Intake Air Temp correction"
 		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = tChargeSettings, "tCharge Settings"
@@ -1578,7 +1581,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Idle control mode",					idleMode
 		field = "Use separate Advance Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
-		field = "Cranking Idle Air",					crankingIACposition
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
 		field = "#See Idle Target RPM Curve"
 		panel = idlePidSettings, { idleMode == 0}
@@ -1854,9 +1856,14 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Injection Mode",						crankingInjectionMode
 		field = "Base Fuel Pulse Width", 				cranking_baseFuel
 		
+	dialog = crankingIAC, "IAC"
+		field = "Cranking IAC position",					crankingIACposition
+		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
+		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting	
+		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle		
 		
 	dialog = crankingIgnition, "Ignition"
-		field = "Advance", 								crankingTimingAngle
+		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
 		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
         field = "Use fixed Dwell?",         			useConstantDwellDuringCranking
@@ -1873,20 +1880,17 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Falloff temperature", primeInjFalloffTemperature
 		
 		
-;			Tuning->Cranking
-	dialog = crankingDialog, "Cranking"				
+;			Cranking->Cranking Settings
+	dialog = crankingDialog, "Cranking Settings"
 		field = "Cranking RPM limit",                	cranking_rpm
-		panel = crankingFuel
 		panel = crankingIgnition
-		field = "Cranking Idle Air",					crankingIACposition
+		panel = crankingIAC
+		panel = crankingFuel
 		panel = primingFuelPulsePanel
 		panel = postCrankingEnrichment
-		field = ""
-		field = ""
 		field = "enable Cylinder Cleanup",				isCylinderCleanupEnabled
-		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting
 		field = "Startup fuel pump prime",				startUpFuelPumpDuration
-		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
+		field = ""
 		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
 		
 		
