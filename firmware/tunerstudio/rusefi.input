@@ -349,7 +349,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingAngleBins, RPMValue
       yBins       = map_samplingAngle
-      gauge       = RPMGauge
+	  gauge       = MAPGauge
    
    curve = map_samplingWindowCurve, "MAP Sampling Duration"
       columnLabel = "RPM", "Window"
@@ -357,7 +357,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingWindowBins, RPMValue
       yBins       = map_samplingWindow
-      gauge       = RPMGauge
+	  gauge       = MAPGauge
 
    curve = injectorsDeadTime, "Injector Dead Time by VBatt"
       columnLabel = "Voltage", "Dead Time"
@@ -485,7 +485,7 @@ fileVersion = { 20171101 }
       yAxis       =   -3,  1, 5
       xBins       = cltFuelCorrBins, coolant
       yBins       = wueAfrTargetOffset
-      ;gauge      = cltGauge
+      gauge      = cltGauge
 
     curve = wueAnalyzer_warmup_curve, "Warmup Enrichment"
       columnLabel = "Coolant", "Current WUE", "Coolant", "Corrected"
@@ -1514,7 +1514,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = mapCurves
 		panel = mapSwitchAndSettings
 
-;			Engine->EGO Sensor Settings
+;			Sensors->EGO Sensor Settings
 	dialog = egoSettings_sensor,	"EGO Sensor Settings"
 		field = "Type",									afr_type
 ; todo: only use these values for custom!		
@@ -1562,7 +1562,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = idleSolenoid,				West
 		panel = idleStepper,				East
 		
-				
 	dialog = idlehw, "", yAxis
 	field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
