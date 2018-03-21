@@ -172,9 +172,10 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
 	 */
-	efiAssertVoid(!cisnan(iEvent->advance), "findAngle#4");
-	assertAngleRange(iEvent->advance, "findAngle#a5");
-	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, iEvent->advance PASS_ENGINE_PARAMETER_SUFFIX));
+	float advance = iEvent->advance;
+	efiAssertVoid(!cisnan(advance), "findAngle#4");
+	assertAngleRange(advance, "findAngle#a5");
+	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, advance PASS_ENGINE_PARAMETER_SUFFIX));
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.eventIndex, (int)iEvent->dwellPosition.angleOffset,
