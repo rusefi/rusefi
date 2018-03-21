@@ -349,7 +349,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingAngleBins, RPMValue
       yBins       = map_samplingAngle
-      gauge       = RPMGauge
+	  gauge       = MAPGauge
    
    curve = map_samplingWindowCurve, "MAP Sampling Duration"
       columnLabel = "RPM", "Window"
@@ -357,7 +357,7 @@ fileVersion = { 20171101 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingWindowBins, RPMValue
       yBins       = map_samplingWindow
-      gauge       = RPMGauge
+	  gauge       = MAPGauge
 
    curve = injectorsDeadTime, "Injector Dead Time by VBatt"
       columnLabel = "Voltage", "Dead Time"
@@ -485,7 +485,7 @@ fileVersion = { 20171101 }
       yAxis       =   -3,  1, 5
       xBins       = cltFuelCorrBins, coolant
       yBins       = wueAfrTargetOffset
-      ;gauge      = cltGauge
+      gauge      = cltGauge
 
     curve = wueAnalyzer_warmup_curve, "Warmup Enrichment"
       columnLabel = "Coolant", "Current WUE", "Coolant", "Corrected"
@@ -967,13 +967,13 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
 
-	menu = "Tuning"
+	menu = "&Tuning"
+		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
+		subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel Table"
         subMenu = mapAccelTaper,			"Engine Load Acceleration Enrichment Taper"
 		subMenu = std_separator
-		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
-        subMenu = tpsTpsAccelTbl, 			"TPS/TPS Acceleration Extra Fuel"
+		subMenu = baroCorrTbl,				"Baro Correction Table", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = std_separator
-		subMenu = baroCorrTbl,				"Baro Correction", 0, {fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = tChargeSettings, "tCharge Settings"
 		subMenu = std_separator
 		subMenu = smLaunchControl,           "Launch Control"
@@ -1156,13 +1156,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
 
 	dialog = triggerConfiguration_IO,	"Settings I/O"
-		field = "!ECU reboot needed to apply pin assignment"
-		field = "#Cam is primary if you have cam sensor"
-		field = "Primary input channel", 				triggerInputPins1
-		field = "Invert Primary",						invertPrimaryTriggerSignal
-	    field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-	    field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-	    field = "Cam Sync/VVT input",					camInput
 	    field = "VVT mode",								vvtMode, {trigger_type != 80}
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
@@ -1246,10 +1239,10 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection,	Center
 		
-;			Engine->Aux1 Thermistor Settings
+;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
-		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Here is three pairs of thermistor temperature and his resistance."
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor1_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor1_resistance_1
@@ -1260,10 +1253,10 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Highest temperature",				 	auxTempSensor1_tempC_3
 		field = "Resistance @ HT",         	    		auxTempSensor1_resistance_3
 
-;			Engine->Aux2 Thermistor Settings
+;			Sensors->AUX2 Thermistor Sensor Setting
 	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
-		field = "!Here is three pairs of thermistor temperature and his resistance."
-		field = "!Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Here is three pairs of thermistor temperature and his resistance."
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",  					auxTempSensor2_tempC_1		
 		field = "Resistance @ LT",         	   			auxTempSensor2_resistance_1
@@ -1352,19 +1345,23 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Idle Stepper Step",					idle_stepperStepPin
 		field = "Idle Stepper Enable",					stepperEnablePin
 		field = "Fuel Pump Pin",						fuelPumpPin
+		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
 		field = "ETB Dir #1",							etbDirectionPin1
 		field = "ETB Dir #2",							etbDirectionPin2
 		field = "ETB Control #1",						etbControlPin1	
 		field = "ETB Control #2",						etbControlPin2	
 		field = "SD CS Pin",							sdCardCsPin
 		field = "Check Engine Pin",						malfunctionIndicatorPin
+		field = "Check Engine Pin Mode",				malfunctionIndicatorPinMode
 		field = "Aux Pin #1",							auxPidPins1
 		field = "Aux Pin #2",							auxPidPins2
 		field = "Aux Pin #3",							auxPidPins3
 		field = "Aux Pin #4",							auxPidPins4
 		field = "test557pin",							test557pin
-		
-
+		field = "Fan Pin",								fanPin
+		field = "Fan Pin Mode",							fanPinMode
+		field = "Main Relay Pin",  						mainRelayPin
+		field = "Main Relay Mode",			         	mainRelayPinMode
 
 	dialog = allPins3
 		field = "Injection Pin 1",						injectionPins1
@@ -1476,16 +1473,20 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = iat_thermistor
 		gauge = IATGauge
 		
+;			Sensors->Oil Pressure Sensor Settings
 	dialog = oilp_settings, "Oil Pressure Sensor Settings"
 		field = "low voltage",							oilPressure_v1
 		field = "low pressure",							oilPressure_value1
 		field = "high voltage",							oilPressure_v2
 		field = "high pressure",						oilPressure_value2
 
-;			Engine->MAP Sensor Settings
-	dialog = mapSensorVDlg, "Voltage Sensor Settings", xAxis		
-	    field = "MAP ADC input", 						map_sensor_hwChannel, {hasFrequencyReportingMapSensor == 0}
-		field = "Map type", map_sensor_type, 			{hasFrequencyReportingMapSensor == 0}
+	dialog = oilPressureSensor, "", xAxis
+		panel = oilp_settings
+		gauge = OilPressGauge
+
+;			Sensors->MAP Sensor Settings
+	dialog = mapSensorVDlg, "Voltage Sensor Settings", yAxis		
+		field = "MAP type", map_sensor_type, 			{hasFrequencyReportingMapSensor == 0}
 		field = "MAP value low point",  		        map_sensor_lowValue, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
 		field = "MAP voltage low point", 	 		    mapLowValueVoltage, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
 		field = "MAP value high point",               	map_sensor_highValue, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
@@ -1493,32 +1494,27 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Use minimal value of",					mapMinBufferLength
 		field = "Measure Map Only In One Cylinder",		measureMapOnlyInOneCylinder
 
-	dialog = mapSensorFDlg, "Frequency Sensor Settings", xAxis		
-		field = "pin",		frequencyReportingMapInputPin, {hasFrequencyReportingMapSensor == 1}
+	dialog = mapSensorFDlg, "Frequency Sensor Settings", yAxis
 		field = "0 kPa freq",		mapFrequency0Kpa, {hasFrequencyReportingMapSensor == 1}
 		field = "100 kpa freq",		mapFrequency100Kpa, {hasFrequencyReportingMapSensor == 1}
-
-	dialog = mapCurves, "", border		
-	    panel = map_samplingAngleCurve,	West
-		panel = map_samplingWindowCurve,	East
 
 	dialog = mapSwitch, "MAP input type"
 	    field = "frequency-based MAP",				hasFrequencyReportingMapSensor
 	    
-	dialog = mapVandF, "V and F"	    
-		panel = mapSensorVDlg, 		North
-		panel = mapSensorFDlg,		South
+	dialog = mapSwitchAndSettings, "", yAxis
+		panel = mapSwitch
+		panel = mapSensorVDlg
+		panel = mapSensorFDlg
 	
-	dialog = mapSwitchAndSettings, "Switch and Settings"
-		field = "!ECU reboot needed to apply pin assignment"
-		panel = mapSwitch, 		North
-		panel = mapVandF,		South
+	dialog = mapCurves, "", yAxis
+	    panel = map_samplingAngleCurve
+		panel = map_samplingWindowCurve
 		
-	dialog = mapSettings, "MAP Sensor Settings", border
-		panel = mapCurves,		North
-		panel = mapSwitchAndSettings,		South
+	dialog = mapSettings, "", xAxis
+		panel = mapCurves
+		panel = mapSwitchAndSettings
 
-;			Engine->EGO Sensor Settings
+;			Sensors->EGO Sensor Settings
 	dialog = egoSettings_sensor,	"EGO Sensor Settings"
 		field = "Type",									afr_type
 ; todo: only use these values for custom!		
@@ -1566,7 +1562,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = idleSolenoid,				West
 		panel = idleStepper,				East
 		
-				
 	dialog = idlehw, "", yAxis
 	field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
@@ -1833,9 +1828,6 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Engine Sniffer", 						isEngineChartEnabled			
 		field = "  Threshold", 							engineSnifferRpmThreshold
 		
-				
-				
-;			Tuning->General
 	dialog = generalSettings, "General"
 		field = "http://rusefi.com/support"
 		field = "RPM Hard Limit",         	    		rpmHardLimit
