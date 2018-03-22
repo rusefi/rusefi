@@ -175,6 +175,8 @@ public:
 	float iatFuelCorrection;
 	float cltFuelCorrection;
 	float postCrankingFuelCorrection;
+	float fuelCutoffCorrection;
+	efitick_t coastingFuelCutStartTime;
 	/**
 	 * injectorLag(VBatt)
 	 *

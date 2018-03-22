@@ -9,6 +9,7 @@ TEST_SRC_CPP = test_util.cpp \
 	test_idle_controller.cpp \
 	test_trigger_decoder.cpp \
 	test_fuel_map.cpp \
+	test_fuelCut.cpp \
 	engine_test_helper.cpp \
 	test_logic_expression.cpp \
 	test_speed_density.cpp \
