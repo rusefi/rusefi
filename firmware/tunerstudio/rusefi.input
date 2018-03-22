@@ -123,7 +123,7 @@ enable2ndByteCanID = false
 
 		filter = VBatt, "VBatt", VBatt       <       , 12,      , true
 
-;         filter = minTps, "Minimum TPS", TPS,       >       , 1,       , true
+         filter = minTps, "Minimum TPS", TPSValue,       <       , 1,       , true
 
 
 ;[VeAnalyze]
@@ -977,6 +977,8 @@ menuDialog = main
 		subMenu = tChargeSettings, "tCharge Settings"
 		subMenu = std_separator
 		subMenu = smLaunchControl,           "Launch Control"
+		subMenu = std_separator
+		subMenu = coastingFuelCutControl, 	"Coasting Fuel Cutoff Settings"
 		
 menuDialog = main
 	menu = "&FSIO" 
@@ -2110,6 +2112,12 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
 	    
+	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
+		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled
+		field = "Cutoff Activation RPM High Limit",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
+		field = "Cutoff Deactivation RPM Low Limit",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
+		field = "TPS Deactivation Threshold",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
+		field = "CLT Activation Threshold",				coastingFuelCutClt, {coastingFuelCutEnabled == 1}
 [Tools]
  ;addTool = toolName, PanelName
  addTool = veTableGenerator, "VE Table Generator", veTableTbl
