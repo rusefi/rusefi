@@ -900,7 +900,7 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance t
 	int16_t coastingFuelCutRpmHigh;;"rpm",        1,     0,  0,    5000,  0
 	int16_t coastingFuelCutRpmLow;;"rpm",        1,     0,  0,    5000,  0
 	int16_t coastingFuelCutTps;percent between 0 and 100;"%",        1,     0,  0,    100,  0
-	int16_t unusedInt;
+	int16_t coastingFuelCutClt;Fuel cutoff is deactivated if CLT<threshold;"C",        1,     0,  -100,    100,  0
 	
 	int[774] unusedEnd;
 	
