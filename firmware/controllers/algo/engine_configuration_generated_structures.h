@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 18 11:56:18 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 22 08:12:47 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2112,9 +2112,10 @@ typedef struct {
 	 */
 	int16_t coastingFuelCutTps;
 	/**
+	 * Fuel cutoff is deactivated if CLT<threshold
 	 * offset 3382
 	 */
-	int16_t unusedInt;
+	int16_t coastingFuelCutClt;
 	/**
 	 * offset 3384
 	 */
@@ -2364,4 +2365,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 18 11:56:18 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 22 08:12:47 EDT 2018
