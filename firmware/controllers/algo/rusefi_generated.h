@@ -1558,8 +1558,8 @@
 #define coastingFuelCutRpmLow_offset_hex d32
 #define coastingFuelCutTps_offset 3380
 #define coastingFuelCutTps_offset_hex d34
-#define unusedInt_offset 3382
-#define unusedInt_offset_hex d36
+#define coastingFuelCutClt_offset 3382
+#define coastingFuelCutClt_offset_hex d36
 #define unusedEnd_offset 3384
 #define unusedEnd_offset_hex d38
 #define cltCrankingCorrBins_offset 6480
