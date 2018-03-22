@@ -206,6 +206,8 @@ EngineState::EngineState() {
 	sparkDwell = mapAveragingDuration = 0;
 	totalLoggedBytes = injectionOffset = 0;
 	auxValveStart = auxValveEnd = 0;
+	fuelCutoffCorrection = 0;
+	coastingFuelCutStartTime = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -258,6 +260,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// update fuel consumption states
 	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
+	// Fuel cut-off isn't just 0 or 1, it can be tapered
+	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
 	if (engineConfiguration->postCrankingFactor > 0.01f) {
