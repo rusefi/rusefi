@@ -487,6 +487,14 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 70, 101);
 }
 
+static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	boardConfiguration->coastingFuelCutEnabled = false;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+}
+
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
 	setLinearCurve(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
@@ -662,6 +670,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultWarmupIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setDefaultWarmupFuelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	setDefaultFuelCutParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setMazdaMiataNbTpsTps(PASS_ENGINE_PARAMETER_SIGNATURE);
 
