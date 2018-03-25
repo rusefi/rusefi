@@ -26,10 +26,6 @@ efitimesec_t getTimeNowSeconds(void) {
 	return currentTimeMillis() / CH_CFG_ST_FREQUENCY;
 }
 
-int getRusEfiVersion(void) {
-	return 239;
-}
-
 static size_t wt_writes(void *ip, const uint8_t *bp, size_t n) {
 	printToWin32Console((char*)bp);
 	return CONSOLE_PORT->vmt->write(CONSOLE_PORT, bp, n);

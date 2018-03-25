@@ -95,7 +95,9 @@ static void runChprintfTest() {
 
 void rusEfiFunctionalTest(void) {
 	printToWin32Console("Running version:");
-	printToWin32Console("TODO");
+	static char versionBuffer[20];
+	itoa10(versionBuffer, (int)getRusEfiVersion());
+	printToWin32Console(versionBuffer);
 
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
