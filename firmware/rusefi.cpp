@@ -121,10 +121,6 @@
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
-#include "bootloader/bootloader.h"
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-
 LoggingWithStorage sharedLogger("main");
 
 bool main_loop_started = false;
