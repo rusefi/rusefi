@@ -94,7 +94,7 @@ static void runChprintfTest() {
 }
 
 void rusEfiFunctionalTest(void) {
-	printToWin32Console("Running version:");
+	printToWin32Console("Running rusEfi simulator version:");
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
 	printToWin32Console(versionBuffer);
@@ -121,9 +121,7 @@ void rusEfiFunctionalTest(void) {
 	initRpmCalculator(&sharedLogger, engine);
 
 	initTriggerCentral(&sharedLogger);
-
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
 	initMapAveraging(&sharedLogger, engine);
 #endif /* EFI_MAP_AVERAGING */
