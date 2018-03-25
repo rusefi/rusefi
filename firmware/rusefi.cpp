@@ -259,22 +259,4 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-static char UNUSED_RAM_SIZE[7000];
 
-static char UNUSED_CCM_SIZE[14000] CCM_OPTIONAL;
-
-/**
- * See also VCS_VERSION
- */
-int getRusEfiVersion(void) {
-	if (UNUSED_RAM_SIZE[0] != 0)
-		return 123; // this is here to make the compiler happy about the unused array
-	if (UNUSED_CCM_SIZE[0] * 0 != 0)
-		return 3211; // this is here to make the compiler happy about the unused array
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
-	// make bootloader code happy too
-	if (initBootloader() != 0)
-		return 123;
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20180322;
-}
