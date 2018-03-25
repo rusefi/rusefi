@@ -69,11 +69,14 @@
 #include "CJ125.h"
 #endif /* EFI_PROD_CODE */
 
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+#include "bootloader/bootloader.h"
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
 EXTERN_ENGINE;
-
 
 /**
  * CH_FREQUENCY is the number of system ticks in a second
@@ -730,5 +733,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20180323;
+	return 20180325;
 }
