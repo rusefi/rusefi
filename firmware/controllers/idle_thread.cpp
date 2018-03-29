@@ -167,7 +167,7 @@ percent_t getIdlePosition(void) {
 	return currentIdlePosition;
 }
 
-static float autoIdle(float cltCorrection) {
+static float autoIdle() {
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (tpsPos > boardConfiguration->idlePidDeactivationTpsThreshold) {
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
@@ -237,6 +237,7 @@ static msg_t ivThread(int param) {
 
 		float clt = engine->sensors.clt;
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
 		if (cisnan(clt))
 			cltCorrection = 1.0f;
@@ -263,7 +264,7 @@ static msg_t ivThread(int param) {
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection);
 			} else {
-				iacPosition = autoIdle(cltCorrection);
+				iacPosition = autoIdle();
 			}
 			
 			// store 'base' iacPosition without adjustments
@@ -292,6 +293,7 @@ static msg_t ivThread(int param) {
 				idlePid.postState(&tsOutputChannels, 1000000);
 			} else {
 				tsOutputChannels.debugFloatField1 = iacPosition;
+				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
 			}
 #endif
 		}
