@@ -44,6 +44,8 @@ EXTERN_ENGINE
 ;
 
 static bool shouldResetPid = false;
+// we might reset PID state when the state is changed, but only if needed (See autoIdle())
+static bool mightResetPid = false;
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
 // Use new PID with CIC integrator
@@ -170,6 +172,13 @@ percent_t getIdlePosition(void) {
 static float autoIdle() {
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (tpsPos > boardConfiguration->idlePidDeactivationTpsThreshold) {
+		// Don't store old I and D terms if PID doesn't work anymore.
+		// Otherwise they will affect the idle position much later, when the throttle is closed.
+		if (mightResetPid) {
+			mightResetPid = false;
+			shouldResetPid = true;
+		}
+
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
 		return baseIdlePosition;
 	}
@@ -184,7 +193,23 @@ static float autoIdle() {
 		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
 	}
 
-	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
+	// check if within the dead zone
+	int rpm = getRpmE(engine);
+	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone))
+		return baseIdlePosition;
+
+	// When rpm < targetRpm, there's a risk of dropping RPM too low - and the engine dies out.
+	// So PID reaction should be increased by adding extra percent to PID-error:
+	percent_t errorAmpCoef = 1.0f;
+	if (rpm < targetRpm)
+		errorAmpCoef += (float)CONFIG(pidExtraForLowRpm) / PERCENT_MULT;
+	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
+	idlePid.setErrorAmplification(errorAmpCoef);
+
+	percent_t newValue = idlePid.getValue(targetRpm, rpm, engineConfiguration->idleRpmPid.period);
+	
+	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
+	mightResetPid = true;
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
 	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
