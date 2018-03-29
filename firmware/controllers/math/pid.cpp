@@ -39,7 +39,7 @@ float Pid::getValue(float target, float input) {
 }
 
 float Pid::getRawValue(float target, float input, float dTime) {
-	float error = target - input;
+	float error = (target - input) * errorAmplificationCoef;
 	prevTarget = target;
 	prevInput = input;
 
@@ -74,6 +74,7 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 void Pid::reset(void) {
 	dTerm = iTerm = 0;
 	prevResult = prevInput = prevTarget = prevError = 0;
+	errorAmplificationCoef = 1.0f;
 	resetCounter++;
 }
 
@@ -99,6 +100,10 @@ float Pid::getD(void) {
 
 float Pid::getOffset(void) {
 	return pid->offset;
+}
+
+void Pid::setErrorAmplification(float coef) {
+	errorAmplificationCoef = coef;
 }
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
