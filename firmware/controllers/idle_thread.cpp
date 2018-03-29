@@ -221,6 +221,22 @@ static float autoIdle() {
 	newValue = minF(newValue, CONFIG(idleRpmPid.maxValue));
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
+	// Interpolate to the manual position when RPM is close to the upper RPM limit (if idlePidRpmUpperLimit is set).
+	// If RPM increases and the throttle is closed, then we're in coasting mode, and we should smoothly disable auto-pid.
+	// If we just leave IAC at baseIdlePosition (as in case of TPS deactivation threshold), RPM would get stuck. 
+	// That's why there's 'useIacTableForCoasting' setting which involves a separate IAC position table for coasting (iacCoasting).
+	// Currently it's user-defined. But eventually we'll use a real calculated and stored IAC position instead.
+	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
+	if (CONFIG(idlePidRpmUpperLimit) > 0) {
+		if (boardConfiguration->useIacTableForCoasting) {
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
+			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
+		} else {
+			// Well, just leave it as is, without PID regulation...
+			newValue = baseIdlePosition;
+		}
+	}
+
 	return newValue;
 }
 
