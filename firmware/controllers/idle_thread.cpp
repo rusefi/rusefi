@@ -68,6 +68,10 @@ static percent_t currentIdlePosition = -100.0f;
  * the same as currentIdlePosition, but without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
  */
 static percent_t baseIdlePosition = currentIdlePosition;
+/**
+ * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
+ */
+static percent_t idlePositionSensitivityThreshold = 1.0f;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
@@ -276,7 +280,8 @@ static msg_t ivThread(int param) {
 					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
-		if (absF(iacPosition - currentIdlePosition) < 1) {
+		// The threshold is dependent on IAC type (see initIdleHardware())
+		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
 			continue; // value is pretty close, let's leave the poor valve alone
 		}
 
@@ -379,6 +384,8 @@ static void initIdleHardware() {
 		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin, 
 				engineConfiguration->stepperDirectionPinMode, engineConfiguration->idleStepperReactionTime, 
 				engineConfiguration->idleStepperTotalSteps, engineConfiguration->stepperEnablePin, logger);
+		// This greatly improves PID accuracy for steppers with a small number of steps
+		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
 	} else {
 		/**
 		 * Start PWM for idleValvePin
@@ -386,6 +393,7 @@ static void initIdleHardware() {
 		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &enginePins.idleSolenoidPin,
 				boardConfiguration->idle.solenoidFrequency, boardConfiguration->manIdlePosition / 100,
 				applyIdleSolenoidPinState);
+		idlePositionSensitivityThreshold = 1.0f;
 	}
 }
 
