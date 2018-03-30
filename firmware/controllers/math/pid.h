@@ -41,6 +41,7 @@ public:
 	float getOffset(void);
 	float getIntegration(void);
 	float getPrevError(void);
+	void setErrorAmplification(float coef);
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
@@ -60,6 +61,7 @@ private:
 	float prevTarget;
 	float prevInput;
 	float prevResult;
+	float errorAmplificationCoef;
 
 private:
 	virtual void updateITerm(float value);

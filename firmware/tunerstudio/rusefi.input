@@ -431,6 +431,14 @@ fileVersion = { 20171101 }
       yBins       = cltIdleCorr
       gauge       = CLTGauge
 
+	curve = iacCoastingCurve, "Coasting IAC Position for Auto-Idle"
+      columnLabel = "Coolant", "Multiplier"
+      xAxis       = -40, 120, 10
+      yAxis       =  0,  100, 10
+      xBins       = iacCoastingBins, coolant
+      yBins       = iacCoasting
+      gauge       = idleAirValvePositionGauge
+
 	curve = cltCrankingCurve, "Cranking IAC multiplier"
       columnLabel = "Coolant", "Multiplier"
       xAxis       = -40, 120, 10
@@ -966,6 +974,7 @@ menuDialog = main
 		subMenu = idleAdvanceCurve,			"Idle Ignition Advance", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = std_separator
 		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
+		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
 	menu = "&Tuning"
 		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment"
@@ -1578,8 +1587,9 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Min",									idleRpmPid_minValue
 		field = "Max",									idleRpmPid_maxValue
 		field = "period",								idleRpmPid_period
-		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone, { idleMode == 0}
-		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit, { idleMode == 0}
+		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone
+		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit
+		field = "PID Extra for low RPM",				pidExtraForLowRpm
 		
 		
 	dialog = idleSettings, "", yAxis
@@ -1587,6 +1597,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Idle IAC control mode",					idleMode
 		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
+		field = "Use separate IAC Table For Coasting",	useIacTableForCoasting, {idleMode == 0}
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
 		panel = idlePidSettings, { idleMode == 0}
 		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;

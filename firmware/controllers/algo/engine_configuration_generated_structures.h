@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 22 08:12:47 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 28 16:53:17 EEST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -648,7 +648,7 @@ typedef struct {
 	bool coastingFuelCutEnabled : 1;
 	/**
 	offset 376 bit 22 */
-	bool unused_board_984_22 : 1;
+	bool useIacTableForCoasting : 1;
 	/**
 	offset 376 bit 23 */
 	bool unused_board_984_23 : 1;
@@ -2117,9 +2117,28 @@ typedef struct {
 	 */
 	int16_t coastingFuelCutClt;
 	/**
+	 * Increases PID reaction for RPM<target by adding extra percent to PID-error
 	 * offset 3384
 	 */
-	int unusedEnd[774];
+	int16_t pidExtraForLowRpm;
+	/**
+	 * offset 3386
+	 */
+	int16_t unusedInt16;
+	/**
+	 * CLT-based idle position for coasting (used in Auto-PID Idle mode)
+	 * offset 3388
+	 */
+	float iacCoastingBins[CLT_CURVE_SIZE];
+	/**
+	 *  CLT-based idle position for coasting (used in Auto-PID Idle mode)
+	 * offset 3452
+	 */
+	float iacCoasting[CLT_CURVE_SIZE];
+	/**
+	 * offset 3516
+	 */
+	int unusedEnd[741];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2203,12 +2222,12 @@ typedef struct {
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
-	 * CLT-based idle position multiplier for simple manual idle controller, or target RPM multiplier for PID-based idle
+	 * CLT-based idle position multiplier for simple manual idle controller
 	 * offset 10656
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
-	 *  CLT-based idle position multiplier for simple manual idle controller, or target RPM multiplier for PID-based idle
+	 *  CLT-based idle position multiplier for simple manual idle controller
 	 * offset 10720
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
@@ -2365,4 +2384,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 22 08:12:47 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 28 16:53:17 EEST 2018
