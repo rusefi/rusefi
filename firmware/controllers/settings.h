@@ -17,6 +17,9 @@ void printConfiguration(const engine_configuration_s *engineConfiguration);
 void stopEngine(void);
 void setCallFromPitStop(int durationMs);
 void setEngineType(int value);
+/**
+ * See also getEngine_type_e()
+ */
 const char* getConfigurationName(engine_type_e engineType);
 
 #endif /* SETTINGS_H_ */
