@@ -670,6 +670,8 @@ static void handleGetVersion(ts_channel_s *tsChannel, ts_response_format_e mode)
 static void handleGetText(ts_channel_s *tsChannel) {
 	tsState.textCommandCounter++;
 
+	printOverallStatus(getTimeNowSeconds());
+
 	int outputSize;
 	char *output = swapOutputBuffers(&outputSize);
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
