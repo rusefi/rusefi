@@ -351,22 +351,6 @@ void writeLogLine(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-static void printState(void) {
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-
-	// todo: make SWO work
-//	char *msg = "hello\r\n";
-//	for(int i=0;i<strlen(msg);i++) {
-//		ITM_SendChar(msg[i]);
-//	}
-
-
-
-//	debugInt(&logger, "idl", getIdleSwitch());
-
-#endif /* EFI_SHAFT_POSITION_INPUT */
-}
-
 #define INITIAL_FULL_LOG TRUE
 //#define INITIAL_FULL_LOG FALSE
 
@@ -439,8 +423,18 @@ extern bool consoleInBinaryMode;
 
 /**
  * @brief Sends all pending data to dev console
+ *
+ * This method is periodically invoked by the main loop
  */
 void updateDevConsoleState(void) {
+	// todo: make SWO work
+//	char *msg = "hello\r\n";
+//	for(int i=0;i<strlen(msg);i++) {
+//		ITM_SendChar(msg[i]);
+//	}
+
+
+
 	if (!isCommandLineConsoleReady()) {
 		return;
 	}
@@ -487,8 +481,6 @@ void updateDevConsoleState(void) {
 #else
 	chThdSleepMilliseconds(200);
 #endif
-
-	printState();
 
 #if EFI_WAVE_ANALYZER
 	printWave(&logger);
