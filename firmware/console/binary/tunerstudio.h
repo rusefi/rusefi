@@ -32,11 +32,23 @@ typedef struct {
 	int testCommandCounter;
 } tunerstudio_counters_s;
 
+/**
+ * handle non CRC wrapped command
+ */
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize);
 
+/**
+ * rusEfi own test command
+ */
 void handleTestCommand(ts_channel_s *tsChannel);
+/**
+ * this command is part of protocol initialization
+ */
 void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
+/**
+ * Gauges refresh
+ */
 void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
 
 char *getWorkingPageAddr(int pageIndex);
