@@ -377,7 +377,7 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 }
 #endif /* EFI_PROD_CODE */
 
-static void printInfo(systime_t nowSeconds) {
+void printOverallStatus(systime_t nowSeconds) {
 	/**
 	 * we report the version every 4 seconds - this way the console does not need to
 	 * request it and we will display it pretty soon
@@ -413,12 +413,11 @@ static void printInfo(systime_t nowSeconds) {
 	}
 
 #endif /* EFI_PROD_CODE */
-
+	scheduleLogging(&logger);
 }
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
-extern fatal_msg_t errorMessageBuffer;
 extern bool consoleInBinaryMode;
 
 /**
@@ -468,7 +467,6 @@ void updateDevConsoleState(void) {
 	}
 
 	systime_t nowSeconds = getTimeNowSeconds();
-	printInfo(nowSeconds);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	int currentCkpEventCounter = getCrankEventCounter();

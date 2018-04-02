@@ -17,5 +17,6 @@ void initStatusLoop(void);
 void writeLogLine(void);
 bool getFullLog(void);
 void setFullLog(int value);
+void printOverallStatus(systime_t nowSeconds);
 
 #endif /* CONSOLE_LOOP_H_ */
