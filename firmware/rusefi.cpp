@@ -8,6 +8,9 @@
 
 /**
  * @mainpage
+ * This documentation https://rusefi.com/docs/html/
+ *
+ * For version see engine_controller.cpp getRusEfiVersion
  *
  * @section sec_into
  *
@@ -45,6 +48,13 @@
  * A single tooth primary signal would be a typical example when synchronization is not needed.
  *
  *
+ * @section sec_timers Timers
+ * At the moment rusEfi is build using 5 times:
+ * 1) 1MHz microsecond_timer.cpp
+ * 2) 10KHz fast ADC callback pwmpcb_fast adc_inputs.cpp
+ * 3) slow ADC callback pwmpcb_slow adc_inputs.cpp
+ * 4) periodicFastTimer engine_controller.cpp
+ * 5) periodicSlowTimer engine_controller.cpp
  *
  *
  *
