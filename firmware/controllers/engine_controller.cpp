@@ -82,8 +82,8 @@ EXTERN_ENGINE;
  * CH_FREQUENCY is the number of system ticks in a second
  */
 
-static virtual_timer_t periodicSlowTimer;
-static virtual_timer_t periodicFastTimer;
+static virtual_timer_t periodicSlowTimer; // 20Hz
+static virtual_timer_t periodicFastTimer; // 50Hz
 
 static LoggingWithStorage logger("Engine Controller");
 
