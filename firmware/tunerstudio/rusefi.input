@@ -538,7 +538,7 @@ fileVersion = { 20171101 }
       upDownLabel = "(RICHER)", "(LEANER)"
 
 ; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
-   table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel",   1
+   table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel(ms)",   1
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
@@ -1135,7 +1135,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Enabled",						isInjectionEnabled
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
-		field = "Two wire batch",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
+		field = "Two wire batch emulation",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
 
 	dialog = ignitionSettings, "Ignition Settings"
 		field = "Enabled",						isIgnitionEnabled
