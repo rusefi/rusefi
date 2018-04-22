@@ -48,6 +48,11 @@ public:
 private:
 	IntListenerArray<15> triggerListeneres;
 	int hwEventCounters[HW_EVENT_TYPES];
+	
+	// Used by 'useNoiselessTriggerDecoder', see handleShaftSignal()
+	efitick_t lastSignalTimes[HW_EVENT_TYPES];
+	efitick_t accumSignalPeriods[HW_EVENT_TYPES];
+	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
 };
 #endif
 
