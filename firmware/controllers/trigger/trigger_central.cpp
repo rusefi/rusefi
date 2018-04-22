@@ -177,8 +177,12 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 }
 
 void hwHandleShaftSignal(trigger_event_e signal) {
-	if (!isUsefulSignal(signal, engineConfiguration)) {
-		return;
+	// for effective noise filtering, we need both signal edges, 
+	// so we pass them to handleShaftSignal() and defer this test
+	if (!boardConfiguration->useNoiselessTriggerDecoder) {
+		if (!isUsefulSignal(signal, engineConfiguration)) {
+			return;
+		}
 	}
 	uint32_t triggerHandlerEntryTime = GET_TIMESTAMP();
 	isInsideTriggerHandler = true;
@@ -256,6 +260,17 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	}
 
 	nowNt = getTimeNowNt();
+
+	// This code gathers some statistics on signals and compares accumulated periods to filter interference
+	if (boardConfiguration->useNoiselessTriggerDecoder) {
+		if (!noiseFilter(nowNt, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+			return;
+		}
+		// moved here from hwHandleShaftSignal()
+		if (!isUsefulSignal(signal, engineConfiguration)) {
+			return;
+		}
+	}
 
 	engine->onTriggerSignalEvent(nowNt);
 
