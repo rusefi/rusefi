@@ -75,8 +75,6 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-uint32_t triggerHanlderEntryTime;
-
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 int triggerReentraint = 0;
@@ -182,7 +180,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	if (!isUsefulSignal(signal, engineConfiguration)) {
 		return;
 	}
-	triggerHanlderEntryTime = GET_TIMESTAMP();
+	uint32_t triggerHandlerEntryTime = GET_TIMESTAMP();
 	isInsideTriggerHandler = true;
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
@@ -190,7 +188,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#8");
 	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
-	triggerDuration = GET_TIMESTAMP() - triggerHanlderEntryTime;
+	triggerDuration = GET_TIMESTAMP() - triggerHandlerEntryTime;
 	isInsideTriggerHandler = false;
 	if (triggerDuration > triggerMaxDuration)
 		triggerMaxDuration = triggerDuration;
