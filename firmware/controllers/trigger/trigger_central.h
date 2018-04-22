@@ -32,6 +32,8 @@ public:
 	void handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index);
 	void resetCounters();
+	void resetAccumSignalData();
+	bool noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	TriggerStateWithRunningStatistics triggerState;
 	efitick_t nowNt;
 	angle_t vvtPosition;

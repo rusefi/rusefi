@@ -205,6 +205,7 @@ TriggerCentral::TriggerCentral() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 	clearCallbacks(&triggerListeneres);
 	triggerState.reset();
+	resetAccumSignalData();
 }
 
 int TriggerCentral::getHwEventCounter(int index) {
@@ -214,6 +215,12 @@ int TriggerCentral::getHwEventCounter(int index) {
 void TriggerCentral::resetCounters() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetRunningCounters();
+}
+
+void TriggerCentral::resetAccumSignalData() {
+	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
+	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
+	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
 }
 
 static char shaft_signal_msg_index[15];
@@ -577,6 +584,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 
 	#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 		engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->triggerCentral.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING
