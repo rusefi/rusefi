@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 28 16:53:17 EEST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 26 02:12:36 EDT 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -405,7 +405,7 @@ public class Fields {
 	public static final int isFasterEngineSpinUpEnabled_offset = 984;
 	public static final int coastingFuelCutEnabled_offset = 984;
 	public static final int useIacTableForCoasting_offset = 984;
-	public static final int unused_board_984_23_offset = 984;
+	public static final int useNoiselessTriggerDecoder_offset = 984;
 	public static final int unused_board_984_24_offset = 984;
 	public static final int unused_board_984_25_offset = 984;
 	public static final int unused_board_984_26_offset = 984;
@@ -1417,7 +1417,7 @@ public class Fields {
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 984, FieldType.BIT, 20);
 	public static final Field COASTINGFUELCUTENABLED = Field.create("COASTINGFUELCUTENABLED", 984, FieldType.BIT, 21);
 	public static final Field USEIACTABLEFORCOASTING = Field.create("USEIACTABLEFORCOASTING", 984, FieldType.BIT, 22);
-	public static final Field UNUSED_BOARD_984_23 = Field.create("UNUSED_BOARD_984_23", 984, FieldType.BIT, 23);
+	public static final Field USENOISELESSTRIGGERDECODER = Field.create("USENOISELESSTRIGGERDECODER", 984, FieldType.BIT, 23);
 	public static final Field UNUSED_BOARD_984_24 = Field.create("UNUSED_BOARD_984_24", 984, FieldType.BIT, 24);
 	public static final Field UNUSED_BOARD_984_25 = Field.create("UNUSED_BOARD_984_25", 984, FieldType.BIT, 25);
 	public static final Field UNUSED_BOARD_984_26 = Field.create("UNUSED_BOARD_984_26", 984, FieldType.BIT, 26);
