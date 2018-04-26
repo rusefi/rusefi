@@ -463,6 +463,7 @@ void TriggerShape::setTriggerSynchronizationGap2(float syncRatioFrom, float sync
 	isSynchronizationNeeded = true;
 	this->syncRatioFrom = syncRatioFrom;
 	this->syncRatioTo = syncRatioTo;
+	this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
 		printf("setTriggerSynchronizationGap2 %.2f %.2f\r\n", syncRatioFrom, syncRatioTo);

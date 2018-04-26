@@ -209,7 +209,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	if (isLessImportant(type)) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (printTriggerDebug) {
-			printf("%s isLessImportant %s now=%d index=%d\r\n",
+			printf("%s isLessImportant %s now=%lld index=%d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
 					getTrigger_event_e(signal),
 					nowNt,
@@ -307,12 +307,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			 */
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-		if (printTriggerDebug) {
-			printf("sync=%d index=%d size=%d\r\n",
+			if (printTriggerDebug) {
+				printf("sync=%d index=%d size=%d\r\n",
 					shaft_is_synchronized,
 					currentCycle.current_index,
 					TRIGGER_SHAPE(size));
-		}
+			}
 #endif /* EFI_UNIT_TEST */
 			int endOfCycleIndex = TRIGGER_SHAPE(size) - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
 
@@ -395,14 +395,15 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 
 
-	if (triggerCycleCallback != NULL) {
-		triggerCycleCallback(this);
-	}
-	startOfCycleNt = nowNt;
-	resetCurrentCycleState();
-	incrementTotalEventCounter();
-	runningRevolutionCounter++;
-	totalEventCountBase += TRIGGER_SHAPE(size);
+			if (triggerCycleCallback != NULL) {
+				triggerCycleCallback(this);
+			}
+
+			startOfCycleNt = nowNt;
+			resetCurrentCycleState();
+			incrementTotalEventCounter();
+			runningRevolutionCounter++;
+			totalEventCountBase += TRIGGER_SHAPE(size);
 
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -412,7 +413,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						runningRevolutionCounter);
 			}
 #endif /* EFI_UNIT_TEST */
-		} else {
+		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
 			;
 		}

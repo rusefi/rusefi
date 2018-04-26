@@ -1177,6 +1177,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	    field = "Trigger error LED",					triggerErrorPin
 	    field = "Trigger error LED mode",				triggerErrorPinMode
 	    field = "print sync details to console",		isPrintTriggerSynchDetails
+	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8}
 	dialog = triggerConfiguration
 		panel = triggerConfiguration_settings,	North
 		panel = triggerConfiguration_IO,		South

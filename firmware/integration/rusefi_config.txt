@@ -551,7 +551,7 @@ bit is_enabled_spi_2
 	bit isFasterEngineSpinUpEnabled
 	bit coastingFuelCutEnabled
 	bit useIacTableForCoasting
-	bit unused_board_984_23
+	bit useNoiselessTriggerDecoder
 	bit unused_board_984_24
 	bit unused_board_984_25
 	bit unused_board_984_26
