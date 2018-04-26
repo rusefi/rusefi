@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 28 16:53:17 EEST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 26 02:12:36 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -651,7 +651,7 @@ typedef struct {
 	bool useIacTableForCoasting : 1;
 	/**
 	offset 376 bit 23 */
-	bool unused_board_984_23 : 1;
+	bool useNoiselessTriggerDecoder : 1;
 	/**
 	offset 376 bit 24 */
 	bool unused_board_984_24 : 1;
@@ -2384,4 +2384,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Mar 28 16:53:17 EEST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 26 02:12:36 EDT 2018

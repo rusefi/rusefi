@@ -590,8 +590,8 @@
 #define coastingFuelCutEnabled_offset_hex 3d8
 #define useIacTableForCoasting_offset 984
 #define useIacTableForCoasting_offset_hex 3d8
-#define unused_board_984_23_offset 984
-#define unused_board_984_23_offset_hex 3d8
+#define useNoiselessTriggerDecoder_offset 984
+#define useNoiselessTriggerDecoder_offset_hex 3d8
 #define unused_board_984_24_offset 984
 #define unused_board_984_24_offset_hex 3d8
 #define unused_board_984_25_offset 984
