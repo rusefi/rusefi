@@ -75,8 +75,6 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-uint32_t triggerHanlderEntryTime;
-
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 int triggerReentraint = 0;
@@ -179,10 +177,14 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 }
 
 void hwHandleShaftSignal(trigger_event_e signal) {
-	if (!isUsefulSignal(signal, engineConfiguration)) {
-		return;
+	// for effective noise filtering, we need both signal edges, 
+	// so we pass them to handleShaftSignal() and defer this test
+	if (!boardConfiguration->useNoiselessTriggerDecoder) {
+		if (!isUsefulSignal(signal, engineConfiguration)) {
+			return;
+		}
 	}
-	triggerHanlderEntryTime = GET_TIMESTAMP();
+	uint32_t triggerHandlerEntryTime = GET_TIMESTAMP();
 	isInsideTriggerHandler = true;
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
@@ -190,7 +192,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#8");
 	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
-	triggerDuration = GET_TIMESTAMP() - triggerHanlderEntryTime;
+	triggerDuration = GET_TIMESTAMP() - triggerHandlerEntryTime;
 	isInsideTriggerHandler = false;
 	if (triggerDuration > triggerMaxDuration)
 		triggerMaxDuration = triggerDuration;
@@ -207,6 +209,7 @@ TriggerCentral::TriggerCentral() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 	clearCallbacks(&triggerListeneres);
 	triggerState.reset();
+	resetAccumSignalData();
 }
 
 int TriggerCentral::getHwEventCounter(int index) {
@@ -216,6 +219,12 @@ int TriggerCentral::getHwEventCounter(int index) {
 void TriggerCentral::resetCounters() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetRunningCounters();
+}
+
+void TriggerCentral::resetAccumSignalData() {
+	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
+	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
+	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
 }
 
 static char shaft_signal_msg_index[15];
@@ -241,6 +250,68 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	}
 }
 
+/**
+ * This is used to filter noise spikes (interference) in trigger signal. See 
+ * The basic idea is to use not just edges, but the average amount of time the signal stays in '0' or '1'.
+ * So we update 'accumulated periods' to track where the signal is. 
+ * And then compare between the current period and previous, with some tolerance (allowing for the wheel speed change).
+ * @return true if the signal is passed through.
+ */
+bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// todo: find a better place for these defs
+	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
+			SHAFT_3RD_RISING, SHAFT_3RD_FALLING };
+	static const trigger_wheel_e triggerIdx[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
+	// we process all trigger channels independently
+	trigger_wheel_e ti = triggerIdx[signal];
+	// falling is opposite to rising, and vise versa
+	trigger_event_e os = opposite[signal];
+	
+	// todo: currently only primary channel is filtered, because there are some weird trigger types on other channels
+	if (ti != T_PRIMARY)
+		return true;
+	
+	// update period accumulator: for rising signal, we update '0' accumulator, and for falling - '1'
+	if (lastSignalTimes[signal] != -1)
+		accumSignalPeriods[signal] += nowNt - lastSignalTimes[signal];
+	// save current time for this trigger channel
+	lastSignalTimes[signal] = nowNt;
+	
+	// now we want to compare current accumulated period to the stored one 
+	efitick_t currentPeriod = accumSignalPeriods[signal];
+	// the trick is to compare between different
+	efitick_t allowedPeriod = accumSignalPrevPeriods[os];
+
+	// but first check if we're expecting a gap
+	bool isGapExpected = TRIGGER_SHAPE(isSynchronizationNeeded) && triggerState.shaft_is_synchronized && 
+			(triggerState.currentCycle.eventCount[ti] + 1) == TRIGGER_SHAPE(expectedEventCount[ti]);
+	
+	if (isGapExpected) {
+		// usually we need to extend the period for gaps, based on the trigger info
+		allowedPeriod *= TRIGGER_SHAPE(syncRatioAvg);
+	}
+	
+	// also we need some margin for rapidly changing trigger-wheel speed,
+	// that's why we expect the period to be no less than 2/3 of the previous period (this is just an empirical 'magic' coef.)
+	efitick_t minAllowedPeriod = 2 * allowedPeriod / 3;
+	// but no longer than 5/4 of the previous 'normal' period
+	efitick_t maxAllowedPeriod = 5 * allowedPeriod / 4;
+	
+	// above all, check if the signal comes not too early
+	if (currentPeriod >= minAllowedPeriod) {
+		// now we store this period as a reference for the next time,
+		// BUT we store only 'normal' periods, and ignore too long periods (i.e. gaps)
+		if (!isGapExpected && (maxAllowedPeriod == 0 || currentPeriod <= maxAllowedPeriod)) {
+			accumSignalPrevPeriods[signal] = currentPeriod;
+		}
+		// reset accumulator
+		accumSignalPeriods[signal] = 0;
+		return true;
+	}
+	// all premature or extra-long events are ignored - treated as interference
+	return false;
+}
+
 void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
@@ -251,6 +322,17 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	}
 
 	nowNt = getTimeNowNt();
+
+	// This code gathers some statistics on signals and compares accumulated periods to filter interference
+	if (boardConfiguration->useNoiselessTriggerDecoder) {
+		if (!noiseFilter(nowNt, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+			return;
+		}
+		// moved here from hwHandleShaftSignal()
+		if (!isUsefulSignal(signal, engineConfiguration)) {
+			return;
+		}
+	}
 
 	engine->onTriggerSignalEvent(nowNt);
 
@@ -579,6 +661,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 
 	#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 		engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->triggerCentral.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING

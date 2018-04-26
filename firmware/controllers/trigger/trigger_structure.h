@@ -91,6 +91,10 @@ public:
 
 	float syncRatioFrom;
 	float syncRatioTo;
+	/**
+	 * used by NoiselessTriggerDecoder (See TriggerCentral::handleShaftSignal())
+	 */
+	int syncRatioAvg;
 
 	/**
 	 * Usually this is not needed, but some crazy triggers like 36-2-2-2 require two consecutive

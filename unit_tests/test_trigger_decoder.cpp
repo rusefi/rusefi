@@ -471,6 +471,8 @@ void testTriggerDecoder(void) {
 	assertEquals(s->wave.switchTimes[2], 0.75);
 	assertEquals(s->wave.switchTimes[3], 1);
 
+	testNoiselessDecoder();
+
 	testDodgeNeonDecoder();
 	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 8, 0.4931, 0.2070);
 
