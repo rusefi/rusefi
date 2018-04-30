@@ -47,7 +47,7 @@ public:
 	int getChannelState(int channelIndex, int phaseIndex) const;
 
 	int findAngleMatch(float angle, int size) const;
-	int waveIndertionAngle(float angle, int size) const;
+	int findInsertionAngle(float angle, int size) const;
 
 	/**
 	 * Number of signal wires
