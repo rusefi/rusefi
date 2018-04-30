@@ -146,7 +146,10 @@ int multi_wave_s::getChannelState(int channelIndex, int phaseIndex) const {
 	return waves[channelIndex].pinStates[phaseIndex];
 }
 
-int multi_wave_s::waveIndertionAngle(float angle, int size) const {
+/**
+ * returns the index at which given value would need to be inserted into sorted array
+ */
+int multi_wave_s::findInsertionAngle(float angle, int size) const {
 	for (int i = size - 1; i >= 0; i--) {
 		if (angle > switchTimes[i])
 			return i + 1;
@@ -388,24 +391,27 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 		return;
 	}
 
-	int index = wave.waveIndertionAngle(angle, size);
+	int index = wave.findInsertionAngle(angle, size);
 
-	// shifting existing data
+	/**
+	 * todo: it would be nice to be able to provide trigger angles without sorting them externally
+	 * The idea here is to shift existing data - including handling high vs low state of the signals
+	 */
 	// todo: does this logic actually work? I think it does not! due to broken state handling
+/*
 	for (int i = size - 1; i >= index; i--) {
 		for (int j = 0; j < PWM_PHASE_MAX_WAVE_PER_PWM; j++) {
 			wave.waves[j].pinStates[i + 1] = wave.getChannelState(j, index);
 		}
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
-
+*/
 	isFrontEvent[index] = TV_RISE == stateParam;
 
 	if (index != size) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
 	}
 
-//	int index = size;
 	size++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
