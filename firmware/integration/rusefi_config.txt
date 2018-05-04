@@ -117,7 +117,7 @@ struct_no_prefix engine_configuration_s
 #define MAF_DECODING_COUNT 256
 
 ! please note that 1024 here is 4 * FUEL_RPM_COUNT * FUEL_LOAD_COUNT  
-custom fuel_table_t	1024 array,   F32,   @OFFSET@, [16x16],"ms",      1,     0,      0.0,   300.0,   2
+custom fuel_table_t	1024 array,   F32,   @OFFSET@, [16x16],"ms",      1,     0,      0.0,   500.0,   2
 custom ve_table_t 1024 array,   F32,   @OFFSET@, [16x16],"%", 1, 0, 0, 999.0, 2
 custom afr_table_t 256 array,   U08,   @OFFSET@, [16x16],"deg",	   0.1,     0,        0,  25.0,     1 
 
@@ -947,31 +947,31 @@ float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/
 float[MAF_DECODING_COUNT] mafDecodingBins;; "V", 1, 0, -5.0, 150.0, 2
 
 angle_table_t ignitionIatCorrTable;
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature",   1,   0.0,        0,  300.0,   2
+float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature",   1,   0.0,        0,  500.0,   2
 float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 angle_table_t injectionPhase;
-float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load",   1,   0.0,        0,  300.0,   2
+float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 float[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 fuel_table_t fuelTable;
-float[FUEL_LOAD_COUNT] fuelLoadBins;;"V",	   1,      0,      0.0,  300.0,   2
+float[FUEL_LOAD_COUNT] fuelLoadBins;;"V",	   1,      0,      0.0,  500.0,   2
 float[FUEL_RPM_COUNT] fuelRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
 
 ignition_table_t ignitionTable;
-float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load",   1,   0.0,        0,  300.0,   2
+float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
 float[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ve_table_t veTable;
-float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1,   0.0,        0,  300.0,   2
+float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1,   0.0,        0,  400.0,   2
 float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 afr_table_t afrTable;		
-float[FUEL_LOAD_COUNT] afrLoadBins;;"",	1,   0.0,        0,  300.0,   2
+float[FUEL_LOAD_COUNT] afrLoadBins;;"",	1,   0.0,        0,  500.0,   2
 float[FUEL_RPM_COUNT] afrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 ! ve_table_t ve2Table;
-! float[FUEL_LOAD_COUNT] ve2LoadBins;;"kPa",	1,   0.0,        0,  300.0,   2
+! float[FUEL_LOAD_COUNT] ve2LoadBins;;"kPa",	1,   0.0,        0,  500.0,   2
 ! float[FUEL_RPM_COUNT] ve2RpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 tps_tps_table_t tpsTpsAccelTable;
