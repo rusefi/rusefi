@@ -412,9 +412,8 @@ public:
 	/**
 	 * pre-calculated offset for given sequence index within engine cycle
 	 * (not cylinder ID)
-	 * todo: better name?
 	 */
-	angle_t angleExtra[IGNITION_PIN_COUNT];
+	angle_t ignitionPositionWithEngineCycle[IGNITION_PIN_COUNT];
 	/**
 	 * pre-calculated reference to which output pin should be used for
 	 * given sequence index within engine cycle
