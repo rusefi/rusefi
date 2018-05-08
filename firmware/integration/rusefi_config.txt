@@ -864,7 +864,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	adc_channel_e cj125ur;heater input
 	
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
-	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;
+	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction
 
 	pin_input_mode_e brakePedalPinMode;
 	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1

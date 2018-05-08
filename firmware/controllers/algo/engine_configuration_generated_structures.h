@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 26 02:12:36 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 08 11:56:12 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1988,6 +1988,7 @@ typedef struct {
 	 */
 	adc_channel_e cj125ur;
 	/**
+	 * per-cylinder timing correction
 	 * offset 2728
 	 */
 	cfg_float_t_1f timing_offset_cylinder[IGNITION_PIN_COUNT];
@@ -2384,4 +2385,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 26 02:12:36 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 08 11:56:12 EDT 2018
