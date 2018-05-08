@@ -175,6 +175,12 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		// here we convert per-cylinder fuel amount into total engine amount since the single injector serves all cylinders
 		fuelPerCycle *= engineConfiguration->specs.cylindersCount;
 	}
+	// Fuel cut-off isn't just 0 or 1, it can be tapered
+	fuelPerCycle *= ENGINE(engineState.fuelCutoffCorrection);
+	// If no fuel, don't add injector lag
+	if (fuelPerCycle == 0.0f)
+		return 0;
+
 	floatms_t theoreticalInjectionLength = fuelPerCycle / numberOfInjections;
 	floatms_t injectorLag = ENGINE(engineState.injectorLag);
 	if (cisnan(injectorLag)) {
@@ -242,6 +248,42 @@ float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d("iatc", iat, IAT_FUEL_CORRECTION_CURVE);
+}
+
+/**
+ * @brief	Called from EngineState::periodicFastCallback to update the state.
+ * @note The returned value is float, not boolean - to implement taper (smoothed correction).
+ * @return	Fuel duration correction for fuel cut-off control (ex. if coasting). No correction if 1.0
+ */
+float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// no corrections by default
+	float fuelCorr = 1.0f;
+
+	// coasting fuel cut-off correction
+	if (boardConfiguration->coastingFuelCutEnabled) {
+		percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	
+		// gather events
+		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
+		bool cltDeactivate = cisnan(engine->sensors.clt) ? false : (engine->sensors.clt < (float)CONFIG(coastingFuelCutClt));
+		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
+		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
+		
+		// state machine (coastingFuelCutStartTime is also used as a flag)
+		if (!tpsDeactivate && !cltDeactivate && rpmActivate) {
+			ENGINE(engineState.coastingFuelCutStartTime) = nowNt;
+		} else if (tpsDeactivate || rpmDeactivate || cltDeactivate) {
+			ENGINE(engineState.coastingFuelCutStartTime) = 0;
+		}
+		// enable fuelcut?
+		if (ENGINE(engineState.coastingFuelCutStartTime) != 0) {
+			// todo: add taper - interpolate using (nowNt - coastingFuelCutStartTime)?
+			fuelCorr = 0.0f;
+		}
+	}
+	
+	// todo: add other fuel cut-off checks here (possibly cutFuelOnHardLimit?)
+	return fuelCorr;
 }
 
 /**

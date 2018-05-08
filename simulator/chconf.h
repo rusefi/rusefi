@@ -344,7 +344,7 @@
   #define ON_LOCK_HOOK
   #define ON_UNLOCK_HOOK
 
-#define USE_PORT_LOCK TRUE
+#define USE_PORT_LOCK FALSE
 
 /**
  * @brief   Debug option, parameters checks.
@@ -503,13 +503,18 @@
   /* System tick event code here.*/                                         \
 }
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+
 /**
  * @brief   System halt hook.
  * @details This hook is invoked in case to a system halting error before
  *          the system is halted.
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
-  /* System halt code here.*/                                               \
+		  printf("chSysHalt\r\n");                                          \
+		  exit(-1);                                                         \
 }
 
 /**

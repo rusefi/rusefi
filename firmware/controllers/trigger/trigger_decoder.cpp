@@ -169,6 +169,8 @@ void TriggerState::resetCurrentCycleState() {
 
 void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	shaft_is_synchronized = false;
+	// Needed for early instant-RPM detection
+	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 /**
@@ -207,7 +209,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	if (isLessImportant(type)) {
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (printTriggerDebug) {
-			printf("%s isLessImportant %s now=%d index=%d\r\n",
+			printf("%s isLessImportant %s now=%lld index=%d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
 					getTrigger_event_e(signal),
 					nowNt,
@@ -305,12 +307,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			 */
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-		if (printTriggerDebug) {
-			printf("sync=%d index=%d size=%d\r\n",
+			if (printTriggerDebug) {
+				printf("sync=%d index=%d size=%d\r\n",
 					shaft_is_synchronized,
 					currentCycle.current_index,
 					TRIGGER_SHAPE(size));
-		}
+			}
 #endif /* EFI_UNIT_TEST */
 			int endOfCycleIndex = TRIGGER_SHAPE(size) - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
 
@@ -393,14 +395,15 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 
 
-	if (triggerCycleCallback != NULL) {
-		triggerCycleCallback(this);
-	}
-	startOfCycleNt = nowNt;
-	resetCurrentCycleState();
-	incrementTotalEventCounter();
-	runningRevolutionCounter++;
-	totalEventCountBase += TRIGGER_SHAPE(size);
+			if (triggerCycleCallback != NULL) {
+				triggerCycleCallback(this);
+			}
+
+			startOfCycleNt = nowNt;
+			resetCurrentCycleState();
+			incrementTotalEventCounter();
+			runningRevolutionCounter++;
+			totalEventCountBase += TRIGGER_SHAPE(size);
 
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -410,7 +413,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						runningRevolutionCounter);
 			}
 #endif /* EFI_UNIT_TEST */
-		} else {
+		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
 			;
 		}
@@ -436,6 +439,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
+	// Needed for early instant-RPM detection
+	if (!isInitializingTrigger) {
+		engine->rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 }
 
 /**
@@ -644,6 +651,9 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		unlockAnyContext();
 	}
 #endif
+
+	// Moved here from mainTriggerCallback()
+	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void onFindIndexCallback(TriggerState *state) {

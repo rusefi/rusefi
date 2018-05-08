@@ -14,7 +14,7 @@ public class BitState {
         }
         bitIndex++;
         if (bitIndex == 32)
-            throw new IllegalStateException("todo: too many bits, not supported");
+            throw new IllegalStateException("Too many bits: " + cf.name);
     }
 
     public void reset() {

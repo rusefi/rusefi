@@ -8,6 +8,9 @@
 
 /**
  * @mainpage
+ * This documentation https://rusefi.com/docs/html/
+ *
+ * For version see engine_controller.cpp getRusEfiVersion
  *
  * @section sec_into
  *
@@ -45,6 +48,13 @@
  * A single tooth primary signal would be a typical example when synchronization is not needed.
  *
  *
+ * @section sec_timers Timers
+ * At the moment rusEfi is build using 5 times:
+ * 1) 1MHz microsecond_timer.cpp
+ * 2) 10KHz fast ADC callback pwmpcb_fast adc_inputs.cpp
+ * 3) slow ADC callback pwmpcb_slow adc_inputs.cpp
+ * 4) periodicFastTimer engine_controller.cpp
+ * 5) periodicSlowTimer engine_controller.cpp
  *
  *
  *
@@ -120,10 +130,6 @@
 #if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
-
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
-#include "bootloader/bootloader.h"
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 
 LoggingWithStorage sharedLogger("main");
 
@@ -259,22 +265,4 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-static char UNUSED_RAM_SIZE[7000];
 
-static char UNUSED_CCM_SIZE[14000] CCM_OPTIONAL;
-
-/**
- * See also VCS_VERSION
- */
-int getRusEfiVersion(void) {
-	if (UNUSED_RAM_SIZE[0] != 0)
-		return 123; // this is here to make the compiler happy about the unused array
-	if (UNUSED_CCM_SIZE[0] * 0 != 0)
-		return 3211; // this is here to make the compiler happy about the unused array
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
-	// make bootloader code happy too
-	if (initBootloader() != 0)
-		return 123;
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20180301;
-}

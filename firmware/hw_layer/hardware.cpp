@@ -23,6 +23,7 @@
 #include "max31855.h"
 #include "mpu_util.h"
 #include "accelerometer.h"
+#include "servo.h"
 
 #if EFI_PROD_CODE
 //#include "usb_msd.h"
@@ -431,6 +432,10 @@ void initHardware(Logging *l) {
 
 #if EFI_UART_GPS || defined(__DOXYGEN__)
 	initGps();
+#endif
+
+#if EFI_SERVO
+	initServo();
 #endif
 
 #if ADC_SNIFFER || defined(__DOXYGEN__)

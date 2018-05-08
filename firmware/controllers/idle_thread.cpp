@@ -44,6 +44,8 @@ EXTERN_ENGINE
 ;
 
 static bool shouldResetPid = false;
+// we might reset PID state when the state is changed, but only if needed (See autoIdle())
+static bool mightResetPid = false;
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
 // Use new PID with CIC integrator
@@ -68,6 +70,10 @@ static percent_t currentIdlePosition = -100.0f;
  * the same as currentIdlePosition, but without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
  */
 static percent_t baseIdlePosition = currentIdlePosition;
+/**
+ * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
+ */
+static percent_t idlePositionSensitivityThreshold = 1.0f;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
@@ -163,9 +169,16 @@ percent_t getIdlePosition(void) {
 	return currentIdlePosition;
 }
 
-static float autoIdle(float cltCorrection) {
+static float autoIdle() {
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (tpsPos > boardConfiguration->idlePidDeactivationTpsThreshold) {
+		// Don't store old I and D terms if PID doesn't work anymore.
+		// Otherwise they will affect the idle position much later, when the throttle is closed.
+		if (mightResetPid) {
+			mightResetPid = false;
+			shouldResetPid = true;
+		}
+
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
 		return baseIdlePosition;
 	}
@@ -180,7 +193,23 @@ static float autoIdle(float cltCorrection) {
 		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
 	}
 
-	percent_t newValue = idlePid.getValue(targetRpm, getRpmE(engine), engineConfiguration->idleRpmPid.period);
+	// check if within the dead zone
+	int rpm = getRpmE(engine);
+	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone))
+		return baseIdlePosition;
+
+	// When rpm < targetRpm, there's a risk of dropping RPM too low - and the engine dies out.
+	// So PID reaction should be increased by adding extra percent to PID-error:
+	percent_t errorAmpCoef = 1.0f;
+	if (rpm < targetRpm)
+		errorAmpCoef += (float)CONFIG(pidExtraForLowRpm) / PERCENT_MULT;
+	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
+	idlePid.setErrorAmplification(errorAmpCoef);
+
+	percent_t newValue = idlePid.getValue(targetRpm, rpm, engineConfiguration->idleRpmPid.period);
+	
+	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
+	mightResetPid = true;
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
 	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
@@ -191,6 +220,22 @@ static float autoIdle(float cltCorrection) {
 	newValue = maxF(newValue, CONFIG(idleRpmPid.minValue));
 	newValue = minF(newValue, CONFIG(idleRpmPid.maxValue));
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
+
+	// Interpolate to the manual position when RPM is close to the upper RPM limit (if idlePidRpmUpperLimit is set).
+	// If RPM increases and the throttle is closed, then we're in coasting mode, and we should smoothly disable auto-pid.
+	// If we just leave IAC at baseIdlePosition (as in case of TPS deactivation threshold), RPM would get stuck. 
+	// That's why there's 'useIacTableForCoasting' setting which involves a separate IAC position table for coasting (iacCoasting).
+	// Currently it's user-defined. But eventually we'll use a real calculated and stored IAC position instead.
+	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
+	if (CONFIG(idlePidRpmUpperLimit) > 0) {
+		if (boardConfiguration->useIacTableForCoasting) {
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
+			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
+		} else {
+			// Well, just leave it as is, without PID regulation...
+			newValue = baseIdlePosition;
+		}
+	}
 
 	return newValue;
 }
@@ -233,6 +278,7 @@ static msg_t ivThread(int param) {
 
 		float clt = engine->sensors.clt;
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
 		if (cisnan(clt))
 			cltCorrection = 1.0f;
@@ -259,7 +305,7 @@ static msg_t ivThread(int param) {
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection);
 			} else {
-				iacPosition = autoIdle(cltCorrection);
+				iacPosition = autoIdle();
 			}
 			
 			// store 'base' iacPosition without adjustments
@@ -276,7 +322,8 @@ static msg_t ivThread(int param) {
 					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
-		if (absF(iacPosition - currentIdlePosition) < 1) {
+		// The threshold is dependent on IAC type (see initIdleHardware())
+		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
 			continue; // value is pretty close, let's leave the poor valve alone
 		}
 
@@ -287,6 +334,7 @@ static msg_t ivThread(int param) {
 				idlePid.postState(&tsOutputChannels, 1000000);
 			} else {
 				tsOutputChannels.debugFloatField1 = iacPosition;
+				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
 			}
 #endif
 		}
@@ -379,6 +427,8 @@ static void initIdleHardware() {
 		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin, 
 				engineConfiguration->stepperDirectionPinMode, engineConfiguration->idleStepperReactionTime, 
 				engineConfiguration->idleStepperTotalSteps, engineConfiguration->stepperEnablePin, logger);
+		// This greatly improves PID accuracy for steppers with a small number of steps
+		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
 	} else {
 		/**
 		 * Start PWM for idleValvePin
@@ -386,6 +436,7 @@ static void initIdleHardware() {
 		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &enginePins.idleSolenoidPin,
 				boardConfiguration->idle.solenoidFrequency, boardConfiguration->manIdlePosition / 100,
 				applyIdleSolenoidPinState);
+		idlePositionSensitivityThreshold = 1.0f;
 	}
 }
 

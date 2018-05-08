@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/frankenso/frankenso.sch)
-    (date "2/25/2018 8:31:29 PM")
+    (date "3/8/2018 3:52:08 PM")
     (tool "Eeschema 4.0.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -369,7 +369,7 @@
       (tstamp 539825A7))
     (comp (ref P99)
       (value 176122-6_2ND)
-      (footprint 176122-6_2nd)
+      (footprint rusEFI_LIB:176122-6_2nd)
       (fields
         (field (name MFG,MFG#) TE,176122-6)
         (field (name VEND1,VEND1#) DIGI,176122-6_2ND))
@@ -666,7 +666,7 @@
       (tstamp 5398DEB0))
     (comp (ref S1)
       (value DISPLAY_BL)
-      (footprint DISPLAY_4x20_BL)
+      (footprint rusEFI_LIB:DISPLAY_4x20_BL)
       (fields
         (field (name MFG,MFG#) DNP,DNP)
         (field (name VEND1,VEND1#) DNP,DNP)
@@ -739,7 +739,7 @@
       (tstamp 53B6DC30))
     (comp (ref U4)
       (value ITEAD_HC-0X)
-      (footprint ITEAD_HC-05)
+      (footprint rusEFI_LIB:ITEAD_HC-05)
       (fields
         (field (name MFG,MFG#) DNP,DNP)
         (field (name VEND1,VEND1#) DNP,DNP)
@@ -2943,7 +2943,7 @@
       (tstamp 52AEAE96))
     (comp (ref X161)
       (value 8MHz)
-      (footprint HC-49V)
+      (footprint rusEFI_LIB:HC-18U)
       (fields
         (field (name MFG,MFG#) CTS,ATS08A-E)
         (field (name VEND1,VEND1#) DIGI,CTX1054-ND))
@@ -4591,7 +4591,7 @@
       (tstamp 52CFAD58))
     (comp (ref BT1)
       (value BATTERY_CR2032)
-      (footprint BATT_CR2032_MPD)
+      (footprint rusEFI_LIB:BATT_CR2032_MPD)
       (fields
         (field (name MFG,MFG#) Keystone,103)
         (field (name VEND1,VEND1#) DIGI,103K-ND)
@@ -4690,7 +4690,7 @@
       (tstamp 52D13C4D))
     (comp (ref X1)
       (value 8MHz)
-      (footprint HC-49V)
+      (footprint rusEFI_LIB:HC-18U)
       (fields
         (field (name MFG,MFG#) CTS,ATS08A-E)
         (field (name VEND1,VEND1#) DIGI,CTX1054-ND)
@@ -4701,7 +4701,7 @@
       (tstamp 52D13AFB))
     (comp (ref SW1)
       (value SW_PUSH)
-      (footprint TL-1105)
+      (footprint rusEFI_LIB:TL-1105)
       (fields
         (field (name MFG,MFG#) E-SWITCH,TL1105F160Q)
         (field (name VEND1,VEND1#) DIGI,EG1827-ND)
@@ -4756,7 +4756,7 @@
       (tstamp 52D13EB3))
     (comp (ref SW2)
       (value SW_PUSH)
-      (footprint TL-1105)
+      (footprint rusEFI_LIB:TL-1105)
       (fields
         (field (name MFG,MFG#) E-SWITCH,TL1105F160Q)
         (field (name VEND1,VEND1#) DIGI,EG1827-ND)
@@ -4976,7 +4976,7 @@
       (tstamp 52D18908))
     (comp (ref J1)
       (value MINI-USB-5P-3400020P1)
-      (footprint MINI-USB-5P-3400020P1)
+      (footprint rusEFI_LIB:MINI-USB_RCTP_V-T_B)
       (fields
         (field (name MFG,MFG#) JAE,DX2R005HN2E700)
         (field (name VEND1,VEND1#) DIGI,670-1190-1-ND)
@@ -5196,7 +5196,7 @@
       (tstamp 52F266B6))
     (comp (ref U2)
       (value NUF2101MT1G)
-      (footprint SOT-457)
+      (footprint rusEFI_LIB:TSOP-6)
       (fields
         (field (name MFG,MFG#) on-semi,NUF2101MT1G)
         (field (name VEND1,VEND1#) DIGI,NUF2101MT1GOSCT-ND)
@@ -5229,7 +5229,7 @@
       (tstamp 53887FDF))
     (comp (ref J2)
       (value MINI-USB-5P-3400020P1V)
-      (footprint MINI-USB_RCTP_V-T_B)
+      (footprint rusEFI_LIB:MINI-USB_RCTP_V-T_B)
       (fields
         (field (name MFG,MFG#) TE,1734753-1)
         (field (name VEND1,VEND1#) DIGI,A107790-ND)
@@ -5344,7 +5344,7 @@
       (tstamp 4E13FF86))
     (comp (ref P1104)
       (value CONN_2)
-      (footprint tcpl_PCC-SMP)
+      (footprint rusEFI_LIB:tcpl_PCC-SMP)
       (fields
         (field (name MFG,MFG#) omega,PCC-SMP-K)
         (field (name VEND1,VEND1#) DIGI,1471-1067-ND))
@@ -5407,7 +5407,7 @@
       (tstamp 4E13FF86))
     (comp (ref P1204)
       (value CONN_2)
-      (footprint tcpl_PCC-SMP)
+      (footprint rusEFI_LIB:tcpl_PCC-SMP)
       (fields
         (field (name MFG,MFG#) omega,PCC-SMP-K)
         (field (name VEND1,VEND1#) DIGI,1471-1067-ND))
@@ -5470,7 +5470,7 @@
       (tstamp 4E13FF86))
     (comp (ref P1304)
       (value CONN_2)
-      (footprint tcpl_PCC-SMP)
+      (footprint rusEFI_LIB:tcpl_PCC-SMP)
       (fields
         (field (name MFG,MFG#) omega,PCC-SMP-K)
         (field (name VEND1,VEND1#) DIGI,1471-1067-ND))
@@ -5533,7 +5533,7 @@
       (tstamp 4E13FF86))
     (comp (ref P1404)
       (value CONN_2)
-      (footprint tcpl_PCC-SMP)
+      (footprint rusEFI_LIB:tcpl_PCC-SMP)
       (fields
         (field (name MFG,MFG#) omega,PCC-SMP-K)
         (field (name VEND1,VEND1#) DIGI,1471-1067-ND))
@@ -6975,10 +6975,10 @@
   (libraries
     (library (logical conn)
       (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\conn.lib"))
-    (library (logical device)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\device.lib"))
     (library (logical KICAD_Older_Version)
       (uri C:\Users\Vista_64_D630\Desktop\Jared\code\Hardware\trunk\rusefi.com\rusefi_lib\KICAD_Older_Version.lib))
+    (library (logical device)
+      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library\\device.lib"))
     (library (logical "crystal(mc306)")
       (uri "C:\\Users\\Vista_64_D630\\Desktop\\Jared\\code\\Hardware\\trunk\\rusefi.com\\rusefi_lib\\crystal(mc306).lib"))
     (library (logical Pololu_DRV8880)

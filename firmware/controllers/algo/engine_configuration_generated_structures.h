@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 04 23:08:53 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 26 02:12:36 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -645,13 +645,13 @@ typedef struct {
 	bool isFasterEngineSpinUpEnabled : 1;
 	/**
 	offset 376 bit 21 */
-	bool unused_board_984_21 : 1;
+	bool coastingFuelCutEnabled : 1;
 	/**
 	offset 376 bit 22 */
-	bool unused_board_984_22 : 1;
+	bool useIacTableForCoasting : 1;
 	/**
 	offset 376 bit 23 */
-	bool unused_board_984_23 : 1;
+	bool useNoiselessTriggerDecoder : 1;
 	/**
 	offset 376 bit 24 */
 	bool unused_board_984_24 : 1;
@@ -1322,19 +1322,19 @@ typedef struct {
 	bool hasFrequencyReportingMapSensor : 1;
 	/**
 	offset 1472 bit 21 */
-	bool unused_bit_1472_21 : 1;
+	bool useFSIO8ForServo1 : 1;
 	/**
 	offset 1472 bit 22 */
-	bool unused_bit_1472_22 : 1;
+	bool useFSIO9ForServo2 : 1;
 	/**
 	offset 1472 bit 23 */
-	bool unused_bit_1472_23 : 1;
+	bool useFSIO10ForServo3 : 1;
 	/**
 	offset 1472 bit 24 */
-	bool unused_bit_1472_24 : 1;
+	bool useFSIO11ForServo4 : 1;
 	/**
 	offset 1472 bit 25 */
-	bool unused_bit_1472_25 : 1;
+	bool useFSIO12ForServo5 : 1;
 	/**
 	offset 1472 bit 26 */
 	bool unused_bit_1472_26 : 1;
@@ -2101,7 +2101,44 @@ typedef struct {
 	/**
 	 * offset 3376
 	 */
-	int unusedEnd[776];
+	int16_t coastingFuelCutRpmHigh;
+	/**
+	 * offset 3378
+	 */
+	int16_t coastingFuelCutRpmLow;
+	/**
+	 * percent between 0 and 100
+	 * offset 3380
+	 */
+	int16_t coastingFuelCutTps;
+	/**
+	 * Fuel cutoff is deactivated if CLT<threshold
+	 * offset 3382
+	 */
+	int16_t coastingFuelCutClt;
+	/**
+	 * Increases PID reaction for RPM<target by adding extra percent to PID-error
+	 * offset 3384
+	 */
+	int16_t pidExtraForLowRpm;
+	/**
+	 * offset 3386
+	 */
+	int16_t unusedInt16;
+	/**
+	 * CLT-based idle position for coasting (used in Auto-PID Idle mode)
+	 * offset 3388
+	 */
+	float iacCoastingBins[CLT_CURVE_SIZE];
+	/**
+	 *  CLT-based idle position for coasting (used in Auto-PID Idle mode)
+	 * offset 3452
+	 */
+	float iacCoasting[CLT_CURVE_SIZE];
+	/**
+	 * offset 3516
+	 */
+	int unusedEnd[741];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2185,12 +2222,12 @@ typedef struct {
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
-	 * CLT-based idle position multiplier for simple manual idle controller, or target RPM multiplier for PID-based idle
+	 * CLT-based idle position multiplier for simple manual idle controller
 	 * offset 10656
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
-	 *  CLT-based idle position multiplier for simple manual idle controller, or target RPM multiplier for PID-based idle
+	 *  CLT-based idle position multiplier for simple manual idle controller
 	 * offset 10720
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
@@ -2347,4 +2384,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 04 23:08:53 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 26 02:12:36 EDT 2018

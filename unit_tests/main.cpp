@@ -20,6 +20,7 @@
 
 #include "test_fuel_map.h"
 #include "fuel_math.h"
+#include "test_fuelCut.h"
 #include "test_logic_expression.h"
 #include "test_pid_auto.h"
 #include "engine_configuration.h"
@@ -29,6 +30,7 @@
 #include "test_signal_executor.h"
 #include "trigger_central.h"
 #include "test_startOfCrankingPrimingPulse.h"
+#include "test_fasterEngineSpinningUp.h"
 #include "test_util.h"
 #include "map_resize.h"
 #include "engine_math.h"
@@ -74,10 +76,12 @@ int main(void) {
 	testFindIndex();
 	testPlainCrankingWithoutAdvancedFeatures();
 	testStartOfCrankingPrimingPulse();
+	testFasterEngineSpinningUp();
 	testInterpolate2d();
 	testGpsParser();
 	testMisc();
 	testFuelMap();
+	testFuelCut();
 	testEngineMath();
 	testIgnitionPlanning();
 	testSensors();

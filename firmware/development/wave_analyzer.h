@@ -1,6 +1,7 @@
 /**
  * @file	wave_analyzer.h
  *
+ * todo: rename all this 'logic analyzer' is probably much more appropriate
  *
  * @date Jan 7, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017

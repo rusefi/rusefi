@@ -5,7 +5,9 @@
  * We are using two ADC devices here.
  * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 20Hz
  *
- * Fast ADC group is used for TPS, MAP, MAF HIP
+ * Fast ADC group is used for TPS, MAP, MAF HIP - this one is currently sampled at 10KHz
+ *  We need frequent MAP for map_averaging.cpp
+ *  We need frequent TPS for ???
  *
  * @date Jan 14, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018

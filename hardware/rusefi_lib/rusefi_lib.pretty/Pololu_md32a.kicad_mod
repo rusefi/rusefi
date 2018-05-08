@@ -1,4 +1,4 @@
-(module md32a (layer F.Cu) (tedit 58A04C58)
+(module Pololu_md32a (layer F.Cu) (tedit 58A04C58)
   (fp_text reference md32a (at 0 1.27) (layer F.SilkS)
     (effects (font (size 1.27 1.524) (thickness 0.3048)))
   )
@@ -139,9 +139,9 @@
   (pad 14 thru_hole circle (at -3.81 -6.35) (size 1.4224 1.4224) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
   (pad 15 thru_hole circle (at -6.35 -6.35) (size 1.4224 1.4224) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
   (pad 16 thru_hole circle (at -8.89 -6.35) (size 1.4224 1.4224) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
-  (model ../../../../../../Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/rusefi_lib/3d/drv8880-stepper-motor-driver-carrier.wrl
-    (at (xyz -0.401 0.301 0.1))
-    (scale (xyz 0.395 0.395 0.395))
-    (rotate (xyz 0 0 90))
+  (model ${RUSLIB}/3d/drv8880-stepper-motor-driver-carrier.wrl
+    (at (xyz 0 0 0))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 0))
   )
 )

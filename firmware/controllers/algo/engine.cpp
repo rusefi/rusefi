@@ -64,7 +64,7 @@ int MockAdcState::getMockAdcValue(int hwChannel) {
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.rpmValue;
+	int rpm = rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? boardConfiguration->sensorChartMode : SC_OFF;
 
@@ -206,6 +206,8 @@ EngineState::EngineState() {
 	sparkDwell = mapAveragingDuration = 0;
 	totalLoggedBytes = injectionOffset = 0;
 	auxValveStart = auxValveEnd = 0;
+	fuelCutoffCorrection = 0;
+	coastingFuelCutStartTime = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -227,7 +229,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	updateAuxValves(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	int rpm = GET_RPM();
+	int rpm = ENGINE(rpmCalculator).getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
 	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -258,6 +260,9 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// update fuel consumption states
 	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
+	// Fuel cut-off isn't just 0 or 1, it can be tapered
+	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
 	if (engineConfiguration->postCrankingFactor > 0.01f) {
@@ -376,9 +381,6 @@ void Engine::watchdog() {
 		return;
 	}
 	efitick_t nowNt = getTimeNowNt();
-#ifndef RPM_LOW_THRESHOLD
-#define RPM_LOW_THRESHOLD 240
-#endif
 // note that we are ignoring the number of tooth here - we
 // check for duration between tooth as if we only have one tooth per revolution which is not the case
 #define REVOLUTION_TIME_HIGH_THRESHOLD (60 * 1000000LL / RPM_LOW_THRESHOLD)
@@ -411,7 +413,7 @@ void Engine::watchdog() {
 
 void Engine::checkShutdown() {
 #if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
-	int rpm = rpmCalculator.rpmValue;
+	int rpm = rpmCalculator.getRpm();
 
 	const float vBattThreshold = 5.0f;
 	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold && stopEngineRequestTimeNt == 0) {
@@ -452,7 +454,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
-	int rpm = rpmCalculator.rpmValue;
+	int rpm = rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 

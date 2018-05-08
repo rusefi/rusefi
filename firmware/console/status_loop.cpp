@@ -351,22 +351,6 @@ void writeLogLine(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-static void printState(void) {
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-
-	// todo: make SWO work
-//	char *msg = "hello\r\n";
-//	for(int i=0;i<strlen(msg);i++) {
-//		ITM_SendChar(msg[i]);
-//	}
-
-
-
-//	debugInt(&logger, "idl", getIdleSwitch());
-
-#endif /* EFI_SHAFT_POSITION_INPUT */
-}
-
 #define INITIAL_FULL_LOG TRUE
 //#define INITIAL_FULL_LOG FALSE
 
@@ -393,7 +377,7 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 }
 #endif /* EFI_PROD_CODE */
 
-static void printInfo(systime_t nowSeconds) {
+void printOverallStatus(systime_t nowSeconds) {
 	/**
 	 * we report the version every 4 seconds - this way the console does not need to
 	 * request it and we will display it pretty soon
@@ -429,18 +413,27 @@ static void printInfo(systime_t nowSeconds) {
 	}
 
 #endif /* EFI_PROD_CODE */
-
+	scheduleLogging(&logger);
 }
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
-extern fatal_msg_t errorMessageBuffer;
 extern bool consoleInBinaryMode;
 
 /**
  * @brief Sends all pending data to dev console
+ *
+ * This method is periodically invoked by the main loop
  */
 void updateDevConsoleState(void) {
+	// todo: make SWO work
+//	char *msg = "hello\r\n";
+//	for(int i=0;i<strlen(msg);i++) {
+//		ITM_SendChar(msg[i]);
+//	}
+
+
+
 	if (!isCommandLineConsoleReady()) {
 		return;
 	}
@@ -474,7 +467,6 @@ void updateDevConsoleState(void) {
 	}
 
 	systime_t nowSeconds = getTimeNowSeconds();
-	printInfo(nowSeconds);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	int currentCkpEventCounter = getCrankEventCounter();
@@ -487,8 +479,6 @@ void updateDevConsoleState(void) {
 #else
 	chThdSleepMilliseconds(200);
 #endif
-
-	printState();
 
 #if EFI_WAVE_ANALYZER
 	printWave(&logger);

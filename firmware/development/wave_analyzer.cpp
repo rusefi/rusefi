@@ -5,6 +5,7 @@
  * This file is responsible for sniffing of external digital signals and registering
  * these digital events in WaveChart used by the Sniffer tab of Dev Console.
  *
+ * this is rusEfi build-in logic analyzer
  *
  * @date Jan 7, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018

@@ -131,6 +131,10 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 CommandHandler console_line_callback;
 
+/**
+ * todo: what does this variable currently mean? is it still needed?
+ * looks like things are a bit confusing here
+ */
 static bool b_isCommandLineConsoleOverTTL;
 
 bool isCommandLineConsoleOverTTL(void) {

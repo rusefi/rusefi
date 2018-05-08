@@ -175,6 +175,8 @@ public:
 	float iatFuelCorrection;
 	float cltFuelCorrection;
 	float postCrankingFuelCorrection;
+	float fuelCutoffCorrection;
+	efitick_t coastingFuelCutStartTime;
 	/**
 	 * injectorLag(VBatt)
 	 *
@@ -377,6 +379,8 @@ public:
 	bool isRunningPwmTest;
 
 	float fsioTimingAdjustment;
+
+	float servoValues[SERVO_COUNT];
 
 	/**
 	 * Are we experiencing knock right now?

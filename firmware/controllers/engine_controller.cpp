@@ -69,18 +69,21 @@
 #include "CJ125.h"
 #endif /* EFI_PROD_CODE */
 
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+#include "bootloader/bootloader.h"
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
 EXTERN_ENGINE;
 
-
 /**
  * CH_FREQUENCY is the number of system ticks in a second
  */
 
-static virtual_timer_t periodicSlowTimer;
-static virtual_timer_t periodicFastTimer;
+static virtual_timer_t periodicSlowTimer; // 20Hz
+static virtual_timer_t periodicFastTimer; // 50Hz
 
 static LoggingWithStorage logger("Engine Controller");
 
@@ -711,4 +714,24 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initTachometer();
 #endif /* EFI_PROD_CODE */
+}
+
+static char UNUSED_RAM_SIZE[7000];
+
+static char UNUSED_CCM_SIZE[7000] CCM_OPTIONAL;
+
+/**
+ * See also VCS_VERSION
+ */
+int getRusEfiVersion(void) {
+	if (UNUSED_RAM_SIZE[0] != 0)
+		return 123; // this is here to make the compiler happy about the unused array
+	if (UNUSED_CCM_SIZE[0] * 0 != 0)
+		return 3211; // this is here to make the compiler happy about the unused array
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+	// make bootloader code happy too
+	if (initBootloader() != 0)
+		return 123;
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+	return 20180401;
 }
