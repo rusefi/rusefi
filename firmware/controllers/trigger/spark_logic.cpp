@@ -224,7 +224,7 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFI
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
-	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(angleExtra[event->cylinderIndex]) + CONFIG(timing_offset_cylinder[event->cylinderIndex]);
+	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(ignitionPositionWithEngineCycle[event->cylinderIndex]) + CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	efiAssertVoid(!cisnan(localAdvance), "localAdvance#1");
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
 	const int coilIndex = ID2INDEX(getCylinderId(index PASS_ENGINE_PARAMETER_SUFFIX));
