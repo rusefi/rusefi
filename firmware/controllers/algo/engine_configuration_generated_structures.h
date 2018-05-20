@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 08 11:56:12 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 20 13:21:41 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1038,7 +1038,8 @@ typedef struct {
 	 */
 	int hip9011PrescalerAndSDO;
 	/**
-	 * kHz knock band override
+	 * We calculate knock band based of cylinderBore
+	 *  Use this to override - kHz knock band override
 	 * offset 328
 	 */
 	float knockBandCustom;
@@ -2385,4 +2386,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue May 08 11:56:12 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 20 13:21:41 EDT 2018
