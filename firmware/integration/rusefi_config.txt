@@ -297,7 +297,7 @@ ThermistorConf iat;
 	int step1rpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm",    1,      0,       0, 20000.0,        2
 	int step1timing;;"deg",    1,      0,       -180, 180,        2
 	int hip9011PrescalerAndSDO;6=8MHz todo solit two bit fields;"integer", 1, 0.0, 0.0, 32, 0
-	float knockBandCustom;+kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
+	float knockBandCustom;+We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
 
 float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On single-coil or wasted spark setups you have to lower dwell at high RPM;"RPM",     1,   0.0,      0.0,  18000,   2
