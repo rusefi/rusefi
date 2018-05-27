@@ -841,6 +841,14 @@ gaugeCategory = Fuel Data
 
    entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f"
    entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f"
+   entry = egt1,	        "EGT1",	float,"%.1f"
+   entry = egt2,	        "EGT2",	float,"%.1f"
+   entry = egt3,	        "EGT3",	float,"%.1f"
+   entry = egt4,	        "EGT4",	float,"%.1f"
+   entry = egt5,	        "EGT5",	float,"%.1f"
+   entry = egt6,	        "EGT6",	float,"%.1f"
+   entry = egt7,	        "EGT7",	float,"%.1f"
+   entry = egt8,	        "EGT8",	float,"%.1f"
 
    entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
    entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
