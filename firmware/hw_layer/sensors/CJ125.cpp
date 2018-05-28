@@ -452,6 +452,10 @@ static msg_t cjThread(void)
 		case CJ125_READY:
 			// use PID for normal heater control
 			if (nowNt - prevNt >= CJ125_HEATER_CONTROL_PERIOD) {
+				/* PID doesn't care about the target or the input, it knows only the
+				 * error value as the difference of (target - input). and if we swap them we'll just get a sign inversion. If target=vUrCal, and input=vUr, then error=vUrCal-vUr, i.e. if vUr<vUrCal then the error will cause the heater to increase it's duty cycle. But it's not exactly what we want! Lesser vUr means HOTTER cell. That's why we even have this safety check for overheating: (vUr < CJ125_UR_OVERHEAT_THR)...
+				 * So the simple trick is to inverse the error by swapping the target and input values.
+				 */
 				float duty = heaterPid.getValue(vUr, vUrCal);
 				heaterPid.showPidStatus(logger, "cj");
 				cjSetHeater(duty);
