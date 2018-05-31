@@ -820,6 +820,7 @@ gaugeCategory = Fuel Data
    entry = engineLoad,	    @@GAUGE_NAME_ENGINE_LOAD@@, 	   float,  "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
    entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
+   entry = knockCount,		@@GAUGE_NAME_KNOCK_COUNTER@@,	   int,    "%d"
    entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
    entry = rpmAcceleration, "dRPM",        float,  "%.3f"
