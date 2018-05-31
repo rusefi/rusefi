@@ -135,9 +135,9 @@ static void showHipInfo(void) {
 	}
 
 	printSpiState(logger, boardConfiguration);
-	scheduleMsg(logger, "enabled=%s state=%d bore=%.2fmm freq=%.2fkHz PaSDO=%d",
+	scheduleMsg(logger, "enabled=%s state=%s bore=%.2fmm freq=%.2fkHz PaSDO=%d",
 			boolToString(boardConfiguration->isHip9011Enabled),
-			state,
+			getHip_state_e(state),
 			engineConfiguration->cylinderBore, getBand(),
 			engineConfiguration->hip9011PrescalerAndSDO);
 
