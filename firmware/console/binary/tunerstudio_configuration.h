@@ -85,6 +85,7 @@ typedef struct {
 	unsigned int hasFatalError : 1; // bit 6
 	unsigned int isWarnNow : 1; // bit 7
 	unsigned int isCltBroken : 1; // bit 8
+	unsigned int isKnockChipOk : 1; // bit 9
 	int tsConfigVersion; // 84
 	egt_values_s egtValues; // 88
 	float unusedOffset104; // 104
