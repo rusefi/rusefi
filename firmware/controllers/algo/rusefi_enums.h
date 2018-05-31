@@ -889,4 +889,29 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
 
+typedef enum {
+	NOT_READY,
+	/**
+	 * the step after this one is always IS_INTEGRATING
+	 * We only integrate if we have RPM
+	 */
+	READY_TO_INTEGRATE,
+	/**
+	 * the step after this one is always WAITING_FOR_ADC_TO_SKIP
+	 */
+	IS_INTEGRATING,
+	/**
+	 * the step after this one is always WAITING_FOR_RESULT_ADC
+	 */
+	WAITING_FOR_ADC_TO_SKIP,
+	/**
+	 * the step after this one is always IS_SENDING_SPI_COMMAND or READY_TO_INTEGRATE
+	 */
+	WAITING_FOR_RESULT_ADC,
+	/**
+	 * the step after this one is always READY_TO_INTEGRATE
+	 */
+	IS_SENDING_SPI_COMMAND,
+} hip_state_e;
+
 #endif /* RUSEFI_ENUMS_H_ */
