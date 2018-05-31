@@ -130,7 +130,26 @@ case ZIL_130:
   }
  return NULL;
 }
-const char *getTrigger_type_e(trigger_type_e value){
+
+const char *getHip_state_e(hip_state_e value) {
+switch (value) {
+case NOT_READY:
+	return "NOT_READY";
+case READY_TO_INTEGRATE:
+	return "READY_TO_INTEGRATE";
+case IS_INTEGRATING:
+	return "IS_INTEGRATING";
+case WAITING_FOR_ADC_TO_SKIP:
+	return "WAITING_FOR_ADC_TO_SKIP";
+case WAITING_FOR_RESULT_ADC:
+	return "WAITING_FOR_RESULT_ADC";
+case IS_SENDING_SPI_COMMAND:
+	return "IS_SENDING_SPI_COMMAND";
+}
+return NULL;
+}
+
+const char *getTrigger_type_e(trigger_type_e value) {
 switch(value) {
 case Force_4b_trigger_type:
   return "Force_4b_trigger_type";

@@ -9,6 +9,7 @@
 
 #include "rusefi_enums.h"
 const char *getEngine_type_e(engine_type_e value);
+const char *getHip_state_e(hip_state_e value);
 const char *getTrigger_type_e(trigger_type_e value);
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
 const char *getTrigger_value_e(trigger_value_e value);
