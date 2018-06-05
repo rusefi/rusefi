@@ -1166,7 +1166,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;			Engine->Trigger configuration
 	dialog = triggerConfiguration_settings,	"Settings Trigger"
 		field = "Trigger type",							trigger_type
-		field = "Operation mode",						operationMode
+		field = "Operation mode / speed",				operationMode
 		field = "With VR sensors only rising edge has reliable position"
 		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
@@ -1176,6 +1176,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
 
 	dialog = triggerConfiguration_IO,	"Settings I/O"
+	    field = "!https://rusefi.com/wiki/index.php?title=Manual:Software:VVT"
 	    field = "VVT mode",								vvtMode, {trigger_type != 80}
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
