@@ -1524,6 +1524,9 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	    field = "frequency-based MAP",				hasFrequencyReportingMapSensor
 	    
 	dialog = mapSwitchAndSettings, "", yAxis
+		field = "Low value threshold", mapErrorDetectionTooLow
+		field = "High value threshold", mapErrorDetectionTooHigh
+		
 		panel = mapSwitch
 		panel = mapSensorVDlg
 		panel = mapSensorFDlg
