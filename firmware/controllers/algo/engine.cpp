@@ -282,7 +282,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	injectionOffset = getinjectionOffset(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	injectionOffset = getInjectionOffset(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 

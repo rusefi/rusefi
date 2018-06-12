@@ -96,7 +96,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return tpsAccelEnrich + baseFuel;
 }
 
-angle_t getinjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(rpm)) {
 		return 0; // error already reported
 	}
