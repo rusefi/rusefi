@@ -166,7 +166,8 @@ typedef struct {
 	int16_t accelerationY; // 278
 	float oilPressure;	// 280
 	float fuelConsumptionPerHour; // 284
-	int unused3[17];
+	float injectionOffset; // 288
+	int unused3[16];
 	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
 

@@ -506,7 +506,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getinjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm), engineConfiguration->globalFuelCorrection);
 
 	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
 
@@ -686,6 +686,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
     tsOutputChannels->oilPressure = engine->sensors.oilPressure;
+
+    tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
     tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
     tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
