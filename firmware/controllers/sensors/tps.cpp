@@ -76,7 +76,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(CUSTOM_INVALID_TPS_SETTING, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
 		return NAN;
 	}
-	float result = interpolate(TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, adc);
+	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		// too much noise with simulator
@@ -142,7 +142,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return mockPedalPosition;
 	}
 	float voltage = getVoltageDivided("pPS", engineConfiguration->pedalPositionChannel);
-	float result = interpolate(engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
+	float result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 
 	// this would put the value into the 0-100 range
 	return maxF(0, minF(100, result));

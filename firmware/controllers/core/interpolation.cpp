@@ -100,7 +100,7 @@ float FastInterpolation::getValue(float x) {
  * @param	y2 value of the second point
  * @param	X key to be interpolated
  *
- * @note	For example, "interpolate(engineConfiguration.tpsMin, 0, engineConfiguration.tpsMax, 100, adc);"
+ * @note	For example, "interpolateMsg("", engineConfiguration.tpsMin, 0, engineConfiguration.tpsMax, 100, adc);"
  */
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x) {
 	// todo: double comparison using EPS
@@ -123,10 +123,6 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 	printf("a=%.2f b=%.2f result=%.2f\r\n", a, b, result);
 #endif
 	return result;
-}
-
-float interpolate(float x1, float y1, float x2, float y2, float x) {
-	return interpolateMsg("", x1, y1, x2, y2, x);
 }
 
 float interpolateClamped(float x1, float y1, float x2, float y2, float x) {

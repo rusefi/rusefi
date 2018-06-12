@@ -86,7 +86,7 @@ float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear
 			// should work as a short term fix.
 			// todo: move 'useLinearXXXSensor' into termistor configuration record
 		// yes, we use 'resistance' setting for 'voltage' here
-		return interpolate(config->config.resistance_1, config->config.tempC_1,
+		return interpolateMsg("temp", config->config.resistance_1, config->config.tempC_1,
 				config->config.resistance_2, config->config.tempC_2,
 						voltage);
 
