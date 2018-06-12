@@ -32,12 +32,12 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 		warning(CUSTOM_ERR_6147, "t-getTCharge NaN");
 		return coolantTemp;
 	}
-	float minRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMinRpmMinTps, tpMax,
+	float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin, engineConfiguration->tChargeMinRpmMinTps, tpMax,
 			engineConfiguration->tChargeMinRpmMaxTps, tps);
-	float maxRpmKcurrentTPS = interpolate(tpMin, engineConfiguration->tChargeMaxRpmMinTps, tpMax,
+	float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin, engineConfiguration->tChargeMaxRpmMinTps, tpMax,
 			engineConfiguration->tChargeMaxRpmMaxTps, tps);
 
-	float Tcharge_coff = interpolate(rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
+	float Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
 	if (cisnan(Tcharge_coff)) {
 		warning(CUSTOM_ERR_6148, "t2-getTCharge NaN");
 		return coolantTemp;

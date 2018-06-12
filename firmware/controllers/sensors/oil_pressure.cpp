@@ -23,5 +23,5 @@ float getOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
     float volts = getVoltageDivided("oilp", sensor->hwChannel);
 
-    return interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts);
+    return interpolateMsg("oil", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts);
 }

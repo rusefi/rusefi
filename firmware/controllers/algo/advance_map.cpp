@@ -215,7 +215,7 @@ float getAdvanceForRpm(int rpm, float advanceMax) {
             return advanceMax;
         if (rpm < 600)
             return 10;
-       return interpolate(600, 10, 3000, advanceMax, rpm);
+       return interpolateMsg("advance", 600, 10, 3000, advanceMax, rpm);
 }
 
 #define round10(x) efiRound(x, 0.1)

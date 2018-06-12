@@ -121,7 +121,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	}
 
-	return interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
+	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
 			+ engineConfiguration->egoValueShift;
 }
 
