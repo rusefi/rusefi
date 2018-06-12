@@ -255,8 +255,9 @@ fileVersion = { 20171101 }
       coilDutyCycle        = scalar,  F32,     272,              "perc",           1,         0
       accelerationX        = scalar,  S16,     276,              "G",           0.01,         0
       accelerationY        = scalar,  S16,     276,              "G",           0.01,         0
-	  oilPressure		   = scalar,  F32,     280,				 "kPa",			1, 0.0
-      fuelConsumptionPerHour=scalar,  F32,     284,				 "kPa",			1, 0.0
+      oilPressure	   = scalar,  F32,     280,		 "kPa",			1, 0.0
+      fuelConsumptionPerHour=scalar,  F32,     284,		 "kPa",			1, 0.0
+      injectionOffset       = scalar, F32,     288,              "deg",                 1,     0;
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -866,6 +867,7 @@ gaugeCategory = Fuel Data
 
    entry = sparkDwellValue,	@@GAUGE_COIL_DWELL_TIME@@, float,"%.3f"
    entry = vvtPosition, @@GAUGE_NAME_VVT@@, float,"%.2f"
+   entry = injectionOffset, "injOffset"  , float, "%.2F"
 
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
 ; Alternator_PID: alternator duty cycle
