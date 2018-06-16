@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 15 20:43:23 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 16 08:07:00 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -571,6 +571,7 @@ typedef struct {
 	 */
 	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
+	 * Narrow band o2 heater, not used for CJ125. See wboHeaterPin
 	 * offset 368
 	 */
 	brain_pin_e o2heaterPin;
@@ -2387,4 +2388,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 15 20:43:23 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 16 08:07:00 EDT 2018
