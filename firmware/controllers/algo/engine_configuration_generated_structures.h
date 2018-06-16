@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 20 13:21:41 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 15 20:43:23 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1262,6 +1262,7 @@ typedef struct {
 	offset 1472 bit 1 */
 	bool fuelClosedLoopCorrectionEnabled : 1;
 	/**
+	 * Print details into rusEfi console
 	offset 1472 bit 2 */
 	bool isVerboseIAC : 1;
 	/**
@@ -2386,4 +2387,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 20 13:21:41 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 15 20:43:23 EDT 2018
