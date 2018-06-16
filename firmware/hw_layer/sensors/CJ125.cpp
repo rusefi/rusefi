@@ -354,8 +354,8 @@ static bool cjIsWorkingState(void) {
 
 static void cjInitPid(void) {
 	// todo: these values are valid only for LSU 4.2
-	heaterPidConfig.pFactor = CJ125_PID_LSU42_P;
-	heaterPidConfig.iFactor = CJ125_PID_LSU42_I;
+	heaterPidConfig.pFactor = 8.0f;
+	heaterPidConfig.iFactor = 0.003f;
 	heaterPidConfig.dFactor = 0.0f;
 	heaterPidConfig.minValue = 0;
 	heaterPidConfig.maxValue = 1;
