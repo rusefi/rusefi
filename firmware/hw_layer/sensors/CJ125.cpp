@@ -278,19 +278,29 @@ static void cjStart(void) {
 	
 	cjIdentify();
 
+	// defaults
+	vUaCal = 1.5;
+	vUrCal = 1.0;
+
 	// Load calibration values
 	uint32_t storedLambda = backupRamLoad(BACKUP_CJ125_CALIBRATION_LAMBDA);
 	uint32_t storedHeater = backupRamLoad(BACKUP_CJ125_CALIBRATION_HEATER);
 	// if no calibration, try to calibrate now and store new values
 	if (storedLambda == 0 || storedHeater == 0) {
-		cjCalibrate();
+		// Calibrate as soon as the thread starts, so we don't have to wait for it
+		state = CJ125_CALIBRATION;
 	} else {
+		state = CJ125_INIT;
+
 		scheduleMsg(logger, "cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);
 		vUaCal = getVoltageFrom16bit(storedLambda);
-		vUrCal = getVoltageFrom16bit(storedHeater);
-		// Start normal measurement mode
-		cjSetMode(CJ125_MODE_NORMAL_17);
+		vUrCal = getVoltageFrom16bit(storedHeater);	
 	}
+
+	// Start normal measurement mode
+	cjSetMode(CJ125_MODE_NORMAL_17);
+	cjWriteRegister(INIT_REG2_WR, 0x00);
+
 	cjPrintData();
 
 	lastSlowAdcCounter = getSlowAdcCounter();
@@ -587,10 +597,6 @@ void initCJ125(Logging *sharedLogger) {
 	cjStartHeaterControl();
 	cjStart();
 
-#if 1
-	state = CJ125_INIT;
-#endif
-	
 	addConsoleAction("cj125", cjStartTest);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 #ifdef CJ125_DEBUG
