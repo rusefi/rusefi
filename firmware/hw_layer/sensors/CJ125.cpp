@@ -99,8 +99,6 @@ static int cjReadRegister(unsigned char regAddr) {
 	spiSelect(driver);
 	tx_buff[0] = regAddr;
 	spiSend(driver, 1, tx_buff);
-	// safety?
-	chThdSleepMilliseconds(10);
 	
 	rx_buff[0] = 0;
 	spiReceive(driver, 1, rx_buff);
