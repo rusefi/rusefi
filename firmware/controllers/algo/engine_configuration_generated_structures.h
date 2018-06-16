@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 16 08:07:00 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 16 08:40:30 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1981,7 +1981,7 @@ typedef struct {
 	 */
 	pin_mode_e stepperEnablePinMode;
 	/**
-	 * lampda input
+	 * lambda input
 	 * offset 2720
 	 */
 	adc_channel_e cj125ua;
@@ -2388,4 +2388,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 16 08:07:00 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jun 16 08:40:30 EDT 2018
