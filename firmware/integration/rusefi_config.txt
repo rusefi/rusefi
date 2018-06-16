@@ -639,7 +639,7 @@ custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 board_configuration_s bc;
 bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled
-	bit isVerboseIAC
+	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;enable verbose_etb
 	bit useConstantDwellDuringCranking 
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 

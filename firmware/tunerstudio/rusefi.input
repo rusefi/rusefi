@@ -67,7 +67,9 @@ enable2ndByteCanID = false
 ; this section will be generated automatically by ConfigDefinition.jar based on rusefi_config.txt
 
 ; CONFIG_DEFINITION_END
-
+	idleRpmPid_offset = "Constant base value"
+	idleRpmPid_period = "PID recalculation period"
+	
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
@@ -657,7 +659,7 @@ fileVersion = { 20171101 }
    triggerErrorsCounterGauge = triggerErrorsCounter, "trg err", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
    
    
-   idleAirValvePositionGauge = idleAirValvePosition, "idle position", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   idleAirValvePositionGauge = idleAirValvePosition, "idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
 
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    warningCounterGauge = warningCounter, "warn", "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1617,7 +1619,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
 		panel = idlePidSettings, { idleMode == 0}
 		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;
-		field = "verbose",								isVerboseIAC
+		field = "verbose status",						isVerboseIAC
 		field = "#See Warmup idle multiplier"
 		slider = "Manual IAC Position",				manIdlePosition, horizontal
 
