@@ -232,7 +232,7 @@ static void cjCalibrate(void) {
 	cjSetMode(CJ125_MODE_CALIBRATION);
 	int init1 = cjReadRegister(INIT_REG1_RD);
 	// check if our command has been accepted
-	if (init1 != CJ125_INIT1_CALBRT) {
+	if ((init1 & 0xFE) != (CJ125_INIT1_CALBRT & 0xFE)) {
 		scheduleMsg(logger, "cj125: Calibration error (init1=0x%02x)! Failed!", init1);
 		cjSetMode(CJ125_MODE_NORMAL_17);
 		return;
@@ -252,6 +252,10 @@ static void cjCalibrate(void) {
 	// find average
 	vUaCal /= (float)CJ125_CALIBRATE_NUM_SAMPLES;
 	vUrCal /= (float)CJ125_CALIBRATE_NUM_SAMPLES;
+
+	// why is cal resistor different than operating value?
+	vUrCal += 0.25f;
+
 	// restore normal mode
 	cjSetMode(CJ125_MODE_NORMAL_17);
 	chThdSleepMilliseconds(CJ125_CALIBRATION_DELAY);
@@ -289,7 +293,7 @@ static void cjStart(void) {
 	vUaCal = 1.5;
 	vUrCal = 1.0;
 
-	// Load calibration values
+	/*// Load calibration values
 	uint32_t storedLambda = backupRamLoad(BACKUP_CJ125_CALIBRATION_LAMBDA);
 	uint32_t storedHeater = backupRamLoad(BACKUP_CJ125_CALIBRATION_HEATER);
 	// if no calibration, try to calibrate now and store new values
@@ -302,7 +306,9 @@ static void cjStart(void) {
 		scheduleMsg(logger, "cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);
 		vUaCal = getVoltageFrom16bit(storedLambda);
 		vUrCal = getVoltageFrom16bit(storedHeater);	
-	}
+	}*/
+
+	state = CJ125_INIT;
 
 	// Start normal measurement mode
 	cjSetMode(CJ125_MODE_NORMAL_17);
