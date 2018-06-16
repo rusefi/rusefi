@@ -554,7 +554,7 @@ static void cjSetInit2(int v) {
 
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: make configurable sensor LSU type
-	cj125_sensor_type_e sensorType = CJ125_LSU_42;
+	cj125_sensor_type_e sensorType = CJ125_LSU_49;
 	
 	// See CJ125 datasheet, page 6
 	float pumpCurrent = (vUa - vUaCal) * amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
