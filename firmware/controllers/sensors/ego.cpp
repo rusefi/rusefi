@@ -100,16 +100,23 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
 }
 
+extern TunerStudioOutputChannels tsOutputChannels;
+
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_CJ125 || defined(__DOXYGEN__)
+	afr_sensor_s * sensor = &CONFIG(afr);
+
+	float volts = getVoltageDivided("ego", sensor->hwChannel);
+	float afr = interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
+			+ engineConfiguration->egoValueShift;
+
+	tsOutputChannels.debugFloatField3 = afr;
+
 	if (boardConfiguration->isCJ125Enabled) {
 		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_CJ125 */
-	afr_sensor_s * sensor = &CONFIG(afr);
-
-	float volts = getVoltageDivided("ego", sensor->hwChannel);
-
+	
 	if (boardConfiguration->afr_type == ES_NarrowBand) {
 		float afr = interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen, NARROW_BAND_WIDE_BAND_CONVERSION_SIZE);
 #ifdef EFI_NARROW_EGO_AVERAGING
@@ -121,8 +128,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	}
 
-	return interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
-			+ engineConfiguration->egoValueShift;
+	return afr;
 }
 
 static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {

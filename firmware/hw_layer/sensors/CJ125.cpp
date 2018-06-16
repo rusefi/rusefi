@@ -581,7 +581,7 @@ bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = heaterDuty;
 	tsOutputChannels->debugFloatField2 = heaterPid.getIntegration();
-	tsOutputChannels->debugFloatField3 = heaterPid.getPrevError();
+	//tsOutputChannels->debugFloatField3 = heaterPid.getPrevError();
 	tsOutputChannels->debugFloatField4 = vUa;
 	tsOutputChannels->debugFloatField5 = vUr;
 	tsOutputChannels->debugFloatField6 = vUaCal;
