@@ -276,6 +276,13 @@ static void cjStart(void) {
 		return;
 	}
 	
+	// software reset (a few times)
+	for(int i = 0; i < 3; i++)
+	{
+		cjWriteRegister(INIT_REG2_WR, 0x40);
+		chThdSleepMilliseconds(100);
+	}
+	
 	cjIdentify();
 
 	// defaults
