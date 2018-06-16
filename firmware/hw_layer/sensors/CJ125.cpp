@@ -368,8 +368,7 @@ static void cjStartSpi(void) {
 	spiStart(driver, &cj125spicfg);
 }
 
-static msg_t cjThread(void)
-{
+static msg_t cjThread(void) {
 	chRegSetThreadName("cj125");
 
 	chThdSleepMilliseconds(500);
@@ -382,15 +381,13 @@ static msg_t cjThread(void)
 
 		cjUpdateAnalogValues();
 		
-		switch (state)
-		{
+		switch (state) {
 			case CJ125_IDLE:
 				chThdSleepMilliseconds(CJ125_IDLE_TICK_DELAY);
 				continue;
 			case CJ125_INIT:
 				// If the engine's turning, time to heat the sensor.
-				if(!isStopped)
-				{
+				if(!isStopped) {
 					state = CJ125_PREHEAT;
 					startHeatingNt = prevNt = getTimeNowNt();
 					cjSetMode(CJ125_MODE_NORMAL_17);
@@ -406,15 +403,13 @@ static msg_t cjThread(void)
 				break;
 			case CJ125_PREHEAT:
 				// If the engine stopped, turn off the sensor!
-				if(isStopped)
-				{
+				if(isStopped) {
 					state = CJ125_INIT;
 					cjSetIdleHeater();
 				}
 				
 				// If the sensor is sufficiently warm for PID, switch to that
-				if(vUr < CJ125_UR_PREHEAT_THR)
-				{
+				if(vUr < CJ125_UR_PREHEAT_THR) {
 					state = CJ125_READY;
 				}
 
@@ -428,8 +423,7 @@ static msg_t cjThread(void)
 				}
 
 				// If the sensor is very hot, turn it off because something's wrong
-				if(vUr < CJ125_UR_OVERHEAT_THR)
-				{
+				if(vUr < CJ125_UR_OVERHEAT_THR)	{
 					state = CJ125_OVERHEAT;
 				}
 
