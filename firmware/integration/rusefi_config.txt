@@ -860,7 +860,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	pid_s fuelClosedLoopPid;
 	float fuelClosedLoopAfrHighThreshold;;"ratio",        1,     0,  0,    100,  1
 	pin_mode_e stepperEnablePinMode;
-	adc_channel_e cj125ua;lampda input
+	adc_channel_e cj125ua;lambda input
 	adc_channel_e cj125ur;heater input
 	
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
