@@ -409,6 +409,7 @@ static msg_t cjThread(void) {
 				// Start normal operation
 				state = CJ125_INIT;
 				cjSetMode(CJ125_MODE_NORMAL_17);
+				cjWriteRegister(INIT_REG2_WR, 0x00);
 
 				break;
 			case CJ125_PREHEAT:
