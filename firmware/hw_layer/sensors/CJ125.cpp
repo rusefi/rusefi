@@ -136,7 +136,7 @@ static float getUr() {
 
 static float getUa() {
 	if (CONFIG(cj125ua) != EFI_ADC_NONE)
-		return getVoltageDivided("cj125ua", CONFIG(cj125ua));
+		return getVoltage("cj125ua", CONFIG(cj125ua));
 	return 0.0f;
 }
 
@@ -467,7 +467,7 @@ static msg_t cjThread(void) {
 		cjSetMode(lambda > 1.0f ? CJ125_MODE_NORMAL_17 : CJ125_MODE_NORMAL_8);
 #endif
 
-#if 0
+#if 1
 		// Update console output variables
 		cjPostState(&tsOutputChannels);
 #endif
