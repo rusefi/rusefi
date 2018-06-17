@@ -173,5 +173,6 @@ void initCJ125(Logging *shared);
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void cj125defaultPinout();
 
 #endif /* HW_LAYER_SENSORS_CJ125_H_ */
