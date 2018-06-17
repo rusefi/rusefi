@@ -370,8 +370,8 @@ static void cjInitPid(void) {
 //	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
 
 void cj125defaultPinout() {
-	engineConfiguration->cj125ua = EFI_ADC_9;
-	engineConfiguration->cj125ur = EFI_ADC_12;
+	engineConfiguration->cj125ua = EFI_ADC_13; // PC3
+	engineConfiguration->cj125ur = EFI_ADC_4; // PA4
 	boardConfiguration->wboHeaterPin = GPIOC_13;
 
 	boardConfiguration->isCJ125Enabled = false;
@@ -453,11 +453,6 @@ static msg_t cjThread(void)
 #if 0
 		// Change amplification if AFR gets lean/rich for better accuracy
 		cjSetMode(lambda > 1.0f ? CJ125_MODE_NORMAL_17 : CJ125_MODE_NORMAL_8);
-#endif
-
-#if 0
-		// Update console output variables
-		cjPostState(&tsOutputChannels);
 #endif
 
 		switch (state) {
@@ -570,6 +565,7 @@ bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
+// used by DBG_CJ125
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = heaterDuty;
 	tsOutputChannels->debugFloatField2 = heaterPid.getIntegration();
