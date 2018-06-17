@@ -1445,6 +1445,18 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
 
+	dialog = allPins5
+		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
+		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
+		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
+		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
+		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
+		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
+		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
+		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
+		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
+		field = "hip9011CsPin",							hip9011CsPin
+		field = "LIS302DLCsPin",						LIS302DLCsPin
 
 
 	dialog = allPins1_2, "", xAxis
@@ -1458,6 +1470,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 	dialog = allPins, "All Pins", xAxis
 		panel = allPins1_2
 		panel = allPins3_4
+		panel = allPins5
 
 ;			Sensors->CLT Sensor Settings
 	dialog = clt_thermistor, "CLT Sensor Settings"
@@ -1696,7 +1709,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
 		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
-		field = "LIS302DLCsPin",						LIS302DLCsPin, {is_enabled_spi_1 == 1}
+		field = "LIS302DLCsPin",						LIS302DLCsPin
 
 	dialog = fuelClosedLoopDialog, "Fuel short-term closed-loop correction"
 		field = "#This is just the cherry on the cake once you have good VE table"
