@@ -102,8 +102,8 @@
 #define isVerboseAuxPid4_offset_hex 4c
 #define useBiQuadAnalogFiltering_offset 76
 #define useBiQuadAnalogFiltering_offset_hex 4c
-#define issue_294_10_offset 76
-#define issue_294_10_offset_hex 4c
+#define cj125isUaDivided_offset 76
+#define cj125isUaDivided_offset_hex 4c
 #define issue_294_11_offset 76
 #define issue_294_11_offset_hex 4c
 #define issue_294_12_offset 76

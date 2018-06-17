@@ -137,8 +137,14 @@ static float getUr() {
 }
 
 static float getUa() {
-	if (CONFIG(cj125ua) != EFI_ADC_NONE)
-		return getVoltageDivided("cj125ua", CONFIG(cj125ua));
+	if (CONFIG(cj125ua) != EFI_ADC_NONE) {
+		if (engineConfiguration->cj125isUaDivided) {
+			return getVoltageDivided("cj125ua", CONFIG(cj125ua));
+		} else {
+			return getVoltage("cj125ua", CONFIG(cj125ua));
+		}
+	}
+
 	return 0.0f;
 }
 
@@ -355,6 +361,28 @@ static void cjInitPid(void) {
 	// todo: period?
 	heaterPidConfig.period = 1.0f;
 	heaterPid.reset();
+}
+
+//	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+//	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+//	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
+//	boardConfiguration->cj125CsPin = GPIOA_15;
+//	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
+
+void cj125defaultPinout() {
+	engineConfiguration->cj125ua = EFI_ADC_9;
+	engineConfiguration->cj125ur = EFI_ADC_12;
+	boardConfiguration->wboHeaterPin = GPIOC_13;
+
+	boardConfiguration->isCJ125Enabled = false;
+
+	boardConfiguration->spi2mosiPin = GPIOB_15;
+	boardConfiguration->spi2misoPin = GPIOB_14;
+	boardConfiguration->spi2sckPin = GPIOB_13;
+
+	boardConfiguration->cj125CsPin = GPIOB_0;
+	boardConfiguration->isCJ125Enabled = true;
+	boardConfiguration->is_enabled_spi_2 = true;
 }
 
 static void cjStartSpi(void) {
