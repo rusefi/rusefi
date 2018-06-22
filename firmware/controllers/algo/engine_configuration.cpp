@@ -492,6 +492,7 @@ static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->coastingFuelCutRpmLow = 1300;
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCupMap = 30;
 	engineConfiguration->coastingFuelCutClt = 30;
 }
 
