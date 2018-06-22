@@ -249,7 +249,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	// If somebody commanded an impossibly short injection, do nothing.
 	// Durations under 50us-ish aren't safe for the scheduler
 	// as their order may be swapped, resulting in a stuck open injector
-	if (injectionDuration < 0.050)
+	if (injectionDuration < 0.050f)
 	{
 		return;
 	}
