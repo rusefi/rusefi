@@ -256,7 +256,7 @@ bit activateAuxPid4;
 bit isVerboseAuxPid4;
 bit useBiQuadAnalogFiltering;
 bit cj125isUaDivided;
-bit issue_294_11;
+bit cj125isLsu49;
 bit issue_294_12;
 bit issue_294_13;
 bit issue_294_14;
