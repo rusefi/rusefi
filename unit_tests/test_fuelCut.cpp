@@ -28,6 +28,7 @@ void testCoastingFuelCut() {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
 	// configure TPS

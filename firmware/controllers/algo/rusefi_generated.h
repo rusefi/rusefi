@@ -1562,8 +1562,8 @@
 #define coastingFuelCutClt_offset_hex d36
 #define pidExtraForLowRpm_offset 3384
 #define pidExtraForLowRpm_offset_hex d38
-#define unusedInt16_offset 3386
-#define unusedInt16_offset_hex d3a
+#define coastingFuelCutMap_offset 3386
+#define coastingFuelCutMap_offset_hex d3a
 #define iacCoastingBins_offset 3388
 #define iacCoastingBins_offset_hex d3c
 #define iacCoasting_offset 3452
