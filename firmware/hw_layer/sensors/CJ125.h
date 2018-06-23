@@ -89,7 +89,7 @@
 
 #define	CJ125_DIAG_NORM					0xFF // no errors
 
-#define	CJ125_IDENT						0x60
+#define	CJ125_IDENT						0x60 // 96
 #define	CJ125_IDENT_MASK 				0xF8
 
 #define CJ125_CALIBRATION_DELAY 		1000 	// 1 sec
@@ -149,9 +149,11 @@ typedef enum {
 } cj125_state_e;
 
 typedef enum {
-	CJ125_ERROR_NONE,
-	CJ125_ERROR_HEATER_MALFUNCTION,
-	CJ125_ERROR_OVERHEAT,
+	CJ125_ERROR_NONE = 0,
+	CJ125_ERROR_HEATER_MALFUNCTION = 1,
+	CJ125_ERROR_OVERHEAT = 2,
+	CJ125_ERROR_WRONG_IDENT = 3,
+	CJ125_ERROR_WRONG_INIT = 4,
 
 } cj125_error_e;
 
