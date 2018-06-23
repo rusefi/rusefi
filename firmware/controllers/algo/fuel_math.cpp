@@ -262,17 +262,19 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 	// coasting fuel cut-off correction
 	if (boardConfiguration->coastingFuelCutEnabled) {
 		percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		float map = getMap();
 	
 		// gather events
+		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
 		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
 		bool cltDeactivate = cisnan(engine->sensors.clt) ? false : (engine->sensors.clt < (float)CONFIG(coastingFuelCutClt));
 		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
 		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
 		
 		// state machine (coastingFuelCutStartTime is also used as a flag)
-		if (!tpsDeactivate && !cltDeactivate && rpmActivate) {
+		if (!mapDeactivate && !tpsDeactivate && !cltDeactivate && rpmActivate) {
 			ENGINE(engineState.coastingFuelCutStartTime) = nowNt;
-		} else if (tpsDeactivate || rpmDeactivate || cltDeactivate) {
+		} else if (mapDeactivate || tpsDeactivate || rpmDeactivate || cltDeactivate) {
 			ENGINE(engineState.coastingFuelCutStartTime) = 0;
 		}
 		// enable fuelcut?

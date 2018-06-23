@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jun 17 14:48:08 EDT 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 22 11:35:17 CDT 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1033,7 +1033,7 @@ public class Fields {
 	public static final int coastingFuelCutTps_offset = 3380;
 	public static final int coastingFuelCutClt_offset = 3382;
 	public static final int pidExtraForLowRpm_offset = 3384;
-	public static final int unusedInt16_offset = 3386;
+	public static final int coastingFuelCutMap_offset = 3386;
 	public static final int iacCoastingBins_offset = 3388;
 	public static final int iacCoasting_offset = 3452;
 	public static final int unusedEnd_offset = 3516;
@@ -1865,7 +1865,7 @@ public class Fields {
 	public static final Field COASTINGFUELCUTTPS = Field.create("COASTINGFUELCUTTPS", 3380, FieldType.INT);
 	public static final Field COASTINGFUELCUTCLT = Field.create("COASTINGFUELCUTCLT", 3382, FieldType.INT);
 	public static final Field PIDEXTRAFORLOWRPM = Field.create("PIDEXTRAFORLOWRPM", 3384, FieldType.INT);
-	public static final Field UNUSEDINT16 = Field.create("UNUSEDINT16", 3386, FieldType.INT);
+	public static final Field COASTINGFUELCUTMAP = Field.create("COASTINGFUELCUTMAP", 3386, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);

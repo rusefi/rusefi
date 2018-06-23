@@ -245,6 +245,15 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		warning(CUSTOM_OBD_NEG_INJECTION, "Negative injection pulse %.2f", injectionDuration);
 		return;
 	}
+
+	// If somebody commanded an impossibly short injection, do nothing.
+	// Durations under 50us-ish aren't safe for the scheduler
+	// as their order may be swapped, resulting in a stuck open injector
+	if (injectionDuration < 0.050f)
+	{
+		return;
+	}
+
 	floatus_t durationUs = MS2US(injectionDuration);
 
 
