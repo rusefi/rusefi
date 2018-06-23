@@ -290,7 +290,18 @@ static void cjStart(void) {
 		return;
 	}
 	
+	// Software reset cj125
+	for (int i = 0; i < 2; i++)
+	{
+		cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET)
+		chThdSleepMilliseconds(100);
+	}
+
 	cjIdentify();
+
+	// default values
+	vUaCal = 1.5f;
+	vUrCal = 1.0f;
 
 	// Load calibration values
 	uint32_t storedLambda = backupRamLoad(BACKUP_CJ125_CALIBRATION_LAMBDA);
