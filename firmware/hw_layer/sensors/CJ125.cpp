@@ -257,7 +257,11 @@ static void cjCalibrate(void) {
 	for (int i = 0; i < CJ125_CALIBRATE_NUM_SAMPLES; i++) {
 		cjUpdateAnalogValues();
 		cjPrintData();
-		cjPostState(&tsOutputChannels);
+
+		if (engineConfiguration->debugMode == DBG_CJ125) {
+			cjPostState(&tsOutputChannels);
+		}
+
 		vUaCal += vUa;
 		vUrCal += vUr;
 	}
