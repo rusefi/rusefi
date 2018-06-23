@@ -302,14 +302,20 @@ static void cjStart(void) {
 	uint32_t storedHeater = backupRamLoad(BACKUP_CJ125_CALIBRATION_HEATER);
 	// if no calibration, try to calibrate now and store new values
 	if (storedLambda == 0 || storedHeater == 0) {
-		cjCalibrate();
+		// Calibrate as soon as the thread starts, so we don't have to wait for it
+		state = CJ125_CALIBRATION;
 	} else {
+		state = CJ125_INIT;
+
 		scheduleMsg(logger, "cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);
 		vUaCal = getVoltageFrom16bit(storedLambda);
 		vUrCal = getVoltageFrom16bit(storedHeater);
-		// Start normal measurement mode
-		cjSetMode(CJ125_MODE_NORMAL_17);
 	}
+
+	// Start normal measurement mode
+	cjSetMode(CJ125_MODE_NORMAL_17);
+	cjWriteRegister(INIT_REG2_WR, 0x00);
+
 	cjPrintData();
 
 	lastSlowAdcCounter = getSlowAdcCounter();
@@ -423,43 +429,67 @@ static msg_t cjThread(void)
 
 		cjUpdateAnalogValues();
 		
-		// If the controller is disabled
-		if (state == CJ125_IDLE || state == CJ125_ERROR) {
-			chThdSleepMilliseconds(CJ125_IDLE_TICK_DELAY);
-			continue;
-		}
+		switch (state) {
+			case CJ125_IDLE:
+				chThdSleepMilliseconds(CJ125_IDLE_TICK_DELAY);
+				continue;
+			case CJ125_INIT:
+				// If the engine's turning, time to heat the sensor.
+				if(!isStopped) {
+					state = CJ125_PREHEAT;
+					startHeatingNt = prevNt = getTimeNowNt();
+					cjSetMode(CJ125_MODE_NORMAL_17);
+				}
 
-		if (state == CJ125_CALIBRATION) {
-			cjCalibrate();
-			// Start normal operation
-			state = CJ125_INIT;
-			cjSetMode(CJ125_MODE_NORMAL_17);
-		}
-		
-		diag = cjReadRegister(DIAG_REG_RD);
-
-		// check heater state
-		if (vUr > CJ125_UR_PREHEAT_THR || heaterDuty < CJ125_PREHEAT_MIN_DUTY) {
-			// Check if RPM>0 and it's time to start pre-heating
-			if (state == CJ125_INIT && !isStopped) {
-				// start preheating
-				state = CJ125_PREHEAT;
-				startHeatingNt = prevNt = getTimeNowNt();
+				break;
+			case CJ125_CALIBRATION:
+				cjCalibrate();
+				// Start normal operation
+				state = CJ125_INIT;
 				cjSetMode(CJ125_MODE_NORMAL_17);
-			}
-		} else if (vUr > CJ125_UR_GOOD_THR) {
-			state = CJ125_HEAT_UP;
-		} else if (vUr < CJ125_UR_OVERHEAT_THR) {
-			state = CJ125_OVERHEAT;
-		} else {
-			// This indicates that the heater temperature is optimal for UA measurement
-			state = CJ125_READY;
+				cjWriteRegister(INIT_REG2_WR, 0x00);
+
+				break;
+			case CJ125_PREHEAT:
+				// If the engine stopped, turn off the sensor!
+				if(isStopped) {
+					state = CJ125_INIT;
+					cjSetIdleHeater();
+				}
+
+				// If the sensor is sufficiently warm for PID, switch to that
+				if(vUr < CJ125_UR_PREHEAT_THR) {
+					state = CJ125_READY;
+				}
+
+				break;
+			case CJ125_READY:
+				// If the engine stopped, turn off the sensor!
+				if(isStopped) {
+					state = CJ125_INIT;
+					cjSetIdleHeater();
+				}
+
+				// If the sensor is very hot, turn it off because something's wrong
+				if(vUr < CJ125_UR_OVERHEAT_THR)	{
+					state = CJ125_OVERHEAT;
+				}
+
+				// If the sensor is very cold, something went wrong.
+				if(vUr > CJ125_UR_UNDERHEAT_THR) {
+					cjSetError(CJ125_ERROR_HEATER_MALFUNCTION);
+				}
+
+				break;
+			case CJ125_OVERHEAT:
+				break;
+			case CJ125_ERROR:
+				chThdSleepMilliseconds(CJ125_IDLE_TICK_DELAY);
+				continue;
+			default: break;
 		}
 
-		if (isStopped && cjIsWorkingState()) {
-			state = CJ125_INIT;
-			cjSetIdleHeater();
-		}
+		diag = cjReadRegister(DIAG_REG_RD);
 
 #if 0
 		// Change amplification if AFR gets lean/rich for better accuracy
