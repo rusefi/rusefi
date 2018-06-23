@@ -163,8 +163,14 @@ static void cjPrintData(void) {
 static void cjPrintErrorCode(cj125_error_e errCode) {
 	const char *errString = nullptr;
 	switch (errCode) {
+	case CJ125_ERROR_WRONG_INIT:
+		errString = "Wrong initialization value";
+		break;
+	case CJ125_ERROR_WRONG_IDENT:
+		errString = "Read invalid ident value";
+		break;
 	case CJ125_ERROR_HEATER_MALFUNCTION:
-		errString = "Heater malfunction (Too long preheat)"; 
+		errString = "Heater malfunction (Too long preheat or heater failure)"; 
 		break;
 	case CJ125_ERROR_OVERHEAT:
 		errString = "Sensor overheating";
