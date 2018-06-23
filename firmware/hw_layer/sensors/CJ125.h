@@ -113,6 +113,7 @@
 #define CJ125_UR_PREHEAT_THR			2.0f	// Ur > 2.0 Volts is too cold to control with PID
 #define CJ125_UR_OVERHEAT_THR			0.5f	// Ur < 0.5 Volts is overheat
 #define CJ125_UR_GOOD_THR				1.4f
+#define CJ125_UR_UNDERHEAT_THR          2.2f    // Ur > 2.2v after closed loop = something went wrong
 
 #define CJ125_UACAL_MIN					1.0f	// Calibration UA values range
 #define CJ125_UACAL_MAX					2.0f
