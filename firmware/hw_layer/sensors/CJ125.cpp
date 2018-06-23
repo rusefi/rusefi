@@ -289,7 +289,7 @@ static void cjStart(void) {
 	// Software reset cj125
 	for (int i = 0; i < 2; i++)
 	{
-		cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET)
+		cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET);
 		chThdSleepMilliseconds(100);
 	}
 
