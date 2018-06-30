@@ -3,7 +3,7 @@
   (general
     (links 83)
     (no_connects 0)
-    (area 73.660002 96.52 139.700001 163.2458)
+    (area 111.315499 104.838499 129.603501 139.255501)
     (thickness 1.6)
     (drawings 59)
     (tracks 318)
@@ -15,8 +15,8 @@
   (page A)
   (title_block
     (title "CJ125 Wide O2 ")
-    (date 2017-01-30)
-    (rev R0.3)
+    (date 2018-06-17)
+    (rev R0.4)
     (company http://rusefi.com/)
   )
 
@@ -73,7 +73,7 @@
     (mod_text_width 0.127)
     (pad_size 1.99898 1.99898)
     (pad_drill 1.00076)
-    (pad_to_mask_clearance 0.2)
+    (pad_to_mask_clearance 0.0762)
     (aux_axis_origin 111.379 135.382)
     (visible_elements 7FFFF67F)
     (pcbplotparams
@@ -1614,7 +1614,7 @@
   (gr_text 5V (at 116.967 109.855 90) (layer F.SilkS)
     (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
   )
-  (gr_text "rusEFI R0.3" (at 120.015 138.43) (layer F.SilkS)
+  (gr_text "rusEFI R0.4" (at 120.015 138.43) (layer F.SilkS)
     (effects (font (size 1.016 1.016) (thickness 0.127)))
   )
   (gr_text T-0 (at 113.157 134.493) (layer F.Cu)

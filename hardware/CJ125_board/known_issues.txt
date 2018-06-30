@@ -10,3 +10,4 @@
 10)                  match Frankenso GND/3v/5v pinout
 11) RESOLVED IN R0.3 provide 4 extra holes in corners just for flat mounting
 12) RESOLVED IN R0.3 power ON status LED, heater intensity LED
+13) RESOLVED IN R0.4 Change solder mask, from 0.007874015748 to 0.003. 
