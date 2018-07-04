@@ -499,7 +499,6 @@ static msg_t cjThread(void)
 			case CJ125_ERROR:
 				chThdSleepMilliseconds(CJ125_IDLE_TICK_DELAY);
 				continue;
-			default: break;
 		}
 
 		diag = cjReadRegister(DIAG_REG_RD);
@@ -525,7 +524,6 @@ static msg_t cjThread(void)
 				prevNt = nowNt;
 			}
 			break;
-		case CJ125_HEAT_UP:
 		case CJ125_READY:
 			// use PID for normal heater control
 			if (nowNt - prevNt >= CJ125_HEATER_CONTROL_PERIOD) {
@@ -545,8 +543,13 @@ static msg_t cjThread(void)
 				cjSetError(CJ125_ERROR_OVERHEAT);
 				prevNt = nowNt;
 			}
-		default:
-			;
+			break;
+		// Nothing to do for these cases
+		case CJ125_IDLE:
+		case CJ125_INIT:
+		case CJ125_CALIBRATION:
+		case CJ125_ERROR:
+			break;
 		}
 
 		chThdSleepMilliseconds(CJ125_TICK_DELAY);
