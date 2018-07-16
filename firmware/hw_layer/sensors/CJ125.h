@@ -100,7 +100,7 @@
 // See http://www.waltech.com/wideband-files/boschsensordatasheet.htm
 #define CJ125_HEATER_IDLE_RATE			0.15f	// for a very cold sensor (presumably), we allow 15% duty max.
 #define CJ125_HEATER_PREHEAT_PERIOD 	300		// 300 ms
-#define CJ125_HEATER_CONTROL_PERIOD		180		// 180 ms
+#define CJ125_HEATER_CONTROL_PERIOD		100		// 180 ms
 #define CJ125_HEATER_OVERHEAT_PERIOD	500		// 500 ms
 #define CJ125_HEATER_PWM_FREQ 			100		// 100 Hz
 #define CJ125_HEATER_PREHEAT_RATE		(0.4f/14.0f)	// Assuming that dutycycle=1.0 equals to 14V, and max.allowed heater rate is 0.4V/sec
@@ -113,6 +113,7 @@
 #define CJ125_UR_PREHEAT_THR			2.0f	// Ur > 2.0 Volts is too cold to control with PID
 #define CJ125_UR_OVERHEAT_THR			0.5f	// Ur < 0.5 Volts is overheat
 #define CJ125_UR_GOOD_THR				1.4f
+#define CJ125_UR_UNDERHEAT_THR          2.2f    // Ur > 2.2v after closed loop = something went wrong
 
 #define CJ125_UACAL_MIN					1.0f	// Calibration UA values range
 #define CJ125_UACAL_MAX					2.0f
@@ -133,6 +134,9 @@
 #define CJ125_PID_LSU42_P				(80.0f / 16.0f * 5.0f / 1024.0f)
 #define CJ125_PID_LSU42_I				(25.0f / 16.0f * 5.0f / 1024.0f)
 
+#define CJ125_PID_LSU49_P               (8.0f)
+#define CJ125_PID_LSU49_I               (0.003f)
+
 // Returned if there's no valid measurement
 #define CJ125_AFR_NAN					0.0f
 
@@ -141,7 +145,6 @@ typedef enum {
 	CJ125_INIT,
 	CJ125_CALIBRATION,
 	CJ125_PREHEAT,
-	CJ125_HEAT_UP,
 	CJ125_READY,
 	CJ125_OVERHEAT,
 	CJ125_ERROR,

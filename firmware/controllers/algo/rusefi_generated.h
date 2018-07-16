@@ -104,8 +104,8 @@
 #define useBiQuadAnalogFiltering_offset_hex 4c
 #define cj125isUaDivided_offset 76
 #define cj125isUaDivided_offset_hex 4c
-#define issue_294_11_offset 76
-#define issue_294_11_offset_hex 4c
+#define cj125isLsu49_offset 76
+#define cj125isLsu49_offset_hex 4c
 #define issue_294_12_offset 76
 #define issue_294_12_offset_hex 4c
 #define issue_294_13_offset 76

@@ -1694,6 +1694,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "UA input",								cj125ua, {isCJ125Enabled == 1}
 		field = "UR input",								cj125ur, {isCJ125Enabled == 1}
 		field = "Is UA input divided?"					cj125isUaDivided, {isCJ125Enabled == 1}
+		field = "Is sensor LSU 4.9?"					cj125isLsu49, {isCJ125Enabled == 1}
 		
 	dialog = spiFunction, "SPI settings"
 		field = "!ECU reboot needed to apply these settings"
