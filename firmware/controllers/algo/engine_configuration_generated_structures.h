@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 22 11:35:17 CDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 22 11:54:40 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -987,6 +987,7 @@ typedef struct {
 	 */
 	int16_t tpsErrorDetectionTooLow;
 	/**
+	 * TPS error detection, what TPS % value is unrealistically high
 	 * offset 86
 	 */
 	int16_t tpsErrorDetectionTooHigh;
@@ -2389,4 +2390,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 22 11:35:17 CDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 22 11:54:40 EDT 2018
