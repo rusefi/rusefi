@@ -174,6 +174,12 @@ static void cjPrintErrorCode(cj125_error_e errCode) {
 	case CJ125_ERROR_NONE:
 		errString = "N/A";
 		break;
+	case CJ125_ERROR_WRONG_IDENT:
+		errString = "W_IDENT";
+		break;
+	case CJ125_ERROR_WRONG_INIT:
+		errString = "W_INIT";
+		break;
 	}
 	scheduleMsg(logger, "cj125 ERROR: %s.", errString);
 }
