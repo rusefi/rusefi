@@ -64,7 +64,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 	}
 
 	float firstAngle = getAngle(triggerShapeSynchPointIndex);
-	assertAngleRange(triggerShapeSynchPointIndex, "firstAngle");
+	assertAngleRange(triggerShapeSynchPointIndex, "firstAngle", CUSTOM_ERR_6551);
 
 	int frontOnlyIndex = 0;
 
@@ -76,7 +76,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 			eventAngles[1] = 0;
 			frontOnlyIndexes[0] = 0;
 		} else {
-			assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex");
+			assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_ERR_6552);
 			int triggerDefinitionCoordinate = (triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
 			efiAssertVoid(engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= size ? triggerDefinitionCoordinate - size : triggerDefinitionCoordinate;

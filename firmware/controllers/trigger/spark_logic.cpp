@@ -174,7 +174,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 */
 	float advance = iEvent->advance;
 	efiAssertVoid(!cisnan(advance), "findAngle#4");
-	assertAngleRange(advance, "findAngle#a5");
+	assertAngleRange(advance, "findAngle#a5", CUSTOM_ERR_6549);
 	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, advance PASS_ENGINE_PARAMETER_SUFFIX));
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -249,7 +249,7 @@ void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFI
 
 	angle_t a = localAdvance - dwellAngle;
 	efiAssertVoid(!cisnan(a), "findAngle#5");
-	assertAngleRange(a, "findAngle#a6");
+	assertAngleRange(a, "findAngle#a6", CUSTOM_ERR_6550);
 	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, a PASS_ENGINE_PARAMETER_SUFFIX));
 
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)

@@ -1908,6 +1908,18 @@ typedef enum {
 	CUSTOM_ERR_6548 = 6548,
 	CUSTOM_ERR_6549 = 6549,
 
+	CUSTOM_ERR_6550 = 6550,
+	CUSTOM_ERR_6551 = 6551,
+	CUSTOM_ERR_6552 = 6552,
+	CUSTOM_ERR_6553 = 6553,
+	CUSTOM_ERR_6554 = 6554,
+	CUSTOM_ERR_6555 = 6555,
+	CUSTOM_ERR_6556 = 6556,
+	CUSTOM_ERR_6557 = 6557,
+	CUSTOM_ERR_6558 = 6557,
+	CUSTOM_ERR_6559 = 6559,
+
+
 	// this is needed for proper enum size, this matters for malfunction_central
 	Internal_ForceMyEnumIntSize_cranking_obd_code = ENUM_32_BITS,
 } obd_code_e;
