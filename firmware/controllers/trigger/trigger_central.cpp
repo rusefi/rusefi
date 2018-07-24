@@ -134,7 +134,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 
 	// convert engine cycle angle into trigger cycle angle
 	vvtPosition -= tdcPosition();
-	fixAngle(vvtPosition, "vvtPosition");
+	fixAngle(vvtPosition, "vvtPosition", CUSTOM_ERR_6558);
 
 	tc->vvtPosition = (engineConfiguration->vvtDisplayInverted ? -vvtPosition : vvtPosition) + engineConfiguration->vvtOffset;
 

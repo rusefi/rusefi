@@ -232,7 +232,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(engineConfiguration->operationMode) * i / engineConfiguration->specs.cylindersCount;
 			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
-			fixAngle(cylinderStart, "cylinderStart");
+			fixAngle(cylinderStart, "cylinderStart", CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
 		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
@@ -288,7 +288,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		}
 
 
-		fixAngle(samplingEnd, "samplingEnd");
+		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 		// todo: schedule this based on closest trigger event, same as ignition works

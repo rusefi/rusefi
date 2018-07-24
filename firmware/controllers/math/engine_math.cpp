@@ -193,7 +193,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	ev->engine = engine;
 #endif
-	fixAngle(angle, "addFuel#1");
+	fixAngle(angle, "addFuel#1", CUSTOM_ERR_6554);
 
 	ev->outputs[0] = output;
 	ev->outputs[1] = secondOutput;
@@ -304,7 +304,7 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle
 	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition();
 	efiAssertVoid(!cisnan(angleOffset), "findAngle#2");
-	fixAngle(angleOffset, "addFuel#2");
+	fixAngle(angleOffset, "addFuel#2", CUSTOM_ERR_6555);
 
 	int index = triggerIndexByAngle[(int)angleOffset];
 	angle_t eventAngle = eventAngles[index];
