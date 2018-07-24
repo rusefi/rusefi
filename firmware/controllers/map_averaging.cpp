@@ -222,7 +222,7 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 
 void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = engine->rpmCalculator.rpmValue;
+	int rpm = GET_RPM();
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
@@ -256,7 +256,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		return;
 
 	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
-	int rpm = ENGINE(rpmCalculator.rpmValue);
+	int rpm = GET_RPM();
 	if (!isValidRpm(rpm)) {
 		return;
 	}
@@ -317,7 +317,7 @@ float getMap(void) {
 	}
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	if (!isValidRpm(engine->rpmCalculator.rpmValue) || currentPressure == NO_VALUE_YET)
+	if (!isValidRpm(GET_RPM() || currentPressure == NO_VALUE_YET)
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
 	return validateMap(currentPressure);
 #else

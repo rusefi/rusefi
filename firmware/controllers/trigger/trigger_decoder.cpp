@@ -425,7 +425,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {
 		// let's not show a warning if we are just starting to spin
-		if (engine->rpmCalculator.rpmValue != 0) {
+		if (GET_RPM() != 0) {
 			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
 			lastDecodingErrorTime = getTimeNowNt();
 			someSortOfTriggerError = true;

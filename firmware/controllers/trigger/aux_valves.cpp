@@ -40,7 +40,7 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 	if (index != SCHEDULING_TRIGGER_INDEX) {
 		return;
 	}
-	int rpm = ENGINE(rpmCalculator.rpmValue);
+	int rpm = GET_RPM();
 	if (!isValidRpm(rpm)) {
 		return;
 	}
