@@ -153,7 +153,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	angle -= engineConfiguration->ignitionOffset;
-	fixAngle(angle, "getAdvance");
+	fixAngle(angle, "getAdvance", CUSTOM_ERR_6548);
 	return angle;
 }
 

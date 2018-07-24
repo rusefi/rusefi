@@ -82,7 +82,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= size ? triggerDefinitionCoordinate - size : triggerDefinitionCoordinate;
 			float angle = getAngle(triggerDefinitionCoordinate) - firstAngle;
 			efiAssertVoid(!cisnan(angle), "trgSyncNaN");
-			fixAngle(angle, "trgSync");
+			fixAngle(angle, "trgSync", CUSTOM_ERR_6559);
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 				if (isFrontEvent[triggerDefinitionIndex]) {
 					frontOnlyIndex += 2;
@@ -201,7 +201,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[current_index]);
 	// todo: make this '90' depend on cylinder count or trigger shape?
 	angle_t previousAngle = currentAngle - 90;
-	fixAngle(previousAngle, "prevAngle");
+	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_6560);
 	// todo: prevIndex should be pre-calculated
 	*prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)previousAngle]);
 
@@ -210,7 +210,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	uint32_t time = nowNt - timeOfLastEvent[*prevIndex];
 	angle_t angleDiff = currentAngle - prevIndexAngle;
 	// todo: angle diff should be pre-calculated
-	fixAngle(angleDiff, "angleDiff");
+	fixAngle(angleDiff, "angleDiff", CUSTOM_ERR_6561);
 
 	// just for safety
 	if (time == 0)

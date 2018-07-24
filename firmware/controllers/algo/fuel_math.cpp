@@ -111,7 +111,7 @@ angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	efiAssert(!cisnan(value), "inj offset#1", 0);
 	angle_t result =  value + CONFIG(extraInjectionOffset);
-	fixAngle(result, "inj offset#2");
+	fixAngle(result, "inj offset#2", CUSTOM_ERR_6553);
 	return result;
 }
 
