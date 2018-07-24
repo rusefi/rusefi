@@ -234,7 +234,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 		return;
 	engine->m.beforeHipCb = GET_TIMESTAMP();
 
-	int rpm = engine->rpmCalculator.rpmValue;
+	int rpm = GET_RPM();
 	if (!isValidRpm(rpm))
 		return;
 
@@ -303,7 +303,7 @@ void hipAdcCallback(adcsample_t value) {
 		prepareHip9011RpmLookup(currentAngleWindowWidth);
 		}
 
-		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
+		int integratorIndex = getIntegrationIndexByRpm(GET_RPM());
 		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
 		int bandIndex = getBandIndex();
 		int prescalerIndex = engineConfiguration->hip9011PrescalerAndSDO;

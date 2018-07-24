@@ -313,7 +313,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		InjectorOutputPin *output = event->outputs[0];
 	#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 		printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-				(int)MS2US(getCrankshaftRevolutionTimeMs(ENGINE(rpmCalculator.rpmValue))));
+				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM())));
 	#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 
