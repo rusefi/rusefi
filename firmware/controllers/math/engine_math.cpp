@@ -131,7 +131,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	efiAssert(!cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
 	efiAssert(!cisnan(injectionDuration), "NaN injectionDuration", false);
-	assertAngleRange(injectionDuration, "injectionDuration_r");
+	assertAngleRange(injectionDuration, "injectionDuration_r", CUSTOM_ERR_6542);
 	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
@@ -139,7 +139,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	}
 	angle_t baseAngle = injectionOffset - injectionDuration;
 	efiAssert(!cisnan(baseAngle), "NaN baseAngle", false);
-	assertAngleRange(baseAngle, "baseAngle_r");
+	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
 
 	int injectorIndex;
 
@@ -159,7 +159,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
-	assertAngleRange(baseAngle, "addFbaseAngle");
+	assertAngleRange(baseAngle, "addFbaseAngle", CUSTOM_ERR_6543);
 
 	int cylindersCount = CONFIG(specs.cylindersCount);
 	if (cylindersCount < 1) {
@@ -206,7 +206,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	}
 
 	efiAssert(!cisnan(angle), "findAngle#3", false);
-	assertAngleRange(angle, "findAngle#a33");
+	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
 	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER_SUFFIX));
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.eventIndex, injectorIndex);
@@ -293,13 +293,13 @@ int TriggerShape::findAngleIndex(float target DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(!cisnan(angleOffset), "findAngle#1");
-	assertAngleRange(angleOffset, "findAngle#a1");
+	assertAngleRange(angleOffset, "findAngle#a1", CUSTOM_ERR_6545);
 
 	efiAssertVoid(!cisnan(ENGINE(triggerCentral.triggerShape.tdcPosition)), "tdcPos#1")
-	assertAngleRange(ENGINE(triggerCentral.triggerShape.tdcPosition), "tdcPos#a1");
+	assertAngleRange(ENGINE(triggerCentral.triggerShape.tdcPosition), "tdcPos#a1", CUSTOM_ERR_6546);
 
 	efiAssertVoid(!cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG(globalTriggerAngleOffset), "tdcPos#a2");
+	assertAngleRange(CONFIG(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_ERR_6547);
 
 	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition();

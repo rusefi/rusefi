@@ -20,9 +20,9 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 
 #if EFI_ENABLE_ASSERTS
-#define assertAngleRange(angle, msg) if(angle > 10000000 || angle < -10000000) { firmwareError(ERROR_ANGLE_RANGE, "angle range %s %.2f", msg, angle);angle = 0;}
+#define assertAngleRange(angle, msg, code) if(angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
 #else
-#define assertAngleRange(angle, msg) {}
+#define assertAngleRange(angle, msg, code) {}
 #endif
 
 void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -38,7 +38,7 @@ void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 		   firmwareError(CUSTOM_ERR_ANGLE, "angle NaN %s", msg);            \
 		   angle = 0;                                                       \
 	    }                                                                   \
-		assertAngleRange(angle, msg);										\
+		assertAngleRange(angle, msg, CUSTOM_ERR_6548);						\
 		float engineCycleDurationLocalCopy = ENGINE(engineCycle);	        \
 		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
 		/*       as a performance optimization?*/                           \
