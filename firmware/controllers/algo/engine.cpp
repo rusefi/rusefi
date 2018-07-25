@@ -184,7 +184,7 @@ TransmissionState::TransmissionState() {
 }
 
 EngineState::EngineState() {
-	dwellAngle = 0;
+	dwellAngle = NAN;
 	engineNoiseHipLevel = 0;
 	injectorLag = 0;
 	warningCounter = 0;
@@ -231,7 +231,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	int rpm = ENGINE(rpmCalculator).getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	dwellAngle = sparkDwell / getOneDegreeTimeMs(rpm);
+	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		engine->sensors.currentAfr = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
