@@ -30,7 +30,7 @@ int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
 
-void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX);
+void prepareCylinderIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
@@ -73,7 +73,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 	EXPAND_Engine;
 #endif
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
-	prepareIgnitionSchedule(event PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareCylinderIgnitionSchedule(event PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -220,7 +220,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		} \
 }
 
-void prepareIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void prepareCylinderIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
@@ -272,7 +272,7 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		list->elements[cylinderIndex].engine = engine;
 #endif /* EFI_UNIT_TEST */
-		prepareIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
+		prepareCylinderIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	list->isReady = true;
 }
