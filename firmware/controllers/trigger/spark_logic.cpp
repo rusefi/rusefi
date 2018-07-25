@@ -66,11 +66,15 @@ static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 		} \
 }
 
-void prepareCylinderIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// change of sign here from 'before TDC' to 'after TDC'
-	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ENGINE(ignitionPositionWithEngineCycle[event->cylinderIndex]) + CONFIG(timing_offset_cylinder[event->cylinderIndex]);
+	angle_t ignitionPositionWithinEngineCycle = ENGINE(ignitionPositionWithinEngineCycle[event->cylinderIndex]);
+	assertAngleRange(ignitionPositionWithinEngineCycle, "aPWEC", CUSTOM_ERR_6566);
+	cfg_float_t_1f timing_offset_cylinder = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
+	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ignitionPositionWithinEngineCycle + timing_offset_cylinder;
+
 	efiAssertVoid(!cisnan(localAdvance), "localAdvance#1");
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
 	const int coilIndex = ID2INDEX(getCylinderId(index PASS_ENGINE_PARAMETER_SUFFIX));
@@ -85,7 +89,6 @@ void prepareCylinderIgnitionSchedule(IgnitionEvent *event DECLARE_ENGINE_PARAMET
 	} else {
 		secondOutput = NULL;
 	}
-	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
 
 	assertPinAssigned(output);
 
@@ -116,7 +119,13 @@ void turnSparkPinLow(IgnitionEvent *event) {
 	EXPAND_Engine;
 #endif
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
-	prepareCylinderIgnitionSchedule(event PASS_ENGINE_PARAMETER_SUFFIX);
+
+	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
+	if (cisnan(dwellAngle)) {
+		// we are here if engine has just stopped
+		return;
+	}
+ 	prepareCylinderIgnitionSchedule(dwellAngle, event PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -257,7 +266,8 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 }
 
 static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(ENGINE(engineState.timingAdvance))) {
+	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
+	if (cisnan(ENGINE(engineState.timingAdvance)) || cisnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
 		list->isReady = false;
@@ -270,7 +280,7 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 		list->elements[cylinderIndex].engine = engine;
 #endif /* EFI_UNIT_TEST */
-		prepareCylinderIgnitionSchedule(&list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
+		prepareCylinderIgnitionSchedule(dwellAngle, &list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	list->isReady = true;
 }

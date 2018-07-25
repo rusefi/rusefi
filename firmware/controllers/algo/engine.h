@@ -414,7 +414,7 @@ public:
 	 * pre-calculated offset for given sequence index within engine cycle
 	 * (not cylinder ID)
 	 */
-	angle_t ignitionPositionWithEngineCycle[IGNITION_PIN_COUNT];
+	angle_t ignitionPositionWithinEngineCycle[IGNITION_PIN_COUNT];
 	/**
 	 * pre-calculated reference to which output pin should be used for
 	 * given sequence index within engine cycle
