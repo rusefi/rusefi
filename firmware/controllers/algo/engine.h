@@ -166,6 +166,7 @@ public:
 
 	/**
 	 * ignition dwell duration as crankshaft angle
+	 * NAN if engine is stopped
 	 */
 	angle_t dwellAngle;
 
