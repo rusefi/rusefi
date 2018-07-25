@@ -478,7 +478,7 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		break;
 
 	default:
-		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
+		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in getIgnitionPinForIndex()", engineConfiguration->ignitionMode);
 		return 0;
 	}
 }
