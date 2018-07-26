@@ -20,7 +20,7 @@ static LoggingWithStorage logger;
 
 static SimplePwm pwmTest[5];
 
-extern OutputPin warningPin;
+extern OutputPin warningLedPin;
 extern EnginePins enginePins;
 
 EXTERN_ENGINE;
@@ -31,7 +31,7 @@ static void startPwmTest(int freq) {
 	engine->isRunningPwmTest = true;
 
 	// PD13 pin is initialized elsewhere already
-	startSimplePwm(&pwmTest[0], "tester", &warningPin, 10, 0.5f, applyPinState);
+	startSimplePwm(&pwmTest[0], "tester", &warningLedPin, 10, 0.5f, applyPinState);
 	/**
 	 * See custom_engine.cpp for pinout
 	 */
