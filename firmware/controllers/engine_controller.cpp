@@ -104,13 +104,13 @@ static msg_t csThread(void) {
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		if (is_running) {
 			// blinking while running
-			enginePins.runningPin.setValue(0);
+			enginePins.runningLedPin.setValue(0);
 			chThdSleepMilliseconds(50);
-			enginePins.runningPin.setValue(1);
+			enginePins.runningLedPin.setValue(1);
 			chThdSleepMilliseconds(50);
 		} else {
 			// constant on while cranking and off if engine is stopped
-			enginePins.runningPin.setValue(is_cranking);
+			enginePins.runningLedPin.setValue(is_cranking);
 			chThdSleepMilliseconds(100);
 		}
 	}

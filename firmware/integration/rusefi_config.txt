@@ -760,8 +760,8 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float addedToWallCoef;;"%",        1,     0,    0.0,    300.0,  2
-	brain_pin_e communicationPin;blue LED on discovery by default	
-	brain_pin_e runningPin;green LED on discovery by default
+	brain_pin_e communicationLedPin;blue LED on discovery by default	
+	brain_pin_e runningLedPin;green LED on discovery by default
 	brain_pin_e binarySerialTxPin;	
 	brain_pin_e binarySerialRxPin;	
 	brain_pin_e consoleSerialTxPin;	todo: finish pin migration from hard-coded to configurable?
@@ -801,7 +801,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 
 
 	brain_pin_e fatalErrorPin;RED led on Discovery by default. TODO: start using this property
-	brain_pin_e warninigPin;TODO: start using this property
+	brain_pin_e warninigLedPin;TODO: start using this property
 	brain_pin_e configResetPin;
 	uint32_t uartConsoleSerialSpeed;;"BPs",      1,      0,       0,1000000,      0
 	float tpsDecelEnleanmentThreshold;;"roc",        1,     0,    0, 200,     3

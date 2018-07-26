@@ -1136,10 +1136,10 @@
 #define idleRpmPid_maxValue_offset_hex 76e
 #define addedToWallCoef_offset 1904
 #define addedToWallCoef_offset_hex 770
-#define communicationPin_offset 1908
-#define communicationPin_offset_hex 774
-#define runningPin_offset 1912
-#define runningPin_offset_hex 778
+#define communicationLedPin_offset 1908
+#define communicationLedPin_offset_hex 774
+#define runningLedPin_offset 1912
+#define runningLedPin_offset_hex 778
 #define binarySerialTxPin_offset 1916
 #define binarySerialTxPin_offset_hex 77c
 #define binarySerialRxPin_offset 1920
@@ -1196,8 +1196,8 @@
 #define engineLoadAccelEnrichmentMultiplier_offset_hex 88c
 #define fatalErrorPin_offset 2192
 #define fatalErrorPin_offset_hex 890
-#define warninigPin_offset 2196
-#define warninigPin_offset_hex 894
+#define warninigLedPin_offset 2196
+#define warninigLedPin_offset_hex 894
 #define configResetPin_offset 2200
 #define configResetPin_offset_hex 898
 #define uartConsoleSerialSpeed_offset 2204
