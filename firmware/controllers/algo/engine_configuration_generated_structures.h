@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 22 11:54:40 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 26 15:39:48 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1609,12 +1609,12 @@ typedef struct {
 	 * blue LED on discovery by default
 	 * offset 1908
 	 */
-	brain_pin_e communicationPin;
+	brain_pin_e communicationLedPin;
 	/**
 	 * green LED on discovery by default
 	 * offset 1912
 	 */
-	brain_pin_e runningPin;
+	brain_pin_e runningLedPin;
 	/**
 	 * offset 1916
 	 */
@@ -1746,7 +1746,7 @@ typedef struct {
 	 * TODO: start using this property
 	 * offset 2196
 	 */
-	brain_pin_e warninigPin;
+	brain_pin_e warninigLedPin;
 	/**
 	 * offset 2200
 	 */
@@ -2390,4 +2390,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 22 11:54:40 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 26 15:39:48 EDT 2018

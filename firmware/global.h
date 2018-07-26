@@ -131,7 +131,7 @@ typedef unsigned int time_t;
 #define ON_FATAL_ERROR() \
 		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1); \
 		turnAllPinsOff(); \
-		enginePins.communicationPin.setValue(1);
+		enginePins.communicationLedPin.setValue(1);
 
 /*
  * Stack debugging

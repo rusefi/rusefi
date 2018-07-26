@@ -169,10 +169,10 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
 	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
 
-	engineConfiguration->communicationPin = GPIO_UNASSIGNED;// GPIOA_13; // yellow LED
-	engineConfiguration->runningPin = GPIOA_13; //GPIOA_13; // yellow LED
-	engineConfiguration->fatalErrorPin = GPIOA_13;
-	engineConfiguration->warninigPin = GPIO_UNASSIGNED;
+	engineConfiguration->communicationLedPin = GPIO_UNASSIGNED;// GPIOA_13; // yellow LED
+	engineConfiguration->runningLedPin = GPIOA_13; //GPIOA_13; // yellow LED
+	engineConfiguration->fatalErrorLedPin = GPIOA_13;
+	engineConfiguration->warninigLedPin = GPIO_UNASSIGNED;
 	engineConfiguration->configResetPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->triggerInputPins[0] = is469 ? GPIOA_5 : GPIOA_5;

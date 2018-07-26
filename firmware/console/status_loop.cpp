@@ -544,18 +544,18 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
  */
 static THD_WORKING_AREA(blinkingStack, 128);
 
-static OutputPin *leds[] = { &enginePins.warningPin, &enginePins.runningPin, &enginePins.checkEnginePin,
-		&enginePins.errorLedPin, &enginePins.communicationPin, &enginePins.checkEnginePin };
+static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin, &enginePins.checkEnginePin,
+		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
-	enginePins.communicationPin.initPin("led: comm status", engineConfiguration->communicationPin);
+	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// we initialize this here so that we can blink it on start-up
 	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin, &boardConfiguration->malfunctionIndicatorPinMode);
 
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
-	enginePins.warningPin.initPin("led: warning status", LED_WARNING_BRAIN_PIN);
-	enginePins.runningPin.initPin("led: running status", engineConfiguration->runningPin);
+	enginePins.warningLedPin.initPin("led: warning status", LED_WARNING_BRAIN_PIN);
+	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
 #endif /* EFI_WARNING_LED */
 }
 
@@ -619,16 +619,16 @@ static void blinkingThread(void *arg) {
 #endif
 
 		if (!hasFirmwareError() && !hasFirmwareErrorFlag) {
-			enginePins.communicationPin.setValue(0);
+			enginePins.communicationLedPin.setValue(0);
 		}
-		enginePins.warningPin.setValue(0);
+		enginePins.warningLedPin.setValue(0);
 		chThdSleepMilliseconds(delayMs);
 
-		enginePins.communicationPin.setValue(1);
+		enginePins.communicationLedPin.setValue(1);
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 		if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
 			consoleByteArrived = false;
-			enginePins.warningPin.setValue(1);
+			enginePins.warningLedPin.setValue(1);
 		}
 #endif
 		chThdSleepMilliseconds(delayMs);

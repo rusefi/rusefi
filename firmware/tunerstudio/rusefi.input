@@ -1889,8 +1889,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
-		field = "comm status pin",						communicationPin
-		field = "running status",						runningPin
+		field = "comm status light",					communicationLedPin
+		field = "running status light",					runningLedPin
 		
 ;			Engine->Base Engine Settings
 	dialog = engineChars, "Base Engine Settings"

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jun 22 11:35:17 CDT 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 26 15:39:48 EDT 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -779,10 +779,10 @@ public class Fields {
 	public static final int idleRpmPid_maxValue_offset = 1902;
 	public static final int addedToWallCoef_offset = 1904;
 	public static final int addedToWallCoef_offset_hex = 770;
-	public static final int communicationPin_offset = 1908;
-	public static final int communicationPin_offset_hex = 774;
-	public static final int runningPin_offset = 1912;
-	public static final int runningPin_offset_hex = 778;
+	public static final int communicationLedPin_offset = 1908;
+	public static final int communicationLedPin_offset_hex = 774;
+	public static final int runningLedPin_offset = 1912;
+	public static final int runningLedPin_offset_hex = 778;
 	public static final int binarySerialTxPin_offset = 1916;
 	public static final int binarySerialRxPin_offset = 1920;
 	public static final int binarySerialRxPin_offset_hex = 780;
@@ -824,8 +824,8 @@ public class Fields {
 	public static final int engineLoadAccelEnrichmentMultiplier_offset = 2188;
 	public static final int fatalErrorPin_offset = 2192;
 	public static final int fatalErrorPin_offset_hex = 890;
-	public static final int warninigPin_offset = 2196;
-	public static final int warninigPin_offset_hex = 894;
+	public static final int warninigLedPin_offset = 2196;
+	public static final int warninigLedPin_offset_hex = 894;
 	public static final int configResetPin_offset = 2200;
 	public static final int configResetPin_offset_hex = 898;
 	public static final int uartConsoleSerialSpeed_offset = 2204;
@@ -1682,8 +1682,8 @@ public class Fields {
 	public static final Field IDLERPMPID_MINVALUE = Field.create("IDLERPMPID_MINVALUE", 1900, FieldType.INT);
 	public static final Field IDLERPMPID_MAXVALUE = Field.create("IDLERPMPID_MAXVALUE", 1902, FieldType.INT);
 	public static final Field ADDEDTOWALLCOEF = Field.create("ADDEDTOWALLCOEF", 1904, FieldType.FLOAT);
-	public static final Field COMMUNICATIONPIN = Field.create("COMMUNICATIONPIN", 1908, FieldType.INT, brain_pin_e);
-	public static final Field RUNNINGPIN = Field.create("RUNNINGPIN", 1912, FieldType.INT, brain_pin_e);
+	public static final Field COMMUNICATIONLEDPIN = Field.create("COMMUNICATIONLEDPIN", 1908, FieldType.INT, brain_pin_e);
+	public static final Field RUNNINGLEDPIN = Field.create("RUNNINGLEDPIN", 1912, FieldType.INT, brain_pin_e);
 	public static final Field BINARYSERIALTXPIN = Field.create("BINARYSERIALTXPIN", 1916, FieldType.INT, brain_pin_e);
 	public static final Field BINARYSERIALRXPIN = Field.create("BINARYSERIALRXPIN", 1920, FieldType.INT, brain_pin_e);
 	public static final Field CONSOLESERIALTXPIN = Field.create("CONSOLESERIALTXPIN", 1924, FieldType.INT, brain_pin_e);
@@ -1708,7 +1708,7 @@ public class Fields {
 	public static final Field ENGINELOADACCELENRICHMENTTHRESHOLD = Field.create("ENGINELOADACCELENRICHMENTTHRESHOLD", 2184, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELENRICHMENTMULTIPLIER = Field.create("ENGINELOADACCELENRICHMENTMULTIPLIER", 2188, FieldType.FLOAT);
 	public static final Field FATALERRORPIN = Field.create("FATALERRORPIN", 2192, FieldType.INT, brain_pin_e);
-	public static final Field WARNINIGPIN = Field.create("WARNINIGPIN", 2196, FieldType.INT, brain_pin_e);
+	public static final Field WARNINIGLEDPIN = Field.create("WARNINIGLEDPIN", 2196, FieldType.INT, brain_pin_e);
 	public static final Field CONFIGRESETPIN = Field.create("CONFIGRESETPIN", 2200, FieldType.INT, brain_pin_e);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 2204, FieldType.INT);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2208, FieldType.FLOAT);
