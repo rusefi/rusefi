@@ -13,8 +13,8 @@ angle_t getEngineCycle(operation_mode_e operationMode) {
 
 void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
 		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(totalTeethCount > 0, "total count");
-	efiAssertVoid(skippedCount >= 0, "skipped count");
+	efiAssertVoid(CUSTOM_ERR_6586, totalTeethCount > 0, "total count");
+	efiAssertVoid(CUSTOM_ERR_6587, skippedCount >= 0, "skipped count");
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
@@ -35,7 +35,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 		s->shapeDefinitionError = true;
 		return;
 	}
-	efiAssertVoid(s != NULL, "TriggerShape is NULL");
+	efiAssertVoid(CUSTOM_ERR_6588, s != NULL, "TriggerShape is NULL");
 	s->initialize(operationMode, false);
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);

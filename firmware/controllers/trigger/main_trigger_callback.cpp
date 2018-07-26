@@ -188,7 +188,7 @@ void seTurnPinLow(InjectionSignalPair *pair) {
 			tempTurnPinLow(output);
 		}
 	}
-	efiAssertVoid(pair->event != NULL, "pair event");
+	efiAssertVoid(CUSTOM_ERR_6626, pair->event != NULL, "pair event");
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	Engine *engine = pair->event->engine;
 	EXPAND_Engine;
@@ -369,8 +369,8 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#3");
-	efiAssertVoid(trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
+	efiAssertVoid(CUSTOM_ERR_6627, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#3");
+	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
 	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE) || limitedFuel) {
 		return;
@@ -402,7 +402,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		InjectionEvent *event = &fs->elements[injEventIndex];
 		uint32_t eventIndex = event->injectionStart.eventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
-//		efiAssertVoid(eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
+//		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
 		if (eventIndex != trgEventIndex) {
 			continue;
 		}
@@ -442,7 +442,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		 */
 		return;
 	}
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#2");
+	efiAssertVoid(CUSTOM_ERR_6629, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#2");
 
 	if (trgEventIndex >= ENGINE(engineCycleEventCount)) {
 		/**
@@ -500,7 +500,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		}
 	}
 
-	efiAssertVoid(!CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
+	efiAssertVoid(CUSTOM_ERR_6630, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
 	if (trgEventIndex == CONFIG(ignMathCalculateAtIndex)) {
 		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
@@ -620,7 +620,7 @@ static void showMainInfo(Engine *engine) {
 
 void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
-	efiAssertVoid(engine!=NULL, "null engine");
+	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
 	initSparkLogic(logger);
 
 	initAuxValves(logger);

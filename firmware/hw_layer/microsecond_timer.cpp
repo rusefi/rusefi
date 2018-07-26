@@ -64,7 +64,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 	}
 	if (timeUs < 2)
 		timeUs = 2; // for some reason '1' does not really work
-	efiAssertVoid(timeUs > 0, "not positive timeUs");
+	efiAssertVoid(CUSTOM_ERR_6681, timeUs > 0, "not positive timeUs");
 	if (timeUs >= 10 * US_PER_SECOND) {
 		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too long: %d", timeUs);
 		return;
@@ -123,7 +123,7 @@ static void usTimerWatchDog(void) {
 
 	msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 	// 2 seconds of inactivity would not look right
-	efiAssertVoid(getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
+	efiAssertVoid(CUSTOM_ERR_6682, getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
 
 }
 

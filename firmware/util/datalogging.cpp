@@ -66,7 +66,7 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, const char *text, uin
 }
 
 void append(Logging *logging, const char *text) {
-	efiAssertVoid(text != NULL, "append NULL");
+	efiAssertVoid(CUSTOM_ERR_6602, text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
 	bool isCapacityProblem = validateBuffer(logging, text, extraLen);
 	if (isCapacityProblem) {
@@ -93,7 +93,7 @@ void appendFast(Logging *logging, const char *text) {
 // todo: look into chsnprintf once on Chibios 3
 static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	intermediateLoggingBuffer.eos = 0; // reset
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
+	efiAssertVoid(CUSTOM_ERR_6603, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
 	append(logging, (char *) intermediateLoggingBufferData);
@@ -103,7 +103,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
  * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
  */
 static void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
+	efiAssertVoid(CUSTOM_ERR_6604, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
 		firmwareError(CUSTOM_ERR_BUFF_INIT_ERROR, "intermediateLoggingBufferInited not inited!");
 		return;
@@ -116,7 +116,7 @@ static void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
+	efiAssertVoid(CUSTOM_ERR_6607, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(logging, fmt, ap);
@@ -236,7 +236,7 @@ void resetLogging(Logging *logging) {
  * This method should only be invoked on main thread because only the main thread can write to the console
  */
 void printMsg(Logging *logger, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5o");
+	efiAssertVoid(CUSTOM_ERR_6605, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5o");
 //	resetLogging(logging); // I guess 'reset' is not needed here?
 	appendMsgPrefix(logger);
 

@@ -301,9 +301,9 @@ void OutputPin::toggle() {
 void OutputPin::setValue(int logicValue) {
 #if EFI_PROD_CODE
 	if (port != GPIO_NULL) {
-		efiAssertVoid(modePtr!=NULL, "pin mode not initialized");
+		efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 		pin_output_mode_e mode = *modePtr;
-		efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
+		efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 		int eValue = getElectricalValue(logicValue, mode);
 		setPinValue(this, eValue, logicValue);
 	}

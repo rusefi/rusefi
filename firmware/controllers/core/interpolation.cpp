@@ -114,7 +114,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 
 	// a*x1 + b = y1
 	// a*x2 + b = y2
-//	efiAssertVoid(x1 != x2, "no way we can interpolate");
+//	efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, x1 != x2, "no way we can interpolate");
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
 	float b = y1 - a * x1;
 	float result = a * x + b;

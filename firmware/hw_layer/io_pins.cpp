@@ -92,7 +92,7 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 
 #if HAL_USE_ICU || defined(__DOXYGEN__)
 void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
-	  efiAssertVoid((icup->state == ICU_STOP) || (icup->state == ICU_READY),
+	  efiAssertVoid(CUSTOM_ERR_6679, (icup->state == ICU_STOP) || (icup->state == ICU_READY),
 	              "input already used?");
 
 	icuStart(icup, config);

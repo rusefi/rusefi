@@ -172,7 +172,7 @@ AdcDevice fastAdc(&adcgrpcfg_fast);
 
 void doSlowAdc(void) {
 
-	efiAssertVoid(getRemainingStack(chThdGetSelfX())> 32, "lwStAdcSlow");
+	efiAssertVoid(CUSTOM_ERR_6658, getRemainingStack(chThdGetSelfX())> 32, "lwStAdcSlow");
 
 #if EFI_INTERNAL_ADC
 
@@ -203,7 +203,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 }
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
-	efiAssertVoid(getRemainingStack(chThdGetSelfX())> 32, "lwStAdcFast");
+	efiAssertVoid(CUSTOM_ERR_6659, getRemainingStack(chThdGetSelfX())> 32, "lwStAdcFast");
 #if EFI_INTERNAL_ADC
 	(void) pwmp;
 
@@ -567,7 +567,7 @@ int getSlowAdcCounter() {
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9c");
+	efiAssertVoid(CUSTOM_ERR_6671, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9c");
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {

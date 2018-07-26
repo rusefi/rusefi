@@ -23,8 +23,8 @@
  * This method takes ~350 ticks.
  */
 void applyPinState(PwmConfig *state, int stateIndex) {
-	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
+	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
+	efiAssertVoid(CUSTOM_ERR_6664, state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int waveIndex = 0; waveIndex < state->multiWave.waveCount; waveIndex++) {
 		OutputPin *output = state->outputPins[waveIndex];
 		int value = state->multiWave.waves[waveIndex].pinStates[stateIndex];
@@ -33,7 +33,7 @@ void applyPinState(PwmConfig *state, int stateIndex) {
 }
 
 void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
-	efiAssertVoid(dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
+	efiAssertVoid(CUSTOM_ERR_6665, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
 		return;

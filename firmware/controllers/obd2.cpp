@@ -80,7 +80,7 @@ static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue) {
 }
 
 static void obdSendValue(int mode, int PID, int numBytes, float value) {
-	efiAssertVoid(numBytes <= 2, "invalid numBytes");
+	efiAssertVoid(CUSTOM_ERR_6662, numBytes <= 2, "invalid numBytes");
 	int iValue = (int)efiRound(value, 1.0f);
 	// clamp to uint8_t (0..255) or uint16_t (0..65535)
 	iValue = maxI(minI(iValue, (numBytes == 1) ? 255 : 65535), 0);

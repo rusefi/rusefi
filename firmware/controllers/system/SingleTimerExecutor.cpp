@@ -41,7 +41,7 @@ uint32_t lastExecutionCount;
 
 static void executorCallback(void *arg) {
 	(void)arg;
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstck#2y");
+	efiAssertVoid(CUSTOM_ERR_6624, getRemainingStack(chThdGetSelfX()) > 256, "lowstck#2y");
 
 //	callbackTime = getTimeNowNt();
 //	if((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {
@@ -139,7 +139,7 @@ void Executor::scheduleTimerCallback() {
 	 */
 	efitick_t nowNt = getTimeNowNt();
 	nextEventTimeNt = queue.getNextEventTime(nowNt);
-	efiAssertVoid(nextEventTimeNt > nowNt, "setTimer constraint");
+	efiAssertVoid(CUSTOM_ERR_6625, nextEventTimeNt > nowNt, "setTimer constraint");
 	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
 	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);

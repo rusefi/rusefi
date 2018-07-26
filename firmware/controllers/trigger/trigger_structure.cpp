@@ -48,7 +48,7 @@ TriggerShape::TriggerShape() :
 
 void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "calc s");
+	efiAssertVoid(CUSTOM_ERR_6642, getRemainingStack(chThdGetSelfX()) > 256, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
 
@@ -56,7 +56,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 
 	int length = getLength();
 	engine->engineCycleEventCount = length;
-	efiAssertVoid(length > 0, "shapeLength=0");
+	efiAssertVoid(CUSTOM_ERR_6594, length > 0, "shapeLength=0");
 	if (length >= PWM_PHASE_MAX_COUNT) {
 		warning(CUSTOM_ERR_TRIGGER_SHAPE_TOO_LONG, "Count above %d", length);
 		shapeDefinitionError = true;
@@ -78,10 +78,10 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 		} else {
 			assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_ERR_6552);
 			int triggerDefinitionCoordinate = (triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
-			efiAssertVoid(engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
+			efiAssertVoid(CUSTOM_ERR_6595, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= size ? triggerDefinitionCoordinate - size : triggerDefinitionCoordinate;
 			float angle = getAngle(triggerDefinitionCoordinate) - firstAngle;
-			efiAssertVoid(!cisnan(angle), "trgSyncNaN");
+			efiAssertVoid(CUSTOM_ERR_6596, !cisnan(angle), "trgSyncNaN");
 			fixAngle(angle, "trgSync", CUSTOM_ERR_6559);
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 				if (isFrontEvent[triggerDefinitionIndex]) {
@@ -322,9 +322,9 @@ extern bool printTriggerDebug;
 #endif
 
 void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
+	efiAssertVoid(CUSTOM_ERR_6597, operationMode != OM_NONE, "operationMode not set");
 
-	efiAssertVoid(waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
+	efiAssertVoid(CUSTOM_ERR_6598, waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
@@ -356,7 +356,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 		expectedEventCount[waveIndex]++;
 	}
 
-	efiAssertVoid(angle > 0, "angle should be positive");
+	efiAssertVoid(CUSTOM_ERR_6599, angle > 0, "angle should be positive");
 	if (size > 0) {
 		if (angle <= previousAngle) {
 			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f and prev=%.2f, size=%d", angle, previousAngle, size);
@@ -430,7 +430,7 @@ void multi_wave_s::checkSwitchTimes(int size) {
 }
 
 void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(s != NULL, "TriggerShape is NULL");
+	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerShape is NULL");
 	operation_mode_e operationMode = FOUR_STROKE_CRANK_SENSOR;
 
 	s->initialize(operationMode, false);
