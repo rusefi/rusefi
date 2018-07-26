@@ -94,7 +94,7 @@ EXTERN_ENGINE
 static Logging *logger;
 
 float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssert(engine!=NULL, "getLEValue", NAN);
+	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", NAN);
 	switch (action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();

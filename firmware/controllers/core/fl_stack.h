@@ -79,7 +79,7 @@ T FLStack<T, MAXSIZE>::pop() {
  */
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::get(int index) {
-	efiAssert(index >= 0 && index < MAXSIZE, "FLget", values[0]);
+	efiAssert(CUSTOM_ERR_ASSERT, index >= 0 && index < MAXSIZE, "FLget", values[0]);
 	return values[index];
 }
 
@@ -120,7 +120,7 @@ void ArrayList<Type, Dimention>::reset(void) {
 
 template<class Type, int Dimention>
 Type * ArrayList<Type, Dimention>::add(void) {
-	efiAssert(size < Dimention, "add() too many elements", (Type *)NULL);
+	efiAssert(CUSTOM_ERR_ASSERT, size < Dimention, "add() too many elements", (Type *)NULL);
 	return &elements[size++];
 }
 

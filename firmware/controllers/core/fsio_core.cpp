@@ -139,7 +139,7 @@ void LECalculator::push(le_action_e action, float value) {
  */
 bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssert(getRemainingStack(chThdGetSelfX()) > 64, "FSIO logic", false);
+	efiAssert(CUSTOM_ERR_ASSERT, getRemainingStack(chThdGetSelfX()) > 64, "FSIO logic", false);
 #endif
 	switch (element->action) {
 
@@ -314,7 +314,7 @@ float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	int counter = 0;
 	while (element != NULL) {
-		efiAssert(counter < 200, "FSIOcount", NAN); // just in case
+		efiAssert(CUSTOM_ERR_ASSERT, counter < 200, "FSIOcount", NAN); // just in case
 
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
@@ -379,7 +379,7 @@ const char *getNextToken(const char *line, char *buffer, const int bufferSize) {
 		// no space - the whole remaining line is the token
 		tokenLen = strlen(line);
 	}
-	efiAssert(tokenLen < bufferSize, "token overflow", NULL);
+	efiAssert(CUSTOM_ERR_ASSERT, tokenLen < bufferSize, "token overflow", NULL);
 	strncpy(buffer, line, tokenLen);
 	buffer[tokenLen] = 0;
 	line += tokenLen;

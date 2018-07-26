@@ -140,15 +140,15 @@ float interpolateClamped(float x1, float y1, float x2, float y2, float x) {
  * Another implementation, which one is faster?
  */
 int findIndex2(const float array[], unsigned size, float value) {
-	efiAssert(!cisnan(value), "NaN in findIndex2", 0);
-	efiAssert(size > 1, "size in findIndex", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(value), "NaN in findIndex2", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, size > 1, "size in findIndex", 0);
 //	if (size <= 1)
 //		return size && *array <= value ? 0 : -1;
 
 	signed i = 0;
 	//unsigned b = 1 << int(log(float(size) - 1) / 0.69314718055994530942);
 	unsigned b = size >> 1; // in our case size is always a power of 2
-	efiAssert(b + b == size, "Size not power of 2", -1);
+	efiAssert(CUSTOM_ERR_ASSERT, b + b == size, "Size not power of 2", -1);
 	for (; b; b >>= 1) {
 		unsigned j = i | b;
 		/**
@@ -156,7 +156,7 @@ int findIndex2(const float array[], unsigned size, float value) {
 		 * "if (j < size && array[j] <= value)"
 		 * but in our case size is always power of 2 thus size is always more then j
 		 */
-		// efiAssert(j < size, "size", 0);
+		// efiAssert(CUSTOM_ERR_ASSERT, j < size, "size", 0);
 		if (array[j] <= value)
 			i = j;
 	}
@@ -199,7 +199,7 @@ int findIndexMsg(const char *msg, const float array[], int size, float value) {
 #if 0
 		// that's an assertion to make sure we do not loop here
 		size--;
-		efiAssert(size > 0, "Unexpected state in binary search", 0);
+		efiAssert(CUSTOM_ERR_ASSERT, size > 0, "Unexpected state in binary search", 0);
 #endif
 
 		// todo: compare current implementation with

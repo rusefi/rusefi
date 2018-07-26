@@ -37,7 +37,7 @@ PinRepository::PinRepository() {
 }
 
 static int getPortIndex(ioportid_t port) {
-	efiAssert(port != NULL, "null port", -1);
+	efiAssert(CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
 	if (port == GPIOA)
 		return 0;
 	if (port == GPIOB)

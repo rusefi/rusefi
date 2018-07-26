@@ -55,10 +55,10 @@ int getRusEfiVersion(void);
  * is stopped. Please use firmwareWarning() instead
  */
 #if EFI_ENABLE_ASSERTS
-  #define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(CUSTOM_ERR_ASSERT, message); return result; } }
+  #define efiAssert(code, condition, message, result) { if (!(condition)) { firmwareError(code, message); return result; } }
   #define efiAssertVoid(code, condition, message) { if (!(condition)) { firmwareError(code, message); return; } }
 #else /* EFI_ENABLE_ASSERTS */
-  #define efiAssert(condition, message, result) { }
+  #define efiAssert(code, condition, message, result) { }
   #define efiAssertVoid(code, condition, message) { }
 #endif /* EFI_ENABLE_ASSERTS */
 

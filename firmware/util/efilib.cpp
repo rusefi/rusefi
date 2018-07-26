@@ -34,7 +34,7 @@ float efiFloor(float value, float precision) {
  * @param precision for example '0.1' for one digit fractional part
  */
 float efiRound(float value, float precision) {
-	efiAssert(precision != 0, "zero precision", NAN);
+	efiAssert(CUSTOM_ERR_ASSERT, precision != 0, "zero precision", NAN);
 	float a = rintf (value / precision);
 	return a * precision;
 }
