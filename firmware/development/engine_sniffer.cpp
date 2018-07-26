@@ -170,13 +170,13 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	}
 	if (skipUntilEngineCycle != 0 && ENGINE(rpmCalculator.getRevolutionCounter()) < skipUntilEngineCycle)
 		return;
-	efiAssertVoid(name!=NULL, "WC: NULL name");
+	efiAssertVoid(CUSTOM_ERR_6651, name!=NULL, "WC: NULL name");
 
 #if EFI_PROD_CODE
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 32, "lowstck#2c");
+	efiAssertVoid(CUSTOM_ERR_6652, getRemainingStack(chThdGetSelfX()) > 32, "lowstck#2c");
 #endif
 
-	efiAssertVoid(isInitialized, "chart not initialized");
+	efiAssertVoid(CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
 #endif

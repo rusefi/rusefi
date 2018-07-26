@@ -53,7 +53,7 @@ void PwmConfig::init(float *st, single_wave_s *waves) {
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	if (dutyCycle < 0 || dutyCycle > 1) {
-		firmwareError(CUSTOM_ERR_ASSERT_VOID, "spwd:dutyCycle %.2f", dutyCycle);
+		firmwareError(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
 	}
 	multiWave.setSwitchTime(0, dutyCycle);
 }
@@ -96,7 +96,7 @@ void PwmConfig::handleCycleStart() {
 		if (pwmCycleCallback != NULL) {
 			pwmCycleCallback(this);
 		}
-		efiAssertVoid(periodNt != 0, "period not initialized");
+		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 		if (safe.periodNt != periodNt || safe.iteration == ITERATION_LIMIT) {
 			/**
 			 * period length has changed - we need to reset internal state
@@ -168,7 +168,7 @@ efitimeus_t PwmConfig::togglePwmState() {
  */
 static void timerCallback(PwmConfig *state) {
 	state->dbgNestingLevel++;
-	efiAssertVoid(state->dbgNestingLevel < 25, "PWM nesting issue");
+	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitimeus_t switchTimeUs = state->togglePwmState();
 	scheduleByTimestamp(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
@@ -196,7 +196,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTimes, int waveCount,
 		pin_state_t **pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 
-	efiAssertVoid(periodNt != 0, "period is not initialized");
+	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {
 		firmwareError(CUSTOM_ERR_PWM_1, "signal length cannot be zero");
 		return;
@@ -205,7 +205,7 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 		firmwareError(CUSTOM_ERR_PWM_2, "too many phases in PWM");
 		return;
 	}
-	efiAssertVoid(waveCount > 0, "waveCount should be positive");
+	efiAssertVoid(CUSTOM_ERR_6583, waveCount > 0, "waveCount should be positive");
 	checkSwitchTimes2(phaseCount, switchTimes);
 
 	this->pwmCycleCallback = pwmCycleCallback;

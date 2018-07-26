@@ -162,7 +162,7 @@ static void scheduleReboot(void) {
 }
 
 void runRusEfi(void) {
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 512, "init s");
+	efiAssertVoid(CUSTOM_ERR_6608, getRemainingStack(chThdGetSelfX()) > 512, "init s");
 	assertEngineReference();
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
@@ -234,7 +234,7 @@ void runRusEfi(void) {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "stack#1");
+		efiAssertVoid(CUSTOM_ERR_6609, getRemainingStack(chThdGetSelfX()) > 128, "stack#1");
 
 #if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)
 		// sensor state + all pending messages for our own dev console

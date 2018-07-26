@@ -244,7 +244,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t nowNt = getTimeNowNt();
 #if EFI_PROD_CODE
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstckRCL");
+	efiAssertVoid(CUSTOM_ERR_6632, getRemainingStack(chThdGetSelfX()) > 256, "lowstckRCL");
 #endif
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
@@ -378,10 +378,10 @@ void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
  */
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
 		schfunc_t callback, void *param, RpmCalculator *calc) {
-	efiAssertVoid(!cisnan(angle), "NaN angle?");
-	efiAssertVoid(isValidRpm(rpm), "RPM check expected");
+	efiAssertVoid(CUSTOM_ERR_6633, !cisnan(angle), "NaN angle?");
+	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
 	float delayUs = calc->oneDegreeUs * angle;
-	efiAssertVoid(!cisnan(delayUs), "NaN delay?");
+	efiAssertVoid(CUSTOM_ERR_6635, !cisnan(delayUs), "NaN delay?");
 	scheduleForLater(timer, (int) delayUs, callback, param);
 }
 #endif

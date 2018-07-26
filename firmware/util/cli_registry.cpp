@@ -57,7 +57,7 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 		}
 	}
 
-	efiAssertVoid(consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
+	efiAssertVoid(CUSTOM_ERR_6601, consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
 	TokenCallback *current = &consoleActions[consoleActionCount++];
 	current->token = token;
 	current->parameterType = type;

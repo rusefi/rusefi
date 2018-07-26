@@ -49,7 +49,7 @@ void configureMiniCooperTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SU
 	}
 	a += 3 * w;
 
-	efiAssertVoid(absF(firstGapAngle + 360 - a) < 0.1, "shape constraint");
+	efiAssertVoid(CUSTOM_ERR_6584, absF(firstGapAngle + 360 - a) < 0.1, "shape constraint");
 
 	s->addEvent2(a, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 	a += 3 * w;
@@ -60,7 +60,7 @@ void configureMiniCooperTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SU
 		a = addPair(s, a, w PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-	efiAssertVoid(absF(720 - w / 2 - a) < 0.1, "shape constraint");
+	efiAssertVoid(CUSTOM_ERR_6585, absF(720 - w / 2 - a) < 0.1, "shape constraint");
 	s->addEvent2(a, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->addEvent2(720.0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);

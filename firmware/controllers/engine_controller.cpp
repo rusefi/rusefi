@@ -244,7 +244,7 @@ static void resetAccel(void) {
 }
 
 static void periodicSlowCallback(Engine *engine) {
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
+	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
@@ -733,5 +733,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20180722;
+	return 20180723;
 }

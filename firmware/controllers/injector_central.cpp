@@ -54,7 +54,7 @@ static void assertCylinderId(int cylinderId, const char *msg) {
 		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
 		//scheduleSimpleMsg(&logger, "cid=", cylinderId);
 		print("ERROR [%s] cid=%d\r\n", msg, cylinderId);
-		efiAssertVoid(false, "Cylinder ID");
+		efiAssertVoid(CUSTOM_ERR_6647, false, "Cylinder ID");
 	}
 }
 
@@ -73,7 +73,7 @@ static void printInjectorsStatus(void) {
 }
 
 static void setInjectorEnabled(int id, int value) {
-	efiAssertVoid(id >= 0 && id < engineConfiguration->specs.cylindersCount, "injector id");
+	efiAssertVoid(CUSTOM_ERR_6648, id >= 0 && id < engineConfiguration->specs.cylindersCount, "injector id");
 	is_injector_enabled[id] = value;
 	printInjectorsStatus();
 }

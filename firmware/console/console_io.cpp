@@ -155,7 +155,7 @@ void runConsoleLoop(ts_channel_s *console) {
 	}
 
 	while (true) {
-		efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 256, "lowstck#9e");
+		efiAssertVoid(CUSTOM_ERR_6571, getRemainingStack(chThdGetSelfX()) > 256, "lowstck#9e");
 		bool end = getConsoleLine((BaseSequentialStream*) console->channel, console->crcReadBuffer, sizeof(console->crcReadBuffer) - 3);
 		if (end) {
 			// firmware simulator is the only case when this happens

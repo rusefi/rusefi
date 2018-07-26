@@ -75,7 +75,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, IgnitionEvent *e
 	cfg_float_t_1f timing_offset_cylinder = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ignitionPositionWithinEngineCycle + timing_offset_cylinder;
 
-	efiAssertVoid(!cisnan(localAdvance), "localAdvance#1");
+	efiAssertVoid(CUSTOM_ERR_6589, !cisnan(localAdvance), "localAdvance#1");
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
 	const int coilIndex = ID2INDEX(getCylinderId(index PASS_ENGINE_PARAMETER_SUFFIX));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
@@ -97,7 +97,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, IgnitionEvent *e
 	event->advance = localAdvance;
 
 	angle_t a = localAdvance - dwellAngle;
-	efiAssertVoid(!cisnan(a), "findAngle#5");
+	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(a), "findAngle#5");
 	assertAngleRange(a, "findAngle#a6", CUSTOM_ERR_6550);
 	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, a PASS_ENGINE_PARAMETER_SUFFIX));
 
@@ -225,7 +225,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * TODO: improve precision
 	 */
 	float advance = iEvent->advance;
-	efiAssertVoid(!cisnan(advance), "findAngle#4");
+	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(advance), "findAngle#4");
 	assertAngleRange(advance, "findAngle#a5", CUSTOM_ERR_6549);
 	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, advance PASS_ENGINE_PARAMETER_SUFFIX));
 
@@ -273,7 +273,7 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 		list->isReady = false;
 		return;
 	}
-	efiAssertVoid(engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
+	efiAssertVoid(CUSTOM_ERR_6592, engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
 
 	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;

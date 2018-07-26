@@ -196,7 +196,7 @@ int EventQueue::size(void) {
 void EventQueue::assertListIsSorted() {
 	scheduling_s *current = head;
 	while (current != NULL && current->next != NULL) {
-		efiAssertVoid(current->momentX <= current->next->momentX, "list order");
+		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->next->momentX, "list order");
 		current = current->next;
 	}
 }

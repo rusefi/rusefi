@@ -65,7 +65,7 @@ void IntListenerArray<MAX_INT_LISTENER_COUNT>::clear() {
 
 template<int MAX_INT_LISTENER_COUNT>
 void IntListenerArray<MAX_INT_LISTENER_COUNT>::registerCallback(VoidInt handler, void *arg) {
-	efiAssertVoid(currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
+	efiAssertVoid(CUSTOM_ERR_6606, currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
 	int index = currentListenersCount++;
 	callbacks[index] = handler;
 	args[index] = arg;

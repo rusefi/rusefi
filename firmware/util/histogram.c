@@ -99,7 +99,7 @@ void hsAdd(histogram_s *h, int64_t value) {
 	int count = 1;
 	h->total_value += value;
 	h->total_count += count;
-	efiAssertVoid(index < BOUND_LENGTH, "histogram issue");
+	efiAssertVoid(CUSTOM_ERR_6670, index < BOUND_LENGTH, "histogram issue");
 
 	h->values[index] += count;
 }

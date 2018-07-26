@@ -109,7 +109,7 @@ static bool isAveraging = false;
 
 static void startAveraging(void *arg) {
 	(void) arg;
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9");
+	efiAssertVoid(CUSTOM_ERR_6649, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9");
 	bool wasLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
@@ -135,7 +135,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 
 	/* Calculates the average values from the ADC samples.*/
 	measurementsPerRevolutionCounter++;
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9a");
+	efiAssertVoid(CUSTOM_ERR_6650, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9a");
 
 #if (EFI_SENSOR_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
 	if (ENGINE(sensorChartMode) == SC_MAP) {

@@ -189,7 +189,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
-	efiAssertVoid(getRemainingStack(chThdGetSelfX()) > 128, "lowstck#8");
+	efiAssertVoid(CUSTOM_ERR_6636, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#8");
 	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
 	triggerDuration = GET_TIMESTAMP() - triggerHandlerEntryTime;
@@ -313,7 +313,7 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 }
 
 void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(engine!=NULL, "configuration");
+	efiAssertVoid(CUSTOM_ERR_6637, engine!=NULL, "configuration");
 
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
@@ -340,7 +340,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 	int eventIndex = (int) signal;
-	efiAssertVoid(eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
+	efiAssertVoid(CUSTOM_ERR_6638, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
 	if (nowNt - previousShaftEventTimeNt > US2NT(US_PER_SECOND_LL)) {
@@ -466,7 +466,7 @@ void printAllTriggers() {
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-		efiAssertVoid(!s->shapeDefinitionError, "trigger error");
+		efiAssertVoid(CUSTOM_ERR_6639, !s->shapeDefinitionError, "trigger error");
 
 		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 

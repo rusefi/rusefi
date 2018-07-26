@@ -51,7 +51,7 @@ static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
-	efiAssertVoid(reader->hw->started, "wave analyzer NOT INITIALIZED");
+	efiAssertVoid(CUSTOM_ERR_6654, reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
@@ -120,7 +120,7 @@ static void initWave(const char *name, int index) {
 	bool mode = boardConfiguration->logicAnalyzerMode[index];
 
 	waveReaderCount++;
-	efiAssertVoid(index < MAX_ICU_COUNT, "too many ICUs");
+	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
 	reader->name = name;
 
