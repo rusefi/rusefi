@@ -59,7 +59,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 }
 
 static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
-	efiAssert(state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
 	float switchTime = state->multiWave.getSwitchTime(state->safe.phaseIndex);
 	float periodNt = state->safe.periodNt;

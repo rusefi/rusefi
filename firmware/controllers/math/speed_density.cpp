@@ -103,13 +103,13 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return 0;
 	}
 	float map = getMap();
-	efiAssert(!cisnan(map), "NaN map", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", 0);
 
 	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
-	efiAssert(!cisnan(adjustedMap), "NaN adjustedMap", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", 0);
 
 	float airMass = getCylinderAirMass(engineConfiguration, ENGINE(engineState.currentVE), adjustedMap, tChargeK);
-	efiAssert(!cisnan(airMass), "NaN airMass", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(airMass), "NaN airMass", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
 			map, adjustedMap, engine->engineState.airMass);

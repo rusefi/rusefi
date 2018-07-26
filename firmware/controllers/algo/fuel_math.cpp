@@ -76,20 +76,20 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE));
-	efiAssert(!cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
 
 	floatms_t baseFuel;
 	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
 		baseFuel = getSpeedDensityFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
-		efiAssert(!cisnan(baseFuel), "NaN sd baseFuel", 0);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN sd baseFuel", 0);
 	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 		baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER_SUFFIX);
-		efiAssert(!cisnan(baseFuel), "NaN rm baseFuel", 0);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN rm baseFuel", 0);
 	} else {
 		baseFuel = engine->engineState.baseTableFuel;
-		efiAssert(!cisnan(baseFuel), "NaN bt baseFuel", 0);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN bt baseFuel", 0);
 	}
 	engine->engineState.baseFuel = baseFuel;
 
@@ -109,7 +109,7 @@ angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		firmwareError(CUSTOM_ERR_ASSERT, "inj offset#1 %.2f %.2f", rpm, engineLoad);
 		return 0;
 	}
-	efiAssert(!cisnan(value), "inj offset#1", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(value), "inj offset#1", 0);
 	angle_t result =  value + CONFIG(extraInjectionOffset);
 	fixAngle(result, "inj offset#2", CUSTOM_ERR_6553);
 	return result;
@@ -161,11 +161,11 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	floatms_t fuelPerCycle;
 	if (isCranking) {
 		fuelPerCycle = getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
-		efiAssert(!cisnan(fuelPerCycle), "NaN cranking fuelPerCycle", 0);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN cranking fuelPerCycle", 0);
 	} else {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
-		efiAssert(!cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
 #if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 	printf("baseFuel=%.2f fuelPerCycle=%.2f \t\n",
 			baseFuel, fuelPerCycle);
@@ -194,12 +194,12 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
 	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
 	float postCrankingFuelCorrection = ENGINE(engineState.postCrankingFuelCorrection);
-	efiAssert(!cisnan(iatCorrection), "NaN iatCorrection", 0);
-	efiAssert(!cisnan(cltCorrection), "NaN cltCorrection", 0);
-	efiAssert(!cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
 	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection * postCrankingFuelCorrection + ENGINE(engineState.fuelPidCorrection);
-	efiAssert(!cisnan(runningFuel), "NaN runningFuel", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 	ENGINE(engineState.runningFuel) = runningFuel;
 
 	return runningFuel;

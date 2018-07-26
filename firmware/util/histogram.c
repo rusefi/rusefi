@@ -59,7 +59,7 @@ void initHistogramsModule(void) {
  * @brief This internal method is only public so that we can test it.
  */
 int histogramGetIndex(int64_t value) {
-	efiAssert(initialized, "histo initialized", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, initialized, "histo initialized", 0);
 	if (value < 0)
 		return 0;
 	if (value < SBI_SIZE)

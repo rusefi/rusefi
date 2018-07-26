@@ -70,7 +70,7 @@ float convertKelvinToFahrenheit(float kelvin) {
 }
 
 float getResistance(ThermistorConf *config, float voltage) {
-	efiAssert(config != NULL, "thermistor config is null", NAN);
+	efiAssert(CUSTOM_ERR_ASSERT, config != NULL, "thermistor config is null", NAN);
 	thermistor_conf_s *tc = &config->config;
 
 	float resistance = getR2InVoltageDividor(voltage, _5_VOLTS, tc->bias_resistor);
@@ -122,7 +122,7 @@ float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve,
  			engineConfiguration->useLinearCltSensor);
 	if (!isValidCoolantTemperature(temperature)) {
-		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+		efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %.2f", temperature);
 		engine->isCltBroken = true;
 		return LIMPING_MODE_CLT_TEMPERATURE;
@@ -203,7 +203,7 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve,
 			engineConfiguration->useLinearIatSensor);
 	if (!isValidIntakeAirTemperature(temperature)) {
-		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+		efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 #if EFI_PROD_CODE || EFI_UNIT_TEST || defined(__DOXYGEN__)
 		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT %.2f", temperature);
 #endif /* EFI_PROD_CODE */

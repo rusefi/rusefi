@@ -57,8 +57,8 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
  *
  */
 float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiAssert(engine!=NULL, "engine 2NULL", NAN);
-	efiAssert(engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
+	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine 2NULL", NAN);
+	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->fuelAlgorithm) {
 	case LM_PLAIN_MAF:
 		if (!hasMafSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -111,7 +111,7 @@ void FuelSchedule::clear() {
  * @returns false in case of error, true if success
  */
 bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssert(engine!=NULL, "engine is NULL", false);
+	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine is NULL", false);
 
 	floatus_t oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
 	if (cisnan(oneDegreeUs)) {
@@ -128,9 +128,9 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
 	floatms_t fuelMs = ENGINE(injectionDuration);
-	efiAssert(!cisnan(fuelMs), "NaN fuelMs", false);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
-	efiAssert(!cisnan(injectionDuration), "NaN injectionDuration", false);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDuration), "NaN injectionDuration", false);
 	assertAngleRange(injectionDuration, "injectionDuration_r", CUSTOM_ERR_6542);
 	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
 	if (cisnan(injectionOffset)) {
@@ -138,7 +138,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		return false;
 	}
 	angle_t baseAngle = injectionOffset - injectionDuration;
-	efiAssert(!cisnan(baseAngle), "NaN baseAngle", false);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
 	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
 
 	int injectorIndex;
@@ -205,7 +205,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		return false;
 	}
 
-	efiAssert(!cisnan(angle), "findAngle#3", false);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
 	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
 	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_ENGINE_PARAMETER_SUFFIX));
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -247,7 +247,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else {
-		efiAssert(!cisnan(rpm), "invalid rpm", NAN);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
 		dwellMs = interpolate2d("dwell", rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues, DWELL_CURVE_SIZE);
 	}
@@ -266,7 +266,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 int TriggerShape::findAngleIndex(float target DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int engineCycleEventCount = TRIGGER_SHAPE(getLength());
 
-	efiAssert(engineCycleEventCount > 0, "engineCycleEventCount", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);
 
 	uint32_t left = 0;
 	uint32_t right = engineCycleEventCount - 1;

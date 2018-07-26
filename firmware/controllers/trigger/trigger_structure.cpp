@@ -301,7 +301,7 @@ angle_t TriggerShape::getAngle(int index) const {
 	 * See also trigger_central.cpp
 	 * See also getEngineCycleEventCount()
 	 */
-	efiAssert(size != 0, "shapeSize=0", NAN);
+	efiAssert(CUSTOM_ERR_ASSERT, size != 0, "shapeSize=0", NAN);
 	int crankCycle = index / size;
 	int remainder = index % size;
 
