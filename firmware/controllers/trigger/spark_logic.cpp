@@ -74,6 +74,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, IgnitionEvent *e
 	assertAngleRange(ignitionPositionWithinEngineCycle, "aPWEC", CUSTOM_ERR_6566);
 	cfg_float_t_1f timing_offset_cylinder = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
 	const angle_t localAdvance = -ENGINE(engineState.timingAdvance) + ignitionPositionWithinEngineCycle + timing_offset_cylinder;
+	efiAssertVoid(CUSTOM_ERR_6689, !cisnan(localAdvance), "findAngle#9");
 
 	efiAssertVoid(CUSTOM_ERR_6589, !cisnan(localAdvance), "localAdvance#1");
 	const int index = ENGINE(ignitionPin[event->cylinderIndex]);
@@ -176,9 +177,14 @@ static int globalSparkIdCoutner = 0;
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
+	angle_t advance = iEvent->advance;
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
 	if (cisnan(dwellMs) || dwellMs <= 0) {
 		warning(CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
+		return;
+	}
+	if (cisnan(advance)) {
+		warning(CUSTOM_ERR_6688, "NaN advance");
 		return;
 	}
 
@@ -224,7 +230,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
 	 */
-	float advance = iEvent->advance;
+
 	efiAssertVoid(CUSTOM_ERR_6591, !cisnan(advance), "findAngle#4");
 	assertAngleRange(advance, "findAngle#a5", CUSTOM_ERR_6549);
 	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, advance PASS_ENGINE_PARAMETER_SUFFIX));
