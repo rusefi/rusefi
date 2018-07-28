@@ -89,7 +89,7 @@ void testFasterEngineSpinningUp() {
 
 	eth.clearQueue();
 	timeStartUs = timeNowUs;
-	eth.fireTriggerEvents2(1, 60);
+	eth.fireTriggerEventsWithDuration(60);
 
 	// check if the mode is now changed to 'running' at higher RPM
 	assertEquals(RUNNING, engine->rpmCalculator.getState());
