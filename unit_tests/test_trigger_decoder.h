@@ -23,4 +23,6 @@ void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointInde
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);
 void testNoiselessDecoder(void);
 
+void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 #endif /* TEST_TRIGGER_DECODER_H_ */
