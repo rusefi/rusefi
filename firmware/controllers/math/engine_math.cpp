@@ -299,8 +299,8 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle
 	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angleOffset), "findAngle#1");
 	assertAngleRange(angleOffset, "findAngle#a1", CUSTOM_ERR_6545);
 
-	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(ENGINE(triggerCentral.triggerShape.tdcPosition)), "tdcPos#1")
-	assertAngleRange(ENGINE(triggerCentral.triggerShape.tdcPosition), "tdcPos#a1", CUSTOM_ERR_6546);
+	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(TRIGGER_SHAPE(tdcPosition)), "tdcPos#1")
+	assertAngleRange(TRIGGER_SHAPE(tdcPosition), "tdcPos#a1", CUSTOM_ERR_6546);
 
 	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
 	assertAngleRange(CONFIG(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_ERR_6547);

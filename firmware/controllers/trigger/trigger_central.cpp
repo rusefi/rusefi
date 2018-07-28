@@ -419,8 +419,8 @@ EXTERN_ENGINE
 static void triggerShapeInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
-	scheduleMsg(logger, "useRise=%s", boolToString(s->useRiseEdge));
-	scheduleMsg(logger, "gap from %.2f to %.2f", s->syncRatioFrom, s->syncRatioTo);
+	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_SHAPE(useRiseEdge)));
+	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo));
 
 	for (int i = 0; i < s->getSize(); i++) {
 		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
@@ -660,7 +660,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		assertEngineReference();
 
 	#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-		engine->triggerCentral.triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX);
+		TRIGGER_SHAPE(initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
 		engine->triggerCentral.resetAccumSignalData();
 	#endif
 	}
