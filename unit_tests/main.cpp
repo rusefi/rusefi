@@ -2,7 +2,7 @@
  * @file main.cpp
  * @file First step towards unit-testing rusEfi algorithms
  *
- * @author Andrey Belomutskiy (c) 2012-2014
+ * @author Andrey Belomutskiy (c) 2012-2018
  */
 
 #include <stdio.h>

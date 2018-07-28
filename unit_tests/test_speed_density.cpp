@@ -2,7 +2,7 @@
  * @file test_speed_density.cpp
  *
  * @date Jun 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
