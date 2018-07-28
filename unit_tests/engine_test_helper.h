@@ -23,7 +23,8 @@ public:
 	void firePrimaryTriggerRise();
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
-	void fireTriggerEvents2(int count, int durationUs);
+	void fireTriggerEventsWithDuration(int durationMs);
+	void fireTriggerEvents2(int count, int durationMs);
 	void clearQueue();
 
 	Engine engine;
