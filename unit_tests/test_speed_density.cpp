@@ -19,22 +19,22 @@ void testSpeedDensity(void) {
 	EXPAND_EngineTestHelper;
 	schedulingQueue.clear(); // todo: there must be a better place for this
 
-	eth.ec->trigger.customTotalToothCount = 8;
+	engineConfiguration->trigger.customTotalToothCount = 8;
 	eth.applyTriggerShape();
 
 	eth.fireTriggerEvents(36);
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	// 427 cubic inches, that's a LOT of engine
-	eth.ec->specs.displacement = 6.99728;
-	eth.ec->specs.cylindersCount = 8;
+	engineConfigurationc->specs.displacement = 6.99728;
+	engineConfiguration->specs.cylindersCount = 8;
 
-	eth.ec->injector.flow = gramm_second_to_cc_minute(5.303);
+	engineConfiguration->injector.flow = gramm_second_to_cc_minute(5.303);
 
-	float airMass = getCylinderAirMass(eth.ec, 0.92, 98, 293.16);
+	float airMass = getCylinderAirMass(engineConfiguration, 0.92, 98, 293.16);
 
 	assertEquals(0.9371, airMass);
 
 	// 0.01414 sec or 14.14 ms
-	assertEquals(0.01414, sdMath(eth.ec, airMass, 12.5));
+	assertEquals(0.01414, sdMath(engineConfiguration, airMass, 12.5));
 }
