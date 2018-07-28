@@ -622,6 +622,10 @@ static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int inject
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
 }
 
+void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	assertEqualsM(msg, expectedRpm, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+}
+
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
@@ -659,14 +663,14 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPAND_Engine
 
 
-	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertRpm("RPM=0", 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("setTestBug299 EL", 0, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 	assertEqualsM("setTestBug299 IAT", 30, engine->sensors.iat);
 	eth->fireTriggerEvents2(1, MS2US(20));
 	// still no RPM since need to cycles measure cycle duration
-	assertEqualsM("setTestBug299: RPM#1", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertRpm("setTestBug299: RPM#1", 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	eth->fireTriggerEvents2(1, MS2US(20));
-	assertEqualsM("setTestBug299: RPM#2", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertRpm("setTestBug299: RPM#2", 3000 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	eth->clearQueue();
 
@@ -755,17 +759,16 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("exec#3", 0, schedulingQueue.executeAll(timeNowUs));
 
 
-	testMafValue = 0;
-	assertEqualsM("maf", 0, getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
-
 	assertEqualsM("iatC", 1, engine->engineState.iatFuelCorrection);
 	assertEqualsM("cltC", 1, engine->engineState.cltFuelCorrection);
 	assertEqualsM("lag", 0, engine->engineState.injectorLag);
 
+	testMafValue = 0;
+	assertEqualsM("maf", 0, getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
+
 	assertEqualsM("setTestBug299: RPM", 3000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
-
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 	testMafValue = 3;
