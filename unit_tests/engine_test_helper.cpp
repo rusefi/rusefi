@@ -64,7 +64,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	prepareTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	TRIGGER_SHAPE(initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
 	resetTriggerConfigChangedForUnitTest();
@@ -110,7 +110,7 @@ void EngineTestHelper::applyTriggerShape() {
 	persistent_config_s *config = engine->config;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
-	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	TRIGGER_SHAPE(initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
