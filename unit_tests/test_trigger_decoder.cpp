@@ -666,10 +666,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertRpm("RPM=0", 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("setTestBug299 EL", 0, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 	assertEqualsM("setTestBug299 IAT", 30, engine->sensors.iat);
-	eth->fireTriggerEvents2(1, 20);
+	eth->fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	assertRpm("setTestBug299: RPM#1", 0 PASS_ENGINE_PARAMETER_SUFFIX);
-	eth->fireTriggerEvents2(1, 20);
+	eth->fireTriggerEventsWithDuration(20);
 	assertRpm("setTestBug299: RPM#2", 3000 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	eth->clearQueue();
