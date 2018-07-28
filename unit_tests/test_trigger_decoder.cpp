@@ -677,8 +677,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
 	 */
-	timeNowUs += MS2US(20);
-	eth->firePrimaryTriggerRise();
+	eth->fireRise(20);
 	// fuel schedule - short pulses.
 	// time...|0.......|10......|20......|30......|40
 	// inj #0 |.......#|........|.......#|........|
@@ -984,8 +983,8 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	schedulingQueue.executeAll(timeNowUs);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	assertEqualsM("Queue.size#05", 7, schedulingQueue.size());
 	schedulingQueue.executeAll(timeNowUs);
 
@@ -1200,16 +1199,15 @@ void testSparkReverseOrderBug319(void) {
 	timeNowUs = 0;
 	setWholeTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 
 	timeNowUs += MS2US(20);
 	eth.firePrimaryTriggerFall();
 
 	schedulingQueue.executeAll(timeNowUs);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+	eth.fireRise(20);
 
 	timeNowUs += MS2US(20);
 	eth.firePrimaryTriggerFall();
@@ -1221,8 +1219,8 @@ void testSparkReverseOrderBug319(void) {
 	schedulingQueue.executeAll(timeNowUs);
 	printf("***************************************************\r\n");
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 
 
@@ -1240,8 +1238,8 @@ void testSparkReverseOrderBug319(void) {
 
 	printf("*************************************************** now let's have a good engine cycle and confirm things work\r\n");
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 
 	assertEqualsM("RPM#2", 545, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -1255,8 +1253,7 @@ void testSparkReverseOrderBug319(void) {
 
 	printf("*************************************************** (rpm is back) now let's have a good engine cycle and confirm things work\r\n");
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 
 	assertEqualsM("RPM#3", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -1270,8 +1267,7 @@ void testSparkReverseOrderBug319(void) {
 
 	printf("*************************************************** (rpm is back 2) now let's have a good engine cycle and confirm things work\r\n");
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 
 	assertEqualsM("RPM#4", 3000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -1317,8 +1313,8 @@ void testMissedSpark299(void) {
 	schedulingQueue.executeAll(timeNowUs);
 	assertEqualsM("ci#3", 1, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 
 	timeNowUs += MS2US(20);
@@ -1352,15 +1348,15 @@ void testMissedSpark299(void) {
 	setWholeTimingTable(-5 PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 	timeNowUs += MS2US(20);
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNowUs);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 	timeNowUs += MS2US(20);
 	eth.firePrimaryTriggerFall();

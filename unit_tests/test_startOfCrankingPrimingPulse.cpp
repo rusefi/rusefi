@@ -28,8 +28,8 @@ void testPlainCrankingWithoutAdvancedFeatures() {
 	// still no RPM since need to cycles measure cycle duration
 	assertEqualsM("RPM#1", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	timeNowUs += MS2US(200);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(200);
 	assertEqualsM("RPM#2", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
 	assertEqualsM("plain#2", 4, schedulingQueue.size());

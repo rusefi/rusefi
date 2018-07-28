@@ -43,8 +43,7 @@ void testFasterEngineSpinningUp() {
 	// check all events starting from now
 	int timeStartUs = timeNowUs;
 	// advance 1 revolution
-	timeNowUs += MS2US(200);
-	eth.firePrimaryTriggerRise();
+	eth.fireRise(200);
 
 	// check if the mode is changed
 	assertEquals(SPINNING_UP, engine->rpmCalculator.getState());
@@ -66,8 +65,8 @@ void testFasterEngineSpinningUp() {
 
 	// now clear and advance more
 	eth.clearQueue();
-	timeNowUs += MS2US(200);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(200);
 
 	// check if the mode is changed when fully synched
 	assertEquals(CRANKING, engine->rpmCalculator.getState());
