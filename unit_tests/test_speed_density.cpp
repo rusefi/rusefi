@@ -26,7 +26,7 @@ void testSpeedDensity(void) {
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	// 427 cubic inches, that's a LOT of engine
-	engineConfigurationc->specs.displacement = 6.99728;
+	engineConfiguration->specs.displacement = 6.99728;
 	engineConfiguration->specs.cylindersCount = 8;
 
 	engineConfiguration->injector.flow = gramm_second_to_cc_minute(5.303);

@@ -13,6 +13,9 @@
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
 
+/**
+ * Mock engine with trigger signal simulation infrastructure
+ */
 class EngineTestHelper {
 public:
 	EngineTestHelper(engine_type_e engineType);
@@ -23,11 +26,8 @@ public:
 	void fireTriggerEvents2(int count, int durationUs);
 	void clearQueue();
 
-	persistent_config_s persistentConfig;
 	Engine engine;
-
-	engine_configuration_s *ec;
-	engine_configuration_s *engineConfiguration;
+	persistent_config_s persistentConfig;
 };
 
 #endif /* ENGINE_TEST_HELPER_H_ */
