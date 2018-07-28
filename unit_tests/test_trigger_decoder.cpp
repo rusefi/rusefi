@@ -298,12 +298,12 @@ void testRpmCalculator(void) {
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
-	IgnitionEventList *ilist = &eth.engine.ignitionEvents;
+	IgnitionEventList *ilist = &engine->ignitionEvents;
 	assertEqualsM("size #1", 0, ilist->isReady);
 
-	assertEqualsM("engineCycle", 720, eth.engine.engineCycle);
+	assertEqualsM("engineCycle", 720, engine->engineCycle);
 
-	efiAssertVoid(CUSTOM_ERR_6683, eth.engine.engineConfiguration!=NULL, "null config in engine");
+	efiAssertVoid(CUSTOM_ERR_6683, engineConfiguration!=NULL, "null config in engine");
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
@@ -313,7 +313,7 @@ void testRpmCalculator(void) {
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timeNowUs = 0;
-	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEquals(0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
@@ -321,15 +321,15 @@ void testRpmCalculator(void) {
 
 	eth.fireTriggerEvents(48);
 
-	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
-	assertEqualsM("index #1", 15, eth.engine.triggerCentral.triggerState.getCurrentIndex());
+	assertEqualsM("RPM", 1500, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("index #1", 15, engine->triggerCentral.triggerState.getCurrentIndex());
 
 
 	eth.clearQueue();
 
 	debugSignalExecutor = true;
 
-	assertEquals(eth.engine.triggerCentral.triggerState.shaft_is_synchronized, 1);
+	assertEquals(engine->triggerCentral.triggerState.shaft_is_synchronized, 1);
 
 	timeNowUs += MS2US(5); // 5ms
 
@@ -341,16 +341,16 @@ void testRpmCalculator(void) {
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	assertEqualsM("fuel #1", 4.5450, eth.engine.injectionDuration);
-	InjectionEvent *ie0 = &eth.engine.injectionEvents.elements[0];
+	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
+	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
 	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
-	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel #2", 4.5450, eth.engine.injectionDuration);
-	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
+	assertEqualsM("dwell", 4.5, engine->engineState.dwellAngle);
+	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
+	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	assertEqualsM("size #2", 1, ilist->isReady);
 	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffset);
@@ -1075,7 +1075,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("Lfuel#2", 17.5, engine->injectionDuration);
-	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 
 	assertEqualsM("Lqs#1", 4, schedulingQueue.size());
