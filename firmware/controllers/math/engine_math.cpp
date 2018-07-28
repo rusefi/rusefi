@@ -101,6 +101,10 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 
 FuelSchedule::FuelSchedule() {
 	clear();
+	for (int cylinderIndex = 0; cylinderIndex < MAX_INJECTION_OUTPUT_COUNT; cylinderIndex++) {
+		InjectionEvent *ev = &elements[cylinderIndex];
+		ev->ownIndex = cylinderIndex;
+	}
 }
 
 void FuelSchedule::clear() {
@@ -217,10 +221,10 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	clear();
 
-	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		InjectionEvent *ev = &elements[i];
-		ev->ownIndex = i;
-		bool result = addFuelEventsForCylinder(i PASS_ENGINE_PARAMETER_SUFFIX);
+	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+		InjectionEvent *ev = &elements[cylinderIndex];
+		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
+		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 		if (!result)
 			return;
 	}
