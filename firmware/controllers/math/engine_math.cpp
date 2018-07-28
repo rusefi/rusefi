@@ -420,7 +420,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	if (index < 0 || index >= firingOrderLength) {
-		firmwareError(CUSTOM_ERR_6687, "index %d", index);
+		// todo: open question when does this happen? reproducible with functional tests?
+		warning(CUSTOM_ERR_6686, "index %d", index);
 		return 1;
 	}
 
