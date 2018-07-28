@@ -49,12 +49,22 @@ class Engine;
 #define PASS_ENGINE_PARAMETER_SIGNATURE engine, engineConfiguration, config, boardConfiguration
 #define PASS_ENGINE_PARAMETER_SUFFIX , engine, engineConfiguration, config, boardConfiguration
 
-#define EXPAND_Engine engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
+
+/**
+ * this macro is a work-around for uint tests to get all needed pointers only
+ * if engine is in scope
+ */
+#define EXPAND_Engine \
+	    engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
 		persistent_config_s *config = engine->config; \
 		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 
-#define EXPAND_EngineTestHelper Engine *engine = &eth.engine; \
+/**
+ * this macro provides references to engine from EngineTestHelper
+ */
+#define EXPAND_EngineTestHelper \
+	    Engine *engine = &eth.engine; \
 		EXPAND_Engine
 
 #define CONFIG(x) engineConfiguration->x
