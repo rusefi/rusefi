@@ -404,9 +404,19 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
-	const int foLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (engineConfiguration->specs.cylindersCount != foLength) {
-		warning(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong firing order %d/%d", engineConfiguration->specs.cylindersCount, foLength);
+	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	if (index < 1 || index > INJECTION_PIN_COUNT) {
+		firmwareError(CUSTOM_ERR_6687, "fol %d", firingOrderLength);
+		return 1;
+	}
+	if (engineConfiguration->specs.cylindersCount != firingOrderLength) {
+		warning(CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong firing order %d/%d", engineConfiguration->specs.cylindersCount, firingOrderLength);
+		return 1;
+	}
+
+	if (index < 0 || index >= firingOrderLength) {
+		firmwareError(CUSTOM_ERR_6687, "index %d", index);
 		return 1;
 	}
 
