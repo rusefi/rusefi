@@ -44,7 +44,7 @@ public:
 	 * this method schedules all fuel events for an engine cycle
 	 */
 	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	bool addFuelEventsForCylinder(int i DECLARE_ENGINE_PARAMETER_SUFFIX);
+	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
 	bool isReady;
