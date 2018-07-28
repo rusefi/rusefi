@@ -83,6 +83,14 @@ void baseHardwareInit(void) {
 	BOR_Set(BOR_Level_1); // one step above default value
 }
 
+void _unhandled_exception(void) {
+/*lint -restore*/
+
+  chDbgPanic3("_unhandled_exception", __FILE__, __LINE__);
+  while (true) {
+  }
+}
+
 void DebugMonitorVector(void) {
 	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
 	while (TRUE)
