@@ -374,7 +374,7 @@ static bool isValidCan1RxPin(brain_pin_e pin) {
 }
 
 static bool isValidCan1TxPin(brain_pin_e pin) {
-	return pin == GPIOA_12 || pin == GPIOB_9 || GPIOD_1;
+	return pin == GPIOA_12 || pin == GPIOB_9 || pin == GPIOD_1;
 }
 
 static bool isValidCan2RxPin(brain_pin_e pin) {
