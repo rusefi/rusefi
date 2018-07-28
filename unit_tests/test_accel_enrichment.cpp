@@ -3,7 +3,7 @@
  *
  *  Created on: apr 29, 2014
  *  	Author: Dmitry Sidin
- *      Author: Andrey Belomutskiy, (c) 2012-2015
+ *      Author: Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"

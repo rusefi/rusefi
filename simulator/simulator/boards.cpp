@@ -2,7 +2,7 @@
  * @file board.cpp
  *
  * @date Nov 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2016
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "main.h"
