@@ -111,9 +111,7 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 
 void EngineTestHelper::applyTriggerShape() {
 	Engine *engine = &this->engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	persistent_config_s *config = engine->config;
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+	EXPAND_Engine
 
 	TRIGGER_SHAPE(initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
 
