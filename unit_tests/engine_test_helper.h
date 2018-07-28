@@ -20,11 +20,14 @@ class EngineTestHelper {
 public:
 	EngineTestHelper(engine_type_e engineType);
 	void applyTriggerShape();
+	void fireRise(int delayMs);
+	void fireFall(int delayMs);
+
 	void firePrimaryTriggerRise();
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
-	void fireTriggerEventsWithDuration(int durationMs);
-	void fireTriggerEvents2(int count, int durationMs);
+	void fireTriggerEventsWithDuration(int delayMs);
+	void fireTriggerEvents2(int count, int delayMs);
 	void clearQueue();
 
 	Engine engine;

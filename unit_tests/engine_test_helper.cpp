@@ -70,6 +70,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	resetTriggerConfigChangedForUnitTest();
 }
 
+void EngineTestHelper::fireRise(int delayMs) {
+	timeNowUs += MS2US(delayMs);
+	firePrimaryTriggerRise();
+
+}
+
 void EngineTestHelper::firePrimaryTriggerRise() {
 	board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
@@ -92,8 +98,8 @@ void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
 void EngineTestHelper::fireTriggerEvents2(int count, int durationMs) {
 	int durationUs = MS2US(durationMs);
 	for (int i = 0; i < count; i++) {
-		timeNowUs += durationUs;
-		firePrimaryTriggerRise();
+
+		fireRise(durationMs);
 		timeNowUs += durationUs;
 		firePrimaryTriggerFall();
 	}
