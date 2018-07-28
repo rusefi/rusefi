@@ -23,7 +23,6 @@ extern float testMafValue;
 extern engine_configuration_s activeConfiguration;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
-	ec = &persistentConfig.engineConfiguration;
 	unitTestWarningCounter = 0;
 
 	testMafValue = 0;
@@ -32,8 +31,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	schedulingQueue.clear();
 	enginePins.reset();
 
-	engineConfiguration = ec;
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
+	Engine *engine = &this->engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	board_configuration_s * boardConfiguration = &persistentConfig.engineConfiguration.bc;
 	persistent_config_s *config = &persistentConfig;
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
@@ -49,7 +49,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
 
-	Engine *engine = &this->engine;
 	prepareFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initAccelEnrichment(NULL PASS_ENGINE_PARAMETER_SUFFIX);
@@ -64,8 +63,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	// this is needed to have valid CLT and IAT.
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	prepareTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	engine->triggerCentral.triggerShape.initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
