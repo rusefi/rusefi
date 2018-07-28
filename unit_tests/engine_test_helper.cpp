@@ -80,12 +80,17 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 }
 
+void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
+	fireTriggerEvents2(1, durationMs);
+}
+
 /**
  * Sends specified number of rise/fall trigger events, with specified amount of time between those.
  *
  * This is helpful for TT_ONE trigger wheel decoder and probably other decoders as well.
  */
-void EngineTestHelper::fireTriggerEvents2(int count, int durationUs) {
+void EngineTestHelper::fireTriggerEvents2(int count, int durationMs) {
+	int durationUs = MS2US(durationMs);
 	for (int i = 0; i < count; i++) {
 		timeNowUs += durationUs;
 		firePrimaryTriggerRise();
@@ -101,7 +106,7 @@ void EngineTestHelper::clearQueue() {
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {
-	fireTriggerEvents2(count, MS2US(5)); // 5ms
+	fireTriggerEvents2(count, 5); // 5ms
 }
 
 void EngineTestHelper::applyTriggerShape() {
