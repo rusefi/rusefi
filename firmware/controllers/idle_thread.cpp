@@ -85,8 +85,10 @@ static percent_t currentIdlePosition = -100.0f;
 static percent_t baseIdlePosition = currentIdlePosition;
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
+ * todo: why do we have this logic? is this ever useful?
+ * See
  */
-static percent_t idlePositionSensitivityThreshold = 1.0f;
+static percent_t idlePositionSensitivityThreshold = 0.0f;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
@@ -459,7 +461,7 @@ static void initIdleHardware() {
 		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &enginePins.idleSolenoidPin,
 				boardConfiguration->idle.solenoidFrequency, boardConfiguration->manIdlePosition / 100,
 				applyIdleSolenoidPinState);
-		idlePositionSensitivityThreshold = 1.0f;
+		idlePositionSensitivityThreshold = 0.0f;
 	}
 }
 
