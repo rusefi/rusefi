@@ -664,7 +664,7 @@ bit hasFrequencyReportingMapSensor;
 	bit useFSIO10ForServo3
 	bit useFSIO11ForServo4
 	bit useFSIO12ForServo5
-bit unused_bit_1472_26;
+bit useFSIO15ForIdleRpmAdjustment;
 bit unused_bit_1472_27;
 	adc_channel_e hipOutputChannel;
 
