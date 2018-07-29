@@ -1108,8 +1108,8 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	// injector does not go low too soon, that's a feature :)
 	assertTrueM("injector@2", enginePins.injectors[0].currentLogicValue);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerFall();
+
+	eth.fireFall(20);
 
 	assertEqualsM("Lqs#04", 6, schedulingQueue.size());
 	assertInjectorUpEvent("L015@0", 0, MS2US(-1.5), 1 PASS_ENGINE_PARAMETER_SUFFIX);
