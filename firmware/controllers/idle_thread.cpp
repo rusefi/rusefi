@@ -68,6 +68,7 @@ typedef enum {
 	RPM_DEAD_ZONE = 2,
 	PWM_PRETTY_CLOSE = 3,
 	ADJUSTING = 4,
+	BLIP = 5,
 
 } idle_state_e;
 
@@ -317,6 +318,7 @@ static msg_t ivThread(int param) {
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
 			baseIdlePosition = iacPosition;
+			idleState = BLIP;
 		} else if (!isRunning) {
 			// during cranking it's always manual mode, PID would make no sence during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
@@ -346,11 +348,6 @@ static msg_t ivThread(int param) {
 					engine->rpmCalculator.getRevolutionCounterSinceStart());
 		}
 
-		// The threshold is dependent on IAC type (see initIdleHardware())
-		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
-			idleState = PWM_PRETTY_CLOSE;
-			continue; // value is pretty close, let's leave the poor valve alone
-		}
 
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -362,6 +359,12 @@ static msg_t ivThread(int param) {
 				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
 			}
 #endif
+		}
+
+		// The threshold is dependent on IAC type (see initIdleHardware())
+		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
+			idleState = PWM_PRETTY_CLOSE;
+			continue; // value is pretty close, let's leave the poor valve alone
 		}
 
 		currentIdlePosition = iacPosition;
