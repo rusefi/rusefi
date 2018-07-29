@@ -156,33 +156,35 @@ void test1995FordInline6TriggerDecoder(void) {
 	assertEqualsM("event index", 10, ecl->elements[5].dwellPosition.eventIndex);
 	assertEqualsM("angle offset#2", 7, ecl->elements[5].dwellPosition.angleOffset);
 
-	TriggerState state;
+	TriggerState state_;
+	TriggerState *sta = &state_;
 
-	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
+
+	assertFalseM("shaft_is_synchronized", sta->shaft_is_synchronized);
 	int r = 10;
-	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
-	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
-	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
-	assertTrue(state.shaft_is_synchronized); // first signal rise synchronize
-	assertEquals(0, state.getCurrentIndex());
-	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEquals(1, state.getCurrentIndex());
+	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
+	assertFalseM("shaft_is_synchronized", sta->shaft_is_synchronized); // still no synchronization
+	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
+	assertTrue(sta->shaft_is_synchronized); // first signal rise synchronize
+	assertEquals(0, sta->getCurrentIndex());
+	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	assertEquals(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
-		assertEqualsM("even", i++, state.getCurrentIndex());
-		state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
-		assertEqualsM("odd", i++, state.getCurrentIndex());
+		sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		assertEqualsM("even", i++, sta->getCurrentIndex());
+		sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEquals(10, state.getCurrentIndex());
+	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	assertEquals(10, sta->getCurrentIndex());
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEquals(11, state.getCurrentIndex());
+	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	assertEquals(11, sta->getCurrentIndex());
 
-	state.decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEquals(0, state.getCurrentIndex()); // new revolution
+	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
+	assertEquals(0, sta->getCurrentIndex()); // new revolution
 
 	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
