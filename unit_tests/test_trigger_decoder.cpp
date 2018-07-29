@@ -112,49 +112,11 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 	assertEqualsM("angleOffset", angleOffset, position->angleOffset);
 }
 
-void test1995FordInline6TriggerDecoder(void) {
-	printf("*************************************************** test1995FordInline6TriggerDecoder\r\n");
-
-	assertEqualsM("triggerIndex ", 0, getTriggerZeroEventIndex(FORD_INLINE_6_1995));
-
-	initTriggerDecoder();
+void testSomethingWeird(void) {
+	printf("*************************************************** testSomethingWeird\r\n");
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
-
-	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
-
-	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
-
-	// this is needed to have valid CLT and IAT. todo: extract method
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	event_trigger_position_s position;
-	assertEqualsM("globalTriggerAngleOffset", 0, engineConfiguration->globalTriggerAngleOffset);
-	TRIGGER_SHAPE(findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertTriggerPosition(&position, 0, 0);
-
-	TRIGGER_SHAPE(findTriggerPosition(&position, 200 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertTriggerPosition(&position, 3, 20);
-
-	TRIGGER_SHAPE(findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertTriggerPosition(&position, 6, 0);
-
-	eth.applyTriggerShape();
-
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	eth.fireTriggerEvents(48);
-	assertEquals(2000, eth.engine.rpmCalculator.rpmValue);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	eth.fireTriggerEvents(48);
-
-	IgnitionEventList *ecl = &eth.engine.ignitionEvents;
-	assertEqualsM("ford inline ignition events size", 1, ecl->isReady);
-	assertEqualsM("event index", 0, ecl->elements[0].dwellPosition.eventIndex);
-	assertEqualsM("angle offset#1", 7, ecl->elements[0].dwellPosition.angleOffset);
-
-	assertEqualsM("event index", 10, ecl->elements[5].dwellPosition.eventIndex);
-	assertEqualsM("angle offset#2", 7, ecl->elements[5].dwellPosition.angleOffset);
 
 	TriggerState state_;
 	TriggerState *sta = &state_;
@@ -185,6 +147,52 @@ void test1995FordInline6TriggerDecoder(void) {
 
 	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(0, sta->getCurrentIndex()); // new revolution
+}
+
+void test1995FordInline6TriggerDecoder(void) {
+	testSomethingWeird();
+
+	printf("*************************************************** test1995FordInline6TriggerDecoder\r\n");
+
+	assertEqualsM("triggerIndex ", 0, getTriggerZeroEventIndex(FORD_INLINE_6_1995));
+
+	EngineTestHelper eth(FORD_INLINE_6_1995);
+	EXPAND_EngineTestHelper;
+
+	TriggerShape * shape = &engine->triggerCentral.triggerShape;
+
+	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
+
+	// this is needed to have valid CLT and IAT. todo: extract method
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	event_trigger_position_s position;
+	assertEqualsM("globalTriggerAngleOffset", 0, engineConfiguration->globalTriggerAngleOffset);
+	TRIGGER_SHAPE(findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertTriggerPosition(&position, 0, 0);
+
+	TRIGGER_SHAPE(findTriggerPosition(&position, 200 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertTriggerPosition(&position, 3, 20);
+
+	TRIGGER_SHAPE(findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertTriggerPosition(&position, 6, 0);
+
+	eth.applyTriggerShape();
+
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.fireTriggerEvents(48);
+	assertRpm("rpm", 2000 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.fireTriggerEvents(48);
+
+	IgnitionEventList *ecl = &engine->ignitionEvents;
+	assertEqualsM("ford inline ignition events size", 1, ecl->isReady);
+	assertEqualsM("event index", 0, ecl->elements[0].dwellPosition.eventIndex);
+	assertEqualsM("angle offset#1", 7, ecl->elements[0].dwellPosition.angleOffset);
+
+	assertEqualsM("event index", 10, ecl->elements[5].dwellPosition.eventIndex);
+	assertEqualsM("angle offset#2", 7, ecl->elements[5].dwellPosition.angleOffset);
+
 
 	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
