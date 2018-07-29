@@ -62,6 +62,18 @@ static StepperMotor iacMotor;
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
+typedef enum {
+	INIT = 0,
+	TPS_THRESHOLD = 1,
+	RPM_DEAD_ZONE = 2,
+	PWM_PRETTY_CLOSE = 3,
+	ADJUSTING = 4,
+
+} idle_state_e;
+
+idle_state_e idleState = INIT;
+
+
 /**
  * that's current position with CLT and IAT corrections
  */
@@ -119,7 +131,7 @@ static void applyIACposition(percent_t position) {
 	}
 }
 
-static float manualIdleController(float cltCorrection) {
+static percent_t manualIdleController(float cltCorrection) {
 
 	percent_t correctedPosition = cltCorrection * boardConfiguration->manIdlePosition;
 
@@ -139,7 +151,7 @@ void setIdleValvePosition(int positionPercent) {
 	boardConfiguration->manIdlePosition = positionPercent;
 }
 
-static int blipIdlePosition;
+static percent_t blipIdlePosition;
 static efitimeus_t timeToStopBlip = 0;
 static efitimeus_t timeToStopIdleTest = 0;
 
@@ -169,7 +181,10 @@ percent_t getIdlePosition(void) {
 	return currentIdlePosition;
 }
 
-static float autoIdle() {
+/**
+ * @return idle valve position percentage for automatic closed loop mode
+ */
+static percent_t automaticIdleController() {
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (tpsPos > boardConfiguration->idlePidDeactivationTpsThreshold) {
 		// Don't store old I and D terms if PID doesn't work anymore.
@@ -179,6 +194,7 @@ static float autoIdle() {
 			shouldResetPid = true;
 		}
 
+		idleState = TPS_THRESHOLD;
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
 		return baseIdlePosition;
 	}
@@ -195,8 +211,11 @@ static float autoIdle() {
 
 	// check if within the dead zone
 	int rpm = getRpmE(engine);
-	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone))
+	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
+		idleState = RPM_DEAD_ZONE;
+		// current RPM is close enough, no need to change anything
 		return baseIdlePosition;
+	}
 
 	// When rpm < targetRpm, there's a risk of dropping RPM too low - and the engine dies out.
 	// So PID reaction should be increased by adding extra percent to PID-error:
@@ -253,6 +272,11 @@ static msg_t ivThread(int param) {
 	while (true) {
 		idlePid.sleep();  // in both manual and auto mode same period is used
 
+		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
+			scheduleMsg(logger, "state %d", idleState);
+			idlePid.showPidStatus(logger, "idle");
+		}
+
 		if (shouldResetPid) {
 			idlePid.reset();
 //			alternatorPidResetCounter++;
@@ -288,7 +312,7 @@ static msg_t ivThread(int param) {
 		else
 			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
 
-		float iacPosition;
+		percent_t iacPosition;
 
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
@@ -305,7 +329,7 @@ static msg_t ivThread(int param) {
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection);
 			} else {
-				iacPosition = autoIdle();
+				iacPosition = automaticIdleController();
 			}
 			
 			// store 'base' iacPosition without adjustments
@@ -324,6 +348,7 @@ static msg_t ivThread(int param) {
 
 		// The threshold is dependent on IAC type (see initIdleHardware())
 		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
+			idleState = PWM_PRETTY_CLOSE;
 			continue; // value is pretty close, let's leave the poor valve alone
 		}
 
@@ -339,13 +364,8 @@ static msg_t ivThread(int param) {
 #endif
 		}
 
-		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
-			idlePid.showPidStatus(logger, "idle");
-
-		}
-
 		currentIdlePosition = iacPosition;
-
+		idleState = ADJUSTING;
 		applyIACposition(currentIdlePosition);
 	}
 #if defined __GNUC__
