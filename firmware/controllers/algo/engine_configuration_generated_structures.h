@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 26 15:39:48 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 29 17:54:43 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1341,7 +1341,7 @@ typedef struct {
 	bool useFSIO12ForServo5 : 1;
 	/**
 	offset 1472 bit 26 */
-	bool unused_bit_1472_26 : 1;
+	bool useFSIO15ForIdleRpmAdjustment : 1;
 	/**
 	offset 1472 bit 27 */
 	bool unused_bit_1472_27 : 1;
@@ -2390,4 +2390,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jul 26 15:39:48 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 29 17:54:43 EDT 2018

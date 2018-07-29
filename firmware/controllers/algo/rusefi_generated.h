@@ -918,8 +918,8 @@
 #define useFSIO11ForServo4_offset_hex 5c0
 #define useFSIO12ForServo5_offset 1472
 #define useFSIO12ForServo5_offset_hex 5c0
-#define unused_bit_1472_26_offset 1472
-#define unused_bit_1472_26_offset_hex 5c0
+#define useFSIO15ForIdleRpmAdjustment_offset 1472
+#define useFSIO15ForIdleRpmAdjustment_offset_hex 5c0
 #define unused_bit_1472_27_offset 1472
 #define unused_bit_1472_27_offset_hex 5c0
 #define hipOutputChannel_offset 1476

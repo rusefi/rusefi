@@ -211,6 +211,8 @@ static percent_t automaticIdleController() {
 	} else {
 		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
 	}
+	targetRpm += engine->fsioIdleTargetRPMAdjustment;
+
 
 	// check if within the dead zone
 	int rpm = getRpmE(engine);

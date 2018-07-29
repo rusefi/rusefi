@@ -380,6 +380,7 @@ public:
 	bool isRunningPwmTest;
 
 	float fsioTimingAdjustment;
+	float fsioIdleTargetRPMAdjustment;
 
 	float servoValues[SERVO_COUNT];
 

@@ -115,6 +115,7 @@ void Engine::reset() {
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
 	fsioTimingAdjustment = 0;
+	fsioIdleTargetRPMAdjustment = 0;
 	isAlternatorControlEnabled = false;
 	callFromPitStopEndTime = 0;
 	rpmHardLimitTimestamp = 0;

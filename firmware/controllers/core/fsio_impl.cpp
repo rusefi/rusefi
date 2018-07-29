@@ -25,6 +25,8 @@
 #define NO_PWM 0
 
 
+// see useFSIO15ForIdleRpmAdjustment
+#define MAGIC_OFFSET_FOR_IDLE_TARGET_RPM 14
 // see useFSIO16ForTimingAdjustment
 #define MAGIC_OFFSET_FOR_TIMING_FSIO 15
 
@@ -435,6 +437,16 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
 		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic);
+	}
+
+	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
+		LEElement * element = fsioLogics[MAGIC_OFFSET_FOR_IDLE_TARGET_RPM];
+		if (element == NULL) {
+			warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", "RPM targer");
+		} else {
+			engine->fsioIdleTargetRPMAdjustment = calc.getValue2(engine->fsioIdleTargetRPMAdjustment, element PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+
 	}
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
 		LEElement * element = fsioLogics[MAGIC_OFFSET_FOR_TIMING_FSIO];
