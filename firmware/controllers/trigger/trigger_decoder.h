@@ -42,7 +42,7 @@ typedef struct {
 } current_cycle_state_s;
 
 /**
- * @see TriggerShape for trigger wheel shape deginition
+ * @see TriggerShape for trigger wheel shape definition
  */
 class TriggerState {
 public:
