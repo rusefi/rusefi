@@ -73,12 +73,16 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 void EngineTestHelper::fireRise(int delayMs) {
 	timeNowUs += MS2US(delayMs);
 	firePrimaryTriggerRise();
-
 }
 
 void EngineTestHelper::firePrimaryTriggerRise() {
 	board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+}
+
+void EngineTestHelper::fireFall(int delayMs) {
+	timeNowUs += MS2US(delayMs);
+	firePrimaryTriggerFall();
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
@@ -96,12 +100,9 @@ void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
  * This is helpful for TT_ONE trigger wheel decoder and probably other decoders as well.
  */
 void EngineTestHelper::fireTriggerEvents2(int count, int durationMs) {
-	int durationUs = MS2US(durationMs);
 	for (int i = 0; i < count; i++) {
-
 		fireRise(durationMs);
-		timeNowUs += durationUs;
-		firePrimaryTriggerFall();
+		fireFall(durationMs);
 	}
 }
 

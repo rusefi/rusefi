@@ -345,7 +345,7 @@ void testRpmCalculator(void) {
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
 	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
 
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.firePrimaryTriggerRise();
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, engine->engineState.dwellAngle);
@@ -373,12 +373,9 @@ void testRpmCalculator(void) {
 
 	schedulingQueue.clear();
 
-	timeNowUs += MS2US(5);
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
-	timeNowUs += MS2US(5); // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
-	timeNowUs += MS2US(5);
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.fireFall(5);
+	eth.fireRise(5);
+	eth.fireFall(5);
 	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 4, schedulingQueue.size());
 	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
@@ -389,16 +386,16 @@ void testRpmCalculator(void) {
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));
 
-	timeNowUs += MS2US(5);
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.fireFall(5);
 	assertEqualsM("queue size 4.1", 0, schedulingQueue.size());
 
 	timeNowUs += MS2US(5); // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 4.2", 4, schedulingQueue.size());
 
 	timeNowUs += MS2US(5); // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 4.3", 4, schedulingQueue.size());
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
@@ -412,26 +409,24 @@ void testRpmCalculator(void) {
 	assertEqualsM("queue size 4", 4, schedulingQueue.size());
 	schedulingQueue.clear();
 
-	timeNowUs += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.fireFall(5);
 	assertEqualsM("queue size 5", 2, schedulingQueue.size());
 // todo: assert queue elements
 	schedulingQueue.clear();
 
 	timeNowUs += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 6", 2, schedulingQueue.size());
 	assertEqualsM("6/0", st + 40944, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("6/1", st + 41444, schedulingQueue.getForUnitText(1)->momentX);
 	schedulingQueue.clear();
 
-	timeNowUs += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.fireFall(5);
 	assertEqualsM("queue size 7", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNowUs += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 8", 4, schedulingQueue.size());
 	// todo: assert queue elements completely
 	assertEqualsM("8/0", st + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
@@ -440,12 +435,12 @@ void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNowUs += 5000;
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.firePrimaryTriggerFall();
 	assertEqualsM("queue size 9", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNowUs += 5000; // 5ms
-	eth.engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 10", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 }
@@ -700,8 +695,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	/**
 	 * Trigger down - no new events, executing some
 	 */
-	timeNowUs += MS2US(20);
-	eth->firePrimaryTriggerFall();
+	eth->fireFall(20);
 	// same exact picture
 	// time...|-20.....|-10.....|0.......|10......|20
 	// inj #0 |.......#|........|.......#|........|
@@ -1293,8 +1287,8 @@ void testMissedSpark299(void) {
 
 	assertEqualsM("warningCounter#0", 4, unitTestWarningCounter);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 	assertEqualsM("ci#0", 0, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
 
@@ -1303,8 +1297,8 @@ void testMissedSpark299(void) {
 	schedulingQueue.executeAll(timeNowUs);
 	assertEqualsM("ci#1", 1, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 	assertEqualsM("ci#2", 0, eth.engine.triggerCentral.triggerState.currentCycle.current_index);
 
@@ -1331,15 +1325,15 @@ void testMissedSpark299(void) {
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 	timeNowUs += MS2US(20);
 	eth.firePrimaryTriggerFall();
 	schedulingQueue.executeAll(timeNowUs);
 
-	timeNowUs += MS2US(20);
-	eth.firePrimaryTriggerRise();
+
+	eth.fireRise(20);
 	schedulingQueue.executeAll(timeNowUs);
 	timeNowUs += MS2US(20);
 	eth.firePrimaryTriggerFall();
