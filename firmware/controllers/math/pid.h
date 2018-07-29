@@ -25,7 +25,7 @@ class Pid {
 public:
 	Pid();
 	Pid(pid_s *pid);
-	void init(pid_s *pid);
+	void initPidClass(pid_s *pid);
 	bool isSame(pid_s *pid);
 
 	float getValue(float target, float input);

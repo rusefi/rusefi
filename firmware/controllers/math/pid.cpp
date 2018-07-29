@@ -12,14 +12,14 @@
 #include "math.h"
 
 Pid::Pid() {
-    init(NULL);
+	initPidClass(NULL);
 }
 
 Pid::Pid(pid_s *pid) {
-	init(pid);
+	initPidClass(pid);
 }
 
-void Pid::init(pid_s *pid) {
+void Pid::initPidClass(pid_s *pid) {
 	this->pid = pid;
 	resetCounter = 0;
 
@@ -120,12 +120,12 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();
 	tsOutputChannels->debugFloatField5 = getD();
+	tsOutputChannels->debugFloatField6 = dTerm;
 //	tsOutputChannels->debugFloatField6 = pid->minValue;
 	tsOutputChannels->debugFloatField7 = pid->maxValue;
 	tsOutputChannels->debugIntField1 = getP() * pMult;
 	tsOutputChannels->debugIntField2 = getOffset();
 	tsOutputChannels->debugIntField3 = resetCounter;
-	tsOutputChannels->debugFloatField6 = dTerm;
 }
 #endif
 
