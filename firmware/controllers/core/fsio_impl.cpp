@@ -194,6 +194,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	}
 	boardConfiguration->fsioOutputPins[index] = pin;
 	scheduleMsg(logger, "FSIO output pin #%d [%s]", (index + 1), hwPortname(pin));
+	scheduleMsg(logger, "please writeconfig and reboot for pin to take effect");
 	showFsioInfo();
 }
 #endif /* EFI_PROD_CODE */
