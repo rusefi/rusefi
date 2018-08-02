@@ -147,7 +147,25 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 // todo: that's about bench test mode, wrong header for sure!
 #include "injector_central.h"
 
+static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
+// todo: reduce code duplication between all "set pin methods"
+	int index = atoi(indexStr) - 1;
+	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
+		scheduleMsg(logger, "invalid FSIO index: %d", index);
+		return;
+	}
+	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	boardConfiguration->fsioAdc[index] = pin;
+	scheduleMsg(logger, "FSIO analog input pin #%d [%s]", (index + 1), hwPortname(pin));
+}
+
 static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
+	// todo: reduce code duplication between all "set pin methods"
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
@@ -160,7 +178,7 @@ static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	boardConfiguration->fsioDigitalInputs[index] = pin;
-	scheduleMsg(logger, "FSIO input pin #%d [%s]", (index + 1), hwPortname(pin));
+	scheduleMsg(logger, "FSIO digital input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
 static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
@@ -637,6 +655,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
 	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
 	addConsoleActionSS("set_fsio_digital_input_pin", (VoidCharPtrCharPtr) setFsioDigitalInputPin);
+	addConsoleActionSS("set_fsio_analog_input_pin", (VoidCharPtrCharPtr) setFsioAnalogInputPin);
 
 #endif /* EFI_PROD_CODE */
 
