@@ -54,7 +54,8 @@ static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_set
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, "fsio_table");
-static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, "fsio_input");
+static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, "fsio_analog_input");
+static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, "fsio_digital_input");
 static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
@@ -146,7 +147,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 // todo: that's about bench test mode, wrong header for sure!
 #include "injector_central.h"
 
-static void setFsioInputPin(const char *indexStr, const char *pinName) {
+static void setFsioDigitalInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
@@ -635,7 +636,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleActionSS("set_fsio_pid_output_pin", (VoidCharPtrCharPtr) setFsioPidOutputPin);
 	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
 	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
-	addConsoleActionSS("set_fsio_input_pin", (VoidCharPtrCharPtr) setFsioInputPin);
+	addConsoleActionSS("set_fsio_digital_input_pin", (VoidCharPtrCharPtr) setFsioDigitalInputPin);
 
 #endif /* EFI_PROD_CODE */
 
