@@ -160,7 +160,7 @@ static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 		scheduleMsg(logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	boardConfiguration->fsioAdc[index] = pin;
+	engineConfiguration->fsioAdc[index] = (adc_channel_e) pin;
 	scheduleMsg(logger, "FSIO analog input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
