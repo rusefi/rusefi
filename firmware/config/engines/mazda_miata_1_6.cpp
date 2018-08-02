@@ -178,9 +178,9 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 //	 * set_rpn_expression 1 "rpm 3 fsio_setting >"
 	// rpn_eval "rpm 1 fsio_setting >"
-	// rpn_eval "fsio_input"
+	// rpn_eval "fsio_analog_input"
 
-	// set_fsio_expression 0 "((rpm > fsio_setting(4) & (fsio_input < fsio_setting(5)) | rpm > fsio_setting(1) | (coolant > fsio_setting(2)  > | (vbatt < fsio_setting(3)"
+	// set_fsio_expression 0 "((rpm > fsio_setting(4) & (fsio_analog_input < fsio_setting(5)) | rpm > fsio_setting(1) | (coolant > fsio_setting(2)  > | (vbatt < fsio_setting(3)"
 
 	// todo: convert
 	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
