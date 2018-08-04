@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 29 17:54:43 EDT 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 04 10:21:45 EDT 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -68,7 +68,7 @@ public class Fields {
 	public static final int isVerboseAuxPid4_offset = 76;
 	public static final int useBiQuadAnalogFiltering_offset = 76;
 	public static final int cj125isUaDivided_offset = 76;
-	public static final int issue_294_11_offset = 76;
+	public static final int cj125isLsu49_offset = 76;
 	public static final int issue_294_12_offset = 76;
 	public static final int issue_294_13_offset = 76;
 	public static final int issue_294_14_offset = 76;
@@ -1187,7 +1187,7 @@ public class Fields {
 	public static final Field ISVERBOSEAUXPID4 = Field.create("ISVERBOSEAUXPID4", 76, FieldType.BIT, 8);
 	public static final Field USEBIQUADANALOGFILTERING = Field.create("USEBIQUADANALOGFILTERING", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
-	public static final Field ISSUE_294_11 = Field.create("ISSUE_294_11", 76, FieldType.BIT, 11);
+	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
 	public static final Field ISSUE_294_12 = Field.create("ISSUE_294_12", 76, FieldType.BIT, 12);
 	public static final Field ISSUE_294_13 = Field.create("ISSUE_294_13", 76, FieldType.BIT, 13);
 	public static final Field ISSUE_294_14 = Field.create("ISSUE_294_14", 76, FieldType.BIT, 14);

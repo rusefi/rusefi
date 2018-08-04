@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 29 17:54:43 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 04 10:21:45 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -918,7 +918,7 @@ typedef struct {
 	bool cj125isUaDivided : 1;
 	/**
 	offset 76 bit 11 */
-	bool issue_294_11 : 1;
+	bool cj125isLsu49 : 1;
 	/**
 	offset 76 bit 12 */
 	bool issue_294_12 : 1;
@@ -2390,4 +2390,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jul 29 17:54:43 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 04 10:21:45 EDT 2018
