@@ -972,6 +972,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
+	engineConfiguration->cj125isUaDivided = true;
+
 	engineConfiguration->isAlternatorControlEnabled = true;
 
 //	boardConfiguration->gps_rx_pin = GPIOB_7;
