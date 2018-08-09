@@ -133,6 +133,9 @@
 #define CJ125_PID_LSU42_P				(80.0f / 16.0f * 5.0f / 1024.0f)
 #define CJ125_PID_LSU42_I				(25.0f / 16.0f * 5.0f / 1024.0f)
 
+#define CJ125_PID_LSU49_P               (8.0f)
+#define CJ125_PID_LSU49_I               (0.003f)
+
 // Returned if there's no valid measurement
 #define CJ125_AFR_NAN					0.0f
 
