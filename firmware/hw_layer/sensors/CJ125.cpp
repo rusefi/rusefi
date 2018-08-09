@@ -361,9 +361,13 @@ static bool cjIsWorkingState(void) {
 }
 
 static void cjInitPid(void) {
-	// todo: these values are valid only for LSU 4.2
-	heaterPidConfig.pFactor = CJ125_PID_LSU42_P;
-	heaterPidConfig.iFactor = CJ125_PID_LSU42_I;
+	if(engineConfiguration->cj125isLsu49) {
+		heaterPidConfig.pFactor = CJ125_PID_LSU49_P;
+		heaterPidConfig.iFactor = CJ125_PID_LSU49_I;
+	} else {
+		heaterPidConfig.pFactor = CJ125_PID_LSU42_P;
+		heaterPidConfig.iFactor = CJ125_PID_LSU42_I;
+	}
 	heaterPidConfig.dFactor = 0.0f;
 	heaterPidConfig.minValue = 0;
 	heaterPidConfig.maxValue = 1;
@@ -550,8 +554,12 @@ static void cjSetInit2(int v) {
 #endif /* CJ125_DEBUG */
 
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// todo: make configurable sensor LSU type
-	cj125_sensor_type_e sensorType = CJ125_LSU_42;
+	cj125_sensor_type_e sensorType;
+	if (engineConfiguration->cj125isLsu49) {
+		sensorType = CJ125_LSU_49;
+	} else {
+		sensorType = CJ125_LSU_42;
+	}
 	
 	// See CJ125 datasheet, page 6
 	float pumpCurrent = (vUa - vUaCal) * amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
