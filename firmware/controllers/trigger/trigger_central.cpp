@@ -125,6 +125,9 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
+		if (engineConfiguration->debugMode == DBG_VVT) {
+			tsOutputChannels.debugIntField1++;
+		}
 	}
 
 
