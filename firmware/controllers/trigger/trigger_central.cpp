@@ -125,9 +125,11 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_VVT) {
 			tsOutputChannels.debugIntField1++;
 		}
+#endif /* EFI_PROD_CODE */
 	}
 
 
