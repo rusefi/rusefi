@@ -78,8 +78,14 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 		if (needInterpolationLogging())
 			printf("Y is smaller than smallest cell in table: %d\r\n", yIndex);
 #endif /* DEBUG_INTERPOLATION */
-		// no interpolation should be fine here.
-		return map[xIndex][0];
+		if (xIndex == xBinSize - 1)
+			return map[xIndex][0];
+		float key1 = xBin[xIndex];
+		float key2 = xBin[xIndex + 1];
+		float value1 = map[xIndex][0];
+		float value2 = map[xIndex + 1][0];
+
+		return interpolateMsg("out3d", key1, value1, key2, value2, x);
 	}
 
 	if (xIndex == xBinSize - 1 && yIndex == yBinSize - 1) {
@@ -95,8 +101,14 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 		if (needInterpolationLogging())
 			printf("TODO BETTER LOGGING x overflow %d\r\n", yIndex);
 #endif /* DEBUG_INTERPOLATION */
-		// todo: implement better handling - y interpolation
-		return map[xBinSize - 1][yIndex];
+		// here yIndex is less than yBinSize - 1, we've checked that condition already
+
+		float key1 = yBin[yIndex];
+		float key2 = yBin[yIndex + 1];
+		float value1 = map[xIndex][yIndex];
+		float value2 = map[xIndex][yIndex + 1];
+
+		return interpolateMsg("out3d", key1, value1, key2, value2, y);
 	}
 
 	if (yIndex == yBinSize - 1) {
@@ -104,8 +116,14 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 		if (needInterpolationLogging())
 			printf("Y is larger than largest cell in table: %d\r\n", yIndex);
 #endif /* DEBUG_INTERPOLATION */
-		// todo: implement better handling - x interpolation
-		return map[xIndex][yBinSize - 1];
+		// here xIndex is less than xBinSize - 1, we've checked that condition already
+
+		float key1 = xBin[xIndex];
+		float key2 = xBin[xIndex + 1];
+		float value1 = map[xIndex][yIndex];
+		float value2 = map[xIndex + 1][yIndex];
+
+		return interpolateMsg("out3d", key1, value1, key2, value2, x);
 	}
 
 	/*
