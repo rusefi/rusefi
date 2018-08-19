@@ -2,6 +2,9 @@
  * @file    interpolation.cpp
  * @brief	Linear interpolation algorithms
  *
+ * See test_interpolation_3d.cpp
+ *
+ *
  * @date Oct 17, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
  * @author Dmitry Sidin, (c) 2015

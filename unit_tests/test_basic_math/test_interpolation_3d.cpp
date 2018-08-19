@@ -1,10 +1,8 @@
 /*
+ * @file    test_interpolation_3d.cpp
+ *
  *  Created on: Oct 17, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
- */
-
-/**
- * @file    test_interpolation_3d.c
  */
 
 #include "test_interpolation_3d.h"
@@ -61,6 +59,13 @@ static void newTestToComfirmInterpolation() {
 	assertEqualsM("middle @ 2.3  ",35.15, getValue(/*rpm*/250, 2.3));
 
 	assertEqualsM("middle cell    ", 54.25, getValue(/*rpm*/250, 2.5));
+
+	// issue #604: interpolation outside of the table
+	assertEqualsM("800 @ 2.1  ",200, getValue(/*rpm*/800, 2.1));
+	assertEqualsM("800 @ 2.3  ",200, getValue(/*rpm*/800, 2.3));
+	assertEqualsM("800 @ 3.3  ",500, getValue(/*rpm*/800, 3.3));
+
+
 }
 
 void testInterpolate3d(void) {
