@@ -228,8 +228,6 @@ private:
 	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
-void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
-
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* TRIGGER_STRUCTURE_H_ */
