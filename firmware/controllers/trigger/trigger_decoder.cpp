@@ -35,6 +35,7 @@
 #include "trigger_toyota.h"
 #include "trigger_rover.h"
 #include "trigger_honda.h"
+#include "trigger_vw.h"
 #include "trigger_structure.h"
 #include "efiGpio.h"
 #include "engine.h"
