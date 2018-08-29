@@ -142,7 +142,7 @@ public:
 	efitimesec_t timeOfPreviousWarning;
 
 	/**
-	 * speed-density logic, calculated air mass in gramms
+	 * speed-density logic, calculated air mass in grams
 	 */
 	float airMass;
 
