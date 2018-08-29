@@ -59,6 +59,9 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
  */
 #define GAS_R 0.28705
 
+/**
+ * @return air mass in grams
+ */
 float getCycleAirMass(engine_configuration_s *engineConfiguration, float VE, float MAP, float tempK) {
 	// todo: pre-calculate cylinder displacement to save one division
 	float cylinderDisplacement = engineConfiguration->specs.displacement;
