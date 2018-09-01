@@ -21,6 +21,10 @@ public:
 	void baseConstructor();
 	Logging();
 	Logging(const char *name, char *buffer, int bufferSize);
+	void initLoggingExt(const char *name, char *buffer, int bufferSize);
+	void append(const char *text);
+	void appendFast(const char *text);
+	void appendPrintf(const char *fmt, ...);
 	const char *name;
 	char SMALL_BUFFER[40];
 	/**

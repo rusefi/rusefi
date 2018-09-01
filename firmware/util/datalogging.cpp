@@ -115,6 +115,7 @@ static void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 	}
 }
 
+// todo: replace with logging->appendPrintf
 void appendPrintf(Logging *logging, const char *fmt, ...) {
 	efiAssertVoid(CUSTOM_ERR_6607, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
@@ -123,12 +124,20 @@ void appendPrintf(Logging *logging, const char *fmt, ...) {
 	va_end(ap);
 }
 
-void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize) {
-	logging->name = name;
-	logging->buffer = buffer;
-	logging->bufferSize = bufferSize;
-	resetLogging(logging);
-	logging->isInitialized = true;
+void Logging::appendPrintf(const char *fmt, ...) {
+	efiAssertVoid(CUSTOM_ERR_6607, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
+	va_list ap;
+	va_start(ap, fmt);
+	vappendPrintf(this, fmt, ap);
+	va_end(ap);
+}
+
+void Logging::initLoggingExt(const char *name, char *buffer, int bufferSize) {
+	this->name = name;
+	this->buffer = buffer;
+	this->bufferSize = bufferSize;
+	resetLogging(this);
+	this->isInitialized = true;
 }
 
 int isInitialized(Logging *logging) {
@@ -303,7 +312,7 @@ Logging::Logging() {
 Logging::Logging(char const *name, char *buffer, int bufferSize) {
 	baseConstructor();
 #if ! EFI_UNIT_TEST
-	initLoggingExt(this, name, buffer, bufferSize);
+	initLoggingExt(name, buffer, bufferSize);
 #endif /* ! EFI_UNIT_TEST */
 }
 
