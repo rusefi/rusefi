@@ -208,6 +208,8 @@ void printWithLength(char *line) {
 	 * When we work with actual hardware, it is faster to invoke 'chSequentialStreamWrite' for the
 	 * whole buffer then to invoke 'chSequentialStreamPut' once per character.
 	 */
+	// todo: if needed we can probably know line length without calculating it, but seems like this is done not
+	// under a lock so not a problem?
 	int len = efiStrlen(line);
 	strcpy(header, "line:");
 	char *p = header + efiStrlen(header);
