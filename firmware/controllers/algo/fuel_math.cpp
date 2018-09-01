@@ -106,7 +106,7 @@ angle_t getInjectionOffset(float rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	angle_t value = fuelPhaseMap.getValue(rpm, engineLoad);
 	if (cisnan(value)) {
-		firmwareError(CUSTOM_ERR_ASSERT, "inj offset#1 %.2f %.2f", rpm, engineLoad);
+		firmwareError(CUSTOM_ERR_ASSERT, "inj offset#3? %.2f %.2f", rpm, engineLoad);
 		return 0;
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(value), "inj offset#1", 0);
