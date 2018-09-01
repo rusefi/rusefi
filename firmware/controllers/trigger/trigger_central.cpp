@@ -89,7 +89,6 @@ static efitick_t previousVvtCamDuration = 0;
 
 void hwHandleVvtCamSignal(trigger_value_e front) {
 	if (ENGINE(isEngineChartEnabled)) {
-		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 		addEngineSniffferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
 	}
 
