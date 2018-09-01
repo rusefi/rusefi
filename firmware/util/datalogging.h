@@ -22,6 +22,7 @@ public:
 	Logging();
 	Logging(const char *name, char *buffer, int bufferSize);
 	void initLoggingExt(const char *name, char *buffer, int bufferSize);
+	void vappendPrintf(const char *fmt, va_list arg);
 	void append(const char *text);
 	void appendFast(const char *text);
 	void appendPrintf(const char *fmt, ...);
