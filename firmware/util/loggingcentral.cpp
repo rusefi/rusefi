@@ -128,4 +128,30 @@ void initLoggingCentral(void) {
 	accumulatedSize = 0;
 }
 
+/**
+ * this whole method is executed under syslock so that we can have multiple threads use the same shared buffer
+ * in order to reduce memory usage
+ */
+void scheduleMsg(Logging *logging, const char *fmt, ...) {
+	if (logging == NULL) {
+		warning(CUSTOM_ERR_LOGGING_NULL, "logging NULL");
+		return;
+	}
+	int wasLocked = lockAnyContext();
+	resetLogging(logging); // todo: is 'reset' really needed here?
+	appendMsgPrefix(logging);
+
+	va_list ap;
+	va_start(ap, fmt);
+	logging->vappendPrintf(fmt, ap);
+	va_end(ap);
+
+	appendMsgPostfix(logging);
+	scheduleLogging(logging);
+	if (!wasLocked) {
+		unlockAnyContext();
+	}
+}
+
+
 #endif /* EFI_UNIT_TEST */

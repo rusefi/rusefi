@@ -110,10 +110,10 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 /**
  * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
  */
-static void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
+void Logging::vappendPrintf(const char *fmt, va_list arg) {
 	efiAssertVoid(CUSTOM_ERR_6604, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
 	int wasLocked = lockAnyContext();
-	vappendPrintfI(logging, fmt, arg);
+	vappendPrintfI(this, fmt, arg);
 	if (!wasLocked) {
 		unlockAnyContext();
 	}
@@ -124,7 +124,7 @@ void appendPrintf(Logging *logging, const char *fmt, ...) {
 	efiAssertVoid(CUSTOM_ERR_6607, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
-	vappendPrintf(logging, fmt, ap);
+	logging->vappendPrintf(fmt, ap);
 	va_end(ap);
 }
 
@@ -132,7 +132,7 @@ void Logging::appendPrintf(const char *fmt, ...) {
 	efiAssertVoid(CUSTOM_ERR_6607, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
-	vappendPrintf(this, fmt, ap);
+	vappendPrintf(fmt, ap);
 	va_end(ap);
 }
 
@@ -255,37 +255,12 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 
 	va_list ap;
 	va_start(ap, fmt);
-	vappendPrintf(logger, fmt, ap);
+	logger->vappendPrintf(fmt, ap);
 	va_end(ap);
 
 	append(logger, DELIMETER);
 	printWithLength(logger->buffer);
 	resetLogging(logger);
-}
-
-/**
- * this whole method is executed under syslock so that we can have multiple threads use the same shared buffer
- * in order to reduce memory usage
- */
-void scheduleMsg(Logging *logging, const char *fmt, ...) {
-	if (logging == NULL) {
-		warning(CUSTOM_ERR_LOGGING_NULL, "logging NULL");
-		return;
-	}
-	int wasLocked = lockAnyContext();
-	resetLogging(logging); // todo: is 'reset' really needed here?
-	appendMsgPrefix(logging);
-
-	va_list ap;
-	va_start(ap, fmt);
-	vappendPrintf(logging, fmt, ap);
-	va_end(ap);
-
-	appendMsgPostfix(logging);
-	scheduleLogging(logging);
-	if (!wasLocked) {
-		unlockAnyContext();
-	}
 }
 
 uint32_t remainingSize(Logging *logging) {
