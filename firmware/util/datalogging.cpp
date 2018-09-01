@@ -2,7 +2,7 @@
  * @file    datalogging.cpp
  * @brief   Buffered console output stream code
  *
- * Here we have a memory buffer and method related to
+ * Here we have a memory buffer and methods related to
  * printing messages into this buffer. The purpose of the
  * buffer is to allow fast, non-blocking, thread-safe logging.
  *
@@ -92,6 +92,10 @@ void appendFast(Logging *logging, const char *text) {
 
 // todo: look into chsnprintf once on Chibios 3
 static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
+	if (!intermediateLoggingBufferInited) {
+		firmwareError(CUSTOM_ERR_BUFF_INIT_ERROR, "intermediateLoggingBufferInited not inited!");
+		return;
+	}
 	intermediateLoggingBuffer.eos = 0; // reset
 	efiAssertVoid(CUSTOM_ERR_6603, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
@@ -104,10 +108,6 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
  */
 static void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 	efiAssertVoid(CUSTOM_ERR_6604, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
-	if (!intermediateLoggingBufferInited) {
-		firmwareError(CUSTOM_ERR_BUFF_INIT_ERROR, "intermediateLoggingBufferInited not inited!");
-		return;
-	}
 	int wasLocked = lockAnyContext();
 	vappendPrintfI(logging, fmt, arg);
 	if (!wasLocked) {
