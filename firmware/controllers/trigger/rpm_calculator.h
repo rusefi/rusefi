@@ -177,7 +177,7 @@ int getRevolutionCounter(void);
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSniffferEvent(name, msg) waveChart.addEvent3((name), (msg))
+#define addEngineSniffferEvent(name, msg) if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); }
  #else
 #define addEngineSniffferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */

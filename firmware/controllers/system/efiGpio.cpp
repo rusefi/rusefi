@@ -210,17 +210,10 @@ void NamedOutputPin::setHigh() {
 	// turn the output level ACTIVE
 	setValue(true);
 
-	// sleep for the needed duration
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
-	// explicit check here is a performance optimization to speed up no-chart mode
-	if (ENGINE(isEngineChartEnabled)) {
 
-//	dbgDurr = hal_lld_get_counter_value() - dbgStart;
-
-		addEngineSniffferEvent(name, WC_UP);
-	}
+	addEngineSniffferEvent(name, WC_UP);
 #endif /* EFI_ENGINE_SNIFFER */
-//	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 }
 
 void NamedOutputPin::setLow() {
@@ -234,9 +227,7 @@ void NamedOutputPin::setLow() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
-	if (ENGINE(isEngineChartEnabled)) {
-		addEngineSniffferEvent(name, WC_DOWN);
-	}
+	addEngineSniffferEvent(name, WC_DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
