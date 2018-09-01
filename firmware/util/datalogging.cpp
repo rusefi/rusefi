@@ -39,7 +39,6 @@
 #include "memstreams.h"
 #include "console_io.h"
 #include "rfiutil.h"
-#include "loggingcentral.h"
 
 static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
@@ -65,18 +64,23 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, const char *text, uin
 	return false;
 }
 
-void append(Logging *logging, const char *text) {
+void Logging::append(const char *text) {
 	efiAssertVoid(CUSTOM_ERR_6602, text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	bool isCapacityProblem = validateBuffer(logging, text, extraLen);
+	bool isCapacityProblem = validateBuffer(this, text, extraLen);
 	if (isCapacityProblem) {
 		return;
 	}
-	strcpy(logging->linePointer, text);
+	strcpy(linePointer, text);
 	/**
 	 * And now we are pointing at the zero char at the end of the buffer again
 	 */
-	logging->linePointer += extraLen;
+	linePointer += extraLen;
+}
+
+// todo: inline
+void append(Logging *logging, const char *text) {
+	logging->append(text);
 }
 
 /**

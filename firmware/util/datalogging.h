@@ -64,8 +64,6 @@ void resetLogging(Logging *logging);
 void appendMsgPrefix(Logging *logging);
 void appendMsgPostfix(Logging *logging);
 
-void scheduleMsg(Logging *logging, const char *fmt, ...);
-
 
 #ifdef __cplusplus
 extern "C"
