@@ -214,11 +214,10 @@ void NamedOutputPin::setHigh() {
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	// explicit check here is a performance optimization to speed up no-chart mode
 	if (ENGINE(isEngineChartEnabled)) {
-		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
-		const char *pinName = name;
+
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 
-		addEngineSniffferEvent(pinName, WC_UP);
+		addEngineSniffferEvent(name, WC_UP);
 	}
 #endif /* EFI_ENGINE_SNIFFER */
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
@@ -236,10 +235,7 @@ void NamedOutputPin::setLow() {
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 	if (ENGINE(isEngineChartEnabled)) {
-		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
-		const char *pinName = name;
-
-		addEngineSniffferEvent(pinName, WC_DOWN);
+		addEngineSniffferEvent(name, WC_DOWN);
 	}
 #endif /* EFI_ENGINE_SNIFFER */
 }
