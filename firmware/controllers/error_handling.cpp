@@ -102,11 +102,11 @@ static void printWarning(const char *fmt, va_list ap) {
 	resetLogging(&logger); // todo: is 'reset' really needed here?
 	appendMsgPrefix(&logger);
 
-	append(&logger, WARNING_PREFIX);
+	logger.append(WARNING_PREFIX);
 
 	printToStream(&warningStream, fmt, ap);
 
-	append(&logger, warningBuffer);
+	logger.append(warningBuffer);
 	append(&logger, DELIMETER);
 	scheduleLogging(&logger);
 }

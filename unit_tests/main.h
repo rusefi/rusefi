@@ -24,6 +24,7 @@
 
 #ifdef __cplusplus
 #include "datalogging.h"
+#include "loggingcentral.h"
 
 extern "C"
 {

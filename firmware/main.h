@@ -29,6 +29,7 @@ extern "C"
 #ifdef __cplusplus
 #include "cli_registry.h"
 #include "datalogging.h"
+#include "loggingcentral.h"
 #include "eficonsole.h"
 #endif
 
