@@ -112,9 +112,9 @@ static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 static int logFileLineIndex = 0;
 #define TAB "\t"
 
-static void reportSensorF(Logging *log, bool fileFormat, const char *caption, const char *units, float value,
+static void reportSensorF(Logging *log, bool isLogFileFormatting, const char *caption, const char *units, float value,
 		int precision) {
-	if (!fileFormat) {
+	if (!isLogFileFormatting) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 		debugFloat(log, caption, value, precision);
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
