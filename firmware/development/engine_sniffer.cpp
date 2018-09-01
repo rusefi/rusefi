@@ -141,7 +141,7 @@ WaveChart::WaveChart() {
 }
 
 void WaveChart::init() {
-	initLoggingExt(&logging, "wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
+	logging.initLoggingExt("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
 	isInitialized = true;
 	reset();
 }
