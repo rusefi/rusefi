@@ -324,7 +324,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
 		int rpm = ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
-		// todo: use event-based scheduling, not just time-based scheduling
+		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
 					(schfunc_t) onTdcCallback, NULL, &engine->rpmCalculator);
