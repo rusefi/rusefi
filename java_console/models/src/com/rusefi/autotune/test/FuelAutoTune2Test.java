@@ -22,7 +22,7 @@ public class FuelAutoTune2Test {
         dataPoints.add(AfrDataPoint.valueOf(13, 1200, 80));
 
         {
-            System.out.println("Running with one datapoint already at target AFR");
+            System.out.println("Running with one datapoint already at target afr");
             Result r = FuelAutoTune2.INSTANCE.process(false, dataPoints, 0.1, 13, createVeTable(1));
             FuelAutoTuneTest.printNotDefault(r.getKgbcRES(), 1);
         }
