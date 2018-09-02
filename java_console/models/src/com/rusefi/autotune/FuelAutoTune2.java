@@ -31,7 +31,7 @@ public enum FuelAutoTune2 implements FuelAutoLogic {
             return null;
         // end
         AfrDataPoint s = dataECU.iterator().next();
-        double delta = (s.AFR - targetAFR) / targetAFR; // privedennoe otklonenie po toplivu
+        double delta = (s.getAfr() - targetAFR) / targetAFR; // privedennoe otklonenie po toplivu
 
 
         for (int r = 0; r < SIZE; r++) {          //rpmIndex

@@ -9,20 +9,21 @@ import com.rusefi.config.Fields;
  * 2/23/2016.
  */
 public class AfrDataPoint {
-    public final double AFR;
+    private final double afr;
     private final int rpm;
     private final double engineLoad;
-    int rpmIndex;
-    int engineLoadIndex;
 
-    public AfrDataPoint(double AFR, int rpmIndex, int engineLoadIndex, int rpm, double engineLoad) {
+    private final int rpmIndex;
+    private final int engineLoadIndex;
+
+    public AfrDataPoint(double afr, int rpmIndex, int engineLoadIndex, int rpm, double engineLoad) {
         this.rpm = rpm;
         this.engineLoad = engineLoad;
         if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
             throw new IllegalStateException("rpmIndex " + rpmIndex);
         if (engineLoadIndex < 0 || engineLoadIndex >= Fields.FUEL_LOAD_COUNT)
             throw new IllegalStateException("engineLoadIndex " + engineLoadIndex);
-        this.AFR = AFR;
+        this.afr = afr;
         this.rpmIndex = rpmIndex;
         this.engineLoadIndex = engineLoadIndex;
     }
@@ -49,6 +50,10 @@ public class AfrDataPoint {
 
     public int RPM_RT_32() {
         return getRpmIndex();
+    }
+
+    public double getAfr() {
+        return afr;
     }
 
     public int getRpm() {

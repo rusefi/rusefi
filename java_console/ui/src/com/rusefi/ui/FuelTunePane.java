@@ -218,9 +218,9 @@ public class FuelTunePane {
             return;
         try {
             dos.writeBytes("Running with " + data.size() + " points\r\n");
-            dos.writeBytes("AFR\tRPM\tload\r\n");
+            dos.writeBytes("afr\tRPM\tload\r\n");
             for (AfrDataPoint point : data)
-                dos.writeBytes(point.AFR  +"\t" + point.getRpm() + "\t" + point.getEngineLoad() + "\r\n");
+                dos.writeBytes(point.getAfr() +"\t" + point.getRpm() + "\t" + point.getEngineLoad() + "\r\n");
 
         } catch (IOException e) {
             FileLog.MAIN.logLine("Error writing auto-tune log");
