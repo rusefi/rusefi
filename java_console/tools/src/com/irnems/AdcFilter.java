@@ -49,7 +49,7 @@ public class AdcFilter {
         FileUtils.saveList("v2.csv", values);
 
 
-        final List<Double> medianValues = MedialFilter.filter(values, 5);
+        final List<Double> medianValues = MedianFilter.filter(values, 5);
         FileUtils.saveList("v_med.csv", medianValues);
 
 
