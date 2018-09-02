@@ -25,7 +25,7 @@ public enum FuelAutoTune implements FuelAutoLogic {
 
     // void MainWindow::calckGBC(double STEP)
     @Override
-    public Result process(boolean smooth, Collection<stDataOnline> dataECU, double STEP, double targetAFR, float[][] kgbcINIT) {
+    public Result process(boolean smooth, Collection<AfrDataPoint> dataECU, double STEP, double targetAFR, float[][] kgbcINIT) {
         float kgbcSQ[][] = new float[SIZE][SIZE];
         double kgbcSQsum = 0;
         double kgbcSQsumLast;
@@ -40,7 +40,7 @@ public enum FuelAutoTune implements FuelAutoLogic {
 
         // let's could how many data points we have for each cell
         int bkGBC[][] = new int[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
-        for (stDataOnline data : dataECU) {
+        for (AfrDataPoint data : dataECU) {
             bkGBC[data.PRESS_RT_32()][data.RPM_RT_32()]++;
         }
 
@@ -142,8 +142,8 @@ public enum FuelAutoTune implements FuelAutoLogic {
         }
     }
 
-    private static void countDeviation(Collection<stDataOnline> dataECU, float[][] kgbcSQ, float[][] kgbcRES, float[][] kgbcINIT, double targetAFR) {
-        for (stDataOnline dataPoint : dataECU) {
+    private static void countDeviation(Collection<AfrDataPoint> dataECU, float[][] kgbcSQ, float[][] kgbcRES, float[][] kgbcINIT, double targetAFR) {
+        for (AfrDataPoint dataPoint : dataECU) {
             double corrInit = 1; // addGbcTwatINIT_190[dataPoint.twat + 40];
             double corrRes = 1; //addGbcTwatRES_190[dataPoint.twat + 40];
             double tpsCorrInit = 1; //ktgbcINIT[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
