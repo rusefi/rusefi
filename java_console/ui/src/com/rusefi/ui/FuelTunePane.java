@@ -11,7 +11,7 @@ import com.rusefi.FileLog;
 import com.rusefi.UploadChanges;
 import com.rusefi.autotune.FuelAutoTune;
 import com.rusefi.autotune.Result;
-import com.rusefi.autotune.stDataOnline;
+import com.rusefi.autotune.AfrDataPoint;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Fields;
@@ -193,7 +193,7 @@ public class FuelTunePane {
         loadMap(veTable, Fields.VETABLE.getOffset());
         logMap("source", veTable);
 
-        List<stDataOnline> data = new ArrayList<>();
+        List<AfrDataPoint> data = new ArrayList<>();
         synchronized (incomingDataPoints) {
             for (FuelDataPoint point : incomingDataPoints)
                 data.add(point.asDataOnline());
@@ -212,14 +212,14 @@ public class FuelTunePane {
         upload.setEnabled(true);
     }
 
-    private void writeDataPoints(List<stDataOnline> data) {
+    private void writeDataPoints(List<AfrDataPoint> data) {
         DataOutputStream dos = getTuneLogStream();
         if (dos == null)
             return;
         try {
             dos.writeBytes("Running with " + data.size() + " points\r\n");
             dos.writeBytes("AFR\tRPM\tload\r\n");
-            for (stDataOnline point : data)
+            for (AfrDataPoint point : data)
                 dos.writeBytes(point.AFR  +"\t" + point.getRpm() + "\t" + point.getEngineLoad() + "\r\n");
 
         } catch (IOException e) {
@@ -360,8 +360,8 @@ public class FuelTunePane {
             engineLoadIndex = Math.max(0, BinarySearch.binarySearch(engineLoad, veLoadBins));
         }
 
-        public stDataOnline asDataOnline() {
-            return new stDataOnline(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
+        public AfrDataPoint asDataOnline() {
+            return new AfrDataPoint(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
         }
     }
 }

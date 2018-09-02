@@ -3,17 +3,19 @@ package com.rusefi.autotune;
 import com.rusefi.config.Fields;
 
 /**
+ * Air/Fuel ratio data point
+ *
  * (c) Andrey Belomutskiy 2013-2017
  * 2/23/2016.
  */
-public class stDataOnline {
+public class AfrDataPoint {
     public final double AFR;
     private final int rpm;
     private final double engineLoad;
     int rpmIndex;
     int engineLoadIndex;
 
-    public stDataOnline(double AFR, int rpmIndex, int engineLoadIndex, int rpm, double engineLoad) {
+    public AfrDataPoint(double AFR, int rpmIndex, int engineLoadIndex, int rpm, double engineLoad) {
         this.rpm = rpm;
         this.engineLoad = engineLoad;
         if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
@@ -25,12 +27,12 @@ public class stDataOnline {
         this.engineLoadIndex = engineLoadIndex;
     }
 
-    public static stDataOnline valueOf(double AFR, int rpm, double engineLoad) {
+    public static AfrDataPoint valueOf(double afr, int rpm, double engineLoad) {
         int rpmIndex = (int) (rpm / 7000.0 * FuelAutoTune.SIZE);
         if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
             return null;
         int engineLoadIndex = (int) (engineLoad / 120.0 * FuelAutoTune.SIZE);
-        return new stDataOnline(AFR, rpmIndex, engineLoadIndex, rpm, engineLoad);
+        return new AfrDataPoint(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
     }
 
     int getRpmIndex() {
