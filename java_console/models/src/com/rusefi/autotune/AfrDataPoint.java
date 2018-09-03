@@ -29,10 +29,10 @@ public class AfrDataPoint {
     }
 
     public static AfrDataPoint valueOf(double afr, int rpm, double engineLoad) {
-        int rpmIndex = (int) (rpm / 7000.0 * FuelAutoTune.SIZE);
+        int rpmIndex = (int) (rpm / 7000.0 * Fields.FUEL_RPM_COUNT);
         if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
             return null;
-        int engineLoadIndex = (int) (engineLoad / 120.0 * FuelAutoTune.SIZE);
+        int engineLoadIndex = (int) (engineLoad / 120.0 * Fields.FUEL_LOAD_COUNT);
         return new AfrDataPoint(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
     }
 
@@ -41,7 +41,7 @@ public class AfrDataPoint {
     }
 
     public int getEngineLoadIndex() {
-        return (int) engineLoadIndex;
+        return engineLoadIndex;
     }
 
     public int PRESS_RT_32() {
