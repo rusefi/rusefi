@@ -63,4 +63,13 @@ public class AfrDataPoint {
     public double getEngineLoad() {
         return engineLoad;
     }
+
+    @Override
+    public String toString() {
+        return "AfrDataPoint{" +
+                "afr=" + afr +
+                ", rpm=" + rpm +
+                ", engineLoad=" + engineLoad +
+                '}';
+    }
 }

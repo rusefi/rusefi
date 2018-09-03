@@ -13,8 +13,8 @@ public enum FuelAutoTune2 implements FuelAutoLogic {
 
 
     @Override
-    public Result process(boolean smooth, Collection<AfrDataPoint> dataECU, double GRAD, double targetAFR, float[][] VEcur) {
-        float result[][] = new float[SIZE][SIZE];
+    public Result process(boolean smooth, Collection<AfrDataPoint> dataECU, double GRAD, double targetAFR, double[][] VEcur) {
+        double result[][] = new double[SIZE][SIZE];
 
         // proverka na statichnost' rezhimnoy tochki
         boolean fl_static = true;

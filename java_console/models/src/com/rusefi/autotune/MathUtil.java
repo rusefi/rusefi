@@ -10,10 +10,10 @@ public class MathUtil {
     private MathUtil() {
     }
 
-    static float[][] deepCopy(float[][] input) {
+    static double[][] deepCopy(double[][] input) {
         if (input == null)
             return null;
-        float[][] result = new float[input.length][];
+        double[][] result = new double[input.length][];
         for (int r = 0; r < input.length; r++) {
             result[r] = input[r].clone();
         }
@@ -29,7 +29,7 @@ public class MathUtil {
         return result;
     }
 
-    static void setArray2D(double[][] array, double value) {
+    public static void setArray2D(double[][] array, double value) {
         for (double[] a : array)
             Arrays.setAll(a, i -> value);
     }
