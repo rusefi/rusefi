@@ -1,5 +1,7 @@
 package com.rusefi.autotune;
 
+import java.util.Arrays;
+
 /**
  * (c) Andrey Belomutskiy 2013-2017
  * 2/18/2016.
@@ -18,13 +20,21 @@ public class MathUtil {
         return result;
     }
 
-    static double sumArray(float[][] array2) {
+    static double sumArray(double[][] array2D) {
         double result = 0;
-        for (float[] array1 : array2) {
-            for (float element : array1) {
+        for (double[] array : array2D) {
+            for (double element : array)
                 result += element;
-            }
         }
         return result;
+    }
+
+    static void setArray2D(double[][] array, double value) {
+        for (double[] a : array)
+            Arrays.setAll(a, i -> value);
+    }
+
+    static double square(double value) {
+        return value * value;
     }
 }

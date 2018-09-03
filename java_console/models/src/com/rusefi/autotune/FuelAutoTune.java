@@ -1,8 +1,10 @@
 package com.rusefi.autotune;
 
-import com.rusefi.config.Fields;
-
 import java.util.Collection;
+
+import static com.rusefi.autotune.MathUtil.square;
+import static com.rusefi.config.Fields.FUEL_LOAD_COUNT;
+import static com.rusefi.config.Fields.FUEL_RPM_COUNT;
 
 /**
  * 1/5/2016
@@ -26,74 +28,50 @@ public enum FuelAutoTune implements FuelAutoLogic {
     // void MainWindow::calckGBC(double STEP)
     @Override
     public Result process(boolean smooth, Collection<AfrDataPoint> dataECU, double STEP, double targetAFR, float[][] kgbcINIT) {
-        float kgbcSQ[][] = new float[SIZE][SIZE];
+        double kgbcSQ[][] = new double[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
         double kgbcSQsum = 0;
         double kgbcSQsumLast;
-        double minSQ;
-        double step;
         double minSQtotal = 1e+15;
         double kgbcSQsumLastTotal = 1e+16;
         double ksq = 1000; //???? ??????????????????? ??????????
         double ke = 100; //???? ??????????
         double kg = 100; //???? ?????
 
-
         // let's could how many data points we have for each cell
-        int bkGBC[][] = new int[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
+        int bkGBC[][] = new int[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
         for (AfrDataPoint data : dataECU) {
             bkGBC[data.PRESS_RT_32()][data.RPM_RT_32()]++;
         }
 
         float result[][] = MathUtil.deepCopy(kgbcINIT);
 
-//        double addGbcTwatRES[] = new double[TEMP_CORR];
-//        double addGbcTwatINIT[] = new double[TEMP_CORR];
-//
-//        double addGbcTwatINIT_190[] = new double[191];
-//        double addGbcTwatRES_190[] = new double[191];
-//        double mulGbcTwatRES[] = new double[TEMP_CORR];
-//        double mulGbcTwatINIT[] = new double[TEMP_CORR];
-//        double mulGbcTwatINIT_190[] = new double[191];
-//        double mulGbcTwatRES_190[] = new double[191];
+        double ktgbcRES[][] = new double[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+        double ktgbcINIT[][] = new double[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 
-//        for (int i = 0; i < 39; i++) {
-//            addGbcTwatINIT[i] = 1;
-//            addGbcTwatRES[i] = 1;
-//        }
+        MathUtil.setArray2D(ktgbcINIT, 1);
+        MathUtil.setArray2D(ktgbcRES, 1);
 
-        double ktgbcRES[][] = new double[SIZE][SIZE];
-        double ktgbcINIT[][] = new double[SIZE][SIZE];
-
-        for (int i = 0; i < SIZE; i++) {          //trt
-            for (int j = 0; j < SIZE; j++) {      //rpm
-                ktgbcINIT[i][j] = 1;
-                ktgbcRES[i][j] = 1;
-            }
-        }
-
-        int gMinRT = 20; // minimal number of measurments in cell to be considered
+        int COUNT_THRESHOLD = 20; // minimal number of measurements in cell to be considered
 
         int minK = 0; // todo: what is this?
         while (true) {
-            for (int r = 0; r < SIZE; r++) {
-                for (int c = 0; c < SIZE; c++) {
-                    if (bkGBC[r][c] < gMinRT)
+            for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
+                for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
+                    if (bkGBC[loadIndex][rpmIndex] < COUNT_THRESHOLD)
                         continue;
 
                     //log("Processing " + r + "/c" + c);
 
-                    minSQ = 1e+16;
+                    double minSQ = 1e+16;
                     kgbcSQsum = 1e+16;
-                    step = STEP;
+
+                    double step = STEP;
                     double mink = 0;
                     while (true) {
                         ////////////////////////////////////
                         //????????? ?????????? ? ????????
-                        for (int i = 0; i < SIZE; i++) {
-                            for (int j = 0; j < SIZE; j++) {
-                                kgbcSQ[i][j] = 0;
-                            }
-                        }
+                        MathUtil.setArray2D(kgbcSQ, 0);
+
                         kgbcSQsumLast = kgbcSQsum;
 
                         countDeviation(dataECU, kgbcSQ, result, kgbcINIT, targetAFR);
@@ -110,7 +88,7 @@ public enum FuelAutoTune implements FuelAutoLogic {
                     /*if(bkGBC[r][c]) */
 
 //                        log("Adjusting " + step);
-                        result[r][c] += step;
+                        result[loadIndex][rpmIndex] += step;
                         if (kgbcSQsum < minSQ)
                             minSQ = kgbcSQsum;
 
@@ -119,7 +97,7 @@ public enum FuelAutoTune implements FuelAutoLogic {
                         if (mink > 4) {
 //                            updateTablekGBC();
 //                            ui -> statusBar -> showMessage(QString::number (kgbcSQsum), 500);
-                            log("break " + c + "/" + r);
+                            log("break " + rpmIndex + "/" + loadIndex);
                             break;
                         }
                     }
@@ -142,16 +120,12 @@ public enum FuelAutoTune implements FuelAutoLogic {
         }
     }
 
-    private static void countDeviation(Collection<AfrDataPoint> dataECU, float[][] kgbcSQ, float[][] kgbcRES, float[][] kgbcINIT, double targetAFR) {
+    private static void countDeviation(Collection<AfrDataPoint> dataECU, double[][] kgbcSQ, float[][] kgbcRES, float[][] kgbcINIT, double targetAFR) {
         for (AfrDataPoint dataPoint : dataECU) {
-            double corrInit = 1; // addGbcTwatINIT_190[dataPoint.twat + 40];
-            double corrRes = 1; //addGbcTwatRES_190[dataPoint.twat + 40];
-            double tpsCorrInit = 1; //ktgbcINIT[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
-            double tpsCorrRes = 1; //ktgbcRES[dataPoint.THR_RT_16][dataPoint.RPM_RT_32()];
-
             double ALF = targetAFR / 14.7;
-            double tmp = (dataPoint.getAfr() / 14.7 - ALF * (kgbcRES[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] * tpsCorrRes * corrRes) /
-                    (kgbcINIT[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] * tpsCorrInit * corrInit));
+            double tmp = (dataPoint.getAfr() / 14.7 - ALF *
+                    (kgbcRES[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()]) /
+                    (kgbcINIT[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()]));
 
 //            if (isLogEnabled())
 //                log("r=" + r + "/c=" + c + ": tmp=" + tmp);
@@ -160,27 +134,25 @@ public enum FuelAutoTune implements FuelAutoLogic {
             kgbcSQ[dataPoint.PRESS_RT_32()][dataPoint.RPM_RT_32()] += Math.abs(tmp); // todo: what is this deviation called?
         }
     }
+
     private static double smooth(double kgbcSQsum, double ksq, double ke, double kg, float[][] kgbcRES) {
-        double e;
-        double g;
+        double e = 0;
         kgbcSQsum = ksq * kgbcSQsum;
-        e = 0;
+
         // todo: add a comment while 'SIZE - 1' here?
         for (int i = 0; i < SIZE - 1; i++) {
             for (int j = 0; j < SIZE; j++) {
-                double tmp = kgbcRES[i][j] - kgbcRES[i + 1][j];
-                e += tmp * tmp;
-                tmp = kgbcRES[j][i] - kgbcRES[j][i + 1];
-                e += tmp * tmp;
+                e += square(kgbcRES[i][j] - kgbcRES[i + 1][j]);
+                e += square(kgbcRES[j][i] - kgbcRES[j][i + 1]);
             }
         }
-        g = 0;
+
+        double g= 0;
         for (int i = 0; i < SIZE - 2; i++) {
             for (int j = 0; j < SIZE; j++) {
-                double tmp = kgbcRES[i][j] - 2 * kgbcRES[i + 1][j] + kgbcRES[i + 2][j];
-                g += tmp * tmp;
-                tmp = kgbcRES[j][i] - 2 * kgbcRES[j][i + 1] + kgbcRES[j][i + 2];
-                g += tmp * tmp;
+                double tmp1 = square(kgbcRES[i][j] - 2 * kgbcRES[i + 1][j] + kgbcRES[i + 2][j]);
+                g += tmp1;
+                g += square(kgbcRES[j][i] - 2 * kgbcRES[j][i + 1] + kgbcRES[j][i + 2]);
             }
         }
         kgbcSQsum += ke * e + kg * g;
