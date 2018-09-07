@@ -12,6 +12,7 @@
 #include "custom_engine.h"
 #include "fsio_impl.h"
 #include "thermistors.h"
+#include "mazda_miata_1_6.h"
 
 EXTERN_ENGINE;
 
@@ -87,6 +88,29 @@ static const fuel_table_t mafBased16FuelTable = {
 		{/* 15 4.400	*//* 0 800.0*/7.000,	/* 1 1213.33*/7.000,	/* 2 1626.6599*/7.000,	/* 3 2040.0*/7.000,	/* 4 2453.3298*/7.000,	/* 5 2866.66*/7.000,	/* 6 3280.0*/7.000,	/* 7 3693.3298*/7.000,	/* 8 4106.6597*/6.000,	/* 9 4520.0*/6.000,	/* 10 4933.33*/6.000,	/* 11 5346.6597*/6.000,	/* 12 5760.0*/6.000,	/* 13 6173.33*/6.000,	/* 14 6586.6597*/6.000,	/* 15 7000.0*/6.000,	},
 };
 
+void miataNAcommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+
+	setCommonNTCSensor(&engineConfiguration->clt);
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->iat);
+	engineConfiguration->iat.config.bias_resistor = 2700;
+
+	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
+
+	boardConfiguration->idle.solenoidFrequency = 160;
+	boardConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
+
+	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+}
+
 void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -95,9 +119,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->map.sensor.type = MT_TOYOTA_89420_02010;
 
-
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
 
 	memcpy(config->veRpmBins, ve16RpmBins, sizeof(ve16RpmBins));
 	memcpy(config->veLoadBins, ve16LoadBins, sizeof(ve16LoadBins));
@@ -124,21 +146,9 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set cranking_fuel 5
 	engineConfiguration->cranking.baseFuel = 5;
 
-	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->specs.displacement = 1.6;
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
-
-	boardConfiguration->idle.solenoidFrequency = 160;
-	boardConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper
-
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
 
 	boardConfiguration->isSdCardEnabled = true;
 
@@ -185,17 +195,12 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: convert
 	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-
-	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-
-	boardConfiguration->injectionPins[0] = GPIOD_3; // #1&3
-	boardConfiguration->injectionPins[1] = GPIOE_2; // #2&4
+	boardConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
+	boardConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V
 	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->injectionMode = IM_BATCH;
+
+	miataNAcommon(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
