@@ -53,8 +53,9 @@
 #include "GY6_139QMB.h"
 
 #include "mazda_miata.h"
-#include "mazda_miata_nb.h"
 #include "mazda_miata_1_6.h"
+#include "mazda_miata_na8.h"
+#include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_323.h"
 #include "mazda_626.h"
