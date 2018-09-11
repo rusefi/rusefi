@@ -61,7 +61,7 @@ static void waAnaWidthCallback(WaveReader *reader) {
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
 	assertIsrContext(CUSTOM_ERR_6670);
-	addEngineSniffferEvent(reader->name, WC_UP);
+	addEngineSnifferEvent(reader->name, WC_UP);
 
 	uint32_t width = nowUs - reader->periodEventTimeUs;
 	reader->last_wave_low_widthUs = width;
@@ -75,7 +75,7 @@ void WaveReader::onFallEvent() {
 	fallEventCounter++;
 	lastActivityTimeUs = nowUs;
 	assertIsrContext(CUSTOM_ERR_6670);
-	addEngineSniffferEvent(name, WC_DOWN);
+	addEngineSnifferEvent(name, WC_DOWN);
 
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;

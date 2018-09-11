@@ -311,7 +311,7 @@ static char rpmBuffer[_MAX_FILLER];
  */
 static void onTdcCallback(void) {
 	itoa10(rpmBuffer, getRpmE(engine));
-	addEngineSniffferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
+	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 
 /**

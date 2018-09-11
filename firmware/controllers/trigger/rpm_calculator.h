@@ -177,9 +177,9 @@ int getRevolutionCounter(void);
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSniffferEvent(name, msg) if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); }
+#define addEngineSnifferEvent(name, msg) if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); }
  #else
-#define addEngineSniffferEvent(n, msg) {}
+#define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc);

@@ -88,7 +88,7 @@ static efitick_t previousVvtCamTime = 0;
 static efitick_t previousVvtCamDuration = 0;
 
 void hwHandleVvtCamSignal(trigger_value_e front) {
-	addEngineSniffferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
+	addEngineSnifferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
 
 	if (boardConfiguration->vvtCamSensorUseRise ^ (front != TV_FALL)) {
 		return;
@@ -244,11 +244,11 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	bool isUp = isUpEvent[(int) ckpSignalType];
 	shaft_signal_msg_index[0] = isUp ? 'u' : 'd';
 
-	addEngineSniffferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
+	addEngineSnifferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
 	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 		// let's add the opposite event right away
 		shaft_signal_msg_index[0] = isUp ? 'd' : 'u';
-		addEngineSniffferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
+		addEngineSnifferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
 	}
 }
 

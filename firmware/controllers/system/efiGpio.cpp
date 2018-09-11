@@ -212,7 +212,7 @@ void NamedOutputPin::setHigh() {
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 
-	addEngineSniffferEvent(name, WC_UP);
+	addEngineSnifferEvent(name, WC_UP);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -227,7 +227,7 @@ void NamedOutputPin::setLow() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
-	addEngineSniffferEvent(name, WC_DOWN);
+	addEngineSnifferEvent(name, WC_DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
