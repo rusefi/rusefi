@@ -12,7 +12,7 @@ public class BinarySearchTest extends TestCase {
 
     public void testBinary() {
 
-        float[] angles = new float[] {0, 56, 126, 180, 236, 279, 306, 416, 486, 540, 596, 666};
+        double[] angles = new double[] {0, 56, 126, 180, 236, 279, 306, 416, 486, 540, 596, 666};
 
         Arrays.sort(angles);
 
