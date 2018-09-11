@@ -313,7 +313,7 @@ void testRpmCalculator(void) {
 
 	assertEqualsM("engineCycle", 720, engine->engineCycle);
 
-	efiAssertVoid(CUSTOM_ERR_6683, engineConfiguration!=NULL, "null config in engine");
+	efiAssertVoid(CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
