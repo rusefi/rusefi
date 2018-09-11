@@ -165,6 +165,8 @@ efitimeus_t PwmConfig::togglePwmState() {
 
 /**
  * Main PWM loop: toggle pin & schedule next invocation
+ *
+ * First invocation happens on application thread
  */
 static void timerCallback(PwmConfig *state) {
 	state->dbgNestingLevel++;
