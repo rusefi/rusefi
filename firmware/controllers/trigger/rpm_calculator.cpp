@@ -362,8 +362,6 @@ void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
 	}
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
-//	tdcScheduler[0].name = "tdc0";
-//	tdcScheduler[1].name = "tdc1";
 	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
 #endif
 
