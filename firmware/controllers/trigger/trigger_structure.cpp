@@ -56,7 +56,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 
 	int length = getLength();
 	engine->engineCycleEventCount = length;
-	efiAssertVoid(CUSTOM_ERR_6594, length > 0, "shapeLength=0");
+	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
 	if (length >= PWM_PHASE_MAX_COUNT) {
 		warning(CUSTOM_ERR_TRIGGER_SHAPE_TOO_LONG, "Count above %d", length);
 		shapeDefinitionError = true;
@@ -322,7 +322,7 @@ extern bool printTriggerDebug;
 #endif
 
 void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(CUSTOM_ERR_6597, operationMode != OM_NONE, "operationMode not set");
+	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(CUSTOM_ERR_6598, waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
 

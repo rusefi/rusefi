@@ -500,7 +500,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		}
 	}
 
-	efiAssertVoid(CUSTOM_ERR_6630, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
+	efiAssertVoid(CUSTOM_IGN_MATH_STATE, !CONFIG(useOnlyRisingEdgeForTrigger) || CONFIG(ignMathCalculateAtIndex) % 2 == 0, "invalid ignMathCalculateAtIndex");
 
 	if (trgEventIndex == CONFIG(ignMathCalculateAtIndex)) {
 		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {

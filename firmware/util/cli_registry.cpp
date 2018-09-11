@@ -53,11 +53,11 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 	}
 	for (int i = 0; i < consoleActionCount; i++) {
 		if (strcmp(token, consoleActions[i].token) == 0 /* zero result means strings are equal */) {
-			firmwareError(CUSTOM_ERR_6147, "Same action twice [%s]", token);
+			firmwareError(CUSTOM_SAME_TWICE, "Same action twice [%s]", token);
 		}
 	}
 
-	efiAssertVoid(CUSTOM_ERR_6601, consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
+	efiAssertVoid(CUSTOM_CONSOLE_TOO_MANY, consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
 	TokenCallback *current = &consoleActions[consoleActionCount++];
 	current->token = token;
 	current->parameterType = type;

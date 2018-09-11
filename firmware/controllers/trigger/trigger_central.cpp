@@ -315,7 +315,7 @@ bool TriggerCentral::noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE
 }
 
 void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(CUSTOM_ERR_6637, engine!=NULL, "configuration");
+	efiAssertVoid(CUSTOM_CONF_NULL, engine!=NULL, "configuration");
 
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
