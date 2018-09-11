@@ -53,8 +53,9 @@
 #include "GY6_139QMB.h"
 
 #include "mazda_miata.h"
-#include "mazda_miata_nb.h"
 #include "mazda_miata_1_6.h"
+#include "mazda_miata_na8.h"
+#include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_323.h"
 #include "mazda_626.h"
@@ -1134,8 +1135,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setZil130(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA_1_6:
-	case MAZDA_MIATA_NA8:
 		setMiataNA_1_6_Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		break;
+	case MAZDA_MIATA_NA8:
+		setMazdaMiataNA8Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case TEST_CIVIC_4_0_BOTH:
 		setHondaCivic4_0_both(PASS_ENGINE_PARAMETER_SIGNATURE);
