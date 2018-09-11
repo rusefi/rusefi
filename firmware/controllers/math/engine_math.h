@@ -16,7 +16,7 @@
 
 void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#define assertEngineReference() efiAssertVoid(CUSTOM_ERR_6600, engine != NULL, "engine is NULL")
+#define assertEngineReference() efiAssertVoid(CUSTOM_ENGINE_REF, engine != NULL, "engine is NULL")
 
 
 #if EFI_ENABLE_ASSERTS

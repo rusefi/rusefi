@@ -65,7 +65,7 @@ static ALWAYS_INLINE bool validateBuffer(Logging *logging, const char *text, uin
 }
 
 void Logging::append(const char *text) {
-	efiAssertVoid(CUSTOM_ERR_6602, text != NULL, "append NULL");
+	efiAssertVoid(CUSTOM_APPEND_NULL, text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
 	bool isCapacityProblem = validateBuffer(this, text, extraLen);
 	if (isCapacityProblem) {
@@ -121,7 +121,7 @@ void Logging::vappendPrintf(const char *fmt, va_list arg) {
 
 // todo: replace with logging->appendPrintf
 void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_ERR_6607, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
+	efiAssertVoid(CUSTOM_APPEND_STACK, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	logging->vappendPrintf(fmt, ap);
@@ -129,7 +129,7 @@ void appendPrintf(Logging *logging, const char *fmt, ...) {
 }
 
 void Logging::appendPrintf(const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_ERR_6607, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
+	efiAssertVoid(CUSTOM_APPEND_STACK, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(fmt, ap);
