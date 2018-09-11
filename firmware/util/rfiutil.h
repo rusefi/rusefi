@@ -22,6 +22,8 @@
 #define isLocked() (ch.dbg.lock_cnt > 0)
 #define isIsrContext() (ch.dbg.isr_cnt > 0)
 
+#define assertIsrContext(code) efiAssertVoid(code, isIsrContext(), "NOT_ISR")
+
 #ifdef __cplusplus
 extern "C"
 {
