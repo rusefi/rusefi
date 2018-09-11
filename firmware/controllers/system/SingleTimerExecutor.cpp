@@ -60,17 +60,12 @@ Executor::Executor() {
 	queue.setLateDelay(US2NT(100));
 }
 
+/**
+ * callback would be executed either on ISR thread or current thread if we would need to execute right away
+ */
 void Executor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
 	scheduleCounter++;
-//	if (delayUs < 0) {
-//		firmwareError(OBD_PCM_Processor_Fault, "Negative delayUs %s: %d", prefix, delayUs);
-//		return;
-//	}
-//	if (delayUs == 0) {
-//		callback(param);
-//		return;
-//	}
 	bool alreadyLocked = true;
 	if (!reentrantFlag) {
 		// this would guard the queue and disable interrupts
