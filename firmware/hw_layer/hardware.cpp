@@ -299,10 +299,10 @@ void showBor(void) {
 }
 
 void initHardware(Logging *l) {
-	efiAssertVoid(CUSTOM_ERR_6677, getRemainingStack(chThdGetSelfX()) > 256, "init h");
+	efiAssertVoid(CUSTOM_IH_STACK, getRemainingStack(chThdGetSelfX()) > 256, "init h");
 	sharedLogger = l;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	efiAssertVoid(CUSTOM_ERR_6678, engineConfiguration!=NULL, "engineConfiguration");
+	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	printMsg(sharedLogger, "initHardware()");

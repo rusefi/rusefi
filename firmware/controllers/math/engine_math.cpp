@@ -135,7 +135,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDuration = MS2US(fuelMs) / oneDegreeUs;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDuration), "NaN injectionDuration", false);
-	assertAngleRange(injectionDuration, "injectionDuration_r", CUSTOM_ERR_6542);
+	assertAngleRange(injectionDuration, "injectionDuration_r", CUSTOM_INJ_DURATION);
 	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
@@ -163,7 +163,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
-	assertAngleRange(baseAngle, "addFbaseAngle", CUSTOM_ERR_6543);
+	assertAngleRange(baseAngle, "addFbaseAngle", CUSTOM_ADD_BASE);
 
 	int cylindersCount = CONFIG(specs.cylindersCount);
 	if (cylindersCount < 1) {

@@ -74,7 +74,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 		gptStopTimerI(&GPTDEVICE);
 	}
 	if (GPTDEVICE.state != GPT_READY) {
-		firmwareError(CUSTOM_ERR_6541, "HW timer state %d", GPTDEVICE.state);
+		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d", GPTDEVICE.state);
 		return;
 	}
 	if (hasFirmwareError())

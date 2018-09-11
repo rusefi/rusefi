@@ -143,7 +143,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	angle_t angle;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-		assertAngleRange(angle, "crAngle", CUSTOM_ERR_6541);
+		assertAngleRange(angle, "crAngle", CUSTOM_ERR_6680);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "crAngleN", 0);
 		if (CONFIG(useAdvanceCorrectionsForCranking))
 			angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);

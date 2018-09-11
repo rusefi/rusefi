@@ -29,7 +29,7 @@ baroCorr_Map3D_t baroCorrMap("baro");
 //  http://rusefi.com/math/t_charge.html
 float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(coolantTemp) || cisnan(airTemp)) {
-		warning(CUSTOM_ERR_6147, "t-getTCharge NaN");
+		warning(CUSTOM_ERR_START_STACK, "t-getTCharge NaN");
 		return coolantTemp;
 	}
 	float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin, engineConfiguration->tChargeMinRpmMinTps, tpMax,
@@ -39,7 +39,7 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 
 	float Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
 	if (cisnan(Tcharge_coff)) {
-		warning(CUSTOM_ERR_6148, "t2-getTCharge NaN");
+		warning(CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
 		return coolantTemp;
 	}
 
