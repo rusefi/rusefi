@@ -7,7 +7,7 @@
 #ifndef HW_LAYER_SERVO_H_
 #define HW_LAYER_SERVO_H_
 
-#include "main.h"
+#include "global.h"
 
 void initServo(void);
 

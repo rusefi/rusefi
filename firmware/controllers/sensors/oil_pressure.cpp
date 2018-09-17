@@ -1,7 +1,7 @@
 /**
  *  @author Matthew Kennedy, (c) 2017
  */
-#include "main.h"
+#include "global.h"
 #include "oil_pressure.h"
 #include "interpolation.h"
 #include "analog_input.h"

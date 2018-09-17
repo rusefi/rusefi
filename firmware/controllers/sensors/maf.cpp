@@ -1,4 +1,4 @@
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 #include "analog_input.h"
 #include "maf.h"

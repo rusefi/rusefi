@@ -6,7 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "settings.h"
 #include "eficonsole.h"
 #include "engine_configuration.h"

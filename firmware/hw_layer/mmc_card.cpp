@@ -12,7 +12,7 @@
  * todo: extract some logic into a controller file
  */
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 

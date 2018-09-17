@@ -10,7 +10,7 @@
 #ifndef EGO_H_
 #define EGO_H_
 
-#include "main.h"
+#include "global.h"
 #include "rusefi_enums.h"
 #include "engine_configuration.h"
 

@@ -8,7 +8,7 @@
 #ifndef BACKUP_RAM_H_
 #define BACKUP_RAM_H_
 
-#include "main.h"
+#include "global.h"
 #include "efiGpio.h"
 
 typedef enum {

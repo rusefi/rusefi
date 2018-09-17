@@ -9,7 +9,7 @@
 #ifndef DIST_EMULATOR_H_
 #define DIST_EMULATOR_H_
 
-#include "main.h"
+#include "global.h"
 
 #include "trigger_structure.h"
 #include "engine.h"

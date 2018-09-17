@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "error_handling.h"
 #include "io_pins.h"
 #include "efilib2.h"

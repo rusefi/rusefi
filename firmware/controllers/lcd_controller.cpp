@@ -16,7 +16,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "lcd_controller.h"
 #include "lcd_HD44780.h"
 #include "efilib.h"

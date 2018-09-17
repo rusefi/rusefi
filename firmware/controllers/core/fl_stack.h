@@ -9,7 +9,7 @@
 #ifndef FL_STACK_H_
 #define FL_STACK_H_
 
-#include "main.h"
+#include "global.h"
 #include "error_handling.h"
 
 template<typename T, int MAXSIZE>

@@ -8,7 +8,7 @@
 #ifndef WAVE_ANALYZER_HW_H_
 #define WAVE_ANALYZER_HW_H_
 
-#include "main.h"
+#include "global.h"
 
 #if HAL_USE_ICU || defined(__DOXYGEN__)
 

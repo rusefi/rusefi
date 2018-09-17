@@ -25,7 +25,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #include "io_pins.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"

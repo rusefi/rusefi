@@ -1,7 +1,7 @@
 #ifndef FLASH_H
 #define FLASH_H
 
-#include "main.h"
+#include "global.h"
 #include <stdint.h>
 
 /**

@@ -9,7 +9,7 @@
 #ifndef POTEN_H_
 #define POTEN_H_
 
-#include "main.h"
+#include "global.h"
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 

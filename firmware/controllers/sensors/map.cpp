@@ -5,7 +5,7 @@
  *
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
-#include "main.h"
+#include "global.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
 #include "analog_input.h"

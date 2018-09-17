@@ -9,7 +9,7 @@
 #ifndef MALFUNCTION_CENTRAL_H_
 #define MALFUNCTION_CENTRAL_H_
 
-#include "main.h"
+#include "global.h"
 
 #ifdef __cplusplus
 extern "C"

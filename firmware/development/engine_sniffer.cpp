@@ -24,7 +24,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #include "engine_sniffer.h"
 #include "adc_inputs.h"
 

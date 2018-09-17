@@ -5,7 +5,7 @@
 
 
 
-#include "main.h"
+#include "global.h"
 #include "rusefi_enums.h"
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {

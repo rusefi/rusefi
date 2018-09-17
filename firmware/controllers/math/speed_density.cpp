@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "speed_density.h"
 #include "interpolation.h"
 #include "rpm_calculator.h"

@@ -10,7 +10,7 @@
  * http://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
  */
 
-#include "main.h"
+#include "global.h"
 #include "thermistors.h"
 #include "analog_input.h"
 #include "engine_configuration.h"

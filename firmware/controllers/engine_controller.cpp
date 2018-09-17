@@ -22,7 +22,7 @@
  */
 
 #include "sensor_chart.h"
-#include "main.h"
+#include "global.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"
 #include "engine_controller.h"

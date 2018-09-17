@@ -11,7 +11,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "event_queue.h"
 #include "efitime.h"
 #include "efilib2.h"

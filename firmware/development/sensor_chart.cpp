@@ -6,7 +6,7 @@
  */
 
 #include "sensor_chart.h"
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 #include "rpm_calculator.h"
 

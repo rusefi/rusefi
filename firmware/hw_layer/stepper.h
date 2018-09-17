@@ -7,7 +7,7 @@
 #ifndef STEPPER_H_
 #define STEPPER_H_
 
-#include "main.h"
+#include "global.h"
 #include "efiGpio.h"
 #include "backup_ram.h"
 

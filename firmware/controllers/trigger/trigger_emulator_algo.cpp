@@ -13,7 +13,7 @@
  * @date Mar 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
-#include "main.h"
+#include "global.h"
 
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 

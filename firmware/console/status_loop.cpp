@@ -24,7 +24,7 @@
  *
  */
 
-#include "main.h"
+#include "global.h"
 #include "status_loop.h"
 
 #include "adc_inputs.h"

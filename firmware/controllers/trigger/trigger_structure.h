@@ -8,7 +8,7 @@
 #ifndef TRIGGER_STRUCTURE_H_
 #define TRIGGER_STRUCTURE_H_
 
-#include "main.h"
+#include "global.h"
 
 #include "rusefi_enums.h"
 #include "EfiWave.h"

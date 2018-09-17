@@ -23,7 +23,7 @@
 
 #include <stdarg.h>
 #include <stdbool.h>
-#include "main.h"
+#include "global.h"
 #include <chprintf.h>
 #include "eficonsole.h"
 #include "console_io.h"

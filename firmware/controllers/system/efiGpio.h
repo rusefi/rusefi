@@ -10,7 +10,7 @@
 #define EFIGPIO_H_
 
 #include "io_pins.h"
-#include "main.h"
+#include "global.h"
 
 void initPrimaryPins(void);
 void initOutputPins(void);

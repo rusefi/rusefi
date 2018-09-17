@@ -10,7 +10,7 @@
 #ifndef VOLTAGE_H_
 #define VOLTAGE_H_
 
-#include "main.h"
+#include "global.h"
 #include "engine_configuration.h"
 
 float getVRef(DECLARE_ENGINE_PARAMETER_SIGNATURE);

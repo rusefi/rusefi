@@ -8,7 +8,6 @@
 #define H_ENGINE_H_
 
 #include "global.h"
-#include "main.h"
 #include "pid.h"
 #include "engine_configuration.h"
 #include "rpm_calculator.h"

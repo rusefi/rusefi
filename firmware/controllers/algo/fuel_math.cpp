@@ -29,7 +29,7 @@
  *
  */
 
-#include "main.h"
+#include "global.h"
 #include "fuel_math.h"
 #include "interpolation.h"
 #include "engine_configuration.h"

@@ -24,7 +24,7 @@
  *
  */
 
-#include "main.h"
+#include "global.h"
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
 #include "idle_thread.h"

@@ -8,7 +8,7 @@
 #ifndef CONFIG_STM32F1EGT_MPU_UTIL_H_
 #define CONFIG_STM32F1EGT_MPU_UTIL_H_
 
-#include "main.h"
+#include "global.h"
 
 #define baseHardwareInit() {}
 

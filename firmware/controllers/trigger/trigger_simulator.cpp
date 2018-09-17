@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"

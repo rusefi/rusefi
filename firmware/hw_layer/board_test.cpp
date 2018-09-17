@@ -22,7 +22,7 @@
  */
 
 #include "engine.h"
-#include "main.h"
+#include "global.h"
 #include "board_test.h"
 #include "pin_repository.h"
 #include "efiGpio.h"

@@ -21,7 +21,7 @@
  */
 
 #include "event_registry.h"
-#include "main.h"
+#include "global.h"
 #include "engine_math.h"
 
 InjectionEvent::InjectionEvent() {
