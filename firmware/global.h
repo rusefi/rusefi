@@ -1,6 +1,8 @@
 /*
  * @file global.h
  *
+ * Global header file for firmware
+ *
  * @date May 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
@@ -37,9 +39,7 @@ typedef unsigned int time_t;
 #include "efifeatures.h"
 #include "rusefi_types.h"
 #include "rusefi_enums.h"
-#if EFI_PROD_CODE
 #include "io_pins.h"
-#endif
 #include "auto_generated_enums.h"
 #include "obd_error_codes.h"
 #include "error_handling.h"
