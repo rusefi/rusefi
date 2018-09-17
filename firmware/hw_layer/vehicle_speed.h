@@ -8,7 +8,7 @@
 #ifndef HW_LAYER_VEHICLE_SPEED_H_
 #define HW_LAYER_VEHICLE_SPEED_H_
 
-#include "main.h"
+#include "global.h"
 
 /**
  * @return vehicle speed, in kilometers per hour

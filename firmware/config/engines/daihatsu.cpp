@@ -8,7 +8,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "daihatsu.h"
 
 EXTERN_ENGINE;

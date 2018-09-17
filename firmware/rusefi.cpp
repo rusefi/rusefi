@@ -104,13 +104,12 @@
  *
  */
 
-#include "main.h"
+#include "global.h"
 #include "trigger_structure.h"
 #include "hardware.h"
 #include "engine_controller.h"
 #include "efiGpio.h"
 
-#include "global.h"
 #include "rfi_perftest.h"
 #include "rusefi.h"
 #include "memstreams.h"

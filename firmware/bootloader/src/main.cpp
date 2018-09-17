@@ -1,8 +1,7 @@
 
-#include "main.h"
+#include "global.h"
 #include "hardware.h"
 #include "efiGpio.h"
-#include "global.h"
 
 #ifdef __cplusplus
 extern "C"

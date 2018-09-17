@@ -20,7 +20,7 @@
  *
  */
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_ENGINE_AUDI_AAN || defined(__DOXYGEN__)
 

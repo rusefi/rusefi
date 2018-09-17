@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "dodge_ram.h"
 #include "custom_engine.h"
 #include "allsensors.h"

@@ -7,7 +7,7 @@
 #ifndef CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_
 #define CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_PROD_CODE
 #include "usbconsole.h"

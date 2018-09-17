@@ -8,7 +8,7 @@
 #ifndef BLUETOOTH_H_
 #define BLUETOOTH_H_
 
-#include "main.h"
+#include "global.h"
 #include "tunerstudio_io.h"
 
 

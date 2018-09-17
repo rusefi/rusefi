@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "mazda_626.h"
 #include "engine_math.h"
 #include "honda_accord.h"
