@@ -14,6 +14,8 @@
 
 #define EFI_FSIO TRUE
 
+#define EFI_TEXT_LOGGING TRUE
+
 #define EFI_PWM_TESTER FALSE
 
 #define HAL_USE_USB_MSD FALSE
