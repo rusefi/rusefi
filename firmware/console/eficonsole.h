@@ -6,7 +6,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#pragma once
 #ifndef RFICONSOLE_H_
 #define RFICONSOLE_H_
 

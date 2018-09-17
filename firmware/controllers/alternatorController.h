@@ -10,7 +10,7 @@
 #ifndef ALTERNATORCONTROLLER_H_
 #define ALTERNATORCONTROLLER_H_
 
-#include "main.h"
+#include "global.h"
 void initAlternatorCtrl(Logging *sharedLogger);
 void setAltPFactor(float p);
 void setAltIFactor(float p);

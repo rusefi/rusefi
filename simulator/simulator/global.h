@@ -32,6 +32,14 @@
 #include "rusefi_enums.h"
 #include "obd_error_codes.h"
 
+#ifdef __cplusplus
+#include "chprintf.h"
+#include "cli_registry.h"
+#include "datalogging.h"
+#include "eficonsole.h"
+#include "loggingcentral.h"
+#endif /* __cplusplus */
+
 #define EFI_UNIT_TEST FALSE
 
 #define hasFatalError() (FALSE)
@@ -80,7 +88,7 @@ extern "C"
 #endif /* __cplusplus */
 
 void printToWin32Console(char *p);
-int systicks2ms(int systicks);
+
 int getRemainingStack(thread_t *otp);
 
 // todo: move somewhere else?
@@ -117,3 +125,5 @@ void applyNewConfiguration(void);
 #define TRIGGER_SHAPE(x) engine->triggerCentral.triggerShape.x
 
 #endif /* GLOBAL_H_ */
+
+

@@ -2,6 +2,7 @@
 #include "main.h"
 #include "engine_configuration.h"
 #include "max31855.h"
+#include "rusefi.h"
 
 egt_cs_array_t max31855_cs;
 

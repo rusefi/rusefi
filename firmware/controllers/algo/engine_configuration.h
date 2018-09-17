@@ -9,11 +9,8 @@
 #ifndef ENGINE_CONFIGURATION_H_
 #define ENGINE_CONFIGURATION_H_
 
-#include "efifeatures.h"
-#include "crc.h"
-#include "rusefi_enums.h"
 #include "global.h"
-#include "rusefi_types.h"
+#include "crc.h"
 #include "engine_configuration_generated_structures.h"
 
 #define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
