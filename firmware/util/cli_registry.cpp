@@ -17,7 +17,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdbool.h>
-#include "main.h"
+#include "global.h"
 #include "cli_registry.h"
 #include "efilib.h"
 

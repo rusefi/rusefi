@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "tunerstudio_io.h"
 #include "console_io.h"
 #include "engine.h"

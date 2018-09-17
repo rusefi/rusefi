@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "acura_rsx.h"
 
 void setAcuraRSX(engine_configuration_s *engineConfiguration) {

@@ -7,7 +7,7 @@
  * @author andreika, (c) 2017
  */
 
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 #include "engine_math.h"
 #include "allsensors.h"

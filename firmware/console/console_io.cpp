@@ -18,7 +18,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #include "console_io.h"
 #include "rfiutil.h"
 #include "tunerstudio.h"

@@ -9,7 +9,7 @@
 #define EFILIB2_H_
 
 #include <stdint.h>
-#include "main.h"
+#include "global.h"
 
 typedef struct {
 	// todo: would probably be better to keep the high bits as 32 bit field to be sure
@@ -32,7 +32,6 @@ class Overflow64Counter
 	State64 state;
 };
 
-#include "main.h"
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
  #define GET_TIMESTAMP() port_rt_get_counter_value()
 #else

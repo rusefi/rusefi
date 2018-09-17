@@ -8,7 +8,7 @@
 #ifndef MINICOOPERR50_H_
 #define MINICOOPERR50_H_
 
-#include "main.h"
+#include "global.h"
 #include "engine_configuration.h"
 
 void setMiniCooperR50(engine_configuration_s *engineConfiguration);

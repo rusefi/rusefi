@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_SUPPORT_NISSAN_PRIMERA || defined(__DOXYGEN__)
 #include "nissan_primera.h"

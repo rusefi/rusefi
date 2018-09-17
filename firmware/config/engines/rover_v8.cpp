@@ -13,7 +13,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "rover_v8.h"
 #include "engine_math.h"
 #include "allsensors.h"

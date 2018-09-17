@@ -31,7 +31,7 @@
  */
 
 #include <stdbool.h>
-#include "main.h"
+#include "global.h"
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 #include "chprintf.h"

@@ -1,4 +1,4 @@
-#include "main.h"
+#include "global.h"
 
 #include "engine_state.h"
 #include "tunerstudio.h"

@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "GY6_139QMB.h"
 #include "engine_math.h"
 #include "engine_configuration.h"
