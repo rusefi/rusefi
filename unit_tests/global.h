@@ -1,6 +1,8 @@
 /*
  * @file	global.h
  *
+ * Global header file for unit tests
+ *
  * @date Nov 28, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
@@ -10,9 +12,9 @@
 
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
 
-#include <time.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
+#include <time.h>
 
 #include "efitime.h"
 #include "auto_generated_enums.h"
