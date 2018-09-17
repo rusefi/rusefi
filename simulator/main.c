@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#include "main.h"
+#include "global.h"
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
 #include "framework.h"

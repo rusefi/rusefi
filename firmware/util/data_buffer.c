@@ -6,7 +6,7 @@
  */
 
 #include "data_buffer.h"
-#include "main.h"
+#include "global.h"
 #if EFI_PROD_CODE
 //#include "eficonsole.h"
 #endif /* EFI_PROD_CODE */

@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-#include "main.h"
+#include "global.h"
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 

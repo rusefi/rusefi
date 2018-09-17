@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "test_logic_expression.h"
 #include "fsio_impl.h"
 #include "cli_registry.h"

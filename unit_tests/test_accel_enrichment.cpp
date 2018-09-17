@@ -6,7 +6,7 @@
  *      Author: Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "accel_enrichment.h"
 #include "test_accel_enrichment.h"
 #include "engine_configuration.h"

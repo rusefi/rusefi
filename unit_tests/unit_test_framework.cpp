@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include "main.h"
+#include "global.h"
 
 void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS) {
 	char msg[100];

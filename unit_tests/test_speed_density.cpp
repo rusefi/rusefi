@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "engine_test_helper.h"
 #include "speed_density.h"
 #include "test_speed_density.h"

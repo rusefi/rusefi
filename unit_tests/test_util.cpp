@@ -9,7 +9,7 @@
 
 #include "test_util.h"
 #include "cyclic_buffer.h"
-#include "main.h"
+#include "global.h"
 #include "histogram.h"
 
 #include "malfunction_central.h"

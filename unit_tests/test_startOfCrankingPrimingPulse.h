@@ -8,7 +8,7 @@
 #ifndef TEST_STARTOFCRANKINGPRIMINGPULSE_H_
 #define TEST_STARTOFCRANKINGPRIMINGPULSE_H_
 
-#include "main.h"
+#include "global.h"
 
 void testPlainCrankingWithoutAdvancedFeatures();
 void testStartOfCrankingPrimingPulse();

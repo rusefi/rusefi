@@ -7,7 +7,7 @@
 #ifndef TEST_FASTERENGINESPINNINGUP_H_
 #define TEST_FASTERENGINESPINNINGUP_H_
 
-#include "main.h"
+#include "global.h"
 
 void testFasterEngineSpinningUp();
 

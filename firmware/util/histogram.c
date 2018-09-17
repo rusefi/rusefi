@@ -11,7 +11,7 @@
 
 #include <string.h>
 #include "histogram.h"
-#include "main.h"
+#include "global.h"
 
 #if EFI_HISTOGRAMS || EFI_UNIT_TEST
 
