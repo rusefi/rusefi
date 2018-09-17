@@ -18,9 +18,7 @@ extern "C"
 #include <ch.h>
 #include <hal.h>
     
-#include <math.h>
 #include <float.h>
-#include <string.h>
 
 #ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
@@ -38,16 +36,17 @@ typedef unsigned int time_t;
 #define ALWAYS_INLINE INLINE
 #endif
 
-#include "efifeatures.h"
-#include "rusefi_types.h"
-#include "rusefi_enums.h"
-#include "io_pins.h"
-#include "auto_generated_enums.h"
-#include "obd_error_codes.h"
-#include "error_handling.h"
+#include "common_headers.h"
 
-#include "efitime.h"
-#include "efilib.h"
+#include "io_pins.h"
+
+#ifdef __cplusplus
+#include "cli_registry.h"
+
+#include "eficonsole.h"
+#endif /* __cplusplus */
+
+#include "chprintf.h"
 
 /* definition to expand macro then apply to pragma message */
 #define VALUE_TO_STRING(x) #x
@@ -142,18 +141,6 @@ typedef unsigned int time_t;
  * Stack debugging
  */
 int getRemainingStack(thread_t *otp);
-
-
-
-
-#ifdef __cplusplus
-#include "cli_registry.h"
-#include "datalogging.h"
-#include "loggingcentral.h"
-#include "eficonsole.h"
-#endif /* __cplusplus */
-
-#include "chprintf.h"
 
 #ifdef __cplusplus
 }

@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
-#include "error_handling.h"
+#include "engine.h"
 #include "io_pins.h"
 #include "efilib2.h"
-#include "engine.h"
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global
