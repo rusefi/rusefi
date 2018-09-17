@@ -21,14 +21,13 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "engine.h"
 #include "main.h"
 #include "board_test.h"
-#include "rusefi_enums.h"
 #include "pin_repository.h"
 #include "efiGpio.h"
 #include "adc_inputs.h"
 #include "AdcConfiguration.h"
-#include "engine.h"
 
 static volatile int stepCoutner = 0;
 static volatile brain_pin_e currentPin = GPIO_UNASSIGNED;

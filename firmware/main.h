@@ -31,7 +31,7 @@ extern "C"
 #include "datalogging.h"
 #include "loggingcentral.h"
 #include "eficonsole.h"
-#endif
+#endif /* __cplusplus */
 
 #include "chprintf.h"
 
