@@ -13,8 +13,10 @@
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "status_loop.h"
 
+#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
 static char LOGGING_BUFFER[5000] CCM_OPTIONAL;
-static Logging logging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+#endif /* EFI_TEXT_LOGGING */
 
 static int pendingData = false;
 static int initialized = false;
@@ -22,6 +24,7 @@ static int initialized = false;
 extern engine_configuration_s *engineConfiguration;
 
 void scAddData(float angle, float value) {
+#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
 	if (!initialized) {
 		return; // this is possible because of initialization sequence
 	}
@@ -45,10 +48,10 @@ void scAddData(float angle, float value) {
 			 * data after we have added some data - meaning it's time to flush
 			 */
 			// message terminator
-			appendPrintf(&logging, DELIMETER);
+			appendPrintf(&scLogging, DELIMETER);
 			// output pending data
 			if (getFullLog()) {
-				scheduleLogging(&logging);
+				scheduleLogging(&scLogging);
 			}
 			pendingData = false;
 		}
@@ -56,14 +59,15 @@ void scAddData(float angle, float value) {
 	}
 	if (!pendingData) {
 		pendingData = true;
-		resetLogging(&logging);
+		resetLogging(&scLogging);
 		// message header
-		appendPrintf(&logging, "analog_chart%s", DELIMETER);
+		appendPrintf(&scLogging, "analog_chart%s", DELIMETER);
 	}
 
-	if (remainingSize(&logging) > 100) {
-		appendPrintf(&logging, "%.2f|%.2f|", angle, value);
+	if (remainingSize(&scLogging) > 100) {
+		appendPrintf(&scLogging, "%.2f|%.2f|", angle, value);
 	}
+#endif /* EFI_TEXT_LOGGING */
 }
 
 static void setSensorChartFrequency(int value) {

@@ -159,12 +159,11 @@ void WaveChart::publish() {
 	}
 }
 
-static char timeBuffer[10];
-
 /**
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
+#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;
 	}
@@ -234,7 +233,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		hsAdd(&engineSnifferHisto, diff);
 	}
 #endif /* EFI_HISTOGRAMS */
-
+#endif /* EFI_TEXT_LOGGING */
 }
 
 void showWaveChartHistogram(void) {

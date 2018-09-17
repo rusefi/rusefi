@@ -29,6 +29,7 @@ public:
 	bool isStartedTooLongAgo();
 private:
 	Logging logging;
+	char timeBuffer[10];
 	uint32_t counter;
 	efitime_t startTimeNt;
 	volatile int isInitialized;
