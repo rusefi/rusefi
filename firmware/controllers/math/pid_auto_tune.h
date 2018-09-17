@@ -12,7 +12,7 @@
 #ifndef CONTROLLERS_MATH_PID_AUTO_TUNE_H_
 #define CONTROLLERS_MATH_PID_AUTO_TUNE_H_
 
-#include "main.h"
+#include "global.h"
 #include "rusefi_types.h"
 
 class PID_AutoTune {

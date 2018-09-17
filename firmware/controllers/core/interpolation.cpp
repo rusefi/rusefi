@@ -10,7 +10,7 @@
  * @author Dmitry Sidin, (c) 2015
  */
 
-#include "main.h"
+#include "global.h"
 #if DEBUG_FUEL
 #include <stdio.h>
 #endif

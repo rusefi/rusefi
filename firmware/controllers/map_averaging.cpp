@@ -21,7 +21,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #include "efilib2.h"
 #include "map.h"
 

@@ -11,7 +11,7 @@
 #ifndef MALFUNCTION_INDICATOR_H_
 #define MALFUNCTION_INDICATOR_H_
 
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)

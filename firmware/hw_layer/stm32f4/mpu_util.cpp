@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "mpu_util.h"
 #include "error_handling.h"
 #include "engine.h"

@@ -8,7 +8,7 @@
 #ifndef HW_LAYER_ACCELEROMETER_H_
 #define HW_LAYER_ACCELEROMETER_H_
 
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 
 void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);

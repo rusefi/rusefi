@@ -18,7 +18,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 

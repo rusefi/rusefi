@@ -8,7 +8,7 @@
 #ifndef TRIGGER_DECODER_H_
 #define TRIGGER_DECODER_H_
 
-#include "main.h"
+#include "global.h"
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 

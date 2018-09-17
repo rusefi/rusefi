@@ -11,7 +11,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "wave_analyzer.h"
 #include "eficonsole.h"
 #include "data_buffer.h"

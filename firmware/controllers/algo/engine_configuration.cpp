@@ -20,7 +20,7 @@
  *
  */
 
-#include "main.h"
+#include "global.h"
 #include "engine_configuration.h"
 #include "fsio_impl.h"
 #include "allsensors.h"

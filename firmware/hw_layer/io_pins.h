@@ -10,7 +10,7 @@
 #define IO_PINS_H_
 
 #include "rusefi_enums.h"
-#include "main.h"
+#include "global.h"
 
 #define INITIAL_PIN_STATE -1
 #define GPIO_NULL NULL

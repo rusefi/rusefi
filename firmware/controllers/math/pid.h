@@ -8,7 +8,7 @@
 #ifndef PID_H_
 #define PID_H_
 
-#include "main.h"
+#include "global.h"
 #include "engine_configuration_generated_structures.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR

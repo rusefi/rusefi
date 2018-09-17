@@ -18,7 +18,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #include "trigger_structure.h"
 #include "error_handling.h"
 #include "trigger_decoder.h"

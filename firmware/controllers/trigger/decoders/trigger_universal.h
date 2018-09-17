@@ -9,7 +9,7 @@
 #ifndef CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_
 #define CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_
 
-#include "main.h"
+#include "global.h"
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 

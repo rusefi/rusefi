@@ -21,7 +21,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include <nvic.h>
 #endif

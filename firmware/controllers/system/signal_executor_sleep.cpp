@@ -22,7 +22,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #include "scheduler.h"
 #include "signal_executor.h"
 #include "main_trigger_callback.h"

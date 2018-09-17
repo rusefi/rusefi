@@ -7,7 +7,7 @@
 #ifndef SCHEDULER_H_
 #define SCHEDULER_H_
 
-#include "main.h"
+#include "global.h"
 
 typedef void (*schfunc_t)(void *);
 

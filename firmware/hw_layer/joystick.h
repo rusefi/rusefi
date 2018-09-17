@@ -7,7 +7,7 @@
 #ifndef CONTROLLERS_JOYSTICK_H_
 #define CONTROLLERS_JOYSTICK_H_
 
-#include "main.h"
+#include "global.h"
 
 typedef enum {
 	JB_CENTER = 0,

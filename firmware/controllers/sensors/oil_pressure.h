@@ -6,7 +6,7 @@
 #ifndef OIL_PRESSURE_H_
 #define OIL_PRESSURE_H_
 
-#include "main.h"
+#include "global.h"
 #include "rusefi_enums.h"
 #include "engine_configuration.h"
 

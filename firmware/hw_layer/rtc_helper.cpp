@@ -8,7 +8,7 @@
 
 #include <string.h> 
 #include <time.h>
-#include "main.h"
+#include "global.h"
 #include "rfiutil.h"
 #include "rtc_helper.h"
 

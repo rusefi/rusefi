@@ -8,7 +8,7 @@
  */
 
 #include <board.h>
-#include "main.h"
+#include "global.h"
 #include "io_pins.h"
 #include "efiGpio.h"
 

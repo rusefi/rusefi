@@ -8,7 +8,7 @@
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
 
-#include "main.h"
+#include "global.h"
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 

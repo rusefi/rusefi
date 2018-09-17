@@ -6,7 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "poten.h"
 #include "eficonsole.h"
 #include "pin_repository.h"

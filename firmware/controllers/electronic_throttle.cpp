@@ -48,7 +48,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
+#include "global.h"
 #include "electronic_throttle.h"
 #include "tps.h"
 #include "io_pins.h"

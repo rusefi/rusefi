@@ -9,7 +9,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "pin_repository.h"
 #include "eficonsole.h"
 #include "memstreams.h"

@@ -14,7 +14,7 @@
 #include <string.h>
 // todo: MISRA does not like time.h
 #include <time.h>
-#include "main.h"
+#include "global.h"
 
 #if EFI_UART_GPS || defined(__DOXYGEN__)
 

@@ -9,7 +9,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 #include "engine_state.h"
 #include "efiGpio.h"

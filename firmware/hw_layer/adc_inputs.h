@@ -9,7 +9,7 @@
 #ifndef ADC_INPUTS_H_
 #define ADC_INPUTS_H_
 
-#include "main.h"
+#include "global.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "adc_math.h"

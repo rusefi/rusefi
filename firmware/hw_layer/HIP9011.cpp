@@ -32,7 +32,7 @@
  * @Spilly
  */
 
-#include "main.h"
+#include "global.h"
 #include "engine.h"
 #include "settings.h"
 #include "pin_repository.h"

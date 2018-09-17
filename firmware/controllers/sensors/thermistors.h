@@ -8,7 +8,7 @@
 #ifndef THERMISTORS_H_
 #define THERMISTORS_H_
 
-#include "main.h"
+#include "global.h"
 
 #define KELV 273.15f
 

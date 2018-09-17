@@ -10,7 +10,7 @@
 #ifndef WAVE_ANALYZER_H_
 #define WAVE_ANALYZER_H_
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 

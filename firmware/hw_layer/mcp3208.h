@@ -16,7 +16,7 @@
 #ifndef MCP3208_H_
 #define MCP3208_H_
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_MCP_3208 || defined(__DOXYGEN__)
 

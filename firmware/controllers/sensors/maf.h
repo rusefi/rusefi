@@ -12,7 +12,7 @@
 #ifndef MAF_H_
 #define MAF_H_
 
-#include "main.h"
+#include "global.h"
 
 #define getMafT(ec) (getVoltageDivided("maf", ec->mafAdcChannel))
 float getMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE);

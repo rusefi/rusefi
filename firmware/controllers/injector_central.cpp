@@ -21,7 +21,7 @@
  */
 
 // todo: rename this file
-#include "main.h"
+#include "global.h"
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
