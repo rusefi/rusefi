@@ -6,7 +6,7 @@
  */
 
 #include "test_engine_math.h"
-#include "main.h"
+#include "global.h"
 #include "engine_math.h"
 #include "engine_configuration.h"
 #include "map.h"

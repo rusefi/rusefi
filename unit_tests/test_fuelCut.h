@@ -7,7 +7,7 @@
 #ifndef TEST_FUELCUT_H_
 #define TEST_FUELCUT_H_
 
-#include "main.h"
+#include "global.h"
 
 void testFuelCut();
 

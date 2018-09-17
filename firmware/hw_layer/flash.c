@@ -3,7 +3,7 @@
  * @brief	Lower-level code related to internal flash memory
  */
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 

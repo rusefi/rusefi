@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "boards.h"
 #include "engine.h"
 #include "adc_math.h"

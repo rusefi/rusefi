@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 #include "test_trigger_decoder.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"

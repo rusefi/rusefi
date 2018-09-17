@@ -6,7 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "main.h"
+#include "global.h"
 
 #if EFI_MCP_3208 || defined(__DOXYGEN__)
 #include "mcp3208.h"

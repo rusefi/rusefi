@@ -6,7 +6,7 @@
  */
 
 #include <time.h>
-#include "main.h"
+#include "global.h"
 
 #include "signal_executor.h"
 #include "test_signal_executor.h"

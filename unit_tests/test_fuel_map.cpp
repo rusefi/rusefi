@@ -6,7 +6,7 @@
  */
 
 #include "test_fuel_map.h"
-#include "main.h"
+#include "global.h"
 #include "engine_configuration.h"
 #include "fuel_math.h"
 #include "trigger_structure.h"

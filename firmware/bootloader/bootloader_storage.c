@@ -1,5 +1,5 @@
 
-#include "main.h"
+#include "global.h"
 #include "bootloader/bootloader.h"
 
 #if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
