@@ -2,8 +2,8 @@
  * @file	main.h
  * @brief	Test version of main.h
  *
- *  Created on: Oct 17, 2013
- *      Author: Andrey Belomutskiy (C) 2012-2013
+ * @date Oct 17, 2013
+ * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
 #ifndef MAIN_H_
