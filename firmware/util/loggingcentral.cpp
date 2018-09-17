@@ -41,6 +41,7 @@ static char * outputBuffer;
  * of logging content
  */
 void scheduleLogging(Logging *logging) {
+#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
 	// this could be done without locking
 	int newLength = efiStrlen(logging->buffer);
 
@@ -63,6 +64,7 @@ void scheduleLogging(Logging *logging) {
 		unlockOutputBuffer();
 	}
 	resetLogging(logging);
+#endif /* EFI_TEXT_LOGGING */
 }
 
 /**
@@ -112,12 +114,14 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
  * actual data to console in order to avoid concurrent access to serial hardware.
  */
 void printPending(void) {
+#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
 	int actualOutputBufferSize;
 	char *output = swapOutputBuffers(&actualOutputBufferSize);
 
 	if (actualOutputBufferSize > 0) {
 		printWithLength(output);
 	}
+#endif /* EFI_TEXT_LOGGING */
 }
 
 void initLoggingCentral(void) {
@@ -133,6 +137,7 @@ void initLoggingCentral(void) {
  * in order to reduce memory usage
  */
 void scheduleMsg(Logging *logging, const char *fmt, ...) {
+#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
 	if (logging == NULL) {
 		warning(CUSTOM_ERR_LOGGING_NULL, "logging NULL");
 		return;
@@ -151,6 +156,7 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 	if (!wasLocked) {
 		unlockAnyContext();
 	}
+#endif /* EFI_TEXT_LOGGING */
 }
 
 
