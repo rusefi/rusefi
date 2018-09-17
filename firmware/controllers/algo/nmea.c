@@ -19,9 +19,9 @@
  *
  * see #testGpsParser
  */
+#include "global.h"
 #include <math.h>
 #include <time.h>
-#include "main.h"
 #include "nmea.h"
 
 long hex2int(char *a, int len) {
