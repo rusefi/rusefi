@@ -12,8 +12,6 @@
 #include "trigger_emulator.h"
 #include "eficonsole.h"
 #include "main_trigger_callback.h"
-#include "datalogging.h"
-#include "engine_configuration.h"
 #include "io_pins.h"
 #include "trigger_emulator_algo.h"
 #include "trigger_central.h"
