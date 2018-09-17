@@ -144,12 +144,15 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_6680);
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "crAngleN", 0);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
 		if (CONFIG(useAdvanceCorrectionsForCranking))
 			angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "rAngleN", 0);
+		if (cisnan(angle)) {
+			warning(CUSTOM_ERR_6610, "NaN angle from table");
+			return 0;
+		}
 		angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	angle -= engineConfiguration->ignitionOffset;
