@@ -20,7 +20,6 @@
  * see #testGpsParser
  */
 #include "global.h"
-#include <math.h>
 #include <time.h>
 #include "nmea.h"
 

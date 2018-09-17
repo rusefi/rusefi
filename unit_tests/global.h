@@ -13,27 +13,15 @@
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
 
 #include <stdbool.h>
-#include <string.h>
+#include <stdio.h>
 #include <time.h>
 
-#include "efitime.h"
-#include "auto_generated_enums.h"
-
-#include <stdio.h>
-#include <math.h>
-#include "efitime.h"
-
-#include "error_handling.h"
-#include "efifeatures.h"
-
-#include "efilib.h"
-#include "efitime.h"
+#include "common_headers.h"
 
 #include "boards.h"
 
 #ifdef __cplusplus
-#include "datalogging.h"
-#include "loggingcentral.h"
+
 
 extern "C"
 {

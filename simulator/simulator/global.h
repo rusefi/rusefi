@@ -15,29 +15,18 @@
 #include <ch.h>
 #include <hal.h>
 
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
 #include <float.h>
 
-#include "efifeatures.h"
+#include "common_headers.h"
 
-#include "auto_generated_enums.h"
 #include "boards.h"
-#include "efilib.h"
-#include "efitime.h"
-#include "error_handling.h"
-#include "rusefi_enums.h"
-#include "obd_error_codes.h"
 
 #ifdef __cplusplus
 #include "chprintf.h"
 #include "cli_registry.h"
-#include "datalogging.h"
 #include "eficonsole.h"
-#include "loggingcentral.h"
 #endif /* __cplusplus */
 
 #define EFI_UNIT_TEST FALSE
@@ -61,8 +50,6 @@
 #define DL_OUTPUT_BUFFER 9000
 
 #define CCM_OPTIONAL
-
-#include "rusefi_enums.h"
 
 #define EFI_CUSTOM_PANIC_METHOD 1
 

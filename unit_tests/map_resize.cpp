@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include <stdio.h>
+#include "engine_configuration.h"
 #include "fuel_math.h"
 #include "interpolation.h"
-#include "engine_configuration.h"
-#include "global.h"
 
 #if 1
 

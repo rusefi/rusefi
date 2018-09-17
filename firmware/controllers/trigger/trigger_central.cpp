@@ -431,7 +431,6 @@ static void triggerShapeInfo(void) {
 }
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-#include <stdio.h>
 #include <stdlib.h>
 
 #define TRIGGERS_FILE_NAME "triggers.txt"

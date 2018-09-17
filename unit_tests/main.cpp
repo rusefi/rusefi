@@ -5,13 +5,10 @@
  * @author Andrey Belomutskiy (c) 2012-2018
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
+#include <stdlib.h>
 
 #include "global.h"
-#include "error_handling.h"
 #include "test_accel_enrichment.h"
 #include "test_interpolation_3d.h"
 #include "test_find_index.h"

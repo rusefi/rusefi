@@ -11,11 +11,6 @@
  */
 
 #include "global.h"
-#if DEBUG_FUEL
-#include <stdio.h>
-#endif
-
-#include <math.h>
 
 #include "efilib2.h"
 #include "interpolation.h"
