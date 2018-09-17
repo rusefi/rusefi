@@ -9,7 +9,6 @@
 #ifndef RFICONSOLE_LOGIC_H_
 #define RFICONSOLE_LOGIC_H_
 
-#include "efifeatures.h"
 #include "datalogging.h"
 #include "rusefi_types.h"
 

@@ -9,8 +9,8 @@
 #ifndef DATALOGGING_H_
 #define DATALOGGING_H_
 
-#include "global.h"
 #include <stdarg.h>
+#include <stdint.h>
 
 #define DELIMETER	","
 

@@ -18,6 +18,8 @@ extern "C"
 #include <ch.h>
 #include <hal.h>
     
+#include <math.h>
+#include <float.h>
 #include <string.h>
 
 #ifndef DEFAULT_ENGINE_TYPE
@@ -43,6 +45,9 @@ typedef unsigned int time_t;
 #include "auto_generated_enums.h"
 #include "obd_error_codes.h"
 #include "error_handling.h"
+
+#include "efitime.h"
+#include "efilib.h"
 
 /* definition to expand macro then apply to pragma message */
 #define VALUE_TO_STRING(x) #x
@@ -138,8 +143,50 @@ typedef unsigned int time_t;
  */
 int getRemainingStack(thread_t *otp);
 
+
+
+
+#ifdef __cplusplus
+#include "cli_registry.h"
+#include "datalogging.h"
+#include "loggingcentral.h"
+#include "eficonsole.h"
+#endif /* __cplusplus */
+
+#include "chprintf.h"
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
+// todo: access some existing configuration field
+#define CORE_CLOCK 168000000
+
+// 168 ticks in microsecond
+#define US_TO_NT_MULTIPLIER 168
+
+/**
+ * converts efitimeus_t to efitick_t
+ */
+#define US2NT(us) (((efitime_t)(us))*US_TO_NT_MULTIPLIER)
+
+/**
+ * converts efitick_t to efitimeus_t
+ */
+#define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
+
+#define Delay(ms) chThdSleepMilliseconds(ms)
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+bool lockAnyContext(void);
+void unlockAnyContext(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GLOBAL_H_ */
+

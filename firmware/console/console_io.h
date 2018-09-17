@@ -4,7 +4,6 @@
  * @date Dec 29, 2012
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
-#pragma once
 #ifndef CONSOLE_IO_H_
 #define CONSOLE_IO_H_
 

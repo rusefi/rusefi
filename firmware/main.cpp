@@ -7,7 +7,7 @@
  *      http://rusefi.com/
  */
 
-#include "main.h"
+#include "global.h"
 #include "rusefi.h"
 #include "mpu_util.h"
 

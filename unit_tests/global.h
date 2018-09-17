@@ -19,6 +19,45 @@
 #include "efitime.h"
 #include "auto_generated_enums.h"
 
+#include <stdio.h>
+#include <math.h>
+#include "efitime.h"
+
+#include "error_handling.h"
+#include "efifeatures.h"
+
+#include "efilib.h"
+#include "efitime.h"
+
+#include "boards.h"
+
+#ifdef __cplusplus
+#include "datalogging.h"
+#include "loggingcentral.h"
+
+extern "C"
+{
+#endif
+
+#define CH_FREQUENCY 1000
+
+typedef int bool_t;
+typedef uint32_t systime_t;
+
+void chDbgAssert(int c, char *msg, void *arg);
+
+void print(const char *fmt, ...);
+
+#define TICKS_IN_MS 100
+
+#define chDbgCheck(x, y) chDbgAssert(x, y, NULL)
+
+#ifdef __cplusplus
+}
+#endif
+
+
+
 #define US_TO_NT_MULTIPLIER 100
 
 #define ALWAYS_INLINE INLINE

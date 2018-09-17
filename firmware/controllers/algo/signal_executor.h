@@ -9,15 +9,9 @@
 #ifndef SIGNAL_EXECUTOR_H_
 #define SIGNAL_EXECUTOR_H_
 
-#include "rusefi_enums.h"
 #include "global.h"
-#include "efifeatures.h"
 #include "scheduler.h"
 #include "efiGpio.h"
-
-#if EFI_PROD_CODE
-#include "datalogging.h"
-#endif /* EFI_PROD_CODE */
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 #include "signal_executor_sleep.h"
