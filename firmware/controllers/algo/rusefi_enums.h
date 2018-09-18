@@ -773,8 +773,13 @@ typedef enum {
 	DBG_CJ125 = 25,
 	DBG_CAN = 26,
 	DBG_MAP = 27,
-	DBG_28 = 28,
+	DBG_METRICS = 28,
 	DBG_29 = 29,
+	DBG_30 = 30,
+	DBG_31 = 31,
+	DBG_32 = 32,
+	DBG_33 = 33,
+	DBG_34 = 34,
 
 	Force_4b_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
