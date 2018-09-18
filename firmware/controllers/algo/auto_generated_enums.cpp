@@ -736,8 +736,8 @@ case DBG_CAN:
   return "DBG_CAN";
 case DBG_MAP:
   return "DBG_MAP";
-case DBG_28:
-  return "DBG_28";
+case DBG_METRICS:
+  return "DBG_METRICS";
 case DBG_29:
   return "DBG_29";
 case DBG_ADC:
@@ -792,7 +792,9 @@ case DBG_WARMUP_ENRICH:
   return "DBG_WARMUP_ENRICH";
 case Force_4b_debug_mode_e:
   return "Force_4b_debug_mode_e";
-  }
+default:
+  return "NA";
+}
  return NULL;
 }
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value){

@@ -94,6 +94,8 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 extern bool hasFirmwareErrorFlag;
 extern tunerstudio_counters_s tsState;
+extern int maxTriggerReentraint;
+extern uint32_t maxLockedDuration;
 #define FULL_LOGGING_KEY "fl"
 
 static char LOGGING_BUFFER[1800] CCM_OPTIONAL;
@@ -744,6 +746,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = getTimeNowSeconds();
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
+		break;
+	case DBG_METRICS:
+#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+		tsOutputChannels->debugIntField1 = maxLockedDuration;
+		tsOutputChannels->debugIntField2 = maxTriggerReentraint;
+#endif /* EFI_CLOCK_LOCKS */
 		break;
 	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
