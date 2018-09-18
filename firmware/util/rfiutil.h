@@ -29,7 +29,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-//char hexC(int v);
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par);
 
 #ifdef __cplusplus
