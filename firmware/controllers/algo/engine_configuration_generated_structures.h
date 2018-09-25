@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 04 10:21:45 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Sep 25 15:46:46 EDT 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1425,7 +1425,7 @@ typedef struct {
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
 	offset 1484 bit 19 */
-	bool unused_1484_bit_19 : 1;
+	bool useTPSAdvanceTable : 1;
 	/**
 	offset 1484 bit 20 */
 	bool unused_1484_bit_20 : 1;
@@ -2144,7 +2144,39 @@ typedef struct {
 	/**
 	 * offset 3516
 	 */
-	int unusedEnd[741];
+	ignition_tps_table_t ignitionTpsTable;
+	/**
+	 * offset 4028
+	 */
+	float ignitionTpsBins[IGN_TPS_COUNT];
+	/**
+	 * offset 4092
+	 */
+	float tChargeAirCoefMin;
+	/**
+	 * offset 4096
+	 */
+	float tChargeAirCoefMax;
+	/**
+	 * offset 4100
+	 */
+	float tChargeAirFlowMax;
+	/**
+	 * offset 4104
+	 */
+	float tChargeAirIncrLimit;
+	/**
+	 * offset 4108
+	 */
+	float tChargeAirDecrLimit;
+	/**
+	 * offset 4112
+	 */
+	tChargeMode_e tChargeMode;
+	/**
+	 * offset 4116
+	 */
+	int unusedEnd[591];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2390,4 +2422,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Aug 04 10:21:45 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Sep 25 15:46:46 EDT 2018
