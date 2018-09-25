@@ -37,7 +37,6 @@ void testEngineMath(void) {
 	assertEqualsM("600 RPM", 50, getOneDegreeTimeMs(600) * 180);
 	assertEqualsM("6000 RPM", 5, getOneDegreeTimeMs(6000) * 180);
 
-
 	assertEquals(312.5, getTCharge(1000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEquals(313.5833, getTCharge(1000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEquals(314.6667, getTCharge(1000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
@@ -46,6 +45,18 @@ void testEngineMath(void) {
 	assertEquals(312.5, getTCharge(4000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEquals(320.0833, getTCharge(4000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEquals(327.6667, getTCharge(4000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+
+	// test Air Interpolation mode
+	engineConfiguration->tChargeMode = TCHARGE_MODE_AIR_INTERP;
+	engineConfiguration->tChargeAirCoefMin = 0.098f;
+	engineConfiguration->tChargeAirCoefMax = 0.902f;
+	engineConfiguration->tChargeAirFlowMax = 153.6f;
+	// calc. some airMass given the engine displacement=1.839 and 4 cylinders (FORD_ESCORT_GT)
+	engine->engineState.airMass = getCylinderAirMass(engineConfiguration, /*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f);
+	assertEquals(0.5464f, engine->engineState.airMass);
+	// calc. airFlow using airMass, and find tCharge
+	assertEquals(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0, /*CLT*/90.0f, /*IAT*/20.0f PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEquals(65.5625f/*kg/h*/, engine->engineState.airFlow);
 }
 
 void testIgnitionMapGenerator(void) {
