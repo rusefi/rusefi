@@ -23,6 +23,7 @@
 #include "fl_stack.h"
 #include "io_pins.h"
 #include "efiGpio.h"
+#include "efilib.h"
 
 void testCrc(void) {
 	assertEquals(4, efiRound(4.4, 1));
@@ -404,6 +405,12 @@ void testMisc(void) {
 	strcpy(buff, "  ab  ");
 	// we need a mutable array here
 	assertTrue(strEqual("ab", efiTrim(buff)));
+
+
+	{
+		float v = atoff("nan");
+		assertTrueM("NaN atoff", cisnan(v));
+	}
 
 //	assertEquals(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
 //	assertEquals(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
