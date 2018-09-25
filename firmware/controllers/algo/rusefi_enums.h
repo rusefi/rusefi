@@ -922,4 +922,9 @@ typedef enum {
 	IS_SENDING_SPI_COMMAND,
 } hip_state_e;
 
+typedef enum {
+	TCHARGE_MODE_RPM_TPS = 0,
+	TCHARGE_MODE_AIR_INTERP = 1,
+} tChargeMode_e;
+
 #endif /* RUSEFI_ENUMS_H_ */

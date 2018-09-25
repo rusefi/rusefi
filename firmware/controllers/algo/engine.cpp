@@ -195,7 +195,9 @@ EngineState::EngineState() {
 	vssEventCounter = 0;
 	targetAFR = 0;
 	tpsAccelEnrich = 0;
-	tChargeK = 0;
+	tCharge = tChargeK = 0;
+	timeSinceLastTChargeK = getTimeNowNt();
+	airFlow = 0;
 	cltTimingCorrection = 0;
 	runningFuel = baseFuel = currentVE = 0;
 	timeOfPreviousWarning = -10;

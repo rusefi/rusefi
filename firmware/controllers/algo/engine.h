@@ -144,6 +144,10 @@ public:
 	 * speed-density logic, calculated air mass in grams
 	 */
 	float airMass;
+	/**
+	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
+	 */
+	float airFlow;
 
 	float engineNoiseHipLevel;
 
@@ -194,7 +198,9 @@ public:
 	float baroCorrection;
 
 	// speed density
-	float tChargeK;
+	float tCharge, tChargeK;
+	efitick_t timeSinceLastTChargeK;
+
 	float currentVE;
 	float targetAFR;
 
