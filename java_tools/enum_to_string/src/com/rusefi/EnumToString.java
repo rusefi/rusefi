@@ -65,7 +65,7 @@ public class EnumToString {
         System.out.println("Reading from " + inFileName);
         String simpleFileName = f.getName();
 
-        result.append("#include \"main.h\"\r\n");
+        result.append("#include \"global.h\"\r\n");
         result.append("#include \"" + simpleFileName + "\"\r\n");
         EnumToString.header.append("#include \"" + simpleFileName + "\"\r\n");
 
