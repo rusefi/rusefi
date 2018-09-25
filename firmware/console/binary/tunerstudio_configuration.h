@@ -106,7 +106,7 @@ typedef struct {
 	float engineLoadAccelExtra; // offset 124
 	float tpsAccelFuel; // offset 128
 	float baroCorrection; // 132
-	float pedalPosition; // 138
+	float pedalPosition; // 136
 	/**
 	 * @see coilDutyCycle
 	 */
