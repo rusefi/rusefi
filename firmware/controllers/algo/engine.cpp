@@ -290,10 +290,8 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
-		float coolantC = ENGINE(sensors.clt);
-		float intakeC = ENGINE(sensors.iat);
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER_SUFFIX));
+		updateTChargeK(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
 		float map = getMap();
 
 		/**
@@ -313,6 +311,20 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	float coolantC = ENGINE(sensors.clt);
+	float intakeC = ENGINE(sensors.iat);
+	float newTCharge = getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER_SUFFIX);
+	// convert to microsecs and then to seconds
+	efitick_t curTime = getTimeNowNt();
+	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;
+	if (!cisnan(newTCharge)) {
+		// control the rate of change or just fill with the initial value
+		tCharge = (tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
+		tChargeK = convertCelsiusToKelvin(tCharge);
+		timeSinceLastTChargeK = curTime;
+	}
+}
 
 /**
  * Here we have a bunch of stuff which should invoked after configuration change

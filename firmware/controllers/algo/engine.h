@@ -130,6 +130,7 @@ public:
 	EngineState();
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	FuelConsumptionState fuelConsumption;
 
