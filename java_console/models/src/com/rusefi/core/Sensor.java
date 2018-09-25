@@ -30,7 +30,6 @@ public enum Sensor {
     MAF("MAF", SensorCategory.SENSOR_INPUTS, "Volts", 4),
     MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
 
-    PPS("pedal", SensorCategory.SENSOR_INPUTS, "%", 100), // pedal position sensor
     knockCount("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
     KnockValue("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
 
@@ -114,6 +113,8 @@ public enum Sensor {
     deltaTps(SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD),
     engineLoadAccelDelta(SensorCategory.FUEL, FieldType.FLOAT, 124, BackgroundColor.MUD),
     tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
+    PPS("pedal", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 126, BackgroundColor.MUD), // pedal position sensor
+
     injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
     wallFuelAmount(SensorCategory.FUEL, FieldType.FLOAT, 160, BackgroundColor.MUD),
     iatCorrection(SensorCategory.FUEL, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
