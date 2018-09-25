@@ -1191,13 +1191,29 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = fuelTableGaugesPanel
 		panel = fuelTableRight
 
-	dialog = tChargeSettings, "tCharge Settings"
+	dialog = tChargeRpmTpsSettings, "RPM+TPS Mode Settings"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
 		field = "minRPM minTPS", tChargeMinRpmMinTps
 		field = "minRPM maxTPS", tChargeMinRpmMaxTps
 		field = "maxRPM minTPS", tChargeMaxRpmMinTps
 		field = "maxRPM maxTPS", tChargeMaxRpmMaxTps
+
+	dialog = tChargeGeneralSettings, ""
+		field = "tCharge Mode", tChargeMode
+		field = "tChange Increment Limit, deg/sec", tChargeAirIncrLimit
+		field = "tChange Decrement Limit, deg/sec", tChargeAirDecrLimit
+	    field = ""
+
+	dialog = tChargeAirInterpSettings, "Air Interpolation Mode Settings"
+		field = "Min tCharge Coeff.", tChargeAirCoefMin
+		field = "Max tCharge Coeff.", tChargeAirCoefMax
+		field = "Max Air Flow, kg/h", tChargeAirFlowMax
+		
+	dialog = tChargeSettings, "tCharge Settings"
+		panel = tChargeGeneralSettings
+		panel = tChargeRpmTpsSettings, { tChargeMode == 0}
+		panel = tChargeAirInterpSettings, { tChargeMode == 1}
 
 	dialog = baseInjection, "General"
 		field = "Enabled",						isInjectionEnabled
