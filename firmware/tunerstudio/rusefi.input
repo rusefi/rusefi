@@ -636,6 +636,15 @@ fileVersion = { 20171101 }
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 	
+   table = ignitionTpsTableTbl,  ignitionTableMap,  "Ignition TPS Table",   1
+      ;       constant, variable
+      xBins       = ignitionRpmBins,  RPMValue
+      yBins       = ignitionLoadBins,  TPSValue
+
+      zBins       = ignitionTpsTable
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(RICHER)", "(LEANER)"
+	
    table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",   1
       ;       constant, variable
       xBins       = ignitionIatCorrRpmBins,  RPMValue
@@ -1009,7 +1018,8 @@ menuDialog = main
 		subMenu = dwellSettings,			"Dwell time"
 		subMenu = ignitionCylExtra,			"Ignition Cylinder Extra"
 		subMenu = std_separator
-		subMenu = ignitionTableTbl,			"Ignition Advance Table"
+		subMenu = ignitionTableTbl,			"Ignition Advance Table", 0, {useTPSAdvanceTable == 0}
+		subMenu = ignitionTpsTableTbl,		"Ignition Advance TPS-based Table", 0, {useTPSAdvanceTable == 1}
 		subMenu = std_separator
 		subMenu = cltTimingCorrCurve,		"Warmup timing correction"
 		subMenu = ignitionIatCorrTableTbl,	"Ignition IAT correction Table"
@@ -1201,6 +1211,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "#Wasted spark with individual coils"
 		field = "Two wire wasted",				twoWireBatchIgnition, {isIgnitionEnabled == 1 && ignitionMode == 2}
 		field = "Timing Mode",					timingMode, {isIgnitionEnabled == 1}
+		field = "Use TPS-based Advance Table",	useTPSAdvanceTable, {isIgnitionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
 		field = "#Use fixed timing while validating with a timing gun"
 		field = "Fixed Timinig",				fixedTiming, {isIgnitionEnabled == 1 && timingMode == 1}
 
