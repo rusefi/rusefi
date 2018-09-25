@@ -37,6 +37,7 @@
 #define DWELL_CURVE_SIZE 8
 #define CRANKING_CURVE_SIZE 8
 #define IGN_LOAD_COUNT 16
+#define IGN_TPS_COUNT 16
 #define IGN_RPM_COUNT 16
 #define INJECTION_PIN_COUNT 12
 #define IGNITION_PIN_COUNT 12
@@ -68,6 +69,7 @@
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "mode12", "mode13", "mode14", "mode15", "mode16", "mode17", "mode18", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25", "mode26", "mode27", "mode28", "mode29", "mode30", "mode31", "PULLUP", "mode33", "mode34", "mode35"
+#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 #define engineConfiguration_offset 0
 #define engineConfiguration_offset_hex 0
 #define engineType_offset 0
@@ -964,8 +966,8 @@
 #define useSeparateAdvanceForCranking_offset_hex 5cc
 #define useAdvanceCorrectionsForCranking_offset 1484
 #define useAdvanceCorrectionsForCranking_offset_hex 5cc
-#define unused_1484_bit_19_offset 1484
-#define unused_1484_bit_19_offset_hex 5cc
+#define useTPSAdvanceTable_offset 1484
+#define useTPSAdvanceTable_offset_hex 5cc
 #define unused_1484_bit_20_offset 1484
 #define unused_1484_bit_20_offset_hex 5cc
 #define unused_1484_bit_21_offset 1484
@@ -1568,8 +1570,24 @@
 #define iacCoastingBins_offset_hex d3c
 #define iacCoasting_offset 3452
 #define iacCoasting_offset_hex d7c
-#define unusedEnd_offset 3516
-#define unusedEnd_offset_hex dbc
+#define ignitionTpsTable_offset 3516
+#define ignitionTpsTable_offset_hex dbc
+#define ignitionTpsBins_offset 4028
+#define ignitionTpsBins_offset_hex fbc
+#define tChargeAirCoefMin_offset 4092
+#define tChargeAirCoefMin_offset_hex ffc
+#define tChargeAirCoefMax_offset 4096
+#define tChargeAirCoefMax_offset_hex 1000
+#define tChargeAirFlowMax_offset 4100
+#define tChargeAirFlowMax_offset_hex 1004
+#define tChargeAirIncrLimit_offset 4104
+#define tChargeAirIncrLimit_offset_hex 1008
+#define tChargeAirDecrLimit_offset 4108
+#define tChargeAirDecrLimit_offset_hex 100c
+#define tChargeMode_offset 4112
+#define tChargeMode_offset_hex 1010
+#define unusedEnd_offset 4116
+#define unusedEnd_offset_hex 1014
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512

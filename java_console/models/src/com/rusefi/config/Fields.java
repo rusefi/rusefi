@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Aug 14 12:37:04 EDT 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Sep 25 15:46:46 EDT 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -26,6 +26,7 @@ public class Fields {
 	public static final int DWELL_CURVE_SIZE = 8;
 	public static final int CRANKING_CURVE_SIZE = 8;
 	public static final int IGN_LOAD_COUNT = 16;
+	public static final int IGN_TPS_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
 	public static final int INJECTION_PIN_COUNT = 12;
 	public static final int IGNITION_PIN_COUNT = 12;
@@ -652,7 +653,7 @@ public class Fields {
 	public static final int useFixedBaroCorrFromMap_offset = 1484;
 	public static final int useSeparateAdvanceForCranking_offset = 1484;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1484;
-	public static final int unused_1484_bit_19_offset = 1484;
+	public static final int useTPSAdvanceTable_offset = 1484;
 	public static final int unused_1484_bit_20_offset = 1484;
 	public static final int unused_1484_bit_21_offset = 1484;
 	public static final int engineChartSize_offset = 1488;
@@ -1036,7 +1037,20 @@ public class Fields {
 	public static final int coastingFuelCutMap_offset = 3386;
 	public static final int iacCoastingBins_offset = 3388;
 	public static final int iacCoasting_offset = 3452;
-	public static final int unusedEnd_offset = 3516;
+	public static final int ignitionTpsTable_offset = 3516;
+	public static final int ignitionTpsBins_offset = 4028;
+	public static final int tChargeAirCoefMin_offset = 4092;
+	public static final int tChargeAirCoefMax_offset = 4096;
+	public static final int tChargeAirCoefMax_offset_hex = 1000;
+	public static final int tChargeAirFlowMax_offset = 4100;
+	public static final int tChargeAirFlowMax_offset_hex = 1004;
+	public static final int tChargeAirIncrLimit_offset = 4104;
+	public static final int tChargeAirIncrLimit_offset_hex = 1008;
+	public static final int tChargeAirDecrLimit_offset = 4108;
+	public static final int tChargeMode_offset = 4112;
+	public static final int tChargeMode_offset_hex = 1010;
+	public static final int unusedEnd_offset = 4116;
+	public static final int unusedEnd_offset_hex = 1014;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1604,7 +1618,7 @@ public class Fields {
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1484, FieldType.BIT, 16);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1484, FieldType.BIT, 17);
 	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1484, FieldType.BIT, 18);
-	public static final Field UNUSED_1484_BIT_19 = Field.create("UNUSED_1484_BIT_19", 1484, FieldType.BIT, 19);
+	public static final Field USETPSADVANCETABLE = Field.create("USETPSADVANCETABLE", 1484, FieldType.BIT, 19);
 	public static final Field UNUSED_1484_BIT_20 = Field.create("UNUSED_1484_BIT_20", 1484, FieldType.BIT, 20);
 	public static final Field UNUSED_1484_BIT_21 = Field.create("UNUSED_1484_BIT_21", 1484, FieldType.BIT, 21);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1488, FieldType.INT);
@@ -1866,6 +1880,14 @@ public class Fields {
 	public static final Field COASTINGFUELCUTCLT = Field.create("COASTINGFUELCUTCLT", 3382, FieldType.INT);
 	public static final Field PIDEXTRAFORLOWRPM = Field.create("PIDEXTRAFORLOWRPM", 3384, FieldType.INT);
 	public static final Field COASTINGFUELCUTMAP = Field.create("COASTINGFUELCUTMAP", 3386, FieldType.INT);
+	public static final Field IGNITIONTPSTABLE = Field.create("IGNITIONTPSTABLE", 3516, FieldType.INT);
+	public static final Field TCHARGEAIRCOEFMIN = Field.create("TCHARGEAIRCOEFMIN", 4092, FieldType.FLOAT);
+	public static final Field TCHARGEAIRCOEFMAX = Field.create("TCHARGEAIRCOEFMAX", 4096, FieldType.FLOAT);
+	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 4100, FieldType.FLOAT);
+	public static final Field TCHARGEAIRINCRLIMIT = Field.create("TCHARGEAIRINCRLIMIT", 4104, FieldType.FLOAT);
+	public static final Field TCHARGEAIRDECRLIMIT = Field.create("TCHARGEAIRDECRLIMIT", 4108, FieldType.FLOAT);
+	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation"};
+	public static final Field TCHARGEMODE = Field.create("TCHARGEMODE", 4112, FieldType.INT, tChargeMode_e);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
