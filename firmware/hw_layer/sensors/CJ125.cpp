@@ -23,7 +23,7 @@
 #include "backup_ram.h"
 
 
-#define CJ125_DEBUG
+//#define CJ125_DEBUG
 //#define CJ125_DEBUG_SPI
 
 EXTERN_ENGINE;
@@ -525,7 +525,7 @@ static bool cjCheckConfig(void) {
 static void cjStartCalibration(void) {
 	if (!cjCheckConfig())
 		return;
-	if (state != CJ125_IDLE) {
+	if (cjIsWorkingState()) {
 		// todo: change this later for the normal thread operation (auto pre-heating)
 		scheduleMsg(logger, "cj125: Cannot start calibration. Please restart the board and make sure that your sensor is not heating");
 		return;
