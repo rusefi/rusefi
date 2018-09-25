@@ -75,9 +75,10 @@ static THD_WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
  * @brief Pulse-Width Modulation state
  */
 static SimplePwm etbPwmUp CCM_OPTIONAL;
+/*
 static SimplePwm etbPwmDown CCM_OPTIONAL;
-
 static OutputPin outputDirectionOpen CCM_OPTIONAL;
+*/
 static OutputPin outputDirectionClose CCM_OPTIONAL;
 
 EXTERN_ENGINE;
@@ -117,12 +118,14 @@ static msg_t etbThread(void *arg) {
 
 		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
 
-		bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
-		if (needEtbBraking != wasEtbBraking) {
-			scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
-			wasEtbBraking = needEtbBraking;
+		if (boardConfiguration->etbDirectionPin2 != GPIO_UNASSIGNED) {
+			bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
+			if (needEtbBraking != wasEtbBraking) {
+				scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
+				wasEtbBraking = needEtbBraking;
+			}
+			outputDirectionClose.setValue(needEtbBraking);
 		}
-		outputDirectionClose.setValue(needEtbBraking);
 
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE) {
 			pid.postState(&tsOutputChannels);
@@ -145,12 +148,15 @@ static msg_t etbThread(void *arg) {
 #endif
 }
 
-static void setThrottleConsole(int level) {
+/**
+ * manual duty cycle control without PID
+ */
+static void setThrottleDutyCycle(int level) {
 	scheduleMsg(&logger, "setting throttle=%d", level);
 
 	float dc = 0.01 + (minI(level, 98)) / 100.0;
 	etbPwmUp.setSimplePwmDutyCycle(dc);
-	print("st = %.2f\r\n", dc);
+	print("etb duty = %.2f\r\n", dc);
 }
 
 static void showEthInfo(void) {
@@ -175,19 +181,25 @@ static void showEthInfo(void) {
 	pid.showPidStatus(&logger, "ETB");
 }
 
-static void apply(void) {
+static void applyPidSettings(void) {
 	pid.updateFactors(engineConfiguration->etb.pFactor, engineConfiguration->etb.iFactor, 0);
 }
 
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
-	apply();
+	applyPidSettings();
 	showEthInfo();
 }
 
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
-	apply();
+	applyPidSettings();
+	showEthInfo();
+}
+
+void setEtbDFactor(float value) {
+	engineConfiguration->etb.dFactor = value;
+	applyPidSettings();
 	showEthInfo();
 }
 
@@ -199,6 +211,8 @@ void setDefaultEtbParameters(void) {
 	engineConfiguration->etb.iFactor = 0.5;
 	engineConfiguration->etb.period = 100;
 	engineConfiguration->etbFreq = 300;
+
+//	boardConfiguration->etbControlPin1 = GPIOE_4; // test board, matched default fuel pump relay
 }
 
 bool isETBRestartNeeded(void) {
@@ -233,32 +247,27 @@ void startETBPins(void) {
 			freq,
 			0.80,
 			applyPinState);
+/*
 	startSimplePwmExt(&etbPwmDown, "etb2",
 			boardConfiguration->etbControlPin2,
 			&enginePins.etbOutput2,
 			freq,
 			0.80,
 			applyPinState);
-
 	outputDirectionOpen.initPin("etb dir open", boardConfiguration->etbDirectionPin1);
+*/
 	outputDirectionClose.initPin("etb dir close", boardConfiguration->etbDirectionPin2);
 }
 
 static void setTempOutput(float value) {
 	autoTune.output = value;
-
 }
 
 static void setTempStep(float value) {
 	autoTune.oStep = value;
-
 }
 
 void initElectronicThrottle(void) {
-	// these two lines are controlling direction
-//	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
-//	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
-
 	addConsoleAction("ethinfo", showEthInfo);
 	if (!hasPedalPositionSensor()) {
 		return;
@@ -266,12 +275,13 @@ void initElectronicThrottle(void) {
 
 	startETBPins();
 
-	addConsoleActionI("set_etb", setThrottleConsole);
+	//
+	addConsoleActionI("set_etb", setThrottleDutyCycle);
 
 	addConsoleActionF("set_etb_output", setTempOutput);
 	addConsoleActionF("set_etb_step", setTempStep);
 
-	apply();
+	applyPidSettings();
 
 	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t) etbThread, NULL);
 }

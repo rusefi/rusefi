@@ -1162,6 +1162,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"idle_d", setIdleDFactor},
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
+		{"etb_d", setEtbDFactor},
 #endif /* EFI_PROD_CODE */
 
 		//		{"", },
