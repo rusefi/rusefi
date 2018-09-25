@@ -13,6 +13,7 @@ void initElectronicThrottle(void);
 void setDefaultEtbParameters(void);
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
+void setEtbDFactor(float value);
 bool isETBRestartNeeded(void);
 void stopETBPins(void);
 void startETBPins(void);
