@@ -66,6 +66,8 @@ bool isSameF(float v1, float v2);
 bool strEqualCaseInsensitive(const char *str1, const char *str2);
 bool strEqual(const char *str1, const char *str2);
 
+float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
