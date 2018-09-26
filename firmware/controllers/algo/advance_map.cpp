@@ -32,6 +32,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif
 
 static ign_Map3D_t advanceMap("advance");
+static ign_tps_Map3D_t advanceTpsMap("advanceTps", 1.0 / ADVANCE_TPS_STORAGE_MULT);
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
 static int minCrankingRpm = 0;
@@ -81,8 +82,14 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	if (isStep1Condition(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		return engineConfiguration->step1timing;
 	}
-
-	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
+	
+	float advanceAngle;
+	if (CONFIG(useTPSAdvanceTable)) {
+		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		advanceAngle = advanceTpsMap.getValue((float) rpm, tps);
+	} else {
+		advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
+	}
 	
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle)) {
@@ -168,6 +175,8 @@ void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void prepareTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
+			config->ignitionRpmBins);
+	advanceTpsMap.init(CONFIG(ignitionTpsTable), CONFIG(ignitionTpsBins),
 			config->ignitionRpmBins);
 	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
 			config->ignitionIatCorrRpmBins);
