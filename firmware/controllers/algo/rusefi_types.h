@@ -74,6 +74,7 @@ typedef uint8_t afr_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 // todo: merge these two types together? but these tables have different TS parameters like ranges etc
 typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
+typedef int16_t ignition_tps_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 
 typedef float baro_corr_table_t[BARO_CORR_SIZE][BARO_CORR_SIZE];
 
