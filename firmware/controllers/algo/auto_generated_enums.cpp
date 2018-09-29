@@ -45,8 +45,8 @@ case FORD_INLINE_6_1995:
   return "FORD_INLINE_6_1995";
 case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
-case Force_4b_engine_type:
-  return "Force_4b_engine_type";
+case Force_4_bytes_size_engine_type:
+  return "Force_4_bytes_size_engine_type";
 case GEO_STORM:
   return "GEO_STORM";
 case GM_2_2:
@@ -151,8 +151,8 @@ return NULL;
 
 const char *getTrigger_type_e(trigger_type_e value) {
 switch(value) {
-case Force_4b_trigger_type:
-  return "Force_4b_trigger_type";
+case Force_4_bytes_size_trigger_type:
+  return "Force_4_bytes_size_trigger_type";
 case TT_2JZ_1_12:
   return "TT_2JZ_1_12";
 case TT_2JZ_3_34:
@@ -246,8 +246,8 @@ case ADC_OFF:
   return "ADC_OFF";
 case ADC_SLOW:
   return "ADC_SLOW";
-case Force_4b_adc_channel_mode:
-  return "Force_4b_adc_channel_mode";
+case Force_4_bytes_size_adc_channel_mode:
+  return "Force_4_bytes_size_adc_channel_mode";
   }
  return NULL;
 }
@@ -292,8 +292,8 @@ case SHAFT_SECONDARY_RISING:
 }
 const char *getVvt_mode_e(vvt_mode_e value){
 switch(value) {
-case Force_4b_vvt_mode:
-  return "Force_4b_vvt_mode";
+case Force_4_bytes_size_vvt_mode:
+  return "Force_4_bytes_size_vvt_mode";
 case MIATA_NB2:
   return "MIATA_NB2";
 case VVT_2GZ:
@@ -307,8 +307,8 @@ case VVT_SECOND_HALF:
 }
 const char *getEngine_load_mode_e(engine_load_mode_e value){
 switch(value) {
-case Force_4b_engine_load_mode:
-  return "Force_4b_engine_load_mode";
+case Force_4_bytes_size_engine_load_mode:
+  return "Force_4_bytes_size_engine_load_mode";
 case LM_ALPHA_N:
   return "LM_ALPHA_N";
 case LM_MAP:
@@ -330,15 +330,15 @@ case DM_HD44780_OVER_PCF8574:
   return "DM_HD44780_OVER_PCF8574";
 case DM_NONE:
   return "DM_NONE";
-case Force_4b_display_mode:
-  return "Force_4b_display_mode";
+case Force_4_bytes_size_display_mode:
+  return "Force_4_bytes_size_display_mode";
   }
  return NULL;
 }
 const char *getLog_format_e(log_format_e value){
 switch(value) {
-case Force_4b_log_format:
-  return "Force_4b_log_format";
+case Force_4_bytes_size_log_format:
+  return "Force_4_bytes_size_log_format";
 case LF_NATIVE:
   return "LF_NATIVE";
 case LM_MLV:
@@ -348,8 +348,8 @@ case LM_MLV:
 }
 const char *getIdle_mode_e(idle_mode_e value){
 switch(value) {
-case Force_4b_idle_mode:
-  return "Force_4b_idle_mode";
+case Force_4_bytes_size_idle_mode:
+  return "Force_4_bytes_size_idle_mode";
 case IM_AUTO:
   return "IM_AUTO";
 case IM_MANUAL:
@@ -359,8 +359,8 @@ case IM_MANUAL:
 }
 const char *getPin_output_mode_e(pin_output_mode_e value){
 switch(value) {
-case Force_4b_pin_output_mode:
-  return "Force_4b_pin_output_mode";
+case Force_4_bytes_size_pin_output_mode:
+  return "Force_4_bytes_size_pin_output_mode";
 case OM_DEFAULT:
   return "OM_DEFAULT";
 case OM_INVERTED:
@@ -374,15 +374,15 @@ case OM_OPENDRAIN_INVERTED:
 }
 const char *getGpio_mode_e(gpio_mode_e value){
 switch(value) {
-case Force_4b_gpio_mode:
-  return "Force_4b_gpio_mode";
+case Force_4_bytes_size_gpio_mode:
+  return "Force_4_bytes_size_gpio_mode";
   }
  return NULL;
 }
 const char *getPin_input_mode_e(pin_input_mode_e value){
 switch(value) {
-case Force_4b_pin_input_mode:
-  return "Force_4b_pin_input_mode";
+case Force_4_bytes_size_pin_input_mode:
+  return "Force_4_bytes_size_pin_input_mode";
 case PI_DEFAULT:
   return "PI_DEFAULT";
 case PI_PULLDOWN:
@@ -400,8 +400,8 @@ case FOUR_STROKE_CRANK_SENSOR:
   return "FOUR_STROKE_CRANK_SENSOR";
 case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
   return "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR";
-case Force_4b_operation_mode_e:
-  return "Force_4b_operation_mode_e";
+case Force_4_bytes_size_operation_mode_e:
+  return "Force_4_bytes_size_operation_mode_e";
 case OM_NONE:
   return "OM_NONE";
 case TWO_STROKE:
@@ -411,8 +411,8 @@ case TWO_STROKE:
 }
 const char *getIgnition_mode_e(ignition_mode_e value){
 switch(value) {
-case Force_4b_ignition_mode:
-  return "Force_4b_ignition_mode";
+case Force_4_bytes_size_ignition_mode:
+  return "Force_4_bytes_size_ignition_mode";
 case IM_INDIVIDUAL_COILS:
   return "IM_INDIVIDUAL_COILS";
 case IM_ONE_COIL:
@@ -424,8 +424,8 @@ case IM_WASTED_SPARK:
 }
 const char *getInjection_mode_e(injection_mode_e value){
 switch(value) {
-case Force_4b_injection_mode:
-  return "Force_4b_injection_mode";
+case Force_4_bytes_size_injection_mode:
+  return "Force_4_bytes_size_injection_mode";
 case IM_BATCH:
   return "IM_BATCH";
 case IM_SEQUENTIAL:
@@ -443,15 +443,15 @@ case CIM_DEFAULT:
   return "CIM_DEFAULT";
 case CIM_FIXED_ANGLE:
   return "CIM_FIXED_ANGLE";
-case Force_4b_cranking_ignition_mode:
-  return "Force_4b_cranking_ignition_mode";
+case Force_4_bytes_size_cranking_ignition_mode:
+  return "Force_4_bytes_size_cranking_ignition_mode";
   }
  return NULL;
 }
 const char *getUart_device_e(uart_device_e value){
 switch(value) {
-case Force_4b_uart_device:
-  return "Force_4b_uart_device";
+case Force_4_bytes_size_uart_device:
+  return "Force_4_bytes_size_uart_device";
 case UART_DEVICE_1:
   return "UART_DEVICE_1";
 case UART_DEVICE_2:
@@ -467,8 +467,8 @@ case UART_NONE:
 }
 const char *getSpi_device_e(spi_device_e value){
 switch(value) {
-case Force_4b_spi_device:
-  return "Force_4b_spi_device";
+case Force_4_bytes_size_spi_device:
+  return "Force_4_bytes_size_spi_device";
 case SPI_DEVICE_1:
   return "SPI_DEVICE_1";
 case SPI_DEVICE_2:
@@ -520,15 +520,15 @@ case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-case Force_4b_cranking_adc_channel:
-  return "Force_4b_cranking_adc_channel";
+case Force_4_bytes_size_cranking_adc_channel:
+  return "Force_4_bytes_size_cranking_adc_channel";
   }
  return NULL;
 }
 const char *getMass_storage_e(mass_storage_e value){
 switch(value) {
-case Force_4b_mass_storage:
-  return "Force_4b_mass_storage";
+case Force_4_bytes_size_mass_storage:
+  return "Force_4_bytes_size_mass_storage";
 case MS_ALWAYS:
   return "MS_ALWAYS";
 case MS_AUTO:
@@ -552,15 +552,15 @@ case ES_NarrowBand:
   return "ES_NarrowBand";
 case ES_PLX:
   return "ES_PLX";
-case Force_4b_ego_sensor:
-  return "Force_4b_ego_sensor";
+case Force_4_bytes_size_ego_sensor:
+  return "Force_4_bytes_size_ego_sensor";
   }
  return NULL;
 }
 const char *getBrain_pin_e(brain_pin_e value){
 switch(value) {
-case Force_4b_brain_pin_e:
-  return "Force_4b_brain_pin_e";
+case Force_4_bytes_size_brain_pin_e:
+  return "Force_4_bytes_size_brain_pin_e";
 case GPIOA_0:
   return "GPIOA_0";
 case GPIOA_1:
@@ -790,8 +790,8 @@ case DBG_VVT:
   return "DBG_VVT";
 case DBG_WARMUP_ENRICH:
   return "DBG_WARMUP_ENRICH";
-case Force_4b_debug_mode_e:
-  return "Force_4b_debug_mode_e";
+case Force_4_bytes_size_debug_mode_e:
+  return "Force_4_bytes_size_debug_mode_e";
 default:
   return "NA";
 }
@@ -799,8 +799,8 @@ default:
 }
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value){
 switch(value) {
-case Force_4b_cranking_map_type:
-  return "Force_4b_cranking_map_type";
+case Force_4_bytes_size_cranking_map_type:
+  return "Force_4_bytes_size_cranking_map_type";
 case MT_CUSTOM:
   return "MT_CUSTOM";
 case MT_DENSO183:

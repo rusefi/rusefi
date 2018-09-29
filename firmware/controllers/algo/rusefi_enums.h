@@ -11,8 +11,11 @@
 #ifndef RUSEFI_ENUMS_H_
 #define RUSEFI_ENUMS_H_
 
-#include "firing_order.h"
 #include "efifeatures.h"
+
+// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
+// this is about offsets and sizes in TunerStudio
+#define ENUM_32_BITS 2000000000
 
 #define HIP_NAME "HIP"
 #define TACH_NAME "tach"
@@ -515,12 +518,12 @@ typedef enum {
 	SPI_DEVICE_3 = 3,
 	SPI_DEVICE_4 = 4,
 
-	Force_4bytes_size_spi_device = ENUM_32_BITS,
+	Force_4_bytes_size_spi_device = ENUM_32_BITS,
 } spi_device_e;
 
 typedef enum {
 	TC_ZERO = 0,
-	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS, // we need to force persistent value size
+	Force_4_bytes_size_tChargeMode_e = ENUM_32_BITS, // we need to force persistent value size
 } tChargeMode_e;
 
 /**
