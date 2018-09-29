@@ -638,6 +638,7 @@ fileVersion = { 20171101 }
 	
    table = ignitionTpsTableTbl,  ignitionTableMap,  "Ignition TPS Table",   1
       ;       constant, variable
+      ; Currently we share ignitionRpmBins between two advance tables... Is it ok?
       xBins       = ignitionRpmBins,  RPMValue
       yBins       = ignitionTpsBins,  TPSValue
 

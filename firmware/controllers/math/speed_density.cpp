@@ -61,6 +61,7 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 		return coolantTemp;
 	}
 
+	// We use a robust interp. function for proper tcharge_coff clamping.
 	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, Tcharge_coff);
 
 	if (cisnan(Tcharge)) {

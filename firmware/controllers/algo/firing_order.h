@@ -5,12 +5,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
+#include "rusefi_enums.h"
+
+
 #ifndef CONTROLLERS_ALGO_FIRING_ORDER_H_
 #define CONTROLLERS_ALGO_FIRING_ORDER_H_
-
-// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
-// this is about offsets and sizes in TunerStudio
-#define ENUM_32_BITS 2000000000
 
 typedef enum {
 	FO_1 = 0,

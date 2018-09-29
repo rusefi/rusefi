@@ -199,6 +199,7 @@ public:
 	float baroCorrection;
 
 	// speed density
+	// Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
 	float tCharge, tChargeK;
 	efitick_t timeSinceLastTChargeK;
 
