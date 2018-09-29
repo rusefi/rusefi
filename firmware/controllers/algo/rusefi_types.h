@@ -17,6 +17,7 @@ typedef unsigned int time_t;
 #endif
 
 #include "rusefi_enums.h"
+#include "firing_order.h"
 #include "rusefi_generated.h"
 
 // time in seconds
