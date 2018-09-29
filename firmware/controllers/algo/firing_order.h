@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#include "firing_enums.h"
+#include "rusefi_enums.h"
 
 
 #ifndef CONTROLLERS_ALGO_FIRING_ORDER_H_
