@@ -89,6 +89,7 @@ struct_no_prefix engine_configuration_s
 #define CRANKING_CURVE_SIZE 8
 
 #define IGN_LOAD_COUNT 16
+#define IGN_TPS_COUNT 16
 #define IGN_RPM_COUNT 16
 
 #define INJECTION_PIN_COUNT 12
@@ -132,6 +133,7 @@ custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO
 
 ! please note that 1024 here is 4 * IGN_LOAD_COUNT * IGN_RPM_COUNT  
 custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -20, 90,    2
+custom ignition_tps_table_t	512 array,   S16,   @OFFSET@, [16x16],"deg",	   0.01,     0,     -20, 90,    2
 
 custom angle_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
 
@@ -690,7 +692,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking
 bit useAdvanceCorrectionsForCranking
-bit unused_1484_bit_19
+bit useTPSAdvanceTable
 bit unused_1484_bit_20
 bit unused_1484_bit_21
 
@@ -908,8 +910,21 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance t
 	
 float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%",      1,     0,      0.0,    100.0,   2
+
+ignition_tps_table_t ignitionTpsTable;
+float[IGN_TPS_COUNT] ignitionTpsBins;;"TPS",   1,   0.0,        0,  100.0,   2
+
+float tChargeAirCoefMin;;"Min tCharge Coeff.",        1,     0,  0.0,    1.0,  4
+float tChargeAirCoefMax;;"Max tCharge Coeff.",        1,     0,  0.0,    1.0,  4
+float tChargeAirFlowMax;;"Max Air Flow, kg/h",        1,     0,  0.0,    1000.0,  1
+float tChargeAirIncrLimit;;"tChange Increment Limit, deg/sec",        1,     0,  0.0,    100.0,  1
+float tChargeAirDecrLimit;;"tChange Decrement Limit, deg/sec",        1,     0,  0.0,    100.0,  1
+
+#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
+custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
+tChargeMode_e tChargeMode;
 	
-	int[741] unusedEnd;
+	int[591] unusedEnd;
 	
 
 end_struct

@@ -139,9 +139,14 @@ void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destinat
  * AFR value is packed into uint8_t with a multiplier of 10
  */
 #define AFR_STORAGE_MULT 10
+/**
+ * TPS-based Advance value is packed into int16_t with a multiplier of 100
+ */
+#define ADVANCE_TPS_STORAGE_MULT 100
 
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t> afr_Map3D_t;
 typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float> ign_Map3D_t;
+typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, int16_t> ign_tps_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float> baroCorr_Map3D_t;
 
