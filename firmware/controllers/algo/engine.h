@@ -130,6 +130,7 @@ public:
 	EngineState();
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	FuelConsumptionState fuelConsumption;
 
@@ -144,6 +145,10 @@ public:
 	 * speed-density logic, calculated air mass in grams
 	 */
 	float airMass;
+	/**
+	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
+	 */
+	float airFlow;
 
 	float engineNoiseHipLevel;
 
@@ -194,7 +199,10 @@ public:
 	float baroCorrection;
 
 	// speed density
-	float tChargeK;
+	// Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
+	float tCharge, tChargeK;
+	efitick_t timeSinceLastTChargeK;
+
 	float currentVE;
 	float targetAFR;
 

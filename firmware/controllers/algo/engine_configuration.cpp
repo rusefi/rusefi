@@ -756,6 +756,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tChargeMinRpmMaxTps = 0.25;
 	engineConfiguration->tChargeMaxRpmMinTps = 0.25;
 	engineConfiguration->tChargeMaxRpmMaxTps = 0.9;
+	engineConfiguration->tChargeMode = TCHARGE_MODE_RPM_TPS;
+	engineConfiguration->tChargeAirCoefMin = 0.098f;
+	engineConfiguration->tChargeAirCoefMax = 0.902f;
+	engineConfiguration->tChargeAirFlowMax = 153.6f;
+	engineConfiguration->tChargeAirIncrLimit = 1.0f;
+	engineConfiguration->tChargeAirDecrLimit = 12.5f;
 
 	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
 
