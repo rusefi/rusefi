@@ -154,6 +154,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
 		if (CONFIG(useAdvanceCorrectionsForCranking))
 			angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN2", 0);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 		if (cisnan(angle)) {
@@ -161,8 +162,11 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			return 0;
 		}
 		angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "AngleN3", 0);
 	}
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN4", 0);
 	angle -= engineConfiguration->ignitionOffset;
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
 	fixAngle(angle, "getAdvance", CUSTOM_ERR_6548);
 	return angle;
 }
