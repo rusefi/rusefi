@@ -518,6 +518,11 @@ typedef enum {
 	Force_4b_spi_device = ENUM_32_BITS,
 } spi_device_e;
 
+typedef enum {
+	TC_ZERO = 0,
+	Force_4b_spi_device = ENUM_32_BITS,
+} tChargeMode_e;
+
 /**
  * Frankenso analog #1 PC2 ADC12
  * Frankenso analog #2 PC1 ADC11
