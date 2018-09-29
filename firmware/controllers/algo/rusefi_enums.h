@@ -518,11 +518,6 @@ typedef enum {
 	Force_4bytes_size_spi_device = ENUM_32_BITS,
 } spi_device_e;
 
-typedef enum {
-	TC_ZERO = 0,
-	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS, // we need to force persistent value size
-} tChargeMode_e;
-
 /**
  * Frankenso analog #1 PC2 ADC12
  * Frankenso analog #2 PC1 ADC11
@@ -930,6 +925,7 @@ typedef enum {
 typedef enum {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
+	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
 } tChargeMode_e;
 
 #endif /* RUSEFI_ENUMS_H_ */
