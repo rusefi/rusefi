@@ -520,7 +520,7 @@ typedef enum {
 
 typedef enum {
 	TC_ZERO = 0,
-	Force_4b_spi_device = ENUM_32_BITS,
+	Force_4b_tChargeMode_e = ENUM_32_BITS,
 } tChargeMode_e;
 
 /**
