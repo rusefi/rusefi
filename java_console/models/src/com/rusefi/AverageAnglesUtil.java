@@ -7,6 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
+ * This command line utility is part of rusEfi unknown trigger discovery
+ * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger
+ *
  * 2/15/2015
  */
 public class AverageAnglesUtil {

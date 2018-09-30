@@ -7,7 +7,7 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public final class Histograms {
-    private static final String SQL_STATEMENT = "SQL-statement";
+    private static final String MAGIC = "total";
     public static final double H_ACCURACY = 0.05;
     public static final int BOUND_LENGTH = (int) (Math.log(Long.MAX_VALUE) / Math.log(1.0 + H_ACCURACY));
 
@@ -20,12 +20,7 @@ public final class Histograms {
 
     private final HashMap<String, StatisticsGroup> total_stats = new HashMap<>();
     private final long start_time = System.currentTimeMillis();
-    public final ThreadLocal<LocalStats> local_stats = new ThreadLocal<LocalStats>() {
-        @Override
-        protected LocalStats initialValue() {
-            return new LocalStats();
-        }
-    };
+    public final ThreadLocal<LocalStats> local_stats = ThreadLocal.withInitial(LocalStats::new);
     private final HashSet<LocalStats> all_local_stats = new HashSet<>();
 
     private long last_dump = System.currentTimeMillis();
@@ -247,7 +242,7 @@ public final class Histograms {
      * Sorts specified statistics of specified statistics group for logging.
      */
     private static void sortStatistics(StatisticsGroup sg, Statistics[] sts) {
-        final boolean use_total = sg.type.startsWith(SQL_STATEMENT);
+        final boolean use_total = sg.type.startsWith(MAGIC);
         Arrays.sort(sts, new Comparator<Statistics>() {
             public int compare(Statistics st1, Statistics st2) {
                 if (use_total && st1.total_value != st2.total_value)
@@ -376,7 +371,7 @@ public final class Histograms {
         Statistics[] sts = sg.data.values().toArray(new Statistics[sg.data.size()]);
         sortStatistics(sg, sts);
         for (Statistics st : sts) {
-            appendStatistics(sb, st, new ArrayList<Long>());
+            appendStatistics(sb, st, new ArrayList<>());
         }
         return sb.toString();
     }

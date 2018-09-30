@@ -86,8 +86,8 @@ public class EngineState {
         SensorStats.startDelta(Sensor.INJECTOR_1_DWELL, Sensor.INJECTOR_2_DWELL, Sensor.INJ_1_2_DELTA);
         SensorStats.startDelta(Sensor.INJECTOR_3_DWELL, Sensor.INJECTOR_4_DWELL, Sensor.INJ_3_4_DELTA);
 
-        SensorStats.startConversion(Sensor.CLT, Sensor.CLT_F, SensorConversion.C_TO_F);
-        SensorStats.startConversion(Sensor.IAT, Sensor.IAT_F, SensorConversion.C_TO_F);
+        SensorStats.startConversion(Sensor.CLT, Sensor.CLT_F, SensorConversion.celsius_to_fahrenheit);
+        SensorStats.startConversion(Sensor.IAT, Sensor.IAT_F, SensorConversion.celsius_to_fahrenheit);
         SensorStats.startConversion(Sensor.MAFR, Sensor.MAFR_CFM, new SensorConversion() {
                     @Override
                     public double convertValue(double value) {
