@@ -1,6 +1,7 @@
 package com.rusefi.core;
 
 import com.rusefi.CyclicBuffer;
+import com.rusefi.DataBuffer;
 import com.rusefi.SensorConversion;
 import com.rusefi.waves.EngineReport;
 
@@ -52,7 +53,7 @@ public class SensorStats {
                     public void onSensorUpdate(double value) {
                         cb.add(value);
                         if (cb.getSize() == cb.getMaxSize()) {
-                            double stdDev = cb.getStandardDeviation();
+                            double stdDev = DataBuffer.getStandardDeviation(cb.getValues());
                             SensorCentral.getInstance().setValue(stdDev, destination);
                         }
                     }

@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * Simple command line utility
+ *
+ *
  * Date: 3/8/13
  * (c) Andrey Belomutskiy
  */
