@@ -1,6 +1,11 @@
 package com.rusefi;
 
-public class CyclicBuffer {
+import java.util.Arrays;
+
+/**
+ * Fixed-size array backed buffer
+ */
+public class CyclicBuffer implements DataBuffer {
     private final double values[];
 
     private int size = 0;
@@ -8,17 +13,6 @@ public class CyclicBuffer {
 
     public CyclicBuffer(int maxSize) {
         values = new double[maxSize];
-    }
-
-    public double getStandardDeviation() {
-        double accumulator = 0;
-        double avg = average();
-
-        for (int i = 0; i < getSize(); i++) {
-            double v = get(i) - avg;
-            accumulator += v * v;
-        }
-        return Math.sqrt(accumulator);
     }
 
     public void add(double value) {
@@ -30,19 +24,13 @@ public class CyclicBuffer {
             pointer = 0;
     }
 
-    public double average() {
-        return sum() / size;
-    }
-
-    public double sum() {
-        double result = 0;
-        for (int i = 0; i < size; i++)
-            result += values[i];
-        return result;
-    }
-
     public int getSize() {
         return size;
+    }
+
+    @Override
+    public double[] getValues() {
+        return Arrays.copyOfRange(values, 0, size);
     }
 
     public int getMaxSize() {
