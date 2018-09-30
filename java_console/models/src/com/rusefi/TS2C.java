@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 
 /**
+ * tuner studio project to C data structure converter command line utility
+ *
  * 12/27/2014
  * Andrey Belomutskiy, (c) 2012-2016
  */
