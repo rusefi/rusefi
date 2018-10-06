@@ -148,6 +148,8 @@ public class ParserTest {
         assertParseB("1 4 |", "1 | 4");
         assertParseB("time_since_boot 4 < rpm 0 > |", "(time_since_boot < 4) | (rpm > 0)");
 
+        assertParseB("rpm 4500 > trottle 50 > and", "(rpm > 4500) and (trottle> 50)");
+
         assertParseB("1 4 and", "1 and 4");
         assertParseB("1 4 and", "1 AND 4");
 
