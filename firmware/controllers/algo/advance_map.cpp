@@ -153,8 +153,12 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_6680);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
-		if (CONFIG(useAdvanceCorrectionsForCranking))
-			angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		if (CONFIG(useAdvanceCorrectionsForCranking)) {
+			angle_t correction = getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+			if (!cisnan(correction)) { // correction could be NaN during settings update
+				angle += correction;
+			}
+		}
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN2", 0);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
@@ -162,7 +166,10 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			warning(CUSTOM_ERR_6610, "NaN angle from table");
 			return 0;
 		}
-		angle += getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		angle_t correction = getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		if (!cisnan(correction)) { // correction could be NaN during settings update
+			angle += correction;
+		}
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "AngleN3", 0);
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN4", 0);
