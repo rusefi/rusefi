@@ -25,20 +25,7 @@ public abstract class BaseConfigField {
     }
 
     protected void requestInitialValue(final Field field) {
-        /**
-         * This would request initial value
-         */
-        if (ConnectionStatus.INSTANCE.isConnected()) {
-            processInitialValue(field);
-        } else {
-            ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
-                @Override
-                public void onConnectionStatus(boolean isConnected) {
-                    if (ConnectionStatus.INSTANCE.getValue() == ConnectionStatus.Value.CONNECTED)
-                        processInitialValue(field);
-                }
-            });
-        }
+        ConnectionStatus.INSTANCE.executeOnceConnected(() -> processInitialValue(field));
     }
 
     private void processInitialValue(Field field) {
