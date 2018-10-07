@@ -26,6 +26,9 @@ public class SensorLogger {
             Sensor.MAP,
             Sensor.AFR,
 
+            Sensor.PPS,
+            Sensor.ETB_CONTROL_QUALITY,
+
             Sensor.idlePosition,
 
             Sensor.TARGET_AFR,
