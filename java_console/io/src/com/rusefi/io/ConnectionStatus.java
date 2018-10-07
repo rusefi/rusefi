@@ -22,6 +22,20 @@ public class ConnectionStatus {
     @NotNull
     private Value value = Value.NOT_CONNECTED;
 
+    public void executeOnceConnected(Runnable r) {
+        /*
+         * This would request initial value
+         */
+        if (isConnected()) {
+            r.run();
+        } else {
+            addListener(isConnected -> {
+                if (getValue() == Value.CONNECTED)
+                    r.run();
+            });
+        }
+    }
+
     public enum Value {
         NOT_CONNECTED,
         LOADING,
