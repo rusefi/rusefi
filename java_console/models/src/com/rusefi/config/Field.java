@@ -117,8 +117,8 @@ public class Field {
     @Override
     public String toString() {
         return "Field{" +
-                "name=" + name +
-                "offset=" + offset +
+                name +
+                ", o=" + offset +
                 ", type=" + type +
                 '}';
     }
