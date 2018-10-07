@@ -8,6 +8,7 @@ import java.util.TreeMap;
  * This data structure holds only one value for each millisecond timestamp but that should be totally fine
  * for our purposes
  *
+ * @see ClosedLoopControlQualityMetric
  * @see EtbTestSequence
  */
 public class TimeBasedBuffer implements DataBuffer {
@@ -23,10 +24,16 @@ public class TimeBasedBuffer implements DataBuffer {
         values.headMap(now - duration).clear();
     }
 
+    @Override
+    public synchronized void clear() {
+        values.clear();
+    }
+
     protected long currentTimeMillis() {
         return System.currentTimeMillis();
     }
 
+    @Override
     public synchronized void add(double value) {
         values.put(currentTimeMillis(), value);
     }

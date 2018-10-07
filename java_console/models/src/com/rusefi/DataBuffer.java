@@ -1,7 +1,14 @@
 package com.rusefi;
 
 public interface DataBuffer {
+    void add(double value);
+
     double[] getValues();
+
+    /**
+     * Resets the buffer back to initial empty state
+     */
+    void clear();
 
     static double sum(double[] values) {
         double result = 0;

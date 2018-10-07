@@ -15,6 +15,12 @@ public class CyclicBuffer implements DataBuffer {
         values = new double[maxSize];
     }
 
+    @Override
+    public void clear() {
+        size = pointer = 0;
+    }
+
+    @Override
     public void add(double value) {
         if (size < values.length)
             size++;
