@@ -260,6 +260,10 @@ fileVersion = { 20171101 }
       oilPressure	   = scalar,  F32,     280,		 "kPa",			1, 0.0
       fuelConsumptionPerHour=scalar,  F32,     284,		 "kPa",			1, 0.0
       injectionOffset       = scalar, F32,     288,              "deg",                 1,     0;
+      debugIntField4    = scalar,  S16,  292, "val",          1,       0.0;
+      debugIntField5    = scalar,  S16,  294, "val",          1,       0.0;
+
+
 ;
 ; see TunerStudioOutputChannels struct
 ;
