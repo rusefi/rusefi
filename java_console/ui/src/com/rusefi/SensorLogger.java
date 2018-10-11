@@ -79,6 +79,8 @@ public class SensorLogger {
             Sensor.debugIntField1,
             Sensor.debugIntField2,
             Sensor.debugIntField3,
+            Sensor.debugIntField4,
+            Sensor.debugIntField5,
 
             Sensor.errorCodeCounter,
             Sensor.lastErrorCode,
@@ -193,6 +195,12 @@ public class SensorLogger {
         }
         if (sensor == Sensor.debugIntField2 && isPidDebugMode(debugMode)) {
             return "PID: offset";
+        }
+        if (sensor == Sensor.debugIntField3 && isPidDebugMode(debugMode)) {
+            return "PID: counter";
+        }
+        if (sensor == Sensor.debugIntField4 && isPidDebugMode(debugMode)) {
+            return "PID: period";
         }
         return sensor.getName();
     }

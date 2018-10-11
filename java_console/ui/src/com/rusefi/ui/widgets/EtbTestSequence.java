@@ -41,8 +41,15 @@ public class EtbTestSequence {
 
     static {
         FIRST_STEP
-            .addNext(5 * SECOND, 30)
-            .addNext(10 * SECOND, 50);
+                .addNext(5 * SECOND, 10)
+                .addNext(10 * SECOND, 30)
+                .addNext(10 * SECOND, 50)
+                .addNext(10 * SECOND, 70)
+                .addNext(10 * SECOND, 100)
+                .addNext(10 * SECOND, 50)
+                .addNext(10 * SECOND, 70)
+                .addNext(10 * SECOND, 0)
+        ;
     }
 
     public EtbTestSequence() {
