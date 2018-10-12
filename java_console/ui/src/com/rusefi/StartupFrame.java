@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,8 +58,17 @@ public class StartupFrame {
     @NotNull
     private List<String> currentlyDisplayedPorts = new ArrayList<>();
     private boolean isFirstTimeApplyingPorts = true;
-    private JPanel leftPanel;
+    private JPanel leftPanel = new JPanel(new VerticalFlowLayout());
 
+    private JPanel realHardwarePanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.LEADING, 5, 10));
+    private JPanel miscPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TRAILING)) {
+        @Override
+        public Dimension getPreferredSize() {
+            // want miscPanel and realHardwarePanel to be the same width
+            Dimension size = super.getPreferredSize();
+            return new Dimension(Math.max(size.width, realHardwarePanel.getPreferredSize().width), size.height);
+        }
+    };
     /**
      * this flag tells us if we are closing the startup frame in order to proceed with console start or if we are
      * closing the application.
@@ -89,10 +99,13 @@ public class StartupFrame {
     }
 
     public void chooseSerialPort() {
+        realHardwarePanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Real stm32"));
+        miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
-        leftPanel = new JPanel(new VerticalFlowLayout());
-        leftPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
-                BorderFactory.createLineBorder(Color.darkGray)));
+
+//        leftPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
+//                BorderFactory.createLineBorder(Color.darkGray)));
+
 
         connectPanel.add(comboPorts);
         final JComboBox<String> comboSpeeds = createSpeedCombo();
@@ -109,11 +122,22 @@ public class StartupFrame {
             }
         });
 
-        leftPanel.add(connectPanel);
-        leftPanel.add(noPortsMessage);
+        leftPanel.add(realHardwarePanel);
+        leftPanel.add(miscPanel);
+
+        realHardwarePanel.add(connectPanel);
+        realHardwarePanel.add(noPortsMessage);
         installMessage(noPortsMessage, "Check you cables. Check your drivers. Do you want to start simulator maybe?");
-        leftPanel.add(new URLLabel(VCP_DRIVER_TEXT, VCP_DRIVER_URI));
-        leftPanel.add(new HorizontalLine());
+        realHardwarePanel.add(new URLLabel(VCP_DRIVER_TEXT, VCP_DRIVER_URI));
+
+        if (ProcessStatusWindow.isWindows()) {
+            realHardwarePanel.add(new HorizontalLine());
+            realHardwarePanel.add(new OlderDiscoveryChecbbox().getButton());
+            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_DEBUG_FILE, "Program Firmware/Debug").getButton());
+            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_RELEASE_FILE, "Program Firmware/Release").getButton());
+            realHardwarePanel.add(new EraseChip().getButton());
+        }
+
 
         findAndApplyPorts();
 
@@ -127,20 +151,10 @@ public class StartupFrame {
             }
         });
 
-        leftPanel.add(buttonLogViewer);
-        leftPanel.add(new HorizontalLine());
+        miscPanel.add(buttonLogViewer);
+        miscPanel.add(new HorizontalLine());
 
-        leftPanel.add(SimulatorHelper.createSimulatorComponent(this));
-
-        if (ProcessStatusWindow.isWindows()) {
-            leftPanel.add(new HorizontalLine());
-            leftPanel.add(new OlderDiscoveryChecbbox().getButton());
-            leftPanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_DEBUG_FILE, "Program Firmware/Debug").getButton());
-            leftPanel.add(new HorizontalLine());
-            leftPanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_RELEASE_FILE, "Program Firmware/Release").getButton());
-            leftPanel.add(new HorizontalLine());
-            leftPanel.add(new EraseChip().getButton());
-        }
+        miscPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
