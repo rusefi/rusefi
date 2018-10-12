@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  * 4/15/2016.
  */
 public class SensorLogger {

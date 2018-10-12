@@ -14,7 +14,7 @@ import java.io.File;
 import static com.romraider.editor.ecu.ECUEditorManager.getECUEditor;
 
 /**
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  * 3/6/2015
  */
 public class RomRaiderWrapper {

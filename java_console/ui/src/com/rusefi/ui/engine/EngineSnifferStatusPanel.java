@@ -16,7 +16,7 @@ import java.util.Map;
  * <p/>
  * <p/>
  * Date: 12/26/13
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  */
 public class EngineSnifferStatusPanel {
     public final JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));

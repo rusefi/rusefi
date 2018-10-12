@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * http://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
  * <p/>
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  * 1/19/2017
  */
 public class CompileTool {

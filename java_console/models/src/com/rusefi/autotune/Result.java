@@ -1,7 +1,7 @@
 package com.rusefi.autotune;
 
 /**
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  * 2/23/2016.
  */
 public class Result {

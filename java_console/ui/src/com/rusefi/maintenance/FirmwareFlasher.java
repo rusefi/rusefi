@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 
 /**
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  * 2/4/15
  */
 public class FirmwareFlasher extends ProcessStatusWindow {

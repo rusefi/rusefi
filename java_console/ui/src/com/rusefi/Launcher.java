@@ -39,7 +39,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * <p/>
  * <p/>
  * 12/25/12
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  *
  * @see StartupFrame
  * @see EngineSnifferPanel

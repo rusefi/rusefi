@@ -5,7 +5,7 @@ import com.rusefi.ui.StatusWindow;
 import java.io.*;
 
 /**
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  */
 public class ProcessStatusWindow {
 

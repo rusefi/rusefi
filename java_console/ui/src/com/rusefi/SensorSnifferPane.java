@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Date: 12/21/13
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  */
 public class SensorSnifferPane {
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Analog_Chart";
