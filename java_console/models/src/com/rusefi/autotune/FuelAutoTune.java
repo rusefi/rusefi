@@ -8,7 +8,7 @@ import static com.rusefi.config.Fields.FUEL_RPM_COUNT;
 
 /**
  * 1/5/2016
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  */
 public enum FuelAutoTune implements FuelAutoLogic {
     INSTANCE;

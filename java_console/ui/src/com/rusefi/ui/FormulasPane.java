@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 /**
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  */
 public class FormulasPane {
     private static final String NL = "\r\n \\\\ ";

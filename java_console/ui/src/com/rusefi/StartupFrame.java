@@ -39,7 +39,7 @@ public class StartupFrame {
     // todo: figure out a better way to work with absolute path
     private static final String APPICON = "appicon.png";
     private static final String LOGO = "logo.gif";
-    private static final String LINK_TEXT = "rusEfi (c) 2012-2017";
+    public static final String LINK_TEXT = "rusEfi (c) 2012-2018";
     private static final String URI = "http://rusefi.com/?java_console";
     private static final String VCP_DRIVER_TEXT = "vcp driver";
     private static final String VCP_DRIVER_URI = "http://www.st.com/st-web-ui/static/active/en/st_prod_software_internet/resource/technical/software/driver/stsw-stm32102.zip";

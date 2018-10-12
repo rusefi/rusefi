@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * 1/5/2016
- * (c) Andrey Belomutskiy 2013-2017
+ * (c) Andrey Belomutskiy 2013-2018
  */
 public class FuelAutoTuneTest {
     private static final double EPS = 0.00001;
