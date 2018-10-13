@@ -48,7 +48,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         });
     }
 
-    public static String getOpenovdCommad() {
+    public static String getOpenocdCommad() {
         String cfg = OlderDiscoveryChecbbox.olderMode ? "stm32f4discovery.cfg" : "stm32f429disc1.cfg";
         return BINARY_LOCATION + File.separator +  OPENOCD_EXE + " -f openocd/" + cfg;
     }
@@ -58,7 +58,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             wnd.appendMsg(fileName + " not found, cannot proceed !!!");
             return;
         }
-        StringBuffer error = executeCommand(getOpenovdCommad() + " -c \"program " +
+        StringBuffer error = executeCommand(getOpenocdCommad() + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"");
         if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {
