@@ -8,6 +8,7 @@ import com.rusefi.io.LinkManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 /**
  * (c) Andrey Belomutskiy
@@ -51,13 +52,13 @@ public class TcpIoStream implements IoStream {
                 Thread.currentThread().setName("TCP connector loop");
                 FileLog.MAIN.logLine("Running TCP connection loop");
 
-                byte b[] = new byte[1];
+                byte inputBuffer[] = new byte[256];
                 while (true) {
                     try {
-                        int result = input.read(b);
+                        int result = input.read(inputBuffer);
                         if (result == -1)
                             throw new IOException("TcpIoStream: End of input?");
-                        listener.onDataArrived(b);
+                        listener.onDataArrived(Arrays.copyOf(inputBuffer, result));
                     } catch (IOException e) {
                         System.err.println("TcpIoStream: End of connection");
                         return;
