@@ -66,13 +66,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         this.stream = stream;
 
         incomingData = new IncomingDataBuffer(logger);
-        DataListener streamDataListener = new DataListener() {
-            @Override
-            public void onDataArrived(byte[] freshData) {
-                incomingData.addData(freshData);
-            }
-        };
-        stream.setInputListener(streamDataListener);
+        stream.setInputListener(incomingData::addData);
     }
 
     private static void sleep() {
