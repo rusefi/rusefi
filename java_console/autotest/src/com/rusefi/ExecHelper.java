@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.function.Consumer;
 
 /**
  * 3/18/14
@@ -46,29 +47,40 @@ public class ExecHelper {
         thread.setDaemon(true);
         thread.start();
 
-        readAndPrint("from console: ", input);
+        String prefix = "from console: ";
+        Consumer<String> PRINT_AND_LOG = string -> {
+// looks like this is a performance issue since so many lines are printed? looks like it's helping to not write this?
+
+//            System.out.println(prefix + string);
+//            FileLog.SIMULATOR_CONSOLE.logLine(string);
+        };
+
+
+        readAndPrint(PRINT_AND_LOG, input);
         input.close();
     }
 
-    private static void readAndPrint(String prefix, BufferedReader input) throws IOException {
+    private static void readAndPrint(Consumer<String> consumer, BufferedReader input) throws IOException {
         String line;
         while ((line = input.readLine()) != null) {
-            System.out.println(prefix + line);
-            FileLog.SIMULATOR_CONSOLE.logLine(line);
+            consumer.accept(line);
         }
     }
 
     private static Runnable createErrorStreamEcho(final Process process) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                BufferedReader err =
-                        new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                try {
-                    readAndPrint("from err: ", err);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+        return () -> {
+            BufferedReader err =
+                    new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            try {
+                String prefix = "from console: ";
+                Consumer<String> PRINT_AND_LOG = string -> {
+                    System.out.println(prefix + string);
+                    FileLog.SIMULATOR_CONSOLE.logLine(string);
+                };
+
+                readAndPrint(PRINT_AND_LOG, err);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
         };
     }
