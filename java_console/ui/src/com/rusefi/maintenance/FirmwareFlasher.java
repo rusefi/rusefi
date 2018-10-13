@@ -1,11 +1,9 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.ui.OlderDiscoveryChecbbox;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
 
 /**
  * (c) Andrey Belomutskiy 2013-2018
@@ -37,19 +35,13 @@ public class FirmwareFlasher extends ProcessStatusWindow {
 
                 wnd.showFrame("rusEfi Firmware Flasher");
 
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        doFlashFirmware();
-                    }
-                };
-                submitAction(runnable);
+                submitAction(() -> doFlashFirmware());
             }
         });
     }
 
     public static String getOpenocdCommad() {
-        String cfg = OlderDiscoveryChecbbox.olderMode ? "stm32f4discovery.cfg" : "stm32f429disc1.cfg";
+        String cfg = "stm32f4discovery.cfg";
         return BINARY_LOCATION + File.separator +  OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
