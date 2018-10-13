@@ -90,6 +90,9 @@ void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 
+// we combine trigger-defined triggerShape.tdcPosition with user-defined CONFIG(globalTriggerAngleOffset)
+// expectation is that for well-known triggers CONFIG(globalTriggerAngleOffset) would usually be zero
+// while for toothed wheels user would have to provide a value
 #define tdcPosition() \
 		(ENGINE(triggerCentral.triggerShape.tdcPosition) + CONFIG(globalTriggerAngleOffset))
 
