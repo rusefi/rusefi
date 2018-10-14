@@ -59,7 +59,7 @@ static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, in
  * based on data in https://rusefi.com/forum/viewtopic.php?f=3&t=936&p=30303#p30285
  */
 void initGmLS24(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 	trigger_wheel_e ch = T_PRIMARY;
 
 	/* 
