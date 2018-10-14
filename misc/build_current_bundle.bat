@@ -24,9 +24,9 @@ echo %date% %time%
 
 
 echo Erasing chip
-if not exist flash_erase_new_board.bat echo NOT FOUND flash_erase_new_board.bat
-if not exist flash_erase_new_board.bat exit -1
-call flash_erase_new_board.bat
+if not exist flash_erase.bat echo NOT FOUND flash_erase.bat
+if not exist flash_erase.bat exit -1
+call flash_erase.bat
 
 
 echo build_current_bundle.bat: Building firmware
