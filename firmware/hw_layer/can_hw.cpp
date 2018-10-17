@@ -14,11 +14,6 @@
 #include "string.h"
 #include "obd2.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-
-
-#endif /* EFI_PROD_CODE */
-
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
 #include "pin_repository.h"
@@ -49,9 +44,18 @@ static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
  * 29 bit would be CAN_TI0R_EXID (?) but we do not mention it here
  * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
-static const CANConfig canConfig = {
+static const CANConfig canConfig500 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(6) };
+
+/*
+ * speed = 42000000 / (BRP + 1) / (1 + TS1 + 1 + TS2 + 1)
+ * 42000000 / 7 / 6 = 1000000
+ *
+ */
+static const CANConfig canConfig1000 = {
+CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(2) | CAN_BTR_BRP(6) };
 
 static CANRxFrame rxBuffer;
 CANTxFrame txmsg;
@@ -315,10 +319,10 @@ void initCan(void) {
 
 #if STM32_CAN_USE_CAN2 || defined(__DOXYGEN__)
 	// CAN1 is required for CAN2
-	canStart(&CAND1, &canConfig);
-	canStart(&CAND2, &canConfig);
+	canStart(&CAND1, &canConfig500);
+	canStart(&CAND2, &canConfig500);
 #else
-	canStart(&CAND1, &canConfig);
+	canStart(&CAND1, &canConfig500);
 #endif /* STM32_CAN_USE_CAN2 */
 
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);
