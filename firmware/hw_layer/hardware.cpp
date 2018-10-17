@@ -17,6 +17,7 @@
 #include "rfiutil.h"
 #include "injector_central.h"
 #include "vehicle_speed.h"
+#include "yaw_rate_sensor.h"
 
 #include "trigger_input.h"
 #include "eficonsole.h"
@@ -427,6 +428,11 @@ void initHardware(Logging *l) {
 	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 //	initFixedLeds();
+
+
+#if EFI_BOSCH_YAW || defined(__DOXYGEN__)
+	initBoschYawRateSensor();
+#endif /* EFI_BOSCH_YAW */
 
 	//	initBooleanInputs();
 
