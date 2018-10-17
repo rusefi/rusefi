@@ -57,6 +57,14 @@ static const CANConfig canConfig1000 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(2) | CAN_BTR_BRP(6) };
 
+// 42000000 / 14 / 12 = 250000
+
+// todo: validate this
+static const CANConfig canConfig250 = {
+CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(13) };
+
+
 static CANRxFrame rxBuffer;
 CANTxFrame txmsg;
 
@@ -274,7 +282,7 @@ static void canInfo(void) {
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriod);
 
-	scheduleMsg(&logger, "CAN rx count %d/tx ok %d/tx not ok %d", canReadCounter, canWriteOk, canWriteNotOk);
+	scheduleMsg(&logger, "CAN rx_cnt=%d/tx_ok=%d/tx_not_ok=%d", canReadCounter, canWriteOk, canWriteNotOk);
 }
 
 void setCanType(int type) {
