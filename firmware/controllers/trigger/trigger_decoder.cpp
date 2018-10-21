@@ -236,13 +236,14 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		isFirstEvent = false;
 // todo: skip a number of signal from the beginning
 
+		toothDurations[0] = currentDuration;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-//	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothDurations[1]);
-//	scheduleMsg(&logger, "ratio %.2f", 1.0 * currentDuration/ shaftPositionState->toothDurations[1]);
+//	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, toothDurations[0], shaftPositionState->toothDurations[1]);
+//	scheduleMsg(&logger, "ratio %.2f", 1.0 * toothDurations[0]/ shaftPositionState->toothDurations[1]);
 #else
 		if (printTriggerDebug) {
-			printf("ratio %.2f: current=%d previous=%d\r\n", 1.0 * currentDuration / toothDurations[1],
-				currentDuration, toothDurations[1]);
+			printf("ratio %.2f: current=%d previous=%d\r\n", 1.0 * toothDurations[0] / toothDurations[1],
+					toothDurations[0], toothDurations[1]);
 		}
 #endif
 
@@ -252,28 +253,33 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			// this is getting a little out of hand, any ideas?
 
 			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
-				float currentGap = 1.0 * currentDuration / toothDurations[1];
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+				float currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 				tsOutputChannels.debugFloatField1 = currentGap;
 				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
 #endif /* EFI_UNIT_TEST */
 			}
 
-			bool primaryGap = currentDuration > toothDurations[1] * TRIGGER_SHAPE(syncronizationRatioFrom[0])
-				&& currentDuration < toothDurations[1] * TRIGGER_SHAPE(syncronizationRatioTo[0]);
+			bool isGapCondition[GAP_TRACKING_LENGHT];
 
-			bool secondaryGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothDurations[1] > toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioFrom[1])
-			&& toothDurations[1] < toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioTo[1]));
+			for (int i = 0;i<GAP_TRACKING_LENGHT;i++) {
+				isGapCondition[i] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[i])) || toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
+					&& toothDurations[i] < toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioTo[i]);
+			}
 
-			bool thirdGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (toothDurations[2] > toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioFrom[2])
-			&& toothDurations[2] < toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioTo[2]));
+
+//			isGapCondition[1] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothDurations[1] > toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioFrom[1])
+//			&& toothDurations[1] < toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioTo[1]));
+//
+//			isGapCondition[2] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (toothDurations[2] > toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioFrom[2])
+//			&& toothDurations[2] < toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioTo[2]));
 
 			/**
 			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
 			 */
-			isSynchronizationPoint = primaryGap
-					&& secondaryGap
-					&& thirdGap;
+			isSynchronizationPoint = isGapCondition[0]
+					&& isGapCondition[1]
+					&& isGapCondition[2];
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (CONFIG(isPrintTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
