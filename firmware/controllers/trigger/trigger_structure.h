@@ -45,6 +45,8 @@ private:
 class Engine;
 class TriggerState;
 
+#define GAP_TRACKING_LENGHT 3
+
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
  * @see TriggerState for trigger decoder state which works based on this trigger shape model
@@ -89,6 +91,17 @@ public:
 	 */
 	int triggerIndexByAngle[720];
 
+
+	/**
+	 * Depending on trigger shape, we use betweeb one and three previous gap ranges to detect synchronizaiton.
+	 *
+	 * Usually second or third gap is not needed, but some crazy triggers like 36-2-2-2 require two consecutive
+	 * gaps ratios to sync
+	 */
+
+	float syncronizationRatioFrom[GAP_TRACKING_LENGHT];
+	float syncronizationRatioTo[GAP_TRACKING_LENGHT];
+
 	float syncRatioFrom;
 	float syncRatioTo;
 	/**
@@ -96,15 +109,6 @@ public:
 	 */
 	int syncRatioAvg;
 
-	/**
-	 * Usually this is not needed, but some crazy triggers like 36-2-2-2 require two consecutive
-	 * gaps ratios to sync
-	 */
-	float secondSyncRatioFrom;
-	float secondSyncRatioTo;
-
-	float thirdSyncRatioFrom;
-	float thirdSyncRatioTo;
 
 	/**
 	 * Trigger indexes within trigger cycle are counted from synchronization point, and all
