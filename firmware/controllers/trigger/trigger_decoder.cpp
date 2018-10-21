@@ -268,12 +268,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			}
 
 
-//			isGapCondition[1] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothDurations[1] > toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioFrom[1])
-//			&& toothDurations[1] < toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioTo[1]));
-//
-//			isGapCondition[2] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (toothDurations[2] > toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioFrom[2])
-//			&& toothDurations[2] < toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioTo[2]));
-
 			/**
 			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
 			 */
