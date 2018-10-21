@@ -53,8 +53,10 @@ void PwmConfig::init(float *st, single_wave_s *waves) {
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	if (dutyCycle < 0 || dutyCycle > 1) {
-		firmwareError(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
+		return;
 	}
+	// todo: need to fix PWM so that it supports zero duty cycle
 	multiWave.setSwitchTime(0, dutyCycle);
 }
 

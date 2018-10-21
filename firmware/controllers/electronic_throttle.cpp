@@ -75,6 +75,7 @@ static THD_WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
  * @brief Pulse-Width Modulation state
  */
 static SimplePwm etbPwmUp CCM_OPTIONAL;
+static float valueOverride = NAN;
 /*
 static SimplePwm etbPwmDown CCM_OPTIONAL;
 static OutputPin outputDirectionOpen CCM_OPTIONAL;
@@ -85,8 +86,6 @@ EXTERN_ENGINE;
 
 static Pid pid(&engineConfiguration->etb);
 
-//static float prevTps;
-
 static percent_t currentEtbDuty;
 
 static bool wasEtbBraking = false;
@@ -94,10 +93,21 @@ static bool wasEtbBraking = false;
 static msg_t etbThread(void *arg) {
         UNUSED(arg);
 	while (true) {
+		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
+			pid.postState(&tsOutputChannels);
+		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
+			tsOutputChannels.debugFloatField1 = valueOverride;
+		}
+
 		if (shouldResetPid) {
 			pid.reset();
-//			alternatorPidResetCounter++;
 			shouldResetPid = false;
+		}
+
+		if (!cisnan(valueOverride)) {
+			etbPwmUp.setSimplePwmDutyCycle(valueOverride);
+			pid.sleep();
+			continue;
 		}
 
 		if (engine->etbAutoTune) {
@@ -127,18 +137,10 @@ static msg_t etbThread(void *arg) {
 			outputDirectionClose.setValue(needEtbBraking);
 		}
 
-		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
-			pid.postState(&tsOutputChannels);
-		}
 		if (engineConfiguration->isVerboseETB) {
 			pid.showPidStatus(&logger, "ETB");
 		}
 
-
-//		if (tps != prevTps) {
-//			prevTps = tps;
-//			scheduleMsg(&logger, "tps=%d", (int) tps);
-//		}
 
 		// this thread is activated 10 times per second
 		pid.sleep();
@@ -149,12 +151,14 @@ static msg_t etbThread(void *arg) {
 }
 
 /**
- * manual duty cycle control without PID
+ * manual duty cycle control without PID. Percent value from 0 to 100
  */
-static void setThrottleDutyCycle(int level) {
-	scheduleMsg(&logger, "setting throttle=%d", level);
+static void setThrottleDutyCycle(float level) {
+	scheduleMsg(&logger, "setting ETB duty=%f", level);
 
-	float dc = 0.01 + (minI(level, 98)) / 100.0;
+	float dc = (minI(level, 98)) / 100.0;
+	dc = maxF(dc, 0.00001); // todo: need to fix PWM so that it supports zero duty cycle
+	valueOverride = dc;
 	etbPwmUp.setSimplePwmDutyCycle(dc);
 	print("etb duty = %.2f\r\n", dc);
 }
@@ -276,7 +280,7 @@ void initElectronicThrottle(void) {
 	startETBPins();
 
 	//
-	addConsoleActionI("set_etb", setThrottleDutyCycle);
+	addConsoleActionF("set_etb", setThrottleDutyCycle);
 
 	addConsoleActionF("set_etb_output", setTempOutput);
 	addConsoleActionF("set_etb_step", setTempStep);

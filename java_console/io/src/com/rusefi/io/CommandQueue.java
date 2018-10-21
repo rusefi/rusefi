@@ -150,6 +150,10 @@ public class CommandQueue {
         write(command, timeout, InvocationConfirmationListener.VOID);
     }
 
+    public void write(String command, InvocationConfirmationListener listener) {
+        write(command, DEFAULT_TIMEOUT, listener, true);
+    }
+
     public void write(String command, int timeoutMs, InvocationConfirmationListener listener) {
         write(command, timeoutMs, listener, true);
     }
