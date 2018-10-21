@@ -127,7 +127,7 @@ static msg_t etbThread(void *arg) {
 			outputDirectionClose.setValue(needEtbBraking);
 		}
 
-		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE) {
+		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 			pid.postState(&tsOutputChannels);
 		}
 		if (engineConfiguration->isVerboseETB) {
