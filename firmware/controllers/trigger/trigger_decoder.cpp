@@ -131,7 +131,7 @@ void TriggerState::reset() {
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
 	durationBeforePrevious = 0;
-	thirdPreviousDuration = 0;
+	memset(toothDurations, 0, sizeof(toothDurations));
 
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
@@ -266,8 +266,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			bool secondaryGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(syncronizationRatioFrom[1])
 			&& toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(syncronizationRatioTo[1]));
 
-			bool thirdGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (durationBeforePrevious > thirdPreviousDuration * TRIGGER_SHAPE(syncronizationRatioFrom[2])
-			&& durationBeforePrevious < thirdPreviousDuration * TRIGGER_SHAPE(syncronizationRatioTo[2]));
+			bool thirdGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (durationBeforePrevious > toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioFrom[2])
+			&& durationBeforePrevious < toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioTo[2]));
 
 			/**
 			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
@@ -283,7 +283,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif /* EFI_PROD_CODE */
 				float gap = 1.0 * currentDuration / toothed_previous_duration;
 				float prevGap = 1.0 * toothed_previous_duration / durationBeforePrevious;
-				float gap3 = 1.0 * durationBeforePrevious / thirdPreviousDuration;
+				float gap3 = 1.0 * durationBeforePrevious / toothDurations[2];
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 				scheduleMsg(logger, "%d: cur=%.2f/prev=%.2f/3rd=%.2f @ %d while expected from %.2f to %.2f and 2nd from %.2f to %.2f and 3rd from %.2f to %.2f error=%d",
 						getTimeNowSeconds(),
@@ -293,6 +293,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						TRIGGER_SHAPE(syncronizationRatioFrom[1]), TRIGGER_SHAPE(syncronizationRatioTo[1]),
 						TRIGGER_SHAPE(syncronizationRatioFrom[2]), TRIGGER_SHAPE(syncronizationRatioTo[2]),
 						someSortOfTriggerError);
+
+				for (int i = 0;i<GAP_TRACKING_LENGHT;i++) {
+					scheduleMsg(logger, "%d:", i);
+				}
+
 #else
 				actualSynchGap = gap;
 				print("current gap %.2f/%.2f/%.2f c=%d prev=%d\r\n", gap, prevGap, gap3, currentDuration, toothed_previous_duration);
@@ -419,7 +424,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 		}
 
-		thirdPreviousDuration = durationBeforePrevious;
+		toothDurations[2] = durationBeforePrevious;
 		durationBeforePrevious = toothed_previous_duration;
 		toothed_previous_duration = currentDuration;
 		toothed_previous_time = nowNt;

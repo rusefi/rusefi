@@ -45,7 +45,7 @@ private:
 class Engine;
 class TriggerState;
 
-#define GAP_TRACKING_LENGHT 3
+#define GAP_TRACKING_LENGHT 4
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
