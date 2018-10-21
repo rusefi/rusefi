@@ -441,8 +441,8 @@ void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 
 void TriggerShape::setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
-	this->syncRatioFrom = syncRatioFrom;
-	this->syncRatioTo = syncRatioTo;
+	this->syncronizationRatioFrom[0] = syncRatioFrom;
+	this->syncronizationRatioTo[0] = syncRatioTo;
 	this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {

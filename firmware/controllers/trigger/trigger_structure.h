@@ -102,8 +102,7 @@ public:
 	float syncronizationRatioFrom[GAP_TRACKING_LENGHT];
 	float syncronizationRatioTo[GAP_TRACKING_LENGHT];
 
-	float syncRatioFrom;
-	float syncRatioTo;
+
 	/**
 	 * used by NoiselessTriggerDecoder (See TriggerCentral::handleShaftSignal())
 	 */

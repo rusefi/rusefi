@@ -422,7 +422,7 @@ static void triggerShapeInfo(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
 	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_SHAPE(useRiseEdge)));
-	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo));
+	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_SHAPE(syncronizationRatioFrom[0]), TRIGGER_SHAPE(syncronizationRatioTo[0]));
 
 	for (int i = 0; i < s->getSize(); i++) {
 		scheduleMsg(logger, "event %d %.2f", i, s->eventAngles[i]);
@@ -562,7 +562,7 @@ void triggerInfo(void) {
 			boolToString(engineConfiguration->directSelfStimulation));
 
 	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
-		scheduleMsg(logger, "gap from %.2f to %.2f", ts->syncRatioFrom, ts->syncRatioTo);
+		scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_SHAPE(syncronizationRatioFrom[0]), TRIGGER_SHAPE(syncronizationRatioTo[0]));
 	}
 
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */

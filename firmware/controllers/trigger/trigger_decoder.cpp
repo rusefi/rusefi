@@ -260,8 +260,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif /* EFI_UNIT_TEST */
 			}
 
-			bool primaryGap = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
-				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo);
+			bool primaryGap = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncronizationRatioFrom[0])
+				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncronizationRatioTo[0]);
 
 			bool secondaryGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(syncronizationRatioFrom[1])
 			&& toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(syncronizationRatioTo[1]));
@@ -289,7 +289,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						getTimeNowSeconds(),
 						gap, prevGap, gap3,
 						currentCycle.current_index,
-						TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo),
+						TRIGGER_SHAPE(syncronizationRatioFrom[0]), TRIGGER_SHAPE(syncronizationRatioTo[0]),
 						TRIGGER_SHAPE(syncronizationRatioFrom[1]), TRIGGER_SHAPE(syncronizationRatioTo[1]),
 						TRIGGER_SHAPE(syncronizationRatioFrom[2]), TRIGGER_SHAPE(syncronizationRatioTo[2]),
 						someSortOfTriggerError);
