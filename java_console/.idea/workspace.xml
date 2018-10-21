@@ -1,39 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="2539dd74-4d25-4ef8-9e8d-c2848cd2c223" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/test" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/test/EcuStimulatorSandbox.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/StimulationInputs.java" />
-      <change type="MOVED" beforePath="C:\stuff\rusefi_sourceforge\java_console\ui\src\com\irnems\EcuStimulator.java" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/EcuStimulator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui/src/com/rusefi/ui/ChartHelper.java" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/ui/ChartHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui/src/com/irnems/Launcher.java" afterPath="$PROJECT_DIR$/ui/src/com/irnems/Launcher.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui/src/com/rusefi/ui/Live3DReport.java" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/ui/Live3DReport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/MafCommand.java" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/MafCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/src/com/irnems/models/Range.java" afterPath="$PROJECT_DIR$/models/src/com/irnems/models/Range.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui/src/com/rusefi/ui/RpmPanel.java" afterPath="$PROJECT_DIR$/ui/src/com/rusefi/ui/RpmPanel.java" />
-    </list>
-    <list id="6c1ea617-8ce6-4a25-9951-31baa322d436" name="n4" comment="n4">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="2539dd74-4d25-4ef8-9e8d-c2848cd2c223" name="Default" comment="" />
+    <list id="6c1ea617-8ce6-4a25-9951-31baa322d436" name="n4" comment="n4" />
     <ignored path="java_console.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="$PROJECT_DIR$/.idea/workspace.xml" ignored="false" />
+    <ignored path="$PROJECT_DIR$/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DaemonCodeAnalyzer">
-    <disable_hints />
-  </component>
   <component name="DebuggerManager">
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true" converted="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
@@ -69,94 +53,127 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_rules />
-    <ui_properties />
+    <ui_properties converted="true" />
+    <breakpoint_rules converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="java_console" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="Launcher.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ui/src/com/irnems/Launcher.java">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="BinaryProtocol.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/io/src/com/rusefi/binaryprotocol/BinaryProtocol.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="71" selection-start="1262" selection-end="1262" vertical-scroll-proportion="0.0" vertical-offset="600" max-vertical-offset="1870">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EcuStimulatorSandbox.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/test/EcuStimulatorSandbox.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="45" selection-start="285" selection-end="285" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EcuStimulator.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/EcuStimulator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="32" selection-start="2473" selection-end="2473" vertical-scroll-proportion="0.0" vertical-offset="1099" max-vertical-offset="4862">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2555#2556#0" expanded="true" />
-                <element signature="e#2586#2587#0" expanded="true" />
-                <element signature="e#2618#2619#0" expanded="true" />
-                <element signature="e#2648#2649#0" expanded="true" />
-                <element signature="e#9179#9995#0" expanded="true" />
-                <element signature="e#9687#9901#0" expanded="true" />
-                <element signature="e#9874#9875#0" expanded="true" />
-                <element signature="e#9984#9985#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ChartHelper.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/ChartHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="133" column="10" selection-start="4481" selection-end="4481" vertical-scroll-proportion="0.0" vertical-offset="2068" max-vertical-offset="2346">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Range.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/src/com/irnems/models/Range.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="39" selection-start="241" selection-end="241" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="561">
+            <state relative-caret-position="279">
+              <caret line="470" column="0" lean-forward="true" selection-start-line="470" selection-start-column="0" selection-end-line="470" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StimulationInputs.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/StimulationInputs.java">
+      <file leaf-file-name="ClosedLoopControlQualityMetric.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/ClosedLoopControlQualityMetric.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="37" selection-start="825" selection-end="825" vertical-scroll-proportion="0.51555556" vertical-offset="343" max-vertical-offset="935">
+            <state relative-caret-position="462">
+              <caret line="39" column="32" lean-forward="false" selection-start-line="39" selection-start-column="32" selection-end-line="39" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EtbTestSequence.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/EtbTestSequence.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="253">
+              <caret line="88" column="43" lean-forward="false" selection-start-line="88" selection-start-column="43" selection-end-line="88" selection-end-column="43" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1214#1215#0" expanded="true" />
-                <element signature="e#1244#1245#0" expanded="true" />
+                <element signature="e#1954#1955#0" expanded="true" />
+                <element signature="e#1983#1984#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RpmPanel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/RpmPanel.java">
+      <file leaf-file-name="EtbResearch.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/EtbResearch.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="100" column="0" selection-start="3306" selection-end="3306" vertical-scroll-proportion="0.0" vertical-offset="1225" max-vertical-offset="1887">
+            <state relative-caret-position="451">
+              <caret line="54" column="15" lean-forward="false" selection-start-line="54" selection-start-column="15" selection-end-line="54" selection-end-column="15" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2430#3089#0" expanded="true" />
+                <element signature="e#3088#3089#0" expanded="true" />
+                <element signature="e#3133#3134#0" expanded="true" />
+                <element signature="e#3162#3163#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Logger.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/opensr5/src/com/opensr5/Logger.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileLog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logging/src/com/rusefi/FileLog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="87">
+              <caret line="13" column="19" lean-forward="false" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommandQueue.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/io/src/com/rusefi/io/CommandQueue.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="278">
+              <caret line="29" column="59" lean-forward="false" selection-start-line="29" selection-start-column="59" selection-end-line="29" selection-end-column="59" />
+              <folding>
+                <element signature="e#5509#5510#0" expanded="true" />
+                <element signature="e#5556#5557#0" expanded="true" />
+                <element signature="e#5610#5611#0" expanded="true" />
+                <element signature="e#5686#5687#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ECUExec.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/romraider/src/com/romraider/ECUExec.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="109">
+              <caret line="50" column="12" lean-forward="false" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Logger.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/log4j.jar!/org/apache/log4j/Logger.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="263">
+              <caret line="23" column="25" lean-forward="false" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
+              <folding>
+                <element signature="e#568#569#0" expanded="true" />
+                <element signature="e#628#629#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BenchTestPane.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/BenchTestPane.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="28" column="61" lean-forward="false" selection-start-line="28" selection-start-column="61" selection-end-line="28" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -164,79 +181,59 @@
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>pedal</find>
+      <find>int</find>
+      <find>debugin</find>
+      <find>excepti</find>
+      <find>excep</find>
+      <find>.inf</find>
+      <find>.info</find>
+    </findStrings>
+  </component>
   <component name="FindManager">
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="IdeDocumentHistory">
-    <option name="changedFiles">
+    <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/io/src/com/irnems/T2.java" />
-        <option value="$PROJECT_DIR$/io/src/com/irnems/Test.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/ResponseBuffer.java" />
-        <option value="$PROJECT_DIR$/io/src/com/irnems/SerialPortReader.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/RpmModel.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/test/RpmModelTest.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/SerialIO.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/AdcModel.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/AdcPanel.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/BooleanInputsModel.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/EngineState.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/RpmPanel.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/WaveInfoPanel.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/Launcher.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/FuelMap.java" />
-        <option value="$PROJECT_DIR$/models/src/com/rusefi/waves/WaveChart.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/ui/WavePanel.java" />
-        <option value="$PROJECT_DIR$/models/src/com/rusefi/waves/RevolutionLog.java" />
-        <option value="$PROJECT_DIR$/models/src/com/rusefi/waves/test/RevolutionLogTest.java" />
-        <option value="$PROJECT_DIR$/models/src/com/rusefi/waves/test/WaveChartParserTest.java" />
-        <option value="$PROJECT_DIR$/models/src/com/rusefi/waves/WaveReport.java" />
-        <option value="$PROJECT_DIR$/io/src/com/irnems/FileLog.java" />
-        <option value="$PROJECT_DIR$/autotest/src/com/rusefi/TestingUtils.java" />
-        <option value="$PROJECT_DIR$/autotest/src/com/rusefi/ExecHelper.java" />
-        <option value="$PROJECT_DIR$/io/src/com/rusefi/io/LinkManager.java" />
-        <option value="$PROJECT_DIR$/io/src/com/rusefi/io/serial/PortHolder.java" />
-        <option value="$PROJECT_DIR$/models/src/com/irnems/core/EngineState.java" />
-        <option value="$PROJECT_DIR$/models/src/com/irnems/core/MessagesCentral.java" />
-        <option value="$PROJECT_DIR$/autotest/src/com/rusefi/IoUtil.java" />
-        <option value="$PROJECT_DIR$/autotest/src/com/rusefi/AutoTest.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/rusefi/PortLookupFrame.java" />
-        <option value="C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/util/Scanner.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/rusefi/VersionChecker.java" />
-        <option value="C:/Program Files/Java/jdk1.7.0_51/src.zip!/javax/swing/JSpinner.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/rusefi/ui/ChartHelper.java" />
-        <option value="$PROJECT_DIR$/models/src/com/irnems/models/Range.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/irnems/Launcher.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/rusefi/test/EcuStimulatorSandbox.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/rusefi/ui/RpmPanel.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/rusefi/EcuStimulator.java" />
-        <option value="$PROJECT_DIR$/ui/src/com/rusefi/StimulationInputs.java" />
+        <option value="$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/EtbTestSequence.java" />
+        <option value="$PROJECT_DIR$/ui/src/com/rusefi/Launcher.java" />
+        <option value="$PROJECT_DIR$/models/src/com/rusefi/config/FieldType.java" />
+        <option value="$PROJECT_DIR$/ui/src/com/rusefi/SensorLogger.java" />
+        <option value="$PROJECT_DIR$/models/src/com/rusefi/core/Sensor.java" />
+        <option value="$PROJECT_DIR$/io/src/com/rusefi/binaryprotocol/BinaryProtocol.java" />
+        <option value="$PROJECT_DIR$/ui/src/com/rusefi/BenchTestPane.java" />
+        <option value="$PROJECT_DIR$/io/src/com/rusefi/io/CommandQueue.java" />
+        <option value="$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/EtbResearch.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1136" />
-    <option name="height" value="679" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1698" />
+    <option name="height" value="1020" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <OptionsSetting value="true" id="Add" />
-    <OptionsSetting value="true" id="Remove" />
-    <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
-    <OptionsSetting value="true" id="Status" />
-    <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -246,6 +243,8 @@
       <autoscrollToSource ProjectPane="true" />
       <autoscrollFromSource ProjectPane="true" />
       <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
       <pane id="Scope">
@@ -269,18 +268,6 @@
               <option name="myItemId" value="External Libraries" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="surfaceplotter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="surfaceplotter-2.0.1.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="surfaceplotter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -299,15 +286,9 @@
               <option name="myItemId" value="surfaceplotter-2.0.1.jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+              <option name="myItemId" value="surfaceplotter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -320,25 +301,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
+              <option name="myItemId" value="surfaceplotter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rt.jar" />
+              <option name="myItemId" value="surfaceplotter-2.0.1.jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -352,15 +319,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
+              <option name="myItemId" value="log4j" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rt.jar" />
+              <option name="myItemId" value="log4j.jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="javax" />
+              <option name="myItemId" value="log4j" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -374,158 +341,12 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
+              <option name="myItemId" value="log4j" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rt.jar" />
+              <option name="myItemId" value="log4j.jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="javax" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="swing" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rt.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rt.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rt.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="net" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.7 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rt.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lang" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="junit-4.10.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="junit-4.10.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="junit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java_console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -551,8 +372,18 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -571,10 +402,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -600,15 +427,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="rusefi" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="widgets" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -618,7 +445,31 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
+              <option name="myItemId" value="romraider" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="romraider" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="romraider" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -626,11 +477,35 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
+              <option name="myItemId" value="romraider" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="opensr5" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="opensr5" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="irnems" />
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="opensr5" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -641,6 +516,42 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rusefi" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -687,6 +598,30 @@
               <option name="myItemId" value="com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="logging" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="logging" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="rusefi" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
@@ -698,19 +633,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="irnems" />
+              <option name="myItemId" value="io" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -720,7 +643,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
+              <option name="myItemId" value="io" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="io" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -728,15 +665,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
+              <option name="myItemId" value="rusefi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java_console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="io" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="irnems" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
+              <option name="myItemId" value="rusefi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="io" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -770,6 +721,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -799,7 +751,6 @@
     <property name="dynamic.classpath" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
-    <property name="restartRequiresConfirmation" value="true" />
     <property name="LayoutCode.rearrangeEntriesJava" value="false" />
     <property name="FullScreen" value="false" />
     <property name="extract.method.default.visibility" value="private" />
@@ -821,7 +772,7 @@
       <recent name="com.rusefi" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.EcuStimulatorSandbox">
+  <component name="RunManager" selected="Application.Launcher COM112">
     <configuration default="false" name="Test" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="com.irnems.Test" />
       <option name="VM_PARAMETERS" />
@@ -835,6 +786,28 @@
       <module name="io" />
       <envs />
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="EcuStimulatorSandbox" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.rusefi.test.EcuStimulatorSandbox" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="ui" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -910,100 +883,13 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="EcuStimulatorSandbox" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.rusefi.test.EcuStimulatorSandbox" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="ui" />
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method />
-    </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
-      <module name="" />
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
-      <option name="PROGRAM_PARAMETERS" />
-      <method />
-    </configuration>
-    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
-      <module name="" />
-      <option name="TESTING_TYPE" value="0" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="USE_COMMAND_LINE" value="true" />
-      <option name="COMMAND_LINE" value="" />
-      <option name="WIPE_USER_DATA" value="false" />
-      <option name="DISABLE_BOOT_ANIMATION" value="false" />
-      <option name="NETWORK_SPEED" value="full" />
-      <option name="NETWORK_LATENCY" value="none" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
-      <method />
-    </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-      <method />
-    </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
-    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
+      <module />
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1040,59 +926,100 @@
       <patterns />
       <method />
     </configuration>
-    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
-      <module name="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="USE_COMMAND_LINE" value="true" />
-      <option name="COMMAND_LINE" value="" />
-      <option name="WIPE_USER_DATA" value="false" />
-      <option name="DISABLE_BOOT_ANIMATION" value="false" />
-      <option name="NETWORK_SPEED" value="full" />
-      <option name="NETWORK_LATENCY" value="none" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <envs />
       <method />
     </configuration>
-    <configuration default="false" name="Launcher COM3" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="com.irnems.Launcher" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="COM3" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    <configuration default="true" type="Java Scratch" factoryName="Java Scratch">
+      <option name="SCRATCH_FILE_ID" value="0" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="ui" />
+      <module name="" />
       <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <list size="13">
-      <item index="0" class="java.lang.String" itemvalue="Application.Launcher &quot;log viewer&quot;" />
-      <item index="1" class="java.lang.String" itemvalue="Application.AutoTest" />
-      <item index="2" class="java.lang.String" itemvalue="Application.Launcher COM10" />
-      <item index="3" class="java.lang.String" itemvalue="Application.Launcher COM11" />
-      <item index="4" class="java.lang.String" itemvalue="Application.Launcher COM7" />
-      <item index="5" class="java.lang.String" itemvalue="Application.Launcher" />
-      <item index="6" class="java.lang.String" itemvalue="Application.Launcher 29001" />
-      <item index="7" class="java.lang.String" itemvalue="Application.Launcher COM3" />
-      <item index="8" class="java.lang.String" itemvalue="Application.Test" />
-      <item index="9" class="java.lang.String" itemvalue="JUnit.RpmModelTest.testRpmSmoothing" />
-      <item index="10" class="java.lang.String" itemvalue="JUnit.RevolutionLogTest.backTime" />
-      <item index="11" class="java.lang.String" itemvalue="JUnit.WaveChartParserTest" />
-      <item index="12" class="java.lang.String" itemvalue="Application.EcuStimulatorSandbox" />
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="autotest" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <list size="43">
+      <item index="0" class="java.lang.String" itemvalue="Application.Launcher COM107" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Launcher COM112" />
+      <item index="2" class="java.lang.String" itemvalue="Application.Launcher COM12" />
+      <item index="3" class="java.lang.String" itemvalue="Application.Launcher COM15" />
+      <item index="4" class="java.lang.String" itemvalue="Application.Launcher COM18" />
+      <item index="5" class="java.lang.String" itemvalue="Application.Launcher COM19" />
+      <item index="6" class="java.lang.String" itemvalue="Application.Launcher COM22" />
+      <item index="7" class="java.lang.String" itemvalue="Application.Launcher COM4" />
+      <item index="8" class="java.lang.String" itemvalue="Application.Launcher COM5" />
+      <item index="9" class="java.lang.String" itemvalue="Application.Launcher COM9" />
+      <item index="10" class="java.lang.String" itemvalue="Application.Launcher COM7" />
+      <item index="11" class="java.lang.String" itemvalue="Application.Launcher COM3" />
+      <item index="12" class="java.lang.String" itemvalue="Application.Launcher COM54" />
+      <item index="13" class="java.lang.String" itemvalue="Application.Launcher COM56" />
+      <item index="14" class="java.lang.String" itemvalue="Application.Launcher COM58" />
+      <item index="15" class="java.lang.String" itemvalue="Application.Launcher COM66" />
+      <item index="16" class="java.lang.String" itemvalue="Application.AverageAnglesUtil" />
+      <item index="17" class="java.lang.String" itemvalue="Application.BinaryProtocolCmd" />
+      <item index="18" class="java.lang.String" itemvalue="Application.CmdLine" />
+      <item index="19" class="java.lang.String" itemvalue="Application.EnduranceTest" />
+      <item index="20" class="java.lang.String" itemvalue="Application.FiringOrderTSLogic" />
+      <item index="21" class="java.lang.String" itemvalue="Application.IniFileModel" />
+      <item index="22" class="java.lang.String" itemvalue="Application.Launcher COM37" />
+      <item index="23" class="java.lang.String" itemvalue="Application.Launcher COM41" />
+      <item index="24" class="java.lang.String" itemvalue="Application.RealHwTest" />
+      <item index="25" class="java.lang.String" itemvalue="Application.TS2C fsioTable1" />
+      <item index="26" class="java.lang.String" itemvalue="Application.TS2C fuelTable" />
+      <item index="27" class="java.lang.String" itemvalue="Application.TS2C ignitionTable" />
+      <item index="28" class="java.lang.String" itemvalue="Application.TS2C targetAFR" />
+      <item index="29" class="java.lang.String" itemvalue="Application.TS2C tps2tps" />
+      <item index="30" class="java.lang.String" itemvalue="Application.TS2C veTable" />
+      <item index="31" class="java.lang.String" itemvalue="Application.TriggerImage" />
+      <item index="32" class="java.lang.String" itemvalue="Application.Launcher &quot;log viewer&quot;" />
+      <item index="33" class="java.lang.String" itemvalue="Application.AutoTest" />
+      <item index="34" class="java.lang.String" itemvalue="Application.Launcher COM10" />
+      <item index="35" class="java.lang.String" itemvalue="Application.Launcher COM11" />
+      <item index="36" class="java.lang.String" itemvalue="Application.Launcher" />
+      <item index="37" class="java.lang.String" itemvalue="Application.Launcher 29001" />
+      <item index="38" class="java.lang.String" itemvalue="Application.Test" />
+      <item index="39" class="java.lang.String" itemvalue="Application.EcuStimulatorSandbox" />
+      <item index="40" class="java.lang.String" itemvalue="JUnit.RpmModelTest.testRpmSmoothing" />
+      <item index="41" class="java.lang.String" itemvalue="JUnit.RevolutionLogTest.backTime" />
+      <item index="42" class="java.lang.String" itemvalue="JUnit.WaveChartParserTest" />
     </list>
     <recent_temporary>
       <list size="3">
@@ -1106,7 +1033,9 @@
       <Port>5050</Port>
     </configuration>
   </component>
-  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
   <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="true" SSL_PROTOCOLS="all">
     <option name="USER" value="" />
     <option name="PASSWORD" value="" />
@@ -1351,33 +1280,33 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1136" height="679" extended-state="6" />
-    <editor active="true" />
+    <frame x="-9" y="-9" width="1698" height="1020" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36450383" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24953617" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.48091602" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293556" sideWeight="0.49778435" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24446085" sideWeight="0.46897376" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22263451" sideWeight="0.31985295" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22263451" sideWeight="0.6764706" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21374045" sideWeight="0.4970458" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293556" sideWeight="0.49778435" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21374045" sideWeight="0.4970458" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23366214" sideWeight="0.64252335" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5606796" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23366214" sideWeight="0.35747662" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24953617" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24446085" sideWeight="0.46897376" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.48058254" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1391,9 +1320,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <option name="myTodoPanelSettings">
-      <TodoPanelSettings />
-    </option>
     <MESSAGE value="UI initial version" />
     <MESSAGE value="RPM is getting closer" />
     <MESSAGE value="RPM smoothing" />
@@ -1417,7 +1343,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="http://sourceforge.net/p/rusefi/tickets/61/" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="3" />
+    </breakpoint-manager>
+    <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -1434,313 +1363,356 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/test/WaveChartParserTest.java">
+    <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/surface/JSurface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="23" selection-start="407" selection-end="407" vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="1190" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/TestingUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="259" selection-end="259" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="595" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/AutoTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="0" selection-start="1408" selection-end="1408" vertical-scroll-proportion="0.0" vertical-offset="748" max-vertical-offset="2516" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/test/WaveChartParserTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="23" selection-start="407" selection-end="407" vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="1190" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/TestingUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="259" selection-end="259" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="595" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/AutoTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="95" selection-start="4161" selection-end="4161" vertical-scroll-proportion="0.0" vertical-offset="1887" max-vertical-offset="2635" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/WaveChart.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="34" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="680" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/IoUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="28" selection-start="919" selection-end="919" vertical-scroll-proportion="0.0" vertical-offset="389" max-vertical-offset="969" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/WaveReport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="160" column="34" selection-start="4644" selection-end="4656" vertical-scroll-proportion="0.0" vertical-offset="2720" max-vertical-offset="2924" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/TestingUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="550" selection-end="550" vertical-scroll-proportion="0.0" vertical-offset="357" max-vertical-offset="595" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/AutoTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="10" selection-start="2562" selection-end="2562" vertical-scroll-proportion="0.0" vertical-offset="1258" max-vertical-offset="3621" />
+        <state relative-caret-position="0">
+          <caret line="116" column="11" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/JSurfacePanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="235" column="0" selection-start="5091" selection-end="5091" vertical-scroll-proportion="0.0" vertical-offset="3995" max-vertical-offset="5304" />
+        <state relative-caret-position="0">
+          <caret line="235" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/surface/JSurface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="11" selection-start="5208" selection-end="5208" vertical-scroll-proportion="0.0" vertical-offset="1972" max-vertical-offset="41106" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/surface/SurfaceModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="17" selection-start="2532" selection-end="2532" vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="3026" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/DefaultSurfaceModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="81" selection-start="533" selection-end="533" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="3145" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/surface/SurfaceModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="17" selection-start="2532" selection-end="2532" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/surface/JSurface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="11" selection-start="5208" selection-end="5208" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/JSurfacePanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="235" column="0" selection-start="5091" selection-end="5091" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/WaveChart.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="34" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="680" />
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/junit/framework/Assert.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="23" selection-start="877" selection-end="877" vertical-scroll-proportion="-3.88" vertical-offset="277" max-vertical-offset="1513" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/WaveChart.java" />
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/junit/framework/Assert.class" />
     <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/RevolutionLog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="40" selection-start="1865" selection-end="1865" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="1309" />
+        <state relative-caret-position="0">
+          <caret line="49" column="40" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/test/RevolutionLogTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="33" selection-start="466" selection-end="466" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="459" />
+        <state relative-caret-position="0">
+          <caret line="17" column="33" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/test/WaveChartParserTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="9" selection-start="6070" selection-end="6070" vertical-scroll-proportion="0.0" vertical-offset="552" max-vertical-offset="1037" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/WaveReport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="161" column="73" selection-start="4750" selection-end="4750" vertical-scroll-proportion="0.0" vertical-offset="2513" max-vertical-offset="2771" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/io/src/com/irnems/FileLog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="29" selection-start="1426" selection-end="1426" vertical-scroll-proportion="0.0" vertical-offset="772" max-vertical-offset="1445" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/test/WaveChartParserTest.java" />
+    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/waves/WaveReport.java" />
+    <entry file="file://$PROJECT_DIR$/io/src/com/irnems/FileLog.java" />
     <entry file="file://$PROJECT_DIR$/io/src/com/rusefi/io/LinkManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="30" selection-start="956" selection-end="956" vertical-scroll-proportion="0.0" vertical-offset="177" max-vertical-offset="1071" />
+        <state relative-caret-position="0">
+          <caret line="28" column="30" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/io/src/com/rusefi/io/serial/PortHolder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="19" selection-start="1712" selection-end="1712" vertical-scroll-proportion="0.0" vertical-offset="641" max-vertical-offset="1938" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/irnems/core/EngineState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="218" column="32" selection-start="8608" selection-end="8608" vertical-scroll-proportion="0.0" vertical-offset="3276" max-vertical-offset="5780" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/io/src/com/rusefi/io/CommandQueue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="49" selection-start="2451" selection-end="2451" vertical-scroll-proportion="0.3686007" vertical-offset="1014" max-vertical-offset="2312" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/irnems/core/MessagesCentral.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="5" selection-start="620" selection-end="620" vertical-scroll-proportion="0.19934641" vertical-offset="262" max-vertical-offset="714" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/PortLookupFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="122" selection-end="122" vertical-scroll-proportion="0.08032128" vertical-offset="45" max-vertical-offset="1139">
-          <folding>
-            <element signature="e#617#625#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="52" column="19" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/models/src/com/irnems/core/EngineState.java" />
+    <entry file="file://$PROJECT_DIR$/models/src/com/irnems/core/MessagesCentral.java" />
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/PortLookupFrame.java" />
     <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/AutoTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="168" column="30" selection-start="5715" selection-end="5715" vertical-scroll-proportion="0.0" vertical-offset="2617" max-vertical-offset="3128" />
+        <state relative-caret-position="0">
+          <caret line="168" column="30" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/IoUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="27" selection-start="5354" selection-end="5354" vertical-scroll-proportion="0.0" vertical-offset="1726" max-vertical-offset="2533" />
+        <state relative-caret-position="0">
+          <caret line="134" column="27" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/ExecHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="32" selection-start="267" selection-end="267" vertical-scroll-proportion="0.9622642" vertical-offset="0" max-vertical-offset="1258" />
+        <state relative-caret-position="0">
+          <caret line="14" column="32" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/autotest/src/com/rusefi/TestingUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="31" selection-start="2277" selection-end="2277" vertical-scroll-proportion="0.65194803" vertical-offset="752" max-vertical-offset="1173" />
+        <state relative-caret-position="0">
+          <caret line="67" column="31" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/lang/Thread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1383" column="22" selection-start="53349" selection-end="53349" vertical-scroll-proportion="0.0" vertical-offset="22483" max-vertical-offset="34238">
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="1383" column="22" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/util/Scanner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="39" selection-start="1105" selection-end="1105" vertical-scroll-proportion="0.0" vertical-offset="765" max-vertical-offset="45135">
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="56" column="39" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/net/MalformedURLException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="54" selection-start="530" selection-end="541" vertical-scroll-proportion="0.14658634" vertical-offset="556" max-vertical-offset="1054">
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="37" column="54" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/VersionChecker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="252" selection-end="252" vertical-scroll-proportion="0.0" vertical-offset="476" max-vertical-offset="2040">
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/VersionChecker.java" />
     <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/BooleanInputsModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="13" selection-start="163" selection-end="163" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/FrameHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="28" selection-start="294" selection-end="303" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/FrameHelper.java" />
     <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/GaugesPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="40" selection-start="664" selection-end="674" vertical-scroll-proportion="0.5803213" vertical-offset="0" max-vertical-offset="1547">
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="24" column="40" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/javax/swing/JSpinner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="33898">
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/lib/surfaceplotter-2.0.1-sources.jar!/net/ericaro/surfaceplotter/DefaultSurfaceModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="13" selection-start="465" selection-end="465" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2958">
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="15" column="13" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/ChartHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="10" selection-start="4481" selection-end="4481" vertical-scroll-proportion="0.0" vertical-offset="2068" max-vertical-offset="2346">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="2552">
+          <caret line="133" column="10" lean-forward="false" selection-start-line="133" selection-start-column="10" selection-end-line="133" selection-end-column="10" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ui/src/com/irnems/Launcher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="71" selection-start="1262" selection-end="1262" vertical-scroll-proportion="0.0" vertical-offset="600" max-vertical-offset="1870">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/irnems/Launcher.java" />
     <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/test/EcuStimulatorSandbox.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="45" selection-start="285" selection-end="285" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="220">
+          <caret line="11" column="45" lean-forward="false" selection-start-line="11" selection-start-column="45" selection-end-line="11" selection-end-column="45" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/src/com/irnems/models/Range.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="39" selection-start="241" selection-end="241" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="561">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/RpmPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="3306" selection-end="3306" vertical-scroll-proportion="0.0" vertical-offset="1225" max-vertical-offset="1887">
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/models/src/com/irnems/models/Range.java" />
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/RpmPanel.java" />
     <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/EcuStimulator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="32" selection-start="2473" selection-end="2473" vertical-scroll-proportion="0.0" vertical-offset="1099" max-vertical-offset="4862">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2555#2556#0" expanded="true" />
-            <element signature="e#2586#2587#0" expanded="true" />
-            <element signature="e#2618#2619#0" expanded="true" />
-            <element signature="e#2648#2649#0" expanded="true" />
-            <element signature="e#9179#9995#0" expanded="true" />
-            <element signature="e#9687#9901#0" expanded="true" />
-            <element signature="e#9874#9875#0" expanded="true" />
-            <element signature="e#9984#9985#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="990">
+          <caret line="71" column="5" lean-forward="false" selection-start-line="71" selection-start-column="5" selection-end-line="71" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/StimulationInputs.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="37" selection-start="825" selection-end="825" vertical-scroll-proportion="0.51555556" vertical-offset="343" max-vertical-offset="935">
+        <state relative-caret-position="22">
+          <caret line="27" column="37" lean-forward="false" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/config/FieldType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="9" lean-forward="false" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+          <folding>
+            <element signature="e#339#340#0" expanded="false" />
+            <element signature="e#390#391#0" expanded="false" />
+            <element signature="e#429#430#0" expanded="false" />
+            <element signature="e#480#481#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/src.zip!/java/nio/ByteBuffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36432">
+          <caret line="1695" column="24" lean-forward="false" selection-start-line="1695" selection-start-column="24" selection-end-line="1695" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#55847#0" expanded="false" />
+            <element signature="e#8515#8516#0" expanded="false" />
+            <element signature="e#8584#8585#0" expanded="false" />
+            <element signature="e#9208#9209#0" expanded="false" />
+            <element signature="e#9261#9262#0" expanded="false" />
+            <element signature="e#12369#12370#0" expanded="false" />
+            <element signature="e#12420#12421#0" expanded="false" />
+            <element signature="e#19972#19973#0" expanded="false" />
+            <element signature="e#20018#20019#0" expanded="false" />
+            <element signature="e#25207#25208#0" expanded="false" />
+            <element signature="e#25253#25254#0" expanded="false" />
+            <element signature="e#25815#25816#0" expanded="false" />
+            <element signature="e#25865#25866#0" expanded="false" />
+            <element signature="e#34416#34417#0" expanded="false" />
+            <element signature="e#34497#34498#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/config/Fields.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26048">
+          <caret line="1184" column="31" lean-forward="false" selection-start-line="1184" selection-start-column="31" selection-end-line="1184" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/SensorLogger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4202">
+          <caret line="202" column="31" lean-forward="false" selection-start-line="202" selection-start-column="31" selection-end-line="202" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/jre/lib/rt.jar!/sun/misc/Unsafe.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7238">
+          <caret line="330" column="50" lean-forward="false" selection-start-line="330" selection-start-column="50" selection-end-line="330" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/Launcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="47" column="54" lean-forward="false" selection-start-line="47" selection-start-column="54" selection-end-line="47" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/src/com/rusefi/core/Sensor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5434">
+          <caret line="275" column="0" lean-forward="false" selection-start-line="275" selection-start-column="0" selection-end-line="275" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#11132#11133#0" expanded="false" />
+            <element signature="e#11177#11178#0" expanded="false" />
+            <element signature="e#12307#12308#0" expanded="false" />
+            <element signature="e#12369#12370#0" expanded="false" />
+            <element signature="e#12687#12688#0" expanded="false" />
+            <element signature="e#12714#12715#0" expanded="false" />
+            <element signature="e#12757#12758#0" expanded="false" />
+            <element signature="e#12788#12789#0" expanded="false" />
+            <element signature="e#12820#12821#0" expanded="false" />
+            <element signature="e#12848#12849#0" expanded="false" />
+            <element signature="e#12883#12884#0" expanded="false" />
+            <element signature="e#12914#12915#0" expanded="false" />
+            <element signature="e#12949#12950#0" expanded="false" />
+            <element signature="e#12980#12981#0" expanded="false" />
+            <element signature="e#13021#13022#0" expanded="false" />
+            <element signature="e#13049#13050#0" expanded="false" />
+            <element signature="e#13079#13080#0" expanded="false" />
+            <element signature="e#13108#13109#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/io/src/com/rusefi/binaryprotocol/BinaryProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="470" column="0" lean-forward="true" selection-start-line="470" selection-start-column="0" selection-end-line="470" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/ClosedLoopControlQualityMetric.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="39" column="32" lean-forward="false" selection-start-line="39" selection-start-column="32" selection-end-line="39" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/BenchTestPane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="28" column="61" lean-forward="false" selection-start-line="28" selection-start-column="61" selection-end-line="28" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/EtbTestSequence.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="88" column="43" lean-forward="false" selection-start-line="88" selection-start-column="43" selection-end-line="88" selection-end-column="43" />
+          <folding>
+            <element signature="e#1954#1955#0" expanded="true" />
+            <element signature="e#1983#1984#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/io/src/com/rusefi/io/CommandQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="29" column="59" lean-forward="false" selection-start-line="29" selection-start-column="59" selection-end-line="29" selection-end-column="59" />
+          <folding>
+            <element signature="e#5509#5510#0" expanded="true" />
+            <element signature="e#5556#5557#0" expanded="true" />
+            <element signature="e#5610#5611#0" expanded="true" />
+            <element signature="e#5686#5687#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/log4j.jar!/org/apache/log4j/Logger.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="23" column="25" lean-forward="false" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
+          <folding>
+            <element signature="e#568#569#0" expanded="true" />
+            <element signature="e#628#629#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/romraider/src/com/romraider/ECUExec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="50" column="12" lean-forward="false" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/opensr5/src/com/opensr5/Logger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logging/src/com/rusefi/FileLog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="13" column="19" lean-forward="false" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ui/src/com/rusefi/ui/widgets/EtbResearch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="451">
+          <caret line="54" column="15" lean-forward="false" selection-start-line="54" selection-start-column="15" selection-end-line="54" selection-end-column="15" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1214#1215#0" expanded="true" />
-            <element signature="e#1244#1245#0" expanded="true" />
+            <element signature="e#2430#3089#0" expanded="true" />
+            <element signature="e#3088#3089#0" expanded="true" />
+            <element signature="e#3133#3134#0" expanded="true" />
+            <element signature="e#3162#3163#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1834,4 +1806,3 @@
     </states>
   </component>
 </project>
-
