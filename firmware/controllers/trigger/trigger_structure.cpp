@@ -103,13 +103,12 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
 	memset(eventAngles, 0, sizeof(eventAngles));
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
+
 	setTriggerSynchronizationGap(2);
-
-	syncronizationRatioFrom[1] = NAN; // NaN means do not use this ratio
-	syncronizationRatioTo[1] = 100000;
-	syncronizationRatioFrom[2] = NAN; // NaN means do not use this ratio
-	syncronizationRatioTo[2] = 100000;
-
+	for (int index = 1; index < GAP_TRACKING_LENGHT ; index++) {
+		// NaN means do not use this gap ratio
+		setTriggerSynchronizationGap3(index, NAN, 100000);
+	}
 
 	tdcPosition = 0;
 	shapeDefinitionError = useOnlyPrimaryForSync = false;
