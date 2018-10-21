@@ -74,6 +74,9 @@ public:
 	 */
 	bool shaft_is_synchronized;
 
+	/**
+	 * current duration at index zero and previous durations are following
+	 */
 	uint32_t toothDurations[GAP_TRACKING_LENGHT + 1];
 
 	/**
