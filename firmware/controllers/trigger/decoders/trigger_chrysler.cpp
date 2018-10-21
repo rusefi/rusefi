@@ -124,7 +124,7 @@ gap=1.43/0.71
 
 	// these values only work well for 'useFronOnly' mode!!!
 	s->setTriggerSynchronizationGap2(0.75, 1.5);
-	s->setSecondTriggerSynchronizationGap2(0.65, 1.25);
+	s->setTriggerSynchronizationGap3(1, 0.65, 1.25);
 
 	float EPS_ANGLE = 0.3;
 

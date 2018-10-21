@@ -440,37 +440,38 @@ void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 }
 
 void TriggerShape::setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
+	setTriggerSynchronizationGap3(0, syncRatioFrom, syncRatioTo);
+}
+
+void TriggerShape::setTriggerSynchronizationGap3(int index, float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
-	this->syncronizationRatioFrom[0] = syncRatioFrom;
-	this->syncronizationRatioTo[0] = syncRatioTo;
-	this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
+	this->syncronizationRatioFrom[index] = syncRatioFrom;
+	this->syncronizationRatioTo[index] = syncRatioTo;
+	if (index == 0) {
+		// we have a special case here - only sync with one gap has this feature
+		this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
+	}
+
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
-		printf("setTriggerSynchronizationGap2 %.2f %.2f\r\n", syncRatioFrom, syncRatioTo);
+		printf("setTriggerSynchronizationGap3 %d %.2f %.2f\r\n", index, syncRatioFrom, syncRatioTo);
 	}
 #endif /* EFI_UNIT_TEST */
+
 }
 
 void TriggerShape::setTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap2(syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(0, syncRatio * 0.75f, syncRatio * 1.25f);
 }
 
 void TriggerShape::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
-	isSynchronizationNeeded = true;
-	this->syncronizationRatioFrom[1] = syncRatioFrom;
-	this->syncronizationRatioTo[1] = syncRatioTo;
+	setTriggerSynchronizationGap3(1, syncRatioFrom, syncRatioTo);
 }
 
 void TriggerShape::setThirdTriggerSynchronizationGap(float syncRatio) {
-	setThirdTriggerSynchronizationGap2(syncRatio * 0.75f, syncRatio * 1.25f);
-}
-
-void TriggerShape::setThirdTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
-	isSynchronizationNeeded = true;
-	this->syncronizationRatioFrom[2] = syncRatioFrom;
-	this->syncronizationRatioTo[2] = syncRatioTo;
+	setTriggerSynchronizationGap3(2, syncRatio * 0.75f, syncRatio * 1.25f);
 }
 
 void TriggerShape::setSecondTriggerSynchronizationGap(float syncRatio) {
-	setSecondTriggerSynchronizationGap2(syncRatio * 0.75f, syncRatio * 1.25f);
+	setTriggerSynchronizationGap3(1, syncRatio * 0.75f, syncRatio * 1.25f);
 }
