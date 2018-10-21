@@ -74,7 +74,7 @@ public:
 	 */
 	bool shaft_is_synchronized;
 
-	uint32_t toothDurations[GAP_TRACKING_LENGHT];
+	uint32_t toothDurations[GAP_TRACKING_LENGHT + 1];
 
 	/**
 	 * this could be a local variable, but it's better for debugging to have it as a field

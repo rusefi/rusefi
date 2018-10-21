@@ -237,12 +237,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 // todo: skip a number of signal from the beginning
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-//	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothDurations[0]);
-//	scheduleMsg(&logger, "ratio %.2f", 1.0 * currentDuration/ shaftPositionState->toothDurations[0]);
+//	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothDurations[1]);
+//	scheduleMsg(&logger, "ratio %.2f", 1.0 * currentDuration/ shaftPositionState->toothDurations[1]);
 #else
 		if (printTriggerDebug) {
-			printf("ratio %.2f: current=%d previous=%d\r\n", 1.0 * currentDuration / toothDurations[0],
-				currentDuration, toothDurations[0]);
+			printf("ratio %.2f: current=%d previous=%d\r\n", 1.0 * currentDuration / toothDurations[1],
+				currentDuration, toothDurations[1]);
 		}
 #endif
 
@@ -252,21 +252,21 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			// this is getting a little out of hand, any ideas?
 
 			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
-				float currentGap = 1.0 * currentDuration / toothDurations[0];
+				float currentGap = 1.0 * currentDuration / toothDurations[1];
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 				tsOutputChannels.debugFloatField1 = currentGap;
 				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
 #endif /* EFI_UNIT_TEST */
 			}
 
-			bool primaryGap = currentDuration > toothDurations[0] * TRIGGER_SHAPE(syncronizationRatioFrom[0])
-				&& currentDuration < toothDurations[0] * TRIGGER_SHAPE(syncronizationRatioTo[0]);
+			bool primaryGap = currentDuration > toothDurations[1] * TRIGGER_SHAPE(syncronizationRatioFrom[0])
+				&& currentDuration < toothDurations[1] * TRIGGER_SHAPE(syncronizationRatioTo[0]);
 
-			bool secondaryGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothDurations[0] > toothDurations[1] * TRIGGER_SHAPE(syncronizationRatioFrom[1])
-			&& toothDurations[0] < toothDurations[1] * TRIGGER_SHAPE(syncronizationRatioTo[1]));
+			bool secondaryGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothDurations[1] > toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioFrom[1])
+			&& toothDurations[1] < toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioTo[1]));
 
-			bool thirdGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (toothDurations[1] > toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioFrom[2])
-			&& toothDurations[1] < toothDurations[2] * TRIGGER_SHAPE(syncronizationRatioTo[2]));
+			bool thirdGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (toothDurations[2] > toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioFrom[2])
+			&& toothDurations[2] < toothDurations[3] * TRIGGER_SHAPE(syncronizationRatioTo[2]));
 
 			/**
 			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
@@ -280,9 +280,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
-				float gap = 1.0 * currentDuration / toothDurations[0];
-				float prevGap = 1.0 * toothDurations[0] / toothDurations[1];
-				float gap3 = 1.0 * toothDurations[1] / toothDurations[2];
+				float gap = 1.0 * currentDuration / toothDurations[1];
+				float prevGap = 1.0 * toothDurations[1] / toothDurations[2];
+				float gap3 = 1.0 * toothDurations[2] / toothDurations[3];
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 				scheduleMsg(logger, "%d: cur=%.2f/prev=%.2f/3rd=%.2f @ %d while expected from %.2f to %.2f and 2nd from %.2f to %.2f and 3rd from %.2f to %.2f error=%d",
 						getTimeNowSeconds(),
@@ -299,7 +299,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 #else
 				actualSynchGap = gap;
-				print("current gap %.2f/%.2f/%.2f c=%d prev=%d\r\n", gap, prevGap, gap3, currentDuration, toothDurations[0]);
+				print("current gap %.2f/%.2f/%.2f c=%d prev=%d\r\n", gap, prevGap, gap3, currentDuration, toothDurations[1]);
 #endif /* EFI_PROD_CODE */
 			}
 
@@ -423,9 +423,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 		}
 
+		toothDurations[3] = toothDurations[2];
 		toothDurations[2] = toothDurations[1];
-		toothDurations[1] = toothDurations[0];
-		toothDurations[0] = currentDuration;
+		toothDurations[1] = currentDuration;
 		toothed_previous_time = nowNt;
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {
