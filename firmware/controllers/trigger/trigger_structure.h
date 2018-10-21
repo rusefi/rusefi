@@ -178,11 +178,11 @@ public:
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
 	void setTriggerSynchronizationGap(float syncRatio);
+	void setTriggerSynchronizationGap3(int index, float syncRatioFrom, float syncRatioTo);
 	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
 	void setSecondTriggerSynchronizationGap(float syncRatio);
 	void setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
 	void setThirdTriggerSynchronizationGap(float syncRatio);
-	void setThirdTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
 	/**
 	 * this one is per CRANKshaft revolution
 	 */

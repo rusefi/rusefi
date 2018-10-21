@@ -108,7 +108,7 @@ void initializeSubaru7_6(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->addEvent2(720, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	s->setTriggerSynchronizationGap2(4.9, 9);
-	s->setSecondTriggerSynchronizationGap2(0.6, 1.25);
+	s->setTriggerSynchronizationGap3(1, 0.6, 1.25);
 
 	s->isSynchronizationNeeded = true;
 
