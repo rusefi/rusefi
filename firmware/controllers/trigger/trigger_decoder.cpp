@@ -263,8 +263,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			bool isGapCondition[GAP_TRACKING_LENGHT];
 
 			for (int i = 0;i<GAP_TRACKING_LENGHT;i++) {
-				isGapCondition[i] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[i])) || toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
-					&& toothDurations[i] < toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioTo[i]);
+				isGapCondition[i] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[i])) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
+					&& toothDurations[i] < toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioTo[i]));
 			}
 
 
