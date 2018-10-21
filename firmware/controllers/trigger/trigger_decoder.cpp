@@ -135,7 +135,8 @@ void TriggerState::reset() {
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
-	currentDuration = 0;
+
+	memset(toothDurations, 0, sizeof(toothDurations));
 	curSignal = SHAFT_PRIMARY_FALLING;
 	prevSignal = SHAFT_PRIMARY_FALLING;
 	startOfCycleNt = 0;
@@ -201,7 +202,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
 	 * 10 seconds since previous trigger event we do not really care.
 	 */
-	currentDuration =
+	toothDurations[0] =
 			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
 
 	bool isPrimary = triggerWheel == T_PRIMARY;
@@ -236,7 +237,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		isFirstEvent = false;
 // todo: skip a number of signal from the beginning
 
-		toothDurations[0] = currentDuration;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 //	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, toothDurations[0], shaftPositionState->toothDurations[1]);
 //	scheduleMsg(&logger, "ratio %.2f", 1.0 * toothDurations[0]/ shaftPositionState->toothDurations[1]);
@@ -280,7 +280,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
-				float gap = 1.0 * currentDuration / toothDurations[1];
+				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				float prevGap = 1.0 * toothDurations[1] / toothDurations[2];
 				float gap3 = 1.0 * toothDurations[2] / toothDurations[3];
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -299,7 +299,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 #else
 				actualSynchGap = gap;
-				print("current gap %.2f/%.2f/%.2f c=%d prev=%d\r\n", gap, prevGap, gap3, currentDuration, toothDurations[1]);
+				print("current gap %.2f/%.2f/%.2f c=%d prev=%d\r\n", gap, prevGap, gap3, toothDurations[0], toothDurations[1]);
 #endif /* EFI_PROD_CODE */
 			}
 
@@ -425,7 +425,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		toothDurations[3] = toothDurations[2];
 		toothDurations[2] = toothDurations[1];
-		toothDurations[1] = currentDuration;
+		toothDurations[1] = toothDurations[0];
 		toothed_previous_time = nowNt;
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {

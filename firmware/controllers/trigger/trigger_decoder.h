@@ -79,10 +79,6 @@ public:
 	 */
 	uint32_t toothDurations[GAP_TRACKING_LENGHT + 1];
 
-	/**
-	 * this could be a local variable, but it's better for debugging to have it as a field
-	 */
-	uint32_t currentDuration;
 	efitime_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
