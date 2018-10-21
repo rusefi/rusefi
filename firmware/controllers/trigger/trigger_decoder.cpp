@@ -423,9 +423,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 		}
 
-		toothDurations[3] = toothDurations[2];
-		toothDurations[2] = toothDurations[1];
-		toothDurations[1] = toothDurations[0];
+		for (int i = GAP_TRACKING_LENGHT; i > 0; i--) {
+			toothDurations[i] = toothDurations[i - 1];
+		}
+
 		toothed_previous_time = nowNt;
 	}
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {
