@@ -263,11 +263,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			bool primaryGap = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
 				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo);
 
-			bool secondaryGap = cisnan(TRIGGER_SHAPE(secondSyncRatioFrom)) || (toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioFrom)
-			&& toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(secondSyncRatioTo));
+			bool secondaryGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[1])) || (toothed_previous_duration > durationBeforePrevious * TRIGGER_SHAPE(syncronizationRatioFrom[1])
+			&& toothed_previous_duration < durationBeforePrevious * TRIGGER_SHAPE(syncronizationRatioTo[1]));
 
-			bool thirdGap = cisnan(TRIGGER_SHAPE(thirdSyncRatioFrom)) || (durationBeforePrevious > thirdPreviousDuration * TRIGGER_SHAPE(thirdSyncRatioFrom)
-			&& durationBeforePrevious < thirdPreviousDuration * TRIGGER_SHAPE(thirdSyncRatioTo));
+			bool thirdGap = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[2])) || (durationBeforePrevious > thirdPreviousDuration * TRIGGER_SHAPE(syncronizationRatioFrom[2])
+			&& durationBeforePrevious < thirdPreviousDuration * TRIGGER_SHAPE(syncronizationRatioTo[2]));
 
 			/**
 			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
@@ -290,8 +290,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						gap, prevGap, gap3,
 						currentCycle.current_index,
 						TRIGGER_SHAPE(syncRatioFrom), TRIGGER_SHAPE(syncRatioTo),
-						TRIGGER_SHAPE(secondSyncRatioFrom), TRIGGER_SHAPE(secondSyncRatioTo),
-						TRIGGER_SHAPE(thirdSyncRatioFrom), TRIGGER_SHAPE(thirdSyncRatioTo),
+						TRIGGER_SHAPE(syncronizationRatioFrom[1]), TRIGGER_SHAPE(syncronizationRatioTo[1]),
+						TRIGGER_SHAPE(syncronizationRatioFrom[2]), TRIGGER_SHAPE(syncronizationRatioTo[2]),
 						someSortOfTriggerError);
 #else
 				actualSynchGap = gap;

@@ -105,10 +105,10 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 	setTriggerSynchronizationGap(2);
 
-	secondSyncRatioFrom = NAN; // NaN means do not use this ratio
-	secondSyncRatioTo = 100000;
-	thirdSyncRatioFrom = NAN; // NaN means do not use this ratio
-	thirdSyncRatioTo = 100000;
+	syncronizationRatioFrom[1] = NAN; // NaN means do not use this ratio
+	syncronizationRatioTo[1] = 100000;
+	syncronizationRatioFrom[2] = NAN; // NaN means do not use this ratio
+	syncronizationRatioTo[2] = 100000;
 
 
 	tdcPosition = 0;
@@ -457,8 +457,8 @@ void TriggerShape::setTriggerSynchronizationGap(float syncRatio) {
 
 void TriggerShape::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
-	this->secondSyncRatioFrom = syncRatioFrom;
-	this->secondSyncRatioTo = syncRatioTo;
+	this->syncronizationRatioFrom[1] = syncRatioFrom;
+	this->syncronizationRatioTo[1] = syncRatioTo;
 }
 
 void TriggerShape::setThirdTriggerSynchronizationGap(float syncRatio) {
@@ -467,8 +467,8 @@ void TriggerShape::setThirdTriggerSynchronizationGap(float syncRatio) {
 
 void TriggerShape::setThirdTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
-	this->thirdSyncRatioFrom = syncRatioFrom;
-	this->thirdSyncRatioTo = syncRatioTo;
+	this->syncronizationRatioFrom[2] = syncRatioFrom;
+	this->syncronizationRatioTo[2] = syncRatioTo;
 }
 
 void TriggerShape::setSecondTriggerSynchronizationGap(float syncRatio) {
