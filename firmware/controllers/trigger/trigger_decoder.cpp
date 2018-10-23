@@ -260,9 +260,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif /* EFI_UNIT_TEST */
 			}
 
-			bool isGapCondition[GAP_TRACKING_LENGHT];
+			bool isGapCondition[GAP_TRACKING_LENGTH];
 
-			for (int i = 0;i<GAP_TRACKING_LENGHT;i++) {
+			for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 				isGapCondition[i] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[i])) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
 					&& toothDurations[i] < toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioTo[i]));
 			}
@@ -293,7 +293,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						TRIGGER_SHAPE(syncronizationRatioFrom[2]), TRIGGER_SHAPE(syncronizationRatioTo[2]),
 						someSortOfTriggerError);
 
-				for (int i = 0;i<GAP_TRACKING_LENGHT;i++) {
+				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					scheduleMsg(logger, "%d:", i);
 				}
 
@@ -423,7 +423,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			;
 		}
 
-		for (int i = GAP_TRACKING_LENGHT; i > 0; i--) {
+		for (int i = GAP_TRACKING_LENGTH; i > 0; i--) {
 			toothDurations[i] = toothDurations[i - 1];
 		}
 

@@ -45,7 +45,7 @@ private:
 class Engine;
 class TriggerState;
 
-#define GAP_TRACKING_LENGHT 4
+#define GAP_TRACKING_LENGTH 4
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
@@ -99,8 +99,8 @@ public:
 	 * gaps ratios to sync
 	 */
 
-	float syncronizationRatioFrom[GAP_TRACKING_LENGHT];
-	float syncronizationRatioTo[GAP_TRACKING_LENGHT];
+	float syncronizationRatioFrom[GAP_TRACKING_LENGTH];
+	float syncronizationRatioTo[GAP_TRACKING_LENGTH];
 
 
 	/**
