@@ -77,7 +77,7 @@ public:
 	/**
 	 * current duration at index zero and previous durations are following
 	 */
-	uint32_t toothDurations[GAP_TRACKING_LENGHT + 1];
+	uint32_t toothDurations[GAP_TRACKING_LENGTH + 1];
 
 	efitime_t toothed_previous_time;
 

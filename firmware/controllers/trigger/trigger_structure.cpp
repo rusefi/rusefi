@@ -105,7 +105,7 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 //	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 
 	setTriggerSynchronizationGap(2);
-	for (int index = 1; index < GAP_TRACKING_LENGHT ; index++) {
+	for (int index = 1; index < GAP_TRACKING_LENGTH ; index++) {
 		// NaN means do not use this gap ratio
 		setTriggerSynchronizationGap3(index, NAN, 100000);
 	}
