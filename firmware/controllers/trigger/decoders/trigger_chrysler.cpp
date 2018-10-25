@@ -545,6 +545,38 @@ void initJeep18_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 }
 
+static void add4cylblock(int off, TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	s->addEvent2(114 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(114 + off + 2, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(134 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(134 + off + 2, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(154 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(154 + off + 2, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(174 + off, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(174 + off + 2, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+// TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initJeep18_2_2_2(s PASS_ENGINE_PARAMETER_SUFFIX);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->isSynchronizationNeeded = true;
+	s->setTriggerSynchronizationGap(1);
+	s->useOnlyPrimaryForSync = true;
+	s->tdcPosition = 720 - 236;
+
+	float offset = 124;
+
+	add4cylblock(offset - 180, s PASS_ENGINE_PARAMETER_SUFFIX);
+	add4cylblock(offset, s PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(236 + offset, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX); // 360
+
+	add4cylblock(offset + 180, s PASS_ENGINE_PARAMETER_SUFFIX);
+	add4cylblock(offset + 360, s PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(596 + offset, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX); // 720
+
 }
