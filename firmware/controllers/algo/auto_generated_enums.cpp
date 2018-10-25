@@ -197,6 +197,8 @@ case TT_HONDA_CBR_600_CUSTOM:
   return "TT_HONDA_CBR_600_CUSTOM";
 case TT_JEEP_18_2_2_2:
   return "TT_JEEP_18_2_2_2";
+case TT_JEEP_4_CYL:
+	return "TT_JEEP_4_CYL";
 case TT_MAZDA_DOHC_1_4:
   return "TT_MAZDA_DOHC_1_4";
 case TT_MAZDA_MIATA_NA:

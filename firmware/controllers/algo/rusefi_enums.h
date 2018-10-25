@@ -271,6 +271,7 @@ typedef enum {
 
 	TT_SUBARU_7_6 = 36,
 
+	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
 	TT_JEEP_18_2_2_2 = 37,
 
 	/*
@@ -280,7 +281,10 @@ typedef enum {
 
 	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
 
-	TT_UNUSED = 40, // this is used if we want to iterate over all trigger types
+	// Jeep XJ 2500cc 4 cylinder. See also TT_JEEP_18_2_2_2 for 6 cylinders
+	TT_JEEP_4_CYL = 40,
+
+	TT_UNUSED = 41, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;

@@ -596,6 +596,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		initDodgeRam(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
+	case TT_JEEP_4_CYL:
 	case TT_JEEP_18_2_2_2:
 		initJeep18_2_2_2(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;

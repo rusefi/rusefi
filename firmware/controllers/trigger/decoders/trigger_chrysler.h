@@ -23,5 +23,6 @@ void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 void configureDodgeStratusTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initJeep18_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initJeep_XJ_4cyl_2500(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* TRIGGER_CHRYSLER_H_ */
