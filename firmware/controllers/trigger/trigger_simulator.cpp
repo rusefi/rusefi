@@ -87,11 +87,11 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t s
 	/**
 	 * let's feed two more cycles to validate shape definition
 	 */
-	for (uint32_t i = syncIndex + 1; i <= syncIndex + 2 * shape->getSize(); i++) {
+	for (uint32_t i = syncIndex + 1; i <= syncIndex + GAP_TRACKING_LENGTH * shape->getSize(); i++) {
 		feedSimulatedEvent(state, shape, i PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	int revolutionCounter = state->getTotalRevolutionCounter();
-	if (revolutionCounter != 3) {
+	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
 		warning(CUSTOM_OBD_TRIGGER_SHAPE, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(engineConfiguration->trigger.type), revolutionCounter);
 		shape->shapeDefinitionError = true;
 		return;
