@@ -230,7 +230,7 @@ void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointInde
 
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	TriggerShape *t = &eth.engine.triggerCentral.triggerShape;
+	TriggerShape *t = &ENGINE(triggerCentral.triggerShape);
 
 	assertFalseM("isError", t->shapeDefinitionError);
 
@@ -559,6 +559,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("MAZDA_323", MAZDA_323, 0, 0.4833, 0);
+	testTriggerDecoder2("CAMARO_4", CAMARO_4, 34, 0.5, 0);
 
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
