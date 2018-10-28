@@ -233,4 +233,6 @@ private:
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+#define TRIGGER_SHAPE(x) ENGINE(triggerCentral.triggerShape.x)
+
 #endif /* TRIGGER_STRUCTURE_H_ */

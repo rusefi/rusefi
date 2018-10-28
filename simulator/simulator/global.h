@@ -109,7 +109,6 @@ void applyNewConfiguration(void);
 
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) engine->x
-#define TRIGGER_SHAPE(x) engine->triggerCentral.triggerShape.x
 
 #endif /* GLOBAL_H_ */
 
