@@ -122,7 +122,6 @@ typedef unsigned int time_t;
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) _engine.x
-#define TRIGGER_SHAPE(x) _engine.triggerCentral.triggerShape.x
 
 #else
 #define EXTERN_ENGINE
