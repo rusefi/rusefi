@@ -267,39 +267,46 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					&& toothDurations[i] < toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioTo[i]));
 			}
 
+			bool isSync = isGapCondition[0];
+			for (int index = 1; index < GAP_TRACKING_LENGTH ; index++) {
+				isSync = isSync && isGapCondition[index];
+			}
+			isSynchronizationPoint = isSync;
 
-			/**
-			 * Here I prefer to have two multiplications instead of one division, that's a micro-optimization
-			 */
-			isSynchronizationPoint = isGapCondition[0]
-					&& isGapCondition[1]
-					&& isGapCondition[2];
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (CONFIG(isPrintTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
-				float gap = 1.0 * toothDurations[0] / toothDurations[1];
-				float prevGap = 1.0 * toothDurations[1] / toothDurations[2];
-				float gap3 = 1.0 * toothDurations[2] / toothDurations[3];
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-				scheduleMsg(logger, "%d: cur=%.2f/prev=%.2f/3rd=%.2f @ %d while expected from %.2f to %.2f and 2nd from %.2f to %.2f and 3rd from %.2f to %.2f error=%d",
-						getTimeNowSeconds(),
-						gap, prevGap, gap3,
-						currentCycle.current_index,
-						TRIGGER_SHAPE(syncronizationRatioFrom[0]), TRIGGER_SHAPE(syncronizationRatioTo[0]),
-						TRIGGER_SHAPE(syncronizationRatioFrom[1]), TRIGGER_SHAPE(syncronizationRatioTo[1]),
-						TRIGGER_SHAPE(syncronizationRatioFrom[2]), TRIGGER_SHAPE(syncronizationRatioTo[2]),
-						someSortOfTriggerError);
 
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
-					scheduleMsg(logger, "%d:", i);
+					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
+					scheduleMsg(logger, "%d %d: cur %.2f expected from %.2f to %.2f error=%d",
+							getTimeNowSeconds(),
+							i,
+							gap,
+							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
+							TRIGGER_SHAPE(syncronizationRatioTo[i]),
+							someSortOfTriggerError);
 				}
 
 #else
+				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				actualSynchGap = gap;
-				print("current gap %.2f/%.2f/%.2f c=%d prev=%d\r\n", gap, prevGap, gap3, toothDurations[0], toothDurations[1]);
+				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
+					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
+					print("%d: cur %.2f expected from %.2f to %.2f error=%d",
+							i,
+							gap,
+							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
+							TRIGGER_SHAPE(syncronizationRatioTo[i]),
+							someSortOfTriggerError);
+				}
+
+
 #endif /* EFI_PROD_CODE */
 			}
 
