@@ -40,6 +40,7 @@ void configureGmTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 /**
+ * TT_GM_LS_24
  * https://www.mediafire.com/?40mfgeoe4ctti
  * http://www.ls1gto.com/forums/archive/index.php/t-190549.htm
  * http://www.ls2.com/forums/showthread.php/834483-LS-Timing-Reluctor-Wheels-Explained
