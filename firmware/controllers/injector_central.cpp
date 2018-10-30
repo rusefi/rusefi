@@ -233,10 +233,10 @@ static msg_t benchThread(int param) {
 void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
 		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
-		unmarkPin(oldPin);
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+		unmarkPin(oldPin);
 		port = NULL;
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_GPIO_HARDWARE */
 	}
 }
 
