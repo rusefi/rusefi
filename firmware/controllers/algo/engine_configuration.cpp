@@ -82,13 +82,25 @@
 #include "zil130.h"
 #include "honda_600.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#include "electronic_throttle.h"
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 #include "idle_thread.h"
+#endif /* EFI_IDLE_CONTROL */
+
+#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 #include "alternatorController.h"
+#endif
+
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#include "electronic_throttle.h"
+#endif
+
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#include "HIP9011.h"
+#endif
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "hardware.h"
 #include "board.h"
-#include "HIP9011.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
