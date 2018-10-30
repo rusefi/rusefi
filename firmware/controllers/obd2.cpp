@@ -22,6 +22,10 @@
  */
 
 #include "global.h"
+
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+
+
 #include "engine.h"
 #include "obd2.h"
 #include "can_hw.h"
@@ -207,3 +211,4 @@ void obdOnCanPacketRx(CANRxFrame *rx) {
 	}
 }
 
+#endif /* EFI_CAN_SUPPORT */

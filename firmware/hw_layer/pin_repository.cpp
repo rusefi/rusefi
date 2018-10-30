@@ -14,7 +14,6 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "chprintf.h"
-#include "rusefi.h"
 
 #define PIN_REPO_SIZE 7 * PORT_SIZE
 // todo: move this into PinRepository class

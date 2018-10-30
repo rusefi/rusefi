@@ -12,7 +12,6 @@
 #include "flash_main.h"
 #include "eficonsole.h"
 #include "flash.h"
-#include "rusefi.h"
 #include "engine_math.h"
 
 // this message is part of console API, see FLASH_SUCCESS_MSG in java code
