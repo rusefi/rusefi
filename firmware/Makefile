@@ -127,8 +127,8 @@ include $(PROJECT_DIR)/ext/fatfs.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
-include development/development.mk
-include controllers/controllers.mk
+include $(PROJECT_DIR)/development/development.mk
+include $(PROJECT_DIR)/controllers/controllers.mk
 
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
