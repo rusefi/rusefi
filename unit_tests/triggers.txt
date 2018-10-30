@@ -2481,3 +2481,9 @@ event 30 1001 638.00
 event 31 1000 640.00
 event 32 1001 658.00
 event 33 1000 660.00
+TRIGGERTYPE 41 4 TT_FIAT_IAW_P8 60.00
+# duty 0.17 0.00
+event 0 1 0.00
+event 1 0 120.00
+event 2 1 180.00
+event 3 0 660.00

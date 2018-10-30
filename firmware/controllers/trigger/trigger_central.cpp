@@ -467,7 +467,10 @@ void printAllTriggers() {
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-		efiAssertVoid(CUSTOM_ERR_6639, !s->shapeDefinitionError, "trigger error");
+		if (s->shapeDefinitionError) {
+			printf("Trigger error %d\r\n", triggerId);
+			exit(-1);
+		}
 
 		fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", triggerId, s->getLength(), getTrigger_type_e(tt), s->tdcPosition);
 

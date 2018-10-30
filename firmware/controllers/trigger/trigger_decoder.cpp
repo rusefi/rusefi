@@ -43,6 +43,7 @@
 #include "trigger_central.h"
 #include "trigger_simulator.h"
 #include "trigger_universal.h"
+#include "trigger_misc.h"
 #include "rfiutil.h"
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
@@ -640,6 +641,9 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_FIAT_IAW_P8:
+		configureFiatIAQ_P8(this PASS_ENGINE_PARAMETER_SUFFIX);
+		break;
+
 	case TT_GM_LS_24:
 		initGmLS24(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
