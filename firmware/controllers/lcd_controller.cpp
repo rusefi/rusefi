@@ -17,6 +17,9 @@
  */
 
 #include "global.h"
+
+#if EFI_HD44780_LCD || defined(__DOXYGEN__)
+
 #include "lcd_controller.h"
 #include "lcd_HD44780.h"
 #include "rpm_calculator.h"
@@ -37,7 +40,6 @@
 #include "idle_thread.h"
 #include "fuel_math.h"
 
-#if EFI_HD44780_LCD || defined(__DOXYGEN__)
 
 EXTERN_ENGINE
 ;

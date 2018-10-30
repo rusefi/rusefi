@@ -505,4 +505,4 @@ void startIdleThread(Logging*sharedLogger) {
 	apply();
 }
 
-#endif
+#endif /* EFI_IDLE_CONTROL */
