@@ -639,6 +639,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		initializeRoverK(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
+	case TT_FIAT_IAW_P8:
 	case TT_GM_LS_24:
 		initGmLS24(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;

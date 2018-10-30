@@ -179,6 +179,8 @@ case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
 case TT_GM_7X:
   return "TT_GM_7X";
+case TT_FIAT_IAW_P8:
+  return "TT_FIAT_IAW_P8";
 case TT_GM_LS_24:
   return "TT_GM_LS_24";
 case TT_HONDA_1_24:
