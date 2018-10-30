@@ -284,7 +284,11 @@ typedef enum {
 	// Jeep XJ 2500cc 4 cylinder. See also TT_JEEP_18_2_2_2 for 6 cylinders
 	TT_JEEP_4_CYL = 40,
 
-	TT_UNUSED = 41, // this is used if we want to iterate over all trigger types
+	// magneti marelli Fiat/Lancia IAW P8 from the 90', 2.0 16 v turbo engine - Lancia Coupe
+	// https://rusefi.com/forum/viewtopic.php?f=5&t=1440
+	TT_FIAT_IAW_P8 = 41,
+
+	TT_UNUSED = 42, // this is used if we want to iterate over all trigger types
 
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e;

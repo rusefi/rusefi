@@ -14,6 +14,7 @@ TRIGGER_DECODERS_SRC_CPP = \
 	$(PROJECT_DIR)/controllers/trigger/decoders/trigger_honda.cpp \
 	$(PROJECT_DIR)/controllers/trigger/decoders/trigger_rover.cpp \
 	$(PROJECT_DIR)/controllers/trigger/decoders/trigger_vw.cpp \
+	$(PROJECT_DIR)/controllers/trigger/decoders/trigger_misc.cpp \
 	$(PROJECT_DIR)/controllers/trigger/decoders/trigger_universal.cpp
 
 TRIGGER_SRC_CPP = \
