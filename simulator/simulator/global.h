@@ -29,6 +29,8 @@
 #include "eficonsole.h"
 #endif /* __cplusplus */
 
+#define efiSetPadMode(msg, brainPin, mode) {}
+
 #define EFI_UNIT_TEST FALSE
 
 #define hasFatalError() (FALSE)

@@ -289,7 +289,7 @@ static msg_t ivThread(int param) {
 		}
 
 
-
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		// this value is not used yet
 		if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
 			engine->clutchDownState = efiReadPin(boardConfiguration->clutchDownPin);
@@ -301,6 +301,7 @@ static msg_t ivThread(int param) {
 		if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
 			engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
 		}
+#endif /* EFI_PROD_CODE */
 
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
@@ -490,8 +491,10 @@ void startIdleThread(Logging*sharedLogger) {
 	}
 
 	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
 				getInputMode(engineConfiguration->brakePedalPinMode));
+#endif /* EFI_PROD_CODE */
 	}
 
 	addConsoleAction("idleinfo", showIdleInfo);
