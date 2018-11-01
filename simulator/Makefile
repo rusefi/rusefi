@@ -132,6 +132,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
+	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \

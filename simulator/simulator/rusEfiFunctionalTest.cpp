@@ -45,9 +45,6 @@ int getRemainingStack(thread_t *otp) {
 	return 99999;
 }
 
-void idleDebug(const char *msg, percent_t value) {
-}
-
 float getMap(void) {
 	return getRawMap();
 }
