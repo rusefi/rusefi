@@ -101,6 +101,22 @@ private:
 	single_wave_s waveInstance;
 };
 
+/**
+ * Start a one-channel software PWM driver.
+ *
+ * This method should be called after scheduling layer is started by initSignalExecutor()
+ */
+void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output,
+		float dutyCycle, float frequency, pwm_gen_callback *stateChangeCallback);
+
+/**
+ * initialize GPIO pin and start a one-channel software PWM driver.
+ *
+ * This method should be called after scheduling layer is started by initSignalExecutor()
+ */
+void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, OutputPin *output,
+		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
+
 void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes,
 		int waveCount, pin_state_t **pinStates);
 
