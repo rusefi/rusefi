@@ -20,11 +20,17 @@ static Logging *logger;
 
 static void saveStepperPos(int pos) {
 	// use backup-power RTC registers to store the data
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	backupRamSave(BACKUP_STEPPER_POS, pos + 1);
+#endif
 }
 
 static int loadStepperPos() {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	return (int)backupRamLoad(BACKUP_STEPPER_POS) - 1;
+#else
+	return 0;
+#endif
 }
 
 static msg_t stThread(StepperMotor *motor) {
@@ -86,7 +92,9 @@ static msg_t stThread(StepperMotor *motor) {
 		}
 		motor->pulse();
 		// save position to backup RTC register
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		saveStepperPos(motor->currentPosition);
+#endif
 	}
 
 	// let's part the motor in a known position to begin with
