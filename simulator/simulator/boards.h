@@ -20,6 +20,25 @@
 #define EFI_CONSOLE_UART_DEVICE (&testStream)
 
 int getAdcValue(const char *msg, int channel);
+#define getSlowAdcCounter() 0
+#define waitForSlowAdc(x) {}
+
+
+// mock SPI
+#define SPIDriver void
+typedef uint16_t adcsample_t;
+#define spiStart(x, y) {}
+#define spiStop(x) {}
+#define spiSelect(x) {}
+#define spiSelectI(x) {}
+#define spiSend(x, y, z) {}
+#define spiReceive(x, y, z) {}
+#define spiExchange(x,y,w,z) {}
+#define spiExchangeI(x,y,w,z) {}
+#define spiStartExchangeI(x,y,w,z) {}
+#define spiUnselect(x) {}
+#define spiUnselectI(x) {}
+// end of mock SPI
 
 #ifdef __cplusplus
 extern "C"
