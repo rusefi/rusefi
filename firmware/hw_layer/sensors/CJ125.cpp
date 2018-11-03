@@ -287,8 +287,10 @@ static void cjCalibrate(void) {
 	uint32_t storedLambda = get16bitFromVoltage(vUaCal);
 	uint32_t storedHeater = get16bitFromVoltage(vUrCal);
 	scheduleMsg(logger, "cj125: Done! Saving calibration data (%d %d).", storedLambda, storedHeater);
+#if EFI_PROD_CODE
 	backupRamSave(BACKUP_CJ125_CALIBRATION_LAMBDA, storedLambda);
 	backupRamSave(BACKUP_CJ125_CALIBRATION_HEATER, storedHeater);
+#endif
 
 	state = CJ125_IDLE;
 }
