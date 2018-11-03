@@ -20,7 +20,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT = -std=c++11 -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -105,6 +105,8 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(TEST_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(PROJECT_DIR)/controllers/error_handling.cpp \
+		  $(PROJECT_DIR)/hw_layer/HIP9011.cpp \
+		  $(PROJECT_DIR)/hw_layer/sensors/CJ125.cpp \
 	$(TRIGGER_SRC_CPP) \
 	main.cpp
 
@@ -150,6 +152,8 @@ INCDIR = . \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/hal/include \
 	$(PROJECT_DIR)/hw_layer \
+          $(PROJECT_DIR)/hw_layer/algo \
+          $(PROJECT_DIR)/hw_layer/sensors/ \
 	test_data_structures \
 	test_basic_math
 	
