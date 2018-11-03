@@ -14,9 +14,9 @@
 #include "analog_input.h"
 #include "cyclic_buffer.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_CJ125 || defined(__DOXYGEN__)
 #include "CJ125.h"
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_CJ125 */
 
 EXTERN_ENGINE;
 

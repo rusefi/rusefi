@@ -47,10 +47,11 @@ static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static SPIDriver *driver;
 
-
+#if EFI_PROD_CODE
 static SPIConfig cj125spicfg = { NULL,
 	/* HW dependent part.*/
 	NULL, 0, SPI_CR1_MSTR | SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+#endif
 
 // Used by CJ125 driver state machine
 static volatile cj125_state_e state = CJ125_IDLE;
@@ -125,24 +126,28 @@ static void cjWriteRegister(unsigned char regAddr, unsigned char regValue) {
 
 static float getUr() {
 	if (CONFIG(cj125ur) != EFI_ADC_NONE) {
+#if EFI_PROD_CODE
 #ifdef EFI_CJ125_DIRECTLY_CONNECTED_UR
 		// in case of directly connected Ur signal from CJ125 to the ADC pin of MCU
 		return getVoltage("cj125ur", CONFIG(cj125ur));
 #else
 		// if a standard voltage division scheme with OpAmp is used
 		return getVoltageDivided("cj125ur", CONFIG(cj125ur));
-#endif
+#endif /* EFI_CJ125_DIRECTLY_CONNECTED_UR */
+#endif /* EFI_PROD_CODE */
 	}
 	return 0.0f;
 }
 
 static float getUa() {
 	if (CONFIG(cj125ua) != EFI_ADC_NONE) {
+#if EFI_PROD_CODE
 		if (engineConfiguration->cj125isUaDivided) {
 			return getVoltageDivided("cj125ua", CONFIG(cj125ua));
 		} else {
 			return getVoltage("cj125ua", CONFIG(cj125ua));
 		}
+#endif /* EFI_PROD_CODE */
 	}
 
 	return 0.0f;
@@ -400,16 +405,16 @@ void cj125defaultPinout() {
 }
 
 static void cjStartSpi(void) {
-	cj125spicfg.ssport = getHwPort("cj125", boardConfiguration->cj125CsPin);
-	cj125spicfg.sspad = getHwPin("cj125", boardConfiguration->cj125CsPin);
-
-	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
-
 	cj125Cs.initPin("cj125 CS", boardConfiguration->cj125CsPin,
 			&engineConfiguration->cj125CsPinMode);
 
+#if EFI_PROD_CODE
+	cj125spicfg.ssport = getHwPort("cj125", boardConfiguration->cj125CsPin);
+	cj125spicfg.sspad = getHwPin("cj125", boardConfiguration->cj125CsPin);
+	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 	scheduleMsg(logger, "cj125: Starting SPI driver");
 	spiStart(driver, &cj125spicfg);
+#endif
 }
 
 static msg_t cjThread(void)
