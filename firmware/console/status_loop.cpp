@@ -72,8 +72,11 @@ extern bool main_loop_started;
 #include "max31855.h"
 #include "vehicle_speed.h"
 #include "SingleTimerExecutor.h"
-#include "CJ125.h"
 #endif /* EFI_PROD_CODE */
+
+#if EFI_CJ125 || defined(__DOXYGEN__)
+#include "CJ125.h"
+#endif /* EFI_CJ125 */
 
 #if EFI_MAP_AVERAGING
 #include "map_averaging.h"
