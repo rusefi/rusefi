@@ -304,8 +304,13 @@ static void cjStart(void) {
 	cjIdentify();
 
 	// Load calibration values
+#if EFI_PROD_CODE
 	uint32_t storedLambda = backupRamLoad(BACKUP_CJ125_CALIBRATION_LAMBDA);
 	uint32_t storedHeater = backupRamLoad(BACKUP_CJ125_CALIBRATION_HEATER);
+#else
+	uint32_t storedLambda = 0;
+	uint32_t storedHeater = 0;
+#endif
 	// if no calibration, try to calibrate now and store new values
 	if (storedLambda == 0 || storedHeater == 0) {
 		cjCalibrate();
