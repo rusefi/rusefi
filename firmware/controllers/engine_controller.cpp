@@ -625,7 +625,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	/**
 	 * this uses SimplePwm which depends on scheduler, has to be initialized after scheduler
 	 */
-	initCJ125(sharedLogger);
+	initCJ125(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_CJ125 */
 
 

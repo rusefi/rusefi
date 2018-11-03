@@ -174,7 +174,7 @@ typedef enum {
 } cj125_sensor_type_e;
 
 
-void initCJ125(Logging *shared);
+void initCJ125(Logging *shared DECLARE_ENGINE_PARAMETER_SUFFIX);
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 #endif
