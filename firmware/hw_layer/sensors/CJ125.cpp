@@ -606,7 +606,7 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
-void initCJ125(Logging *sharedLogger) {
+void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 
 	if (!boardConfiguration->isCJ125Enabled)
