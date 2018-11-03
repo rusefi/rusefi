@@ -334,6 +334,12 @@ void Engine::preCalculate() {
 	sparkTable.preCalc(engineConfiguration->sparkDwellRpmBins,
 			engineConfiguration->sparkDwellValues);
 
+#if ! EFI_UNIT_TEST
+	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
+#else
+	adcToVoltageInputDividerCoefficient = engineConfiguration->analogInputDividerCoefficient;
+#endif
+
 	/**
 	 * Here we prepare a fast, index-based MAF lookup from a slower curve description
 	 */

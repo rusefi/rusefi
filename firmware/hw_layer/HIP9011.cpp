@@ -93,12 +93,14 @@ static Logging *logger;
 // SPI_CR1_CPHA Clock Phase
 // todo: nicer method which would mention SPI speed explicitly?
 
+#if EFI_PROD_CODE
 static SPIConfig hipSpiCfg = { NULL,
 /* HW dependent part.*/
 NULL, 0,
 SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
 		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+#endif
 
 static void checkResponse(void) {
 	if (tx_buff[0] == rx_buff[0]) {
@@ -158,6 +160,7 @@ static void showHipInfo(void) {
 			msg);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
+#if EFI_PROD_CODE
 	scheduleMsg(logger, "hip %.2fv/last=%.2f@%s/max=%.2f adv=%d",
 			engine->knockVolts,
 			getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
@@ -167,6 +170,7 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(engineConfiguration->hip9011SpiDevice)));
 	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
 	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
+#endif
 
 	scheduleMsg(logger, "start %.2f end %.2f", engineConfiguration->knockDetectionWindowStart,
 			engineConfiguration->knockDetectionWindowEnd);
@@ -182,16 +186,20 @@ void setHip9011FrankensoPinout(void) {
 	//	boardConfiguration->hip9011CsPin = GPIOD_0; // rev 0.1
 
 	boardConfiguration->isHip9011Enabled = true;
-	boardConfiguration->hip9011CsPin = GPIOB_0; // rev 0.4
-	boardConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
 	engineConfiguration->hip9011PrescalerAndSDO = 6; // 8MHz chip
-	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
-	boardConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 	boardConfiguration->is_enabled_spi_2 = true;
 	// todo: convert this to rusEfi, hardware-independent enum
+#if EFI_PROD_CODE
+	boardConfiguration->hip9011CsPin = GPIOB_0; // rev 0.4
+	boardConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
+
+	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
+	boardConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
+
 	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 	engineConfiguration->spi2MisoMode = PAL_STM32_PUPDR_PULLUP; // 32
+#endif /* EFI_PROD_CODE */
 
 	boardConfiguration->hip9011Gain = 1;
 	engineConfiguration->knockVThreshold = 4;
@@ -287,11 +295,11 @@ static int getBandIndex(void) {
 	return getHip9011BandIndex(freq);
 }
 
-void hipAdcCallback(adcsample_t value) {
+void hipAdcCallback(adcsample_t adcValue) {
 	if (state == WAITING_FOR_ADC_TO_SKIP) {
 		state = WAITING_FOR_RESULT_ADC;
 	} else if (state == WAITING_FOR_RESULT_ADC) {
-		engine->knockVolts = adcToVoltsDivided(value);
+		engine->knockVolts = adcValue * engine->adcToVoltageInputDividerCoefficient;
 		hipValueMax = maxF(engine->knockVolts, hipValueMax);
 		engine->knockLogic(engine->knockVolts);
 
@@ -389,7 +397,9 @@ static void hipStartupCode(void) {
 	 * asynchronous mode
 	 */
 	spiStop(driver);
+#if EFI_PROD_CODE
 	hipSpiCfg.end_cb = endOfSpiExchange;
+#endif
 	spiStart(driver, &hipSpiCfg);
 	state = READY_TO_INTEGRATE;
 }
@@ -429,10 +439,12 @@ void initHip9011(Logging *sharedLogger) {
 
 	prepareHip9011RpmLookup(currentAngleWindowWidth);
 
+#if EFI_PROD_CODE
 	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
 
 	hipSpiCfg.ssport = getHwPort("hip", boardConfiguration->hip9011CsPin);
 	hipSpiCfg.sspad = getHwPin("hip", boardConfiguration->hip9011CsPin);
+#endif
 
 	intHold.initPin("hip int/hold", boardConfiguration->hip9011IntHoldPin,
 			&boardConfiguration->hip9011IntHoldPinMode);
