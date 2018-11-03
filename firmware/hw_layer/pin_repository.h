@@ -11,8 +11,7 @@
 #ifndef PIN_REPOSITORY_H_
 #define PIN_REPOSITORY_H_
 
-#include "ch.h"
-#include "hal.h"
+#include "global.h"
 #include "io_pins.h"
 
 #ifdef __cplusplus

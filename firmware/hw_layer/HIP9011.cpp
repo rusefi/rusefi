@@ -250,7 +250,9 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	// todo: schedule this based on closest trigger event, same as ignition works
 	scheduleByAngle(rpm, &startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
 			(schfunc_t) &startIntegration, NULL, &engine->rpmCalculator);
+#if EFI_PROD_CODE
 	hipLastExecutionCount = lastExecutionCount;
+#endif
 	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
 			(schfunc_t) &endIntegration,
 			NULL, &engine->rpmCalculator);
