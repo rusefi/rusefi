@@ -590,6 +590,8 @@ bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
+
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 // used by DBG_CJ125
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = heaterDuty;
@@ -602,6 +604,7 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugIntField1 = state;
 	tsOutputChannels->debugIntField2 = diag;
 }
+#endif /* EFI_TUNER_STUDIO */
 
 void initCJ125(Logging *sharedLogger) {
 	logger = sharedLogger;

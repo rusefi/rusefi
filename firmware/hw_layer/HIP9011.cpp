@@ -35,7 +35,6 @@
 #include "global.h"
 #include "engine.h"
 #include "settings.h"
-#include "pin_repository.h"
 #include "hardware.h"
 #include "rpm_calculator.h"
 #include "trigger_central.h"
@@ -44,6 +43,10 @@
 #include "adc_inputs.h"
 #include "efilib2.h"
 #include "engine_controller.h"
+
+#if EFI_PROD_CODE
+#include "pin_repository.h"
+#endif
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
@@ -252,7 +255,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 			(schfunc_t) &startIntegration, NULL, &engine->rpmCalculator);
 #if EFI_PROD_CODE
 	hipLastExecutionCount = lastExecutionCount;
-#endif
+#endif /* EFI_PROD_CODE */
 	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
 			(schfunc_t) &endIntegration,
 			NULL, &engine->rpmCalculator);

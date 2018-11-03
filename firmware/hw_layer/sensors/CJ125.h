@@ -175,7 +175,9 @@ typedef enum {
 
 
 void initCJ125(Logging *shared);
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
+#endif
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void cj125defaultPinout();
