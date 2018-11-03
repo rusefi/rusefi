@@ -17,20 +17,6 @@
 #include "pin_repository.h"
 #include "datalogging.h"
 
-/**
- * This method controls the actual hardware pins
- *
- * This method takes ~350 ticks.
- */
-void applyPinState(PwmConfig *state, int stateIndex) {
-	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_6664, state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
-	for (int waveIndex = 0; waveIndex < state->multiWave.waveCount; waveIndex++) {
-		OutputPin *output = state->outputPins[waveIndex];
-		int value = state->multiWave.waves[waveIndex].pinStates[stateIndex];
-		output->setValue(value);
-	}
-}
 
 void initPwmGenerator(void) {
 }
