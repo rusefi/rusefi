@@ -305,6 +305,14 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set cranking_fuel 4
 	engineConfiguration->cranking.baseFuel = 4; // this value for return-less NB miata fuel system, higher pressure
 
+/**
+ * Saab attempt
+ * Saab  coil on #1
+ * Miata coil on #2 - orange ECU wire "2&3"
+ * Saab  coil on #3 extra green wire
+ * Miata coil on #4 - white ECU wire "1&4"
+ */
+
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
