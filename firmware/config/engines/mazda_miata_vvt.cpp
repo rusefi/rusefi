@@ -307,10 +307,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 /**
  * Saab attempt
- * Saab  coil on #1
- * Miata coil on #2 - orange ECU wire "2&3"
- * Saab  coil on #3 extra green wire
- * Miata coil on #4 - white ECU wire "1&4"
+ * Saab  coil on #1 PD8 extra blue wire
+ * Miata coil on #2 PC9  - orange ECU wire "2&3"
+ * Saab  coil on #3 PD9 extra white wire
+ * Miata coil on #4 PE14 - white ECU wire "1&4"
  */
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
@@ -376,7 +376,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->injector.flow = 265;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
+//	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
 	// todo: blue jumper wire - what is it?!
