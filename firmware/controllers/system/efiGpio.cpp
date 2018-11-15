@@ -443,7 +443,7 @@ const char *portname(ioportid_t GPIOx) {
 		return "PC";
 	if (GPIOx == GPIOD)
 		return "PD";
-#if defined(STM32F4XX)
+#if defined(STM32F4XX) || defined(STM32F7XX)
 	if (GPIOx == GPIOE)
 		return "PE";
 	if (GPIOx == GPIOH)
