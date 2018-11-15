@@ -164,8 +164,8 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
-#if EFI_PROD_CODE
+#if (EFI_PROD_CODE && EFI_CAN_SUPPORT) || defined(__DOXYGEN__)
 	enableFrankensoCan();
-#endif
+#endif /* EFI_PROD_CODE && EFI_CAN_SUPPORT */
 }
 

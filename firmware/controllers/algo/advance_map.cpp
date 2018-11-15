@@ -28,7 +28,9 @@
 EXTERN_ENGINE;
 
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 #endif
 
 static ign_Map3D_t advanceMap("advance");
@@ -113,9 +115,11 @@ static angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
 		tsOutputChannels.debugFloatField3 = engine->fsioTimingAdjustment;
+#endif /* EFI_TUNER_STUDIO */
 #endif
 	}
 	

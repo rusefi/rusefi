@@ -229,12 +229,14 @@ static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
 }
 
 void stopSpi(spi_device_e device) {
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 	if (!isSpiInitialized[device])
 		return; // not turned on
 	isSpiInitialized[device] = false;
 	unmarkPin(getSckPin(device));
 	unmarkPin(getMisoPin(device));
 	unmarkPin(getMosiPin(device));
+#endif /* HAL_USE_SPI */
 }
 
 void applyNewHardwareSettings(void) {
@@ -246,12 +248,18 @@ void applyNewHardwareSettings(void) {
        
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 	stopCanPins();
+#endif /* EFI_CAN_SUPPORT */
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	bool etbRestartNeeded = isETBRestartNeeded();
 	if (etbRestartNeeded) {
 		stopETBPins();
 	}
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	stopVSSPins();
+#endif /* EFI_VEHICLE_SPEED */
 	stopAuxPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
@@ -279,11 +287,17 @@ void applyNewHardwareSettings(void) {
 
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 	startCanPins();
+#endif /* EFI_CAN_SUPPORT */
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	if (etbRestartNeeded) {
 		startETBPins();
 	}
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	startVSSPins();
+#endif /* EFI_VEHICLE_SPEED */
 	startAuxPins();
 
 	adcConfigListener(engine);

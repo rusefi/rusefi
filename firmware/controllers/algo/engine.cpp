@@ -39,7 +39,9 @@ EXTERN_ENGINE
 ;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 #endif
 
 MockAdcState::MockAdcState() {
@@ -251,8 +253,10 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_WARMUP_ENRICH) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			tsOutputChannels.debugFloatField1 = warmupTargetAfr;
 			warmupAfrPid.postState(&tsOutputChannels);
+#endif /* EFI_TUNER_STUDIO */
 		}
 #endif
 

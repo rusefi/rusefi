@@ -65,7 +65,9 @@ float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 #endif /* EFI_UNIT_TEST */
 
 static Logging * logger;
@@ -256,8 +258,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 				float currentGap = 1.0 * toothDurations[0] / toothDurations[1];
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				tsOutputChannels.debugFloatField1 = currentGap;
 				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
+#endif /* EFI_TUNER_STUDIO */
 #endif /* EFI_UNIT_TEST */
 			}
 
@@ -365,10 +369,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			if (isDecodingError && !isInitializingTrigger) {
 				if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 					tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
 					tsOutputChannels.debugIntField2 = currentCycle.eventCount[1];
 					tsOutputChannels.debugIntField3 = currentCycle.eventCount[2];
+#endif /* EFI_TUNER_STUDIO */
 #endif /* EFI_UNIT_TEST */
 				}
 

@@ -26,7 +26,9 @@ extern fsio8_Map3D_f32t fsioTable1;
 // todo: this is to some extent a copy-paste of alternatorController. maybe same loop
 // for all PIDs?
 
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 
 static THD_WORKING_AREA(auxPidThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -89,8 +91,10 @@ static msg_t auxPidThread(int param) {
 
 
 			if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				auxPid.postState(&tsOutputChannels);
 				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
+#endif /* EFI_TUNER_STUDIO */
 			}
 
 			auxPidPwm[0].setSimplePwmDutyCycle(pwm / 100);

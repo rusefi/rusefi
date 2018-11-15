@@ -77,6 +77,7 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (!boardConfiguration->is_enabled_spi_1)
 		return; // temporary
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 	driver = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
 
 	turnOnSpi(engineConfiguration->accelerometerSpiDevice);
@@ -94,6 +95,7 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	lis302dlWriteRegister(driver, LIS302DL_CTRL_REG3, 0x00);
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+#endif /* HAL_USE_SPI */
 }
 
 #endif /* EFI_MEMS */

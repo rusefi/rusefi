@@ -33,7 +33,9 @@ static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE)
 static percent_t currentAltDuty;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 #endif
 
 static bool currentPlainOnOffState = false;
@@ -60,7 +62,9 @@ static msg_t AltCtrlThread(int param) {
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
 			// but at least we would reflect latest state
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			altPid.postState(&tsOutputChannels);
+#endif /* EFI_TUNER_STUDIO */
 		}
 #endif /* !EFI_UNIT_TEST */
 
@@ -85,8 +89,9 @@ static msg_t AltCtrlThread(int param) {
 			enginePins.alternatorPin.setValue(newState);
 			currentPlainOnOffState = newState;
 			if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				tsOutputChannels.debugIntField1 = newState;
-
+#endif /* EFI_TUNER_STUDIO */
 			}
 
 			continue;

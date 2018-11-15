@@ -14,6 +14,8 @@
 #include "hardware.h"
 #include "mpu_util.h"
 
+#if HAL_USE_SPI || defined(__DOXYGEN__)
+
 /**
  * MCP42010 digital potentiometer driver
  *
@@ -112,3 +114,5 @@ void initPotentiometers(Logging *sharedLogger, board_configuration_s *boardConfi
 	print("digiPot logic disabled\r\n");
 #endif
 }
+
+#endif /* HAL_USE_SPI */

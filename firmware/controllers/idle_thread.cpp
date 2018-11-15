@@ -39,7 +39,9 @@
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static Logging *logger;
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 EXTERN_ENGINE
 ;
 
@@ -357,11 +359,15 @@ static msg_t ivThread(int param) {
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 			if (engineConfiguration->idleMode == IM_AUTO) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				// see also tsOutputChannels->idlePosition
 				idlePid.postState(&tsOutputChannels, 1000000);
+#endif /* EFI_TUNER_STUDIO */
 			} else {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				tsOutputChannels.debugFloatField1 = iacPosition;
 				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
+#endif /* EFI_TUNER_STUDIO */
 			}
 #endif
 		}

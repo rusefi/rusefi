@@ -99,7 +99,9 @@ void initEngineEmulator(Logging *sharedLogger, Engine *engine) {
 		return;
 
 #if EFI_POTENTIOMETER
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 	initPotentiometers(sharedLogger, &engine->engineConfiguration->bc);
+#endif /* HAL_USE_SPI */
 #endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();

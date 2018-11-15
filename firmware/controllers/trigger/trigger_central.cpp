@@ -29,7 +29,9 @@
 #include "rfiutil.h"
 #include "pin_repository.h"
 #include "tunerstudio.h"
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 #endif /* EFI_PROD_CODE */
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
@@ -124,7 +126,9 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		}
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			tsOutputChannels.debugIntField1++;
+#endif /* EFI_TUNER_STUDIO */
 		}
 #endif /* EFI_PROD_CODE */
 	}
@@ -151,7 +155,9 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			tc->triggerState.incrementTotalEventCounter();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				tsOutputChannels.debugIntField1++;
+#endif /* EFI_TUNER_STUDIO */
 			}
 #endif /* EFI_PROD_CODE */
 		}
@@ -162,7 +168,9 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 			tc->triggerState.incrementTotalEventCounter();
 			if (engineConfiguration->debugMode == DBG_VVT) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				tsOutputChannels.debugIntField1++;
+#endif /* EFI_TUNER_STUDIO */
 			}
 #endif /* EFI_PROD_CODE */
 		}
@@ -623,7 +631,9 @@ void triggerInfo(void) {
 
 	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);
 
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
+#endif /* EFI_HIP_9011 */
 	scheduleMsg(logger, "hwSetTimerDuration=%d", hwSetTimerDuration);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
