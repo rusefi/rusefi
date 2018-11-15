@@ -131,7 +131,13 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 #endif
 
 #if HAL_USE_I2C || defined(__DOXYGEN__)
+#if defined(STM32F7XX)
+// values calculated with STM32CubeMX tool, 100kHz I2C clock for Nucleo-767 @168 MHz, PCK1=42MHz
+#define HAL_I2C_F7_100_TIMINGR 0x00A0A3F7
+static I2CConfig i2cfg = { HAL_I2C_F7_100_TIMINGR, 0, 0 };	// todo: does it work?
+#else /* defined(STM32F4XX) */
 static I2CConfig i2cfg = { OPMODE_I2C, 100000, STD_DUTY_CYCLE, };
+#endif /* defined(STM32F4XX) */
 
 void initI2Cmodule(void) {
 	print("Starting I2C module\r\n");
