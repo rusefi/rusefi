@@ -40,7 +40,12 @@
  */
 
 /* Low speed SPI configuration (281.250kHz, CPHA=0, CPOL=0, MSb first).*/
+
+#if defined(STM32F7XX)
+#define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_CRCL
+#else /* defined(STM32F4XX) */
 #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
+#endif /* defined(STM32F4XX) */
 
 static Logging * logger;
 
