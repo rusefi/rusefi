@@ -74,13 +74,23 @@ typedef unsigned int time_t;
  *
  * Please note that DMA does not work with CCM memory
  */
-#if EFI_USE_CCM && defined __GNUC__
-#define CCM_OPTIONAL __attribute__((section(".ram4")))
-#elif defined __GNUC__
-#define CCM_OPTIONAL
-#else
-#define CCM_OPTIONAL @ ".ram4"
+#if defined(STM32F7XX)
+#undef EFI_USE_CCM
+// todo: DTCM == CCM on STM32F7?
+//#define CCM_RAM ".ram3"
+#else /* defined(STM32F4XX) */
+#define CCM_RAM ".ram4"
+#endif /* defined(STM32F4XX) */
+
+#if EFI_USE_CCM
+#if defined __GNUC__
+#define CCM_OPTIONAL __attribute__((section(CCM_RAM)))
+#else // non-gcc
+#define CCM_OPTIONAL @ CCM_RAM
 #endif
+#else /* !EFI_USE_CCM */
+#define CCM_OPTIONAL
+#endif /* EFI_USE_CCM */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
