@@ -3,6 +3,9 @@
  *
  * @brief In this header we can configure which firmware modules are used.
  *
+ * STM32F7 config is inherited from STM32F4. This file contains only differences between F4 and F7.
+ * This is more consistent way to maintain these config 'branches' and add new features.
+ *
  * @date Aug 29, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
