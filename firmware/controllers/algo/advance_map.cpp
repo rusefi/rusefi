@@ -27,11 +27,9 @@
 
 EXTERN_ENGINE;
 
-#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-#endif
 
 static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!
@@ -114,13 +112,11 @@ static angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->sensors.iat);
 	}
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
-#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
 		tsOutputChannels.debugFloatField3 = engine->fsioTimingAdjustment;
 #endif /* EFI_TUNER_STUDIO */
-#endif
 	}
 	
 	return iatCorrection

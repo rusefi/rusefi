@@ -26,12 +26,10 @@
 #include "engine_state.h"
 #include "engine_math.h"
 #include "signal_executor.h"
-#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 #include "tunerstudio_configuration.h"
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-#endif /* EFI_UNIT_TEST */
 
 EXTERN_ENGINE
 ;
@@ -132,7 +130,6 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		extraFuel = 0;
 	}
 
-#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = tpsFrom;
@@ -141,8 +138,6 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		tsOutputChannels.debugFloatField4 = extraFuel;
 #endif /* EFI_TUNER_STUDIO */
 	}
-#endif
-
 
 	return extraFuel;
 }
@@ -168,7 +163,6 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 		result = d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	}
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (engineConfiguration->debugMode == DBG_EL_ACCEL) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugIntField1 = distance;
@@ -176,7 +170,6 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 		tsOutputChannels.debugFloatField2 = taper;
 #endif /* EFI_TUNER_STUDIO */
 	}
-#endif
 	return result;
 }
 

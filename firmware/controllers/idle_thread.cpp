@@ -357,7 +357,6 @@ static msg_t ivThread(int param) {
 
 
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 			if (engineConfiguration->idleMode == IM_AUTO) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				// see also tsOutputChannels->idlePosition
@@ -369,7 +368,6 @@ static msg_t ivThread(int param) {
 				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
 			}
-#endif
 		}
 
 		// The threshold is dependent on IAC type (see initIdleHardware())

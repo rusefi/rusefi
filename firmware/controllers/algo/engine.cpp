@@ -38,11 +38,9 @@ extern afr_Map3D_t afrMap;
 EXTERN_ENGINE
 ;
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-#endif
 
 MockAdcState::MockAdcState() {
 	memset(hasMockAdc, 0, sizeof(hasMockAdc));
@@ -251,15 +249,12 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		} else {
 			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, engine->sensors.currentAfr, 1);
 		}
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_WARMUP_ENRICH) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			tsOutputChannels.debugFloatField1 = warmupTargetAfr;
 			warmupAfrPid.postState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 		}
-#endif
-
 	} else {
 		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}

@@ -124,13 +124,11 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 		if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			tsOutputChannels.debugIntField1++;
 #endif /* EFI_TUNER_STUDIO */
 		}
-#endif /* EFI_PROD_CODE */
 	}
 
 
@@ -153,26 +151,22 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			 * virtual crank-based trigger
 			 */
 			tc->triggerState.incrementTotalEventCounter();
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 			if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				tsOutputChannels.debugIntField1++;
 #endif /* EFI_TUNER_STUDIO */
 			}
-#endif /* EFI_PROD_CODE */
 		}
 	} else if (engineConfiguration->vvtMode == VVT_SECOND_HALF) {
 		bool isEven = tc->triggerState.isEvenRevolution();
 		if (isEven) {
 			// see above comment
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
 			tc->triggerState.incrementTotalEventCounter();
 			if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				tsOutputChannels.debugIntField1++;
 #endif /* EFI_TUNER_STUDIO */
 			}
-#endif /* EFI_PROD_CODE */
 		}
 
 	} else if (engineConfiguration->vvtMode == MIATA_NB2) {
