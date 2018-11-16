@@ -39,7 +39,7 @@ extern "C" {
  * 11 to program 64 bits per step
  */
 // Warning, flashdata_t must be unsigned!!!
-#if defined(STM32F4XX) || defined(__DOXYGEN__)
+#if defined(STM32F4XX) || defined(STM32F7XX) || defined(__DOXYGEN__)
 #define FLASH_CR_PSIZE_MASK         FLASH_CR_PSIZE_0 | FLASH_CR_PSIZE_1
 #if ((STM32_VDD >= 270) && (STM32_VDD <= 360)) || defined(__DOXYGEN__)
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_1

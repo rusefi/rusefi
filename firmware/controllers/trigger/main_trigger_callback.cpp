@@ -74,7 +74,9 @@ static Logging *logger;
 #if ! EFI_UNIT_TEST
 static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
 static Pid fuelPid(fuelPidS);
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 #endif
 
 // todo: figure out if this even helps?
@@ -360,8 +362,10 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->engineState.fuelPidCorrection = fuelPid.getValue(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), 1);
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = engine->engineState.fuelPidCorrection;
 		fuelPid.postState(&tsOutputChannels);
+#endif /* EFI_TUNER_STUDIO */
 	}
 
 #endif

@@ -877,7 +877,9 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->enabledStep1Limiter = isEnabled;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(param, "auto_idle")) {
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 		setIdleMode(isEnabled ? IM_MANUAL : IM_AUTO);
+#endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(param, "serial")) {
 		boardConfiguration->useSerialPort = isEnabled;
@@ -1155,7 +1157,10 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"engine_decel_multiplier", setDecelMult},
 		{"flat_injector_lag", setFlatInjectorLag},
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 		{"mock_vehicle_speed", setMockVehicleSpeed},
+#endif /* EFI_VEHICLE_SPEED */
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 		{"idle_offset", setIdleOffset},
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
@@ -1163,6 +1168,7 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},
+#endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 
 		//		{"", },
@@ -1208,10 +1214,14 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 		{"bor", setBor},
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 		{"can_mode", setCanType},
+#endif /* EFI_CAN_SUPPORT */
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 		{"idle_position", setIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
 		{"idle_dt", setIdleDT},
+#endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 		//		{"", },
 		//		{"", },

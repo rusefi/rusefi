@@ -61,7 +61,9 @@
 #include "pin_repository.h"
 #include "pwm_generator.h"
 #include "pid_auto_tune.h"
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 static bool shouldResetPid = false;
 
 static PID_AutoTune autoTune;
@@ -94,9 +96,13 @@ static msg_t etbThread(void *arg) {
         UNUSED(arg);
 	while (true) {
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			pid.postState(&tsOutputChannels);
+#endif /* EFI_TUNER_STUDIO */
 		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			tsOutputChannels.debugFloatField1 = valueOverride;
+#endif /* EFI_TUNER_STUDIO */
 		}
 
 		if (shouldResetPid) {

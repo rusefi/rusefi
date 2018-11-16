@@ -170,16 +170,20 @@ void initSignalExecutorImpl(void) {
 	initMicrosecondTimer();
 }
 
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
 #include "engine.h"
 EXTERN_ENGINE;
 
 
 void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugIntField1 = instance.timerCallbackCounter;
 		tsOutputChannels.debugIntField2 = instance.doExecuteCounter;
 		tsOutputChannels.debugIntField3 = instance.scheduleCounter;
+#endif /* EFI_TUNER_STUDIO */
 	}
 }
 

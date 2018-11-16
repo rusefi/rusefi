@@ -45,13 +45,13 @@ static int getPortIndex(ioportid_t port) {
 		return 2;
 	if (port == GPIOD)
 		return 3;
-#if defined(STM32F4XX)
+#if defined(STM32F4XX) || defined(STM32F7XX)
 	if (port == GPIOE)
 		return 4;
 #endif /* defined(STM32F4XX) */
 	if (port == GPIOF)
 		return 5;
-#if defined(STM32F4XX)
+#if defined(STM32F4XX) || defined(STM32F7XX)
 	if (port == GPIOH)
 		return 6;
 #endif /* defined(STM32F4XX) */
