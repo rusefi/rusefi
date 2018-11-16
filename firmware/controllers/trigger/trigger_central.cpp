@@ -28,11 +28,12 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #include "pin_repository.h"
-#include "tunerstudio.h"
+#endif /* EFI_PROD_CODE */
+
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#include "tunerstudio.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-#endif /* EFI_PROD_CODE */
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
 #include "engine_sniffer.h"
