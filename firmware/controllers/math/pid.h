@@ -41,10 +41,10 @@ public:
 	float getIntegration(void);
 	float getPrevError(void);
 	void setErrorAmplification(float coef);
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
-#endif
+#endif /* EFI_TUNER_STUDIO */
 	float minResult;
 	float maxResult;
 	float iTerm;
