@@ -106,15 +106,17 @@ void Pid::setErrorAmplification(float coef) {
 	errorAmplificationCoef = coef;
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 	postState(tsOutputChannels, 1);
+#endif /* EFI_TUNER_STUDIO */
 }
 
 /**
  * see https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
  */
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 	tsOutputChannels->debugFloatField1 = prevResult;
 	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
@@ -127,8 +129,8 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
 	tsOutputChannels->debugIntField2 = getOffset();
 	tsOutputChannels->debugIntField3 = resetCounter;
 	tsOutputChannels->debugIntField4 = pid->period;
+#endif /* EFI_TUNER_STUDIO */
 }
-#endif
 
 void Pid::sleep() {
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)

@@ -14,6 +14,9 @@
 #include "usbcfg.h"
 #include "efifeatures.h"
 
+
+static bool isUsbSerialInitialized = false;
+
 void usb_serial_start(void) {
 	/*
 	 * Initializes a serial-over-USB CDC driver.
@@ -37,10 +40,12 @@ void usb_serial_start(void) {
 	 */
 	sdStart(&SD2, NULL);
 #endif
+
+	isUsbSerialInitialized = true;
 }
 
 bool is_usb_serial_ready(void) {
-	return SDU1.config->usbp->state == USB_ACTIVE;
+	return isUsbSerialInitialized && SDU1.config->usbp->state == USB_ACTIVE;
 }
 
 #else

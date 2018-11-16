@@ -151,7 +151,9 @@ void runConsoleLoop(ts_channel_s *console) {
 	if (boardConfiguration->startConsoleInBinaryMode) {
 		// switch to binary protocol
 		consoleInBinaryMode = true;
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		runBinaryProtocolLoop(console, true);
+#endif /* EFI_TUNER_STUDIO */
 	}
 
 	while (true) {
@@ -171,7 +173,9 @@ void runConsoleLoop(ts_channel_s *console) {
 			logMsg("Switching to binary mode\r\n");
 #endif
 			// switch to binary protocol
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			runBinaryProtocolLoop(console, true);
+#endif /* EFI_TUNER_STUDIO */
 		}
 	}
 }

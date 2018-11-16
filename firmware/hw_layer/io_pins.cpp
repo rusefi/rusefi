@@ -27,7 +27,7 @@ static LoggingWithStorage logger("io_pins");
 
 extern EnginePins enginePins;
 
-#if defined(STM32F4XX)
+#if defined(STM32F4XX) || defined(STM32F7XX)
 static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
 #else
 static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};

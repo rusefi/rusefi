@@ -108,11 +108,27 @@ ifeq ($(PROJECT_BOARD),)
 endif
 DDEFS += -D$(PROJECT_BOARD)
 
+ifeq ($(PROJECT_CPU),)
+  PROJECT_CPU = ST_STM32F4
+endif
+DDEFS += -D$(PROJECT_CPU)
+
+# CPU-dependent defs
+ifeq ($(PROJECT_CPU),ST_STM32F7)
+CPU_STARTUP = startup_stm32f7xx.mk
+CPU_PLATFORM = STM32F7xx/platform.mk
+CPU_HWLAYER = stm32f7
+else # ST_STM32F4
+CPU_STARTUP = startup_stm32f4xx.mk
+CPU_PLATFORM = STM32F4xx/platform.mk
+CPU_HWLAYER = stm32f4
+endif
+
 # Startup files.
-include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
+include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
@@ -254,7 +270,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	hw_layer/lcd \
 	hw_layer/sensors \
 	hw_layer/mass_storage \
-	hw_layer/stm32f4 \
+	hw_layer/$(CPU_HWLAYER) \
 	development \
 	development/hw_layer \
 	development/test \
