@@ -9,7 +9,9 @@ ifeq ($(USE_OPT),)
 #  USE_OPT = -Wall     -ggdb     -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
 #  USE_OPT = -Wall -O0 -ggdb -g3 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
-  USE_OPT = -Wall -O2           -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
+# 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
+# see https://github.com/rusefi/rusefi/issues/517
+  USE_OPT = -Wall -O2    -Wno-error=implicit-fallthrough       -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
 
 	ifeq ($(OS),Windows_NT)
 	else
