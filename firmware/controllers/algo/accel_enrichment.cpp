@@ -26,8 +26,8 @@
 #include "engine_state.h"
 #include "engine_math.h"
 #include "signal_executor.h"
-#include "tunerstudio_configuration.h"
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#include "tunerstudio_configuration.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
