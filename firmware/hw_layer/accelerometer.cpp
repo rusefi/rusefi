@@ -17,13 +17,14 @@
  */
 
 #include "accelerometer.h"
-#include "lis302dl.h"
 #include "hardware.h"
 #include "mpu_util.h"
 
 EXTERN_ENGINE;
 
 #if EFI_MEMS || defined(__DOXYGEN__)
+#include "lis302dl.h"
+
 static SPIDriver *driver;
 
 /*
@@ -77,6 +78,7 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (!boardConfiguration->is_enabled_spi_1)
 		return; // temporary
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 	driver = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
 
 	turnOnSpi(engineConfiguration->accelerometerSpiDevice);
@@ -94,6 +96,7 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	lis302dlWriteRegister(driver, LIS302DL_CTRL_REG3, 0x00);
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+#endif /* HAL_USE_SPI */
 }
 
 #endif /* EFI_MEMS */

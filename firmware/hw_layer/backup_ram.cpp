@@ -8,6 +8,7 @@
 
 uint32_t backupRamLoad(backup_ram_e idx) {
 	switch (idx) {
+#if HAL_USE_RTC || defined(__DOXYGEN__)
 	case BACKUP_STEPPER_POS:
 		return RTCD1.rtc->BKP0R & 0xffff;
 	case BACKUP_IGNITION_SWITCH_COUNTER:
@@ -16,6 +17,7 @@ uint32_t backupRamLoad(backup_ram_e idx) {
 		return RTCD1.rtc->BKP1R & 0xffff;
 	case BACKUP_CJ125_CALIBRATION_HEATER:
 		return (RTCD1.rtc->BKP1R >> 16) & 0xffff;
+#endif /* HAL_USE_RTC */
 	default:
 		//scheduleMsg(logger, "Invalid backup ram idx %d", idx);
 		return 0;
@@ -24,6 +26,7 @@ uint32_t backupRamLoad(backup_ram_e idx) {
 
 void backupRamSave(backup_ram_e idx, uint32_t value) {
 	switch (idx) {
+#if HAL_USE_RTC || defined(__DOXYGEN__)
 	case BACKUP_STEPPER_POS:
 		RTCD1.rtc->BKP0R = (RTCD1.rtc->BKP0R & ~0x0000ffff) | (value & 0xffff);
 		break;
@@ -36,6 +39,7 @@ void backupRamSave(backup_ram_e idx, uint32_t value) {
 	case BACKUP_CJ125_CALIBRATION_HEATER:
 		RTCD1.rtc->BKP1R = (RTCD1.rtc->BKP1R & ~0xffff0000) | ((value & 0xffff) << 16);
 		break;
+#endif /* HAL_USE_RTC */
 	default:
 		//scheduleMsg(logger, "Invalid backup ram idx %d, value 0x08x", idx, value);
 		break;

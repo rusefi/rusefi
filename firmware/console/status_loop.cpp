@@ -93,10 +93,10 @@ int warningEnabled = true;
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
+extern tunerstudio_counters_s tsState;
 #endif
 
 extern bool hasFirmwareErrorFlag;
-extern tunerstudio_counters_s tsState;
 extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
 #define FULL_LOGGING_KEY "fl"

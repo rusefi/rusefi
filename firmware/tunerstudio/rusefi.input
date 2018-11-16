@@ -1534,6 +1534,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
 		field = "hip9011CsPin",							hip9011CsPin
 		field = "LIS302DLCsPin",						LIS302DLCsPin
+		field = "Malfunction Indicator",				malfunctionIndicatorPin
 
 
 	dialog = allPins1_2, "", xAxis

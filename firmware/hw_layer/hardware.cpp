@@ -131,7 +131,13 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 #endif
 
 #if HAL_USE_I2C || defined(__DOXYGEN__)
+#if defined(STM32F7XX)
+// values calculated with STM32CubeMX tool, 100kHz I2C clock for Nucleo-767 @168 MHz, PCK1=42MHz
+#define HAL_I2C_F7_100_TIMINGR 0x00A0A3F7
+static I2CConfig i2cfg = { HAL_I2C_F7_100_TIMINGR, 0, 0 };	// todo: does it work?
+#else /* defined(STM32F4XX) */
 static I2CConfig i2cfg = { OPMODE_I2C, 100000, STD_DUTY_CYCLE, };
+#endif /* defined(STM32F4XX) */
 
 void initI2Cmodule(void) {
 	print("Starting I2C module\r\n");
@@ -229,12 +235,14 @@ static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
 }
 
 void stopSpi(spi_device_e device) {
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 	if (!isSpiInitialized[device])
 		return; // not turned on
 	isSpiInitialized[device] = false;
 	unmarkPin(getSckPin(device));
 	unmarkPin(getMisoPin(device));
 	unmarkPin(getMosiPin(device));
+#endif /* HAL_USE_SPI */
 }
 
 void applyNewHardwareSettings(void) {
@@ -246,12 +254,18 @@ void applyNewHardwareSettings(void) {
        
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 	stopCanPins();
+#endif /* EFI_CAN_SUPPORT */
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	bool etbRestartNeeded = isETBRestartNeeded();
 	if (etbRestartNeeded) {
 		stopETBPins();
 	}
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	stopVSSPins();
+#endif /* EFI_VEHICLE_SPEED */
 	stopAuxPins();
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
@@ -279,11 +293,17 @@ void applyNewHardwareSettings(void) {
 
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 	startCanPins();
+#endif /* EFI_CAN_SUPPORT */
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	if (etbRestartNeeded) {
 		startETBPins();
 	}
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	startVSSPins();
+#endif /* EFI_VEHICLE_SPEED */
 	startAuxPins();
 
 	adcConfigListener(engine);

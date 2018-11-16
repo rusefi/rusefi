@@ -305,6 +305,14 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set cranking_fuel 4
 	engineConfiguration->cranking.baseFuel = 4; // this value for return-less NB miata fuel system, higher pressure
 
+/**
+ * Saab attempt
+ * Saab  coil on #1 PD8 extra blue wire
+ * Miata coil on #2 PC9  - orange ECU wire "2&3"
+ * Saab  coil on #3 PD9 extra white wire
+ * Miata coil on #4 PE14 - white ECU wire "1&4"
+ */
+
 	boardConfiguration->ignitionPins[0] = GPIOE_14;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
@@ -368,7 +376,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->injector.flow = 265;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
+//	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
 	// todo: blue jumper wire - what is it?!
