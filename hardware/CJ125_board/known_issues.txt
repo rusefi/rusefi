@@ -13,3 +13,5 @@
 13) RESOLVED IN R0.4 Change solder mask, from 0.007874015748 to 0.003. 
 14) RESOLVED IN R0.4.1 Change LSU4.9 to 301 ohms, as noted here https://rusefi.com/forum/viewtopic.php?f=4&t=1052&start=143
 15) RESOLVED IN R0.4.1 Change Rfb1 and Rfb2 should be increased to 5.11k and 511k as noted here https://rusefi.com/forum/viewtopic.php?f=4&t=1052&start=143
+16)                  Sepeate the signald GND and the power GND for a better design
+17)                  and the GND ring around pin 22 CF for better RF rejection. 
