@@ -1,6 +1,10 @@
 /*
  * pid_auto_tune.cpp
  *
+ * See https://github.com/br3ttb/Arduino-PID-AutoTune-Library/blob/master/PID_AutoTune_v0/PID_AutoTune_v0.cpp
+ * See https://github.com/t0mpr1c3/Arduino-PID-AutoTune-Library/blob/master/PID_AutoTune_v0/PID_AutoTune_v0.cpp
+ *
+ *
  *  Created on: Sep 13, 2017
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
@@ -13,35 +17,33 @@ PID_AutoTune::PID_AutoTune() {
 	nLookBack = 50;
 	oStep = 10;
 	noiseBand = 0.5;
-	Ku = NAN;
-	Pu = NAN;
-}
-
-void PID_AutoTune::FinishUp() {
-	Ku = 4 * (2 * oStep) / ((absMax - absMin) * 3.14159);
-	Pu = (float) (currentPeakTime - prevPeakTime) / 1000.0; // converting ms to seconds
 
 }
 
-int PID_AutoTune::Runtime(Logging *logging) {
-	justevaled = false;
+//void PID_AutoTune::FinishUp() {
+//	Ku = 4 * (2 * oStep) / ((absMax - absMin) * 3.14159);
+//	Pu = (float) (currentPeakTime - prevPeakTime) / 1000.0; // converting ms to seconds
+//
+//}
+
+bool PID_AutoTune::Runtime(Logging *logging) {
+
 	if (peakCount > 9 && running) {
 		running = false;
-		FinishUp();
+//		FinishUp();
 		return 1;
 	}
 
-	justevaled = true;
 	if (!running) {
 		//initialize working variables the first time around
-		peakType = 0;
+		peakType = NOT_A_PEAK;
 		peakCount = 0;
 
 		absMax = input;
 		absMin = input;
 		setpoint = input;
 		running = true;
-		dataPointsCount = 0;
+		inputCount  = 0;
 		outputStart = output;
 		output = outputStart + oStep;
 
@@ -55,7 +57,7 @@ int PID_AutoTune::Runtime(Logging *logging) {
 			absMax = input;
 		if (input < absMin)
 			absMin = input;
-		dataPointsCount++;
+		inputCount ++;
 	}
 
 	//oscillate the output base on the input's relation to the setpoint
@@ -83,7 +85,7 @@ int PID_AutoTune::Runtime(Logging *logging) {
 		lastInputs[i + 1] = lastInputs[i];
 	}
 	lastInputs[0] = input;
-	if (dataPointsCount < 9) { //we don't want to trust the maxes or mins until the inputs array has been filled
+	if (inputCount   < 9) { //we don't want to trust the maxes or mins until the inputs array has been filled
 		return 0;
 	}
 
@@ -95,27 +97,27 @@ int PID_AutoTune::Runtime(Logging *logging) {
 	bool directionJustChanged = false;
 
 	if (isMax) {
-		if (peakType == 0)
-			peakType = 1;
-		if (peakType == -1) {
-			peakType = 1;
+		if (peakType == NOT_A_PEAK )
+			peakType = MAXIMUM ;
+		if (peakType == MINIMUM ) {
+			peakType = MAXIMUM ;
 			directionJustChanged = true;
 		}
 
 //		peaks[peakCount] = input; we are not using max peak values
 
 	} else if (isMin) {
-		if (peakType == 0)
-			peakType = -1;
-		if (peakType == 1) {
-			peakType = -1;
-			prevPeakTime = currentPeakTime;
-			currentPeakTime = currentTimeMillis();
+		if (peakType == NOT_A_PEAK )
+			peakType = MINIMUM ;
+		if (peakType == MAXIMUM ) {
+			peakType = MINIMUM;
+			lastPeakTime[1] = lastPeakTime[0];
+			lastPeakTime[0] = currentTimeMillis();
 			directionJustChanged = true;
 
 			if (peakCount < 10) {
 				peakCount++;
-				peaks[peakCount] = input;
+				lastPeaks[peakCount] = input;
 			} else {
 				// todo: reset peak counter maybe?
 			}
@@ -125,10 +127,10 @@ int PID_AutoTune::Runtime(Logging *logging) {
 	}
 
 	if (directionJustChanged && peakCount > 2) { //we've transitioned.  check if we can autotune based on the last peaks
-		float avgSeparation = (absF(peaks[peakCount - 0] - peaks[peakCount - 1])
-				+ absF(peaks[peakCount - 1] - peaks[peakCount - 2])) / 2;
+		float avgSeparation = (absF(lastPeaks[peakCount - 0] - lastPeaks[peakCount - 1])
+				+ absF(lastPeaks[peakCount - 1] - lastPeaks[peakCount - 2])) / 2;
 		if (avgSeparation < 0.05 * (absMax - absMin)) {
-			FinishUp();
+			//FinishUp();
 			running = false;
 			return 1;
 
