@@ -24,10 +24,8 @@
 
 
 // verbose debug option
-// requires open Serial port
 #undef AUTOTUNE_DEBUG
 
-#define USE_SIMULATION
 
 // defining this option implements relay bias
 // this is useful to adjust the relay output values
