@@ -19,15 +19,19 @@ efitimems_t currentTimeMillis(void) {
 Logging logging;
 
 static float zigZagOffset = 0;
+
 static zigZagValue(int index) {
 	int i = index % 20;
-	if ( i <= 10)
-	return i * 10 + zigZagOffset;
-	return (20 - i) * 10 + zigZagOffset;
-
+	if ( i <= 10) {
+		return i * 10 + zigZagOffset;
+	} else {
+		return (20 - i) * 10 + zigZagOffset;
+	}
 }
 
 void testPidAutoZigZag() {
+	printf("*************************************************** testPidAutoZigZag\r\n");
+
 	mockTimeMs = 0;
 
 	PID_AutoTune at;
