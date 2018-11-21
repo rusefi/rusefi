@@ -71,6 +71,8 @@ struct Tuning
   }
 };
 
+#define STEPCOUNT 5
+
 class PID_AutoTune
 {
 
@@ -151,10 +153,13 @@ public:
   double input;
   double output;
 
-  double absMax; // todo: remove this
-  double absMin; // todo: remove this
+#if EFI_UNIT_TEST
+  double absMax;
+  double absMin;
+#endif /* EFI_UNIT_TEST */
   double outputStart;
 
+  unsigned long sampleTime;
 
 private:
 
@@ -171,10 +176,9 @@ private:
 
   enum AutoTunerState state;            // * state of autotuner finite state machine
   unsigned long lastTime;
-  unsigned long sampleTime;
   enum Peak peakType;
-  unsigned long lastPeakTime[5];        // * peak time, most recent in array element 0
-  double lastPeaks[5];                  // * peak value, most recent in array element 0
+  unsigned long lastPeakTime[STEPCOUNT];        // * peak time, most recent in array element 0
+  double lastPeaks[STEPCOUNT];                  // * peak value, most recent in array element 0
   double lastInputs[101];               // * process values, most recent in array element 0
   byte inputCount;
   double workingNoiseBand;
