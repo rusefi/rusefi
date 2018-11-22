@@ -241,6 +241,16 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 			iEvent->sparkId);
 #endif
 
+	/**
+	 * todo: extract a "scheduleForAngle" method with best implementation into a separate utility method
+	 *
+	 * Here's the status as of Nov 2018:
+	 * "scheduleForLater" uses time only and for best precision it's best to use "scheduleForLater" only
+	 * once we hit the last trigger tooth prior to needed event. This case we use as much trigger position angle as possible
+	 * and only use less precise RPM-based time calculation for the last portion of the angle, the one between two teeth closest to the
+	 * desirent angle moment.
+	 *
+	 */
 	if (iEvent->sparkPosition.eventIndex == trgEventIndex) {
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
