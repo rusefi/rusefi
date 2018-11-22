@@ -376,7 +376,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 
-		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * TRIGGER_SHAPE(size));
+		triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	}
 	if (triggerIndexForListeners == 0) {
 		timeAtVirtualZeroNt = nowNt;

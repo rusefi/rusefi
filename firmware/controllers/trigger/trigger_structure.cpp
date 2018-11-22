@@ -78,7 +78,7 @@ void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE
 			assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_ERR_6552);
 			int triggerDefinitionCoordinate = (triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
 			efiAssertVoid(CUSTOM_ERR_6595, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
-			int triggerDefinitionIndex = triggerDefinitionCoordinate >= size ? triggerDefinitionCoordinate - size : triggerDefinitionCoordinate;
+			int triggerDefinitionIndex = triggerDefinitionCoordinate >= privateTriggerDefinitionSize ? triggerDefinitionCoordinate - privateTriggerDefinitionSize : triggerDefinitionCoordinate;
 			float angle = getAngle(triggerDefinitionCoordinate) - firstAngle;
 			efiAssertVoid(CUSTOM_ERR_6596, !cisnan(angle), "trgSyncNaN");
 			fixAngle(angle, "trgSync", CUSTOM_ERR_6559);
@@ -118,7 +118,7 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	invertOnAdd = false;
 
 	this->operationMode = operationMode;
-	size = 0;
+	privateTriggerDefinitionSize = 0;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
 	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
@@ -133,7 +133,7 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 }
 
 int TriggerShape::getSize() const {
-	return size;
+	return privateTriggerDefinitionSize;
 }
 
 int TriggerShape::getTriggerShapeSynchPointIndex() {
@@ -299,9 +299,9 @@ angle_t TriggerShape::getAngle(int index) const {
 	 * See also trigger_central.cpp
 	 * See also getEngineCycleEventCount()
 	 */
-	efiAssert(CUSTOM_ERR_ASSERT, size != 0, "shapeSize=0", NAN);
-	int crankCycle = index / size;
-	int remainder = index % size;
+	efiAssert(CUSTOM_ERR_ASSERT, privateTriggerDefinitionSize != 0, "shapeSize=0", NAN);
+	int crankCycle = index / privateTriggerDefinitionSize;
+	int remainder = index % privateTriggerDefinitionSize;
 
 	return getCycleDuration() * crankCycle + getSwitchAngle(remainder);
 }
@@ -339,7 +339,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	int signal = waveIndex * 1000 + stateParam;
-	triggerSignals[size] = signal;
+	triggerSignals[privateTriggerDefinitionSize] = signal;
 #endif
 
 	float engineCycle = getEngineCycle(operationMode);
@@ -355,16 +355,16 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	}
 
 	efiAssertVoid(CUSTOM_ERR_6599, angle > 0, "angle should be positive");
-	if (size > 0) {
+	if (privateTriggerDefinitionSize > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f and prev=%.2f, size=%d", angle, previousAngle, size);
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f and prev=%.2f, size=%d", angle, previousAngle, privateTriggerDefinitionSize);
 			shapeDefinitionError = true;
 			return;
 		}
 	}
 	previousAngle = angle;
-	if (size == 0) {
-		size = 1;
+	if (privateTriggerDefinitionSize == 0) {
+		privateTriggerDefinitionSize = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 			single_wave_s *wave = &this->wave.waves[i];
 
@@ -382,14 +382,14 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 		return;
 	}
 
-	int exactMatch = wave.findAngleMatch(angle, size);
+	int exactMatch = wave.findAngleMatch(angle, privateTriggerDefinitionSize);
 	if (exactMatch != EFI_ERROR_CODE) {
 		warning(CUSTOM_ERR_SAME_ANGLE, "same angle: not supported");
 		shapeDefinitionError = true;
 		return;
 	}
 
-	int index = wave.findInsertionAngle(angle, size);
+	int index = wave.findInsertionAngle(angle, privateTriggerDefinitionSize);
 
 	/**
 	 * todo: it would be nice to be able to provide trigger angles without sorting them externally
@@ -406,11 +406,11 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 */
 	isFrontEvent[index] = TV_RISE == stateParam;
 
-	if (index != size) {
+	if (index != privateTriggerDefinitionSize) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
 	}
 
-	size++;
+	privateTriggerDefinitionSize++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		wave.waves[i].pinStates[index] = wave.getChannelState(i, index - 1);
