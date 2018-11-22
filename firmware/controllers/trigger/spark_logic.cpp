@@ -248,7 +248,10 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * "scheduleForLater" uses time only and for best precision it's best to use "scheduleForLater" only
 	 * once we hit the last trigger tooth prior to needed event. This case we use as much trigger position angle as possible
 	 * and only use less precise RPM-based time calculation for the last portion of the angle, the one between two teeth closest to the
-	 * desirent angle moment.
+	 * desired angle moment.
+	 *
+	 * At the moment we only have time-based scheduler. I believe what needs to be added is a trigger-event based scheduler on top of the
+	 * time-based schedule. This case we would be firing events with best possible angle precision.
 	 *
 	 */
 	if (iEvent->sparkPosition.eventIndex == trgEventIndex) {
