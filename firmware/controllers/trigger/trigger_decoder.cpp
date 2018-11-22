@@ -361,6 +361,15 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					|| currentCycle.eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
 					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
+#if EFI_UNIT_TEST
+			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, isInitializingTrigger);
+			if (isDecodingError) {
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  TRIGGER_SHAPE(expectedEventCount[0]));
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  TRIGGER_SHAPE(expectedEventCount[1]));
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[2],  TRIGGER_SHAPE(expectedEventCount[2]));
+			}
+#endif
+
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 			if (isDecodingError && !isInitializingTrigger) {
 				if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
@@ -492,6 +501,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 
 	case TT_MAZDA_MIATA_VVT_TEST:
 		initializeMazdaMiataVVtTestShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		break;
+
+	case TT_MAZDA_Z5:
+		initialize_Mazda_Engine_z5_Shape(this PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 
 	case TT_MIATA_VVT:
