@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Wed Nov 21 21:47:19 EST 2018
+// on Thu Nov 22 18:48:26 EST 2018
 // see also gen_config_and_enums.bat
 
 
@@ -943,6 +943,34 @@ case TCHARGE_MODE_AIR_INTERP:
   return "TCHARGE_MODE_AIR_INTERP";
 case TCHARGE_MODE_RPM_TPS:
   return "TCHARGE_MODE_RPM_TPS";
+  }
+ return NULL;
+}
+const char *getPidAutoTune_Peak(PidAutoTune_Peak value){
+switch(value) {
+case MAXIMUM:
+  return "MAXIMUM";
+case NOT_A_PEAK:
+  return "NOT_A_PEAK";
+  }
+ return NULL;
+}
+const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value){
+switch(value) {
+case AUTOTUNER_OFF:
+  return "AUTOTUNER_OFF";
+case CONVERGED:
+  return "CONVERGED";
+case FAILED:
+  return "FAILED";
+case RELAY_STEP_DOWN:
+  return "RELAY_STEP_DOWN";
+case RELAY_STEP_UP:
+  return "RELAY_STEP_UP";
+case STEADY_STATE_AFTER_STEP_UP:
+  return "STEADY_STATE_AFTER_STEP_UP";
+case STEADY_STATE_AT_BASELINE:
+  return "STEADY_STATE_AT_BASELINE";
   }
  return NULL;
 }

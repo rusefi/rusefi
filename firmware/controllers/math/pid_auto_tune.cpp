@@ -94,17 +94,17 @@ double PID_AutoTune::calculatePhaseLag(double inducedAmplitude)
   }
 }
 
-void PID_AutoTune::setState(AutoTunerState state) {
+void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
 	this->state = state;
 #if EFI_UNIT_TEST
-		printf("setState %d\r\n", state);
+		printf("setState %s\r\n", getPidAutoTune_AutoTunerState(state));
 #endif /* EFI_UNIT_TEST */
 }
 
-void PID_AutoTune::setPeakType(Peak peakType) {
+void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
 	this->peakType = peakType;
 #if EFI_UNIT_TEST
-		printf("peakType %d\r\n", peakType);
+		printf("peakType %s\r\n", getPidAutoTune_Peak(peakType));
 #endif /* EFI_UNIT_TEST */
 }
 
