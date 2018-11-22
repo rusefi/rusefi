@@ -167,9 +167,11 @@ public:
 	/**
 	 * Total count of shaft events per CAM or CRANK shaft revolution.
 	 * TODO this should be migrated to CRANKshaft revolution, this would go together
-	 * TODO: rename to triggerDefinitionSize ?
+	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
+	 * but name is supposed to hint at the fact that decoders should not be assigning to it
+	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
 	 */
-	int size;
+	int privateTriggerDefinitionSize;
 
 	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -234,5 +236,7 @@ private:
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define TRIGGER_SHAPE(x) ENGINE(triggerCentral.triggerShape.x)
+
+#define getTriggerSize() TRIGGER_SHAPE(privateTriggerDefinitionSize)
 
 #endif /* TRIGGER_STRUCTURE_H_ */

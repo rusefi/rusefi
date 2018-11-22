@@ -82,7 +82,7 @@ bool isTriggerDecoderError(void) {
 }
 
 bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return currentCycle.current_index < TRIGGER_SHAPE(size);
+	return currentCycle.current_index < getTriggerSize();
 }
 
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
@@ -324,10 +324,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				printf("sync=%d index=%d size=%d\r\n",
 					shaft_is_synchronized,
 					currentCycle.current_index,
-					TRIGGER_SHAPE(size));
+					getTriggerSize());
 			}
 #endif /* EFI_UNIT_TEST */
-			int endOfCycleIndex = TRIGGER_SHAPE(size) - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
+			int endOfCycleIndex = getTriggerSize() - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
 
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
@@ -337,7 +337,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				printf("isSynchronizationPoint=%d index=%d size=%d\r\n",
 						isSynchronizationPoint,
 						currentCycle.current_index,
-						TRIGGER_SHAPE(size));
+						getTriggerSize());
 			}
 #endif /* EFI_UNIT_TEST */
 
@@ -415,7 +415,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			resetCurrentCycleState();
 			incrementTotalEventCounter();
 			runningRevolutionCounter++;
-			totalEventCountBase += TRIGGER_SHAPE(size);
+			totalEventCountBase += getTriggerSize();
 
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
@@ -439,7 +439,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {
 		// let's not show a warning if we are just starting to spin
 		if (GET_RPM() != 0) {
-			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, TRIGGER_SHAPE(size));
+			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, getTriggerSize());
 			lastDecodingErrorTime = getTimeNowNt();
 			someSortOfTriggerError = true;
 		}
