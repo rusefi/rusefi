@@ -95,26 +95,6 @@ public:
     NO_OVERSHOOT_PID
   };
 
-  // peak type
-  enum Peak
-  {
-    MINIMUM = -1,
-    NOT_A_PEAK = 0,
-    MAXIMUM = 1
-  };
-
-  // auto tuner state
-  enum AutoTunerState
-  {
-    AUTOTUNER_OFF = 0,
-    STEADY_STATE_AT_BASELINE = 1,
-    STEADY_STATE_AFTER_STEP_UP = 2,
-    RELAY_STEP_UP = 4,
-    RELAY_STEP_DOWN = 8,
-    CONVERGED = 16,
-    FAILED = 128
-  };
-
   // tuning rule divisor
   enum
   {
@@ -162,8 +142,8 @@ public:
   unsigned long sampleTime;
   byte nLookBack;
 
-  void setState(AutoTunerState state);
-  void setPeakType(Peak peakType);
+  void setState(PidAutoTune_AutoTunerState state);
+  void setPeakType(PidAutoTune_Peak peakType);
 
 private:
 
@@ -177,9 +157,9 @@ private:
   double noiseBand;
   byte controlType;                     // * selects autotune algorithm
 
-  enum AutoTunerState state;            // * state of autotuner finite state machine
+  PidAutoTune_AutoTunerState state;            // * state of autotuner finite state machine
   unsigned long lastTime;
-  enum Peak peakType;
+  PidAutoTune_Peak peakType;
   unsigned long lastPeakTime[STEPCOUNT];        // * peak time, most recent in array element 0
   double lastPeaks[STEPCOUNT];                  // * peak value, most recent in array element 0
   double lastInputs[101];               // * process values, most recent in array element 0
