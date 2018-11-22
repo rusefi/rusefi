@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Oct 30 04:58:47 EDT 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 22 10:00:39 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1288,7 +1288,7 @@ public class Fields {
 	public static final Field TPSADCCHANNEL = Field.create("TPSADCCHANNEL", 520, FieldType.INT, adc_channel_e);
 	public static final Field OVERRIDECRANKINGIGNITION = Field.create("OVERRIDECRANKINGIGNITION", 524, FieldType.INT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 528, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "trg42", "trg43", "trg44", "trg45", "INVALID"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 532, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED = Field.create("TRIGGER_UNUSEDCUSTOMISSYNCHRONIZATIONNEEDED", 536, FieldType.BIT, 0);
 	public static final Field TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT = Field.create("TRIGGER_UNUSEDCUSTOMNEEDSECONDTRIGGERINPUT", 536, FieldType.BIT, 1);
