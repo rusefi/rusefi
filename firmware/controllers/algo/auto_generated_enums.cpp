@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Fri Jan 26 11:27:27 EST 2018
+// on Wed Nov 21 20:48:18 EST 2018
 // see also gen_config_and_enums.bat
 
 
@@ -75,6 +75,8 @@ case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
   return "MAZDA_MIATA_2003_NA_RAIL";
+case MAZDA_MIATA_NA8:
+  return "MAZDA_MIATA_NA8";
 case MAZDA_MIATA_NB1:
   return "MAZDA_MIATA_NB1";
 case MIATA_1990:
@@ -87,8 +89,6 @@ case MIATA_1996:
   return "MIATA_1996";
 case MIATA_NA_1_6:
   return "MIATA_NA_1_6";
-case MAZDA_MIATA_NA8:
-  return "MAZDA_MIATA_NA8";
 case MINI_COOPER_R50:
   return "MINI_COOPER_R50";
 case MITSU_4G93:
@@ -130,26 +130,7 @@ case ZIL_130:
   }
  return NULL;
 }
-
-const char *getHip_state_e(hip_state_e value) {
-switch (value) {
-case NOT_READY:
-	return "NOT_READY";
-case READY_TO_INTEGRATE:
-	return "READY_TO_INTEGRATE";
-case IS_INTEGRATING:
-	return "IS_INTEGRATING";
-case WAITING_FOR_ADC_TO_SKIP:
-	return "WAITING_FOR_ADC_TO_SKIP";
-case WAITING_FOR_RESULT_ADC:
-	return "WAITING_FOR_RESULT_ADC";
-case IS_SENDING_SPI_COMMAND:
-	return "IS_SENDING_SPI_COMMAND";
-}
-return NULL;
-}
-
-const char *getTrigger_type_e(trigger_type_e value) {
+const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
 case Force_4_bytes_size_trigger_type:
   return "Force_4_bytes_size_trigger_type";
@@ -175,12 +156,12 @@ case TT_DODGE_RAM:
   return "TT_DODGE_RAM";
 case TT_DODGE_STRATUS:
   return "TT_DODGE_STRATUS";
+case TT_FIAT_IAW_P8:
+  return "TT_FIAT_IAW_P8";
 case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
 case TT_GM_7X:
   return "TT_GM_7X";
-case TT_FIAT_IAW_P8:
-  return "TT_FIAT_IAW_P8";
 case TT_GM_LS_24:
   return "TT_GM_LS_24";
 case TT_HONDA_1_24:
@@ -200,7 +181,7 @@ case TT_HONDA_CBR_600_CUSTOM:
 case TT_JEEP_18_2_2_2:
   return "TT_JEEP_18_2_2_2";
 case TT_JEEP_4_CYL:
-	return "TT_JEEP_4_CYL";
+  return "TT_JEEP_4_CYL";
 case TT_MAZDA_DOHC_1_4:
   return "TT_MAZDA_DOHC_1_4";
 case TT_MAZDA_MIATA_NA:
@@ -734,16 +715,16 @@ case GPIO_UNASSIGNED:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_CJ125:
-  return "DBG_CJ125";
-case DBG_CAN:
-  return "DBG_CAN";
-case DBG_MAP:
-  return "DBG_MAP";
-case DBG_METRICS:
-  return "DBG_METRICS";
-case DBG_ELECTRONIC_THROTTLE_EXTRA:
-  return "DBG_ELECTRONIC_THROTTLE_EXTRA";
+case DBG_30:
+  return "DBG_30";
+case DBG_31:
+  return "DBG_31";
+case DBG_32:
+  return "DBG_32";
+case DBG_33:
+  return "DBG_33";
+case DBG_34:
+  return "DBG_34";
 case DBG_ADC:
   return "DBG_ADC";
 case DBG_ALTERNATOR_PID:
@@ -754,8 +735,14 @@ case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
+case DBG_CAN:
+  return "DBG_CAN";
+case DBG_CJ125:
+  return "DBG_CJ125";
 case DBG_CRANKING_DETAILS:
   return "DBG_CRANKING_DETAILS";
+case DBG_ELECTRONIC_THROTTLE_EXTRA:
+  return "DBG_ELECTRONIC_THROTTLE_EXTRA";
 case DBG_ELECTRONIC_THROTTLE_PID:
   return "DBG_ELECTRONIC_THROTTLE_PID";
 case DBG_EL_ACCEL:
@@ -776,6 +763,10 @@ case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_KNOCK:
   return "DBG_KNOCK";
+case DBG_MAP:
+  return "DBG_MAP";
+case DBG_METRICS:
+  return "DBG_METRICS";
 case DBG_SD_CARD:
   return "DBG_SD_CARD";
 case DBG_SR5_PROTOCOL:
@@ -796,9 +787,7 @@ case DBG_WARMUP_ENRICH:
   return "DBG_WARMUP_ENRICH";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
-default:
-  return "NA";
-}
+  }
  return NULL;
 }
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value){
@@ -924,6 +913,34 @@ case CAN_BUS_NBC_VAG:
   return "CAN_BUS_NBC_VAG";
 case Internal_ForceMyEnumIntSize_can_nbc:
   return "Internal_ForceMyEnumIntSize_can_nbc";
+  }
+ return NULL;
+}
+const char *getHip_state_e(hip_state_e value){
+switch(value) {
+case IS_INTEGRATING:
+  return "IS_INTEGRATING";
+case IS_SENDING_SPI_COMMAND:
+  return "IS_SENDING_SPI_COMMAND";
+case NOT_READY:
+  return "NOT_READY";
+case READY_TO_INTEGRATE:
+  return "READY_TO_INTEGRATE";
+case WAITING_FOR_ADC_TO_SKIP:
+  return "WAITING_FOR_ADC_TO_SKIP";
+case WAITING_FOR_RESULT_ADC:
+  return "WAITING_FOR_RESULT_ADC";
+  }
+ return NULL;
+}
+const char *getTChargeMode_e(tChargeMode_e value){
+switch(value) {
+case Force_4bytes_size_tChargeMode_e:
+  return "Force_4bytes_size_tChargeMode_e";
+case TCHARGE_MODE_AIR_INTERP:
+  return "TCHARGE_MODE_AIR_INTERP";
+case TCHARGE_MODE_RPM_TPS:
+  return "TCHARGE_MODE_RPM_TPS";
   }
  return NULL;
 }

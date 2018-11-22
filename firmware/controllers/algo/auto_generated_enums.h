@@ -1,15 +1,14 @@
-#ifndef _A_H_HEADER_
-#define _A_H_HEADER_
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Fri Jan 26 11:27:27 EST 2018
+// on Wed Nov 21 20:48:18 EST 2018
 // see also gen_config_and_enums.bat
 
 
 
+#ifndef _A_H_HEADER_
+#define _A_H_HEADER_
 #include "rusefi_enums.h"
 const char *getEngine_type_e(engine_type_e value);
-const char *getHip_state_e(hip_state_e value);
 const char *getTrigger_type_e(trigger_type_e value);
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
 const char *getTrigger_value_e(trigger_value_e value);
@@ -42,4 +41,6 @@ const char *getMaf_sensor_type_e(maf_sensor_type_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getChamber_style_e(chamber_style_e value);
 const char *getCan_nbc_e(can_nbc_e value);
+const char *getHip_state_e(hip_state_e value);
+const char *getTChargeMode_e(tChargeMode_e value);
 #endif /*_A_H_HEADER_ */
