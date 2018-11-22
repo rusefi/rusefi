@@ -452,9 +452,6 @@ void printAllTriggers() {
 	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
 		trigger_type_e tt = (trigger_type_e) triggerId;
 
-//		if (triggerId != 20)
-//			continue;
-
 		printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
 		persistent_config_s pc;

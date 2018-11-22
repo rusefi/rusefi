@@ -299,7 +299,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				actualSynchGap = gap;
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					print("%d: cur %.2f expected from %.2f to %.2f error=%d",
+					print("%d: cur %.2f expected from %.2f to %.2f error=%d\r\n",
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
@@ -673,8 +673,9 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 	}
 #endif
 
-	// Moved here from mainTriggerCallback()
-	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (!shapeDefinitionError) {
+		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
 }
 
 static void onFindIndexCallback(TriggerState *state) {
