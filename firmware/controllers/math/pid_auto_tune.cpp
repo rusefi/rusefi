@@ -46,7 +46,7 @@ PID_AutoTune::PID_AutoTune() {
 
 	controlType = ZIEGLER_NICHOLS_PI;
 	noiseBand = 0.5;
-	state = AUTOTUNER_OFF;
+	setState(AUTOTUNER_OFF);
 	oStep = 10.0;
 	SetLookbackSec(10);
 }
@@ -94,6 +94,20 @@ double PID_AutoTune::calculatePhaseLag(double inducedAmplitude)
   }
 }
 
+void PID_AutoTune::setState(AutoTunerState state) {
+	this->state = state;
+#if EFI_UNIT_TEST
+		printf("setState %d\r\n", state);
+#endif /* EFI_UNIT_TEST */
+}
+
+void PID_AutoTune::setPeakType(Peak peakType) {
+	this->peakType = peakType;
+#if EFI_UNIT_TEST
+		printf("peakType %d\r\n", peakType);
+#endif /* EFI_UNIT_TEST */
+}
+
 bool PID_AutoTune::Runtime(Logging *logging)
 {
   // check ready for new input
@@ -102,7 +116,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
   if (state == AUTOTUNER_OFF)
   {
     // initialize working variables the first time around
-    peakType = NOT_A_PEAK;
+	  setPeakType(NOT_A_PEAK);
     inputCount = 0;
     peakCount = 0;
     setpoint = input;
@@ -122,11 +136,11 @@ bool PID_AutoTune::Runtime(Logging *logging)
     // move to new state
     if (controlType == AMIGOF_PI)
     {
-      state = STEADY_STATE_AT_BASELINE;
+    	setState(STEADY_STATE_AT_BASELINE);
     }
     else
     {
-      state = RELAY_STEP_UP;
+    	setState(RELAY_STEP_UP);
     }
   }
 
@@ -154,12 +168,12 @@ bool PID_AutoTune::Runtime(Logging *logging)
   // check input and change relay state if necessary
   if ((state == RELAY_STEP_UP) && (refVal > setpoint + workingNoiseBand))
   {
-    state = RELAY_STEP_DOWN;
+	  setState(RELAY_STEP_DOWN);
     justChanged = true;
   }
   else if ((state == RELAY_STEP_DOWN) && (refVal < setpoint - workingNoiseBand))
   {
-    state = RELAY_STEP_UP;
+	  setState(RELAY_STEP_UP);
     justChanged = true;
   }
   if (justChanged)
@@ -182,6 +196,10 @@ bool PID_AutoTune::Runtime(Logging *logging)
         Serial.print(F("asymmetry "));
         Serial.println(asymmetry);
 #endif
+
+#if EFI_UNIT_TEST
+		printf("asymmetry=%f\r\n", asymmetry);
+#endif /* EFI_UNIT_TEST */
 
         if (asymmetry > AUTOTUNE_STEP_ASYMMETRY_TOLERANCE)
         {
@@ -226,6 +244,10 @@ bool PID_AutoTune::Runtime(Logging *logging)
             Serial.print(F("relayBias "));
             Serial.println(relayBias);
 #endif
+
+#if EFI_UNIT_TEST
+		printf("deltaRelayBias=%f relayBias=%f\r\n", deltaRelayBias, relayBias);
+#endif /* EFI_UNIT_TEST */
 
             // reset relay step counter
             // to give the process value oscillation
@@ -296,6 +318,10 @@ bool PID_AutoTune::Runtime(Logging *logging)
   Serial.println(state);
 #endif
 
+#if EFI_UNIT_TEST
+		printf("setpoint=%f refVal=%f\r\n", setpoint, refVal);
+#endif /* EFI_UNIT_TEST */
+
   // store initial inputs
   // we don't want to trust the maxes or mins
   // until the input array is full
@@ -354,6 +380,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
     }
     avgInput /= (double)(inputCount + 1);
 
+    bool stable = (iMax - iMin) <= 2.0 * workingNoiseBand;
 #if defined (AUTOTUNE_DEBUG)
   Serial.print(F("iMax "));
   Serial.println(iMax);
@@ -362,8 +389,18 @@ bool PID_AutoTune::Runtime(Logging *logging)
   Serial.print(F("avgInput "));
   Serial.println(avgInput);
   Serial.print(F("stable "));
-  Serial.println((iMax - iMin) <= 2.0 * workingNoiseBand);
+  Serial.println(stable);
 #endif
+
+
+#if EFI_UNIT_TEST
+		printf("iMax=%f iMin=%f\r\n", iMax, iMin);
+#endif /* EFI_UNIT_TEST */
+
+#if EFI_UNIT_TEST
+		printf("avgInput=%f stable=%d\r\n", avgInput, stable);
+#endif /* EFI_UNIT_TEST */
+
 
     // if recent inputs are stable
     if ((iMax - iMin) <= 2.0 * workingNoiseBand)
@@ -375,7 +412,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
 
       if (state == STEADY_STATE_AT_BASELINE)
       {
-        state = STEADY_STATE_AFTER_STEP_UP;
+    	  setState(STEADY_STATE_AFTER_STEP_UP);
         lastPeaks[0] = avgInput;
         inputCount = 0;
 #if EFI_UNIT_TEST
@@ -392,16 +429,20 @@ bool PID_AutoTune::Runtime(Logging *logging)
       Serial.println(K_process);
 #endif
 
+#if EFI_UNIT_TEST
+		printf("K_process=%f\r\n", K_process);
+#endif /* EFI_UNIT_TEST */
+
       // bad estimate of process gain
       if (K_process < 1e-10) // zero
       {
-        state = AUTOTUNER_OFF;
+    	  setState(AUTOTUNER_OFF);
 #if EFI_UNIT_TEST
 		printf(":( 4\r\n");
 #endif /* EFI_UNIT_TEST */
 		return false;
       }
-      state = RELAY_STEP_DOWN;
+      setState(RELAY_STEP_DOWN);
 
 #if defined (AUTOTUNE_RELAY_BIAS)
       sumInputSinceLastStep[0] = 0.0;
@@ -431,7 +472,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
     {
       justChanged = true;
     }
-    peakType = MAXIMUM;
+    setPeakType(MAXIMUM);
   }
   else if (isMin)
   {
@@ -439,7 +480,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
     {
       justChanged = true;
     }
-    peakType = MINIMUM;
+    setPeakType(MINIMUM);
   }
 
   // update peak times and values
@@ -591,7 +632,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
     // check convergence criterion for amplitude of induced oscillation
     if (((0.5 * (absMax - absMin) - inducedAmplitude) / inducedAmplitude) < AUTOTUNE_PEAK_AMPLITUDE_TOLERANCE)
     {
-      state = CONVERGED;
+    	setState(CONVERGED);
     }
   }
 
@@ -609,7 +650,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
     (peakCount >= 20)
   )
   {
-    state = FAILED;
+	  setState(FAILED);
   }
 
   if (((byte) state & (CONVERGED | FAILED)) == 0)
@@ -686,7 +727,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
     Ti = ((-3.05 + 1.72 * phaseLag) / pow(1.0 + (-6.10 + 3.44 * phaseLag) * kappa_phi, 2)) * Pu;
     Td = 0.0;
 #if EFI_UNIT_TEST
-		printf("Happy end 1!\r\n");
+		printf("Happy end AMIGOF_PI!\r\n");
 #endif /* EFI_UNIT_TEST */
     // converged
     return true;
@@ -697,10 +738,25 @@ bool PID_AutoTune::Runtime(Logging *logging)
   Td = tuningRule[controlType].PI_controller() ?
        0.0 : Pu / (double) tuningRule[controlType].divisor(TD_DIVISOR);
 #if EFI_UNIT_TEST
-		printf("Happy end 2!\r\n");
+		printf("Happy end!\r\n");
 #endif /* EFI_UNIT_TEST */
   // converged
   return true;
+}
+
+double PID_AutoTune::GetKp()
+{
+  return Kp;
+}
+
+double PID_AutoTune::GetKi()
+{
+  return Kp / Ti;
+}
+
+double PID_AutoTune::GetKd()
+{
+  return Kp * Td;
 }
 
 

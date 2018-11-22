@@ -160,6 +160,10 @@ public:
   double outputStart;
 
   unsigned long sampleTime;
+  byte nLookBack;
+
+  void setState(AutoTunerState state);
+  void setPeakType(Peak peakType);
 
 private:
 
@@ -171,7 +175,6 @@ private:
   bool running; // todo: remove this
 
   double noiseBand;
-  byte nLookBack;
   byte controlType;                     // * selects autotune algorithm
 
   enum AutoTunerState state;            // * state of autotuner finite state machine
