@@ -50,6 +50,40 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX
 	s->useOnlyPrimaryForSync = true;
 }
 
+/**
+ * by alexander-n8hgeg5e
+ * See https://rusefi.com/forum/viewtopic.php?f=5&t=1447
+ */
+void initialize_Mazda_Engine_z5_Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
+	/**
+	 * My Signal is:      60,      60,      102,     60
+	 *               120,     120,     120,      78,
+	 *                                              ^  
+	 *                                              |
+	 *                                              sync point = 0 degree from now on 
+	 * All rising edges are 60 befor some OT.
+	 * If the edge goes high, it should look at the last past 2 events. (high-low-now)
+	 * time1/time2 == 78/102 = 13/17 then triggerevent '0' would be nice.
+	 * 
+	 */
+	s->useRiseEdge = false;
+	s->tdcPosition = 0; // 1 and 3 are at top , so 0 or 360
+	s->setTriggerSynchronizationGap(0.7);
+
+	s->addEvent2(60.0f,   T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(180.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(240.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(360.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(420.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(540.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(618.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(720.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
 // TT_MIATA_VVT
 void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, false);
