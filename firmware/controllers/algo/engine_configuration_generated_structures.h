@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Sep 25 15:46:46 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 22 23:13:59 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -27,10 +27,12 @@ typedef struct {
 	 */
 	int16_t period;
 	/**
+	 * Output min value
 	 * offset 16
 	 */
 	int16_t minValue;
 	/**
+	 * Output max value
 	 * offset 18
 	 */
 	int16_t maxValue;
@@ -2422,4 +2424,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Sep 25 15:46:46 EDT 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 22 23:13:59 EST 2018
