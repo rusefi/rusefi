@@ -130,6 +130,7 @@ public:
 
   byte peakCount;
   float input;
+  // suggested P coefficient while auto-tuning
   float output;
 
   void setOutput(float output);

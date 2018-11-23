@@ -27,6 +27,7 @@
 #include "efilib.h"
 #include "efitime.h"
 
+// see https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 // order must be match enumerated type for auto tune methods
 Tuning tuningRule[PID_AutoTune::NO_OVERSHOOT_PID + 1] =
 {
