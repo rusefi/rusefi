@@ -108,6 +108,9 @@ void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
 #endif /* EFI_UNIT_TEST */
 }
 
+/**
+ * returns true when done, otherwise returns false
+ */
 bool PID_AutoTune::Runtime(Logging *logging)
 {
   // check ready for new input
@@ -656,7 +659,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
   if (((byte) state & (CONVERGED | FAILED)) == 0)
   {
 #if EFI_UNIT_TEST
-		printf(":( 1 state=%d\r\n", (int)state);
+		printf(":( 1 state=%s\r\n", getPidAutoTune_AutoTunerState(state));
 #endif /* EFI_UNIT_TEST */
 	return false;
   }
@@ -744,17 +747,17 @@ bool PID_AutoTune::Runtime(Logging *logging)
   return true;
 }
 
-double PID_AutoTune::GetKp()
+float PID_AutoTune::GetKp()
 {
   return Kp;
 }
 
-double PID_AutoTune::GetKi()
+float PID_AutoTune::GetKi()
 {
   return Kp / Ti;
 }
 
-double PID_AutoTune::GetKd()
+float PID_AutoTune::GetKd()
 {
   return Kp * Td;
 }

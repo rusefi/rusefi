@@ -124,14 +124,14 @@ public:
                                         //   than this value
   double GetNoiseBand();                //   this should be accurately set
 
-  double GetKp();                       // * once autotune is complete, these functions contain the
-  double GetKi();                       //   computed tuning parameters.
-  double GetKd();                       //
+  float GetKp();                       // * once autotune is complete, these functions contain the
+  float GetKi();                       //   computed tuning parameters.
+  float GetKd();                       //
 
   double oStep;
   byte peakCount;
-  double input;
-  double output;
+  float input;
+  float output;
 
 #if EFI_UNIT_TEST
   double absMax;
@@ -144,6 +144,7 @@ public:
 
   void setState(PidAutoTune_AutoTunerState state);
   void setPeakType(PidAutoTune_Peak peakType);
+  PidAutoTune_AutoTunerState state;            // * state of autotuner finite state machine
 
 private:
 
@@ -157,17 +158,16 @@ private:
   double noiseBand;
   byte controlType;                     // * selects autotune algorithm
 
-  PidAutoTune_AutoTunerState state;            // * state of autotuner finite state machine
   unsigned long lastTime;
   PidAutoTune_Peak peakType;
   unsigned long lastPeakTime[STEPCOUNT];        // * peak time, most recent in array element 0
-  double lastPeaks[STEPCOUNT];                  // * peak value, most recent in array element 0
-  double lastInputs[101];               // * process values, most recent in array element 0
+  float lastPeaks[STEPCOUNT];                  // * peak value, most recent in array element 0
+  float lastInputs[101];               // * process values, most recent in array element 0
   byte inputCount;
-  double workingNoiseBand;
-  double workingOstep;
-  double inducedAmplitude;
-  double Kp, Ti, Td;
+  float workingNoiseBand;
+  float workingOstep;
+  float inducedAmplitude;
+  float Kp, Ti, Td;
 
   // used by AMIGOf tuning rule
   double calculatePhaseLag(double);     // * calculate phase lag from noiseBand and inducedAmplitude

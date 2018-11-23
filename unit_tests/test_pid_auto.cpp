@@ -22,21 +22,25 @@ static float zigZagOffset = 0;
 
 #define CYCLE 20
 
+// range of oscillation
+static float oscRange;
+
 /**
  * output linearly goes from 0 to 100 and back within each 'CYCLE' steps
  */
 static float zigZagValue(int index) {
 	int i = index % CYCLE;
 	if ( i <= CYCLE / 2) {
-		return i * (100.0 / 2 / CYCLE) + zigZagOffset;
+		return i * (oscRange / 2 / CYCLE) + zigZagOffset;
 	} else {
-		return (CYCLE - i) * (100.0 / 2 / CYCLE) + zigZagOffset;
+		return (CYCLE - i) * (oscRange / 2 / CYCLE) + zigZagOffset;
 	}
 }
 
-void testPidAutoZigZag() {
-	printf("*************************************************** testPidAutoZigZag\r\n");
+static void testPidAutoZigZagStable() {
+	printf("*************************************************** testPidAutoZigZagStable\r\n");
 
+	oscRange = 100;
 	mockTimeMs = 0;
 
 	PID_AutoTune at;
@@ -60,7 +64,8 @@ void testPidAutoZigZag() {
 
 	for (; mockTimeMs <= 10 + startMockMs; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
-		at.Runtime(&logging);
+		bool result = at.Runtime(&logging);
+		assertFalseM("should be false#1", result);
 
 	}
 //	assertEqualsLM("min@11", 0, at.absMin);
@@ -69,33 +74,93 @@ void testPidAutoZigZag() {
 
 	for (; mockTimeMs <= 21; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
-		at.Runtime(&logging);
+		bool result = at.Runtime(&logging);
+		assertFalseM("should be false#2", result);
 	}
 	assertEqualsM("peakCount@21", 0, at.peakCount);
 
 	for (; mockTimeMs <= 41; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
-		at.Runtime(&logging);
+		bool result = at.Runtime(&logging);
+		assertFalseM("should be false#2_2", result);
 	}
 	assertEqualsM("peakCount@41", 2, at.peakCount);
 //	assertEqualsM("Pu@41", 1, cisnan(at.Pu));
 
 	for (; mockTimeMs <= 60; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
-		at.Runtime(&logging);
+		bool result = at.Runtime(&logging);
+		assertFalseM("should be false#4", result);
 	}
 	assertEqualsM("peakCount@60", 4, at.peakCount);
 	//assertEqualsM("Pu@60", 0.02, at.Pu);
 
 //	zigZagOffset = 10;
 
-	for (; mockTimeMs <= 80; mockTimeMs++) {
+	for (; mockTimeMs <= 69; mockTimeMs++) {
+
 		at.input = zigZagValue(mockTimeMs);
-		at.Runtime(&logging);
+		bool result = at.Runtime(&logging);
+		assertFalseM("should be false#4", result);
 	}
-	assertEqualsM("peakCount@80", 6, at.peakCount);
+
+	at.input = zigZagValue(mockTimeMs);
+	bool result = at.Runtime(&logging);
+	assertEqualsM("should be true", 1, result);
+
+	assertEqualsM("output", 0.0, at.output);
+
+	assertEqualsM("peakCount@80", 5, at.peakCount);
 	assertEqualsM("ki", 27.7798, at.GetKi());
 	assertEqualsM("kd", 0.0, at.GetKd());
 
 	// todo: test the same code with noisy zig-zag function
+}
+
+static void testPidAutoZigZagGrowingOsc() {
+	printf("*************************************************** testPidAutoZigZagGrowingOsc\r\n");
+
+	oscRange = 100;
+	mockTimeMs = 0;
+
+	PID_AutoTune at;
+	at.SetLookbackSec(5);
+	at.sampleTime = 0; // not used in math only used to filter values out
+
+	int startMockMs;
+
+	for (int i =0;i<11;i++) {
+		startMockMs = mockTimeMs;
+		printf("loop=%d %d\r\n", i, startMockMs);
+		for (; mockTimeMs < CYCLE + startMockMs; mockTimeMs++) {
+			at.input = zigZagValue(mockTimeMs);
+			bool result = at.Runtime(&logging);
+			assertFalseM("should be false#4", result);
+		}
+		oscRange *= 1.5;
+	}
+
+	startMockMs = mockTimeMs;
+//	for (; mockTimeMs < CYCLE + startMockMs; mockTimeMs++) {
+//		printf("loop2=%d\r\n", mockTimeMs);
+//		at.input = zigZagValue(mockTimeMs);
+//		bool result = at.Runtime(&logging);
+//		assertFalseM("should be false#5", result);
+//	}
+
+	at.input = zigZagValue(mockTimeMs);
+	bool result = at.Runtime(&logging);
+	assertTrueM("should be true#2", result);
+	assertEqualsM("FAiled", FAILED, at.state);
+
+	assertEqualsM("output Growing", 0.0, at.output);
+
+}
+
+void testPidAutoZigZag() {
+	printf("*************************************************** testPidAutoZigZag\r\n");
+
+	testPidAutoZigZagStable();
+
+	testPidAutoZigZagGrowingOsc();
 }
