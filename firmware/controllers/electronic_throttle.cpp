@@ -122,13 +122,17 @@ static msg_t etbThread(void *arg) {
 
 		if (engine->etbAutoTune) {
 			autoTune.input = actualThrottlePosition;
-			autoTune.Runtime(&logger);
+			bool result = autoTune.Runtime(&logger);
 
 			tuneWorkingPid.updateFactors(autoTune.output, 0, 0);
 
 			float value = tuneWorkingPid.getValue(50, actualThrottlePosition);
 			scheduleMsg(&logger, "output %f value=%f", autoTune.output, value);
 			etbPwmUp.setSimplePwmDutyCycle(value);
+
+			if (result) {
+				scheduleMsg(&logger, "GREAT NEWS!");
+			}
 
 			tuneWorkingPid.sleep();
 			continue;
