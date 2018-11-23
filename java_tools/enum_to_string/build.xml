@@ -6,7 +6,7 @@
 
     <target name="compile">
         <mkdir dir="build/classes"/>
-        <javac destdir="build/classes" classpath="lib/junit.jar:lib/annotations.jar">
+        <javac destdir="build/classes" classpath="../../java_console/lib/junit.jar:lib/annotations.jar">
 		<src path="src"/>
 	</javac>
     </target>
