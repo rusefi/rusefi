@@ -175,11 +175,11 @@ static void testPidAutoZigZagZero() {
 			printf("loop=%d %d\r\n", i, startMockMs);
 			for (; mockTimeMs < CYCLE + startMockMs; mockTimeMs++) {
 				at.input = zigZagValue(mockTimeMs);
-//				bool result = at.Runtime(&logging);
-//				assertFalseM("should be false#4", result);
+				bool result = at.Runtime(&logging);
+				assertFalseM("should be false#4", result);
 			}
-			oscRange *= 1.5;
 		}
+		// nothing happens in this test since we do not allow time play a role
 }
 
 void testPidAutoZigZag() {

@@ -49,6 +49,7 @@ PID_AutoTune::PID_AutoTune() {
 	noiseBand = 0.5;
 	setState(AUTOTUNER_OFF);
 	oStep = 10.0;
+	input = output = 0;
 	SetLookbackSec(10);
 }
 
@@ -112,7 +113,7 @@ void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
 /**
  * returns true when done, otherwise returns false
  */
-bool PID_AutoTune::Runtime(Logging *logging)
+bool PID_AutoTune::Runtime(Logging *logger)
 {
   // check ready for new input
   unsigned long now = currentTimeMillis();
@@ -738,6 +739,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
 #if EFI_UNIT_TEST
 		printf("Happy end AMIGOF_PI!\r\n");
 #endif /* EFI_UNIT_TEST */
+	scheduleMsg(logger, "output %f", output);
     // converged
     return true;
   }
