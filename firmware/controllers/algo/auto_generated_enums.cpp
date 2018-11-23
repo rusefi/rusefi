@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Thu Nov 22 18:48:26 EST 2018
+// on Thu Nov 22 20:05:41 EST 2018
 // see also gen_config_and_enums.bat
 
 
@@ -950,6 +950,8 @@ const char *getPidAutoTune_Peak(PidAutoTune_Peak value){
 switch(value) {
 case MAXIMUM:
   return "MAXIMUM";
+case MINIMUM:
+  return "MINIMUM";
 case NOT_A_PEAK:
   return "NOT_A_PEAK";
   }

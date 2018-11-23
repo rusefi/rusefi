@@ -72,7 +72,7 @@ public class EnumToString {
         reader = new BufferedReader(new FileReader(inFileName));
         String line;
         while ((line = reader.readLine()) != null) {
-            line = line.replaceAll("\\s+", "");
+            line = removeSpaces(line);
 
             if (line.startsWith("typedefenum{")) {
                 System.out.println("Entering enum");
@@ -87,7 +87,7 @@ public class EnumToString {
             } else {
                 line = line.replaceAll("//.+", "");
                 if (isInsideEnum) {
-                    if (line.matches("[a-zA-Z_$][a-zA-Z\\d_$]*[=a-zA-Z\\d_*]*,?")) {
+                    if (isKeyValueLine(line)) {
                         line = line.replace(",", "");
                         int index = line.indexOf('=');
                         if (index != -1)
@@ -98,6 +98,14 @@ public class EnumToString {
                 }
             }
         }
+    }
+
+    static String removeSpaces(String line) {
+        return line.replaceAll("\\s+", "");
+    }
+
+    static boolean isKeyValueLine(String line) {
+        return removeSpaces(line).matches("[a-zA-Z_$][a-zA-Z\\d_$]*[=-a-zA-Z\\d_*]*,?");
     }
 
     private static String makeCode(String enumName) {
