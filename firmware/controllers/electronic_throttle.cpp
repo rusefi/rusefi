@@ -66,6 +66,8 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 static bool shouldResetPid = false;
 
+static pid_s tuneWorkingPidSettings;
+static Pid tuneWorkingPid(&tuneWorkingPidSettings);
 static PID_AutoTune autoTune;
 
 static LoggingWithStorage logger("ETB");
@@ -122,9 +124,13 @@ static msg_t etbThread(void *arg) {
 			autoTune.input = actualThrottlePosition;
 			autoTune.Runtime(&logger);
 
-			etbPwmUp.setSimplePwmDutyCycle(autoTune.output);
+			tuneWorkingPid.updateFactors(autoTune.output, 0, 0);
 
-			pid.sleep();
+			float value = tuneWorkingPid.getValue(50, actualThrottlePosition);
+			scheduleMsg(&logger, "output %f value=%f", autoTune.output, value);
+			etbPwmUp.setSimplePwmDutyCycle(value);
+
+			tuneWorkingPid.sleep();
 			continue;
 		}
 
@@ -289,6 +295,15 @@ void initElectronicThrottle(void) {
 
 	//
 	addConsoleActionF("set_etb", setThrottleDutyCycle);
+
+
+	tuneWorkingPidSettings.pFactor = 1;
+	tuneWorkingPidSettings.iFactor = 0;
+	tuneWorkingPidSettings.dFactor = 0;
+	tuneWorkingPidSettings.offset = 10; // todo: not hard-coded value
+	//todo tuneWorkingPidSettings.period = 10;
+	tuneWorkingPidSettings.minValue = 0;
+	tuneWorkingPidSettings.maxValue = 100;
 
 	// this is useful one you do "enable etb_auto"
 	addConsoleActionF("set_etb_output", setTempOutput);
