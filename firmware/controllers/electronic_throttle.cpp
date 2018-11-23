@@ -116,7 +116,10 @@ static msg_t etbThread(void *arg) {
 			continue;
 		}
 
+		percent_t actualThrottlePosition = getTPS();
+
 		if (engine->etbAutoTune) {
+			autoTune.input = actualThrottlePosition;
 			autoTune.Runtime(&logger);
 
 			etbPwmUp.setSimplePwmDutyCycle(autoTune.output);
@@ -128,7 +131,6 @@ static msg_t etbThread(void *arg) {
 
 		percent_t targetPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-		percent_t actualThrottlePosition = getTPS();
 
 		currentEtbDuty = pid.getValue(targetPosition, actualThrottlePosition);
 
@@ -274,7 +276,7 @@ static void setTempOutput(float value) {
 }
 
 static void setTempStep(float value) {
-	autoTune.oStep = value;
+	autoTune.SetOutputStep(value);
 }
 
 void initElectronicThrottle(void) {
@@ -288,6 +290,7 @@ void initElectronicThrottle(void) {
 	//
 	addConsoleActionF("set_etb", setThrottleDutyCycle);
 
+	// this is useful one you do "enable etb_auto"
 	addConsoleActionF("set_etb_output", setTempOutput);
 	addConsoleActionF("set_etb_step", setTempStep);
 

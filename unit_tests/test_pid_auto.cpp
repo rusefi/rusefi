@@ -45,6 +45,7 @@ static void testPidAutoZigZagStable() {
 
 	PID_AutoTune at;
 	at.SetLookbackSec(5);
+	at.SetControlType(PID_AutoTune::ZIEGLER_NICHOLS_PI);
 	at.sampleTime = 0; // not used in math only used to filter values out
 	assertEqualsM("nLookBack", 20, at.nLookBack);
 
@@ -108,7 +109,7 @@ static void testPidAutoZigZagStable() {
 	bool result = at.Runtime(&logging);
 	assertEqualsM("should be true", 1, result);
 
-	assertEqualsM("output", 0.0, at.output);
+	assertEqualsM("testPidAutoZigZagStable::output", 0.0, at.output);
 
 	assertEqualsM("peakCount@80", 5, at.peakCount);
 	assertEqualsM("ki", 27.7798, at.GetKi());
@@ -157,9 +158,35 @@ static void testPidAutoZigZagGrowingOsc() {
 
 }
 
+static void testPidAutoZigZagZero() {
+	printf("*************************************************** testPidAutoZigZagGrowingOsc\r\n");
+
+	oscRange = 0;
+	mockTimeMs = 0;
+
+	PID_AutoTune at;
+	at.SetLookbackSec(5);
+	at.sampleTime = 0; // not used in math only used to filter values out
+
+	int startMockMs;
+
+		for (int i =0;i<110;i++) {
+			startMockMs = mockTimeMs;
+			printf("loop=%d %d\r\n", i, startMockMs);
+			for (; mockTimeMs < CYCLE + startMockMs; mockTimeMs++) {
+				at.input = zigZagValue(mockTimeMs);
+//				bool result = at.Runtime(&logging);
+//				assertFalseM("should be false#4", result);
+			}
+			oscRange *= 1.5;
+		}
+}
+
 void testPidAutoZigZag() {
 	printf("*************************************************** testPidAutoZigZag\r\n");
 
+
+	testPidAutoZigZagZero();
 	testPidAutoZigZagStable();
 
 	testPidAutoZigZagGrowingOsc();

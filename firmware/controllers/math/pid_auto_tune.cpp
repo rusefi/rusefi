@@ -44,7 +44,7 @@ Tuning tuningRule[PID_AutoTune::NO_OVERSHOOT_PID + 1] =
 PID_AutoTune::PID_AutoTune() {
 	running = false;
 
-	controlType = ZIEGLER_NICHOLS_PI;
+	controlType = ZIEGLER_NICHOLS_PID;
 	noiseBand = 0.5;
 	setState(AUTOTUNER_OFF);
 	oStep = 10.0;
@@ -127,7 +127,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
     lastPeakTime[0] = now;
     workingNoiseBand = noiseBand;
     newWorkingNoiseBand = noiseBand;
-    workingOstep = oStep;
+    workingOutputstep = oStep;
 
 #if defined (AUTOTUNE_RELAY_BIAS)
     relayBias = 0.0;
@@ -293,9 +293,9 @@ bool PID_AutoTune::Runtime(Logging *logging)
   {
 
 #if defined (AUTOTUNE_RELAY_BIAS)
-    output = outputStart + workingOstep + relayBias;
+    setOutput(outputStart + workingOstep + relayBias);
 #else
-    output = outputStart + workingOstep;
+    setOutput(outputStart + workingOutputstep);
 #endif
 
   }
@@ -303,9 +303,9 @@ bool PID_AutoTune::Runtime(Logging *logging)
   {
 
 #if defined (AUTOTUNE_RELAY_BIAS)
-    output = outputStart - workingOstep + relayBias;
+	  setOutput(outputStart - workingOstep + relayBias);
 #else
-    output = outputStart - workingOstep;
+	  setOutput(outputStart - workingOutputstep);
 #endif
 
   }
@@ -425,7 +425,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
       }
       // else state == STEADY_STATE_AFTER_STEP_UP
       // calculate process gain
-      K_process = (avgInput - lastPeaks[0]) / workingOstep;
+      K_process = (avgInput - lastPeaks[0]) / workingOutputstep;
 
 #if defined (AUTOTUNE_DEBUG)
       Serial.print(F("Process gain "));
@@ -639,6 +639,8 @@ bool PID_AutoTune::Runtime(Logging *logging)
     }
   }
 
+  bool tooManyCycles = peakCount >= 20;
+  bool tooLongBetween =  ((now - lastPeakTime[0]) > (unsigned long) (AUTOTUNE_MAX_WAIT_MINUTES * 60000));
   // if the autotune has not already converged
   // terminate after 10 cycles
   // or if too long between peaks
@@ -649,10 +651,13 @@ bool PID_AutoTune::Runtime(Logging *logging)
     ((now - lastStepTime[0]) > (unsigned long) (AUTOTUNE_MAX_WAIT_MINUTES * 60000)) ||
 #endif
 
-    ((now - lastPeakTime[0]) > (unsigned long) (AUTOTUNE_MAX_WAIT_MINUTES * 60000)) ||
-    (peakCount >= 20)
+	tooLongBetween ||
+	tooManyCycles
   )
   {
+#if EFI_UNIT_TEST
+		printf("tooManyCycles=%d tooLongBetween=%d\r\n", tooManyCycles, tooLongBetween);
+#endif /* EFI_UNIT_TEST */
 	  setState(FAILED);
   }
 
@@ -666,7 +671,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
 
   // autotune algorithm has terminated
   // reset autotuner variables
-  output = outputStart;
+  setOutput( outputStart);
 
   if (state == FAILED)
   {
@@ -684,7 +689,7 @@ bool PID_AutoTune::Runtime(Logging *logging)
   // finish up by calculating tuning parameters
 
   // calculate ultimate gain
-  double Ku = 4.0 * workingOstep / (inducedAmplitude * CONST_PI);
+  double Ku = 4.0 * workingOutputstep / (inducedAmplitude * CONST_PI);
 
 #if defined (AUTOTUNE_DEBUG)
   Serial.print(F("ultimate gain "));
@@ -762,4 +767,30 @@ float PID_AutoTune::GetKd()
   return Kp * Td;
 }
 
+void PID_AutoTune::setOutput(float output) {
+	this->output = output;
+#if EFI_UNIT_TEST
+		printf("output=%f\r\n", output);
+#endif /* EFI_UNIT_TEST */
+}
+
+void PID_AutoTune::SetOutputStep(double Step)
+{
+  oStep = Step;
+}
+
+double PID_AutoTune::GetOutputStep()
+{
+  return oStep;
+}
+
+void PID_AutoTune::SetControlType(byte type)
+{
+  controlType = type;
+}
+
+byte PID_AutoTune::GetControlType()
+{
+  return controlType;
+}
 

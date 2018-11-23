@@ -128,10 +128,11 @@ public:
   float GetKi();                       //   computed tuning parameters.
   float GetKd();                       //
 
-  double oStep;
   byte peakCount;
   float input;
   float output;
+
+  void setOutput(float output);
 
 #if EFI_UNIT_TEST
   double absMax;
@@ -147,6 +148,7 @@ public:
   PidAutoTune_AutoTunerState state;            // * state of autotuner finite state machine
 
 private:
+  double oStep;
 
   double processValueOffset(double,     // * returns an estimate of the process value offset
       double);                          //   as a proportion of the amplitude
@@ -165,7 +167,7 @@ private:
   float lastInputs[101];               // * process values, most recent in array element 0
   byte inputCount;
   float workingNoiseBand;
-  float workingOstep;
+  float workingOutputstep;
   float inducedAmplitude;
   float Kp, Ti, Td;
 
