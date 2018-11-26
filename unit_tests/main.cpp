@@ -61,6 +61,7 @@ extern bool printTriggerDebug;
 int main(void) {
 //	printTriggerDebug = true;
 
+	testMisc();
 	testDifferentInjectionModes();
 	testPidAutoZigZag();
 	testMissedSpark299();
@@ -76,7 +77,6 @@ int main(void) {
 	testFasterEngineSpinningUp();
 	testInterpolate2d();
 	testGpsParser();
-	testMisc();
 	testFuelMap();
 	testFuelCut();
 	testEngineMath();
@@ -114,7 +114,7 @@ int main(void) {
 	testTriggerDecoder();
 
 	//	resizeMap();
-	printf("Success 20180120\r\n");
+	printf("Success 20181120\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	return EXIT_SUCCESS;

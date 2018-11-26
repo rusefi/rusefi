@@ -408,6 +408,10 @@ void testMisc(void) {
 
 
 	{
+		float v = atoff("1.0");
+		assertEqualsM("atoff", 1.0, v);
+	}
+	{
 		float v = atoff("nan");
 		assertTrueM("NaN atoff", cisnan(v));
 	}
