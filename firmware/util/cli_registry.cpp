@@ -122,6 +122,10 @@ void addConsoleActionSSSSS(const char *token, VoidCharPtrCharPtrCharPtrCharPtrCh
 	doAddAction(token, STRING5_PARAMETER, (Void) callback, NULL);
 }
 
+void addConsoleActionNANF(const char *token, VoidFloat callback) {
+	doAddAction(token, FLOAT_PARAMETER_NAN_ALLOWED, (Void) callback, NULL);
+}
+
 void addConsoleActionF(const char *token, VoidFloat callback) {
 	doAddAction(token, FLOAT_PARAMETER, (Void) callback, NULL);
 }
@@ -358,6 +362,15 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		}
 		VoidIntInt callbackS = (VoidIntInt) current->callback;
 		(*callbackS)(value1, value2);
+		return;
+	}
+
+	if (current->parameterType == FLOAT_PARAMETER_NAN_ALLOWED) {
+		float value = atoff(parameter);
+		VoidFloat callbackF = (VoidFloat) current->callback;
+
+		// invoke callback function by reference
+		(*callbackF)(value);
 		return;
 	}
 
