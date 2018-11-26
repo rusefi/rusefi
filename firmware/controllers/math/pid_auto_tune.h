@@ -110,6 +110,8 @@ public:
                                         //   returns true when done, otherwise returns false
   void Cancel();                        // * Stops the AutoTune
 
+  void reset();
+
   void SetOutputStep(double);           // * how far above and below the starting value will
                                         //   the output step?
   double GetOutputStep();               //
@@ -128,6 +130,7 @@ public:
   float GetKi();                       //   computed tuning parameters.
   float GetKd();                       //
 
+  Logging *logger;
   byte peakCount;
   float input;
   // suggested P coefficient while auto-tuning

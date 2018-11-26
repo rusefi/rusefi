@@ -94,6 +94,9 @@ static percent_t currentEtbDuty;
 
 static bool wasEtbBraking = false;
 
+// todo: need to fix PWM so that it supports zero duty cycle
+#define PERCENT_TO_DUTY(X) (maxF((minI(X, 99.9)) / 100.0, 0.1))
+
 static msg_t etbThread(void *arg) {
         UNUSED(arg);
 	while (true) {
@@ -127,11 +130,14 @@ static msg_t etbThread(void *arg) {
 			tuneWorkingPid.updateFactors(autoTune.output, 0, 0);
 
 			float value = tuneWorkingPid.getValue(50, actualThrottlePosition);
-			scheduleMsg(&logger, "output %f value=%f", autoTune.output, value);
-			etbPwmUp.setSimplePwmDutyCycle(value);
+			scheduleMsg(&logger, "AT input=%f output=%f PID=%f", autoTune.input,
+					autoTune.output,
+					value);
+			scheduleMsg(&logger, "AT PID=%f", value);
+			etbPwmUp.setSimplePwmDutyCycle(PERCENT_TO_DUTY(value));
 
 			if (result) {
-				scheduleMsg(&logger, "GREAT NEWS!");
+				scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
 			}
 
 			tuneWorkingPid.sleep();
@@ -144,7 +150,7 @@ static msg_t etbThread(void *arg) {
 
 		currentEtbDuty = pid.getValue(targetPosition, actualThrottlePosition);
 
-		etbPwmUp.setSimplePwmDutyCycle(currentEtbDuty / 100);
+		etbPwmUp.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentEtbDuty));
 
 		if (boardConfiguration->etbDirectionPin2 != GPIO_UNASSIGNED) {
 			bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
@@ -169,13 +175,13 @@ static msg_t etbThread(void *arg) {
 }
 
 /**
+ * set_etb X
  * manual duty cycle control without PID. Percent value from 0 to 100
  */
 static void setThrottleDutyCycle(float level) {
 	scheduleMsg(&logger, "setting ETB duty=%f", level);
 
-	float dc = (minI(level, 98)) / 100.0;
-	dc = maxF(dc, 0.00001); // todo: need to fix PWM so that it supports zero duty cycle
+	float dc = PERCENT_TO_DUTY(level);
 	valueOverride = dc;
 	etbPwmUp.setSimplePwmDutyCycle(dc);
 	print("etb duty = %.2f\r\n", dc);
@@ -285,8 +291,17 @@ static void setTempOutput(float value) {
 	autoTune.output = value;
 }
 
-static void setTempStep(float value) {
+/**
+ * set_etbat_step X
+ */
+static void setAutoStep(float value) {
+	autoTune.reset();
 	autoTune.SetOutputStep(value);
+}
+
+static void setAutoPeriod(int period) {
+	tuneWorkingPidSettings.period = period;
+	autoTune.reset();
 }
 
 void initElectronicThrottle(void) {
@@ -294,6 +309,7 @@ void initElectronicThrottle(void) {
 	if (!hasPedalPositionSensor()) {
 		return;
 	}
+	autoTune.SetOutputStep(0.1);
 
 	startETBPins();
 
@@ -304,14 +320,16 @@ void initElectronicThrottle(void) {
 	tuneWorkingPidSettings.pFactor = 1;
 	tuneWorkingPidSettings.iFactor = 0;
 	tuneWorkingPidSettings.dFactor = 0;
-	tuneWorkingPidSettings.offset = 10; // todo: not hard-coded value
+//	tuneWorkingPidSettings.offset = 10; // todo: not hard-coded value
 	//todo tuneWorkingPidSettings.period = 10;
 	tuneWorkingPidSettings.minValue = 0;
 	tuneWorkingPidSettings.maxValue = 100;
+	tuneWorkingPidSettings.period = 100;
 
 	// this is useful one you do "enable etb_auto"
-	addConsoleActionF("set_etb_output", setTempOutput);
-	addConsoleActionF("set_etb_step", setTempStep);
+	addConsoleActionF("set_etbat_output", setTempOutput);
+	addConsoleActionF("set_etbat_step", setAutoStep);
+	addConsoleActionI("set_etbat_period", setAutoPeriod);
 
 	applyPidSettings();
 
