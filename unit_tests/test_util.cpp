@@ -411,6 +411,10 @@ void testMisc(void) {
 		float v = atoff("nan");
 		assertTrueM("NaN atoff", cisnan(v));
 	}
+	{
+		float v = atoff("N");
+		assertTrueM("NaN atoff", cisnan(v));
+	}
 
 //	assertEquals(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
 //	assertEquals(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
