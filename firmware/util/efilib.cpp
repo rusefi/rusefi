@@ -209,7 +209,7 @@ int efiPow10(int param) {
 }
 
 /**
- * string to float. NaN input is not supported
+ * string to float. NaN input is supported
  *
  * @return NAN in case of invalid string
  * todo: explicit value for error code? probably not, NaN is only returned in case of an error
@@ -220,9 +220,13 @@ float atoff(const char *param) {
 		return (float) NAN;
 	strcpy(todofixthismesswithcopy, param);
 	char *string = todofixthismesswithcopy;
+	if (indexOf(string, 'n') != -1 || indexOf(string, 'N') != -1) {
+		printf("NAN from [%s]\r\n", string);
+		return (float) NAN;
+	}
 
 	// todo: is there a standard function?
-	// todo: create a unit test
+	// unit-tested by 'testMisc()'
 	int dotIndex = indexOf(string, '.');
 	if (dotIndex == -1) {
 		// just an integer
