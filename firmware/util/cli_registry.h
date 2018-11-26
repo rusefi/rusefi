@@ -17,6 +17,7 @@ typedef enum {
 	NO_PARAMETER_P,
 	ONE_PARAMETER,
 	ONE_PARAMETER_P,
+	FLOAT_PARAMETER_NAN_ALLOWED,
 	FLOAT_PARAMETER,
 	FLOAT_PARAMETER_P,
 	STRING_PARAMETER,
@@ -64,6 +65,7 @@ void addConsoleActionII(const char *token, VoidIntInt callback);
 void addConsoleActionIIP(const char *token, VoidIntIntVoidPtr callback, void *param);
 
 void addConsoleActionF(const char *token, VoidFloat callback);
+void addConsoleActionNANF(const char *token, VoidFloat callback);
 
 void addConsoleActionFF(const char *token, VoidFloatFloat callback);
 void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param);
