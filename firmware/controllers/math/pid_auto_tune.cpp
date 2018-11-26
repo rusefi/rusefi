@@ -43,14 +43,28 @@ Tuning tuningRule[PID_AutoTune::NO_OVERSHOOT_PID + 1] =
 };
 
 PID_AutoTune::PID_AutoTune() {
+	reset();
+}
+
+void PID_AutoTune::Cancel()
+{
+  state = AUTOTUNER_OFF;
+}
+
+void PID_AutoTune::reset() {
 	running = false;
 
 	controlType = ZIEGLER_NICHOLS_PID;
 	noiseBand = 0.5;
 	setState(AUTOTUNER_OFF);
 	oStep = 10.0;
+	memset(lastPeaks, 0, sizeof(lastPeaks));
+	memset(lastInputs, 0, sizeof(lastInputs));
+
+	logger = NULL;
 	input = output = 0;
 	SetLookbackSec(10);
+
 }
 
 void PID_AutoTune::SetLookbackSec(int value)
@@ -115,6 +129,8 @@ void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
  */
 bool PID_AutoTune::Runtime(Logging *logger)
 {
+
+	this->logger = logger; // a bit lazy but good enough
   // check ready for new input
   unsigned long now = currentTimeMillis();
 
@@ -772,6 +788,11 @@ float PID_AutoTune::GetKd()
 
 void PID_AutoTune::setOutput(float output) {
 	this->output = output;
+
+	if (logger != NULL) {
+		scheduleMsg(logger, "setOutput %f %s", output, getPidAutoTune_AutoTunerState(state));
+	}
+
 #if EFI_UNIT_TEST
 		printf("output=%f\r\n", output);
 #endif /* EFI_UNIT_TEST */
