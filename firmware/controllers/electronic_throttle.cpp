@@ -308,6 +308,11 @@ static void setAutoPeriod(int period) {
 	autoTune.reset();
 }
 
+static void setAutoOffset(int offset) {
+	tuneWorkingPidSettings.offset = offset;
+	autoTune.reset();
+}
+
 void initElectronicThrottle(void) {
 	addConsoleAction("ethinfo", showEthInfo);
 	if (!hasPedalPositionSensor()) {
@@ -334,6 +339,7 @@ void initElectronicThrottle(void) {
 	addConsoleActionF("set_etbat_output", setTempOutput);
 	addConsoleActionF("set_etbat_step", setAutoStep);
 	addConsoleActionI("set_etbat_period", setAutoPeriod);
+	addConsoleActionI("set_etbat_offset", setAutoOffset);
 
 	applyPidSettings();
 

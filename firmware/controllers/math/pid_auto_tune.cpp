@@ -55,7 +55,7 @@ void PID_AutoTune::reset() {
 
 	controlType = ZIEGLER_NICHOLS_PID;
 	noiseBand = 0.5;
-	setState(AUTOTUNER_OFF);
+	state = AUTOTUNER_OFF; // cannot invoke setter here since logger is not initialized yet
 	oStep = 10.0;
 	memset(lastPeaks, 0, sizeof(lastPeaks));
 	memset(lastInputs, 0, sizeof(lastInputs));
@@ -111,6 +111,7 @@ double PID_AutoTune::calculatePhaseLag(double inducedAmplitude)
 
 void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
 	this->state = state;
+	scheduleMsg(logger, "setState %s", getPidAutoTune_AutoTunerState(state));
 #if EFI_UNIT_TEST
 		printf("setState %s\r\n", getPidAutoTune_AutoTunerState(state));
 #endif /* EFI_UNIT_TEST */
@@ -118,6 +119,7 @@ void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
 
 void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
 	this->peakType = peakType;
+	scheduleMsg(logger, "setPeakType %s", getPidAutoTune_Peak(peakType));
 #if EFI_UNIT_TEST
 		printf("peakType %s\r\n", getPidAutoTune_Peak(peakType));
 #endif /* EFI_UNIT_TEST */
@@ -356,6 +358,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
   if (inputCount <= nLookBack)
   {
     lastInputs[nLookBack - inputCount] = refVal;
+	  scheduleMsg(logger, "AT need more data %d %d", inputCount, nLookBack);
 #if EFI_UNIT_TEST
 		printf("need more data %d %d\r\n", inputCount, nLookBack);
 #endif /* EFI_UNIT_TEST */
@@ -380,6 +383,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
     lastInputs[i + 1] = val;
   }
   lastInputs[0] = refVal;
+  scheduleMsg(logger, "isMin=%d isMax=%d", isMin, isMax);
 
   // for AMIGOf tuning rule, perform an initial
   // step change to calculate process gain K_process
@@ -514,6 +518,8 @@ bool PID_AutoTune::Runtime(Logging *logger)
   if (justChanged)
   {
     peakCount++;
+    scheduleMsg(logger, "peakCount=%d", peakCount);
+
 
 #if defined (AUTOTUNE_DEBUG)
     Serial.println(F("peakCount "));
