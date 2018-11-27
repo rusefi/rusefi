@@ -213,25 +213,27 @@ static void showEthInfo(void) {
 	pid.showPidStatus(&logger, "ETB");
 }
 
-static void applyPidSettings(void) {
-	pid.updateFactors(engineConfiguration->etb.pFactor, engineConfiguration->etb.iFactor, 0);
-}
-
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
-	applyPidSettings();
+	pid.reset();
 	showEthInfo();
 }
 
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
-	applyPidSettings();
+	pid.reset();
 	showEthInfo();
 }
 
 void setEtbDFactor(float value) {
 	engineConfiguration->etb.dFactor = value;
-	applyPidSettings();
+	pid.reset();
+	showEthInfo();
+}
+
+void setEtbOffset(int value) {
+	engineConfiguration->etb.offset = value;
+	pid.reset();
 	showEthInfo();
 }
 
@@ -341,7 +343,7 @@ void initElectronicThrottle(void) {
 	addConsoleActionI("set_etbat_period", setAutoPeriod);
 	addConsoleActionI("set_etbat_offset", setAutoOffset);
 
-	applyPidSettings();
+	pid.reset();
 
 	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t) etbThread, NULL);
 }
