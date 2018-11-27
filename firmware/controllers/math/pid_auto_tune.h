@@ -159,8 +159,6 @@ private:
 
   double setpoint;
 
-  bool running; // todo: remove this
-
   double noiseBand;
   byte controlType;                     // * selects autotune algorithm
 
