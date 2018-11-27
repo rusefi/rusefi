@@ -52,7 +52,6 @@ void PID_AutoTune::Cancel()
 }
 
 void PID_AutoTune::reset() {
-	running = false;
 
 	controlType = ZIEGLER_NICHOLS_PID;
 	noiseBand = 0.5;
@@ -161,6 +160,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
     }
     else
     {
+    	scheduleMsg(logger, "starting...");
     	setState(RELAY_STEP_UP);
     }
   }
@@ -171,6 +171,8 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #if EFI_UNIT_TEST
 		printf("too soon for new input %d %d %d\r\n", now, lastTime, sampleTime);
 #endif /* EFI_UNIT_TEST */
+	scheduleMsg(logger, "AT skipping now=%d %d %d", now, lastTime, sampleTime);
+
     return false;
   }
 
@@ -189,11 +191,13 @@ bool PID_AutoTune::Runtime(Logging *logger)
   // check input and change relay state if necessary
   if ((state == RELAY_STEP_UP) && (refVal > setpoint + workingNoiseBand))
   {
+	  scheduleMsg(logger, "noise crossed up %f s=%f n=%f", refVal, setpoint, workingNoiseBand);
 	  setState(RELAY_STEP_DOWN);
     justChanged = true;
   }
   else if ((state == RELAY_STEP_DOWN) && (refVal < setpoint - workingNoiseBand))
   {
+	  scheduleMsg(logger, "noise crossed down %f s=%f n=%f", refVal, setpoint, workingNoiseBand);
 	  setState(RELAY_STEP_UP);
     justChanged = true;
   }
@@ -216,7 +220,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #if defined (AUTOTUNE_DEBUG)
         Serial.print(F("asymmetry "));
         Serial.println(asymmetry);
-#endif
+#endif /* AUTOTUNE_DEBUG */
 
 #if EFI_UNIT_TEST
 		printf("asymmetry=%f\r\n", asymmetry);
@@ -264,7 +268,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
             Serial.println(deltaRelayBias);
             Serial.print(F("relayBias "));
             Serial.println(relayBias);
-#endif
+#endif /* AUTOTUNE_DEBUG */
 
 #if EFI_UNIT_TEST
 		printf("deltaRelayBias=%f relayBias=%f\r\n", deltaRelayBias, relayBias);
@@ -289,7 +293,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
     lastStepTime[0] = now;
     sumInputSinceLastStep[0] = 0.0;
 
-#if defined (AUTOTUNE_DEBUG
+#if defined (AUTOTUNE_DEBUG)
     for (byte i = 1; i < (stepCount > 4 ? 5 : stepCount); i++)
     {
       Serial.print(F("step time "));
@@ -297,7 +301,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
       Serial.print(F("step sum "));
       Serial.println(sumInputSinceLastStep[i]);
     }
-#endif
+#endif /* AUTOTUNE_DEBUG */
 
 #endif // if defined AUTOTUNE_RELAY_BIAS
 
@@ -313,6 +317,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #if defined (AUTOTUNE_RELAY_BIAS)
     setOutput(outputStart + workingOstep + relayBias);
 #else
+	  scheduleMsg(logger, "AT adding %f", workingOutputstep);
     setOutput(outputStart + workingOutputstep);
 #endif
 
@@ -323,6 +328,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #if defined (AUTOTUNE_RELAY_BIAS)
 	  setOutput(outputStart - workingOstep + relayBias);
 #else
+	  scheduleMsg(logger, "AT subtracting %f", workingOutputstep);
 	  setOutput(outputStart - workingOutputstep);
 #endif
 
@@ -689,6 +695,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 
   // autotune algorithm has terminated
   // reset autotuner variables
+  scheduleMsg(logger, "AT done");
   setOutput( outputStart);
 
   if (state == FAILED)
@@ -789,9 +796,7 @@ float PID_AutoTune::GetKd()
 void PID_AutoTune::setOutput(float output) {
 	this->output = output;
 
-	if (logger != NULL) {
-		scheduleMsg(logger, "setOutput %f %s", output, getPidAutoTune_AutoTunerState(state));
-	}
+	scheduleMsg(logger, "setOutput %f %s", output, getPidAutoTune_AutoTunerState(state));
 
 #if EFI_UNIT_TEST
 		printf("output=%f\r\n", output);
