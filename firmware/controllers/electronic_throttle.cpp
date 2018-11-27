@@ -180,6 +180,10 @@ static msg_t etbThread(void *arg) {
  */
 static void setThrottleDutyCycle(float level) {
 	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
+	if (cisnan(level)) {
+		valueOverride = NAN;
+		return;
+	}
 
 	float dc = PERCENT_TO_DUTY(level);
 	valueOverride = dc;
@@ -314,7 +318,7 @@ void initElectronicThrottle(void) {
 	startETBPins();
 
 	//
-	addConsoleActionF("set_etb", setThrottleDutyCycle);
+	addConsoleActionNANF("set_etb", setThrottleDutyCycle);
 
 
 	tuneWorkingPidSettings.pFactor = 1;

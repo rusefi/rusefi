@@ -52,6 +52,10 @@ void PwmConfig::init(float *st, single_wave_s *waves) {
  * @param dutyCycle value between 0 and 1
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
+	if (cisnan(dutyCycle)) {
+		warning(CUSTOM_ERR_6691, "spwd:dutyCycle %.2f", dutyCycle);
+		return;
+	}
 	if (dutyCycle < 0 || dutyCycle > 1) {
 		warning(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
