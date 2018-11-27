@@ -95,7 +95,7 @@ static percent_t currentEtbDuty;
 static bool wasEtbBraking = false;
 
 // todo: need to fix PWM so that it supports zero duty cycle
-#define PERCENT_TO_DUTY(X) (maxF((minI(X, 99.9)) / 100.0, 0.1))
+#define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), 0.1) / 100.0)
 
 static msg_t etbThread(void *arg) {
         UNUSED(arg);
@@ -179,12 +179,12 @@ static msg_t etbThread(void *arg) {
  * manual duty cycle control without PID. Percent value from 0 to 100
  */
 static void setThrottleDutyCycle(float level) {
-	scheduleMsg(&logger, "setting ETB duty=%f", level);
+	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
 
 	float dc = PERCENT_TO_DUTY(level);
 	valueOverride = dc;
 	etbPwmUp.setSimplePwmDutyCycle(dc);
-	print("etb duty = %.2f\r\n", dc);
+	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
 
 static void showEthInfo(void) {
