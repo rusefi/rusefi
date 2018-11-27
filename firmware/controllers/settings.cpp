@@ -1165,11 +1165,14 @@ command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
 		{"idle_d", setIdleDFactor},
+#endif /* EFI_IDLE_CONTROL */
+#endif /* EFI_PROD_CODE */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},
-#endif /* EFI_IDLE_CONTROL */
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 		//		{"", },
 //		{"", },
@@ -1223,6 +1226,11 @@ command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_dt", setIdleDT},
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+		{"etb_o", setEtbOffset},
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
 		//		{"", },
 		//		{"", },
 		//		{"", },

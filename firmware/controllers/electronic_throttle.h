@@ -14,6 +14,7 @@ void setDefaultEtbParameters(void);
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
 void setEtbDFactor(float value);
+void setEtbOffset(int value);
 bool isETBRestartNeeded(void);
 void stopETBPins(void);
 void startETBPins(void);
