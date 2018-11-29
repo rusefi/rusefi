@@ -318,6 +318,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
+	boardConfiguration->etbControlPin1 = GPIOC_7;
 
 	// set_whole_ve_map 80
 
