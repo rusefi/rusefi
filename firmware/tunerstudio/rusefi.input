@@ -1376,7 +1376,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "aux1 Bias Resistor Value",       		auxTempSensor1_bias_resistor
 		field = "aux2 TempSensor ADC input",			auxTempSensor2_adcChannel
 		field = "aux2 Bias Resistor Value",    	   		auxTempSensor2_bias_resistor
-		field = "Accelerator position sensor", 			pedalPositionChannel
+		field = "Accelerator position sensor", 			pedalPositionAdcChannel
 		field = "Oil Pressure ADC input",				oilPressure_hwChannel
 		field = "fuelLevelSensor", 						fuelLevelSensor
 		field = "Baro ADC input", 						baroSensor_hwChannel
@@ -1424,7 +1424,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "fuelLevelSensor", 						fuelLevelSensor
 		field = "Baro ADC input", 						baroSensor_hwChannel
-		field = "Throttle pedal Position Channel", 		pedalPositionChannel
+		field = "Throttle pedal Position Channel", 		pedalPositionAdcChannel
 		field = "Primary input channel", 				triggerInputPins1
 		field = "Secondary channel", 					triggerInputPins2
 		field = "Cam Sync/VVT input",					camInput
@@ -2157,18 +2157,18 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		field = "verbose",								isVerboseETB
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
-		field = "PWM Frequency",						etbFreq, {pedalPositionChannel != 16}
-		field = "Dir #1",								etbDirectionPin1, {pedalPositionChannel != 16}
-		field = "Dir #2",								etbDirectionPin2, {pedalPositionChannel != 16}
-		field = "Control #1",							etbControlPin1, {pedalPositionChannel != 16}
-		field = "Control #2",							etbControlPin2, {pedalPositionChannel != 16}
-		field = "pFactor",								etb_pFactor, {pedalPositionChannel != 16}
-		field = "iFactor",								etb_iFactor, {pedalPositionChannel != 16}
-		field = "dFactor",								etb_dFactor, {pedalPositionChannel != 16}	
-		field = "offset",								etb_offset, {pedalPositionChannel != 16}
-		field = "control period",						etb_period, {pedalPositionChannel != 16}
-		field = "pid min",								etb_minValue, {pedalPositionChannel != 16}	
-		field = "pid max",								etb_maxValue, {pedalPositionChannel != 16}	
+		field = "PWM Frequency",						etbFreq, {pedalPositionAdcChannel != 16}
+		field = "Dir #1",								etbDirectionPin1, {pedalPositionAdcChannel != 16}
+		field = "Dir #2",								etbDirectionPin2, {pedalPositionAdcChannel != 16}
+		field = "Control #1",							etbControlPin1, {pedalPositionAdcChannel != 16}
+		field = "Control #2",							etbControlPin2, {pedalPositionAdcChannel != 16}
+		field = "pFactor",								etb_pFactor, {pedalPositionAdcChannel != 16}
+		field = "iFactor",								etb_iFactor, {pedalPositionAdcChannel != 16}
+		field = "dFactor",								etb_dFactor, {pedalPositionAdcChannel != 16}	
+		field = "offset",								etb_offset, {pedalPositionAdcChannel != 16}
+		field = "control period",						etb_period, {pedalPositionAdcChannel != 16}
+		field = "pid min",								etb_minValue, {pedalPositionAdcChannel != 16}	
+		field = "pid max",								etb_maxValue, {pedalPositionAdcChannel != 16}	
 				
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1
