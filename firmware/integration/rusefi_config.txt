@@ -383,7 +383,7 @@ log_format_e logFormat;
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 	
-	adc_channel_e tpsAdcChannel;
+	adc_channel_e tpsAdcChannel;See aslo pedalPositionAdcChannel
 	int overrideCrankingIgnition;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
 
@@ -428,7 +428,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e pedalPositionChannel;
+adc_channel_e pedalPositionAdcChannel;Electronic pedal position input\nSee also tpsAdcChannel
 	
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
 
