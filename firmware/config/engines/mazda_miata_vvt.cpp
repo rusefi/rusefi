@@ -325,6 +325,12 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//engineConfiguration->pedalPositionAdcChannel = EFI_ADC_2; // PA2
 	// engineConfiguration->tpsAdcChannel = EFI_ADC_13; // PC3
 
+	// 0.5; //volts
+	// 2.65; // volts
+
+	// 94;
+	// 591;
+
 	// set_whole_ve_map 80
 
 	memcpy(config->veRpmBins, ve18vvtRpmBins, sizeof(ve18vvtRpmBins));
