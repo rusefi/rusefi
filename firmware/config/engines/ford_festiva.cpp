@@ -123,7 +123,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
-	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5
+	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10
 	boardConfiguration->manIdlePosition = 10;

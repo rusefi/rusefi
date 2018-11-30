@@ -293,7 +293,7 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;

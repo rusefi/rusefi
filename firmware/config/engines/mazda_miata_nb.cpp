@@ -44,7 +44,7 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->clt.adcChannel = EFI_ADC_11;
 	engineConfiguration->iat.adcChannel = EFI_ADC_13;
-	engineConfiguration->afr.hwChannel = EFI_ADC_2;
+	engineConfiguration->afr.hwChannel = EFI_ADC_2; // PA2
 
 	boardConfiguration->idle.solenoidPin = GPIOE_0;
 	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
