@@ -278,8 +278,8 @@ bit issue_294_28;
 bit issue_294_29;
 
 
-int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors;"ADC",      1,     0,    0, 1023,      0
-int16_t tpsMax;Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tpsAdcChannel;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMax;Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tpsAdcChannel;"ADC",      1,     0,    0, 1023,      0
 
 int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
 int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
