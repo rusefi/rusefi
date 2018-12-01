@@ -63,7 +63,7 @@ int main(void) {
 
 	testMisc();
 	testDifferentInjectionModes();
-	testPidAutoZigZag();
+	testPidAuto();
 	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();

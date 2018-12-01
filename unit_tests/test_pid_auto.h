@@ -8,6 +8,6 @@
 #ifndef TEST_PID_AUTO_H_
 #define TEST_PID_AUTO_H_
 
-void testPidAutoZigZag();
+void testPidAuto();
 
 #endif /* TEST_PID_AUTO_H_ */

@@ -158,10 +158,9 @@ static void testPidAutoZigZagGrowingOsc() {
 
 }
 
-static void testPidAutoZigZagZero() {
+static void testPidZeroLine() {
 	printf("*************************************************** testPidAutoZigZagGrowingOsc\r\n");
 
-	oscRange = 0;
 	mockTimeMs = 0;
 
 	PID_AutoTune at;
@@ -174,7 +173,7 @@ static void testPidAutoZigZagZero() {
 			startMockMs = mockTimeMs;
 			printf("loop=%d %d\r\n", i, startMockMs);
 			for (; mockTimeMs < CYCLE + startMockMs; mockTimeMs++) {
-				at.input = zigZagValue(mockTimeMs);
+				at.input = 0;
 				bool result = at.Runtime(&logging);
 				assertFalseM("should be false#4", result);
 			}
@@ -182,11 +181,11 @@ static void testPidAutoZigZagZero() {
 		// nothing happens in this test since we do not allow time play a role
 }
 
-void testPidAutoZigZag() {
-	printf("*************************************************** testPidAutoZigZag\r\n");
+void testPidAuto() {
+	printf("*************************************************** testPidAuto\r\n");
 
 
-	testPidAutoZigZagZero();
+	testPidZeroLine();
 	testPidAutoZigZagStable();
 
 	testPidAutoZigZagGrowingOsc();
