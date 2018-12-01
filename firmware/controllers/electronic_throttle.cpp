@@ -29,6 +29,10 @@
  * ethinfo
  * set mock_pedal_position X
  *
+ *
+ * set debug_mode 17
+ * for PID outputs
+ *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
  * @date Dec 7, 2013
@@ -100,12 +104,14 @@ static bool wasEtbBraking = false;
 static msg_t etbThread(void *arg) {
         UNUSED(arg);
 	while (true) {
+		// set debug_mode 17
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			pid.postState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+			// set debug_mode 29
 			tsOutputChannels.debugFloatField1 = valueOverride;
 #endif /* EFI_TUNER_STUDIO */
 		}
@@ -324,7 +330,7 @@ void initElectronicThrottle(void) {
 
 	startETBPins();
 
-	//
+	// manual duty cycle control without PID. Percent value from 0 to 100
 	addConsoleActionNANF("set_etb", setThrottleDutyCycle);
 
 
