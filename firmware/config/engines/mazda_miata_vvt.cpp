@@ -331,6 +331,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// 94;
 	// 591;
 
+	// pid: 1/0/0
+	// pid: 0.8 / 0.02 / 0.002
+
+
 	// set_whole_ve_map 80
 
 	memcpy(config->veRpmBins, ve18vvtRpmBins, sizeof(ve18vvtRpmBins));
