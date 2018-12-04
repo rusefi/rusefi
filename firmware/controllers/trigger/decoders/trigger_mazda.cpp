@@ -57,30 +57,29 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX
 void initialize_Mazda_Engine_z5_Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	/**
-	 * My Signal is:      60,      60,      102,     60
-	 *               120,     120,     120,      78,
+	 * My Signal is:      70,      70,      100,     70
+	 *               110,     110,     110,      80,
 	 *                                              ^  
 	 *                                              |
-	 *                                              sync point = 0 degree from now on 
-	 * All rising edges are 60 befor some OT.
-	 * If the edge goes high, it should look at the last past 2 events. (high-low-now)
-	 * time1/time2 == 78/102 = 13/17 then triggerevent '0' would be nice.
+	 *                                              60 or 70 deg from here: 1 and 3 are at top 
+	 * All rising edges are probably 60 or 70 degree befor some TDC.
 	 * 
 	 */
 	s->useRiseEdge = false;
-	s->tdcPosition = 0; // 1 and 3 are at top , so 0 or 360
-	s->setTriggerSynchronizationGap(0.7);
+	s->tdcPosition = 0;  // 0 or 360 maybe right
+	s->setTriggerSynchronizationGap(0.71);
+	s->setSecondTriggerSynchronizationGap2(0.75*1.17, 1.25*1.17);
 
-	s->addEvent2(60.0f,   T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(70.0f,   T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(180.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
-	s->addEvent2(240.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(250.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(360.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
-	s->addEvent2(420.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(430.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(540.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 
-	s->addEvent2(618.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(640.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	s->addEvent2(720.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
