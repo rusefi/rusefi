@@ -66,10 +66,6 @@ void testFindIndex(void) {
 	}
 }
 
-//static float getValue2(float key, float maf) {
-//
-//}
-
 void testInterpolate2d(void) {
 	printf("*************************************************** testInterpolate2d\r\n");
 
@@ -100,7 +96,6 @@ void testSetTableValue(void) {
 	printf("*************************************************** testSetTableValue\r\n");
 
 	persistent_config_s config;
-//	memset()
 
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
 		config.cltFuelCorrBins[i] = -40 + i * 10;
