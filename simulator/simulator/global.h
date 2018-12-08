@@ -17,7 +17,6 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include <float.h>
 
 #include "common_headers.h"
 
