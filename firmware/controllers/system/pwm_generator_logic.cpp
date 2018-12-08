@@ -201,6 +201,10 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 	}
 }
 
+/**
+ * this method also starts the timer cycle
+ * See also startSimplePwm
+ */
 void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTimes, int waveCount,
 		pin_state_t **pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 
@@ -232,6 +236,7 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 }
 
 void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+	efiAssertVoid(CUSTOM_ERR_6692, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_6665, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
