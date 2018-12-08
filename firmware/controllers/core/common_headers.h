@@ -16,7 +16,6 @@
 
 #include "error_handling.h"
 #include "auto_generated_enums.h"
-#include "rusefi_enums.h"
 #include "efilib.h"
 #include "efitime.h"
 
