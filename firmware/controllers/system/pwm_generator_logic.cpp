@@ -199,6 +199,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 			state->multiWave.waves[waveIndex].pinStates[phaseIndex] = pinStates[waveIndex][phaseIndex];
 		}
 	}
+	state->multiWave.checkSwitchTimes(phaseCount);
 }
 
 /**
@@ -218,7 +219,6 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 		return;
 	}
 	efiAssertVoid(CUSTOM_ERR_6583, waveCount > 0, "waveCount should be positive");
-	checkSwitchTimes2(phaseCount, switchTimes);
 
 	this->pwmCycleCallback = pwmCycleCallback;
 	this->stateChangeCallback = stateChangeCallback;

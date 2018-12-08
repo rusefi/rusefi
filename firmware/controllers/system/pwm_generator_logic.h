@@ -59,7 +59,7 @@ public:
 
 
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
-	multi_wave_s multiWave;
+	MultiWave multiWave;
 	efitimeus_t togglePwmState();
 
 	int dbgNestingLevel;
