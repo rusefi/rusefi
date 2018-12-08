@@ -147,7 +147,7 @@ public:
 	int triggerSignals[PWM_PHASE_MAX_COUNT];
 #endif
 
-	multi_wave_s wave;
+	MultiWave wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// tood: maybe even automate this flag calculation?

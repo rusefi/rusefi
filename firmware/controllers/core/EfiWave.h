@@ -34,11 +34,11 @@ public:
 
 class TriggerShape;
 
-class multi_wave_s {
+class MultiWave {
 public:
 	void baseConstructor();
-	multi_wave_s();
-	multi_wave_s(float *st, single_wave_s *waves);
+	MultiWave();
+	MultiWave(float *st, single_wave_s *waves);
 	void init(float *st, single_wave_s *waves);
 	void reset(void);
 	float getSwitchTime(int phaseIndex) const;
@@ -61,7 +61,5 @@ public:
 	 */
 	float *switchTimes;
 };
-
-void checkSwitchTimes2(int size, float *switchTimes);
 
 #endif /* EFI_WAVE_H_ */

@@ -397,10 +397,6 @@ angle_t TriggerShape::getSwitchAngle(int index) const {
 	return getCycleDuration() * wave.getSwitchTime(index);
 }
 
-void multi_wave_s::checkSwitchTimes(int size) {
-	checkSwitchTimes2(size, switchTimes);
-}
-
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
