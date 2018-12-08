@@ -57,31 +57,56 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX
 void initialize_Mazda_Engine_z5_Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	/**
-	 * My Signal is:      60,      60,      102,     60
-	 *               120,     120,     120,      78,
+	 * This trigger i tested on real engine.
+	 * It seems working.
+	 * Sometimes during cranking there were some trigger warnings.
+	 * The engine has a distributor for ignition. 
+	 *
+	 * My Signal is:      70,      70,      80,     70
+	 *               110,     110,     110,     100,
 	 *                                              ^  
 	 *                                              |
-	 *                                              sync point = 0 degree from now on 
-	 * All rising edges are 60 befor some OT.
-	 * If the edge goes high, it should look at the last past 2 events. (high-low-now)
-	 * time1/time2 == 78/102 = 13/17 then triggerevent '0' would be nice.
+	 *                                              60 or 70 deg from here: 1 and 3 are at top 
+	 * All rising edges are probably 60 or 70 degree befor some TDC.
 	 * 
 	 */
-	s->useRiseEdge = false;
-	s->tdcPosition = 0; // 1 and 3 are at top , so 0 or 360
-	s->setTriggerSynchronizationGap(0.7);
+	s->tdcPosition = 70;  // 70 or 430 maybe right
+        /*
+	  Without the sync anomaly the trigger would be 0.64 , 1.57 and so on ...
+	 I choosed the values mostly by multiplying 0.75 or 1.25 like the default.
+	 If two values have to be distinguished, means rusefi has to decide for one of them,
+	 i choosed the middle.
 
-	s->addEvent2(60.0f,   T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(180.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+        0:  1.25     ->  1.00  -  1.40   
+        1:  0.73     ->  0.55  -  0.99    
+        2:  1.57     ->  1.41  -  2.0
+        3:  0.64     ->  0.45  -  1.10
+        4:  1.57    
+        5:  0.64
+        6:  1.57
+        7:  0.70
 
-	s->addEvent2(240.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(360.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	*/
 
-	s->addEvent2(420.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(540.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+        s->setTriggerSynchronizationGap3(0, 1.00 , 1.40);
+        s->setTriggerSynchronizationGap3(1, 0.55 , 0.99);
+        s->setTriggerSynchronizationGap3(2, 1.41 , 2.00);
+        s->setTriggerSynchronizationGap3(3, 0.45 , 1.10);
+	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
+        s->gapBothDirections = true;
 
-	s->addEvent2(618.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(70.0,   T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(180.0,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(250.0,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(360.0,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(430.0,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(540.0,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	s->addEvent2(620.0,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(720.0,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 // TT_MIATA_VVT
