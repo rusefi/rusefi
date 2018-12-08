@@ -8,7 +8,6 @@
 #ifndef EFILIB2_H_
 #define EFILIB2_H_
 
-#include <stdint.h>
 #include "global.h"
 
 typedef struct {

@@ -12,7 +12,6 @@
 
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
 
-#include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
 

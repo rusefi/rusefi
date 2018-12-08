@@ -15,7 +15,6 @@ extern "C"
 
 #include "global.h"
 #include "obd_error_codes.h"
-#include "stdbool.h"
 #include "rusefi_types.h"
 
 void addWarningCode(obd_code_e code);

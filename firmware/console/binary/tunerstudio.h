@@ -15,8 +15,6 @@
 #include "tunerstudio_configuration.h"
 #include "engine.h"
 
-#include <stdint.h>
-
 typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
