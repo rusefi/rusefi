@@ -8,6 +8,11 @@ PROJECT_DIR = ../firmware
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
+# looks like as of Dec 2018 we are producing 32 bit unit tests
+# Cygwin64 would have 64 bit GDB which would not debug 32 bit unit tests, so one
+# would have to download 32 bit version of GDB maybe from http://www.equation.com/servlet/equation.cmd?fa=gdb
+# TODO: start producing 64 bit binaries?
+#
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
   USE_OPT = -c -Wall -O0 -ggdb -g3
