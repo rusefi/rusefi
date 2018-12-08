@@ -55,8 +55,6 @@ void print(const char *fmt, ...);
 typedef int bool_t;
 
 #define EFI_ERROR_CODE 0xffffffff
-#define TRUE 1
-#define FALSE 0
 
 #define CCM_OPTIONAL
 
