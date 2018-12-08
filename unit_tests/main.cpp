@@ -99,6 +99,7 @@ int main(void) {
 	testFLStack();
 
 	testSignalExecutor();
+	testPwmGenerator();
 
 
 	/**

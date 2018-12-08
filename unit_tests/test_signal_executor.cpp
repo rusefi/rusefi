@@ -14,6 +14,7 @@
 #include "utlist.h"
 #include "event_queue.h"
 #include "unit_test_framework.h"
+#include "pwm_generator_logic.h"
 
 EventQueue schedulingQueue;
 
@@ -111,6 +112,27 @@ static void testSignalExecutor3(void) {
 	eq.insertTask(&s3, 12, orderCallback, (void*)3);
 
 	eq.executeAll(100);
+}
+
+void testApplyPinState(PwmConfig *state, int stateIndex) {
+
+}
+
+void testPwmGenerator() {
+	print("*************************************** testPwmGenerator\r\n");
+
+	PwmConfig pwm;
+
+	OutputPin pin;
+
+	//pwm.setFrequency(600);
+
+//	startSimplePwm(&pwm, "unit_test",
+//			&pin,
+//			600 /* frequency */,
+//			0.80 /* duty cycle */,
+//			&testApplyPinState);
+
 }
 
 void testSignalExecutor(void) {
