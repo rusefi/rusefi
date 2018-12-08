@@ -141,34 +141,6 @@ int TriggerShape::getTriggerShapeSynchPointIndex() {
 	return triggerShapeSynchPointIndex;
 }
 
-int multi_wave_s::getChannelState(int channelIndex, int phaseIndex) const {
-	return waves[channelIndex].pinStates[phaseIndex];
-}
-
-/**
- * returns the index at which given value would need to be inserted into sorted array
- */
-int multi_wave_s::findInsertionAngle(float angle, int size) const {
-	for (int i = size - 1; i >= 0; i--) {
-		if (angle > switchTimes[i])
-			return i + 1;
-	}
-	return 0;
-}
-
-int multi_wave_s::findAngleMatch(float angle, int size) const {
-	for (int i = 0; i < size; i++) {
-		if (isSameF(switchTimes[i], angle))
-			return i;
-	}
-	return EFI_ERROR_CODE;
-}
-
-void multi_wave_s::setSwitchTime(int index, float value) {
-	efiAssertVoid(CUSTOM_ERR_6690, switchTimes != NULL, "switchTimes");
-	switchTimes[index] = value;
-}
-
 efitime_t TriggerState::getStartOfRevolutionIndex() {
 	return totalEventCountBase;
 }
