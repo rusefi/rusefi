@@ -9,6 +9,7 @@
 #include "test_pid_auto.h"
 #include "pid_auto_tune.h"
 #include "unit_test_framework.h"
+#include "cyclic_buffer.h"
 
 efitimems_t mockTimeMs = 0;
 
@@ -181,10 +182,45 @@ static void testPidZeroLine() {
 		// nothing happens in this test since we do not allow time play a role
 }
 
+static void testPidDelayLine(void) {
+	printf("*************************************************** testPidDelayLine\r\n");
+
+	static const int delayBufSize = 8;
+	
+	// we use a small FIFO buf to imitate some "response delay" of our virtual PID-controlled "device"
+	cyclic_buffer<float, delayBufSize> delayBuf;
+	delayBuf.clear();
+	
+	mockTimeMs = 0;
+
+	PID_AutoTune at;
+	at.SetLookbackSec(5);
+	at.sampleTime = 0; // not used in math only used to filter values out
+	
+	int startMockMs;
+	bool result = false;
+	for (int i = 0; i < 110 && !result; i++) {
+		startMockMs = mockTimeMs;
+		//at.input = delayBuf.get(delayBuf.currentIndex - 1);
+		int numElems = minI(delayBuf.getSize(), delayBuf.getCount());
+		// our "device" is an averaging delay line
+		at.input = (numElems == 0) ? 0 : (delayBuf.sum(numElems) / delayBuf.getSize());
+		result = at.Runtime(&logging);
+		// this is how our "device" is controlled by auto-tuner
+		delayBuf.add(at.output);
+		printf("[%d] %d in=%f out=%f\r\n", i, startMockMs, at.input, at.output);
+		mockTimeMs++;
+	}
+
+	if (result)
+		printf("*** Converged! Got result: P=%f I=%f D=%f\r\n", at.GetKp(), at.GetKi(), at.GetKd());
+	assertTrueM("should be true#5", result);
+}
+
 void testPidAuto() {
 	printf("*************************************************** testPidAuto\r\n");
 
-
+	testPidDelayLine();
 	testPidZeroLine();
 	testPidAutoZigZagStable();
 
