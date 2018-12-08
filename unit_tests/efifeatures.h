@@ -2,11 +2,13 @@
  * @file efifeatures.h
  *
  * @date Mar 7, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
+
+#include "rusefi_true.h"
 
 #define EFI_ENABLE_ASSERTS TRUE
 
