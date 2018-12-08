@@ -9,6 +9,7 @@
 
 #include <string.h>
 #include <stdbool.h>
+#include <float.h>
 #include <stdint.h>
 #if defined __GNUC__
 // GCC

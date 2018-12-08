@@ -17,8 +17,6 @@ extern "C"
 
 #include <ch.h>
 #include <hal.h>
-    
-#include <float.h>
 
 #ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
