@@ -21,11 +21,9 @@
 #include "boards.h"
 
 #ifdef __cplusplus
-
-
 extern "C"
 {
-#endif
+#endif /* __cplusplus */
 
 #define CH_FREQUENCY 1000
 
@@ -42,8 +40,7 @@ void print(const char *fmt, ...);
 
 #ifdef __cplusplus
 }
-#endif
-
+#endif /* __cplusplus */
 
 
 #define US_TO_NT_MULTIPLIER 100
@@ -68,7 +65,7 @@ typedef int bool_t;
 
 #ifdef __cplusplus
 class Engine;
-#endif
+#endif /* __cplusplus */
 
 /**
  * @see firmware/global.h for explanation
