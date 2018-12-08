@@ -13,7 +13,6 @@
 #define CONTROLLERS_MATH_PID_AUTO_TUNE_H_
 
 #include "global.h"
-#include "rusefi_types.h"
 
 #define byte uint8_t
 

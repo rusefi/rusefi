@@ -9,6 +9,7 @@
 #define CONTROLLERS_CORE_COMMON_HEADERS_H_
 
 #include "efifeatures.h"
+#include "rusefi_types.h"
 
 #include <math.h>
 #include <stdio.h>
