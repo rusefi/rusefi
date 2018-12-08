@@ -343,8 +343,8 @@ void testRpmCalculator(void) {
 
 	timeNowUs += MS2US(5); // 5ms
 
-	int st = timeNowUs;
-	assertEqualsM("st value", 485000, st);
+	int start = timeNowUs;
+	assertEqualsM("start value", 485000, start);
 
 	// todo: why is this required here? we already have one 'prepareOutputSignals' in constructor, what's wrong with it?
 	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -371,12 +371,12 @@ void testRpmCalculator(void) {
 	scheduling_s *ev0 = schedulingQueue.getForUnitText(0);
 
 	assertREqualsM("Call@0", (void*)ev0->callback, (void*)turnSparkPinHigh);
-	assertEqualsM("ev 0", st + 944, ev0->momentX);
+	assertEqualsM("ev 0", start + 944, ev0->momentX);
 	assertEqualsLM("coil 0", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev0->param)->outputs[0]);
 
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(1);
 	assertREqualsM("Call@1", (void*)ev1->callback, (void*)turnSparkPinLow);
-	assertEqualsM("ev 1", st + 1444, ev1->momentX);
+	assertEqualsM("ev 1", start + 1444, ev1->momentX);
 	assertEqualsLM("coil 1", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev1->param)->outputs[0]);
 
 	}
@@ -388,9 +388,9 @@ void testRpmCalculator(void) {
 	eth.fireFall(5);
 	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 4, schedulingQueue.size());
-	assertEqualsM("ev 3", st + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM2("ev 5", st + 14277, schedulingQueue.getForUnitText(1)->momentX, 2);
-	assertEqualsM("3/3", st + 14777, schedulingQueue.getForUnitText(2)->momentX);
+	assertEqualsM("ev 3", start + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM2("ev 5", start + 14277, schedulingQueue.getForUnitText(1)->momentX, 2);
+	assertEqualsM("3/3", start + 14777, schedulingQueue.getForUnitText(2)->momentX);
 	schedulingQueue.clear();
 
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
@@ -427,8 +427,8 @@ void testRpmCalculator(void) {
 
 	eth.fireRise(5);
 	assertEqualsM("queue size 6", 2, schedulingQueue.size());
-	assertEqualsM("6/0", st + 40944, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("6/1", st + 41444, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsM("6/0", start + 40944, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("6/1", start + 41444, schedulingQueue.getForUnitText(1)->momentX);
 	schedulingQueue.clear();
 
 	eth.fireFall(5);
@@ -439,9 +439,9 @@ void testRpmCalculator(void) {
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 8", 4, schedulingQueue.size());
 	// todo: assert queue elements completely
-	assertEqualsM("8/0", st + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM2("8/1", st + 54277, schedulingQueue.getForUnitText(1)->momentX, 0);
-	assertEqualsM2("8/2", st + 54777, schedulingQueue.getForUnitText(2)->momentX, 0);
+	assertEqualsM("8/0", start + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM2("8/1", start + 54277, schedulingQueue.getForUnitText(1)->momentX, 0);
+	assertEqualsM2("8/2", start + 54777, schedulingQueue.getForUnitText(2)->momentX, 0);
 	schedulingQueue.clear();
 
 
