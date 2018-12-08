@@ -235,7 +235,7 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 	timerCallback(this);
 }
 
-void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+void startSimplePwm(SimplePwm *state, const char *msg, OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 	efiAssertVoid(CUSTOM_ERR_6692, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_6665, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 	if (frequency < 1) {
@@ -254,7 +254,7 @@ void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output, float 
 	state->weComplexInit(msg, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
 }
 
-void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, OutputPin *output, float frequency,
+void startSimplePwmExt(SimplePwm *state, const char *msg, brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 
 	output->initPin(msg, brainPin);

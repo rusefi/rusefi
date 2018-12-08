@@ -106,7 +106,7 @@ private:
  *
  * This method should be called after scheduling layer is started by initSignalExecutor()
  */
-void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output,
+void startSimplePwm(SimplePwm *state, const char *msg, OutputPin *output,
 		float dutyCycle, float frequency, pwm_gen_callback *stateChangeCallback);
 
 /**
@@ -114,7 +114,7 @@ void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output,
  *
  * This method should be called after scheduling layer is started by initSignalExecutor()
  */
-void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, OutputPin *output,
+void startSimplePwmExt(SimplePwm *state, const char *msg, brain_pin_e brainPin, OutputPin *output,
 		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
 
 void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes,

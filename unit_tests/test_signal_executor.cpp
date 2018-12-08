@@ -121,17 +121,17 @@ void testApplyPinState(PwmConfig *state, int stateIndex) {
 void testPwmGenerator() {
 	print("*************************************** testPwmGenerator\r\n");
 
-	PwmConfig pwm;
+	SimplePwm pwm;
 
 	OutputPin pin;
 
 	//pwm.setFrequency(600);
 
-//	startSimplePwm(&pwm, "unit_test",
-//			&pin,
-//			600 /* frequency */,
-//			0.80 /* duty cycle */,
-//			&testApplyPinState);
+	startSimplePwm(&pwm, "unit_test",
+			&pin,
+			600 /* frequency */,
+			0.80 /* duty cycle */,
+			&testApplyPinState);
 
 }
 
