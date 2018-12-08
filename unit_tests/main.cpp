@@ -63,33 +63,47 @@ int main(void) {
 
 	testMisc();
 	testDifferentInjectionModes();
+	/**
+	 * PID
+	 */
 	testPidAuto();
+	testPidController();
+	/**
+	 * Larger-scale engine control
+	 */
 	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
 	testFuelSchedulerBug299smallAndMedium();
 	testLogicExpressions(); // fsio
-	testOverflow64Counter();
-	testInterpolate3d();
-	testFindIndex();
 	testPlainCrankingWithoutAdvancedFeatures();
 	testStartOfCrankingPrimingPulse();
 	testFasterEngineSpinningUp();
-	testInterpolate2d();
 	testGpsParser();
 	testFuelMap();
 	testFuelCut();
 	testEngineMath();
 	testIgnitionPlanning();
 	testSensors();
+	/**
+	 * Data structures and general methods
+	 */
 	testCyclicBuffer();
 	testCrc();
+	testOverflow64Counter();
+	testFindIndex();
+	testInterpolate3d();
+	testInterpolate2d();
+	testSetTableValue();
+	testHistogram();
+	testFLStack();
 
 	testSignalExecutor();
 
-	testHistogram();
 
-
+	/**
+	 * Business logic tests
+	 */
 	testMalfunctionCentral();
 
 	testConsoleLogic();
@@ -97,24 +111,20 @@ int main(void) {
 	testAngleResolver();
 
 	testPinHelper();
-	testSetTableValue();
 
 	testAccelEnrichment();
 
 	testSpeedDensity();
-
-	testFLStack();
 
 	testMenuTree();
 	testMafLookup();
 	testIgnitionMapGenerator();
 	testMafFuelMath();
 
-	testPidController();
 	testTriggerDecoder();
 
 	//	resizeMap();
-	printf("Success 20181120\r\n");
+	printf("Success 20181206\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	return EXIT_SUCCESS;
