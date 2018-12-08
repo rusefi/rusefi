@@ -334,7 +334,6 @@ void testConsoleLogic(void) {
 	assertEquals(239, lastInteger);
 
 	print("\r\naddConsoleActionI 240 with two spaces\r\n");
-	addConsoleActionI("echoi", testEchoI);
 	strcpy(buffer, "echoi  240");
 	handleConsoleLine(buffer);
 	assertEquals(240, lastInteger);
@@ -348,7 +347,6 @@ void testConsoleLogic(void) {
 	assertEquals(239, lastInteger2);
 
 	print("\r\naddConsoleActionII three spaces\r\n");
-	addConsoleActionII("echoii", testEchoII);
 	strcpy(buffer, "echoii   21   220");
 	handleConsoleLine(buffer);
 	assertEquals(21, lastInteger);
