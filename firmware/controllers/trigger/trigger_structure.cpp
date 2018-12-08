@@ -18,6 +18,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include "global.h"
 #include "trigger_structure.h"
 #include "trigger_decoder.h"
@@ -164,6 +165,7 @@ int multi_wave_s::findAngleMatch(float angle, int size) const {
 }
 
 void multi_wave_s::setSwitchTime(int index, float value) {
+	efiAssertVoid(CUSTOM_ERR_6690, switchTimes != NULL, "switchTimes");
 	switchTimes[index] = value;
 }
 
