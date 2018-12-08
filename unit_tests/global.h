@@ -20,6 +20,7 @@
 #include "boards.h"
 
 #ifdef __cplusplus
+// todo: include it right here? #include "unit_test_framework.h"
 extern "C"
 {
 #endif /* __cplusplus */
@@ -51,8 +52,6 @@ void print(const char *fmt, ...);
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
 
 #define INLINE inline
-
-typedef int bool_t;
 
 #define EFI_ERROR_CODE 0xffffffff
 

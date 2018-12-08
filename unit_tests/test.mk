@@ -1,6 +1,7 @@
 TEST_SRC_CPP = test_util.cpp \
 	unit_test_framework.cpp \
 	boards.cpp \
+	global_execution_queue.cpp \
 	test_basic_math/test_find_index.cpp \
 	test_basic_math/test_interpolation_3d.cpp \
 	test_data_structures/test_engine_math.cpp \
@@ -12,6 +13,7 @@ TEST_SRC_CPP = test_util.cpp \
 	test_fuel_map.cpp \
 	test_fuelCut.cpp \
 	engine_test_helper.cpp \
+	test_pwm_generator.cpp \
 	test_logic_expression.cpp \
 	test_speed_density.cpp \
 	test_signal_executor.cpp \

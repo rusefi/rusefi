@@ -12,7 +12,6 @@
 
 extern EventQueue schedulingQueue;
 extern int timeNowUs;
-extern EnginePins enginePins;
 
 void testFasterEngineSpinningUp() {
 	// this is just a reference unit test implementation

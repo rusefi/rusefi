@@ -5,40 +5,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include <time.h>
 #include "global.h"
+#include <time.h>
 
 #include "signal_executor.h"
 #include "test_signal_executor.h"
 #include "io_pins.h"
-#include "utlist.h"
 #include "event_queue.h"
-#include "unit_test_framework.h"
 #include "pwm_generator_logic.h"
+#include "unit_test_framework.h"
 
-EventQueue schedulingQueue;
-
-bool_t debugSignalExecutor = false;
-
-void scheduleForLater(scheduling_s *scheduling, int delayUs,
-		schfunc_t callback, void *param) {
-	if (debugSignalExecutor) {
-		printf("scheduleTask %d\r\n", delayUs);
-	}
-	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
-}
-
-void scheduleByTimestamp(scheduling_s *scheduling,
-		efitimeus_t time, schfunc_t callback, void *param) {
-	if (debugSignalExecutor) {
-		printf("scheduleByTime %d\r\n", time);
-	}
-	schedulingQueue.insertTask(scheduling, time, callback, param);
-}
-
-void initSignalExecutorImpl(void) {
-}
-
+// this instance is used by some unit tests here which reference it directly
 static EventQueue eq;
 
 static int callbackCounter = 0;
@@ -112,27 +89,6 @@ static void testSignalExecutor3(void) {
 	eq.insertTask(&s3, 12, orderCallback, (void*)3);
 
 	eq.executeAll(100);
-}
-
-void testApplyPinState(PwmConfig *state, int stateIndex) {
-
-}
-
-void testPwmGenerator() {
-	print("*************************************** testPwmGenerator\r\n");
-
-	SimplePwm pwm;
-
-	OutputPin pin;
-
-	//pwm.setFrequency(600);
-
-	startSimplePwm(&pwm, "unit_test",
-			&pin,
-			600 /* frequency */,
-			0.80 /* duty cycle */,
-			&testApplyPinState);
-
 }
 
 void testSignalExecutor(void) {
