@@ -2,7 +2,6 @@
 #define FLASH_H
 
 #include "global.h"
-#include <stdint.h>
 
 /**
  * @brief Number of sectors in the flash memory.

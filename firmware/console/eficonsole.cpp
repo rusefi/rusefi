@@ -22,7 +22,6 @@
  */
 
 #include <stdarg.h>
-#include <stdbool.h>
 #include "global.h"
 #include <chprintf.h>
 #include "eficonsole.h"

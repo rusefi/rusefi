@@ -30,7 +30,6 @@
  *
  */
 
-#include <stdbool.h>
 #include "global.h"
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)

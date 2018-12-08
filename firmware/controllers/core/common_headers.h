@@ -11,7 +11,6 @@
 #include "efifeatures.h"
 
 #include <math.h>
-#include <string.h>
 #include <stdio.h>
 
 #include "error_handling.h"

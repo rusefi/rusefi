@@ -7,6 +7,8 @@
 #ifndef CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 #define CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 
+#include <string.h>
+#include <stdbool.h>
 #include <stdint.h>
 #if defined __GNUC__
 // GCC
