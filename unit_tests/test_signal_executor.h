@@ -10,5 +10,6 @@
 
 int getRevolutionCounter();
 void testSignalExecutor(void);
+void testPwmGenerator();
 
 #endif /* TEST_SIGNAL_EXECUTOR_H_ */
