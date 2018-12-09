@@ -91,11 +91,11 @@ static void testSwitchToNanPeriod() {
 
 	expectedTimeOfNextEvent += 600;
 	assertEqualsM2("1@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
-	assertNextEvent("exec2@70", 1);
+	assertNextEvent("exec2@NAN", 0);
 
 	expectedTimeOfNextEvent += MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
 	assertEqualsM2("2@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
-	assertNextEvent("exec3@NAN", 1);
+	assertNextEvent("exec3@NAN", 0);
 }
 
 void testPwmGenerator() {

@@ -139,10 +139,9 @@ efitimeus_t PwmConfig::togglePwmState() {
 
 	if (cisnan(periodNt)) {
 		/**
-		 * NaN period means PWM is paused
-		 * TODO: what about pin state? low, high or random?
-		 * TODO: cover this with a unit test
+		 * NaN period means PWM is paused, we also set the pin low
 		 */
+		stateChangeCallback(this, 0);
 		return getTimeNowUs() + MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
 	}
 	if (mode != PM_NORMAL) {
