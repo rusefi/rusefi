@@ -17,6 +17,7 @@
 #define BLOCKING_FACTOR 400
 #define FSIO_ANALOG_INPUT_COUNT 4
 #define SERVO_COUNT 8
+#define ETB_BIAS_CURVE_LENGTH 8
 #define TS_OUTPUT_SIZE 356
 #define TS_FILE_VERSION 20171101
 #define WARMUP_TARGET_AFR_SIZE 4
@@ -1586,8 +1587,12 @@
 #define tChargeAirDecrLimit_offset_hex 100c
 #define tChargeMode_offset 4112
 #define tChargeMode_offset_hex 1010
-#define unusedEnd_offset 4116
-#define unusedEnd_offset_hex 1014
+#define etbBiasBins_offset 4116
+#define etbBiasBins_offset_hex 1014
+#define etbBiasValues_offset 4124
+#define etbBiasValues_offset_hex 101c
+#define unusedEnd_offset 4156
+#define unusedEnd_offset_hex 103c
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512

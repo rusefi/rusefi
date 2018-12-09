@@ -1,11 +1,12 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 29 23:22:22 EST 2018
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 09 10:18:27 EST 2018
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
 	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
 	public static final int SERVO_COUNT = 8;
+	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int TS_OUTPUT_SIZE = 356;
 	public static final int TS_FILE_VERSION = 20171101;
 	public static final int WARMUP_TARGET_AFR_SIZE = 4;
@@ -1049,8 +1050,10 @@ public class Fields {
 	public static final int tChargeAirDecrLimit_offset = 4108;
 	public static final int tChargeMode_offset = 4112;
 	public static final int tChargeMode_offset_hex = 1010;
-	public static final int unusedEnd_offset = 4116;
-	public static final int unusedEnd_offset_hex = 1014;
+	public static final int etbBiasBins_offset = 4116;
+	public static final int etbBiasBins_offset_hex = 1014;
+	public static final int etbBiasValues_offset = 4124;
+	public static final int unusedEnd_offset = 4156;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 29 23:21:24 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 09 10:18:27 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2181,9 +2181,19 @@ typedef struct {
 	 */
 	tChargeMode_e tChargeMode;
 	/**
+	 * target TPS value, 0 to 100%
 	 * offset 4116
 	 */
-	int unusedEnd[591];
+	uint8_t etbBiasBins[ETB_BIAS_CURVE_LENGTH];
+	/**
+	 * PWM bias, 0 to 100%
+	 * offset 4124
+	 */
+	float etbBiasValues[ETB_BIAS_CURVE_LENGTH];
+	/**
+	 * offset 4156
+	 */
+	int unusedEnd[581];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2429,4 +2439,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Nov 29 23:21:24 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 09 10:18:27 EST 2018

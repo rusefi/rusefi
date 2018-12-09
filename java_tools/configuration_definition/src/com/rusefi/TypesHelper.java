@@ -1,5 +1,9 @@
 package com.rusefi;
 
+import static com.rusefi.ConfigStructure.INT_16_T;
+import static com.rusefi.ConfigStructure.UINT8_T;
+import static com.rusefi.ConfigStructure.UINT_16_T;
+
 /**
  * 1/22/15
  */
@@ -12,9 +16,9 @@ public class TypesHelper {
             return ConfigDefinition.structures.get(type).totalSize;
         if (ConfigDefinition.tsCustomSize.containsKey(type))
             return ConfigDefinition.tsCustomSize.get(type);
-        if (type.equals(ConfigStructure.UINT8_T))
+        if (type.equals(UINT8_T))
             return 1;
-        if (type.equals(ConfigStructure.INT_16_T) || type.equals(ConfigStructure.UINT_16_T)) {
+        if (type.equals(INT_16_T) || type.equals(UINT_16_T)) {
             return 2;
         }
         return 4;
@@ -27,10 +31,13 @@ public class TypesHelper {
             return "U32";
         if ("int32_t".equals(type) || "int".equals(type))
             return "S32";
-        if ("int16_t".equals(type))
+        if (INT_16_T.equals(type))
             return "S16";
-        if ("uint16_t".equals(type))
+        if (UINT_16_T.equals(type))
             return "U16";
+        if (UINT8_T.equals(type))
+            return "U8";
+        System.out.println("No TS type convesion for " + type);
         return type;
     }
 
