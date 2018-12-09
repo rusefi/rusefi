@@ -321,6 +321,26 @@ static void setAutoOffset(int offset) {
 	autoTune.reset();
 }
 
+void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engineConfiguration->etbBiasBins[0] = 0;
+	engineConfiguration->etbBiasBins[1] = 5;
+	engineConfiguration->etbBiasBins[2] = 7;
+	engineConfiguration->etbBiasBins[3] = 8;
+	engineConfiguration->etbBiasBins[4] = 11;
+	engineConfiguration->etbBiasBins[5] = 98;
+	engineConfiguration->etbBiasBins[6] = 99;
+	engineConfiguration->etbBiasBins[7] = 100;
+
+	engineConfiguration->etbBiasValues[0] = -100 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[1] = -95 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[2] = -80 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[3] = 0 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[4] = 115 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[5] = 142 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[6] = 142 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[7] = 142 / 255.0f * 100;
+}
+
 void initElectronicThrottle(void) {
 	addConsoleAction("ethinfo", showEthInfo);
 	if (!hasPedalPositionSensor()) {

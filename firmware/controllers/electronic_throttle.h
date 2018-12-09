@@ -10,7 +10,8 @@
 
 #include "engine.h"
 void initElectronicThrottle(void);
-void setDefaultEtbParameters(void);
+void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
 void setEtbDFactor(float value);

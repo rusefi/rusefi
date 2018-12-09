@@ -342,7 +342,8 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	setDefaultAlternatorParameters();
 #endif
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
-	setDefaultEtbParameters();
+	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultEtbBiasCurve(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	setDefaultIdleParameters();

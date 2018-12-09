@@ -430,6 +430,14 @@ fileVersion = { 20171101 }
       yBins       = crankingFuelCoef
       gauge       = CLTGauge
 
+	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
+      columnLabel = "TPS", "duty bias"
+      xAxis       =  0, 100, 10
+      yAxis       =  0,  100, 10
+      xBins       = etbBiasBins, TPSValue
+      yBins       = etbBiasValues
+      gauge       = TPSGauge
+
 	curve = crankingTpsCurve, "Cranking TPS Multiplier"
       columnLabel = "TPS", "Multiplier"
       xAxis       =  0, 100, 10
@@ -998,7 +1006,8 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = fanSetting,				"Fan Settings"
 		subMenu = malfunction,				"MIL Settings"
-		subMenu = etbDialog,				"Electronic Thtottle Body (alpha version)"
+		subMenu = etbDialog,				"Electronic Thtottle Body (beta version)"
+		subMenu = etbTpsBiasCurve, 			"Electronic Thtottle Body Bias Curve"
 		subMenu = std_separator
 		subMenu = std_realtime,    			"&Realtime Display",              0	
 		
@@ -2153,7 +2162,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		topicHelp = "veTableDialogHelp"
 		panel = veTableMap, South
 				
-	dialog = etbDialog, "Electronic Thtottle Body (alpha)"			
+	dialog = etbDialog, "Electronic Thtottle Body (beta)"			
 		field = "verbose",								isVerboseETB
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
