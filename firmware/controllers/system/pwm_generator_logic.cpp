@@ -17,6 +17,12 @@
  */
 #define ITERATION_LIMIT 1000
 
+// 1% duty cycle
+#define ZERO_PWM_THRESHOLD 0.01
+
+// 99% duty cycle
+#define FULL_PWM_THRESHOLD 0.99
+
 SimplePwm::SimplePwm() {
 	waveInstance.init(pinStates);
 	sr[0] = waveInstance;
@@ -62,9 +68,9 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
 	}
-	if (dutyCycle == 0) {
+	if (dutyCycle < ZERO_PWM_THRESHOLD) {
 		mode = PM_ZERO;
-	} else if (dutyCycle == 1) {
+	} else if (dutyCycle > FULL_PWM_THRESHOLD) {
 		mode = PM_FULL;
 	} else {
 		mode = PM_NORMAL;
