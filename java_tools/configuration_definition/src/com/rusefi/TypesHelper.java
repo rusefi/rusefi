@@ -36,7 +36,7 @@ public class TypesHelper {
         if (UINT_16_T.equals(type))
             return "U16";
         if (UINT8_T.equals(type))
-            return "U8";
+            return "U08";
         System.out.println("No TS type convesion for " + type);
         return type;
     }
