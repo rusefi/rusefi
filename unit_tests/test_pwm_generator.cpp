@@ -13,27 +13,29 @@
 extern EventQueue schedulingQueue;
 extern int timeNowUs;
 
-static int nextTime = 800;
+static int expectedTimeOfNextEvent = 0;
+static int pinValue = -1;
 
 static void testApplyPinState(PwmConfig *state, int stateIndex) {
-	int value = state->multiWave.waves[0].pinStates[stateIndex];
+	pinValue = state->multiWave.waves[0].pinStates[stateIndex];
 
-	printf("Applying value %d @ timeNow=%d\r\n", value, timeNowUs);
+	printf("PWM_test: setPinValue=%d @ timeNow=%d\r\n", pinValue, timeNowUs);
 }
 
-static void assertNextEvent(const char *msg) {
-	printf("Asserting event [%s]\r\n", msg);
+static void assertNextEvent(const char *msg, int expectedPinState) {
+	printf("PWM_test: Asserting event [%s]\r\n", msg);
 	// only one action expected in queue
-	assertEquals(1, schedulingQueue.size());
+	assertEqualsM("PWM_test: schedulingQueue size", 1, schedulingQueue.size());
 
 	// move time to next event timestamp
-	timeNowUs += nextTime;
+	timeNowUs = expectedTimeOfNextEvent;
 
 	// execute pending actions and assert that only one action was executed
-	assertEqualsM(msg, 1, schedulingQueue.executeAll(timeNowUs));
+	assertEqualsM5(msg, " executed", 1, schedulingQueue.executeAll(timeNowUs), 0);
+	assertEqualsM5(msg, " pin state", expectedPinState, pinValue, 0);
 
 	// assert that we have one new action in queue
-	assertEquals(1, schedulingQueue.size());
+	assertEqualsM("PWM_test: queue.size", 1, schedulingQueue.size());
 }
 
 void testPwmGenerator() {
@@ -44,6 +46,7 @@ void testPwmGenerator() {
 	OutputPin pin;
 
 	schedulingQueue.clear();
+	timeNowUs = 0;
 
 	startSimplePwm(&pwm, "unit_test",
 			&pin,
@@ -51,32 +54,45 @@ void testPwmGenerator() {
 			0.80 /* duty cycle */,
 			&testApplyPinState);
 
-	int start = timeNowUs;
 
-	assertEqualsM2("1@1000/80", start + nextTime, schedulingQueue.getForUnitText(0)->momentX, 0);
+	expectedTimeOfNextEvent += 800;
+	assertEqualsM2("1@1000/80", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@0");
-	assertEqualsM("time1", start + 800, timeNowUs);
+	assertNextEvent("exec@0", 0);
+	assertEqualsM("time1", 800, timeNowUs);
 
-	nextTime += 200;
-	assertEqualsM2("2@1000/80", start + nextTime, schedulingQueue.getForUnitText(0)->momentX, 0);
+	expectedTimeOfNextEvent += 200;
+	assertEqualsM2("2@1000/80", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-
+	// above we had vanilla duty cycle, now let's handle a special case
 	pwm.setSimplePwmDutyCycle(0);
+	assertEqualsM2("2@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@1");
-	assertEqualsM("time2", start + 1800, timeNowUs);
+	assertNextEvent("exec@1", 1);
+	assertEqualsM("time2", 1000, timeNowUs);
 
-	assertEqualsM2("2@1000/80", start + nextTime, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("3@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@2");
-	assertEqualsM("time3", start + 2800, timeNowUs);
+	assertNextEvent("exec@2", 0 /* pin value */);
+	assertEqualsM("time3", 1000, timeNowUs);
+	expectedTimeOfNextEvent += 1000;
+	assertEqualsM2("4@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@3");
-	assertEqualsM("time4", start + 3800, timeNowUs);
+	// todo: this is bad - pin is high with zero duty cycle
+	assertNextEvent("exec@3", 1 /* pin value */);
+	assertEqualsM("time4", 2000, timeNowUs);
+	assertEqualsM2("5@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@4");
-	assertNextEvent("exec@5");
+	assertNextEvent("exec@4", 0 /* pin value */);
+	expectedTimeOfNextEvent += 1000;
+	assertEqualsM2("6@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+
+	// todo: this is bad - pin is high with zero duty cycle
+	assertNextEvent("exec@5", 1 /* pin value */);
+	assertEqualsM2("7@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+
+
+	assertNextEvent("exec@6", 0 /* pin value */);
 }
 
 
