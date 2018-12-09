@@ -5,7 +5,8 @@
  * See void onJoystick(joystick_button_e button)
  *
  * TODO: separate EXTI layer from joystick logic
- * TODO: spell out the limitations of EXTI, can we use multiple pins with same index?
+ * You cannot use two pins with same index for EXTI (for instance PA5 and PE5) since these would
+ * be using same EXTI line. See https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
  * See also comments in digital_input_hw.cpp
  *
  * @date Jan 2, 2015
