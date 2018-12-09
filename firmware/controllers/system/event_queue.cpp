@@ -219,6 +219,9 @@ scheduling_s *EventQueue::getForUnitText(int index) {
 			return current;
 		index--;
 	}
+#if EFI_UNIT_TEST
+	firmwareError(OBD_PCM_Processor_Fault, "getForUnitText: null");
+#endif /* EFI_UNIT_TEST */
 	return NULL;
 }
 
