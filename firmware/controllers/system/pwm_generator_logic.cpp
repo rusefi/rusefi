@@ -64,6 +64,9 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	multiWave.setSwitchTime(0, dutyCycle);
 }
 
+/**
+ * returns absolute timestamp of state change
+ */
 static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	efiAssert(CUSTOM_ERR_ASSERT, state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
@@ -71,7 +74,7 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	float periodNt = state->safe.periodNt;
 #if DEBUG_PWM
 	scheduleMsg(&logger, "iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
-#endif
+#endif /* DEBUG_PWM */
 
 	/**
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
@@ -81,7 +84,7 @@ static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
-#endif
+#endif /* DEBUG_PWM */
 	return NT2US(state->safe.startNt + timeToSwitchNt);
 }
 
@@ -98,7 +101,7 @@ void PwmConfig::setFrequency(float frequency) {
 }
 
 void PwmConfig::handleCycleStart() {
-	if (safe.phaseIndex == 0) {
+	efiAssertVoid(CUSTOM_ERR_6697, safe.phaseIndex == 0, "handleCycleStart");
 		if (pwmCycleCallback != NULL) {
 			pwmCycleCallback(this);
 		}
@@ -114,7 +117,6 @@ void PwmConfig::handleCycleStart() {
 			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
 #endif
 		}
-	}
 }
 
 /**
@@ -129,11 +131,15 @@ efitimeus_t PwmConfig::togglePwmState() {
 	if (cisnan(periodNt)) {
 		/**
 		 * NaN period means PWM is paused
+		 * TODO: what about pin state? low, high or random?
+		 * TODO: cover this by a unit test
 		 */
 		return getTimeNowUs() + MS2US(100);
 	}
 
-	handleCycleStart();
+	if (safe.phaseIndex == 0) {
+		handleCycleStart();
+	}
 
 	/**
 	 * Here is where the 'business logic' - the actual pin state change is happening
