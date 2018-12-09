@@ -16,6 +16,8 @@
  * See https://stackoverflow.com/questions/43440599/stm32-multi-channel-input-capture-overcapturing-on-all-channels-interrupts-not
  *    where they seem to be capturing something on multiple channels maybe not PWM mode of ICU is the key difference?
  *
+ * rus084 is reminding that EXTI could be enough for our needs
+ * See joystick.cpp
  *
  * @date Jun 23, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018

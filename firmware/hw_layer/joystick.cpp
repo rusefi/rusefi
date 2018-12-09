@@ -4,6 +4,10 @@
  * See lcd_controller.cpp for more information
  * See void onJoystick(joystick_button_e button)
  *
+ * TODO: separate EXTI layer from joystick logic
+ * TODO: spell out the limitations of EXTI, can we use multiple pins with same index?
+ * See also comments in digital_input_hw.cpp
+ *
  * @date Jan 2, 2015
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
