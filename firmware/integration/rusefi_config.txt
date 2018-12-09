@@ -53,6 +53,8 @@ struct_no_prefix engine_configuration_s
 
 #define SERVO_COUNT 8
 
+#define ETB_BIAS_CURVE_LENGTH 8
+
 ! this is here so that rusEfi console can access it, too
 #define TS_OUTPUT_SIZE 356
 
@@ -924,7 +926,11 @@ float tChargeAirDecrLimit;;"tChange Decrement Limit, deg/sec",        1,     0, 
 custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
 tChargeMode_e tChargeMode;
 	
-	int[591] unusedEnd;
+	
+		uint8_t[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%;"target TPS position",   1,   0.0,        0,  100.0,   0
+		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        0,  100.0,   2
+	
+	int[581] unusedEnd;
 	
 
 end_struct
