@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class ConfigStructure {
     public static final String UINT8_T = "uint8_t";
+    public static final String UINT_16_T = "uint16_t";
+    public static final String INT_16_T = "int16_t";
+
     public final String name;
     private final String comment;
     public final boolean withPrefix;
