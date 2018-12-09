@@ -12,6 +12,7 @@ current binaries are always available at http://rusefi.com/build_server/
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 12/09/2018    | r16057    | electronic throttle body control is now BETA version |
 | 08/19/2018    | r15811    | bugfix #604: no interpolation outside of the table |
 | 01/29/2018    | r15514    | improvement #215: CJ125 wideband contoller |
 | 01/23/2018    | r15442    | improvement #463: ChibiOS 17 / 4 |
