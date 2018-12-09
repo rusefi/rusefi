@@ -13,6 +13,8 @@
 #include "scheduler.h"
 #include "efiGpio.h"
 
+#define NAN_FREQUENCY_SLEEP_PERIOD_MS 100
+
 typedef struct {
 	/**
 	 * a copy so that all phases are executed on the same period, even if another thread
@@ -35,6 +37,12 @@ class PwmConfig;
 typedef void (pwm_cycle_callback)(PwmConfig *state);
 typedef void (pwm_gen_callback)(PwmConfig *state, int stateIndex);
 
+typedef enum {
+	PM_ZERO,
+	PM_NORMAL,
+	PM_FULL
+} pwm_mode_e;
+
 /**
  * @brief   Multi-channel software PWM output configuration
  */
@@ -49,6 +57,11 @@ public:
 			int phaseCount, float *swithcTimes, int waveCount, pin_state_t **pinStates,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
+
+	/**
+	 * We need to handle zero duty cycle and 100% duty cycle in a special way
+	 */
+	pwm_mode_e mode;
 
 	/**
 	 * @param use NAN frequency to pause PWM

@@ -13,7 +13,7 @@
 extern EventQueue schedulingQueue;
 extern int timeNowUs;
 
-static int expectedTimeOfNextEvent = 0;
+static int expectedTimeOfNextEvent;
 static int pinValue = -1;
 
 static void testApplyPinState(PwmConfig *state, int stateIndex) {
@@ -38,15 +38,76 @@ static void assertNextEvent(const char *msg, int expectedPinState) {
 	assertEqualsM("PWM_test: queue.size", 1, schedulingQueue.size());
 }
 
+static void test100dutyCycle() {
+	print("*************************************** test100dutyCycle\r\n");
+
+	expectedTimeOfNextEvent = timeNowUs = 0;
+	SimplePwm pwm;
+	OutputPin pin;
+	schedulingQueue.clear();
+
+	startSimplePwm(&pwm, "unit_test",
+			&pin,
+			1000 /* frequency */,
+			1.0 /* duty cycle */,
+			&testApplyPinState);
+
+	expectedTimeOfNextEvent += 1000;
+	assertEqualsM2("1@1000/100", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+
+	assertNextEvent("exec@100", 1);
+
+	expectedTimeOfNextEvent += 1000;
+	assertNextEvent("exec2@100", 1);
+
+	expectedTimeOfNextEvent += 1000;
+	assertNextEvent("exec3@100", 1);
+}
+
+static void testSwitchToNanPeriod() {
+	print("*************************************** testSwitchToNanPeriod\r\n");
+
+	expectedTimeOfNextEvent = timeNowUs = 0;
+	SimplePwm pwm;
+	OutputPin pin;
+	schedulingQueue.clear();
+
+	startSimplePwm(&pwm, "unit_test",
+			&pin,
+			1000 /* frequency */,
+			0.60 /* duty cycle */,
+			&testApplyPinState);
+
+	expectedTimeOfNextEvent += 600;
+	assertEqualsM2("1@1000/70", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+
+	assertNextEvent("exec@70", 0);
+	assertEqualsM("time1", 600, timeNowUs);
+
+	expectedTimeOfNextEvent += 400;
+	assertNextEvent("exec2@70", 1);
+
+	pwm.setFrequency(NAN);
+
+	expectedTimeOfNextEvent += 600;
+	assertEqualsM2("1@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertNextEvent("exec2@70", 1);
+
+	expectedTimeOfNextEvent += MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
+	assertEqualsM2("2@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertNextEvent("exec3@NAN", 1);
+}
+
 void testPwmGenerator() {
+	test100dutyCycle();
+	testSwitchToNanPeriod();
+
 	print("*************************************** testPwmGenerator\r\n");
 
+	expectedTimeOfNextEvent = timeNowUs = 0;
 	SimplePwm pwm;
-
 	OutputPin pin;
-
 	schedulingQueue.clear();
-	timeNowUs = 0;
 
 	startSimplePwm(&pwm, "unit_test",
 			&pin,
@@ -68,27 +129,29 @@ void testPwmGenerator() {
 	pwm.setSimplePwmDutyCycle(0);
 	assertEqualsM2("2@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@1", 1);
+	assertNextEvent("exec@1", 0);
 	assertEqualsM("time2", 1000, timeNowUs);
 
+	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("3@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
 	assertNextEvent("exec@2", 0 /* pin value */);
-	assertEqualsM("time3", 1000, timeNowUs);
+	assertEqualsM("time3", 2000, timeNowUs);
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("4@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	// todo: this is bad - pin is high with zero duty cycle
-	assertNextEvent("exec@3", 1 /* pin value */);
-	assertEqualsM("time4", 2000, timeNowUs);
+	assertNextEvent("exec@3", 0 /* pin value */);
+	assertEqualsM("time4", 3000, timeNowUs);
+	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("5@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
 	assertNextEvent("exec@4", 0 /* pin value */);
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("6@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	// todo: this is bad - pin is high with zero duty cycle
-	assertNextEvent("exec@5", 1 /* pin value */);
+	assertNextEvent("exec@5", 0 /* pin value */);
+	expectedTimeOfNextEvent += 1000;
+	assertEqualsM("time4", 5000, timeNowUs);
 	assertEqualsM2("7@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
 

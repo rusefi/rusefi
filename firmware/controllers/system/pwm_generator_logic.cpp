@@ -28,6 +28,7 @@ void PwmConfig::baseConstructor() {
 	memset(&safe, 0, sizeof(safe));
 	dbgNestingLevel = 0;
 	periodNt = NAN;
+	mode = PM_NORMAL;
 	memset(&outputPins, 0, sizeof(outputPins));
 	phaseCount = 0;
 	pwmCycleCallback = NULL;
@@ -50,6 +51,7 @@ void PwmConfig::init(float *st, single_wave_s *waves) {
 /**
  * This method allows you to change duty cycle on the fly
  * @param dutyCycle value between 0 and 1
+ * See also setFrequency
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	if (cisnan(dutyCycle)) {
@@ -60,8 +62,14 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
 	}
-	// todo: need to fix PWM so that it supports zero duty cycle
-	multiWave.setSwitchTime(0, dutyCycle);
+	if (dutyCycle == 0) {
+		mode = PM_ZERO;
+	} else if (dutyCycle == 1) {
+		mode = PM_FULL;
+	} else {
+		mode = PM_NORMAL;
+		multiWave.setSwitchTime(0, dutyCycle);
+	}
 }
 
 /**
@@ -70,7 +78,8 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	efiAssert(CUSTOM_ERR_ASSERT, state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
-	float switchTime = state->multiWave.getSwitchTime(state->safe.phaseIndex);
+	// we handle PM_ZERO and PM_FULL separately
+	float switchTime = state->mode == PM_NORMAL ? state->multiWave.getSwitchTime(state->safe.phaseIndex) : 1;
 	float periodNt = state->safe.periodNt;
 #if DEBUG_PWM
 	scheduleMsg(&logger, "iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
@@ -132,9 +141,13 @@ efitimeus_t PwmConfig::togglePwmState() {
 		/**
 		 * NaN period means PWM is paused
 		 * TODO: what about pin state? low, high or random?
-		 * TODO: cover this by a unit test
+		 * TODO: cover this with a unit test
 		 */
-		return getTimeNowUs() + MS2US(100);
+		return getTimeNowUs() + MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
+	}
+	if (mode != PM_NORMAL) {
+		// in case of ZERO or FULL we are always at starting index
+		safe.phaseIndex = 0;
 	}
 
 	if (safe.phaseIndex == 0) {
@@ -144,8 +157,16 @@ efitimeus_t PwmConfig::togglePwmState() {
 	/**
 	 * Here is where the 'business logic' - the actual pin state change is happening
 	 */
-	// callback state index is offset by one. todo: why? can we simplify this?
-	int cbStateIndex = safe.phaseIndex == 0 ? phaseCount - 1 : safe.phaseIndex - 1;
+	int cbStateIndex;
+	if (mode == PM_NORMAL) {
+		// callback state index is offset by one. todo: why? can we simplify this?
+		cbStateIndex = safe.phaseIndex == 0 ? phaseCount - 1 : safe.phaseIndex - 1;
+	} else if (mode == PM_ZERO) {
+		cbStateIndex = 0;
+	} else {
+		cbStateIndex = 1;
+	}
+
 	stateChangeCallback(this, cbStateIndex);
 
 	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(this);
@@ -168,10 +189,15 @@ efitimeus_t PwmConfig::togglePwmState() {
 //	}
 
 	safe.phaseIndex++;
-	if (safe.phaseIndex == phaseCount) {
+	if (safe.phaseIndex == phaseCount || mode != PM_NORMAL) {
 		safe.phaseIndex = 0; // restart
 		safe.iteration++;
 	}
+#if EFI_UNIT_TEST
+	printf("PWM: nextSwitchTimeUs=%d phaseIndex=%d iteration=%d\r\n", nextSwitchTimeUs,
+			safe.phaseIndex,
+			safe.iteration);
+#endif /* EFI_UNIT_TEST */
 	return nextSwitchTimeUs;
 }
 
@@ -205,7 +231,9 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 			state->multiWave.waves[waveIndex].pinStates[phaseIndex] = pinStates[waveIndex][phaseIndex];
 		}
 	}
-	state->multiWave.checkSwitchTimes(phaseCount);
+	if (state->mode == PM_NORMAL) {
+		state->multiWave.checkSwitchTimes(phaseCount);
+	}
 }
 
 /**
@@ -251,6 +279,7 @@ void startSimplePwm(SimplePwm *state, const char *msg, OutputPin *output, float 
 
 	float switchTimes[] = { dutyCycle, 1 };
 	pin_state_t pinStates0[] = { 0, 1 };
+	state->setSimplePwmDutyCycle(dutyCycle);
 
 	pin_state_t *pinStates[1] = { pinStates0 };
 
