@@ -4,9 +4,7 @@ import com.rusefi.ConfigDefinition;
 import com.rusefi.ConfigField;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * (c) Andrey Belomutskiy
@@ -19,6 +17,18 @@ public class ConfigDefinitionTest {
         assertEquals("\t * abc\n", ConfigDefinition.packComment("abc", "\t"));
         assertEquals("\t * abc\n" +
                 "\t * vbn\n", ConfigDefinition.packComment("abc\\nvbn", "\t"));
+    }
+
+    @Test
+    public void testByteArray() {
+        {
+            ConfigField cf = ConfigField.parse("uint8_t[8] field");
+            assertEquals(cf.type, "uint8_t");
+            assertEquals(cf.arraySize, 8);
+            assertEquals(cf.getSize(null), 8);
+            assertFalse("isIterate", cf.isIterate);
+        }
+
     }
 
     @Test

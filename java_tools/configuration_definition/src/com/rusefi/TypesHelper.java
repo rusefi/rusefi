@@ -4,6 +4,7 @@ package com.rusefi;
  * 1/22/15
  */
 public class TypesHelper {
+
     public static int getElementSize(String type) {
         if (type == null)
             throw new NullPointerException("type");
@@ -13,7 +14,7 @@ public class TypesHelper {
             return ConfigDefinition.tsCustomSize.get(type);
         if (type.equals(ConfigStructure.UINT8_T))
             return 1;
-        if (type.equals("int16_t") || type.equals("uint16_t")) {
+        if (type.equals(ConfigStructure.INT_16_T) || type.equals(ConfigStructure.UINT_16_T)) {
             return 2;
         }
         return 4;

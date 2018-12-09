@@ -37,13 +37,13 @@ public class ConfigField {
      */
     public final String name;
     public final String comment;
-    public final boolean isBit;
-    public final String arraySizeAsText;
+    final boolean isBit;
+    private final String arraySizeAsText;
     public final String type;
     public final int arraySize;
 
     public final String tsInfo;
-    public final int elementSize;
+    private final int elementSize;
     /**
      * this property of array expands field into a bunch of variables like field1 field2 field3 etc
      */
@@ -106,7 +106,7 @@ public class ConfigField {
         return field;
     }
 
-    int getSize(ConfigField next) {
+    public int getSize(ConfigField next) {
         if (isBit && next.isBit)
             return 0;
         if (isBit)
