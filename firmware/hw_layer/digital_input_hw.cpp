@@ -126,6 +126,8 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
  * ChibiOS limitation is that only channels #1 and #2 could be used for input capture
  *
  * TODO: migrate slow ADC to software timer so that TIM8 is also available for input capture
+ * todo: https://github.com/rusefi/rusefi/issues/630 ?
+ *
  */
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
