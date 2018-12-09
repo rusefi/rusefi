@@ -170,7 +170,7 @@ int EventQueue::executeAll(efitime_t now) {
 		uint32_t howFarOff = now - current->momentX;
 		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-		printf("execute current=%d param=%d\r\n", (long)current, (long)current->param);
+		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->param);
 #endif
 		current->callback(current->param);
 		// even with overflow it's safe to subtract here
