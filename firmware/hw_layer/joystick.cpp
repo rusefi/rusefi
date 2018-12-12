@@ -36,12 +36,18 @@ static int joyD = 0;
 static Logging *sharedLogger;
 static efitick_t lastEventTime = 0;
 
-static void extCallback(EXTDriver *extp, expchannel_t channel) {
-        UNUSED(extp);
+static bool isJitter() {
 	efitick_t now = getTimeNowNt();
 	if (now - lastEventTime < NT_EVENT_GAP)
-		return; // two consecutive events are probably just jitter
+		return true; // two consecutive events are probably just jitter
 	lastEventTime = now;
+	return false;
+}
+
+static void extCallback(EXTDriver *extp, expchannel_t channel) {
+        UNUSED(extp);
+    if (isJitter())
+    	 return;
 	joyTotal++;
 	joystick_button_e button;
 	// todo: I guess it's time to reduce code duplication and start working with an array
@@ -51,12 +57,14 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	} else if (channel == getHwPin("joy", boardConfiguration->joystickAPin)) {
 		joyA++;
 		button = JB_BUTTON_A;
+/* not used so far
 	} else if (channel == getHwPin("joy", boardConfiguration->joystickBPin)) {
 		joyB++;
-		button = JB_BUTTON_C;
+		button = JB_BUTTON_B;
 	} else if (channel == getHwPin("joy", boardConfiguration->joystickCPin)) {
 		joyC++;
-		button = JB_BUTTON_B;
+		button = JB_BUTTON_C;
+*/
 	} else if (channel == getHwPin("joy", boardConfiguration->joystickDPin)) {
 		joyD++;
 		button = JB_BUTTON_D;

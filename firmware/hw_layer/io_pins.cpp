@@ -43,6 +43,9 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	return PORTS[brainPin / PORT_SIZE];
 }
 
+/**
+ * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
+ */
 ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return EFI_ERROR_CODE;
