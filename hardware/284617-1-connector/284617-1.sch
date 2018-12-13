@@ -10,7 +10,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -30,9 +29,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:284617-1
-LIBS:368255-2
-LIBS:284617-1-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
 $Descr A4 8268 11693 portrait
 encoding utf-8
