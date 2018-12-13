@@ -18,6 +18,7 @@
  *
  * rus084 is reminding that EXTI could be enough for our needs
  * See joystick.cpp
+ * See trigger_input.cpp
  *
  * @date Jun 23, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
@@ -271,4 +272,4 @@ void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
 	hw->started = true;
 }
 
-#endif
+#endif /* EFI_WAVE_ANALYZER */

@@ -2,6 +2,12 @@
  * @file	trigger_input.cpp
  * @brief	Position sensor hardware layer
  *
+ * todo: code reuse with digital_input_hw.cpp was never finished
+ * todo: at the moment due to half-done code reuse we depend on EFI_WAVE_ANALYZER which makes no sense, need to finish this refactoring
+ * todo: VVT implementation is a nasty copy-paste :(
+ *
+ * see digital_input_hw.cp
+ *
  * @date Dec 30, 2012
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
