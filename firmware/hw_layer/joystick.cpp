@@ -139,7 +139,7 @@ static uint32_t getExtMode(ioportid_t port) {
 	return 0;
 }
 
-static void applyPin(brain_pin_e pin) {
+static void enableExti(brain_pin_e pin, extcallback_t cb) {
 	if (pin == GPIO_UNASSIGNED)
 		return;
 
@@ -147,14 +147,14 @@ static void applyPin(brain_pin_e pin) {
 	ioportid_t port = getHwPort("joy", pin);
 
 	extcfg.channels[index].mode = EXT_CH_MODE_RISING_EDGE | EXT_CH_MODE_AUTOSTART | getExtMode(port);
-	extcfg.channels[index].cb = extCallback;
+	extcfg.channels[index].cb = cb;
 }
 
 static bool isJoystickEnabled() {
 	return boardConfiguration->joystickCenterPin != GPIO_UNASSIGNED ||
 			boardConfiguration->joystickAPin != GPIO_UNASSIGNED ||
-			boardConfiguration->joystickBPin != GPIO_UNASSIGNED ||
-			boardConfiguration->joystickCPin != GPIO_UNASSIGNED ||
+			// not used so far			boardConfiguration->joystickBPin != GPIO_UNASSIGNED ||
+			// not used so far	boardConfiguration->joystickCPin != GPIO_UNASSIGNED ||
 			boardConfiguration->joystickDPin != GPIO_UNASSIGNED;
 }
 
@@ -163,16 +163,16 @@ void initJoystick(Logging *shared) {
 		return;
 	sharedLogger = shared;
 
-	applyPin(boardConfiguration->joystickCenterPin);
-	applyPin(boardConfiguration->joystickAPin);
-	applyPin(boardConfiguration->joystickBPin);
-	applyPin(boardConfiguration->joystickCPin);
-	applyPin(boardConfiguration->joystickDPin);
+	enableExti(boardConfiguration->joystickCenterPin, extCallback);
+	enableExti(boardConfiguration->joystickAPin, extCallback);
+// not used so far	applyPin(boardConfiguration->joystickBPin);
+// not used so far	applyPin(boardConfiguration->joystickCPin);
+	enableExti(boardConfiguration->joystickDPin, extCallback);
 
 	efiSetPadMode("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
 	efiSetPadMode("joy A", boardConfiguration->joystickAPin, PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
 	efiSetPadMode("joy D", boardConfiguration->joystickDPin, PAL_MODE_INPUT_PULLUP);
 
 	addConsoleAction("joystickinfo", joystickInfo);
