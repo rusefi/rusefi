@@ -3,6 +3,14 @@
 # NOTE: Can be overridden externally.
 #
 
+ifeq ("$(wildcard ../firmware/ChibiOS4/os/common/startup/ARMCMx/compilers/GCC/rules.mk)","")
+#
+# todo: someone please figure out the syntax to invoke 'git submodule update --init' from here
+#
+$(error Modules are missing? Did you execute 'git submodule update --init'?)
+endif
+
+
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
