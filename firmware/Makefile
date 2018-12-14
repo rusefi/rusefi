@@ -3,6 +3,14 @@
 # NOTE: Can be overridden externally.
 #
 
+ifeq ("$(wildcard ChibiOS4/os/common/startup/ARMCMx/compilers/GCC/rules.mk)","")
+#
+# todo: someone please figure out the syntax to invoke 'git submodule update --init' from here
+#
+$(error Modules are missing? Did you execute 'git submodule update --init'?)
+endif
+
+
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
 # for 'release' options see 'clean_compile_two_versions.bat' file
 
