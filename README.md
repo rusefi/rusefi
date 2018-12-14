@@ -14,6 +14,11 @@ Important note - we now use submodules:
 
 `git submodule update --init`
 
+# What do we have here?
+ * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips
+ * [Hardware](/hardware) KiCAD files for all our PCBs
+ * [Unit Tests]()
+
 
 # External Links
 
