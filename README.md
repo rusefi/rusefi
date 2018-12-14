@@ -8,7 +8,27 @@ current binaries are always available at http://rusefi.com/build_server/
 
 [![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/)
 
-# Releases
+## Cloning the repository
+
+Important note - we now use submodules:
+
+`git submodule update --init`
+
+
+# External Links
+
+ * Wiki: http://rusefi.com
+ * Forum http://rusefi.com/forum
+ * Doxygen documentation is available at http://rusefi.com/docs/html
+ * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
+ * Facebook https://www.facebook.com/rusEfiECU
+ * YouTube: https://www.youtube.com/user/rusefi
+
+# Building the Code
+See https://rusefi.com/forum/viewtopic.php?f=5&t=9
+
+
+# Release Notes
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
@@ -66,20 +86,9 @@ current binaries are always available at http://rusefi.com/build_server/
 | 08/03/2013	| r13	    | wideband O2 input, better idling algorithm, serial-over-USB
 | 07/05/2013	| r10	    | Second CKP, sequential injection.
 | 06/19/2013	| r9	    | Initial version - batch injection & ignition with advance table lookup.
-	
-# Links
-
- * Wiki: http://rusefi.com
- * Forum http://rusefi.com/forum
- * Doxygen documentation is available at http://rusefi.com/docs/html
- * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
- * Facebook https://www.facebook.com/rusEfiECU
- * YouTube: https://www.youtube.com/user/rusefi
-
-# Building the Code
 
 ## Cloning the repository
 
-We now use submodules:
+Important nonte - we now use submodules:
 
 `git submodule update --init`
