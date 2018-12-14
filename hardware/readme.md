@@ -1,15 +1,11 @@
 
 
-The most interesting folder here is frankenso - that's rusEfi most useful board
+The most interesting folder here is [Frankenso](frankenso/) - that's rusEfi most useful board
 
-<br>
-<br>
 
 Some vehicle-specific connector boards are also pretty nice if you want to keep original harness intact
-<br>
-<br>
 
 See http://rusefi.com/wiki/index.php?title=Hardware:OEM_connectors
-<br>
+
 See http://rusefi.com/forum/viewtopic.php?f=4&t=260
 
