@@ -15,8 +15,11 @@ todo: move Connectors wiki page content into git
 * [154 pin](284617-1-connector) Audi
 
 # Modules
-[CAN module](can_board) CAN using SN65HVD230
-[VR module](VR_Board) Variable Reluctance conditioner board VR MAX9926
+* [CAN module](can_board) CAN using SN65HVD230
+* [VR module](VR_Board) Variable Reluctance conditioner board VR MAX9926
+* [Brain board 48pin](mini48-stm32)
+* [Brain board 100pin](brain_board)
+* [Brain board 176pin](brain_board_176-pin)
 
 
 ### Frankenstein
