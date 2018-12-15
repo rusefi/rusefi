@@ -1,5 +1,6 @@
-		improve silkscreen for all pins
-                add power LED
-                add both output channels LEDs
-                add logo if possible
-                add VR/Hall option unless we already have it
+ 1)                   improve silkscreen for all pins
+ 2) RESOLVED IN R0.2  add power LED
+
+ 3)                   add logo if possible
+
+ 4) RESOLVED IN R0.2  LED's silk screen anode vs cathode was flipped
