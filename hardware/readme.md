@@ -14,6 +14,15 @@ todo: move Connectors wiki page content into git
 * [121 pin](368255-2-connector) Audi
 * [154 pin](284617-1-connector) Audi
 
+# Modules
+[CAN module](can_board) CAN using SN65HVD230
+[VR module](VR_Board) Variable Reluctance conditioner board VR MAX9926
+
+
+### Frankenstein
+
+[Our older ECU board](frankenstein)
+
 # More info
 
 See [Hardware status forum thread](http://rusefi.com/forum/viewtopic.php?f=4&t=260)
