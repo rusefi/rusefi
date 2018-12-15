@@ -9,8 +9,9 @@ See [Connectors wiki page](http://rusefi.com/wiki/index.php?title=Hardware:OEM_c
 todo: move Connectors wiki page content into git
 
 * [64 pin](176122-6-connector) Mazda Miata NA NB1, Honda Civic
-*  
-
+* [72 pin](1123038-2-connector) Mazda Miata NB2 
+* [121 pin](368255-2-connector) Audi
+* [154 pin](284617-1-connector) Audi
 
 # More info
 
