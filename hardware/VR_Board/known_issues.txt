@@ -1,0 +1,5 @@
+		improve silkscreen for all pins
+                add power LED
+                add both output channels LEDs
+                add logo if possible
+                add VR/Hall option unless we already have it
