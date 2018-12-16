@@ -32,6 +32,6 @@ void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin);
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin);
 
-#endif
+#endif /* HAL_USE_ICU */
 
 #endif /* DIGITAL_INPUT_HW_H_ */
