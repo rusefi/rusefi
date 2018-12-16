@@ -15,7 +15,8 @@ set RUSEFI_SVN_PATH=../../svn/
 set RUSEFI_SVN_W_PATH=..\..\svn
 set RUSEFI_GIT_PATH=../git/rusefi
 
-
+rem windows version of 'mkdir' just created '-p' folder
+rem todo: copy mkdir to mkdir_cygwin and invoke it using that name?
 mkdir -p %RUSEFI_SVN_PATH%"
 echo "Going to %RUSEFI_SVN_PATH%" 
 cd %RUSEFI_SVN_PATH%
