@@ -1,11 +1,16 @@
 echo I am unit_tests.bat
 
 set FTP_SERVER=home451478433.1and1-data.host
+rem 'RUSEFI_BUILD_FTP_PASS' environment variable 
+
+echo We should be in root folder
+pwd
+
+rem Prior to running unit tests we build real hardware firmware
 
 cd firmware
 
 git submodule update --init
-
 
 rm -fR .dep
 rm -fR build
@@ -19,10 +24,9 @@ cd ..
 echo We are in root folder
 pwd
 
-
-
 cd unit_tests
 
+rem Only here we are building unit_tests
 call compile.bat
 pwd
 ls -l build
