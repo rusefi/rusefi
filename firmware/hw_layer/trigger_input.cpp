@@ -3,7 +3,7 @@
  * @brief	Position sensor hardware layer
  *
  * todo: code reuse with digital_input_hw.cpp was never finished
- * todo: at the moment due to half-done code reuse we depend on EFI_WAVE_ANALYZER which makes no sense, need to finish this refactoring
+ * todo: at the moment due to half-done code reuse we already depend on EFI_ICU_INPUTS but still have custom code
  * todo: VVT implementation is a nasty copy-paste :(
  *
  * see digital_input_hw.cp

@@ -28,7 +28,7 @@
 #include "mpu_util.h"
 #include "fl_stack.h"
 
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_ICU_INPUTS || defined(__DOXYGEN__)
 
 #include "eficonsole.h"
 #include "pin_repository.h"
@@ -272,4 +272,4 @@ void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
 	hw->started = true;
 }
 
-#endif /* EFI_WAVE_ANALYZER */
+#endif /* EFI_ICU_INPUTS */
