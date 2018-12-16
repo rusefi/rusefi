@@ -49,6 +49,8 @@
  */
 #define EFI_WAVE_ANALYZER TRUE
 
+#define EFI_ICU_INPUTS TRUE
+
 /**
  * TunerStudio support.
  */
