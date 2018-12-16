@@ -1,4 +1,7 @@
 
+echo Should be executed from root folder
+pwd
+cd firmware
 
 doxygen
 IF NOT ERRORLEVEL echo doxygen run FAILED
