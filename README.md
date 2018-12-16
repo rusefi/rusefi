@@ -22,6 +22,7 @@ Important note - we now use submodules:
  * [Unit Tests](/unit_tests) Unit tests of firmware pieces
  * [Misc tools](/java_tools) Misc development utilities
  * [misc/Jenkins](/misc/jenkins) Jenkins Continues Integration scripts
+ * [Work in progress status](work_in_progress.md)
 
 # External Links
 
