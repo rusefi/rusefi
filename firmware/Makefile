@@ -3,7 +3,11 @@
 # NOTE: Can be overridden externally.
 #
 
-ifeq ("$(wildcard ChibiOS4/os/common/startup/ARMCMx/compilers/GCC/rules.mk)","")
+CHIBIOS = ChibiOS4
+RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
+RULESFILE = $(RULESPATH)/rules.mk
+
+ifeq ("$(wildcard $(RULESFILE))","")
 #
 # todo: someone please figure out the syntax to invoke 'git submodule update --init' from here
 #
@@ -108,7 +112,6 @@ PROJECT = rusefi
 PROJECT_DIR = .
 
 # Imported source files and paths
-CHIBIOS = ChibiOS4
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
 ifeq ($(PROJECT_BOARD),)
@@ -357,6 +360,4 @@ ULIBS = -lm
 # End of user defines
 ##############################################################################
 
-RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
-RULESFILE = $(RULESPATH)/rules.mk
 include $(RULESFILE)
