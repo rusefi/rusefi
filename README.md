@@ -32,6 +32,7 @@ Important note - we now use submodules:
  * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
  * Facebook https://www.facebook.com/rusEfiECU
  * YouTube: https://www.youtube.com/user/rusefi
+ * Patreon https://www.patreon.com/rusefi
 
 # Building the Code
 See https://rusefi.com/forum/viewtopic.php?f=5&t=9

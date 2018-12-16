@@ -18,7 +18,6 @@ make -v
 cd ..
 
 
-
 cd firmware
 echo %date% %time%
 
@@ -30,8 +29,7 @@ call flash_erase.bat
 
 
 echo build_current_bundle.bat: Building firmware
-rm -fR .dep
-rm -fR build
+call clean.bat
 git submodule update --init
 
 call update_version.bat
@@ -149,5 +147,4 @@ cd ..
 echo %date% %time%
 echo "build_current_bundle: DONE here"
 pwd
-
 
