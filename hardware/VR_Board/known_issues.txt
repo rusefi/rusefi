@@ -1,6 +1,6 @@
- 1)                   improve silkscreen for all pins
+ 1) RESOLVED IN R0.2  improve silkscreen for all pins
  2) RESOLVED IN R0.2  add power LED
 
- 3)                   add logo if possible
+ 3) RESOLVED IN R0.2  add logo if possible
 
  4) RESOLVED IN R0.2  LED's silk screen anode vs cathode was flipped
