@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include <board.h>
+//#include "board.h"
 #include "global.h"
 #include "io_pins.h"
 #include "efiGpio.h"
@@ -41,19 +41,6 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 		return GPIO_NULL;
 	}
 	return PORTS[brainPin / PORT_SIZE];
-}
-
-/**
- * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
- */
-ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED)
-		return EFI_ERROR_CODE;
-	if (brainPin > GPIO_UNASSIGNED || brainPin < 0) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
-		return EFI_ERROR_CODE;
-	}
-	return brainPin % PORT_SIZE;
 }
 
 bool efiReadPin(brain_pin_e pin) {
