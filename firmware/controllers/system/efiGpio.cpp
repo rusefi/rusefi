@@ -11,6 +11,7 @@
 #include "efiGpio.h"
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#include "pin_repository.h"
 #include "io_pins.h"
 #endif /* EFI_GPIO_HARDWARE */
 
@@ -452,6 +453,19 @@ const char *portname(ioportid_t GPIOx) {
 	if (GPIOx == GPIOF)
 		return "PF";
 	return "unknown";
+}
+
+/**
+ * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
+ */
+ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
+	if (brainPin == GPIO_UNASSIGNED)
+		return EFI_ERROR_CODE;
+	if (brainPin > GPIO_UNASSIGNED || brainPin < 0) {
+		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
+		return EFI_ERROR_CODE;
+	}
+	return brainPin % PORT_SIZE;
 }
 
 #else /* EFI_GPIO_HARDWARE */
