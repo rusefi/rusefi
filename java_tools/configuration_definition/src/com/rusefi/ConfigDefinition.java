@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * (c) Andrey Belomutskiy
@@ -31,7 +30,6 @@ public class ConfigDefinition {
     private static final String FIELDS_JAVA = "models/src/com/rusefi/config/Fields.java";
     private static int totalTsSize;
 
-    private static Stack<ConfigStructure> stack = new Stack<>();
     public static Map<String, ConfigStructure> structures = new HashMap<>();
     public static Map<String, String> tsCustomLine = new HashMap<>();
     public static Map<String, Integer> tsCustomSize = new HashMap<>();
@@ -44,11 +42,11 @@ public class ConfigDefinition {
             return;
         }
 
-        String inputPath = args[0];
+        String definitionInputPath = args[0];
         String tsPath = args[1];
         String headerDestinationFolder = args[2];
         String javaConsolePath = args[3];
-        String fullFileName = inputPath + File.separator + INPUT_FILE_NAME;
+        String fullFileName = definitionInputPath + File.separator + INPUT_FILE_NAME;
         System.out.println("Reading from " + fullFileName);
         String destCHeader = headerDestinationFolder + File.separator + ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H;
         System.out.println("Writing C header to " + destCHeader);
@@ -61,7 +59,8 @@ public class ConfigDefinition {
 
         CharArrayWriter javaFieldsWriter = new CharArrayWriter();
 
-        processFile(br, cHeader, tsWriter, javaFieldsWriter);
+        ReaderState state = new ReaderState();
+        processFile(state, br, cHeader, tsWriter, javaFieldsWriter);
 
         BufferedWriter javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + FIELDS_JAVA));
         javaFields.write("package com.rusefi.config;" + EOL + EOL);
@@ -75,15 +74,14 @@ public class ConfigDefinition {
 
         BufferedWriter tsHeader = writeTunerStudioFile(tsPath, tsWriter.toString());
 
-        if (!stack.isEmpty())
-            throw new IllegalStateException("Unclosed structure: " + stack.peek().getName());
+        state.ensureEmptyAfterProcessing();
 
         cHeader.close();
         tsHeader.close();
 
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
-        String inputFileName = inputPath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+        String inputFileName = definitionInputPath + File.separator + ROM_RAIDER_XML_TEMPLATE;
         String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
         processTextTemplate(inputFileName, outputFileName);
     }
@@ -158,7 +156,7 @@ public class ConfigDefinition {
         return new TsFileContent(prefix.toString(), postfix.toString());
     }
 
-    private static void processFile(BufferedReader br, BufferedWriter cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
+    private static void processFile(ReaderState state, BufferedReader br, BufferedWriter cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
         String line;
 
         String message = "// this section " + MESSAGE + EOL;
@@ -178,11 +176,11 @@ public class ConfigDefinition {
                 continue;
 
             if (line.startsWith(STRUCT)) {
-                handleStartStructure(line.substring(STRUCT.length()), true);
+                handleStartStructure(state, line.substring(STRUCT.length()), true);
             } else if (line.startsWith(STRUCT_NO_PREFIX)) {
-                handleStartStructure(line.substring(STRUCT_NO_PREFIX.length()), false);
+                handleStartStructure(state, line.substring(STRUCT_NO_PREFIX.length()), false);
             } else if (line.startsWith(END_STRUCT)) {
-                handleEndStruct(cHeader, tsHeader, javaFieldsWriter);
+                handleEndStruct(state, cHeader, tsHeader, javaFieldsWriter);
             } else if (line.startsWith(BIT)) {
                 line = line.substring(BIT.length() + 1).trim();
 
@@ -198,7 +196,7 @@ public class ConfigDefinition {
                 }
 
                 ConfigField bitField = new ConfigField(bitName, comment, true, null, null, 0, null, false);
-                stack.peek().addBoth(bitField);
+                state.stack.peek().addBoth(bitField);
 
             } else if (startsWithToken(line, CUSTOM)) {
                 line = line.substring(CUSTOM.length() + 1).trim();
@@ -220,7 +218,7 @@ public class ConfigDefinition {
                 tsCustomLine.put(name, tunerStudioLine);
 
             } else {
-                processLine(line);
+                processLine(state, line);
             }
         }
         cHeader.write("#endif" + EOL);
@@ -232,7 +230,7 @@ public class ConfigDefinition {
         return line.startsWith(token + " ") || line.startsWith(token + "\t");
     }
 
-    private static void handleStartStructure(String line, boolean withPrefix) {
+    private static void handleStartStructure(ReaderState state, String line, boolean withPrefix) {
         String name;
         String comment;
         if (line.contains(" ")) {
@@ -244,14 +242,14 @@ public class ConfigDefinition {
             comment = null;
         }
         ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
-        stack.push(structure);
+        state.stack.push(structure);
         System.out.println("Starting structure " + structure.getName());
     }
 
-    private static void handleEndStruct(Writer cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
-        if (stack.isEmpty())
+    private static void handleEndStruct(ReaderState state, Writer cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
+        if (state.stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
-        ConfigStructure structure = stack.pop();
+        ConfigStructure structure = state.stack.pop();
         System.out.println("Ending structure " + structure.getName());
         structure.addAlignmentFill();
 
@@ -259,7 +257,7 @@ public class ConfigDefinition {
 
         structure.headerWrite(cHeader);
 
-        if (stack.isEmpty()) {
+        if (state.stack.isEmpty()) {
             totalTsSize = structure.writeTunerStudio("", tsHeader, 0);
             tsHeader.write("; total TS size = " + totalTsSize + EOL);
             VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
@@ -268,7 +266,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static void processLine(String line) throws IOException {
+    private static void processLine(ReaderState state, String line) {
         /**
          * for example
          * #define CLT_CURVE_SIZE 16
@@ -282,9 +280,9 @@ public class ConfigDefinition {
         if (cf == null)
             throw new IllegalStateException("Cannot parse line [" + line + "]");
 
-        if (stack.isEmpty())
+        if (state.stack.isEmpty())
             throw new IllegalStateException(cf.name + ": Not enclosed in a struct");
-        ConfigStructure structure = stack.peek();
+        ConfigStructure structure = state.stack.peek();
 
         if (cf.isIterate) {
             structure.addC(cf);
