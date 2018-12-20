@@ -56,8 +56,9 @@ public class ConfigDefinition {
 
         ConfigurationConsumer cHeaderConsumer = new CHeaderConsumer(cHeader);
         ConfigurationConsumer tsProjectConsumer = new TSProjectConsumer(tsWriter, tsPath, state);
+        ConfigurationConsumer javaFieldsConcumer = new JavaFieldsConsumer(javaFieldsWriter, state);
 
-        processFile(state, br, cHeaderConsumer, javaFieldsWriter, tsProjectConsumer);
+        processFile(state, br, cHeaderConsumer, tsProjectConsumer, javaFieldsConcumer);
 
         BufferedWriter javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + FIELDS_JAVA));
         javaFields.write("package com.rusefi.config;" + EOL + EOL);
@@ -103,8 +104,10 @@ public class ConfigDefinition {
         fw.close();
     }
 
-    private static void processFile(ReaderState state, BufferedReader br, ConfigurationConsumer cHeaderConsumer,
-                                    CharArrayWriter javaFieldsWriter, ConfigurationConsumer tsProjectConsumer) throws IOException {
+    private static void processFile(ReaderState state, BufferedReader br,
+                                    ConfigurationConsumer cHeaderConsumer,
+                                    ConfigurationConsumer tsProjectConsumer,
+                                    ConfigurationConsumer javaFieldsConcumer) throws IOException {
         String line;
 
         cHeaderConsumer.startFile();
@@ -123,7 +126,7 @@ public class ConfigDefinition {
             } else if (line.startsWith(STRUCT_NO_PREFIX)) {
                 handleStartStructure(state, line.substring(STRUCT_NO_PREFIX.length()), false);
             } else if (line.startsWith(END_STRUCT)) {
-                handleEndStruct(state, cHeaderConsumer, javaFieldsWriter, tsProjectConsumer);
+                handleEndStruct(state, cHeaderConsumer, tsProjectConsumer, javaFieldsConcumer);
             } else if (line.startsWith(BIT)) {
                 handleBitLine(state, line);
 
@@ -202,7 +205,8 @@ public class ConfigDefinition {
     }
 
     private static void handleEndStruct(ReaderState state, ConfigurationConsumer cHeaderConsumer,
-                                        CharArrayWriter javaFieldsWriter, ConfigurationConsumer tsProjectConsumer) throws IOException {
+                                        ConfigurationConsumer tsProjectConsumer,
+                                        ConfigurationConsumer javaFieldsConcumer) throws IOException {
         if (state.stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = state.stack.pop();
@@ -213,10 +217,8 @@ public class ConfigDefinition {
 
         cHeaderConsumer.handleEndStruct(structure);
         tsProjectConsumer.handleEndStruct(structure);
+        javaFieldsConcumer.handleEndStruct(structure);
 
-        if (state.stack.isEmpty()) {
-            structure.writeJavaFields(state,"", javaFieldsWriter, 0);
-        }
     }
 
     private static void processField(ReaderState state, String line) {
