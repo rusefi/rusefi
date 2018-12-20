@@ -31,8 +31,6 @@ public class ConfigDefinition {
     private static int totalTsSize;
 
     public static Map<String, ConfigStructure> structures = new HashMap<>();
-    public static Map<String, String> tsCustomLine = new HashMap<>();
-    public static Map<String, Integer> tsCustomSize = new HashMap<>();
     public static StringBuilder settingContextHelp = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -182,21 +180,7 @@ public class ConfigDefinition {
             } else if (line.startsWith(END_STRUCT)) {
                 handleEndStruct(state, cHeader, tsHeader, javaFieldsWriter);
             } else if (line.startsWith(BIT)) {
-                line = line.substring(BIT.length() + 1).trim();
-
-                String bitName;
-                String comment;
-                if (!line.contains(";")) {
-                    bitName = line;
-                    comment = "";
-                } else {
-                    int index = line.indexOf(";");
-                    bitName = line.substring(0, index);
-                    comment = line.substring(index + 1);
-                }
-
-                ConfigField bitField = new ConfigField(bitName, comment, true, null, null, 0, null, false);
-                state.stack.peek().addBoth(bitField);
+                handleBitLine(state, line);
 
             } else if (startsWithToken(line, CUSTOM)) {
                 line = line.substring(CUSTOM.length() + 1).trim();
@@ -214,16 +198,40 @@ public class ConfigDefinition {
                 } catch (NumberFormatException e) {
                     throw new IllegalStateException("Size in " + line);
                 }
-                tsCustomSize.put(name, size);
-                tsCustomLine.put(name, tunerStudioLine);
+                state.tsCustomSize.put(name, size);
+                state.tsCustomLine.put(name, tunerStudioLine);
 
+            } else if (startsWithToken(line, DEFINE)) {
+                /**
+                 * for example
+                 * #define CLT_CURVE_SIZE 16
+                 */
+                processDefine(line.substring(DEFINE.length()).trim());
             } else {
-                processLine(state, line);
+                processField(state, line);
             }
         }
         cHeader.write("#endif" + EOL);
         cHeader.write("// end" + EOL);
         cHeader.write(message);
+    }
+
+    private static void handleBitLine(ReaderState state, String line) {
+        line = line.substring(BIT.length() + 1).trim();
+
+        String bitName;
+        String comment;
+        if (!line.contains(";")) {
+            bitName = line;
+            comment = "";
+        } else {
+            int index = line.indexOf(";");
+            bitName = line.substring(0, index);
+            comment = line.substring(index + 1);
+        }
+
+        ConfigField bitField = new ConfigField(state, bitName, comment, true, null, null, 0, null, false);
+        state.stack.peek().addBoth(bitField);
     }
 
     private static boolean startsWithToken(String line, String token) {
@@ -251,14 +259,14 @@ public class ConfigDefinition {
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = state.stack.pop();
         System.out.println("Ending structure " + structure.getName());
-        structure.addAlignmentFill();
+        structure.addAlignmentFill(state);
 
         ConfigDefinition.structures.put(structure.getName(), structure);
 
         structure.headerWrite(cHeader);
 
         if (state.stack.isEmpty()) {
-            totalTsSize = structure.writeTunerStudio("", tsHeader, 0);
+            totalTsSize = structure.writeTunerStudio(state,"", tsHeader, 0);
             tsHeader.write("; total TS size = " + totalTsSize + EOL);
             VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
 
@@ -266,17 +274,9 @@ public class ConfigDefinition {
         }
     }
 
-    private static void processLine(ReaderState state, String line) {
-        /**
-         * for example
-         * #define CLT_CURVE_SIZE 16
-         */
-        if (startsWithToken(line, DEFINE)) {
-            processDefine(line.substring(DEFINE.length()).trim());
-            return;
-        }
+    private static void processField(ReaderState state, String line) {
 
-        ConfigField cf = ConfigField.parse(line);
+        ConfigField cf = ConfigField.parse(state, line);
         if (cf == null)
             throw new IllegalStateException("Cannot parse line [" + line + "]");
 
@@ -287,7 +287,7 @@ public class ConfigDefinition {
         if (cf.isIterate) {
             structure.addC(cf);
             for (int i = 1; i <= cf.arraySize; i++) {
-                ConfigField element = new ConfigField(cf.name + i, cf.comment, false, null,
+                ConfigField element = new ConfigField(state,cf.name + i, cf.comment, false, null,
                         cf.type, 1, cf.tsInfo, false);
                 structure.addTs(element);
             }

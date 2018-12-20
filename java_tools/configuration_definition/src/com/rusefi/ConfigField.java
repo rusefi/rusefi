@@ -17,7 +17,7 @@ import static com.rusefi.ConfigDefinition.EOL;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField("", null, false, null, null, 1, null, false);
+    public static final ConfigField VOID = new ConfigField(null, "", null, false, null, null, 1, null, false);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\s([\\w\\d]+))?\\])?";
     private static final String namePattern = "[[\\w\\d\\s_]]+";
@@ -49,7 +49,7 @@ public class ConfigField {
      */
     public final boolean isIterate;
 
-    public ConfigField(String name, String comment, boolean isBit, String arraySizeAsText, String type,
+    public ConfigField(ReaderState state, String name, String comment, boolean isBit, String arraySizeAsText, String type,
                        int arraySize, String tsInfo, boolean isIterate) {
         if (name == null)
             throw new NullPointerException(comment + " " + isBit + " " + type);
@@ -59,11 +59,7 @@ public class ConfigField {
         this.isBit = isBit;
         this.arraySizeAsText = arraySizeAsText;
         this.type = type;
-        if (type == null) {
-            elementSize = 0;
-        } else {
-            elementSize = TypesHelper.getElementSize(type);
-        }
+        elementSize = TypesHelper.getElementSize(state, type);
         this.arraySize = arraySize;
         this.tsInfo = tsInfo;
         this.isIterate = isIterate;
@@ -77,7 +73,7 @@ public class ConfigField {
     /**
      * @see ConfigDefinitionTest#testParseLine()
      */
-    public static ConfigField parse(String line) {
+    public static ConfigField parse(ReaderState state, String line) {
         Matcher matcher = FIELD.matcher(line);
         if (!matcher.matches())
             return null;
@@ -97,7 +93,7 @@ public class ConfigField {
         String tsInfo = matcher.group(10);
 
         boolean isIterate = "iterate".equalsIgnoreCase(matcher.group(5));
-        ConfigField field = new ConfigField(name, comment, false, arraySizeAsText, type, arraySize,
+        ConfigField field = new ConfigField(state, name, comment, false, arraySizeAsText, type, arraySize,
                 tsInfo, isIterate);
         System.out.println("type " + type);
         System.out.println("name " + name);
@@ -141,7 +137,7 @@ public class ConfigField {
                 '}';
     }
 
-    public int writeTunerStudio(String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
+    public int writeTunerStudio(ReaderState state, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
         String nameWithPrefix = prefix + name;
 
         VariableRegistry.INSTANCE.register(nameWithPrefix + "_offset", tsPosition);
@@ -149,7 +145,7 @@ public class ConfigField {
         ConfigStructure cs = ConfigDefinition.structures.get(type);
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? name + "_" : "";
-            return cs.writeTunerStudio(prefix + extraPrefix, tsHeader, tsPosition);
+            return cs.writeTunerStudio(state, prefix + extraPrefix, tsHeader, tsPosition);
         }
 
         if (isBit) {
@@ -164,10 +160,10 @@ public class ConfigField {
             return tsPosition;
         }
 
-        if (ConfigDefinition.tsCustomLine.containsKey(type)) {
-            String bits = ConfigDefinition.tsCustomLine.get(type);
+        if (state.tsCustomLine.containsKey(type)) {
+            String bits = state.tsCustomLine.get(type);
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
-            int size = ConfigDefinition.tsCustomSize.get(type);
+            int size = state.tsCustomSize.get(type);
 //            tsHeader.headerWrite("\t" + size + ",");
             //          tsHeader.headerWrite("\t" + tsPosition + ",");
             bits = bits.replaceAll("@OFFSET@", "" + tsPosition);
