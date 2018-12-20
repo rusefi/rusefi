@@ -37,7 +37,7 @@ public class ConfigStructure {
         return name;
     }
 
-    public void addAlignmentFill() {
+    public void addAlignmentFill(ReaderState state) {
         bitState.reset();
         /**
          * we make alignment decision based on C fields since we expect interation and non-iteration fields
@@ -53,7 +53,7 @@ public class ConfigStructure {
         int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
 
         if (fillSize != 0) {
-            ConfigField fill = new ConfigField("alignmentFill", "need 4 byte alignment", false,
+            ConfigField fill = new ConfigField(state, "alignmentFill", "need 4 byte alignment", false,
                     "" + fillSize,
                     UINT8_T, fillSize, null, false);
             addBoth(fill);
@@ -86,12 +86,12 @@ public class ConfigStructure {
         cHeader.write("} " + name + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
     }
 
-    public int writeTunerStudio(String prefix, Writer tsHeader, int tsPosition) throws IOException {
+    public int writeTunerStudio(ReaderState state, String prefix, Writer tsHeader, int tsPosition) throws IOException {
         FieldIterator fieldIterator = new FieldIterator();
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
             ConfigField cf = tsFields.get(i);
-            tsPosition = cf.writeTunerStudio(prefix, tsHeader, tsPosition, next, fieldIterator.bitState.get());
+            tsPosition = cf.writeTunerStudio(state, prefix, tsHeader, tsPosition, next, fieldIterator.bitState.get());
 
             fieldIterator.bitState.incrementBitIndex(cf, next);
         }

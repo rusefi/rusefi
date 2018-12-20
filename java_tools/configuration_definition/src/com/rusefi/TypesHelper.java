@@ -9,13 +9,13 @@ import static com.rusefi.ConfigStructure.UINT_16_T;
  */
 public class TypesHelper {
 
-    public static int getElementSize(String type) {
+    public static int getElementSize(ReaderState state, String type) {
         if (type == null)
-            throw new NullPointerException("type");
+            return 0;
         if (ConfigDefinition.structures.containsKey(type))
             return ConfigDefinition.structures.get(type).totalSize;
-        if (ConfigDefinition.tsCustomSize.containsKey(type))
-            return ConfigDefinition.tsCustomSize.get(type);
+        if (state != null && state.tsCustomSize.containsKey(type))
+            return state.tsCustomSize.get(type);
         if (type.equals(UINT8_T))
             return 1;
         if (type.equals(INT_16_T) || type.equals(UINT_16_T)) {
