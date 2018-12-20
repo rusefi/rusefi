@@ -34,13 +34,30 @@ https://help.github.com/articles/configuring-a-remote-for-a-fork/
 
 git remote -v
 git remote add upstream https://github.com/ChibiOS/ChibiOS.git
+ or
+git remote add upstream https://github.com/RomRaider/RomRaider
 git remote -v
 
 =========================================
 https://help.github.com/articles/syncing-a-fork/
 git fetch upstream
 git merge upstream/stable_17.6.x
+ or
+git merge upstream/master
 git push
 
 
 http://stackoverflow.com/questions/9646167/clean-up-a-fork-and-restart-it-from-the-upstream
+
+=========================================
+https://stackoverflow.com/questions/19279490/can-i-fork-another-persons-repo-twice-into-my-own-account
+
+git clone http://github.com/RomRaider/RomRaider RomRaider_copy_2
+cd RomRaider_copy_2
+git remote remove origin
+git remote add origin https://github.com/rusefi/RomRaider_copy_2.git
+git push -u origin master
+
+
+
+
