@@ -48,9 +48,11 @@ public class ConfigField {
      * this property of array expands field into a bunch of variables like field1 field2 field3 etc
      */
     public final boolean isIterate;
+    private final ReaderState state;
 
     public ConfigField(ReaderState state, String name, String comment, boolean isBit, String arraySizeAsText, String type,
                        int arraySize, String tsInfo, boolean isIterate) {
+        this.state = state;
         if (name == null)
             throw new NullPointerException(comment + " " + isBit + " " + type);
         assertNoWhitespaces(name);
@@ -137,15 +139,15 @@ public class ConfigField {
                 '}';
     }
 
-    public int writeTunerStudio(ReaderState state, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
+    public int writeTunerStudio(String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
         String nameWithPrefix = prefix + name;
 
         VariableRegistry.INSTANCE.register(nameWithPrefix + "_offset", tsPosition);
 
-        ConfigStructure cs = ConfigDefinition.structures.get(type);
+        ConfigStructure cs = state.structures.get(type);
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? name + "_" : "";
-            return cs.writeTunerStudio(state, prefix + extraPrefix, tsHeader, tsPosition);
+            return cs.writeTunerStudio(prefix + extraPrefix, tsHeader, tsPosition);
         }
 
         if (isBit) {
@@ -203,10 +205,10 @@ public class ConfigField {
     }
 
     public int writeJavaFields(String prefix, Writer javaFieldsWriter, int tsPosition, ConfigField next, int bitIndex) throws IOException {
-        ConfigStructure cs = ConfigDefinition.structures.get(type);
+        ConfigStructure cs = state.structures.get(type);
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? name + "_" : "";
-            return cs.writeJavaFields(prefix + extraPrefix, javaFieldsWriter, tsPosition);
+            return cs.writeJavaFields(state, prefix + extraPrefix, javaFieldsWriter, tsPosition);
         }
 
         String nameWithPrefix = prefix + name;

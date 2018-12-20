@@ -64,41 +64,41 @@ public class ConfigStructure {
     /**
      * This method writes a C header version of a data structure
      */
-    public void headerWrite(Writer cHeader) throws IOException {
-        if (comment != null) {
-            cHeader.write("/**" + ConfigDefinition.EOL + ConfigDefinition.packComment(comment, "")  + ConfigDefinition.EOL + "*/" + ConfigDefinition.EOL);
+    public static void headerWrite(ConfigStructure configStructure, Writer cHeader) throws IOException {
+        if (configStructure.comment != null) {
+            cHeader.write("/**" + ConfigDefinition.EOL + ConfigDefinition.packComment(configStructure.comment, "")  + ConfigDefinition.EOL + "*/" + ConfigDefinition.EOL);
         }
 
-        cHeader.write("// start of " + name + ConfigDefinition.EOL);
+        cHeader.write("// start of " + configStructure.name + ConfigDefinition.EOL);
         cHeader.write("typedef struct {" + ConfigDefinition.EOL);
 
-        bitState.reset();
-        for (int i = 0; i < cFields.size(); i++) {
-            ConfigField cf = cFields.get(i);
-            cHeader.write(cf.getHeaderText(currentOffset, bitState.get()));
-            ConfigField next = i == cFields.size() - 1 ? ConfigField.VOID : cFields.get(i + 1);
+        configStructure.bitState.reset();
+        for (int i = 0; i < configStructure.cFields.size(); i++) {
+            ConfigField cf = configStructure.cFields.get(i);
+            cHeader.write(cf.getHeaderText(configStructure.currentOffset, configStructure.bitState.get()));
+            ConfigField next = i == configStructure.cFields.size() - 1 ? ConfigField.VOID : configStructure.cFields.get(i + 1);
 
-            bitState.incrementBitIndex(cf, next);
-            currentOffset += cf.getSize(next);
+            configStructure.bitState.incrementBitIndex(cf, next);
+            configStructure.currentOffset += cf.getSize(next);
         }
 
-        cHeader.write("\t/** total size " + currentOffset + "*/" + ConfigDefinition.EOL);
-        cHeader.write("} " + name + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
+        cHeader.write("\t/** total size " + configStructure.currentOffset + "*/" + ConfigDefinition.EOL);
+        cHeader.write("} " + configStructure.name + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
     }
 
-    public int writeTunerStudio(ReaderState state, String prefix, Writer tsHeader, int tsPosition) throws IOException {
+    public int writeTunerStudio(String prefix, Writer tsHeader, int tsPosition) throws IOException {
         FieldIterator fieldIterator = new FieldIterator();
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
             ConfigField cf = tsFields.get(i);
-            tsPosition = cf.writeTunerStudio(state, prefix, tsHeader, tsPosition, next, fieldIterator.bitState.get());
+            tsPosition = cf.writeTunerStudio(prefix, tsHeader, tsPosition, next, fieldIterator.bitState.get());
 
             fieldIterator.bitState.incrementBitIndex(cf, next);
         }
         return tsPosition;
     }
 
-    public int writeJavaFields(String prefix, Writer javaFieldsWriter, int tsPosition) throws IOException {
+    public int writeJavaFields(ReaderState state, String prefix, Writer javaFieldsWriter, int tsPosition) throws IOException {
         FieldIterator fieldIterator = new FieldIterator();
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
