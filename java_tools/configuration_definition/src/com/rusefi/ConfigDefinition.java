@@ -212,13 +212,7 @@ public class ConfigDefinition {
         state.structures.put(structure.getName(), structure);
 
         cHeaderConsumer.handleEndStruct(structure);
-
-        if (state.stack.isEmpty()) {
-            totalTsSize = structure.writeTunerStudio("", tsHeader, 0);
-            tsHeader.write("; total TS size = " + totalTsSize + EOL);
-            VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
-
-        }
+        tsProjectConsumer.handleEndStruct(structure);
 
         if (state.stack.isEmpty()) {
             structure.writeJavaFields(state,"", javaFieldsWriter, 0);

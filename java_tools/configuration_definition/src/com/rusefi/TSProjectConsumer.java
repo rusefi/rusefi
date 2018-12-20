@@ -86,7 +86,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             ConfigDefinition.totalTsSize = structure.writeTunerStudio("", tsWriter, 0);
             tsWriter.write("; total TS size = " + ConfigDefinition.totalTsSize + EOL);
             VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", ConfigDefinition.totalTsSize);
-            writeTunerStudioFile(tsPath, tsWriter.toString());
         }
     }
 
