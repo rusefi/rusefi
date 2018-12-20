@@ -22,7 +22,6 @@ public class ConfigDefinition {
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
-    public static int totalTsSize;
 
     public static StringBuilder settingContextHelp = new StringBuilder();
 
@@ -58,10 +57,6 @@ public class ConfigDefinition {
         ConfigurationConsumer javaFieldsConsumer = new JavaFieldsConsumer(javaFieldsWriter, state, javaConsolePath);
 
         processFile(state, br, cHeaderConsumer, tsProjectConsumer, javaFieldsConsumer);
-
-
-
-        TSProjectConsumer.writeTunerStudioFile(tsPath, tsWriter.toString());
 
         state.ensureEmptyAfterProcessing();
 
@@ -135,6 +130,7 @@ public class ConfigDefinition {
             }
         }
         cHeaderConsumer.endFile();
+        tsProjectConsumer.endFile();
         javaFieldsConcumer.endFile();
     }
 
