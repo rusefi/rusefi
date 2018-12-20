@@ -12,7 +12,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private final CharArrayWriter tsWriter;
     private final String tsPath;
     private final ReaderState state;
-   // private int totalTsSize;
+    private int totalTsSize;
 
     public TSProjectConsumer(CharArrayWriter tsWriter, String tsPath, ReaderState state) {
         this.tsWriter = tsWriter;
@@ -20,7 +20,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         this.state = state;
     }
 
-    static void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
+    private void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
         TsFileContent tsContent = readTsFile(tsPath);
         System.out.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + ConfigDefinition.TS_FILE_INPUT_NAME);
 
@@ -29,7 +29,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         tsHeader.write("; " + CONFIG_DEFINITION_START + ConfigDefinition.EOL);
         tsHeader.write("; this section " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        tsHeader.write("pageSize            = " + ConfigDefinition.totalTsSize + ConfigDefinition.EOL);
+        tsHeader.write("pageSize            = " + totalTsSize + ConfigDefinition.EOL);
         tsHeader.write("page = 1" + ConfigDefinition.EOL);
         tsHeader.write(fieldsSection);
         if (ConfigDefinition.settingContextHelp.length() > 0) {
@@ -77,16 +77,15 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-
+        writeTunerStudioFile(tsPath, tsWriter.toString());
     }
 
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
-            ConfigDefinition.totalTsSize = structure.writeTunerStudio("", tsWriter, 0);
-            tsWriter.write("; total TS size = " + ConfigDefinition.totalTsSize + EOL);
-            VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", ConfigDefinition.totalTsSize);
- //           TSProjectConsumer.writeTunerStudioFile(tsPath, tsWriter.toString());
+            totalTsSize = structure.writeTunerStudio("", tsWriter, 0);
+            tsWriter.write("; total TS size = " + totalTsSize + EOL);
+            VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
         }
     }
 }
