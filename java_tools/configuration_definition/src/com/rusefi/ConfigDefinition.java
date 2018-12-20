@@ -70,12 +70,12 @@ public class ConfigDefinition {
         javaFields.close();
 
 
-        BufferedWriter tsHeader = writeTunerStudioFile(tsPath, tsWriter.toString());
+        writeTunerStudioFile(tsPath, tsWriter.toString());
 
         state.ensureEmptyAfterProcessing();
 
         cHeader.close();
-        tsHeader.close();
+
 
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
@@ -84,7 +84,7 @@ public class ConfigDefinition {
         processTextTemplate(inputFileName, outputFileName);
     }
 
-    private static BufferedWriter writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
+    private static void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
         TsFileContent tsContent = readTsFile(tsPath);
         System.out.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
@@ -102,7 +102,7 @@ public class ConfigDefinition {
         }
         tsHeader.write("; " + CONFIG_DEFINITION_END + ConfigDefinition.EOL);
         tsHeader.write(tsContent.getPostfix());
-        return tsHeader;
+        tsHeader.close();
     }
 
     private static void processTextTemplate(String inputFileName, String outputFileName) throws IOException {
