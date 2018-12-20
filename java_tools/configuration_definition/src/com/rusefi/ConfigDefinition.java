@@ -75,7 +75,7 @@ public class ConfigDefinition {
         BufferedWriter tsHeader = writeTunerStudioFile(tsPath, tsWriter.toString());
 
         if (!stack.isEmpty())
-            throw new IllegalStateException("Unclosed structure: " + stack.peek().name);
+            throw new IllegalStateException("Unclosed structure: " + stack.peek().getName());
 
         cHeader.close();
         tsHeader.close();
@@ -242,17 +242,17 @@ public class ConfigDefinition {
         }
         ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         stack.push(structure);
-        System.out.println("Starting structure " + structure.name);
+        System.out.println("Starting structure " + structure.getName());
     }
 
     private static void handleEndStruct(Writer cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
         if (stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = stack.pop();
-        System.out.println("Ending structure " + structure.name);
+        System.out.println("Ending structure " + structure.getName());
         structure.addAlignmentFill();
 
-        ConfigDefinition.structures.put(structure.name, structure);
+        ConfigDefinition.structures.put(structure.getName(), structure);
 
         structure.headerWrite(cHeader);
 
