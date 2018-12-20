@@ -55,11 +55,10 @@ public class ConfigDefinition {
 
         ConfigurationConsumer cHeaderConsumer = new CHeaderConsumer(cHeader);
         ConfigurationConsumer tsProjectConsumer = new TSProjectConsumer(tsWriter, tsPath, state);
-        ConfigurationConsumer javaFieldsConcumer = new JavaFieldsConsumer(javaFieldsWriter, state);
+        ConfigurationConsumer javaFieldsConsumer = new JavaFieldsConsumer(javaFieldsWriter, state, javaConsolePath);
 
-        processFile(state, br, cHeaderConsumer, tsProjectConsumer, javaFieldsConcumer);
+        processFile(state, br, cHeaderConsumer, tsProjectConsumer, javaFieldsConsumer);
 
-        JavaFieldsConsumer.writeFields(javaConsolePath, javaFieldsWriter);
 
 
         TSProjectConsumer.writeTunerStudioFile(tsPath, tsWriter.toString());
@@ -136,6 +135,7 @@ public class ConfigDefinition {
             }
         }
         cHeaderConsumer.endFile();
+        javaFieldsConcumer.endFile();
     }
 
     private static void handleCustomLine(ReaderState state, String line) {

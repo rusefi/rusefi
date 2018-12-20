@@ -8,6 +8,4 @@ public interface ConfigurationConsumer {
     void endFile() throws IOException;
 
     void handleEndStruct(ConfigStructure structure) throws IOException;
-
-    void onTotalEnd();
 }
