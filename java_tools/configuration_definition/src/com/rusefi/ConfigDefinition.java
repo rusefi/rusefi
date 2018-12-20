@@ -25,7 +25,8 @@ public class ConfigDefinition {
     private static final String BIT = "bit";
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
-    private static final String ROM_RAIDER_XML = "rusefi.xml";
+    private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
+    private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
     private static final String FIELDS_JAVA = "models/src/com/rusefi/config/Fields.java";
     private static int totalTsSize;
@@ -82,7 +83,9 @@ public class ConfigDefinition {
 
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
-        processTextTemplate(inputPath + File.separator + ROM_RAIDER_XML, javaConsolePath + File.separator + ROM_RAIDER_XML);
+        String inputFileName = inputPath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+        String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
+        processTextTemplate(inputFileName, outputFileName);
     }
 
     private static BufferedWriter writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
