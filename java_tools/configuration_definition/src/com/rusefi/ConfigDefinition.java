@@ -2,8 +2,6 @@ package com.rusefi;
 
 import java.io.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * (c) Andrey Belomutskiy
@@ -13,7 +11,7 @@ import java.util.Map;
 public class ConfigDefinition {
     public static final String EOL = "\n";
     private static final String INPUT_FILE_NAME = "rusefi_config.txt";
-    private static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
+    public static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
     private static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final String TS_FILE_OUTPUT_NAME = "rusefi.ini";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
@@ -30,7 +28,6 @@ public class ConfigDefinition {
     private static final String FIELDS_JAVA = "models/src/com/rusefi/config/Fields.java";
     private static int totalTsSize;
 
-    public static Map<String, ConfigStructure> structures = new HashMap<>();
     public static StringBuilder settingContextHelp = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -57,8 +54,11 @@ public class ConfigDefinition {
 
         CharArrayWriter javaFieldsWriter = new CharArrayWriter();
 
+
+        ConfigurationConsumer cHeaderConsumer = new CHeaderConsumer(cHeader);
+
         ReaderState state = new ReaderState();
-        processFile(state, br, cHeader, tsWriter, javaFieldsWriter);
+        processFile(state, br, cHeaderConsumer, tsWriter, javaFieldsWriter);
 
         BufferedWriter javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + FIELDS_JAVA));
         javaFields.write("package com.rusefi.config;" + EOL + EOL);
@@ -154,15 +154,11 @@ public class ConfigDefinition {
         return new TsFileContent(prefix.toString(), postfix.toString());
     }
 
-    private static void processFile(ReaderState state, BufferedReader br, BufferedWriter cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
+    private static void processFile(ReaderState state, BufferedReader br, ConfigurationConsumer cHeaderConsumer,
+                                    Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
         String line;
 
-        String message = "// this section " + MESSAGE + EOL;
-        cHeader.write(message);
-        cHeader.write("// begin" + EOL);
-        cHeader.write("#ifndef ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
-        cHeader.write("#define ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
-        cHeader.write("#include \"rusefi_types.h\"" + EOL);
+        cHeaderConsumer.startFile();
 
         while ((line = br.readLine()) != null) {
             line = line.trim();
@@ -178,28 +174,12 @@ public class ConfigDefinition {
             } else if (line.startsWith(STRUCT_NO_PREFIX)) {
                 handleStartStructure(state, line.substring(STRUCT_NO_PREFIX.length()), false);
             } else if (line.startsWith(END_STRUCT)) {
-                handleEndStruct(state, cHeader, tsHeader, javaFieldsWriter);
+                handleEndStruct(state, cHeaderConsumer, tsHeader, javaFieldsWriter);
             } else if (line.startsWith(BIT)) {
                 handleBitLine(state, line);
 
             } else if (startsWithToken(line, CUSTOM)) {
-                line = line.substring(CUSTOM.length() + 1).trim();
-                int index = line.indexOf(' ');
-                String name = line.substring(0, index);
-                line = line.substring(index).trim();
-                index = line.indexOf(' ');
-                String customSize = line.substring(0, index);
-
-                String tunerStudioLine = line.substring(index).trim();
-                tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
-                int size;
-                try {
-                    size = Integer.parseInt(customSize);
-                } catch (NumberFormatException e) {
-                    throw new IllegalStateException("Size in " + line);
-                }
-                state.tsCustomSize.put(name, size);
-                state.tsCustomLine.put(name, tunerStudioLine);
+                handleCustomLine(state, line);
 
             } else if (startsWithToken(line, DEFINE)) {
                 /**
@@ -211,9 +191,27 @@ public class ConfigDefinition {
                 processField(state, line);
             }
         }
-        cHeader.write("#endif" + EOL);
-        cHeader.write("// end" + EOL);
-        cHeader.write(message);
+        cHeaderConsumer.endFile();
+    }
+
+    private static void handleCustomLine(ReaderState state, String line) {
+        line = line.substring(CUSTOM.length() + 1).trim();
+        int index = line.indexOf(' ');
+        String name = line.substring(0, index);
+        line = line.substring(index).trim();
+        index = line.indexOf(' ');
+        String customSize = line.substring(0, index);
+
+        String tunerStudioLine = line.substring(index).trim();
+        tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
+        int size;
+        try {
+            size = Integer.parseInt(customSize);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException("Size in " + line);
+        }
+        state.tsCustomSize.put(name, size);
+        state.tsCustomLine.put(name, tunerStudioLine);
     }
 
     private static void handleBitLine(ReaderState state, String line) {
@@ -254,23 +252,24 @@ public class ConfigDefinition {
         System.out.println("Starting structure " + structure.getName());
     }
 
-    private static void handleEndStruct(ReaderState state, Writer cHeader, Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
+    private static void handleEndStruct(ReaderState state, ConfigurationConsumer cHeaderConsumer,
+                                        Writer tsHeader, CharArrayWriter javaFieldsWriter) throws IOException {
         if (state.stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = state.stack.pop();
         System.out.println("Ending structure " + structure.getName());
         structure.addAlignmentFill(state);
 
-        ConfigDefinition.structures.put(structure.getName(), structure);
+        state.structures.put(structure.getName(), structure);
 
-        structure.headerWrite(cHeader);
+        cHeaderConsumer.handleEndStruct(structure);
 
         if (state.stack.isEmpty()) {
-            totalTsSize = structure.writeTunerStudio(state,"", tsHeader, 0);
+            totalTsSize = structure.writeTunerStudio("", tsHeader, 0);
             tsHeader.write("; total TS size = " + totalTsSize + EOL);
             VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
 
-            structure.writeJavaFields("", javaFieldsWriter, 0);
+            structure.writeJavaFields(state,"", javaFieldsWriter, 0);
         }
     }
 

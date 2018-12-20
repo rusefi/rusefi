@@ -12,8 +12,8 @@ public class TypesHelper {
     public static int getElementSize(ReaderState state, String type) {
         if (type == null)
             return 0;
-        if (ConfigDefinition.structures.containsKey(type))
-            return ConfigDefinition.structures.get(type).totalSize;
+        if (state != null && state.structures.containsKey(type))
+            return state.structures.get(type).totalSize;
         if (state != null && state.tsCustomSize.containsKey(type))
             return state.tsCustomSize.get(type);
         if (type.equals(UINT8_T))
