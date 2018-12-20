@@ -57,7 +57,7 @@ public class ConfigDefinition {
         ConfigurationConsumer cHeaderConsumer = new CHeaderConsumer(cHeader);
         ConfigurationConsumer tsProjectConsumer = new TSProjectConsumer(tsWriter, tsPath, state);
 
-        processFile(state, br, cHeaderConsumer, tsWriter, javaFieldsWriter, tsProjectConsumer);
+        processFile(state, br, cHeaderConsumer, javaFieldsWriter, tsProjectConsumer);
 
         BufferedWriter javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + FIELDS_JAVA));
         javaFields.write("package com.rusefi.config;" + EOL + EOL);
@@ -104,7 +104,7 @@ public class ConfigDefinition {
     }
 
     private static void processFile(ReaderState state, BufferedReader br, ConfigurationConsumer cHeaderConsumer,
-                                    Writer tsHeader, CharArrayWriter javaFieldsWriter, ConfigurationConsumer tsProjectConsumer) throws IOException {
+                                    CharArrayWriter javaFieldsWriter, ConfigurationConsumer tsProjectConsumer) throws IOException {
         String line;
 
         cHeaderConsumer.startFile();
@@ -123,7 +123,7 @@ public class ConfigDefinition {
             } else if (line.startsWith(STRUCT_NO_PREFIX)) {
                 handleStartStructure(state, line.substring(STRUCT_NO_PREFIX.length()), false);
             } else if (line.startsWith(END_STRUCT)) {
-                handleEndStruct(state, cHeaderConsumer, tsHeader, javaFieldsWriter, tsProjectConsumer);
+                handleEndStruct(state, cHeaderConsumer, javaFieldsWriter, tsProjectConsumer);
             } else if (line.startsWith(BIT)) {
                 handleBitLine(state, line);
 
@@ -202,7 +202,7 @@ public class ConfigDefinition {
     }
 
     private static void handleEndStruct(ReaderState state, ConfigurationConsumer cHeaderConsumer,
-                                        Writer tsHeader, CharArrayWriter javaFieldsWriter, ConfigurationConsumer tsProjectConsumer) throws IOException {
+                                        CharArrayWriter javaFieldsWriter, ConfigurationConsumer tsProjectConsumer) throws IOException {
         if (state.stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = state.stack.pop();
