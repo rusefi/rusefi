@@ -7,13 +7,15 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
 
     private final CharArrayWriter javaFieldsWriter;
     private final ReaderState state;
+    private final String javaConsolePath;
 
-    public JavaFieldsConsumer(CharArrayWriter javaFieldsWriter, ReaderState state) {
+    public JavaFieldsConsumer(CharArrayWriter javaFieldsWriter, ReaderState state, String javaConsolePath) {
         this.javaFieldsWriter = javaFieldsWriter;
         this.state = state;
+        this.javaConsolePath = javaConsolePath;
     }
 
-    static void writeFields(String javaConsolePath, CharArrayWriter javaFieldsWriter) throws IOException {
+    private static void writeFields(String javaConsolePath, CharArrayWriter javaFieldsWriter) throws IOException {
         BufferedWriter javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + FIELDS_JAVA));
         javaFields.write("package com.rusefi.config;" + ConfigDefinition.EOL + ConfigDefinition.EOL);
         javaFields.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL);
@@ -31,7 +33,7 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-
+        JavaFieldsConsumer.writeFields(javaConsolePath, javaFieldsWriter);
     }
 
     @Override
@@ -39,10 +41,5 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
         if (state.stack.isEmpty()) {
             structure.writeJavaFields(state,"", javaFieldsWriter, 0);
         }
-    }
-
-    @Override
-    public void onTotalEnd() {
-
     }
 }

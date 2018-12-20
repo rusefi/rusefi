@@ -89,9 +89,4 @@ public class TSProjectConsumer implements ConfigurationConsumer {
  //           TSProjectConsumer.writeTunerStudioFile(tsPath, tsWriter.toString());
         }
     }
-
-    @Override
-    public void onTotalEnd() {
-
-    }
 }

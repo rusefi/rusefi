@@ -35,9 +35,4 @@ public class CHeaderConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         ConfigStructure.headerWrite(structure, cHeader);
     }
-
-    @Override
-    public void onTotalEnd() {
-
-    }
 }
