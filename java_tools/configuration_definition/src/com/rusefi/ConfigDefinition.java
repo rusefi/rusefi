@@ -12,21 +12,18 @@ public class ConfigDefinition {
     public static final String EOL = "\n";
     private static final String INPUT_FILE_NAME = "rusefi_config.txt";
     public static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
-    private static final String TS_FILE_INPUT_NAME = "rusefi.input";
-    private static final String TS_FILE_OUTPUT_NAME = "rusefi.ini";
+    public static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
     private static final String END_STRUCT = "end_struct";
     private static final String CUSTOM = "custom";
     private static final String DEFINE = "#define";
     private static final String BIT = "bit";
-    private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
-    private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
     private static final String FIELDS_JAVA = "models/src/com/rusefi/config/Fields.java";
-    private static int totalTsSize;
+    public static int totalTsSize;
 
     public static StringBuilder settingContextHelp = new StringBuilder();
 
@@ -55,9 +52,11 @@ public class ConfigDefinition {
         CharArrayWriter javaFieldsWriter = new CharArrayWriter();
 
 
-        ConfigurationConsumer cHeaderConsumer = new CHeaderConsumer(cHeader);
-
         ReaderState state = new ReaderState();
+
+        ConfigurationConsumer cHeaderConsumer = new CHeaderConsumer(cHeader);
+        ConfigurationConsumer tsProjectConsumer = new TSProjectConsumer(tsWriter, tsPath, state);
+
         processFile(state, br, cHeaderConsumer, tsWriter, javaFieldsWriter);
 
         BufferedWriter javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + FIELDS_JAVA));
@@ -70,7 +69,7 @@ public class ConfigDefinition {
         javaFields.close();
 
 
-        writeTunerStudioFile(tsPath, tsWriter.toString());
+        TSProjectConsumer.writeTunerStudioFile(tsPath, tsWriter.toString());
 
         state.ensureEmptyAfterProcessing();
 
@@ -82,27 +81,6 @@ public class ConfigDefinition {
         String inputFileName = definitionInputPath + File.separator + ROM_RAIDER_XML_TEMPLATE;
         String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
         processTextTemplate(inputFileName, outputFileName);
-    }
-
-    private static void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
-        TsFileContent tsContent = readTsFile(tsPath);
-        System.out.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
-
-        BufferedWriter tsHeader = new BufferedWriter(new FileWriter(tsPath + File.separator + TS_FILE_OUTPUT_NAME));
-        tsHeader.write(tsContent.getPrefix());
-
-        tsHeader.write("; " + CONFIG_DEFINITION_START + ConfigDefinition.EOL);
-        tsHeader.write("; this section " + MESSAGE + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        tsHeader.write("pageSize            = " + totalTsSize + ConfigDefinition.EOL);
-        tsHeader.write("page = 1" + ConfigDefinition.EOL);
-        tsHeader.write(fieldsSection);
-        if (settingContextHelp.length() > 0) {
-            tsHeader.write("[SettingContextHelp]" + ConfigDefinition.EOL);
-            tsHeader.write(settingContextHelp.toString() + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        }
-        tsHeader.write("; " + CONFIG_DEFINITION_END + ConfigDefinition.EOL);
-        tsHeader.write(tsContent.getPostfix());
-        tsHeader.close();
     }
 
     private static void processTextTemplate(String inputFileName, String outputFileName) throws IOException {
@@ -123,35 +101,6 @@ public class ConfigDefinition {
             fw.write(line + ConfigDefinition.EOL);
         }
         fw.close();
-    }
-
-    private static TsFileContent readTsFile(String tsPath) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader(tsPath + File.separator + TS_FILE_INPUT_NAME));
-
-        StringBuilder prefix = new StringBuilder();
-        StringBuilder postfix = new StringBuilder();
-
-        boolean isBeforeStartTag = true;
-        boolean isAfterEndTag = false;
-        String line;
-        while ((line = r.readLine()) != null) {
-            if (line.contains(CONFIG_DEFINITION_START)) {
-                isBeforeStartTag = false;
-                continue;
-            }
-            if (line.contains(CONFIG_DEFINITION_END)) {
-                isAfterEndTag = true;
-                continue;
-            }
-
-            if (isBeforeStartTag)
-                prefix.append(line + ConfigDefinition.EOL);
-
-            if (isAfterEndTag)
-                postfix.append(VariableRegistry.INSTANCE.applyVariables(line) + ConfigDefinition.EOL);
-        }
-        r.close();
-        return new TsFileContent(prefix.toString(), postfix.toString());
     }
 
     private static void processFile(ReaderState state, BufferedReader br, ConfigurationConsumer cHeaderConsumer,
