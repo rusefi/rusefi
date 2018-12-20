@@ -1,8 +1,9 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 09 10:18:27 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 19 21:31:59 EST 2018
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
 #include "rusefi_types.h"
+// start of pid_s
 typedef struct {
 	/**
 	 * offset 0
@@ -39,6 +40,7 @@ typedef struct {
 	/** total size 20*/
 } pid_s;
 
+// start of cranking_parameters_s
 typedef struct {
 	/**
 	 * Fuel squirt duration while cranking
@@ -60,6 +62,7 @@ typedef struct {
 	/** total size 8*/
 } cranking_parameters_s;
 
+// start of air_pressure_sensor_config_s
 typedef struct {
 	/**
 	 * kPa value at low volts
@@ -86,6 +89,7 @@ typedef struct {
  * @brief MAP averaging configuration
 
 */
+// start of MAP_sensor_config_s
 typedef struct {
 	/**
 	 * offset 0
@@ -116,6 +120,7 @@ typedef struct {
  * @brief Thermistor known values
 
 */
+// start of thermistor_conf_s
 typedef struct {
 	/**
 	 * these values are in Celcuus
@@ -153,6 +158,7 @@ typedef struct {
  * @brief Oil pressure sensor interpolation
 
 */
+// start of oil_pressure_config_s
 typedef struct {
 	/**
 	 * offset 0
@@ -181,6 +187,7 @@ typedef struct {
  * @brief Thermistor curve parameters
 
 */
+// start of ThermistorConf
 typedef struct {
 	/**
 	 * offset 0
@@ -193,6 +200,7 @@ typedef struct {
 	/** total size 32*/
 } ThermistorConf;
 
+// start of injector_s
 typedef struct {
 	/**
 	 * cc/min, cubic centimeter per minute
@@ -216,6 +224,7 @@ typedef struct {
 	/** total size 68*/
 } injector_s;
 
+// start of bi_quard_s
 typedef struct {
 	/**
 	 * offset 0
@@ -240,6 +249,7 @@ typedef struct {
 	/** total size 20*/
 } bi_quard_s;
 
+// start of specs_s
 typedef struct {
 	/**
 	 * Engine displacement, in liters
@@ -262,6 +272,7 @@ typedef struct {
  * @brief Trigger wheel(s) configuration
 
 */
+// start of trigger_config_s
 typedef struct {
 	/**
 	 * set trigger_type X
@@ -289,6 +300,7 @@ typedef struct {
 	/** total size 16*/
 } trigger_config_s;
 
+// start of afr_sensor_s
 typedef struct {
 	/**
 	 * offset 0
@@ -313,6 +325,7 @@ typedef struct {
 	/** total size 20*/
 } afr_sensor_s;
 
+// start of idle_hardware_s
 typedef struct {
 	/**
 	 * offset 0
@@ -337,6 +350,7 @@ typedef struct {
 	/** total size 20*/
 } idle_hardware_s;
 
+// start of board_configuration_s
 typedef struct {
 	/**
 	 * offset 0
@@ -866,6 +880,7 @@ typedef struct {
 	/** total size 864*/
 } board_configuration_s;
 
+// start of engine_configuration_s
 typedef struct {
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
@@ -2197,6 +2212,7 @@ typedef struct {
 	/** total size 6480*/
 } engine_configuration_s;
 
+// start of persistent_config_s
 typedef struct {
 	/**
 	 * offset 0
@@ -2439,4 +2455,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Dec 09 10:18:27 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 19 21:31:59 EST 2018

@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public class ConfigStructure {
     public static final String UINT_16_T = "uint16_t";
     public static final String INT_16_T = "int16_t";
 
-    public final String name;
+    private final String name;
     private final String comment;
     public final boolean withPrefix;
     /**
@@ -32,6 +31,10 @@ public class ConfigStructure {
         this.name = name;
         this.comment = comment;
         this.withPrefix = withPrefix;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void addAlignmentFill() {
@@ -65,6 +68,8 @@ public class ConfigStructure {
         if (comment != null) {
             cHeader.write("/**" + ConfigDefinition.EOL + ConfigDefinition.packComment(comment, "")  + ConfigDefinition.EOL + "*/" + ConfigDefinition.EOL);
         }
+
+        cHeader.write("// start of " + name + ConfigDefinition.EOL);
         cHeader.write("typedef struct {" + ConfigDefinition.EOL);
 
         bitState.reset();
