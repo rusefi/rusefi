@@ -1,7 +1,7 @@
 72 pin connector Mazda Miata MX-5 NB2
 
 
-# [For sale HERE](https://www.tindie.com/products/russian/72p-connector-bare-pcb-miata-nb2/)
+# [For sale here](https://www.tindie.com/products/russian/72p-connector-bare-pcb-miata-nb2/)
 
 ![Connector](connector.png)
 
