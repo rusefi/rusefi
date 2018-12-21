@@ -28,14 +28,17 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:logo
+LIBS:logo_flipped
+LIBS:172319-1_connector-cache
 EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "ECU adapter"
-Date "2017-12-16"
-Rev "R0.1"
+Date "2018-12-21"
+Rev "R0.2"
 Comp "rusEFI by DAECU"
 Comment1 ""
 Comment2 ""
@@ -240,6 +243,28 @@ F 1 "GND" H 6100 5475 50  0000 C CNN
 F 2 "" H 6100 5625 50  0000 C CNN
 F 3 "" H 6100 5625 50  0000 C CNN
 	1    6100 5625
+	1    0    0    -1  
+$EndComp
+$Comp
+L LOGO #G1
+U 1 1 5C1CC128
+P 5950 7800
+F 0 "#G1" H 5950 7697 60  0001 C CNN
+F 1 "LOGO" H 5950 7903 60  0001 C CNN
+F 2 "rusEFI_Lib:LOGO" H 5950 7800 60  0001 C CNN
+F 3 "" H 5950 7800 60  0001 C CNN
+	1    5950 7800
+	1    0    0    -1  
+$EndComp
+$Comp
+L LOGO #G2
+U 1 1 5C1CC142
+P 5950 7800
+F 0 "#G2" H 5950 7697 60  0001 C CNN
+F 1 "LOGO" H 5950 7903 60  0001 C CNN
+F 2 "rusEFI_Lib:LOGO_F" H 5950 7800 60  0001 C CNN
+F 3 "" H 5950 7800 60  0001 C CNN
+	1    5950 7800
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

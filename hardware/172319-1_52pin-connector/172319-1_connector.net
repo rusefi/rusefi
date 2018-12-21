@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:/Users/Vista_64_D630/Desktop/Jared/code/Hardware/trunk/rusefi.com/172319-1_52pin-connector/172319-1_connector.sch)
-    (date "2/11/2018 7:56:01 AM")
+    (date "12/21/2018 5:33:26 AM")
     (tool "Eeschema 4.0.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
