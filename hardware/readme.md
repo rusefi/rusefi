@@ -9,7 +9,7 @@ See [Connectors wiki page](http://rusefi.com/wiki/index.php?title=Hardware:OEM_c
 todo: move Connectors wiki page content into git
 
 * [35 pin](MX7-C-35PL-C11-connector) Mazda TCU
-& [38 pin](NGC_38_connector) Chrysler NGC connector
+* [38 pin](NGC_38_connector) Chrysler NGC connector
 * [52 pin](172319-1_52pin-connector) Mitsubishi Galant VR4
 * [55 pin](963063-15_55_pin_connector) BMW Lada
 * [64 pin](176122-6-connector) Mazda Miata NA NB1, Honda Civic
