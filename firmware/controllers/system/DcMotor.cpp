@@ -1,4 +1,3 @@
-
 /**
  * @file DcMotor.cpp
  * @brief DC motor controller
