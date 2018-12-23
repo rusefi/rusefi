@@ -24,7 +24,8 @@ todo: move Connectors wiki page content into git
 * [CAN module](can_board) CAN using SN65HVD230
 * [VR module](VR_Board) Variable Reluctance conditioner board VR MAX9926
 * [Wideband module](CJ125_board) CJ125 Bosch Wideband board
-* [TLE6240GP module](low_side_tle6240) - integrated low side switch
+* [TLE6240 module](low_side_tle6240) - integrated low side switch
+* [TLE6244 module](Breakout_TLE6244) - integrated low side switch
 
 ### Frankenstein
 
