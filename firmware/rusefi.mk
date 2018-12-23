@@ -1,9 +1,10 @@
 
 ifeq ("$(wildcard $(RULESFILE))","")
-#
-# todo: someone please figure out the syntax to invoke 'git submodule update --init' from here
-#
-$(error Modules are missing? Did you execute 'git submodule update --init'?)
+$(info Invoking "git submodule update --init")
+$(shell git submodule update --init)
+$(info Invoked "git submodule update --init")
+# make is not happy about newly checked out module for some reason but next invocation would work
+$(error Please run 'make' again)
 endif
 
 ifeq ($(PROJECT_BOARD),)
