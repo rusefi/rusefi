@@ -9,7 +9,9 @@
 class DcMotor
 {
 public:
-    virtual void Set(float duty) = 0;
+/* unit tests rusefi_test.exe crash with this, why?
+	virtual void Set(float duty) = 0;
+*/
 };
 
 class TwoPinDcMotor : public DcMotor
@@ -21,5 +23,12 @@ private:
 public:
     TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2);
 
-    virtual void Set(float duty) override;
+    /* unit tests rusefi_test.exe crash with this, why?
+    virtual
+*/
+    void Set(float duty)
+    /* unit tests rusefi_test.exe crash with this, why?
+     override
+*/
+     ;
 };
