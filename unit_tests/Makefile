@@ -4,7 +4,16 @@
 #
 
 PROJECT_DIR = ../firmware
-#CHIBIOS = $(PROJECT_DIR)/chibios
+CHIBIOS=$(PROJECT_DIR)/ChibiOS4
+STREAMSFILE = $(CHIBIOS)/os/hal/include/hal_streams.h
+
+ifeq ("$(wildcard $(STREAMSFILE))","")
+$(info Invoking "git submodule update --init")
+$(shell git submodule update --init)
+$(info Invoked "git submodule update --init")
+# make is not happy about newly checked out module for some reason but next invocation would work
+$(error Please run 'make' again)
+endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -138,7 +147,6 @@ TCPPSRC =
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
-CHIBIOS=$(PROJECT_DIR)/ChibiOS4
 
 INCDIR = . \
 	$(PROJECT_DIR)/util \

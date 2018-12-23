@@ -3,12 +3,12 @@
 # NOTE: Can be overridden externally.
 #
 
-ifeq ("$(wildcard ../firmware/ChibiOS4/os/common/startup/ARMCMx/compilers/GCC/rules.mk)","")
-#
-# todo: someone please figure out the syntax to invoke 'git submodule update --init' from here
-#
-$(error Modules are missing? Did you execute 'git submodule update --init'?)
-endif
+
+CHIBIOS = ../firmware/ChibiOS4
+RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
+RULESFILE = $(RULESPATH)/rules.mk
+
+include ../firmware/rusefi.mk
 
 
 # Compiler options here.
@@ -84,7 +84,6 @@ PROJECT = rusefi_simulator
 PROJECT_DIR = ../firmware
 
 # Imported source files and paths
-CHIBIOS = ../firmware/ChibiOS4
 
 # Startup files.
 # HAL-OSAL files (optional).
@@ -267,5 +266,4 @@ endif
 # End of user defines
 ##############################################################################
 
-RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 include $(RULESPATH)/rules.mk
