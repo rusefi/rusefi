@@ -505,6 +505,9 @@ extern uint32_t hwSetTimerDuration;
 extern uint32_t maxLockedDuration;
 extern uint32_t maxEventCallbackDuration;
 
+extern int perSecondIrqDuration;
+extern int perSecondIrqCounter;
+
 #if (EFI_PROD_CODE) || defined(__DOXYGEN__)
 extern uint32_t maxPrecisionCallbackDuration;
 #endif /* EFI_PROD_CODE  */
@@ -622,6 +625,10 @@ void triggerInfo(void) {
 
 #if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
 	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
+
+	scheduleMsg(logger, "perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
+	scheduleMsg(logger, "IRQ CPU utilization %f%%", perSecondIrqDuration / 168000000.0 * 100);
+
 #endif /* EFI_CLOCK_LOCKS */
 
 	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);

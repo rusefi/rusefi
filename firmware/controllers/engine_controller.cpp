@@ -246,6 +246,43 @@ static void resetAccel(void) {
 	engine->wallFuel.reset();
 }
 
+
+#if EFI_CLOCK_LOCKS
+static int previousSecond;
+
+typedef FLStack<int, 16> irq_enter_timestamps_t;
+
+static irq_enter_timestamps_t irqEnterTimestamps;
+
+void irqEnterHook(void) {
+	irqEnterTimestamps.push(GET_TIMESTAMP());
+}
+
+static int currentIrqDurationAccumulator = 0;
+static int currentIrqCounter = 0;
+/**
+ * See also maxLockedDuration
+ */
+int perSecondIrqDuration = 0;
+int perSecondIrqCounter = 0;
+void irqExitHook(void) {
+	int enterTime = irqEnterTimestamps.pop();
+	currentIrqDurationAccumulator += (GET_TIMESTAMP() - enterTime);
+	currentIrqCounter++;
+}
+#endif /* EFI_CLOCK_LOCKS */
+
+static void invokePerSecond(void) {
+#if EFI_CLOCK_LOCKS
+	// this data transfer is not atomic but should be totally good enough
+	perSecondIrqDuration = currentIrqDurationAccumulator;
+	perSecondIrqCounter = currentIrqCounter;
+	currentIrqDurationAccumulator = currentIrqCounter = 0;
+#endif /* EFI_CLOCK_LOCKS */
+
+}
+
+
 static void periodicSlowCallback(Engine *engine) {
 	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -253,11 +290,16 @@ static void periodicSlowCallback(Engine *engine) {
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
 	bool alreadyLocked = lockAnyContext();
-	updateAndSet(&halTime.state, port_rt_get_counter_value());
+	updateAndSet(&halTime.state, GET_TIMESTAMP());
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
-#endif
+	int timeSeconds = getTimeNowSeconds();
+	if (previousSecond != timeSeconds) {
+		previousSecond = timeSeconds;
+		invokePerSecond();
+	}
+#endif /* EFI_PROD_CODE */
 
 	/**
 	 * Update engine RPM state if needed (check timeouts).
@@ -265,9 +307,9 @@ static void periodicSlowCallback(Engine *engine) {
 	engine->rpmCalculator.checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 		writeToFlashIfPending();
-#endif
+#endif /* EFI_INTERNAL_FLASH */
 		resetAccel();
 	} else {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -282,7 +324,7 @@ static void periodicSlowCallback(Engine *engine) {
 	engine->updateSlowSensors();
 	engine->checkShutdown();
 
-#if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
+#if EFI_FSIO || defined(__DOXYGEN__)
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_FSIO */
 
@@ -736,5 +778,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20181209;
+	return 20181223;
 }
