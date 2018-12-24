@@ -105,6 +105,10 @@ extern "C"
  *          this value.
  */
 // rusEfi currently uses tick mode, see CH_CFG_ST_FREQUENCY
+// ST requires TIM2 or another 32 bit timer and we currently use it for ICU
+// but! there is no reason to use it for ICU as we've recently realized
+// so todo: migrate trigger to EXTI and try tick-less mode
+// see also CH_CFG_TIME_QUANTUM
 #define CH_CFG_ST_TIMEDELTA                 0
 
 /** @} */
