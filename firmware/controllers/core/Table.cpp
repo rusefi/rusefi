@@ -47,6 +47,20 @@ BinResult TableBins<TBin, TSize>::Get(float value) const
     return { idx, fraction };
 }
 
+template <typename TBin, uint8_t TSize>
+bool TableBins<TBin, TSize>::IsAscending()
+{
+    for(int8_t idx = 0; i < TSize - 1; i++)
+    {
+        if(m_bins[i] >= m_bins[i + 1])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 struct TableHelper
 {
     static float Linterp(float low, float high, float frac)

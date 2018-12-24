@@ -34,6 +34,13 @@ public:
      * and how far from (idx) to (idx + 1) the value is located.
      */
     BinResult Get(float value) const;
+
+    /**
+     * Confirm that the bins are in strictly ascending order.
+     * 
+     * @return True if m_bins[i] <= m_bins[i+1] for all i, otherwise false.
+     */
+    bool IsAscending();
 };
 
 /**
