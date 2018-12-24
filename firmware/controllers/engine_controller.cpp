@@ -246,9 +246,9 @@ static void resetAccel(void) {
 	engine->wallFuel.reset();
 }
 
+static int previousSecond;
 
 #if EFI_CLOCK_LOCKS
-static int previousSecond;
 
 typedef FLStack<int, 16> irq_enter_timestamps_t;
 
