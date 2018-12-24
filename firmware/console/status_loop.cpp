@@ -736,11 +736,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
-	efitimesec_t now = getTimeNowSeconds();
-	tsOutputChannels->timeSeconds = now;
+	efitimesec_t timeSeconds = getTimeNowSeconds();
+	tsOutputChannels->timeSeconds = timeSeconds;
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
-	tsOutputChannels->isWarnNow = isWarningNow(now, true);
+	tsOutputChannels->isWarnNow = isWarningNow(timeSeconds, true);
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	tsOutputChannels->isKnockChipOk = (invalidHip9011ResponsesCount == 0);
@@ -748,7 +748,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	switch (engineConfiguration->debugMode)	{
 	case DBG_STATUS:
-		tsOutputChannels->debugFloatField1 = getTimeNowSeconds();
+		tsOutputChannels->debugFloatField1 = timeSeconds;
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
 		break;
 	case DBG_METRICS:

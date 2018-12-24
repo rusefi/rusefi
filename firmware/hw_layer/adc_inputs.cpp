@@ -9,6 +9,8 @@
  *  We need frequent MAP for map_averaging.cpp
  *  We need frequent TPS for ???
  *
+ * 10KHz equals one measurement every 3.6 degrees at 6000 RPM
+ *
  * @date Jan 14, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
  */

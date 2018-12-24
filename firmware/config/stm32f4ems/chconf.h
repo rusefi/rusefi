@@ -35,9 +35,27 @@
 #define CHPRINTF_USE_FLOAT          	TRUE
 
 #if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
+// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
  #define EFI_CLOCK_LOCKS FALSE
 #endif /* EFI_CLOCK_LOCKS */
 
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+ #ifndef __ASSEMBLER__
+  #if EFI_CLOCK_LOCKS
+    void irqEnterHook(void);
+    void irqExitHook(void);
+  #else /* EFI_CLOCK_LOCKS */
+    #define irqEnterHook() {}
+    #define irqExitHook() {}
+  #endif /*EFI_CLOCK_LOCKS */
+ #endif /* __ASSEMBLER__ */
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #if EFI_CLOCK_LOCKS
 #ifdef __cplusplus
@@ -87,6 +105,10 @@ extern "C"
  *          this value.
  */
 // rusEfi currently uses tick mode, see CH_CFG_ST_FREQUENCY
+// ST requires TIM2 or another 32 bit timer and we currently use it for ICU
+// but! there is no reason to use it for ICU as we've recently realized
+// so todo: migrate trigger to EXTI and try tick-less mode
+// see also CH_CFG_TIME_QUANTUM
 #define CH_CFG_ST_TIMEDELTA                 0
 
 /** @} */
@@ -511,6 +533,7 @@ extern "C"
  */
 #define CH_CFG_IRQ_PROLOGUE_HOOK() {                                        \
   /* IRQ prologue code here.*/                                              \
+  irqEnterHook();                                                           \
 }
 
 /**
@@ -518,6 +541,7 @@ extern "C"
  */
 #define CH_CFG_IRQ_EPILOGUE_HOOK() {                                        \
   /* IRQ epilogue code here.*/                                              \
+  irqExitHook();                                                            \
 }
 
 /**
