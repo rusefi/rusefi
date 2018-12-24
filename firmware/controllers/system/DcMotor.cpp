@@ -1,18 +1,21 @@
 /**
- *  @file	DcMotor.cpp
- *  @author Matthew Kennedy, (c) 2018
+ * @file DcMotor.cpp
+ * @brief DC motor controller
+ * 
+ * @date Dec 22, 2018
+ * @author Matthew Kennedy
  */
+
 #include "DcMotor.h"
 
 TwoPinDcMotor::TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2)
-    : m_dir1(dir1)
+    : m_pwm(pwm)
+    , m_dir1(dir1)
     , m_dir2(dir2)
-    , m_pwm(pwm)
 {
-
 }
 
-void TwoPinDcMotor::Set(float duty)
+bool TwoPinDcMotor::Set(float duty)
 {
     bool dir;
 
@@ -26,10 +29,10 @@ void TwoPinDcMotor::Set(float duty)
         dir = true;
     }
 
-    // Clamp
-    if(duty > 0.95f)
+    // Clamp to 100%
+    if(duty > 1.0f)
     {
-        duty = 0.95f;
+        duty = 1.0f;
     }
     // Disable for very small duty
     else if (duty < 0.01f)
@@ -49,4 +52,7 @@ void TwoPinDcMotor::Set(float duty)
     }
 
     m_pwm->setSimplePwmDutyCycle(duty);
+
+    // This motor has no fault detection, so always return false (indicate success).
+    return false;
 }
