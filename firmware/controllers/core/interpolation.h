@@ -26,7 +26,7 @@ void ensureArrayIsAscending(const char *msg, const float array[], int size);
 int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
-float interpolate2d(const char *msg, float value, float bin[], float values[], int size);
+float interpolate2d_DEPRECATED(const char *msg, float value, float bin[], float values[], int size);
 
 int needInterpolationLogging(void);
 

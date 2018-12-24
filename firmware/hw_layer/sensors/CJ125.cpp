@@ -575,7 +575,7 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	
 	// See CJ125 datasheet, page 6
 	float pumpCurrent = (vUa - vUaCal) * amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
-	lambda = interpolate2d("cj125Lsu", pumpCurrent, (float *)cjLSUBins[sensorType], (float *)cjLSULambda[sensorType], cjLSUTableSize[sensorType]);
+	lambda = interpolate2d_DEPRECATED("cj125Lsu", pumpCurrent, (float *)cjLSUBins[sensorType], (float *)cjLSULambda[sensorType], cjLSUTableSize[sensorType]);
 	// todo: make configurable stoich ratio
 	return lambda * CJ125_STOICH_RATIO;
 }

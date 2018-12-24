@@ -218,7 +218,7 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->sensors.oilPressure = getOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	warmupTargetAfr = interpolate2d("warm", engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
+	warmupTargetAfr = interpolate2d_DEPRECATED("warm", engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
 			engineConfiguration->warmupTargetAfr, WARMUP_TARGET_AFR_SIZE);
 }
 
@@ -279,7 +279,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
+	engineNoiseHipLevel = interpolate2d_DEPRECATED("knock", rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -299,7 +299,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		float rawVe = veMap.getValue(rpm, map);
 		// get VE from the separate table for Idle
 		if (CONFIG(useSeparateVeForIdle)) {
-			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
+			float idleVe = interpolate2d_DEPRECATED("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
 			// interpolate between idle table and normal (running) table using TPS threshold
 			rawVe = interpolateClamped(0.0f, idleVe, boardConfiguration->idlePidDeactivationTpsThreshold, rawVe, tps);
 		}
@@ -344,7 +344,7 @@ void Engine::preCalculate() {
 	 */
 	for (int i = 0; i < MAF_DECODING_CACHE_SIZE; i++) {
 		float volts = i / MAF_DECODING_CACHE_MULT;
-		float maf = interpolate2d("maf", volts, config->mafDecodingBins,
+		float maf = interpolate2d_DEPRECATED("maf", volts, config->mafDecodingBins,
 				config->mafDecoding, MAF_DECODING_COUNT);
 		mafDecodingLookup[i] = maf;
 	}

@@ -211,7 +211,7 @@ static percent_t automaticIdleController() {
 		// error is already reported, let's take first value from the table should be good enough error handing solution
 		targetRpm = CONFIG(cltIdleRpm)[0];
 	} else {
-		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
+		targetRpm = interpolate2d_DEPRECATED("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
 	}
 	targetRpm += engine->fsioIdleTargetRPMAdjustment;
 
@@ -255,7 +255,7 @@ static percent_t automaticIdleController() {
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		if (boardConfiguration->useIacTableForCoasting) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
+			percent_t iacPosForCoasting = interpolate2d_DEPRECATED("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
@@ -316,9 +316,9 @@ static msg_t ivThread(int param) {
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning)
-			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE) / PERCENT_MULT;
+			cltCorrection = interpolate2d_DEPRECATED("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE) / PERCENT_MULT;
 		else
-			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
+			cltCorrection = interpolate2d_DEPRECATED("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
 
 		percent_t iacPosition;
 

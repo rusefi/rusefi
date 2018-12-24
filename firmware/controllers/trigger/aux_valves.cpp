@@ -97,11 +97,11 @@ void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// error should be already reported by now
 		return;
 	}
-	engine->engineState.auxValveStart = interpolate2d("aux", x,
+	engine->engineState.auxValveStart = interpolate2d_DEPRECATED("aux", x,
 			engineConfiguration->fsioCurve1Bins,
 			engineConfiguration->fsioCurve1, FSIO_CURVE_16);
 
-	engine->engineState.auxValveEnd = interpolate2d("aux", x,
+	engine->engineState.auxValveEnd = interpolate2d_DEPRECATED("aux", x,
 			engineConfiguration->fsioCurve2Bins,
 			engineConfiguration->fsioCurve2, FSIO_CURVE_16);
 
