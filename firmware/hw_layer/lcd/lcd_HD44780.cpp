@@ -61,7 +61,7 @@ static void lcdSleep(int period) {
 	if (BUSY_WAIT_DELAY) {
 		// this mode is useful for displaying messages to report OS fatal issues
 
-		int ticks = 168000000 / 1000000 * period;
+		int ticks = CORE_CLOCK / 1000000 * period;
 		int a = 0;
 		for (int i = 0; i < ticks; i++)
 			a += i;

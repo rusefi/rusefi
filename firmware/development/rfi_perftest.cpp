@@ -269,7 +269,7 @@ static int rtcStartTime;
 
 static void timeInfo(void) {
 	scheduleMsg(logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
-	scheduleMsg(logger, "hal seconds = %d", halTime.get() / 168000000LL);
+	scheduleMsg(logger, "hal seconds = %d", halTime.get() / (long)CORE_CLOCK);
 
 #if EFI_RTC || defined(__DOXYGEN__)
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
