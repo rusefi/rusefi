@@ -10,6 +10,8 @@
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
 
+#define EFI_CLOCK_LOCKS FALSE
+
 #define EFI_GPIO_HARDWARE TRUE
 
 #define EFI_FSIO TRUE
