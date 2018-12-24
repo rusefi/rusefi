@@ -17,6 +17,7 @@
 #include "allsensors.h"
 #include "rpm_calculator.h"
 #include "efiGpio.h"
+#include "pwm_generator_logic.h"
 
 /**
  * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
@@ -93,8 +94,8 @@ static LEElement * mainRelayLogic;
 EXTERN_ENGINE
 ;
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging *logger;
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", NAN);
@@ -260,12 +261,10 @@ void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfigura
 #endif
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-
-static SimplePwm fsioPwm[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
-
 static LECalculator calc;
 extern LEElement * fsioLogics[FSIO_COMMAND_COUNT];
+
+static SimplePwm fsioPwm[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
 
 // that's crazy, but what's an alternative? we need const char *, a shared buffer would not work for pin repository
 static const char *getGpioPinName(int index) {
@@ -369,10 +368,12 @@ static const char * action2String(le_action_e action) {
 	return buffer;
 }
 
-static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
+static void setPinState(const char * msg, OutputPin *pin, LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
 	}
+#endif /* EFI_PROD_CODE */
 
 	if (element == NULL) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
@@ -390,6 +391,8 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 	}
 }
 
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void setFsioFrequency(int index, int frequency) {
 	index--;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
@@ -403,6 +406,7 @@ static void setFsioFrequency(int index, int frequency) {
 		scheduleMsg(logger, "Setting FSIO frequency %dHz on #%d@%s", frequency, index + 1, hwPortname(boardConfiguration->fsioOutputPins[index]));
 	}
 }
+#endif /* EFI_PROD_CODE */
 
 static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	LEElement * element = fsioLogics[8 - 1 + servoIndex];
@@ -414,7 +418,6 @@ static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-
 /**
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
@@ -425,13 +428,13 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_FUEL_PUMP || defined(__DOXYGEN__)
 	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED) {
-		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic);
+		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_FUEL_PUMP */
 
 #if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
 	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
-		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic);
+		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
 #else /* EFI_MAIN_RELAY_CONTROL */
 	/**
 	 * main relay is always on if ECU is on, that's a good enough initial implementation
@@ -445,18 +448,18 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * todo: convert to FSIO?
 	 * open question if heater should be ON during cranking
 	 */
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
-		setPinState("A/C", &enginePins.acRelay, acRelayLogic);
+		setPinState("A/C", &enginePins.acRelay, acRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 //	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
-//		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
+//		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine PASS_ENGINE_PARAMETER_SUFFIX);
 //	}
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
-		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic);
+		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
@@ -497,7 +500,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-#endif /* EFI_PROD_CODE */
 
 static void showFsio(const char *msg, LEElement *element) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -653,7 +655,9 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	addConsoleActionSS("set_fsio_pid_output_pin", (VoidCharPtrCharPtr) setFsioPidOutputPin);
 	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
+#endif
 	addConsoleActionSS("set_fsio_digital_input_pin", (VoidCharPtrCharPtr) setFsioDigitalInputPin);
 	addConsoleActionSS("set_fsio_analog_input_pin", (VoidCharPtrCharPtr) setFsioAnalogInputPin);
 
