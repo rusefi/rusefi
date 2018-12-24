@@ -230,7 +230,7 @@ DINCDIR =
 DLIBDIR =
 
 # List all default libraries here
-DLIBS = -static-libgcc -static-libstdc++
+DLIBS = -static-libgcc -static -static-libstdc++
 
 #
 # End of default section
