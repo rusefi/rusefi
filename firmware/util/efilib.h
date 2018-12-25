@@ -9,7 +9,6 @@
 #define EFILIB_H_
 
 #include <stdint.h>
-#include "global.h"
 
 #define _MAX_FILLER 11
 
