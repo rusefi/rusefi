@@ -264,63 +264,6 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return dwellMs;
 }
 
-/**
- * this method is only used on initialization
- */
-int TriggerShape::findAngleIndex(float target DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int engineCycleEventCount = TRIGGER_SHAPE(getLength());
-
-	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);
-
-	uint32_t left = 0;
-	uint32_t right = engineCycleEventCount - 1;
-
-	/**
-	 * Let's find the last trigger angle which is less or equal to the desired angle
-	 * todo: extract binary search as template method?
-	 */
-    while (left <= right) {
-        int middle = (left + right) / 2;
-		angle_t eventAngle = TRIGGER_SHAPE(eventAngles[middle]);
-
-        if (eventAngle < target) {
-            left = middle + 1;
-        } else if (eventAngle > target) {
-            right = middle - 1;
-        } else {
-            // Values are equal
-            return middle;             // Key found
-        }
-    }
-    return left - 1;
-}
-
-void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angleOffset), "findAngle#1");
-	assertAngleRange(angleOffset, "findAngle#a1", CUSTOM_ERR_6545);
-
-	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(TRIGGER_SHAPE(tdcPosition)), "tdcPos#1")
-	assertAngleRange(TRIGGER_SHAPE(tdcPosition), "tdcPos#a1", CUSTOM_ERR_6546);
-
-	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_ERR_6547);
-
-	// convert engine cycle angle into trigger cycle angle
-	angleOffset += tdcPosition();
-	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angleOffset), "findAngle#2");
-	fixAngle(angleOffset, "addFuel#2", CUSTOM_ERR_6555);
-
-	int index = triggerIndexByAngle[(int)angleOffset];
-	angle_t eventAngle = eventAngles[index];
-	if (angleOffset < eventAngle) {
-		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angleOffset, eventAngle);
-		return;
-	}
-
-	position->eventIndex = index;
-	position->eventAngle = eventAngle;
-	position->angleOffset = angleOffset - eventAngle;
-}
 
 static int order_1_2[] = {1, 2};
 
@@ -520,7 +463,7 @@ ignition_mode_e getIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void TriggerShape::prepareShape(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int engineCycleInt = (int) getEngineCycle(CONFIG(operationMode));
 	for (int angle = 0; angle < engineCycleInt; angle++) {
-		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER_SUFFIX);
+		int triggerShapeIndex = findAngleIndex(angle);
 		if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 			// we need even index for front_only mode - so if odd indexes are rounded down
 			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
