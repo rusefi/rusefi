@@ -30,11 +30,10 @@ typedef int8_t pin_state_t;
  *
  * @brief   PWM configuration for the specific output pin
  */
-// todo: rename to SingleWave
-class single_wave_s {
+class SingleWave {
 public:
-	single_wave_s();
-	single_wave_s(pin_state_t *pinStates);
+	SingleWave();
+	SingleWave(pin_state_t *pinStates);
 	void init(pin_state_t *pinStates);
 	/**
 	 * todo: confirm that we only deal with two states here, no magic '-1'?
@@ -55,8 +54,8 @@ class MultiWave {
 public:
 	void baseConstructor();
 	MultiWave();
-	MultiWave(float *switchTimes, single_wave_s *waves);
-	void init(float *switchTimes, single_wave_s *waves);
+	MultiWave(float *switchTimes, SingleWave *waves);
+	void init(float *switchTimes, SingleWave *waves);
 	void reset(void);
 	float getSwitchTime(int phaseIndex) const;
 	void setSwitchTime(int phaseIndex, float value);
@@ -70,7 +69,7 @@ public:
 	 * Number of signal wires
 	 */
 	int waveCount;
-	single_wave_s *waves;
+	SingleWave *waves;
 //private:
 	/**
 	 * values in the (0..1] range which refer to points within the period at at which pin state should be changed

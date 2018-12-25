@@ -49,9 +49,9 @@ typedef enum {
 class PwmConfig {
 public:
 	PwmConfig();
-	PwmConfig(float *switchTimes, single_wave_s *waves);
+	PwmConfig(float *switchTimes, SingleWave *waves);
 	void baseConstructor();
-	void init(float *switchTimes, single_wave_s *waves);
+	void init(float *switchTimes, SingleWave *waves);
 
 	void weComplexInit(const char *msg,
 			int phaseCount, float *swithcTimes, int waveCount, pin_state_t **pinStates,
@@ -108,10 +108,10 @@ public:
 	SimplePwm();
 	void setSimplePwmDutyCycle(float dutyCycle);
 	pin_state_t pinStates[2];
-	single_wave_s sr[1];
+	SingleWave sr[1];
 	float _switchTimes[2];
 private:
-	single_wave_s waveInstance;
+	SingleWave waveInstance;
 };
 
 /**

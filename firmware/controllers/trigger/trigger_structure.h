@@ -37,7 +37,7 @@ class trigger_shape_helper {
 public:
 	trigger_shape_helper();
 
-	single_wave_s waves[TRIGGER_CHANNEL_COUNT];
+	SingleWave waves[TRIGGER_CHANNEL_COUNT];
 private:
 	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
 };

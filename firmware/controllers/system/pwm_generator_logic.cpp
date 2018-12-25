@@ -45,12 +45,12 @@ PwmConfig::PwmConfig() {
 	baseConstructor();
 }
 
-PwmConfig::PwmConfig(float *st, single_wave_s *waves) {
+PwmConfig::PwmConfig(float *st, SingleWave *waves) {
 	baseConstructor();
 	multiWave.init(st, waves);
 }
 
-void PwmConfig::init(float *st, single_wave_s *waves) {
+void PwmConfig::init(float *st, SingleWave *waves) {
 	multiWave.init(st, waves);
 }
 
