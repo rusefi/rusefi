@@ -2,7 +2,6 @@
   <library name="batik">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/lib/batik" />
-      <root url="file://$PROJECT_DIR$/lib/batik" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
