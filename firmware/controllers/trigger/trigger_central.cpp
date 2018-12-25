@@ -468,7 +468,7 @@ void printAllTriggers() {
 		engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
-		s->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->initializeTriggerShape(NULL, engineConfiguration->useOnlyRisingEdgeForTrigger PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (s->shapeDefinitionError) {
 			printf("Trigger error %d\r\n", triggerId);
@@ -676,7 +676,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		assertEngineReference();
 
 	#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-		TRIGGER_SHAPE(initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
+		TRIGGER_SHAPE(initializeTriggerShape(logger, engineConfiguration->useOnlyRisingEdgeForTrigger PASS_ENGINE_PARAMETER_SUFFIX));
 		engine->triggerCentral.resetAccumSignalData();
 	#endif
 	}

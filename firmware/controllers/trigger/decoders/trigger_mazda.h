@@ -13,7 +13,7 @@
 
 #define MIATA_NA_GAP 1.4930f
 
-void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initializeMazdaMiataNaShape(TriggerShape *s, bool useOnlyRisingEdgeForTrigger);
 void initializeMazdaMiataNb1Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initializeMazdaMiataVVtTestShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);

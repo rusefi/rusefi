@@ -54,7 +54,7 @@ class TriggerState;
 class TriggerShape {
 public:
 	TriggerShape();
-	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void initializeTriggerShape(Logging *logger, bool useOnlyRisingEdgeForTrigger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void findTriggerPosition(
 			event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -134,6 +134,8 @@ public:
 	 * See also useOnlyPrimaryForSync
 	 */
 	bool gapBothDirections;
+
+	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
 
 	/**
 	 * This is used for signal validation
