@@ -212,7 +212,8 @@ public:
 
 private:
 	trigger_shape_helper h;
-	int findAngleIndex(float target DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	int findAngleIndex(float angle);
 
 	/**
 	 * index of synchronization event within TriggerShape

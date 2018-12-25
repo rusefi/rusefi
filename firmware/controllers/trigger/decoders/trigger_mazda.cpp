@@ -55,7 +55,7 @@ void initializeMazdaMiataNaShape(TriggerShape *s, bool useOnlyRisingEdgeForTrigg
  * by alexander-n8hgeg5e
  * See https://rusefi.com/forum/viewtopic.php?f=5&t=1447
  */
-void initialize_Mazda_Engine_z5_Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initialize_Mazda_Engine_z5_Shape(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	/**
 	 * My Signal is:      60,      60,      102,     60
@@ -86,7 +86,7 @@ void initialize_Mazda_Engine_z5_Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S
 }
 
 // TT_MIATA_VVT
-void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initializeMazdaMiataNb2Crank(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, false);
 
 	float o = 160;
@@ -100,7 +100,7 @@ void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFI
 	s->addEvent720(o + 4 * 140.0f, T_PRIMARY, TV_RISE);
 }
 
-static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap(0.11f);
 	s->useRiseEdge = false;
@@ -141,15 +141,15 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset
 	s->useOnlyPrimaryForSync = true;
 }
 
-void initializeMazdaMiataNb1Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initializeMazdaMiataNb1ShapeWithOffset(s, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+void initializeMazdaMiataNb1Shape(TriggerShape *s) {
+	initializeMazdaMiataNb1ShapeWithOffset(s, 0);
 }
 
-void initializeMazdaMiataVVtTestShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initializeMazdaMiataNb1ShapeWithOffset(s, -22 PASS_ENGINE_PARAMETER_SUFFIX);
+void initializeMazdaMiataVVtTestShape(TriggerShape *s) {
+	initializeMazdaMiataNb1ShapeWithOffset(s, -22);
 }
 
-void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureMazdaProtegeSOHC(TriggerShape *s) {
 
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 
@@ -177,7 +177,7 @@ void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	s->isSynchronizationNeeded = false;
 }
 
-void configureMazdaProtegeLx(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureMazdaProtegeLx(TriggerShape *s) {
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useOnlyPrimaryForSync = true;

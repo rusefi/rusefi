@@ -183,12 +183,16 @@ void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @param nowNt current time
  */
 void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
+	// todo: use 'triggerShape' instead of TRIGGER_SHAPE in order to decouple this method from engine #635
+	TriggerShape *triggerShape = &ENGINE(triggerCentral.triggerShape);
+
 	efiAssertVoid(CUSTOM_ERR_6640, signal <= SHAFT_3RD_RISING, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 	trigger_value_e type = eventType[signal];
 
-	if (!CONFIG(useOnlyRisingEdgeForTrigger) && curSignal == prevSignal) {
+	if (!useOnlyRisingEdgeForTrigger && curSignal == prevSignal) {
 		orderingErrorCounter++;
 	}
 
@@ -250,7 +254,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		bool isSynchronizationPoint;
 
-		if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
+		if (triggerShape->isSynchronizationNeeded) {
 			// this is getting a little out of hand, any ideas?
 
 			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
@@ -264,8 +268,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			bool isGapCondition[GAP_TRACKING_LENGTH];
 
 			for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
-				isGapCondition[i] = cisnan(TRIGGER_SHAPE(syncronizationRatioFrom[i])) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
-					&& toothDurations[i] < toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioTo[i]));
+				isGapCondition[i] = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
+					&& toothDurations[i] < toothDurations[i + 1] * triggerShape->syncronizationRatioTo[i]);
 			}
 
 			bool isSync = isGapCondition[0];
@@ -498,19 +502,19 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
-		initializeMazdaMiataNb1Shape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeMazdaMiataNb1Shape(this);
 		break;
 
 	case TT_MAZDA_MIATA_VVT_TEST:
-		initializeMazdaMiataVVtTestShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeMazdaMiataVVtTestShape(this);
 		break;
 
 	case TT_MAZDA_Z5:
-		initialize_Mazda_Engine_z5_Shape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initialize_Mazda_Engine_z5_Shape(this);
 		break;
 
 	case TT_MIATA_VVT:
-		initializeMazdaMiataNb2Crank(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeMazdaMiataNb2Crank(this);
 		break;
 
 	case TT_DODGE_NEON_1995:
@@ -543,7 +547,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
-		configureMazdaProtegeLx(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureMazdaProtegeLx(this);
 		break;
 
 	case TT_ONE_PLUS_ONE:
@@ -563,7 +567,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_MAZDA_SOHC_4:
-		configureMazdaProtegeSOHC(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureMazdaProtegeSOHC(this);
 		break;
 
 	case TT_MINI_COOPER_R50:
