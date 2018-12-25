@@ -175,9 +175,20 @@ public:
 	 */
 	int privateTriggerDefinitionSize;
 
+	/* 0..1 angle range */
 	void addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	/* 0..720 angle range
+	 * Deprecated?
+	 */
+	void addEvent720(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	/* 0..720 angle range
+	 * Deprecated?
+	 */
 	void addEvent2(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+	/* 0..720 angle range
+	 * Deprecated?
+	 */
 	void addEvent3(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX);
 	operation_mode_e getOperationMode();
 
@@ -218,7 +229,7 @@ private:
 
 	/**
 	 * This variable is used to confirm that events are added in the right order.
-	 * todo: this variable is pribably not needed, could be reimplemented by accessing by index
+	 * todo: this variable is probably not needed, could be reimplemented by accessing by index
 	 */
 	angle_t previousAngle;
 	/**
