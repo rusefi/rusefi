@@ -446,7 +446,7 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(CUSTOM_ERR_6645, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6646, state->multiWave.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
-	int value = state->multiWave.waves[0].pinStates[stateIndex];
+	int value = state->multiWave.getChannelState(/*channelIndex*/0, stateIndex);
 	if (!value /* always allow turning solenoid off */ ||
 			(GET_RPM() != 0 || timeToStopIdleTest != 0) /* do not run solenoid unless engine is spinning or bench testing in progress */
 			) {

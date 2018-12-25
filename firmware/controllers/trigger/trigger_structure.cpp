@@ -32,8 +32,8 @@ EXTERN_ENGINE;
 
 trigger_shape_helper::trigger_shape_helper() {
 	memset(&pinStates, 0, sizeof(pinStates));
-	for (int i = 0; i < TRIGGER_CHANNEL_COUNT; i++) {
-		waves[i].init(pinStates[i]);
+	for (int channelIndex = 0; channelIndex < TRIGGER_CHANNEL_COUNT; channelIndex++) {
+		channels[channelIndex].init(pinStates[channelIndex]);
 	}
 }
 
@@ -41,7 +41,7 @@ TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
 	version = 0;
 	initialize(OM_NONE, false);
-	wave.waves = h.waves;
+	wave.channels = h.channels;
 
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 }
@@ -280,9 +280,9 @@ angle_t TriggerShape::getAngle(int index) const {
 	return getCycleDuration() * crankCycle + getSwitchAngle(remainder);
 }
 
-void TriggerShape::addEvent3(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerShape::addEvent3(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (angle > filterLeft && angle < filterRight)
-		addEvent2(angle, waveIndex, stateParam PASS_ENGINE_PARAMETER_SUFFIX);
+		addEvent2(angle, channelIndex, stateParam PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 operation_mode_e TriggerShape::getOperationMode() {
@@ -296,7 +296,7 @@ extern bool printTriggerDebug;
 void TriggerShape::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 // todo: move the following logic from below here
 	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
-//		expectedEventCount[waveIndex]++;
+//		expectedEventCount[channelIndex]++;
 //	}
 
 }
@@ -304,25 +304,25 @@ void TriggerShape::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger
 /**
  * Deprecated - see https://github.com/rusefi/rusefi/issues/635
  */
-void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/**
 	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
 	 */
-	addEvent(engineConfiguration->useOnlyRisingEdgeForTrigger, angle / getEngineCycle(operationMode), waveIndex, stateParam);
+	addEvent(engineConfiguration->useOnlyRisingEdgeForTrigger, angle / getEngineCycle(operationMode), channelIndex, stateParam);
 }
 
 // todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
 // todo: see calculateExpectedEventCounts
 // related calculation should be done once trigger is initialized outside of trigger shape scope
-void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
+void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
 
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
-	efiAssertVoid(CUSTOM_ERR_6598, waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
+	efiAssertVoid(CUSTOM_ERR_6598, channelIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
-		printf("addEvent2 %.2f i=%d r/f=%d\r\n", angle, waveIndex, stateParam);
+		printf("addEvent2 %.2f i=%d r/f=%d\r\n", angle, channelIndex, stateParam);
 	}
 #endif
 
@@ -334,13 +334,13 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 	}
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
-	int signal = waveIndex * 1000 + stateParam;
+	int signal = channelIndex * 1000 + stateParam;
 	triggerSignals[privateTriggerDefinitionSize] = signal;
 #endif
 
 
 	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
-		expectedEventCount[waveIndex]++;
+		expectedEventCount[channelIndex]++;
 	}
 
 	efiAssertVoid(CUSTOM_ERR_6599, angle > 0, "angle should be positive");
@@ -355,19 +355,19 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 	if (privateTriggerDefinitionSize == 0) {
 		privateTriggerDefinitionSize = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			SingleWave *wave = &this->wave.waves[i];
+			SingleWave *wave = &this->wave.channels[i];
 
 			if (wave->pinStates == NULL) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
 				shapeDefinitionError = true;
 				return;
 			}
-			wave->pinStates[0] = initialState[i];
+			wave->setState(/* channelIndex */ 0, /* value */ initialState[i]);
 		}
 
 		isFrontEvent[0] = TV_RISE == stateParam;
 		wave.setSwitchTime(0, angle);
-		wave.waves[waveIndex].setState(0, state);
+		wave.channels[channelIndex].setState(/* channelIndex */ 0, /* value */ state);
 		return;
 	}
 
@@ -402,10 +402,11 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 	privateTriggerDefinitionSize++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		wave.waves[i].pinStates[index] = wave.getChannelState(i, index - 1);
+		int value = wave.getChannelState(/* channelIndex */i, index - 1);
+		wave.channels[i].setState(index, value);
 	}
 	wave.setSwitchTime(index, angle);
-	wave.waves[waveIndex].setState(index, state);
+	wave.channels[channelIndex].setState(index, state);
 }
 
 angle_t TriggerShape::getSwitchAngle(int index) const {

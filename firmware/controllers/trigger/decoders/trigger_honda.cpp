@@ -10,10 +10,10 @@
 
 #define S24 (720.0f / 24 / 2)
 
-static float addAccordPair(TriggerShape *s, float sb, trigger_wheel_e const waveIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->addEvent2(sb, waveIndex, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+static float addAccordPair(TriggerShape *s, float sb, trigger_wheel_e const channelIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	s->addEvent2(sb, channelIndex, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
 	sb += S24;
-	s->addEvent2(sb, waveIndex, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent2(sb, channelIndex, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	sb += S24;
 
 	return sb;

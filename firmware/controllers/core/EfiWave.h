@@ -66,10 +66,10 @@ public:
 	int findInsertionAngle(float angle, int size) const;
 
 	/**
-	 * Number of signal wires
+	 * Number of signal channels
 	 */
 	int waveCount;
-	SingleWave *waves;
+	SingleWave *channels;
 //private:
 	/**
 	 * values in the (0..1] range which refer to points within the period at at which pin state should be changed

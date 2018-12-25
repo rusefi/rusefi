@@ -36,14 +36,14 @@ EXTERN_ENGINE
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	int prevIndex = (stateIndex + state->phaseCount - 1) % state->phaseCount;
 
-	bool primaryWheelState = state->multiWave.waves[0].pinStates[prevIndex];
-	int newPrimaryWheelState = state->multiWave.waves[0].pinStates[stateIndex];
+	bool primaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/prevIndex);
+	int newPrimaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/stateIndex);
 
-	bool secondaryWheelState = state->multiWave.waves[1].pinStates[prevIndex];
-	int newSecondaryWheelState = state->multiWave.waves[1].pinStates[stateIndex];
+	bool secondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/prevIndex);
+	int newSecondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/stateIndex);
 
-	bool thirdWheelState = state->multiWave.waves[2].pinStates[prevIndex];
-	int new3rdWheelState = state->multiWave.waves[2].pinStates[stateIndex];
+	bool thirdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/prevIndex);
+	int new3rdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/stateIndex);
 
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 
@@ -122,8 +122,10 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
-		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
-				s->wave.waves[2].pinStates };
+		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {
+				s->wave.channels[0].pinStates,
+				s->wave.channels[1].pinStates,
+				s->wave.channels[2].pinStates };
 		copyPwmParameters(state, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates);
 		state->safe.periodNt = -1; // this would cause loop re-initialization
 	}
@@ -163,8 +165,10 @@ void initTriggerEmulatorLogic(Logging *sharedLogger) {
 
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
-	pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
-			s->wave.waves[2].pinStates };
+	pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {
+			s->wave.channels[0].pinStates,
+			s->wave.channels[1].pinStates,
+			s->wave.channels[2].pinStates };
 	triggerSignal.weComplexInit("position sensor", s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
 
