@@ -10,7 +10,6 @@
 
 #include "global.h"
 
-#include "rusefi_enums.h"
 #include "EfiWave.h"
 #include "engine_configuration.h"
 

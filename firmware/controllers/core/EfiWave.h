@@ -7,7 +7,7 @@
 #ifndef EFI_WAVE_H_
 #define EFI_WAVE_H_
 
-#include "engine_configuration.h"
+#include "global.h"
 
 #define PWM_PHASE_MAX_COUNT 252
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
@@ -22,6 +22,12 @@
 typedef int8_t pin_state_t;
 
 /**
+ * This class represents one channel of a digital signal state sequence
+ * Each element represents either a HIGH or LOW state - while at the moment this
+ * is not implemented using a bit array, it could absolutely be a bit array
+ *
+ * This sequence does not know anything about signal lengths - only signal state at a given index
+ *
  * @brief   PWM configuration for the specific output pin
  */
 class single_wave_s {
@@ -29,10 +35,16 @@ public:
 	single_wave_s();
 	single_wave_s(pin_state_t *pinStates);
 	void init(pin_state_t *pinStates);
+	/**
+	 * todo: confirm that we only deal with two states here, no magic '-1'?
+	 * @return HIGH or LOW state at given index
+	 */
+	int getState(int index);
+	void setState(int index, int state);
+
+	// todo: make this private
 	pin_state_t *pinStates;
 };
-
-class TriggerShape;
 
 class MultiWave {
 public:
