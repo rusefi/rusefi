@@ -294,6 +294,14 @@ extern bool printTriggerDebug;
 #endif
 
 void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	/**
+	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
+	 */
+	addEvent(angle / getEngineCycle(operationMode), engineConfiguration->useOnlyRisingEdgeForTrigger, waveIndex, stateParam);
+}
+
+void TriggerShape::addEvent(angle_t angle, bool useOnlyRisingEdgeForTrigger, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
+
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(CUSTOM_ERR_6598, waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
@@ -316,15 +324,8 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	triggerSignals[privateTriggerDefinitionSize] = signal;
 #endif
 
-	float engineCycle = getEngineCycle(operationMode);
 
-	/**
-	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
-	 * todo: accept angle as a value in the 0..1 range?
-	 */
-	angle /= engineCycle;
-
-	if (!engineConfiguration->useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
+	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
 		expectedEventCount[waveIndex]++;
 	}
 
