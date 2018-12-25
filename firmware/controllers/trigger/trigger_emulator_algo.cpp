@@ -72,9 +72,9 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 static pin_state_t pinStates1[PWM_PHASE_MAX_COUNT];
 static pin_state_t pinStates2[PWM_PHASE_MAX_COUNT];
 static pin_state_t pinStates3[PWM_PHASE_MAX_COUNT];
-static single_wave_s waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { single_wave_s(pinStates1), single_wave_s(pinStates2),
-		single_wave_s(pinStates3) };
-static single_wave_s sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
+static SingleWave waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { SingleWave(pinStates1), SingleWave(pinStates2),
+		SingleWave(pinStates3) };
+static SingleWave sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
 
 static float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 

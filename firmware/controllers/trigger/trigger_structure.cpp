@@ -355,7 +355,7 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 	if (privateTriggerDefinitionSize == 0) {
 		privateTriggerDefinitionSize = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			single_wave_s *wave = &this->wave.waves[i];
+			SingleWave *wave = &this->wave.waves[i];
 
 			if (wave->pinStates == NULL) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");

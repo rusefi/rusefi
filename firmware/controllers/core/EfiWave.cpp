@@ -9,23 +9,23 @@
 #include "EfiWave.h"
 #include "trigger_structure.h"
 
-single_wave_s::single_wave_s() {
+SingleWave::SingleWave() {
 	init(NULL);
 }
 
-single_wave_s::single_wave_s(pin_state_t *ps) {
+SingleWave::SingleWave(pin_state_t *ps) {
 	init(ps);
 }
 
-void single_wave_s::init(pin_state_t *pinStates) {
+void SingleWave::init(pin_state_t *pinStates) {
 	this->pinStates = pinStates;
 }
 
-int single_wave_s::getState(int index) {
+int SingleWave::getState(int index) {
 	return pinStates[index];
 }
 
-void single_wave_s::setState(int index, int state) {
+void SingleWave::setState(int index, int state) {
 	pinStates[index] = state;
 }
 
@@ -39,12 +39,12 @@ MultiWave::MultiWave() {
 	baseConstructor();
 }
 
-MultiWave::MultiWave(float *switchTimes, single_wave_s *waves) {
+MultiWave::MultiWave(float *switchTimes, SingleWave *waves) {
 	baseConstructor();
 	init(switchTimes, waves);
 }
 
-void MultiWave::init(float *switchTimes, single_wave_s *waves) {
+void MultiWave::init(float *switchTimes, SingleWave *waves) {
 	this->switchTimes = switchTimes;
 	this->waves = waves;
 }
