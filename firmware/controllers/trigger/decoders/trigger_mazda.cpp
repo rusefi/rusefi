@@ -33,21 +33,21 @@ void initializeMazdaMiataNaShape(TriggerShape *s, bool useOnlyRisingEdgeForTrigg
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
 	 */
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 52.960405, T_SECONDARY, TV_RISE);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 122.635956, T_SECONDARY, TV_FALL);
+	s->addEvent720(52.960405, T_SECONDARY, TV_RISE);
+	s->addEvent720(122.635956, T_SECONDARY, TV_FALL);
 
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 216.897031, T_PRIMARY, TV_RISE);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 232.640068, T_SECONDARY, TV_RISE);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 288.819688, T_PRIMARY, TV_FALL);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 302.646323, T_SECONDARY, TV_FALL);
+	s->addEvent720(216.897031, T_PRIMARY, TV_RISE);
+	s->addEvent720(232.640068, T_SECONDARY, TV_RISE);
+	s->addEvent720(288.819688, T_PRIMARY, TV_FALL);
+	s->addEvent720(302.646323, T_SECONDARY, TV_FALL);
 
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 412.448056, T_SECONDARY, TV_RISE);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 482.816719, T_SECONDARY, TV_FALL);
+	s->addEvent720(412.448056, T_SECONDARY, TV_RISE);
+	s->addEvent720(482.816719, T_SECONDARY, TV_FALL);
 
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 577.035495, T_PRIMARY, TV_RISE);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 592.878113, T_SECONDARY, TV_RISE);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 662.899708, T_SECONDARY, TV_FALL);
-	s->addEvent720(useOnlyRisingEdgeForTrigger, 720.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(577.035495, T_PRIMARY, TV_RISE);
+	s->addEvent720(592.878113, T_SECONDARY, TV_RISE);
+	s->addEvent720(662.899708, T_SECONDARY, TV_FALL);
+	s->addEvent720(720.0f, T_PRIMARY, TV_FALL);
 	s->useOnlyPrimaryForSync = true;
 }
 
