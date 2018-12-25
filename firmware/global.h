@@ -3,6 +3,11 @@
  *
  * Global utility header file for firmware
  *
+ * Simulator and unit tests have their own version of this header
+ *
+ * While this header contains 'EXTERN_ENGINE' and 'DECLARE_ENGINE_PARAMETER_SIGNATURE' magic,
+ * this header is not allowed to actually include higher-level engine related headers
+ *
  * @date May 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
@@ -86,8 +91,6 @@ typedef unsigned int time_t;
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-
 /**
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
  * optimization.
@@ -126,11 +129,6 @@ typedef unsigned int time_t;
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) _engine.x
-
-#else
-#define EXTERN_ENGINE
-#endif
-
 
 /**
  * low-level function is used here to reduce stack usage

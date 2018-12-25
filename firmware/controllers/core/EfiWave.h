@@ -30,6 +30,7 @@ typedef int8_t pin_state_t;
  *
  * @brief   PWM configuration for the specific output pin
  */
+// todo: rename to SingleWave
 class single_wave_s {
 public:
 	single_wave_s();
@@ -42,16 +43,20 @@ public:
 	int getState(int index);
 	void setState(int index, int state);
 
-	// todo: make this private
+	// todo: make this private by using 'getState' and 'setState' methods
 	pin_state_t *pinStates;
 };
 
+/**
+ * This class represents multi-channel logical signals with shared time axis
+ *
+ */
 class MultiWave {
 public:
 	void baseConstructor();
 	MultiWave();
-	MultiWave(float *st, single_wave_s *waves);
-	void init(float *st, single_wave_s *waves);
+	MultiWave(float *switchTimes, single_wave_s *waves);
+	void init(float *switchTimes, single_wave_s *waves);
 	void reset(void);
 	float getSwitchTime(int phaseIndex) const;
 	void setSwitchTime(int phaseIndex, float value);
