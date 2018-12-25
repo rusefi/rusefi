@@ -10,8 +10,6 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
-
 #include <stdio.h>
 #include <time.h>
 
