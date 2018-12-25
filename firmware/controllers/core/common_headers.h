@@ -1,6 +1,8 @@
 /*
  * @file common_headers.h
  *
+ * Header file shared between firmware, simulator and unit_tests
+ *
  * @date Sep 16, 2018
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
