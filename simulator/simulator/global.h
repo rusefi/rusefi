@@ -4,7 +4,7 @@
  * Global header file for win32 or posix simulator
  *
  * @date May 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #ifndef GLOBAL_H_
@@ -17,6 +17,7 @@
 #include <time.h>
 
 #include "common_headers.h"
+#include "global_shared.h"
 
 #include "boards.h"
 
@@ -94,19 +95,8 @@ void applyNewConfiguration(void);
 
 #define hal_lld_get_counter_value() 0
 
-#define EXTERN_ENGINE extern Engine *engine; \
-		extern engine_configuration_s *engineConfiguration; \
-		extern board_configuration_s *boardConfiguration; \
-		extern persistent_config_s *config; \
-		extern persistent_config_container_s persistentState; \
-		extern EnginePins enginePins
-
-#define DECLARE_ENGINE_PARAMETER_SIGNATURE void
-#define DECLARE_ENGINE_PARAMETER_SUFFIX
-#define PASS_ENGINE_PARAMETER_SIGNATURE
-#define PASS_ENGINE_PARAMETER_SUFFIX
-
-#define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
+#define EXTERN_ENGINE \
+		COMMON_EXTERN_ENGINE
 #define ENGINE(x) engine->x
 
 #endif /* GLOBAL_H_ */
