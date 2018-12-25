@@ -33,21 +33,21 @@ void initializeMazdaMiataNaShape(TriggerShape *s, bool useOnlyRisingEdgeForTrigg
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
 	 */
-	s->addEvent(52.960405 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
-	s->addEvent(122.635956 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 52.960405 / 720, T_SECONDARY, TV_RISE);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 122.635956 / 720, T_SECONDARY, TV_FALL);
 
-	s->addEvent(216.897031 / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_RISE);
-	s->addEvent(232.640068 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
-	s->addEvent(288.819688 / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_FALL);
-	s->addEvent(302.646323 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 216.897031 / 720, T_PRIMARY, TV_RISE);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 232.640068 / 720, T_SECONDARY, TV_RISE);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 288.819688 / 720, T_PRIMARY, TV_FALL);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 302.646323 / 720, T_SECONDARY, TV_FALL);
 
-	s->addEvent(412.448056 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
-	s->addEvent(482.816719 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 412.448056 / 720, T_SECONDARY, TV_RISE);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 482.816719 / 720, T_SECONDARY, TV_FALL);
 
-	s->addEvent(577.035495 / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_RISE);
-	s->addEvent(592.878113 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
-	s->addEvent(662.899708 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
-	s->addEvent(720.0f / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_FALL);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 577.035495 / 720, T_PRIMARY, TV_RISE);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 592.878113 / 720, T_SECONDARY, TV_RISE);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 662.899708 / 720, T_SECONDARY, TV_FALL);
+	s->addEvent(useOnlyRisingEdgeForTrigger, 720.0f / 720, T_PRIMARY, TV_FALL);
 	s->useOnlyPrimaryForSync = true;
 }
 

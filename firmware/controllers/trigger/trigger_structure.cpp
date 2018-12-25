@@ -314,7 +314,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 // todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
 // todo: see calculateExpectedEventCounts
 // related calculation should be done once trigger is initialized outside of trigger shape scope
-void TriggerShape::addEvent(angle_t angle, bool useOnlyRisingEdgeForTrigger, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
+void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
