@@ -15,26 +15,26 @@ void configureGmTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	float m = CRANK_MODE_MULTIPLIER;
 
-	s->addEvent2(m * 60 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(m * 60, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(m * 60 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(m * 60, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(m * 120 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(m * 120.0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(m * 120 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(m * 120.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(m * 180 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(m * 180, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(m * 180 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(m * 180, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(m * 240 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(m * 240.0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(m * 240 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(m * 240.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(m * 300 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(m * 300.0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(m * 300 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(m * 300.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(m * 350 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(m * 350.0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(m * 350 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(m * 350.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(m * 360 - w, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(m * 360.0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(m * 360 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(m * 360.0, T_PRIMARY, TV_FALL);
 
 	s->setTriggerSynchronizationGap(6);
 }
@@ -44,8 +44,8 @@ static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, in
 	int window = (isLongShort ? 12 : 3) * mult;
 	int end = startAngle + mult * 15;
 
-	s->addEvent2(startAngle + window, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(end, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(startAngle + window, T_PRIMARY, TV_RISE);
+	s->addEvent720(end, T_PRIMARY, TV_FALL);
 
 	return end;
 }

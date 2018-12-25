@@ -23,32 +23,32 @@ void initializeRoverK(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float base = 0;
 
 	for (int i = 0; i < 2; i++) {
-		s->addEvent2(base + tooth / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-		s->addEvent2(base + tooth, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
+		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 2; i++) {
-		s->addEvent2(base + tooth / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-		s->addEvent2(base + tooth, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
+		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 14; i++) {
-		s->addEvent2(base + tooth / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-		s->addEvent2(base + tooth, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
+		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 3; i++) {
-		s->addEvent2(base + tooth / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-		s->addEvent2(base + tooth, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
+		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 11; i++) {
-		s->addEvent2(base + tooth / 2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-		s->addEvent2(base + tooth, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
+		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
 		base += tooth;
 	}
 

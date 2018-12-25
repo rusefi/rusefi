@@ -37,7 +37,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_RISE);
 
 	left = right;
 	right = base;
@@ -45,7 +45,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_FALL);
 
 	// was is the the one with 360 opto sensor?
 
@@ -57,7 +57,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 //				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_RISE);
 
 	left = right;
 	right = base;
@@ -65,7 +65,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 //				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_FALL);
 
 	base += 180;
 	left = right;
@@ -74,7 +74,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 //				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_RISE);
 
 	left = right;
 	right = base;
@@ -82,16 +82,16 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 //		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
 //				left, right PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_FALL);
 
 	base += 180;
 	left = right;
 	right = base - width;
 
-	s->addEvent2(right, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_RISE);
 	left = right;
 	right = base;
-	s->addEvent2(right, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(right, T_PRIMARY, TV_FALL);
 }
 
 

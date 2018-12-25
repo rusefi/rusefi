@@ -17,11 +17,11 @@ void configureFiatIAQ_P8(TriggerShape * s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int width = 60;
 	s->tdcPosition = width;
 
-	s->addEvent2(width, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(180, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(width, T_PRIMARY, TV_RISE);
+	s->addEvent720(180, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(180 + width, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(180 + width, T_PRIMARY, TV_RISE);
+	s->addEvent720(720, T_PRIMARY, TV_FALL);
 	s->setTriggerSynchronizationGap(3);
 }
 

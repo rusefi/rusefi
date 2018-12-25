@@ -51,11 +51,11 @@ void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->addEvent2(180, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(360, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(180, T_PRIMARY, TV_RISE);
+	s->addEvent720(360, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(540, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(540, T_SECONDARY, TV_RISE);
+	s->addEvent720(720, T_SECONDARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
@@ -67,9 +67,9 @@ void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLAR
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 
-	s->addEvent2(2, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(2, T_PRIMARY, TV_RISE);
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(20, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(20, T_PRIMARY, TV_FALL);
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
 
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
@@ -88,29 +88,29 @@ void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_EN
 
 	trigger_wheel_e crank = T_SECONDARY;
 
-	s->addEvent2(10, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(50, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(10, T_PRIMARY, TV_RISE);
+	s->addEvent720(50, T_PRIMARY, TV_FALL);
 
 
 	float a = 2 * crankW;
 
 	// #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a += crankW, crank, TV_RISE);
+	s->addEvent720(a += crankW, crank, TV_FALL);
 	// #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a += crankW, crank, TV_RISE);
+	s->addEvent720(a += crankW, crank, TV_FALL);
 	// #3/3
 	a += crankW;
 	a += crankW;
 
 	// 2nd #1/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a += crankW, crank, TV_RISE);
+	s->addEvent720(a += crankW, crank, TV_FALL);
 
 	// 2nd #2/3
-	s->addEvent2(a += crankW, crank, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a += crankW, crank, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a += crankW, crank, TV_RISE);
+	s->addEvent720(a += crankW, crank, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
 }
