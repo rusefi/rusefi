@@ -119,20 +119,20 @@ void testFuelMap(void) {
 }
 
 
-static void confgiureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
-	s->addEvent2(53.747, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(121.90, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(232.76, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(300.54, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(360, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
+	s->addEvent720(121.90, T_SECONDARY, TV_FALL);
+	s->addEvent720(232.76, T_SECONDARY, TV_RISE);
+	s->addEvent720(300.54, T_SECONDARY, TV_FALL);
+	s->addEvent720(360, T_PRIMARY, TV_RISE);
 
-	s->addEvent2(409.8412, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(478.6505, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(588.045, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(657.03, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(409.8412, T_SECONDARY, TV_RISE);
+	s->addEvent720(478.6505, T_SECONDARY, TV_FALL);
+	s->addEvent720(588.045, T_SECONDARY, TV_RISE);
+	s->addEvent720(657.03, T_SECONDARY, TV_FALL);
+	s->addEvent720(720, T_PRIMARY, TV_FALL);
 
 	assertEquals(53.747 / 720, s->wave.getSwitchTime(0));
 	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
@@ -214,7 +214,7 @@ void testAngleResolver(void) {
 	assertEquals(178.24, injectionStart.angleOffset);
 
 	TriggerShape t;
-	confgiureFordAspireTriggerShape(&t PASS_ENGINE_PARAMETER_SUFFIX);
+	confgiureFordAspireTriggerShape(&t);
 }
 
 void testPinHelper(void) {
