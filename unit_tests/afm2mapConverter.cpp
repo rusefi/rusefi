@@ -85,7 +85,7 @@ void printConvertedTable() {
 
 			float volts = V_BINS[vIndex];
 
-			float psiValue = interpolate2d("conv", volts, vValues, PSI_BINS, ASIZE);
+			float psiValue = interpolate2d_DEPRECATED("conv", volts, vValues, PSI_BINS, ASIZE);
 
 //			psiValues[vIndex] = psiValue;
 			printf("/*v=%f kpa=*/ %f, ", volts, psiValue);

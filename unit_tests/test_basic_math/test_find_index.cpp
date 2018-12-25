@@ -66,8 +66,8 @@ void testFindIndex(void) {
 	}
 }
 
-void testInterpolate2d(void) {
-	printf("*************************************************** testInterpolate2d\r\n");
+void testinterpolate2d_DEPRECATED(void) {
+	printf("*************************************************** testinterpolate2d_DEPRECATED\r\n");
 
 	float bins4[] = { 1, 2, 3, 4 };
 	float values4[] = { 1, 20, 30, 400 };
@@ -76,19 +76,19 @@ void testInterpolate2d(void) {
 	int result;
 
 	printf("Left size\r\n");
-	result = interpolate2d("t", 0, bins4, values4, size);
+	result = interpolate2d_DEPRECATED("t", 0, bins4, values4, size);
 	assertEquals(1, result);
 
 	printf("Right size\r\n");
-	result = interpolate2d("t", 10, bins4, values4, size);
+	result = interpolate2d_DEPRECATED("t", 10, bins4, values4, size);
 	assertEquals(400, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d("t", 3, bins4, values4, size);
+	result = interpolate2d_DEPRECATED("t", 3, bins4, values4, size);
 	assertEquals(30, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d("t", 3.5, bins4, values4, size);
+	result = interpolate2d_DEPRECATED("t", 3.5, bins4, values4, size);
 	assertEquals(215, result);
 }
 
