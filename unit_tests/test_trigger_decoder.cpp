@@ -456,7 +456,7 @@ void testRpmCalculator(void) {
 }
 
 void testTriggerDecoder(void) {
-	printf("*************************************************** testTriggerDecoder\r\n");
+	printf("====================================================================================== testTriggerDecoder\r\n");
 
 	persistent_config_s c;
 	Engine e(&c);
@@ -478,6 +478,7 @@ void testTriggerDecoder(void) {
 
 	testNoiselessDecoder();
 
+	printf("====================================================================================== testTriggerDecoder part 2\r\n");
 	testDodgeNeonDecoder();
 	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 8, 0.4931, 0.2070);
 
@@ -494,6 +495,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
 	testTriggerDecoder2("Miata 2003", MAZDA_MIATA_2003, 3, 0.0444, 0.0);
 
+	printf("====================================================================================== testTriggerDecoder part 3\r\n");
 	testTriggerDecoder2("Civic 4/0 both", TEST_CIVIC_4_0_BOTH, 0, 0.5000, 0.0);
 	testTriggerDecoder2("Civic 4/0 rise", TEST_CIVIC_4_0_RISE, 0, 0.5000, 0.0);
 

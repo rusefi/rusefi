@@ -13,7 +13,7 @@
 #include "engine_test_helper.h"
 
 void testAccelEnrichment(void) {
-	printf("*************************************************** testAccelEnrichment\r\n");
+	printf("====================================================================================== testAccelEnrichment\r\n");
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
