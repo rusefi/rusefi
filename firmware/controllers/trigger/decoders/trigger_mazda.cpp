@@ -72,17 +72,17 @@ void initialize_Mazda_Engine_z5_Shape(TriggerShape *s DECLARE_ENGINE_PARAMETER_S
 	s->tdcPosition = 0; // 1 and 3 are at top , so 0 or 360
 	s->setTriggerSynchronizationGap(0.7);
 
-	s->addEvent2(60.0f,   T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(180.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(60.0f,   T_PRIMARY, TV_FALL);
+	s->addEvent720(180.0f,  T_PRIMARY, TV_RISE);
 
-	s->addEvent2(240.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(360.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(240.0f,  T_PRIMARY, TV_FALL);
+	s->addEvent720(360.0f,  T_PRIMARY, TV_RISE);
 
-	s->addEvent2(420.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(540.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(420.0f,  T_PRIMARY, TV_FALL);
+	s->addEvent720(540.0f,  T_PRIMARY, TV_RISE);
 
-	s->addEvent2(618.0f,  T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720.0f,  T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(618.0f,  T_PRIMARY, TV_FALL);
+	s->addEvent720(720.0f,  T_PRIMARY, TV_RISE);
 }
 
 // TT_MIATA_VVT
@@ -94,10 +94,10 @@ void initializeMazdaMiataNb2Crank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFI
 	s->tdcPosition = 60 + 655;
 
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
-	s->addEvent2(o + 4 * 56.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(o + 4 * 60.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(o + 4 * 136.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(o + 4 * 140.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(o + 4 * 56.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(o + 4 * 60.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(o + 4 * 136.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(o + 4 * 140.0f, T_PRIMARY, TV_RISE);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -111,33 +111,33 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset
 	/**
 	 * cam sensor is primary, crank sensor is secondary
 	 */
-	s->addEvent2(20.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(20.0f, T_PRIMARY, TV_RISE);
 
-	s->addEvent2(offset + 66.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 70.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 136.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 140.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 246.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 250.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 316.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 320.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(offset + 66.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 70.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 136.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 140.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 246.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 250.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 316.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 320.0f, T_SECONDARY, TV_RISE);
 
-	s->addEvent2(340.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(360.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(340.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(360.0f, T_PRIMARY, TV_RISE);
 
-	s->addEvent2(380.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(400.0f, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(380.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(400.0f, T_PRIMARY, TV_RISE);
 
-	s->addEvent2(offset + 426.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 430.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 496.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 500.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 606.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 610.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 676.0f, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(offset + 680.0f, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(offset + 426.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 430.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 496.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 500.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 606.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 610.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 676.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 680.0f, T_SECONDARY, TV_RISE);
 
-	s->addEvent2(720.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(720.0f, T_PRIMARY, TV_FALL);
 	s->useOnlyPrimaryForSync = true;
 }
 
@@ -161,18 +161,18 @@ void configureMazdaProtegeSOHC(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 	float z = 0.093;
 	a = 180;
-	s->addEvent2(a - z * 720, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
+	s->addEvent720(a, T_PRIMARY, TV_FALL);
 
 	a += 180;
-	s->addEvent2(a - z * 720, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
+	s->addEvent720(a, T_PRIMARY, TV_FALL);
 	a += 180;
-	s->addEvent2(a - z * 720, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
+	s->addEvent720(a, T_PRIMARY, TV_FALL);
 	a += 180;
-	s->addEvent2(a - z * 720, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(a, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
+	s->addEvent720(a, T_PRIMARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
 }
@@ -185,21 +185,21 @@ void configureMazdaProtegeLx(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */
-	s->addEvent2(95.329254, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(95.329254, T_PRIMARY, TV_RISE);
 
-	s->addEvent2(95.329254 + 14.876692, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(95.329254 + 82.693557, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(95.329254 + 14.876692, T_SECONDARY, TV_RISE);
+	s->addEvent720(95.329254 + 82.693557, T_SECONDARY, TV_FALL);
 
-	s->addEvent2(95.329254 + 137.119154, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(95.329254 + 137.119154, T_PRIMARY, TV_FALL);
 
-	s->addEvent2(95.329254 + 192.378308, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(95.329254 + 261.556418, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(95.329254 + 192.378308, T_SECONDARY, TV_RISE);
+	s->addEvent720(95.329254 + 261.556418, T_SECONDARY, TV_FALL);
 
-	s->addEvent2(95.329254 + 373.060597, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(95.329254 + 443.503184, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(95.329254 + 373.060597, T_SECONDARY, TV_RISE);
+	s->addEvent720(95.329254 + 443.503184, T_SECONDARY, TV_FALL);
 
-	s->addEvent2(95.329254 + 555.349776, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(95.329254 + 555.349776, T_SECONDARY, TV_RISE);
+	s->addEvent720(720, T_SECONDARY, TV_FALL);
 
 	s->tdcPosition = 137.119154;
 	s->isSynchronizationNeeded = false;

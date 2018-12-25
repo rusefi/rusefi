@@ -7,10 +7,10 @@
 
 #include "trigger_bmw.h"
 
-static inline float addPair(TriggerShape *s, float a, float w DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->addEvent2(a, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+static inline float addPair(TriggerShape *s, float a, float w) {
+	s->addEvent720(a, T_SECONDARY, TV_RISE);
 	a += w;
-	s->addEvent2(a, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a, T_SECONDARY, TV_FALL);
 	a += w;
 	return a;
 }
@@ -22,48 +22,48 @@ void configureMiniCooperTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SU
 
 	float w = 360.0 / 121;
 	float a = w / 2;
-	s->addEvent2(a, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a, T_SECONDARY, TV_FALL);
 	a += w;
 
 	for (int i = 0; i <= 22; i++) {
-		a = addPair(s, a, w PASS_ENGINE_PARAMETER_SUFFIX);
+		a = addPair(s, a, w);
 	}
 
 	a += 3 * w;
 
 	float firstGapAngle = a;
 
-	s->addEvent2(a, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a, T_SECONDARY, TV_RISE);
 	a += 3 * w;
-	s->addEvent2(a, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a, T_SECONDARY, TV_FALL);
 	a += w;
 
 	for (int i = 0; i < 36; i++) {
-		a = addPair(s, a, w PASS_ENGINE_PARAMETER_SUFFIX);
+		a = addPair(s, a, w);
 	}
 
-	s->addEvent2(376, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(376, T_PRIMARY, TV_RISE);
 
 	for (int i = 0; i < 21; i++) {
-		a = addPair(s, a, w PASS_ENGINE_PARAMETER_SUFFIX);
+		a = addPair(s, a, w);
 	}
 	a += 3 * w;
 
 	efiAssertVoid(CUSTOM_ERR_6584, absF(firstGapAngle + 360 - a) < 0.1, "shape constraint");
 
-	s->addEvent2(a, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a, T_SECONDARY, TV_RISE);
 	a += 3 * w;
-	s->addEvent2(a, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a, T_SECONDARY, TV_FALL);
 	a += w;
 
 	for (int i = 0; i < 33; i++) {
-		a = addPair(s, a, w PASS_ENGINE_PARAMETER_SUFFIX);
+		a = addPair(s, a, w);
 	}
 
 	efiAssertVoid(CUSTOM_ERR_6585, absF(720 - w / 2 - a) < 0.1, "shape constraint");
-	s->addEvent2(a, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(a, T_SECONDARY, TV_RISE);
 
-	s->addEvent2(720.0, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent720(720.0, T_PRIMARY, TV_FALL);
 
 	/**
 	 * With just one tooth on camshaft synchronization is not needed
