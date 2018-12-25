@@ -470,7 +470,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdgeForTrigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 #if !EFI_UNIT_TEST
 	// we have a confusing threading model so some synchronization would not hurt
@@ -492,7 +492,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		break;
 
 	case TT_MAZDA_MIATA_NA:
-		initializeMazdaMiataNaShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeMazdaMiataNaShape(this, useOnlyRisingEdgeForTrigger);
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
@@ -664,6 +664,8 @@ void TriggerShape::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMET
 		shapeDefinitionError = true;
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
 	}
+	calculateExpectedEventCounts(useOnlyRisingEdgeForTrigger);
+
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getSize());
 		/**

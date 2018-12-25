@@ -20,7 +20,8 @@
 
 #include "trigger_mazda.h"
 
-void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+// todo: remove useOnlyRisingEdgeForTrigger parameter from here see https://github.com/rusefi/rusefi/issues/635
+void initializeMazdaMiataNaShape(TriggerShape *s, bool useOnlyRisingEdgeForTrigger) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
 	s->useRiseEdge = false;
@@ -32,21 +33,21 @@ void initializeMazdaMiataNaShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
 	 */
-	s->addEvent2(52.960405, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(122.635956, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent(52.960405 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
+	s->addEvent(122.635956 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
 
-	s->addEvent2(216.897031, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(232.640068, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(288.819688, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(302.646323, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent(216.897031 / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_RISE);
+	s->addEvent(232.640068 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
+	s->addEvent(288.819688 / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_FALL);
+	s->addEvent(302.646323 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
 
-	s->addEvent2(412.448056, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(482.816719, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent(412.448056 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
+	s->addEvent(482.816719 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
 
-	s->addEvent2(577.035495, T_PRIMARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(592.878113, T_SECONDARY, TV_RISE PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(662.899708, T_SECONDARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
-	s->addEvent2(720.0f, T_PRIMARY, TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
+	s->addEvent(577.035495 / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_RISE);
+	s->addEvent(592.878113 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_RISE);
+	s->addEvent(662.899708 / 720, useOnlyRisingEdgeForTrigger, T_SECONDARY, TV_FALL);
+	s->addEvent(720.0f / 720, useOnlyRisingEdgeForTrigger, T_PRIMARY, TV_FALL);
 	s->useOnlyPrimaryForSync = true;
 }
 

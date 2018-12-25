@@ -293,6 +293,17 @@ operation_mode_e TriggerShape::getOperationMode() {
 extern bool printTriggerDebug;
 #endif
 
+void TriggerShape::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
+// todo: move the following logic from below here
+	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
+//		expectedEventCount[waveIndex]++;
+//	}
+
+}
+
+/**
+ * Deprecated - see https://github.com/rusefi/rusefi/issues/635
+ */
 void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/**
 	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
@@ -300,6 +311,9 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	addEvent(angle / getEngineCycle(operationMode), engineConfiguration->useOnlyRisingEdgeForTrigger, waveIndex, stateParam);
 }
 
+// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
+// todo: see calculateExpectedEventCounts
+// related calculation should be done once trigger is initialized outside of trigger shape scope
 void TriggerShape::addEvent(angle_t angle, bool useOnlyRisingEdgeForTrigger, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
