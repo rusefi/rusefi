@@ -20,7 +20,7 @@ static int expectedTimeOfNextEvent;
 static int pinValue = -1;
 
 static void testApplyPinState(PwmConfig *state, int stateIndex) {
-	pinValue = state->multiWave.waves[0].pinStates[stateIndex];
+	pinValue = state->multiWave.getChannelState(/*channelIndex*/0, stateIndex);
 
 	printf("PWM_test: setPinValue=%d @ timeNow=%d\r\n", pinValue, timeNowUs);
 }

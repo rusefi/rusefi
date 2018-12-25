@@ -30,7 +30,7 @@ void SingleWave::setState(int index, int state) {
 }
 
 void MultiWave::baseConstructor() {
-	waves = NULL;
+	channels = NULL;
 	switchTimes = NULL;
 	reset();
 }
@@ -44,9 +44,9 @@ MultiWave::MultiWave(float *switchTimes, SingleWave *waves) {
 	init(switchTimes, waves);
 }
 
-void MultiWave::init(float *switchTimes, SingleWave *waves) {
+void MultiWave::init(float *switchTimes, SingleWave *channels) {
 	this->switchTimes = switchTimes;
-	this->waves = waves;
+	this->channels = channels;
 }
 
 void MultiWave::reset(void) {
@@ -70,7 +70,7 @@ void MultiWave::checkSwitchTimes(int size) {
 }
 
 int MultiWave::getChannelState(int channelIndex, int phaseIndex) const {
-	return waves[channelIndex].pinStates[phaseIndex];
+	return channels[channelIndex].pinStates[phaseIndex];
 }
 
 /**

@@ -230,10 +230,11 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 	for (int phaseIndex = 0; phaseIndex < phaseCount; phaseIndex++) {
 		state->multiWave.setSwitchTime(phaseIndex, switchTimes[phaseIndex]);
 
-		for (int waveIndex = 0; waveIndex < waveCount; waveIndex++) {
-//			print("output switch time index (%d/%d) at %.2f to %d\r\n", phaseIndex,waveIndex,
+		for (int channelIndex = 0; channelIndex < waveCount; channelIndex++) {
+//			print("output switch time index (%d/%d) at %.2f to %d\r\n", phaseIndex, channelIndex,
 //					switchTimes[phaseIndex], pinStates[waveIndex][phaseIndex]);
-			state->multiWave.waves[waveIndex].pinStates[phaseIndex] = pinStates[waveIndex][phaseIndex];
+			int value = pinStates[channelIndex][phaseIndex];
+			state->multiWave.channels[channelIndex].setState(phaseIndex, value);
 		}
 	}
 	if (state->mode == PM_NORMAL) {
@@ -310,9 +311,9 @@ void startSimplePwmExt(SimplePwm *state, const char *msg, brain_pin_e brainPin, 
 void applyPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6664, state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
-	for (int waveIndex = 0; waveIndex < state->multiWave.waveCount; waveIndex++) {
-		OutputPin *output = state->outputPins[waveIndex];
-		int value = state->multiWave.waves[waveIndex].pinStates[stateIndex];
+	for (int channelIndex = 0; channelIndex < state->multiWave.waveCount; channelIndex++) {
+		OutputPin *output = state->outputPins[channelIndex];
+		int value = state->multiWave.getChannelState(channelIndex, stateIndex);
 		output->setValue(value);
 	}
 }

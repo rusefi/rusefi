@@ -37,7 +37,7 @@ class trigger_shape_helper {
 public:
 	trigger_shape_helper();
 
-	SingleWave waves[TRIGGER_CHANNEL_COUNT];
+	SingleWave channels[TRIGGER_CHANNEL_COUNT];
 private:
 	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
 };
@@ -175,10 +175,10 @@ public:
 	 */
 	int privateTriggerDefinitionSize;
 
-	void addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
-	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent2(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	void addEvent3(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void addEvent3(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX);
 	operation_mode_e getOperationMode();
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
