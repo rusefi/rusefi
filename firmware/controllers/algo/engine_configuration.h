@@ -13,6 +13,10 @@
 #include "crc.h"
 #include "engine_configuration_generated_structures.h"
 
+#ifndef DEFAULT_ENGINE_TYPE
+#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+#endif
+
 #define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
 #define WARMUP_CLT_EXTRA_FUEL_CURVE config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE
 #define IAT_FUEL_CORRECTION_CURVE config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE

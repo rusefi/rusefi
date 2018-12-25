@@ -1,7 +1,7 @@
 /*
  * @file global.h
  *
- * Global header file for firmware
+ * Global utility header file for firmware
  *
  * @date May 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -17,10 +17,6 @@ extern "C"
 
 #include <ch.h>
 #include <hal.h>
-
-#ifndef DEFAULT_ENGINE_TYPE
-#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
-#endif
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
