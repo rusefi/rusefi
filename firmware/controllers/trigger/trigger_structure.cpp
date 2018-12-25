@@ -282,7 +282,7 @@ angle_t TriggerShape::getAngle(int index) const {
 
 void TriggerShape::addEvent3(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (angle > filterLeft && angle < filterRight)
-		addEvent2(angle, channelIndex, stateParam PASS_ENGINE_PARAMETER_SUFFIX);
+		addEvent(engineConfiguration->useOnlyRisingEdgeForTrigger, angle / getEngineCycle(operationMode), channelIndex, stateParam);
 }
 
 operation_mode_e TriggerShape::getOperationMode() {
