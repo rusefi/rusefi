@@ -178,7 +178,7 @@ public:
 	void addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
 	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	void addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void addEvent3(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX);
 	operation_mode_e getOperationMode();
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
