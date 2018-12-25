@@ -33,6 +33,7 @@
 #include "engine_math.h"
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
+#include "test_table.h"
 
 typedef int32_t         msg_t;
 
@@ -94,6 +95,7 @@ int main(void) {
 	testFindIndex();
 	testInterpolate3d();
 	testInterpolate2d();
+	test_table();
 	testSetTableValue();
 	testHistogram();
 	testFLStack();
@@ -128,6 +130,8 @@ int main(void) {
 	printf("Success 20181206\r\n");
 	printAllTriggers();
 //	printConvertedTable();
+
+
 	return EXIT_SUCCESS;
 }
 
