@@ -308,7 +308,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 	/**
 	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
 	 */
-	addEvent(angle / getEngineCycle(operationMode), engineConfiguration->useOnlyRisingEdgeForTrigger, waveIndex, stateParam);
+	addEvent(engineConfiguration->useOnlyRisingEdgeForTrigger, angle / getEngineCycle(operationMode), waveIndex, stateParam);
 }
 
 // todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
