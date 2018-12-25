@@ -280,7 +280,7 @@ angle_t TriggerShape::getAngle(int index) const {
 	return getCycleDuration() * crankCycle + getSwitchAngle(remainder);
 }
 
-void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerShape::addEvent3(angle_t angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (angle > filterLeft && angle < filterRight)
 		addEvent2(angle, waveIndex, stateParam PASS_ENGINE_PARAMETER_SUFFIX);
 }
