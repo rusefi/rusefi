@@ -50,7 +50,7 @@ BinResult TableBins<TBin, TSize>::Get(float value) const
 template <typename TBin, uint8_t TSize>
 bool TableBins<TBin, TSize>::IsAscending()
 {
-    for(int8_t idx = 0; i < TSize - 1; i++)
+    for(int8_t i = 0; i < TSize - 1; i++)
     {
         if(m_bins[i] >= m_bins[i + 1])
         {
