@@ -21,6 +21,14 @@ void single_wave_s::init(pin_state_t *pinStates) {
 	this->pinStates = pinStates;
 }
 
+int single_wave_s::getState(int index) {
+	return pinStates[index];
+}
+
+void single_wave_s::setState(int index, int state) {
+	pinStates[index] = state;
+}
+
 void MultiWave::baseConstructor() {
 	waves = NULL;
 	switchTimes = NULL;

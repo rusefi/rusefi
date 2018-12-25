@@ -352,7 +352,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 
 		isFrontEvent[0] = TV_RISE == stateParam;
 		wave.setSwitchTime(0, angle);
-		wave.waves[waveIndex].pinStates[0] = state;
+		wave.waves[waveIndex].setState(0, state);
 		return;
 	}
 
@@ -390,7 +390,7 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const waveIndex, tri
 		wave.waves[i].pinStates[index] = wave.getChannelState(i, index - 1);
 	}
 	wave.setSwitchTime(index, angle);
-	wave.waves[waveIndex].pinStates[index] = state;
+	wave.waves[waveIndex].setState(index, state);
 }
 
 angle_t TriggerShape::getSwitchAngle(int index) const {
