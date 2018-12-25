@@ -7,6 +7,10 @@
  * As of version 2.6.x, ChibiOS tick-based kernel is not capable of scheduling events
  * with the level of precision we need, and realistically it should not.
  *
+ * See https://rusefi.com/forum/viewtopic.php?f=5&t=373&sid=e285ebd9a5677a83235116007e8eb65d&start=360#p30895
+ * for some performance data: with 'debug' firmware we spend about 5% of CPU in TIM5 handler which seem to be executed
+ * about 1500 times a second
+ *
  * http://sourceforge.net/p/rusefi/tickets/24/
  *
  * @date: Apr 18, 2014
