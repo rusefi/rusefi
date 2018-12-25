@@ -20,7 +20,7 @@
 extern float testMafValue;
 
 void testMafFuelMath(void) {
-	printf("*************************************************** testMafFuelMath\r\n");
+	printf("====================================================================================== testMafFuelMath\r\n");
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
 
@@ -34,7 +34,7 @@ void testMafFuelMath(void) {
 }
 
 void testFuelMap(void) {
-	printf("*************************************************** testFuelMap\r\n");
+	printf("====================================================================================== testFuelMap\r\n");
 
 	printf("Setting up FORD_ASPIRE_1996\r\n");
 	EngineTestHelper eth(FORD_ASPIRE_1996);

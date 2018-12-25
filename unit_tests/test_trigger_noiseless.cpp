@@ -107,16 +107,16 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, -1, 0, 0, 0);
 
 	// should be no errors anyway
-	assertEquals(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	assertEqualsM("testNoiselessDecoderProcedure totalTriggerErrorCounter", 0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	// check if we're imitating the 60-2 signal correctly
 	assertEqualsM("index #1", 0, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	// check rpm (60secs / (1000us * 60teeth)) = 1000rpm
-	assertEqualsM("RPM", 1000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("testNoiselessDecoder RPM", 1000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	// add noise1 - 1 spike in the middle of the 2nd rising pulse
 	fireNoisyCycle60_2(&eth, 2, 1000, 2, 10, 500, 1);
 
-	assertEqualsM("noise#1", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	assertEqualsM("testNoiselessDecoder noise#1", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 
 	resetTrigger(eth);
 
@@ -158,7 +158,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, 4, 5, 10, failProofNumSpikes);
 
 	// we barely survived this time
-	assertEqualsM("noise#6", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	assertEqualsM("testNoiselessDecoder noise#6", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 
 	resetTrigger(eth);
 
@@ -168,12 +168,12 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	// alas, this is a hard case even for noiseless decoder, and it fails...
 	// but still we're close to 33% signal-noise ratio threshold - not bad!
 	// so here's an error anyway!
-	assertEqualsM("noise#7_fail_test", 1, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	assertEqualsM("testNoiselessDecoder noise#7_fail_test", 1, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 
 }
 
 void testNoiselessDecoder(void) {
-	printf("*************************************************** testNoiselessDecoder\r\n");
+	printf("====================================================================================== testNoiselessDecoder\r\n");
 	timeNowUs = 0;
 	schedulingQueue.clear();
 
@@ -191,7 +191,7 @@ void testNoiselessDecoder(void) {
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	assertEquals(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	assertEquals(0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("testNoiselessDecoder RPM", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	//printTriggerDebug = true;
 
