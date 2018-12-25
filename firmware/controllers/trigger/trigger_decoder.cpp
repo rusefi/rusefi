@@ -484,6 +484,8 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 
 	shapeDefinitionError = false;
 
+	this->useOnlyRisingEdgeForTriggerTemp = useOnlyRisingEdgeForTrigger;
+
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:

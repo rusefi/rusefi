@@ -311,8 +311,8 @@ void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const channelIndex, 
 	addEvent(engineConfiguration->useOnlyRisingEdgeForTrigger, angle / getEngineCycle(operationMode), channelIndex, stateParam);
 }
 
-void TriggerShape::addEvent720(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
-	addEvent(useOnlyRisingEdgeForTrigger, angle / 720, channelIndex, stateParam);
+void TriggerShape::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
+	addEvent(useOnlyRisingEdgeForTriggerTemp, angle / 720, channelIndex, stateParam);
 }
 
 // todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here

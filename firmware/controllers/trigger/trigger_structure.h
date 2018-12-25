@@ -175,12 +175,14 @@ public:
 	 */
 	int privateTriggerDefinitionSize;
 
+	bool useOnlyRisingEdgeForTriggerTemp;
+
 	/* 0..1 angle range */
 	void addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 	/* 0..720 angle range
 	 * Deprecated?
 	 */
-	void addEvent720(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 	/* 0..720 angle range
 	 * Deprecated?
 	 */
