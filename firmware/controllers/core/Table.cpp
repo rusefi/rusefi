@@ -96,3 +96,7 @@ template class Table2d<float, float, 8>;
 // appropriate bin templates get instantiated by getting
 // used in a table
 
+
+// These exist for unit tests (linker will remove in real firmware)
+template class Table2d<float, float, 2>;
+template class Table2d<float, float, 3>;
