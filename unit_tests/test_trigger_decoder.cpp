@@ -223,7 +223,7 @@ void testFordAspire(void) {
 }
 
 void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
-	printf("*************************************************** %s\r\n", msg);
+	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
 	EngineTestHelper eth(type);
 	EXPAND_EngineTestHelper;
