@@ -11,7 +11,7 @@
 /**
  * https://en.wikipedia.org/wiki/Rover_K-series_engine
  */
-void initializeRoverK(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initializeRoverK(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 
 	float tooth = 20;

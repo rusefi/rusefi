@@ -494,7 +494,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 
 	case TT_TOOTHED_WHEEL:
 		initializeSkippedToothTriggerShapeExt(this, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -563,7 +563,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_ONE:
-		setToothedWheelConfiguration(this, 1, 0, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+		setToothedWheelConfiguration(this, 1, 0, engineConfiguration->operationMode);
 		break;
 
 	case TT_MAZDA_SOHC_4:
@@ -571,11 +571,11 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_MINI_COOPER_R50:
-		configureMiniCooperTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureMiniCooperTriggerShape(this);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(this, 60, 2, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+		setToothedWheelConfiguration(this, 60, 2, engineConfiguration->operationMode);
 		break;
 
 	case TT_60_2_VW:
@@ -583,35 +583,35 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(this, 36, 1, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+		setToothedWheelConfiguration(this, 36, 1, engineConfiguration->operationMode);
 		break;
 
 	case TT_HONDA_4_24_1:
-		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0);
 		break;
 
 	case TT_HONDA_4_24:
-		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
 		break;
 
 	case TT_HONDA_1_24:
-		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10 PASS_ENGINE_PARAMETER_SUFFIX);
+		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10);
 		break;
 
 	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifted(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureHondaAccordShifted(this);
 		break;
 
 	case TT_HONDA_1_4_24:
-		configureHondaAccordCDDip(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureHondaAccordCDDip(this);
 		break;
 
 	case TT_HONDA_CBR_600:
-		configureHondaCbr600(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureHondaCbr600(this);
 		break;
 
 	case TT_HONDA_CBR_600_CUSTOM:
-		configureHondaCbr600custom(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureHondaCbr600custom(this);
 		break;
 
 	case TT_MITSUBISHI:
@@ -631,31 +631,31 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_SUBARU_7_6:
-		initializeSubaru7_6(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeSubaru7_6(this);
 		break;
 
 	case TT_36_2_2_2:
-		initialize36_2_2_2(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initialize36_2_2_2(this);
 		break;
 
 	case TT_2JZ_3_34:
-		initialize2jzGE3_34(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initialize2jzGE3_34(this);
 		break;
 
 	case TT_2JZ_1_12:
-		initialize2jzGE1_12(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initialize2jzGE1_12(this);
 		break;
 
 	case TT_NISSAN_SR20VE:
-		initializeNissanSR20VE_4(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeNissanSR20VE_4(this);
 		break;
 
 	case TT_NISSAN_SR20VE_360:
-		initializeNissanSR20VE_4_360(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeNissanSR20VE_4_360(this);
 		break;
 
 	case TT_ROVER_K:
-		initializeRoverK(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeRoverK(this);
 		break;
 
 	case TT_FIAT_IAW_P8:
@@ -663,7 +663,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_GM_LS_24:
-		initGmLS24(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initGmLS24(this);
 		break;
 
 	default:

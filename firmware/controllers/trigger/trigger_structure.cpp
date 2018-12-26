@@ -418,13 +418,13 @@ angle_t TriggerShape::getSwitchAngle(int index) const {
 }
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
-		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		operation_mode_e operationMode) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 	s->useRiseEdge = true;
 
 	initializeSkippedToothTriggerShapeExt(s, total, skipped,
-			operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+			operationMode);
 #endif
 }
 

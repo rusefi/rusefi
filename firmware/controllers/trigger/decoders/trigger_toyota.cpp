@@ -11,7 +11,7 @@
 
 EXTERN_ENGINE;
 
-void initialize2jzGE1_12(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initialize2jzGE1_12(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float crankD = 360 / 12 / 2; // 15
@@ -45,8 +45,8 @@ void initialize2jzGE1_12(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->isSynchronizationNeeded = false;
 }
 
-void initialize2jzGE3_34(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setToothedWheelConfiguration(s, 36, 2, FOUR_STROKE_CRANK_SENSOR PASS_ENGINE_PARAMETER_SUFFIX);
+void initialize2jzGE3_34(TriggerShape *s) {
+	setToothedWheelConfiguration(s, 36, 2, FOUR_STROKE_CRANK_SENSOR);
 
 //	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 //

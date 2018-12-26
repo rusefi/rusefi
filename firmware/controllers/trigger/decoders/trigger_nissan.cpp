@@ -13,7 +13,7 @@
 /**
  * 8,2,2,2 Nissan pattern
  */
-static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, with2nd);
 	s->isSynchronizationNeeded = true;
 	s->gapBothDirections = true;
@@ -99,10 +99,10 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
  * Nissan Primera p11 year 1995-2002
  */
 
-void initializeNissanSR20VE_4(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initializeNissanSR20VE_4_optional_360(s, false PASS_ENGINE_PARAMETER_SUFFIX);
+void initializeNissanSR20VE_4(TriggerShape *s) {
+	initializeNissanSR20VE_4_optional_360(s, false);
 }
 
-void initializeNissanSR20VE_4_360(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initializeNissanSR20VE_4_optional_360(s, true PASS_ENGINE_PARAMETER_SUFFIX);
+void initializeNissanSR20VE_4_360(TriggerShape *s) {
+	initializeNissanSR20VE_4_optional_360(s, true);
 }

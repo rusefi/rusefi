@@ -10,7 +10,7 @@
 
 #include "engine.h"
 
-void initialize2jzGE1_12(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
-void initialize2jzGE3_34(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initialize2jzGE1_12(TriggerShape *s);
+void initialize2jzGE3_34(TriggerShape *s);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_TOYOTA_H_ */

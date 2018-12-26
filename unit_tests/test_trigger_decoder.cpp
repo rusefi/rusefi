@@ -469,7 +469,7 @@ void testTriggerDecoder(void) {
 	engine_configuration_s *engineConfiguration = &c.engineConfiguration;
 	board_configuration_s *boardConfiguration = &c.engineConfiguration.bc;
 
-	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR PASS_ENGINE_PARAMETER_SUFFIX);
+	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
 	assertEquals(s->wave.switchTimes[0], 0.25);
 	assertEquals(s->wave.switchTimes[1], 0.5);

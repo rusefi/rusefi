@@ -15,7 +15,7 @@ static inline float addPair(TriggerShape *s, float a, float w) {
 	return a;
 }
 
-void configureMiniCooperTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureMiniCooperTriggerShape(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 //	s->initialState[0] = 1;

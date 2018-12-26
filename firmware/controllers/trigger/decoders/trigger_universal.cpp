@@ -29,7 +29,7 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int to
 }
 
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
-		operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		operation_mode_e operationMode) {
 	if (totalTeethCount <= 0) {
 		warning(CUSTOM_OBD_TRIGGER_SHAPE, "totalTeethCount is zero or less: %d", totalTeethCount);
 		s->shapeDefinitionError = true;
