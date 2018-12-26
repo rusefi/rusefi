@@ -12,7 +12,7 @@ angle_t getEngineCycle(operation_mode_e operationMode) {
 }
 
 void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
-		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		float toothWidth, float offset, float engineCycle, float filterLeft, float filterRight) {
 	efiAssertVoid(CUSTOM_ERR_6586, totalTeethCount > 0, "total count");
 	efiAssertVoid(CUSTOM_ERR_6587, skippedCount >= 0, "skipped count");
 
@@ -42,11 +42,11 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	s->isSynchronizationNeeded = (totalTeethCount > 2) && (skippedCount != 0);
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
-	NO_LEFT_FILTER, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
+	NO_LEFT_FILTER, NO_RIGHT_FILTER);
 }
 
 
-void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
 	float engineCycle = getEngineCycle(operationMode);
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
@@ -61,25 +61,25 @@ void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode DECLARE
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 
 	s->addEvent720(2, T_PRIMARY, TV_RISE);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20 PASS_ENGINE_PARAMETER_SUFFIX);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
 	s->addEvent720(20, T_PRIMARY, TV_FALL);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
 
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
-	NO_RIGHT_FILTER PASS_ENGINE_PARAMETER_SUFFIX);
+	NO_RIGHT_FILTER);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
 }
 
-void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 
