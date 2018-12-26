@@ -18,36 +18,10 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define assertEngineReference() efiAssertVoid(CUSTOM_ENGINE_REF, engine != NULL, "engine is NULL")
 
-
-#if EFI_ENABLE_ASSERTS
-#define assertAngleRange(angle, msg, code) if(angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
-#else
-#define assertAngleRange(angle, msg, code) {}
-#endif
-
 void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+#define fixAngle(angle, msg, code) fixAngle2(angle, msg, code, ENGINE(engineCycle))
 
-/**
- * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
- * I guess this implementation would be faster than 'angle % engineCycle'
- */
-#define fixAngle(angle, msg, code)											    \
-	{																		\
-   	    if (cisnan(angle)) {                                                \
-		   firmwareError(CUSTOM_ERR_ANGLE, "aNaN%s", msg);                  \
-		   angle = 0;                                                       \
-	    }                                                                   \
-		assertAngleRange(angle, msg, code);	   					            \
-		float engineCycleDurationLocalCopy = ENGINE(engineCycle);	        \
-		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
-		/*       as a performance optimization?*/                           \
-		while (angle < 0)                       							\
-			angle += engineCycleDurationLocalCopy;   						\
-			/* todo: would 'if' work as good as 'while'? */                 \
-		while (angle >= engineCycleDurationLocalCopy)						\
-			angle -= engineCycleDurationLocalCopy;   						\
-	}
 
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.

@@ -184,32 +184,32 @@ void testAngleResolver(void) {
 	event_trigger_position_s injectionStart;
 
 	printf("*************************************************** testAngleResolver 0\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
 	assertEquals(0.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
 	assertEquals(42.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
 	assertEquals(68.2400, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset));
 	assertEquals(2, injectionStart.eventIndex);
 	assertEquals(69.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset));
 	assertEquals(2, injectionStart.eventIndex);
 	assertEquals(122.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
-	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset));
 	assertEquals(2, injectionStart.eventIndex);
 	assertEquals(178.24, injectionStart.angleOffset);
 

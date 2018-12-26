@@ -52,6 +52,7 @@
 
 #define DEFINE_CONFIG_PARAM(x, y)
 #define CONFIG_PARAM(x) CONFIG(x)
+#define PASS_CONFIG_PARAM(x)
 
 
 #endif /* GLOBAL_SHARED_H_ */

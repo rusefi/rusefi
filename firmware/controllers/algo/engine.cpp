@@ -67,7 +67,9 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 	bool alreadyLocked = lockAnyContext();
 #endif /* EFI_UNIT_TEST */
 
-	TRIGGER_SHAPE(initializeTriggerShape(logger, engineConfiguration->useOnlyRisingEdgeForTrigger PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(initializeTriggerShape(logger,
+			engineConfiguration->operationMode,
+			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
 		/**
@@ -75,7 +77,8 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		initState.reset();
-		TRIGGER_SHAPE(calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER_SUFFIX));
+		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
+				&initState PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (engine->triggerCentral.triggerShape.getSize() == 0) {
 			firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
