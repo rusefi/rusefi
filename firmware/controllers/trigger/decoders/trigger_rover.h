@@ -9,7 +9,7 @@
 #ifndef CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_
 #define CONTROLLERS_TRIGGER_TRIGGER_ROVER_H_
 
-#include "trigger_structure.h"
+#include "trigger_decoder.h"
 
 void initializeRoverK(TriggerShape *s);
 

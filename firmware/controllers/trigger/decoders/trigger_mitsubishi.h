@@ -7,9 +7,9 @@
 #ifndef TRIGGER_MITSUBISHI_H_
 #define TRIGGER_MITSUBISHI_H_
 
-#include "trigger_structure.h"
+#include "trigger_decoder.h"
 
-void initializeMitsubishi4g18(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initializeMitsubishi4g18(TriggerShape *s);
 void configureFordAspireTriggerShape(TriggerShape * s);
 
 #endif /* TRIGGER_MITSUBISHI_H_ */

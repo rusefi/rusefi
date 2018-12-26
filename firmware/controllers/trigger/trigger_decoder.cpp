@@ -579,7 +579,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_60_2_VW:
-		setVwConfiguration(this PASS_ENGINE_PARAMETER_SUFFIX);
+		setVwConfiguration(this);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
@@ -615,7 +615,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_MITSUBISHI:
-		initializeMitsubishi4g18(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initializeMitsubishi4g18(this);
 		break;
 
 	case TT_DODGE_RAM:
@@ -659,7 +659,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_FIAT_IAW_P8:
-		configureFiatIAQ_P8(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureFiatIAQ_P8(this);
 		break;
 
 	case TT_GM_LS_24:

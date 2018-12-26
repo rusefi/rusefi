@@ -31,7 +31,7 @@ void configureFordAspireTriggerShape(TriggerShape * s) {
 /**
  * TT_MITSUBISHI = 11
  */
-void initializeMitsubishi4g18(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initializeMitsubishi4g18(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = false;
 

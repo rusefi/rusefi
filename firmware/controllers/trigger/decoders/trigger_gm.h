@@ -8,7 +8,7 @@
 #ifndef TRIGGER_GM_H_
 #define TRIGGER_GM_H_
 
-#include "trigger_structure.h"
+#include "trigger_decoder.h"
 
 void configureGmTriggerShape(TriggerShape *s);
 void initGmLS24(TriggerShape *s);
