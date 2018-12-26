@@ -10,9 +10,8 @@
 
 void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerShape is NULL");
-	operation_mode_e operationMode = FOUR_STROKE_CRANK_SENSOR;
 
-	s->initialize(operationMode, false);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 
 	s->isSynchronizationNeeded = true;
 
@@ -20,7 +19,7 @@ void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 
-	float engineCycle = getEngineCycle(operationMode);
+	float engineCycle = getEngineCycle(s->getOperationMode());
 	float toothWidth = 0.5;
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, 60, 2, toothWidth, 0, engineCycle,
