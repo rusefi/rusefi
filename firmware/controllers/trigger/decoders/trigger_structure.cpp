@@ -20,15 +20,28 @@
 
 
 #include "global.h"
+#include "trigger_bmw.h"
+#include "trigger_chrysler.h"
+#include "trigger_gm.h"
+#include "trigger_nissan.h"
+#include "trigger_mazda.h"
+#include "trigger_misc.h"
+#include "trigger_mitsubishi.h"
+#include "trigger_subaru.h"
 #include "trigger_structure.h"
-#include "trigger_decoder.h"
-#include "engine_math.h"
+#include "trigger_toyota.h"
+#include "trigger_rover.h"
+#include "trigger_honda.h"
+#include "trigger_vw.h"
 #include "trigger_universal.h"
+
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
-EXTERN_ENGINE;
+#include "engine_configuration.h"
+		extern persistent_config_container_s persistentState;
+
 
 trigger_shape_helper::trigger_shape_helper() {
 	memset(&pinStates, 0, sizeof(pinStates));
@@ -44,58 +57,6 @@ TriggerShape::TriggerShape() :
 	wave.channels = h.channels;
 
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
-}
-
-void TriggerShape::calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(CUSTOM_ERR_6642, getRemainingStack(chThdGetSelfX()) > 256, "calc s");
-#endif
-	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
-
-	triggerShapeSynchPointIndex = findTriggerZeroEventIndex(state, this, triggerConfig PASS_ENGINE_PARAMETER_SUFFIX);
-
-	int length = getLength();
-	engine->engineCycleEventCount = length;
-	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
-	if (length >= PWM_PHASE_MAX_COUNT) {
-		warning(CUSTOM_ERR_TRIGGER_SHAPE_TOO_LONG, "Count above %d", length);
-		shapeDefinitionError = true;
-		return;
-	}
-
-	float firstAngle = getAngle(triggerShapeSynchPointIndex);
-	assertAngleRange(triggerShapeSynchPointIndex, "firstAngle", CUSTOM_ERR_6551);
-
-	int frontOnlyIndex = 0;
-
-	for (int eventIndex = 0; eventIndex < length; eventIndex++) {
-		if (eventIndex == 0) {
-			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
-			eventAngles[0] = 0;
-			// this value would be used in case of front-only
-			eventAngles[1] = 0;
-			frontOnlyIndexes[0] = 0;
-		} else {
-			assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_ERR_6552);
-			int triggerDefinitionCoordinate = (triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
-			efiAssertVoid(CUSTOM_ERR_6595, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
-			int triggerDefinitionIndex = triggerDefinitionCoordinate >= privateTriggerDefinitionSize ? triggerDefinitionCoordinate - privateTriggerDefinitionSize : triggerDefinitionCoordinate;
-			float angle = getAngle(triggerDefinitionCoordinate) - firstAngle;
-			efiAssertVoid(CUSTOM_ERR_6596, !cisnan(angle), "trgSyncNaN");
-			fixAngle(angle, "trgSync", CUSTOM_ERR_6559);
-			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
-				if (isFrontEvent[triggerDefinitionIndex]) {
-					frontOnlyIndex += 2;
-					eventAngles[frontOnlyIndex] = angle;
-					eventAngles[frontOnlyIndex + 1] = angle;
-				}
-			} else {
-				eventAngles[eventIndex] = angle;
-			}
-
-			frontOnlyIndexes[eventIndex] = frontOnlyIndex;
-		}
-	}
 }
 
 void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
@@ -140,98 +101,6 @@ int TriggerShape::getSize() const {
 int TriggerShape::getTriggerShapeSynchPointIndex() {
 	return triggerShapeSynchPointIndex;
 }
-
-efitime_t TriggerState::getStartOfRevolutionIndex() {
-	return totalEventCountBase;
-}
-
-void TriggerState::resetRunningCounters() {
-	runningRevolutionCounter = 0;
-	runningTriggerErrorCounter = 0;
-	runningOrderingErrorCounter = 0;
-}
-
-void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	// empty base implementation
-}
-
-TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() {
-	instantRpm = 0;
-	prevInstantRpmValue = 0;
-	// avoid ill-defined instant RPM when the data is not gathered yet
-	efitime_t nowNt = getTimeNowNt();
-	for (int i = 0; i < PWM_PHASE_MAX_COUNT; i++) {
-		timeOfLastEvent[i] = nowNt;
-	}
-}
-
-float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
-	/**
-	 * Here we calculate RPM based on last 90 degrees
-	 */
-	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[current_index]);
-	// todo: make this '90' depend on cylinder count or trigger shape?
-	angle_t previousAngle = currentAngle - 90;
-	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_6560);
-	// todo: prevIndex should be pre-calculated
-	*prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)previousAngle]);
-
-	// now let's get precise angle for that event
-	angle_t prevIndexAngle = TRIGGER_SHAPE(eventAngles[*prevIndex]);
-	uint32_t time = nowNt - timeOfLastEvent[*prevIndex];
-	angle_t angleDiff = currentAngle - prevIndexAngle;
-	// todo: angle diff should be pre-calculated
-	fixAngle(angleDiff, "angleDiff", CUSTOM_ERR_6561);
-
-	// just for safety
-	if (time == 0)
-		return prevInstantRpmValue;
-
-	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
-	instantRpmValue[current_index] = instantRpm;
-	timeOfLastEvent[current_index] = nowNt;
-
-	// This fixes early RPM instability based on incomplete data
-	if (instantRpm < RPM_LOW_THRESHOLD)
-		return prevInstantRpmValue;
-	prevInstantRpmValue = instantRpm;
-
-	return instantRpm;
-}
-
-void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	timeOfLastEvent[currentCycle.current_index] = nowNt;
-}
-
-void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
-		int prevIndex;
-		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
-		int prevIndex;
-		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
-		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
-		if (boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
-			scAddData(currentAngle, instantRpm);
-		} else {
-			scAddData(currentAngle, instantRpm / instantRpmValue[prevIndex]);
-		}
-#endif /* EFI_SENSOR_CHART */
-	}
-}
-
-efitime_t TriggerState::getTotalEventCounter() {
-	return totalEventCountBase + currentCycle.current_index;
-}
-
-int TriggerState::getTotalRevolutionCounter() {
-	return totalRevolutionCounter;
-}
-
 
 /**
  * physical primary trigger duration
@@ -299,16 +168,6 @@ void TriggerShape::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger
 //		expectedEventCount[channelIndex]++;
 //	}
 
-}
-
-/**
- * Deprecated - see https://github.com/rusefi/rusefi/issues/635
- */
-void TriggerShape::addEvent2(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	/**
-	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
-	 */
-	addEvent(engineConfiguration->useOnlyRisingEdgeForTrigger, angle / getEngineCycle(operationMode), channelIndex, stateParam);
 }
 
 void TriggerShape::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
@@ -480,20 +339,21 @@ int TriggerShape::findAngleIndex(float target) {
     return left - 1;
 }
 
-void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
+		angle_t angleOffset DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
 	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angleOffset), "findAngle#1");
 	assertAngleRange(angleOffset, "findAngle#a1", CUSTOM_ERR_6545);
 
-	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(TRIGGER_SHAPE(tdcPosition)), "tdcPos#1")
-	assertAngleRange(TRIGGER_SHAPE(tdcPosition), "tdcPos#a1", CUSTOM_ERR_6546);
+	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(tdcPosition), "tdcPos#1")
+	assertAngleRange(tdcPosition, "tdcPos#a1", CUSTOM_ERR_6546);
 
-	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_ERR_6547);
+	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG_PARAM(globalTriggerAngleOffset)), "tdcPos#2")
+	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_ERR_6547);
 
 	// convert engine cycle angle into trigger cycle angle
-	angleOffset += tdcPosition();
+	angleOffset += tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angleOffset), "findAngle#2");
-	fixAngle(angleOffset, "addFuel#2", CUSTOM_ERR_6555);
+	fixAngle2(angleOffset, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(operationMode));
 
 	int index = triggerIndexByAngle[(int)angleOffset];
 	angle_t eventAngle = eventAngles[index];
@@ -505,6 +365,18 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position, angle
 	position->eventIndex = index;
 	position->eventAngle = eventAngle;
 	position->angleOffset = angleOffset - eventAngle;
+}
+
+void TriggerShape::prepareShape() {
+	int engineCycleInt = (int) getEngineCycle(operationMode);
+	for (int angle = 0; angle < engineCycleInt; angle++) {
+		int triggerShapeIndex = findAngleIndex(angle);
+		if (useOnlyRisingEdgeForTriggerTemp) {
+			// we need even index for front_only mode - so if odd indexes are rounded down
+			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
+		}
+		triggerIndexByAngle[angle] = triggerShapeIndex;
+	}
 }
 
 void TriggerShape::setTriggerSynchronizationGap(float syncRatio) {
@@ -521,4 +393,208 @@ void TriggerShape::setThirdTriggerSynchronizationGap(float syncRatio) {
 
 void TriggerShape::setSecondTriggerSynchronizationGap(float syncRatio) {
 	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * 0.75f, syncRatio * 1.25f);
+}
+
+
+/**
+ * External logger is needed because at this point our logger is not yet initialized
+ */
+void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e operationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	efiAssertVoid(CUSTOM_ERR_6641, getRemainingStack(chThdGetSelfX()) > 256, "init t");
+	scheduleMsg(logger, "initializeTriggerShape(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
+#endif
+
+	shapeDefinitionError = false;
+
+	this->useOnlyRisingEdgeForTriggerTemp = useOnlyRisingEdgeForTrigger;
+
+	switch (triggerConfig->type) {
+
+	case TT_TOOTHED_WHEEL:
+		initializeSkippedToothTriggerShapeExt(this, triggerConfig->customTotalToothCount,
+				triggerConfig->customSkippedToothCount, operationMode);
+		break;
+
+	case TT_MAZDA_MIATA_NA:
+		initializeMazdaMiataNaShape(this, useOnlyRisingEdgeForTrigger);
+		break;
+
+	case TT_MAZDA_MIATA_NB1:
+		initializeMazdaMiataNb1Shape(this);
+		break;
+
+	case TT_MAZDA_MIATA_VVT_TEST:
+		initializeMazdaMiataVVtTestShape(this);
+		break;
+
+	case TT_MAZDA_Z5:
+		initialize_Mazda_Engine_z5_Shape(this);
+		break;
+
+	case TT_MIATA_VVT:
+		initializeMazdaMiataNb2Crank(this);
+		break;
+
+	case TT_DODGE_NEON_1995:
+		configureNeon1995TriggerShape(this);
+		break;
+
+	case TT_DODGE_NEON_1995_ONLY_CRANK:
+		configureNeon1995TriggerShapeOnlyCrank(this);
+		break;
+
+	case TT_DODGE_STRATUS:
+		configureDodgeStratusTriggerShape(this);
+		break;
+
+	case TT_DODGE_NEON_2003_CAM:
+		configureNeon2003TriggerShapeCam(this);
+		break;
+
+	case TT_DODGE_NEON_2003_CRANK:
+		configureNeon2003TriggerShapeCam(this);
+//		configureNeon2003TriggerShapeCrank(triggerShape);
+		break;
+
+	case TT_FORD_ASPIRE:
+		configureFordAspireTriggerShape(this);
+		break;
+
+	case TT_GM_7X:
+		configureGmTriggerShape(this);
+		break;
+
+	case TT_MAZDA_DOHC_1_4:
+		configureMazdaProtegeLx(this);
+		break;
+
+	case TT_ONE_PLUS_ONE:
+		configureOnePlusOne(this, operationMode);
+		break;
+
+	case TT_3_1_CAM:
+		configure3_1_cam(this, operationMode);
+		break;
+
+	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
+		configureOnePlus60_2(this, operationMode);
+		break;
+
+	case TT_ONE:
+		setToothedWheelConfiguration(this, 1, 0, operationMode);
+		break;
+
+	case TT_MAZDA_SOHC_4:
+		configureMazdaProtegeSOHC(this);
+		break;
+
+	case TT_MINI_COOPER_R50:
+		configureMiniCooperTriggerShape(this);
+		break;
+
+	case TT_TOOTHED_WHEEL_60_2:
+		setToothedWheelConfiguration(this, 60, 2, operationMode);
+		break;
+
+	case TT_60_2_VW:
+		setVwConfiguration(this);
+		break;
+
+	case TT_TOOTHED_WHEEL_36_1:
+		setToothedWheelConfiguration(this, 36, 1, operationMode);
+		break;
+
+	case TT_HONDA_4_24_1:
+		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0);
+		break;
+
+	case TT_HONDA_4_24:
+		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
+		break;
+
+	case TT_HONDA_1_24:
+		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10);
+		break;
+
+	case TT_HONDA_ACCORD_1_24_SHIFTED:
+		configureHondaAccordShifted(this);
+		break;
+
+	case TT_HONDA_1_4_24:
+		configureHondaAccordCDDip(this);
+		break;
+
+	case TT_HONDA_CBR_600:
+		configureHondaCbr600(this);
+		break;
+
+	case TT_HONDA_CBR_600_CUSTOM:
+		configureHondaCbr600custom(this);
+		break;
+
+	case TT_MITSUBISHI:
+		initializeMitsubishi4g18(this);
+		break;
+
+	case TT_DODGE_RAM:
+		initDodgeRam(this);
+		break;
+
+	case TT_JEEP_4_CYL:
+		initJeep_XJ_4cyl_2500(this);
+		break;
+
+	case TT_JEEP_18_2_2_2:
+		initJeep18_2_2_2(this);
+		break;
+
+	case TT_SUBARU_7_6:
+		initializeSubaru7_6(this);
+		break;
+
+	case TT_36_2_2_2:
+		initialize36_2_2_2(this);
+		break;
+
+	case TT_2JZ_3_34:
+		initialize2jzGE3_34(this);
+		break;
+
+	case TT_2JZ_1_12:
+		initialize2jzGE1_12(this);
+		break;
+
+	case TT_NISSAN_SR20VE:
+		initializeNissanSR20VE_4(this);
+		break;
+
+	case TT_NISSAN_SR20VE_360:
+		initializeNissanSR20VE_4_360(this);
+		break;
+
+	case TT_ROVER_K:
+		initializeRoverK(this);
+		break;
+
+	case TT_FIAT_IAW_P8:
+		configureFiatIAQ_P8(this);
+		break;
+
+	case TT_GM_LS_24:
+		initGmLS24(this);
+		break;
+
+	default:
+		shapeDefinitionError = true;
+		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
+	}
+	calculateExpectedEventCounts(useOnlyRisingEdgeForTrigger);
+	version++;
+
+	if (!shapeDefinitionError) {
+		wave.checkSwitchTimes(getSize());
+	}
+
 }

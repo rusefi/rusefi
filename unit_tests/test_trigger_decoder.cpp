@@ -168,13 +168,13 @@ void test1995FordInline6TriggerDecoder(void) {
 
 	event_trigger_position_s position;
 	assertEqualsM("globalTriggerAngleOffset", 0, engineConfiguration->globalTriggerAngleOffset);
-	TRIGGER_SHAPE(findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&position, 0, engineConfiguration->globalTriggerAngleOffset));
 	assertTriggerPosition(&position, 0, 0);
 
-	TRIGGER_SHAPE(findTriggerPosition(&position, 200 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&position, 200, engineConfiguration->globalTriggerAngleOffset));
 	assertTriggerPosition(&position, 3, 20);
 
-	TRIGGER_SHAPE(findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_SHAPE(findTriggerPosition(&position, 360, engineConfiguration->globalTriggerAngleOffset));
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerShape();

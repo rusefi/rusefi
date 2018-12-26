@@ -154,5 +154,7 @@ void initTriggerDecoderLogger(Logging *sharedLogger);
 
 bool isTriggerDecoderError(void);
 
+void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 
 #endif /* TRIGGER_DECODER_H_ */

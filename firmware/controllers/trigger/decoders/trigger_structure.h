@@ -2,17 +2,42 @@
  * @file	trigger_structure.h
  *
  * @date Dec 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #ifndef TRIGGER_STRUCTURE_H_
 #define TRIGGER_STRUCTURE_H_
 
 #include "global.h"
-
+#include "engine_configuration_generated_structures.h"
 #include "EfiWave.h"
-// todo: this header should know nothing about engine or engine configuration. todo: refactor
-#include "engine_configuration.h"
+
+#if EFI_ENABLE_ASSERTS
+#define assertAngleRange(angle, msg, code) if(angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
+#else
+#define assertAngleRange(angle, msg, code) {}
+#endif
+
+/**
+ * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
+ * I guess this implementation would be faster than 'angle % engineCycle'
+ */
+#define fixAngle2(angle, msg, code, engineCycle)			   	    	    \
+	{																		\
+   	    if (cisnan(angle)) {                                                \
+		   firmwareError(CUSTOM_ERR_ANGLE, "aNaN%s", msg);                  \
+		   angle = 0;                                                       \
+	    }                                                                   \
+		assertAngleRange(angle, msg, code);	   					            \
+		float engineCycleDurationLocalCopy = engineCycle;	                \
+		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
+		/*       as a performance optimization?*/                           \
+		while (angle < 0)                       							\
+			angle += engineCycleDurationLocalCopy;   						\
+			/* todo: would 'if' work as good as 'while'? */                 \
+		while (angle >= engineCycleDurationLocalCopy)						\
+			angle -= engineCycleDurationLocalCopy;   						\
+	}
 
 /**
  * This structure defines an angle position within the trigger
@@ -54,9 +79,10 @@ class TriggerState;
 class TriggerShape {
 public:
 	TriggerShape();
-	void initializeTriggerShape(Logging *logger, bool useOnlyRisingEdgeForTrigger DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void findTriggerPosition(
-			event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void initializeTriggerShape(Logging *logger, operation_mode_e operationMode,
+			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
+	void findTriggerPosition(event_trigger_position_s *position,
+			angle_t angleOffset DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
 
 	bool isSynchronizationNeeded;
 	/**
@@ -183,10 +209,6 @@ public:
 	 * Deprecated?
 	 */
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
-	/* 0..720 angle range
-	 * Deprecated?
-	 */
-	void addEvent2(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	/* 0..720 angle range
 	 * Deprecated?
@@ -208,19 +230,24 @@ public:
 	int getSize() const;
 
 	int getTriggerShapeSynchPointIndex();
-	void prepareShape(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void prepareShape();
 
-private:
-	trigger_shape_helper h;
-
-	int findAngleIndex(float angle);
+	/**
+	 * This private method should only be used to prepare the array of pre-calculated values
+	 * See eventAngles array
+	 */
+	angle_t getAngle(int phaseIndex) const;
 
 	/**
 	 * index of synchronization event within TriggerShape
 	 * See findTriggerZeroEventIndex()
 	 */
 	int triggerShapeSynchPointIndex;
+private:
+	trigger_shape_helper h;
+
+	int findAngleIndex(float angle);
+
 	/**
 	 * Working buffer for 'wave' instance
 	 * Values are in the 0..1 range
@@ -241,11 +268,6 @@ private:
 	 */
 	operation_mode_e operationMode;
 
-	/**
-	 * This private method should only be used to prepare the array of pre-calculated values
-	 * See eventAngles array
-	 */
-	angle_t getAngle(int phaseIndex) const;
 
 	angle_t getCycleDuration() const;
 };

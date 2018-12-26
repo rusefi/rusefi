@@ -70,6 +70,9 @@ class Engine;
 #define PASS_ENGINE_PARAMETER_SUFFIX , engine, engineConfiguration, config, boardConfiguration
 
 
+#define DEFINE_CONFIG_PARAM(x, y) , x y
+#define PASS_CONFIG_PARAM(x) , x
+
 /**
  * this macro is a work-around for uint tests to get all needed pointers only
  * if engine is in scope
@@ -89,5 +92,7 @@ class Engine;
 
 #define CONFIG(x) engineConfiguration->x
 #define ENGINE(x) engine->x
+
+#define CONFIG_PARAM(x) (x)
 
 #endif /* GLOBAL_H_ */
