@@ -34,7 +34,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 
 	if (with2nd) {
 		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right PASS_ENGINE_PARAMETER_SUFFIX);
+				left, right);
 	}
 
 	s->addEvent720(right, T_PRIMARY, TV_RISE);
@@ -43,7 +43,7 @@ static void initializeNissanSR20VE_4_optional_360(TriggerShape *s, bool with2nd 
 	right = base;
 	if (with2nd) {
 		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right PASS_ENGINE_PARAMETER_SUFFIX);
+				left, right);
 	}
 	s->addEvent720(right, T_PRIMARY, TV_FALL);
 

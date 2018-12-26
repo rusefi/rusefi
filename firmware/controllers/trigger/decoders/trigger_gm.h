@@ -10,7 +10,7 @@
 
 #include "trigger_structure.h"
 
-void configureGmTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void configureGmTriggerShape(TriggerShape *s);
 void initGmLS24(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* TRIGGER_GM_H_ */

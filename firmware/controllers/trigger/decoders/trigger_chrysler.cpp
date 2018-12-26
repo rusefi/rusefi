@@ -9,19 +9,18 @@
 #include "trigger_decoder.h"
 #include "trigger_universal.h"
 
-void initDodgeRam(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initDodgeRam(TriggerShape *s) {
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = true;
 
 	s->isSynchronizationNeeded = false;
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, -25, 360, 0, 720 PASS_ENGINE_PARAMETER_SUFFIX);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, -25, 360, 0, 720);
 
 	s->addEvent720(360, T_PRIMARY, TV_RISE);
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, 360 - 25, 360, 0,
-			720 PASS_ENGINE_PARAMETER_SUFFIX);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, 360 - 25, 360, 0, 720);
 
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
 	s->useOnlyPrimaryForSync = true;
@@ -101,7 +100,7 @@ void configureNeon2003TriggerShapeCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER
 	s->addEvent720(m * 360, T_PRIMARY, TV_RISE);
 }
 
-void configureNeon2003TriggerShapeCam(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureNeon2003TriggerShapeCam(TriggerShape *s) {
 // todo: move sync point so that two channel does not have false trigger issues
 	bool useOnlyPrimary = true;
 
@@ -324,7 +323,7 @@ gap=1.43/0.71
 	}
 }
 
-void configureDodgeStratusTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureDodgeStratusTriggerShape(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	s->isSynchronizationNeeded = true;
 
@@ -390,7 +389,7 @@ void configureDodgeStratusTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_
 	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
 }
 
-static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s) {
 	trigger_wheel_e crank = withCam ? T_SECONDARY : T_PRIMARY;
 
 	// voodoo magic - we always need 720 at the end
@@ -450,17 +449,17 @@ static void configureNeon1995TriggerShapeCommon(bool withCam, TriggerShape *s DE
 	}
 }
 
-void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureNeon1995TriggerShapeOnlyCrank(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 	s->setTriggerSynchronizationGap(3.79);
 
 	s->tdcPosition = 279;
 
-	configureNeon1995TriggerShapeCommon(false, s PASS_ENGINE_PARAMETER_SUFFIX);
+	configureNeon1995TriggerShapeCommon(false, s);
 }
 
 
-void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureNeon1995TriggerShape(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->setTriggerSynchronizationGap(0.8227);
@@ -470,12 +469,12 @@ void configureNeon1995TriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFF
 
 	s->initialState[T_PRIMARY] = 1;
 
-	configureNeon1995TriggerShapeCommon(true, s PASS_ENGINE_PARAMETER_SUFFIX);
+	configureNeon1995TriggerShapeCommon(true, s);
 
 	s->useOnlyPrimaryForSync = true;
 }
 
-void initJeep18_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initJeep18_2_2_2(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(1);
@@ -545,7 +544,7 @@ void initJeep18_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 }
 
-static void add4cylblock(int off, TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void add4cylblock(int off, TriggerShape *s) {
 	s->addEvent720(114 + off, T_SECONDARY, TV_RISE);
 	s->addEvent720(114 + off + 2, T_SECONDARY, TV_FALL);
 
@@ -560,7 +559,7 @@ static void add4cylblock(int off, TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFI
 }
 
 // TT_JEEP_4_CYL
-void initJeep_XJ_4cyl_2500(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initJeep_XJ_4cyl_2500(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->isSynchronizationNeeded = true;
 	s->setTriggerSynchronizationGap(1);
@@ -569,13 +568,13 @@ void initJeep_XJ_4cyl_2500(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	float offset = 124;
 
-	add4cylblock(offset - 180, s PASS_ENGINE_PARAMETER_SUFFIX);
-	add4cylblock(offset, s PASS_ENGINE_PARAMETER_SUFFIX);
+	add4cylblock(offset - 180, s);
+	add4cylblock(offset, s);
 
 	s->addEvent720(236 + offset, T_PRIMARY, TV_RISE); // 360
 
-	add4cylblock(offset + 180, s PASS_ENGINE_PARAMETER_SUFFIX);
-	add4cylblock(offset + 360, s PASS_ENGINE_PARAMETER_SUFFIX);
+	add4cylblock(offset + 180, s);
+	add4cylblock(offset + 360, s);
 
 	s->addEvent720(596 + offset, T_PRIMARY, TV_FALL); // 720
 

@@ -23,7 +23,7 @@ void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float toothWidth = 0.5;
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, 60, 2, toothWidth, 0, engineCycle,
-			NO_LEFT_FILTER, 690 PASS_ENGINE_PARAMETER_SUFFIX);
+			NO_LEFT_FILTER, 690);
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth) );
 	s->addEvent3(0 + angleDown + 12, T_PRIMARY, TV_RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER);

@@ -7,7 +7,7 @@
 
 #include "trigger_mitsubishi.h"
 
-void configureFordAspireTriggerShape(TriggerShape * s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureFordAspireTriggerShape(TriggerShape * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->isSynchronizationNeeded = false;
 

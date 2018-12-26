@@ -7,7 +7,7 @@
 
 #include "trigger_gm.h"
 
-void configureGmTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureGmTriggerShape(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 
 	// all angles are x2 here - so, 5 degree width is 10

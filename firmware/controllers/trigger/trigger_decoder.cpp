@@ -518,32 +518,32 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_DODGE_NEON_1995:
-		configureNeon1995TriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureNeon1995TriggerShape(this);
 		break;
 
 	case TT_DODGE_NEON_1995_ONLY_CRANK:
-		configureNeon1995TriggerShapeOnlyCrank(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureNeon1995TriggerShapeOnlyCrank(this);
 		break;
 
 	case TT_DODGE_STRATUS:
-		configureDodgeStratusTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureDodgeStratusTriggerShape(this);
 		break;
 
 	case TT_DODGE_NEON_2003_CAM:
-		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureNeon2003TriggerShapeCam(this);
 		break;
 
 	case TT_DODGE_NEON_2003_CRANK:
-		configureNeon2003TriggerShapeCam(this PASS_ENGINE_PARAMETER_SUFFIX);
-//		configureNeon2003TriggerShapeCrank(triggerShape PASS_ENGINE_PARAMETER_SUFFIX);
+		configureNeon2003TriggerShapeCam(this);
+//		configureNeon2003TriggerShapeCrank(triggerShape);
 		break;
 
 	case TT_FORD_ASPIRE:
-		configureFordAspireTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureFordAspireTriggerShape(this);
 		break;
 
 	case TT_GM_7X:
-		configureGmTriggerShape(this PASS_ENGINE_PARAMETER_SUFFIX);
+		configureGmTriggerShape(this);
 		break;
 
 	case TT_MAZDA_DOHC_1_4:
@@ -551,15 +551,15 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_ONE_PLUS_ONE:
-		configureOnePlusOne(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+		configureOnePlusOne(this, engineConfiguration->operationMode);
 		break;
 
 	case TT_3_1_CAM:
-		configure3_1_cam(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+		configure3_1_cam(this, engineConfiguration->operationMode);
 		break;
 
 	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(this, engineConfiguration->operationMode PASS_ENGINE_PARAMETER_SUFFIX);
+		configureOnePlus60_2(this, engineConfiguration->operationMode);
 		break;
 
 	case TT_ONE:
@@ -619,15 +619,15 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		break;
 
 	case TT_DODGE_RAM:
-		initDodgeRam(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initDodgeRam(this);
 		break;
 
 	case TT_JEEP_4_CYL:
-		initJeep_XJ_4cyl_2500(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initJeep_XJ_4cyl_2500(this);
 		break;
 
 	case TT_JEEP_18_2_2_2:
-		initJeep18_2_2_2(this PASS_ENGINE_PARAMETER_SUFFIX);
+		initJeep18_2_2_2(this);
 		break;
 
 	case TT_SUBARU_7_6:
