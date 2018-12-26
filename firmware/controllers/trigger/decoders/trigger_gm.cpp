@@ -39,7 +39,7 @@ void configureGmTriggerShape(TriggerShape *s) {
 	s->setTriggerSynchronizationGap(6);
 }
 
-static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, int mult DECLARE_ENGINE_PARAMETER_SUFFIX)
+static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, int mult)
 {
 	int window = (isLongShort ? 12 : 3) * mult;
 	int end = startAngle + mult * 15;
@@ -59,7 +59,7 @@ static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, in
  *
  * based on data in https://rusefi.com/forum/viewtopic.php?f=3&t=936&p=30303#p30285
  */
-void initGmLS24(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initGmLS24(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
 	trigger_wheel_e ch = T_PRIMARY;
 
@@ -99,7 +99,7 @@ void initGmLS24(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		bool bit = code & 0x000001;
 		code = code >> 1;
 
-		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER PASS_ENGINE_PARAMETER_SUFFIX);
+		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER);
 	}
 
 	s->useOnlyPrimaryForSync = true;

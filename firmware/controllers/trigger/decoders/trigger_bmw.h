@@ -9,6 +9,6 @@
 
 #include "engine.h"
 
-void configureMiniCooperTriggerShape(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void configureMiniCooperTriggerShape(TriggerShape *s);
 
 #endif /* TRIGGER_BMW_H_ */

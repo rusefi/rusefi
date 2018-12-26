@@ -22,7 +22,7 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
 		float offset, float engineCycle, float filterLeft, float filterRight);
 
 
-void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode DECLARE_ENGINE_PARAMETER_SUFFIX);;
+void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);;
 
 void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode);
 

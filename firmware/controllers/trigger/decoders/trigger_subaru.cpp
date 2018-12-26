@@ -10,7 +10,7 @@
 /**
  * This trigger is also used by Nissan and Mazda
  */
-void initialize36_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initialize36_2_2_2(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float wide = 30 * 2;
@@ -46,7 +46,7 @@ void initialize36_2_2_2(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void initializeSubaru7_6(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initializeSubaru7_6(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float magic = 333;
