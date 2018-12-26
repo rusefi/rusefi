@@ -30,6 +30,8 @@
 #define isRunningBenchTest() true
 #endif /* EFI_PROD_CODE */
 
+static TriggerState initState CCM_OPTIONAL;
+
 static LoggingWithStorage logger("engine");
 
 extern fuel_Map3D_t veMap;
@@ -57,6 +59,40 @@ void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
 
 int MockAdcState::getMockAdcValue(int hwChannel) {
 	return fakeAdcValues[hwChannel];
+}
+
+void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if !EFI_UNIT_TEST
+	// we have a confusing threading model so some synchronization would not hurt
+	bool alreadyLocked = lockAnyContext();
+#endif /* EFI_UNIT_TEST */
+
+	TRIGGER_SHAPE(initializeTriggerShape(logger, engineConfiguration->useOnlyRisingEdgeForTrigger PASS_ENGINE_PARAMETER_SUFFIX));
+
+	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
+		/**
+	 	 * this instance is used only to initialize 'this' TriggerShape instance
+	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
+	 	 */
+		initState.reset();
+		TRIGGER_SHAPE(calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER_SUFFIX));
+
+		if (engine->triggerCentral.triggerShape.getSize() == 0) {
+			firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
+		}
+		engine->engineCycleEventCount = TRIGGER_SHAPE(getLength());
+	}
+
+#if !EFI_UNIT_TEST
+	if (!alreadyLocked) {
+		unlockAnyContext();
+	}
+#endif
+
+	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
+		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
 }
 
 /**

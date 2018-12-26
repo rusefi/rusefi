@@ -379,6 +379,7 @@ public:
 
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	bool clutchUpState;
 	bool clutchDownState;
