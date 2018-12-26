@@ -209,6 +209,7 @@ public:
 
 	int getTriggerShapeSynchPointIndex();
 	void prepareShape(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 private:
 	trigger_shape_helper h;
@@ -247,7 +248,6 @@ private:
 	angle_t getAngle(int phaseIndex) const;
 
 	angle_t getCycleDuration() const;
-	void calculateTriggerSynchPoint(TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode);

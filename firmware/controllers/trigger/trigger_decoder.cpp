@@ -54,8 +54,6 @@
 EXTERN_ENGINE
 ;
 
-static TriggerState initState CCM_OPTIONAL;
-
 static cyclic_buffer<int> errorDetection;
 static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
 
@@ -476,10 +474,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
  */
 void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdgeForTrigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
-#if !EFI_UNIT_TEST
-	// we have a confusing threading model so some synchronization would not hurt
-	bool alreadyLocked = lockAnyContext();
-#endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssertVoid(CUSTOM_ERR_6641, getRemainingStack(chThdGetSelfX()) > 256, "init t");
@@ -671,32 +665,12 @@ void TriggerShape::initializeTriggerShape(Logging *logger, bool useOnlyRisingEdg
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
 	}
 	calculateExpectedEventCounts(useOnlyRisingEdgeForTrigger);
+	version++;
 
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getSize());
-		/**
-	 	 * this instance is used only to initialize 'this' TriggerShape instance
-	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
-	 	 */
-		initState.reset();
-		calculateTriggerSynchPoint(&initState PASS_ENGINE_PARAMETER_SUFFIX);
-
-		if (engine->triggerCentral.triggerShape.getSize() == 0) {
-			firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
-		}
-		engine->engineCycleEventCount = getLength();
 	}
-	version++;
 
-#if !EFI_UNIT_TEST
-	if (!alreadyLocked) {
-		unlockAnyContext();
-	}
-#endif
-
-	if (!shapeDefinitionError) {
-		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
 }
 
 static void onFindIndexCallback(TriggerState *state) {
