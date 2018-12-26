@@ -8,8 +8,8 @@
 #ifndef CONTROLLERS_TRIGGER_DECODERS_TRIGGER_VW_H_
 #define CONTROLLERS_TRIGGER_DECODERS_TRIGGER_VW_H_
 
-#include "engine.h"
+#include "trigger_decoder.h"
 
-void setVwConfiguration(TriggerShape *s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setVwConfiguration(TriggerShape *s);
 
 #endif /* CONTROLLERS_TRIGGER_DECODERS_TRIGGER_VW_H_ */

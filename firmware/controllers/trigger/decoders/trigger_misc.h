@@ -8,8 +8,8 @@
 #ifndef CONTROLLERS_TRIGGER_DECODERS_TRIGGER_MISC_H_
 #define CONTROLLERS_TRIGGER_DECODERS_TRIGGER_MISC_H_
 
-#include "trigger_structure.h"
+#include "trigger_decoder.h"
 
-void configureFiatIAQ_P8(TriggerShape * s DECLARE_ENGINE_PARAMETER_SUFFIX);
+void configureFiatIAQ_P8(TriggerShape * s);
 
 #endif /* CONTROLLERS_TRIGGER_DECODERS_TRIGGER_MISC_H_ */

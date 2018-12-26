@@ -9,9 +9,7 @@
 #ifndef CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_
 #define CONTROLLERS_TRIGGER_DECODERS_TRIGGER_UNIVERSAL_H_
 
-#include "global.h"
-#include "trigger_structure.h"
-#include "engine_configuration.h"
+#include "trigger_decoder.h"
 
 #define NO_LEFT_FILTER -1
 #define NO_RIGHT_FILTER 1000
