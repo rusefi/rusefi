@@ -1332,7 +1332,7 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	TRIGGER_SHAPE(initializeTriggerShape(logger, engineConfiguration->useOnlyRisingEdgeForTrigger PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
 #endif
 
 #if EFI_FSIO || defined(__DOXYGEN__)
