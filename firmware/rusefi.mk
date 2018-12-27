@@ -22,8 +22,17 @@ ifeq ($(PROJECT_CPU),ST_STM32F7)
 CPU_STARTUP = startup_stm32f7xx.mk
 CPU_PLATFORM = STM32F7xx/platform.mk
 CPU_HWLAYER = stm32f7
-else # ST_STM32F4
+endif
+
+ifeq ($(PROJECT_CPU),ST_STM32F4)
 CPU_STARTUP = startup_stm32f4xx.mk
 CPU_PLATFORM = STM32F4xx/platform.mk
 CPU_HWLAYER = stm32f4
+endif
+
+
+ifeq ($(PROJECT_CPU),ST_STM32F1)
+CPU_STARTUP = startup_stm32f1xx.mk
+CPU_PLATFORM = STM32F1xx/platform.mk
+CPU_HWLAYER = stm32f1
 endif
