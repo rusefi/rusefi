@@ -9,3 +9,4 @@ Debug/
 .settings/
 firmware/rusefi_ram_report.txt
 doxygen/
+.idea
