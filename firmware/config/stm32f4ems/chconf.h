@@ -28,6 +28,9 @@
 #ifndef _CHCONF_H_
 #define _CHCONF_H_
 
+// todo: access some existing configuration field
+#define CORE_CLOCK 168000000
+
 #define _CHIBIOS_RT_CONF_
 
 #define PORT_IDLE_THREAD_STACK_SIZE     1024

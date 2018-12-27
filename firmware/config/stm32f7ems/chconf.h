@@ -28,6 +28,9 @@
 #ifndef CHCONF_H
 #define CHCONF_H
 
+// todo: access some existing configuration field
+#define CORE_CLOCK 168000000
+
 #define _CHIBIOS_RT_CONF_
 
 #if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
