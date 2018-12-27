@@ -16,7 +16,7 @@
  * Hunchback - VVT engine with NA fuel rail
  * set engine_type 54
  *
- * board #70 - red car, hunchback compatibel
+ * board #70 - red car, hunchback compatible
  * set engine_type 55
  *
  * Crank   primary trigger        PA5 (3E in Miata board)       white
