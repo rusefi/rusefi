@@ -150,6 +150,10 @@ ifeq ($(LDSCRIPT),)
   LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
 endif
 
+ifeq ($(PROJECT_CPU),)
+  PROJECT_CPU=ST_STM32F4
+endif                 
+
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC = $(STARTUPSRC) \
@@ -223,6 +227,11 @@ TCPPSRC =
 # List ASM source files here
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
+ifeq ($(CONFIGPATH),)
+  CONFIGPATH=config/stm32f4ems
+endif
+
+
 INCDIR = $(CHIBIOS)/os/license \
         $(PORTINC) \
 	$(OSALINC) \
@@ -237,7 +246,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/various/devices_lib/accel \
-	config/stm32f4ems \
+	$(CONFIGPATH) \
 	config/engines \
 	config \
 	ext \
