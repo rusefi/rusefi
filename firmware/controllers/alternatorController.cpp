@@ -167,7 +167,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 				engineConfiguration->alternatorPwmFrequency, 0.1, applyAlternatorPinState);
 	}
 	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,
-			(tfunc_t) AltCtrlThread, NULL);
+			(tfunc_t)(void*) AltCtrlThread, NULL);
 }
 
 #endif /* EFI_ALTERNATOR_CONTROL */

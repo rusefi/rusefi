@@ -65,7 +65,7 @@ efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	print("registerCkpListener: %s\r\n", name);
-	triggerListeneres.registerCallback((VoidInt) listener, engine);
+	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
 }
 
 /**
@@ -397,7 +397,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
 		 */
 		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
-			ShaftPositionListener listener = (ShaftPositionListener) triggerListeneres.callbacks[i];
+			ShaftPositionListener listener = (ShaftPositionListener) (void*) triggerListeneres.callbacks[i];
 			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 

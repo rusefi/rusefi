@@ -114,7 +114,7 @@ void initMalfunctionIndicator(void) {
 		return;
 	}
 	// create static thread
-	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t) mfiThread, NULL);
+	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t)(void*) mfiThread, NULL);
 
 	addConsoleAction("testmil", testMil);
 }
