@@ -177,7 +177,6 @@ extern int tpsFastAdc;
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
-	efiAssertVoid(CUSTOM_ERR_6675, getRemainingStack(chThdGetSelfX()) > 64, "lowstck12a");
 
 	(void) buffer;
 	(void) n;
@@ -199,9 +198,9 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
 #endif
-		if (tpsSampleIndex != TPS_IS_SLOW) {
+//		if (tpsSampleIndex != TPS_IS_SLOW) {
 //			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
-		}
+//		}
 	}
 }
 
