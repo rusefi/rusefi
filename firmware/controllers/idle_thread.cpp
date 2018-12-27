@@ -480,7 +480,7 @@ void startIdleThread(Logging*sharedLogger) {
 
 	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
-	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t)(void*) ivThread, NULL);
 
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet

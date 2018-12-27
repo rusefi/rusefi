@@ -95,7 +95,7 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	lis302dlWriteRegister(driver, LIS302DL_CTRL_REG2, 0x00); // 4 wire mode
 	lis302dlWriteRegister(driver, LIS302DL_CTRL_REG3, 0x00);
 
-	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t)(void*) ivThread, NULL);
 #endif /* HAL_USE_SPI */
 }
 

@@ -264,7 +264,7 @@ void runIoTest(int subsystem, int index) {
 
 void initInjectorCentral(Logging *sharedLogger) {
 	logger = sharedLogger;
-	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
+	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t)(void*) benchThread, NULL);
 
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		is_injector_enabled[i] = true;

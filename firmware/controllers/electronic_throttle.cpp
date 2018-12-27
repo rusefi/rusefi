@@ -371,7 +371,7 @@ void initElectronicThrottle(void) {
 
 	pid.reset();
 
-	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t) etbThread, NULL);
+	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t)(void*) etbThread, NULL);
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */

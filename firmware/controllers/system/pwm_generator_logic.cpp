@@ -30,8 +30,8 @@ SimplePwm::SimplePwm() {
 }
 
 void PwmConfig::baseConstructor() {
-	memset(&scheduling, 0, sizeof(scheduling));
-	memset(&safe, 0, sizeof(safe));
+	memset((void*)&scheduling, 0, sizeof(scheduling));
+	memset((void*)&safe, 0, sizeof(safe));
 	dbgNestingLevel = 0;
 	periodNt = NAN;
 	mode = PM_NORMAL;

@@ -333,7 +333,7 @@ void initCan(void) {
 	canStart(&CAND1, &canConfig500);
 #endif /* STM32_CAN_USE_CAN2 */
 
-	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);
+	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t)(void*) canThread, NULL);
 
 	startCanPins();
 

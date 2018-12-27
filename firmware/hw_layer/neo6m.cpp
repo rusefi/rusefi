@@ -117,7 +117,7 @@ void initGps(void) {
 	efiSetPadMode("GPS rx", boardConfiguration->gps_rx_pin, PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
-	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, (tfunc_t)GpsThreadEntryPoint, NULL);
+	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, (tfunc_t)(void*) GpsThreadEntryPoint, NULL);
 
 	addConsoleAction("gpsinfo", &printGpsInfo);
 }

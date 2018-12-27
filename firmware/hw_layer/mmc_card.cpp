@@ -444,7 +444,7 @@ void initMmcCard(void) {
 	mmcObjectInit(&MMCD1); 						// Initializes an instance.
 	mmcStart(&MMCD1, &mmccfg);
 
-	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
+	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t)(void*) MMCmonThread, NULL);
 
 	addConsoleAction("mountsd", MMCmount);
 	addConsoleActionS("appendtolog", appendToLog);
