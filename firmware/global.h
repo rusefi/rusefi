@@ -115,11 +115,9 @@ int getRemainingStack(thread_t *otp);
 }
 #endif /* __cplusplus */
 
-// todo: access some existing configuration field
-#define CORE_CLOCK 168000000
 
 // 168 ticks in microsecond
-#define US_TO_NT_MULTIPLIER 168
+#define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
 
 /**
  * converts efitimeus_t to efitick_t
