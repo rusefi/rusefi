@@ -644,7 +644,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleActionI("cj125_set_init2", cjSetInit2);
 #endif /* CJ125_DEBUG */
 
-	chThdCreateStatic(cjThreadStack, sizeof(cjThreadStack), LOWPRIO, (tfunc_t) cjThread, NULL);
+	chThdCreateStatic(cjThreadStack, sizeof(cjThreadStack), LOWPRIO, (tfunc_t)(void*) cjThread, NULL);
 }
 
 #endif /* EFI_CJ125 */

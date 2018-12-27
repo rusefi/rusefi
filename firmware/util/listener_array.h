@@ -85,7 +85,7 @@ void invokeCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array, int value)
 template<int MAX_INT_LISTENER_COUNT>
 void IntListenerArray<MAX_INT_LISTENER_COUNT>::invokeJustArgCallbacks() {
 	for (int i = 0; i < currentListenersCount; i++) {
-		VoidPtr listener = (VoidPtr)callbacks[i];
+		VoidPtr listener = (VoidPtr)(void*)callbacks[i];
 		void *arg = args[i];
 		(listener)(arg);
 	}

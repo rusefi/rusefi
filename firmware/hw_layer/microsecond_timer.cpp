@@ -152,7 +152,7 @@ void initMicrosecondTimer(void) {
 
 	lastSetTimerTimeNt = getTimeNowNt();
 #if EFI_EMULATE_POSITION_SENSORS
-	chThdCreateStatic(mwThreadStack, sizeof(mwThreadStack), NORMALPRIO, (tfunc_t) mwThread, NULL);
+	chThdCreateStatic(mwThreadStack, sizeof(mwThreadStack), NORMALPRIO, (tfunc_t)(void*) mwThread, NULL);
 #endif /* EFI_ENGINE_EMULATOR */
 
 //	// test code

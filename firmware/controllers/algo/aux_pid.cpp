@@ -134,7 +134,7 @@ void stopAuxPins(void) {
 
 void initAuxPid(Logging *sharedLogger) {
 	chThdCreateStatic(auxPidThreadStack, sizeof(auxPidThreadStack), LOWPRIO,
-			(tfunc_t) auxPidThread, NULL);
+			(tfunc_t)(void*) auxPidThread, NULL);
 
 	logger = sharedLogger;
 

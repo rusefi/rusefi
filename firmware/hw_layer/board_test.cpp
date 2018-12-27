@@ -199,7 +199,7 @@ void initBoardTest(void) {
 	btInitOutputPins();
 	blinkAllOutputPins();
 
-	chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+	chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t)(void*) ivThread, NULL);
 	// this code is ugly as hell, I had no time to think. Todo: refactor
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)

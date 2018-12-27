@@ -79,7 +79,7 @@ void initServo(void) {
 
 
 
-	chThdCreateStatic(seThreadStack, sizeof(seThreadStack), NORMALPRIO, (tfunc_t) seThread, NULL);
+	chThdCreateStatic(seThreadStack, sizeof(seThreadStack), NORMALPRIO, (tfunc_t)(void*) seThread, NULL);
 }
 
 

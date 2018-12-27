@@ -91,7 +91,7 @@ static void initECUstimulator(Engine *engine) {
 
 	setDiag(1);
 
-	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t) eeThread, engine);
+	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t)(void*) eeThread, engine);
 }
 
 void initEngineEmulator(Logging *sharedLogger, Engine *engine) {
