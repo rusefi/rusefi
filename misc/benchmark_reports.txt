@@ -1,0 +1,15 @@
+
+*** Dell e6410 laptop ~2011: 8GB RAM, 1TB SSD, Win7, gcc 7.3.1 - -j4 option to run 4 cores
+~3 minutes
+Startting build for benchmark 
+27-Dec-2018 19:15:12
+Done! 
+27-Dec-2018 19:18:08
+
+
+*** Dell e6410 laptop ~2011: 8GB RAM, 1TB SSD, Win7, gcc 7.3.1 - looks like single core mode?
+~6 minutes
+Startting build for benchmark 
+27-Dec-2018 19:06:48
+Done! 
+27-Dec-2018 19:12:51
