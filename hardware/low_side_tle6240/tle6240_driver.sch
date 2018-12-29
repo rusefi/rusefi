@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -10,7 +11,6 @@ LIBS:cmos4000
 LIBS:adc-dac
 LIBS:memory
 LIBS:xilinx
-LIBS:special
 LIBS:microcontrollers
 LIBS:dsp
 LIBS:microchip
@@ -32,14 +32,14 @@ LIBS:valves
 LIBS:tle6240
 LIBS:conn_16
 LIBS:tle6240_driver-cache
-EELAYER 27 0
+EELAYER 25 0
 EELAYER END
-$Descr A4 11693 8268
+$Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
-Title ""
-Date "13 feb 2014"
-Rev ""
+Title "rusEFI break out board"
+Date "2018-12-29"
+Rev "R0.1"
 Comp ""
 Comment1 ""
 Comment2 ""
