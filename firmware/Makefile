@@ -93,6 +93,12 @@ ifeq ($(USE_FPU),)
   USE_FPU = hard
 endif
 
+# and this is not working for be :( See https://github.com/rusefi/rusefi/issues/638
+# use -j4 unless some value was specified
+NUMJOBS=${NUMJOBS:-" -j4 "}
+
+MAKEFLAGS += ${NUMJOBS}
+
 #
 # Architecture or project specific options
 ##############################################################################
