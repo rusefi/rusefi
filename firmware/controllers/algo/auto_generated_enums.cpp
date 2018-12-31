@@ -717,8 +717,6 @@ case GPIO_UNASSIGNED:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_30:
-  return "DBG_30";
 case DBG_31:
   return "DBG_31";
 case DBG_32:
@@ -787,6 +785,8 @@ case DBG_VVT:
   return "DBG_VVT";
 case DBG_WARMUP_ENRICH:
   return "DBG_WARMUP_ENRICH";
+case DBG_ION:
+  return "DBG_ION";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
   }

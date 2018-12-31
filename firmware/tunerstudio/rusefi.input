@@ -972,6 +972,10 @@ gaugeCategory = Fuel Data
    
 ; Alternator_PID: PID reset counter   
    entry = debugIntField3,   @@GAUGE_NAME_DEBUG_I3@@,int,"%d"
+
+   entry = debugIntField4,   @@GAUGE_NAME_DEBUG_I4@@,int,"%d"
+
+   entry = debugIntField5,   @@GAUGE_NAME_DEBUG_I5@@,int,"%d"
    
       
    entry = engineMode,   "Engine Mode",int,"%d"
