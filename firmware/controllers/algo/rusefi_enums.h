@@ -797,7 +797,7 @@ typedef enum {
 	DBG_MAP = 27,
 	DBG_METRICS = 28,
 	DBG_ELECTRONIC_THROTTLE_EXTRA = 29,
-	DBG_30 = 30,
+	DBG_ION = 30,
 	DBG_31 = 31,
 	DBG_32 = 32,
 	DBG_33 = 33,
