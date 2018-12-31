@@ -2,7 +2,7 @@
  * @file	can_hw.h
  *
  * @date Dec 11, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef CAN_HW_H_
