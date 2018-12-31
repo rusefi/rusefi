@@ -2,7 +2,7 @@
  * @file	stepper.h
  *
  * @date Dec 24, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2018
  */
 #ifndef STEPPER_H_
 #define STEPPER_H_
