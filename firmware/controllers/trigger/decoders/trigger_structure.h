@@ -12,6 +12,8 @@
 #include "engine_configuration_generated_structures.h"
 #include "EfiWave.h"
 
+#define FOUR_STROKE_ENGINE_CYCLE 720
+
 #if EFI_ENABLE_ASSERTS
 #define assertAngleRange(angle, msg, code) if(angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
 #else

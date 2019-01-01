@@ -8,7 +8,7 @@
 #include "trigger_universal.h"
 
 angle_t getEngineCycle(operation_mode_e operationMode) {
-	return operationMode == TWO_STROKE ? 360 : 720;
+	return operationMode == TWO_STROKE ? 360 : FOUR_STROKE_ENGINE_CYCLE;
 }
 
 void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,

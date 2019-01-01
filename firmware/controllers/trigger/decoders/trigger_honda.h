@@ -8,7 +8,7 @@
 #ifndef CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_
 #define CONTROLLERS_TRIGGER_TRIGGER_HONDA_H_
 
-#include "trigger_decoder.h"
+#include "trigger_structure.h"
 
 void configureHondaAccordCDDip(TriggerShape *s);
 void configureHondaAccordShifted(TriggerShape *s);

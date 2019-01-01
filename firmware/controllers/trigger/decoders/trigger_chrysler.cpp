@@ -6,7 +6,6 @@
  */
 
 #include "trigger_chrysler.h"
-#include "trigger_decoder.h"
 #include "trigger_universal.h"
 
 void initDodgeRam(TriggerShape *s) {

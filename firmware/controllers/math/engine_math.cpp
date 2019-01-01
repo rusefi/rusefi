@@ -24,7 +24,6 @@
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "allsensors.h"
-#include "trigger_decoder.h"
 #include "event_registry.h"
 #include "efiGpio.h"
 #include "fuel_math.h"
