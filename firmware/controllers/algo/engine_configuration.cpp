@@ -25,7 +25,6 @@
 #include "fsio_impl.h"
 #include "allsensors.h"
 #include "interpolation.h"
-#include "trigger_decoder.h"
 #include "engine_math.h"
 #include "speed_density.h"
 #include "advance_map.h"
