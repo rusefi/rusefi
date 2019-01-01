@@ -28,7 +28,6 @@
  */
 
 #include "global.h"
-#include "trigger_decoder.h"
 #include "thermistors.h"
 #include "honda_accord.h"
 #include "engine_math.h"

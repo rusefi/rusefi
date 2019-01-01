@@ -19,7 +19,7 @@ void setVwConfiguration(TriggerShape *s) {
 	int totalTeethCount = 60;
 	int skippedCount = 2;
 
-	float engineCycle = getEngineCycle(s->getOperationMode());
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
 	float toothWidth = 0.5;
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, 60, 2, toothWidth, 0, engineCycle,

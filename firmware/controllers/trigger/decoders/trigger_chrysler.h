@@ -8,7 +8,7 @@
 #ifndef TRIGGER_CHRYSLER_H_
 #define TRIGGER_CHRYSLER_H_
 
-#include "trigger_decoder.h"
+#include "trigger_structure.h"
 
 #define CHRYSLER_NGC4_GAP 1
 #define CHRYSLER_NGC6_GAP 1.5

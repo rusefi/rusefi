@@ -7,7 +7,7 @@
 #ifndef TRIGGER_BMW_H_
 #define TRIGGER_BMW_H_
 
-#include "trigger_decoder.h"
+#include "trigger_structure.h"
 
 void configureMiniCooperTriggerShape(TriggerShape *s);
 
