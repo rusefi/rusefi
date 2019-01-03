@@ -8,6 +8,8 @@
 #ifndef HW_LAYER_SENSORS_CJ125_H_
 #define HW_LAYER_SENSORS_CJ125_H_
 
+#include "engine_configuration.h"
+
 // CJ125 SPI Registers
 #define	IDENT_REG_RD					0x48 // Read Identity Register
 #define	INIT_REG1_WR					0x56 // Write To Initialization Register 1
