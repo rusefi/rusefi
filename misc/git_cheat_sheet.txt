@@ -38,6 +38,8 @@ git remote add upstream https://github.com/ChibiOS/ChibiOS.git
 git remote add upstream https://github.com/RomRaider/RomRaider
 git remote -v
 
+See also git_scripts/git_add_upstream.bat
+
 =========================================
 https://help.github.com/articles/syncing-a-fork/
 git fetch upstream
@@ -48,6 +50,8 @@ git push
 
 
 http://stackoverflow.com/questions/9646167/clean-up-a-fork-and-restart-it-from-the-upstream
+
+See also git_scripts/git_reset_to_upstream.bat
 
 =========================================
 https://stackoverflow.com/questions/19279490/can-i-fork-another-persons-repo-twice-into-my-own-account
