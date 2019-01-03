@@ -1,5 +1,5 @@
 /*
- * @file	global.h
+ * @file global.h
  *
  * Global header file for unit tests
  *
