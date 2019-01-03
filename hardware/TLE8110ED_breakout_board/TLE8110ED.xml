@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>C:\Users\steigerwald\OneDrive - Pyrometer Instrument Company\Stefan\Private\rusefi\kicad projects\TLE8110ED\TLE8110ED.sch</source>
+    <date>1/2/2019 3:12:29 PM</date>
+    <tool>Eeschema 4.0.7</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>TLE8110ED.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="U1">
+      <value>TLE8110ED</value>
+      <footprint>TLE8110ED:PG-DSO-36-72</footprint>
+      <libsource lib="TLE8110ED" part="TLE8110ED"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C2D1911</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>Conn_01x18</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_1x18_Pitch2.54mm</footprint>
+      <libsource lib="conn" part="Conn_01x18"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C2D19AC</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>Screw_Terminal_01x16</value>
+      <footprint>Connectors_Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_16pol</footprint>
+      <libsource lib="conn" part="Screw_Terminal_01x16"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5C2D19ED</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="conn" part="Conn_01x18">
+      <description>Generic connector, single row, 01x18</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_??x*mm*</fp>
+        <fp>Connector*:*1x??x*mm*</fp>
+        <fp>Pin?Header?Straight?1X*</fp>
+        <fp>Pin?Header?Angled?1X*</fp>
+        <fp>Socket?Strip?Straight?1X*</fp>
+        <fp>Socket?Strip?Angled?1X*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x18</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+        <pin num="8" name="Pin_8" type="passive"/>
+        <pin num="9" name="Pin_9" type="passive"/>
+        <pin num="10" name="Pin_10" type="passive"/>
+        <pin num="11" name="Pin_11" type="passive"/>
+        <pin num="12" name="Pin_12" type="passive"/>
+        <pin num="13" name="Pin_13" type="passive"/>
+        <pin num="14" name="Pin_14" type="passive"/>
+        <pin num="15" name="Pin_15" type="passive"/>
+        <pin num="16" name="Pin_16" type="passive"/>
+        <pin num="17" name="Pin_17" type="passive"/>
+        <pin num="18" name="Pin_18" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="Screw_Terminal_01x16">
+      <description>Generic screw terminal, single row, 01x16</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*Terminal*Block*:*</fp>
+        <fp>TerminalBlock*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Screw_Terminal_01x16</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+        <pin num="8" name="Pin_8" type="passive"/>
+        <pin num="9" name="Pin_9" type="passive"/>
+        <pin num="10" name="Pin_10" type="passive"/>
+        <pin num="11" name="Pin_11" type="passive"/>
+        <pin num="12" name="Pin_12" type="passive"/>
+        <pin num="13" name="Pin_13" type="passive"/>
+        <pin num="14" name="Pin_14" type="passive"/>
+        <pin num="15" name="Pin_15" type="passive"/>
+        <pin num="16" name="Pin_16" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="TLE8110ED" part="TLE8110ED">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TLE8110ED</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND1" type="power_in"/>
+        <pin num="2" name="In1" type="input"/>
+        <pin num="3" name="In2" type="input"/>
+        <pin num="4" name="EN" type="input"/>
+        <pin num="5" name="~RST" type="input"/>
+        <pin num="6" name="In3" type="input"/>
+        <pin num="7" name="In4" type="input"/>
+        <pin num="8" name="VDD" type="power_in"/>
+        <pin num="9" name="In5" type="input"/>
+        <pin num="10" name="VCC" type="power_in"/>
+        <pin num="11" name="S_SO" type="output"/>
+        <pin num="12" name="S_CLK" type="input"/>
+        <pin num="13" name="S_CS" type="input"/>
+        <pin num="14" name="S_SI" type="input"/>
+        <pin num="15" name="In6" type="input"/>
+        <pin num="16" name="In7" type="input"/>
+        <pin num="17" name="In8" type="input"/>
+        <pin num="18" name="GND2" type="power_in"/>
+        <pin num="19" name="GND3" type="power_in"/>
+        <pin num="20" name="Out9" type="output"/>
+        <pin num="21" name="Out10" type="output"/>
+        <pin num="22" name="N.C." type="NotConnected"/>
+        <pin num="23" name="GND5" type="power_in"/>
+        <pin num="24" name="Out6" type="output"/>
+        <pin num="25" name="Out4" type="output"/>
+        <pin num="26" name="Out3" type="output"/>
+        <pin num="27" name="In9" type="input"/>
+        <pin num="28" name="In10" type="input"/>
+        <pin num="29" name="Out2" type="output"/>
+        <pin num="30" name="Out1" type="output"/>
+        <pin num="31" name="Out5" type="output"/>
+        <pin num="32" name="GND6" type="power_in"/>
+        <pin num="33" name="N.C." type="NotConnected"/>
+        <pin num="34" name="Out8" type="output"/>
+        <pin num="35" name="Out7" type="output"/>
+        <pin num="36" name="GND4" type="power_in"/>
+        <pin num="37" name="GND_chass" type="power_in"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="TLE8110ED">
+      <uri>C:\Users\steigerwald\OneDrive - Pyrometer Instrument Company\Stefan\Private\rusefi\kicad projects\TLE8110ED\TLE8110ED.lib</uri>
+    </library>
+    <library logical="conn">
+      <uri>C:\Program Files\KiCad\share\kicad\library\conn.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="Net-(J2-Pad12)">
+      <node ref="U1" pin="23"/>
+      <node ref="J2" pin="12"/>
+    </net>
+    <net code="2" name="Net-(J2-Pad11)">
+      <node ref="U1" pin="32"/>
+      <node ref="U1" pin="37"/>
+      <node ref="J2" pin="11"/>
+    </net>
+    <net code="3" name="Net-(J1-Pad18)">
+      <node ref="U1" pin="2"/>
+      <node ref="J1" pin="18"/>
+    </net>
+    <net code="4" name="Net-(J1-Pad17)">
+      <node ref="U1" pin="3"/>
+      <node ref="J1" pin="17"/>
+    </net>
+    <net code="5" name="Net-(J1-Pad16)">
+      <node ref="J1" pin="16"/>
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="6" name="Net-(J1-Pad15)">
+      <node ref="J1" pin="15"/>
+      <node ref="U1" pin="7"/>
+    </net>
+    <net code="7" name="Net-(J1-Pad14)">
+      <node ref="J1" pin="14"/>
+      <node ref="U1" pin="9"/>
+    </net>
+    <net code="8" name="Net-(J2-Pad15)">
+      <node ref="U1" pin="18"/>
+      <node ref="J2" pin="15"/>
+    </net>
+    <net code="9" name="Net-(J2-Pad9)">
+      <node ref="U1" pin="20"/>
+      <node ref="J2" pin="9"/>
+    </net>
+    <net code="10" name="Net-(J2-Pad10)">
+      <node ref="U1" pin="21"/>
+      <node ref="J2" pin="10"/>
+    </net>
+    <net code="11" name="Net-(J2-Pad16)">
+      <node ref="J2" pin="16"/>
+      <node ref="U1" pin="1"/>
+    </net>
+    <net code="12" name="Net-(J2-Pad14)">
+      <node ref="J2" pin="14"/>
+      <node ref="U1" pin="19"/>
+    </net>
+    <net code="13" name="Net-(J2-Pad13)">
+      <node ref="U1" pin="36"/>
+      <node ref="J2" pin="13"/>
+    </net>
+    <net code="14" name="Net-(J1-Pad5)">
+      <node ref="J1" pin="5"/>
+      <node ref="U1" pin="10"/>
+    </net>
+    <net code="15" name="Net-(J1-Pad4)">
+      <node ref="J1" pin="4"/>
+      <node ref="U1" pin="14"/>
+    </net>
+    <net code="16" name="Net-(J1-Pad3)">
+      <node ref="U1" pin="13"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="17" name="Net-(J1-Pad2)">
+      <node ref="U1" pin="12"/>
+      <node ref="J1" pin="2"/>
+    </net>
+    <net code="18" name="Net-(J1-Pad1)">
+      <node ref="U1" pin="11"/>
+      <node ref="J1" pin="1"/>
+    </net>
+    <net code="19" name="Net-(J1-Pad9)">
+      <node ref="U1" pin="28"/>
+      <node ref="J1" pin="9"/>
+    </net>
+    <net code="20" name="Net-(J1-Pad13)">
+      <node ref="J1" pin="13"/>
+      <node ref="U1" pin="15"/>
+    </net>
+    <net code="21" name="Net-(J1-Pad12)">
+      <node ref="U1" pin="16"/>
+      <node ref="J1" pin="12"/>
+    </net>
+    <net code="22" name="Net-(J1-Pad11)">
+      <node ref="U1" pin="17"/>
+      <node ref="J1" pin="11"/>
+    </net>
+    <net code="23" name="Net-(J1-Pad10)">
+      <node ref="J1" pin="10"/>
+      <node ref="U1" pin="27"/>
+    </net>
+    <net code="24" name="Net-(J2-Pad8)">
+      <node ref="U1" pin="34"/>
+      <node ref="J2" pin="8"/>
+    </net>
+    <net code="25" name="Net-(J1-Pad8)">
+      <node ref="U1" pin="4"/>
+      <node ref="J1" pin="8"/>
+    </net>
+    <net code="26" name="Net-(J1-Pad7)">
+      <node ref="U1" pin="5"/>
+      <node ref="J1" pin="7"/>
+    </net>
+    <net code="27" name="Net-(J1-Pad6)">
+      <node ref="U1" pin="8"/>
+      <node ref="J1" pin="6"/>
+    </net>
+    <net code="28" name="Net-(U1-Pad22)">
+      <node ref="U1" pin="22"/>
+    </net>
+    <net code="29" name="Net-(U1-Pad33)">
+      <node ref="U1" pin="33"/>
+    </net>
+    <net code="30" name="Net-(J2-Pad4)">
+      <node ref="J2" pin="4"/>
+      <node ref="U1" pin="25"/>
+    </net>
+    <net code="31" name="Net-(J2-Pad1)">
+      <node ref="J2" pin="1"/>
+      <node ref="U1" pin="30"/>
+    </net>
+    <net code="32" name="Net-(J2-Pad2)">
+      <node ref="J2" pin="2"/>
+      <node ref="U1" pin="29"/>
+    </net>
+    <net code="33" name="Net-(J2-Pad3)">
+      <node ref="J2" pin="3"/>
+      <node ref="U1" pin="26"/>
+    </net>
+    <net code="34" name="Net-(J2-Pad5)">
+      <node ref="J2" pin="5"/>
+      <node ref="U1" pin="31"/>
+    </net>
+    <net code="35" name="Net-(J2-Pad6)">
+      <node ref="J2" pin="6"/>
+      <node ref="U1" pin="24"/>
+    </net>
+    <net code="36" name="Net-(J2-Pad7)">
+      <node ref="J2" pin="7"/>
+      <node ref="U1" pin="35"/>
+    </net>
+  </nets>
+</export>
