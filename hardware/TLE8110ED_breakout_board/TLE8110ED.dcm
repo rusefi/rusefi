@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TPS3839DQN
+D 150-nA, Ultralow Power, Supply Voltage Monitor, X2SON-4
+K supply voltage supervisor
+F http://www.ti.com/lit/ds/sbvs193d/sbvs193d.pdf
+$ENDCMP
+#
+#End Doc Library
