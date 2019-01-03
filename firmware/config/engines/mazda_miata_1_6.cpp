@@ -16,6 +16,10 @@
 
 EXTERN_ENGINE;
 
+// todo:
+// extern const float ve16RpmBins[FUEL_RPM_COUNT];
+
+
 static const float ve16RpmBins[FUEL_RPM_COUNT] = {
 650.0,1100.0,1550.0,2000.0,
 2450.0,2900.0,3350.0,3800.0,
