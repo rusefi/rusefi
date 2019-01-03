@@ -4,6 +4,7 @@ TEST_SRC_CPP = test_util.cpp \
 	global_execution_queue.cpp \
 	test_basic_math/test_find_index.cpp \
 	test_basic_math/test_interpolation_3d.cpp \
+	test_cj125.cpp \
 	test_data_structures/test_engine_math.cpp \
 	test_startOfCrankingPrimingPulse.cpp \
 	test_fasterEngineSpinningUp.cpp \

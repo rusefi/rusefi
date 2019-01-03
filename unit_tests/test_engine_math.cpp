@@ -1,8 +1,8 @@
 /*
  * @file	test_engine_math.c
  *
- *  Created on: Nov 14, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2018
+ * @date Nov 14, 2013
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "test_engine_math.h"

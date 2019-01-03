@@ -23,6 +23,7 @@
 #include "engine_configuration.h"
 
 #include "test_idle_controller.h"
+#include "test_c125.h"
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
@@ -124,8 +125,10 @@ int main(void) {
 
 	testTriggerDecoder();
 
+	testCJ125();
+
 	//	resizeMap();
-	printf("Success 20181206\r\n");
+	printf("Success 20190103\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	return EXIT_SUCCESS;
