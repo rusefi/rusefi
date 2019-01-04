@@ -8,8 +8,7 @@ class PeriodicController : public ThreadController<TStackSize>
 {
 private:
     const systime_t m_period;
-    bool m_running = true;
-
+    
 protected:
     const float m_periodSeconds;
 
@@ -23,17 +22,12 @@ protected:
      */
     virtual void PeriodicTask(efitime_t nowNt) = 0;
 
-    /**
-     * Called when the controller is stopped.  Optionally override this method to clean up.
-     */
-    virtual void OnStopped() {};
-
 private:
     void ThreadTask() override final
     {
         OnStarted();
 
-        while(m_running)
+        while(true)
         {
             systime_t before = chVTGetSystemTime();
             efitime_t nowNt = getTimeNowNt();
@@ -48,8 +42,6 @@ private:
             // doing work, so the loop runs at a predictable 500hz.
             chThdSleepUntilWindowed(before, before + m_period);
         }
-
-        OnStopped();
     }
 
 public:
@@ -60,17 +52,5 @@ public:
         // as it may be different due to rounding errors
         , m_periodSeconds(m_period / (float)CH_CFG_ST_FREQUENCY)
     {
-    }
-
-    void Start() override final
-    {
-        m_running = true;
-
-        ThreadController<TStackSize>::Start();
-    }
-
-    void Stop() override final
-    {
-        m_running = false;
     }
 };

@@ -41,9 +41,4 @@ public:
         m_thread = chThdCreateStatic(m_threadstack, sizeof(m_threadstack), m_prio, StaticThreadTaskAdapter, this);
         m_thread->name = GetName();
     }
-
-    /**
-     * @brief Stop the thread.
-     */
-    virtual void Stop() = 0;
 };
