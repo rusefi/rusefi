@@ -9,8 +9,10 @@
 
 #include "cdm_ion_sense.h"
 
+#if EFI_TUNER_STUDIO
 void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
 
 }
+#endif
 
 

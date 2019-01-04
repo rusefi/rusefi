@@ -7,9 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "engine.h"
+
+// todo: EFI_STEPPER macro
+#if EFI_PROD_CODE || EFI_SIMULATOR
 #include "stepper.h"
 #include "pin_repository.h"
-#include "engine.h"
 #include "tps.h"
 #include "engine_controller.h"
 #include "adc_inputs.h"
@@ -181,3 +184,4 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t)(void*) stThread, this);
 }
 
+#endif

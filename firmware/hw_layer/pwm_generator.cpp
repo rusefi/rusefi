@@ -12,12 +12,14 @@
  *
  */
 
-#include "pwm_generator.h"
+#include "global.h"
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#include "pwm_generator.h"
 #include "pin_repository.h"
 #include "datalogging.h"
-
 
 void initPwmGenerator(void) {
 }
 
+#endif
