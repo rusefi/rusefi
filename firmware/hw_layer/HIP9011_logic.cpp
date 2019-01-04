@@ -23,3 +23,9 @@ float getHIP9011Band(DEFINE_HIP_PARAMS) {
 	return GET_CONFIG_VALUE(knockBandCustom) == 0 ?
 			BAND(GET_CONFIG_VALUE(cylinderBore)) : GET_CONFIG_VALUE(knockBandCustom);
 }
+
+int getBandIndex(DEFINE_HIP_PARAMS) {
+	float freq = getHIP9011Band(FORWARD_HIP_PARAMS);
+	return getHip9011BandIndex(freq);
+}
+
