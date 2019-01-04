@@ -612,7 +612,7 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e spi3misoPin;
 	brain_pin_e spi3sckPin;
 
-	float hip9011Gain;
+	float unusedBc;
 	brain_pin_e joystickCenterPin;
 	brain_pin_e joystickAPin;
 	brain_pin_e joystickBPin;
@@ -930,7 +930,8 @@ tChargeMode_e tChargeMode;
 		uint8_t[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%;"target TPS position",   1,   0.0,        0,  100.0,   0
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
-	int[581] unusedEnd;
+	float hip9011Gain;
+	int[580] unusedEnd;
 	
 
 end_struct

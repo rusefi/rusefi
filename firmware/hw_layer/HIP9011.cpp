@@ -135,7 +135,7 @@ static void showHipInfo(void) {
 
 	char *outputName = getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, hipPinNameBuffer);
 
-	scheduleMsg(logger, "band_index=%d gain %.2f/index=%d output=%s", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex,
+	scheduleMsg(logger, "band_index=%d gain %.2f/index=%d output=%s", currentBandIndex, engineConfiguration->hip9011Gain, currentGainIndex,
 			outputName);
 	scheduleMsg(logger, "integrator index=%d knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
 	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
@@ -191,7 +191,7 @@ void setHip9011FrankensoPinout(void) {
 	engineConfiguration->spi2MisoMode = PAL_STM32_PUPDR_PULLUP; // 32
 #endif /* EFI_PROD_CODE */
 
-	boardConfiguration->hip9011Gain = 1;
+	engineConfiguration->hip9011Gain = 1;
 	engineConfiguration->knockVThreshold = 4;
 	engineConfiguration->maxKnockSubDeg = 20;
 
@@ -269,7 +269,7 @@ void setHipBand(float value) {
 }
 
 void setHipGain(float value) {
-	boardConfiguration->hip9011Gain = value;
+	engineConfiguration->hip9011Gain = value;
 	showHipInfo();
 }
 
@@ -307,7 +307,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 		}
 
 		int integratorIndex = getIntegrationIndexByRpm(GET_RPM());
-		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
+		int gainIndex = getHip9011GainIndex(engineConfiguration->hip9011Gain);
 		int bandIndex = getBandIndex();
 		int prescalerIndex = engineConfiguration->hip9011PrescalerAndSDO;
 

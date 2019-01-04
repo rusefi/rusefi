@@ -431,7 +431,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
-	boardConfiguration->hip9011Gain = 0.3;
+	engineConfiguration->hip9011Gain = 0.3;
 
 	float t = 0.5;
 
