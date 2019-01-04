@@ -282,11 +282,6 @@ static void endOfSpiExchange(SPIDriver *spip) {
 	checkResponse();
 }
 
-static int getBandIndex(void) {
-	float freq = getHIP9011Band(PASS_HIP_PARAMS);
-	return getHip9011BandIndex(freq);
-}
-
 static void sendCommand(hip_state_e s, unsigned char cmd) {
 	instance.state = s;
 	tx_buff[0] = cmd;

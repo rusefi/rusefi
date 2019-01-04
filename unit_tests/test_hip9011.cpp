@@ -35,4 +35,6 @@ TEST(hip9011, band) {
 	EXPECT_FLOAT_EQ(3, getHIP9011Band(/* knockBandCustom*/3, /*cylinderBore*/76));
 	EXPECT_FLOAT_EQ(7.5389242, getHIP9011Band(/* knockBandCustom*/0, /*cylinderBore*/76));
 
+	EXPECT_EQ(42, getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76));
+
 }
