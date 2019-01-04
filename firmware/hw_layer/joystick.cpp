@@ -17,11 +17,11 @@
  */
 
 #include "engine.h"
+
+#if HAL_USE_EXT || defined(__DOXYGEN__)
 #include "joystick.h"
 #include "pin_repository.h"
 #include "digital_input_exti.h"
-
-#if HAL_USE_EXT || defined(__DOXYGEN__)
 
 EXTERN_ENGINE
 ;

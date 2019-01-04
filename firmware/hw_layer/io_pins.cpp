@@ -7,8 +7,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-//#include "board.h"
 #include "global.h"
+
+#if EFI_PROD_CODE
 #include "io_pins.h"
 #include "efiGpio.h"
 
@@ -88,3 +89,4 @@ void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
 	icuStart(icup, config);
 }
 #endif /* HAL_USE_ICU */
+#endif

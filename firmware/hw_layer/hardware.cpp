@@ -7,26 +7,27 @@
  */
 
 #include "global.h"
+
+#include "trigger_input.h"
+#include "servo.h"
+
+#if EFI_PROD_CODE
 #include "adc_inputs.h"
 #include "can_hw.h"
-#include "console_io.h"
 #include "hardware.h"
 #include "io_pins.h"
-#include "pin_repository.h"
 #include "rtc_helper.h"
 #include "rfiutil.h"
 #include "injector_central.h"
 #include "vehicle_speed.h"
 #include "yaw_rate_sensor.h"
-
-#include "trigger_input.h"
-#include "eficonsole.h"
+#include "pin_repository.h"
 #include "max31855.h"
-#include "mpu_util.h"
 #include "accelerometer.h"
-#include "servo.h"
+#include "eficonsole.h"
+#include "console_io.h"
 
-#if EFI_PROD_CODE
+#include "mpu_util.h"
 //#include "usb_msd.h"
 
 #include "AdcConfiguration.h"
@@ -45,7 +46,7 @@
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "aux_pid.h"
-#endif /* EFI_PROD_CODE */
+
 
 #if EFI_SPEED_DENSITY
 #include "map_averaging.h"
@@ -499,3 +500,5 @@ void initHardware(Logging *l) {
 }
 
 #endif /* EFI_PROD_CODE */
+
+#endif  /* EFI_PROD_CODE || EFI_SIMULATOR */
