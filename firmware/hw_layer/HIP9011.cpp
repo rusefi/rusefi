@@ -38,6 +38,7 @@
 #include "hardware.h"
 #include "rpm_calculator.h"
 #include "trigger_central.h"
+#include "HIP9011_logic.h"
 #include "hip9011_lookup.h"
 #include "HIP9011.h"
 #include "adc_inputs.h"
@@ -68,24 +69,14 @@ static int totalKnockEventsCount = 0;
 static int currentPrescaler;
 static float hipValueMax = 0;
 
+static HIP9011 instance;
+
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
 int correctResponsesCount = 0;
 int invalidHip9011ResponsesCount = 0;
 static char pinNameBuffer[16];
 static float currentAngleWindowWidth;
-
-/**
- * Int/Hold pin is controlled from scheduler call-backs which are set according to current RPM
- *
- * The following state makes sure that we only have SPI communication while not integrating and that we take
- * a good ADC reading after integrating.
- *
- * Once integration window is over, we wait for the 2nd ADC callback and then initiate SPI communication if needed
- *
- * hipOutput should be set to used FAST adc device
- */
-static hip_state_e state = NOT_READY;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
@@ -142,7 +133,7 @@ static void showHipInfo(void) {
 	printSpiState(logger, boardConfiguration);
 	scheduleMsg(logger, "enabled=%s state=%s bore=%.2fmm freq=%.2fkHz PaSDO=%d",
 			boolToString(boardConfiguration->isHip9011Enabled),
-			getHip_state_e(state),
+			getHip_state_e(instance.state),
 			engineConfiguration->cylinderBore, getBand(),
 			engineConfiguration->hip9011PrescalerAndSDO);
 
@@ -215,12 +206,12 @@ void setHip9011FrankensoPinout(void) {
 }
 
 static void startIntegration(void) {
-	if (state == READY_TO_INTEGRATE) {
+	if (instance.state == READY_TO_INTEGRATE) {
 		/**
 		 * SPI communication is only allowed while not integrating, so we postpone the exchange
 		 * until we are done integrating
 		 */
-		state = IS_INTEGRATING;
+		instance.state = IS_INTEGRATING;
 		intHold.setHigh();
 	}
 }
@@ -230,9 +221,9 @@ static void endIntegration(void) {
 	 * isIntegrating could be 'false' if an SPI command was pending thus we did not integrate during this
 	 * engine cycle
 	 */
-	if (state == IS_INTEGRATING) {
+	if (instance.state == IS_INTEGRATING) {
 		intHold.setLow();
-		state = WAITING_FOR_ADC_TO_SKIP;
+		instance.state = WAITING_FOR_ADC_TO_SKIP;
 	}
 }
 
@@ -291,7 +282,7 @@ void setHipGain(float value) {
  */
 static void endOfSpiExchange(SPIDriver *spip) {
 	spiUnselectI(driver);
-	state = READY_TO_INTEGRATE;
+	instance.state = READY_TO_INTEGRATE;
 	checkResponse();
 }
 
@@ -301,7 +292,7 @@ static int getBandIndex(void) {
 }
 
 static void sendCommand(hip_state_e s, unsigned char cmd) {
-	state = s;
+	instance.state = s;
 	tx_buff[0] = cmd;
 
 	spiSelectI(driver);
@@ -309,9 +300,9 @@ static void sendCommand(hip_state_e s, unsigned char cmd) {
 }
 
 void hipAdcCallback(adcsample_t adcValue) {
-	if (state == WAITING_FOR_ADC_TO_SKIP) {
-		state = WAITING_FOR_RESULT_ADC;
-	} else if (state == WAITING_FOR_RESULT_ADC) {
+	if (instance.state == WAITING_FOR_ADC_TO_SKIP) {
+		instance.state = WAITING_FOR_RESULT_ADC;
+	} else if (instance.state == WAITING_FOR_RESULT_ADC) {
 		engine->knockVolts = adcValue * engine->adcToVoltageInputDividerCoefficient;
 		hipValueMax = maxF(engine->knockVolts, hipValueMax);
 		engine->knockLogic(engine->knockVolts);
@@ -345,11 +336,10 @@ void hipAdcCallback(adcsample_t adcValue) {
 			sendCommand(IS_SENDING_SPI_COMMAND, SET_PRESCALER_CMD + prescalerIndex);
 
 		} else {
-			state = READY_TO_INTEGRATE;
+			instance.state = READY_TO_INTEGRATE;
 		}
 	}
 }
-static bool needToInit = true;
 
 static void hipStartupCode(void) {
 //	D[4:1] = 0000 : 4 MHz
@@ -400,7 +390,7 @@ static void hipStartupCode(void) {
 	hipSpiCfg.end_cb = endOfSpiExchange;
 #endif
 	spiStart(driver, &hipSpiCfg);
-	state = READY_TO_INTEGRATE;
+	instance.state = READY_TO_INTEGRATE;
 }
 
 static THD_WORKING_AREA(hipTreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -418,9 +408,9 @@ static msg_t hipThread(void *arg) {
 	while (true) {
 		chThdSleepMilliseconds(100);
 
-		if (needToInit) {
+		if (instance.needToInit) {
 			hipStartupCode();
-			needToInit = false;
+			instance.needToInit = false;
 		}
 	}
 	return -1;
