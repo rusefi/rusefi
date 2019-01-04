@@ -10,6 +10,7 @@
 #include "pid_auto_tune.h"
 #include "unit_test_framework.h"
 #include "cyclic_buffer.h"
+#include "gtest/gtest.h"
 
 efitimems_t mockTimeMs = 0;
 
@@ -159,9 +160,7 @@ static void testPidAutoZigZagGrowingOsc() {
 
 }
 
-static void testPidZeroLine() {
-	printf("*************************************************** testPidAutoZigZagGrowingOsc\r\n");
-
+TEST(pidAutoTune, zeroLine) {
 	mockTimeMs = 0;
 
 	PID_AutoTune at;
@@ -182,8 +181,7 @@ static void testPidZeroLine() {
 		// nothing happens in this test since we do not allow time play a role
 }
 
-static void testPidDelayLine(void) {
-	printf("*************************************************** testPidDelayLine\r\n");
+TEST(pidAutoTune, delayLine) {
 
 	static const int delayBufSize = 8;
 	
@@ -220,8 +218,6 @@ static void testPidDelayLine(void) {
 void testPidAuto() {
 	printf("*************************************************** testPidAuto\r\n");
 
-	testPidDelayLine();
-	testPidZeroLine();
 	testPidAutoZigZagStable();
 
 	testPidAutoZigZagGrowingOsc();

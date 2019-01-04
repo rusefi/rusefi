@@ -110,6 +110,7 @@ CSRC =	$(UTILSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
+	gtest-all.cpp \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
@@ -123,6 +124,7 @@ CPPSRC = $(UTILSRC_CPP) \
 		  $(PROJECT_DIR)/hw_layer/sensors/CJ125.cpp \
 	$(TRIGGER_SRC_CPP) \
 	main.cpp
+
 
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
@@ -168,6 +170,8 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/sensors/ \
 	test_data_structures \
+	googletest/googletest \
+	googletest/googletest/include \
 	test_basic_math
 	
 

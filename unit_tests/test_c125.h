@@ -8,6 +8,4 @@
 #ifndef TEST_C125_H_
 #define TEST_C125_H_
 
-void testCJ125();
-
 #endif /* TEST_C125_H_ */
