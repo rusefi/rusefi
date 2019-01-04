@@ -9,8 +9,10 @@
 #define HW_LAYER_CDM_ION_SENSE_H_
 
 #include "global.h"
-#include "tunerstudio_configuration.h"
 
+#if EFI_TUNER_STUDIO
+#include "tunerstudio_configuration.h"
 void ionPostState(TunerStudioOutputChannels *tsOutputChannels);
+#endif
 
 #endif /* HW_LAYER_CDM_ION_SENSE_H_ */

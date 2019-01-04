@@ -18,11 +18,11 @@
 
 #include "accelerometer.h"
 #include "hardware.h"
-#include "mpu_util.h"
 
 EXTERN_ENGINE;
 
 #if EFI_MEMS || defined(__DOXYGEN__)
+#include "mpu_util.h"
 #include "lis302dl.h"
 
 static SPIDriver *driver;
