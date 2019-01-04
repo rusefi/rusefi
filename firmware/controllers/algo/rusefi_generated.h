@@ -813,8 +813,8 @@
 #define spi3misoPin_offset_hex 548
 #define spi3sckPin_offset 1356
 #define spi3sckPin_offset_hex 54c
-#define hip9011Gain_offset 1360
-#define hip9011Gain_offset_hex 550
+#define unusedBc_offset 1360
+#define unusedBc_offset_hex 550
 #define joystickCenterPin_offset 1364
 #define joystickCenterPin_offset_hex 554
 #define joystickAPin_offset 1368
@@ -1591,8 +1591,10 @@
 #define etbBiasBins_offset_hex 1014
 #define etbBiasValues_offset 4124
 #define etbBiasValues_offset_hex 101c
-#define unusedEnd_offset 4156
-#define unusedEnd_offset_hex 103c
+#define hip9011Gain_offset 4156
+#define hip9011Gain_offset_hex 103c
+#define unusedEnd_offset 4160
+#define unusedEnd_offset_hex 1040
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512

@@ -1052,7 +1052,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->spi3misoPin = GPIOB_4;
 	boardConfiguration->spi3sckPin = GPIOB_3;
 
-	boardConfiguration->hip9011Gain = 1;
+	engineConfiguration->hip9011Gain = 1;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	setHip9011FrankensoPinout();
 #endif

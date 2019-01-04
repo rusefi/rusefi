@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 19 21:31:59 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 17:02:17 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -824,7 +824,7 @@ typedef struct {
 	/**
 	 * offset 752
 	 */
-	float hip9011Gain;
+	float unusedBc;
 	/**
 	 * offset 756
 	 */
@@ -2208,7 +2208,11 @@ typedef struct {
 	/**
 	 * offset 4156
 	 */
-	int unusedEnd[581];
+	float hip9011Gain;
+	/**
+	 * offset 4160
+	 */
+	int unusedEnd[580];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2455,4 +2459,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 19 21:31:59 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 17:02:17 EST 2019
