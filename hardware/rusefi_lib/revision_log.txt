@@ -1,6 +1,0 @@
-Mar 11 2013	r2069	fuse box 3D
-Mar 09 2014	r2055	front logo lib, LMV324IDR
-Mar 05 2014	r1926	MAX chips lib
-Feb 20 2014	r1677	3d models assignment, usb module cleanup
-Feb 19 2014	r1661	removing unused file Footprints.mod
-Feb 19 2014	r1659	initial revision
