@@ -58,6 +58,7 @@
 #include "lcd_controller.h"
 #include "settings.h"
 #include "can_hw.h"
+#include "cdm_ion_sense.h"
 
 extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
@@ -100,6 +101,7 @@ extern bool hasFirmwareErrorFlag;
 extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
 #define FULL_LOGGING_KEY "fl"
+
 
 static char LOGGING_BUFFER[1800] CCM_OPTIONAL;
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
@@ -666,13 +668,13 @@ extern int invalidHip9011ResponsesCount;
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	int rpm = getRpmE(engine);
-#else
+#else /* EFI_SHAFT_POSITION_INPUT */
 	int rpm = 0;
-#endif
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	executorStatistics();
-#endif
+#endif /* EFI_PROD_CODE */
 
 	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float coolant = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -844,6 +846,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
 		}
+		break;
+	case DBG_ION:
+		//ionPostState(tsOutputChannels);
 		break;
 	default:
 		;

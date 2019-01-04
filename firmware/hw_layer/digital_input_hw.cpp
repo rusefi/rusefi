@@ -25,11 +25,11 @@
  */
 
 #include "digital_input_hw.h"
-#include "mpu_util.h"
 #include "fl_stack.h"
 
 #if EFI_ICU_INPUTS || defined(__DOXYGEN__)
 
+#include "mpu_util.h"
 #include "eficonsole.h"
 #include "pin_repository.h"
 

@@ -5,10 +5,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "digital_input_exti.h"
-#include "efiGpio.h"
+#include "global.h"
 
 #if HAL_USE_EXT || defined(__DOXYGEN__)
+#include "digital_input_exti.h"
+#include "efiGpio.h"
 
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
