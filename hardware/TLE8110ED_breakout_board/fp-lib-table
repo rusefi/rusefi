@@ -2,4 +2,5 @@
   (lib (name TLE8110ED)(type KiCad)(uri "$(KIPRJMOD)/TLE8110ED.pretty")(options "")(descr ""))
   (lib (name Connectors_Terminal_Blocks)(type KiCad)(uri "$(KISYSMOD)/Connectors_Terminal_Blocks.pretty")(options "")(descr ""))
   (lib (name Pin_Headers)(type KiCad)(uri "$(KISYSMOD)/Pin_Headers.pretty")(options "")(descr ""))
+  (lib (name Mounting_Holes)(type KiCad)(uri "$(KISYSMOD)/Mounting_Holes.pretty")(options "")(descr ""))
 )
