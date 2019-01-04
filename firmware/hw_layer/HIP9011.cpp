@@ -103,7 +103,7 @@ NULL, 0,
 SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
 		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
-#endif
+#endif /* EFI_PROD_CODE */
 
 static void checkResponse(void) {
 	if (tx_buff[0] == rx_buff[0]) {
@@ -173,7 +173,7 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(engineConfiguration->hip9011SpiDevice)));
 	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
 	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
-#endif
+#endif /* EFI_PROD_CODE */
 
 	scheduleMsg(logger, "start %.2f end %.2f", engineConfiguration->knockDetectionWindowStart,
 			engineConfiguration->knockDetectionWindowEnd);
@@ -300,6 +300,14 @@ static int getBandIndex(void) {
 	return getHip9011BandIndex(freq);
 }
 
+static void sendCommand(hip_state_e s, unsigned char cmd) {
+	state = s;
+	tx_buff[0] = cmd;
+
+	spiSelectI(driver);
+	spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+}
+
 void hipAdcCallback(adcsample_t adcValue) {
 	if (state == WAITING_FOR_ADC_TO_SKIP) {
 		state = WAITING_FOR_RESULT_ADC;
@@ -313,7 +321,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 
 		if (angleWindowWidth != currentAngleWindowWidth) {
 			currentAngleWindowWidth = angleWindowWidth;
-		prepareHip9011RpmLookup(currentAngleWindowWidth);
+			prepareHip9011RpmLookup(currentAngleWindowWidth);
 		}
 
 		int integratorIndex = getIntegrationIndexByRpm(GET_RPM());
@@ -324,32 +332,18 @@ void hipAdcCallback(adcsample_t adcValue) {
 
 		if (currentGainIndex != gainIndex) {
 			currentGainIndex = gainIndex;
-			tx_buff[0] = SET_GAIN_CMD + gainIndex;
+			sendCommand(IS_SENDING_SPI_COMMAND, SET_GAIN_CMD + gainIndex);
 
-			state = IS_SENDING_SPI_COMMAND;
-			spiSelectI(driver);
-			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 		} else if (currentIntergratorIndex != integratorIndex) {
 			currentIntergratorIndex = integratorIndex;
-			tx_buff[0] = SET_INTEGRATOR_CMD + integratorIndex;
-
-			state = IS_SENDING_SPI_COMMAND;
-			spiSelectI(driver);
-			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+			sendCommand(IS_SENDING_SPI_COMMAND, SET_INTEGRATOR_CMD + integratorIndex);
 		} else if (currentBandIndex != bandIndex) {
 			currentBandIndex = bandIndex;
-			tx_buff[0] = SET_BAND_PASS_CMD + bandIndex;
-
-			state = IS_SENDING_SPI_COMMAND;
-			spiSelectI(driver);
-			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+			sendCommand(IS_SENDING_SPI_COMMAND, SET_BAND_PASS_CMD + bandIndex);
 		} else if (currentPrescaler != prescalerIndex) {
 			currentPrescaler = prescalerIndex;
-			tx_buff[0] = SET_PRESCALER_CMD + prescalerIndex;
+			sendCommand(IS_SENDING_SPI_COMMAND, SET_PRESCALER_CMD + prescalerIndex);
 
-			state = IS_SENDING_SPI_COMMAND;
-			spiSelectI(driver);
-			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 		} else {
 			state = READY_TO_INTEGRATE;
 		}
