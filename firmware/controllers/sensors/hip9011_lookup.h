@@ -26,7 +26,6 @@ int getHip9011BandIndex(float frequency);
 void prepareHip9011RpmLookup(float angleWindowWidth);
 
 #define GAIN_INDEX(gain) (GAIN_LOOKUP_SIZE - 1 - findIndexMsg("fGain", gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, (gain)))
-#define BAND(bore) (900 / (PIF * (bore) / 2))
 
 extern float rpmLookup[INT_LOOKUP_SIZE];
 int getIntegrationIndexByRpm(float rpm);

@@ -117,10 +117,6 @@ static SPIDriver *driver;
 EXTERN_ENGINE
 ;
 
-static float getBand(void) {
-	return engineConfiguration->knockBandCustom == 0 ?
-			BAND(engineConfiguration->cylinderBore) : engineConfiguration->knockBandCustom;
-}
 
 static char hipPinNameBuffer[16];
 
@@ -134,7 +130,7 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "enabled=%s state=%s bore=%.2fmm freq=%.2fkHz PaSDO=%d",
 			boolToString(boardConfiguration->isHip9011Enabled),
 			getHip_state_e(instance.state),
-			engineConfiguration->cylinderBore, getBand(),
+			engineConfiguration->cylinderBore, getHIP9011Band(PASS_HIP_PARAMS),
 			engineConfiguration->hip9011PrescalerAndSDO);
 
 	char *outputName = getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, hipPinNameBuffer);
@@ -287,7 +283,7 @@ static void endOfSpiExchange(SPIDriver *spip) {
 }
 
 static int getBandIndex(void) {
-	float freq = getBand();
+	float freq = getHIP9011Band(PASS_HIP_PARAMS);
 	return getHip9011BandIndex(freq);
 }
 

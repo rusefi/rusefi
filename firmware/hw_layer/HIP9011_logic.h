@@ -8,7 +8,9 @@
 #ifndef HW_LAYER_HIP9011_LOGIC_H_
 #define HW_LAYER_HIP9011_LOGIC_H_
 
+#include "efifeatures.h"
 #include "rusefi_enums.h"
+#include "hip9011_lookup.h"
 
 /**
  * this interface defines SPI communication channel with HIP9011 chip
@@ -35,5 +37,23 @@ public:
 	hip_state_e state;
 };
 
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#define PASS_HIP_PARAMS
+#define DEFINE_HIP_PARAMS
+#define GET_CONFIG_VALUE(x) CONFIG(x)
+#else
+
+#define PASS_HIP_PARAMS CONFIG(knockBandCustom), \
+		CONFIG(cylinderBore)
+
+#define DEFINE_HIP_PARAMS float knockBandCustom,\
+		float cylinderBore
+
+#define GET_CONFIG_VALUE(x) x
+#endif
+
+
+float getHIP9011Band(DEFINE_HIP_PARAMS);
 
 #endif /* HW_LAYER_HIP9011_LOGIC_H_ */

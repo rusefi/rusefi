@@ -6,6 +6,7 @@
 
 #include "unit_test_framework.h"
 #include "hip9011_lookup.h"
+#include "HIP9011_logic.h"
 #include "gtest/gtest.h"
 
 TEST(hip9011, lookup) {
@@ -27,4 +28,11 @@ TEST(hip9011, lookup) {
 	EXPECT_EQ(21, getIntegrationIndexByRpm(1100));
 	EXPECT_EQ(1, getIntegrationIndexByRpm(6600));
 	EXPECT_EQ(0, getIntegrationIndexByRpm(16600));
+}
+
+TEST(hip9011, band) {
+
+	EXPECT_FLOAT_EQ(3, getHIP9011Band(/* knockBandCustom*/3, /*cylinderBore*/76));
+	EXPECT_FLOAT_EQ(7.5389242, getHIP9011Band(/* knockBandCustom*/0, /*cylinderBore*/76));
+
 }
