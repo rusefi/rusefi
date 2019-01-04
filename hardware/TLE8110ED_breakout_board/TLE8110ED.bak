@@ -151,7 +151,9 @@ Wire Wire Line
 Wire Wire Line
 	7500 3600 7500 5950
 Wire Wire Line
-	7500 5950 6150 5950
+	7500 5950 6350 5950
+Wire Wire Line
+	6350 5950 6150 5950
 Wire Wire Line
 	6150 5950 6150 5150
 Wire Wire Line
@@ -346,45 +348,45 @@ Out9
 Text Label 6700 3600 0    60   ~ 0
 Out10
 $Comp
-L Mounting_Hole MK1
+L Mounting_Hole MK?
 U 1 1 5C2E7411
 P 2150 1500
-F 0 "MK1" H 2150 1700 50  0000 C CNN
+F 0 "MK?" H 2150 1700 50  0000 C CNN
 F 1 "Mounting_Hole" H 2150 1625 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_3.2mm_M3_DIN965" H 2150 1500 50  0001 C CNN
+F 2 "" H 2150 1500 50  0001 C CNN
 F 3 "" H 2150 1500 50  0001 C CNN
 	1    2150 1500
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mounting_Hole MK3
+L Mounting_Hole MK?
 U 1 1 5C2E7432
 P 2800 1500
-F 0 "MK3" H 2800 1700 50  0000 C CNN
+F 0 "MK?" H 2800 1700 50  0000 C CNN
 F 1 "Mounting_Hole" H 2800 1625 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_3.2mm_M3_DIN965" H 2800 1500 50  0001 C CNN
+F 2 "" H 2800 1500 50  0001 C CNN
 F 3 "" H 2800 1500 50  0001 C CNN
 	1    2800 1500
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mounting_Hole MK2
+L Mounting_Hole MK?
 U 1 1 5C2E7487
 P 2200 2000
-F 0 "MK2" H 2200 2200 50  0000 C CNN
+F 0 "MK?" H 2200 2200 50  0000 C CNN
 F 1 "Mounting_Hole" H 2200 2125 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_3.2mm_M3_DIN965" H 2200 2000 50  0001 C CNN
+F 2 "" H 2200 2000 50  0001 C CNN
 F 3 "" H 2200 2000 50  0001 C CNN
 	1    2200 2000
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mounting_Hole MK4
+L Mounting_Hole MK?
 U 1 1 5C2E74A8
 P 2800 1950
-F 0 "MK4" H 2800 2150 50  0000 C CNN
+F 0 "MK?" H 2800 2150 50  0000 C CNN
 F 1 "Mounting_Hole" H 2800 2075 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_3.2mm_M3_DIN965" H 2800 1950 50  0001 C CNN
+F 2 "" H 2800 1950 50  0001 C CNN
 F 3 "" H 2800 1950 50  0001 C CNN
 	1    2800 1950
 	1    0    0    -1  
