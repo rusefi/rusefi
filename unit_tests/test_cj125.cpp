@@ -5,14 +5,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-
 #include "test_c125.h"
-#include "CJ125.h"
+#include "gtest/gtest.h"
 
-void testCJ125() {
-	printf("====================================================================================== testCJ125\r\n");
-
+TEST(testCJ125, todo) {
+	EXPECT_EQ(1, 2 - 1);
 }
-
 
 

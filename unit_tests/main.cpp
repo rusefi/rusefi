@@ -23,7 +23,6 @@
 #include "engine_configuration.h"
 
 #include "test_idle_controller.h"
-#include "test_c125.h"
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
@@ -34,6 +33,7 @@
 #include "engine_math.h"
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
+#include "gtest/gtest.h"
 
 typedef int32_t         msg_t;
 
@@ -59,7 +59,7 @@ int getRevolutionCounter(void) {
 }
 extern bool printTriggerDebug;
 
-int main(void) {
+GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
 	testMisc();
@@ -125,13 +125,14 @@ int main(void) {
 
 	testTriggerDecoder();
 
-	testCJ125();
+
 
 	//	resizeMap();
 	printf("Success 20190103\r\n");
 	printAllTriggers();
 //	printConvertedTable();
-	return EXIT_SUCCESS;
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
 
 void print(const char *format, ...) {
