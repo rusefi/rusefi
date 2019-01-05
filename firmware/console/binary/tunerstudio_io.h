@@ -72,6 +72,7 @@ typedef struct {
 #define TS_PAGE_COMMAND 'P' // 0x50
 #define TS_COMMAND_F 'F' // 0x46
 #define TS_GET_FIRMWARE_VERSION 'V' // versionInfo
+#define TS_TOOTH_COMMAND 'L' // 0x4C
 
 #define TS_SINGLE_WRITE_COMMAND 'W' // 0x57 pageValueWrite
 #define TS_CHUNK_WRITE_COMMAND 'C' // 0x43 pageChunkWrite

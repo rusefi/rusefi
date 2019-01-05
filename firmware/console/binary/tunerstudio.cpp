@@ -72,8 +72,8 @@
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "crc.h"
-#include "fl_protocol.h"
 #include "bluetooth.h"
+#include "tunerstudio_io.h"
 
 #include <string.h>
 #include "engine_configuration.h"
