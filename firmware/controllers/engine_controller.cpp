@@ -761,7 +761,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_PROD_CODE */
 }
 
-static char UNUSED_RAM_SIZE[7000];
+static char UNUSED_RAM_SIZE[10000];
 
 static char UNUSED_CCM_SIZE[7000] CCM_OPTIONAL;
 
@@ -778,5 +778,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20181223;
+	return 20190105;
 }
