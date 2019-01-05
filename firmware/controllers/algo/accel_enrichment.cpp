@@ -114,7 +114,7 @@ float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-//	FuelSchedule *fs = engine->engineConfigurationPtr2->injectionEvents;
+//	FuelSchedule *fs = engineConfiguration->injectionEvents;
 	float tpsTo = cb.get(index);
 	float tpsFrom = cb.get(index - 1);
 	float d = tpsTo - tpsFrom;

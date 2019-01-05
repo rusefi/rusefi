@@ -217,7 +217,7 @@ void runRusEfi(void) {
 #endif
         
 #if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
-	initEngineEmulator(&sharedLogger, engine);
+	initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 	startStatusThreads();
 

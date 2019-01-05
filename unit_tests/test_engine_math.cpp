@@ -93,7 +93,7 @@ void testMafLookup(void) {
 	EXPAND_EngineTestHelper;
 
 	setBosch0280218037(config);
-	engine->preCalculate();
+	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	assertEqualsM("@0", -34.5000, engine->mafDecodingLookup[0]);
 	assertEqualsM("@1", -33.7875, engine->mafDecodingLookup[1]);

@@ -9,6 +9,6 @@
 #define ENGINE_EMULATOR_H_
 
 #include "engine.h"
-void initEngineEmulator(Logging *sharedLogger, Engine *engine);
+void initEngineEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* ENGINE_EMULATOR_H_ */
