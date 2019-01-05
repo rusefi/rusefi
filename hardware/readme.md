@@ -24,13 +24,13 @@ todo: move Connectors wiki page content into git
 * [CAN module](can_board) CAN using SN65HVD230
 * [VR module](VR_Board) Variable Reluctance conditioner board VR MAX9926
 * [Wideband module](CJ125_board) CJ125 Bosch Wideband board
-* [TLE6240 module](low_side_tle6240) integrated low side switch
-* [TLE6244 module](Breakout_TLE6244) integrated low side switch
-* [MC33816](Common_Rail_MC33816) common rail driver
-* [LM1949](Low-Z_LM1949) low impedance injector driver
-* [VND5E025AKTR](PowerSSO-24_breakout) double channel high-side driver with analog current sense
-* [BTS21400](DDPAK_breakout) ignition coil IGBT driver
-
+* [VND5E025AKTR](PowerSSO-24_breakout) double channel high-side driver with analog current sense (used on Dodge Neon 2003 test mule)
+* [BTS21400](DDPAK_breakout) ignition coil IGBT driver (used on Dodge Neon 2003 test mule)
+* [TLE6240 module](low_side_tle6240) integrated low side switch (fabricated, not tested)
+* [TLE6244 module](Breakout_TLE6244) integrated low side switch (never actually fabricated)
+* [MC33816](Common_Rail_MC33816) common rail driver (never actually fabricated)
+* [LM1949](Low-Z_LM1949) low impedance injector driver (never actually fabricated)
+Above mentioned modules are known to work unless stated otherwise
 
 ### Frankenstein
 
