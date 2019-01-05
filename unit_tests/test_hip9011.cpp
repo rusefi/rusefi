@@ -17,10 +17,10 @@ TEST(hip9011, lookup) {
 	assertEqualsM2("240us 50 degree", 1105.2435, getRpmByAngleWindowAndTimeUs(240, 50), 0.1);
 	assertEqualsM2("240us 50 degree", 6631.4619, getRpmByAngleWindowAndTimeUs(40, 50), 0.1);
 
-	EXPECT_EQ(0, getHip9011GainIndex(3));
-	EXPECT_EQ(0, getHip9011GainIndex(2));
-	EXPECT_EQ(47, getHip9011GainIndex(0.234));
-	EXPECT_EQ(63, getHip9011GainIndex(0.000001));
+	EXPECT_EQ(0, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/3));
+	EXPECT_EQ(0, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/2));
+	EXPECT_EQ(47, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.234));
+	EXPECT_EQ(63, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.000001));
 
 	prepareHip9011RpmLookup(50);
 
@@ -32,9 +32,9 @@ TEST(hip9011, lookup) {
 
 TEST(hip9011, band) {
 
-	EXPECT_FLOAT_EQ(3, getHIP9011Band(/* knockBandCustom*/3, /*cylinderBore*/76));
-	EXPECT_FLOAT_EQ(7.5389242, getHIP9011Band(/* knockBandCustom*/0, /*cylinderBore*/76));
+	EXPECT_FLOAT_EQ(3, getHIP9011Band(/* knockBandCustom*/3, /*cylinderBore*/76, /*hip9011Gain*/NAN));
+	EXPECT_FLOAT_EQ(7.5389242, getHIP9011Band(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN));
 
-	EXPECT_EQ(42, getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76));
+	EXPECT_EQ(42, getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN));
 
 }
