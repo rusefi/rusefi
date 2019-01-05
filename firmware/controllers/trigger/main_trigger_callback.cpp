@@ -87,13 +87,13 @@ extern TunerStudioOutputChannels tsOutputChannels;
 //#endif
 
 void startSimultaniousInjection(Engine *engine) {
-	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
+	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setHigh();
 	}
 }
 
 static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
-	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
+	for (int i = 0; i < engine->engineConfigurationPtr->specs.cylindersCount; i++) {
 		enginePins.injectors[i].setLow();
 	}
 }

@@ -323,7 +323,7 @@ void showBor(void) {
 void initHardware(Logging *l) {
 	efiAssertVoid(CUSTOM_IH_STACK, getRemainingStack(chThdGetSelfX()) > 256, "init h");
 	sharedLogger = l;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 

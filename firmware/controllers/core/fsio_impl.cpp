@@ -542,7 +542,7 @@ static void showFsioInfo(void) {
 			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%.2f", (i + 1), exp,
 					hwPortname(boardConfiguration->fsioOutputPins[i]), boardConfiguration->fsioFrequency[i],
 					engine->fsioLastValue[i]);
-//			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfiguration2->fsioLastValue[i]);
+//			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfigurationPtr2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
 		}
 	}

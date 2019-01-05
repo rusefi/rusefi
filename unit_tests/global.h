@@ -78,7 +78,7 @@ class Engine;
  * if engine is in scope
  */
 #define EXPAND_Engine \
-	    engine_configuration_s *engineConfiguration = engine->engineConfiguration; \
+	    engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr; \
 		persistent_config_s *config = engine->config; \
 		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 

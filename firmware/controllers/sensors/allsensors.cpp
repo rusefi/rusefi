@@ -26,5 +26,5 @@ bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * for now we are looking for a pull-up. High level means input switch is floating (which is OFF position)
 	 * low value means input is ground - which means ON.
 	 */
-	return getVoltageDivided("A/C", engine->engineConfiguration->acSwitchAdc) < 2.5;
+	return getVoltageDivided("A/C", engine->engineConfigurationPtr->acSwitchAdc) < 2.5;
 }
