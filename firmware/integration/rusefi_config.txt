@@ -612,7 +612,7 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e spi3misoPin;
 	brain_pin_e spi3sckPin;
 
-	float unusedBc;
+	brain_pin_e cdmInputPin;Saab Combustion Detection Module knock signal input pin
 	brain_pin_e joystickCenterPin;
 	brain_pin_e joystickAPin;
 	brain_pin_e joystickBPin;

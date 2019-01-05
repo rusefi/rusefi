@@ -813,8 +813,8 @@
 #define spi3misoPin_offset_hex 548
 #define spi3sckPin_offset 1356
 #define spi3sckPin_offset_hex 54c
-#define unusedBc_offset 1360
-#define unusedBc_offset_hex 550
+#define cdmInputPin_offset 1360
+#define cdmInputPin_offset_hex 550
 #define joystickCenterPin_offset 1364
 #define joystickCenterPin_offset_hex 554
 #define joystickAPin_offset 1368
