@@ -509,7 +509,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	if (trgEventIndex == CONFIG(ignMathCalculateAtIndex)) {
 		if (CONFIG(externalKnockSenseAdc) != EFI_ADC_NONE) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc);
-			engine->knockLogic(externalKnockValue);
+			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
 

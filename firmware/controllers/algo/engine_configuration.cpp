@@ -178,7 +178,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	applyNewHardwareSettings();
 #endif /* EFI_PROD_CODE */
-	engine->preCalculate();
+	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
 #endif /* EFI_ALTERNATOR_CONTROL */

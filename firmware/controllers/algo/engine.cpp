@@ -34,7 +34,6 @@ static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
 
-// todo: in this file it would be better not to have complete 'EXTERN_ENGINE'
 EXTERN_ENGINE
 ;
 
@@ -92,7 +91,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: move this logic somewhere to sensors folder?
-	if (engineConfiguration->fuelLevelSensor != EFI_ADC_NONE) {
+	if (CONFIG(fuelLevelSensor) != EFI_ADC_NONE) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
 		sensors.fuelTankGauge = interpolateMsg("fgauge", boardConfiguration->fuelLevelEmptyTankVoltage, 0,
 				boardConfiguration->fuelLevelFullTankVoltage, 100,
@@ -165,12 +164,12 @@ void Engine::reset() {
  * Here we have a bunch of stuff which should invoked after configuration change
  * so that we can prepare some helper structures
  */
-void Engine::preCalculate() {
-	sparkTable.preCalc(engineConfigurationPtr->sparkDwellRpmBins,
-			engineConfigurationPtr->sparkDwellValues);
+void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	sparkTable.preCalc(engineConfiguration->sparkDwellRpmBins,
+			engineConfiguration->sparkDwellValues);
 
 #if ! EFI_UNIT_TEST
-	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfigurationPtr->analogInputDividerCoefficient;
+	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
 #else
 	adcToVoltageInputDividerCoefficient = engineConfigurationPtr->analogInputDividerCoefficient;
 #endif
@@ -197,9 +196,9 @@ void Engine::printKnockState(void) {
 	scheduleMsg(&engineLogger, "knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
 }
 
-void Engine::knockLogic(float knockVolts) {
+void Engine::knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	this->knockVolts = knockVolts;
-    knockNow = knockVolts > engineConfigurationPtr->knockVThreshold;
+    knockNow = knockVolts > engineConfiguration->knockVThreshold;
     /**
      * KnockCount is directly proportional to the degrees of ignition
      * advance removed
@@ -216,7 +215,7 @@ void Engine::knockLogic(float knockVolts) {
     if (knockNow) {
         knockEver = true;
         timeOfLastKnockEvent = getTimeNowUs();
-        if (knockCount < engineConfigurationPtr->maxKnockSubDeg)
+        if (knockCount < engineConfiguration->maxKnockSubDeg)
             knockCount++;
     } else if (knockCount >= 1) {
         knockCount--;

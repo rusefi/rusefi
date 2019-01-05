@@ -531,7 +531,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 		scheduleMsg(&logger, "invalid value [%s]", valueStr);
 		return;
 	}
-	float *ptr = (float *) (&((char *) engine->engineConfigurationPtr)[offset]);
+	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getFloat(offset);
 }

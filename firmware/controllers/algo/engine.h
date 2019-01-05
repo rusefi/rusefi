@@ -346,6 +346,7 @@ public:
 	persistent_config_s *config;
 	/**
 	 * we use funny unique name to make sure that compiler is not confused between global variable and class member
+	 * todo: this variable is probably a sign of some problem, should we even have it?
 	 */
 	engine_configuration_s *engineConfigurationPtr;
 
@@ -473,7 +474,7 @@ public:
 	 */
 	float mafDecodingLookup[MAF_DECODING_CACHE_SIZE];
 
-	void preCalculate();
+	void preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	void watchdog();
 
@@ -490,7 +491,7 @@ public:
 
 	monitoring_timestamps_s m;
 
-	void knockLogic(float knockVolts);
+	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
 
 private:

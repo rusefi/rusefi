@@ -94,13 +94,13 @@ static void initECUstimulator(Engine *engine) {
 	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t)(void*) eeThread, engine);
 }
 
-void initEngineEmulator(Logging *sharedLogger, Engine *engine) {
+void initEngineEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (hasFirmwareError())
 		return;
 
 #if EFI_POTENTIOMETER
 #if HAL_USE_SPI || defined(__DOXYGEN__)
-	initPotentiometers(sharedLogger, &engine->engineConfigurationPtr->bc);
+	initPotentiometers(sharedLogger, &engineConfiguration->bc);
 #endif /* HAL_USE_SPI */
 #endif /* EFI_POTENTIOMETER */
 
