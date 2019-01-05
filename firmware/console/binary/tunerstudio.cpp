@@ -437,15 +437,10 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 	scheduleMsg(&tsLogger, "BURN in %dms", currentTimeMillis() - nowMs);
 }
 
-static TunerStudioReadRequest readRequest;
-static TunerStudioWriteChunkRequest writeChunkRequest;
-static TunerStudioOchRequest ochRequest;
-static short int pageIn;
-
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
-			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
+			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_FILE_RANGE
 			|| command == TS_TOOTH_COMMAND
@@ -456,8 +451,6 @@ static bool isKnownCommand(char command) {
 
 void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	int wasReady = false;
-
-	bool isFirstByte = true;
 
 	while (true) {
 		int isReady = sr5IsReady(isConsoleRedirect);
@@ -491,14 +484,6 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		}
 		onDataArrived();
 
-		if (isFirstByte) {
-			if (isStartOfFLProtocol(firstByte)) {
-
-			}
-
-		}
-		isFirstByte = false;
-
 //		scheduleMsg(logger, "Got first=%x=[%c]", firstByte, firstByte);
 		if (handlePlainCommand(tsChannel, firstByte))
 			continue;
@@ -511,7 +496,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 		}
 //		scheduleMsg(logger, "Got secondByte=%x=[%c]", secondByte, secondByte);
 
-		uint32_t incomingPacketSize = firstByte * 256 + secondByte;
+		uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 
 		if (incomingPacketSize == BINARY_SWITCH_TAG) {
 			// we are here if we get a binary switch request while already in binary mode. We will just ignore it.
@@ -624,14 +609,11 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  * @brief 'Output' command sends out a snapshot of current values
  */
 void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
-
-
 	if (sizeof(TunerStudioOutputChannels) < offset + count) {
 		scheduleMsg(&tsLogger, "invalid offset/count %d/%d", offset, count);
 		sendErrorCode(tsChannel);
 		return;
 	}
-
 
 	tsState.outputChannelsCommandCounter++;
 	prepareTunerStudioOutputs();
@@ -698,78 +680,32 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
  * @return true if legacy command was processed, false otherwise
  */
 bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
-	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
+	// Bail fast if guaranteed not to be a plain command
+	if(command == 0)
+	{
+		return false;
+	}
+	else if (command == TS_HELLO_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked Query command");
 		handleQueryCommand(tsChannel, TS_PLAIN);
 		return true;
 	} else if (command == TS_TEST_COMMAND || command == 'T') {
 		handleTestCommand(tsChannel);
 		return true;
-	} else if (command == TS_PAGE_COMMAND) {
-		int received = sr5ReadData(tsChannel, (uint8_t * )&pageIn, sizeof(pageIn));
-		if (received != sizeof(pageIn)) {
-			tunerStudioError("ERROR: not enough for PAGE");
-			return true;
-		}
-		handlePageSelectCommand(tsChannel, TS_PLAIN, pageIn);
-		return true;
-	} else if (command == TS_BURN_COMMAND) {
-		scheduleMsg(&tsLogger, "Got naked BURN");
-		uint16_t page;
-		int recieved = sr5ReadData(tsChannel, (uint8_t * )&page, sizeof(page));
-		if (recieved != sizeof(page)) {
-			tunerStudioError("ERROR: Not enough for plain burn");
-			return true;
-		}
-		handleBurnCommand(tsChannel, TS_PLAIN, page);
-		return true;
-	} else if (command == TS_CHUNK_WRITE_COMMAND) {
-		scheduleMsg(&tsLogger, "Got naked CHUNK_WRITE");
-		int received = sr5ReadData(tsChannel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest));
-		if (received != sizeof(writeChunkRequest)) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", received);
-			tsState.errorCounter++;
-			return true;
-		}
-		received = sr5ReadData(tsChannel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
-		if (received != writeChunkRequest.count) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", received,
-					writeChunkRequest.count);
-			tsState.errorCounter++;
-			return true;
-		}
-		currentPageId = writeChunkRequest.page;
-
-		handleWriteChunkCommand(tsChannel, TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count,
-				(uint8_t *) &tsChannel->crcReadBuffer);
-		return true;
-	} else if (command == TS_READ_COMMAND) {
-		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int received = sr5ReadData(tsChannel, (uint8_t * )&readRequest, sizeof(readRequest));
-		if (received != sizeof(readRequest)) {
-			tunerStudioError("Not enough for plain read header");
-			return true;
-		}
-		handlePageReadCommand(tsChannel, TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
-		return true;
-	} else if (command == TS_OUTPUT_COMMAND) {
-		int received = sr5ReadData(tsChannel, (uint8_t * )&ochRequest, sizeof(ochRequest));
-		if (received != sizeof(ochRequest)) {
-			tunerStudioError("Not enough for OutputChannelsCommand");
-			return true;
-		}
-
-		//scheduleMsg(logger, "Got naked Channels???");
-		handleOutputChannelsCommand(tsChannel, TS_PLAIN, ochRequest.offset, ochRequest.count);
-		return true;
-	} else if (command == TS_LEGACY_HELLO_COMMAND) {
-		tunerStudioDebug("ignoring LEGACY_HELLO_COMMAND");
-		return true;
 	} else if (command == TS_COMMAND_F) {
+		/**
+		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
+		 * Response from TS support: This is an optional command		 *
+		 * "The F command is used to find what ini. file needs to be loaded in TunerStudio to match the controller.
+		 * If you are able to just make your firmware ignore the command that would work.
+		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
+		 */
+
 		tunerStudioDebug("not ignoring F");
 		sr5WriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
 		return true;
 	} else {
+		// This wasn't a valid command
 		return false;
 	}
 }
@@ -778,7 +714,13 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	char command = data[0];
 	data++;
-	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
+
+	// Output command first since it's popular
+	if (command == TS_OUTPUT_COMMAND) {
+		uint16_t offset = *(uint16_t *) (data);
+		uint16_t count = *(uint16_t *) (data + 2);
+		handleOutputChannelsCommand(tsChannel, TS_CRC, offset, count);
+	} else if (command == TS_HELLO_COMMAND) {
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
 	} else if (command == TS_GET_FIRMWARE_VERSION) {
@@ -787,10 +729,6 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		handleGetText(tsChannel);
 	} else if (command == TS_EXECUTE) {
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
-	} else if (command == TS_OUTPUT_COMMAND) {
-		uint16_t offset = *(uint16_t *) (data);
-		uint16_t count = *(uint16_t *) (data + 2);
-		handleOutputChannelsCommand(tsChannel, TS_CRC, offset, count);
 	} else if (command == TS_PAGE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		handlePageSelectCommand(tsChannel, TS_CRC, page);
@@ -824,20 +762,6 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		handlePageReadCommand(tsChannel, TS_CRC, page, offset, count);
 	} else if (command == 't' || command == 'T') {
 		handleTestCommand(tsChannel);
-	} else if (command == TS_LEGACY_HELLO_COMMAND) {
-		/**
-		 * 'Q' is the query command used for compatibility with older ECUs
-		 */
-		tunerStudioDebug("ignoring Q");
-	} else if (command == TS_COMMAND_F) {
-		tunerStudioDebug("ignoring F");
-		/**
-		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
-		 * Response from TS support: This is an optional command		 *
-		 * "The F command is used to find what ini. file needs to be loaded in TunerStudio to match the controller.
-		 * If you are able to just make your firmware ignore the command that would work.
-		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
-		 */
 	} else if (command == TS_IO_TEST_COMMAND) {
 		uint16_t subsystem = SWAP_UINT16(*(short*)&data[0]);
 		uint16_t index = SWAP_UINT16(*(short*)&data[2]);
