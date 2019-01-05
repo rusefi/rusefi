@@ -163,6 +163,7 @@ static void scheduleReboot(void) {
 void runRusEfi(void) {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getRemainingStack(chThdGetSelfX()) > 512, "init s");
 	assertEngineReference();
+	engine->setConfig(config);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
 
@@ -196,8 +197,6 @@ void runRusEfi(void) {
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
 	initializeConsole(&sharedLogger);
-
-	engine->setConfig(config);
 
 	addConsoleAction("reboot", scheduleReboot);
 
