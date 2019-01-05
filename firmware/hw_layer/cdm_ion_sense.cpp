@@ -8,6 +8,32 @@
  */
 
 #include "cdm_ion_sense.h"
+#include "engine.h"
+
+CdmState::CdmState() {
+	currentRevolution = 0;
+	currentValue = 0;
+	accumulator = 0;
+}
+
+int CdmState::getValue() {
+	return currentValue;
+}
+
+void CdmState::onNewSignal(int currentRevolution) {
+	if (this->currentRevolution == currentRevolution) {
+		accumulator++;
+	} else {
+		this->currentRevolution = currentRevolution;
+		currentValue = accumulator;
+		accumulator = 1;
+	}
+}
+
+#if EFI_CDM_INTEGRATION
+#include "digital_input_exti.h"
+
+EXTERN_ENGINE;
 
 #if EFI_TUNER_STUDIO
 void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
@@ -15,4 +41,34 @@ void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif
 
+static CdmState instance;
 
+
+static void extIonCallback(EXTDriver *extp, expchannel_t channel) {
+        UNUSED(extp);
+
+        int currentRevolution = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+
+        instance.onNewSignal(currentRevolution);
+
+}
+
+
+void cdmIonInit(void) {
+	// todo: allow 'GPIOA_0' once we migrate to new mandatory configuration
+	if (boardConfiguration->cdmInputPin == GPIOA_0 || boardConfiguration->cdmInputPin == GPIO_UNASSIGNED) {
+		return;
+	}
+	int pin = (int)boardConfiguration->cdmInputPin;
+	if (pin <= 0 || pin > (int)GPIO_UNASSIGNED) {
+		// todo: remove this protection once we migrate to new mandatory configuration
+		return;
+	}
+
+
+	enableExti(boardConfiguration->cdmInputPin, EXT_CH_MODE_RISING_EDGE, extIonCallback);
+
+}
+
+
+#endif /* EFI_CDM_INTEGRATION */

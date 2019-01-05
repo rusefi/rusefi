@@ -42,6 +42,7 @@
 #include "settings.h"
 #include "algo.h"
 #include "joystick.h"
+#include "cdm_ion_sense.h"
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
@@ -488,6 +489,10 @@ void initHardware(Logging *l) {
 
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	initVehicleSpeed(sharedLogger);
+#endif
+
+#if EFI_CDM_INTEGRATION
+	cdmIonInit();
 #endif
 
 #if HAL_USE_EXT || defined(__DOXYGEN__)
