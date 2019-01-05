@@ -763,7 +763,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;See cltIdleRpmBins
-	float addedToWallCoef;;"%",        1,     0,    0.0,    300.0,  2
+	float addedToWallCoef;Wall wetting/evaporation factor/Tau factor/fuel film;"%",        1,     0,    0.0,    300.0,  2
 	brain_pin_e communicationLedPin;blue LED on discovery by default	
 	brain_pin_e runningLedPin;green LED on discovery by default
 	brain_pin_e binarySerialTxPin;	
