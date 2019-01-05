@@ -1,3 +1,10 @@
+/**
+ *  @file ControllerBase.h
+ * 
+ *  @date Jan 5, 2019
+ *  @author Matthew Kennedy, (c) 2019
+ */
+
 #pragma once
 
 // Sparse for now...

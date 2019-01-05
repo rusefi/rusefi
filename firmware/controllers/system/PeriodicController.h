@@ -1,8 +1,36 @@
+/**
+ *  @file PeriodicController.h
+ * 
+ *  @date Jan 5, 2019
+ *  @author Matthew Kennedy, (c) 2019
+ */
+
 #pragma once
 
 #include "ThreadController.h"
 #include "efitime.h"
 
+
+/**
+ * @brief Base class for a controller that needs to run periodically to perform work.
+ * 
+ * For example, if we have some PID loop that needs to run at a specified frequency,
+ * inherit this class, and perform your period update in PeriodicTask.  Any one-time
+ * setup work can be performed in OnStarted().
+ * 
+ * This class effectively implements this funtionality:
+ * 
+ * void thread()
+ * {
+ *     OnStarted();
+ * 
+ *     while(true)
+ *     {
+ *         PeriodicTask(getTimeNowNt());
+ *         sleep();
+ *     }
+ * }
+ */
 template <int TStackSize>
 class PeriodicController : public ThreadController<TStackSize>
 {
@@ -10,6 +38,9 @@ private:
     const systime_t m_period;
     
 protected:
+    /**
+     * The target period between calls to PeriodicTask.
+     */
     const float m_periodSeconds;
 
     /**
@@ -47,9 +78,10 @@ private:
 public:
     PeriodicController(const char* name, tprio_t priority, float frequencyHz)
         : ThreadController<TStackSize>(name, priority)
+        // First compute the period in systime_t
         , m_period(CH_CFG_ST_FREQUENCY / frequencyHz)
-        // we compute floating point seconds to get the ACTUAL period
-        // as it may be different due to rounding errors
+        // Then compute the float period off of the integer one to
+        //  get the ACTUAL period, which may be slightly different than requested.
         , m_periodSeconds(m_period / (float)CH_CFG_ST_FREQUENCY)
     {
     }
