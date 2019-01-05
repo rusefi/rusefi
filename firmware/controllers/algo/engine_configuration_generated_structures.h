@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 21:51:55 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -822,9 +822,10 @@ typedef struct {
 	 */
 	brain_pin_e spi3sckPin;
 	/**
+	 * Saab Combustion Detection Module knock signal input pin
 	 * offset 752
 	 */
-	float unusedBc;
+	brain_pin_e cdmInputPin;
 	/**
 	 * offset 756
 	 */
@@ -2460,4 +2461,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 21:51:55 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019

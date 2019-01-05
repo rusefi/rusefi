@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 17:02:17 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -562,8 +562,8 @@ public class Fields {
 	public static final int spi3misoPin_offset = 1352;
 	public static final int spi3misoPin_offset_hex = 548;
 	public static final int spi3sckPin_offset = 1356;
-	public static final int unusedBc_offset = 1360;
-	public static final int unusedBc_offset_hex = 550;
+	public static final int cdmInputPin_offset = 1360;
+	public static final int cdmInputPin_offset_hex = 550;
 	public static final int joystickCenterPin_offset = 1364;
 	public static final int joystickCenterPin_offset_hex = 554;
 	public static final int joystickAPin_offset = 1368;
@@ -1547,7 +1547,7 @@ public class Fields {
 	public static final Field SPI3MOSIPIN = Field.create("SPI3MOSIPIN", 1348, FieldType.INT, brain_pin_e);
 	public static final Field SPI3MISOPIN = Field.create("SPI3MISOPIN", 1352, FieldType.INT, brain_pin_e);
 	public static final Field SPI3SCKPIN = Field.create("SPI3SCKPIN", 1356, FieldType.INT, brain_pin_e);
-	public static final Field UNUSEDBC = Field.create("UNUSEDBC", 1360, FieldType.FLOAT);
+	public static final Field CDMINPUTPIN = Field.create("CDMINPUTPIN", 1360, FieldType.INT, brain_pin_e);
 	public static final Field JOYSTICKCENTERPIN = Field.create("JOYSTICKCENTERPIN", 1364, FieldType.INT, brain_pin_e);
 	public static final Field JOYSTICKAPIN = Field.create("JOYSTICKAPIN", 1368, FieldType.INT, brain_pin_e);
 	public static final Field JOYSTICKBPIN = Field.create("JOYSTICKBPIN", 1372, FieldType.INT, brain_pin_e);
