@@ -627,7 +627,7 @@ void triggerInfo(void) {
 	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
 
 	scheduleMsg(logger, "perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
-	scheduleMsg(logger, "IRQ CPU utilization %f%%", perSecondIrqDuration / 168000000.0 * 100);
+	scheduleMsg(logger, "IRQ CPU utilization %f%%", perSecondIrqDuration / (float)CORE_CLOCK * 100);
 
 #endif /* EFI_CLOCK_LOCKS */
 
