@@ -10,6 +10,7 @@
  */
 
 #include "global.h"
+#if EFI_PROD_CODE
 #include "pin_repository.h"
 #include "eficonsole.h"
 #include "memstreams.h"
@@ -184,3 +185,4 @@ void unmarkPin(brain_pin_e brainPin) {
 	}
 }
 
+#endif

@@ -41,6 +41,10 @@ if not exist deliver/rusefi_release.hex exit -1
 if not exist deliver/rusefi_debug.hex echo FAILED DEBUG
 if not exist deliver/rusefi_debug.hex exit -1
 
+..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_release.hex -out deliver/rusefi_release.dfu
+..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_debug.hex   -out deliver/rusefi_debug.dfu
+
+
 cd ..
 
 

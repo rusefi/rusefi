@@ -120,7 +120,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(TEST_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(PROJECT_DIR)/controllers/error_handling.cpp \
-		  $(PROJECT_DIR)/hw_layer/HIP9011.cpp \
+	$(HW_LAYER_EMS_CPP) \
 		  $(PROJECT_DIR)/hw_layer/sensors/CJ125.cpp \
 	$(TRIGGER_SRC_CPP) \
 	main.cpp

@@ -170,6 +170,13 @@ void runConsoleLoop(ts_channel_s *console) {
 
 		if (consoleInBinaryMode) {
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
+			/**
+			 * Originally there was an attempt to have a human-readable text-based custom communication
+			 * protocol between rusEfi console and rusEfi firmware. This is still kind of a bit functional
+			 * but probably not very useful.
+			 * Here we switch from that text mode into the protocol which is currently known as TunerStudio protocol
+			 * even while historically it could be rooted in some older software.
+			 */
 			logMsg("Switching to binary mode\r\n");
 #endif
 			// switch to binary protocol

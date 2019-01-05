@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "test_c125.h"
 #include "gtest/gtest.h"
 
 TEST(testCJ125, todo) {

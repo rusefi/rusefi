@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 19 21:31:59 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -822,9 +822,10 @@ typedef struct {
 	 */
 	brain_pin_e spi3sckPin;
 	/**
+	 * Saab Combustion Detection Module knock signal input pin
 	 * offset 752
 	 */
-	float hip9011Gain;
+	brain_pin_e cdmInputPin;
 	/**
 	 * offset 756
 	 */
@@ -1624,6 +1625,7 @@ typedef struct {
 	 */
 	pid_s idleRpmPid;
 	/**
+	 * Wall wetting/evaporation factor/Tau factor/fuel film
 	 * offset 1904
 	 */
 	float addedToWallCoef;
@@ -2208,7 +2210,11 @@ typedef struct {
 	/**
 	 * offset 4156
 	 */
-	int unusedEnd[581];
+	float hip9011Gain;
+	/**
+	 * offset 4160
+	 */
+	int unusedEnd[580];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2455,4 +2461,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed Dec 19 21:31:59 EST 2018
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019

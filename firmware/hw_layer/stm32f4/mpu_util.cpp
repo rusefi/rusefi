@@ -6,6 +6,9 @@
  */
 
 #include "global.h"
+
+#if EFI_PROD_CODE
+
 #include "mpu_util.h"
 #include "error_handling.h"
 #include "engine.h"
@@ -410,4 +413,6 @@ CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 }
 
 #endif /* EFI_CAN_SUPPORT */
+
+#endif /* EFI_PROD_CODE */
 

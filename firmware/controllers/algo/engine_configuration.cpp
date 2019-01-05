@@ -288,6 +288,7 @@ static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration
 }
 
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
+	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
@@ -310,6 +311,8 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->LIS302DLCsPin = GPIO_UNASSIGNED;
 	engineConfiguration->flexFuelSensor = GPIO_UNASSIGNED;
 	engineConfiguration->test557pin = GPIO_UNASSIGNED;
+
+	boardConfiguration->cdmInputPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
@@ -1052,7 +1055,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->spi3misoPin = GPIOB_4;
 	boardConfiguration->spi3sckPin = GPIOB_3;
 
-	boardConfiguration->hip9011Gain = 1;
+	engineConfiguration->hip9011Gain = 1;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	setHip9011FrankensoPinout();
 #endif

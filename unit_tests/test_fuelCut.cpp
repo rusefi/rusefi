@@ -32,8 +32,8 @@ void testCoastingFuelCut() {
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
 	// configure TPS
-	eth.engine.engineConfiguration->tpsMin = 0;
-	eth.engine.engineConfiguration->tpsMax = 10;
+	eth.engine.engineConfigurationPtr->tpsMin = 0;
+	eth.engine.engineConfigurationPtr->tpsMax = 10;
 
 	// basic engine setup
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

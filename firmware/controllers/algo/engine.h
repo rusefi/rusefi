@@ -344,7 +344,10 @@ public:
 
 	RpmCalculator rpmCalculator;
 	persistent_config_s *config;
-	engine_configuration_s *engineConfiguration;
+	/**
+	 * we use funny unique name to make sure that compiler is not confused between global variable and class member
+	 */
+	engine_configuration_s *engineConfigurationPtr;
 
 	/**
 	 * this is about 'stopengine' command

@@ -21,8 +21,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "engine.h"
 #include "global.h"
+
+#if EFI_PROD_CODE
+#include "engine.h"
 #include "board_test.h"
 #include "pin_repository.h"
 #include "efiGpio.h"
@@ -229,3 +231,4 @@ void initBoardTest(void) {
 		chThdSleepSeconds(1);
 	}
 }
+#endif  /* EFI_PROD_CODE */

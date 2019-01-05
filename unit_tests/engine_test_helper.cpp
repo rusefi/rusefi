@@ -31,10 +31,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	schedulingQueue.clear();
 	enginePins.reset();
 
-	Engine *engine = &this->engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	board_configuration_s * boardConfiguration = &persistentConfig.engineConfiguration.bc;
 	persistent_config_s *config = &persistentConfig;
+	Engine *engine = &this->engine;
+	engine->setConfig(config);
+	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
+	board_configuration_s * boardConfiguration = &persistentConfig.engineConfiguration.bc;
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
@@ -57,7 +58,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engine->engineConfiguration->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
+	engine->engineConfigurationPtr->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
 
 	initThermistors(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	// this is needed to have valid CLT and IAT.
@@ -76,8 +77,8 @@ void EngineTestHelper::fireRise(int delayMs) {
 }
 
 void EngineTestHelper::firePrimaryTriggerRise() {
-	board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+	board_configuration_s * boardConfiguration = &engine.engineConfigurationPtr->bc;
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
 }
 
 void EngineTestHelper::fireFall(int delayMs) {
@@ -86,8 +87,8 @@ void EngineTestHelper::fireFall(int delayMs) {
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
-	board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
-	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
+	board_configuration_s * boardConfiguration = &engine.engineConfigurationPtr->bc;
+	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {

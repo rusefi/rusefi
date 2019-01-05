@@ -7,26 +7,27 @@
  */
 
 #include "global.h"
+
+#include "trigger_input.h"
+#include "servo.h"
+
+#if EFI_PROD_CODE
 #include "adc_inputs.h"
 #include "can_hw.h"
-#include "console_io.h"
 #include "hardware.h"
 #include "io_pins.h"
-#include "pin_repository.h"
 #include "rtc_helper.h"
 #include "rfiutil.h"
 #include "injector_central.h"
 #include "vehicle_speed.h"
 #include "yaw_rate_sensor.h"
-
-#include "trigger_input.h"
-#include "eficonsole.h"
+#include "pin_repository.h"
 #include "max31855.h"
-#include "mpu_util.h"
 #include "accelerometer.h"
-#include "servo.h"
+#include "eficonsole.h"
+#include "console_io.h"
 
-#if EFI_PROD_CODE
+#include "mpu_util.h"
 //#include "usb_msd.h"
 
 #include "AdcConfiguration.h"
@@ -41,11 +42,12 @@
 #include "settings.h"
 #include "algo.h"
 #include "joystick.h"
+#include "cdm_ion_sense.h"
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "aux_pid.h"
-#endif /* EFI_PROD_CODE */
+
 
 #if EFI_SPEED_DENSITY
 #include "map_averaging.h"
@@ -321,7 +323,7 @@ void showBor(void) {
 void initHardware(Logging *l) {
 	efiAssertVoid(CUSTOM_IH_STACK, getRemainingStack(chThdGetSelfX()) > 256, "init h");
 	sharedLogger = l;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
@@ -489,6 +491,10 @@ void initHardware(Logging *l) {
 	initVehicleSpeed(sharedLogger);
 #endif
 
+#if EFI_CDM_INTEGRATION
+	cdmIonInit();
+#endif
+
 #if HAL_USE_EXT || defined(__DOXYGEN__)
 	initJoystick(sharedLogger);
 #endif
@@ -499,3 +505,5 @@ void initHardware(Logging *l) {
 }
 
 #endif /* EFI_PROD_CODE */
+
+#endif  /* EFI_PROD_CODE || EFI_SIMULATOR */

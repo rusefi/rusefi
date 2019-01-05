@@ -21,12 +21,11 @@ extern const float gainLookupInReverseOrder[GAIN_LOOKUP_SIZE];
 extern const float bandFreqLookup[BAND_LOOKUP_SIZE];
 
 float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth);
-int getHip9011GainIndex(float gain);
+
 int getHip9011BandIndex(float frequency);
 void prepareHip9011RpmLookup(float angleWindowWidth);
 
 #define GAIN_INDEX(gain) (GAIN_LOOKUP_SIZE - 1 - findIndexMsg("fGain", gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, (gain)))
-#define BAND(bore) (900 / (PIF * (bore) / 2))
 
 extern float rpmLookup[INT_LOOKUP_SIZE];
 int getIntegrationIndexByRpm(float rpm);

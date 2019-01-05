@@ -8,7 +8,10 @@
 #ifndef CAN_HW_H_
 #define CAN_HW_H_
 
+#include "efifeatures.h"
+#if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
+#endif /* EFI_TUNER_STUDIO */
 
 // CAN Bus ID for broadcast
 /**
@@ -33,13 +36,16 @@
 #define CAN_VAG_CLT 0x289
 
 void initCan(void);
-void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void commonTxInit(int eid);
 void sendCanMessage();
 void setCanType(int type);
 void setTxBit(int offset, int index);
+
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void postCanState(TunerStudioOutputChannels *tsOutputChannels);
+#endif
 
 #endif /* CAN_HW_H_ */

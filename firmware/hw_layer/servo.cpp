@@ -12,9 +12,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "engine.h"
+
+// todo: EFI_SERVO macro
+#if EFI_PROD_CODE || EFI_SIMULATOR
 #include "servo.h"
 #include "pin_repository.h"
-#include "engine.h"
 
 // todo: remove this hack once we have next incompatible configuration change
 #define TEMP_FOR_COMPATIBILITY GPIOA_0
@@ -81,5 +84,5 @@ void initServo(void) {
 
 	chThdCreateStatic(seThreadStack, sizeof(seThreadStack), NORMALPRIO, (tfunc_t)(void*) seThread, NULL);
 }
-
+#endif
 
