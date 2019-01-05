@@ -761,9 +761,9 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_PROD_CODE */
 }
 
-static char UNUSED_RAM_SIZE[10000];
+static char UNUSED_RAM_SIZE[10500];
 
-static char UNUSED_CCM_SIZE[7000] CCM_OPTIONAL;
+static char UNUSED_CCM_SIZE[7100] CCM_OPTIONAL;
 
 /**
  * See also VCS_VERSION
