@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 17:02:17 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 21:51:55 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1624,6 +1624,7 @@ typedef struct {
 	 */
 	pid_s idleRpmPid;
 	/**
+	 * Wall wetting/evaporation factor/Tau factor/fuel film
 	 * offset 1904
 	 */
 	float addedToWallCoef;
@@ -2459,4 +2460,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 17:02:17 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 21:51:55 EST 2019
