@@ -15,6 +15,7 @@
 #include "microsecond_timer.h"
 #include "scheduler.h"
 #include "rfiutil.h"
+#include "PeriodicController.h"
 
 // https://my.st.com/public/STe2ecommunities/mcu/Lists/cortex_mx_stm32/Flat.aspx?RootFolder=https%3a%2f%2fmy.st.com%2fpublic%2fSTe2ecommunities%2fmcu%2fLists%2fcortex_mx_stm32%2fInterrupt%20on%20CEN%20bit%20setting%20in%20TIM7&FolderCTID=0x01200200770978C69A1141439FE559EB459D7580009C4E14902C3CDE46A77F0FFD06506F5B&currentviews=474
 
@@ -72,6 +73,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 
 	if (GPTDEVICE.state == GPT_ONESHOT) {
 		gptStopTimerI(&GPTDEVICE);
+		
 	}
 	if (GPTDEVICE.state != GPT_READY) {
 		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d", GPTDEVICE.state);
@@ -113,36 +115,34 @@ static void callback(GPTDriver *gptp) {
 	}
 }
 
-static void usTimerWatchDog(void) {
-	if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
-		strcpy(buff, "no_event");
-		itoa10(&buff[8], lastSetTimerValue);
-		firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
-		return;
+
+class MicrosecondTimerWatchdogController : public PeriodicController<UTILITY_THREAD_STACK_SIZE>
+{
+public:
+	MicrosecondTimerWatchdogController()
+		: PeriodicController("timer watchdog", NORMALPRIO, 1.0f)
+	{
 	}
 
-	msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
-	// 2 seconds of inactivity would not look right
-	efiAssertVoid(CUSTOM_ERR_6682, getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
+private:
+	void PeriodicTask(efitime_t nowNt) override
+	{
+		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
+			strcpy(buff, "no_event");
+			itoa10(&buff[8], lastSetTimerValue);
+			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
+			return;
+		}
 
-}
-
-static msg_t mwThread(int param) {
-	(void)param;
-	chRegSetThreadName("timer watchdog");
-
-	while (true) {
-		chThdSleepMilliseconds(1000); // once a second is enough
-		usTimerWatchDog();
+		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
+		// 2 seconds of inactivity would not look right
+		efiAssertVoid(CUSTOM_ERR_6682, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
 	}
-#if defined __GNUC__
-	return -1;
-#endif        
-}
+};
 
-//static const GPTConfig gpt5cfg;
+MicrosecondTimerWatchdogController watchdogControllerInstance;
 
-static const GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
+static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 callback, /* Timer callback.*/
 0, 0 };
 
@@ -152,7 +152,7 @@ void initMicrosecondTimer(void) {
 
 	lastSetTimerTimeNt = getTimeNowNt();
 #if EFI_EMULATE_POSITION_SENSORS
-	chThdCreateStatic(mwThreadStack, sizeof(mwThreadStack), NORMALPRIO, (tfunc_t)(void*) mwThread, NULL);
+	watchdogControllerInstance.Start();
 #endif /* EFI_ENGINE_EMULATOR */
 
 //	// test code
