@@ -59,19 +59,20 @@ typedef struct {
 	input_queue_t fifoRxQueue;
 } uart_dma_s;
 
-#define TS_HELLO_COMMAND_DEPRECATED 'H' // 0x48
-#define TS_HELLO_COMMAND 'S' // 0x53 queryCommand
+// These commands are used exclusively by the rusEfi console
 #define TS_TEST_COMMAND 't' // 0x74
-#define TS_TOOTH_COMMAND 'L' // 0x4C
-#define TS_LEGACY_HELLO_COMMAND 'Q' // 0x51
+#define TS_GET_TEXT 'G' // 0x47
+#define TS_GET_FILE_RANGE '2'
+#define TS_EXECUTE 'E' // 0x45
+
+// These commands are used by TunerStudio and the rusEfi console
+#define TS_HELLO_COMMAND 'S' // 0x53 queryCommand
 #define TS_OUTPUT_COMMAND 'O' // 0x4F ochGetCommand
 #define TS_READ_COMMAND 'R' // 0x52
 #define TS_PAGE_COMMAND 'P' // 0x50
 #define TS_COMMAND_F 'F' // 0x46
-#define TS_EXECUTE 'E' // 0x45
-#define TS_GET_TEXT 'G' // 0x47
-#define TS_GET_FILE_RANGE '2'
 #define TS_GET_FIRMWARE_VERSION 'V' // versionInfo
+#define TS_TOOTH_COMMAND 'L' // 0x4C
 
 #define TS_SINGLE_WRITE_COMMAND 'W' // 0x57 pageValueWrite
 #define TS_CHUNK_WRITE_COMMAND 'C' // 0x43 pageChunkWrite
