@@ -311,6 +311,8 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->flexFuelSensor = GPIO_UNASSIGNED;
 	engineConfiguration->test557pin = GPIO_UNASSIGNED;
 
+	boardConfiguration->cdmInputPin = GPIO_UNASSIGNED;
+
 	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
