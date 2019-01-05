@@ -1001,12 +1001,12 @@ typedef struct {
 
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-plain_get_short_s getS_plain[] = {
+const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
 		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
 };
 
-plain_get_integer_s getI_plain[] = {
+const plain_get_integer_s getI_plain[] = {
 //		{"cranking_rpm", &engineConfiguration->cranking.rpm},
 //		{"cranking_injection_mode", setCrankingInjectionMode},
 //		{"injection_mode", setInjectionMode},
@@ -1043,7 +1043,7 @@ plain_get_integer_s getI_plain[] = {
 		//		{"", },
 };
 
-plain_get_float_s getF_plain[] = {
+const plain_get_float_s getF_plain[] = {
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &boardConfiguration->manIdlePosition},
 		{"ignition_offset", &engineConfiguration->ignitionOffset},
@@ -1060,7 +1060,7 @@ plain_get_float_s getF_plain[] = {
 static void getValue(const char *paramStr) {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	{
-		plain_get_integer_s *currentI = &getI_plain[0];
+		const plain_get_integer_s *currentI = &getI_plain[0];
 		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
 			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
 				scheduleMsg(&logger, "%s value: %d", currentI->token, *currentI->value);
@@ -1070,7 +1070,7 @@ static void getValue(const char *paramStr) {
 		}
 	}
 
-	plain_get_float_s *currentF = &getF_plain[0];
+	const plain_get_float_s *currentF = &getF_plain[0];
 	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
 		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
 			float value = *currentF->value;
@@ -1126,7 +1126,7 @@ typedef struct {
 	VoidFloat callback;
 } command_f_s;
 
-command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
+const command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"mock_pedal_position", setMockPedalPosition},
 		{"mock_maf_voltage", setMockMafVoltage},
 		{"mock_afr_voltage", setMockAfrVoltage},
@@ -1190,7 +1190,7 @@ static void setTpsErrorDetectionTooHigh(int v) {
 	engineConfiguration->tpsErrorDetectionTooHigh = v;
 }
 
-command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
+const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"call_from_pitstop", setCallFromPitStop},
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
@@ -1242,7 +1242,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	float valueF = atoff(valueStr);
 	int valueI = atoi(valueStr);
 
-	command_f_s *currentF = &commandsF[0];
+	const command_f_s *currentF = &commandsF[0];
 	while (currentF < commandsF + sizeof(commandsF)/sizeof(commandsF[0])) {
 		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
 			currentF->callback(valueF);
@@ -1251,7 +1251,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		currentF++;
 	}
 
-	command_i_s *currentI = &commandsI[0];
+	const command_i_s *currentI = &commandsI[0];
 	while (currentI < commandsI + sizeof(commandsI)/sizeof(commandsI[0])) {
 		if (strEqualCaseInsensitive(paramStr, currentI->token)) {
 			currentI->callback(valueI);
