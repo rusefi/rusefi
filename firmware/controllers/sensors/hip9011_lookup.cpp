@@ -69,11 +69,6 @@ int getIntegrationIndexByRpm(float rpm) {
 	return i == -1 ? INT_LOOKUP_SIZE - 1 : INT_LOOKUP_SIZE - i - 1;
 }
 
-int getHip9011GainIndex(float gain) {
-	int i = GAIN_INDEX(gain);
-	// GAIN_LOOKUP_SIZE is returned for index which is too low
-	return i == GAIN_LOOKUP_SIZE ? GAIN_LOOKUP_SIZE - 1 : i;
-}
 
 /**
  * @param frequency knock frequencey, in kHz

@@ -307,8 +307,8 @@ void hipAdcCallback(adcsample_t adcValue) {
 		}
 
 		int integratorIndex = getIntegrationIndexByRpm(GET_RPM());
-		int gainIndex = getHip9011GainIndex(engineConfiguration->hip9011Gain);
-		int bandIndex = getBandIndex();
+		int gainIndex = getHip9011GainIndex(PASS_HIP_PARAMS);
+		int bandIndex = getBandIndex(PASS_HIP_PARAMS);
 		int prescalerIndex = engineConfiguration->hip9011PrescalerAndSDO;
 
 

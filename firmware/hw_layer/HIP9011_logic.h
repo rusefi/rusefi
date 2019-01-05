@@ -46,13 +46,16 @@ public:
 #else
 
 #define PASS_HIP_PARAMS CONFIG(knockBandCustom), \
-		CONFIG(cylinderBore)
+		CONFIG(cylinderBore), \
+		CONFIG(hip9011Gain)
 
 #define FORWARD_HIP_PARAMS knockBandCustom, \
-		cylinderBore
+		cylinderBore, \
+		hip9011Gain
 
 #define DEFINE_HIP_PARAMS float knockBandCustom,\
-		float cylinderBore
+		float cylinderBore, \
+		float hip9011Gain
 
 #define GET_CONFIG_VALUE(x) x
 #endif
@@ -60,5 +63,6 @@ public:
 
 float getHIP9011Band(DEFINE_HIP_PARAMS);
 int getBandIndex(DEFINE_HIP_PARAMS);
+int getHip9011GainIndex(DEFINE_HIP_PARAMS);
 
 #endif /* HW_LAYER_HIP9011_LOGIC_H_ */

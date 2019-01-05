@@ -21,7 +21,7 @@ extern const float gainLookupInReverseOrder[GAIN_LOOKUP_SIZE];
 extern const float bandFreqLookup[BAND_LOOKUP_SIZE];
 
 float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth);
-int getHip9011GainIndex(float gain);
+
 int getHip9011BandIndex(float frequency);
 void prepareHip9011RpmLookup(float angleWindowWidth);
 
