@@ -61,8 +61,8 @@ void testFuelMap(void) {
 	assertEqualsM("lag", 1.04, getInjectorLag(12 PASS_ENGINE_PARAMETER_SUFFIX));
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		eth.engine.engineConfiguration->injector.battLagCorrBins[i] = i;
-		eth.engine.engineConfiguration->injector.battLagCorr[i] = 0.5 + 2 * i;
+		eth.engine.engineConfigurationPtr->injector.battLagCorrBins[i] = i;
+		eth.engine.engineConfigurationPtr->injector.battLagCorr[i] = 0.5 + 2 * i;
 	}
 
 	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);

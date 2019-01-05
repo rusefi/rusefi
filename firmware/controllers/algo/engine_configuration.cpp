@@ -288,6 +288,7 @@ static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration
 }
 
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
+	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 

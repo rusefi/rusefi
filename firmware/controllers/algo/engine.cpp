@@ -187,7 +187,8 @@ void Engine::reset() {
 	injectionDuration = 0;
 	clutchDownState = clutchUpState = brakePedalState = false;
 	memset(&m, 0, sizeof(m));
-
+	config = NULL;
+	engineConfigurationPtr = NULL;
 }
 
 FuelConsumptionState::FuelConsumptionState() {
@@ -369,13 +370,13 @@ void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUF
  * so that we can prepare some helper structures
  */
 void Engine::preCalculate() {
-	sparkTable.preCalc(engineConfiguration->sparkDwellRpmBins,
-			engineConfiguration->sparkDwellValues);
+	sparkTable.preCalc(engineConfigurationPtr->sparkDwellRpmBins,
+			engineConfigurationPtr->sparkDwellValues);
 
 #if ! EFI_UNIT_TEST
-	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
+	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfigurationPtr->analogInputDividerCoefficient;
 #else
-	adcToVoltageInputDividerCoefficient = engineConfiguration->analogInputDividerCoefficient;
+	adcToVoltageInputDividerCoefficient = engineConfigurationPtr->analogInputDividerCoefficient;
 #endif
 
 	/**
@@ -391,7 +392,7 @@ void Engine::preCalculate() {
 
 void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
-	engineConfiguration = &config->engineConfiguration;
+	engineConfigurationPtr = &config->engineConfiguration;
 	memset(config, 0, sizeof(persistent_config_s));
 	engineState.warmupAfrPid.initPidClass(&config->engineConfiguration.warmupAfrPid);
 }
@@ -402,7 +403,7 @@ void Engine::printKnockState(void) {
 
 void Engine::knockLogic(float knockVolts) {
 	this->knockVolts = knockVolts;
-    knockNow = knockVolts > engineConfiguration->knockVThreshold;
+    knockNow = knockVolts > engineConfigurationPtr->knockVThreshold;
     /**
      * KnockCount is directly proportional to the degrees of ignition
      * advance removed
@@ -419,7 +420,7 @@ void Engine::knockLogic(float knockVolts) {
     if (knockNow) {
         knockEver = true;
         timeOfLastKnockEvent = getTimeNowUs();
-        if (knockCount < engineConfiguration->maxKnockSubDeg)
+        if (knockCount < engineConfigurationPtr->maxKnockSubDeg)
             knockCount++;
     } else if (knockCount >= 1) {
         knockCount--;
