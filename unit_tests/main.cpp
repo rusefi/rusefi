@@ -89,14 +89,11 @@ GTEST_API_ int main(int argc, char **argv) {
 	/**
 	 * Data structures and general methods
 	 */
-	testCyclicBuffer();
-	testCrc();
-	testOverflow64Counter();
 	testFindIndex();
 	testInterpolate3d();
 	testInterpolate2d();
 	testSetTableValue();
-	testHistogram();
+
 	testFLStack();
 
 	testSignalExecutor();
