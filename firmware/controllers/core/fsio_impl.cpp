@@ -408,14 +408,20 @@ static void setFsioFrequency(int index, int frequency) {
 }
 #endif /* EFI_PROD_CODE */
 
+/**
+ * @param out param! current and new value as long as element is not NULL
+ */
+static void updateValueOrWarning(LEElement * element, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (element == NULL) {
+		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
+	} else {
+		*value = calc.getValue2(*value, element PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+}
+
 static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	LEElement * element = fsioLogics[8 - 1 + servoIndex];
-
-	if (element == NULL) {
-		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", "servo");
-	} else {
-		engine->servoValues[servoIndex] = calc.getValue2(engine->servoValues[servoIndex], element PASS_ENGINE_PARAMETER_SUFFIX);
-	}
+	updateValueOrWarning(element, "servo", &engine->servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**
@@ -464,23 +470,13 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
 		LEElement * element = fsioLogics[MAGIC_OFFSET_FOR_IDLE_TARGET_RPM];
-		if (element == NULL) {
-			warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", "RPM targer");
-		} else {
-			engine->fsioIdleTargetRPMAdjustment = calc.getValue2(engine->fsioIdleTargetRPMAdjustment, element PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-
+		updateValueOrWarning(element, "RPM target", &engine->fsioIdleTargetRPMAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
 	}
+
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
 		LEElement * element = fsioLogics[MAGIC_OFFSET_FOR_TIMING_FSIO];
-
-		if (element == NULL) {
-			warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", "timing");
-		} else {
-			engine->fsioTimingAdjustment = calc.getValue2(engine->fsioTimingAdjustment, element PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		updateValueOrWarning(element, "timing", &engine->fsioTimingAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-
 
 	if (engineConfiguration->useFSIO8ForServo1) {
 		useFsioForServo(0 PASS_ENGINE_PARAMETER_SUFFIX);
