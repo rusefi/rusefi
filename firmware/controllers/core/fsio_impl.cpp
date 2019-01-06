@@ -480,7 +480,7 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->useFSIO4ForSeriousEngineWarning) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_ENGINE_WARNING, "eng warning", &ENGINE(fsioState.isEngineWarning) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-#endif
+#endif /* EFI_ENABLE_ENGINE_WARNING */
 
 #if EFI_ENABLE_CRITICAL_ENGINE_STOP
 	if (engineConfiguration->useFSIO5ForCriticalIssueEngineStop) {
@@ -491,7 +491,7 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 		}
 	}
-#endif
+#endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &ENGINE(fsioIdleTargetRPMAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
