@@ -411,7 +411,8 @@ static void setFsioFrequency(int index, int frequency) {
 /**
  * @param out param! current and new value as long as element is not NULL
  */
-static void updateValueOrWarning(LEElement * element, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void updateValueOrWarning(int fsioIndex, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	LEElement * element = fsioLogics[fsioIndex];
 	if (element == NULL) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
@@ -420,8 +421,7 @@ static void updateValueOrWarning(LEElement * element, const char *msg, float *va
 }
 
 static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	LEElement * element = fsioLogics[8 - 1 + servoIndex];
-	updateValueOrWarning(element, "servo", &engine->servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
+	updateValueOrWarning(8 - 1 + servoIndex, "servo", &engine->servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**
@@ -469,13 +469,11 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
-		LEElement * element = fsioLogics[MAGIC_OFFSET_FOR_IDLE_TARGET_RPM];
-		updateValueOrWarning(element, "RPM target", &engine->fsioIdleTargetRPMAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
+		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &engine->fsioIdleTargetRPMAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
-		LEElement * element = fsioLogics[MAGIC_OFFSET_FOR_TIMING_FSIO];
-		updateValueOrWarning(element, "timing", &engine->fsioTimingAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
+		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &engine->fsioTimingAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO8ForServo1) {
