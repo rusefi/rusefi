@@ -33,9 +33,6 @@ private:
     {
         ThreadController* t = static_cast<ThreadController*>(thread);
 
-        // Set the thread's name to the name of the controller.
-        regSetThreadName(GetName());
-
         // Run our thread task
         t->ThreadTask();
     }
@@ -60,5 +57,6 @@ public:
     virtual void Start()
     {
         m_thread = chThdCreateStatic(m_threadstack, sizeof(m_threadstack), m_prio, StaticThreadTaskAdapter, this);
+        m_thread->name = GetName();
     }
 };
