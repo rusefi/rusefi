@@ -144,8 +144,8 @@ public class AutoTest {
 
     private static void test2003DodgeNeon() {
         setEngineType(23);
-        sendCommand("set suckedOffCoef 0");
-        sendCommand("set addedToWallCoef 0");
+        sendCommand("set wwaeTau 0");
+        sendCommand("set wwaeBeta 0");
         sendCommand("set mock_map_voltage 1");
         sendCommand("set mock_vbatt_voltage 1.20");
         sendCommand("disable cylinder_cleanup");
