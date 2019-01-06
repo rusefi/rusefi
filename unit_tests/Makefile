@@ -172,6 +172,7 @@ INCDIR = . \
 	test_data_structures \
 	googletest/googletest \
 	googletest/googletest/include \
+	tests \
 	test_basic_math
 	
 
