@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 16:40:23 EST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -632,7 +632,10 @@ public class Fields {
 	public static final int useFSIO11ForServo4_offset = 1472;
 	public static final int useFSIO12ForServo5_offset = 1472;
 	public static final int useFSIO15ForIdleRpmAdjustment_offset = 1472;
-	public static final int unused_bit_1472_27_offset = 1472;
+	public static final int useFSIO5ForCriticalIssueEngineStop_offset = 1472;
+	public static final int useFSIO4ForSeriousEngineWarning_offset = 1472;
+	public static final int unused_bit_1472_29_offset = 1472;
+	public static final int unused_bit_1472_30_offset = 1472;
 	public static final int hipOutputChannel_offset = 1476;
 	public static final int idleMode_offset = 1480;
 	public static final int isInjectionEnabled_offset = 1484;
@@ -1603,7 +1606,10 @@ public class Fields {
 	public static final Field USEFSIO11FORSERVO4 = Field.create("USEFSIO11FORSERVO4", 1472, FieldType.BIT, 24);
 	public static final Field USEFSIO12FORSERVO5 = Field.create("USEFSIO12FORSERVO5", 1472, FieldType.BIT, 25);
 	public static final Field USEFSIO15FORIDLERPMADJUSTMENT = Field.create("USEFSIO15FORIDLERPMADJUSTMENT", 1472, FieldType.BIT, 26);
-	public static final Field UNUSED_BIT_1472_27 = Field.create("UNUSED_BIT_1472_27", 1472, FieldType.BIT, 27);
+	public static final Field USEFSIO5FORCRITICALISSUEENGINESTOP = Field.create("USEFSIO5FORCRITICALISSUEENGINESTOP", 1472, FieldType.BIT, 27);
+	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1472, FieldType.BIT, 28);
+	public static final Field UNUSED_BIT_1472_29 = Field.create("UNUSED_BIT_1472_29", 1472, FieldType.BIT, 29);
+	public static final Field UNUSED_BIT_1472_30 = Field.create("UNUSED_BIT_1472_30", 1472, FieldType.BIT, 30);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1476, FieldType.INT, adc_channel_e);
 	public static final Field IDLEMODE = Field.create("IDLEMODE", 1480, FieldType.INT);
 	public static final Field ISINJECTIONENABLED = Field.create("ISINJECTIONENABLED", 1484, FieldType.BIT, 0);

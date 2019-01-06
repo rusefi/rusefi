@@ -133,5 +133,6 @@ public:
 const char *getNextToken(const char *line, char *buffer, const int bufferSize);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
+bool float2bool(float v);
 
 #endif /* LOGIC_EXPRESSION_H_ */

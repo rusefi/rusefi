@@ -14,6 +14,7 @@
 #if EFI_FSIO || defined(__DOXYGEN__)
 
 #include "fsio_impl.h"
+#include "settings.h"
 #include "allsensors.h"
 #include "rpm_calculator.h"
 #include "efiGpio.h"
@@ -25,6 +26,8 @@
  */
 #define NO_PWM 0
 
+#define MAGIC_OFFSET_FOR_ENGINE_WARNING 4
+#define MAGIC_OFFSET_FOR_CRITICAL_ENGINE 5
 
 // see useFSIO15ForIdleRpmAdjustment
 #define MAGIC_OFFSET_FOR_IDLE_TARGET_RPM 14
@@ -410,13 +413,18 @@ static void setFsioFrequency(int index, int frequency) {
 
 /**
  * @param out param! current and new value as long as element is not NULL
+ * @return 'true' if value has changed
  */
-static void updateValueOrWarning(int fsioIndex, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static bool updateValueOrWarning(int fsioIndex, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	LEElement * element = fsioLogics[fsioIndex];
 	if (element == NULL) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
+		return false;
 	} else {
-		*value = calc.getValue2(*value, element PASS_ENGINE_PARAMETER_SUFFIX);
+		float beforeValue = *value;
+		*value = calc.getValue2(beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+		// floating '==' comparison without EPS seems fine here
+		return (beforeValue != *value);
 	}
 }
 
@@ -468,12 +476,29 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
+#if EFI_ENABLE_ENGINE_WARNING
+	if (engineConfiguration->useFSIO4ForSeriousEngineWarning) {
+		updateValueOrWarning(MAGIC_OFFSET_FOR_ENGINE_WARNING, "eng warning", &ENGINE(fsioState.isEngineWarning) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif
+
+#if EFI_ENABLE_CRITICAL_ENGINE_STOP
+	if (engineConfiguration->useFSIO5ForCriticalIssueEngineStop) {
+		bool changed = updateValueOrWarning(MAGIC_OFFSET_FOR_CRITICAL_ENGINE, "eng critical", &ENGINE(fsioState.isCriticalEngineCondition) PASS_ENGINE_PARAMETER_SUFFIX);
+		if (changed && float2bool(ENGINE(fsioState.isCriticalEngineCondition))) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+			scheduleStopEngine();
+#endif
+		}
+	}
+#endif
+
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &engine->fsioIdleTargetRPMAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
+		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &ENGINE(fsioIdleTargetRPMAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &engine->fsioTimingAdjustment PASS_ENGINE_PARAMETER_SUFFIX);
+		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO8ForServo1) {

@@ -923,8 +923,14 @@
 #define useFSIO12ForServo5_offset_hex 5c0
 #define useFSIO15ForIdleRpmAdjustment_offset 1472
 #define useFSIO15ForIdleRpmAdjustment_offset_hex 5c0
-#define unused_bit_1472_27_offset 1472
-#define unused_bit_1472_27_offset_hex 5c0
+#define useFSIO5ForCriticalIssueEngineStop_offset 1472
+#define useFSIO5ForCriticalIssueEngineStop_offset_hex 5c0
+#define useFSIO4ForSeriousEngineWarning_offset 1472
+#define useFSIO4ForSeriousEngineWarning_offset_hex 5c0
+#define unused_bit_1472_29_offset 1472
+#define unused_bit_1472_29_offset_hex 5c0
+#define unused_bit_1472_30_offset 1472
+#define unused_bit_1472_30_offset_hex 5c0
 #define hipOutputChannel_offset 1476
 #define hipOutputChannel_offset_hex 5c4
 #define idleMode_offset 1480
