@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 23:35:34 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1366,8 +1366,19 @@ typedef struct {
 	offset 1472 bit 26 */
 	bool useFSIO15ForIdleRpmAdjustment : 1;
 	/**
+	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1472 bit 27 */
-	bool unused_bit_1472_27 : 1;
+	bool useFSIO5ForCriticalIssueEngineStop : 1;
+	/**
+	 * Sometimes we have to miss injection on purpose to attract driver's attention
+	offset 1472 bit 28 */
+	bool useFSIO4ForSeriousEngineWarning : 1;
+	/**
+	offset 1472 bit 29 */
+	bool unused_bit_1472_29 : 1;
+	/**
+	offset 1472 bit 30 */
+	bool unused_bit_1472_30 : 1;
 	/**
 	 * offset 1476
 	 */
@@ -2461,4 +2472,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 04 22:03:58 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 23:35:34 EST 2019

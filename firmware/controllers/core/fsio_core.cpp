@@ -113,7 +113,7 @@ void LECalculator::add(LEElement *element) {
 	}
 }
 
-static bool float2bool(float v) {
+bool float2bool(float v) {
 	return v != 0;
 }
 

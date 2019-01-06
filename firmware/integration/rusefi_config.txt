@@ -669,7 +669,10 @@ bit hasFrequencyReportingMapSensor;
 	bit useFSIO11ForServo4
 	bit useFSIO12ForServo5
 bit useFSIO15ForIdleRpmAdjustment;
-bit unused_bit_1472_27;
+bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
+bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
+bit unused_bit_1472_29;
+bit unused_bit_1472_30;
 	adc_channel_e hipOutputChannel;
 
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"

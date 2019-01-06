@@ -41,6 +41,14 @@ EXTERN_ENGINE
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
+FsioState::FsioState() {
+#if EFI_ENABLE_ENGINE_WARNING
+	isEngineWarning = FALSE;
+#endif
+#if EFI_ENABLE_CRITICAL_ENGINE_STOP
+	isCriticalEngineCondition = FALSE;
+#endif
+}
 
 void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST

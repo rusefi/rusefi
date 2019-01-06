@@ -285,6 +285,26 @@ class WallFuel;
 
 typedef void (*configuration_callback_t)(Engine*);
 
+class FsioState {
+public:
+	FsioState();
+#if EFI_ENABLE_ENGINE_WARNING
+	/**
+	 * Shall we purposely miss on some cylinders in order to attract driver's attention to some problem
+	 * like getting too hot
+	 */
+	float isEngineWarning;
+#endif /* EFI_ENABLE_ENGINE_WARNING */
+
+#if EFI_ENABLE_CRITICAL_ENGINE_STOP
+	/**
+	 * Shall we stop engine due to some critical condition in order to save the engine
+	 */
+	float isCriticalEngineCondition;
+#endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
+};
+
+
 class Engine {
 public:
 	Engine(persistent_config_s *config);
@@ -391,10 +411,12 @@ public:
 
 	bool isRunningPwmTest;
 
+	// todo: move this into FsioState class
 	float fsioTimingAdjustment;
 	float fsioIdleTargetRPMAdjustment;
-
 	float servoValues[SERVO_COUNT];
+
+	FsioState fsioState;
 
 	/**
 	 * Are we experiencing knock right now?
