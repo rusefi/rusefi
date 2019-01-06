@@ -304,7 +304,7 @@ public:
 	float fsioLastValue[FSIO_COMMAND_COUNT];
 
 	WallFuel wallFuel;
-
+	bool needToStopEngine(efitick_t nowNt);
 	bool etbAutoTune;
 	/**
 	 * That's the list of pending spark firing events

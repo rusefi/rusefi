@@ -258,7 +258,7 @@ void runIoTest(int subsystem, int index) {
 		// call to pit
 		setCallFromPitStop(30000);
 	} else if (subsystem == 0x99) {
-		stopEngine();
+		scheduleStopEngine();
 	}
 }
 
