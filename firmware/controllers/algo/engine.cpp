@@ -116,6 +116,15 @@ Engine::Engine(persistent_config_s *config) {
 	reset();
 }
 
+/**
+ * @see scheduleStopEngine()
+ * @return true if there is a reason to stop engine
+ */
+bool Engine::needToStopEngine(efitick_t nowNt) {
+	return stopEngineRequestTimeNt != 0 &&
+			nowNt - stopEngineRequestTimeNt	< 3 * US2NT(US_PER_SECOND_LL);
+}
+
 void Engine::reset() {
 	withError = isEngineChartEnabled = false;
 	etbAutoTune = false;
@@ -270,9 +279,13 @@ void Engine::checkShutdown() {
 #if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
 	int rpm = rpmCalculator.getRpm();
 
+	/**
+	 * Something is weird here: "below 5.0 volts on battery" what is it about? Is this about
+	 * Frankenso powering everything while driver has already turned ignition off? or what is this condition about?
+	 */
 	const float vBattThreshold = 5.0f;
 	if (isValidRpm(rpm) && sensors.vBatt < vBattThreshold && stopEngineRequestTimeNt == 0) {
-		stopEngine();
+		scheduleStopEngine();
 		// todo: add stepper motor parking
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */

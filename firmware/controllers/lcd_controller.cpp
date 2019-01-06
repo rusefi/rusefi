@@ -75,7 +75,7 @@ static MenuItem miMapV(&miSensors, LL_MAF_V);
 static MenuItem miMapKgHr(&miSensors, LL_MAF_KG_HR);
 static MenuItem miKnock(&miSensors, LL_KNOCK);
 
-static MenuItem miStopEngine(&miBench, "stop engine", stopEngine);
+static MenuItem miStopEngine(&miBench, "stop engine", scheduleStopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
 static MenuItem miTestFuelPump(&miBench, "test pump", fuelPumpBench);
 static MenuItem miTestMIL(&miBench, "test MIL", milBench);

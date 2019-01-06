@@ -970,7 +970,11 @@ static void disableSpi(int index) {
 	setSpiMode(index, false);
 }
 
-void stopEngine(void) {
+/**
+ * See 'Engine::needToStopEngine' for code which actually stops engine
+ * weird: we stop pins from here? we probably should stop engine from the code which is actually stopping engine?
+ */
+void scheduleStopEngine(void) {
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
 	// let's close injectors or else if these happen to be open right now
 	enginePins.stopPins();
@@ -1339,7 +1343,7 @@ void initSettings(void) {
 
 	addConsoleActionSSS("set_timing_map", setTimingMap);
 
-	addConsoleAction("stopengine", (Void) stopEngine);
+	addConsoleAction("stopengine", (Void) scheduleStopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleActionI("enable_spi", enableSpi);

@@ -90,6 +90,9 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return state == RUNNING;
 }
 
+/**
+ * @return true if engine is spinning (cranking or running)
+ */
 bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (lastRpmEventTimeNt == 0) {
 		// here we assume 64 bit time does not overflow
@@ -97,12 +100,9 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return false;
 	}
 	efitick_t nowNt = getTimeNowNt();
-	if (ENGINE(stopEngineRequestTimeNt) != 0) {
-		if (nowNt - ENGINE(stopEngineRequestTimeNt)	< 3 * US2NT(US_PER_SECOND_LL)) {
-			// 'stopengine' command implementation
-			setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
-			return false;
-		}
+	if (ENGINE(needToStopEngine(nowNt))) {
+		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return false;
 	}
 
 	/**
