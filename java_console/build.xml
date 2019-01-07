@@ -5,6 +5,10 @@
         <delete dir="build"/>
     </target>
 
+    <target name="clean_out_folder">
+        <delete dir="out"/>
+    </target>
+
     <target name="compile">
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
