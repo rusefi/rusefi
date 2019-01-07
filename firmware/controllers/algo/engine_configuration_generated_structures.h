@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 23:35:34 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 06 03:15:03 PST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1602,7 +1602,7 @@ typedef struct {
 	/**
 	 * offset 1808
 	 */
-	float suckedOffCoef;
+	float wwaeTau;
 	/**
 	 * offset 1812
 	 */
@@ -1639,7 +1639,7 @@ typedef struct {
 	 * Wall wetting/evaporation factor/Tau factor/fuel film
 	 * offset 1904
 	 */
-	float addedToWallCoef;
+	float wwaeBeta;
 	/**
 	 * blue LED on discovery by default
 	 * offset 1908
@@ -2321,7 +2321,7 @@ typedef struct {
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
 	 * kg/hour value.
-	 * By the way 2.081989116 kg/h = 1 ft³/m
+	 * By the way 2.081989116 kg/h = 1 ftï¿½/m
 	 * offset 10784
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
@@ -2472,4 +2472,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 23:35:34 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 06 03:15:03 PST 2019

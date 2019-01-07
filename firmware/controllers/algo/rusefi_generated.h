@@ -1071,8 +1071,8 @@
 #define tachPulseDuractionMs_offset_hex 708
 #define tachPulseTriggerIndex_offset 1804
 #define tachPulseTriggerIndex_offset_hex 70c
-#define suckedOffCoef_offset 1808
-#define suckedOffCoef_offset_hex 710
+#define wwaeTau_offset 1808
+#define wwaeTau_offset_hex 710
 #define alternatorControl_offset 1812
 #define alternatorControl_offset_hex 714
 #define alternatorControl_pFactor_offset 1812
@@ -1143,8 +1143,8 @@
 #define idleRpmPid_minValue_offset_hex 76c
 #define idleRpmPid_maxValue_offset 1902
 #define idleRpmPid_maxValue_offset_hex 76e
-#define addedToWallCoef_offset 1904
-#define addedToWallCoef_offset_hex 770
+#define wwaeBeta_offset 1904
+#define wwaeBeta_offset_hex 770
 #define communicationLedPin_offset 1908
 #define communicationLedPin_offset_hex 774
 #define runningLedPin_offset 1912

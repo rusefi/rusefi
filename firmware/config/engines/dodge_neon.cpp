@@ -502,11 +502,11 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 
-	engineConfiguration->suckedOffCoef = 0.05;
-	engineConfiguration->addedToWallCoef = 0.40;
+	engineConfiguration->wwaeTau = 1.0f;
+	engineConfiguration->wwaeBeta = 0.40f;
 
-	engineConfiguration->suckedOffCoef = 0;
-	engineConfiguration->addedToWallCoef = 0;
+	engineConfiguration->wwaeTau = 0;
+	engineConfiguration->wwaeBeta = 0;
 
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->manIdlePosition = 36; // set_idle_pwm 40

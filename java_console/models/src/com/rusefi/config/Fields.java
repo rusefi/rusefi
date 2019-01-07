@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 16:40:23 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 06 03:15:03 PST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -723,8 +723,8 @@ public class Fields {
 	public static final int tachPulseDuractionMs_offset = 1800;
 	public static final int tachPulseDuractionMs_offset_hex = 708;
 	public static final int tachPulseTriggerIndex_offset = 1804;
-	public static final int suckedOffCoef_offset = 1808;
-	public static final int suckedOffCoef_offset_hex = 710;
+	public static final int wwaeTau_offset = 1808;
+	public static final int wwaeTau_offset_hex = 710;
 	public static final int alternatorControl_offset = 1812;
 	public static final int alternatorControl_offset_hex = 714;
 	public static final int alternatorControl_pFactor_offset = 1812;
@@ -782,8 +782,8 @@ public class Fields {
 	public static final int idleRpmPid_period_offset = 1898;
 	public static final int idleRpmPid_minValue_offset = 1900;
 	public static final int idleRpmPid_maxValue_offset = 1902;
-	public static final int addedToWallCoef_offset = 1904;
-	public static final int addedToWallCoef_offset_hex = 770;
+	public static final int wwaeBeta_offset = 1904;
+	public static final int wwaeBeta_offset_hex = 770;
 	public static final int communicationLedPin_offset = 1908;
 	public static final int communicationLedPin_offset_hex = 774;
 	public static final int runningLedPin_offset = 1912;
@@ -1676,7 +1676,7 @@ public class Fields {
 	public static final Field SPI2MISOMODE = Field.create("SPI2MISOMODE", 1732, FieldType.INT, pin_mode_e);
 	public static final Field TACHPULSEDURACTIONMS = Field.create("TACHPULSEDURACTIONMS", 1800, FieldType.FLOAT);
 	public static final Field TACHPULSETRIGGERINDEX = Field.create("TACHPULSETRIGGERINDEX", 1804, FieldType.INT);
-	public static final Field SUCKEDOFFCOEF = Field.create("SUCKEDOFFCOEF", 1808, FieldType.FLOAT);
+	public static final Field WWAETAU = Field.create("WWAETAU", 1808, FieldType.FLOAT);
 	public static final Field ALTERNATORCONTROL_PFACTOR = Field.create("ALTERNATORCONTROL_PFACTOR", 1812, FieldType.FLOAT);
 	public static final Field ALTERNATORCONTROL_IFACTOR = Field.create("ALTERNATORCONTROL_IFACTOR", 1816, FieldType.FLOAT);
 	public static final Field ALTERNATORCONTROL_DFACTOR = Field.create("ALTERNATORCONTROL_DFACTOR", 1820, FieldType.FLOAT);
@@ -1708,7 +1708,7 @@ public class Fields {
 	public static final Field IDLERPMPID_PERIOD = Field.create("IDLERPMPID_PERIOD", 1898, FieldType.INT);
 	public static final Field IDLERPMPID_MINVALUE = Field.create("IDLERPMPID_MINVALUE", 1900, FieldType.INT);
 	public static final Field IDLERPMPID_MAXVALUE = Field.create("IDLERPMPID_MAXVALUE", 1902, FieldType.INT);
-	public static final Field ADDEDTOWALLCOEF = Field.create("ADDEDTOWALLCOEF", 1904, FieldType.FLOAT);
+	public static final Field WWAEBETA = Field.create("WWAEBETA", 1904, FieldType.FLOAT);
 	public static final Field COMMUNICATIONLEDPIN = Field.create("COMMUNICATIONLEDPIN", 1908, FieldType.INT, brain_pin_e);
 	public static final Field RUNNINGLEDPIN = Field.create("RUNNINGLEDPIN", 1912, FieldType.INT, brain_pin_e);
 	public static final Field BINARYSERIALTXPIN = Field.create("BINARYSERIALTXPIN", 1916, FieldType.INT, brain_pin_e);
