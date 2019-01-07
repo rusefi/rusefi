@@ -235,7 +235,7 @@ DINCDIR =
 DLIBDIR =
 
 # List all default libraries here
-DLIBS = -static-libgcc -static -static-libstdc++
+DLIBS = -pthread
 
 #
 # End of default section
