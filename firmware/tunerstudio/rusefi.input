@@ -2044,8 +2044,8 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 ;		field = "Decel Multiplier",	 			tpsDecelEnleanmentMultiplier
 		
 	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
-		field = "sucked off wall coefficient",          suckedOffCoef
-		field = "added to wall coef",                   addedToWallCoef
+		field = "evaporation time constant",          wwaeTau
+		field = "added to wall coef",                   wwaeBeta
 	
 		
 ;			Tuning->AccelEnrichment

@@ -104,8 +104,8 @@ public class SettingsTab {
 //        panel.add(UiUtils.wrap(new ConfigField(Fields.IGNITIONOFFSET, "Ignition offset").getContent()));
 //        panel.add(UiUtils.wrap(new ConfigField(Fields.CRANKINGTIMINGANGLE, "Cranking timing").getContent()));
 //
-//        panel.add(UiUtils.wrap(new ConfigField(Fields.ADDEDTOWALLCOEF, "Added to wall").getContent()));
-//        panel.add(UiUtils.wrap(new ConfigField(Fields.SUCKEDOFFCOEF, "Sucked off wall").getContent()));
+//        panel.add(UiUtils.wrap(new ConfigField(Fields.WWAEBETA, "Added to wall").getContent()));
+//        panel.add(UiUtils.wrap(new ConfigField(Fields.WWAETAU, "Sucked off wall").getContent()));
 ////        panel.add(UiUtils.wrap(new ConfigField(Fields.TPSACCELENRICHMENTTHRESHOLD, "TPS accel threshold").getContent()));
 //        panel.add(UiUtils.wrap(new ConfigField(Fields.TPSACCELENRICHMENTMULTIPLIER, "TPS accel coef").getContent()));
 

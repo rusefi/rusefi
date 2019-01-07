@@ -1302,10 +1302,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->operationMode = (operation_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "suckedOffCoef")) {
-		engineConfiguration->suckedOffCoef = valueF;
-	} else if (strEqualCaseInsensitive(paramStr, "addedToWallCoef")) {
-		engineConfiguration->addedToWallCoef = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
+		engineConfiguration->wwaeTau = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
+		engineConfiguration->wwaeBeta = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {

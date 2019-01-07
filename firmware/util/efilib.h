@@ -68,6 +68,10 @@ bool strEqual(const char *str1, const char *str2);
 // Currently used by air-interp. tCharge mode (see EngineState::updateTChargeK()).
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);
 
+// @brief Compute e^x using a 4th order taylor expansion centered at x=-1.  Provides
+// bogus results outside the range -2 < x < 0.
+float expf_taylor(float x);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
