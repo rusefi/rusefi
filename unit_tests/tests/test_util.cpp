@@ -25,7 +25,9 @@
 #include "efiGpio.h"
 #include "efilib.h"
 
-void testCrc(void) {
+#include "gtest/gtest.h"
+
+TEST(util, crc) {
 	assertEquals(4, efiRound(4.4, 1));
 	assertEquals(1.2, efiRound(1.2345, 0.1));
 
@@ -50,7 +52,7 @@ void testCrc(void) {
 
 static cyclic_buffer<int> sb;
 
-void testOverflow64Counter(void) {
+TEST(util, Overflow64Counter) {
 	print("*************************************** testOverflow64Counter\r\n");
 
 	Overflow64Counter o;
@@ -63,7 +65,8 @@ void testOverflow64Counter(void) {
 	assertEquals(4294967296, o.update(0));
 }
 
-void testCyclicBuffer(void) {
+TEST(util, cyclicBuffer) {
+
 	print("*************************************** testCyclicBuffer\r\n");
 
 	{
@@ -90,7 +93,7 @@ void testCyclicBuffer(void) {
 
 }
 
-void testHistogram(void) {
+TEST(util, histogram) {
 	print("******************************************* testHistogram\r\n");
 
 	initHistogramsModule();

@@ -8,11 +8,7 @@
 #ifndef TEST_CYCLIC_BUFFER_H_
 #define TEST_CYCLIC_BUFFER_H_
 
-void testCrc(void);
 void testMisc(void);
-void testCyclicBuffer(void);
-void testOverflow64Counter(void);
-void testHistogram(void);
 void testMalfunctionCentral(void);
 void testConsoleLogic(void);
 void testGpsParser(void);
