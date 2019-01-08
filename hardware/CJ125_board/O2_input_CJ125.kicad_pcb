@@ -1,4 +1,4 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.5)
+(kicad_pcb (version 4) (host pcbnew 4.0.7)
 
   (general
     (links 83)
@@ -15,8 +15,8 @@
   (page A)
   (title_block
     (title "CJ125 Wide O2 ")
-    (date 2018-06-17)
-    (rev R0.4)
+    (date 2019-01-08)
+    (rev R0.4.1)
     (company http://rusefi.com/)
   )
 
@@ -1515,7 +1515,7 @@
   (gr_circle (center 113.538 136.906) (end 113.538 138.43) (layer Edge.Cuts) (width 0.127))
   (gr_line (start 111.379 139.192) (end 129.54 139.192) (angle 90) (layer Edge.Cuts) (width 0.127))
   (gr_line (start 98.806 143.256) (end 111.887 135.89) (angle 90) (layer Dwgs.User) (width 0.127))
-  (gr_text https://sf.net/projects/rusefi (at 112.395 121.158 90) (layer F.SilkS)
+  (gr_text rusEFI.com (at 112.395 121.158 90) (layer F.SilkS)
     (effects (font (size 1.016 1.016) (thickness 0.127)))
   )
   (gr_text "IA\nCalR" (at 123.063 133.35 180) (layer B.SilkS)
@@ -1614,7 +1614,7 @@
   (gr_text 5V (at 116.967 109.855 90) (layer F.SilkS)
     (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
   )
-  (gr_text "rusEFI R0.4" (at 120.015 138.43) (layer F.SilkS)
+  (gr_text R0.4.1 (at 120.015 138.43) (layer F.SilkS)
     (effects (font (size 1.016 1.016) (thickness 0.127)))
   )
   (gr_text T-0 (at 113.157 134.493) (layer F.Cu)
