@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 06 03:15:03 PST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 07 19:25:33 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2210,22 +2210,23 @@ typedef struct {
 	tChargeMode_e tChargeMode;
 	/**
 	 * target TPS value, 0 to 100%
+	 * TOOD: use int8 data date once we template interpolation method
 	 * offset 4116
 	 */
-	uint8_t etbBiasBins[ETB_BIAS_CURVE_LENGTH];
+	float etbBiasBins[ETB_BIAS_CURVE_LENGTH];
 	/**
 	 * PWM bias, 0 to 100%
-	 * offset 4124
+	 * offset 4148
 	 */
 	float etbBiasValues[ETB_BIAS_CURVE_LENGTH];
 	/**
-	 * offset 4156
+	 * offset 4180
 	 */
 	float hip9011Gain;
 	/**
-	 * offset 4160
+	 * offset 4184
 	 */
-	int unusedEnd[580];
+	int unusedEnd[574];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2472,4 +2473,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 06 03:15:03 PST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 07 19:25:33 EST 2019

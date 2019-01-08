@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 06 03:15:03 PST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 07 19:25:33 EST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1055,10 +1055,12 @@ public class Fields {
 	public static final int tChargeMode_offset_hex = 1010;
 	public static final int etbBiasBins_offset = 4116;
 	public static final int etbBiasBins_offset_hex = 1014;
-	public static final int etbBiasValues_offset = 4124;
-	public static final int hip9011Gain_offset = 4156;
-	public static final int unusedEnd_offset = 4160;
-	public static final int unusedEnd_offset_hex = 1040;
+	public static final int etbBiasValues_offset = 4148;
+	public static final int etbBiasValues_offset_hex = 1034;
+	public static final int hip9011Gain_offset = 4180;
+	public static final int hip9011Gain_offset_hex = 1054;
+	public static final int unusedEnd_offset = 4184;
+	public static final int unusedEnd_offset_hex = 1058;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1901,7 +1903,7 @@ public class Fields {
 	public static final Field TCHARGEAIRDECRLIMIT = Field.create("TCHARGEAIRDECRLIMIT", 4108, FieldType.FLOAT);
 	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation"};
 	public static final Field TCHARGEMODE = Field.create("TCHARGEMODE", 4112, FieldType.INT, tChargeMode_e);
-	public static final Field HIP9011GAIN = Field.create("HIP9011GAIN", 4156, FieldType.FLOAT);
+	public static final Field HIP9011GAIN = Field.create("HIP9011GAIN", 4180, FieldType.FLOAT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
