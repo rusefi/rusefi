@@ -15,3 +15,4 @@
 15) RESOLVED IN R0.4.1 Change Rfb1 and Rfb2 should be increased to 5.11k and 511k as noted here https://rusefi.com/forum/viewtopic.php?f=4&t=1052&start=143
 16)                  Sepeate the signald GND and the power GND for a better design
 17)                  and the GND ring around pin 22 CF for better RF rejection. 
+18)                  change label from sf.net/projects/rusefi/ to rusefi.com
