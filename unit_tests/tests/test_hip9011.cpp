@@ -8,6 +8,7 @@
 #include "hip9011_lookup.h"
 #include "HIP9011_logic.h"
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 TEST(hip9011, lookup) {
 	assertEqualsM2("", 3183.1013, getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
@@ -42,4 +43,18 @@ TEST(hip9011, band) {
 
 	EXPECT_EQ(42, getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN));
 
+}
+
+class MockHip9011Hardware : public Hip9011HardwareInterface
+{
+public:
+	MockHip9011Hardware() {  }
+
+    MOCK_METHOD1(sendSyncCommand, void(unsigned char));
+    MOCK_METHOD1(sendCommand, void(unsigned char));
+};
+
+TEST(hip9011, takeValue) {
+
+	HIP9011 instace(NULL);
 }

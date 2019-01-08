@@ -23,11 +23,13 @@ HIP9011::HIP9011(Hip9011HardwareInterface *hardware) {
 	currentPrescaler = 0;
 	correctResponsesCount = 0;
 	invalidHip9011ResponsesCount = 0;
+	angleWindowWidth = -1;
+
 	this->hardware = hardware;
 }
 
-void HIP9011::setStateAndCommand(hip_state_e state, unsigned char cmd) {
-	this->state = state;
+void HIP9011::setStateAndCommand(unsigned char cmd) {
+	this->state = IS_SENDING_SPI_COMMAND;
 	hardware->sendCommand(cmd);
 }
 
@@ -74,4 +76,38 @@ void HIP9011::prepareHip9011RpmLookup(float angleWindowWidth) {
 int HIP9011::getIntegrationIndexByRpm(float rpm) {
 	int i = findIndexMsg("getIbR", rpmLookup, INT_LOOKUP_SIZE, (rpm));
 	return i == -1 ? INT_LOOKUP_SIZE - 1 : INT_LOOKUP_SIZE - i - 1;
+}
+
+void HIP9011::setAngleWindowWidth(float angleWindowWidth) {
+	// float '==' is totally appropriate here
+	if (this->angleWindowWidth == angleWindowWidth)
+		return; // exit if value has not change
+	this->angleWindowWidth = angleWindowWidth;
+	prepareHip9011RpmLookup(angleWindowWidth);
+}
+
+void HIP9011::handleValue(int rpm, int prescalerIndex DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
+	int integratorIndex = getIntegrationIndexByRpm(rpm);
+	int gainIndex = getHip9011GainIndex(FORWARD_HIP_PARAMS);
+	int bandIndex = getBandIndex(FORWARD_HIP_PARAMS);
+
+
+	if (currentGainIndex != gainIndex) {
+		currentGainIndex = gainIndex;
+		setStateAndCommand(SET_GAIN_CMD + gainIndex);
+
+	} else if (currentIntergratorIndex != integratorIndex) {
+		currentIntergratorIndex = integratorIndex;
+		setStateAndCommand(SET_INTEGRATOR_CMD + integratorIndex);
+	} else if (currentBandIndex != bandIndex) {
+		currentBandIndex = bandIndex;
+		setStateAndCommand(SET_BAND_PASS_CMD + bandIndex);
+	} else if (currentPrescaler != prescalerIndex) {
+		currentPrescaler = prescalerIndex;
+		setStateAndCommand(SET_PRESCALER_CMD + prescalerIndex);
+
+	} else {
+		state = READY_TO_INTEGRATE;
+	}
+
 }

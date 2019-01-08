@@ -73,7 +73,6 @@ HIP9011 instance(&hardware);
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
 static char pinNameBuffer[16];
-static float currentAngleWindowWidth;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
@@ -303,34 +302,12 @@ void hipAdcCallback(adcsample_t adcValue) {
 		float angleWindowWidth =
 		engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart;
 
-		if (angleWindowWidth != currentAngleWindowWidth) {
-			currentAngleWindowWidth = angleWindowWidth;
-			instance.prepareHip9011RpmLookup(currentAngleWindowWidth);
-		}
+		instance.setAngleWindowWidth(angleWindowWidth);
 
-		int integratorIndex = instance.getIntegrationIndexByRpm(GET_RPM());
-		int gainIndex = getHip9011GainIndex(PASS_HIP_PARAMS);
-		int bandIndex = getBandIndex(PASS_HIP_PARAMS);
 		int prescalerIndex = engineConfiguration->hip9011PrescalerAndSDO;
 
+		instance.handleValue(GET_RPM(), prescalerIndex DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 
-		if (instance.currentGainIndex != gainIndex) {
-			instance.currentGainIndex = gainIndex;
-			instance.setStateAndCommand(IS_SENDING_SPI_COMMAND, SET_GAIN_CMD + gainIndex);
-
-		} else if (instance.currentIntergratorIndex != integratorIndex) {
-			instance.currentIntergratorIndex = integratorIndex;
-			instance.setStateAndCommand(IS_SENDING_SPI_COMMAND, SET_INTEGRATOR_CMD + integratorIndex);
-		} else if (instance.currentBandIndex != bandIndex) {
-			instance.currentBandIndex = bandIndex;
-			instance.setStateAndCommand(IS_SENDING_SPI_COMMAND, SET_BAND_PASS_CMD + bandIndex);
-		} else if (instance.currentPrescaler != prescalerIndex) {
-			instance.currentPrescaler = prescalerIndex;
-			instance.setStateAndCommand(IS_SENDING_SPI_COMMAND, SET_PRESCALER_CMD + prescalerIndex);
-
-		} else {
-			instance.state = READY_TO_INTEGRATE;
-		}
 	}
 }
 
@@ -410,10 +387,7 @@ void initHip9011(Logging *sharedLogger) {
 		return;
 
 
-	currentAngleWindowWidth =
-	engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart;
-
-	instance.prepareHip9011RpmLookup(currentAngleWindowWidth);
+	instance.setAngleWindowWidth(engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart);
 
 #if EFI_PROD_CODE
 	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
