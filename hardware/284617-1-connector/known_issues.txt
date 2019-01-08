@@ -1,0 +1,2 @@
+1)                    Corners are hitting the plastic          
+2)                    P18 P19 etc silkscreen is hitting useful silkscreen
