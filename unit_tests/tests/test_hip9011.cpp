@@ -25,7 +25,7 @@ TEST(hip9011, lookup) {
 }
 
 TEST(hip9011, rpmLookup) {
-	HIP9011 instace;
+	HIP9011 instace(NULL);
 
 	instace.prepareHip9011RpmLookup(50);
 
