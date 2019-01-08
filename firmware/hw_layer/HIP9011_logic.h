@@ -21,12 +21,38 @@ public:
 	virtual void sendCommand(unsigned char command) = 0;
 };
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#define PASS_HIP_PARAMS
+#define DEFINE_HIP_PARAMS
+#define GET_CONFIG_VALUE(x) CONFIG(x)
+#define FORWARD_HIP_PARAMS
+#define DEFINE_PARAM_SUFFIX(x)
+#else
+
+#define PASS_HIP_PARAMS CONFIG(knockBandCustom), \
+		CONFIG(cylinderBore), \
+		CONFIG(hip9011Gain)
+
+#define FORWARD_HIP_PARAMS knockBandCustom, \
+		cylinderBore, \
+		hip9011Gain
+
+#define DEFINE_HIP_PARAMS float knockBandCustom,\
+		float cylinderBore, \
+		float hip9011Gain
+
+#define GET_CONFIG_VALUE(x) x
+#define DEFINE_PARAM_SUFFIX(x) , x
+#endif
+
 class HIP9011 {
 public:
 	HIP9011(Hip9011HardwareInterface *hardware);
 	void prepareHip9011RpmLookup(float angleWindowWidth);
 	int getIntegrationIndexByRpm(float rpm);
-	void setStateAndCommand(hip_state_e state, unsigned char cmd);
+	void setStateAndCommand(unsigned char cmd);
+	void setAngleWindowWidth(float angleWindowWidth);
+	void handleValue(int rpm, int prescalerIndex DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
 
 	/**
 	 * band index is only send to HIP chip on startup
@@ -35,6 +61,8 @@ public:
 	int currentGainIndex;
 	int correctResponsesCount;
 	int invalidHip9011ResponsesCount;
+	float angleWindowWidth;
+
 	int currentIntergratorIndex;
 	bool needToInit;
 	int settingUpdateCount;
@@ -56,31 +84,23 @@ public:
 	float rpmLookup[INT_LOOKUP_SIZE];
 };
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-#define PASS_HIP_PARAMS
-#define DEFINE_HIP_PARAMS
-#define GET_CONFIG_VALUE(x) CONFIG(x)
-#define FORWARD_HIP_PARAMS
-#else
-
-#define PASS_HIP_PARAMS CONFIG(knockBandCustom), \
-		CONFIG(cylinderBore), \
-		CONFIG(hip9011Gain)
-
-#define FORWARD_HIP_PARAMS knockBandCustom, \
-		cylinderBore, \
-		hip9011Gain
-
-#define DEFINE_HIP_PARAMS float knockBandCustom,\
-		float cylinderBore, \
-		float hip9011Gain
-
-#define GET_CONFIG_VALUE(x) x
-#endif
-
-
 float getHIP9011Band(DEFINE_HIP_PARAMS);
 int getBandIndex(DEFINE_HIP_PARAMS);
 int getHip9011GainIndex(DEFINE_HIP_PARAMS);
+
+// 0b01000000
+#define SET_PRESCALER_CMD 0x40
+
+// 0b11100000
+#define SET_CHANNEL_CMD 0xE0
+
+// 0b11000000
+#define SET_INTEGRATOR_CMD 0xC0
+
+// 0b00000000
+#define SET_BAND_PASS_CMD 0x0
+
+// 0b10000000
+#define SET_GAIN_CMD 0x80
 
 #endif /* HW_LAYER_HIP9011_LOGIC_H_ */
