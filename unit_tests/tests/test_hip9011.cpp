@@ -9,6 +9,7 @@
 #include "HIP9011_logic.h"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+using ::testing::_;
 
 TEST(hip9011, lookup) {
 	assertEqualsM2("", 3183.1013, getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
@@ -54,7 +55,36 @@ public:
     MOCK_METHOD1(sendCommand, void(unsigned char));
 };
 
-TEST(hip9011, takeValue) {
+TEST(hip9011, configurationCommands) {
 
-	HIP9011 instace(NULL);
+	MockHip9011Hardware mock;
+
+	HIP9011 instance(&mock);
+
+	instance.prepareHip9011RpmLookup(50);
+
+// want to invoke method with same parameters a few times
+#define PARAMETERS 600, _8MHZ_PRESCALER, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1
+
+	 // Not making assumptions on the message send ...
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_GAIN_CMD + 0xE)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_INTEGRATOR_CMD + 0x1C)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_BAND_PASS_CMD + 0x2A)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_PRESCALER_CMD + 6)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	// initialization is over, no commands should be sent
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(_)).Times(0);
+	instance.handleValue(PARAMETERS);
 }

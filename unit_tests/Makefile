@@ -111,6 +111,7 @@ CSRC =	$(UTILSRC) \
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
 	gtest-all.cpp \
+	gmock-all.cpp \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
@@ -170,6 +171,7 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/sensors/ \
 	test_data_structures \
+	googletest/googlemock/include \
 	googletest/googletest \
 	googletest/googletest/include \
 	tests \
