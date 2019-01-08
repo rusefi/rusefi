@@ -13,29 +13,34 @@
 #include "hip9011_lookup.h"
 
 /**
- * this interface defines SPI communication channel with HIP9011 chip
+ * this interface defines hardware communication layer for HIP9011 chip
  */
-class HIP9011SpiChannel {
+class Hip9011HardwareInterface {
 public:
-	void sendCommand(unsigned char command);
+	virtual void sendSyncCommand(unsigned char command) = 0;
+	virtual void sendCommand(unsigned char command) = 0;
 };
 
 class HIP9011 {
 public:
-	HIP9011();
+	HIP9011(Hip9011HardwareInterface *hardware);
 	void prepareHip9011RpmLookup(float angleWindowWidth);
 	int getIntegrationIndexByRpm(float rpm);
+	void setStateAndCommand(hip_state_e state, unsigned char cmd);
 
 	/**
 	 * band index is only send to HIP chip on startup
 	 */
 	int currentBandIndex;
 	int currentGainIndex;
+	int correctResponsesCount;
+	int invalidHip9011ResponsesCount;
 	int currentIntergratorIndex;
 	bool needToInit;
 	int settingUpdateCount;
 	int totalKnockEventsCount;
 	int currentPrescaler;
+	Hip9011HardwareInterface *hardware;
 	/**
 	 * Int/Hold pin is controlled from scheduler call-backs which are set according to current RPM
 	 *

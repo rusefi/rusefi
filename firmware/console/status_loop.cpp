@@ -26,6 +26,7 @@
 
 #include "global.h"
 #include "status_loop.h"
+#include "HIP9011_logic.h"
 
 #include "adc_inputs.h"
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
@@ -659,8 +660,7 @@ static void lcdThread(void *arg) {
 }
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
-extern int correctResponsesCount;
-extern int invalidHip9011ResponsesCount;
+extern HIP9011 instance;
 #endif /* EFI_HIP_9011 */
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -745,7 +745,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isWarnNow = isWarningNow(timeSeconds, true);
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
-	tsOutputChannels->isKnockChipOk = (invalidHip9011ResponsesCount == 0);
+	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
 	switch (engineConfiguration->debugMode)	{
@@ -812,8 +812,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	case DBG_KNOCK:
-		tsOutputChannels->debugIntField1 = correctResponsesCount;
-		tsOutputChannels->debugIntField2 = invalidHip9011ResponsesCount;
+		// todo: maybe extract hipPostState(tsOutputChannels);
+		tsOutputChannels->debugIntField1 = instance.correctResponsesCount;
+		tsOutputChannels->debugIntField2 = instance.invalidHip9011ResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
 #if EFI_CJ125 || defined(__DOXYGEN__)

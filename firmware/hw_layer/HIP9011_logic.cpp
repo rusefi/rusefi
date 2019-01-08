@@ -9,7 +9,7 @@
 
 EXTERN_ENGINE;
 
-HIP9011::HIP9011() {
+HIP9011::HIP9011(Hip9011HardwareInterface *hardware) {
 	needToInit = true;
 	state = NOT_READY;
 	/**
@@ -21,6 +21,14 @@ HIP9011::HIP9011() {
 	settingUpdateCount = 0;
 	totalKnockEventsCount = 0;
 	currentPrescaler = 0;
+	correctResponsesCount = 0;
+	invalidHip9011ResponsesCount = 0;
+	this->hardware = hardware;
+}
+
+void HIP9011::setStateAndCommand(hip_state_e state, unsigned char cmd) {
+	this->state = state;
+	hardware->sendCommand(cmd);
 }
 
 #define BAND(bore) (900 / (PIF * (bore) / 2))
