@@ -103,4 +103,6 @@ int getHip9011GainIndex(DEFINE_HIP_PARAMS);
 // 0b10000000
 #define SET_GAIN_CMD 0x80
 
+#define _8MHZ_PRESCALER 6
+
 #endif /* HW_LAYER_HIP9011_LOGIC_H_ */
