@@ -22,12 +22,17 @@ TEST(hip9011, lookup) {
 	EXPECT_EQ(47, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.234));
 	EXPECT_EQ(63, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.000001));
 
-	prepareHip9011RpmLookup(50);
+}
 
-	EXPECT_EQ(31, getIntegrationIndexByRpm(1));
-	EXPECT_EQ(21, getIntegrationIndexByRpm(1100));
-	EXPECT_EQ(1, getIntegrationIndexByRpm(6600));
-	EXPECT_EQ(0, getIntegrationIndexByRpm(16600));
+TEST(hip9011, rpmLookup) {
+	HIP9011 instace;
+
+	instace.prepareHip9011RpmLookup(50);
+
+	EXPECT_EQ(31, instace.getIntegrationIndexByRpm(1));
+	EXPECT_EQ(21, instace.getIntegrationIndexByRpm(1100));
+	EXPECT_EQ(1, instace.getIntegrationIndexByRpm(6600));
+	EXPECT_EQ(0, instace.getIntegrationIndexByRpm(16600));
 }
 
 TEST(hip9011, band) {

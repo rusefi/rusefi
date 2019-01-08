@@ -23,7 +23,19 @@ public:
 class HIP9011 {
 public:
 	HIP9011();
+	void prepareHip9011RpmLookup(float angleWindowWidth);
+	int getIntegrationIndexByRpm(float rpm);
+
+	/**
+	 * band index is only send to HIP chip on startup
+	 */
+	int currentBandIndex;
+	int currentGainIndex;
+	int currentIntergratorIndex;
 	bool needToInit;
+	int settingUpdateCount;
+	int totalKnockEventsCount;
+	int currentPrescaler;
 	/**
 	 * Int/Hold pin is controlled from scheduler call-backs which are set according to current RPM
 	 *
@@ -35,8 +47,9 @@ public:
 	 * hipOutput should be set to used FAST adc device
 	 */
 	hip_state_e state;
-};
 
+	float rpmLookup[INT_LOOKUP_SIZE];
+};
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #define PASS_HIP_PARAMS
