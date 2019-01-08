@@ -31,22 +31,6 @@ const float bandFreqLookup[BAND_LOOKUP_SIZE] = { 1.22, 1.26, 1.31, 1.35, 1.4, 1.
 		10.12, 10.46, 10.83, 11.22, 11.65, 12.1, 12.6, 13.14, 13.72, 14.36, 15.07, 15.84, 16.71, 17.67, 18.76, 19.98 };
 
 
-float rpmLookup[INT_LOOKUP_SIZE];
-
-/**
- *
- * We know the set of possible integration times, we know the knock detection window width
- */
-void prepareHip9011RpmLookup(float angleWindowWidth) {
-	/**
-	 * out binary search method needs increasing order thus the reverse order here
-	 */
-	for (int i = 0; i < INT_LOOKUP_SIZE; i++) {
-		rpmLookup[i] = getRpmByAngleWindowAndTimeUs(integratorValues[INT_LOOKUP_SIZE - i - 1], angleWindowWidth);
-	}
-}
-
-
 /**
  * 'TC is typically TINT/(2*Pi*VOUT)'
  * Knock Sensor Training TPIC8101, page 24
@@ -63,12 +47,6 @@ float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) {
 	float windowWidthMult = angleWindowWidth / 360.0f;
 	return 60000000.0f / integrationTimeUs * windowWidthMult;
 }
-
-int getIntegrationIndexByRpm(float rpm) {
-	int i = findIndexMsg("getIbR", rpmLookup, INT_LOOKUP_SIZE, (rpm));
-	return i == -1 ? INT_LOOKUP_SIZE - 1 : INT_LOOKUP_SIZE - i - 1;
-}
-
 
 /**
  * @param frequency knock frequencey, in kHz
