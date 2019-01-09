@@ -12,12 +12,10 @@
 #include "test_accel_enrichment.h"
 #include "test_interpolation_3d.h"
 #include "test_find_index.h"
-#include "test_sensors.h"
 #include "test_speed_density.h"
 
 #include "test_fuel_map.h"
 #include "fuel_math.h"
-#include "test_fuelCut.h"
 #include "test_logic_expression.h"
 #include "test_pid_auto.h"
 #include "engine_configuration.h"
@@ -68,7 +66,7 @@ GTEST_API_ int main(int argc, char **argv) {
 	 * PID
 	 */
 	testPidAuto();
-	testPidController();
+
 	/**
 	 * Larger-scale engine control
 	 */
@@ -82,10 +80,9 @@ GTEST_API_ int main(int argc, char **argv) {
 	testFasterEngineSpinningUp();
 	testGpsParser();
 	testFuelMap();
-	testFuelCut();
 	testEngineMath();
 	testIgnitionPlanning();
-	testSensors();
+
 	/**
 	 * Data structures and general methods
 	 */

@@ -10,7 +10,6 @@
 #include "pid_auto_tune.h"
 #include "unit_test_framework.h"
 #include "cyclic_buffer.h"
-#include "gtest/gtest.h"
 
 efitimems_t mockTimeMs = 0;
 
