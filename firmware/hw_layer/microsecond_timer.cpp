@@ -88,7 +88,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 	timerRestartCounter++;
 }
 
-static void callback(GPTDriver *gptp) {
+static void hwTimerCallback(GPTDriver *gptp) {
 	(void)gptp;
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
@@ -142,7 +142,7 @@ private:
 MicrosecondTimerWatchdogController watchdogControllerInstance;
 
 static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
-callback, /* Timer callback.*/
+		hwTimerCallback, /* Timer callback.*/
 0, 0 };
 
 void initMicrosecondTimer(void) {
