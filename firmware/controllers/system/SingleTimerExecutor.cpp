@@ -156,15 +156,6 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	hwSetTimerDuration = GET_TIMESTAMP() - beforeHwSetTimer;
 }
 
-/**
- * @brief Schedule an event at specified timestamp
- *
- * @param [in] timeUs absolute time of the event, since ECU boot
- */
-void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	_engine.executor.scheduleByTimestamp(scheduling, time, callback, param);
-}
-
 void initSignalExecutorImpl(void) {
 	globalTimerCallback = executorCallback;
 	initMicrosecondTimer();
