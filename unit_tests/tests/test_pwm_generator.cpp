@@ -58,7 +58,7 @@ static void test100dutyCycle() {
 			&testApplyPinState);
 
 	expectedTimeOfNextEvent += 1000;
-	assertEqualsM2("1@1000/100", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("1@1000/100", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@100", HIGH_VALUE, &executor);
 
@@ -86,7 +86,7 @@ static void testSwitchToNanPeriod() {
 			&testApplyPinState);
 
 	expectedTimeOfNextEvent += 600;
-	assertEqualsM2("1@1000/70", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("1@1000/70", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@70", LOW_VALUE, &executor);
 	assertEqualsM("time1", 600, timeNowUs);
@@ -97,11 +97,11 @@ static void testSwitchToNanPeriod() {
 	pwm.setFrequency(NAN);
 
 	expectedTimeOfNextEvent += 600;
-	assertEqualsM2("1@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("1@1000/NAN", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 	assertNextEvent("exec2@NAN", LOW_VALUE, &executor);
 
 	expectedTimeOfNextEvent += MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
-	assertEqualsM2("2@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("2@1000/NAN", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 	assertNextEvent("exec3@NAN", LOW_VALUE, &executor);
 }
 
@@ -127,42 +127,42 @@ void testPwmGenerator() {
 
 
 	expectedTimeOfNextEvent += 800;
-	assertEqualsM2("1@1000/80", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("1@1000/80", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@0", LOW_VALUE, &executor);
 	assertEqualsM("time1", 800, timeNowUs);
 
 	expectedTimeOfNextEvent += 200;
-	assertEqualsM2("2@1000/80", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("2@1000/80", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	// above we had vanilla duty cycle, now let's handle a special case
 	pwm.setSimplePwmDutyCycle(0);
-	assertEqualsM2("2@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("2@1000/0", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@1", LOW_VALUE, &executor);
 	assertEqualsM("time2", 1000, timeNowUs);
 
 	expectedTimeOfNextEvent += 1000;
-	assertEqualsM2("3@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("3@1000/0", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@2", LOW_VALUE /* pin value */, &executor);
 	assertEqualsM("time3", 2000, timeNowUs);
 	expectedTimeOfNextEvent += 1000;
-	assertEqualsM2("4@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("4@1000/0", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@3", LOW_VALUE /* pin value */, &executor);
 	assertEqualsM("time4", 3000, timeNowUs);
 	expectedTimeOfNextEvent += 1000;
-	assertEqualsM2("5@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("5@1000/0", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@4", LOW_VALUE /* pin value */, &executor);
 	expectedTimeOfNextEvent += 1000;
-	assertEqualsM2("6@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("6@1000/0", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 	assertNextEvent("exec@5", LOW_VALUE /* pin value */, &executor);
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM("time4", 5000, timeNowUs);
-	assertEqualsM2("7@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
+	assertEqualsM2("7@1000/0", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
 
 	assertNextEvent("exec@6", LOW_VALUE /* pin value */, &executor);
