@@ -24,6 +24,7 @@
 #include "SingleTimerExecutor.h"
 #endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
 #if EFI_SIGNAL_EXECUTOR_SLEEP
+#include "signal_executor_sleep.h"
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 #if EFI_UNIT_TEST
 #include "global_execution_queue.h"
@@ -329,9 +330,10 @@ public:
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
-	Executor executor;
+	SingleTimerExecutor executor;
 #endif
 #if EFI_SIGNAL_EXECUTOR_SLEEP
+	SleepExecutor executor;
 #endif
 #if EFI_UNIT_TEST
 	TestExecutor executor;

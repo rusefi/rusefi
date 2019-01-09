@@ -11,9 +11,9 @@
 #include "scheduler.h"
 #include "event_queue.h"
 
-class Executor : public ExecutorInterface {
+class SingleTimerExecutor : public ExecutorInterface {
 public:
-	Executor();
+	SingleTimerExecutor();
 	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
 	void onTimerCallback();
 	int timerCallbackCounter;
