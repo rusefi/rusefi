@@ -62,6 +62,10 @@ SingleTimerExecutor::SingleTimerExecutor() {
 	queue.setLateDelay(US2NT(100));
 }
 
+void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
+}
+
 /**
  * callback would be executed either on ISR thread or current thread if we would need to execute right away
  */

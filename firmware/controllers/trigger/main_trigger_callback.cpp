@@ -208,7 +208,7 @@ static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, sc
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
-	scheduleByTimestamp(scheduling, time, callback, pair);
+	engine->executor.scheduleByTimestamp(scheduling, time, callback, pair);
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
@@ -289,8 +289,8 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
 		scheduling_s * sDown = &pair->signalTimerDown;
 
-		scheduleForLater(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
-		scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
+		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		engine->executor.scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
 					(schfunc_t) &endSimultaniousInjection, event);
 
 	} else {
@@ -579,7 +579,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if (pulseLength > 0) {
 			startSimultaniousInjection(engine);
 			efitimeus_t turnOffDelayUs = (efitimeus_t)efiRound(MS2US(pulseLength), 1.0f);
-			scheduleForLater(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
+			engine->executor.scheduleForLater(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
 		}
 	}
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
