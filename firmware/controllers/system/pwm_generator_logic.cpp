@@ -226,9 +226,9 @@ static void timerCallback(PwmConfig *state) {
 //	if (state->executor == NULL) {
 //		firmwareError(CUSTOM_ERR_6695, "exec on %s", state->name);
 //		return;
-//	}
+	}
 
-	scheduleByTimestamp(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+	state->executor->scheduleByTimestamp(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
 	state->dbgNestingLevel--;
 }
 
