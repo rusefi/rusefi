@@ -9,6 +9,8 @@
 #define UNIT_TEST_FRAMEWORK_H_
 
 #include "engine.h"
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);

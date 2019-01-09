@@ -12,7 +12,7 @@
 
 static ThermistorConf tc;
 
-static void testMapDecoding(void) {
+TEST(sensors, mapDecoding) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
 
@@ -27,7 +27,7 @@ static void testMapDecoding(void) {
 	assertEquals(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-void testTps(void) {
+TEST(sensors, tps) {
 	print("************************************************** testTps\r\n");
 
 	EngineTestHelper eth(DODGE_RAM);
@@ -57,11 +57,7 @@ void testTpsRateOfChange(void) {
 //	assertEquals(25, getTpsRateOfChange());
 }
 
-void testSensors(void) {
-	print("************************************************** testSensors\r\n");
-	testMapDecoding();
-	testTps();
-	testTpsRateOfChange();
+TEST(sensors, tm) {
 
 	ThermistorMath tm;
 	{

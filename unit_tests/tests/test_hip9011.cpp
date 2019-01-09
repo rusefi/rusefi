@@ -7,8 +7,6 @@
 #include "unit_test_framework.h"
 #include "hip9011_lookup.h"
 #include "HIP9011_logic.h"
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
 using ::testing::_;
 
 TEST(hip9011, lookup) {

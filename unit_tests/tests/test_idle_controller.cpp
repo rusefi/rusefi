@@ -8,7 +8,7 @@
 #include "engine_test_helper.h"
 #include "pid.h"
 
-void testPidController(void) {
+TEST(idle, pid) {
 	print("******************************************* testPidController\r\n");
 	pid_s pidS;
 	pidS.pFactor = 50;

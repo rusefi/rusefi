@@ -13,6 +13,7 @@
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
 
+
 /**
  * Mock engine with trigger signal simulation infrastructure
  */
