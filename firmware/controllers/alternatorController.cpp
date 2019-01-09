@@ -24,7 +24,7 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-static SimplePwm alternatorControl;
+static SimplePwm alternatorControl("alt");
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
 static Pid altPid(altPidS);
 
@@ -162,7 +162,10 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 		enginePins.alternatorPin.initPin("on/off alternator", boardConfiguration->alternatorControlPin);
 
 	} else {
-		startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
+		startSimplePwmExt(&alternatorControl,
+				"Alternator control",
+				&engine->executor,
+				boardConfiguration->alternatorControlPin,
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0.1, applyAlternatorPinState);
 	}

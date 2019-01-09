@@ -82,10 +82,10 @@ static THD_WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
 /**
  * @brief Pulse-Width Modulation state
  */
-static SimplePwm etbPwmUp CCM_OPTIONAL;
+static SimplePwm etbPwmUp("etbUp") CCM_OPTIONAL;
 static float valueOverride = NAN;
 /*
-static SimplePwm etbPwmDown CCM_OPTIONAL;
+static SimplePwm etbPwmDown("etbDown") CCM_OPTIONAL;
 static OutputPin outputDirectionOpen CCM_OPTIONAL;
 */
 static OutputPin outputDirectionClose CCM_OPTIONAL;
@@ -282,6 +282,7 @@ void startETBPins(void) {
 
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
+			&engine->executor,
 			boardConfiguration->etbControlPin1,
 			&enginePins.etbOutput1,
 			freq,

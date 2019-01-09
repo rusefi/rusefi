@@ -36,7 +36,7 @@ struct CJ125_state {
 	efitick_t prevNt;
 };
 
-static SimplePwm wboHeaterControl;
+static SimplePwm wboHeaterControl("wbo");
 static OutputPin wboHeaterPin;
 static OutputPin cj125Cs;
 static Logging *logger;
@@ -398,7 +398,9 @@ static void cjStartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (boardConfiguration->wboHeaterPin != GPIO_UNASSIGNED) {
 		scheduleMsg(logger, "cj125: Starting heater control");
 		// todo: use custom pin state method, turn pin off while not running
-		startSimplePwmExt(&wboHeaterControl, "wboHeaterPin", boardConfiguration->wboHeaterPin,
+		startSimplePwmExt(&wboHeaterControl, "wboHeaterPin",
+				&engine->executor,
+				boardConfiguration->wboHeaterPin,
 				&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f, applyPinState);
 		cjSetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
