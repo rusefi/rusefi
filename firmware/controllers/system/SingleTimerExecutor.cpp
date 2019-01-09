@@ -21,12 +21,9 @@
 #include "efitime.h"
 #include "efilib2.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER || defined(__DOXYGEN__)
 #include "microsecond_timer.h"
 #include "tunerstudio_configuration.h"
-#endif
-
-#if (EFI_SIGNAL_EXECUTOR_ONE_TIMER && EFI_PROD_CODE )|| defined(__DOXYGEN__)
 #include "rfiutil.h"
 
 static Executor instance;
