@@ -659,7 +659,9 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			if (frequency == 0) {
 				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), boardConfiguration->fsioOutputPins[i], &DEFAULT_OUTPUT);
 			} else {
-				startSimplePwmExt(&fsioPwm[i], "FSIOpwm", brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, applyPinState);
+				startSimplePwmExt(&fsioPwm[i], "FSIOpwm",
+						&engine->executor,
+						brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f, applyPinState);
 			}
 		}
 	}

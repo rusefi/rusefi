@@ -45,11 +45,13 @@ static void test100dutyCycle() {
 	print("*************************************** test100dutyCycle\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
-	SimplePwm pwm;
+	TestExecutor executor;
+	SimplePwm pwm("test PWM1");
 	OutputPin pin;
 	schedulingQueue.clear();
 
 	startSimplePwm(&pwm, "unit_test",
+			&executor,
 			&pin,
 			1000 /* frequency */,
 			1.0 /* duty cycle */,
@@ -71,11 +73,13 @@ static void testSwitchToNanPeriod() {
 	print("*************************************** testSwitchToNanPeriod\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
-	SimplePwm pwm;
+	TestExecutor executor;
+	SimplePwm pwm("test PWM1");
 	OutputPin pin;
 	schedulingQueue.clear();
 
 	startSimplePwm(&pwm, "unit_test",
+			&executor,
 			&pin,
 			1000 /* frequency */,
 			0.60 /* duty cycle */,
@@ -108,11 +112,14 @@ void testPwmGenerator() {
 	print("*************************************** testPwmGenerator\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
-	SimplePwm pwm;
+	TestExecutor executor;
+	SimplePwm pwm("test PWM3");
 	OutputPin pin;
 	schedulingQueue.clear();
 
-	startSimplePwm(&pwm, "unit_test",
+	startSimplePwm(&pwm,
+			"unit_test",
+			&executor,
 			&pin,
 			1000 /* frequency */,
 			0.80 /* duty cycle */,

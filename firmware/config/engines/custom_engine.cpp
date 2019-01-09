@@ -41,7 +41,7 @@ static void toggleTestAndScheduleNext() {
 	testPin.toggle();
 	periodIndex = (periodIndex + 1) % TEST_LEN;
 	testTime += test557[periodIndex];
-	scheduleByTimestamp(&scheduling, testTime, (schfunc_t) &toggleTestAndScheduleNext, NULL);
+	engine->executor.scheduleByTimestamp(&scheduling, testTime, (schfunc_t) &toggleTestAndScheduleNext, NULL);
 
 }
 

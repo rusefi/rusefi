@@ -10,6 +10,7 @@
 
 #include "global.h"
 #include "pwm_generator_logic.h"
+#include "error_handling.h"
 
 /**
  * We need to limit the number of iterations in order to avoid precision loss while calculating
@@ -29,6 +30,10 @@ SimplePwm::SimplePwm() {
 	init(_switchTimes, sr);
 }
 
+SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
+	this->name = name;
+}
+
 void PwmConfig::baseConstructor() {
 	memset((void*)&scheduling, 0, sizeof(scheduling));
 	memset((void*)&safe, 0, sizeof(safe));
@@ -39,6 +44,8 @@ void PwmConfig::baseConstructor() {
 	phaseCount = 0;
 	pwmCycleCallback = NULL;
 	stateChangeCallback = NULL;
+	executor = NULL;
+	name = "[noname]";
 }
 
 PwmConfig::PwmConfig() {
@@ -216,6 +223,11 @@ static void timerCallback(PwmConfig *state) {
 	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitimeus_t switchTimeUs = state->togglePwmState();
+//	if (state->executor == NULL) {
+//		firmwareError(CUSTOM_ERR_6695, "exec on %s", state->name);
+//		return;
+//	}
+
 	scheduleByTimestamp(&state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
 	state->dbgNestingLevel--;
 }
@@ -246,8 +258,9 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
  * this method also starts the timer cycle
  * See also startSimplePwm
  */
-void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTimes, int waveCount,
+void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor, int phaseCount, float *switchTimes, int waveCount,
 		pin_state_t **pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
+	this->executor = executor;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {
@@ -275,7 +288,8 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 	timerCallback(this);
 }
 
-void startSimplePwm(SimplePwm *state, const char *msg, OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
+		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 	efiAssertVoid(CUSTOM_ERR_6692, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_6665, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 	if (frequency < 1) {
@@ -292,15 +306,17 @@ void startSimplePwm(SimplePwm *state, const char *msg, OutputPin *output, float 
 	state->outputPins[0] = output;
 
 	state->setFrequency(frequency);
-	state->weComplexInit(msg, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
+	state->weComplexInit(msg, executor, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
 }
 
-void startSimplePwmExt(SimplePwm *state, const char *msg, brain_pin_e brainPin, OutputPin *output, float frequency,
+void startSimplePwmExt(SimplePwm *state, const char *msg,
+		ExecutorInterface *executor,
+		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 
 	output->initPin(msg, brainPin);
 
-	startSimplePwm(state, msg, output, frequency, dutyCycle, stateChangeCallback);
+	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, stateChangeCallback);
 }
 
 /**

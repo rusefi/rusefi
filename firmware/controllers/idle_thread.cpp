@@ -57,7 +57,7 @@ static Pid idlePid(&engineConfiguration->idleRpmPid);
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
-static SimplePwm idleSolenoid;
+static SimplePwm idleSolenoid("idle");
 
 static StepperMotor iacMotor;
 
@@ -465,7 +465,9 @@ static void initIdleHardware() {
 		/**
 		 * Start PWM for idleValvePin
 		 */
-		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &enginePins.idleSolenoidPin,
+		startSimplePwmExt(&idleSolenoid, "Idle Valve",
+				&engine->executor,
+				boardConfiguration->idle.solenoidPin, &enginePins.idleSolenoidPin,
 				boardConfiguration->idle.solenoidFrequency, boardConfiguration->manIdlePosition / 100,
 				applyIdleSolenoidPinState);
 		idlePositionSensitivityThreshold = 0.0f;
