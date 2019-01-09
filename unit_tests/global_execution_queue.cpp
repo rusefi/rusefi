@@ -22,19 +22,26 @@ void scheduleForLater(scheduling_s *scheduling, int delayUs,
 	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
+void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	if (debugSignalExecutor) {
+		printf("scheduleTask %d\r\n", delayUs);
+	}
+	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
+}
+
 void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
-		printf("scheduleByTime %d\r\n", time);
+		printf("scheduleByTime %d\r\n", timeUs);
 	}
-	schedulingQueue.insertTask(scheduling, time, callback, param);
+	schedulingQueue.insertTask(scheduling, timeUs, callback, param);
 }
 
 void scheduleByTimestamp(scheduling_s *scheduling,
-		efitimeus_t time, schfunc_t callback, void *param) {
+		efitimeus_t timeUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
-		printf("scheduleByTime %d\r\n", time);
+		printf("scheduleByTime %d\r\n", timeUs);
 	}
-	schedulingQueue.insertTask(scheduling, time, callback, param);
+	schedulingQueue.insertTask(scheduling, timeUs, callback, param);
 }
 
 void initSignalExecutorImpl(void) {

@@ -91,6 +91,10 @@ void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback,
 	}
 }
 
+void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	::scheduleForLater(scheduling, delayUs, callback, param);
+}
+
 void initSignalExecutorImpl(void) {
 
 }

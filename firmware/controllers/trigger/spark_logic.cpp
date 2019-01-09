@@ -224,7 +224,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		scheduleForLater(sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent);
+		engine->executor.scheduleForLater(sUp, chargeDelayUs, (schfunc_t) &turnSparkPinHigh, iEvent);
 	}
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
@@ -264,7 +264,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-		scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent);
+		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent);
 	} else {
 #if SPARK_EXTREME_LOGGING || defined(__DOXYGEN__)
 		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkPosition.eventIndex);
@@ -368,7 +368,7 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
-			scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current);
+			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current);
 		}
 	}
 

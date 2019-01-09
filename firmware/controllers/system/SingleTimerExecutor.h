@@ -15,6 +15,7 @@ class SingleTimerExecutor : public ExecutorInterface {
 public:
 	SingleTimerExecutor();
 	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
+	void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
 	void onTimerCallback();
 	int timerCallbackCounter;
 	int scheduleCounter;
