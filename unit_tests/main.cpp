@@ -129,6 +129,8 @@ GTEST_API_ int main(int argc, char **argv) {
 	printAllTriggers();
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);
+	// uncomment if you only want to run selected tests
+	//::testing::GTEST_FLAG(filter) = "hip*";
 	return RUN_ALL_TESTS();
 }
 
