@@ -11,7 +11,7 @@
 #include "scheduler.h"
 #include "event_queue.h"
 
-class Executor {
+class Executor : public ExecutorInterface {
 public:
 	Executor();
 	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);

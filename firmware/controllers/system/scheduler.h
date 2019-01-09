@@ -29,7 +29,13 @@ public:
 /**
  * see also scheduleByAngle
  */
+// Deprecated see https://github.com/rusefi/rusefi/issues/655
 void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
+// Deprecated see https://github.com/rusefi/rusefi/issues/655
 void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param);
+
+class ExecutorInterface {
+	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) = 0;
+};
 
 #endif /* SCHEDULER_H_ */

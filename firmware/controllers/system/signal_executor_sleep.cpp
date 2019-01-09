@@ -34,8 +34,12 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	scheduleForLater(scheduling, time - getTimeNowUs(), callback, param);
+void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
+	scheduleForLater(scheduling, timeUs - getTimeNowUs(), callback, param);
+}
+
+void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
+	scheduleForLater(scheduling, timeUs - getTimeNowUs(), callback, param);
 }
 
 static void timerCallback(scheduling_s *scheduling) {

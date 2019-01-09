@@ -198,7 +198,7 @@ void seTurnPinLow(InjectionSignalPair *pair) {
 	ENGINE(injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionSignalPair *pair) {
+static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionSignalPair *pair DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
 	InjectorOutputPin *param = pair->outputs[0];
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
@@ -341,10 +341,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		} else {
-			sescheduleByTimestamp(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair);
+			sescheduleByTimestamp(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
-		sescheduleByTimestamp(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair);
+		sescheduleByTimestamp(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
