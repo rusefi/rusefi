@@ -17,6 +17,7 @@ public:
 	void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
 	void clear();
 	int size();
+	scheduling_s* getForUnitTest(int index);
 };
 
 #endif /* GLOBAL_EXECUTION_QUEUE_H_ */
