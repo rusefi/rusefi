@@ -381,7 +381,7 @@ void testRpmCalculator(void) {
 
 	}
 
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 	eth.fireFall(5);
 	eth.fireRise(5);
@@ -391,7 +391,7 @@ void testRpmCalculator(void) {
 	assertEqualsM("ev 3", start + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM2("ev 5", start + 14277, schedulingQueue.getForUnitText(1)->momentX, 2);
 	assertEqualsM("3/3", start + 14777, schedulingQueue.getForUnitText(2)->momentX);
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));

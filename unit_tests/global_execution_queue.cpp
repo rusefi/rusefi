@@ -14,6 +14,10 @@ EventQueue schedulingQueue;
 
 bool_t debugSignalExecutor = false;
 
+TestExecutor::TestExecutor() {
+
+}
+
 void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleTask %d\r\n", delayUs);
@@ -21,15 +25,12 @@ void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfu
 	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
-	if (debugSignalExecutor) {
-		printf("scheduleByTime %d\r\n", timeUs);
-	}
-	schedulingQueue.insertTask(scheduling, timeUs, callback, param);
+
+void TestExecutor::clear() {
+	schedulingQueue.clear();
 }
 
-void scheduleByTimestamp(scheduling_s *scheduling,
-		efitimeus_t timeUs, schfunc_t callback, void *param) {
+void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", timeUs);
 	}
