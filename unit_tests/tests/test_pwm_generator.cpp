@@ -25,10 +25,10 @@ static void testApplyPinState(PwmConfig *state, int stateIndex) {
 	printf("PWM_test: setPinValue=%d @ timeNow=%d\r\n", pinValue, timeNowUs);
 }
 
-static void assertNextEvent(const char *msg, int expectedPinState) {
+static void assertNextEvent(const char *msg, int expectedPinState, TestExecutor *executor) {
 	printf("PWM_test: Asserting event [%s]\r\n", msg);
 	// only one action expected in queue
-	assertEqualsM("PWM_test: schedulingQueue size", 1, schedulingQueue.size());
+	assertEqualsM("PWM_test: schedulingQueue size", 1, executor->size());
 
 	// move time to next event timestamp
 	timeNowUs = expectedTimeOfNextEvent;
@@ -38,7 +38,7 @@ static void assertNextEvent(const char *msg, int expectedPinState) {
 	assertEqualsM5(msg, " pin state", expectedPinState, pinValue, 0);
 
 	// assert that we have one new action in queue
-	assertEqualsM("PWM_test: queue.size", 1, schedulingQueue.size());
+	assertEqualsM("PWM_test: queue.size", 1, executor->size());
 }
 
 static void test100dutyCycle() {
@@ -60,13 +60,13 @@ static void test100dutyCycle() {
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("1@1000/100", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@100", HIGH_VALUE);
+	assertNextEvent("exec@100", HIGH_VALUE, &executor);
 
 	expectedTimeOfNextEvent += 1000;
-	assertNextEvent("exec2@100", HIGH_VALUE);
+	assertNextEvent("exec2@100", HIGH_VALUE, &executor);
 
 	expectedTimeOfNextEvent += 1000;
-	assertNextEvent("exec3@100", HIGH_VALUE);
+	assertNextEvent("exec3@100", HIGH_VALUE, &executor);
 }
 
 static void testSwitchToNanPeriod() {
@@ -88,21 +88,21 @@ static void testSwitchToNanPeriod() {
 	expectedTimeOfNextEvent += 600;
 	assertEqualsM2("1@1000/70", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@70", LOW_VALUE);
+	assertNextEvent("exec@70", LOW_VALUE, &executor);
 	assertEqualsM("time1", 600, timeNowUs);
 
 	expectedTimeOfNextEvent += 400;
-	assertNextEvent("exec2@70", HIGH_VALUE);
+	assertNextEvent("exec2@70", HIGH_VALUE, &executor);
 
 	pwm.setFrequency(NAN);
 
 	expectedTimeOfNextEvent += 600;
 	assertEqualsM2("1@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
-	assertNextEvent("exec2@NAN", LOW_VALUE);
+	assertNextEvent("exec2@NAN", LOW_VALUE, &executor);
 
 	expectedTimeOfNextEvent += MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
 	assertEqualsM2("2@1000/NAN", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
-	assertNextEvent("exec3@NAN", LOW_VALUE);
+	assertNextEvent("exec3@NAN", LOW_VALUE, &executor);
 }
 
 void testPwmGenerator() {
@@ -129,7 +129,7 @@ void testPwmGenerator() {
 	expectedTimeOfNextEvent += 800;
 	assertEqualsM2("1@1000/80", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@0", LOW_VALUE);
+	assertNextEvent("exec@0", LOW_VALUE, &executor);
 	assertEqualsM("time1", 800, timeNowUs);
 
 	expectedTimeOfNextEvent += 200;
@@ -139,33 +139,33 @@ void testPwmGenerator() {
 	pwm.setSimplePwmDutyCycle(0);
 	assertEqualsM2("2@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@1", LOW_VALUE);
+	assertNextEvent("exec@1", LOW_VALUE, &executor);
 	assertEqualsM("time2", 1000, timeNowUs);
 
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("3@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@2", LOW_VALUE /* pin value */);
+	assertNextEvent("exec@2", LOW_VALUE /* pin value */, &executor);
 	assertEqualsM("time3", 2000, timeNowUs);
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("4@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@3", LOW_VALUE /* pin value */);
+	assertNextEvent("exec@3", LOW_VALUE /* pin value */, &executor);
 	assertEqualsM("time4", 3000, timeNowUs);
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("5@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@4", LOW_VALUE /* pin value */);
+	assertNextEvent("exec@4", LOW_VALUE /* pin value */, &executor);
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM2("6@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
-	assertNextEvent("exec@5", LOW_VALUE /* pin value */);
+	assertNextEvent("exec@5", LOW_VALUE /* pin value */, &executor);
 	expectedTimeOfNextEvent += 1000;
 	assertEqualsM("time4", 5000, timeNowUs);
 	assertEqualsM2("7@1000/0", expectedTimeOfNextEvent, schedulingQueue.getForUnitText(0)->momentX, 0);
 
 
-	assertNextEvent("exec@6", LOW_VALUE /* pin value */);
+	assertNextEvent("exec@6", LOW_VALUE /* pin value */, &executor);
 }
 
 

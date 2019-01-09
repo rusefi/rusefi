@@ -23,8 +23,8 @@ void assertTrueM(const char *msg, float actual);
 void assertFalse(float actual);
 void assertFalseM(const char *msg, float actual);
 
-scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX);
-void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
+scheduling_s * assertEvent5(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX);
+void assertEvent(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
 void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 

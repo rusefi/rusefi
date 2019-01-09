@@ -49,14 +49,14 @@ void testFasterEngineSpinningUp() {
 	// due to isFasterEngineSpinUp=true, we should have already detected RPM!
 	assertEqualsM("RPM#1", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
-	assertEqualsM("plain#1", 4, schedulingQueue.size());
+	assertEqualsM("plain#1", 4, engine->executor.size());
 	// test if they are simultaneous
 	assertEquals(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// test if ignition mode is temporary changed to wasted spark, if set to ind.coils
 	assertEquals(IM_WASTED_SPARK, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check real events
-	assertEvent5("inj start#1", 0, (void*)startSimultaniousInjection, timeStartUs, MS2US(200) + 97975);
-	assertEvent5("inj end#1", 1, (void*)endSimultaniousInjection, timeStartUs, MS2US(200) + 100000);
+	assertEvent5(&engine->executor, "inj start#1", 0, (void*)startSimultaniousInjection, timeStartUs, MS2US(200) + 97975);
+	assertEvent5(&engine->executor, "inj end#1", 1, (void*)endSimultaniousInjection, timeStartUs, MS2US(200) + 100000);
 
 	// skip the rest of the cycle
 	eth.fireFall(200);
@@ -75,10 +75,10 @@ void testFasterEngineSpinningUp() {
 	// test if ignition mode is restored to ind.coils
 	assertEquals(IM_INDIVIDUAL_COILS, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
-	assertEqualsM("plain#2", 4, schedulingQueue.size());
+	assertEqualsM("plain#2", 4, engine->executor.size());
 	// check real events
-	assertEvent5("inj start#2", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
-	assertEvent5("inj end#2", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
+	assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
+	assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
 
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
@@ -94,10 +94,10 @@ void testFasterEngineSpinningUp() {
 	// check if the injection mode is back to sequential now
 	assertEquals(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// 4 sequential injections for the full cycle
-	assertEqualsM("plain#3", 8, schedulingQueue.size());
+	assertEqualsM("plain#3", 8, engine->executor.size());
 
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!
-	assertEvent5("inj start#3", 0, (void*)seTurnPinHigh, timeStartUs, MS2US(60) + 27974);
-	assertEvent5("inj end#3", 1, (void*)seTurnPinLow, timeStartUs, MS2US(60) + 27974 + 3000);
+	assertEvent5(&engine->executor, "inj start#3", 0, (void*)seTurnPinHigh, timeStartUs, MS2US(60) + 27974);
+	assertEvent5(&engine->executor, "inj end#3", 1, (void*)seTurnPinLow, timeStartUs, MS2US(60) + 27974 + 3000);
 }
