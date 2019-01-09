@@ -375,12 +375,12 @@ void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
  * it takes the crankshaft to rotate to the specified angle.
  */
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
-		schfunc_t callback, void *param, RpmCalculator *calc) {
+		schfunc_t callback, void *param, RpmCalculator *calc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ANGLE_NAN, !cisnan(angle), "NaN angle?");
 	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
 	float delayUs = calc->oneDegreeUs * angle;
 	efiAssertVoid(CUSTOM_ERR_6635, !cisnan(delayUs), "NaN delay?");
-	scheduleForLater(timer, (int) delayUs, callback, param);
+	engine->executor.scheduleForLater(timer, (int) delayUs, callback, param);
 }
 #endif
 

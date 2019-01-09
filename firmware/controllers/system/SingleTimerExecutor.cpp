@@ -67,7 +67,14 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
 }
 
 /**
+ * @brief Schedule an event at specific delay after now
+ *
+ * Invokes event callback after the specified amount of time.
  * callback would be executed either on ISR thread or current thread if we would need to execute right away
+ *
+ * @param [in, out] scheduling Data structure to keep this event in the collection.
+ * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
+ * @param [in] dwell the number of ticks of output duration.
  */
 void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
@@ -147,19 +154,6 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	uint32_t beforeHwSetTimer = GET_TIMESTAMP();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
 	hwSetTimerDuration = GET_TIMESTAMP() - beforeHwSetTimer;
-}
-
-/**
- * @brief Schedule an event at specific delay after now
- *
- * Invokes event callback after the specified amount of time.
- *
- * @param [in, out] scheduling Data structure to keep this event in the collection.
- * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
- * @param [in] dwell the number of ticks of output duration.
- */
-void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	_engine.executor.scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
 /**
