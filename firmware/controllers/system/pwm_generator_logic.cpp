@@ -223,7 +223,7 @@ static void timerCallback(PwmConfig *state) {
 	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitimeus_t switchTimeUs = state->togglePwmState();
-//	if (state->executor == NULL) {
+	if (state->executor == NULL) {
 //		firmwareError(CUSTOM_ERR_6695, "exec on %s", state->name);
 //		return;
 	}
