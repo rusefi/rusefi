@@ -2,7 +2,7 @@
  * @file	engine.h
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 #ifndef H_ENGINE_H_
 #define H_ENGINE_H_
@@ -18,6 +18,16 @@
 #include "listener_array.h"
 #include "accel_enrichment.h"
 #include "trigger_central.h"
+
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+// PROD real firmware uses this implementation
+#include "SingleTimerExecutor.h"
+#endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
+#if EFI_SIGNAL_EXECUTOR_SLEEP
+#endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
+#if EFI_UNIT_TEST
+#include "global_execution_queue.h"
+#endif /* EFI_UNIT_TEST */
 
 #define MOCK_ADC_SIZE 16
 
@@ -316,6 +326,16 @@ public:
 	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
 	IgnitionEventList ignitionEvents;
 
+	// a pointer with interface type would make this code nicer but would carry extra runtime
+	// cost to resolve pointer, we use instances as a micro optimization
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+	Executor executor;
+#endif
+#if EFI_SIGNAL_EXECUTOR_SLEEP
+#endif
+#if EFI_UNIT_TEST
+	TestExecutor executor;
+#endif
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	FuelSchedule injectionEvents;

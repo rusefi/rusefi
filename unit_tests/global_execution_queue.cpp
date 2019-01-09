@@ -7,6 +7,7 @@
 
 #include "signal_executor.h"
 #include "event_queue.h"
+#include "global_execution_queue.h"
 
 // this global instance is used by integration tests via 'scheduleByTimestamp' global methods below
 EventQueue schedulingQueue;
@@ -19,6 +20,13 @@ void scheduleForLater(scheduling_s *scheduling, int delayUs,
 		printf("scheduleTask %d\r\n", delayUs);
 	}
 	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
+}
+
+void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
+	if (debugSignalExecutor) {
+		printf("scheduleByTime %d\r\n", time);
+	}
+	schedulingQueue.insertTask(scheduling, time, callback, param);
 }
 
 void scheduleByTimestamp(scheduling_s *scheduling,
