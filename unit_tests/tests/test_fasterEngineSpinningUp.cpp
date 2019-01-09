@@ -37,7 +37,7 @@ void testFasterEngineSpinningUp() {
 	// check RPM
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// the queue should be empty, no trigger events yet
-	assertEqualsM("plain#1", 0, schedulingQueue.size());
+	assertEqualsM("plain#1", 0, engine->executor.size());
 
 	// check all events starting from now
 	int timeStartUs = timeNowUs;
