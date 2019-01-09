@@ -304,10 +304,10 @@ extern EnginePins enginePins;
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 	timeNowUs = 0;
-	schedulingQueue.clear();
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
+	engine->executor.clear();
 	IgnitionEventList *ilist = &engine->ignitionEvents;
 	assertEqualsM("size #1", 0, ilist->isReady);
 
@@ -417,23 +417,23 @@ void testRpmCalculator(void) {
 
 	assertEqualsM("index #4", 6, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 4", 4, schedulingQueue.size());
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 	eth.fireFall(5);
 	assertEqualsM("queue size 5", 2, schedulingQueue.size());
 // todo: assert queue elements
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 
 	eth.fireRise(5);
 	assertEqualsM("queue size 6", 2, schedulingQueue.size());
 	assertEqualsM("6/0", start + 40944, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("6/1", start + 41444, schedulingQueue.getForUnitText(1)->momentX);
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 	eth.fireFall(5);
 	assertEqualsM("queue size 7", 0, schedulingQueue.size());
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 	timeNowUs += 5000; // 5ms
 	eth.firePrimaryTriggerRise();
@@ -442,17 +442,17 @@ void testRpmCalculator(void) {
 	assertEqualsM("8/0", start + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM2("8/1", start + 54277, schedulingQueue.getForUnitText(1)->momentX, 0);
 	assertEqualsM2("8/2", start + 54777, schedulingQueue.getForUnitText(2)->momentX, 0);
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 
 	eth.fireFall(5);
 	assertEqualsM("queue size 9", 0, schedulingQueue.size());
-	schedulingQueue.clear();
+	engine->executor.clear();
 
 
 	eth.fireRise(5);
 	assertEqualsM("queue size 10", 0, schedulingQueue.size());
-	schedulingQueue.clear();
+	engine->executor.clear();
 }
 
 void testTriggerDecoder(void) {

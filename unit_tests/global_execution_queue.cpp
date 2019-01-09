@@ -30,6 +30,10 @@ void TestExecutor::clear() {
 	schedulingQueue.clear();
 }
 
+int TestExecutor::size() {
+	return schedulingQueue.size();
+}
+
 void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", timeUs);

@@ -17,7 +17,7 @@ void testSpeedDensity(void) {
 	printf("*************************************************** testSpeedDensity\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
-	schedulingQueue.clear(); // todo: there must be a better place for this
+	engine->executor.clear(); // todo: there must be a better place for this
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	eth.applyTriggerShape();
