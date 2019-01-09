@@ -5,13 +5,13 @@ LIBS:mechanical
 LIBS:TLE8110ED-cache
 EELAYER 25 0
 EELAYER END
-$Descr A4 11693 8268
+$Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
-Comp ""
+Title "TLE8110ED breakout board"
+Date "2019-01-06"
+Rev "0.1"
+Comp "rusEFI"
 Comment1 ""
 Comment2 ""
 Comment3 ""
