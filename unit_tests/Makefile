@@ -237,7 +237,13 @@ DINCDIR =
 DLIBDIR =
 
 # List all default libraries here
-DLIBS = -static-libgcc -static -static-libstdc++
+ifeq ($(OS),Windows_NT)
+  # Windows
+  DLIBS = -static-libgcc -static -static-libstdc++
+else
+  # Linux
+  DLIBS = -pthread
+endif
 
 #
 # End of default section
