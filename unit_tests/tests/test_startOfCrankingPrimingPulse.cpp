@@ -32,10 +32,10 @@ void testPlainCrankingWithoutAdvancedFeatures() {
 	eth.fireRise(200);
 	assertEqualsM("RPM#2", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
-	assertEqualsM("plain#2", 4, schedulingQueue.size());
+	assertEqualsM("plain#2", 4, engine->executor.size());
 
-	assertEvent5("sim start", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
-	assertEvent5("sim end", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
+	assertEvent5(&engine->executor, "sim start", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
+	assertEvent5(&engine->executor, "sim end", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
 }
 
 
@@ -65,6 +65,6 @@ void testStartOfCrankingPrimingPulse() {
 	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
-	assertEqualsM("prime fuel", 1, schedulingQueue.size());
+	assertEqualsM("prime fuel", 1, engine->executor.size());
 }
 
