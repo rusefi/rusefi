@@ -104,13 +104,13 @@ void miataNAcommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
 
-	CONFIGB(idle).solenoidFrequency = 160;
-	CONFIGB(idle).solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
+	boardConfiguration->idle.solenoidFrequency = 160;
+	boardConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
 
-	CONFIGB(ignitionPins)[0] = GPIOE_14; // Frankenso high side - pin 1G
-	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
-	CONFIGB(ignitionPins)[2] = GPIOC_7; // Frankenso high side - pin 1H
-	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 }
@@ -154,7 +154,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
-	CONFIGB(isSdCardEnabled) = true;
+	boardConfiguration->isSdCardEnabled = true;
 
 	// my car was originally a manual so proper TPS
 	engineConfiguration->tpsMin = 93; // convert 12to10 bit (ADC/4)
@@ -180,14 +180,14 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	/*
 //WARNING:	these indeces are off
-	CONFIGB(fsio_setting)[0] = 6400; // RPM threshold
-	CONFIGB(fsio_setting)[1] = 100; // CLT threshold, fsio_setting #2
-	CONFIGB(fsio_setting)[2] = 13.0; // voltage threshold, fsio_setting #3
+	boardConfiguration->fsio_setting[0] = 6400; // RPM threshold
+	boardConfiguration->fsio_setting[1] = 100; // CLT threshold, fsio_setting #2
+	boardConfiguration->fsio_setting[2] = 13.0; // voltage threshold, fsio_setting #3
 
 	//	set_fsio_setting 4 3000
-	CONFIGB(fsio_setting)[3] = 3000; // oil pressure RPM, fsio_setting #4
+	boardConfiguration->fsio_setting[3] = 3000; // oil pressure RPM, fsio_setting #4
 	// set_fsio_setting 5 0.52
-	CONFIGB(fsio_setting)[4] = 0.52; // oil pressure threshold, fsio_setting #5
+	boardConfiguration->fsio_setting[4] = 0.52; // oil pressure threshold, fsio_setting #5
 */
 
 //	 * set_rpn_expression 1 "rpm 3 fsio_setting >"
@@ -199,10 +199,10 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: convert
 	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
 
-	CONFIGB(injectionPins)[0] = GPIOD_3; // #1&3 pin 3U
-	CONFIGB(injectionPins)[1] = GPIOE_2; // #2&4 pin 3V
-	CONFIGB(injectionPins)[2] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[3] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
+	boardConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V
+	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->injectionMode = IM_BATCH;
 

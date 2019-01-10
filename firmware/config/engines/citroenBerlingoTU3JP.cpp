@@ -17,15 +17,13 @@
 #include "citroenBerlingoTU3JP.h"
 #include "settings.h"
 
-EXTERN_ENGINE;
-
-static void setLCD(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIGB(HD44780_rs) = GPIOE_7;
-	CONFIGB(HD44780_e) = GPIOE_9;
-	CONFIGB(HD44780_db4) = GPIOE_11;
-	CONFIGB(HD44780_db5) = GPIOE_13;
-	CONFIGB(HD44780_db6) = GPIOE_15;
-	CONFIGB(HD44780_db7) = GPIOB_10;
+void setLCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIOE_7;
+	boardConfiguration->HD44780_e = GPIOE_9;
+	boardConfiguration->HD44780_db4 = GPIOE_11;
+	boardConfiguration->HD44780_db5 = GPIOE_13;
+	boardConfiguration->HD44780_db6 = GPIOE_15;
+	boardConfiguration->HD44780_db7 = GPIOB_10;
 }
 
 static const fuel_table_t tps_fuel_table = {
@@ -122,35 +120,35 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenstein lo-side output #11: PB8	Main relay
 	// Frankenstein lo-side output #12: PB9	Fuel pump
 
-	CONFIGB(ignitionPins)[0] = GPIOC_14;
-	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
-	CONFIGB(ignitionPins)[2] = GPIOC_15;
-	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[0] = GPIOC_14;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOC_15;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->injector.flow = 137; //SIEMENS DEKA VAZ20734
-	CONFIGB(injectionPins)[0] = GPIOE_6;
-	CONFIGB(injectionPins)[1] = GPIOC_13;
-	CONFIGB(injectionPins)[2] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[3] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[0] = GPIOE_6;
+	boardConfiguration->injectionPins[1] = GPIOC_13;
+	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
-	CONFIGB(fanPin) = GPIOE_0;
-	CONFIGB(fanPinMode) = OM_DEFAULT;
+	boardConfiguration->fanPin = GPIOE_0;
+	boardConfiguration->fanPinMode = OM_DEFAULT;
 	engineConfiguration->fanOffTemperature = 95;
 	engineConfiguration->fanOnTemperature = 99;
 
-	CONFIGB(malfunctionIndicatorPin) = GPIOE_1;
-	CONFIGB(malfunctionIndicatorPinMode) = OM_DEFAULT;
+	boardConfiguration->malfunctionIndicatorPin = GPIOE_1;
+	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	CONFIGB(mainRelayPin) = GPIOB_8;
+	boardConfiguration->mainRelayPin = GPIOB_8;
 
-	CONFIGB(fuelPumpPin) = GPIOB_9;
-	CONFIGB(fuelPumpPinMode) = OM_DEFAULT;
+	boardConfiguration->fuelPumpPin = GPIOB_9;
+	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	setLCD(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setLCD(boardConfiguration);
 
 
-//	CONFIGB(o2heaterPin) = GPIOC_13;
-//	CONFIGB(logicAnalyzerPins)[1] = GPIO_UNASSIGNED;
+//	boardConfiguration->o2heaterPin = GPIOC_13;
+//	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
 
 	/**
 	 * Inputs
@@ -208,7 +206,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	* Speed Sensor
 	*/
-	CONFIGB(vehicleSpeedSensorInputPin) = GPIOA_8;
+	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 	/**
 	* Other
 	*/

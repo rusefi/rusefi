@@ -16,35 +16,35 @@ EXTERN_ENGINE;
 
 void setLadaKalina(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	disableLCD(PASS_ENGINE_PARAMETER_SIGNATURE);
+	disableLCD(boardConfiguration);
 
-	CONFIGB(HD44780_rs) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_e) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db4) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db5) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db6) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db7) = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
-	CONFIGB(triggerInputPins)[0] = GPIOA_5;
-	CONFIGB(triggerInputPins)[1] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
 	engineConfiguration->globalTriggerAngleOffset = 114;
 
-	CONFIGB(ignitionPins)[0] = GPIOE_14;
-	CONFIGB(ignitionPins)[1] = GPIOC_7;
-	CONFIGB(ignitionPins)[2] = GPIOC_9;
-	CONFIGB(ignitionPins)[3] = GPIOE_12;
+	boardConfiguration->ignitionPins[0] = GPIOE_14;
+	boardConfiguration->ignitionPins[1] = GPIOC_7;
+	boardConfiguration->ignitionPins[2] = GPIOC_9;
+	boardConfiguration->ignitionPins[3] = GPIOE_12;
 
-	CONFIGB(useStepperIdle) = true;
-	CONFIGB(fuelPumpPin) = GPIOC_13;
-	CONFIGB(mainRelayPin) = GPIOD_7;
+	boardConfiguration->useStepperIdle = true;
+	boardConfiguration->fuelPumpPin = GPIOC_13;
+	boardConfiguration->mainRelayPin = GPIOD_7;
 
-	CONFIGB(idle).stepperDirectionPin = GPIOE_15;
-	CONFIGB(idle).stepperStepPin = GPIOE_13;
+	boardConfiguration->idle.stepperDirectionPin = GPIOE_15;
+	boardConfiguration->idle.stepperStepPin = GPIOE_13;
 	engineConfiguration->stepperEnablePin = GPIOE_11;
 
 
