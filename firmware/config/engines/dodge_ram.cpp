@@ -36,27 +36,27 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
 	engineConfiguration->specs.displacement = 5.2;
 
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+	CONFIGB(triggerInputPins)[0] = GPIOC_6;
+	CONFIGB(triggerInputPins)[1] = GPIOA_5;
 
-	boardConfiguration->injectionPins[0] = GPIOE_2;
-	boardConfiguration->injectionPins[1] = GPIOB_9;
-	boardConfiguration->injectionPins[2] = GPIOD_5;
-	boardConfiguration->injectionPins[3] = GPIOB_8;
+	CONFIGB(injectionPins)[0] = GPIOE_2;
+	CONFIGB(injectionPins)[1] = GPIOB_9;
+	CONFIGB(injectionPins)[2] = GPIOD_5;
+	CONFIGB(injectionPins)[3] = GPIOB_8;
 
-	boardConfiguration->injectionPins[4] = GPIOB_7;
-	boardConfiguration->injectionPins[5] = GPIOE_3;
-	boardConfiguration->injectionPins[6] = GPIOE_4;
-	boardConfiguration->injectionPins[7] = GPIOD_3;
+	CONFIGB(injectionPins)[4] = GPIOB_7;
+	CONFIGB(injectionPins)[5] = GPIOE_3;
+	CONFIGB(injectionPins)[6] = GPIOE_4;
+	CONFIGB(injectionPins)[7] = GPIOD_3;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[0] = GPIOC_9;
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->mainRelayPin = GPIOE_5;
-	boardConfiguration->fuelPumpPin = GPIOE_6;
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	CONFIGB(mainRelayPin) = GPIOE_5;
+	CONFIGB(fuelPumpPin) = GPIOE_6;
+	CONFIGB(fanPin) = GPIO_UNASSIGNED;
 
 	engineConfiguration->engineChartSize = 450;
 
@@ -72,11 +72,11 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setWholeTimingTable(10 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
-	boardConfiguration->alternatorControlPin = GPIOD_7;
+	CONFIGB(alternatorControlPin) = GPIOD_7;
 	engineConfiguration->alternatorControl.pFactor = 22;
 
-	boardConfiguration->idle.solenoidPin = GPIOC_13;
-	boardConfiguration->idle.solenoidFrequency = 300;
+	CONFIGB(idle).solenoidPin = GPIOC_13;
+	CONFIGB(idle).solenoidFrequency = 300;
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 //	engineConfiguration->vbattDividerCoeff = ((float) (8.93 + 41.27)) / 8.93 * 2;
@@ -88,5 +88,5 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDodgeSensor(&engineConfiguration->iat);
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	boardConfiguration->useStepperIdle = true;
+	CONFIGB(useStepperIdle) = true;
 }

@@ -72,8 +72,8 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 int getGlobalConfigurationVersion(void);
 
-void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
-void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
+void commonFrankensoAnalogInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setFrankenso0_1_joystick(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination);
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination);

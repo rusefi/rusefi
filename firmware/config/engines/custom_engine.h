@@ -10,8 +10,8 @@
 #include "engine.h"
 
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
-void disableLCD(board_configuration_s *boardConfiguration);
+void setFrankenso_01_LCD(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void disableLCD(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void test557init(void);
 
 void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -154,12 +154,12 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
 
-	//	boardConfiguration->spi2mosiPin = GPIOB_15;
-	//	boardConfiguration->spi2misoPin = GPIOB_14;
-	//	boardConfiguration->spi2sckPin = GPIOB_13;
-	boardConfiguration->cj125CsPin = GPIOB_0; // rev 0.4
-	boardConfiguration->isCJ125Enabled = true;
-	boardConfiguration->is_enabled_spi_2 = true;
+	//	CONFIGB(spi2mosiPin) = GPIOB_15;
+	//	CONFIGB(spi2misoPin) = GPIOB_14;
+	//	CONFIGB(spi2sckPin) = GPIOB_13;
+	CONFIGB(cj125CsPin) = GPIOB_0; // rev 0.4
+	CONFIGB(isCJ125Enabled) = true;
+	CONFIGB(is_enabled_spi_2) = true;
 
 
 	// set_rpm_hard_limit 4000
@@ -223,28 +223,28 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - out #8
-	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - out #6
+	CONFIGB(injectionPins)[0] = GPIOB_9; // Frankenstein: low side - out #12
+	CONFIGB(injectionPins)[1] = GPIOB_8; // Frankenstein: low side - out #11
+	CONFIGB(injectionPins)[2] = GPIOE_3; // Frankenstein: low side - out #8
+	CONFIGB(injectionPins)[3] = GPIOE_5; // Frankenstein: low side - out #6
 
-	boardConfiguration->fuelPumpPin = GPIOC_13; // Frankenstein: low side - out #4
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	CONFIGB(fuelPumpPin) = GPIOC_13; // Frankenstein: low side - out #4
+	CONFIGB(fuelPumpPinMode) = OM_DEFAULT;
 
 	engineConfiguration->mapErrorDetectionTooHigh = 120;
 
 	// set injection_pin_mode 0
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+	CONFIGB(injectionPinMode) = OM_DEFAULT;
 
 	// Frankenstein: high side #1: PE8
 	// Frankenstein: high side #2: PE10
 
-	boardConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: high side #1
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOE_10; // // Frankenstein: high side #2
+	CONFIGB(ignitionPins)[0] = GPIOE_8; // Frankenstein: high side #1
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIOE_10; // // Frankenstein: high side #2
 
 	// set ignition_pin_mode 0
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	CONFIGB(ignitionPinMode) = OM_DEFAULT;
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
 	engineConfiguration->clt.config.bias_resistor = 2700;
@@ -254,10 +254,10 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
-	setFrankenso_01_LCD(boardConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
+	setFrankenso_01_LCD(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setFrankenso0_1_joystick(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-//	boardConfiguration->useWarmupPidAfr = true;
+//	CONFIGB(useWarmupPidAfr) = true;
 	engineConfiguration->warmupAfrPid.pFactor = -0.2;
 	engineConfiguration->warmupAfrPid.iFactor = -0.0005;
 //	engineConfiguration->warmupAfrPid.dFactor = -0.02;
@@ -328,14 +328,14 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setFuelTablesLoadBin(20, 120 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	CONFIGB(malfunctionIndicatorPin) = GPIO_UNASSIGNED;
 
 	/**
 	 * PA4 Wideband O2 Sensor
 	 */
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
-	commonFrankensoAnalogInputs(engineConfiguration);
+	commonFrankensoAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
 	/**
@@ -354,29 +354,29 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenso low out #11: PB8 injector #1
 	// Frankenso low out #12: PB7 injector #4
 
-	boardConfiguration->fanPin = GPIOD_7;
+	CONFIGB(fanPin) = GPIOD_7;
 
-	boardConfiguration->injectionPins[0] = GPIOB_8;
-	boardConfiguration->injectionPins[1] = GPIOB_9;
-	boardConfiguration->injectionPins[2] = GPIOE_2;
-	boardConfiguration->injectionPins[3] = GPIOB_7;
+	CONFIGB(injectionPins)[0] = GPIOB_8;
+	CONFIGB(injectionPins)[1] = GPIOB_9;
+	CONFIGB(injectionPins)[2] = GPIOE_2;
+	CONFIGB(injectionPins)[3] = GPIOB_7;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOE_8;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[0] = GPIOC_9;
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIOE_8;
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->mainRelayPin = GPIOE_6;
+	CONFIGB(mainRelayPin) = GPIOE_6;
 
-	boardConfiguration->idle.solenoidPin = GPIOC_13;
-	boardConfiguration->idle.solenoidFrequency = 300;
-	boardConfiguration->manIdlePosition = 36;
+	CONFIGB(idle).solenoidPin = GPIOC_13;
+	CONFIGB(idle).solenoidFrequency = 300;
+	CONFIGB(manIdlePosition) = 36;
 
-	boardConfiguration->fuelPumpPin = GPIOE_3;
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	CONFIGB(fuelPumpPin) = GPIOE_3;
+	CONFIGB(fuelPumpPinMode) = OM_DEFAULT;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+	CONFIGB(triggerInputPins)[0] = GPIOA_5;
+	CONFIGB(triggerInputPins)[1] = GPIOC_6;
 
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
@@ -427,8 +427,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 
-	boardConfiguration->sensorChartMode = SC_MAP;
-	boardConfiguration->isFastAdcEnabled = true;
+	CONFIGB(sensorChartMode) = SC_MAP;
+	CONFIGB(isFastAdcEnabled) = true;
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
 	engineConfiguration->hip9011Gain = 0.3;
@@ -447,10 +447,10 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->cylinderBore = 87.5;
 
-	boardConfiguration->clutchDownPin = GPIOC_12;
-	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-//	boardConfiguration->clutchUpPin = GPIOA_14; // note SWCLK - conflict with SWD
-	boardConfiguration->clutchUpPinMode = PI_PULLUP;
+	CONFIGB(clutchDownPin) = GPIOC_12;
+	CONFIGB(clutchDownPinMode) = PI_PULLUP;
+//	CONFIGB(clutchUpPin) = GPIOA_14; // note SWCLK - conflict with SWD
+	CONFIGB(clutchUpPinMode) = PI_PULLUP;
 
 	engineConfiguration->activateAuxPid1 = 1;
 	engineConfiguration->auxPidPins[0] = GPIOD_5; // playing with AUX PID for alternator
@@ -467,22 +467,22 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	/**
 //	 * set_fsio_setting 1 0.55
 //	 */
-//	boardConfiguration->fsio_setting[0] = 0.55;
+//	CONFIGB(fsio_setting)[0] = 0.55;
 //	setFsioExt(0, GPIOE_5, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+	CONFIGB(vehicleSpeedSensorInputPin) = GPIOA_8;
 
 	engineConfiguration->fanOnTemperature = 92;
 	engineConfiguration->fanOffTemperature = 89;
 //	engineConfiguration->fanOnTemperature = 115; // knock testing - value is a bit high
 //	engineConfiguration->fanOffTemperature = 100;
 
-//	boardConfiguration->tunerStudioSerialSpeed = 9600;
-	boardConfiguration->tunerStudioSerialSpeed = 19200;
+//	CONFIGB(tunerStudioSerialSpeed) = 9600;
+	CONFIGB(tunerStudioSerialSpeed) = 19200;
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
-//temp	boardConfiguration->alternatorControlPin = GPIOD_5;
+//temp	CONFIGB(alternatorControlPin) = GPIOD_5;
 	engineConfiguration->targetVBatt = 14.0;
 	engineConfiguration->alternatorControl.offset = 20;
 	engineConfiguration->alternatorControl.pFactor = 20;
@@ -508,8 +508,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->wwaeTau = 0;
 	engineConfiguration->wwaeBeta = 0;
 
-	boardConfiguration->isSdCardEnabled = false;
-	boardConfiguration->manIdlePosition = 36; // set_idle_pwm 40
+	CONFIGB(isSdCardEnabled) = false;
+	CONFIGB(manIdlePosition) = 36; // set_idle_pwm 40
 
 	engineConfiguration->slowAdcAlpha = 0.33333;
 

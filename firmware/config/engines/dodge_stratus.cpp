@@ -23,12 +23,12 @@ void setDodgeStratus(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOE_8;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[5] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[0] = GPIOC_9;
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIOE_8;
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[4] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[5] = GPIO_UNASSIGNED;
 
 }
 

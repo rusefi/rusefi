@@ -131,14 +131,14 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;
 
-	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
-	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+	CONFIGB(triggerInputPins)[0] = GPIOC_6; // 2G YEL/BLU
+	CONFIGB(triggerInputPins)[1] = GPIOA_5; // 2E White CKP
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
 	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	boardConfiguration->idle.solenoidFrequency = 160;
+	CONFIGB(idle).solenoidFrequency = 160;
 
 	// Frankenstein: high side #1 is PE8
 	// Frankenstein: high side #2 is PE10
@@ -147,16 +147,16 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenstein: high side #5 is PC9
 	// Frankenstein: high side #6 is PC7
 
-	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
-	boardConfiguration->ignitionPins[1] = GPIOE_14; // Frankenstein: high side #4
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	CONFIGB(ignitionPins)[0] = GPIOE_12; // Frankenstein: high side #3
+	CONFIGB(ignitionPins)[1] = GPIOE_14; // Frankenstein: high side #4
+	CONFIGB(ignitionPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPinMode) = OM_DEFAULT;
 
 	setDefaultCrankingFuel(engineConfiguration);
 
-	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+	CONFIGB(triggerSimulatorPinModes)[0] = OM_OPENDRAIN;
+	CONFIGB(triggerSimulatorPinModes)[1] = OM_OPENDRAIN;
 
 	setCommonNTCSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.config.bias_resistor = 2700;
@@ -165,14 +165,14 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void common079721_2351(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->engineChartSize = 300;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED; // fuel pump is not controlled by ECU on this engine
+	CONFIGB(fuelPumpPin) = GPIO_UNASSIGNED; // fuel pump is not controlled by ECU on this engine
 
 	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -202,7 +202,7 @@ void common079721_2351(engine_configuration_s *engineConfiguration, board_config
  * Frankenstein board
  */
 void setMiata1990(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	common079721_2351(engineConfiguration, boardConfiguration);
+	common079721_2351(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	commonMiataNa(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -219,13 +219,13 @@ void setMiata1990(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+	CONFIGB(injectionPins)[0] = GPIOB_9; // Frankenstein: low side - out #12
+	CONFIGB(injectionPins)[1] = GPIOB_8; // Frankenstein: low side - out #11
+	CONFIGB(injectionPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[3] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[4] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPinMode) = OM_DEFAULT;
 
 // todo: idleValvePin
 }
@@ -244,17 +244,17 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
 
-//	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
-//	boardConfiguration->triggerSimulatorPins[1] = GPIOB_3; // 2E - WHT - four times
-//	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-//	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+//	CONFIGB(triggerSimulatorPins)[0] = GPIOD_2; // 2G - YEL/BLU
+//	CONFIGB(triggerSimulatorPins)[1] = GPIOB_3; // 2E - WHT - four times
+//	CONFIGB(triggerSimulatorPinModes)[0] = OM_OPENDRAIN;
+//	CONFIGB(triggerSimulatorPinModes)[1] = OM_OPENDRAIN;
 //
-//	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
-//	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+//	CONFIGB(triggerInputPins)[0] = GPIO_UNASSIGNED;
+//	CONFIGB(triggerInputPins)[1] = GPIO_UNASSIGNED;
 //
-//	boardConfiguration->is_enabled_spi_1 = false;
-//	boardConfiguration->is_enabled_spi_2 = false;
-//	boardConfiguration->is_enabled_spi_3 = false;
+//	CONFIGB(is_enabled_spi_1) = false;
+//	CONFIGB(is_enabled_spi_2) = false;
+//	CONFIGB(is_enabled_spi_3) = false;
 
 	/**
 	 * Outputs
@@ -271,27 +271,27 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenso low out #10: PE0 (do not use with discovery!)
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
-	boardConfiguration->fanPin = GPIOE_6;
+	CONFIGB(fanPin) = GPIOE_6;
 
-	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
+	CONFIGB(o2heaterPin) = GPIO_UNASSIGNED;
 
-	boardConfiguration->fuelPumpPin = GPIOE_4;
+	CONFIGB(fuelPumpPin) = GPIOE_4;
 
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+	CONFIGB(injectionPins)[4] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPinMode) = OM_DEFAULT;
 
-	boardConfiguration->idle.solenoidPin = GPIOB_9;
+	CONFIGB(idle).solenoidPin = GPIOB_9;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	CONFIGB(ignitionPins)[0] = GPIOE_14; // Frankenso high side - pin 1G
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIOC_7; // Frankenso high side - pin 1H
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPinMode) = OM_DEFAULT;
 
-	setFrankenso_01_LCD(boardConfiguration);
+	setFrankenso_01_LCD(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	commonFrankensoAnalogInputs(engineConfiguration);
+	commonFrankensoAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
@@ -311,20 +311,20 @@ void setMiata1994_d(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * This board was avoiding PE0 & PE1 mosfets altogether
 	 */
-	boardConfiguration->injectionPins[0] = GPIOD_7; // avoiding PE1
-	boardConfiguration->injectionPins[1] = GPIOE_2;
-	boardConfiguration->injectionPins[2] = GPIOB_8;
-	boardConfiguration->injectionPins[3] = GPIOB_7;
+	CONFIGB(injectionPins)[0] = GPIOD_7; // avoiding PE1
+	CONFIGB(injectionPins)[1] = GPIOE_2;
+	CONFIGB(injectionPins)[2] = GPIOB_8;
+	CONFIGB(injectionPins)[3] = GPIOB_7;
 
 	// todo: add the diode? change idle valve logic?
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	CONFIGB(idle).solenoidPin = GPIO_UNASSIGNED;
 }
 
 void setMiata1994_s(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setMiata1994_common(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
 
-	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+	CONFIGB(triggerSimulatorPins)[2] = GPIO_UNASSIGNED;
 
 	engineConfiguration->acSwitchAdc = EFI_ADC_1; // PA1, W50 on Frankenso
 
@@ -334,13 +334,13 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * This board has PE0<>PD5 & PE1<>PD3 rewired in order to avoid Discovery issue
 	 */
-	boardConfiguration->injectionPins[0] = GPIOD_3; // avoiding PE1
-	boardConfiguration->injectionPins[1] = GPIOE_2; // injector #2
-	boardConfiguration->injectionPins[2] = GPIOB_8; // injector #3
-	boardConfiguration->injectionPins[3] = GPIOB_7; // injector #4
+	CONFIGB(injectionPins)[0] = GPIOD_3; // avoiding PE1
+	CONFIGB(injectionPins)[1] = GPIOE_2; // injector #2
+	CONFIGB(injectionPins)[2] = GPIOB_8; // injector #3
+	CONFIGB(injectionPins)[3] = GPIOB_7; // injector #4
 
 	//	setFsio(engineConfiguration, 0, GPIOD_11, "coolant 80 >");
-	boardConfiguration->idle.solenoidFrequency = 500;
+	CONFIGB(idle).solenoidFrequency = 500;
 
 	engineConfiguration->acCutoffLowRpm = 400;
 	engineConfiguration->acCutoffHighRpm = 4500;
@@ -353,8 +353,8 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 86;
 	engineConfiguration->tpsMin = 596;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+	CONFIGB(malfunctionIndicatorPin) = GPIOE_5;
+	CONFIGB(malfunctionIndicatorPinMode) = OM_DEFAULT;
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	setMazdaMiataNAMaf(config);
@@ -372,31 +372,31 @@ void setMiata1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
 
 	// upside down
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+	CONFIGB(triggerInputPins)[0] = GPIOA_5;
+	CONFIGB(triggerInputPins)[1] = GPIOC_6;
 
-	boardConfiguration->fuelPumpPin = GPIOE_4;
-	boardConfiguration->idle.solenoidPin = GPIOE_5;
+	CONFIGB(fuelPumpPin) = GPIOE_4;
+	CONFIGB(idle).solenoidPin = GPIOE_5;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->clt.adcChannel = EFI_ADC_11;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_13;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOE_14; // Frankenstein: high side #4
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	CONFIGB(ignitionPins)[0] = GPIOE_12; // Frankenstein: high side #3
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIOE_14; // Frankenstein: high side #4
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPinMode) = OM_DEFAULT;
 
 	// harness is sequential but we have a limited board
 	engineConfiguration->crankingInjectionMode = IM_BATCH;
 	engineConfiguration->injectionMode = IM_BATCH;
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+	CONFIGB(injectionPins)[0] = GPIOB_9; // Frankenstein: low side - out #12
+	CONFIGB(injectionPins)[1] = GPIOB_8; // Frankenstein: low side - out #11
+	CONFIGB(injectionPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[3] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[4] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPinMode) = OM_DEFAULT;
 }

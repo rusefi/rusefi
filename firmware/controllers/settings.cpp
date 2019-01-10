@@ -73,42 +73,42 @@ void printFloatArray(const char *prefix, float array[], int size) {
 }
 
 void printSpiState(Logging *logger, board_configuration_s *boardConfiguration) {
-	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s", boolToString(boardConfiguration->is_enabled_spi_1),
-			boolToString(boardConfiguration->is_enabled_spi_2), boolToString(boardConfiguration->is_enabled_spi_3));
+	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s", boolToString(CONFIGB(is_enabled_spi_1)),
+			boolToString(CONFIGB(is_enabled_spi_2)), boolToString(CONFIGB(is_enabled_spi_3)));
 }
 
 extern board_configuration_s *boardConfiguration;
 
 static void printOutputs(const engine_configuration_s *engineConfiguration) {
-	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(boardConfiguration->injectionPinMode));
+	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(CONFIGB(injectionPinMode)));
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		brain_pin_e brainPin = boardConfiguration->injectionPins[i];
+		brain_pin_e brainPin = CONFIGB(injectionPins)[i];
 		scheduleMsg(&logger, "injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
-	scheduleMsg(&logger, "ignitionPins: mode %s", getPin_output_mode_e(boardConfiguration->ignitionPinMode));
+	scheduleMsg(&logger, "ignitionPins: mode %s", getPin_output_mode_e(CONFIGB(ignitionPinMode)));
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		brain_pin_e brainPin = boardConfiguration->ignitionPins[i];
+		brain_pin_e brainPin = CONFIGB(ignitionPins)[i];
 		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
-	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(boardConfiguration->idle.solenoidPinMode),
-			hwPortname(boardConfiguration->idle.solenoidPin), boardConfiguration->idle.solenoidFrequency);
-	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s", hwPortname(boardConfiguration->malfunctionIndicatorPin),
-			getPin_output_mode_e(boardConfiguration->malfunctionIndicatorPinMode));
+	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(CONFIGB(idle).solenoidPinMode),
+			hwPortname(CONFIGB(idle).solenoidPin), CONFIGB(idle).solenoidFrequency);
+	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s", hwPortname(CONFIGB(malfunctionIndicatorPin)),
+			getPin_output_mode_e(CONFIGB(malfunctionIndicatorPinMode)));
 
-	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fuelPumpPinMode),
-			hwPortname(boardConfiguration->fuelPumpPin));
+	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(CONFIGB(fuelPumpPinMode)),
+			hwPortname(CONFIGB(fuelPumpPin)));
 
-	scheduleMsg(&logger, "fanPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fanPinMode),
-			hwPortname(boardConfiguration->fanPin));
+	scheduleMsg(&logger, "fanPin: mode %s @ %s", getPin_output_mode_e(CONFIGB(fanPinMode)),
+			hwPortname(CONFIGB(fanPin)));
 
-	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->mainRelayPinMode),
-			hwPortname(boardConfiguration->mainRelayPin));
+	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(CONFIGB(mainRelayPinMode)),
+			hwPortname(CONFIGB(mainRelayPin)));
 
 	scheduleMsg(&logger, "alternator field: mode %s @ %s",
-			getPin_output_mode_e(boardConfiguration->alternatorControlPinMode),
-			hwPortname(boardConfiguration->alternatorControlPin));
+			getPin_output_mode_e(CONFIGB(alternatorControlPinMode)),
+			hwPortname(CONFIGB(alternatorControlPin)));
 }
 
 
@@ -265,25 +265,25 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			boolToString(engineConfiguration->isMapAveragingEnabled),
 			boolToString(engineConfiguration->isTunerStudioEnabled),
 			boolToString(engineConfiguration->isWaveAnalyzerEnabled),
-			boolToString(boardConfiguration->isFastAdcEnabled));
+			boolToString(CONFIGB(isFastAdcEnabled)));
 
 	scheduleMsg(&logger, "isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
 			boolToString(engineConfiguration->isManualSpinningMode),
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
-	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(boardConfiguration->clutchUpPin),
+	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(CONFIGB(clutchUpPin)),
 			boolToString(engine->clutchUpState));
-	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin),
+	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(CONFIGB(clutchDownPin)),
 			boolToString(engine->clutchDownState));
 
 	scheduleMsg(&logger, "boardTestModeJumperPin: %s/nesting=%d",
-			hwPortname(boardConfiguration->boardTestModeJumperPin), maxNesting);
+			hwPortname(CONFIGB(boardTestModeJumperPin)), maxNesting);
 
-	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", boardConfiguration->digitalPotentiometerSpiDevice);
+	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", CONFIGB(digitalPotentiometerSpiDevice));
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
 		scheduleMsg(&logger, "digitalPotentiometer CS%d %s", i,
-				hwPortname(boardConfiguration->digitalPotentiometerChipSelect[i]));
+				hwPortname(CONFIGB(digitalPotentiometerChipSelect)[i]));
 	}
 #if EFI_PROD_CODE
 
@@ -327,22 +327,22 @@ void setEngineType(int value) {
 }
 
 static void setIdleSolenoidFrequency(int value) {
-	boardConfiguration->idle.solenoidFrequency = value;
+	CONFIGB(idle).solenoidFrequency = value;
 	incrementGlobalConfigurationVersion();
 }
 
 static void setInjectionPinMode(int value) {
-	boardConfiguration->injectionPinMode = (pin_output_mode_e) value;
+	CONFIGB(injectionPinMode) = (pin_output_mode_e) value;
 	doPrintConfiguration();
 }
 
 static void setIgnitionPinMode(int value) {
-	boardConfiguration->ignitionPinMode = (pin_output_mode_e) value;
+	CONFIGB(ignitionPinMode) = (pin_output_mode_e) value;
 	doPrintConfiguration();
 }
 
 static void setIdlePinMode(int value) {
-	boardConfiguration->idle.solenoidPinMode = (pin_output_mode_e) value;
+	CONFIGB(idle).solenoidPinMode = (pin_output_mode_e) value;
 	doPrintConfiguration();
 }
 
@@ -359,17 +359,17 @@ static void setIgnitionOffset(float value) {
 }
 
 static void setFuelPumpPinMode(int value) {
-	boardConfiguration->fuelPumpPinMode = (pin_output_mode_e) value;
+	CONFIGB(fuelPumpPinMode) = (pin_output_mode_e) value;
 	doPrintConfiguration();
 }
 
 static void setMalfunctionIndicatorPinMode(int value) {
-	boardConfiguration->malfunctionIndicatorPinMode = (pin_output_mode_e) value;
+	CONFIGB(malfunctionIndicatorPinMode) = (pin_output_mode_e) value;
 	doPrintConfiguration();
 }
 
 static void setSensorChartMode(int value) {
-	boardConfiguration->sensorChartMode = (sensor_chart_e) value;
+	CONFIGB(sensorChartMode) = (sensor_chart_e) value;
 	doPrintConfiguration();
 }
 
@@ -431,12 +431,12 @@ static void printTemperatureInfo(void) {
 	}
 
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
-			hwPortname(boardConfiguration->fanPin));
+			hwPortname(CONFIGB(fanPin)));
 
 	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
-			hwPortname(boardConfiguration->acRelayPin));
+			hwPortname(CONFIGB(acRelayPin)));
 
-	scheduleMsg(&logger, "warmupPID=%d corr=%.2f", boardConfiguration->useWarmupPidAfr,
+	scheduleMsg(&logger, "warmupPID=%d corr=%.2f", CONFIGB(useWarmupPidAfr),
 			engine->engineState.cltFuelCorrection);
 
 #endif /* EFI_ANALOG_SENSORS */
@@ -636,11 +636,11 @@ static void setWholeFuelMapCmd(float value) {
 #if EFI_PROD_CODE
 
 static void setEgtSpi(int spi) {
-	boardConfiguration->max31855spiDevice = (spi_device_e) spi;
+	CONFIGB(max31855spiDevice) = (spi_device_e) spi;
 }
 
 static void setPotSpi(int spi) {
-	boardConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
+	CONFIGB(digitalPotentiometerSpiDevice) = (spi_device_e) spi;
 }
 
 static void setIgnitionPin(const char *indexStr, const char *pinName) {
@@ -654,7 +654,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	scheduleMsg(&logger, "setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
-	boardConfiguration->ignitionPins[index] = pin;
+	CONFIGB(ignitionPins)[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -671,23 +671,23 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 
 // set_idle_pin none
 static void setIdlePin(const char *pinName) {
-	setIndividualPin(pinName, &boardConfiguration->idle.solenoidPin, "idle");
+	setIndividualPin(pinName, &CONFIGB(idle).solenoidPin, "idle");
 }
 
 static void setMainRelayPin(const char *pinName) {
-	setIndividualPin(pinName, &boardConfiguration->mainRelayPin, "main relay");
+	setIndividualPin(pinName, &CONFIGB(mainRelayPin), "main relay");
 }
 
 static void setAlternatorPin(const char *pinName) {
-	setIndividualPin(pinName, &boardConfiguration->alternatorControlPin, "alternator");
+	setIndividualPin(pinName, &CONFIGB(alternatorControlPin), "alternator");
 }
 
 static void setACPin(const char *pinName) {
-	setIndividualPin(pinName, &boardConfiguration->acRelayPin, "A/C");
+	setIndividualPin(pinName, &CONFIGB(acRelayPin), "A/C");
 }
 
 static void setFuelPumpPin(const char *pinName) {
-	setIndividualPin(pinName, &boardConfiguration->fuelPumpPin, "fuelPump");
+	setIndividualPin(pinName, &CONFIGB(fuelPumpPin), "fuelPump");
 }
 
 static void setInjectionPin(const char *indexStr, const char *pinName) {
@@ -701,7 +701,7 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	scheduleMsg(&logger, "setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
-	boardConfiguration->injectionPins[index] = pin;
+	CONFIGB(injectionPins)[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -716,7 +716,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	scheduleMsg(&logger, "setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
-	boardConfiguration->triggerInputPins[index] = pin;
+	CONFIGB(triggerInputPins)[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -729,7 +729,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 	if (absI(mode) == ERROR_CODE) {
 		return;
 	}
-	boardConfiguration->triggerSimulatorPinModes[index] = (pin_output_mode_e) mode;
+	CONFIGB(triggerSimulatorPinModes)[index] = (pin_output_mode_e) mode;
 }
 
 static void setEgtCSPin(const char *indexStr, const char *pinName) {
@@ -742,7 +742,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	scheduleMsg(&logger, "setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
-	boardConfiguration->max31855_cs[index] = pin;
+	CONFIGB(max31855_cs)[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -756,7 +756,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	scheduleMsg(&logger, "setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
-	boardConfiguration->triggerSimulatorPins[index] = pin;
+	CONFIGB(triggerSimulatorPins)[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -800,7 +800,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	scheduleMsg(&logger, "setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
-	boardConfiguration->logicAnalyzerPins[index] = pin;
+	CONFIGB(logicAnalyzerPins)[index] = pin;
 }
 
 static void showPinFunction(const char *pinName) {
@@ -845,13 +845,13 @@ static void setFuelMap(const char * rpmStr, const char *loadStr, const char *val
 static void setSpiMode(int index, bool mode) {
 	switch (index) {
 	case 1:
-		boardConfiguration->is_enabled_spi_1 = mode;
+		CONFIGB(is_enabled_spi_1) = mode;
 		break;
 	case 2:
-		boardConfiguration->is_enabled_spi_2 = mode;
+		CONFIGB(is_enabled_spi_2) = mode;
 		break;
 	case 3:
-		boardConfiguration->is_enabled_spi_3 = mode;
+		CONFIGB(is_enabled_spi_3) = mode;
 		break;
 	default:
 		scheduleMsg(&logger, "invalid spi index %d", index);
@@ -862,19 +862,19 @@ static void setSpiMode(int index, bool mode) {
 
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
-		boardConfiguration->isFastAdcEnabled = isEnabled;
+		CONFIGB(isFastAdcEnabled) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "constant_dwell")) {
 		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "binary_mode_console")) {
-		boardConfiguration->startConsoleInBinaryMode = isEnabled;
+		CONFIGB(startConsoleInBinaryMode) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
-		boardConfiguration->isCJ125Enabled = isEnabled;
+		CONFIGB(isCJ125Enabled) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {
 		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
-		boardConfiguration->enabledStep1Limiter = isEnabled;
+		CONFIGB(enabledStep1Limiter) = isEnabled;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(param, "auto_idle")) {
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
@@ -882,9 +882,9 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(param, "serial")) {
-		boardConfiguration->useSerialPort = isEnabled;
+		CONFIGB(useSerialPort) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
-		boardConfiguration->useStepperIdle = isEnabled;
+		CONFIGB(useStepperIdle) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
 		engineConfiguration->useOnlyRisingEdgeForTrigger = isEnabled;
 		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -898,7 +898,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
-		boardConfiguration->isHip9011Enabled = isEnabled;
+		CONFIGB(isHip9011Enabled) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_etb")) {
 		engineConfiguration->isVerboseETB = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
@@ -912,15 +912,15 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "auxdebug4")) {
 		engineConfiguration->isVerboseAuxPid4 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
-		boardConfiguration->isVerboseAlternator = isEnabled;
+		CONFIGB(isVerboseAlternator) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
-		boardConfiguration->useTpicAdvancedMode = isEnabled;
+		CONFIGB(useTpicAdvancedMode) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "knockdebug")) {
 		engine->knockDebug = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
-		boardConfiguration->isSdCardEnabled = isEnabled;
+		CONFIGB(isSdCardEnabled) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "test_mode")) {
 		engine->isTestMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {
@@ -936,7 +936,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
 		engineConfiguration->directSelfStimulation = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
-		boardConfiguration->isEngineControlEnabled = isEnabled;
+		CONFIGB(isEngineControlEnabled) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
 		engineConfiguration->isMapAveragingEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tunerstudio")) {
@@ -1049,7 +1049,7 @@ const plain_get_integer_s getI_plain[] = {
 
 const plain_get_float_s getF_plain[] = {
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
-		{"idle_position", &boardConfiguration->manIdlePosition},
+		{"idle_position", &CONFIGB(manIdlePosition)},
 		{"ignition_offset", &engineConfiguration->ignitionOffset},
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
@@ -1089,7 +1089,7 @@ static void getValue(const char *paramStr) {
 
 
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
-		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
+		scheduleMsg(&logger, "isCJ125Enabled=%d", CONFIGB(isCJ125Enabled));
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
 		showBor();
@@ -1099,7 +1099,7 @@ static void getValue(const char *paramStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
-		scheduleMsg(&logger, "isHip9011Enabled=%d", boardConfiguration->isHip9011Enabled);
+		scheduleMsg(&logger, "isHip9011Enabled=%d", CONFIGB(isHip9011Enabled));
 	}
 
 #if EFI_RTC || defined(__DOXYGEN__)

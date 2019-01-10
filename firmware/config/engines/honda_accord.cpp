@@ -39,7 +39,7 @@ EXTERN_ENGINE;
 
 static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
-	boardConfiguration->isFastAdcEnabled = true;
+	CONFIGB(isFastAdcEnabled) = true;
 
 	// set ignition_mode 0
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -150,29 +150,29 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_SIGNATURE
 	// Frankenso low out #10: PD5 Injector #3
 	// Frankenso low out #11: PB8 injector #1
 	// Frankenso low out #12: PB7 injector #4
-	boardConfiguration->fuelPumpPin = GPIOE_3;
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_2;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-	boardConfiguration->fanPin = GPIOE_4; // blue wire
+	CONFIGB(fuelPumpPin) = GPIOE_3;
+	CONFIGB(fuelPumpPinMode) = OM_DEFAULT;
+	CONFIGB(malfunctionIndicatorPin) = GPIOE_2;
+	CONFIGB(malfunctionIndicatorPinMode) = OM_DEFAULT;
+	CONFIGB(fanPin) = GPIOE_4; // blue wire
 
-	boardConfiguration->idle.solenoidPin = GPIOD_3; // green wire
+	CONFIGB(idle).solenoidPin = GPIOD_3; // green wire
 
-	boardConfiguration->injectionPins[0] = GPIOB_8;
-	boardConfiguration->injectionPins[1] = GPIOB_9;
-	boardConfiguration->injectionPins[2] = GPIOD_5;
-	boardConfiguration->injectionPins[3] = GPIOB_7;
+	CONFIGB(injectionPins)[0] = GPIOB_8;
+	CONFIGB(injectionPins)[1] = GPIOB_9;
+	CONFIGB(injectionPins)[2] = GPIOD_5;
+	CONFIGB(injectionPins)[3] = GPIOB_7;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_12; // white wire
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[0] = GPIOE_12; // white wire
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
 
 
-	setFrankenso_01_LCD(boardConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
+	setFrankenso_01_LCD(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setFrankenso0_1_joystick(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	boardConfiguration->idle.solenoidFrequency = 500;
+	CONFIGB(idle).solenoidFrequency = 500;
 }
 
 /*
