@@ -91,6 +91,7 @@ class Engine;
 		EXPAND_Engine
 
 #define CONFIG(x) engineConfiguration->x
+#define CONFIGB(x) engine->engineConfigurationPtr->bc.x
 #define ENGINE(x) engine->x
 
 #define CONFIG_PARAM(x) (x)

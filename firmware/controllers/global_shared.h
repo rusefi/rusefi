@@ -48,6 +48,7 @@
  * optimization which is hopefully useful at least for anything trigger-related
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
+#define CONFIGB(x) persistentState.persistentConfiguration.engineConfiguration.bc.x
 
 
 #define DEFINE_CONFIG_PARAM(x, y)
