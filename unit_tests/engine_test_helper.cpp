@@ -13,11 +13,9 @@
 #include "accel_enrichment.h"
 #include "thermistors.h"
 #include "advance_map.h"
-#include "event_queue.h"
 
 extern int timeNowUs;
 extern EnginePins enginePins;
-extern EventQueue schedulingQueue;
 extern int unitTestWarningCounter;
 extern float testMafValue;
 extern engine_configuration_s activeConfiguration;

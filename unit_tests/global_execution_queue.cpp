@@ -10,7 +10,7 @@
 #include "global_execution_queue.h"
 
 // this global instance is used by integration tests via 'scheduleByTimestamp' global methods below
-EventQueue schedulingQueue;
+static EventQueue schedulingQueue;
 
 bool_t debugSignalExecutor = false;
 
