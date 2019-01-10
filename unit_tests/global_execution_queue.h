@@ -9,6 +9,7 @@
 #define GLOBAL_EXECUTION_QUEUE_H_
 
 #include "scheduler.h"
+#include "event_queue.h"
 
 class TestExecutor : public ExecutorInterface {
 public:
@@ -19,6 +20,8 @@ public:
 	int executeAll(efitime_t now);
 	int size();
 	scheduling_s* getForUnitTest(int index);
+private:
+	EventQueue schedulingQueue;
 };
 
 #endif /* GLOBAL_EXECUTION_QUEUE_H_ */
