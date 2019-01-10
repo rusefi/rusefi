@@ -18,25 +18,25 @@
 #include "engine_math.h"
 #include "allsensors.h"
 
-EXTERN_ENGINE;
-
-void setFrankenstein_01_LCD(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIGB(HD44780_rs) = GPIOE_9;
-	CONFIGB(HD44780_e) = GPIOE_11;
-	CONFIGB(HD44780_db4) = GPIOE_13;
-	CONFIGB(HD44780_db5) = GPIOE_15;
-	CONFIGB(HD44780_db6) = GPIOB_11;
-	CONFIGB(HD44780_db7) = GPIOB_13;
+void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIOE_9;
+	boardConfiguration->HD44780_e = GPIOE_11;
+	boardConfiguration->HD44780_db4 = GPIOE_13;
+	boardConfiguration->HD44780_db5 = GPIOE_15;
+	boardConfiguration->HD44780_db6 = GPIOB_11;
+	boardConfiguration->HD44780_db7 = GPIOB_13;
 }
+
+EXTERN_ENGINE;
 
 void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	// set trigger_type 9
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
-	CONFIGB(is_enabled_spi_2) = false;
-	CONFIGB(isHip9011Enabled) = false;
-	setFrankenstein_01_LCD(PASS_ENGINE_PARAMETER_SIGNATURE);
+	boardConfiguration->is_enabled_spi_2 = false;
+	boardConfiguration->isHip9011Enabled = false;
+	setFrankenstein_01_LCD(boardConfiguration);
 
 	engineConfiguration->specs.displacement = 3.528;
 	engineConfiguration->specs.cylindersCount = 8;
@@ -57,13 +57,13 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	CONFIGB(ignitionPinMode) = OM_INVERTED;
+	boardConfiguration->ignitionPinMode = OM_INVERTED;
 
     // set_ignition_channels
-    CONFIGB(ignitionPins)[0] = GPIOE_8; // Frankenstein: low side - out #x (?)
-    CONFIGB(ignitionPins)[7] = GPIOE_10; // Frankenstein: low side - out #x (?)
-    CONFIGB(ignitionPins)[3] = GPIOE_12; // Frankenstein: low side - out #x (?)
-    CONFIGB(ignitionPins)[2] = GPIOE_14; // Frankenstein: low side - out #x (?)
+    boardConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: low side - out #x (?)
+    boardConfiguration->ignitionPins[7] = GPIOE_10; // Frankenstein: low side - out #x (?)
+    boardConfiguration->ignitionPins[3] = GPIOE_12; // Frankenstein: low side - out #x (?)
+    boardConfiguration->ignitionPins[2] = GPIOE_14; // Frankenstein: low side - out #x (?)
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15
@@ -78,27 +78,27 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	CONFIGB(injectionPins)[0] = GPIOC_14; // Frankenstein: low side - out #1
-	CONFIGB(injectionPins)[1] = GPIOC_15; // Frankenstein: low side - out #2
-	CONFIGB(injectionPins)[2] = GPIOE_6; // Frankenstein: low side - out #3
-	CONFIGB(injectionPins)[3] = GPIOC_13; // Frankenstein: low side - out #4
-    CONFIGB(injectionPins)[4] = GPIOE_4; // Frankenstein: low side - out #5
-    CONFIGB(injectionPins)[5] = GPIOE_5; // Frankenstein: low side - out #6
-    CONFIGB(injectionPins)[6] = GPIOE_2; // Frankenstein: low side - out #7
-    CONFIGB(injectionPins)[7] = GPIOE_3; // Frankenstein: low side - out #8
+	boardConfiguration->injectionPins[0] = GPIOC_14; // Frankenstein: low side - out #1
+	boardConfiguration->injectionPins[1] = GPIOC_15; // Frankenstein: low side - out #2
+	boardConfiguration->injectionPins[2] = GPIOE_6; // Frankenstein: low side - out #3
+	boardConfiguration->injectionPins[3] = GPIOC_13; // Frankenstein: low side - out #4
+    boardConfiguration->injectionPins[4] = GPIOE_4; // Frankenstein: low side - out #5
+    boardConfiguration->injectionPins[5] = GPIOE_5; // Frankenstein: low side - out #6
+    boardConfiguration->injectionPins[6] = GPIOE_2; // Frankenstein: low side - out #7
+    boardConfiguration->injectionPins[7] = GPIOE_3; // Frankenstein: low side - out #8
 
-// not valid ICU pin	CONFIGB(vehicleSpeedSensorInputPin) = GPIOC_2;
+// not valid ICU pin	boardConfiguration->vehicleSpeedSensorInputPin = GPIOC_2;
 
 	//GPIOE_0 AND GPIOE_1 are bad pins since they conflict with accelerometer
 	//no malfunction indicator pin needed, since we use CAN_BUS_MAZDA_RX8
-	//CONFIGB(fuelPumpPin) = GPIOE_0; // Frankenstein: low side - out #9
-	//CONFIGB(malfunctionIndicatorPin) = GPIOE_1; // Frankenstein: low side - out #10
-	CONFIGB(fuelPumpPin) = GPIOB_8; // Frankenstein: low side - out #11
-	CONFIGB(fuelPumpPinMode) = OM_DEFAULT;
-	CONFIGB(mainRelayPin)  = GPIOB_9; // Frankenstein: low side - out #12
+	//boardConfiguration->fuelPumpPin = GPIOE_0; // Frankenstein: low side - out #9
+	//boardConfiguration->malfunctionIndicatorPin = GPIOE_1; // Frankenstein: low side - out #10
+	boardConfiguration->fuelPumpPin = GPIOB_8; // Frankenstein: low side - out #11
+	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	boardConfiguration->mainRelayPin  = GPIOB_9; // Frankenstein: low side - out #12
 
-    CONFIGB(triggerInputPins)[0] = GPIOC_6; // 2G YEL/BLU
-    CONFIGB(triggerInputPins)[1] = GPIOA_5; // 2E White CKP
+    boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
+    boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
     setCommonNTCSensor(&engineConfiguration->clt);
     engineConfiguration->clt.config.bias_resistor = 2700;
@@ -123,19 +123,19 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
     // Stepper logic:
-    CONFIGB(idle).stepperDirectionPin = GPIOB_10;
-    CONFIGB(idle).stepperStepPin = GPIOB_15;
+    boardConfiguration->idle.stepperDirectionPin = GPIOB_10;
+    boardConfiguration->idle.stepperStepPin = GPIOB_15;
     engineConfiguration->stepperEnablePin = GPIOB_14;
     engineConfiguration->idleStepperReactionTime = 10;
     engineConfiguration->idleStepperTotalSteps = 150;
 
-    CONFIGB(useStepperIdle) = false;
+    boardConfiguration->useStepperIdle = false;
 
 	// set injection_pin_mode 0
-	CONFIGB(injectionPinMode) = OM_DEFAULT;
+	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
-	CONFIGB(canTxPin) = GPIOB_6;
-	CONFIGB(canRxPin) = GPIOB_12;
+	boardConfiguration->canTxPin = GPIOB_6;
+	boardConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
@@ -144,10 +144,10 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
     // todo: make this official Frankenstein joystick?
-    CONFIGB(joystickCenterPin) = GPIOD_8;
-    CONFIGB(joystickAPin) = GPIOD_10;
-    CONFIGB(joystickBPin) = GPIO_UNASSIGNED;
-    CONFIGB(joystickCPin) = GPIO_UNASSIGNED;
-    CONFIGB(joystickDPin) = GPIOD_11;
+    boardConfiguration->joystickCenterPin = GPIOD_8;
+    boardConfiguration->joystickAPin = GPIOD_10;
+    boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
+    boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
+    boardConfiguration->joystickDPin = GPIOD_11;
 
 }

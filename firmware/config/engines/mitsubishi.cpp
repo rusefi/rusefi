@@ -68,19 +68,19 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	CONFIGB(injectionPins)[0] = GPIOB_9; // Frankenstein: low side - out #12
-	CONFIGB(injectionPins)[1] = GPIOB_8; // Frankenstein: low side - out #11
-	CONFIGB(injectionPins)[2] = GPIOE_3; // Frankenstein: low side - out #8
-	CONFIGB(injectionPins)[3] = GPIOE_5; // Frankenstein: low side - out #6
+	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
+	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
+	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - out #8
+	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - out #6
 
 
 	// Frankenstein: high side #1: PE8
 	// Frankenstein: high side #2: PE10
 
-	CONFIGB(ignitionPins)[0] = GPIOE_8; // Frankenstein: high side #1
-	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
-	CONFIGB(ignitionPins)[2] = GPIOE_10; // // Frankenstein: high side #2
-	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: high side #1
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOE_10; // // Frankenstein: high side #2
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;

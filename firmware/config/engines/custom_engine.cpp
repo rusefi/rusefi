@@ -62,22 +62,22 @@ void test557init(void) {
 }
 #endif /* EFI_PROD_CODE */
 
-void setFrankenso_01_LCD(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIGB(HD44780_rs) = GPIOE_7;
-	CONFIGB(HD44780_e) = GPIOE_9;
-	CONFIGB(HD44780_db4) = GPIOE_11;
-	CONFIGB(HD44780_db5) = GPIOE_13;
-	CONFIGB(HD44780_db6) = GPIOE_15;
-	CONFIGB(HD44780_db7) = GPIOB_10;
+void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIOE_7;
+	boardConfiguration->HD44780_e = GPIOE_9;
+	boardConfiguration->HD44780_db4 = GPIOE_11;
+	boardConfiguration->HD44780_db5 = GPIOE_13;
+	boardConfiguration->HD44780_db6 = GPIOE_15;
+	boardConfiguration->HD44780_db7 = GPIOB_10;
 }
 
-void disableLCD(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIGB(HD44780_rs) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_e) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db4) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db5) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db6) = GPIO_UNASSIGNED;
-	CONFIGB(HD44780_db7) = GPIO_UNASSIGNED;
+void disableLCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
+	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 }
 
 // todo: should this be renamed to 'setFrankensoConfiguration'?
@@ -85,9 +85,9 @@ void disableLCD(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-	setFrankenso_01_LCD(PASS_ENGINE_PARAMETER_SIGNATURE);
-	commonFrankensoAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
-	setFrankenso0_1_joystick(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setFrankenso_01_LCD(boardConfiguration);
+	commonFrankensoAnalogInputs(engineConfiguration);
+	setFrankenso0_1_joystick(engineConfiguration);
 
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
@@ -133,28 +133,28 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenso low out #11: PB8 injector #3
 	// Frankenso low out #12: PB7 injector #4
 
-	CONFIGB(fuelPumpPin) = GPIOE_4;
-	CONFIGB(mainRelayPin) = GPIOD_7;
-	CONFIGB(idle).solenoidPin = GPIOC_13;
+	boardConfiguration->fuelPumpPin = GPIOE_4;
+	boardConfiguration->mainRelayPin = GPIOD_7;
+	boardConfiguration->idle.solenoidPin = GPIOC_13;
 
-	CONFIGB(fanPin) = GPIOE_5;
+	boardConfiguration->fanPin = GPIOE_5;
 
-	CONFIGB(injectionPins)[0] = GPIOB_9; // #1
-	CONFIGB(injectionPins)[1] = GPIOE_2; // #2
-	CONFIGB(injectionPins)[2] = GPIOB_8; // #3
-	CONFIGB(injectionPins)[3] = GPIOB_7; // #4
+	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
+	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
+	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
+	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_PWM_TESTER
-	CONFIGB(injectionPins)[4] = GPIOC_8; // #5
-	CONFIGB(injectionPins)[5] = GPIOD_10; // #6
-	CONFIGB(injectionPins)[6] = GPIOD_9;
-	CONFIGB(injectionPins)[7] = GPIOD_11;
-	CONFIGB(injectionPins)[8] = GPIOD_0;
-	CONFIGB(injectionPins)[9] = GPIOB_11;
-	CONFIGB(injectionPins)[10] = GPIOC_7;
-	CONFIGB(injectionPins)[11] = GPIOE_4;
+	boardConfiguration->injectionPins[4] = GPIOC_8; // #5
+	boardConfiguration->injectionPins[5] = GPIOD_10; // #6
+	boardConfiguration->injectionPins[6] = GPIOD_9;
+	boardConfiguration->injectionPins[7] = GPIOD_11;
+	boardConfiguration->injectionPins[8] = GPIOD_0;
+	boardConfiguration->injectionPins[9] = GPIOB_11;
+	boardConfiguration->injectionPins[10] = GPIOC_7;
+	boardConfiguration->injectionPins[11] = GPIOE_4;
 
 	/**
 	 * We want to initialize all outputs for test
@@ -163,20 +163,20 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->displayMode = DM_NONE;
 #else /* EFI_PWM_TESTER */
-	CONFIGB(injectionPins)[4] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[6] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[7] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[8] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[9] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[10] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[11] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
 
-	CONFIGB(ignitionPins)[0] = GPIOE_14;
-	CONFIGB(ignitionPins)[1] = GPIOC_7;
-	CONFIGB(ignitionPins)[2] = GPIOC_9;
+	boardConfiguration->ignitionPins[0] = GPIOE_14;
+	boardConfiguration->ignitionPins[1] = GPIOC_7;
+	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	// set_ignition_pin 4 PE10
-	CONFIGB(ignitionPins)[3] = GPIOE_10;
+	boardConfiguration->ignitionPins[3] = GPIOE_10;
 #endif /* EFI_PWM_TESTER */
 
 	// todo: 8.2 or 10k?
@@ -192,7 +192,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
-	CONFIGB(triggerSimulatorFrequency) = 300;
+	boardConfiguration->triggerSimulatorFrequency = 300;
 	engineConfiguration->cranking.rpm = 100;
 
 	engineConfiguration->specs.cylindersCount = 12;
@@ -201,38 +201,38 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	CONFIGB(injectionPins)[0] = GPIOB_7; // injector in default pinout
-	CONFIGB(injectionPins)[1] = GPIOB_8; // injector in default pinout
-	CONFIGB(injectionPins)[2] = GPIOB_9; // injector in default pinout
-	CONFIGB(injectionPins)[3] = GPIOC_13;
+	boardConfiguration->injectionPins[0] = GPIOB_7; // injector in default pinout
+	boardConfiguration->injectionPins[1] = GPIOB_8; // injector in default pinout
+	boardConfiguration->injectionPins[2] = GPIOB_9; // injector in default pinout
+	boardConfiguration->injectionPins[3] = GPIOC_13;
 
-	CONFIGB(injectionPins)[4] = GPIOD_3;
-	CONFIGB(injectionPins)[5] = GPIOD_5;
-	CONFIGB(injectionPins)[6] = GPIOD_7;
-	CONFIGB(injectionPins)[7] = GPIOE_2; // injector in default pinout
-	CONFIGB(injectionPins)[8] = GPIOE_3;
-	CONFIGB(injectionPins)[9] = GPIOE_4;
-	CONFIGB(injectionPins)[10] = GPIOE_5;
-	CONFIGB(injectionPins)[11] = GPIOE_6;
+	boardConfiguration->injectionPins[4] = GPIOD_3;
+	boardConfiguration->injectionPins[5] = GPIOD_5;
+	boardConfiguration->injectionPins[6] = GPIOD_7;
+	boardConfiguration->injectionPins[7] = GPIOE_2; // injector in default pinout
+	boardConfiguration->injectionPins[8] = GPIOE_3;
+	boardConfiguration->injectionPins[9] = GPIOE_4;
+	boardConfiguration->injectionPins[10] = GPIOE_5;
+	boardConfiguration->injectionPins[11] = GPIOE_6;
 
-	CONFIGB(fuelPumpPin) = GPIO_UNASSIGNED;
-	CONFIGB(mainRelayPin) = GPIO_UNASSIGNED;
-	CONFIGB(idle).solenoidPin = GPIO_UNASSIGNED;
-	CONFIGB(fanPin) = GPIO_UNASSIGNED;
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 
-	CONFIGB(ignitionPins)[0] = GPIOC_9; // coil in default pinout
-	CONFIGB(ignitionPins)[1] = GPIOC_7; // coil in default pinout
-	CONFIGB(ignitionPins)[2] = GPIOE_10; // coil in default pinout
-	CONFIGB(ignitionPins)[3] = GPIOE_8; // Miata VVT tach
+	boardConfiguration->ignitionPins[0] = GPIOC_9; // coil in default pinout
+	boardConfiguration->ignitionPins[1] = GPIOC_7; // coil in default pinout
+	boardConfiguration->ignitionPins[2] = GPIOE_10; // coil in default pinout
+	boardConfiguration->ignitionPins[3] = GPIOE_8; // Miata VVT tach
 
-	CONFIGB(ignitionPins)[4] = GPIOE_14; // coil in default pinout
-	CONFIGB(ignitionPins)[5] = GPIOE_12;
-	CONFIGB(ignitionPins)[6] = GPIOD_8;
-	CONFIGB(ignitionPins)[7] = GPIOD_9;
+	boardConfiguration->ignitionPins[4] = GPIOE_14; // coil in default pinout
+	boardConfiguration->ignitionPins[5] = GPIOE_12;
+	boardConfiguration->ignitionPins[6] = GPIOD_8;
+	boardConfiguration->ignitionPins[7] = GPIOD_9;
 
-	CONFIGB(ignitionPins)[8] = GPIOE_0; // brain board, not discovery
-	CONFIGB(ignitionPins)[9] = GPIOE_1; // brain board, not discovery
+	boardConfiguration->ignitionPins[8] = GPIOE_0; // brain board, not discovery
+	boardConfiguration->ignitionPins[9] = GPIOE_1; // brain board, not discovery
 
 }
 

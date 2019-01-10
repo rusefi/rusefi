@@ -34,7 +34,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.customTotalToothCount = 50;
 	engineConfiguration->trigger.customSkippedToothCount = 2;
 
-	CONFIGB(useSerialPort) = false;
+	boardConfiguration->useSerialPort = false;
 
 	// Frankenstein analog input #1: PA1 adc1 MAP
 	// Frankenstein analog input #2: PA3 adc3 TPS
@@ -73,12 +73,12 @@ void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	CONFIGB(triggerInputPins)[0] = GPIOA_5;
-	CONFIGB(triggerInputPins)[1] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
-	CONFIGB(injectionPins)[0] = GPIOC_15;
+	boardConfiguration->injectionPins[0] = GPIOC_15;
 
-	CONFIGB(fuelPumpPin) = GPIOE_6;
+	boardConfiguration->fuelPumpPin = GPIOE_6;
 
 	// todo: extract a method? figure out something smarter
 	setFuelRpmBin(800, 15000 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -87,7 +87,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->afrRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
 
 	engineConfiguration->hasFrequencyReportingMapSensor = true;
-	CONFIGB(frequencyReportingMapInputPin) = GPIOC_6;
-	CONFIGB(mapFrequency100Kpa) = 159;
-	CONFIGB(mapFrequency0Kpa) = 80;
+	boardConfiguration->frequencyReportingMapInputPin = GPIOC_6;
+	boardConfiguration->mapFrequency100Kpa = 159;
+	boardConfiguration->mapFrequency0Kpa = 80;
 }

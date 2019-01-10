@@ -31,39 +31,39 @@ void setZil130(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 
-	CONFIGB(malfunctionIndicatorPin) = GPIO_UNASSIGNED;
+	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 //	engineConfiguration->twoWireBatchInjection = true;
-	CONFIGB(injectionPinMode) = OM_INVERTED;
-	CONFIGB(injectionPins)[0] = GPIOB_8; // #1
-	CONFIGB(injectionPins)[1] = GPIOE_2; // #2
-	CONFIGB(injectionPins)[2] = GPIOE_3; // #3
-	CONFIGB(injectionPins)[3] = GPIOE_4; // #4
-	CONFIGB(injectionPins)[4] = GPIO_UNASSIGNED; // #5
-	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED; // #6
-	CONFIGB(injectionPins)[6] = GPIO_UNASSIGNED;
-	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPinMode = OM_INVERTED;
+	boardConfiguration->injectionPins[0] = GPIOB_8; // #1
+	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
+	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
+	boardConfiguration->injectionPins[3] = GPIOE_4; // #4
+	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED; // #5
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED; // #6
+	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 
-	CONFIGB(ignitionPins)[0] = GPIOB_5; // #1
-	CONFIGB(ignitionPins)[1] = GPIOB_6; // #2
-	CONFIGB(ignitionPins)[2] = GPIO_UNASSIGNED; // #3
-	CONFIGB(ignitionPins)[3] = GPIOB_7; // #4
-	CONFIGB(ignitionPins)[4] = GPIOC_7; // #5
+	boardConfiguration->ignitionPins[0] = GPIOB_5; // #1
+	boardConfiguration->ignitionPins[1] = GPIOB_6; // #2
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // #3
+	boardConfiguration->ignitionPins[3] = GPIOB_7; // #4
+	boardConfiguration->ignitionPins[4] = GPIOC_7; // #5
 
 	// fuel pump
-	CONFIGB(fuelPumpPin) = GPIOD_4;
+	boardConfiguration->fuelPumpPin = GPIOD_4;
 
 	// idle
-	CONFIGB(idle).solenoidPin = GPIOC_14;
-	CONFIGB(idle).solenoidPinMode = OM_INVERTED;
-	CONFIGB(idle).solenoidFrequency = 300;
-	CONFIGB(manIdlePosition) = 50; // set_idle_pwm 50
+	boardConfiguration->idle.solenoidPin = GPIOC_14;
+	boardConfiguration->idle.solenoidPinMode = OM_INVERTED;
+	boardConfiguration->idle.solenoidFrequency = 300;
+	boardConfiguration->manIdlePosition = 50; // set_idle_pwm 50
 
 	// disable sd_card
-	CONFIGB(sdCardCsPin) = GPIO_UNASSIGNED;
-	CONFIGB(is_enabled_spi_2) = false;
-	CONFIGB(is_enabled_spi_3) = false;
-	CONFIGB(max31855spiDevice) = SPI_NONE;
+	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
+	boardConfiguration->is_enabled_spi_2 = false;
+	boardConfiguration->is_enabled_spi_3 = false;
+	boardConfiguration->max31855spiDevice = SPI_NONE;
 
-	CONFIGB(fanPin) = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 }
