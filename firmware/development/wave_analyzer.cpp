@@ -117,9 +117,9 @@ static void setWaveModeSilent(int index, int mode) {
 //}
 
 static void initWave(const char *name, int index) {
-	brain_pin_e brainPin = boardConfiguration->logicAnalyzerPins[index];
+	brain_pin_e brainPin = CONFIGB(logicAnalyzerPins)[index];
 
-	bool mode = boardConfiguration->logicAnalyzerMode[index];
+	bool mode = CONFIGB(logicAnalyzerMode)[index];
 
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");

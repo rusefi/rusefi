@@ -91,7 +91,9 @@ class Engine;
 		EXPAND_Engine
 
 #define CONFIG(x) engineConfiguration->x
-#define CONFIGB(x) engine->engineConfigurationPtr->bc.x
+// todo: fix this! this does not work because of 'prepareVoidConfiguration(&activeConfiguration);'
+//#define CONFIGB(x) engine->engineConfigurationPtr->bc.x
+#define CONFIGB(x) CONFIG(bc.x)
 #define ENGINE(x) engine->x
 
 #define CONFIG_PARAM(x) (x)

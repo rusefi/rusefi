@@ -260,7 +260,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 	float fuelCorr = 1.0f;
 
 	// coasting fuel cut-off correction
-	if (boardConfiguration->coastingFuelCutEnabled) {
+	if (CONFIGB(coastingFuelCutEnabled)) {
 		percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float map = getMap();
 	
