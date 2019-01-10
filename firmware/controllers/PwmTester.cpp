@@ -35,7 +35,7 @@ static void startPwmTest(int freq) {
 	/**
 	 * See custom_engine.cpp for pinout
 	 */
-	// currently this is PB9 by default - see boardConfiguration->injectionPins
+	// currently this is PB9 by default - see CONFIGB(injectionPins)
 	startSimplePwm(&pwmTest[1], "tester", &enginePins.injectors[0], freq / 1.3333333333, 0.5f, applyPinState);
 	// currently this is PE2 by default
 	startSimplePwm(&pwmTest[2], "tester", &enginePins.injectors[1], freq / 1000, 0.5f, applyPinState);

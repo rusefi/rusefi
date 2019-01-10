@@ -49,7 +49,7 @@ static void runCommands() {
 	chThdSleepMilliseconds(1000);	// safety
 
 	// Store current serial port speed - we're going to change it
-	int savedSerialSpeed = boardConfiguration->tunerStudioSerialSpeed;
+	int savedSerialSpeed = CONFIGB(tunerStudioSerialSpeed);
 	
 	int prevBaudIdx = -1, baudIdx = -1, baudListIdx = 0;
 	int cmdIdx = 0;
@@ -75,7 +75,7 @@ static void runCommands() {
 			}
 			chThdSleepMilliseconds(10);	// safety
 			// change the port speed
-			boardConfiguration->tunerStudioSerialSpeed = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
+			CONFIGB(tunerStudioSerialSpeed) = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
 			// init UART
 			startTsPort(tsChannel);
 			chThdSleepMilliseconds(10);	// safety
@@ -160,7 +160,7 @@ void bluetoothStart(ts_channel_s *tsChan, bluetooth_module_e moduleType, const c
 	tsChannel = tsChan;
 	
 	// if a binary protocol uses USB, we cannot init the bluetooth module!
-	if (!boardConfiguration->useSerialPort) {
+	if (!CONFIGB(useSerialPort)) {
 		scheduleMsg(&btLogger, "Failed! Serial Port connection is disabled!");
 		return;
 	}

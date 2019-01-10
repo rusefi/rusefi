@@ -56,17 +56,17 @@ static void extIonCallback(EXTDriver *extp, expchannel_t channel) {
 
 void cdmIonInit(void) {
 	// todo: allow 'GPIOA_0' once we migrate to new mandatory configuration
-	if (boardConfiguration->cdmInputPin == GPIOA_0 || boardConfiguration->cdmInputPin == GPIO_UNASSIGNED) {
+	if (CONFIGB(cdmInputPin) == GPIOA_0 || CONFIGB(cdmInputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
-	int pin = (int)boardConfiguration->cdmInputPin;
+	int pin = (int)CONFIGB(cdmInputPin);
 	if (pin <= 0 || pin > (int)GPIO_UNASSIGNED) {
 		// todo: remove this protection once we migrate to new mandatory configuration
 		return;
 	}
 
 
-	enableExti(boardConfiguration->cdmInputPin, EXT_CH_MODE_RISING_EDGE, extIonCallback);
+	enableExti(CONFIGB(cdmInputPin), EXT_CH_MODE_RISING_EDGE, extIonCallback);
 
 }
 

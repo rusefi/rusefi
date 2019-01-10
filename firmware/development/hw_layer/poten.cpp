@@ -16,6 +16,8 @@
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 
+EXTERN_ENGINE;
+
 /**
  * MCP42010 digital potentiometer driver
  *
@@ -90,22 +92,22 @@ static void setPotValue1(int value) {
 
 #endif /* EFI_POTENTIOMETER */
 
-void initPotentiometers(Logging *sharedLogger, board_configuration_s *boardConfiguration) {
+void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 #if EFI_POTENTIOMETER
-	if (boardConfiguration->digitalPotentiometerSpiDevice == SPI_NONE) {
+	if (CONFIGB(digitalPotentiometerSpiDevice) == SPI_NONE) {
 		scheduleMsg(logger, "digiPot spi disabled");
 		return;
 	}
-	turnOnSpi(boardConfiguration->digitalPotentiometerSpiDevice);
+	turnOnSpi(CONFIGB(digitalPotentiometerSpiDevice));
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		brain_pin_e csPin = boardConfiguration->digitalPotentiometerChipSelect[i];
+		brain_pin_e csPin = CONFIGB(digitalPotentiometerChipSelect)[i];
 		if (csPin == GPIO_UNASSIGNED) {
 			continue;
                 }
 
-		initPotentiometer(&potConfig[i], getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice),
+		initPotentiometer(&potConfig[i], getSpiDevice(CONFIGB(digitalPotentiometerSpiDevice)),
 				csPin);
 	}
 

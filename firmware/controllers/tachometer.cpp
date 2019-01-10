@@ -38,11 +38,11 @@ static void tachSignalCallback(trigger_event_e ckpSignalType,
 }
 
 void initTachometer(void) {
-	if (boardConfiguration->tachOutputPin == GPIO_UNASSIGNED) {
+	if (CONFIGB(tachOutputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
 
-	enginePins.tachOut.initPin("analog tach output", boardConfiguration->tachOutputPin, &boardConfiguration->tachOutputPinMode);
+	enginePins.tachOut.initPin("analog tach output", CONFIGB(tachOutputPin), &CONFIGB(tachOutputPinMode));
 
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 }

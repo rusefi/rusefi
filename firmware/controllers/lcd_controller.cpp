@@ -212,7 +212,7 @@ static void showLine(lcd_line_e line, int screenY) {
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 		{
 			char sdState;
-			if (boardConfiguration->isSdCardEnabled) {
+			if (CONFIGB(isSdCardEnabled)) {
 				sdState = isSdCardAlive() ? 'L' : 'n';
 			} else {
 				sdState = 'D';

@@ -186,6 +186,7 @@ void runRusEfi(void) {
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
 	readConfiguration(&sharedLogger);
+	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
 	prepareVoidConfiguration(&activeConfiguration);
 
 	/**
@@ -239,7 +240,7 @@ void runRusEfi(void) {
 		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
-		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);
+		chThdSleepMilliseconds(CONFIGB(consoleLoopPeriod));
 	}
 }
 
