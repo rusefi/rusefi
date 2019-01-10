@@ -228,7 +228,7 @@ static void periodicSlowCallback(Engine *engine);
 
 static void scheduleNextSlowInvocation(void) {
 	// schedule next invocation
-	int periodMs = boardConfiguration->generalPeriodicThreadPeriod;
+	int periodMs = CONFIGB(generalPeriodicThreadPeriod);
 	if (periodMs == 0)
 		periodMs = 50; // this might happen while resetting configuration
 	chVTSetAny(&periodicSlowTimer, MS2ST(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
@@ -370,7 +370,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	if (fastAdc.isHwUsed(hwChannel)) {
-		scheduleMsg(&logger, "fast enabled=%s", boolToString(boardConfiguration->isFastAdcEnabled));
+		scheduleMsg(&logger, "fast enabled=%s", boolToString(CONFIGB(isFastAdcEnabled)));
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
@@ -735,7 +735,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	if (boardConfiguration->isEngineControlEnabled) {
+	if (CONFIGB(isEngineControlEnabled)) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */

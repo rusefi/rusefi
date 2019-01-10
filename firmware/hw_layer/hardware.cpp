@@ -97,13 +97,13 @@ void unlockSpi(void) {
 }
 
 static void initSpiModules(board_configuration_s *boardConfiguration) {
-	if (boardConfiguration->is_enabled_spi_1) {
+	if (CONFIGB(is_enabled_spi_1)) {
 		 turnOnSpi(SPI_DEVICE_1);
 	}
-	if (boardConfiguration->is_enabled_spi_2) {
+	if (CONFIGB(is_enabled_spi_2)) {
 		turnOnSpi(SPI_DEVICE_2);
 	}
-	if (boardConfiguration->is_enabled_spi_3) {
+	if (CONFIGB(is_enabled_spi_3)) {
 		turnOnSpi(SPI_DEVICE_3);
 	}
 }
@@ -196,7 +196,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
-		if (boardConfiguration->isHip9011Enabled) {
+		if (CONFIGB(isHip9011Enabled)) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
 #endif
@@ -390,13 +390,13 @@ void initHardware(Logging *l) {
 #endif
 
 	bool isBoardTestMode_b;
-	if (boardConfiguration->boardTestModeJumperPin != GPIO_UNASSIGNED) {
-		efiSetPadMode("board test", boardConfiguration->boardTestModeJumperPin,
+	if (CONFIGB(boardTestModeJumperPin) != GPIO_UNASSIGNED) {
+		efiSetPadMode("board test", CONFIGB(boardTestModeJumperPin),
 		PAL_MODE_INPUT_PULLUP);
-		isBoardTestMode_b = (!efiReadPin(boardConfiguration->boardTestModeJumperPin));
+		isBoardTestMode_b = (!efiReadPin(CONFIGB(boardTestModeJumperPin)));
 
 		// we can now relese this pin, it is actually used as output sometimes
-		unmarkPin(boardConfiguration->boardTestModeJumperPin);
+		unmarkPin(CONFIGB(boardTestModeJumperPin));
 	} else {
 		isBoardTestMode_b = false;
 	}
@@ -415,7 +415,7 @@ void initHardware(Logging *l) {
 	initOutputPins();
 
 #if EFI_MAX_31855
-	initMax31855(sharedLogger, getSpiDevice(boardConfiguration->max31855spiDevice), boardConfiguration->max31855_cs);
+	initMax31855(sharedLogger, getSpiDevice(CONFIGB(max31855spiDevice)), CONFIGB(max31855_cs));
 #endif /* EFI_MAX_31855 */
 
 #if EFI_CAN_SUPPORT

@@ -61,7 +61,7 @@ static const ignition_table_t defaultIatTiming = {
 };
 
 bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return  boardConfiguration->enabledStep1Limiter && rpm >= engineConfiguration->step1rpm;
+	return  CONFIGB(enabledStep1Limiter) && rpm >= engineConfiguration->step1rpm;
 }
 
 /**
@@ -97,7 +97,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
+		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIGB(idlePidDeactivationTpsThreshold), advanceAngle, tps);
 	}
 
 	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;

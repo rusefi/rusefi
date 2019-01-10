@@ -97,7 +97,7 @@ static void resetTrigger(EngineTestHelper &eth) {
 
 static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorToleranceCnt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	printf("*** (bc->useNoiselessTriggerDecoder = %s)\r\n",
-			boardConfiguration->useNoiselessTriggerDecoder ? "true" : "false");
+			CONFIGB(useNoiselessTriggerDecoder) ? "true" : "false");
 
 	resetTrigger(eth);
 	
@@ -195,13 +195,13 @@ void testNoiselessDecoder(void) {
 
 #if 0
 	// try normal trigger mode, no noise filtering
-	boardConfiguration->useNoiselessTriggerDecoder = false;
+	CONFIGB(useNoiselessTriggerDecoder) = false;
 	// for test validation, it should be 1 trigger error
 	testNoiselessDecoderProcedure(eth, 1 PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 	// now enable our noise filtering algo
-	boardConfiguration->useNoiselessTriggerDecoder = true;
+	CONFIGB(useNoiselessTriggerDecoder) = true;
 	// should be 0 errors!
 	testNoiselessDecoderProcedure(eth, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 

@@ -39,11 +39,11 @@ static void showEgtInfo(void) {
 #if EFI_PROD_CODE
 	printSpiState(logger, boardConfiguration);
 
-	scheduleMsg(logger, "EGT spi: %d", boardConfiguration->max31855spiDevice);
+	scheduleMsg(logger, "EGT spi: %d", CONFIGB(max31855spiDevice));
 
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (boardConfiguration->max31855_cs[i] != GPIO_UNASSIGNED) {
-			scheduleMsg(logger, "%d ETG @ %s", i, hwPortname(boardConfiguration->max31855_cs[i]));
+		if (CONFIGB(max31855_cs)[i] != GPIO_UNASSIGNED) {
+			scheduleMsg(logger, "%d ETG @ %s", i, hwPortname(CONFIGB(max31855_cs)[i]));
 		}
 	}
 #endif

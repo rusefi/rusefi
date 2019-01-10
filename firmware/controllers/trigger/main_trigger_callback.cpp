@@ -353,7 +353,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (GET_RPM() < CONFIG(fuelClosedLoopRpmThreshold) ||
 			ENGINE(sensors.clt) < CONFIG(fuelClosedLoopCltThreshold) ||
 			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
-			ENGINE(sensors.currentAfr) < boardConfiguration->fuelClosedLoopAfrLowThreshold ||
+			ENGINE(sensors.currentAfr) < CONFIGB(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
 		engine->engineState.fuelPidCorrection = 0;
 		fuelPid.reset();

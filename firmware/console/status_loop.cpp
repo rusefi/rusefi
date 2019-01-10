@@ -400,21 +400,21 @@ void printOverallStatus(systime_t nowSeconds) {
 			getTimeNowSeconds(),
 			DELIMETER);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	printOutPin(CRANK1, boardConfiguration->triggerInputPins[0]);
-	printOutPin(CRANK2, boardConfiguration->triggerInputPins[1]);
+	printOutPin(CRANK1, CONFIGB(triggerInputPins)[0]);
+	printOutPin(CRANK2, CONFIGB(triggerInputPins)[1]);
 	printOutPin(VVT_NAME, engineConfiguration->camInput);
-	printOutPin(HIP_NAME, boardConfiguration->hip9011IntHoldPin);
-	printOutPin(TACH_NAME, boardConfiguration->tachOutputPin);
+	printOutPin(HIP_NAME, CONFIGB(hip9011IntHoldPin));
+	printOutPin(TACH_NAME, CONFIGB(tachOutputPin));
 	printOutPin(DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
-	printOutPin(WA_CHANNEL_1, boardConfiguration->logicAnalyzerPins[0]);
-	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);
+	printOutPin(WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
+	printOutPin(WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
 #endif /* EFI_WAVE_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		printOutPin(enginePins.coils[i].name, boardConfiguration->ignitionPins[i]);
+		printOutPin(enginePins.coils[i].name, CONFIGB(ignitionPins)[i]);
 
-		printOutPin(enginePins.injectors[i].name, boardConfiguration->injectionPins[i]);
+		printOutPin(enginePins.injectors[i].name, CONFIGB(injectionPins)[i]);
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		printOutPin(enginePins.auxValve[i].name, engineConfiguration->auxValves[i]);
@@ -558,7 +558,7 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin, &boardConfiguration->malfunctionIndicatorPinMode);
+	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIGB(malfunctionIndicatorPin), &CONFIGB(malfunctionIndicatorPinMode));
 
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
