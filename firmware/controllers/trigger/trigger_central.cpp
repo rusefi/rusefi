@@ -691,8 +691,8 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 /**
  * @returns true if configuration just changed, and if that change has affected trigger
  */
-bool checkIfTriggerConfigChanged(void) {
-	bool result = triggerVersion.isOld() && isTriggerConfigChanged;
+bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	bool result = triggerVersion.isOld(getGlobalConfigurationVersion()) && isTriggerConfigChanged;
 	isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
 	return result;
 }

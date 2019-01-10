@@ -23,7 +23,7 @@ public:
 	 *
 	 * @return true if getGlobalConfigurationVersion() has changed since last time we've invoked this method
 	 */
-	bool isOld();
+	bool isOld(int currentVersion);
 	int getVersion();
 
 private:
