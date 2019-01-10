@@ -28,8 +28,6 @@ extern int unitTestWarningCounter;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
 
-extern EventQueue schedulingQueue;
-
 static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// mostly we fire only rise events (useOnlyRisingEdgeForTrigger=true).
 	// but for noise filtering, both edges should be processed, so we fire falling events too

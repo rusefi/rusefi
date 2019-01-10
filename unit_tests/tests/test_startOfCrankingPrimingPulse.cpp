@@ -7,10 +7,8 @@
 
 #include "test_startOfCrankingPrimingPulse.h"
 #include "test_trigger_decoder.h"
-#include "event_queue.h"
 #include "unit_test_framework.h"
 
-extern EventQueue schedulingQueue;
 extern int timeNowUs;
 extern EnginePins enginePins;
 

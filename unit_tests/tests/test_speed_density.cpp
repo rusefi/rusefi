@@ -9,9 +9,6 @@
 #include "engine_test_helper.h"
 #include "speed_density.h"
 #include "test_speed_density.h"
-#include "event_queue.h"
-
-extern EventQueue schedulingQueue;
 
 void testSpeedDensity(void) {
 	printf("*************************************************** testSpeedDensity\r\n");
