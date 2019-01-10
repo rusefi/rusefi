@@ -16,6 +16,7 @@ public:
 	void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
 	void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
 	void clear();
+	int executeAll(efitime_t now);
 	int size();
 	scheduling_s* getForUnitTest(int index);
 };

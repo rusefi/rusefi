@@ -388,9 +388,9 @@ void testRpmCalculator(void) {
 	eth.fireFall(5);
 	assertEqualsM("index #3", 3, eth.engine.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 4, engine->executor.size());
-	assertEqualsM("ev 3", start + 13333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM2("ev 5", start + 14277, schedulingQueue.getForUnitText(1)->momentX, 2);
-	assertEqualsM("3/3", start + 14777, schedulingQueue.getForUnitText(2)->momentX);
+	assertEqualsM("ev 3", start + 13333 - 1515, engine->executor.getForUnitTest(0)->momentX);
+	assertEqualsM2("ev 5", start + 14277, engine->executor.getForUnitTest(1)->momentX, 2);
+	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
@@ -427,8 +427,8 @@ void testRpmCalculator(void) {
 
 	eth.fireRise(5);
 	assertEqualsM("queue size 6", 2, engine->executor.size());
-	assertEqualsM("6/0", start + 40944, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("6/1", start + 41444, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsM("6/0", start + 40944, engine->executor.getForUnitTest(0)->momentX);
+	assertEqualsM("6/1", start + 41444, engine->executor.getForUnitTest(1)->momentX);
 	engine->executor.clear();
 
 	eth.fireFall(5);
@@ -439,9 +439,9 @@ void testRpmCalculator(void) {
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 8", 4, engine->executor.size());
 	// todo: assert queue elements completely
-	assertEqualsM("8/0", start + 53333 - 1515, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM2("8/1", start + 54277, schedulingQueue.getForUnitText(1)->momentX, 0);
-	assertEqualsM2("8/2", start + 54777, schedulingQueue.getForUnitText(2)->momentX, 0);
+	assertEqualsM("8/0", start + 53333 - 1515, engine->executor.getForUnitTest(0)->momentX);
+	assertEqualsM2("8/1", start + 54277, engine->executor.getForUnitTest(1)->momentX, 0);
+	assertEqualsM2("8/2", start + 54777, engine->executor.getForUnitTest(2)->momentX, 0);
 	engine->executor.clear();
 
 

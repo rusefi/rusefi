@@ -34,7 +34,7 @@ static void assertNextEvent(const char *msg, int expectedPinState, TestExecutor 
 	timeNowUs = expectedTimeOfNextEvent;
 
 	// execute pending actions and assert that only one action was executed
-	assertEqualsM5(msg, " executed", 1, schedulingQueue.executeAll(timeNowUs), 0);
+	assertEqualsM5(msg, " executed", 1, executor->executeAll(timeNowUs), 0);
 	assertEqualsM5(msg, " pin state", expectedPinState, pinValue, 0);
 
 	// assert that we have one new action in queue

@@ -25,6 +25,9 @@ void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfu
 	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
+int TestExecutor::executeAll(efitime_t now) {
+	return schedulingQueue.executeAll(now);
+}
 
 void TestExecutor::clear() {
 	schedulingQueue.clear();
