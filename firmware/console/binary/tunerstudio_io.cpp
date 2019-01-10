@@ -90,7 +90,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 	} else
 #endif
 	{
-		if (boardConfiguration->useSerialPort) {
+		if (CONFIGB(useSerialPort)) {
 
 			print("TunerStudio over USART");
 			efiSetPadMode("tunerstudio rx", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
@@ -102,7 +102,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 			iqObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
 			
 			// start DMA driver
-			tsDmaUartConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
+			tsDmaUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
 			uartStart(TS_DMA_UART_DEVICE, &tsDmaUartConfig);
 
 			// start continuous DMA transfer using our circular buffer
@@ -110,7 +110,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 			uartStartReceive(TS_DMA_UART_DEVICE, sizeof(tsUartDma.dmaBuffer), tsUartDma.dmaBuffer);
 #else
 			print("Using Serial mode");
-			tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
+			tsSerialConfig.speed = CONFIGB(tunerStudioSerialSpeed);
 
 			sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
 			
@@ -136,7 +136,7 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 	} else
 #endif
 	{
-		if (boardConfiguration->useSerialPort) {
+		if (CONFIGB(useSerialPort)) {
 			// todo: disable Rx/Tx pads?
 #if TS_UART_DMA_MODE
 			uartStop(TS_DMA_UART_DEVICE);

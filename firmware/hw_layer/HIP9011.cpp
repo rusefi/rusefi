@@ -130,14 +130,14 @@ EXTERN_ENGINE
 static char hipPinNameBuffer[16];
 
 static void showHipInfo(void) {
-	if (!boardConfiguration->isHip9011Enabled) {
+	if (!CONFIGB(isHip9011Enabled)) {
 		scheduleMsg(logger, "hip9011 driver not active");
 		return;
 	}
 
 	printSpiState(logger, boardConfiguration);
 	scheduleMsg(logger, "enabled=%s state=%s bore=%.2fmm freq=%.2fkHz PaSDO=%d",
-			boolToString(boardConfiguration->isHip9011Enabled),
+			boolToString(CONFIGB(isHip9011Enabled)),
 			getHip_state_e(instance.state),
 			engineConfiguration->cylinderBore, getHIP9011Band(PASS_HIP_PARAMS),
 			engineConfiguration->hip9011PrescalerAndSDO);
@@ -153,11 +153,11 @@ static void showHipInfo(void) {
 	const char * msg = instance.invalidHip9011ResponsesCount > 0 ? "NOT GOOD" : "ok";
 	scheduleMsg(logger, "spi=%s IntHold@%s/%d response count=%d incorrect response=%d %s",
 			getSpi_device_e(engineConfiguration->hip9011SpiDevice),
-			hwPortname(boardConfiguration->hip9011IntHoldPin),
-			boardConfiguration->hip9011IntHoldPinMode,
+			hwPortname(CONFIGB(hip9011IntHoldPin)),
+			CONFIGB(hip9011IntHoldPinMode),
 			instance.correctResponsesCount, instance.invalidHip9011ResponsesCount,
 			msg);
-	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), instance.settingUpdateCount);
+	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(CONFIGB(hip9011CsPin)), instance.settingUpdateCount);
 
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "hip %.2fv/last=%.2f@%s/max=%.2f adv=%d",
@@ -165,7 +165,7 @@ static void showHipInfo(void) {
 			getVoltage("hipinfo", engineConfiguration->hipOutputChannel),
 			getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, pinNameBuffer),
 			hipValueMax,
-			boardConfiguration->useTpicAdvancedMode);
+			CONFIGB(useTpicAdvancedMode));
 	scheduleMsg(logger, "mosi=%s", hwPortname(getMosiPin(engineConfiguration->hip9011SpiDevice)));
 	scheduleMsg(logger, "miso=%s", hwPortname(getMisoPin(engineConfiguration->hip9011SpiDevice)));
 	scheduleMsg(logger, "sck=%s", hwPortname(getSckPin(engineConfiguration->hip9011SpiDevice)));
@@ -182,18 +182,18 @@ void setHip9011FrankensoPinout(void) {
 	/**
 	 * SPI on PB13/14/15
 	 */
-	//	boardConfiguration->hip9011CsPin = GPIOD_0; // rev 0.1
+	//	CONFIGB(hip9011CsPin) = GPIOD_0; // rev 0.1
 
-	boardConfiguration->isHip9011Enabled = true;
+	CONFIGB(isHip9011Enabled) = true;
 	engineConfiguration->hip9011PrescalerAndSDO = _8MHZ_PRESCALER; // 8MHz chip
-	boardConfiguration->is_enabled_spi_2 = true;
+	CONFIGB(is_enabled_spi_2) = true;
 	// todo: convert this to rusEfi, hardware-independent enum
 #if EFI_PROD_CODE
-	boardConfiguration->hip9011CsPin = GPIOB_0; // rev 0.4
-	boardConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
+	CONFIGB(hip9011CsPin) = GPIOB_0; // rev 0.4
+	CONFIGB(hip9011CsPinMode) = OM_OPENDRAIN;
 
-	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
-	boardConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
+	CONFIGB(hip9011IntHoldPin) = GPIOB_11;
+	CONFIGB(hip9011IntHoldPinMode) = OM_OPENDRAIN;
 
 	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
@@ -205,7 +205,7 @@ void setHip9011FrankensoPinout(void) {
 	engineConfiguration->maxKnockSubDeg = 20;
 
 
-	if (!boardConfiguration->useTpicAdvancedMode) {
+	if (!CONFIGB(useTpicAdvancedMode)) {
 	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
 	}
 }
@@ -340,7 +340,7 @@ static void hipStartupCode(void) {
 		warning(CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not respond");
 	}
 
-	if (boardConfiguration->useTpicAdvancedMode) {
+	if (CONFIGB(useTpicAdvancedMode)) {
 		// enable advanced mode for digital integrator output
 		instance.hardware->sendSyncCommand(SET_ADVANCED_MODE);
 	}
@@ -383,7 +383,7 @@ static msg_t hipThread(void *arg) {
 void initHip9011(Logging *sharedLogger) {
 	logger = sharedLogger;
 	addConsoleAction("hipinfo", showHipInfo);
-	if (!boardConfiguration->isHip9011Enabled)
+	if (!CONFIGB(isHip9011Enabled))
 		return;
 
 
@@ -392,14 +392,14 @@ void initHip9011(Logging *sharedLogger) {
 #if EFI_PROD_CODE
 	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
 
-	hipSpiCfg.ssport = getHwPort("hip", boardConfiguration->hip9011CsPin);
-	hipSpiCfg.sspad = getHwPin("hip", boardConfiguration->hip9011CsPin);
+	hipSpiCfg.ssport = getHwPort("hip", CONFIGB(hip9011CsPin));
+	hipSpiCfg.sspad = getHwPin("hip", CONFIGB(hip9011CsPin));
 #endif
 
-	intHold.initPin("hip int/hold", boardConfiguration->hip9011IntHoldPin,
-			&boardConfiguration->hip9011IntHoldPinMode);
-	enginePins.hipCs.initPin("hip CS", boardConfiguration->hip9011CsPin,
-			&boardConfiguration->hip9011CsPinMode);
+	intHold.initPin("hip int/hold", CONFIGB(hip9011IntHoldPin),
+			&CONFIGB(hip9011IntHoldPinMode));
+	enginePins.hipCs.initPin("hip CS", CONFIGB(hip9011CsPin),
+			&CONFIGB(hip9011CsPinMode));
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &hipSpiCfg);

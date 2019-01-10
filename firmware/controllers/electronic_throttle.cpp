@@ -158,7 +158,7 @@ static msg_t etbThread(void *arg) {
 
 		etbPwmUp.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentEtbDuty));
 
-		if (boardConfiguration->etbDirectionPin2 != GPIO_UNASSIGNED) {
+		if (CONFIGB(etbDirectionPin2) != GPIO_UNASSIGNED) {
 			bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
 			if (needEtbBraking != wasEtbBraking) {
 				scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
@@ -212,10 +212,10 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "TPS=%.2f", getTPS());
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
-			hwPortname(boardConfiguration->etbControlPin1),
+			hwPortname(CONFIGB(etbControlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	scheduleMsg(&logger, "close dir=%s", hwPortname(boardConfiguration->etbDirectionPin2));
+	scheduleMsg(&logger, "close dir=%s", hwPortname(CONFIGB(etbDirectionPin2)));
 	pid.showPidStatus(&logger, "ETB");
 }
 
@@ -252,7 +252,7 @@ void setDefaultEtbParameters(void) {
 	engineConfiguration->etb.period = 100;
 	engineConfiguration->etbFreq = 300;
 
-//	boardConfiguration->etbControlPin1 = GPIOE_4; // test board, matched default fuel pump relay
+//	CONFIGB(etbControlPin1) = GPIOE_4; // test board, matched default fuel pump relay
 }
 
 bool isETBRestartNeeded(void) {
@@ -283,21 +283,21 @@ void startETBPins(void) {
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
 			&engine->executor,
-			boardConfiguration->etbControlPin1,
+			CONFIGB(etbControlPin1),
 			&enginePins.etbOutput1,
 			freq,
 			0.80,
 			applyPinState);
 /*
 	startSimplePwmExt(&etbPwmDown, "etb2",
-			boardConfiguration->etbControlPin2,
+			CONFIGB(etbControlPin2),
 			&enginePins.etbOutput2,
 			freq,
 			0.80,
 			applyPinState);
-	outputDirectionOpen.initPin("etb dir open", boardConfiguration->etbDirectionPin1);
+	outputDirectionOpen.initPin("etb dir open", CONFIGB(etbDirectionPin1));
 */
-	outputDirectionClose.initPin("etb dir close", boardConfiguration->etbDirectionPin2);
+	outputDirectionClose.initPin("etb dir close", CONFIGB(etbDirectionPin2));
 }
 
 static void setTempOutput(float value) {

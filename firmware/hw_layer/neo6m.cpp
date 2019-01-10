@@ -24,7 +24,7 @@
 #include "nmea.h"
 #include "neo6m.h"
 #include "rtc_helper.h"
-#include "engine_configuration.h"
+#include "engine.h"
 
 extern board_configuration_s *boardConfiguration;
 extern engine_configuration_s *engineConfiguration;
@@ -46,9 +46,11 @@ float getCurrentSpeed(void) {
 	return GPSdata.speed;
 }
 
-static void printGpsInfo(void) {
-	scheduleMsg(&logging, "GPS RX %s", hwPortname(boardConfiguration->gps_rx_pin));
-	scheduleMsg(&logging, "GPS TX %s", hwPortname(boardConfiguration->gps_tx_pin));
+EXTERN_ENGINE;
+
+static void printGpsInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	scheduleMsg(&logging, "GPS RX %s", hwPortname(CONFIGB(gps_rx_pin)));
+	scheduleMsg(&logging, "GPS TX %s", hwPortname(CONFIGB(gps_tx_pin)));
 
 	scheduleMsg(&logging, "m=%d,e=%d: vehicle speed = %.2f\r\n", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
@@ -102,8 +104,8 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 }
 
 static bool isGpsEnabled() {
-	return boardConfiguration->gps_rx_pin != GPIO_UNASSIGNED ||
-			boardConfiguration->gps_tx_pin != GPIO_UNASSIGNED;
+	return CONFIGB(gps_rx_pin) != GPIO_UNASSIGNED ||
+			CONFIGB(gps_tx_pin) != GPIO_UNASSIGNED;
 }
 
 void initGps(void) {
@@ -113,8 +115,8 @@ void initGps(void) {
 
 	sdStart(GPS_SERIAL_DEVICE, &GPSserialConfig);
 //  GPS we have USART1: PB7 -> USART1_RX and PB6 -> USART1_TX
-	efiSetPadMode("GPS tx", boardConfiguration->gps_tx_pin, PAL_MODE_ALTERNATE(7));
-	efiSetPadMode("GPS rx", boardConfiguration->gps_rx_pin, PAL_MODE_ALTERNATE(7));
+	efiSetPadMode("GPS tx", CONFIGB(gps_tx_pin), PAL_MODE_ALTERNATE(7));
+	efiSetPadMode("GPS rx", CONFIGB(gps_rx_pin), PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
 	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, (tfunc_t)(void*) GpsThreadEntryPoint, NULL);

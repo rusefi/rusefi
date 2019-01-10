@@ -93,7 +93,7 @@ static efitick_t previousVvtCamDuration = 0;
 void hwHandleVvtCamSignal(trigger_value_e front) {
 	addEngineSnifferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
 
-	if (boardConfiguration->vvtCamSensorUseRise ^ (front != TV_FALL)) {
+	if (CONFIGB(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
 		return;
 	}
 
@@ -119,7 +119,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
-		if (ratio < boardConfiguration->nb2ratioFrom || ratio > boardConfiguration->nb2ratioTo) {
+		if (ratio < CONFIGB(nb2ratioFrom) || ratio > CONFIGB(nb2ratioTo)) {
 			return;
 		}
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
@@ -184,7 +184,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 void hwHandleShaftSignal(trigger_event_e signal) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
-	if (!boardConfiguration->useNoiselessTriggerDecoder) {
+	if (!CONFIGB(useNoiselessTriggerDecoder)) {
 		if (!isUsefulSignal(signal, engineConfiguration)) {
 			return;
 		}
@@ -329,7 +329,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	nowNt = getTimeNowNt();
 
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
-	if (boardConfiguration->useNoiselessTriggerDecoder) {
+	if (CONFIGB(useNoiselessTriggerDecoder)) {
 		if (!noiseFilter(nowNt, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
@@ -584,27 +584,27 @@ void triggerInfo(void) {
 
 	}
 
-	scheduleMsg(logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
+	scheduleMsg(logger, "primary trigger input: %s", hwPortname(CONFIGB(triggerInputPins)[0]));
 	scheduleMsg(logger, "primary trigger simulator: %s %s freq=%d",
-			hwPortname(boardConfiguration->triggerSimulatorPins[0]),
-			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[0]),
-			boardConfiguration->triggerSimulatorFrequency);
+			hwPortname(CONFIGB(triggerSimulatorPins)[0]),
+			getPin_output_mode_e(CONFIGB(triggerSimulatorPinModes)[0]),
+			CONFIGB(triggerSimulatorFrequency));
 
 	if (ts->needSecondTriggerInput) {
-		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
+		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(CONFIGB(triggerInputPins)[1]));
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
-				hwPortname(boardConfiguration->triggerSimulatorPins[1]),
-				getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
+				hwPortname(CONFIGB(triggerSimulatorPins)[1]),
+				getPin_output_mode_e(CONFIGB(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
-//	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
-//			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[2]));
+//	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(CONFIGB(triggerSimulatorPins)[2]),
+//			getPin_output_mode_e(CONFIGB(triggerSimulatorPinModes)[2]));
 
-	scheduleMsg(logger, "trigger error extra LED: %s %s", hwPortname(boardConfiguration->triggerErrorPin),
-			getPin_output_mode_e(boardConfiguration->triggerErrorPinMode));
-	scheduleMsg(logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
-	scheduleMsg(logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
+	scheduleMsg(logger, "trigger error extra LED: %s %s", hwPortname(CONFIGB(triggerErrorPin)),
+			getPin_output_mode_e(CONFIGB(triggerErrorPinMode)));
+	scheduleMsg(logger, "primary logic input: %s", hwPortname(CONFIGB(logicAnalyzerPins)[0]));
+	scheduleMsg(logger, "secondary logic input: %s", hwPortname(CONFIGB(logicAnalyzerPins)[1]));
 
 	scheduleMsg(logger, "zeroTestTime=%d maxSchedulingPrecisionLoss=%d", engine->m.zeroTestTime, maxSchedulingPrecisionLoss);
 

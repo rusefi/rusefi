@@ -141,7 +141,7 @@ void printTsStats(void) {
 		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
 
 		scheduleMsg(&tsLogger, "TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),
-				boardConfiguration->tunerStudioSerialSpeed);
+				CONFIGB(tunerStudioSerialSpeed));
 	}
 #endif /* EFI_PROD_CODE */
 
@@ -153,7 +153,7 @@ void printTsStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(logger, "fuelTable %d", fuelMapOffset);
 //
-//	int offset = (int) (&boardConfiguration->hip9011Gain) - (int) engineConfiguration;
+//	int offset = (int) (&CONFIGB(hip9011Gain)) - (int) engineConfiguration;
 //	scheduleMsg(&tsLogger, "hip9011Gain %d", offset);
 //
 //	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
@@ -164,7 +164,7 @@ void printTsStats(void) {
 }
 
 static void setTsSpeed(int value) {
-	boardConfiguration->tunerStudioSerialSpeed = value;
+	CONFIGB(tunerStudioSerialSpeed) = value;
 	printTsStats();
 }
 
