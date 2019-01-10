@@ -14,7 +14,7 @@
 
 #include "engine.h"
 
-void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void common079721_2351(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setMiata1990(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setMiata1994_d(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setMiata1994_s(DECLARE_ENGINE_PARAMETER_SIGNATURE);

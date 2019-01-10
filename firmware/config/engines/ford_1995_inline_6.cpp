@@ -85,13 +85,13 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// output 5 is PC13
 	// output 6 is PC15
 
-	boardConfiguration->fuelPumpPin = GPIOC_13;
-	boardConfiguration->injectionPins[0] = GPIOB_9;
-	boardConfiguration->injectionPins[1] = GPIOE_3;
-	boardConfiguration->ignitionPins[0] = GPIOC_15;
+	CONFIGB(fuelPumpPin) = GPIOC_13;
+	CONFIGB(injectionPins)[0] = GPIOB_9;
+	CONFIGB(injectionPins)[1] = GPIOE_3;
+	CONFIGB(ignitionPins)[0] = GPIOC_15;
 
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(fanPin) = GPIO_UNASSIGNED;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
@@ -99,10 +99,10 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//	engineConfiguration->vbattAdcChannel = 0; //
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 
-	boardConfiguration->triggerInputPins[0] = GPIOA_8;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5;
-	boardConfiguration->logicAnalyzerPins[0] = GPIOC_6;
-	boardConfiguration->logicAnalyzerPins[1] = GPIOE_5;
+	CONFIGB(triggerInputPins)[0] = GPIOA_8;
+	CONFIGB(triggerInputPins)[1] = GPIOA_5;
+	CONFIGB(logicAnalyzerPins)[0] = GPIOC_6;
+	CONFIGB(logicAnalyzerPins)[1] = GPIOE_5;
 }
 
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */

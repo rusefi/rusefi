@@ -32,10 +32,10 @@ void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 
 
 	// etb testing
-//	boardConfiguration->clutchUpPin
-	boardConfiguration->etbControlPin1 = GPIOD_3;
+//	CONFIGB(clutchUpPin)
+	CONFIGB(etbControlPin1) = GPIOD_3;
 	engineConfiguration->pedalPositionAdcChannel = EFI_ADC_1;
-	boardConfiguration->etbDirectionPin2 = GPIOD_5;
+	CONFIGB(etbDirectionPin2) = GPIOD_5;
 
 	engineConfiguration->tpsMin = 337;
 	engineConfiguration->tpsMax = 896;

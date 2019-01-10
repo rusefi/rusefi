@@ -46,33 +46,33 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->iat.adcChannel = EFI_ADC_13;
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // PA2
 
-	boardConfiguration->idle.solenoidPin = GPIOE_0;
-	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
+	CONFIGB(idle).solenoidPin = GPIOE_0;
+	CONFIGB(idle).solenoidPinMode = OM_DEFAULT;
 
-	boardConfiguration->fuelPumpPin = GPIOC_14; // Frankenstein: low side - out #4
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	CONFIGB(fuelPumpPin) = GPIOC_14; // Frankenstein: low side - out #4
+	CONFIGB(fuelPumpPinMode) = OM_DEFAULT;
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - out #8
-	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - out #6
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
+	CONFIGB(injectionPins)[0] = GPIOB_9; // Frankenstein: low side - out #12
+	CONFIGB(injectionPins)[1] = GPIOB_8; // Frankenstein: low side - out #11
+	CONFIGB(injectionPins)[2] = GPIOE_3; // Frankenstein: low side - out #8
+	CONFIGB(injectionPins)[3] = GPIOE_5; // Frankenstein: low side - out #6
+	CONFIGB(injectionPins)[4] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPinMode) = OM_DEFAULT;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_10; // Frankenstein: high side #1
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_9; // // Frankenstein: high side #2
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_INVERTED;
+	CONFIGB(ignitionPins)[0] = GPIOE_10; // Frankenstein: high side #1
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIOC_9; // // Frankenstein: high side #2
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPinMode) = OM_INVERTED;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_1;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+	CONFIGB(malfunctionIndicatorPin) = GPIOE_1;
+	CONFIGB(malfunctionIndicatorPinMode) = OM_DEFAULT;
 
-	boardConfiguration->fanPin = GPIOE_6;
-	boardConfiguration->fanPinMode = OM_DEFAULT;
+	CONFIGB(fanPin) = GPIOE_6;
+	CONFIGB(fanPinMode) = OM_DEFAULT;
 
-	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
+	CONFIGB(clutchDownPin) = GPIO_UNASSIGNED;
 
 	// set_whole_fuel_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -85,7 +85,7 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * to test
 	 * set_fsio_setting 1 5000
 	 */
-	boardConfiguration->fsio_setting[0] = 5000;
+	CONFIGB(fsio_setting)[0] = 5000;
 	// (self and (rpm > 4800)) OR (rpm > 5000)
 	// set_rpn_expression 1 "self rpm 4800 > & rpm 5000 > OR"
 //	setFsioExt(0, GPIOE_3, "self rpm 4800 > & rpm 5000 > OR", 150 PASS_ENGINE_PARAMETER_SUFFIX);

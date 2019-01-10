@@ -240,20 +240,20 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
-//	boardConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
-	boardConfiguration->triggerInputPins[0] = GPIOA_5; // board still not modified
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+//	CONFIGB(triggerInputPins)[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
+	CONFIGB(triggerInputPins)[0] = GPIOA_5; // board still not modified
+	CONFIGB(triggerInputPins)[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOC_6;
 
-//	boardConfiguration->is_enabled_spi_1 = true;
+//	CONFIGB(is_enabled_spi_1) = true;
 
 
 	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
 
-	boardConfiguration->alternatorControlPin = GPIOE_10;
-	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
+	CONFIGB(alternatorControlPin) = GPIOE_10;
+	CONFIGB(alternatorControlPinMode) = OM_OPENDRAIN;
 
-//	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	CONFIGB(vehicleSpeedSensorInputPin) = GPIOA_8;
 
 	// enable altdebug
 	engineConfiguration->targetVBatt = 13.8;
@@ -271,12 +271,12 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].maxValue = 44;
 
 	// set idle_position 35
-	boardConfiguration->manIdlePosition = 35;
+	CONFIGB(manIdlePosition) = 35;
 
 
 	// set vvt_mode 3
 	engineConfiguration->vvtMode = MIATA_NB2;
-	boardConfiguration->vvtCamSensorUseRise = true;
+	CONFIGB(vvtCamSensorUseRise) = true;
 	engineConfiguration->vvtDisplayInverted = true;
 	engineConfiguration->vvtOffset = 98; // 2003 red car value
 
@@ -286,7 +286,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//	/**
 	//	 * set_fsio_setting 1 0.55
 	//	 */
-	boardConfiguration->fsio_setting[0] = 0.0;
+	CONFIGB(fsio_setting)[0] = 0.0;
 //	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER_SUFFIX);
 
 
@@ -313,12 +313,12 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Miata coil on #4 PE14 - white ECU wire "1&4"
  */
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_9;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[0] = GPIOE_14;
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(ignitionPins)[2] = GPIOC_9;
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->etbControlPin1 = GPIOC_7;
+	CONFIGB(etbControlPin1) = GPIOC_7;
 
 // default TPS is	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 	// it becomes pedal sensor on test mule
@@ -372,8 +372,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	0.1375
 //	6.375
 //	10.625
-	boardConfiguration->nb2ratioFrom = 8.50 * 0.75;
-	boardConfiguration->nb2ratioTo = 14;
+	CONFIGB(nb2ratioFrom) = 8.50 * 0.75;
+	CONFIGB(nb2ratioTo) = 14;
 	engineConfiguration->nbVvtIndex = 0;
 
 
@@ -384,7 +384,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_6; // just for a test
+	CONFIGB(malfunctionIndicatorPin) = GPIOE_6; // just for a test
 
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
@@ -392,8 +392,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->injector.flow = 265;
 
-//	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
-//	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
+//	CONFIGB(malfunctionIndicatorPin) = GPIOD_9;
+//	CONFIGB(malfunctionIndicatorPinMode) = OM_INVERTED;
 
 	// todo: blue jumper wire - what is it?!
 	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
@@ -423,9 +423,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * set_fsio_setting 3 65
 	 * set_fsio_setting 4 15
 	 */
-	boardConfiguration->fsio_setting[1] = 6500; // #2 RPM threshold
-	boardConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
-	boardConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
+	CONFIGB(fsio_setting)[1] = 6500; // #2 RPM threshold
+	CONFIGB(fsio_setting)[2] = 105; // #3 CLT threshold
+	CONFIGB(fsio_setting)[3] = 12.0; // #4 voltage threshold
 
 	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -467,7 +467,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIG
 	memcpy(config->afrLoadBins, targetAfrLoadBins, sizeof(targetAfrLoadBins));
 	copyTargetAfrTable(target_AFR_NA, config->afrTable);
 
-	boardConfiguration->ignitionPins[2] = GPIOC_7;
+	CONFIGB(ignitionPins)[2] = GPIOC_7;
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
@@ -490,7 +490,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIG
 	engineConfiguration->rpmHardLimit = 7200; // we want to survive the race, but we also want some fun!
 
 	// set idle_position 30
-	boardConfiguration->manIdlePosition = 30;
+	CONFIGB(manIdlePosition) = 30;
 	engineConfiguration->crankingIACposition = 65;
 }
 
@@ -502,7 +502,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIG
 void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	boardConfiguration->ignitionPins[2] = GPIOC_7;
+	CONFIGB(ignitionPins)[2] = GPIOC_7;
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM. Make sure 500K pull-down on Frankenso
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3

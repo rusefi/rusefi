@@ -40,17 +40,17 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	board_configuration_s *bc = &engineConfiguration->bc;
 	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_7; // #1
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED; // #2
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // #3
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // #4
-	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED; // #5
-	boardConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
+	CONFIGB(ignitionPins)[0] = GPIOC_7; // #1
+	CONFIGB(ignitionPins)[1] = GPIO_UNASSIGNED; // #2
+	CONFIGB(ignitionPins)[2] = GPIO_UNASSIGNED; // #3
+	CONFIGB(ignitionPins)[3] = GPIO_UNASSIGNED; // #4
+	CONFIGB(ignitionPins)[4] = GPIO_UNASSIGNED; // #5
+	CONFIGB(ignitionPins)[5] = GPIO_UNASSIGNED; // #6
 
-	boardConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
+	CONFIGB(logicAnalyzerPins)[0] = GPIO_UNASSIGNED;
+	CONFIGB(logicAnalyzerPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(logicAnalyzerPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(logicAnalyzerPins)[3] = GPIO_UNASSIGNED;
 }
 
 void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -63,7 +63,7 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
 
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	CONFIGB(triggerInputPins)[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = GPIOA_5;
 
 	// set global_trigger_offset_angle 0

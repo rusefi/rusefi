@@ -64,8 +64,8 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// upside down wiring
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+	CONFIGB(triggerInputPins)[0] = GPIOA_5;
+	CONFIGB(triggerInputPins)[1] = GPIOC_6;
 
 
 	// set global_trigger_offset_angle 180
@@ -85,9 +85,9 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
   //setIndividualCoilsIgnition();
 
-	setFrankenso_01_LCD(boardConfiguration);
-	commonFrankensoAnalogInputs(engineConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
+	setFrankenso_01_LCD(PASS_ENGINE_PARAMETER_SIGNATURE);
+	commonFrankensoAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setFrankenso0_1_joystick(PASS_ENGINE_PARAMETER_SIGNATURE);
 	setMap(config->injectionPhase, 320);
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
@@ -133,33 +133,33 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenso low out #11: PB8 injector #3
 	// Frankenso low out #12: PB7 injector #4
 
-	boardConfiguration->fuelPumpPin = GPIOE_4;
-	boardConfiguration->mainRelayPin = GPIOD_7;
-	boardConfiguration->idle.solenoidPin = GPIOC_13;
+	CONFIGB(fuelPumpPin) = GPIOE_4;
+	CONFIGB(mainRelayPin) = GPIOD_7;
+	CONFIGB(idle).solenoidPin = GPIOC_13;
 
-	boardConfiguration->fanPin = GPIOE_5;
+	CONFIGB(fanPin) = GPIOE_5;
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
-	boardConfiguration->injectionPins[1] = GPIOD_5; // #2
-	boardConfiguration->injectionPins[2] = GPIOB_7; // #3
-	boardConfiguration->injectionPins[3] = GPIOB_8; // #4
+	CONFIGB(injectionPins)[0] = GPIOB_9; // #1
+	CONFIGB(injectionPins)[1] = GPIOD_5; // #2
+	CONFIGB(injectionPins)[2] = GPIOB_7; // #3
+	CONFIGB(injectionPins)[3] = GPIOB_8; // #4
 
   setDefaultCustomMaps(PASS_ENGINE_PARAMETER_SIGNATURE);
 	setAlgorithm(LM_ALPHA_N PASS_ENGINE_PARAMETER_SUFFIX);
 
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[4] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[5] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[6] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[7] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[8] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[9] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[10] = GPIO_UNASSIGNED;
+	CONFIGB(injectionPins)[11] = GPIO_UNASSIGNED;
 
-	boardConfiguration->ignitionPins[0] = GPIOE_14;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOE_10;
-	boardConfiguration->ignitionPins[3] = GPIOC_9; // #4
+	CONFIGB(ignitionPins)[0] = GPIOE_14;
+	CONFIGB(ignitionPins)[1] = GPIOC_7;
+	CONFIGB(ignitionPins)[2] = GPIOE_10;
+	CONFIGB(ignitionPins)[3] = GPIOC_9; // #4
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;

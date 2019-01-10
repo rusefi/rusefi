@@ -69,10 +69,10 @@ EXTERN_ENGINE;
 void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
-	common079721_2351(engineConfiguration, boardConfiguration);
+	common079721_2351(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setFrankenso_01_LCD(boardConfiguration);
-	setFrankenso0_1_joystick(engineConfiguration);
+	setFrankenso_01_LCD(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setFrankenso0_1_joystick(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setDensoTODO(config);
 
@@ -104,21 +104,21 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	copyFuelTable(racingFestivaVeTable, config->veTable);
 
-//	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
-//	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+//	CONFIGB(triggerInputPins)[0] = GPIOC_6; // 2G YEL/BLU
+//	CONFIGB(triggerInputPins)[1] = GPIOA_5; // 2E White CKP
 
 	// in case of SOHC distributor we only have one signal
-//	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
-//	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+//	CONFIGB(triggerInputPins)[0] = GPIOA_5; // 2E White CKP
+//	CONFIGB(triggerInputPins)[1] = GPIO_UNASSIGNED;
 
 	// in case of DOHC distributor we have two signals
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+	CONFIGB(triggerInputPins)[0] = GPIOC_6;
+	CONFIGB(triggerInputPins)[1] = GPIOA_5; // 2E White CKP
 
 	// Denso 195500-2180
 	engineConfiguration->injector.flow = 265;
 
-	boardConfiguration->isFastAdcEnabled = true;
+	CONFIGB(isFastAdcEnabled) = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
@@ -126,7 +126,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10
-	boardConfiguration->manIdlePosition = 10;
+	CONFIGB(manIdlePosition) = 10;
 	engineConfiguration->crankingIACposition = 65;
 
 	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -155,8 +155,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
-	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+	CONFIGB(triggerSimulatorPinModes)[0] = OM_OPENDRAIN;
+	CONFIGB(triggerSimulatorPinModes)[1] = OM_OPENDRAIN;
 
 	// individual coils
 	// W6  PC9
@@ -164,11 +164,11 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// W12 PE8
 	// W13 PE12
 
-	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIOC_7;
-	boardConfiguration->ignitionPins[2] = GPIOE_8;
-	boardConfiguration->ignitionPins[3] = GPIOE_12;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+	CONFIGB(ignitionPins)[0] = GPIOC_9;
+	CONFIGB(ignitionPins)[1] = GPIOC_7;
+	CONFIGB(ignitionPins)[2] = GPIOE_8;
+	CONFIGB(ignitionPins)[3] = GPIOE_12;
+	CONFIGB(ignitionPinMode) = OM_DEFAULT;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
@@ -190,23 +190,23 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
 
-	boardConfiguration->injectionPins[0] = GPIOD_3;
-	boardConfiguration->injectionPins[1] = GPIOE_2;
+	CONFIGB(injectionPins)[0] = GPIOD_3;
+	CONFIGB(injectionPins)[1] = GPIOE_2;
 
 
 	//setDefaultCrankingFuel(engineConfiguration);
 	engineConfiguration->cranking.baseFuel = 5;
 
 	// 40% idle is good default
-	boardConfiguration->idle.solenoidFrequency = 300;
-	boardConfiguration->idle.solenoidPin = GPIOB_9;
+	CONFIGB(idle).solenoidFrequency = 300;
+	CONFIGB(idle).solenoidPin = GPIOB_9;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+	CONFIGB(malfunctionIndicatorPin) = GPIOE_5;
+	CONFIGB(malfunctionIndicatorPinMode) = OM_DEFAULT;
 
-	boardConfiguration->tunerStudioSerialSpeed = 19200;
+	CONFIGB(tunerStudioSerialSpeed) = 19200;
 
-	commonFrankensoAnalogInputs(engineConfiguration);
+	commonFrankensoAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	setCommonNTCSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.config.bias_resistor = 2700;
 	setCommonNTCSensor(&engineConfiguration->iat);
@@ -230,7 +230,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * to test
 	 * set_fsio_setting 1 5000
 	 */
-	boardConfiguration->fsio_setting[0] = 5000;
+	CONFIGB(fsio_setting)[0] = 5000;
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -246,9 +246,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
 	 */
-	boardConfiguration->fsio_setting[1] = 6200; // RPM threshold
-	boardConfiguration->fsio_setting[2] = 90; // CLT threshold
-	boardConfiguration->fsio_setting[3] = 13.5; // voltage threshold
+	CONFIGB(fsio_setting)[1] = 6200; // RPM threshold
+	CONFIGB(fsio_setting)[2] = 90; // CLT threshold
+	CONFIGB(fsio_setting)[3] = 13.5; // voltage threshold
 
 //	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER_SUFFIX);
 	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -272,7 +272,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	config->ignitionRpmBins[15] = 7000;
 	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
 
-	//	boardConfiguration->useWarmupPidAfr = true;
+	//	CONFIGB(useWarmupPidAfr) = true;
 		engineConfiguration->warmupAfrPid.pFactor = -0.2;
 		engineConfiguration->warmupAfrPid.iFactor = -0.0005;
 	//	engineConfiguration->warmupAfrPid.dFactor = -0.02;
@@ -284,7 +284,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
 	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 1;
 
-	boardConfiguration->isSdCardEnabled = true;
+	CONFIGB(isSdCardEnabled) = true;
 
 //	engineConfiguration->useFSIO16ForTimingAdjustment = true;
 	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PA3
