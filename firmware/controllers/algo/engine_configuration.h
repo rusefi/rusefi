@@ -55,7 +55,7 @@ void setAfrMap(afr_table_t table, float value);
  * See also setLinearCurve()
  */
 void setMap(fuel_table_t table, float value);
-void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX);

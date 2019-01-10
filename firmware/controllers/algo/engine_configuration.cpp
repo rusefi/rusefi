@@ -228,11 +228,11 @@ void setMap(fuel_table_t table, float value) {
 	}
 }
 
-static void setWholeVEMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void setWholeVEMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->veTable, value);
 }
 
-void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->fuelTable, value);
 }
 
@@ -708,7 +708,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
 
 	// set_whole_timing_map 3
-	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 14.7);
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -1121,13 +1121,13 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 #if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
 	case DODGE_NEON_1995:
-		setDodgeNeon1995EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CAM:
-		setDodgeNeonNGCEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CRANK:
-		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case LADA_KALINA:
 		setLadaKalina(PASS_ENGINE_PARAMETER_SIGNATURE);
