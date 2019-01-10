@@ -630,7 +630,7 @@ static void setWholeFuelMapCmd(float value) {
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
-	setWholeFuelMap(value PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(value PASS_CONFIG_PARAMETER_SUFFIX);
 }
 
 #if EFI_PROD_CODE

@@ -132,7 +132,7 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
 
-	setWholeFuelMap(6 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(6 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
