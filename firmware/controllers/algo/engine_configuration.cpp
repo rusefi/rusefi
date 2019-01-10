@@ -636,7 +636,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	prepareVoidConfiguration(engineConfiguration);
 
-	boardConfiguration->mafSensorType = Bosch0280218037;
+	CONFIGB(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -646,7 +646,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 
-	boardConfiguration->mapMinBufferLength = 1;
+	CONFIGB(mapMinBufferLength) = 1;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;

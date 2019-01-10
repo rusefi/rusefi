@@ -134,7 +134,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	iatFuelCorrection = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SUFFIX);
 	// todo: move this into slow callback, no reason for CLT corr to be here
-	if (boardConfiguration->useWarmupPidAfr && engine->sensors.clt < engineConfiguration->warmupAfrThreshold) {
+	if (CONFIGB(useWarmupPidAfr) && engine->sensors.clt < engineConfiguration->warmupAfrThreshold) {
 		if (rpm < 200) {
 			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
@@ -193,7 +193,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if (CONFIG(useSeparateVeForIdle)) {
 			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
 			// interpolate between idle table and normal (running) table using TPS threshold
-			rawVe = interpolateClamped(0.0f, idleVe, boardConfiguration->idlePidDeactivationTpsThreshold, rawVe, tps);
+			rawVe = interpolateClamped(0.0f, idleVe, CONFIGB(idlePidDeactivationTpsThreshold), rawVe, tps);
 		}
 		currentVE = baroCorrection * rawVe * 0.01;
 		targetAFR = afrMap.getValue(rpm, map);
