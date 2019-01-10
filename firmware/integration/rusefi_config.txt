@@ -833,7 +833,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapLowValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
-	brain_input_pin_e camInput;Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
+	brain_input_pin_e camInput;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
 	int crankingIACposition;+IAC position during cranking;"percent",      1,     0,   -100.0,    100,    
 	float tChargeMinRpmMinTps;;"mult",        1,     0,  0,    3,  4
 	float tChargeMinRpmMaxTps;;"mult",        1,     0,  0,    3,  4

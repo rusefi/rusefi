@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 16:37:02 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 17:03:36 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1874,6 +1874,7 @@ typedef struct {
 	float egoValueShift;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
+	 * TODO #660
 	 * offset 2376
 	 */
 	brain_input_pin_e camInput;
@@ -2474,4 +2475,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 16:37:02 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 17:03:36 EST 2019
