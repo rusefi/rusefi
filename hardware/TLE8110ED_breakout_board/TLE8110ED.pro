@@ -1,4 +1,4 @@
-update=1/8/2019 6:45:32 PM
+update=1/9/2019 5:29:23 AM
 version=1
 last_client=kicad
 [general]
@@ -27,14 +27,6 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.2
 BoardOutlineThickness=0.09999999999999999
 ModuleOutlineThickness=0.15
-[eeschema]
-version=1
-LibDir=
-[eeschema/libraries]
-LibName1=TLE8110ED
-LibName2=conn
-LibName3=mechanical
-LibName4=power
 [schematic_editor]
 version=1
 PageLayoutDescrFile=../rusefi_lib/Border.kicad_wks
@@ -45,3 +37,11 @@ NetFmtName=
 SpiceForceRefPrefix=0
 SpiceUseNetNumbers=0
 LabSize=60
+[eeschema]
+version=1
+LibDir=../rusefi_lib
+[eeschema/libraries]
+LibName1=conn
+LibName2=mechanical
+LibName3=power
+LibName4=TLE8110ED
