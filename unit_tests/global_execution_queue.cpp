@@ -6,11 +6,7 @@
  */
 
 #include "signal_executor.h"
-#include "event_queue.h"
 #include "global_execution_queue.h"
-
-// this global instance is used by integration tests via 'scheduleByTimestamp' global methods below
-static EventQueue schedulingQueue;
 
 bool_t debugSignalExecutor = false;
 

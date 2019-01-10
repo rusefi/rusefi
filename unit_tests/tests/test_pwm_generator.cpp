@@ -46,7 +46,6 @@ static void test100dutyCycle() {
 	TestExecutor executor;
 	SimplePwm pwm("test PWM1");
 	OutputPin pin;
-	executor.clear();
 
 	startSimplePwm(&pwm, "unit_test",
 			&executor,
@@ -74,7 +73,6 @@ static void testSwitchToNanPeriod() {
 	TestExecutor executor;
 	SimplePwm pwm("test PWM1");
 	OutputPin pin;
-	executor.clear();
 
 	startSimplePwm(&pwm, "unit_test",
 			&executor,
@@ -113,7 +111,6 @@ void testPwmGenerator() {
 	TestExecutor executor;
 	SimplePwm pwm("test PWM3");
 	OutputPin pin;
-	executor.clear();
 
 	startSimplePwm(&pwm,
 			"unit_test",
