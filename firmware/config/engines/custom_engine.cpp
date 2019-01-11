@@ -48,7 +48,7 @@ static void toggleTestAndScheduleNext() {
 /**
  * https://github.com/rusefi/rusefi/issues/557 common rail / direct injection scheduling control test
  */
-void test557init(void) {
+void runSchedulingPrecisionTestIfNeeded(void) {
 	if (engineConfiguration->test557pin == GPIO_UNASSIGNED ||
 			engineConfiguration->test557pin == GPIOA_0) {
 		return;
