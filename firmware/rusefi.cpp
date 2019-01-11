@@ -222,7 +222,7 @@ void runRusEfi(void) {
 #endif
 	startStatusThreads();
 
-	test557init();
+	runSchedulingPrecisionTestIfNeeded();
 
 	rememberCurrentConfiguration();
 
