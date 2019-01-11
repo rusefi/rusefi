@@ -463,6 +463,8 @@ void cj125defaultPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	cj125Cs.initPin("cj125 CS", CONFIGB(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
+	// Idle CS pin
+	cj125Cs.setValue(true);
 
 #if EFI_PROD_CODE
 	cj125spicfg.ssport = getHwPort("cj125", CONFIGB(cj125CsPin));
