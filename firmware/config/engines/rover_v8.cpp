@@ -141,7 +141,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 
-    setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+    setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
     // todo: make this official Frankenstein joystick?
     boardConfiguration->joystickCenterPin = GPIOD_8;

@@ -240,7 +240,7 @@ void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMap(config->ignitionIatCorrTable, value);
 }
 
-void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 	setLinearCurve(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
@@ -261,7 +261,7 @@ void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * See also crankingTimingAngle
  */
-void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setWholeTimingTable(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTimingMap(config->ignitionTable, value);
 }
 
@@ -467,7 +467,7 @@ static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.battLagCorr[7] = 0.726;
 }
 
-static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultWarmupIdleCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, PERCENT_MULT);
 
 	float baseIdle = 30;
@@ -684,7 +684,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->fsioCurve4Bins, FSIO_CURVE_8, 0, 100, 1);
 
 
-	setDefaultWarmupIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setDefaultWarmupFuelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -697,10 +697,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->useConstantDwellDuringCranking = false;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	setLinearCurve(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
@@ -715,7 +715,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setMap(config->injectionPhase, -180);
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
-	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(10, 160 PASS_CONFIG_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setLinearCurve(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);

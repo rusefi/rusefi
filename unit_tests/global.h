@@ -56,6 +56,7 @@ void print(const char *fmt, ...);
 #define CCM_OPTIONAL
 
 #define EXTERN_ENGINE extern EnginePins enginePins
+#define EXTERN_CONFIG
 
 #ifdef __cplusplus
 class Engine;

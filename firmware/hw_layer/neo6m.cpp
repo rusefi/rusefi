@@ -26,9 +26,6 @@
 #include "rtc_helper.h"
 #include "engine.h"
 
-extern board_configuration_s *boardConfiguration;
-extern engine_configuration_s *engineConfiguration;
-
 static LoggingWithStorage logging("uart gps");
 
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };

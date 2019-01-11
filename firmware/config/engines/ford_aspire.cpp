@@ -69,10 +69,10 @@ EXTERN_ENGINE;
 
 static void setDefaultAspireMaps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	copyFuelTable(default_aspire_fuel_table, config->fuelTable);
 	copyTimingTable(default_aspire_timing_table, config->ignitionTable);
