@@ -93,7 +93,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
-	fireTriggerEvents2(1, durationMs);
+	fireTriggerEvents2(/*count*/1, durationMs);
 }
 
 /**

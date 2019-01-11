@@ -326,7 +326,7 @@ void testRpmCalculator(void) {
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
 	assertEquals(5, TRIGGER_SHAPE(triggerIndexByAngle[241]));
 
-	eth.fireTriggerEvents(48);
+	eth.fireTriggerEvents(/* count */ 48);
 
 	assertEqualsM("RPM", 1500, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	assertEqualsM("index #1", 15, engine->triggerCentral.triggerState.getCurrentIndex());
@@ -342,9 +342,6 @@ void testRpmCalculator(void) {
 
 	int start = eth.getTimeNowUs();
 	assertEqualsM("start value", 485000, start);
-
-	// todo: why is this required here? we already have one 'prepareOutputSignals' in constructor, what's wrong with it?
-	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
