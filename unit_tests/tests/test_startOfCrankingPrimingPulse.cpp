@@ -54,10 +54,6 @@ void testStartOfCrankingPrimingPulse() {
 	// we need below freezing temperature to get prime fuel
 	// todo: less cruel CLT value assignment which would survive 'updateSlowSensors'
 	engine->sensors.clt = -10;
-	// this is needed to update injectorLag
-//	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-//	assertEqualsM("CLT#2", -10, engine->sensors.clt);
-
 
 	// prod code invokes this on ECU start, here we have to mimic this behavior
 	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
