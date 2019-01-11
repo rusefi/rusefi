@@ -317,7 +317,7 @@ void testRpmCalculator(void) {
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.applyTriggerShape();
 
-	setFlatInjectorLag(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	timeNowUs = 0;
@@ -1201,7 +1201,7 @@ void testSparkReverseOrderBug319(void) {
 
 
 	timeNowUs = 0;
-	setWholeTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	eth.fireRise(20);
@@ -1327,7 +1327,7 @@ void testMissedSpark299(void) {
 
 	assertEquals(3000, eth.engine.rpmCalculator.rpmValue);
 
-	setWholeTimingTable(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable(3 PASS_CONFIG_PARAMETER_SUFFIX);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
@@ -1344,7 +1344,7 @@ void testMissedSpark299(void) {
 	eth.fireFall(20);
 	engine->executor.executeAll(timeNowUs);
 
-	setWholeTimingTable(-5 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable(-5 PASS_CONFIG_PARAMETER_SUFFIX);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 

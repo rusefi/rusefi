@@ -86,7 +86,7 @@ void testFuelMap(void) {
 		eth.engine.config->cltFuelCorr[i] = 100;
 	}
 
-	setFlatInjectorLag(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	assertEquals(NAN, getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
 	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);

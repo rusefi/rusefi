@@ -38,7 +38,7 @@ void set1973c20(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 	engineConfiguration->rpmHardLimit = 5000;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 }

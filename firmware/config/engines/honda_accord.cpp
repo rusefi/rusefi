@@ -56,10 +56,10 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_SIGNATURE
 	// Keihin 06164-P0A-A00
 	engineConfiguration->injector.flow = 248;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	buildTimingMap(35 PASS_ENGINE_PARAMETER_SUFFIX);
+	buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/**
 	 * 18K Ohm @ -20C

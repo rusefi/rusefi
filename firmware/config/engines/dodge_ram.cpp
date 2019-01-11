@@ -23,7 +23,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_DODGE_RAM;
 	engineConfiguration->injector.flow = 243.6; // 23.2lb/h
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set cranking_charge_angle 30
 	engineConfiguration->crankingChargeAngle = 30;
@@ -69,7 +69,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set_global_fuel_correction 1
 
 	// set_whole_timing_map 10
-	setWholeTimingTable(10 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable(10 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	boardConfiguration->alternatorControlPin = GPIOD_7;

@@ -52,8 +52,6 @@ EXTERN_ENGINE;
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
 
-extern board_configuration_s *boardConfiguration;
-
 #if HAL_USE_USB_MSD
 #if STM32_USB_USE_OTG2
   USBDriver *usb_driver = &USBD2;

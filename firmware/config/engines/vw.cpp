@@ -18,7 +18,7 @@ EXTERN_ENGINE;
 void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setWholeTimingTable(20 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable(20 PASS_CONFIG_PARAMETER_SUFFIX);
 	engineConfiguration->cranking.baseFuel = 12;
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
@@ -44,7 +44,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set algorithm 3
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -58,8 +58,8 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float mapRange = 110;
 
 	setEgoSensor(ES_PLX PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelTablesLoadBin(20, mapRange PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingLoadBin(20, mapRange PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
 
 	boardConfiguration->isSdCardEnabled = false;
 	engineConfiguration->tpsMin = 740;

@@ -62,8 +62,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 80;
 	engineConfiguration->tpsMax = 764;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set_whole_fuel_map 9
 	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);

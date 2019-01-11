@@ -14,11 +14,11 @@
 #include "table_helper.h"
 #include "engine.h"
 
-void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 #define assertEngineReference() efiAssertVoid(CUSTOM_ENGINE_REF, engine != NULL, "engine is NULL")
 
-void setFlatInjectorLag(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 #define fixAngle(angle, msg, code) fixAngle2(angle, msg, code, ENGINE(engineCycle))
 
@@ -57,10 +57,10 @@ void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAM
 
 int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setTimingRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 

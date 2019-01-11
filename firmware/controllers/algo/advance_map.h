@@ -15,6 +15,6 @@ void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void prepareTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore);
 float getInitialAdvance(int rpm, float map, float advanceMax);
-void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_SUFFIX);
+void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 #endif /* ADVANCE_H_ */

@@ -299,7 +299,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	//setWholeFuelMap(12 PASS_ENGINE_PARAMETER_SUFFIX);
 //	copyFuelTable(alphaNfuel, config->fuelTable);
-	//setWholeTimingTable(12 PASS_ENGINE_PARAMETER_SUFFIX);
+	//setWholeTimingTable(12 PASS_CONFIG_PARAMETER_SUFFIX);
 	copyTimingTable(fromODB, config->ignitionTable);
 
 	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float>(vBattTarget, config->fsioTable1);
@@ -321,12 +321,12 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	//engineConfiguration->fuelAlgorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 1);
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
-	setFuelTablesLoadBin(20, 120 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
@@ -480,7 +480,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	boardConfiguration->tunerStudioSerialSpeed = 9600;
 	boardConfiguration->tunerStudioSerialSpeed = 19200;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 //temp	boardConfiguration->alternatorControlPin = GPIOD_5;
 	engineConfiguration->targetVBatt = 14.0;
