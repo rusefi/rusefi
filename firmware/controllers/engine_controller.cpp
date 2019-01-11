@@ -21,8 +21,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sensor_chart.h"
 #include "global.h"
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#include "sensor_chart.h"
+#endif
 #include "engine_configuration.h"
 #include "trigger_central.h"
 #include "engine_controller.h"
@@ -34,11 +36,15 @@
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 #include "tunerstudio.h"
+#endif
 #include "injector_central.h"
 #include "rfiutil.h"
 #include "engine_math.h"
+#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 #include "wave_analyzer.h"
+#endif
 #include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
