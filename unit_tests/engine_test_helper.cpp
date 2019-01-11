@@ -33,7 +33,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	persistent_config_s *config = &persistentConfig;
 	Engine *engine = &this->engine;
-	engine->executor.clear();
 	engine->setConfig(config);
 	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
 	board_configuration_s * boardConfiguration = &persistentConfig.engineConfiguration.bc;

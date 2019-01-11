@@ -175,7 +175,6 @@ void testNoiselessDecoder(void) {
 
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
-	engine->executor.clear();
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

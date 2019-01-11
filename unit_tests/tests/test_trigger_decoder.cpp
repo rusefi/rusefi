@@ -304,7 +304,6 @@ void testRpmCalculator(void) {
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
-	engine->executor.clear();
 	IgnitionEventList *ilist = &engine->ignitionEvents;
 	assertEqualsM("size #1", 0, ilist->isReady);
 
