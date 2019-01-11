@@ -228,8 +228,6 @@ void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointInde
 	EngineTestHelper eth(type);
 	EXPAND_EngineTestHelper;
 
-	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	TriggerShape *t = &ENGINE(triggerCentral.triggerShape);
 
 	assertFalseM("isError", t->shapeDefinitionError);
@@ -519,7 +517,6 @@ void testTriggerDecoder(void) {
 		EngineTestHelper eth(MITSU_4G93);
 		EXPAND_EngineTestHelper;
 
-		initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 //		TriggerShape *t = &eth.engine.triggerShape;
 //		assertEquals(1, t->eventAngles[1]);

@@ -13,6 +13,7 @@
 #include "accel_enrichment.h"
 #include "thermistors.h"
 #include "advance_map.h"
+#include "algo.h"
 
 extern int timeNowUs;
 extern EnginePins enginePins;
@@ -50,11 +51,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
 
-	prepareFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initAccelEnrichment(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-
-	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -63,7 +62,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	initThermistors(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	// this is needed to have valid CLT and IAT.
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-	prepareTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
