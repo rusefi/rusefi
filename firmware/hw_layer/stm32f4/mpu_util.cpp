@@ -325,10 +325,10 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		int mosiMode,
 		int misoMode) {
 
-	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) + sckMode);
+	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) + sckMode | PAL_STM32_OSPEED_HIGHEST);
 
-	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) + mosiMode);
-	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) + misoMode);
+	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) + mosiMode | PAL_STM32_OSPEED_HIGHEST);
+	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) + misoMode | PAL_STM32_OSPEED_HIGHEST);
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
