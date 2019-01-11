@@ -51,7 +51,7 @@ static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
-	efiAssertVoid(CUSTOM_ERR_6654, reader->hw->started, "wave analyzer NOT INITIALIZED");
+	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
@@ -210,6 +210,9 @@ static float getSignalPeriodMs(int index) {
 //}
 
 static void reportWave(Logging *logging, int index) {
+	if (readers[index].hw == NULL) {
+		return;
+	}
 	if (readers[index].hw->started) {
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);
