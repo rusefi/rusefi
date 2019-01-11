@@ -93,7 +93,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
-	setWholeTimingTable(25 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable(25);
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 

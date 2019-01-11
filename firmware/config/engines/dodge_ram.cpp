@@ -69,7 +69,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set_global_fuel_correction 1
 
 	// set_whole_timing_map 10
-	setWholeTimingTable(10 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	boardConfiguration->alternatorControlPin = GPIOD_7;

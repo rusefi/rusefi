@@ -18,7 +18,7 @@ EXTERN_ENGINE;
 void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setWholeTimingTable(20 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(20 PASS_CONFIG_PARAMETER_SUFFIX);
 	engineConfiguration->cranking.baseFuel = 12;
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;

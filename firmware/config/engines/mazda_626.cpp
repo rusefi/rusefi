@@ -69,7 +69,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);
 
 // set_whole_timing_map 10
-	setWholeTimingTable(10 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// http://s1.micp.ru/tOb0U.png
 	setThermistorConfiguration(&engineConfiguration->clt, -15, 5900, 23, 1750, 97, 165);

@@ -59,7 +59,8 @@ void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setWholeTimingTable(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
+#define setWholeTimingTable(x) setWholeTimingTable_d(x PASS_CONFIG_PARAMETER_SUFFIX);
 void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printFloatArray(const char *prefix, float array[], int size);
 

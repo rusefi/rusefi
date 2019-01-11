@@ -178,7 +178,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set_whole_fuel_map 9
 	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);
-	setWholeTimingTable(12 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -299,7 +299,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	//setWholeFuelMap(12 PASS_ENGINE_PARAMETER_SUFFIX);
 //	copyFuelTable(alphaNfuel, config->fuelTable);
-	//setWholeTimingTable(12 PASS_CONFIG_PARAMETER_SUFFIX);
+	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 	copyTimingTable(fromODB, config->ignitionTable);
 
 	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float>(vBattTarget, config->fsioTable1);
