@@ -34,7 +34,6 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initFuelMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTimingMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initSpeedDensity(PASS_ENGINE_PARAMETER_SIGNATURE);
-	initFsio();
 }
 
 void initAlgo(Logging *sharedLogger) {
