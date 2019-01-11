@@ -463,7 +463,7 @@ void cj125defaultPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	cj125Cs.initPin("cj125 CS", CONFIGB(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
-	// Idle CS pin
+	// Idle CS pin - SPI CS is high when idle
 	cj125Cs.setValue(true);
 
 #if EFI_PROD_CODE
