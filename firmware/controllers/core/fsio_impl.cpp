@@ -83,7 +83,20 @@ LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
 static LEElement userElements[UD_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
 LEElementPool userPool(userElements, UD_ELEMENT_POOL_SIZE);
-static LEElement * fsioLogics[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
+
+class FsioPointers {
+public:
+	FsioPointers();
+	LEElement * fsioLogics[FSIO_COMMAND_COUNT];
+};
+
+FsioPointers::FsioPointers() {
+	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		fsioLogics[i] = NULL;
+	}
+}
+
+static FsioPointers state;
 
 static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
@@ -253,7 +266,7 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
 			}
 
-			fsioLogics[i] = logic;
+			state.fsioLogics[i] = logic;
 		}
 	}
 }
@@ -265,7 +278,6 @@ void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfigura
 }
 
 static LECalculator calc;
-extern LEElement * fsioLogics[FSIO_COMMAND_COUNT];
 
 static SimplePwm fsioPwm[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
 
@@ -309,11 +321,11 @@ static const char *getGpioPinName(int index) {
 }
 
 float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (fsioLogics[index] == NULL) {
+	if (state.fsioLogics[index] == NULL) {
 		warning(CUSTOM_NO_FSIO, "no FSIO for #%d %s", index + 1, hwPortname(CONFIGB(fsioOutputPins)[index]));
 		return NAN;
 	} else {
-		return calc.getValue2(engine->fsioLastValue[index], fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
+		return calc.getValue2(engine->fsioLastValue[index], state.fsioLogics[index] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -416,7 +428,7 @@ static void setFsioFrequency(int index, int frequency) {
  * @return 'true' if value has changed
  */
 static bool updateValueOrWarning(int fsioIndex, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	LEElement * element = fsioLogics[fsioIndex];
+	LEElement * element = state.fsioLogics[fsioIndex];
 	if (element == NULL) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 		return false;
@@ -562,7 +574,7 @@ static void showFsioInfo(void) {
 					hwPortname(CONFIGB(fsioOutputPins)[i]), CONFIGB(fsioFrequency)[i],
 					engine->fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%.2f", i, engine->engineConfigurationPtr2->fsioLastValue[i]);
-			showFsio(NULL, fsioLogics[i]);
+			showFsio(NULL, state.fsioLogics[i]);
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
@@ -702,10 +714,5 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 }
 
-void initFsio(void) {
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		fsioLogics[i] = NULL;
-	}
-}
 
 #endif /* EFI_FSIO */
