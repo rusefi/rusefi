@@ -345,10 +345,10 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
 	assertAngleRange(angleOffset, "findAngle#a1", CUSTOM_ERR_6545);
 
 	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(tdcPosition), "tdcPos#1")
-	assertAngleRange(tdcPosition, "tdcPos#a1", CUSTOM_ERR_6546);
+	assertAngleRange(tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
 
 	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG_PARAM(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_ERR_6547);
+	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
 	angleOffset += tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);

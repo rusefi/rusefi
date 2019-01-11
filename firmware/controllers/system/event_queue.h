@@ -35,7 +35,7 @@ bool assertNotInList(T *head, T*element) {
 			 * was not scheduled by angle but was scheduled by time. In case of scheduling
 			 * by time with slow RPM the whole next fast revolution might be within the wait period
 			 */
-			warning(CUSTOM_RE_ADDING, "re-adding element into event_queue");
+			warning(CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE, "re-adding element into event_queue");
 			return true;
 		}
 	}

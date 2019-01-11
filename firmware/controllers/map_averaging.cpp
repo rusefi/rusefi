@@ -194,7 +194,7 @@ static void endAveraging(void *arg) {
 		}
 		currentPressure = minPressure;
 	} else {
-		warning(CUSTOM_ERR_6548, "No MAP values");
+		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
 	}
 #endif
 	if (!wasLocked)

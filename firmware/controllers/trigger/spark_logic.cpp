@@ -41,7 +41,6 @@ static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
 	 * 1) low goes before high, everything is fine after words
 	 *
 	 * 2) we have an un-matched low followed by legit pairs
-	 *
 	 */
 
 	output->signalFallSparkId = event->sparkId;
