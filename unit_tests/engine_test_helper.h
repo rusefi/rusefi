@@ -31,6 +31,9 @@ public:
 	void fireTriggerEvents2(int count, int delayMs);
 	void clearQueue();
 
+	void executeActions();
+	void moveTimeForwardUs(int deltaTimeUs);
+
 	Engine engine;
 	persistent_config_s persistentConfig;
 };

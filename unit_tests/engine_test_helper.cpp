@@ -111,6 +111,14 @@ void EngineTestHelper::clearQueue() {
 	engine.iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
 }
 
+void EngineTestHelper::executeActions() {
+	engine.executor.executeAll(timeNowUs);
+}
+
+void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
+	timeNowUs += deltaTimeUs;
+}
+
 void EngineTestHelper::fireTriggerEvents(int count) {
 	fireTriggerEvents2(count, 5); // 5ms
 }
