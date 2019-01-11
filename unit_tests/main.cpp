@@ -70,7 +70,6 @@ GTEST_API_ int main(int argc, char **argv) {
 	/**
 	 * Larger-scale engine control
 	 */
-	testMissedSpark299();
 	testSparkReverseOrderBug319();
 	testFuelSchedulerBug299smallAndLarge();
 	testFuelSchedulerBug299smallAndMedium();

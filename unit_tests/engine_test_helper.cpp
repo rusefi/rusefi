@@ -23,6 +23,9 @@ extern engine_configuration_s activeConfiguration;
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	unitTestWarningCounter = 0;
 
+	// todo: make this not a global variable, we need currentTimeProvider interface on engine
+	timeNowUs = 0;
+
 	testMafValue = 0;
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 

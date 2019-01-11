@@ -301,7 +301,6 @@ extern EnginePins enginePins;
 
 void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
-	timeNowUs = 0;
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
@@ -320,7 +319,7 @@ void testRpmCalculator(void) {
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-	timeNowUs = 0;
+
 	assertEquals(0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
@@ -1170,10 +1169,7 @@ void testSparkReverseOrderBug319(void) {
 	eth.applyTriggerShape();
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-
-	timeNowUs = 0;
 	setWholeTimingTable(0);
-
 
 	eth.fireRise(20);
 	eth.fireFall(20);
@@ -1251,7 +1247,7 @@ void testSparkReverseOrderBug319(void) {
 	assertEqualsM("out-of-order #8", 0, enginePins.coils[3].outOfOrder);
 }
 
-void testMissedSpark299(void) {
+TEST(big, testMissedSpark299) {
 	printf("*************************************************** testMissedSpark299\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
