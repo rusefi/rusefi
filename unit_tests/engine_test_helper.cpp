@@ -70,7 +70,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 }
 
 void EngineTestHelper::fireRise(int delayMs) {
-	timeNowUs += MS2US(delayMs);
+	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
 
@@ -80,7 +80,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 }
 
 void EngineTestHelper::fireFall(int delayMs) {
-	timeNowUs += MS2US(delayMs);
+	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerFall();
 }
 
@@ -111,8 +111,8 @@ void EngineTestHelper::clearQueue() {
 	engine.iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
 }
 
-void EngineTestHelper::executeActions() {
-	engine.executor.executeAll(timeNowUs);
+int EngineTestHelper::executeActions() {
+	return engine.executor.executeAll(timeNowUs);
 }
 
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
