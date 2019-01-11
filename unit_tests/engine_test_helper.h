@@ -31,8 +31,14 @@ public:
 	void fireTriggerEvents2(int count, int delayMs);
 	void clearQueue();
 
+	scheduling_s * assertEvent5(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX);
+	void assertEvent(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
+	void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
+	void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
+
 	int executeActions();
 	void moveTimeForwardUs(int deltaTimeUs);
+	efitimeus_t getTimeNowUs(void);
 
 	Engine engine;
 	persistent_config_s persistentConfig;

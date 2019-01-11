@@ -341,7 +341,7 @@ void testRpmCalculator(void) {
 
 	timeNowUs += MS2US(5); // 5ms
 
-	int start = timeNowUs;
+	int start = eth.getTimeNowUs();
 	assertEqualsM("start value", 485000, start);
 
 	// todo: why is this required here? we already have one 'prepareOutputSignals' in constructor, what's wrong with it?
@@ -410,7 +410,7 @@ void testRpmCalculator(void) {
 	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
 	assertEquals(1500, eth.engine.rpmCalculator.rpmValue);
 
-	assertInjectorUpEvent("ev 0/2", 0, -4849, 2 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
 
 
 	assertEqualsM("index #4", 6, eth.engine.triggerCentral.triggerState.getCurrentIndex());
@@ -692,7 +692,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("rev cnt#3", 3, engine->rpmCalculator.getRevolutionCounter());
 	assertInjectorUpEvent("setTestBug299: 1@0", 0, MS2US(8.5), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertInjectorDownEvent("@1", 1, MS2US(10), 0 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertInjectorUpEvent("1@2", 2, MS2US(18.5), 1 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth->assertInjectorUpEvent("1@2", 2, MS2US(18.5), 1);
 	assertInjectorDownEvent("1@3", 3, MS2US(20), 1 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("exec#0", 0, eth->executeActions());
 

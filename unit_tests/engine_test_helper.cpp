@@ -119,8 +119,22 @@ void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	timeNowUs += deltaTimeUs;
 }
 
+efitimeus_t EngineTestHelper::getTimeNowUs(void) {
+	return timeNowUs;
+}
+
 void EngineTestHelper::fireTriggerEvents(int count) {
 	fireTriggerEvents2(count, 5); // 5ms
+}
+
+void EngineTestHelper::assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
+	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
+	::assertEvent(&engine.executor, msg, eventIndex, (void*)seTurnPinHigh, timeNowUs, momentX, (long)pair);
+}
+
+void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
+	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
+	::assertEvent(&engine.executor, msg, eventIndex, (void*)seTurnPinLow, timeNowUs, momentX, (long)pair);
 }
 
 void EngineTestHelper::applyTriggerShape() {

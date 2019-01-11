@@ -38,7 +38,7 @@ void testFasterEngineSpinningUp() {
 	assertEqualsM("plain#1", 0, engine->executor.size());
 
 	// check all events starting from now
-	int timeStartUs = timeNowUs;
+	int timeStartUs = eth.getTimeNowUs();
 	// advance 1 revolution
 	eth.fireRise(200);
 
@@ -75,8 +75,8 @@ void testFasterEngineSpinningUp() {
 	// two simultaneous injections
 	assertEqualsM("plain#2", 4, engine->executor.size());
 	// check real events
-	assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
-	assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
+	assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 97975);
+	assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 100000);
 
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
