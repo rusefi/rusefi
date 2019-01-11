@@ -1201,7 +1201,7 @@ void testSparkReverseOrderBug319(void) {
 
 
 	timeNowUs = 0;
-	setWholeTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable(0);
 
 
 	eth.fireRise(20);
@@ -1327,7 +1327,7 @@ void testMissedSpark299(void) {
 
 	assertEquals(3000, eth.engine.rpmCalculator.rpmValue);
 
-	setWholeTimingTable(3 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable(3);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
@@ -1344,7 +1344,7 @@ void testMissedSpark299(void) {
 	eth.fireFall(20);
 	engine->executor.executeAll(timeNowUs);
 
-	setWholeTimingTable(-5 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable(-5);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 

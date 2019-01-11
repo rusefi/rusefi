@@ -261,7 +261,7 @@ void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * See also crankingTimingAngle
  */
-void setWholeTimingTable(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTimingMap(config->ignitionTable, value);
 }
 
