@@ -32,7 +32,7 @@
 #include "trigger_universal.h"
 
 extern int timeNowUs;
-extern float unitTestValue;
+extern float mockMapValue;
 extern float testMafValue;
 extern int unitTestWarningCounter;
 extern bool printTriggerDebug;
@@ -984,7 +984,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	eth.executeActions();
 
-	unitTestValue = 0;
+	mockMapValue = 0;
 	testMafValue = 0;
 }
 

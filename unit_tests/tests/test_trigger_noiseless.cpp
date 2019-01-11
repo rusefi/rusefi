@@ -22,9 +22,6 @@
 #include "trigger_universal.h"
 
 extern int timeNowUs;
-extern float unitTestValue;
-extern float testMafValue;
-extern int unitTestWarningCounter;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
 

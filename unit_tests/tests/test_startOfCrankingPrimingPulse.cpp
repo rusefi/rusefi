@@ -22,12 +22,12 @@ void testPlainCrankingWithoutAdvancedFeatures() {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	eth.fireTriggerEventsWithDuration(200);
+	eth.fireTriggerEventsWithDuration(/* durationMs */ 200);
 	// still no RPM since need to cycles measure cycle duration
 	assertEqualsM("RPM#1", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 
-	eth.fireRise(200);
+	eth.fireRise(/* delayMs */ 200);
 	assertEqualsM("RPM#2", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
 	assertEqualsM("plain#2", 4, engine->executor.size());

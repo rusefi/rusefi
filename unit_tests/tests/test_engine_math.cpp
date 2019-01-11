@@ -102,8 +102,8 @@ void testMafLookup(void) {
 	assertEqualsM("@255", 738, engine->mafDecodingLookup[255]);
 }
 
-float unitTestValue = 0;
+float mockMapValue = 0;
 
 float getMap(void) {
-	return unitTestValue;
+	return mockMapValue;
 }
