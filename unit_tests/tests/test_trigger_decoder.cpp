@@ -339,7 +339,7 @@ void testRpmCalculator(void) {
 
 	assertEquals(engine->triggerCentral.triggerState.shaft_is_synchronized, 1);
 
-	timeNowUs += MS2US(5); // 5ms
+	eth.moveTimeForwardUs(MS2US(5)); // 5ms
 
 	int start = eth.getTimeNowUs();
 	assertEqualsM("start value", 485000, start);
@@ -433,7 +433,7 @@ void testRpmCalculator(void) {
 	assertEqualsM("queue size 7", 0, engine->executor.size());
 	engine->executor.clear();
 
-	timeNowUs += 5000; // 5ms
+	eth.moveTimeForwardUs(5000); // 5ms
 	eth.firePrimaryTriggerRise();
 	assertEqualsM("queue size 8", 4, engine->executor.size());
 	// todo: assert queue elements completely
@@ -698,7 +698,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	/**
 	 * Trigger up again
 	 */
-	timeNowUs += MS2US(20);
+	eth->moveTimeForwardUs(MS2US(20));
 	eth->assertInjectorUpEvent("22@0", 0, MS2US(-11.5), 0);
 	eth->assertInjectorDownEvent("22@1", 1, MS2US(-10), 0);
 	eth->assertInjectorUpEvent("22@2", 2, MS2US(-1.5), 1);
@@ -718,7 +718,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("exec#2", 0, eth->executeActions());
 
 
-	timeNowUs += MS2US(20);
+	eth->moveTimeForwardUs(MS2US(20));
 	eth->executeActions();
 	eth->firePrimaryTriggerFall();
 	// fuel schedule - short pulses. and more realistic schedule this time
@@ -777,7 +777,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
 
 	assertEqualsM("qs#1", 4, engine->executor.size());
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	assertEqualsM("exec#2#0", 4, eth.executeActions());
 	assertEqualsM("qs#1#2", 0, engine->executor.size());
 
@@ -842,7 +842,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertInjectionEvent("inj#2", &t->elements[2], 0, 0, 153, false);
 	assertInjectionEvent("inj#3", &t->elements[3], 1, 0, 333, false);
 
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	assertEqualsM("qs#02", 5, engine->executor.size());
 //	assertInjectorUpEvent("6@0", 0, MS2US(-12.5), 1);
 //	assertInjectorDownEvent("6@1", 1, MS2US(-10.0), 0);
@@ -869,7 +869,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	assertInjectors("#1_ij_", 0, 0);
 
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |########|.......#|........|........|........|........|........|
@@ -901,7 +901,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	assertEqualsM("executed #6", 0, eth.executeActions());
 
 
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	assertEqualsM("executed #06", 4, eth.executeActions());
 	assertEqualsM("qs#06", 1, engine->executor.size());
 	assertInjectors("inj#2", 1, 0);
@@ -920,7 +920,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 //	assertInjectorDownEvent("07@8", 8, MS2US(50), 0);
 
 	assertEqualsM("executeAll#3", 0, eth.executeActions());
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	assertEqualsM("executeAll#4", 4, eth.executeActions());
 
 	t = &ENGINE(injectionEvents);
@@ -967,7 +967,7 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
 	eth.firePrimaryTriggerRise();
 
@@ -1056,7 +1056,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 
 
 	assertEqualsM("Lqs#1", 4, engine->executor.size());
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
 
 	// injector #1 is low before the test
@@ -1107,7 +1107,7 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	assertFalseM("injector@3", enginePins.injectors[0].currentLogicValue);
 
 
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
 	assertEqualsM("Lqs#04", 0, engine->executor.size());
 
@@ -1127,12 +1127,12 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	//todo	assertInjectorDownEvent("L016@2", 2, MS2US(10), 0);
 
 
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions(); // issue here
 	eth.firePrimaryTriggerFall();
 
 
-	timeNowUs += MS2US(20);
+	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
 	eth.firePrimaryTriggerRise();
 
@@ -1195,14 +1195,14 @@ void testSparkReverseOrderBug319(void) {
 	eth.executeActions();
 
 
-	timeNowUs += 100; // executing new signal too early
+	eth.moveTimeForwardUs(100); // executing new signal too early
 	eth.firePrimaryTriggerFall();
 	eth.executeActions();
 
 	assertEqualsM("out-of-order #1", 1, enginePins.coils[3].outOfOrder);
 
 
-	timeNowUs += MS2US(200); // moving time forward to execute all pending actions
+	eth.moveTimeForwardUs(MS2US(200)); // moving time forward to execute all pending actions
 	eth.executeActions();
 
 	assertEqualsM("out-of-order #2", 0, enginePins.coils[3].outOfOrder);

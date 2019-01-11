@@ -42,7 +42,7 @@ TEST(fuelCut, coasting) {
 	// set 'running' RPM - just above RpmHigh threshold
 	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh + 1;
 	// 'advance' time (amount doesn't matter)
-	timeNowUs += 1000;
+	eth.moveTimeForwardUs(1000);
 
 	const float normalInjDuration = 1.5f;
 	/*

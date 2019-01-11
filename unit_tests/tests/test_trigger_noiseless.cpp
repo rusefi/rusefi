@@ -43,7 +43,7 @@ static void fireEvent(EngineTestHelper *eth, bool isRise) {
  */
 static void noisyPulse(EngineTestHelper *eth, int idx, int durationUs, bool isRise, int noiseIdx, int durationNoiseUs, int offsetNoiseUs, int numSpikes) {
 	// skip some time at the beginning
-	timeNowUs += offsetNoiseUs;
+	eth->moveTimeForwardUs(offsetNoiseUs);
 	durationUs -= offsetNoiseUs;
 	// add noise spikes
 	if (idx == noiseIdx) {
@@ -53,19 +53,19 @@ static void noisyPulse(EngineTestHelper *eth, int idx, int durationUs, bool isRi
 		for (int i = 0; i < numSpikes; i++) {
 			// start spike
 			fireEvent(eth, isRise);
-			timeNowUs += durationNoiseUs;
+			eth->moveTimeForwardUs(durationNoiseUs);
 			durationUs -= durationNoiseUs;
 			// end spike
 			fireEvent(eth, !isRise);
 
 			// add space between spikes
-			timeNowUs += noiseIntervalUs;
+			eth->moveTimeForwardUs(noiseIntervalUs);
 			durationUs -= noiseIntervalUs;
 		}
 	}
 
 	// add the rest of pulse period
-	timeNowUs += durationUs;
+	eth->moveTimeForwardUs(durationUs);
 	fireEvent(eth, isRise);
 }
 
