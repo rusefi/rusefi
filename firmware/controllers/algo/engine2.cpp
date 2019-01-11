@@ -29,6 +29,27 @@ extern LoggingWithStorage engineLogger;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
+WarningCodeState::WarningCodeState() {
+	warningCounter = 0;
+	lastErrorCode = 0;
+	timeOfPreviousWarning = -10;
+}
+
+void WarningCodeState::addWarningCode(obd_code_e code) {
+	warningCounter++;
+	lastErrorCode = code;
+//todo: add cyclic_buffer.contains method
+	//	if (!recentWarninig contains code)
+	recentWarninig.add((int)code);
+}
+
+/**
+ * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
+ */
+bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
+	return absI(now - timeOfPreviousWarning) < period;
+}
 
 MockAdcState::MockAdcState() {
 	memset(hasMockAdc, 0, sizeof(hasMockAdc));
@@ -80,8 +101,6 @@ EngineState::EngineState() {
 	dwellAngle = NAN;
 	engineNoiseHipLevel = 0;
 	injectorLag = 0;
-	warningCounter = 0;
-	lastErrorCode = 0;
 	crankingTime = 0;
 	timeSinceCranking = 0;
 	vssEventCounter = 0;
@@ -92,7 +111,6 @@ EngineState::EngineState() {
 	airFlow = 0;
 	cltTimingCorrection = 0;
 	runningFuel = baseFuel = currentVE = 0;
-	timeOfPreviousWarning = -10;
 	baseTableFuel = iatFuelCorrection = 0;
 	fuelPidCorrection = 0;
 	cltFuelCorrection = postCrankingFuelCorrection = 0;

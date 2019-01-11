@@ -334,8 +334,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 		}
 	}
 
-		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warningCounter);
-		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.lastErrorCode);
+		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warnings.warningCounter);
+		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.warnings.lastErrorCode);
 
 		reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
 		reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
@@ -742,7 +742,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->timeSeconds = timeSeconds;
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
-	tsOutputChannels->isWarnNow = isWarningNow(timeSeconds, true);
+	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
@@ -914,8 +914,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
 	
-	tsOutputChannels->warningCounter = engine->engineState.warningCounter;
-	tsOutputChannels->lastErrorCode = engine->engineState.lastErrorCode;
+	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
+	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
 
 	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
 	tsOutputChannels->knockEverIndicator = engine->knockEver;
