@@ -10,7 +10,7 @@
 
 #include "engine.h"
 
-void prepareFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
  * @return total injection time into all cylinders, before CLT & IAT corrections

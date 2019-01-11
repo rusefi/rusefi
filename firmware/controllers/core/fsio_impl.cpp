@@ -702,7 +702,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 }
 
-void prepareFsio(void) {
+void initFsio(void) {
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		fsioLogics[i] = NULL;
 	}
