@@ -184,7 +184,6 @@ void testNoiselessDecoder(void) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.applyTriggerShape();
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	assertEquals(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	assertEqualsM("testNoiselessDecoder RPM", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
