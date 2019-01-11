@@ -166,6 +166,7 @@ void runRusEfi(void) {
 	engine->setConfig(config);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
+	addConsoleAction("reboot", scheduleReboot);
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	/**
@@ -182,6 +183,11 @@ void runRusEfi(void) {
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
+	 * First data structure keeps track of which hardware I/O pins are used by whom
+	 */
+	initPinRepository();
+
+	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
@@ -190,16 +196,9 @@ void runRusEfi(void) {
 	prepareVoidConfiguration(&activeConfiguration);
 
 	/**
-	 * First data structure keeps track of which hardware I/O pins are used by whom
-	 */
-	initPinRepository();
-
-	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
 	initializeConsole(&sharedLogger);
-
-	addConsoleAction("reboot", scheduleReboot);
 
 	/**
 	 * Initialize hardware drivers
@@ -212,6 +211,7 @@ void runRusEfi(void) {
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
 	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+	rememberCurrentConfiguration();
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 	initTimePerfActions(&sharedLogger);
@@ -223,8 +223,6 @@ void runRusEfi(void) {
 	startStatusThreads();
 
 	runSchedulingPrecisionTestIfNeeded();
-
-	rememberCurrentConfiguration();
 
 	print("Running main loop\r\n");
 	main_loop_started = true;
