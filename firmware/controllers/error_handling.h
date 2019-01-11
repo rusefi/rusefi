@@ -16,7 +16,6 @@ extern "C"
 #include "global.h"
 #include "obd_error_codes.h"
 
-void addWarningCode(obd_code_e code);
 
 /**
  * Something is wrong, but we can live with it: some minor sensor is disconnected
@@ -36,7 +35,6 @@ void firmwareError(obd_code_e code, const char *fmt, ...);
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
-bool isWarningNow(efitimesec_t now, bool forIndicator);
 // todo: rename to getFatalErrorMessage
 char *getFirmwareError(void);
 

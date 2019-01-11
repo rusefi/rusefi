@@ -632,7 +632,7 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 	 */
 	tunerStudioDebug("got T (Test)");
 	sr5WriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.lastErrorCode, tsState.testCommandCounter);
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection

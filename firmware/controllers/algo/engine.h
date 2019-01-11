@@ -135,6 +135,18 @@ public:
 	gear_e gearSelectorPosition;
 };
 
+class WarningCodeState {
+public:
+	WarningCodeState();
+	void addWarningCode(obd_code_e code);
+	bool isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void clear();
+	int warningCounter;
+	int lastErrorCode;
+	efitimesec_t timeOfPreviousWarning;
+	// todo: we need a way to post multiple recent warnings into TS
+	cyclic_buffer<int, 8> recentWarninig;
+};
 
 class EngineState {
 public:
@@ -148,9 +160,7 @@ public:
 	efitick_t crankingTime;
 	efitick_t timeSinceCranking;
 
-	int warningCounter;
-	int lastErrorCode;
-	efitimesec_t timeOfPreviousWarning;
+	WarningCodeState warnings;
 
 	/**
 	 * speed-density logic, calculated air mass in grams
