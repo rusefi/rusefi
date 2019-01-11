@@ -47,6 +47,7 @@ static const char * msg;
 static char buff[32];
 
 static int timerFreezeCounter = 0;
+static volatile int setHwTimerCounter = 0;
 
 extern bool hasFirmwareErrorFlag;
 
@@ -55,6 +56,7 @@ extern bool hasFirmwareErrorFlag;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareUsTimer(int32_t timeUs) {
+	setHwTimerCounter++;
 	/**
 	 * #259 BUG error: not positive timeUs
 	 * Once in a while we night get an interrupt where we do not expect it
@@ -75,7 +77,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 		gptStopTimerI(&GPTDEVICE);
 	}
 	if (GPTDEVICE.state != GPT_READY) {
-		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d", GPTDEVICE.state);
+		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d/%d", GPTDEVICE.state, setHwTimerCounter);
 		return;
 	}
 	if (hasFirmwareError())
@@ -148,6 +150,7 @@ static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 void initMicrosecondTimer(void) {
 
 	gptStart(&GPTDEVICE, &gpt5cfg);
+	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
 
 	lastSetTimerTimeNt = getTimeNowNt();
 #if EFI_EMULATE_POSITION_SENSORS
