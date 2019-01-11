@@ -23,7 +23,4 @@ void assertTrueM(const char *msg, float actual);
 void assertFalse(float actual);
 void assertFalseM(const char *msg, float actual);
 
-scheduling_s * assertEvent5(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX);
-void assertEvent(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
-
 #endif /* UNIT_TEST_FRAMEWORK_H_ */

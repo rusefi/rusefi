@@ -593,25 +593,6 @@ void testTriggerDecoder(void) {
 
 extern fuel_Map3D_t fuelMap;
 
-scheduling_s * assertEvent5(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX) {
-	assertTrueM(msg, executor->size() > index);
-	scheduling_s *event = executor->getForUnitTest(index);
-	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
-	assertEqualsM(msg, momentX, event->momentX - start);
-	return event;
-}
-
-void assertEvent(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
-	scheduling_s *event = assertEvent5(executor, msg, index, callback, start, momentX);
-
-	InjectionSignalPair *eventPair = (InjectionSignalPair *)event->param;
-
-	InjectionSignalPair *expectedPair = (InjectionSignalPair *)param;
-
-	assertEqualsLM(msg, expectedPair->outputs[0], (long)eventPair->outputs[0]);
-// but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
-}
-
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
 	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.eventIndex);

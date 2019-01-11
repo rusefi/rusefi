@@ -32,8 +32,8 @@ void testPlainCrankingWithoutAdvancedFeatures() {
 	// two simultaneous injections
 	assertEqualsM("plain#2", 4, engine->executor.size());
 
-	assertEvent5(&engine->executor, "sim start", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
-	assertEvent5(&engine->executor, "sim end", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
+	eth.assertEvent5(&engine->executor, "sim start", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
+	eth.assertEvent5(&engine->executor, "sim end", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
 }
 
 

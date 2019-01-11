@@ -53,8 +53,8 @@ void testFasterEngineSpinningUp() {
 	// test if ignition mode is temporary changed to wasted spark, if set to ind.coils
 	assertEquals(IM_WASTED_SPARK, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check real events
-	assertEvent5(&engine->executor, "inj start#1", 0, (void*)startSimultaniousInjection, timeStartUs, MS2US(200) + 97975);
-	assertEvent5(&engine->executor, "inj end#1", 1, (void*)endSimultaniousInjection, timeStartUs, MS2US(200) + 100000);
+	eth.assertEvent5(&engine->executor, "inj start#1", 0, (void*)startSimultaniousInjection, timeStartUs, MS2US(200) + 97975);
+	eth.assertEvent5(&engine->executor, "inj end#1", 1, (void*)endSimultaniousInjection, timeStartUs, MS2US(200) + 100000);
 
 	// skip the rest of the cycle
 	eth.fireFall(200);
@@ -75,8 +75,8 @@ void testFasterEngineSpinningUp() {
 	// two simultaneous injections
 	assertEqualsM("plain#2", 4, engine->executor.size());
 	// check real events
-	assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 97975);
-	assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 100000);
+	eth.assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 97975);
+	eth.assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 100000);
 
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
@@ -96,6 +96,6 @@ void testFasterEngineSpinningUp() {
 
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!
-	assertEvent5(&engine->executor, "inj start#3", 0, (void*)seTurnPinHigh, timeStartUs, MS2US(60) + 27974);
-	assertEvent5(&engine->executor, "inj end#3", 1, (void*)seTurnPinLow, timeStartUs, MS2US(60) + 27974 + 3000);
+	eth.assertEvent5(&engine->executor, "inj start#3", 0, (void*)seTurnPinHigh, timeStartUs, MS2US(60) + 27974);
+	eth.assertEvent5(&engine->executor, "inj end#3", 1, (void*)seTurnPinLow, timeStartUs, MS2US(60) + 27974 + 3000);
 }
