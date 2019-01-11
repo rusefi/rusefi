@@ -31,7 +31,7 @@ public:
 	void fireTriggerEvents2(int count, int delayMs);
 	void clearQueue();
 
-	void executeActions();
+	int executeActions();
 	void moveTimeForwardUs(int deltaTimeUs);
 
 	Engine engine;
