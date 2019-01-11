@@ -1171,8 +1171,8 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 	assertInjectorUpEvent("L05@2", 2, MS2US(18), 1 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertInjectorDownEvent("L05@3", 3, MS2US(20), 1 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	timeNowUs += MS2US(20);
-	engine->executor.executeAll(timeNowUs);
+	eth.moveTimeForwardUs(MS2US(20));
+	eth.executeActions();
 }
 
 void testSparkReverseOrderBug319(void) {
