@@ -127,12 +127,11 @@ static void initWave(const char *name, int index) {
 	reader->name = name;
 
 	reader->hw = addWaveAnalyzerDriver("wave input", brainPin);
+	if (reader->hw != NULL) {
+		reader->hw->widthListeners.registerCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
 
-
-	reader->hw->widthListeners.registerCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
-
-	reader->hw->periodListeners.registerCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
-
+		reader->hw->periodListeners.registerCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
+	}
 
 	print("wave%d input on %s\r\n", index, hwPortname(brainPin));
 	startInputDriver(reader->hw, mode);
