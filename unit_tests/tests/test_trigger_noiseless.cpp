@@ -172,7 +172,6 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 
 void testNoiselessDecoder(void) {
 	printf("====================================================================================== testNoiselessDecoder\r\n");
-	timeNowUs = 0;
 
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
