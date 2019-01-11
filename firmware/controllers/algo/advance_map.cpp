@@ -185,7 +185,7 @@ void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
 }
 
-void prepareTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);

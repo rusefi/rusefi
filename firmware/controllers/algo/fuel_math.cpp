@@ -224,7 +224,7 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @note this method has nothing to do with fuel map VALUES - it's job
  * is to prepare the fuel map data structure for 3d interpolation
  */
-void prepareFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
 }
