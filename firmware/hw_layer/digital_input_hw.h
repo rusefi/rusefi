@@ -26,10 +26,12 @@ typedef struct {
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin);
 
 digital_input_s *addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
-void startInputDriver(digital_input_s *hw, bool isActiveHigh);
+void startInputDriver(/*nullable*/digital_input_s *hw, bool isActiveHigh);
 void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 
+//Nullable
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin);
+//Nullable
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin);
 
 #endif /* HAL_USE_ICU */

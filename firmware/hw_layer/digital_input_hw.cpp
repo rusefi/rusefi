@@ -46,6 +46,7 @@ static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100, icuWidt
 
 static ArrayList<digital_input_s, 8> registeredIcus;
 
+//Nullable
 static digital_input_s * finddigital_input_s(ICUDriver *driver) {
 	for (int i = 0; i < registeredIcus.size; i++) {
 		if (registeredIcus.elements[i].driver == driver) {
@@ -145,8 +146,9 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
  *
  * TODO: migrate slow ADC to software timer so that TIM8 is also available for input capture
  * todo: https://github.com/rusefi/rusefi/issues/630 ?
- *
+ * @return NULL if pin could not be used for ICU
  */
+//Nullable
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
 		return NULL;
@@ -208,6 +210,10 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
  */
 digital_input_s * addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
+	if (driver == NULL) {
+		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "not input pin");
+		return NULL;
+	}
 
 	digital_input_s *hw = registeredIcus.add();
 	hw->widthListeners.clear();
@@ -247,7 +253,13 @@ void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
-void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
+void startInputDriver(/*nullable*/digital_input_s *hw, bool isActiveHigh) {
+	if (hw == NULL) {
+		// we can get NULL driver if user somehow has invalid pin in his configuration
+		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "not input pin");
+		return;
+	}
+
 	hw->isActiveHigh = isActiveHigh;
 	if (hw->isActiveHigh) {
 		wave_icucfg.mode = ICU_INPUT_ACTIVE_HIGH;

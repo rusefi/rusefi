@@ -107,7 +107,7 @@ ArrayList<Type, Dimention>::ArrayList(void) {
 
 template<class Type, int Dimention>
 void ArrayList<Type, Dimention>::removeAt(int index) {
-	efiAssertVoid(CUSTOM_ERR_6572, index < size, "index greater then size");
+	efiAssertVoid(CUSTOM_ERR_ARRAY_REMOVE, index >= 0 && index < size, "invalid index");
 	memcpy(&elements[index], &elements[size - 1], sizeof(Type));
 	memset(&elements[size - 1], 0, sizeof(Type));
 	size--;
