@@ -1,6 +1,10 @@
 See also https://git-scm.com/downloads
 
 =========================================
+Save password locally? Try
+git config credential.helper store
+
+=========================================
 New remote tag:
 
 git tag -a TAGNAME -m "tag TAGNAME"
