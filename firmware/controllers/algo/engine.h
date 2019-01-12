@@ -145,7 +145,7 @@ public:
 	int lastErrorCode;
 	efitimesec_t timeOfPreviousWarning;
 	// todo: we need a way to post multiple recent warnings into TS
-	cyclic_buffer<int, 8> recentWarninig;
+	cyclic_buffer<int, 8> recentWarning;
 };
 
 class EngineState {
