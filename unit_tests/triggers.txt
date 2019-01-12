@@ -190,7 +190,7 @@ event 65 1001 205.65
 event 66 1000 208.63
 event 67 1001 211.60
 event 68 1000 214.58
-event 69 1001 217.56
+event 69 1001 217.55
 event 70 1000 220.53
 event 71 1001 223.51
 event 72 1000 226.48
@@ -625,7 +625,7 @@ event 4 1001 192.10
 event 5 0 248.14
 event 6 1000 259.90
 event 7 1001 369.67
-event 8 1000 437.20
+event 8 1000 437.19
 event 9 1 532.74
 event 10 1001 546.37
 event 11 1000 613.22
@@ -782,7 +782,7 @@ event 1 0 180.00
 event 2 1001 360.00
 event 3 1000 540.00
 TRIGGERTYPE 17 234 TT_ONE_PLUS_TOOTHED_WHEEL_60_2 0.00
-# duty 0.98 0.52
+# duty 0.97 0.52
 event 0 1 0.00
 event 1 1001 1.00
 event 2 1000 4.00
