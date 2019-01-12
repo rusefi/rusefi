@@ -19,6 +19,8 @@ extern int timeNowUs;
 extern EnginePins enginePins;
 extern WarningCodeState unitTestWarningCodeState;
 extern float testMafValue;
+extern float testCltValue;
+extern float testIatValue;
 extern engine_configuration_s activeConfiguration;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
@@ -59,6 +61,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->engineConfigurationPtr->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
+	engine->engineConfigurationPtr->clt.adcChannel = (adc_channel_e)TEST_CLT_CHANNEL;
+	engine->engineConfigurationPtr->iat.adcChannel = (adc_channel_e)TEST_IAT_CHANNEL;
+	testCltValue = 1.492964;
+//	testIatValue = 1.492964;
 
 	// this is needed to have valid CLT and IAT.
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);

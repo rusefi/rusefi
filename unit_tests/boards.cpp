@@ -8,11 +8,17 @@
 #include "boards.h"
 
 float testMafValue = 0;
+float testCltValue = 0;
+float testIatValue = 0;
 
 float getVoltageDivided(const char *msg, int channel) {
 	switch(channel) {
 	case TEST_MAF_CHANNEL:
 		return testMafValue;
+	case TEST_CLT_CHANNEL:
+		return testCltValue;
+	case TEST_IAT_CHANNEL:
+		return testIatValue;
 	}
 	return 0;
 }
