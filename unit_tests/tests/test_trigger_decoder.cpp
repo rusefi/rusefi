@@ -313,6 +313,7 @@ void testRpmCalculator(void) {
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->sensors.clt = 70; // 'testCltValue' does not give us exact number so we have to hack here. todo: migrate test
 
 	assertEquals(0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
@@ -1248,7 +1249,7 @@ TEST(big, testMissedSpark299) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 4, unitTestWarningCodeState.warningCounter);
+	assertEqualsM("warningCounter#0", 2, unitTestWarningCodeState.warningCounter);
 
 
 	eth.fireRise(20);
@@ -1318,5 +1319,5 @@ TEST(big, testMissedSpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	assertEqualsM("warningCounter#1", 5, unitTestWarningCodeState.warningCounter);
+	assertEqualsM("warningCounter#1", 3, unitTestWarningCodeState.warningCounter);
 }

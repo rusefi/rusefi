@@ -11,6 +11,8 @@
 #define ADC_CHANNEL_VREF 0
 
 #define TEST_MAF_CHANNEL 10000013
+#define TEST_CLT_CHANNEL 10000014
+#define TEST_IAT_CHANNEL 10000015
 
 float getVoltageDivided(const char *msg, int);
 float getVoltage(const char *msg, int channel);
