@@ -37,6 +37,7 @@ typedef enum {
 	LL_FUEL_TOTAL,
 	LL_FUEL_CLT_CORRECTION,
 	LL_FUEL_IAT_CORRECTION,
+	LL_FUEL_INJECTOR_LAG,
 } lcd_line_e;
 
 typedef void (*VoidCallback)(void);
