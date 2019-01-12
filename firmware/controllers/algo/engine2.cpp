@@ -15,6 +15,13 @@
 #include "engine_math.h"
 #include "advance_map.h"
 #include "aux_valves.h"
+#if EFI_PROD_CODE
+#include "svnversion.h"
+#endif
+
+#if ! EFI_UNIT_TEST
+#include "status_loop.h"
+#endif
 
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
@@ -288,4 +295,15 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+#if EFI_SIMULATOR
+#define VCS_VERSION "123"
+#endif
+
+void printCurrentState(Logging *logging, int seconds, const char *name) {
+	logging->appendPrintf("%s%s%d@%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
+			getRusEfiVersion(), VCS_VERSION,
+			name,
+			seconds,
+			DELIMETER);
+}
 
