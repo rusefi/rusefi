@@ -17,10 +17,8 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-# looks like as of Dec 2018 we are producing 32 bit unit tests
-# Cygwin64 would have 64 bit GDB which would not debug 32 bit unit tests, so one
-# would have to download 32 bit version of GDB maybe from http://www.equation.com/servlet/equation.cmd?fa=gdb
-# TODO: start producing 64 bit binaries?
+# As of Jan 2016 we are producing 64 bit unit tests on Windows which needs 64 bit GDB
+# Previouslyt we had to download 32 bit version of GDB maybe from http://www.equation.com/servlet/equation.cmd?fa=gdb
 #
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
@@ -189,7 +187,10 @@ INCDIR = . \
 #MCU  = cortex-m4
 
 ifeq ($(OS),Windows_NT)
-  TRGT = i686-w64-mingw32-
+#this one is 64 bit
+  TRGT = x86_64-w64-mingw32-
+#this one was 32 bit
+#  TRGT = i686-w64-mingw32-
 else
   TRGT = 
 endif
