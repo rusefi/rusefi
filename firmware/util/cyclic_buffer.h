@@ -14,6 +14,7 @@
 #define CYCLIC_BUFFER_H
 
 #include <string.h>
+#include "rusefi_true.h"
 
 static const short CB_MAX_SIZE = 128;
 
@@ -41,6 +42,7 @@ class cyclic_buffer
     T maxValue(int length);
     T minValue(int length);
     void setSize(int size);
+    bool contains(T value);
     int getSize();
     int getCount();
     void clear();
@@ -109,6 +111,16 @@ void cyclic_buffer<T, maxSize>::add(T value) {
 	}
 
 	++count;
+}
+
+template<typename T, size_t maxSize>
+bool cyclic_buffer<T, maxSize>::contains(T value) {
+	for (int i = 0; i < currentIndex ; i++) {
+		if (elements[i] == value) {
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 template<typename T, size_t maxSize>

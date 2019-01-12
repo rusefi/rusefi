@@ -51,7 +51,6 @@ TEST(util, crc) {
 	assertEqualsM("crc32 line inc", 0x4775a7b1, c);
 }
 
-static cyclic_buffer<int> sb;
 
 TEST(util, Overflow64Counter) {
 	print("*************************************** testOverflow64Counter\r\n");
@@ -66,7 +65,15 @@ TEST(util, Overflow64Counter) {
 	assertEquals(4294967296, o.update(0));
 }
 
+TEST(util, cyclicBufferContains) {
+	cyclic_buffer<int> sb;
+	sb.add(10);
+	ASSERT_EQ(TRUE, sb.contains(10));
+	ASSERT_EQ(FALSE, sb.contains(11));
+}
+
 TEST(util, cyclicBuffer) {
+	cyclic_buffer<int> sb;
 
 	print("*************************************** testCyclicBuffer\r\n");
 
