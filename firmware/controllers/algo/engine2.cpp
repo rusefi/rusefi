@@ -44,15 +44,15 @@ void WarningCodeState::clear() {
 	warningCounter = 0;
 	lastErrorCode = 0;
 	timeOfPreviousWarning = -10;
-	recentWarninig.clear();
+	recentWarning.clear();
 }
 
 void WarningCodeState::addWarningCode(obd_code_e code) {
 	warningCounter++;
 	lastErrorCode = code;
-//todo: add cyclic_buffer.contains method
-	//	if (!recentWarninig contains code)
-	recentWarninig.add((int)code);
+	if (!recentWarning.contains(code)) {
+		recentWarning.add((int)code);
+	}
 }
 
 /**
