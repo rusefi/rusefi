@@ -42,6 +42,8 @@ void print(const char *fmt, ...);
 
 
 #define US_TO_NT_MULTIPLIER 100
+#define VCS_VERSION "321"
+#define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
 #define ALWAYS_INLINE INLINE
 

@@ -15,6 +15,7 @@
 #include "malfunction_central.h"
 #include "cli_registry.h"
 #include "unit_test_framework.h"
+#include "engine_controller.h"
 
 #include "nmea.h"
 #include "efilib2.h"
@@ -486,5 +487,16 @@ void testMenuTree(void) {
 
 	tree.back();
 	assertTrue(tree.current == &miTopLevel1);
+}
 
+int getRusEfiVersion(void) {
+	return 776655;
+}
+
+TEST(util, datalogging) {
+	char LOGGING_BUFFER[1000];
+	Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+
+	printCurrentState(&logger, 239, "CUSTOM_ENGINE");
+	ASSERT_STREQ("rusEfiVersion,776655@321 CUSTOM_ENGINE 239,", LOGGING_BUFFER);
 }

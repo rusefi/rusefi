@@ -19,4 +19,7 @@ bool getFullLog(void);
 void setFullLog(int value);
 void printOverallStatus(systime_t nowSeconds);
 
+// see RUS_EFI_VERSION_TAG in console source code
+#define RUS_EFI_VERSION_TAG "rusEfiVersion"
+
 #endif /* CONSOLE_LOOP_H_ */

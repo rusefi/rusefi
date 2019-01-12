@@ -27,14 +27,12 @@
 #include "global.h"
 #include "status_loop.h"
 #include "HIP9011_logic.h"
+#include "engine_controller.h"
 
 #include "adc_inputs.h"
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 #include "wave_analyzer.h"
 #endif /* EFI_WAVE_ANALYZER */
-
-// see RUS_EFI_VERSION_TAG in console source code
-#define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
 #include "trigger_central.h"
 #include "engine_state.h"
@@ -394,11 +392,8 @@ void printOverallStatus(systime_t nowSeconds) {
 		return;
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
-	appendPrintf(&logger, "%s%s%d@%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
-			getRusEfiVersion(), VCS_VERSION,
-			getConfigurationName(engineConfiguration->engineType),
-			getTimeNowSeconds(),
-			DELIMETER);
+	int seconds = getTimeNowSeconds();
+	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType));
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	printOutPin(CRANK1, CONFIGB(triggerInputPins)[0]);
 	printOutPin(CRANK2, CONFIGB(triggerInputPins)[1]);
