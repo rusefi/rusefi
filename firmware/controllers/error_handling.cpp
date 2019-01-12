@@ -96,7 +96,7 @@ static void printWarning(const char *fmt, va_list ap) {
 }
 
 #else
-int unitTestWarningCounter = 0;
+WarningCodeState unitTestWarningCodeState;
 
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
@@ -131,7 +131,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	printWarning(fmt, ap);
 	va_end(ap);
 #else
-	unitTestWarningCounter++;
+	unitTestWarningCodeState.addWarningCode(code);
 	printf("unit_test_warning: ");
 	va_list ap;
 	va_start(ap, fmt);

@@ -34,7 +34,7 @@
 extern int timeNowUs;
 extern float mockMapValue;
 extern float testMafValue;
-extern int unitTestWarningCounter;
+extern WarningCodeState unitTestWarningCodeState;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
 
@@ -1248,7 +1248,7 @@ TEST(big, testMissedSpark299) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 4, unitTestWarningCounter);
+	assertEqualsM("warningCounter#0", 4, unitTestWarningCodeState.warningCounter);
 
 
 	eth.fireRise(20);
@@ -1318,5 +1318,5 @@ TEST(big, testMissedSpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	assertEqualsM("warningCounter#1", 5, unitTestWarningCounter);
+	assertEqualsM("warningCounter#1", 5, unitTestWarningCodeState.warningCounter);
 }

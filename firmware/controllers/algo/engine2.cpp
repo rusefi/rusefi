@@ -37,9 +37,14 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 WarningCodeState::WarningCodeState() {
+	clear();
+}
+
+void WarningCodeState::clear() {
 	warningCounter = 0;
 	lastErrorCode = 0;
 	timeOfPreviousWarning = -10;
+	recentWarninig.clear();
 }
 
 void WarningCodeState::addWarningCode(obd_code_e code) {
