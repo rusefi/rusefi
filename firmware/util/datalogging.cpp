@@ -103,7 +103,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	efiAssertVoid(CUSTOM_ERR_6603, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
-	append(logging, (char *) intermediateLoggingBufferData);
+	logging->append((char *)intermediateLoggingBuffer.buffer);
 }
 
 /**
