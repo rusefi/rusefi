@@ -77,7 +77,9 @@ public class LogDownloader {
         removeFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int i = JOptionPane.showConfirmDialog(Launcher.getFrame(), "Do you really want to delete " + name + "?");
+                int i = JOptionPane.showConfirmDialog(Launcher.getFrame(), ("Do you really want to delete " + name + "?"),
+                        UIManager.getString("OptionPane.titleText"),
+                        JOptionPane.YES_NO_OPTION);
                 if (i == JOptionPane.YES_OPTION) {
                     CommandQueue.getInstance().write("del " + name);
                     timer.restart();
