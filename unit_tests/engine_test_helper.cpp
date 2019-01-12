@@ -64,7 +64,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->engineConfigurationPtr->clt.adcChannel = (adc_channel_e)TEST_CLT_CHANNEL;
 	engine->engineConfigurationPtr->iat.adcChannel = (adc_channel_e)TEST_IAT_CHANNEL;
 	testCltValue = 1.492964;
-//	testIatValue = 1.492964;
+	testIatValue = 4.03646;
 
 	// this is needed to have valid CLT and IAT.
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);

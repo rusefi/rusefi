@@ -185,10 +185,10 @@ void test1995FordInline6TriggerDecoder(void) {
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	assertEqualsM("ford inline ignition events size", 1, ecl->isReady);
 	assertEqualsM("event index", 0, ecl->elements[0].dwellPosition.eventIndex);
-	assertEqualsM("angle offset#1", 7, ecl->elements[0].dwellPosition.angleOffset);
+	assertEqualsM("angle offset#1", 7.8621, ecl->elements[0].dwellPosition.angleOffset);
 
 	assertEqualsM("event index", 10, ecl->elements[5].dwellPosition.eventIndex);
-	assertEqualsM("angle offset#2", 7, ecl->elements[5].dwellPosition.angleOffset);
+	assertEqualsM("angle offset#2", 7.8621, ecl->elements[5].dwellPosition.angleOffset);
 
 
 	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
@@ -314,6 +314,7 @@ void testRpmCalculator(void) {
 
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->sensors.clt = 70; // 'testCltValue' does not give us exact number so we have to hack here. todo: migrate test
+	engine->sensors.iat = 30; // 'testIatValue' does not give us exact number so we have to hack here. todo: migrate test
 
 	assertEquals(0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
@@ -1249,7 +1250,7 @@ TEST(big, testMissedSpark299) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 2, unitTestWarningCodeState.warningCounter);
+	assertEqualsM("warningCounter#0", 0, unitTestWarningCodeState.warningCounter);
 
 
 	eth.fireRise(20);
@@ -1319,5 +1320,6 @@ TEST(big, testMissedSpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	assertEqualsM("warningCounter#1", 3, unitTestWarningCodeState.warningCounter);
+	assertEqualsM("warningCounter#1", 1, unitTestWarningCodeState.warningCounter);
+	assertEqualsM("warningCounter code", CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarning.get(0));
 }
