@@ -21,13 +21,13 @@ public:
 	Map3D(const char*name);
 	Map3D(const char*name, float multiplier);
 	void create(const char*name, float multiplier);
-	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], float loadBins[LOAD_BIN_SIZE], float rpmBins[RPM_BIN_SIZE]);
+	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const float loadBins[LOAD_BIN_SIZE], const float rpmBins[RPM_BIN_SIZE]);
 	float getValue(float xRpm, float y);
 	void setAll(vType value);
 	vType *pointers[LOAD_BIN_SIZE];
 private:
-	float *loadBins;
-	float *rpmBins;
+	const float *loadBins;
+	const float *rpmBins;
 	bool initialized;
 	const char *name;
 	float multiplier;
@@ -71,8 +71,8 @@ void Table2D<SIZE>::preCalc(float *bin, float *values) {
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
-		float loadBins[LOAD_BIN_SIZE],
-		float rpmBins[RPM_BIN_SIZE]) {
+		const float loadBins[LOAD_BIN_SIZE],
+		const float rpmBins[RPM_BIN_SIZE]) {
 	// this method cannot use logger because it's invoked before everything
 	// that's because this method needs to be invoked before initial configuration processing
 	// and initial configuration load is done prior to logging initialization
