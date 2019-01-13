@@ -1188,9 +1188,10 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.executeActions();
 
-
-	eth.moveTimeForwardUs(100); // executing new signal too early
-	eth.firePrimaryTriggerFall();
+	/**
+	 * here we throw scheduling logic off
+	 */
+	eth.fireFall(0.1); // executing new signal too early
 	eth.executeActions();
 
 	assertEqualsM("out-of-order #1", 1, enginePins.coils[3].outOfOrder);
