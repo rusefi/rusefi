@@ -17,7 +17,7 @@ import static com.rusefi.config.Fields.*;
  *         2/11/13
  */
 public enum Sensor {
-    MAP("MAP", SensorCategory.SENSOR_INPUTS),
+    MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 40, BackgroundColor.MUD, 20, 300),
     MAP_RAW("MAP_RAW", SensorCategory.SENSOR_INPUTS),
     BARO("Baro", SensorCategory.SENSOR_INPUTS),
     // todo: unify with ignitionAdvance
@@ -26,9 +26,9 @@ public enum Sensor {
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
-    CLT("Coolant", SensorCategory.SENSOR_INPUTS, "temperature, C", -40, 300),
-    AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, "", 0, 20),
-    MAF("MAF", SensorCategory.SENSOR_INPUTS, "Volts", 4),
+    CLT("Coolant", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 4, BackgroundColor.MUD, -40, 300),
+    AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 20, BackgroundColor.MUD, 0, 20),
+    MAF("MAF", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 16, BackgroundColor.MUD, 0, 5),
     MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
 
     knockCount("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
@@ -197,6 +197,12 @@ public enum Sensor {
         this(name, category, type, offset, color, 0, 100);
     }
 
+    /**
+     * Text-based protocol is not very alive
+     * @param name
+     * @param category
+     */
+    @Deprecated
     Sensor(String name, SensorCategory category) {
         this(name, category, "", 255);
     }
