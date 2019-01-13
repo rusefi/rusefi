@@ -11,10 +11,6 @@
 #include "engine_test_helper.h"
 
 void testTriggerDecoder(void);
-void testFuelSchedulerBug299smallAndMedium(void);
-void testFuelSchedulerBug299smallAndLarge(void);
-void testDifferentInjectionModes(void);
-void testSparkReverseOrderBug319(void);
 void testRpmCalculator(void);
 void testStartupFuelPumping(void);
 void test1995FordInline6TriggerDecoder(void);
