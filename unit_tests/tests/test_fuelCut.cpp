@@ -7,7 +7,6 @@
 #include "engine_math.h"
 #include "test_trigger_decoder.h"
 #include "event_queue.h"
-#include "unit_test_framework.h"
 #include "tps.h"
 
 extern int timeNowUs;

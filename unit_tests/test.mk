@@ -16,6 +16,7 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	tests/test_trigger_decoder.cpp \
 	tests/test_trigger_noiseless.cpp \
 	tests/test_fuel_map.cpp \
+	tests/test_maf2map.cpp \
 	tests/test_fuelCut.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
