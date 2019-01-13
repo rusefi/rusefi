@@ -61,18 +61,11 @@ GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
 	testMisc();
-	testDifferentInjectionModes();
 	/**
 	 * PID
 	 */
 	testPidAuto();
 
-	/**
-	 * Larger-scale engine control
-	 */
-	testSparkReverseOrderBug319();
-	testFuelSchedulerBug299smallAndLarge();
-	testFuelSchedulerBug299smallAndMedium();
 	testLogicExpressions(); // fsio
 	testPlainCrankingWithoutAdvancedFeatures();
 	testStartOfCrankingPrimingPulse();

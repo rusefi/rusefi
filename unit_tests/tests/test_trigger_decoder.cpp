@@ -746,7 +746,7 @@ static void assertInjectors(const char *msg, int value0, int value1) {
 	assertEqualsM4(msg, "inj#1", value1, enginePins.injectors[1].currentLogicValue);
 }
 
-void testFuelSchedulerBug299smallAndMedium(void) {
+TEST(big, testFuelSchedulerBug299smallAndMedium) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -988,6 +988,9 @@ void testFuelSchedulerBug299smallAndMedium(void) {
 
 	mockMapValue = 0;
 	testMafValue = 0;
+	assertEqualsM("warningCounter#testFuelSchedulerBug299smallAndMedium", 2, unitTestWarningCodeState.recentWarnings.getCount());
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
+	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
 static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -995,8 +998,7 @@ static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-
-void testDifferentInjectionModes(void) {
+TEST(big, testDifferentInjectionModes) {
 	printf("*************************************************** testDifferentInjectionModes\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -1025,9 +1027,10 @@ void testDifferentInjectionModes(void) {
 	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("injection while IM_SINGLE_POINT", 40, engine->injectionDuration);
+	assertEqualsM("warningCounter#testDifferentInjectionModes", 1, unitTestWarningCodeState.recentWarnings.getCount());
 }
 
-void testFuelSchedulerBug299smallAndLarge(void) {
+TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	printf("*************************************************** testFuelSchedulerBug299 small to large\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -1135,9 +1138,12 @@ void testFuelSchedulerBug299smallAndLarge(void) {
 
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
+	assertEqualsM("warningCounter#testFuelSchedulerBug299smallAndLarge", 2, unitTestWarningCodeState.recentWarnings.getCount());
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
+	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
-void testSparkReverseOrderBug319(void) {
+TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -1237,6 +1243,10 @@ void testSparkReverseOrderBug319(void) {
 	eth.fireFall(20);
 	eth.executeActions();
 	assertEqualsM("out-of-order #8", 0, enginePins.coils[3].outOfOrder);
+	assertEqualsM("warningCounter#SparkReverseOrderBug319", 3, unitTestWarningCodeState.recentWarnings.getCount());
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
+	ASSERT_EQ(CUSTOM_DWELL_TOO_LONG, unitTestWarningCodeState.recentWarnings.get(1));
+	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(2));
 }
 
 TEST(big, testMissedSpark299) {
@@ -1250,7 +1260,7 @@ TEST(big, testMissedSpark299) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	assertEqualsM("warningCounter#0", 0, unitTestWarningCodeState.warningCounter);
+	assertEqualsM("warningCounter#0", 0, unitTestWarningCodeState.recentWarnings.getCount());
 
 
 	eth.fireRise(20);
@@ -1320,6 +1330,6 @@ TEST(big, testMissedSpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	assertEqualsM("warningCounter#1", 1, unitTestWarningCodeState.warningCounter);
-	assertEqualsM("warningCounter code", CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarning.get(0));
+	assertEqualsM("warningCounter#1", 1, unitTestWarningCodeState.recentWarnings.getCount());
+	assertEqualsM("warningCounter code", CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
 }
