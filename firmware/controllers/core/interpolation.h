@@ -34,7 +34,7 @@ int needInterpolationLogging(void);
  * @brief	Two-dimensional table lookup with linear interpolation
  */
 template<typename vType>
-float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, vType* map[]) {
+float interpolate3d(float x, const float xBin[], int xBinSize, float y, const float yBin[], int yBinSize, vType* map[]) {
 	if (cisnan(x)) {
 		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;
