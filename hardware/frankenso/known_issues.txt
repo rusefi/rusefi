@@ -178,7 +178,7 @@
 171) RESOLVED IN R0.5.3 Fix the 3D, such that 3D works. 
 172)                    Change DN2625 to the physically larger IXTA6N50D2 as noted here https://rusefi.com/forum/viewtopic.php?p=28759#p28759
 173) 			At least some connector silkscreen 1A-3Z see viewtopic.php?f=4&t=507#p29006
-174)                    D20 D19 D22 silkscreen seemns to be inaccurate - D20 really means D19 etc?
+174)                    D20 D19 D22 silkscreen seems to be inaccurate - D20 really means D19 etc?
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
