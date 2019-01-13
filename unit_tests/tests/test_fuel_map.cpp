@@ -2,7 +2,7 @@
  * @file	test_fuel_map.cpp
  *
  * @date Nov 6, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "test_fuel_map.h"

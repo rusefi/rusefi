@@ -7,7 +7,6 @@
 #include "engine_math.h"
 #include "test_fasterEngineSpinningUp.h"
 #include "test_trigger_decoder.h"
-#include "unit_test_framework.h"
 
 extern int timeNowUs;
 
