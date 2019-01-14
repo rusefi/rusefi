@@ -44,7 +44,7 @@ TEST(sensors, tps) {
 	assertEqualsM("test#2", 50.6667, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-void testTpsRateOfChange(void) {
+TEST(sensors, testTpsRateOfChange) {
 	print("************************************************** testTpsRateOfChange\r\n");
 //	saveTpsState(0, 0);
 //	saveTpsState(CH_FREQUENCY, 50);

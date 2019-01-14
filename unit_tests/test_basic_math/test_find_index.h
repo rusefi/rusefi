@@ -9,7 +9,5 @@
 #define TEST_FIND_INDEX_H_
 
 void testFindIndex(void);
-void testInterpolate2d(void);
-void testSetTableValue(void);
 
 #endif /* TEST_FIND_INDEX_H_ */

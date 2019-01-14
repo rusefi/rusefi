@@ -9,25 +9,17 @@
 #include <stdlib.h>
 
 #include "global.h"
-#include "test_accel_enrichment.h"
 #include "test_interpolation_3d.h"
 #include "test_find_index.h"
-#include "test_speed_density.h"
 
-#include "test_fuel_map.h"
-#include "fuel_math.h"
-#include "test_logic_expression.h"
-#include "test_pid_auto.h"
 #include "engine_configuration.h"
 
 #include "test_idle_controller.h"
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
-#include "test_util.h"
 #include "map_resize.h"
 #include "engine_math.h"
-#include "test_engine_math.h"
 #include "test_trigger_decoder.h"
 #include "gtest/gtest.h"
 
@@ -57,51 +49,6 @@ extern bool printTriggerDebug;
 
 GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
-
-	testMisc();
-	/**
-	 * PID
-	 */
-	testPidAuto();
-
-	testLogicExpressions(); // fsio
-	testGpsParser();
-	testFuelMap();
-	testEngineMath();
-	testIgnitionPlanning();
-
-	/**
-	 * Data structures and general methods
-	 */
-	testFindIndex();
-	testInterpolate3d();
-	testInterpolate2d();
-	testSetTableValue();
-
-	testFLStack();
-
-	testSignalExecutor();
-	testPwmGenerator();
-
-
-	/**
-	 * Business logic tests
-	 */
-	testMalfunctionCentral();
-
-	testConsoleLogic();
-
-	testAngleResolver();
-
-	testPinHelper();
-
-	testMenuTree();
-	testMafLookup();
-	testIgnitionMapGenerator();
-	testMafFuelMath();
-
-	testTriggerDecoder();
-
 
 	//	resizeMap();
 	printf("Success 20190103\r\n");

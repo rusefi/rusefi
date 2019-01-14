@@ -8,7 +8,6 @@
  */
 
 #include "global.h"
-#include "test_logic_expression.h"
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"
@@ -106,7 +105,7 @@ static void testExpression(const char *line, float expected) {
 	testExpression2(0, line, expected);
 }
 
-void testLogicExpressions(void) {
+TEST(misc, testLogicExpressions) {
 	printf("*************************************************** testLogicExpressions\r\n");
 
 	testParsing();

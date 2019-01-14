@@ -101,7 +101,7 @@ static void testSwitchToNanPeriod() {
 	assertNextEvent("exec3@NAN", LOW_VALUE, &executor);
 }
 
-void testPwmGenerator() {
+TEST(misc, testPwmGenerator) {
 	test100dutyCycle();
 	testSwitchToNanPeriod();
 

@@ -91,7 +91,7 @@ static void testSignalExecutor3(void) {
 	eq.executeAll(100);
 }
 
-void testSignalExecutor(void) {
+TEST(misc, testSignalExecutor) {
 	testSignalExecutor3();
 	print("*************************************** testSignalExecutor\r\n");
 

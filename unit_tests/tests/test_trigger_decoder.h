@@ -10,10 +10,6 @@
 
 #include "engine_test_helper.h"
 
-void testTriggerDecoder(void);
-void testRpmCalculator(void);
-void testStartupFuelPumping(void);
-void test1995FordInline6TriggerDecoder(void);
 void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty);
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);
 

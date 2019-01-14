@@ -112,7 +112,7 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 	assertEqualsM("angleOffset", angleOffset, position->angleOffset);
 }
 
-void testSomethingWeird(void) {
+TEST(misc, testSomethingWeird) {
 	printf("*************************************************** testSomethingWeird\r\n");
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
@@ -149,8 +149,7 @@ void testSomethingWeird(void) {
 	assertEquals(0, sta->getCurrentIndex()); // new revolution
 }
 
-void test1995FordInline6TriggerDecoder(void) {
-	testSomethingWeird();
+TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	printf("*************************************************** test1995FordInline6TriggerDecoder\r\n");
 
@@ -194,7 +193,7 @@ void test1995FordInline6TriggerDecoder(void) {
 	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-void testFordAspire(void) {
+TEST(misc, testFordAspire) {
 	printf("*************************************************** testFordAspire\r\n");
 
 	assertEqualsM("getTriggerZeroEventIndex", 4, getTriggerZeroEventIndex(FORD_ASPIRE_1996));
@@ -242,7 +241,7 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 	printTriggerDebug = false;
 }
 
-void testStartupFuelPumping(void) {
+TEST(misc, testStartupFuelPumping) {
 	printf("*************************************************** testStartupFuelPumping\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
@@ -294,7 +293,7 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 extern bool_t debugSignalExecutor;
 extern EnginePins enginePins;
 
-void testRpmCalculator(void) {
+TEST(misc, testRpmCalculator) {
 	printf("*************************************************** testRpmCalculator\r\n");
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
@@ -445,7 +444,7 @@ void testRpmCalculator(void) {
 	engine->executor.clear();
 }
 
-void testTriggerDecoder(void) {
+TEST(misc, testTriggerDecoder) {
 	printf("====================================================================================== testTriggerDecoder\r\n");
 
 	persistent_config_s c;
@@ -470,7 +469,6 @@ void testTriggerDecoder(void) {
 	testDodgeNeonDecoder();
 	testTriggerDecoder2("Dodge Neon 1995", DODGE_NEON_1995, 8, 0.4931, 0.2070);
 
-	testFordAspire();
 	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0000, 0.5);
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
@@ -478,7 +476,6 @@ void testTriggerDecoder(void) {
 	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
 	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);
 
-	test1995FordInline6TriggerDecoder();
 
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
 	testTriggerDecoder2("Miata 2003", MAZDA_MIATA_2003, 3, 0.0444, 0.0);
@@ -574,10 +571,6 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("stratus NGC6", DODGE_STRATUS, 0, 0.8833, 0.0, CHRYSLER_NGC6_GAP);
 
 	testTriggerDecoder2("vw ABA", VW_ABA, 114, 0.5000, 0.0);
-
-
-	testStartupFuelPumping();
-	testRpmCalculator();
 }
 
 extern fuel_Map3D_t fuelMap;

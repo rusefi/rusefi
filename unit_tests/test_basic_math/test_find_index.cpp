@@ -15,7 +15,7 @@ static void testIndex(const int expected, const float array[], int size, float v
 	assertEquals(expected, findIndex2(array, size, value));
 }
 
-void testFindIndex(void) {
+TEST(misc, testFindIndex) {
 	printf("*************************************************** testFindIndex\r\n");
 /*
 	{
@@ -66,7 +66,7 @@ void testFindIndex(void) {
 	}
 }
 
-void testInterpolate2d(void) {
+TEST(misc, testInterpolate2d) {
 	printf("*************************************************** testInterpolate2d\r\n");
 
 	float bins4[] = { 1, 2, 3, 4 };
@@ -92,7 +92,7 @@ void testInterpolate2d(void) {
 	assertEquals(215, result);
 }
 
-void testSetTableValue(void) {
+TEST(misc, testSetTableValue) {
 	printf("*************************************************** testSetTableValue\r\n");
 
 	persistent_config_s config;
