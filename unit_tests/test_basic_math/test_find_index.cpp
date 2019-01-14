@@ -11,7 +11,7 @@
 #include "unit_test_framework.h"
 
 static void testIndex(const int expected, const float array[], int size, float value) {
-	assertEquals(expected, findIndex(array, size, value));
+	ASSERT_EQ(expected, findIndex(array, size, value));
 	assertEquals(expected, findIndex2(array, size, value));
 }
 

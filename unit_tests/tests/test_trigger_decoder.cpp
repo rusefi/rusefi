@@ -83,13 +83,13 @@ static void testDodgeNeonDecoder(void) {
 //	assertFalseM("4 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
 //
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
-//	assertFalse(state.shaft_is_synchronized); // still no synchronization
+//	ASSERT_FALSE(state.shaft_is_synchronized); // still no synchronization
 //
 //	printf("2nd camshaft revolution\r\n");
 //	r = 720;
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	assertTrue(state.shaft_is_synchronized);
+//	ASSERT_TRUE(state.shaft_is_synchronized);
 //	assertEquals(0, state.current_index);
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
 //	assertEquals(1, state.current_index);
@@ -101,7 +101,7 @@ static void testDodgeNeonDecoder(void) {
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
 //	assertEqualsM("current index", 3, state.current_index);
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	assertTrue(state.shaft_is_synchronized);
+//	ASSERT_TRUE(state.shaft_is_synchronized);
 //	assertEqualsM("current index", 0, state.current_index);
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
@@ -127,7 +127,7 @@ TEST(misc, testSomethingWeird) {
 	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
 	assertFalseM("shaft_is_synchronized", sta->shaft_is_synchronized); // still no synchronization
 	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
-	assertTrue(sta->shaft_is_synchronized); // first signal rise synchronize
+	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	assertEquals(0, sta->getCurrentIndex());
 	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r++ PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEquals(1, sta->getCurrentIndex());

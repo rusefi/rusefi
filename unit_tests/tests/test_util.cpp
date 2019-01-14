@@ -324,7 +324,7 @@ TEST(misc, testConsoleLogic) {
 	assertEquals(5, findEndOfToken(cmd));
 
 	strcpy(buffer, "echo");
-	assertTrue(strEqual("echo", unquote(buffer)));
+	ASSERT_TRUE(strEqual("echo", unquote(buffer)));
 
 	strcpy(buffer, "\"echo\"");
 	assertTrueM("unquote quoted", strEqual("echo", unquote(buffer)));
@@ -371,7 +371,7 @@ TEST(misc, testConsoleLogic) {
 
 	strcpy(buffer, "echosss \" 1\" 222 333");
 	handleConsoleLine(buffer);
-	assertTrue(strEqual("\" 1\"", lastFirst));
+	ASSERT_TRUE(strEqual("\" 1\"", lastFirst));
 
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
@@ -412,7 +412,7 @@ TEST(misc, testMisc) {
 	print("******************************************* testMisc\r\n");
 	strcpy(buff, "  ab  ");
 	// we need a mutable array here
-	assertTrue(strEqual("ab", efiTrim(buff)));
+	ASSERT_TRUE(strEqual("ab", efiTrim(buff)));
 
 
 	{
@@ -458,25 +458,25 @@ TEST(misc, testMenuTree) {
 	tree.init(&miTopLevel1, 3);
 
 	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel1);
-	assertTrue(tree.current == &miTopLevel2);
+	ASSERT_TRUE(tree.topVisible == &miTopLevel1);
+	ASSERT_TRUE(tree.current == &miTopLevel2);
 
 	tree.back();
-	assertTrue(tree.current == &miTopLevel2); // no 'back' since we are on the top level already
+	ASSERT_TRUE(tree.current == &miTopLevel2); // no 'back' since we are on the top level already
 
 	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel1);
-	assertTrue(tree.current == &miTopLevel3);
+	ASSERT_TRUE(tree.topVisible == &miTopLevel1);
+	ASSERT_TRUE(tree.current == &miTopLevel3);
 
 	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel2);
-	assertTrue(tree.current == &miTopLevel4);
+	ASSERT_TRUE(tree.topVisible == &miTopLevel2);
+	ASSERT_TRUE(tree.current == &miTopLevel4);
 
 	tree.enterSubMenu();
 	assertTrueM("still same", tree.current == &miTopLevel4); // no children in this one
 
 	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel3);
+	ASSERT_TRUE(tree.topVisible == &miTopLevel3);
 	assertTrueM("tl5", tree.current == &miTopLevel5);
 
 	tree.nextItem();
@@ -489,10 +489,10 @@ TEST(misc, testMenuTree) {
 	tree.nextItem();
 
 	tree.enterSubMenu();
-	assertTrue(tree.current == &miSubMenu5_1);
+	ASSERT_TRUE(tree.current == &miSubMenu5_1);
 
 	tree.back();
-	assertTrue(tree.current == &miTopLevel1);
+	ASSERT_TRUE(tree.current == &miTopLevel1);
 }
 
 int getRusEfiVersion(void) {
