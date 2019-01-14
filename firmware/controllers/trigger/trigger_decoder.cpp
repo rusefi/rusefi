@@ -41,8 +41,6 @@ EXTERN_ENGINE
 ;
 
 static cyclic_buffer<int> errorDetection;
-// todo! make this NOT a global variable
-static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
 
 #if ! EFI_PROD_CODE || defined(__DOXYGEN__)
 bool printTriggerDebug = false;
@@ -481,7 +479,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
 #if EFI_UNIT_TEST
-			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, isInitializingTrigger);
+			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, engine->isInitializingTrigger);
 			if (isDecodingError) {
 				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  TRIGGER_SHAPE(expectedEventCount[0]));
 				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  TRIGGER_SHAPE(expectedEventCount[1]));
@@ -490,7 +488,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif
 
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
-			if (isDecodingError && !isInitializingTrigger) {
+			if (isDecodingError && !engine->isInitializingTrigger) {
 				if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 					tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
@@ -564,7 +562,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {
+	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !engine->isInitializingTrigger) {
 		// let's not show a warning if we are just starting to spin
 		if (GET_RPM() != 0) {
 			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, getTriggerSize());
@@ -581,7 +579,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Needed for early instant-RPM detection
-	if (!isInitializingTrigger) {
+	if (!engine->isInitializingTrigger) {
 		engine->rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
@@ -613,14 +611,14 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		return 0;
 	}
 
-	isInitializingTrigger = true;
+	engine->isInitializingTrigger = true;
 
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
 	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, state PASS_ENGINE_PARAMETER_SUFFIX);
 	if (syncIndex == EFI_ERROR_CODE) {
-		isInitializingTrigger = false;
+		engine->isInitializingTrigger = false;
 		return syncIndex;
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, state->getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
@@ -641,7 +639,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape PASS_ENGINE_PARAMETER_SUFFIX);
 
-	isInitializingTrigger = false;
+	engine->isInitializingTrigger = false;
 	return syncIndex % shape->getSize();
 }
 
