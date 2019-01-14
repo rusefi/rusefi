@@ -87,7 +87,8 @@ TEST(misc, testFuelMap) {
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	assertEquals(NAN, getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+	float iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_FALSE(cisnan(iat));
 	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("IAT", 2, iatCorrection);
 	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -176,7 +177,7 @@ TEST(misc, testAngleResolver) {
 	assertEqualsM("index 5", 412.76, ts->eventAngles[6]);
 	assertEqualsM("time 5", 0.5733, ts->wave.getSwitchTime(5));
 
-	assertEquals(4, ts->getTriggerShapeSynchPointIndex());
+	ASSERT_EQ(4, ts->getTriggerShapeSynchPointIndex());
 
 	assertEqualsM("shape size", 10, ts->getSize());
 
@@ -199,17 +200,17 @@ TEST(misc, testAngleResolver) {
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset));
-	assertEquals(2, injectionStart.eventIndex);
+	ASSERT_EQ(2, injectionStart.eventIndex);
 	assertEquals(69.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset));
-	assertEquals(2, injectionStart.eventIndex);
+	ASSERT_EQ(2, injectionStart.eventIndex);
 	assertEquals(122.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset));
-	assertEquals(2, injectionStart.eventIndex);
+	ASSERT_EQ(2, injectionStart.eventIndex);
 	assertEquals(178.24, injectionStart.angleOffset);
 
 	TriggerShape t;
@@ -218,9 +219,9 @@ TEST(misc, testAngleResolver) {
 
 TEST(misc, testPinHelper) {
 	printf("*************************************************** testPinHelper\r\n");
-	assertEquals(0, getElectricalValue(0, OM_DEFAULT));
-	assertEquals(1, getElectricalValue(1, OM_DEFAULT));
+	ASSERT_EQ(0, getElectricalValue(0, OM_DEFAULT));
+	ASSERT_EQ(1, getElectricalValue(1, OM_DEFAULT));
 
-	assertEquals(0, getElectricalValue(1, OM_INVERTED));
-	assertEquals(1, getElectricalValue(0, OM_INVERTED));
+	ASSERT_EQ(0, getElectricalValue(1, OM_INVERTED));
+	ASSERT_EQ(1, getElectricalValue(0, OM_INVERTED));
 }
