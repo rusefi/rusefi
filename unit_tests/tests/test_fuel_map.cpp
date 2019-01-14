@@ -134,7 +134,7 @@ static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	s->addEvent720(657.03, T_SECONDARY, TV_FALL);
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
 
-	assertEquals(53.747 / 720, s->wave.getSwitchTime(0));
+	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
 	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
 	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
 
@@ -150,8 +150,8 @@ static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	assertEqualsM("@4", 1, s->wave.getChannelState(0, 4));
 	assertEqualsM("@5", 1, s->wave.getChannelState(1, 5));
 	assertEqualsM("@8", 0, s->wave.getChannelState(1, 8));
-	assertEquals(121.90 / 720, s->wave.getSwitchTime(1));
-	assertEquals(657.03 / 720, s->wave.getSwitchTime(8));
+	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
+	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
 
 	assertEqualsM("expecting 0", 0, s->wave.findAngleMatch(53.747 / 720.0, s->getSize()));
 	assertEqualsM("expecting not found", -1, s->wave.findAngleMatch(53 / 720.0, s->getSize()));
@@ -186,32 +186,32 @@ TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver 0\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
-	assertEquals(0.24, injectionStart.angleOffset);
+	ASSERT_NEAR(0.24, injectionStart.angleOffset, EPS5D);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
-	assertEquals(42.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset));
 	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
-	assertEquals(68.2400, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.eventIndex);
-	assertEquals(69.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.eventIndex);
-	assertEquals(122.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.eventIndex);
-	assertEquals(178.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffset);
 
 	TriggerShape t;
 	confgiureFordAspireTriggerShape(&t);

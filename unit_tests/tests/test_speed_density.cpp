@@ -28,8 +28,8 @@ TEST(big, testSpeedDensity) {
 
 	float airMass = getCylinderAirMass(engineConfiguration, 0.92, 98, 293.16);
 
-	assertEquals(0.9371, airMass);
+	ASSERT_FLOAT_EQ(0.9371106624, airMass);
 
 	// 0.01414 sec or 14.14 ms
-	assertEquals(0.01414, sdMath(engineConfiguration, airMass, 12.5));
+	ASSERT_FLOAT_EQ(0.014137065038, sdMath(engineConfiguration, airMass, 12.5));
 }

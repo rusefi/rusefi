@@ -36,14 +36,14 @@ TEST(misc, testEngineMath) {
 	assertEqualsM("600 RPM", 50, getOneDegreeTimeMs(600) * 180);
 	assertEqualsM("6000 RPM", 5, getOneDegreeTimeMs(6000) * 180);
 
-	assertEquals(312.5, getTCharge(1000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(313.5833, getTCharge(1000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(314.6667, getTCharge(1000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(312.5, getTCharge(1000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(313.5833, getTCharge(1000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(314.6667, getTCharge(1000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 
 
-	assertEquals(312.5, getTCharge(4000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(320.0833, getTCharge(4000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(327.6667, getTCharge(4000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(312.5, getTCharge(4000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(320.0833, getTCharge(4000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(327.6667, getTCharge(4000, 100, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 
 	// test Air Interpolation mode
 	engineConfiguration->tChargeMode = TCHARGE_MODE_AIR_INTERP;
@@ -52,10 +52,10 @@ TEST(misc, testEngineMath) {
 	engineConfiguration->tChargeAirFlowMax = 153.6f;
 	// calc. some airMass given the engine displacement=1.839 and 4 cylinders (FORD_ESCORT_GT)
 	engine->engineState.airMass = getCylinderAirMass(engineConfiguration, /*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f);
-	assertEquals(0.5464f, engine->engineState.airMass);
+	ASSERT_NEAR(0.5464f, engine->engineState.airMass, EPS4D);
 	// calc. airFlow using airMass, and find tCharge
-	assertEquals(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0, /*CLT*/90.0f, /*IAT*/20.0f PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(65.5625f/*kg/h*/, engine->engineState.airFlow);
+	ASSERT_FLOAT_EQ(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0, /*CLT*/90.0f, /*IAT*/20.0f PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(65.5625f/*kg/h*/, engine->engineState.airFlow);
 }
 
 TEST(misc, testIgnitionMapGenerator) {
@@ -74,8 +74,8 @@ TEST(misc, testIgnitionMapGenerator) {
 	ASSERT_EQ(7000, rpmBin[15]);
 
 
-    assertEquals(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));
-    assertEquals(32.2, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 145));
+	ASSERT_FLOAT_EQ(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));
+    ASSERT_FLOAT_EQ(32.2, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 145));
 
     assertEqualsM2("100@6000", 36.0, getInitialAdvance(6000, 100, 36), 0.1);
     assertEqualsM2("100@600", 9.9, getInitialAdvance(600, 100, 36), 0.2);

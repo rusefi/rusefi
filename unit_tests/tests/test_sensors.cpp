@@ -20,11 +20,11 @@ TEST(sensors, mapDecoding) {
 	s.type = MT_DENSO183;
 
 	assertEqualsM("denso 0 volts", -6.64, decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(31.244, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(31.244, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
 
 	s.type = MT_MPX4250;
 	assertEqualsM("MPX_4250 0 volts", 8, decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 TEST(sensors, tps) {
@@ -57,18 +57,18 @@ TEST(sensors, testTpsRateOfChange) {
 //	assertEquals(25, getTpsRateOfChange());
 }
 
-TEST(sensors, tm) {
+TEST(sensors, thermistors) {
 
 	ThermistorMath tm;
 	{
 		setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
 		tm.setConfig(&tc.config);
 		float t = tm.getKelvinTemperatureByResistance(2100);
-		assertEquals(75 + KELV, t);
+		ASSERT_FLOAT_EQ(75 + KELV, t);
 
-		assertEquals(-0.003, tm.s_h_a);
-		assertEquals(0.001, tm.s_h_b);
-		assertEquals(0.0, tm.s_h_c);
+		ASSERT_NEAR(-0.003, tm.s_h_a, EPS4D);
+		ASSERT_NEAR(0.001, tm.s_h_b, EPS4D);
+		ASSERT_NEAR(0.0, tm.s_h_c, EPS5D);
 
 	}
 
@@ -78,11 +78,10 @@ TEST(sensors, tm) {
 		tm.setConfig(&tc.config);
 
 		float t = tm.getKelvinTemperatureByResistance(38000);
-		assertEquals(-2.7983, t - KELV);
+		ASSERT_NEAR(-2.7983, t - KELV, EPS4D);
 
 		assertEqualsM("A", 0.0009, tm.s_h_a);
 		assertEqualsM("B", 0.0003, tm.s_h_b);
-		assertEquals(0.0, tm.s_h_c);
+		ASSERT_NEAR(0.0, tm.s_h_c, EPS4D);
 	}
 }
-
