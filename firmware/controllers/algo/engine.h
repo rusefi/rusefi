@@ -324,6 +324,14 @@ public:
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 };
 
+/**
+ * I am not sure if this needs to be configurable.
+ *
+ * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
+ */
+// todo: not great location for these
+#define CLEANUP_MODE_TPS 90
+#define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
 class Engine {
 public:
@@ -434,6 +442,7 @@ public:
 	floatms_t actualLastInjection;
 
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 

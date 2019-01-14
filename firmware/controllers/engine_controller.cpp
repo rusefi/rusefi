@@ -213,21 +213,6 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static void cylinderCleanupControl(Engine *engine) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	bool newValue;
-	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
-	} else {
-		newValue = false;
-	}
-	if (newValue != engine->isCylinderCleanupMode) {
-		engine->isCylinderCleanupMode = newValue;
-		scheduleMsg(&logger, "isCylinderCleanupMode %s", boolToString(newValue));
-	}
-#endif
-}
-
 static LocalVersionHolder versionForConfigurationListeners;
 
 static void periodicSlowCallback(Engine *engine);
@@ -328,17 +313,8 @@ static void periodicSlowCallback(Engine *engine) {
 		engine->engineState.warmupAfrPid.reset();
 	}
 
-	engine->watchdog();
-	engine->updateSlowSensors();
-	engine->checkShutdown();
+	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if EFI_FSIO || defined(__DOXYGEN__)
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE && EFI_FSIO */
-
-	cylinderCleanupControl(engine);
-
-	engine->slowCallBackWasInvoked = TRUE;
 	scheduleNextSlowInvocation();
 }
 
