@@ -105,9 +105,9 @@ TEST(misc, testSetTableValue) {
 	ASSERT_EQ(1, config.cltFuelCorr[0]);
 
 	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
-	assertEquals(1.5, config.cltFuelCorr[0]);
+	ASSERT_FLOAT_EQ(1.5, config.cltFuelCorr[0]);
 
 	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
-	assertEquals(1.4, config.cltFuelCorr[0]);
+	ASSERT_FLOAT_EQ(1.4, config.cltFuelCorr[0]);
 
 }

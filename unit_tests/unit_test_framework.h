@@ -12,6 +12,12 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
+#define EPS1D 0.1
+#define EPS2D 0.01
+#define EPS3D 0.001
+#define EPS4D 0.0001
+#define EPS5D 0.00001
+
 void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
