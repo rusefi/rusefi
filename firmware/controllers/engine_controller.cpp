@@ -747,7 +747,8 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 }
 
 // these two variables are here only to let us know how much RAM is available, also these
-// help to notice when RAM usage goes up
+// help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
+// linking process which is the way to raise the alarm
 static char UNUSED_RAM_SIZE[10200];
 static char UNUSED_CCM_SIZE[7100] CCM_OPTIONAL;
 
