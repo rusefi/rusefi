@@ -36,7 +36,7 @@ TEST(sensors, tps) {
 	engineConfiguration->tpsMax = 193;
 	engineConfiguration->tpsMin = 43;
 
-	assertEquals(49.3333, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_NEAR(49.3333, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 
 
 	engineConfiguration->tpsMax = 43;
