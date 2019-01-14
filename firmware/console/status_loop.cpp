@@ -911,6 +911,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
+	for (int i = 0; i < 8;i++) {
+		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
+	}
 
 	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
 	tsOutputChannels->knockEverIndicator = engine->knockEver;

@@ -71,6 +71,7 @@ cyclic_buffer<T, maxSize>::cyclic_buffer(int size) {
 template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::baseC(int size) {
 	currentIndex = 0;
+	memset(elements, 0, sizeof(elements));
 	setSize(size);
 }
 
