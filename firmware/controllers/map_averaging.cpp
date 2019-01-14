@@ -295,7 +295,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 
 		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
-		int structIndex = getRevolutionCounter() % 2;
+		int structIndex = engine->rpmCalculator.getRevolutionCounter() % 2;
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
 				startAveraging, NULL, &engine->rpmCalculator);
