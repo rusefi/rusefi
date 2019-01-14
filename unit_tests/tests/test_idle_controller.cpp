@@ -25,17 +25,17 @@ TEST(idle, pid) {
 
 
 	assertEqualsM("getValue#10", 10, pid.getValue(14, 16, 0.1));
-	assertEquals(10, pid.getValue(14, 16, 1));
+	ASSERT_EQ(10, pid.getValue(14, 16, 1));
 
 	pid.updateFactors(29, 0, 0);
-	assertEquals(10, pid.getValue(14, 16, 1));
-//	assertEquals(68, pid.getIntegration());
+	ASSERT_EQ(10, pid.getValue(14, 16, 1));
+//	ASSERT_EQ(68, pid.getIntegration());
 
-	assertEquals(10, pid.getValue(14, 16, 1));
-//	assertEquals(0, pid.getIntegration());
+	ASSERT_EQ(10, pid.getValue(14, 16, 1));
+//	ASSERT_EQ(0, pid.getIntegration());
 
-	assertEquals(10, pid.getValue(14, 16, 1));
-//	assertEquals(68, pid.getIntegration());
+	ASSERT_EQ(10, pid.getValue(14, 16, 1));
+//	ASSERT_EQ(68, pid.getIntegration());
 
 
 
