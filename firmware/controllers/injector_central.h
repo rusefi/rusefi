@@ -20,6 +20,6 @@ void milBench(void);
 void initInjectorCentral(Logging *sharedLogger);
 bool isRunningBenchTest(void);
 
-void runIoTest(int subsystem, int index);
+void runBenchTest(int subsystem, int index);
 
 #endif /* INJECTOR_CENTRAL_H_ */

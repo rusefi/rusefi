@@ -429,6 +429,9 @@ void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfigura
 	idleSolenoid.setFrequency(CONFIGB(idle).solenoidFrequency);
 }
 
+/**
+ * Idle test would activate the solenoid for three seconds
+ */
 void startIdleBench(void) {
 	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
 	scheduleMsg(logger, "idle valve bench test");

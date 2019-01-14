@@ -33,6 +33,7 @@
 #include "pin_repository.h"
 #include "efiGpio.h"
 #include "settings.h"
+#include "idle_thread.h"
 
 EXTERN_ENGINE
 ;
@@ -161,6 +162,9 @@ void fanBench(void) {
 	fanBenchExt("3000");
 }
 
+/**
+ * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
+ */
 void milBench(void) {
 	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, CONFIGB(malfunctionIndicatorPin));
 }
@@ -240,7 +244,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	}
 }
 
-void runIoTest(int subsystem, int index) {
+void runBenchTest(int subsystem, int index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
 	if (subsystem == 0x12) {
@@ -248,12 +252,16 @@ void runIoTest(int subsystem, int index) {
 	} else if (subsystem == 0x13) {
 		doRunFuel(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
+		// cmd_test_fuel_pump
 		fuelPumpBench();
 	} else if (subsystem == 0x15) {
 		fanBench();
 	} else if (subsystem == 0x16) {
+		// cmd_test_check_engine_light
 		milBench();
 	} else if (subsystem == 0x17) {
+		// cmd_test_idle_valve
+		startIdleBench();
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);
