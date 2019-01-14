@@ -122,7 +122,7 @@ private:
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
 	TriggerStateWithRunningStatistics();
-	float instantRpm;
+	float instantRpm = 0;
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
@@ -134,7 +134,7 @@ public:
 	/**
 	 * Stores last non-zero instant RPM value to fix early instability
 	 */
-	float prevInstantRpmValue;
+	float prevInstantRpmValue = 0;
 	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
