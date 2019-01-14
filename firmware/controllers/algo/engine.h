@@ -396,6 +396,9 @@ public:
 	// timestamp of most recent time RPM hard limit was triggered
 	efitime_t rpmHardLimitTimestamp;
 
+	// todo: should be a field on some other class, not Engine?
+	bool isInitializingTrigger = false;
+
 	/**
 	 * This flag indicated a big enough problem that engine control would be
 	 * prohibited if this flag is set to true.
