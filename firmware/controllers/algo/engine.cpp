@@ -23,6 +23,7 @@
 #include "settings.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
+#include "fsio_impl.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
@@ -84,8 +85,37 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-
 }
+
+static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	bool newValue;
+	if (engineConfiguration->isCylinderCleanupEnabled) {
+		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
+	} else {
+		newValue = false;
+	}
+	if (newValue != engine->isCylinderCleanupMode) {
+		engine->isCylinderCleanupMode = newValue;
+		scheduleMsg(&engineLogger, "isCylinderCleanupMode %s", boolToString(newValue));
+	}
+#endif
+}
+
+void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	watchdog();
+	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	checkShutdown();
+
+#if EFI_FSIO || defined(__DOXYGEN__)
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE && EFI_FSIO */
+
+	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	slowCallBackWasInvoked = TRUE;
+}
+
 
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
