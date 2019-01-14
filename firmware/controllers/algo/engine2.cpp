@@ -120,6 +120,9 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (!engine->slowCallBackWasInvoked) {
+		warning(CUSTOM_ERR_6696, "Slow not invoked yet");
+	}
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		crankingTime = nowNt;

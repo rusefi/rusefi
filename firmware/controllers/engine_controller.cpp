@@ -291,7 +291,6 @@ static void invokePerSecond(void) {
 
 }
 
-
 static void periodicSlowCallback(Engine *engine) {
 	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -339,11 +338,12 @@ static void periodicSlowCallback(Engine *engine) {
 
 	cylinderCleanupControl(engine);
 
+	engine->slowCallBackWasInvoked = TRUE;
 	scheduleNextSlowInvocation();
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	scheduleNextSlowInvocation();
+	periodicSlowCallback(engine);
 	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 

@@ -109,7 +109,7 @@ GTEST_API_ int main(int argc, char **argv) {
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests
-	//::testing::GTEST_FLAG(filter) = "hip*";
+	//::testing::GTEST_FLAG(filter) = "*testFasterEngineSpinningUp*";
 	return RUN_ALL_TESTS();
 }
 
