@@ -47,7 +47,7 @@ static void testPidAutoZigZagStable() {
 	at.SetLookbackSec(5);
 	at.SetControlType(PID_AutoTune::ZIEGLER_NICHOLS_PI);
 	at.sampleTime = 0; // not used in math only used to filter values out
-	assertEqualsM("nLookBack", 20, at.nLookBack);
+	ASSERT_EQ( 20,  at.nLookBack) << "nLookBack";
 
 
 	at.outputStart = 50;
@@ -60,7 +60,7 @@ static void testPidAutoZigZagStable() {
 	at.Runtime(&logging);
 //	assertEqualsLM("min@1", 0, at.absMin);
 //	assertEqualsLM("max@1", 10, at.absMax);
-	assertEqualsM("peakCount", 0, at.peakCount);
+	ASSERT_EQ( 0,  at.peakCount) << "peakCount";
 	int startMockMs = mockTimeMs;
 
 	for (; mockTimeMs <= 10 + startMockMs; mockTimeMs++) {
@@ -71,29 +71,29 @@ static void testPidAutoZigZagStable() {
 	}
 //	assertEqualsLM("min@11", 0, at.absMin);
 //	assertEqualsLM("max@11", 100, at.absMax);
-	assertEqualsM("peakCount", 0, at.peakCount);
+	ASSERT_EQ( 0,  at.peakCount) << "peakCount";
 
 	for (; mockTimeMs <= 21; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
 		assertFalseM("should be false#2", result);
 	}
-	assertEqualsM("peakCount@21", 0, at.peakCount);
+	ASSERT_EQ( 0,  at.peakCount) << "peakCount@21";
 
 	for (; mockTimeMs <= 41; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
 		assertFalseM("should be false#2_2", result);
 	}
-	assertEqualsM("peakCount@41", 2, at.peakCount);
-//	assertEqualsM("Pu@41", 1, cisnan(at.Pu));
+	ASSERT_EQ( 2,  at.peakCount) << "peakCount@41";
+//	ASSERT_EQ( 1,  cisnan(at.Pu)) << "Pu@41";
 
 	for (; mockTimeMs <= 60; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
 		assertFalseM("should be false#4", result);
 	}
-	assertEqualsM("peakCount@60", 4, at.peakCount);
+	ASSERT_EQ( 4,  at.peakCount) << "peakCount@60";
 	//assertEqualsM("Pu@60", 0.02, at.Pu);
 
 //	zigZagOffset = 10;
@@ -107,11 +107,11 @@ static void testPidAutoZigZagStable() {
 
 	at.input = zigZagValue(mockTimeMs);
 	bool result = at.Runtime(&logging);
-	assertEqualsM("should be true", 1, result);
+	ASSERT_EQ( 1,  result) << "should be true";
 
 	assertEqualsM("testPidAutoZigZagStable::output", 0.0, at.output);
 
-	assertEqualsM("peakCount@80", 5, at.peakCount);
+	ASSERT_EQ( 5,  at.peakCount) << "peakCount@80";
 	assertEqualsM("ki", 27.7798, at.GetKi());
 	assertEqualsM("kd", 0.0, at.GetKd());
 

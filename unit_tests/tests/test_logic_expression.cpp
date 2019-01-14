@@ -193,7 +193,7 @@ TEST(misc, testLogicExpressions) {
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
 		assertTrueM("Not NULL expected", element != NULL);
 		LECalculator c;
-		assertEqualsM("that expression", 1, c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX));
+		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
 
 		ASSERT_EQ(12, c.currentCalculationLogPosition);
 		ASSERT_EQ(102, c.calcLogAction[0]);

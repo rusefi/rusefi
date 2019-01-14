@@ -30,7 +30,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// check if the engine has the right state
 	ASSERT_EQ(STOPPED, engine->rpmCalculator.getState());
 	// check RPM
-	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 0,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM=0";
 	// the queue should be empty, no trigger events yet
 	ASSERT_EQ(0, engine->executor.size()) << "plain#1";
 
@@ -43,7 +43,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// check if the mode is changed
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	// due to isFasterEngineSpinUp=true, we should have already detected RPM!
-	assertEqualsM("spinning-RPM#1", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 300,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "spinning-RPM#1";
 	// two simultaneous injections
 	ASSERT_EQ(4, engine->executor.size()) << "plain#2";
 	// test if they are simultaneous
@@ -65,13 +65,13 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// check if the mode is changed when fully synched
 	ASSERT_EQ(CRANKING, engine->rpmCalculator.getState());
 	// check RPM
-	assertEqualsM("RPM#2", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 300,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#2";
 	// test if they are simultaneous in cranking mode too
 	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// test if ignition mode is restored to ind.coils
 	ASSERT_EQ(IM_INDIVIDUAL_COILS, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
-	assertEqualsM("plain#2", 4, engine->executor.size());
+	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
 	eth.assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 97975);
 	eth.assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 100000);
@@ -86,11 +86,11 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// check if the mode is now changed to 'running' at higher RPM
 	ASSERT_EQ(RUNNING, engine->rpmCalculator.getState());
 	// check RPM
-	assertEqualsM("RPM#3", 1000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 1000,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#3";
 	// check if the injection mode is back to sequential now
 	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// 4 sequential injections for the full cycle
-	assertEqualsM("plain#3", 8, engine->executor.size());
+	ASSERT_EQ( 8,  engine->executor.size()) << "plain#3";
 
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!

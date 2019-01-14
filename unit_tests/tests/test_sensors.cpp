@@ -23,7 +23,7 @@ TEST(sensors, mapDecoding) {
 	ASSERT_FLOAT_EQ(31.244, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
 
 	s.type = MT_MPX4250;
-	assertEqualsM("MPX_4250 0 volts", 8, decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_EQ( 8,  decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX)) << "MPX_4250 0 volts";
 	ASSERT_FLOAT_EQ(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
 }
 

@@ -122,7 +122,7 @@ void EngineTestHelper::fireTriggerEvents2(int count, int durationMs) {
 
 void EngineTestHelper::clearQueue() {
 	engine.executor.executeAll(99999999); // this is needed to clear 'isScheduled' flag
-	assertEqualsM("queue size/0", 0, engine.executor.size());
+	ASSERT_EQ( 0,  engine.executor.size()) << "queue size/0";
 	engine.iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
 }
 

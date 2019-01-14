@@ -41,17 +41,17 @@ static void newTestToComfirmInterpolation() {
 
 	// let's start by testing corners
 	ASSERT_EQ(3, getValue(/*rpm*/200, 2));
-	assertEqualsM("low rpm high load", 4, getValue(/*rpm*/200, 3));
+	ASSERT_EQ( 4,  getValue(/*rpm*/200, 3)) << "low rpm high load";
 
 	ASSERT_EQ(10, getValue(/*rpm*/300, 2));
 	ASSERT_EQ(200, getValue(/*rpm*/300, 3));
 
 	// now testing middles of cell sides
 	assertEqualsM("low rpm middle", 3.5, getValue(/*rpm*/200, 2.5));
-	assertEqualsM("high rpm      ", 105, getValue(/*rpm*/300, 2.5));
+	ASSERT_EQ( 105,  getValue(/*rpm*/300, 2.5)) << "high rpm      ";
 
 	assertEqualsM("low load middle", 6.5, getValue(/*rpm*/250, 2));
-	assertEqualsM("               ", 102, getValue(/*rpm*/250, 3));
+	ASSERT_EQ( 102,  getValue(/*rpm*/250, 3)) << "               ";
 
 	// slowly go from middle side towards center
 	assertEqualsM("middle @ 2.1  ",16.05, getValue(/*rpm*/250, 2.1));
@@ -71,8 +71,8 @@ static void newTestToComfirmInterpolation() {
 	assertEqualsM("-820 @ 2.3  ",2.3, getValue(/*rpm*/-820, 2.3));
 
 	// Y above the range
-	assertEqualsM("310 @ 12.1  ", 330, getValue(/*rpm*/310, 12.1));
-	assertEqualsM("320 @ 12.3  ", 360, getValue(/*rpm*/320, 12.3));
+	ASSERT_EQ( 330,  getValue(/*rpm*/310, 12.1)) << "310 @ 12.1  ";
+	ASSERT_EQ( 360,  getValue(/*rpm*/320, 12.3)) << "320 @ 12.3  ";
 
 	// Y below the range
 	assertEqualsM("310 @ -12.1  ", 3.1, getValue(/*rpm*/310, -12.1));

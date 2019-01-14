@@ -21,10 +21,10 @@ TEST(idle, pid) {
 
 	Pid pid(&pidS);
 
-	assertEqualsM("getValue#90", 90, pid.getValue(14, 12, 0.1));
+	ASSERT_EQ( 90,  pid.getValue(14, 12, 0.1)) << "getValue#90";
 
 
-	assertEqualsM("getValue#10", 10, pid.getValue(14, 16, 0.1));
+	ASSERT_EQ( 10,  pid.getValue(14, 16, 0.1)) << "getValue#10";
 	ASSERT_EQ(10, pid.getValue(14, 16, 1));
 
 	pid.updateFactors(29, 0, 0);
@@ -49,16 +49,16 @@ TEST(idle, pid) {
 
 	pid.reset();
 
-	assertEqualsM("target=50, input=0", 50, pid.getValue(/*target*/50, /*input*/0));
-	assertEqualsM("target=50, input=0 iTerm", 0, pid.iTerm);
+	ASSERT_EQ( 50,  pid.getValue(/*target*/50, /*input*/0)) << "target=50, input=0";
+	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=0 iTerm";
 
-	assertEqualsM("target=50, input=70", 0, pid.getValue(/*target*/50, /*input*/70));
-	assertEqualsM("target=50, input=70 iTerm", 0, pid.iTerm);
+	ASSERT_EQ( 0,  pid.getValue(/*target*/50, /*input*/70)) << "target=50, input=70";
+	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm";
 
-	assertEqualsM("target=50, input=70 #2", 0, pid.getValue(/*target*/50, /*input*/70));
-	assertEqualsM("target=50, input=70 iTerm #2", 0, pid.iTerm);
+	ASSERT_EQ( 0,  pid.getValue(/*target*/50, /*input*/70)) << "target=50, input=70 #2";
+	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm #2";
 
-	assertEqualsM("target=50, input=50", 0, pid.getValue(/*target*/50, /*input*/50));
-	assertEqualsM("target=50, input=50 iTerm", 0, pid.iTerm);
+	ASSERT_EQ( 0,  pid.getValue(/*target*/50, /*input*/50)) << "target=50, input=50";
+	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=50 iTerm";
 
 }

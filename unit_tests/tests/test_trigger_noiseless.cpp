@@ -102,11 +102,11 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, -1, 0, 0, 0);
 
 	// should be no errors anyway
-	assertEqualsM("testNoiselessDecoderProcedure totalTriggerErrorCounter", 0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoderProcedure totalTriggerErrorCounter";
 	// check if we're imitating the 60-2 signal correctly
-	assertEqualsM("index #1", 0, eth.engine.triggerCentral.triggerState.getCurrentIndex());
+	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 	// check rpm (60secs / (1000us * 60teeth)) = 1000rpm
-	assertEqualsM("testNoiselessDecoder RPM", 1000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 1000,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "testNoiselessDecoder RPM";
 
 	// add noise1 - 1 spike in the middle of the 2nd rising pulse
 	fireNoisyCycle60_2(&eth, 2, 1000, 2, 10, 500, 1);
@@ -163,7 +163,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	// alas, this is a hard case even for noiseless decoder, and it fails...
 	// but still we're close to 33% signal-noise ratio threshold - not bad!
 	// so here's an error anyway!
-	assertEqualsM("testNoiselessDecoder noise#7_fail_test", 1, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoder noise#7_fail_test";
 
 }
 
@@ -183,7 +183,7 @@ TEST(big, testNoiselessDecoder) {
 	eth.applyTriggerShape();
 
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	assertEqualsM("testNoiselessDecoder RPM", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 0,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "testNoiselessDecoder RPM";
 
 	//printTriggerDebug = true;
 

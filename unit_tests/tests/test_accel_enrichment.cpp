@@ -23,18 +23,18 @@ TEST(big, testAccelEnrichment) {
 	engine->tpsAccelEnrichment.setLength(4);
 
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("maxDelta", 0, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 0,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta";
 	engine->tpsAccelEnrichment.onNewValue(10 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("maxDelta#1", 40, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 40,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta#1";
 	engine->tpsAccelEnrichment.onNewValue(30 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("maxDelta#2", 80, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 80,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta#2";
 
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("maxDelta#3", 80, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 80,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta#3";
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("maxDelta#4", 80, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 80,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta#4";
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("maxDelta#5", 0, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 0,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta#5";
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("maxDelta", 0, engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 0,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta";
 }
