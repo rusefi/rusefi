@@ -8,6 +8,4 @@
 #ifndef TEST_SPEED_DENSITY_H_
 #define TEST_SPEED_DENSITY_H_
 
-void testSpeedDensity(void);
-
 #endif /* TEST_SPEED_DENSITY_H_ */

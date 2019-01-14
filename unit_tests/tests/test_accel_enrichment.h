@@ -9,6 +9,4 @@
 #ifndef TEST_ACCEL_ENRICHMENT_H_
 #define TEST_ACCEL_ENRICHMENT_H_
 
-void testAccelEnrichment(void);
-
 #endif /* TEST_ACCEL_ENRICHMENT_H_ */

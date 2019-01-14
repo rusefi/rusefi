@@ -8,9 +8,8 @@
 #include "global.h"
 #include "engine_test_helper.h"
 #include "speed_density.h"
-#include "test_speed_density.h"
 
-void testSpeedDensity(void) {
+TEST(big, testSpeedDensity) {
 	printf("*************************************************** testSpeedDensity\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;

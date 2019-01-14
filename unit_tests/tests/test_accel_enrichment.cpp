@@ -8,11 +8,10 @@
 
 #include "global.h"
 #include "accel_enrichment.h"
-#include "test_accel_enrichment.h"
 #include "engine_configuration.h"
 #include "engine_test_helper.h"
 
-void testAccelEnrichment(void) {
+TEST(big, testAccelEnrichment) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);

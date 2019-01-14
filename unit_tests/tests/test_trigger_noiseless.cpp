@@ -167,7 +167,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 
 }
 
-void testNoiselessDecoder(void) {
+TEST(big, testNoiselessDecoder) {
 	printf("====================================================================================== testNoiselessDecoder\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
