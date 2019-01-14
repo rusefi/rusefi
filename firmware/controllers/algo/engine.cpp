@@ -108,7 +108,10 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	checkShutdown();
 
 #if EFI_FSIO || defined(__DOXYGEN__)
+// todo: enable this for unit tests
+#if ! EFI_UNIT_TEST
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 #endif /* EFI_PROD_CODE && EFI_FSIO */
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);

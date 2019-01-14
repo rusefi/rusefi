@@ -67,7 +67,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	testIatValue = 4.03646;
 
 	// this is needed to have valid CLT and IAT.
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+//todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
+	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
