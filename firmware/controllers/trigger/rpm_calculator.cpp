@@ -60,8 +60,9 @@ RpmCalculator::RpmCalculator() {
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceBootForUnitTest = 0;
 
+	// WAT? how come removing this from here breaks tests if same zero default value
+	// is defined in field definition?
 	lastRpmEventTimeNt = 0;
-	oneDegreeUs = NAN;
 }
 
 bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

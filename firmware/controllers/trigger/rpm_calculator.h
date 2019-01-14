@@ -131,7 +131,7 @@ public:
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
-	volatile efitime_t lastRpmEventTimeNt;
+	volatile efitime_t lastRpmEventTimeNt = 0;
 private:
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
