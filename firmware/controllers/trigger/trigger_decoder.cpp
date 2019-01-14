@@ -41,6 +41,7 @@ EXTERN_ENGINE
 ;
 
 static cyclic_buffer<int> errorDetection;
+// todo! make this NOT a global variable
 static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
 
 #if ! EFI_PROD_CODE || defined(__DOXYGEN__)
