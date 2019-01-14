@@ -24,8 +24,6 @@
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
-#include "test_startOfCrankingPrimingPulse.h"
-#include "test_fasterEngineSpinningUp.h"
 #include "test_util.h"
 #include "map_resize.h"
 #include "engine_math.h"
@@ -67,9 +65,6 @@ GTEST_API_ int main(int argc, char **argv) {
 	testPidAuto();
 
 	testLogicExpressions(); // fsio
-	testPlainCrankingWithoutAdvancedFeatures();
-	testStartOfCrankingPrimingPulse();
-	testFasterEngineSpinningUp();
 	testGpsParser();
 	testFuelMap();
 	testEngineMath();

@@ -5,12 +5,11 @@
  */
 
 #include "engine_math.h"
-#include "test_fasterEngineSpinningUp.h"
 #include "test_trigger_decoder.h"
 
 extern int timeNowUs;
 
-void testFasterEngineSpinningUp() {
+TEST(sensors, testFasterEngineSpinningUp) {
 	// this is just a reference unit test implementation
 	printf("*************************************************** testFasterEngineSpinningUp\r\n");
 

@@ -5,13 +5,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "test_startOfCrankingPrimingPulse.h"
 #include "test_trigger_decoder.h"
 
 extern int timeNowUs;
 extern EnginePins enginePins;
 
-void testPlainCrankingWithoutAdvancedFeatures() {
+TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	// this is just a reference unit test implementation
 	printf("*************************************************** testPlainCrankingWithoutAdvancedFeatures\r\n");
 
@@ -36,7 +35,7 @@ void testPlainCrankingWithoutAdvancedFeatures() {
 }
 
 
-void testStartOfCrankingPrimingPulse() {
+TEST(engine, testStartOfCrankingPrimingPulse) {
 	printf("*************************************************** testStartOfCrankingPrimingPulse\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
