@@ -80,7 +80,7 @@ void WaveReader::onFallEvent() {
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
 
-	int revolutionCounter = getRevolutionCounter();
+	int revolutionCounter = engine->rpmCalculator.getRevolutionCounter();
 
 	totalOnTimeAccumulatorUs += width;
 	if (currentRevolutionCounter != revolutionCounter) {
