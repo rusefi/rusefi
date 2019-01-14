@@ -21,7 +21,7 @@ static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER))
 static int pendingData = false;
 static int initialized = false;
 
-extern engine_configuration_s *engineConfiguration;
+EXTERN_ENGINE;
 
 void scAddData(float angle, float value) {
 #if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
