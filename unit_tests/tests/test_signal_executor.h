@@ -9,7 +9,5 @@
 #define TEST_SIGNAL_EXECUTOR_H_
 
 int getRevolutionCounter();
-void testSignalExecutor(void);
-void testPwmGenerator();
 
 #endif /* TEST_SIGNAL_EXECUTOR_H_ */

@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "test_fuel_map.h"
 #include "global.h"
 #include "engine_configuration.h"
 #include "fuel_math.h"
@@ -19,7 +18,7 @@
 
 extern float testMafValue;
 
-void testMafFuelMath(void) {
+TEST(misc, testMafFuelMath) {
 	printf("====================================================================================== testMafFuelMath\r\n");
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
@@ -33,7 +32,7 @@ void testMafFuelMath(void) {
 	assertEqualsM("fuelMs", 26.7099, fuelMs);
 }
 
-void testFuelMap(void) {
+TEST(misc, testFuelMap) {
 	printf("====================================================================================== testFuelMap\r\n");
 
 	printf("Setting up FORD_ASPIRE_1996\r\n");
@@ -161,7 +160,7 @@ static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	assertEqualsM("expecting 1", 1, s->wave.findInsertionAngle(63.747 / 720.0, s->getSize()));
 }
 
-void testAngleResolver(void) {
+TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver\r\n");
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
@@ -217,7 +216,7 @@ void testAngleResolver(void) {
 	confgiureFordAspireTriggerShape(&t);
 }
 
-void testPinHelper(void) {
+TEST(misc, testPinHelper) {
 	printf("*************************************************** testPinHelper\r\n");
 	assertEquals(0, getElectricalValue(0, OM_DEFAULT));
 	assertEquals(1, getElectricalValue(1, OM_DEFAULT));

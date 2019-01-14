@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "test_engine_math.h"
 #include "global.h"
 #include "engine_math.h"
 #include "engine_configuration.h"
@@ -15,7 +14,7 @@
 #include "maf.h"
 #include "advance_map.h"
 
-void testIgnitionPlanning(void) {
+TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
 	EngineTestHelper eth(FORD_ESCORT_GT);
 	EXPAND_EngineTestHelper;
@@ -26,7 +25,7 @@ void testIgnitionPlanning(void) {
 	assertEquals(IM_BATCH, engineConfiguration->injectionMode);
 }
 
-void testEngineMath(void) {
+TEST(misc, testEngineMath) {
 	printf("*************************************************** testEngineMath\r\n");
 
 	EngineTestHelper eth(FORD_ESCORT_GT);
@@ -59,7 +58,7 @@ void testEngineMath(void) {
 	assertEquals(65.5625f/*kg/h*/, engine->engineState.airFlow);
 }
 
-void testIgnitionMapGenerator(void) {
+TEST(misc, testIgnitionMapGenerator) {
 	printf("*************************************************** testIgnitionMapGenerator\r\n");
 
 	assertEquals(35, getTopAdvanceForBore(CS_OPEN, 98, 8, 101.6));
@@ -86,7 +85,7 @@ void testIgnitionMapGenerator(void) {
     assertEqualsM2("20@800", 14.2, getInitialAdvance(800, 20, 36), 0.2);
 }
 
-void testMafLookup(void) {
+TEST(misc, testMafLookup) {
 	printf("*************************************************** testMafLookup\r\n");
 
 	EngineTestHelper eth(FORD_ESCORT_GT);

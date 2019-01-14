@@ -6,7 +6,6 @@
  */
 
 #include "global.h"
-#include "test_pid_auto.h"
 #include "pid_auto_tune.h"
 #include "unit_test_framework.h"
 #include "cyclic_buffer.h"
@@ -214,7 +213,7 @@ TEST(pidAutoTune, delayLine) {
 	assertTrueM("should be true#5", result);
 }
 
-void testPidAuto() {
+TEST(misc, testPidAuto) {
 	printf("*************************************************** testPidAuto\r\n");
 
 	testPidAutoZigZagStable();

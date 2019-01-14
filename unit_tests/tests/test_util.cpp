@@ -7,7 +7,6 @@
 
 #include <string.h>
 
-#include "test_util.h"
 #include "cyclic_buffer.h"
 #include "global.h"
 #include "histogram.h"
@@ -184,7 +183,7 @@ static void testMalfunctionCentralRemoveFirstElement() {
 	assertEquals(secondElement, localCopy.error_codes[0]);
 }
 
-void testMalfunctionCentral(void) {
+TEST(misc, testMalfunctionCentral) {
 	testMalfunctionCentralRemoveNonExistent();
 	testMalfunctionCentralSameElementAgain();
 	testMalfunctionCentralRemoveFirstElement();
@@ -255,7 +254,7 @@ static loc_t GPSdata;
 
 static char nmeaMessage[1000];
 
-void testGpsParser(void) {
+TEST(misc, testGpsParser) {
 	print("******************************************* testGpsParser\r\n");
 
 	strcpy(nmeaMessage, "");
@@ -309,7 +308,7 @@ void testGpsParser(void) {
 // this buffer is needed because on Unix you would not be able to change static char constants
 static char buffer[300];
 
-void testConsoleLogic(void) {
+TEST(misc, testConsoleLogic) {
 	print("******************************************* testConsoleLogic\r\n");
 	resetConsoleActions();
 
@@ -377,7 +376,7 @@ void testConsoleLogic(void) {
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
 
-void testFLStack(void) {
+TEST(misc, testFLStack) {
 	print("******************************************* testFLStack\r\n");
 
 	FLStack<int, 4> stack;
@@ -409,7 +408,7 @@ void testFLStack(void) {
 
 static char buff[32];
 
-void testMisc(void) {
+TEST(misc, testMisc) {
 	print("******************************************* testMisc\r\n");
 	strcpy(buff, "  ab  ");
 	// we need a mutable array here
@@ -433,7 +432,7 @@ void testMisc(void) {
 //	assertEquals(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
 }
 
-void testMenuTree(void) {
+TEST(misc, testMenuTree) {
 	print("******************************************* testMenuTree\r\n");
 
 	MenuItem ROOT(NULL, NULL);

@@ -79,7 +79,7 @@ static void newTestToComfirmInterpolation() {
 	assertEqualsM("320 @ -12.3  ", 3.2, getValue(/*rpm*/320, -12.3));
 }
 
-void testInterpolate3d(void) {
+TEST(misc, testInterpolate3d) {
 	printf("*************************************************** testInterpolate3d\r\n");
 
 	printf("*** no interpolation here 1\r\n");
