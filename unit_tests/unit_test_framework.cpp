@@ -45,10 +45,6 @@ void assertEqualsM(const char *msg, float expected, float actual) {
 	assertEqualsM2(msg, expected, actual, 0.0001);
 }
 
-void assertEquals(float expected, float actual) {
-	assertEqualsM("", expected, actual);
-}
-
 void assertTrueM(const char *msg, float actual) {
 	assertEqualsM(msg, TRUE, actual);
 }

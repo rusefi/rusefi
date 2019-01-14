@@ -29,7 +29,7 @@
 
 TEST(util, crc) {
 	ASSERT_EQ(4, efiRound(4.4, 1));
-	assertEquals(1.2, efiRound(1.2345, 0.1));
+	ASSERT_FLOAT_EQ(1.2, efiRound(1.2345, 0.1));
 
 	print("*************************************** testCrc\r\n");
 

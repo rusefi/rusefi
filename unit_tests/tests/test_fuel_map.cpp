@@ -155,7 +155,7 @@ static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 
 	assertEqualsM("expecting 0", 0, s->wave.findAngleMatch(53.747 / 720.0, s->getSize()));
 	assertEqualsM("expecting not found", -1, s->wave.findAngleMatch(53 / 720.0, s->getSize()));
-	assertEquals(7, s->wave.findAngleMatch(588.045 / 720.0, s->getSize()));
+	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0, s->getSize()));
 
 	assertEqualsM("expecting 0", 0, s->wave.findInsertionAngle(23.747 / 720.0, s->getSize()));
 	assertEqualsM("expecting 1", 1, s->wave.findInsertionAngle(63.747 / 720.0, s->getSize()));
