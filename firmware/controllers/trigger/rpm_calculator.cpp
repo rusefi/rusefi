@@ -60,8 +60,7 @@ RpmCalculator::RpmCalculator() {
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceBootForUnitTest = 0;
 
-	// WAT? how come removing this from here breaks tests if same zero default value
-	// is defined in field definition?
+	// WAT? this was just assigned a non-zero value a few lines above? which one is right?
 	lastRpmEventTimeNt = 0;
 }
 
