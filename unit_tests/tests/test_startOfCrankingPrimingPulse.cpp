@@ -7,11 +7,7 @@
 
 #include "test_trigger_decoder.h"
 
-extern int timeNowUs;
-extern EnginePins enginePins;
-
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
-	// this is just a reference unit test implementation
 	printf("*************************************************** testPlainCrankingWithoutAdvancedFeatures\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -30,8 +26,8 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	// two simultaneous injections
 	assertEqualsM("plain#2", 4, engine->executor.size());
 
-	eth.assertEvent5(&engine->executor, "sim start", 0, (void*)startSimultaniousInjection, timeNowUs, 97975);
-	eth.assertEvent5(&engine->executor, "sim end", 1, (void*)endSimultaniousInjection, timeNowUs, 100000);
+	eth.assertEvent5(&engine->executor, "sim start", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 97975);
+	eth.assertEvent5(&engine->executor, "sim end", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 100000);
 }
 
 
