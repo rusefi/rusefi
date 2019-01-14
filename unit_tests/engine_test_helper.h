@@ -13,11 +13,16 @@
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
 
+class EngineTestHelperBase
+{
+public:
+	EngineTestHelperBase();
+};
 
 /**
  * Mock engine with trigger signal simulation infrastructure
  */
-class EngineTestHelper {
+class EngineTestHelper : public EngineTestHelperBase {
 public:
 	EngineTestHelper(engine_type_e engineType);
 	void applyTriggerShape();

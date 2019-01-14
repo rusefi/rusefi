@@ -23,11 +23,13 @@ extern float testCltValue;
 extern float testIatValue;
 extern engine_configuration_s activeConfiguration;
 
+EngineTestHelperBase::EngineTestHelperBase() { 
+	// todo: make this not a global variable, we need currentTimeProvider interface on engine
+	timeNowUs = 0; 
+}
+
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
 	unitTestWarningCodeState.clear();
-
-	// todo: make this not a global variable, we need currentTimeProvider interface on engine
-	timeNowUs = 0;
 
 	testMafValue = 0;
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));

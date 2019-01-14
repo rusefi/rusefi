@@ -603,7 +603,6 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(CUSTOM_ERR_ASSERT, getRemainingStack(chThdGetSelfX()) > 128, "findPos", -1);
 #endif
-	isInitializingTrigger = true;
 	errorDetection.clear();
 	efiAssert(CUSTOM_ERR_ASSERT, state != NULL, "NULL state", -1);
 
@@ -612,6 +611,8 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	if (shape->shapeDefinitionError) {
 		return 0;
 	}
+
+	isInitializingTrigger = true;
 
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
