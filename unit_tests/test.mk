@@ -9,6 +9,7 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	tests/test_ion.cpp \
 	tests/test_hip9011.cpp \
 	tests/test_cj125.cpp \
+	tests/test_cam_vtt_input.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_startOfCrankingPrimingPulse.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
