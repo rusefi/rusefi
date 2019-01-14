@@ -33,8 +33,8 @@ TEST(misc, testEngineMath) {
 
 	engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
-	assertEqualsM("600 RPM", 50, getOneDegreeTimeMs(600) * 180);
-	assertEqualsM("6000 RPM", 5, getOneDegreeTimeMs(6000) * 180);
+	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";
+	ASSERT_EQ( 5,  getOneDegreeTimeMs(6000) * 180) << "6000 RPM";
 
 	ASSERT_FLOAT_EQ(312.5, getTCharge(1000, 0, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
 	ASSERT_FLOAT_EQ(313.5833, getTCharge(1000, 50, 300, 350 PASS_ENGINE_PARAMETER_SUFFIX));
@@ -67,10 +67,10 @@ TEST(misc, testIgnitionMapGenerator) {
 	float rpmBin[16];
 	setRpmBin(rpmBin, 16, 800, 7000);
 	ASSERT_EQ(650, rpmBin[0]);
-	assertEqualsM("@1", 800, rpmBin[1]);
-	assertEqualsM("@2", 1100, rpmBin[2]);
-	assertEqualsM("rpm@3", 1400, rpmBin[3]);
-	assertEqualsM("rpm@14", 4700, rpmBin[14]);
+	ASSERT_EQ( 800,  rpmBin[1]) << "@1";
+	ASSERT_EQ( 1100,  rpmBin[2]) << "@2";
+	ASSERT_EQ( 1400,  rpmBin[3]) << "rpm@3";
+	ASSERT_EQ( 4700,  rpmBin[14]) << "rpm@14";
 	ASSERT_EQ(7000, rpmBin[15]);
 
 
@@ -98,7 +98,7 @@ TEST(misc, testMafLookup) {
 	assertEqualsM("@1", -33.7875, engine->mafDecodingLookup[1]);
 	assertEqualsM("@2", -33.0750, engine->mafDecodingLookup[2]);
 	assertEqualsM("@200", 313.8826, engine->mafDecodingLookup[200]);
-	assertEqualsM("@255", 738, engine->mafDecodingLookup[255]);
+	ASSERT_EQ( 738,  engine->mafDecodingLookup[255]) << "@255";
 }
 
 float mockMapValue = 0;

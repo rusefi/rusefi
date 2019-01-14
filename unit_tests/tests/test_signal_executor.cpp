@@ -51,15 +51,15 @@ static void testSignalExecutor2(void) {
 	eq.insertTask(&p1.s, 0, (schfunc_t) complexCallback, &p1);
 	eq.insertTask(&p2.s, 0, (schfunc_t) complexCallback, &p2);
 	eq.executeAll(complexTestNow);
-	assertEqualsM("callbackCounter #1", 2, callbackCounter);
+	ASSERT_EQ( 2,  callbackCounter) << "callbackCounter #1";
 	ASSERT_EQ(2, eq.size());
 
 	eq.executeAll(complexTestNow = 2);
-	assertEqualsM("callbackCounter #2", 3, callbackCounter);
+	ASSERT_EQ( 3,  callbackCounter) << "callbackCounter #2";
 	ASSERT_EQ(2, eq.size());
 
 	eq.executeAll(complexTestNow = 3);
-	assertEqualsM("callbackCounter #3", 4, callbackCounter);
+	ASSERT_EQ( 4,  callbackCounter) << "callbackCounter #3";
 	ASSERT_EQ(2, eq.size());
 
 }
@@ -115,10 +115,10 @@ TEST(misc, testSignalExecutor) {
 
 	callbackCounter = 0;
 	eq.executeAll(10);
-	assertEqualsM("callbackCounter/2", 2, callbackCounter);
+	ASSERT_EQ( 2,  callbackCounter) << "callbackCounter/2";
 	callbackCounter = 0;
 	eq.executeAll(11);
-	assertEqualsM("callbackCounter/1#1", 1, callbackCounter);
+	ASSERT_EQ( 1,  callbackCounter) << "callbackCounter/1#1";
 	eq.executeAll(100);
 	ASSERT_EQ(0, eq.size());
 
@@ -127,7 +127,7 @@ TEST(misc, testSignalExecutor) {
 	eq.insertTask(&s3, 10, callback, NULL);
 	callbackCounter = 0;
 	eq.executeAll(10);
-	assertEqualsM("callbackCounter/1#2", 1, callbackCounter);
+	ASSERT_EQ( 1,  callbackCounter) << "callbackCounter/1#2";
 	callbackCounter = 0;
 	eq.executeAll(11);
 	ASSERT_EQ(1, callbackCounter);
@@ -139,7 +139,7 @@ TEST(misc, testSignalExecutor) {
 	ASSERT_EQ(10, eq.getNextEventTime(0));
 
 	eq.executeAll(1);
-	assertEqualsM("callbacks not expected", 0, callbackCounter);
+	ASSERT_EQ( 0,  callbackCounter) << "callbacks not expected";
 
 	eq.executeAll(11);
 	ASSERT_EQ(1, callbackCounter);
