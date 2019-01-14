@@ -78,10 +78,9 @@ private:
 
 class Accelerometer {
 public:
-	Accelerometer();
-	float x; // G value
-	float y;
-	float z;
+	float x = 0; // G value
+	float y = 0;
+	float z = 0;
 };
 
 class SensorsState {
@@ -120,10 +119,10 @@ public:
 	FuelConsumptionState();
 	void addData(float durationMs);
 	void update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-	float perSecondConsumption;
-	float perMinuteConsumption;
-	float perSecondAccumulator;
-	float perMinuteAccumulator;
+	float perSecondConsumption = 0;
+	float perMinuteConsumption = 0;
+	float perSecondAccumulator = 0;
+	float perMinuteAccumulator = 0;
 	efitick_t accumulatedSecondPrevNt;
 	efitick_t accumulatedMinutePrevNt;
 };
@@ -156,24 +155,24 @@ public:
 
 	FuelConsumptionState fuelConsumption;
 
-	efitick_t crankingTime;
-	efitick_t timeSinceCranking;
+	efitick_t crankingTime = 0;
+	efitick_t timeSinceCranking = 0;
 
 	WarningCodeState warnings;
 
 	/**
 	 * speed-density logic, calculated air mass in grams
 	 */
-	float airMass;
+	float airMass = 0;
 	/**
 	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
 	 */
-	float airFlow;
+	float airFlow = 0;
 
-	float engineNoiseHipLevel;
+	float engineNoiseHipLevel = 0;
 
-	float auxValveStart;
-	float auxValveEnd;
+	float auxValveStart = 0;
+	float auxValveEnd = 0;
 
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
@@ -182,67 +181,68 @@ public:
 	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
 	 */
 	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
-	angle_t mapAveragingDuration;
+	angle_t mapAveragingDuration = 0;
 
 	// spark-related
-	floatms_t sparkDwell;
-	angle_t timingAdvance;
+	floatms_t sparkDwell = 0;
+	angle_t timingAdvance = 0;
 
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
 	 */
-	angle_t dwellAngle;
+	angle_t dwellAngle = NAN;
 
-	angle_t cltTimingCorrection;
+	angle_t cltTimingCorrection = 0;
 
 	// fuel-related;
-	float iatFuelCorrection;
-	float cltFuelCorrection;
-	float postCrankingFuelCorrection;
-	float fuelCutoffCorrection;
-	efitick_t coastingFuelCutStartTime;
+	float iatFuelCorrection = 0;
+	float cltFuelCorrection = 0;
+	float postCrankingFuelCorrection = 0;
+	float fuelCutoffCorrection = 0;
+	efitick_t coastingFuelCutStartTime = 0;
 	/**
 	 * injectorLag(VBatt)
 	 *
 	 * this value depends on a slow-changing VBatt value, so
 	 * we update it once in a while
 	 */
-	floatms_t injectorLag;
+	floatms_t injectorLag = 0;
 
 	/**
 	 * See useWarmupPidAfr
 	 */
 	Pid warmupAfrPid;
-	float warmupTargetAfr;
+	float warmupTargetAfr = 0;
 
-	float baroCorrection;
+	float baroCorrection = 0;
 
 	// speed density
 	// Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
-	float tCharge, tChargeK;
+	float tCharge = 0;
+	float tChargeK = 0;
 	efitick_t timeSinceLastTChargeK;
 
-	float currentVE;
-	float targetAFR;
+	float currentVE = 0;
+	float targetAFR = 0;
 
-	int vssEventCounter;
-	int totalLoggedBytes;
+	int vssEventCounter = 0;
+	int totalLoggedBytes = 0;
 
 
 	/**
 	 * pre-calculated value from simple fuel lookup
 	 */
-	floatms_t baseTableFuel;
+	floatms_t baseTableFuel = 0;
 	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
-	floatms_t baseFuel;
+	floatms_t baseFuel = 0;
 
 	/**
 	 * closed-loop fuel correction
 	 */
-	floatms_t fuelPidCorrection;
+	floatms_t fuelPidCorrection = 0;
 
 	/**
 	 * Total fuel with CLT, IAT and TPS acceleration corrections per cycle,
@@ -251,14 +251,14 @@ public:
 	 * @see baseFuel
 	 * @see actualLastInjection
 	 */
-	floatms_t runningFuel;
+	floatms_t runningFuel = 0;
 
 	/**
 	 * TPS acceleration: extra fuel amount
 	 */
-	floatms_t tpsAccelEnrich;
+	floatms_t tpsAccelEnrich = 0;
 
-	angle_t injectionOffset;
+	angle_t injectionOffset = 0;
 
 #if EFI_ENABLE_MOCK_ADC || defined(__DOXYGEN__)
 	MockAdcState mockAdcState;
