@@ -37,6 +37,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// check all events starting from now
 	int timeStartUs = eth.getTimeNowUs();
 	// advance 1 revolution
+	// because we have trivial TT_ONE trigger here synchronization would happen with just one rise front
 	eth.fireRise(200);
 
 	// check if the mode is changed
