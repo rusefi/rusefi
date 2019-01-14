@@ -45,30 +45,30 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static void testParsing(void) {
 	char buffer[64];
 
-	assertTrue(strEqualCaseInsensitive("hello", "HELlo"));
-	assertFalse(strEqualCaseInsensitive("hello", "HElo2"));
+	ASSERT_TRUE(strEqualCaseInsensitive("hello", "HELlo"));
+	ASSERT_FALSE(strEqualCaseInsensitive("hello", "HElo2"));
 
 	const char *ptr;
 	ptr = getNextToken("  hello  ", buffer, sizeof(buffer));
-	assertTrue(strEqual("hello", buffer));
+	ASSERT_TRUE(strEqual("hello", buffer));
 
 	ptr = getNextToken("hello", buffer, sizeof(buffer));
-	assertTrue(strEqual("hello", buffer));
+	ASSERT_TRUE(strEqual("hello", buffer));
 
 	ptr = getNextToken("  hello  world ", buffer, sizeof(buffer));
-	assertTrue(strEqual("hello", buffer));
+	ASSERT_TRUE(strEqual("hello", buffer));
 	ptr = getNextToken(ptr, buffer, sizeof(buffer));
-	assertTrue(strEqual("world", buffer));
+	ASSERT_TRUE(strEqual("world", buffer));
 
-	assertTrue(isNumeric("123"));
-	assertFalse(isNumeric("a123"));
+	ASSERT_TRUE(isNumeric("123"));
+	ASSERT_FALSE(isNumeric("a123"));
 
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 
 	LEElement *element;
 	element = pool.parseExpression("1 3 AND not");
-	assertTrue(element != NULL);
+	ASSERT_TRUE(element != NULL);
 
 	assertEquals(element->action, LE_NUMERIC_VALUE);
 	assertEquals(element->fValue, 1.0);
@@ -84,7 +84,7 @@ static void testParsing(void) {
 	assertEquals(element->action, LE_OPERATOR_NOT);
 
 	element = element->next;
-	assertTrue(element == NULL);
+	ASSERT_TRUE(element == NULL);
 }
 
 static void testExpression2(float selfValue, const char *line, float expected) {

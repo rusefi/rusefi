@@ -53,16 +53,8 @@ void assertTrueM(const char *msg, float actual) {
 	assertEqualsM(msg, TRUE, actual);
 }
 
-void assertTrue(float actual) {
-	assertTrueM("", actual);
-}
-
 void assertFalseM(const char *msg, float actual) {
 	assertEqualsM(msg, FALSE, actual);
-}
-
-void assertFalse(float actual) {
-	assertFalseM("", actual);
 }
 
 void chDbgAssert(int c, char *msg, void *arg) {
