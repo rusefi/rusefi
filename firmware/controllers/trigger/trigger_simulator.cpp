@@ -18,7 +18,7 @@ TriggerStimulatorHelper::TriggerStimulatorHelper() {
 }
 
 // this is not the only place where we have 'isUpEvent'. todo: reuse
-static bool isRisingEdge[6] = { false, true, false, true, false, true };
+static const bool isRisingEdge[6] = { false, true, false, true, false, true };
 
 // todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
 bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration) {

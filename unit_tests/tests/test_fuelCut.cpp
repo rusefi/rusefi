@@ -12,7 +12,6 @@
 extern int timeNowUs;
 
 TEST(fuelCut, coasting) {
-	// this is just a reference unit test implementation
 	printf("*************************************************** testCoastingFuelCut\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);

@@ -10,7 +10,6 @@
 extern int timeNowUs;
 
 TEST(sensors, testFasterEngineSpinningUp) {
-	// this is just a reference unit test implementation
 	printf("*************************************************** testFasterEngineSpinningUp\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
