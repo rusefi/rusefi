@@ -249,11 +249,6 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
-ThermistorMath::ThermistorMath() {
-	memset(&currentConfig, 0, sizeof(currentConfig));
-	s_h_a = s_h_b = s_h_c = 0;
-}
-
 void ThermistorMath::setConfig(thermistor_conf_s *config) {
 	bool isSameConfig = memcmp(config, &currentConfig, sizeof(currentConfig)) == 0;
 	if (isSameConfig) {

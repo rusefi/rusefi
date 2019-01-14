@@ -65,16 +65,15 @@ private:
 
 class ThermistorMath {
 public:
-	ThermistorMath();
 	void setConfig(thermistor_conf_s *config);
 	void prepareThermistorCurve(thermistor_conf_s *tc);
 	bool isLinearSensor();
 	float getKelvinTemperatureByResistance(float resistance);
-	float s_h_a;
-	float s_h_b;
-	float s_h_c;
+	float s_h_a = 0;
+	float s_h_b = 0;
+	float s_h_c = 0;
 private:
-	thermistor_conf_s currentConfig;
+	thermistor_conf_s currentConfig = {};
 };
 
 class Accelerometer {
