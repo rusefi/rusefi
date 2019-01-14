@@ -22,7 +22,7 @@ TEST(misc, testIgnitionPlanning) {
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("testIgnitionPlanning_AFR", 13.5, eth.engine.engineState.targetAFR);
 
-	assertEquals(IM_BATCH, engineConfiguration->injectionMode);
+	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
 }
 
 TEST(misc, testEngineMath) {
@@ -61,17 +61,17 @@ TEST(misc, testEngineMath) {
 TEST(misc, testIgnitionMapGenerator) {
 	printf("*************************************************** testIgnitionMapGenerator\r\n");
 
-	assertEquals(35, getTopAdvanceForBore(CS_OPEN, 98, 8, 101.6));
-	assertEquals(33, getTopAdvanceForBore(CS_OPEN, 98, 11, 101.6));
+	ASSERT_EQ(35, getTopAdvanceForBore(CS_OPEN, 98, 8, 101.6));
+	ASSERT_EQ(33, getTopAdvanceForBore(CS_OPEN, 98, 11, 101.6));
 
 	float rpmBin[16];
 	setRpmBin(rpmBin, 16, 800, 7000);
-	assertEquals(650, rpmBin[0]);
+	ASSERT_EQ(650, rpmBin[0]);
 	assertEqualsM("@1", 800, rpmBin[1]);
 	assertEqualsM("@2", 1100, rpmBin[2]);
 	assertEqualsM("rpm@3", 1400, rpmBin[3]);
 	assertEqualsM("rpm@14", 4700, rpmBin[14]);
-	assertEquals(7000, rpmBin[15]);
+	ASSERT_EQ(7000, rpmBin[15]);
 
 
     assertEquals(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));

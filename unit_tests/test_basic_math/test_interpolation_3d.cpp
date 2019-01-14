@@ -40,11 +40,11 @@ static void newTestToComfirmInterpolation() {
 
 
 	// let's start by testing corners
-	assertEquals(3, getValue(/*rpm*/200, 2));
+	ASSERT_EQ(3, getValue(/*rpm*/200, 2));
 	assertEqualsM("low rpm high load", 4, getValue(/*rpm*/200, 3));
 
-	assertEquals(10, getValue(/*rpm*/300, 2));
-	assertEquals(200, getValue(/*rpm*/300, 3));
+	ASSERT_EQ(10, getValue(/*rpm*/300, 2));
+	ASSERT_EQ(200, getValue(/*rpm*/300, 3));
 
 	// now testing middles of cell sides
 	assertEqualsM("low rpm middle", 3.5, getValue(/*rpm*/200, 2.5));
@@ -83,32 +83,32 @@ TEST(misc, testInterpolate3d) {
 	printf("*************************************************** testInterpolate3d\r\n");
 
 	printf("*** no interpolation here 1\r\n");
-	assertEquals(2, getValue(100, 2));
+	ASSERT_FLOAT_EQ(2, getValue(100, 2));
 
 	printf("*** no interpolation here 2\r\n");
-	assertEquals(5, getValue(200, 4));
+	ASSERT_FLOAT_EQ(5, getValue(200, 4));
 
 	printf("*** rpm interpolated value expected1\r\n");
-	assertEquals(2.5, getValue(150, 2));
+	ASSERT_FLOAT_EQ(2.5, getValue(150, 2));
 
 	printf("*** rpm interpolated value expected2\r\n");
-	assertEquals(102, getValue(250, 3));
+	ASSERT_FLOAT_EQ(102, getValue(250, 3));
 
 	printf("*** both rpm and maf interpolated value expected\r\n");
-	assertEquals(361, getValue(335.3, 3.551));
+	ASSERT_FLOAT_EQ(361, getValue(335.3, 3.551));
 
 	printf("*** both rpm and maf interpolated value expected 2\r\n");
-	assertEquals(203.6, getValue(410.01, 2.012));
+	ASSERT_FLOAT_EQ(203.6, getValue(410.01, 2.012));
 
 	printf("*** both rpm and maf interpolated value expected 3\r\n");
-	assertEquals(600, getValue(1000000, 1000));
+	ASSERT_FLOAT_EQ(600, getValue(1000000, 1000));
 
 	printf("*** both rpm and maf interpolated value expected 4\r\n");
 
-	assertEquals(4, getValue(410.01, -1));
+	ASSERT_FLOAT_EQ(4, getValue(410.01, -1));
 
 
-	assertEquals(1, getValue(-1, -1));
+	ASSERT_FLOAT_EQ(1, getValue(-1, -1));
 
 	newTestToComfirmInterpolation();
 
