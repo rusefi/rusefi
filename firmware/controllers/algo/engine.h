@@ -375,6 +375,7 @@ public:
 	bool isAlternatorControlEnabled;
 
 	bool isCltBroken;
+	bool slowCallBackWasInvoked = false;
 
 
 //	floatms_t callToPitEndTime;

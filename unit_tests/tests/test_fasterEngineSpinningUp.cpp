@@ -12,6 +12,8 @@ extern int timeNowUs;
 TEST(sensors, testFasterEngineSpinningUp) {
 	printf("*************************************************** testFasterEngineSpinningUp\r\n");
 
+	timeNowUs = 0;
+
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
 
