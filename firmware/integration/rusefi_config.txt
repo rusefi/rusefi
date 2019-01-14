@@ -819,7 +819,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfrBins;CLT-based target AFR for PID-based control;"C",        1,     0,   -100.0,    250.0,  2
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfr;;"AFR",      1,     0,      0.0,    20.0,   2
-	float warmupAfrThreshold;;"tempterature",        1,     0,    0, 200,     3
+	float warmupAfrThreshold;;"temperature",        1,     0,    0, 200,     3
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
