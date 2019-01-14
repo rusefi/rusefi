@@ -146,8 +146,10 @@ typedef struct {
 	int timeSeconds; // 224
 	float engineLoadDelta; // 228
 	float speedToRpmRatio; // 232
-	int warningCounter; // 236
-	int lastErrorCode; // 240
+	int16_t warningCounter; // 236
+	int16_t unused_238;
+	int16_t lastErrorCode; // 240
+	int16_t unused_242;
 	/**
 	 * Microcontroller own internal temperature, C
 	 */
@@ -169,7 +171,8 @@ typedef struct {
 	float injectionOffset; // 288
 	int16_t debugIntField4; // 292
 	int16_t debugIntField5; // 294
-	int unused3[15];
+	int16_t recentErrorCodes[8]; // 298
+	int unused3[11];
 	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
 
