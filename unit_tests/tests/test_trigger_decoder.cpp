@@ -785,7 +785,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 //	{
 //		scheduling_s *ev = engine->executor.getForUnitTest(9);
 //		ASSERT_EQ( 5,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4#2";
-//		assertTrueM("down 50", ev == &engineConfiguration->fuelActuators[2].signalPair[1].signalTimerDown);
+//		ASSERT_TRUE(ev == &engineConfiguration->fuelActuators[2].signalPair[1].signalTimerDown) << "down 50";
 //	}
 
 
@@ -1073,7 +1073,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	engine->executor.executeAll(timeNowUs + MS2US(17.5) + 1);
 	// injector does not go low too soon, that's a feature :)
-	assertTrueM("injector@2", enginePins.injectors[0].currentLogicValue);
+	ASSERT_TRUE(enginePins.injectors[0].currentLogicValue) << "injector@2";
 
 
 	eth.fireFall(20);

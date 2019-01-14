@@ -92,7 +92,7 @@ static void testExpression2(float selfValue, const char *line, float expected) {
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	LEElement * element = pool.parseExpression(line);
 	print("Parsing [%s]", line);
-	assertTrueM("Not NULL expected", element != NULL);
+	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
@@ -163,7 +163,7 @@ TEST(misc, testLogicExpressions) {
 	pool.reset();
 	LEElement *element;
 	element = pool.parseExpression("fan no_such_method");
-	assertTrueM("NULL expected", element == NULL);
+	ASSERT_TRUE(element == NULL) << "NULL expected";
 
 
 	/**
@@ -191,7 +191,7 @@ TEST(misc, testLogicExpressions) {
 		LEElement thepool[TEST_POOL_SIZE];
 		LEElementPool pool(thepool, TEST_POOL_SIZE);
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
-		assertTrueM("Not NULL expected", element != NULL);
+		ASSERT_TRUE(element != NULL) << "Not NULL expected";
 		LECalculator c;
 		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
 

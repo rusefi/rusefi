@@ -327,7 +327,7 @@ TEST(misc, testConsoleLogic) {
 	ASSERT_TRUE(strEqual("echo", unquote(buffer)));
 
 	strcpy(buffer, "\"echo\"");
-	assertTrueM("unquote quoted", strEqual("echo", unquote(buffer)));
+	ASSERT_TRUE(strEqual("echo", unquote(buffer))) << "unquote quoted";
 
 	char *ptr = validateSecureLine(UNKNOWN_COMMAND);
 	ASSERT_EQ(0, strcmp(UNKNOWN_COMMAND, ptr));
@@ -421,11 +421,11 @@ TEST(misc, testMisc) {
 	}
 	{
 		float v = atoff("nan");
-		assertTrueM("NaN atoff", cisnan(v));
+		ASSERT_TRUE(cisnan(v)) << "NaN atoff";
 	}
 	{
 		float v = atoff("N");
-		assertTrueM("NaN atoff", cisnan(v));
+		ASSERT_TRUE(cisnan(v)) << "NaN atoff";
 	}
 
 //	ASSERT_EQ(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
@@ -473,15 +473,15 @@ TEST(misc, testMenuTree) {
 	ASSERT_TRUE(tree.current == &miTopLevel4);
 
 	tree.enterSubMenu();
-	assertTrueM("still same", tree.current == &miTopLevel4); // no children in this one
+	ASSERT_TRUE(tree.current == &miTopLevel4) << "still same"; // no children in this one
 
 	tree.nextItem();
 	ASSERT_TRUE(tree.topVisible == &miTopLevel3);
-	assertTrueM("tl5", tree.current == &miTopLevel5);
+	ASSERT_TRUE(tree.current == &miTopLevel5) << "tl5";
 
 	tree.nextItem();
-	assertTrueM("tl1 t", tree.topVisible == &miTopLevel1);
-	assertTrueM("tl1 c", tree.current == &miTopLevel1);
+	ASSERT_TRUE(tree.topVisible == &miTopLevel1) << "tl1 t";
+	ASSERT_TRUE(tree.current == &miTopLevel1) << "tl1 c";
 
 	tree.nextItem();
 	tree.nextItem();
