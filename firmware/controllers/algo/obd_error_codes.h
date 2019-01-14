@@ -1704,7 +1704,6 @@ typedef enum {
 	CUSTOM_OBD_26 = 6026,
 	CUSTOM_UNEXPECTED_ENGINE_TYPE = 6027,
 	CUSTOM_INVALID_TPS_SETTING = 6028,
-	CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE = 6029,
 
 	CUSTOM_OBD_NAN_INJECTION = 6030,
 	CUSTOM_OBD_NEG_INJECTION = 6031,
@@ -1731,19 +1730,10 @@ typedef enum {
 	 * Should not happen
 	 */
 	CUSTOM_OBD_SKIPPED_SPARK = 6045,
-	/**
-	 * This is not engine miss detection - this is only internal scheduler state validation
-	 * Should not happen
-	 */
-	CUSTOM_OBD_SKIPPED_FUEL = 6046,
 	CUSTOM_OBD_6047 = 6047,
 	CUSTOM_OBD_PIN_CONFLICT = 6048,
 	CUSTOM_OBD_LOW_FREQUENCY = 6049,
 
-	/**
-	 * Commanded fuel exceeds your fuel injector flow
-	 */
-	CUSTOM_TOO_LONG_FUEL_INJECTION = 6050,
 	CUSTOM_OBD_ZERO_CYLINDER_COUNT = 6051,
 	CUSTOM_OBD_TS_PAGE_MISMATCH = 6052,
 	CUSTOM_OBD_TS_OUTPUT_MISMATCH = 6053,
@@ -1776,7 +1766,6 @@ typedef enum {
 	CUSTOM_OBD_78 = 6078,
 	CUSTOM_OBD_79 = 6079,
 
-	CUSTOM_OBD_TRIGGER_SHAPE = 6080,
 	CUSTOM_OBD_81 = 6081,
 	CUSTOM_OBD_82 = 6082,
 	CUSTOM_OBD_83 = 6083,
@@ -1820,7 +1809,6 @@ typedef enum {
 	CUSTOM_ERR_DWELL_DURATION = 6118,
 	CUSTOM_ERR_NO_SHAPE = 6119,
 
-	CUSTOM_ERR_TRIGGER_SYNC = 6120,
 	CUSTOM_ERR_SGTP_ARGUMENT = 6121,
 	CUSTOM_ERR_6122 = 6122,
 	CUSTOM_ERR_6123 = 6123,
@@ -1851,10 +1839,6 @@ typedef enum {
 	CUSTOM_ERR_SD_SEEK_FAILED = 6146,
 	CUSTOM_ERR_OUT_OF_ORDER = 6147,
 	CUSTOM_ERR_T2_CHARGE = 6148,
-	/**
-	 * This indicates an issue with coil control - pin was not high when we were trying to set it low.
-	 */
-	CUSTOM_OUT_OF_ORDER_COIL = 6149,
 
 	CUSTOM_ERR_ASSERT = 6500,
 	CUSTOM_ERR_ASSERT_VOID = 6501,
@@ -2073,6 +2057,24 @@ typedef enum {
 	CUSTOM_ERR_ARRAY_IS_FULL = 6698,
 	CUSTOM_ERR_ARRAY_REMOVE_ERROR = 6699,
 	CUSTOM_ERR_INVALID_INPUT_ICU_PIN = 6700,
+
+	CUSTOM_ERR_TRIGGER_SYNC = 9000,
+	CUSTOM_OBD_TRIGGER_SHAPE = 9001,
+	/**
+	 * This is not engine miss detection - this is only internal scheduler state validation
+	 * Should not happen
+	 */
+	CUSTOM_OBD_SKIPPED_FUEL = 9010,
+	CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE = 9011,
+	/**
+	 * This indicates an issue with coil control - pin was not high when we were trying to set it low.
+	 */
+	CUSTOM_OUT_OF_ORDER_COIL = 9012,
+	/**
+	 * Commanded fuel exceeds your fuel injector flow
+	 */
+	CUSTOM_TOO_LONG_FUEL_INJECTION = 9013,
+
 
 	// this is needed for proper enum size, this matters for malfunction_central
 	Internal_ForceMyEnumIntSize_cranking_obd_code = ENUM_32_BITS,
