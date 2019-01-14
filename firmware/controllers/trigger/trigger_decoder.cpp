@@ -126,8 +126,6 @@ int TriggerState::getTotalRevolutionCounter() {
 }
 
 TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() {
-	instantRpm = 0;
-	prevInstantRpmValue = 0;
 	// avoid ill-defined instant RPM when the data is not gathered yet
 	efitime_t nowNt = getTimeNowNt();
 	for (int i = 0; i < PWM_PHASE_MAX_COUNT; i++) {
