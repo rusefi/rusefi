@@ -86,6 +86,10 @@ public:
 	void findTriggerPosition(event_trigger_position_s *position,
 			angle_t angleOffset DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
 
+	/**
+	 * Simplest trigger shape does not require any synchronization - for example if there is only
+	 * one primary channel tooth each raising (or falling depedning on configuration) front would synchronize
+	 */
 	bool isSynchronizationNeeded;
 	/**
 	 * this flag tells us if we should ignore events on second input channel
@@ -101,7 +105,7 @@ public:
 	 * this variable is incremented after each trigger shape redefinition
 	 * See also
 	 */
-	int version;
+	int version = 0;
 
 	/**
 	 * duty cycle for each individual trigger channel
