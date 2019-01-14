@@ -70,7 +70,7 @@ static void orderCallback(void *a) {
 	long value = (long)a;
 
 	printf("value=%d prevValue=%d\r\n", value, prevValue);
-	assertTrueM("orderCallback", value > prevValue);
+	ASSERT_TRUE(value > prevValue) << "orderCallback";
 
 	prevValue = value;
 }

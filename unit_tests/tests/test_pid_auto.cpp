@@ -151,7 +151,7 @@ static void testPidAutoZigZagGrowingOsc() {
 
 	at.input = zigZagValue(mockTimeMs);
 	bool result = at.Runtime(&logging);
-	assertTrueM("should be true#2", result);
+	ASSERT_TRUE(result) << "should be true#2";
 	assertEqualsM("FAiled", FAILED, at.state);
 
 	assertEqualsM("output Growing", 0.0, at.output);
@@ -210,7 +210,7 @@ TEST(pidAutoTune, delayLine) {
 
 	if (result)
 		printf("*** Converged! Got result: P=%f I=%f D=%f\r\n", at.GetKp(), at.GetKi(), at.GetKd());
-	assertTrueM("should be true#5", result);
+	ASSERT_TRUE(result) << "should be true#5";
 }
 
 TEST(misc, testPidAuto) {
