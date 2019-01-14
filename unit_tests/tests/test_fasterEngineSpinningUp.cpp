@@ -43,7 +43,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// check if the mode is changed
 	assertEquals(SPINNING_UP, engine->rpmCalculator.getState());
 	// due to isFasterEngineSpinUp=true, we should have already detected RPM!
-	assertEqualsM("RPM#1", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	assertEqualsM("spinning-RPM#1", 300, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
 	assertEqualsM("plain#1", 4, engine->executor.size());
 	// test if they are simultaneous

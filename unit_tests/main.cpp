@@ -95,17 +95,12 @@ GTEST_API_ int main(int argc, char **argv) {
 
 	testPinHelper();
 
-	testAccelEnrichment();
-
-	testSpeedDensity();
-
 	testMenuTree();
 	testMafLookup();
 	testIgnitionMapGenerator();
 	testMafFuelMath();
 
 	testTriggerDecoder();
-
 
 
 	//	resizeMap();
