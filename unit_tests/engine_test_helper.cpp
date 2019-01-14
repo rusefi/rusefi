@@ -78,11 +78,17 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	resetTriggerConfigChangedForUnitTest();
 }
 
+/**
+ * mock a change of time and fire single RISE front event
+ */
 void EngineTestHelper::fireRise(int delayMs) {
 	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
 
+/**
+ * fire single RISE front event
+ */
 void EngineTestHelper::firePrimaryTriggerRise() {
 	board_configuration_s * boardConfiguration = &engine.engineConfigurationPtr->bc;
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
