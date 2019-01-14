@@ -70,18 +70,18 @@ static void testParsing(void) {
 	element = pool.parseExpression("1 3 AND not");
 	ASSERT_TRUE(element != NULL);
 
-	assertEquals(element->action, LE_NUMERIC_VALUE);
-	assertEquals(element->fValue, 1.0);
+	ASSERT_EQ(element->action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(element->fValue, 1.0);
 
 	element = element->next;
-	assertEquals(element->action, LE_NUMERIC_VALUE);
-	assertEquals(element->fValue, 3.0);
+	ASSERT_EQ(element->action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(element->fValue, 3.0);
 
 	element = element->next;
-	assertEquals(element->action, LE_OPERATOR_AND);
+	ASSERT_EQ(element->action, LE_OPERATOR_AND);
 
 	element = element->next;
-	assertEquals(element->action, LE_OPERATOR_NOT);
+	ASSERT_EQ(element->action, LE_OPERATOR_NOT);
 
 	element = element->next;
 	ASSERT_TRUE(element == NULL);
@@ -195,9 +195,9 @@ TEST(misc, testLogicExpressions) {
 		LECalculator c;
 		assertEqualsM("that expression", 1, c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX));
 
-		assertEquals(12, c.currentCalculationLogPosition);
-		assertEquals(102, c.calcLogAction[0]);
-		assertEquals(0, c.calcLogValue[0]);
+		ASSERT_EQ(12, c.currentCalculationLogPosition);
+		ASSERT_EQ(102, c.calcLogAction[0]);
+		ASSERT_EQ(0, c.calcLogValue[0]);
 	}
 
 	testExpression("coolant", 100);

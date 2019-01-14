@@ -182,7 +182,7 @@ TEST(big, testNoiselessDecoder) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.applyTriggerShape();
 
-	assertEquals(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	assertEqualsM("testNoiselessDecoder RPM", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	//printTriggerDebug = true;

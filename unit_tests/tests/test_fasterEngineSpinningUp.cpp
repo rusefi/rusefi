@@ -25,10 +25,10 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
 	// check if it's true
-	assertEquals(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
-	assertEquals(IM_INDIVIDUAL_COILS, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check if the engine has the right state
-	assertEquals(STOPPED, engine->rpmCalculator.getState());
+	ASSERT_EQ(STOPPED, engine->rpmCalculator.getState());
 	// check RPM
 	assertEqualsM("RPM=0", 0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// the queue should be empty, no trigger events yet
@@ -84,11 +84,11 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	eth.fireTriggerEventsWithDuration(60);
 
 	// check if the mode is now changed to 'running' at higher RPM
-	assertEquals(RUNNING, engine->rpmCalculator.getState());
+	ASSERT_EQ(RUNNING, engine->rpmCalculator.getState());
 	// check RPM
 	assertEqualsM("RPM#3", 1000, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check if the injection mode is back to sequential now
-	assertEquals(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// 4 sequential injections for the full cycle
 	assertEqualsM("plain#3", 8, engine->executor.size());
 
