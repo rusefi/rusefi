@@ -180,6 +180,7 @@
 173) 			At least some connector silkscreen 1A-3Z see viewtopic.php?f=4&t=507#p29006
 174)                    Consider adding the low cost current limiting circuit noted by Jerri Ellsworth at this video. https://www.youtube.com/watch?v=QZ0WXQWND-I
 175) RESOLVED IN R0.5.4 D12 to D23 on schematic are confusing. Aling these desinators to be more clear. 
+176)                    0805 options for VP selection on High Side VP +5/+12 selection
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
