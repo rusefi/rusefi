@@ -1126,7 +1126,7 @@ menuDialog = main
 		subMenu = monitoringSettings,		"rusEfi Console Settings"
 		subMenu	= std_separator
 	 	subMenu = connection,            	"Connection"
-		subMenu = ioTest,					"I-O Test"
+		subMenu = ioTest,					"Bench Test"
 		subMenu = allPins,					"Full pinout"
 
 [ControllerCommands]
@@ -2215,7 +2215,7 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		commandButton = "Stop Engine", cmd_stop_engine          
 		
 	; bench test	
-	dialog = ioTest, "I-O Test", border
+	dialog = ioTest, "Bench Test", border
 		panel = testSpark,		West
 		panel = testInjectors,	Center
 		panel = testMisc,		East
