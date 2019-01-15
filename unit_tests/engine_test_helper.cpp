@@ -153,7 +153,7 @@ void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, 
 }
 
 scheduling_s * EngineTestHelper::assertEvent5(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX) {
-	assertTrueM(msg, executor->size() > index);
+	EXPECT_TRUE(executor->size() > index) << msg;
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
 	assertEqualsM(msg, momentX, event->momentX - start);
