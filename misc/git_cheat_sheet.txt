@@ -17,6 +17,9 @@ New remote branch:
 git checkout -b BRANCHNAME
 git push -u origin BRANCHNAME
 
+git checkout -b 2019.01.14_release_1.19.1
+git push -u origin 2019.01.14_release_1.19.1
+
 
 =========================================
 Download submodules:
