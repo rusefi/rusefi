@@ -18,11 +18,11 @@
 #define EPS4D 0.0001
 #define EPS5D 0.00001
 
+// todo: migrate to googletest, use EXPECT_* and ASSERT_*
 void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
 void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS);
-void assertTrueM(const char *msg, float actual);
 
 #endif /* UNIT_TEST_FRAMEWORK_H_ */
