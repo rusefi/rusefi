@@ -70,17 +70,17 @@ static void testDodgeNeonDecoder(void) {
 
 	TriggerState state;
 
-	assertFalseM("1 shaft_is_synchronized", state.shaft_is_synchronized);
+	ASSERT_FALSE(state.shaft_is_synchronized) << "1 shaft_is_synchronized";
 
 //	int r = 0;
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
-//	assertFalseM("2 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
+//	ASSERT_FALSE(state.shaft_is_synchronized) << "2 shaft_is_synchronized"; // still no synchronization
 
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	assertFalseM("3 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
+//	ASSERT_FALSE(state.shaft_is_synchronized) << "3 shaft_is_synchronized"; // still no synchronization
 //
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
-//	assertFalseM("4 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
+//	ASSERT_FALSE(state.shaft_is_synchronized) << "4 shaft_is_synchronized"; // still no synchronization
 //
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
 //	ASSERT_FALSE(state.shaft_is_synchronized); // still no synchronization
@@ -122,10 +122,10 @@ TEST(misc, testSomethingWeird) {
 	TriggerState *sta = &state_;
 
 
-	assertFalseM("shaft_is_synchronized", sta->shaft_is_synchronized);
+	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
 	sta->decodeTriggerEvent(SHAFT_PRIMARY_FALLING, r PASS_ENGINE_PARAMETER_SUFFIX);
-	assertFalseM("shaft_is_synchronized", sta->shaft_is_synchronized); // still no synchronization
+	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
 	sta->decodeTriggerEvent(SHAFT_PRIMARY_RISING, ++r PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
@@ -226,7 +226,7 @@ void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointInde
 
 	TriggerShape *t = &ENGINE(triggerCentral.triggerShape);
 
-	assertFalseM("isError", t->shapeDefinitionError);
+	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
 
@@ -1045,7 +1045,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.executeActions();
 
 	// injector #1 is low before the test
-	assertFalseM("injector@0", enginePins.injectors[0].currentLogicValue);
+	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@0";
 
 	eth.firePrimaryTriggerRise();
 
@@ -1069,7 +1069,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	engine->executor.executeAll(timeNowUs + 1);
 	// injector goes high...
-	assertFalseM("injector@1", enginePins.injectors[0].currentLogicValue);
+	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@1";
 
 	engine->executor.executeAll(timeNowUs + MS2US(17.5) + 1);
 	// injector does not go low too soon, that's a feature :)
@@ -1089,7 +1089,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	engine->executor.executeAll(timeNowUs + MS2US(10) + 1);
 	// end of combined injection
-	assertFalseM("injector@3", enginePins.injectors[0].currentLogicValue);
+	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@3";
 
 
 	eth.moveTimeForwardUs(MS2US(20));
