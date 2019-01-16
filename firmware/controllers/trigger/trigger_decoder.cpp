@@ -40,6 +40,10 @@
 EXTERN_ENGINE
 ;
 
+// todo: this should become a field on some class
+// no reason to make this a field on TriggerState since we have two instances of that one
+// and only one needs this data structure. we probably need a virtual method of .addError() and
+// only TriggerStateWithRunningStatistics would have the field?
 static cyclic_buffer<int> errorDetection;
 
 #if ! EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -52,10 +56,6 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 static Logging * logger;
-
-efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
-// the boolean flag is a performance optimization so that complex comparison is avoided if no error
-static bool someSortOfTriggerError = false;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -249,6 +249,8 @@ void TriggerState::reset() {
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
+	lastDecodingErrorTime = US2NT(-10000000LL);
+	someSortOfTriggerError = false;
 
 	memset(toothDurations, 0, sizeof(toothDurations));
 	curSignal = SHAFT_PRIMARY_FALLING;

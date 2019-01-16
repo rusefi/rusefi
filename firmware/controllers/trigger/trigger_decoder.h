@@ -74,6 +74,10 @@ public:
 	 */
 	bool shaft_is_synchronized;
 
+	efitick_t lastDecodingErrorTime;
+	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
+	bool someSortOfTriggerError;
+
 	/**
 	 * current duration at index zero and previous durations are following
 	 */

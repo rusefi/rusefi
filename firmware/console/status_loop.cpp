@@ -594,10 +594,8 @@ static void setBlinkingPeriod(int value) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
-extern efitick_t lastDecodingErrorTime;
-
 static bool isTriggerErrorNow() {
-	bool justHadError = (getTimeNowNt() - lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
+	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
 	return justHadError || isTriggerDecoderError();
 }
 
