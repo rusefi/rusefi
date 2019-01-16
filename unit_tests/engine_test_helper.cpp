@@ -181,3 +181,37 @@ void EngineTestHelper::applyTriggerShape() {
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
+
+void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	EXPECT_EQ(expectedRpm, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << msg;
+}
+
+void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode) {
+	Engine *engine = &eth->engine;
+	EXPAND_Engine
+
+	timeNowUs = 0;
+	eth->clearQueue();
+
+	ASSERT_EQ(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
+	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
+	engineConfiguration->specs.cylindersCount = 4;
+	// a bit of flexibility - the mode may be changed by some tests
+	engineConfiguration->injectionMode = injMode;
+	// set cranking mode (it's used by getCurrentInjectionMode())
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+
+	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
+	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
+	// this is needed to update injectorLag
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
+	ASSERT_EQ( 0,  readIfTriggerConfigChangedForUnitTest()) << "trigger #1";
+
+	engineConfiguration->trigger.type = TT_ONE;
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_EQ( 1,  readIfTriggerConfigChangedForUnitTest()) << "trigger #2";
+
+	eth->applyTriggerShape();
+}

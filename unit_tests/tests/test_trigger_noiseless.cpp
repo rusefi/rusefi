@@ -5,7 +5,7 @@
  */
 
 #include "global.h"
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "allsensors.h"

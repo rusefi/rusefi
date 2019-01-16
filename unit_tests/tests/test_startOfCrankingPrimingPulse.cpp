@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	printf("*************************************************** testPlainCrankingWithoutAdvancedFeatures\r\n");

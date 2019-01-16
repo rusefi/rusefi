@@ -14,13 +14,12 @@
 
 #include "engine_configuration.h"
 
-#include "test_idle_controller.h"
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
 #include "map_resize.h"
 #include "engine_math.h"
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 #include "gtest/gtest.h"
 
 typedef int32_t         msg_t;

@@ -5,7 +5,7 @@
  */
 
 #include "engine_math.h"
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 #include "event_queue.h"
 #include "tps.h"
 
