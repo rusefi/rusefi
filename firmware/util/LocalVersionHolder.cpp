@@ -18,9 +18,9 @@ int LocalVersionHolder::getVersion() {
 	return localVersion;
 }
 
-bool LocalVersionHolder::isOld(int global) {
-	if (global > localVersion) {
-		localVersion = global;
+bool LocalVersionHolder::isOld(int globalVersion) {
+	if (globalVersion > localVersion) {
+		localVersion = globalVersion;
 		return true;
 	}
 	return false;

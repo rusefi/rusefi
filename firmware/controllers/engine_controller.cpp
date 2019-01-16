@@ -308,7 +308,7 @@ static void periodicSlowCallback(Engine *engine) {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (versionForConfigurationListeners.isOld(getGlobalConfigurationVersion())) {
+	if (versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
 		updateAccelParameters();
 		engine->engineState.warmupAfrPid.reset();
 	}

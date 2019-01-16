@@ -118,7 +118,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
-				getGlobalConfigurationVersion(), currentTimeMillis());
+				engine->getGlobalConfigurationVersion(), currentTimeMillis());
 
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;

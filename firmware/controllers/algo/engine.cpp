@@ -35,6 +35,9 @@ static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
 
+extern int globalConfigurationVersion;
+
+
 EXTERN_ENGINE
 ;
 
@@ -164,6 +167,10 @@ Engine::Engine(persistent_config_s *config) {
 bool Engine::needToStopEngine(efitick_t nowNt) {
 	return stopEngineRequestTimeNt != 0 &&
 			nowNt - stopEngineRequestTimeNt	< 3 * US2NT(US_PER_SECOND_LL);
+}
+
+int Engine::getGlobalConfigurationVersion(void) const {
+	return globalConfigurationVersion;
 }
 
 void Engine::reset() {

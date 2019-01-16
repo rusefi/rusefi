@@ -21,9 +21,9 @@ public:
 	 * Calling this method changes the internal state of the class - each consumer interested in tracking
 	 * changes should have it's own instance of this class
 	 *
-	 * @return true if getGlobalConfigurationVersion() has changed since last time we've invoked this method
+	 * @return true if 'globalVersion' has changed since last time we've invoked this method
 	 */
-	bool isOld(int currentVersion);
+	bool isOld(int globalVersion);
 	int getVersion();
 
 private:
