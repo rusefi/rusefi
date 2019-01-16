@@ -30,7 +30,7 @@ public:
 	/**
 	 * initializes pin & registers it in pin repository
 	 */
-	void initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
 	/**
 	 * same as above, with DEFAULT_OUTPUT mode
 	 */
@@ -58,10 +58,10 @@ public:
 	 */
 private:
 	// todo: inline this method?
-	void setDefaultPinState(pin_output_mode_e *defaultState);
+	void setDefaultPinState(const pin_output_mode_e *defaultState);
 
 	// 4 byte pointer is a bit of a memory waste here
-	pin_output_mode_e *modePtr;
+	const pin_output_mode_e *modePtr;
 };
 
 
