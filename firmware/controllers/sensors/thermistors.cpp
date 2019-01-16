@@ -47,7 +47,7 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 	return r2 * Vin / (r1 + r2);
 }
 
-float ThermistorMath::getKelvinTemperatureByResistance(float resistance) {
+float ThermistorMath::getKelvinTemperatureByResistance(float resistance) const {
 	if (resistance <= 0) {
 		//warning("Invalid resistance in getKelvinTemperature=", resistance);
 		return 0.0f;
