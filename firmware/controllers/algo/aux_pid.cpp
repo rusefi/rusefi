@@ -64,7 +64,7 @@ static msg_t auxPidThread(int param) {
 		while (true) {
 			auxPid.sleep();
 
-			if (parametersVersion.isOld(getGlobalConfigurationVersion())) {
+			if (parametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
 				pidReset();
 			}
 

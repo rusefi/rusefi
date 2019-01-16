@@ -206,7 +206,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), engineConfiguration->fuelAlgorithm);
 
 
-	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
+	scheduleMsg(&logger, "configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 //		print("line %d (%.2f): ", k, engineConfiguration->fuelKeyBins[k]);

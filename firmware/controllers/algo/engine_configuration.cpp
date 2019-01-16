@@ -136,7 +136,11 @@ static fuel_table_t alphaNfuel = {
 		{/*15 engineLoad=100.00*/ /*0 800.0*/xxxxx, /*1 1213.0*/xxxxx, /*2 1626.0*/xxxxx, /*3 2040.0*/xxxxx, /*4 2453.0*/xxxxx, /*5 2866.0*/xxxxx, /*6 3280.0*/xxxxx, /*7 3693.0*/xxxxx, /*8 4106.0*/xxxxx, /*9 4520.0*/xxxxx, /*10 4933.0*/xxxxx, /*11 5346.0*/xxxxx, /*12 5760.0*/xxxxx, /*13 6173.0*/xxxxx, /*14 6586.0*/xxxxx, /*15 7000.0*/xxxxx}
 		};
 
-static volatile int globalConfigurationVersion = 0;
+/**
+ * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
+ * tuning software)
+ */
+volatile int globalConfigurationVersion = 0;
 
 /**
  * Current engine configuration. On firmware start we assign empty configuration, then
@@ -153,13 +157,6 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 }
 
-/**
- * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
- * tuning software)
- */
-int getGlobalConfigurationVersion(void) {
-	return globalConfigurationVersion;
-}
 
 extern LoggingWithStorage sharedLogger;
 

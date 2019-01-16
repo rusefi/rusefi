@@ -343,6 +343,8 @@ public:
 	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
 	IgnitionEventList ignitionEvents;
 
+	int getGlobalConfigurationVersion(void) const;
+
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
