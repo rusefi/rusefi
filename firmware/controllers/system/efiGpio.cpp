@@ -305,7 +305,7 @@ bool OutputPin::getLogicValue() {
 	return currentLogicValue;
 }
 
-void OutputPin::setDefaultPinState(pin_output_mode_e *outputMode) {
+void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	pin_output_mode_e mode = *outputMode;
 	assertOMode(mode);
 	this->modePtr = outputMode;
@@ -369,7 +369,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
