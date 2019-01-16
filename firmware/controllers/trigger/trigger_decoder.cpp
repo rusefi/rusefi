@@ -120,7 +120,7 @@ efitime_t TriggerState::getTotalEventCounter() {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
-int TriggerState::getTotalRevolutionCounter() {
+int TriggerState::getTotalRevolutionCounter() const {
 	return totalRevolutionCounter;
 }
 
@@ -263,7 +263,7 @@ void TriggerState::reset() {
 	isFirstEvent = true;
 }
 
-int TriggerState::getCurrentIndex() {
+int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
 
@@ -271,7 +271,7 @@ void TriggerState::incrementTotalEventCounter() {
 	totalRevolutionCounter++;
 }
 
-bool TriggerState::isEvenRevolution() {
+bool TriggerState::isEvenRevolution() const {
 	return totalRevolutionCounter & 1;
 }
 

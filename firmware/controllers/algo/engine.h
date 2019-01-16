@@ -39,7 +39,7 @@ public:
 	int fakeAdcValues[MOCK_ADC_SIZE];
 
 	void setMockVoltage(int hwChannel, float voltage);
-	int getMockAdcValue(int hwChannel);
+	int getMockAdcValue(int hwChannel) const;
 };
 
 #define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
@@ -67,8 +67,7 @@ class ThermistorMath {
 public:
 	void setConfig(thermistor_conf_s *config);
 	void prepareThermistorCurve(thermistor_conf_s *tc);
-	bool isLinearSensor();
-	float getKelvinTemperatureByResistance(float resistance);
+	float getKelvinTemperatureByResistance(float resistance) const;
 	float s_h_a = 0;
 	float s_h_b = 0;
 	float s_h_c = 0;
@@ -137,7 +136,7 @@ class WarningCodeState {
 public:
 	WarningCodeState();
 	void addWarningCode(obd_code_e code);
-	bool isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX);
+	bool isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) const;
 	void clear();
 	int warningCounter;
 	int lastErrorCode;

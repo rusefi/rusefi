@@ -50,12 +50,12 @@ public:
 	/**
 	 * current trigger processing index, between zero and #size
 	 */
-	int getCurrentIndex();
-	int getTotalRevolutionCounter();
+	int getCurrentIndex() const;
+	int getTotalRevolutionCounter() const;
 	/**
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
-	bool isEvenRevolution();
+	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter();
 	efitime_t getStartOfRevolutionIndex();

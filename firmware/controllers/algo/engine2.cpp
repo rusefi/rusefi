@@ -58,7 +58,7 @@ void WarningCodeState::addWarningCode(obd_code_e code) {
 /**
  * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
  */
-bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) const {
 	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
 	return absI(now - timeOfPreviousWarning) < period;
 }
@@ -229,7 +229,7 @@ SensorsState::SensorsState() {
 	reset();
 }
 
-int MockAdcState::getMockAdcValue(int hwChannel) {
+int MockAdcState::getMockAdcValue(int hwChannel) const {
 	return fakeAdcValues[hwChannel];
 }
 
