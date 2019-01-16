@@ -51,4 +51,8 @@ public:
 	persistent_config_s persistentConfig;
 };
 
+void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);
+
 #endif /* ENGINE_TEST_HELPER_H_ */

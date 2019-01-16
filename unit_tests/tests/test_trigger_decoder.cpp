@@ -6,7 +6,7 @@
  */
 
 #include "global.h"
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "allsensors.h"
@@ -218,7 +218,7 @@ TEST(misc, testFordAspire) {
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
+static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
 	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
 	EngineTestHelper eth(type);
@@ -579,41 +579,6 @@ static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int inject
 	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.eventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
-}
-
-void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	assertEqualsM(msg, expectedRpm, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
-}
-
-void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode) {
-	Engine *engine = &eth->engine;
-	EXPAND_Engine
-
-	timeNowUs = 0;
-	eth->clearQueue();
-
-	ASSERT_EQ(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
-	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
-	engineConfiguration->specs.cylindersCount = 4;
-	// a bit of flexibility - the mode may be changed by some tests
-	engineConfiguration->injectionMode = injMode;
-	// set cranking mode (it's used by getCurrentInjectionMode())
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-
-	setArrayValues(config->cltFuelCorrBins, CLT_CURVE_SIZE, 1);
-	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
-	// this is needed to update injectorLag
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
-	ASSERT_EQ( 0,  readIfTriggerConfigChangedForUnitTest()) << "trigger #1";
-
-	engineConfiguration->trigger.type = TT_ONE;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 1,  readIfTriggerConfigChangedForUnitTest()) << "trigger #2";
-
-	eth->applyTriggerShape();
-
 }
 
 static void setTestBug299(EngineTestHelper *eth) {
