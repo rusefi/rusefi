@@ -7,6 +7,7 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	test_basic_math/test_efilib.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
+	tests/test_on_demand_parameters.cpp \
 	tests/test_hip9011.cpp \
 	tests/test_cj125.cpp \
 	tests/test_cam_vtt_input.cpp \
