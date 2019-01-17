@@ -25,14 +25,14 @@ TEST(hip9011, lookup) {
 }
 
 TEST(hip9011, rpmLookup) {
-	HIP9011 instace(NULL);
+	HIP9011 instance(NULL);
 
-	instace.prepareHip9011RpmLookup(50);
+	instance.prepareHip9011RpmLookup(50);
 
-	EXPECT_EQ(31, instace.getIntegrationIndexByRpm(1));
-	EXPECT_EQ(21, instace.getIntegrationIndexByRpm(1100));
-	EXPECT_EQ(1, instace.getIntegrationIndexByRpm(6600));
-	EXPECT_EQ(0, instace.getIntegrationIndexByRpm(16600));
+	EXPECT_EQ(31, instance.getIntegrationIndexByRpm(1));
+	EXPECT_EQ(21, instance.getIntegrationIndexByRpm(1100));
+	EXPECT_EQ(1, instance.getIntegrationIndexByRpm(6600));
+	EXPECT_EQ(0, instance.getIntegrationIndexByRpm(16600));
 }
 
 TEST(hip9011, band) {
