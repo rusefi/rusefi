@@ -50,7 +50,7 @@ GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
 	//	resizeMap();
-	printf("Success 20190103\r\n");
+	printf("Success 20190117\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);
