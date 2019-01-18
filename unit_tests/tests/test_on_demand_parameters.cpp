@@ -2,19 +2,11 @@
  * @file test_on_demand_parameters.cpp
  *
  *  Created on: Jan 16, 2019
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include <unordered_map>
 #include "unit_test_framework.h"
-using namespace std;
-
-class TestParameters {
-public:
-	unordered_map<string, float> values;
-	TestParameters* put(string key, float value);
-	float get(string key) const;
-};
+#include "test_parameters.h"
 
 TestParameters* TestParameters::put(string key, float value) {
 	values[key] = value;

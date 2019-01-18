@@ -7,6 +7,7 @@
 #include "unit_test_framework.h"
 #include "hip9011_lookup.h"
 #include "HIP9011_logic.h"
+#include "test_parameters.h"
 using ::testing::_;
 
 TEST(hip9011, lookup) {
