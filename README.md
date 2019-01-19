@@ -100,6 +100,6 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 ## Cloning the repository
 
-Important nonte - we now use submodules:
+Important note - we now use submodules:
 
 `git submodule update --init`
