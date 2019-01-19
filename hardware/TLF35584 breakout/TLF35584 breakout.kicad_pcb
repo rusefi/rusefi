@@ -1,4 +1,4 @@
-(kicad_pcb (version 20171130) (host pcbnew "(5.0.2)-1")
+(kicad_pcb (version 4) (host pcbnew 4.0.7)
 
   (general
     (thickness 1.6)
@@ -1940,11 +1940,6 @@
       (net 1 GND))
     (pad 2 thru_hole circle (at 5.08 0 180) (size 3 3) (drill 1.52) (layers *.Cu *.Mask)
       (net 14 /12V_BAT))
-    (model ${KISYS3DMOD}/Terminal_Blocks.3dshapes/TerminalBlock_bornier-2_P5.08mm.wrl
-      (offset (xyz 2.539999961853027 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
-    )
     (model ${KISYS3DMOD}/TerminalBlock_bornier-2_P5.08mm.step
       (at (xyz 0 0 0))
       (scale (xyz 1 1 1))
