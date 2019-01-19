@@ -299,10 +299,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 		hipValueMax = maxF(engine->knockVolts, hipValueMax);
 		engine->knockLogic(engine->knockVolts);
 
-		float angleWindowWidth =
-		engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart;
-
-		instance.setAngleWindowWidth(angleWindowWidth);
+		instance.setAngleWindowWidth();
 
 		instance.handleValue(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 
@@ -385,7 +382,7 @@ void initHip9011(Logging *sharedLogger) {
 		return;
 
 
-	instance.setAngleWindowWidth(engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart);
+	instance.setAngleWindowWidth();
 
 #if EFI_PROD_CODE
 	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);

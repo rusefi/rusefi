@@ -78,7 +78,8 @@ int HIP9011::getIntegrationIndexByRpm(float rpm) {
 	return i == -1 ? INT_LOOKUP_SIZE - 1 : INT_LOOKUP_SIZE - i - 1;
 }
 
-void HIP9011::setAngleWindowWidth(float angleWindowWidth) {
+void HIP9011::setAngleWindowWidth(DEFINE_HIP_PARAMS) {
+	float angleWindowWidth = GET_CONFIG_VALUE(knockDetectionWindowEnd) - GET_CONFIG_VALUE(knockDetectionWindowStart);
 	// float '==' is totally appropriate here
 	if (this->angleWindowWidth == angleWindowWidth)
 		return; // exit if value has not change
