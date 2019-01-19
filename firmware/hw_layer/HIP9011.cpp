@@ -304,9 +304,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 
 		instance.setAngleWindowWidth(angleWindowWidth);
 
-		int prescalerIndex = engineConfiguration->hip9011PrescalerAndSDO;
-
-		instance.handleValue(GET_RPM(), prescalerIndex DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		instance.handleValue(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 
 	}
 }
