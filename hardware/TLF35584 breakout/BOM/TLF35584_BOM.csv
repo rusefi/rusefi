@@ -1,0 +1,26 @@
+﻿References,Quantity,Value,Footprint,Part Manufacturer,Part #,Specs
+"C2, C5, C7",3,22uF/16V,C_0805,Samsung Electro-Mechanics,CL21A226MOQNNNE,X5R/X7R low ESR 200 mohm max
+"C3, C4, C6, C8",4,4.7uF/16V,C_0805,Samsung Electro-Mechanics,CL21A475KOFNNNE,X5R/X7R low ESR 200 mohm max
+C1,1,100uF/50V,CP_Elec_8x10.5,Semtech,CS1H101M-CRF10,Aluminium electrolytic cap
+"R5, R6, R7, R8, R9, R10, R11, R12, R13, R14",10,1K,R_0805,,,
+"R15, R16",2,10K,R_0805,,,
+R1,1,100K,R_0805,,,
+R2,1,39K,R_0805,,,
+R4,1,0.03R,R_2512,FORT,CUM2512-24FR030,Current sense resistor (min 2W)
+L1,1,22uH/8A,L_Toroid_Vertical_L22.4mm_W10.2mm_P7.90mm_Vishay_TJ4,,,Radial inductor
+L2,1,4.7uH/3A,6.0X6.0X3.0,Bourns,SRN5040TA-4R7M,(Shun Xiang Nuo Elec - SMNR6028-4R7MT)
+"D1, D2",2,BZT52C18,D_SOD-123,Diodes Incorporated,BZT52C18-7-F,18V Zener diode
+D4,1,MBRD835LT4G,DPAK_Diode,ON Semicon,MBRD835LT4G,Schottky diode Min 8V/8A
+D3,1,SMBJ24A,D_SMB,(MDD) Jiangsu Yutai Elec,SMBJ24A,24V TVS diode
+U1,1,TLF35584QKVS2,LQFP-64-1EP_10x10mm_Pitch0.5mm,,,
+F1,1,5A Fuse,Fuseholder_blade,Keystone Electronics,3557-15,or unbranded ebay equivalent
+JP1,1,FRE,Pin_Header_Straight_1x02_Pitch2.54mm,,,
+JP2,1,MPS,Pin_Header_Straight_1x02_Pitch2.54mm,,,
+G***,1,rusEFI_logo_25mm,rusEFI_logo_25mm,,,
+Q1,1,DN2625K4,TO-252-2,Microchip,DN2625K4-G,N channel MOSFET (min 5A/200V)(STMicroelectronics - STD13NM60N)
+Q3,1,NTD20N06LT4G,TO-252-3_TabPin2,ON Semicon,NTD20N06LT4G,N channel MOSFET (min 8A/50V)
+Q2,1,NTD2955T4G,TO-252-3_TabPin2,ON Semicon,NTD2955T4G,P channel MOSFET (min 5A/25V)
+J3,1,POWER_IN,Pin_Header_Straight_1x02_Pitch2.54mm,,,
+J2,1,SIGNALS,Pin_Header_Straight_1x10_Pitch2.54mm,,,
+J4,1,POWER_OUT,Pin_Header_Straight_1x10_Pitch2.54mm,,,
+J1,1,POWER_IN,TerminalBlock_bornier-2_P5.08mm,,,or unbranded ebay equivalent

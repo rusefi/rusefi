@@ -38,9 +38,12 @@ L Device:CP1_Small C1
 U 1 1 5C4E0B9D
 P 6750 6750
 F 0 "C1" H 6760 6820 50  0000 L CNN
-F 1 "100uF 50V" H 6760 6670 50  0000 L CNN
+F 1 "100uF/50V" H 6760 6670 50  0000 L CNN
 F 2 "Capacitors_SMD:CP_Elec_8x10.5" H 6750 6750 50  0001 C CNN
 F 3 "" H 6750 6750 50  0001 C CNN
+F 4 "CS1H101M-CRF10" H 0   0   50  0001 C CNN "Part #"
+F 5 "Semtech" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "Aluminium electrolytic cap" H 0   0   50  0001 C CNN "Specs"
 	1    6750 6750
 	1    0    0    -1  
 $EndComp
@@ -54,6 +57,7 @@ F 2 "TL35584 breakout:Fuseholder_blade" V 2580 5850 50  0001 C CNN
 F 3 "" H 2650 5850 50  0001 C CNN
 F 4 "Keystone Electronics" V 2650 5850 50  0001 C CNN "Part Manufacturer"
 F 5 "3557-15" V 2650 5850 50  0001 C CNN "Part #"
+F 6 "or unbranded ebay equivalent" H 0   0   50  0001 C CNN "Specs"
 	1    2650 5850
 	0    1    1    0   
 $EndComp
@@ -65,7 +69,9 @@ F 0 "Q1" V 3743 5950 50  0000 C CNN
 F 1 "DN2625K4" V 3652 5950 50  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:TO-252-2" H 3600 6050 50  0001 C CNN
 F 3 "" H 3400 5950 50  0001 C CNN
-F 4 "Min 5A" H 0   0   50  0001 C CNN "Specs"
+F 4 "N channel MOSFET (min 5A/200V)(STMicroelectronics - STD13NM60N)" H 0   0   50  0001 C CNN "Specs"
+F 5 "DN2625K4-G" H 0   0   50  0001 C CNN "Part #"
+F 6 "Microchip" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    3400 5950
 	0    -1   -1   0   
 $EndComp
@@ -77,6 +83,9 @@ F 0 "D1" V 3354 6779 50  0000 L CNN
 F 1 "BZT52C18" V 3445 6779 50  0000 L CNN
 F 2 "Diodes_SMD:D_SOD-123" H 3400 6700 50  0001 C CNN
 F 3 "" H 3400 6700 50  0001 C CNN
+F 4 "BZT52C18-7-F" H 0   0   50  0001 C CNN "Part #"
+F 5 "Diodes Incorporated" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "18V Zener diode" H 0   0   50  0001 C CNN "Specs"
 	1    3400 6700
 	0    1    1    0   
 $EndComp
@@ -95,6 +104,9 @@ F 0 "D2" V 4354 6229 50  0000 L CNN
 F 1 "BZT52C18" V 4445 6229 50  0000 L CNN
 F 2 "Diodes_SMD:D_SOD-123" H 4400 6150 50  0001 C CNN
 F 3 "" H 4400 6150 50  0001 C CNN
+F 4 "BZT52C18-7-F" H 0   0   50  0001 C CNN "Part #"
+F 5 "Diodes Incorporated" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "18V Zener diode" H 0   0   50  0001 C CNN "Specs"
 	1    4400 6150
 	0    1    1    0   
 $EndComp
@@ -131,6 +143,9 @@ F 0 "D3" V 4954 6479 50  0000 L CNN
 F 1 "SMBJ24A" V 5045 6479 50  0000 L CNN
 F 2 "Diodes_SMD:D_SMB" H 5000 6400 50  0001 C CNN
 F 3 "" H 5000 6400 50  0001 C CNN
+F 4 "SMBJ24A" H 0   0   50  0001 C CNN "Part #"
+F 5 "(MDD) Jiangsu Yutai Elec" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "24V TVS diode" H 0   0   50  0001 C CNN "Specs"
 	1    5000 6400
 	0    1    1    0   
 $EndComp
@@ -150,12 +165,12 @@ L Device:L L1
 U 1 1 5C4E0BE8
 P 5750 5850
 F 0 "L1" V 5700 5850 50  0000 C CNN
-F 1 "22uH 8A" V 5825 5850 50  0000 C CNN
+F 1 "22uH/8A" V 5825 5850 50  0000 C CNN
 F 2 "Inductors_THT:L_Toroid_Vertical_L22.4mm_W10.2mm_P7.90mm_Vishay_TJ4" H 5750 5850 50  0001 C CNN
 F 3 "" H 5750 5850 50  0001 C CNN
-F 4 "SRN5040TA-4R7M" H 0   0   50  0001 C CNN "Part #"
-F 5 "Bourns" H 0   0   50  0001 C CNN "Part Manufacturer"
-F 6 "Min 8A" H 0   0   50  0001 C CNN "Specs"
+F 4 "" H 0   0   50  0001 C CNN "Part #"
+F 5 "" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "Radial inductor" H 0   0   50  0001 C CNN "Specs"
 	1    5750 5850
 	0    1    1    0   
 $EndComp
@@ -203,7 +218,9 @@ F 0 "R4" H 6200 6700 50  0000 L CNN
 F 1 "0.03R" H 6200 6800 50  0000 L CNN
 F 2 "Resistors_SMD:R_2512" V 6030 6750 50  0001 C CNN
 F 3 "" H 6100 6750 50  0001 C CNN
-F 4 "Min 8A" H 0   0   50  0001 C CNN "Specs"
+F 4 "Current sense resistor (min 2W)" H 0   0   50  0001 C CNN "Specs"
+F 5 "CUM2512-24FR030" H 0   0   50  0001 C CNN "Part #"
+F 6 "FORT" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    6100 6750
 	-1   0    0    1   
 $EndComp
@@ -259,10 +276,12 @@ L Device:C_Small C6
 U 1 1 5C4E0C30
 P 9500 7750
 F 0 "C6" H 9510 7820 50  0000 L CNN
-F 1 "4.7uF" H 9510 7670 50  0000 L CNN
+F 1 "4.7uF/16V" H 9510 7670 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 9500 7750 50  0001 C CNN
 F 3 "" H 9500 7750 50  0001 C CNN
-F 4 "X5R/X7R low ESR" H 0   0   50  0001 C CNN "Specs"
+F 4 "X5R/X7R low ESR 200 mohm max" H 0   0   50  0001 C CNN "Specs"
+F 5 "CL21A475KOFNNNE" H 0   0   50  0001 C CNN "Part #"
+F 6 "Samsung Electro-Mechanics" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    9500 7750
 	1    0    0    -1  
 $EndComp
@@ -310,10 +329,12 @@ L Device:C_Small C5
 U 1 1 5C4E0C52
 P 8650 3000
 F 0 "C5" H 8660 3070 50  0000 L CNN
-F 1 "22uF" H 8660 2920 50  0000 L CNN
+F 1 "22uF/16V" H 8660 2920 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 8650 3000 50  0001 C CNN
 F 3 "" H 8650 3000 50  0001 C CNN
-F 4 "X5R/X7R low ESR" H 0   0   50  0001 C CNN "Specs"
+F 4 "X5R/X7R low ESR 200 mohm max" H 0   0   50  0001 C CNN "Specs"
+F 5 "CL21A226MOQNNNE" H 0   0   50  0001 C CNN "Part #"
+F 6 "Samsung Electro-Mechanics" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    8650 3000
 	-1   0    0    1   
 $EndComp
@@ -341,10 +362,12 @@ L Device:C_Small C4
 U 1 1 5C4E0C63
 P 8150 3000
 F 0 "C4" H 8160 3070 50  0000 L CNN
-F 1 "4.7uF" H 8160 2920 50  0000 L CNN
+F 1 "4.7uF/16V" H 8160 2920 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 8150 3000 50  0001 C CNN
 F 3 "" H 8150 3000 50  0001 C CNN
-F 4 "X5R/X7R low ESR" H 0   0   50  0001 C CNN "Specs"
+F 4 "X5R/X7R low ESR 200 mohm max" H 0   0   50  0001 C CNN "Specs"
+F 5 "CL21A475KOFNNNE" H 0   0   50  0001 C CNN "Part #"
+F 6 "Samsung Electro-Mechanics" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    8150 3000
 	-1   0    0    1   
 $EndComp
@@ -372,10 +395,12 @@ L Device:C_Small C3
 U 1 1 5C4E0C74
 P 7650 3000
 F 0 "C3" H 7660 3070 50  0000 L CNN
-F 1 "4.7uF" H 7660 2920 50  0000 L CNN
+F 1 "4.7uF/16V" H 7660 2920 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 7650 3000 50  0001 C CNN
 F 3 "" H 7650 3000 50  0001 C CNN
-F 4 "X5R/X7R low ESR" H 0   0   50  0001 C CNN "Specs"
+F 4 "X5R/X7R low ESR 200 mohm max" H 0   0   50  0001 C CNN "Specs"
+F 5 "CL21A475KOFNNNE" H 0   0   50  0001 C CNN "Part #"
+F 6 "Samsung Electro-Mechanics" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    7650 3000
 	-1   0    0    1   
 $EndComp
@@ -611,10 +636,12 @@ L Device:C_Small C8
 U 1 1 5C4E0D20
 P 10200 3000
 F 0 "C8" H 10210 3070 50  0000 L CNN
-F 1 "4.7uF" H 10210 2920 50  0000 L CNN
+F 1 "4.7uF/16V" H 10210 2920 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 10200 3000 50  0001 C CNN
 F 3 "" H 10200 3000 50  0001 C CNN
-F 4 "X5R/X7R low ESR" H 0   0   50  0001 C CNN "Specs"
+F 4 "X5R/X7R low ESR 200 mohm max" H 0   0   50  0001 C CNN "Specs"
+F 5 "CL21A475KOFNNNE" H 0   0   50  0001 C CNN "Part #"
+F 6 "Samsung Electro-Mechanics" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    10200 3000
 	1    0    0    1   
 $EndComp
@@ -689,10 +716,12 @@ L Device:C_Small C2
 U 1 1 5C4E0D4B
 P 7400 4200
 F 0 "C2" H 7500 4200 50  0000 L CNN
-F 1 "22uF" H 7450 4300 50  0000 L CNN
+F 1 "22uF/16V" H 7450 4300 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 7400 4200 50  0001 C CNN
 F 3 "" H 7400 4200 50  0001 C CNN
-F 4 "X5R/X7R low ESR" H 0   0   50  0001 C CNN "Specs"
+F 4 "X5R/X7R low ESR 200 mohm max" H 0   0   50  0001 C CNN "Specs"
+F 5 "CL21A226MOQNNNE" H 0   0   50  0001 C CNN "Part #"
+F 6 "Samsung Electro-Mechanics" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    7400 4200
 	1    0    0    1   
 $EndComp
@@ -768,10 +797,12 @@ L Device:C_Small C7
 U 1 1 5C4E0D9D
 P 9800 3000
 F 0 "C7" H 9810 3070 50  0000 L CNN
-F 1 "22uF" H 9810 2920 50  0000 L CNN
+F 1 "22uF/16V" H 9810 2920 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 9800 3000 50  0001 C CNN
 F 3 "" H 9800 3000 50  0001 C CNN
-F 4 "X5R/X7R low ESR" H 0   0   50  0001 C CNN "Specs"
+F 4 "X5R/X7R low ESR 200 mohm max" H 0   0   50  0001 C CNN "Specs"
+F 5 "CL21A226MOQNNNE" H 0   0   50  0001 C CNN "Part #"
+F 6 "Samsung Electro-Mechanics" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    9800 3000
 	-1   0    0    1   
 $EndComp
@@ -804,10 +835,12 @@ L Device:L L2
 U 1 1 5C4E0DB1
 P 6750 4750
 F 0 "L2" V 6700 4750 50  0000 C CNN
-F 1 "4.7uH 3A" V 6825 4750 50  0000 C CNN
-F 2 "TL35584 breakout:L_Taiyo-Yuden_NR-50xx" H 6750 4750 50  0001 C CNN
+F 1 "4.7uH/3A" V 6825 4750 50  0000 C CNN
+F 2 "TL35584 breakout:6.0X6.0X3.0" H 6750 4750 50  0001 C CNN
 F 3 "" H 6750 4750 50  0001 C CNN
-F 4 "Min 3A" H 0   0   50  0001 C CNN "Specs"
+F 4 "(Shun Xiang Nuo Elec - SMNR6028-4R7MT)" H 0   0   50  0001 C CNN "Specs"
+F 5 "SRN5040TA-4R7M" H 0   0   50  0001 C CNN "Part #"
+F 6 "Bourns" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    6750 4750
 	-1   0    0    1   
 $EndComp
@@ -853,10 +886,12 @@ L Device:D_Schottky D4
 U 1 1 5C4E0DDB
 P 6450 5850
 F 0 "D4" H 6450 5634 50  0000 C CNN
-F 1 "STPS8L30" H 6450 5725 50  0000 C CNN
+F 1 "MBRD835LT4G" H 6450 5725 50  0000 C CNN
 F 2 "TL35584 breakout:DPAK_Diode" H 6450 5850 50  0001 C CNN
 F 3 "" H 6450 5850 50  0001 C CNN
-F 4 "Min 8V,Min 8A" H 6450 5850 50  0001 C CNN "Specs"
+F 4 "Schottky diode Min 8V/8A" H 6450 5850 50  0001 C CNN "Specs"
+F 5 "MBRD835LT4G" H 0   0   50  0001 C CNN "Part #"
+F 6 "ON Semicon" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    6450 5850
 	-1   0    0    1   
 $EndComp
@@ -870,19 +905,23 @@ F 0 "Q3" H 6406 6196 50  0000 L CNN
 F 1 "NTD20N06LT4G" H 6406 6105 50  0000 L CNN
 F 2 "TO_SOT_Packages_SMD:TO-252-3_TabPin2" H 6400 6250 50  0001 C CNN
 F 3 "" H 6200 6150 50  0001 C CNN
-F 4 "Min 8A" H 0   0   50  0001 C CNN "Specs"
+F 4 "N channel MOSFET (min 8A/50V)" H 0   0   50  0001 C CNN "Specs"
+F 5 "NTD20N06LT4G" H 0   0   50  0001 C CNN "Part #"
+F 6 "ON Semicon" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    6200 6150
 	-1   0    0    -1  
 $EndComp
 $Comp
-L Device:Q_PMOS_GSD Q2
+L Device:Q_PMOS_GDS Q2
 U 1 1 5C4E0DEA
 P 4050 5950
 F 0 "Q2" V 4393 5950 50  0000 C CNN
 F 1 "NTD2955T4G" V 4302 5950 50  0000 C CNN
 F 2 "TO_SOT_Packages_SMD:TO-252-3_TabPin2" H 4250 6050 50  0001 C CNN
-F 3 "~" H 4050 5950 50  0001 C CNN
-F 4 "Min 5A" H 0   0   50  0001 C CNN "Specs"
+F 3 "" H 4050 5950 50  0001 C CNN
+F 4 "P channel MOSFET (min 5A/25V)" H 0   0   50  0001 C CNN "Specs"
+F 5 "NTD2955T4G" H 0   0   50  0001 C CNN "Part #"
+F 6 "ON Semicon" H 0   0   50  0001 C CNN "Part Manufacturer"
 	1    4050 5950
 	0    -1   -1   0   
 $EndComp
@@ -963,7 +1002,7 @@ P 11450 5050
 F 0 "JP1" H 11450 5235 50  0000 C CNN
 F 1 "FRE" H 11450 5144 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 11450 5050 50  0001 C CNN
-F 3 "~" H 11450 5050 50  0001 C CNN
+F 3 "" H 11450 5050 50  0001 C CNN
 	1    11450 5050
 	1    0    0    -1  
 $EndComp
@@ -995,7 +1034,7 @@ P 14850 2050
 F 0 "J2" H 14956 2628 50  0000 C CNN
 F 1 "SIGNALS" H 14956 2537 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x10_Pitch2.54mm" H 14850 2050 50  0001 C CNN
-F 3 "~" H 14850 2050 50  0001 C CNN
+F 3 "" H 14850 2050 50  0001 C CNN
 	1    14850 2050
 	-1   0    0    -1  
 $EndComp
@@ -1084,7 +1123,7 @@ P 11450 5300
 F 0 "JP2" H 11450 5485 50  0000 C CNN
 F 1 "MPS" H 11450 5394 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 11450 5300 50  0001 C CNN
-F 3 "~" H 11450 5300 50  0001 C CNN
+F 3 "" H 11450 5300 50  0001 C CNN
 	1    11450 5300
 	1    0    0    -1  
 $EndComp
@@ -1103,7 +1142,8 @@ P 12350 1050
 F 0 "J1" H 12322 1023 50  0000 R CNN
 F 1 "POWER_IN" H 12322 932 50  0000 R CNN
 F 2 "TL35584 breakout:TerminalBlock_bornier-2_P5.08mm" H 12350 1050 50  0001 C CNN
-F 3 "~" H 12350 1050 50  0001 C CNN
+F 3 "" H 12350 1050 50  0001 C CNN
+F 4 "or unbranded ebay equivalent" H 0   0   50  0001 C CNN "Specs"
 	1    12350 1050
 	-1   0    0    -1  
 $EndComp
@@ -1114,7 +1154,7 @@ P 12350 700
 F 0 "J3" H 12322 673 50  0000 R CNN
 F 1 "POWER_IN" H 12322 582 50  0000 R CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 12350 700 50  0001 C CNN
-F 3 "~" H 12350 700 50  0001 C CNN
+F 3 "" H 12350 700 50  0001 C CNN
 	1    12350 700 
 	-1   0    0    -1  
 $EndComp
@@ -1143,7 +1183,7 @@ P 12350 2000
 F 0 "J4" H 12456 2578 50  0000 C CNN
 F 1 "POWER_OUT" H 12456 2487 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_1x10_Pitch2.54mm" H 12350 2000 50  0001 C CNN
-F 3 "~" H 12350 2000 50  0001 C CNN
+F 3 "" H 12350 2000 50  0001 C CNN
 	1    12350 2000
 	-1   0    0    -1  
 $EndComp
