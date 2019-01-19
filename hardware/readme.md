@@ -41,6 +41,12 @@ Above mentioned modules are known to work unless stated otherwise
 See [Hardware status forum thread](http://rusefi.com/forum/viewtopic.php?f=4&t=260)
 todo: move hardware status content into git
 
+# Important note
+rusEfi uses KICAD 4 only.
+We are unhappy with how each major version of KiCAD
+seems to break backwords compatibility in a major way and we plan to skip KiCAD version 5
+and evaluate KICAD version 6 once it's available.
+
 
 # Important note
 
