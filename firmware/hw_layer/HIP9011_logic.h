@@ -67,17 +67,17 @@ public:
 	/**
 	 * band index is only send to HIP chip on startup
 	 */
-	int currentBandIndex;
-	int currentGainIndex;
-	int correctResponsesCount;
-	int invalidHip9011ResponsesCount;
-	float angleWindowWidth;
+	int currentBandIndex = 0;
+	int currentGainIndex = -1;
+	int correctResponsesCount = 0;
+	int invalidHip9011ResponsesCount = 0;
+	float angleWindowWidth = - 1;
 
-	int currentIntergratorIndex;
-	bool needToInit;
-	int settingUpdateCount;
-	int totalKnockEventsCount;
-	int currentPrescaler;
+	int currentIntergratorIndex = -1;
+	bool needToInit = true;
+	int settingUpdateCount = 0;
+	int totalKnockEventsCount = 0;
+	int currentPrescaler = 0;
 	Hip9011HardwareInterface *hardware;
 	/**
 	 * Int/Hold pin is controlled from scheduler call-backs which are set according to current RPM

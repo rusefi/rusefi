@@ -299,8 +299,6 @@ void hipAdcCallback(adcsample_t adcValue) {
 		hipValueMax = maxF(engine->knockVolts, hipValueMax);
 		engine->knockLogic(engine->knockVolts);
 
-		instance.setAngleWindowWidth();
-
 		instance.handleValue(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 
 	}
