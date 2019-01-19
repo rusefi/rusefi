@@ -2,7 +2,7 @@
  * @file	engine.h
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 #ifndef H_ENGINE_H_
 #define H_ENGINE_H_
@@ -19,6 +19,17 @@
 #include "accel_enrichment.h"
 #include "trigger_central.h"
 
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+// PROD real firmware uses this implementation
+#include "SingleTimerExecutor.h"
+#endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
+#if EFI_SIGNAL_EXECUTOR_SLEEP
+#include "signal_executor_sleep.h"
+#endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
+#if EFI_UNIT_TEST
+#include "global_execution_queue.h"
+#endif /* EFI_UNIT_TEST */
+
 #define MOCK_ADC_SIZE 16
 
 class MockAdcState {
@@ -28,7 +39,7 @@ public:
 	int fakeAdcValues[MOCK_ADC_SIZE];
 
 	void setMockVoltage(int hwChannel, float voltage);
-	int getMockAdcValue(int hwChannel);
+	int getMockAdcValue(int hwChannel) const;
 };
 
 #define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
@@ -54,24 +65,21 @@ private:
 
 class ThermistorMath {
 public:
-	ThermistorMath();
 	void setConfig(thermistor_conf_s *config);
 	void prepareThermistorCurve(thermistor_conf_s *tc);
-	bool isLinearSensor();
-	float getKelvinTemperatureByResistance(float resistance);
-	float s_h_a;
-	float s_h_b;
-	float s_h_c;
+	float getKelvinTemperatureByResistance(float resistance) const;
+	float s_h_a = 0;
+	float s_h_b = 0;
+	float s_h_c = 0;
 private:
-	thermistor_conf_s currentConfig;
+	thermistor_conf_s currentConfig = {};
 };
 
 class Accelerometer {
 public:
-	Accelerometer();
-	float x; // G value
-	float y;
-	float z;
+	float x = 0; // G value
+	float y = 0;
+	float z = 0;
 };
 
 class SensorsState {
@@ -110,10 +118,10 @@ public:
 	FuelConsumptionState();
 	void addData(float durationMs);
 	void update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-	float perSecondConsumption;
-	float perMinuteConsumption;
-	float perSecondAccumulator;
-	float perMinuteAccumulator;
+	float perSecondConsumption = 0;
+	float perMinuteConsumption = 0;
+	float perSecondAccumulator = 0;
+	float perMinuteAccumulator = 0;
 	efitick_t accumulatedSecondPrevNt;
 	efitick_t accumulatedMinutePrevNt;
 };
@@ -124,6 +132,18 @@ public:
 	gear_e gearSelectorPosition;
 };
 
+class WarningCodeState {
+public:
+	WarningCodeState();
+	void addWarningCode(obd_code_e code);
+	bool isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) const;
+	void clear();
+	int warningCounter;
+	int lastErrorCode;
+	efitimesec_t timeOfPreviousWarning;
+	// todo: we need a way to post multiple recent warnings into TS
+	cyclic_buffer<int, 8> recentWarnings;
+};
 
 class EngineState {
 public:
@@ -134,26 +154,24 @@ public:
 
 	FuelConsumptionState fuelConsumption;
 
-	efitick_t crankingTime;
-	efitick_t timeSinceCranking;
+	efitick_t crankingTime = 0;
+	efitick_t timeSinceCranking = 0;
 
-	int warningCounter;
-	int lastErrorCode;
-	efitimesec_t timeOfPreviousWarning;
+	WarningCodeState warnings;
 
 	/**
 	 * speed-density logic, calculated air mass in grams
 	 */
-	float airMass;
+	float airMass = 0;
 	/**
 	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
 	 */
-	float airFlow;
+	float airFlow = 0;
 
-	float engineNoiseHipLevel;
+	float engineNoiseHipLevel = 0;
 
-	float auxValveStart;
-	float auxValveEnd;
+	float auxValveStart = 0;
+	float auxValveEnd = 0;
 
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
@@ -162,67 +180,68 @@ public:
 	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
 	 */
 	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
-	angle_t mapAveragingDuration;
+	angle_t mapAveragingDuration = 0;
 
 	// spark-related
-	floatms_t sparkDwell;
-	angle_t timingAdvance;
+	floatms_t sparkDwell = 0;
+	angle_t timingAdvance = 0;
 
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
 	 */
-	angle_t dwellAngle;
+	angle_t dwellAngle = NAN;
 
-	angle_t cltTimingCorrection;
+	angle_t cltTimingCorrection = 0;
 
 	// fuel-related;
-	float iatFuelCorrection;
-	float cltFuelCorrection;
-	float postCrankingFuelCorrection;
-	float fuelCutoffCorrection;
-	efitick_t coastingFuelCutStartTime;
+	float iatFuelCorrection = 0;
+	float cltFuelCorrection = 0;
+	float postCrankingFuelCorrection = 0;
+	float fuelCutoffCorrection = 0;
+	efitick_t coastingFuelCutStartTime = 0;
 	/**
 	 * injectorLag(VBatt)
 	 *
 	 * this value depends on a slow-changing VBatt value, so
 	 * we update it once in a while
 	 */
-	floatms_t injectorLag;
+	floatms_t injectorLag = 0;
 
 	/**
 	 * See useWarmupPidAfr
 	 */
 	Pid warmupAfrPid;
-	float warmupTargetAfr;
+	float warmupTargetAfr = 0;
 
-	float baroCorrection;
+	float baroCorrection = 0;
 
 	// speed density
 	// Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
-	float tCharge, tChargeK;
+	float tCharge = 0;
+	float tChargeK = 0;
 	efitick_t timeSinceLastTChargeK;
 
-	float currentVE;
-	float targetAFR;
+	float currentVE = 0;
+	float targetAFR = 0;
 
-	int vssEventCounter;
-	int totalLoggedBytes;
+	int vssEventCounter = 0;
+	int totalLoggedBytes = 0;
 
 
 	/**
 	 * pre-calculated value from simple fuel lookup
 	 */
-	floatms_t baseTableFuel;
+	floatms_t baseTableFuel = 0;
 	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
-	floatms_t baseFuel;
+	floatms_t baseFuel = 0;
 
 	/**
 	 * closed-loop fuel correction
 	 */
-	floatms_t fuelPidCorrection;
+	floatms_t fuelPidCorrection = 0;
 
 	/**
 	 * Total fuel with CLT, IAT and TPS acceleration corrections per cycle,
@@ -231,14 +250,14 @@ public:
 	 * @see baseFuel
 	 * @see actualLastInjection
 	 */
-	floatms_t runningFuel;
+	floatms_t runningFuel = 0;
 
 	/**
 	 * TPS acceleration: extra fuel amount
 	 */
-	floatms_t tpsAccelEnrich;
+	floatms_t tpsAccelEnrich = 0;
 
-	angle_t injectionOffset;
+	angle_t injectionOffset = 0;
 
 #if EFI_ENABLE_MOCK_ADC || defined(__DOXYGEN__)
 	MockAdcState mockAdcState;
@@ -304,6 +323,14 @@ public:
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 };
 
+/**
+ * I am not sure if this needs to be configurable.
+ *
+ * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
+ */
+// todo: not great location for these
+#define CLEANUP_MODE_TPS 90
+#define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
 class Engine {
 public:
@@ -316,6 +343,19 @@ public:
 	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
 	IgnitionEventList ignitionEvents;
 
+	int getGlobalConfigurationVersion(void) const;
+
+	// a pointer with interface type would make this code nicer but would carry extra runtime
+	// cost to resolve pointer, we use instances as a micro optimization
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+	SingleTimerExecutor executor;
+#endif
+#if EFI_SIGNAL_EXECUTOR_SLEEP
+	SleepExecutor executor;
+#endif
+#if EFI_UNIT_TEST
+	TestExecutor executor;
+#endif
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	FuelSchedule injectionEvents;
@@ -344,6 +384,7 @@ public:
 	bool isAlternatorControlEnabled;
 
 	bool isCltBroken;
+	bool slowCallBackWasInvoked = false;
 
 
 //	floatms_t callToPitEndTime;
@@ -355,6 +396,9 @@ public:
 
 	// timestamp of most recent time RPM hard limit was triggered
 	efitime_t rpmHardLimitTimestamp;
+
+	// todo: should be a field on some other class, not Engine?
+	bool isInitializingTrigger = false;
 
 	/**
 	 * This flag indicated a big enough problem that engine control would be
@@ -402,6 +446,7 @@ public:
 	floatms_t actualLastInjection;
 
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 

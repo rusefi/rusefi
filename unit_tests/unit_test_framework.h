@@ -9,21 +9,20 @@
 #define UNIT_TEST_FRAMEWORK_H_
 
 #include "engine.h"
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
+#define EPS1D 0.1
+#define EPS2D 0.01
+#define EPS3D 0.001
+#define EPS4D 0.0001
+#define EPS5D 0.00001
+
+// todo: migrate to googletest, use EXPECT_* and ASSERT_*
 void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
 void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS);
-void assertEquals(float expected, float actual);
-void assertTrue(float actual);
-void assertTrueM(const char *msg, float actual);
-void assertFalse(float actual);
-void assertFalseM(const char *msg, float actual);
-
-scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX);
-void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
-void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
-void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* UNIT_TEST_FRAMEWORK_H_ */

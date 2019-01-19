@@ -166,9 +166,9 @@ void EnginePins::startIgnitionPins(void) {
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		// todo: we need to check if mode has changed
-		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
-			output->initPin(output->name, boardConfiguration->ignitionPins[i],
-				&boardConfiguration->ignitionPinMode);
+		if (CONFIGB(ignitionPins)[i] != activeConfiguration.bc.ignitionPins[i]) {
+			output->initPin(output->name, CONFIGB(ignitionPins)[i],
+				&CONFIGB(ignitionPinMode));
 		}
 	}
 	// todo: we need to check if mode has changed
@@ -188,8 +188,8 @@ void EnginePins::startInjectionPins(void) {
 		// todo: we need to check if mode has changed
 		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
 
-			output->initPin(output->name, boardConfiguration->injectionPins[i],
-					&boardConfiguration->injectionPinMode);
+			output->initPin(output->name, CONFIGB(injectionPins)[i],
+					&CONFIGB(injectionPinMode));
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -305,7 +305,7 @@ bool OutputPin::getLogicValue() {
 	return currentLogicValue;
 }
 
-void OutputPin::setDefaultPinState(pin_output_mode_e *outputMode) {
+void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	pin_output_mode_e mode = *outputMode;
 	assertOMode(mode);
 	this->modePtr = outputMode;
@@ -322,17 +322,17 @@ void initOutputPins(void) {
 //	memset(&outputs, 0, sizeof(outputs));
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
-	enginePins.sdCsPin.initPin("spi CS5", boardConfiguration->sdCardCsPin);
+	enginePins.sdCsPin.initPin("spi CS5", CONFIGB(sdCardCsPin));
 #endif /* HAL_USE_SPI */
 
 	// todo: should we move this code closer to the fuel pump logic?
-	enginePins.fuelPumpRelay.initPin("fuel pump relay", boardConfiguration->fuelPumpPin, &boardConfiguration->fuelPumpPinMode);
+	enginePins.fuelPumpRelay.initPin("fuel pump relay", CONFIGB(fuelPumpPin), &CONFIGB(fuelPumpPinMode));
 
-	enginePins.mainRelay.initPin("main relay", boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
+	enginePins.mainRelay.initPin("main relay", CONFIGB(mainRelayPin), &CONFIGB(mainRelayPinMode));
 
-	enginePins.fanRelay.initPin("fan relay", boardConfiguration->fanPin, &boardConfiguration->fanPinMode);
-	enginePins.o2heater.initPin("o2 heater", boardConfiguration->o2heaterPin);
-	enginePins.acRelay.initPin("A/C relay", boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
+	enginePins.fanRelay.initPin("fan relay", CONFIGB(fanPin), &CONFIGB(fanPinMode));
+	enginePins.o2heater.initPin("o2 heater", CONFIGB(o2heaterPin));
+	enginePins.acRelay.initPin("A/C relay", CONFIGB(acRelayPin), &CONFIGB(acRelayPinMode));
 
 	// digit 1
 	/*
@@ -369,7 +369,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (brainPin == GPIO_UNASSIGNED)
 		return;

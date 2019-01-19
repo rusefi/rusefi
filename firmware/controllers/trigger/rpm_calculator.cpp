@@ -54,19 +54,14 @@ RpmCalculator::RpmCalculator() {
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
 	// todo: reuse assignRpmValue() method which needs PASS_ENGINE_PARAMETER_SUFFIX
-	// which we cannot provide inside this parameter-less consutructor. need a solution for this minor mess
-	previousRpmValue = rpmValue = 0;
-	oneDegreeUs = NAN;
-	state = STOPPED;
-	isSpinning = false;
+	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
-	revolutionCounterSinceStart = 0;
-	revolutionCounterSinceBootForUnitTest = revolutionCounterSinceBoot = 0;
+	revolutionCounterSinceBootForUnitTest = 0;
 
+	// WAT? this was just assigned a non-zero value a few lines above? which one is right?
 	lastRpmEventTimeNt = 0;
-	oneDegreeUs = NAN;
 }
 
 bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -202,7 +197,7 @@ void RpmCalculator::setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (!boardConfiguration->isFasterEngineSpinUpEnabled)
+	if (!CONFIGB(isFasterEngineSpinUpEnabled))
 		return;
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
 	if (isStopped(PASS_ENGINE_PARAMETER_SIGNATURE) && !isSpinning) {
@@ -375,12 +370,12 @@ void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
  * it takes the crankshaft to rotate to the specified angle.
  */
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
-		schfunc_t callback, void *param, RpmCalculator *calc) {
+		schfunc_t callback, void *param, RpmCalculator *calc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ANGLE_NAN, !cisnan(angle), "NaN angle?");
 	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
 	float delayUs = calc->oneDegreeUs * angle;
 	efiAssertVoid(CUSTOM_ERR_6635, !cisnan(delayUs), "NaN delay?");
-	scheduleForLater(timer, (int) delayUs, callback, param);
+	engine->executor.scheduleForLater(timer, (int) delayUs, callback, param);
 }
 #endif
 

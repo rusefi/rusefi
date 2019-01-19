@@ -143,9 +143,9 @@ static const fuel_table_t veDodgeNeon2003Table = {
 };
 
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
@@ -177,8 +177,8 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 
 	// set_whole_fuel_map 9
-	setWholeFuelMap(9 PASS_ENGINE_PARAMETER_SUFFIX);
-	setWholeTimingTable(12 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -252,7 +252,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->sensorChartFrequency = 7;
 }
 
-void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
@@ -299,7 +299,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	//setWholeFuelMap(12 PASS_ENGINE_PARAMETER_SUFFIX);
 //	copyFuelTable(alphaNfuel, config->fuelTable);
-	//setWholeTimingTable(12 PASS_ENGINE_PARAMETER_SUFFIX);
+	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 	copyTimingTable(fromODB, config->ignitionTable);
 
 	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float>(vBattTarget, config->fsioTable1);
@@ -321,12 +321,12 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	//engineConfiguration->fuelAlgorithm = LM_ALPHA_N; // I want to start with a simple Alpha-N
 
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 120, 1);
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
-	setFuelTablesLoadBin(20, 120 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
@@ -480,7 +480,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 //	boardConfiguration->tunerStudioSerialSpeed = 9600;
 	boardConfiguration->tunerStudioSerialSpeed = 19200;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 //temp	boardConfiguration->alternatorControlPin = GPIOD_5;
 	engineConfiguration->targetVBatt = 14.0;
@@ -502,11 +502,11 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 
-	engineConfiguration->suckedOffCoef = 0.05;
-	engineConfiguration->addedToWallCoef = 0.40;
+	engineConfiguration->wwaeTau = 1.0f;
+	engineConfiguration->wwaeBeta = 0.40f;
 
-	engineConfiguration->suckedOffCoef = 0;
-	engineConfiguration->addedToWallCoef = 0;
+	engineConfiguration->wwaeTau = 0;
+	engineConfiguration->wwaeBeta = 0;
 
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->manIdlePosition = 36; // set_idle_pwm 40
@@ -518,8 +518,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// end of setDodgeNeonNGCEngineConfiguration
 }
 
-void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setDodgeNeonNGCEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

@@ -61,7 +61,7 @@ static const ignition_table_t defaultIatTiming = {
 };
 
 bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return  boardConfiguration->enabledStep1Limiter && rpm >= engineConfiguration->step1rpm;
+	return  CONFIGB(enabledStep1Limiter) && rpm >= engineConfiguration->step1rpm;
 }
 
 /**
@@ -97,7 +97,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		advanceAngle = interpolateClamped(0.0f, idleAdvance, boardConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
+		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIGB(idlePidDeactivationTpsThreshold), advanceAngle, tps);
 	}
 
 	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
@@ -175,7 +175,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN4", 0);
 	angle -= engineConfiguration->ignitionOffset;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
-	fixAngle(angle, "getAdvance", CUSTOM_ERR_6548);
+	fixAngle(angle, "getAdvance", CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
 }
 
@@ -185,7 +185,7 @@ void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
 }
 
-void prepareTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
@@ -257,7 +257,7 @@ float getInitialAdvance(int rpm, float map, float advanceMax) {
 /**
  * this method builds a good-enough base timing advance map bases on a number of heuristics
  */
-void buildTimingMap(float advanceMax DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY &&
 			engineConfiguration->fuelAlgorithm != LM_MAP) {
 		warning(CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");

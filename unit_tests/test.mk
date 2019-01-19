@@ -4,10 +4,13 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	global_execution_queue.cpp \
 	test_basic_math/test_find_index.cpp \
 	test_basic_math/test_interpolation_3d.cpp \
+	test_basic_math/test_efilib.cpp \
 	tests/test_util.cpp \
 	tests/test_ion.cpp \
+	tests/test_on_demand_parameters.cpp \
 	tests/test_hip9011.cpp \
 	tests/test_cj125.cpp \
+	tests/test_cam_vtt_input.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_startOfCrankingPrimingPulse.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
@@ -15,6 +18,7 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	tests/test_trigger_decoder.cpp \
 	tests/test_trigger_noiseless.cpp \
 	tests/test_fuel_map.cpp \
+	tests/test_maf2map.cpp \
 	tests/test_fuelCut.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \

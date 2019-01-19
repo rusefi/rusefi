@@ -105,8 +105,8 @@ void commonTxInit(int eid) {
  * send CAN message from txmsg buffer
  */
 static void sendCanMessage2(int size) {
-	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
-			boardConfiguration->canTxPin);
+	CANDriver *device = detectCanDevice(CONFIGB(canRxPin),
+			CONFIGB(canTxPin));
 	if (device == NULL) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
 		return;
@@ -227,8 +227,8 @@ static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
 }
 
 static void canRead(void) {
-	CANDriver *device = detectCanDevice(boardConfiguration->canRxPin,
-			boardConfiguration->canTxPin);
+	CANDriver *device = detectCanDevice(CONFIGB(canRxPin),
+			CONFIGB(canTxPin));
 	if (device == NULL) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
 		return;
@@ -276,8 +276,8 @@ static void canInfo(void) {
 		return;
 	}
 
-	scheduleMsg(&logger, "CAN TX %s", hwPortname(boardConfiguration->canTxPin));
-	scheduleMsg(&logger, "CAN RX %s", hwPortname(boardConfiguration->canRxPin));
+	scheduleMsg(&logger, "CAN TX %s", hwPortname(CONFIGB(canTxPin)));
+	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIGB(canRxPin)));
 	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriod);
@@ -297,8 +297,8 @@ void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	boardConfiguration->canTxPin = GPIOB_6;
-	boardConfiguration->canRxPin = GPIOB_12;
+	CONFIGB(canTxPin) = GPIOB_6;
+	CONFIGB(canRxPin) = GPIOB_12;
 	engineConfiguration->canReadEnabled = false;
 }
 
@@ -308,17 +308,17 @@ void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiSetPadMode("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+	efiSetPadMode("CAN TX", CONFIGB(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadMode("CAN RX", CONFIGB(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 void initCan(void) {
-	isCanEnabled = (boardConfiguration->canTxPin != GPIO_UNASSIGNED) && (boardConfiguration->canRxPin != GPIO_UNASSIGNED);
+	isCanEnabled = (CONFIGB(canTxPin) != GPIO_UNASSIGNED) && (CONFIGB(canRxPin) != GPIO_UNASSIGNED);
 	if (isCanEnabled) {
-		if (!isValidCanTxPin(boardConfiguration->canTxPin))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(boardConfiguration->canTxPin));
-		if (!isValidCanRxPin(boardConfiguration->canRxPin))
-			firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(boardConfiguration->canRxPin));
+		if (!isValidCanTxPin(CONFIGB(canTxPin)))
+			firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIGB(canTxPin)));
+		if (!isValidCanRxPin(CONFIGB(canRxPin)))
+			firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIGB(canRxPin)));
 	}
 
 	addConsoleAction("caninfo", canInfo);

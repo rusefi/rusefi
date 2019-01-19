@@ -49,10 +49,10 @@ EXTERN_ENGINE;
 
 static void setDefaultCustomMaps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	setFuelLoadBin(0,100 PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelRpmBin(0, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingLoadBin(0,100 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingRpmBin(0,7000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelRpmBin(0, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	copyFuelTable(default_custom_fuel_table, config->fuelTable);
   copyFuelTable(default_custom_fuel_table, config->veTable);
@@ -145,7 +145,7 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[3] = GPIOB_8; // #4
 
   setDefaultCustomMaps(PASS_ENGINE_PARAMETER_SIGNATURE);
-	setAlgorithm(LM_ALPHA_N PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
 
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;

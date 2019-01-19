@@ -152,7 +152,7 @@ static void turnOffTriggerInputPin(brain_pin_e hwPin) {
 
 static void rememberPrimaryChannel(void) {
 	primaryCrankDriver = getInputCaptureDriver("primary",
-			boardConfiguration->triggerInputPins[0]);
+			CONFIGB(triggerInputPins)[0]);
 }
 
 void turnOnTriggerInputPins(Logging *sharedLogger) {
@@ -163,7 +163,7 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 
 void stopTriggerInputPins(void) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (boardConfiguration->triggerInputPins[i]
+		if (CONFIGB(triggerInputPins)[i]
 				!= activeConfiguration.bc.triggerInputPins[i]) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
@@ -179,10 +179,10 @@ void applyNewTriggerInputPins(void) {
 
 // then we will enable all the changed pins
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (boardConfiguration->triggerInputPins[i]
+		if (CONFIGB(triggerInputPins)[i]
 				!= activeConfiguration.bc.triggerInputPins[i]) {
 			const char * msg = (i == 0 ? "trigger#1" : (i == 1 ? "trigger#2" : "trigger#3"));
-			turnOnTriggerInputPin(msg, boardConfiguration->triggerInputPins[i], &shaft_icucfg);
+			turnOnTriggerInputPin(msg, CONFIGB(triggerInputPins)[i], &shaft_icucfg);
 		}
 	}
 

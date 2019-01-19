@@ -62,14 +62,14 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 80;
 	engineConfiguration->tpsMax = 764;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelLoadBin(0, 100 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set_whole_fuel_map 9
-	setWholeFuelMap(9 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(9 PASS_CONFIG_PARAMETER_SUFFIX);
 
 // set_whole_timing_map 10
-	setWholeTimingTable(10 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// http://s1.micp.ru/tOb0U.png
 	setThermistorConfiguration(&engineConfiguration->clt, -15, 5900, 23, 1750, 97, 165);

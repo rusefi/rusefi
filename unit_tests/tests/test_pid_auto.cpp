@@ -6,11 +6,9 @@
  */
 
 #include "global.h"
-#include "test_pid_auto.h"
 #include "pid_auto_tune.h"
 #include "unit_test_framework.h"
 #include "cyclic_buffer.h"
-#include "gtest/gtest.h"
 
 efitimems_t mockTimeMs = 0;
 
@@ -49,7 +47,7 @@ static void testPidAutoZigZagStable() {
 	at.SetLookbackSec(5);
 	at.SetControlType(PID_AutoTune::ZIEGLER_NICHOLS_PI);
 	at.sampleTime = 0; // not used in math only used to filter values out
-	assertEqualsM("nLookBack", 20, at.nLookBack);
+	ASSERT_EQ( 20,  at.nLookBack) << "nLookBack";
 
 
 	at.outputStart = 50;
@@ -62,40 +60,40 @@ static void testPidAutoZigZagStable() {
 	at.Runtime(&logging);
 //	assertEqualsLM("min@1", 0, at.absMin);
 //	assertEqualsLM("max@1", 10, at.absMax);
-	assertEqualsM("peakCount", 0, at.peakCount);
+	ASSERT_EQ( 0,  at.peakCount) << "peakCount";
 	int startMockMs = mockTimeMs;
 
 	for (; mockTimeMs <= 10 + startMockMs; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
-		assertFalseM("should be false#1", result);
+		ASSERT_FALSE(result) << "should be false#1";
 
 	}
 //	assertEqualsLM("min@11", 0, at.absMin);
 //	assertEqualsLM("max@11", 100, at.absMax);
-	assertEqualsM("peakCount", 0, at.peakCount);
+	ASSERT_EQ( 0,  at.peakCount) << "peakCount";
 
 	for (; mockTimeMs <= 21; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
-		assertFalseM("should be false#2", result);
+		ASSERT_FALSE(result) << "should be false#2";
 	}
-	assertEqualsM("peakCount@21", 0, at.peakCount);
+	ASSERT_EQ( 0,  at.peakCount) << "peakCount@21";
 
 	for (; mockTimeMs <= 41; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
-		assertFalseM("should be false#2_2", result);
+		ASSERT_FALSE(result) << "should be false#2_2";
 	}
-	assertEqualsM("peakCount@41", 2, at.peakCount);
-//	assertEqualsM("Pu@41", 1, cisnan(at.Pu));
+	ASSERT_EQ( 2,  at.peakCount) << "peakCount@41";
+//	ASSERT_EQ( 1,  cisnan(at.Pu)) << "Pu@41";
 
 	for (; mockTimeMs <= 60; mockTimeMs++) {
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
-		assertFalseM("should be false#4", result);
+		ASSERT_FALSE(result) << "should be false#4";
 	}
-	assertEqualsM("peakCount@60", 4, at.peakCount);
+	ASSERT_EQ( 4,  at.peakCount) << "peakCount@60";
 	//assertEqualsM("Pu@60", 0.02, at.Pu);
 
 //	zigZagOffset = 10;
@@ -104,16 +102,16 @@ static void testPidAutoZigZagStable() {
 
 		at.input = zigZagValue(mockTimeMs);
 		bool result = at.Runtime(&logging);
-		assertFalseM("should be false#4", result);
+		ASSERT_FALSE(result) << "should be false#4";
 	}
 
 	at.input = zigZagValue(mockTimeMs);
 	bool result = at.Runtime(&logging);
-	assertEqualsM("should be true", 1, result);
+	ASSERT_EQ( 1,  result) << "should be true";
 
 	assertEqualsM("testPidAutoZigZagStable::output", 0.0, at.output);
 
-	assertEqualsM("peakCount@80", 5, at.peakCount);
+	ASSERT_EQ( 5,  at.peakCount) << "peakCount@80";
 	assertEqualsM("ki", 27.7798, at.GetKi());
 	assertEqualsM("kd", 0.0, at.GetKd());
 
@@ -138,7 +136,7 @@ static void testPidAutoZigZagGrowingOsc() {
 		for (; mockTimeMs < CYCLE + startMockMs; mockTimeMs++) {
 			at.input = zigZagValue(mockTimeMs);
 			bool result = at.Runtime(&logging);
-			assertFalseM("should be false#4", result);
+			ASSERT_FALSE(result) << "should be false#4";
 		}
 		oscRange *= 1.5;
 	}
@@ -148,12 +146,12 @@ static void testPidAutoZigZagGrowingOsc() {
 //		printf("loop2=%d\r\n", mockTimeMs);
 //		at.input = zigZagValue(mockTimeMs);
 //		bool result = at.Runtime(&logging);
-//		assertFalseM("should be false#5", result);
+//		ASSERT_FALSE(result) << "should be false#5";
 //	}
 
 	at.input = zigZagValue(mockTimeMs);
 	bool result = at.Runtime(&logging);
-	assertTrueM("should be true#2", result);
+	ASSERT_TRUE(result) << "should be true#2";
 	assertEqualsM("FAiled", FAILED, at.state);
 
 	assertEqualsM("output Growing", 0.0, at.output);
@@ -175,7 +173,7 @@ TEST(pidAutoTune, zeroLine) {
 			for (; mockTimeMs < CYCLE + startMockMs; mockTimeMs++) {
 				at.input = 0;
 				bool result = at.Runtime(&logging);
-				assertFalseM("should be false#4", result);
+				ASSERT_FALSE(result) << "should be false#4";
 			}
 		}
 		// nothing happens in this test since we do not allow time play a role
@@ -212,10 +210,10 @@ TEST(pidAutoTune, delayLine) {
 
 	if (result)
 		printf("*** Converged! Got result: P=%f I=%f D=%f\r\n", at.GetKp(), at.GetKi(), at.GetKd());
-	assertTrueM("should be true#5", result);
+	ASSERT_TRUE(result) << "should be true#5";
 }
 
-void testPidAuto() {
+TEST(misc, testPidAuto) {
 	printf("*************************************************** testPidAuto\r\n");
 
 	testPidAutoZigZagStable();

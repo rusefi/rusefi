@@ -26,10 +26,13 @@ public:
 	bool isScheduled;
 };
 
-/**
- * see also scheduleByAngle
- */
-void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
-void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param);
+class ExecutorInterface {
+public:
+	/**
+	 * see also scheduleByAngle
+	 */
+	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) = 0;
+	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) = 0;
+};
 
 #endif /* SCHEDULER_H_ */

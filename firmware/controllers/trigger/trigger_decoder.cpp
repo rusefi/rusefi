@@ -40,8 +40,11 @@
 EXTERN_ENGINE
 ;
 
+// todo: this should become a field on some class
+// no reason to make this a field on TriggerState since we have two instances of that one
+// and only one needs this data structure. we probably need a virtual method of .addError() and
+// only TriggerStateWithRunningStatistics would have the field?
 static cyclic_buffer<int> errorDetection;
-static bool isInitializingTrigger = false; // #286 miata NA config - sync error on startup
 
 #if ! EFI_PROD_CODE || defined(__DOXYGEN__)
 bool printTriggerDebug = false;
@@ -53,10 +56,6 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 static Logging * logger;
-
-efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
-// the boolean flag is a performance optimization so that complex comparison is avoided if no error
-static bool someSortOfTriggerError = false;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -121,13 +120,14 @@ efitime_t TriggerState::getTotalEventCounter() {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
-int TriggerState::getTotalRevolutionCounter() {
+int TriggerState::getTotalRevolutionCounter() const {
 	return totalRevolutionCounter;
 }
 
-TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() {
-	instantRpm = 0;
-	prevInstantRpmValue = 0;
+TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
+		//https://en.cppreference.com/w/cpp/language/zero_initialization
+		instantRpmValue()
+		{
 	// avoid ill-defined instant RPM when the data is not gathered yet
 	efitime_t nowNt = getTimeNowNt();
 	for (int i = 0; i < PWM_PHASE_MAX_COUNT; i++) {
@@ -185,7 +185,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLAR
 
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
-		if (boardConfiguration->sensorChartMode == SC_DETAILED_RPM) {
+		if (CONFIGB(sensorChartMode) == SC_DETAILED_RPM) {
 			scAddData(currentAngle, instantRpm);
 		} else {
 			scAddData(currentAngle, instantRpm / instantRpmValue[prevIndex]);
@@ -249,6 +249,8 @@ void TriggerState::reset() {
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
+	lastDecodingErrorTime = US2NT(-10000000LL);
+	someSortOfTriggerError = false;
 
 	memset(toothDurations, 0, sizeof(toothDurations));
 	curSignal = SHAFT_PRIMARY_FALLING;
@@ -263,7 +265,7 @@ void TriggerState::reset() {
 	isFirstEvent = true;
 }
 
-int TriggerState::getCurrentIndex() {
+int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
 
@@ -271,7 +273,7 @@ void TriggerState::incrementTotalEventCounter() {
 	totalRevolutionCounter++;
 }
 
-bool TriggerState::isEvenRevolution() {
+bool TriggerState::isEvenRevolution() const {
 	return totalRevolutionCounter & 1;
 }
 
@@ -479,7 +481,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
 #if EFI_UNIT_TEST
-			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, isInitializingTrigger);
+			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, engine->isInitializingTrigger);
 			if (isDecodingError) {
 				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  TRIGGER_SHAPE(expectedEventCount[0]));
 				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  TRIGGER_SHAPE(expectedEventCount[1]));
@@ -488,7 +490,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif
 
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
-			if (isDecodingError && !isInitializingTrigger) {
+			if (isDecodingError && !engine->isInitializingTrigger) {
 				if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 					tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
@@ -562,7 +564,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		toothed_previous_time = nowNt;
 	}
-	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !isInitializingTrigger) {
+	if (!isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE) && !engine->isInitializingTrigger) {
 		// let's not show a warning if we are just starting to spin
 		if (GET_RPM() != 0) {
 			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, getTriggerSize());
@@ -579,7 +581,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	runtimeStatistics(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// Needed for early instant-RPM detection
-	if (!isInitializingTrigger) {
+	if (!engine->isInitializingTrigger) {
 		engine->rpmCalculator.setSpinningUp(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
@@ -602,7 +604,6 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(CUSTOM_ERR_ASSERT, getRemainingStack(chThdGetSelfX()) > 128, "findPos", -1);
 #endif
-	isInitializingTrigger = true;
 	errorDetection.clear();
 	efiAssert(CUSTOM_ERR_ASSERT, state != NULL, "NULL state", -1);
 
@@ -612,12 +613,14 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		return 0;
 	}
 
+	engine->isInitializingTrigger = true;
+
 	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
 	uint32_t syncIndex = helper.findTriggerSyncPoint(shape, state PASS_ENGINE_PARAMETER_SUFFIX);
 	if (syncIndex == EFI_ERROR_CODE) {
-		isInitializingTrigger = false;
+		engine->isInitializingTrigger = false;
 		return syncIndex;
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, state->getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
@@ -638,7 +641,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 	helper.assertSyncPositionAndSetDutyCycle(syncIndex, state, shape PASS_ENGINE_PARAMETER_SUFFIX);
 
-	isInitializingTrigger = false;
+	engine->isInitializingTrigger = false;
 	return syncIndex % shape->getSize();
 }
 
@@ -662,8 +665,8 @@ void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SU
 
  void initTriggerDecoder(void) {
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
-	enginePins.triggerDecoderErrorPin.initPin("trg_err", boardConfiguration->triggerErrorPin,
-			&boardConfiguration->triggerErrorPinMode);
+	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIGB(triggerErrorPin),
+			&CONFIGB(triggerErrorPinMode));
 #endif /* EFI_GPIO_HARDWARE */
 }
 

@@ -51,16 +51,16 @@ static void testSignalExecutor2(void) {
 	eq.insertTask(&p1.s, 0, (schfunc_t) complexCallback, &p1);
 	eq.insertTask(&p2.s, 0, (schfunc_t) complexCallback, &p2);
 	eq.executeAll(complexTestNow);
-	assertEqualsM("callbackCounter #1", 2, callbackCounter);
-	assertEquals(2, eq.size());
+	ASSERT_EQ( 2,  callbackCounter) << "callbackCounter #1";
+	ASSERT_EQ(2, eq.size());
 
 	eq.executeAll(complexTestNow = 2);
-	assertEqualsM("callbackCounter #2", 3, callbackCounter);
-	assertEquals(2, eq.size());
+	ASSERT_EQ( 3,  callbackCounter) << "callbackCounter #2";
+	ASSERT_EQ(2, eq.size());
 
 	eq.executeAll(complexTestNow = 3);
-	assertEqualsM("callbackCounter #3", 4, callbackCounter);
-	assertEquals(2, eq.size());
+	ASSERT_EQ( 4,  callbackCounter) << "callbackCounter #3";
+	ASSERT_EQ(2, eq.size());
 
 }
 
@@ -70,7 +70,7 @@ static void orderCallback(void *a) {
 	long value = (long)a;
 
 	printf("value=%d prevValue=%d\r\n", value, prevValue);
-	assertTrueM("orderCallback", value > prevValue);
+	ASSERT_TRUE(value > prevValue) << "orderCallback";
 
 	prevValue = value;
 }
@@ -91,12 +91,12 @@ static void testSignalExecutor3(void) {
 	eq.executeAll(100);
 }
 
-void testSignalExecutor(void) {
+TEST(misc, testSignalExecutor) {
 	testSignalExecutor3();
 	print("*************************************** testSignalExecutor\r\n");
 
 	eq.clear();
-	assertEquals(EMPTY_QUEUE, eq.getNextEventTime(0));
+	ASSERT_EQ(EMPTY_QUEUE, eq.getNextEventTime(0));
 	scheduling_s s1;
 	scheduling_s s2;
 	scheduling_s s3;
@@ -107,54 +107,54 @@ void testSignalExecutor(void) {
 	eq.insertTask(&s3, 12, callback, NULL);
 	eq.insertTask(&s2, 11, callback, NULL);
 
-	assertEquals(4, eq.size());
-	assertEquals(10, eq.getHead()->momentX);
-	assertEquals(10, eq.getHead()->next->momentX);
-	assertEquals(11, eq.getHead()->next->next->momentX);
-	assertEquals(12, eq.getHead()->next->next->next->momentX);
+	ASSERT_EQ(4, eq.size());
+	ASSERT_EQ(10, eq.getHead()->momentX);
+	ASSERT_EQ(10, eq.getHead()->next->momentX);
+	ASSERT_EQ(11, eq.getHead()->next->next->momentX);
+	ASSERT_EQ(12, eq.getHead()->next->next->next->momentX);
 
 	callbackCounter = 0;
 	eq.executeAll(10);
-	assertEqualsM("callbackCounter/2", 2, callbackCounter);
+	ASSERT_EQ( 2,  callbackCounter) << "callbackCounter/2";
 	callbackCounter = 0;
 	eq.executeAll(11);
-	assertEqualsM("callbackCounter/1#1", 1, callbackCounter);
+	ASSERT_EQ( 1,  callbackCounter) << "callbackCounter/1#1";
 	eq.executeAll(100);
-	assertEquals(0, eq.size());
+	ASSERT_EQ(0, eq.size());
 
 	eq.insertTask(&s1, 12, callback, NULL);
 	eq.insertTask(&s2, 11, callback, NULL);
 	eq.insertTask(&s3, 10, callback, NULL);
 	callbackCounter = 0;
 	eq.executeAll(10);
-	assertEqualsM("callbackCounter/1#2", 1, callbackCounter);
+	ASSERT_EQ( 1,  callbackCounter) << "callbackCounter/1#2";
 	callbackCounter = 0;
 	eq.executeAll(11);
-	assertEquals(1, callbackCounter);
+	ASSERT_EQ(1, callbackCounter);
 	eq.executeAll(100);
-	assertEquals(0, eq.size());
+	ASSERT_EQ(0, eq.size());
 
 	callbackCounter = 0;
 	eq.insertTask(&s1, 10, callback, NULL);
-	assertEquals(10, eq.getNextEventTime(0));
+	ASSERT_EQ(10, eq.getNextEventTime(0));
 
 	eq.executeAll(1);
-	assertEqualsM("callbacks not expected", 0, callbackCounter);
+	ASSERT_EQ( 0,  callbackCounter) << "callbacks not expected";
 
 	eq.executeAll(11);
-	assertEquals(1, callbackCounter);
+	ASSERT_EQ(1, callbackCounter);
 
-	assertEquals(EMPTY_QUEUE, eq.getNextEventTime(0));
+	ASSERT_EQ(EMPTY_QUEUE, eq.getNextEventTime(0));
 
 	eq.insertTask(&s1, 10, callback, NULL);
 	eq.insertTask(&s2, 13, callback, NULL);
-	assertEquals(10, eq.getNextEventTime(0));
+	ASSERT_EQ(10, eq.getNextEventTime(0));
 
 	eq.executeAll(1);
-	assertEquals(10, eq.getNextEventTime(0));
+	ASSERT_EQ(10, eq.getNextEventTime(0));
 
 	eq.executeAll(100);
-	assertEquals(0, eq.size());
+	ASSERT_EQ(0, eq.size());
 	callbackCounter = 0;
 	// both events are scheduled for the same time
 	eq.insertTask(&s1, 10, callback, NULL);
@@ -162,6 +162,6 @@ void testSignalExecutor(void) {
 
 	eq.executeAll(11);
 
-	assertEquals(2, callbackCounter);
+	ASSERT_EQ(2, callbackCounter);
 	testSignalExecutor2();
 }

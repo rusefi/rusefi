@@ -118,7 +118,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
-				getGlobalConfigurationVersion(), currentTimeMillis());
+				engine->getGlobalConfigurationVersion(), currentTimeMillis());
 
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
@@ -160,7 +160,7 @@ static void resumeStimulator() {
 	stopEmulationAtIndex = DO_NOT_STOP;
 }
 
-void initTriggerEmulatorLogic(Logging *sharedLogger) {
+void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
@@ -169,7 +169,9 @@ void initTriggerEmulatorLogic(Logging *sharedLogger) {
 			s->wave.channels[0].pinStates,
 			s->wave.channels[1].pinStates,
 			s->wave.channels[2].pinStates };
-	triggerSignal.weComplexInit("position sensor", s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
+	triggerSignal.weComplexInit("position sensor",
+			&engine->executor,
+			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
 
 	addConsoleActionI("rpm", setTriggerEmulatorRPM);

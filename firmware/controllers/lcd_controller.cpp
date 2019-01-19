@@ -54,15 +54,17 @@ static MenuTree tree(&ROOT);
  * todo: add some comment explaining how this works
  */
 static MenuItem miRpm(tree.root, LL_RPM);
-static MenuItem miSensors(tree.root, "sensors");
-static MenuItem miFuelControl(tree.root, "fuel");
-static MenuItem miBench(tree.root, "bench test");
-static MenuItem miAbout(tree.root, "about");
+static MenuItem miSensors(tree.root, "SENSORS");
+static MenuItem miFuelControl(tree.root, "FUEL CONTROL");
+static MenuItem miBench(tree.root, "BENCH TEST");
+static MenuItem miAbout(tree.root, "ABOUT");
 
 static MenuItem miTriggerErrors(&miRpm, LL_TRIGGER_ERRORS);
 static MenuItem miTriggerDuty(&miRpm, LL_TRIGGER_DUTY);
 
 static MenuItem miFuelCltCorr(&miFuelControl, LL_FUEL_CLT_CORRECTION);
+static MenuItem miFuelIatCorr(&miFuelControl, LL_FUEL_IAT_CORRECTION);
+static MenuItem miFuelInjectorLag(&miFuelControl, LL_FUEL_INJECTOR_LAG);
 
 static MenuItem miClt(&miSensors, LL_CLT_TEMPERATURE);
 static MenuItem miIat(&miSensors, LL_IAT_TEMPERATURE);
@@ -202,25 +204,26 @@ static void showLine(lcd_line_e line, int screenY) {
 
 	switch (line) {
 	case LL_VERSION:
-		lcdPrintf("version %s", VCS_VERSION);
+		lcdPrintf("ver %s %d", VCS_VERSION, getRusEfiVersion());
 		return;
 	case LL_CONFIG:
 		lcdPrintf("config %s", getConfigurationName(engineConfiguration->engineType));
 		return;
 	case LL_RPM:
-		lcdPrintf("RPM %d", getRpmE(engine));
+	{
+		int seconds = minI(9999, getTimeNowSeconds());
+		lcdPrintf("RPM %d %d ", getRpmE(engine), seconds);
+	}
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 		{
 			char sdState;
-			if (boardConfiguration->isSdCardEnabled) {
+			if (CONFIGB(isSdCardEnabled)) {
 				sdState = isSdCardAlive() ? 'L' : 'n';
 			} else {
 				sdState = 'D';
 			}
-			efitimesec_t seconds = getTimeNowSeconds();
-			if (seconds < 10000) {
-				lcdPrintf("  %d%c", seconds, sdState);
-			}
+
+			lcdPrintf("%c", sdState);
 		}
 #endif
 		return;
@@ -248,9 +251,14 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("Throttle %s %.2f%%", buffer, getTPS());
 		return;
 	case LL_FUEL_CLT_CORRECTION:
-		lcdPrintf("CLT corr %.2fv", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
-
+	case LL_FUEL_IAT_CORRECTION:
+		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SIGNATURE));
+		return;
+	case LL_FUEL_INJECTOR_LAG:
+		lcdPrintf("ING LAG %.2f", getInjectorLag(engine->sensors.vBatt PASS_ENGINE_PARAMETER_SIGNATURE));
+		return;
 	case LL_VBATT:
 		lcdPrintf("Battery %.2fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;

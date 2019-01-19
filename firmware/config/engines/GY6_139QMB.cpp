@@ -66,10 +66,10 @@ static const fuel_table_t default_139qmb_fuel_table = {
 
 static void setDefault139qmbMaps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelRpmBin(1000, 11000 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingRpmBin(1000, 11000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelRpmBin(1000, 11000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingRpmBin(1000, 11000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	copyFuelTable(default_139qmb_fuel_table, config->fuelTable);
 	//copyTimingTable(default_139qmb_timing_table, config->ignitionTable);

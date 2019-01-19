@@ -20,6 +20,7 @@
 
 #if (EFI_PROD_CODE && HAL_USE_GPT) || defined(__DOXYGEN__)
 #include "efilib2.h"
+#include "PeriodicController.h"
 
 /**
  * Maximum duration of complete timer callback, all pending events together
@@ -46,6 +47,7 @@ static const char * msg;
 static char buff[32];
 
 static int timerFreezeCounter = 0;
+static volatile int setHwTimerCounter = 0;
 
 extern bool hasFirmwareErrorFlag;
 
@@ -54,6 +56,7 @@ extern bool hasFirmwareErrorFlag;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareUsTimer(int32_t timeUs) {
+	setHwTimerCounter++;
 	/**
 	 * #259 BUG error: not positive timeUs
 	 * Once in a while we night get an interrupt where we do not expect it
@@ -74,7 +77,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 		gptStopTimerI(&GPTDEVICE);
 	}
 	if (GPTDEVICE.state != GPT_READY) {
-		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d", GPTDEVICE.state);
+		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d/%d", GPTDEVICE.state, setHwTimerCounter);
 		return;
 	}
 	if (hasFirmwareError())
@@ -87,7 +90,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 	timerRestartCounter++;
 }
 
-static void callback(GPTDriver *gptp) {
+static void hwTimerCallback(GPTDriver *gptp) {
 	(void)gptp;
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
@@ -113,46 +116,45 @@ static void callback(GPTDriver *gptp) {
 	}
 }
 
-static void usTimerWatchDog(void) {
-	if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
-		strcpy(buff, "no_event");
-		itoa10(&buff[8], lastSetTimerValue);
-		firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
-		return;
+
+class MicrosecondTimerWatchdogController : public PeriodicController<UTILITY_THREAD_STACK_SIZE>
+{
+public:
+	MicrosecondTimerWatchdogController()
+		: PeriodicController("timer watchdog", NORMALPRIO, 1.0f)
+	{
 	}
 
-	msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
-	// 2 seconds of inactivity would not look right
-	efiAssertVoid(CUSTOM_ERR_6682, getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
+private:
+	void PeriodicTask(efitime_t nowNt) override
+	{
+		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
+			strcpy(buff, "no_event");
+			itoa10(&buff[8], lastSetTimerValue);
+			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
+			return;
+		}
 
-}
-
-static msg_t mwThread(int param) {
-	(void)param;
-	chRegSetThreadName("timer watchdog");
-
-	while (true) {
-		chThdSleepMilliseconds(1000); // once a second is enough
-		usTimerWatchDog();
+		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
+		// 2 seconds of inactivity would not look right
+		efiAssertVoid(CUSTOM_ERR_6682, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
 	}
-#if defined __GNUC__
-	return -1;
-#endif        
-}
+};
 
-//static const GPTConfig gpt5cfg;
+MicrosecondTimerWatchdogController watchdogControllerInstance;
 
-static const GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
-callback, /* Timer callback.*/
+static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
+		hwTimerCallback, /* Timer callback.*/
 0, 0 };
 
 void initMicrosecondTimer(void) {
 
 	gptStart(&GPTDEVICE, &gpt5cfg);
+	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
 
 	lastSetTimerTimeNt = getTimeNowNt();
 #if EFI_EMULATE_POSITION_SENSORS
-	chThdCreateStatic(mwThreadStack, sizeof(mwThreadStack), NORMALPRIO, (tfunc_t)(void*) mwThread, NULL);
+	watchdogControllerInstance.Start();
 #endif /* EFI_ENGINE_EMULATOR */
 
 //	// test code

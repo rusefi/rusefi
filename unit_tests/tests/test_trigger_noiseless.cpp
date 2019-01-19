@@ -5,7 +5,7 @@
  */
 
 #include "global.h"
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "allsensors.h"
@@ -22,13 +22,8 @@
 #include "trigger_universal.h"
 
 extern int timeNowUs;
-extern float unitTestValue;
-extern float testMafValue;
-extern int unitTestWarningCounter;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
-
-extern EventQueue schedulingQueue;
 
 static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// mostly we fire only rise events (useOnlyRisingEdgeForTrigger=true).
@@ -45,7 +40,7 @@ static void fireEvent(EngineTestHelper *eth, bool isRise) {
  */
 static void noisyPulse(EngineTestHelper *eth, int idx, int durationUs, bool isRise, int noiseIdx, int durationNoiseUs, int offsetNoiseUs, int numSpikes) {
 	// skip some time at the beginning
-	timeNowUs += offsetNoiseUs;
+	eth->moveTimeForwardUs(offsetNoiseUs);
 	durationUs -= offsetNoiseUs;
 	// add noise spikes
 	if (idx == noiseIdx) {
@@ -55,19 +50,19 @@ static void noisyPulse(EngineTestHelper *eth, int idx, int durationUs, bool isRi
 		for (int i = 0; i < numSpikes; i++) {
 			// start spike
 			fireEvent(eth, isRise);
-			timeNowUs += durationNoiseUs;
+			eth->moveTimeForwardUs(durationNoiseUs);
 			durationUs -= durationNoiseUs;
 			// end spike
 			fireEvent(eth, !isRise);
 
 			// add space between spikes
-			timeNowUs += noiseIntervalUs;
+			eth->moveTimeForwardUs(noiseIntervalUs);
 			durationUs -= noiseIntervalUs;
 		}
 	}
 
 	// add the rest of pulse period
-	timeNowUs += durationUs;
+	eth->moveTimeForwardUs(durationUs);
 	fireEvent(eth, isRise);
 }
 
@@ -99,7 +94,7 @@ static void resetTrigger(EngineTestHelper &eth) {
 
 static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorToleranceCnt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	printf("*** (bc->useNoiselessTriggerDecoder = %s)\r\n",
-			boardConfiguration->useNoiselessTriggerDecoder ? "true" : "false");
+			CONFIGB(useNoiselessTriggerDecoder) ? "true" : "false");
 
 	resetTrigger(eth);
 	
@@ -107,11 +102,11 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, -1, 0, 0, 0);
 
 	// should be no errors anyway
-	assertEqualsM("testNoiselessDecoderProcedure totalTriggerErrorCounter", 0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoderProcedure totalTriggerErrorCounter";
 	// check if we're imitating the 60-2 signal correctly
-	assertEqualsM("index #1", 0, eth.engine.triggerCentral.triggerState.getCurrentIndex());
+	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 	// check rpm (60secs / (1000us * 60teeth)) = 1000rpm
-	assertEqualsM("testNoiselessDecoder RPM", 1000, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ( 1000,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "testNoiselessDecoder RPM";
 
 	// add noise1 - 1 spike in the middle of the 2nd rising pulse
 	fireNoisyCycle60_2(&eth, 2, 1000, 2, 10, 500, 1);
@@ -168,14 +163,12 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	// alas, this is a hard case even for noiseless decoder, and it fails...
 	// but still we're close to 33% signal-noise ratio threshold - not bad!
 	// so here's an error anyway!
-	assertEqualsM("testNoiselessDecoder noise#7_fail_test", 1, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoder noise#7_fail_test";
 
 }
 
-void testNoiselessDecoder(void) {
+TEST(big, testNoiselessDecoder) {
 	printf("====================================================================================== testNoiselessDecoder\r\n");
-	timeNowUs = 0;
-	schedulingQueue.clear();
 
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
@@ -188,22 +181,21 @@ void testNoiselessDecoder(void) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.applyTriggerShape();
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	assertEquals(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	assertEqualsM("testNoiselessDecoder RPM", 0, eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ( 0,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "testNoiselessDecoder RPM";
 
 	//printTriggerDebug = true;
 
 #if 0
 	// try normal trigger mode, no noise filtering
-	boardConfiguration->useNoiselessTriggerDecoder = false;
+	CONFIGB(useNoiselessTriggerDecoder) = false;
 	// for test validation, it should be 1 trigger error
 	testNoiselessDecoderProcedure(eth, 1 PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 	// now enable our noise filtering algo
-	boardConfiguration->useNoiselessTriggerDecoder = true;
+	CONFIGB(useNoiselessTriggerDecoder) = true;
 	// should be 0 errors!
 	testNoiselessDecoderProcedure(eth, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 

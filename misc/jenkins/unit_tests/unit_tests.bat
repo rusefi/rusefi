@@ -16,7 +16,7 @@ rm -fR .dep
 rm -fR build
 call update_version.bat
 
-make
+make -j4
 if not exist build/rusefi.hex echo FAILED TO COMPILE FIRMWARE
 if not exist build/rusefi.hex exit -1
 cd ..

@@ -202,11 +202,11 @@ void obdOnCanPacketRx(CANRxFrame *rx) {
 	} else if (rx->data8[0] == 1 && rx->data8[1] == OBD_STORED_DIAGNOSTIC_TROUBLE_CODES) {
 		scheduleMsg(&logger, "Got stored DTC request");
 		// todo: implement stored/pending difference?
-		handleDtcRequest(1, &engine->engineState.lastErrorCode);
+		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);
 	} else if (rx->data8[0] == 1 && rx->data8[1] == OBD_PENDING_DIAGNOSTIC_TROUBLE_CODES) {
 		scheduleMsg(&logger, "Got pending DTC request");
 		// todo: implement stored/pending difference?
-		handleDtcRequest(1, &engine->engineState.lastErrorCode);
+		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);
 	} else {
 		scheduleMsg(&logger, "Got unhandled OBD message");
 	}

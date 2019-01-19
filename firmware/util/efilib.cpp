@@ -315,3 +315,42 @@ float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, f
 		return (incrLimitPerSec <= 0.0f) ? newValue : oldValue + minF(newValue - oldValue, incrLimitPerSec * secsPassed);
 	return (decrLimitPerSec <= 0.0f) ? newValue : oldValue - minF(oldValue - newValue, decrLimitPerSec * secsPassed);
 }
+
+constexpr float constant_e = 2.71828f;
+
+// 'constexpr' is a keyword that tells the compiler
+// "yes, this thing, it's a 'pure function' that only depends on its inputs and has no side effects"
+// like how const is a constant value, constexpr is a constant expression
+// so if somewhere you used it in a way that it could determine the exact arguments to the function at compile time, it will _run_ the function at compile time, and cook in the result as a constant
+constexpr float expf_taylor_impl(float x, uint8_t n)
+{
+	if (x < -2)
+	{
+		return 0.818f;
+	}
+	else if (x > 0)
+	{
+		return 1;
+	}
+
+	x = x + 1;
+
+	float x_power = x;
+	int fac = 1;
+	float sum = 1;
+
+	for (int i = 1; i <= n; i++)
+	{
+		fac *= i;
+		sum += x_power / fac;
+
+		x_power *= x;
+	}
+
+	return sum / constant_e;
+}
+
+float expf_taylor(float x)
+{
+	return expf_taylor_impl(x, 4);
+}

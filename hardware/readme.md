@@ -40,3 +40,12 @@ Above mentioned modules are known to work unless stated otherwise
 
 See [Hardware status forum thread](http://rusefi.com/forum/viewtopic.php?f=4&t=260)
 todo: move hardware status content into git
+
+
+# Important note
+
+We now use submodules:
+
+`git submodule update --init`
+
+

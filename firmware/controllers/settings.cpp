@@ -206,7 +206,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), engineConfiguration->fuelAlgorithm);
 
 
-	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
+	scheduleMsg(&logger, "configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 //		print("line %d (%.2f): ", k, engineConfiguration->fuelKeyBins[k]);
@@ -630,7 +630,7 @@ static void setWholeFuelMapCmd(float value) {
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
-	setWholeFuelMap(value PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(value PASS_CONFIG_PARAMETER_SUFFIX);
 }
 
 #if EFI_PROD_CODE
@@ -1302,10 +1302,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->operationMode = (operation_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "suckedOffCoef")) {
-		engineConfiguration->suckedOffCoef = valueF;
-	} else if (strEqualCaseInsensitive(paramStr, "addedToWallCoef")) {
-		engineConfiguration->addedToWallCoef = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
+		engineConfiguration->wwaeTau = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
+		engineConfiguration->wwaeBeta = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {

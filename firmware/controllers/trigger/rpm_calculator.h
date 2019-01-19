@@ -121,17 +121,17 @@ public:
 	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
 	 * Zero if engine is not running
 	 */
-	volatile int rpmValue;
+	volatile int rpmValue = 0;
 	/**
 	 * this is RPM on previous engine cycle.
 	 */
-	int previousRpmValue;
+	int previousRpmValue = 0;
 	/**
 	 * This is a performance optimization: let's pre-calculate this each time RPM changes
 	 * NaN while engine is not spinning
 	 */
-	volatile floatus_t oneDegreeUs;
-	volatile efitime_t lastRpmEventTimeNt;
+	volatile floatus_t oneDegreeUs = NAN;
+	volatile efitime_t lastRpmEventTimeNt = 0;
 private:
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
@@ -142,19 +142,19 @@ private:
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
 	 */
-	volatile uint32_t revolutionCounterSinceBoot;
+	volatile uint32_t revolutionCounterSinceBoot = 0;
 	/**
 	 * Same as the above, but since the engine started spinning
 	 */
-	volatile uint32_t revolutionCounterSinceStart;
+	volatile uint32_t revolutionCounterSinceStart = 0;
 
-	spinning_state_e state;
+	spinning_state_e state = STOPPED;
 
 	/**
 	 * True if the engine is spinning (regardless of its state), i.e. if shaft position changes.
 	 * Needed by spinning-up logic.
 	 */
-	bool isSpinning;
+	bool isSpinning = false;
 };
 
 /**
@@ -182,6 +182,6 @@ int getRevolutionCounter(void);
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
-void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc);
+void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* RPM_REPORTER_H_ */

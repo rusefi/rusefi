@@ -51,7 +51,7 @@ static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
-	efiAssertVoid(CUSTOM_ERR_6654, reader->hw->started, "wave analyzer NOT INITIALIZED");
+	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
@@ -80,7 +80,7 @@ void WaveReader::onFallEvent() {
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
 
-	int revolutionCounter = getRevolutionCounter();
+	int revolutionCounter = engine->rpmCalculator.getRevolutionCounter();
 
 	totalOnTimeAccumulatorUs += width;
 	if (currentRevolutionCounter != revolutionCounter) {
@@ -117,9 +117,9 @@ static void setWaveModeSilent(int index, int mode) {
 //}
 
 static void initWave(const char *name, int index) {
-	brain_pin_e brainPin = boardConfiguration->logicAnalyzerPins[index];
+	brain_pin_e brainPin = CONFIGB(logicAnalyzerPins)[index];
 
-	bool mode = boardConfiguration->logicAnalyzerMode[index];
+	bool mode = CONFIGB(logicAnalyzerMode)[index];
 
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
@@ -127,12 +127,11 @@ static void initWave(const char *name, int index) {
 	reader->name = name;
 
 	reader->hw = addWaveAnalyzerDriver("wave input", brainPin);
+	if (reader->hw != NULL) {
+		reader->hw->widthListeners.registerCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
 
-
-	reader->hw->widthListeners.registerCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
-
-	reader->hw->periodListeners.registerCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
-
+		reader->hw->periodListeners.registerCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
+	}
 
 	print("wave%d input on %s\r\n", index, hwPortname(brainPin));
 	startInputDriver(reader->hw, mode);
@@ -211,6 +210,9 @@ static float getSignalPeriodMs(int index) {
 //}
 
 static void reportWave(Logging *logging, int index) {
+	if (readers[index].hw == NULL) {
+		return;
+	}
 	if (readers[index].hw->started) {
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);

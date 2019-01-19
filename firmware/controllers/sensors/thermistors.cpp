@@ -47,7 +47,7 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 	return r2 * Vin / (r1 + r2);
 }
 
-float ThermistorMath::getKelvinTemperatureByResistance(float resistance) {
+float ThermistorMath::getKelvinTemperatureByResistance(float resistance) const {
 	if (resistance <= 0) {
 		//warning("Invalid resistance in getKelvinTemperature=", resistance);
 		return 0.0f;
@@ -247,11 +247,6 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleActionF("test_clt_by_r", testCltByR);
 #endif
-}
-
-ThermistorMath::ThermistorMath() {
-	memset(&currentConfig, 0, sizeof(currentConfig));
-	s_h_a = s_h_b = s_h_c = 0;
 }
 
 void ThermistorMath::setConfig(thermistor_conf_s *config) {

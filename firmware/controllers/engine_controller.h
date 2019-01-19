@@ -14,14 +14,6 @@
 #include "engine_configuration.h"
 #include "engine.h"
 
-/**
- * I am not sure if this needs to be configurable.
- *
- * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
- */
-#define CLEANUP_MODE_TPS 90
-#define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
-
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -34,5 +26,7 @@ void setMockAfrVoltage(float voltage);
 void setMockMafVoltage(float voltage);
 void setMockIatVoltage(float voltage);
 void setMockCltVoltage(float voltage);
+
+void printCurrentState(Logging *logging, int seconds, const char *name);
 
 #endif /* ENGINE_STATUS_H_ */

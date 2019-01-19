@@ -26,14 +26,13 @@
 
 #include "global.h"
 #include "status_loop.h"
+#include "HIP9011_logic.h"
+#include "engine_controller.h"
 
 #include "adc_inputs.h"
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 #include "wave_analyzer.h"
 #endif /* EFI_WAVE_ANALYZER */
-
-// see RUS_EFI_VERSION_TAG in console source code
-#define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
 #include "trigger_central.h"
 #include "engine_state.h"
@@ -333,8 +332,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 		}
 	}
 
-		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warningCounter);
-		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.lastErrorCode);
+		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_COUNTER, "count", engine->engineState.warnings.warningCounter);
+		reportSensorI(log, fileFormat, GAUGE_NAME_WARNING_LAST, "code", engine->engineState.warnings.lastErrorCode);
 
 		reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
 		reportSensorI(log, fileFormat, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
@@ -393,27 +392,24 @@ void printOverallStatus(systime_t nowSeconds) {
 		return;
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
-	appendPrintf(&logger, "%s%s%d@%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
-			getRusEfiVersion(), VCS_VERSION,
-			getConfigurationName(engineConfiguration->engineType),
-			getTimeNowSeconds(),
-			DELIMETER);
+	int seconds = getTimeNowSeconds();
+	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType));
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	printOutPin(CRANK1, boardConfiguration->triggerInputPins[0]);
-	printOutPin(CRANK2, boardConfiguration->triggerInputPins[1]);
+	printOutPin(CRANK1, CONFIGB(triggerInputPins)[0]);
+	printOutPin(CRANK2, CONFIGB(triggerInputPins)[1]);
 	printOutPin(VVT_NAME, engineConfiguration->camInput);
-	printOutPin(HIP_NAME, boardConfiguration->hip9011IntHoldPin);
-	printOutPin(TACH_NAME, boardConfiguration->tachOutputPin);
+	printOutPin(HIP_NAME, CONFIGB(hip9011IntHoldPin));
+	printOutPin(TACH_NAME, CONFIGB(tachOutputPin));
 	printOutPin(DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
-	printOutPin(WA_CHANNEL_1, boardConfiguration->logicAnalyzerPins[0]);
-	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);
+	printOutPin(WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
+	printOutPin(WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
 #endif /* EFI_WAVE_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		printOutPin(enginePins.coils[i].name, boardConfiguration->ignitionPins[i]);
+		printOutPin(enginePins.coils[i].name, CONFIGB(ignitionPins)[i]);
 
-		printOutPin(enginePins.injectors[i].name, boardConfiguration->injectionPins[i]);
+		printOutPin(enginePins.injectors[i].name, CONFIGB(injectionPins)[i]);
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		printOutPin(enginePins.auxValve[i].name, engineConfiguration->auxValves[i]);
@@ -557,7 +553,7 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 static void initStatusLeds(void) {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin);
 	// we initialize this here so that we can blink it on start-up
-	enginePins.checkEnginePin.initPin("MalfunctionIndicator", boardConfiguration->malfunctionIndicatorPin, &boardConfiguration->malfunctionIndicatorPinMode);
+	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIGB(malfunctionIndicatorPin), &CONFIGB(malfunctionIndicatorPinMode));
 
 
 #if EFI_WARNING_LED || defined(__DOXYGEN__)
@@ -598,10 +594,8 @@ static void setBlinkingPeriod(int value) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
-extern efitick_t lastDecodingErrorTime;
-
 static bool isTriggerErrorNow() {
-	bool justHadError = (getTimeNowNt() - lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
+	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
 	return justHadError || isTriggerDecoderError();
 }
 
@@ -659,8 +653,7 @@ static void lcdThread(void *arg) {
 }
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
-extern int correctResponsesCount;
-extern int invalidHip9011ResponsesCount;
+extern HIP9011 instance;
 #endif /* EFI_HIP_9011 */
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -742,10 +735,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->timeSeconds = timeSeconds;
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
-	tsOutputChannels->isWarnNow = isWarningNow(timeSeconds, true);
+	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
-	tsOutputChannels->isKnockChipOk = (invalidHip9011ResponsesCount == 0);
+	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
 	switch (engineConfiguration->debugMode)	{
@@ -812,8 +805,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	case DBG_KNOCK:
-		tsOutputChannels->debugIntField1 = correctResponsesCount;
-		tsOutputChannels->debugIntField2 = invalidHip9011ResponsesCount;
+		// todo: maybe extract hipPostState(tsOutputChannels);
+		tsOutputChannels->debugIntField1 = instance.correctResponsesCount;
+		tsOutputChannels->debugIntField2 = instance.invalidHip9011ResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
 #if EFI_CJ125 || defined(__DOXYGEN__)
@@ -913,8 +907,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
 	
-	tsOutputChannels->warningCounter = engine->engineState.warningCounter;
-	tsOutputChannels->lastErrorCode = engine->engineState.lastErrorCode;
+	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
+	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
+	for (int i = 0; i < 8;i++) {
+		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
+	}
 
 	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
 	tsOutputChannels->knockEverIndicator = engine->knockEver;

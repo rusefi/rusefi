@@ -54,9 +54,12 @@ public:
 	void init(float *switchTimes, SingleWave *waves);
 
 	void weComplexInit(const char *msg,
+			ExecutorInterface *executor,
 			int phaseCount, float *swithcTimes, int waveCount, pin_state_t **pinStates,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
+
+	ExecutorInterface *executor;
 
 	/**
 	 * We need to handle zero duty cycle and 100% duty cycle in a special way
@@ -69,7 +72,7 @@ public:
 	void setFrequency(float frequency);
 
 	void handleCycleStart();
-
+	const char *name;
 
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	MultiWave multiWave;
@@ -106,6 +109,7 @@ private:
 class SimplePwm : public PwmConfig {
 public:
 	SimplePwm();
+	SimplePwm(const char *name);
 	void setSimplePwmDutyCycle(float dutyCycle);
 	pin_state_t pinStates[2];
 	SingleWave sr[1];
@@ -119,7 +123,9 @@ private:
  *
  * This method should be called after scheduling layer is started by initSignalExecutor()
  */
-void startSimplePwm(SimplePwm *state, const char *msg, OutputPin *output,
+void startSimplePwm(SimplePwm *state, const char *msg,
+		ExecutorInterface *executor,
+		OutputPin *output,
 		float dutyCycle, float frequency, pwm_gen_callback *stateChangeCallback);
 
 /**
@@ -127,7 +133,10 @@ void startSimplePwm(SimplePwm *state, const char *msg, OutputPin *output,
  *
  * This method should be called after scheduling layer is started by initSignalExecutor()
  */
-void startSimplePwmExt(SimplePwm *state, const char *msg, brain_pin_e brainPin, OutputPin *output,
+void startSimplePwmExt(SimplePwm *state,
+		const char *msg,
+		ExecutorInterface *executor,
+		brain_pin_e brainPin, OutputPin *output,
 		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
 
 void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes,

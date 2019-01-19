@@ -9,30 +9,17 @@
 #include <stdlib.h>
 
 #include "global.h"
-#include "test_accel_enrichment.h"
 #include "test_interpolation_3d.h"
 #include "test_find_index.h"
-#include "test_sensors.h"
-#include "test_speed_density.h"
 
-#include "test_fuel_map.h"
-#include "fuel_math.h"
-#include "test_fuelCut.h"
-#include "test_logic_expression.h"
-#include "test_pid_auto.h"
 #include "engine_configuration.h"
 
-#include "test_idle_controller.h"
 #include "afm2mapConverter.h"
 #include "test_signal_executor.h"
 #include "trigger_central.h"
-#include "test_startOfCrankingPrimingPulse.h"
-#include "test_fasterEngineSpinningUp.h"
-#include "test_util.h"
 #include "map_resize.h"
 #include "engine_math.h"
-#include "test_engine_math.h"
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 #include "gtest/gtest.h"
 
 typedef int32_t         msg_t;
@@ -62,76 +49,13 @@ extern bool printTriggerDebug;
 GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
-	testMisc();
-	testDifferentInjectionModes();
-	/**
-	 * PID
-	 */
-	testPidAuto();
-	testPidController();
-	/**
-	 * Larger-scale engine control
-	 */
-	testMissedSpark299();
-	testSparkReverseOrderBug319();
-	testFuelSchedulerBug299smallAndLarge();
-	testFuelSchedulerBug299smallAndMedium();
-	testLogicExpressions(); // fsio
-	testPlainCrankingWithoutAdvancedFeatures();
-	testStartOfCrankingPrimingPulse();
-	testFasterEngineSpinningUp();
-	testGpsParser();
-	testFuelMap();
-	testFuelCut();
-	testEngineMath();
-	testIgnitionPlanning();
-	testSensors();
-	/**
-	 * Data structures and general methods
-	 */
-	testCyclicBuffer();
-	testCrc();
-	testOverflow64Counter();
-	testFindIndex();
-	testInterpolate3d();
-	testInterpolate2d();
-	testSetTableValue();
-	testHistogram();
-	testFLStack();
-
-	testSignalExecutor();
-	testPwmGenerator();
-
-
-	/**
-	 * Business logic tests
-	 */
-	testMalfunctionCentral();
-
-	testConsoleLogic();
-
-	testAngleResolver();
-
-	testPinHelper();
-
-	testAccelEnrichment();
-
-	testSpeedDensity();
-
-	testMenuTree();
-	testMafLookup();
-	testIgnitionMapGenerator();
-	testMafFuelMath();
-
-	testTriggerDecoder();
-
-
-
 	//	resizeMap();
-	printf("Success 20190103\r\n");
+	printf("Success 20190117\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);
+	// uncomment if you only want to run selected tests
+	//::testing::GTEST_FLAG(filter) = "*testFasterEngineSpinningUp*";
 	return RUN_ALL_TESTS();
 }
 

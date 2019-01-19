@@ -64,7 +64,7 @@ static msg_t auxPidThread(int param) {
 		while (true) {
 			auxPid.sleep();
 
-			if (parametersVersion.isOld()) {
+			if (parametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
 				pidReset();
 			}
 
@@ -115,7 +115,9 @@ static void turnAuxPidOn(int index) {
 		return;
 	}
 
-	startSimplePwmExt(&auxPidPwm[index], "Aux PID", engineConfiguration->auxPidPins[index],
+	startSimplePwmExt(&auxPidPwm[index], "Aux PID",
+			&engine->executor,
+			engineConfiguration->auxPidPins[index],
 			&auxPidPin[0],
 			engineConfiguration->auxPidFrequency[index], 0.1, applyPinState);
 }

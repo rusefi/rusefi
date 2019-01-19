@@ -22,7 +22,7 @@
 #include "allsensors.h"
 #include "custom_engine.h"
 
-static const fuel_table_t miata_maf_fuel_table = { {/*0 engineLoad=1.2*//*0 800.0*/1.53, /*1 1213.0*/0.92, /*2 1626.0*/
+static const fuel_table_t miataNA8_maf_fuel_table = { {/*0 engineLoad=1.2*//*0 800.0*/1.53, /*1 1213.0*/0.92, /*2 1626.0*/
 		0.74, /*3 2040.0*/0.69, /*4 2453.0*/0.69, /*5 2866.0*/0.67, /*6 3280.0*/0.67, /*7 3693.0*/0.67, /*8 4106.0*/
 		0.67, /*9 4520.0*/1.02, /*10 4933.0*/0.98, /*11 5346.0*/0.98, /*12 5760.0*/0.92, /*13 6173.0*/0.89, /*14 6586.0*/
 		0.82, /*15 7000.0*/0.87 }, {/*1 engineLoad=1.413333*//*0 800.0*/2.98, /*1 1213.0*/2.07, /*2 1626.0*/1.74, /*3 2040.0*/
@@ -68,7 +68,7 @@ static const fuel_table_t miata_maf_fuel_table = { {/*0 engineLoad=1.2*//*0 800.
 		12.97, /*9 4520.0*/13.53, /*10 4933.0*/14.87, /*11 5346.0*/15.48, /*12 5760.0*/16.1, /*13 6173.0*/16.18, /*14 6586.0*/
 		15.93, /*15 7000.0*/0.0 } };
 
-static const ignition_table_t miata_maf_advance_table = { {/*0  engineLoad=1.200*//*0 800.0*/+4.498, /*1 1213.0*/+11.905, /*2 1626.0*/
+static const ignition_table_t miataNA8_maf_advance_table = { {/*0  engineLoad=1.200*//*0 800.0*/+4.498, /*1 1213.0*/+11.905, /*2 1626.0*/
 		+23.418, /*3 2040.0*/+25.357, /*4 2453.0*/+25.441, /*5 2866.0*/+25.468, /*6 3280.0*/+29.425, /*7 3693.0*/
 		+32.713, /*8 4106.0*/+35.556, /*9 4520.0*/+37.594, /*10 4933.0*/+36.165, /*11 5346.0*/+30.578, /*12 5760.0*/
 		+29.145, /*13 6173.0*/+29.065, /*14 6586.0*/+27.071, /*15 7000.0*/+28.282 }, {/*1  engineLoad=1.413*//*0 800.0*/
@@ -135,8 +135,8 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	boardConfiguration->idle.solenoidFrequency = 160;
 
@@ -240,9 +240,9 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->crankingChargeAngle = 70;
 
-	copyFuelTable(miata_maf_fuel_table, config->fuelTable);
+	copyFuelTable(miataNA8_maf_fuel_table, config->fuelTable);
 
-	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
+	copyTimingTable(miataNA8_maf_advance_table, config->ignitionTable);
 
 //	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
 //	boardConfiguration->triggerSimulatorPins[1] = GPIOB_3; // 2E - WHT - four times
@@ -368,8 +368,8 @@ void setMiata1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	commonMiataNa(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.displacement = 1.839;
 
-	copyFuelTable(miata_maf_fuel_table, config->fuelTable);
-	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
+	copyFuelTable(miataNA8_maf_fuel_table, config->fuelTable);
+	copyTimingTable(miataNA8_maf_advance_table, config->ignitionTable);
 
 	// upside down
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;

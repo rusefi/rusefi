@@ -5,18 +5,13 @@
  */
 
 #include "engine_math.h"
-#include "test_fuelCut.h"
-#include "test_trigger_decoder.h"
+#include "engine_test_helper.h"
 #include "event_queue.h"
-#include "unit_test_framework.h"
 #include "tps.h"
 
-extern EventQueue schedulingQueue;
 extern int timeNowUs;
-extern EnginePins enginePins;
 
-void testCoastingFuelCut() {
-	// this is just a reference unit test implementation
+TEST(fuelCut, coasting) {
 	printf("*************************************************** testCoastingFuelCut\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -45,7 +40,7 @@ void testCoastingFuelCut() {
 	// set 'running' RPM - just above RpmHigh threshold
 	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh + 1;
 	// 'advance' time (amount doesn't matter)
-	timeNowUs += 1000;
+	eth.moveTimeForwardUs(1000);
 
 	const float normalInjDuration = 1.5f;
 	/*
@@ -101,8 +96,4 @@ void testCoastingFuelCut() {
 
 	// Fuel cut-off is active again!
 	assertEqualsM("inj dur#7 cut", 0.0f, ENGINE(injectionDuration));
-}
-
-void testFuelCut() {
-	testCoastingFuelCut();
 }

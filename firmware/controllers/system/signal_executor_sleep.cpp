@@ -34,8 +34,8 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	scheduleForLater(scheduling, time - getTimeNowUs(), callback, param);
+void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
+	scheduleForLater(scheduling, timeUs - getTimeNowUs(), callback, param);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
@@ -52,7 +52,7 @@ static void timerCallback(scheduling_s *scheduling) {
 
 }
 
-void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	int delaySt = MY_US2ST(delayUs);
 	if (delaySt <= 0) {
 		/**
@@ -85,6 +85,10 @@ void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback,
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
+}
+
+void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	doScheduleForLater(scheduling, delayUs, callback, param);
 }
 
 void initSignalExecutorImpl(void) {

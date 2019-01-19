@@ -7,7 +7,6 @@
 
 #include <string.h>
 
-#include "test_util.h"
 #include "cyclic_buffer.h"
 #include "global.h"
 #include "histogram.h"
@@ -15,6 +14,7 @@
 #include "malfunction_central.h"
 #include "cli_registry.h"
 #include "unit_test_framework.h"
+#include "engine_controller.h"
 
 #include "nmea.h"
 #include "efilib2.h"
@@ -25,15 +25,17 @@
 #include "efiGpio.h"
 #include "efilib.h"
 
-void testCrc(void) {
-	assertEquals(4, efiRound(4.4, 1));
-	assertEquals(1.2, efiRound(1.2345, 0.1));
+#include "gtest/gtest.h"
+
+TEST(util, crc) {
+	ASSERT_EQ(4, efiRound(4.4, 1));
+	ASSERT_FLOAT_EQ(1.2, efiRound(1.2345, 0.1));
 
 	print("*************************************** testCrc\r\n");
 
 	const char * A = "A";
 
-	assertEqualsM("crc8", 168, calc_crc((const crc_t *) A, 1));
+	ASSERT_EQ( 168,  calc_crc((const crc_t *) A, 1)) << "crc8";
 	uint32_t c = crc32(A, 1);
 	printf("crc32(A)=%x\r\n", c);
 	assertEqualsM("crc32 1", 0xd3d99e8b, c);
@@ -48,31 +50,39 @@ void testCrc(void) {
 	assertEqualsM("crc32 line inc", 0x4775a7b1, c);
 }
 
-static cyclic_buffer<int> sb;
 
-void testOverflow64Counter(void) {
+TEST(util, Overflow64Counter) {
 	print("*************************************** testOverflow64Counter\r\n");
 
 	Overflow64Counter o;
-	assertEquals(0, o.update(0));
-	assertEquals(10, o.update(10));
+	ASSERT_EQ(0, o.update(0));
+	ASSERT_EQ(10, o.update(10));
 
-	assertEquals(20, o.update(20));
+	ASSERT_EQ(20, o.update(20));
 
 	// overflow
-	assertEquals(4294967296, o.update(0));
+	ASSERT_EQ(4294967296, o.update(0));
 }
 
-void testCyclicBuffer(void) {
+TEST(util, cyclicBufferContains) {
+	cyclic_buffer<int> sb;
+	sb.add(10);
+	ASSERT_EQ(TRUE, sb.contains(10));
+	ASSERT_EQ(FALSE, sb.contains(11));
+}
+
+TEST(util, cyclicBuffer) {
+	cyclic_buffer<int> sb;
+
 	print("*************************************** testCyclicBuffer\r\n");
 
 	{
 		sb.add(10);
 
-		assertEquals(10, sb.sum(3));
+		ASSERT_EQ(10, sb.sum(3));
 
 		sb.add(2);
-		assertEquals(12, sb.sum(2));
+		ASSERT_EQ(12, sb.sum(2));
 	}
 	{
 		sb.clear();
@@ -82,39 +92,39 @@ void testCyclicBuffer(void) {
 		sb.add(3);
 		sb.add(4);
 
-		assertEquals(4, sb.maxValue(3));
-		assertEquals(4, sb.maxValue(113));
-		assertEqualsM("minValue(3)", 2, sb.minValue(3));
-		assertEquals(1, sb.minValue(113));
+		ASSERT_EQ(4, sb.maxValue(3));
+		ASSERT_EQ(4, sb.maxValue(113));
+		ASSERT_EQ( 2,  sb.minValue(3)) << "minValue(3)";
+		ASSERT_EQ(1, sb.minValue(113));
 	}
 
 }
 
-void testHistogram(void) {
+TEST(util, histogram) {
 	print("******************************************* testHistogram\r\n");
 
 	initHistogramsModule();
 
-	assertEquals(80, histogramGetIndex(239));
-	assertEquals(223, histogramGetIndex(239239));
-	assertEquals(364, histogramGetIndex(239239239));
+	ASSERT_EQ(80, histogramGetIndex(239));
+	ASSERT_EQ(223, histogramGetIndex(239239));
+	ASSERT_EQ(364, histogramGetIndex(239239239));
 
 	histogram_s h;
 
 	initHistogram(&h, "test");
 
 	int result[5];
-	assertEquals(0, hsReport(&h, result));
+	ASSERT_EQ(0, hsReport(&h, result));
 
 	hsAdd(&h, 10);
-	assertEquals(1, hsReport(&h, result));
-	assertEquals(10, result[0]);
+	ASSERT_EQ(1, hsReport(&h, result));
+	ASSERT_EQ(10, result[0]);
 
 	// let's add same value one more time
 	hsAdd(&h, 10);
-	assertEquals(2, hsReport(&h, result));
-	assertEquals(10, result[0]);
-	assertEquals(10, result[1]);
+	ASSERT_EQ(2, hsReport(&h, result));
+	ASSERT_EQ(10, result[0]);
+	ASSERT_EQ(10, result[1]);
 
 	hsAdd(&h, 10);
 	hsAdd(&h, 10);
@@ -123,14 +133,14 @@ void testHistogram(void) {
 	hsAdd(&h, 1000);
 	hsAdd(&h, 100);
 
-	assertEquals(5, hsReport(&h, result));
+	ASSERT_EQ(5, hsReport(&h, result));
 
-	assertEquals(5, result[0]);
-	assertEquals(10, result[1]);
-	assertEquals(10, result[2]);
-	assertEquals(100, result[3]);
+	ASSERT_EQ(5, result[0]);
+	ASSERT_EQ(10, result[1]);
+	ASSERT_EQ(10, result[2]);
+	ASSERT_EQ(100, result[3]);
 	// values are not expected to be exactly the same, it's the shape what matters
-	assertEquals(1011, result[4]);
+	ASSERT_EQ(1011, result[4]);
 }
 
 static void testMalfunctionCentralRemoveNonExistent() {
@@ -149,7 +159,7 @@ static void testMalfunctionCentralSameElementAgain() {
 	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 	getErrorCodes(&localCopy);
-	assertEquals(1, localCopy.count);
+	ASSERT_EQ(1, localCopy.count);
 }
 
 static void testMalfunctionCentralRemoveFirstElement() {
@@ -163,17 +173,17 @@ static void testMalfunctionCentralRemoveFirstElement() {
 	obd_code_e secondElement = OBD_Intake_Air_Temperature_Circuit_Malfunction;
 	addError(secondElement);
 	getErrorCodes(&localCopy);
-	assertEquals(2, localCopy.count);
+	ASSERT_EQ(2, localCopy.count);
 
 	// let's remove first element - code
 	removeError(firstElement);
 
 	getErrorCodes(&localCopy);
-	assertEquals(1, localCopy.count);
-	assertEquals(secondElement, localCopy.error_codes[0]);
+	ASSERT_EQ(1, localCopy.count);
+	ASSERT_EQ(secondElement, localCopy.error_codes[0]);
 }
 
-void testMalfunctionCentral(void) {
+TEST(misc, testMalfunctionCentral) {
 	testMalfunctionCentralRemoveNonExistent();
 	testMalfunctionCentralSameElementAgain();
 	testMalfunctionCentralRemoveFirstElement();
@@ -185,37 +195,37 @@ void testMalfunctionCentral(void) {
 
 	// on start-up error storage should be empty
 	getErrorCodes(&localCopy);
-	assertEquals(0, localCopy.count);
+	ASSERT_EQ(0, localCopy.count);
 
 	obd_code_e code = OBD_Engine_Coolant_Temperature_Circuit_Malfunction;
 	// let's add one error and validate
 	addError(code);
 
 	getErrorCodes(&localCopy);
-	assertEqualsM("count #1", 1, localCopy.count);
-	assertEquals(code, localCopy.error_codes[0]);
+	ASSERT_EQ( 1,  localCopy.count) << "count #1";
+	ASSERT_EQ(code, localCopy.error_codes[0]);
 
 	// let's remove value which is not in the collection
 	removeError((obd_code_e) 22);
 	// element not present - nothing to removed
-	assertEquals(1, localCopy.count);
-	assertEquals(code, localCopy.error_codes[0]);
+	ASSERT_EQ(1, localCopy.count);
+	ASSERT_EQ(code, localCopy.error_codes[0]);
 
 	code = OBD_Intake_Air_Temperature_Circuit_Malfunction;
 	addError(code);
 	getErrorCodes(&localCopy);
-	// todo:	assertEquals(2, localCopy.count);
+	// todo:	ASSERT_EQ(2, localCopy.count);
 
 	for (int code = 0; code < 100; code++) {
 		addError((obd_code_e) code);
 	}
 	getErrorCodes(&localCopy);
-	assertEquals(MAX_ERROR_CODES_COUNT, localCopy.count);
+	ASSERT_EQ(MAX_ERROR_CODES_COUNT, localCopy.count);
 
 	// now we have full array and code below present
 	removeError(code);
 	getErrorCodes(&localCopy);
-	assertEquals(MAX_ERROR_CODES_COUNT - 1, localCopy.count);
+	ASSERT_EQ(MAX_ERROR_CODES_COUNT - 1, localCopy.count);
 }
 
 static int lastInteger = -1;
@@ -244,7 +254,7 @@ static loc_t GPSdata;
 
 static char nmeaMessage[1000];
 
-void testGpsParser(void) {
+TEST(misc, testGpsParser) {
 	print("******************************************* testGpsParser\r\n");
 
 	strcpy(nmeaMessage, "");
@@ -253,75 +263,75 @@ void testGpsParser(void) {
 	// we need to pass a mutable string, not a constant because the parser would be modifying the string
 	strcpy(nmeaMessage, "$GPRMC,173843,A,3349.896,N,11808.521,W,000.0,360.0,230108,013.4,E*69");
 	gps_location(&GPSdata, nmeaMessage);
-	assertEqualsM("1 valid", 4, GPSdata.quality);
+	ASSERT_EQ( 4,  GPSdata.quality) << "1 valid";
 	assertEqualsM("1 latitude", 3349.896, GPSdata.latitude);
 	assertEqualsM("1 longitude", 11808.521, GPSdata.longitude);
-	assertEqualsM("1 speed", 0, GPSdata.speed);
-// 	assertEqualsM("1 altitude", 0, GPSdata.altitude);	// GPRMC not overwrite altitude
-	assertEqualsM("1 course", 360, GPSdata.course);
+	ASSERT_EQ( 0,  GPSdata.speed) << "1 speed";
+// 	ASSERT_EQ( 0,  GPSdata.altitude) << "1 altitude";	// GPRMC not overwrite altitude
+	ASSERT_EQ( 360,  GPSdata.course) << "1 course";
 
 	strcpy(nmeaMessage, "$GPGGA,111609.14,5001.27,N,3613.06,E,3,08,0.0,10.2,M,0.0,M,0.0,0000*70");
 	gps_location(&GPSdata, nmeaMessage);
-	assertEqualsM("2 valid", 3, GPSdata.quality);		// see field details
+	ASSERT_EQ( 3,  GPSdata.quality) << "2 valid";		// see field details
 	assertEqualsM("2 latitude", 50.0212, GPSdata.latitude);
 	assertEqualsM("2 longitude", 36.2177, GPSdata.longitude);
-	assertEqualsM("2 speed", 0, GPSdata.speed);
+	ASSERT_EQ( 0,  GPSdata.speed) << "2 speed";
 	assertEqualsM("2 altitude", 10.2, GPSdata.altitude);
-//	assertEqualsM("2 course", 0, GPSdata.course);  // GPGGA not overwrite course
+//	ASSERT_EQ( 0,  GPSdata.course) << "2 course";  // GPGGA not overwrite course
 
 	strcpy(nmeaMessage, "$GPRMC,111609.14,A,5001.27,N,3613.06,E,11.2,0.0,261206,0.0,E*50");
 	gps_location(&GPSdata, nmeaMessage);
-	assertEqualsM("3 valid", 4, GPSdata.quality);
+	ASSERT_EQ( 4,  GPSdata.quality) << "3 valid";
 	assertEqualsM("3 latitude", 5001.27, GPSdata.latitude);
 	assertEqualsM("3 longitude", 3613.06, GPSdata.longitude);
 	assertEqualsM("3 speed", 11.2, GPSdata.speed);
-//	assertEqualsM("3 altitude", 0, GPSdata.altitude);  // GPRMC not overwrite altitude
-	assertEqualsM("3 course", 0, GPSdata.course);
-	assertEqualsM("3 GPS yy", 2006, GPSdata.GPStm.tm_year + 1900);
-	assertEqualsM("3 GPS mm", 12, GPSdata.GPStm.tm_mon);
-	assertEqualsM("3 GPS yy", 26, GPSdata.GPStm.tm_mday);
-	assertEqualsM("3 GPS hh", 11, GPSdata.GPStm.tm_hour);
-	assertEqualsM("3 GPS mm", 16, GPSdata.GPStm.tm_min);
-	assertEqualsM("3 GPS ss", 9, GPSdata.GPStm.tm_sec);
+//	ASSERT_EQ( 0,  GPSdata.altitude) << "3 altitude";  // GPRMC not overwrite altitude
+	ASSERT_EQ( 0,  GPSdata.course) << "3 course";
+	ASSERT_EQ( 2006,  GPSdata.GPStm.tm_year + 1900) << "3 GPS yy";
+	ASSERT_EQ( 12,  GPSdata.GPStm.tm_mon) << "3 GPS mm";
+	ASSERT_EQ( 26,  GPSdata.GPStm.tm_mday) << "3 GPS yy";
+	ASSERT_EQ( 11,  GPSdata.GPStm.tm_hour) << "3 GPS hh";
+	ASSERT_EQ( 16,  GPSdata.GPStm.tm_min) << "3 GPS mm";
+	ASSERT_EQ( 9,  GPSdata.GPStm.tm_sec) << "3 GPS ss";
 
 	// check again first one
 	// we need to pass a mutable string, not a constant because the parser would be modifying the string
 	strcpy(nmeaMessage, "$GPRMC,173843,A,3349.896,N,11808.521,W,000.0,360.0,230108,013.4,E*69");
 	gps_location(&GPSdata, nmeaMessage);
-	assertEqualsM("4 valid", 4, GPSdata.quality);
+	ASSERT_EQ( 4,  GPSdata.quality) << "4 valid";
 	assertEqualsM("4 latitude", 3349.896, GPSdata.latitude);
 	assertEqualsM("4 longitude", 11808.521, GPSdata.longitude);
-	assertEqualsM("4 speed", 0, GPSdata.speed);
-	assertEqualsM("4 course", 360, GPSdata.course);
+	ASSERT_EQ( 0,  GPSdata.speed) << "4 speed";
+	ASSERT_EQ( 360,  GPSdata.course) << "4 course";
 }
 
 // this buffer is needed because on Unix you would not be able to change static char constants
 static char buffer[300];
 
-void testConsoleLogic(void) {
+TEST(misc, testConsoleLogic) {
 	print("******************************************* testConsoleLogic\r\n");
 	resetConsoleActions();
 
 	helpCommand();
 
 	char * cmd = "he ha";
-	assertEquals(2, findEndOfToken(cmd));
+	ASSERT_EQ(2, findEndOfToken(cmd));
 
 	cmd = "\"hee\" ha";
-	assertEquals(5, findEndOfToken(cmd));
+	ASSERT_EQ(5, findEndOfToken(cmd));
 
 	cmd = "\"h e\" ha";
-	assertEquals(5, findEndOfToken(cmd));
+	ASSERT_EQ(5, findEndOfToken(cmd));
 
 	strcpy(buffer, "echo");
-	assertTrue(strEqual("echo", unquote(buffer)));
+	ASSERT_TRUE(strEqual("echo", unquote(buffer)));
 
 	strcpy(buffer, "\"echo\"");
-	assertTrueM("unquote quoted", strEqual("echo", unquote(buffer)));
+	ASSERT_TRUE(strEqual("echo", unquote(buffer))) << "unquote quoted";
 
 	char *ptr = validateSecureLine(UNKNOWN_COMMAND);
-	assertEquals(0, strcmp(UNKNOWN_COMMAND, ptr));
-	assertEquals(10, tokenLength(UNKNOWN_COMMAND));
+	ASSERT_EQ(0, strcmp(UNKNOWN_COMMAND, ptr));
+	ASSERT_EQ(10, tokenLength(UNKNOWN_COMMAND));
 
 	// handling invalid token should work
 	strcpy(buffer, "sdasdafasd asd");
@@ -331,78 +341,78 @@ void testConsoleLogic(void) {
 	addConsoleActionI("echoi", testEchoI);
 	strcpy(buffer, "echoi 239");
 	handleConsoleLine(buffer);
-	assertEquals(239, lastInteger);
+	ASSERT_EQ(239, lastInteger);
 
 	print("\r\naddConsoleActionI 240 with two spaces\r\n");
 	strcpy(buffer, "echoi  240");
 	handleConsoleLine(buffer);
-	assertEquals(240, lastInteger);
+	ASSERT_EQ(240, lastInteger);
 
 
 	print("\r\naddConsoleActionII\r\n");
 	addConsoleActionII("echoii", testEchoII);
 	strcpy(buffer, "echoii 22 239");
 	handleConsoleLine(buffer);
-	assertEquals(22, lastInteger);
-	assertEquals(239, lastInteger2);
+	ASSERT_EQ(22, lastInteger);
+	ASSERT_EQ(239, lastInteger2);
 
 	print("\r\naddConsoleActionII three spaces\r\n");
 	strcpy(buffer, "echoii   21   220");
 	handleConsoleLine(buffer);
-	assertEquals(21, lastInteger);
-	assertEquals(220, lastInteger2);
+	ASSERT_EQ(21, lastInteger);
+	ASSERT_EQ(220, lastInteger2);
 
 	print("\r\addConsoleActionSSS\r\n");
 	addConsoleActionSSS("echosss", testEchoSSS);
 	strcpy(buffer, "echosss 111 222 333");
 	handleConsoleLine(buffer);
-	assertEquals(111, atoi(lastFirst));
-	assertEquals(333, atoi(lastThird));
+	ASSERT_EQ(111, atoi(lastFirst));
+	ASSERT_EQ(333, atoi(lastThird));
 
 	strcpy(buffer, "echosss \" 1\" 222 333");
 	handleConsoleLine(buffer);
-	assertTrue(strEqual("\" 1\"", lastFirst));
+	ASSERT_TRUE(strEqual("\" 1\"", lastFirst));
 
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
 
-void testFLStack(void) {
+TEST(misc, testFLStack) {
 	print("******************************************* testFLStack\r\n");
 
 	FLStack<int, 4> stack;
-	assertEquals(0, stack.size());
+	ASSERT_EQ(0, stack.size());
 
 	stack.push(123);
 	stack.push(234);
-	assertEquals(2, stack.size());
+	ASSERT_EQ(2, stack.size());
 
 	int v = stack.pop();
-	assertEquals(234, v);
-	assertEquals(1, stack.size());
-	assertEquals(123, stack.get(0));
+	ASSERT_EQ(234, v);
+	ASSERT_EQ(1, stack.size());
+	ASSERT_EQ(123, stack.get(0));
 
 	v = stack.pop();
-	assertEquals(123, v);
-	assertEquals(0, stack.size());
+	ASSERT_EQ(123, v);
+	ASSERT_EQ(0, stack.size());
 
 	stack.push(123);
 	stack.push(234);
 	stack.push(345);
 	stack.push(456);
-	assertEquals(4, stack.size());
+	ASSERT_EQ(4, stack.size());
 
 	stack.remove(123);
-	assertEquals(456, stack.get(0));
-	assertEquals(3, stack.size());
+	ASSERT_EQ(456, stack.get(0));
+	ASSERT_EQ(3, stack.size());
 }
 
 static char buff[32];
 
-void testMisc(void) {
+TEST(misc, testMisc) {
 	print("******************************************* testMisc\r\n");
 	strcpy(buff, "  ab  ");
 	// we need a mutable array here
-	assertTrue(strEqual("ab", efiTrim(buff)));
+	ASSERT_TRUE(strEqual("ab", efiTrim(buff)));
 
 
 	{
@@ -411,18 +421,18 @@ void testMisc(void) {
 	}
 	{
 		float v = atoff("nan");
-		assertTrueM("NaN atoff", cisnan(v));
+		ASSERT_TRUE(cisnan(v)) << "NaN atoff";
 	}
 	{
 		float v = atoff("N");
-		assertTrueM("NaN atoff", cisnan(v));
+		ASSERT_TRUE(cisnan(v)) << "NaN atoff";
 	}
 
-//	assertEquals(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
-//	assertEquals(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
+//	ASSERT_EQ(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
+//	ASSERT_EQ(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
 }
 
-void testMenuTree(void) {
+TEST(misc, testMenuTree) {
 	print("******************************************* testMenuTree\r\n");
 
 	MenuItem ROOT(NULL, NULL);
@@ -441,47 +451,58 @@ void testMenuTree(void) {
 	MenuItem miSubMenu5_1(&miTopLevel5, "sub menu 5 1");
 	MenuItem miSubMenu5_2(&miTopLevel5, "sub menu 5 2");
 
-	assertEquals(0, miTopLevel1.index);
-	assertEquals(1, miTopLevel2.index);
-	assertEquals(4, miTopLevel5.index);
+	ASSERT_EQ(0, miTopLevel1.index);
+	ASSERT_EQ(1, miTopLevel2.index);
+	ASSERT_EQ(4, miTopLevel5.index);
 
 	tree.init(&miTopLevel1, 3);
 
 	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel1);
-	assertTrue(tree.current == &miTopLevel2);
+	ASSERT_TRUE(tree.topVisible == &miTopLevel1);
+	ASSERT_TRUE(tree.current == &miTopLevel2);
 
 	tree.back();
-	assertTrue(tree.current == &miTopLevel2); // no 'back' since we are on the top level already
+	ASSERT_TRUE(tree.current == &miTopLevel2); // no 'back' since we are on the top level already
 
 	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel1);
-	assertTrue(tree.current == &miTopLevel3);
+	ASSERT_TRUE(tree.topVisible == &miTopLevel1);
+	ASSERT_TRUE(tree.current == &miTopLevel3);
 
 	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel2);
-	assertTrue(tree.current == &miTopLevel4);
-
-	tree.enterSubMenu();
-	assertTrueM("still same", tree.current == &miTopLevel4); // no children in this one
-
-	tree.nextItem();
-	assertTrue(tree.topVisible == &miTopLevel3);
-	assertTrueM("tl5", tree.current == &miTopLevel5);
-
-	tree.nextItem();
-	assertTrueM("tl1 t", tree.topVisible == &miTopLevel1);
-	assertTrueM("tl1 c", tree.current == &miTopLevel1);
-
-	tree.nextItem();
-	tree.nextItem();
-	tree.nextItem();
-	tree.nextItem();
+	ASSERT_TRUE(tree.topVisible == &miTopLevel2);
+	ASSERT_TRUE(tree.current == &miTopLevel4);
 
 	tree.enterSubMenu();
-	assertTrue(tree.current == &miSubMenu5_1);
+	ASSERT_TRUE(tree.current == &miTopLevel4) << "still same"; // no children in this one
+
+	tree.nextItem();
+	ASSERT_TRUE(tree.topVisible == &miTopLevel3);
+	ASSERT_TRUE(tree.current == &miTopLevel5) << "tl5";
+
+	tree.nextItem();
+	ASSERT_TRUE(tree.topVisible == &miTopLevel1) << "tl1 t";
+	ASSERT_TRUE(tree.current == &miTopLevel1) << "tl1 c";
+
+	tree.nextItem();
+	tree.nextItem();
+	tree.nextItem();
+	tree.nextItem();
+
+	tree.enterSubMenu();
+	ASSERT_TRUE(tree.current == &miSubMenu5_1);
 
 	tree.back();
-	assertTrue(tree.current == &miTopLevel1);
+	ASSERT_TRUE(tree.current == &miTopLevel1);
+}
 
+int getRusEfiVersion(void) {
+	return 776655;
+}
+
+TEST(util, datalogging) {
+	char LOGGING_BUFFER[1000];
+	Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+
+	printCurrentState(&logger, 239, "CUSTOM_ENGINE");
+	ASSERT_STREQ("rusEfiVersion,776655@321 CUSTOM_ENGINE 239,", LOGGING_BUFFER);
 }

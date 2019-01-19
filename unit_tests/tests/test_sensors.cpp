@@ -12,7 +12,7 @@
 
 static ThermistorConf tc;
 
-static void testMapDecoding(void) {
+TEST(sensors, mapDecoding) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
 
@@ -20,14 +20,14 @@ static void testMapDecoding(void) {
 	s.type = MT_DENSO183;
 
 	assertEqualsM("denso 0 volts", -6.64, decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(31.244, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(31.244, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
 
 	s.type = MT_MPX4250;
-	assertEqualsM("MPX_4250 0 volts", 8, decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEquals(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_EQ( 8,  decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX)) << "MPX_4250 0 volts";
+	ASSERT_FLOAT_EQ(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-void testTps(void) {
+TEST(sensors, tps) {
 	print("************************************************** testTps\r\n");
 
 	EngineTestHelper eth(DODGE_RAM);
@@ -36,7 +36,7 @@ void testTps(void) {
 	engineConfiguration->tpsMax = 193;
 	engineConfiguration->tpsMin = 43;
 
-	assertEquals(49.3333, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_NEAR(49.3333, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
 
 
 	engineConfiguration->tpsMax = 43;
@@ -44,7 +44,7 @@ void testTps(void) {
 	assertEqualsM("test#2", 50.6667, getTpsValue(4 * 117 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-void testTpsRateOfChange(void) {
+TEST(sensors, testTpsRateOfChange) {
 	print("************************************************** testTpsRateOfChange\r\n");
 //	saveTpsState(0, 0);
 //	saveTpsState(CH_FREQUENCY, 50);
@@ -57,22 +57,18 @@ void testTpsRateOfChange(void) {
 //	assertEquals(25, getTpsRateOfChange());
 }
 
-void testSensors(void) {
-	print("************************************************** testSensors\r\n");
-	testMapDecoding();
-	testTps();
-	testTpsRateOfChange();
+TEST(sensors, thermistors) {
 
 	ThermistorMath tm;
 	{
 		setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
 		tm.setConfig(&tc.config);
 		float t = tm.getKelvinTemperatureByResistance(2100);
-		assertEquals(75 + KELV, t);
+		ASSERT_FLOAT_EQ(75 + KELV, t);
 
-		assertEquals(-0.003, tm.s_h_a);
-		assertEquals(0.001, tm.s_h_b);
-		assertEquals(0.0, tm.s_h_c);
+		ASSERT_NEAR(-0.003, tm.s_h_a, EPS4D);
+		ASSERT_NEAR(0.001, tm.s_h_b, EPS4D);
+		ASSERT_NEAR(0.0, tm.s_h_c, EPS5D);
 
 	}
 
@@ -82,11 +78,10 @@ void testSensors(void) {
 		tm.setConfig(&tc.config);
 
 		float t = tm.getKelvinTemperatureByResistance(38000);
-		assertEquals(-2.7983, t - KELV);
+		ASSERT_NEAR(-2.7983, t - KELV, EPS4D);
 
 		assertEqualsM("A", 0.0009, tm.s_h_a);
 		assertEqualsM("B", 0.0003, tm.s_h_b);
-		assertEquals(0.0, tm.s_h_c);
+		ASSERT_NEAR(0.0, tm.s_h_c, EPS4D);
 	}
 }
-

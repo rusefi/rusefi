@@ -35,7 +35,7 @@ static void startPwmTest(int freq) {
 	/**
 	 * See custom_engine.cpp for pinout
 	 */
-	// currently this is PB9 by default - see boardConfiguration->injectionPins
+	// currently this is PB9 by default - see CONFIGB(injectionPins)
 	startSimplePwm(&pwmTest[1], "tester", &enginePins.injectors[0], freq / 1.3333333333, 0.5f, applyPinState);
 	// currently this is PE2 by default
 	startSimplePwm(&pwmTest[2], "tester", &enginePins.injectors[1], freq / 1000, 0.5f, applyPinState);
@@ -73,7 +73,7 @@ static void testCallback(void *arg) {
 	/**
 	 * this would re-schedule another callback in 2ms from now
 	 */
-	scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
+	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
 }
 
 void initPwmTester(void) {
@@ -97,7 +97,7 @@ void initPwmTester(void) {
 	/**
 	 * this would schedule a callback in 2ms from now
 	 */
-	scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
+	engine->executor.scheduleForLater("test", &ioTest, MS2US(2), testCallback, NULL);
 }
 
 #endif

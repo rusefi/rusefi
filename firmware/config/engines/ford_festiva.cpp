@@ -79,11 +79,11 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
 //	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 //	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	config->veRpmBins[0] = 800;
 	config->veRpmBins[1] = 1200;
@@ -147,9 +147,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.baseFuel = 9;
 
 	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 105, 5);
-	setWholeTimingTable(10 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 	// set_whole_fuel_map 5
-	setWholeFuelMap(5 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(5 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 13.5);
 
 	setSingleCoilDwell(engineConfiguration);

@@ -14,6 +14,7 @@
 #define CYCLIC_BUFFER_H
 
 #include <string.h>
+#include "rusefi_true.h"
 
 static const short CB_MAX_SIZE = 128;
 
@@ -36,13 +37,14 @@ class cyclic_buffer
 
   public:
     void add(T value);
-    T get(int index);
-    T sum(int length);
-    T maxValue(int length);
-    T minValue(int length);
+    T get(int index) const;
+    T sum(int length) const;
+    T maxValue(int length) const;
+    T minValue(int length) const;
     void setSize(int size);
-    int getSize();
-    int getCount();
+    bool contains(T value) const;
+    int getSize() const;
+    int getCount() const;
     void clear();
     volatile T elements[maxSize];
     volatile int currentIndex;
@@ -69,6 +71,7 @@ cyclic_buffer<T, maxSize>::cyclic_buffer(int size) {
 template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::baseC(int size) {
 	currentIndex = 0;
+	memset((void*)&elements, 0, sizeof(elements));
 	setSize(size);
 }
 
@@ -112,23 +115,33 @@ void cyclic_buffer<T, maxSize>::add(T value) {
 }
 
 template<typename T, size_t maxSize>
+bool cyclic_buffer<T, maxSize>::contains(T value) const {
+	for (int i = 0; i < currentIndex ; i++) {
+		if (elements[i] == value) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::setSize(int size) {
 	clear();
 	this->size = size < maxSize ? size : maxSize;
 }
 
 template<typename T, size_t maxSize>
-int cyclic_buffer<T, maxSize>::getSize() {
+int cyclic_buffer<T, maxSize>::getSize() const {
 	return size;
 }
 
 template<typename T, size_t maxSize>
-int cyclic_buffer<T, maxSize>::getCount() {
+int cyclic_buffer<T, maxSize>::getCount() const {
 	return count;
 }
 
 template<typename T, size_t maxSize>
-T cyclic_buffer<T, maxSize>::get(int index) {
+T cyclic_buffer<T, maxSize>::get(int index) const {
 	while (index < 0) {
 		index += size;
 	}
@@ -139,7 +152,7 @@ T cyclic_buffer<T, maxSize>::get(int index) {
 }
 
 template<typename T, size_t maxSize>
-T cyclic_buffer<T, maxSize>::maxValue(int length) {
+T cyclic_buffer<T, maxSize>::maxValue(int length) const {
 	if (length > count) {
 		// not enough data in buffer
 		length = count;
@@ -160,7 +173,7 @@ T cyclic_buffer<T, maxSize>::maxValue(int length) {
 }
 
 template<typename T, size_t maxSize>
-T cyclic_buffer<T, maxSize>::minValue(int length) {
+T cyclic_buffer<T, maxSize>::minValue(int length) const {
 	if (length > count) {
 		length = count;
 	}
@@ -180,7 +193,7 @@ T cyclic_buffer<T, maxSize>::minValue(int length) {
 }
 
 template<typename T, size_t maxSize>
-T cyclic_buffer<T, maxSize>::sum(int length) {
+T cyclic_buffer<T, maxSize>::sum(int length) const {
 	if (length > count) {
 		length = count;
 	}

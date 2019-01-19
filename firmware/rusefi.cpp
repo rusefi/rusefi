@@ -166,6 +166,7 @@ void runRusEfi(void) {
 	engine->setConfig(config);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
+	addConsoleAction("reboot", scheduleReboot);
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	/**
@@ -182,23 +183,22 @@ void runRusEfi(void) {
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	/**
-	 * First thing is reading configuration from flash memory.
-	 * In order to have complete flexibility configuration has to go before anything else.
-	 */
-	readConfiguration(&sharedLogger);
-	prepareVoidConfiguration(&activeConfiguration);
-
-	/**
 	 * First data structure keeps track of which hardware I/O pins are used by whom
 	 */
 	initPinRepository();
 
 	/**
+	 * First thing is reading configuration from flash memory.
+	 * In order to have complete flexibility configuration has to go before anything else.
+	 */
+	readConfiguration(&sharedLogger);
+	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
+	prepareVoidConfiguration(&activeConfiguration);
+
+	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
 	initializeConsole(&sharedLogger);
-
-	addConsoleAction("reboot", scheduleReboot);
 
 	/**
 	 * Initialize hardware drivers
@@ -211,6 +211,7 @@ void runRusEfi(void) {
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
 	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+	rememberCurrentConfiguration();
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 	initTimePerfActions(&sharedLogger);
@@ -221,9 +222,7 @@ void runRusEfi(void) {
 #endif
 	startStatusThreads();
 
-	test557init();
-
-	rememberCurrentConfiguration();
+	runSchedulingPrecisionTestIfNeeded();
 
 	print("Running main loop\r\n");
 	main_loop_started = true;
@@ -239,7 +238,7 @@ void runRusEfi(void) {
 		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
-		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);
+		chThdSleepMilliseconds(CONFIGB(consoleLoopPeriod));
 	}
 }
 

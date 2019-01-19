@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 23:35:34 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 17:03:36 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1602,7 +1602,7 @@ typedef struct {
 	/**
 	 * offset 1808
 	 */
-	float suckedOffCoef;
+	float wwaeTau;
 	/**
 	 * offset 1812
 	 */
@@ -1639,7 +1639,7 @@ typedef struct {
 	 * Wall wetting/evaporation factor/Tau factor/fuel film
 	 * offset 1904
 	 */
-	float addedToWallCoef;
+	float wwaeBeta;
 	/**
 	 * blue LED on discovery by default
 	 * offset 1908
@@ -1873,6 +1873,8 @@ typedef struct {
 	 */
 	float egoValueShift;
 	/**
+	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
+	 * TODO #660
 	 * offset 2376
 	 */
 	brain_input_pin_e camInput;
@@ -2210,22 +2212,23 @@ typedef struct {
 	tChargeMode_e tChargeMode;
 	/**
 	 * target TPS value, 0 to 100%
+	 * TOOD: use int8 data date once we template interpolation method
 	 * offset 4116
 	 */
-	uint8_t etbBiasBins[ETB_BIAS_CURVE_LENGTH];
+	float etbBiasBins[ETB_BIAS_CURVE_LENGTH];
 	/**
 	 * PWM bias, 0 to 100%
-	 * offset 4124
+	 * offset 4148
 	 */
 	float etbBiasValues[ETB_BIAS_CURVE_LENGTH];
 	/**
-	 * offset 4156
+	 * offset 4180
 	 */
 	float hip9011Gain;
 	/**
-	 * offset 4160
+	 * offset 4184
 	 */
-	int unusedEnd[580];
+	int unusedEnd[574];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2321,7 +2324,7 @@ typedef struct {
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
 	 * kg/hour value.
-	 * By the way 2.081989116 kg/h = 1 ft³/m
+	 * By the way 2.081989116 kg/h = 1 ftï¿½/m
 	 * offset 10784
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
@@ -2472,4 +2475,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 05 23:35:34 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 17:03:36 EST 2019

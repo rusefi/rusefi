@@ -52,14 +52,14 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	// Injection settings
-	setFlatInjectorLag(1.15 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFlatInjectorLag(1.15 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->injector.flow = 750;
 
 	// General settings
 	boardConfiguration->tunerStudioSerialSpeed = 57600;
 	engineConfiguration->rpmHardLimit = 7000;
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// for best performance at high RPM, we need to turn off 'Engine Sniffer' and 'Sensor Sniffer'
 	boardConfiguration->sensorChartMode = SC_OFF;
@@ -93,7 +93,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
-	setWholeTimingTable(25 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeTimingTable(25);
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 

@@ -38,7 +38,7 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingTimingAngle = -715;
 
 	// set_whole_fuel_map 3
-	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// set cranking_fuel 4
 	engineConfiguration->cranking.baseFuel = 4;

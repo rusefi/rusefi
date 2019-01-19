@@ -26,7 +26,7 @@ void ensureArrayIsAscending(const char *msg, const float array[], int size);
 int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
-float interpolate2d(const char *msg, float value, float bin[], float values[], int size);
+float interpolate2d(const char *msg, float value, const float bin[], const float values[], int size);
 
 int needInterpolationLogging(void);
 
@@ -34,7 +34,7 @@ int needInterpolationLogging(void);
  * @brief	Two-dimensional table lookup with linear interpolation
  */
 template<typename vType>
-float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, vType* map[]) {
+float interpolate3d(float x, const float xBin[], int xBinSize, float y, const float yBin[], int yBinSize, vType* map[]) {
 	if (cisnan(x)) {
 		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;

@@ -2,10 +2,9 @@
  * @file	test_fuel_map.cpp
  *
  * @date Nov 6, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "test_fuel_map.h"
 #include "global.h"
 #include "engine_configuration.h"
 #include "fuel_math.h"
@@ -19,7 +18,7 @@
 
 extern float testMafValue;
 
-void testMafFuelMath(void) {
+TEST(misc, testMafFuelMath) {
 	printf("====================================================================================== testMafFuelMath\r\n");
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 	EXPAND_EngineTestHelper;
@@ -33,7 +32,7 @@ void testMafFuelMath(void) {
 	assertEqualsM("fuelMs", 26.7099, fuelMs);
 }
 
-void testFuelMap(void) {
+TEST(misc, testFuelMap) {
 	printf("====================================================================================== testFuelMap\r\n");
 
 	printf("Setting up FORD_ASPIRE_1996\r\n");
@@ -51,7 +50,7 @@ void testFuelMap(void) {
 	for (int i = 0; i < FUEL_RPM_COUNT; i++)
 		eth.engine.config->fuelRpmBins[i] = i;
 
-	assertEqualsM("base fuel table", 1005, getBaseTableFuel(5, 5));
+	ASSERT_EQ( 1005,  getBaseTableFuel(5, 5)) << "base fuel table";
 
 	printf("*************************************************** initThermistors\r\n");
 
@@ -71,7 +70,7 @@ void testFuelMap(void) {
 	printf("*************************************************** getRunningFuel 1\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
-	assertEqualsM("base fuel", 5.05, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("base fuel", 5.3679, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -86,16 +85,17 @@ void testFuelMap(void) {
 		eth.engine.config->cltFuelCorr[i] = 100;
 	}
 
-	setFlatInjectorLag(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	assertEquals(NAN, getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+	float iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_FALSE(cisnan(iat));
 	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("IAT", 2, iatCorrection);
+	ASSERT_EQ( 2,  iatCorrection) << "IAT";
 	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("CLT", 1, cltCorrection);
+	ASSERT_EQ( 1,  cltCorrection) << "CLT";
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
-	assertEqualsM("injectorLag", 0, injectorLag);
+	ASSERT_EQ( 0,  injectorLag) << "injectorLag";
 
 	testMafValue = 5;
 
@@ -103,7 +103,7 @@ void testFuelMap(void) {
 	printf("*************************************************** getRunningFuel 2\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
-	assertEqualsM("v1", 30150, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_EQ( 30150,  getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
 
 	testMafValue = 0;
 
@@ -111,7 +111,7 @@ void testFuelMap(void) {
 
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor
-	assertEqualsM("getStartingFuel nan", 4, getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_EQ( 4,  getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER_SUFFIX)) << "getStartingFuel nan";
 	assertEqualsM("getStartingFuel#1", 17.8, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEqualsM("getStartingFuel#2", 8.4480, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEqualsM("getStartingFuel#3", 6.48, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER_SUFFIX));
@@ -134,34 +134,34 @@ static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	s->addEvent720(657.03, T_SECONDARY, TV_FALL);
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
 
-	assertEquals(53.747 / 720, s->wave.getSwitchTime(0));
-	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
-	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
+	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
+	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
 
-	assertEqualsM("@1", 0, s->wave.getChannelState(0, 1));
-	assertEqualsM("@1", 0, s->wave.getChannelState(1, 1));
+	ASSERT_EQ( 0,  s->wave.getChannelState(0, 1)) << "@1";
+	ASSERT_EQ( 0,  s->wave.getChannelState(1, 1)) << "@1";
 
-	assertEqualsM("@2", 0, s->wave.getChannelState(0, 2));
-	assertEqualsM("@2", 1, s->wave.getChannelState(1, 2));
+	ASSERT_EQ( 0,  s->wave.getChannelState(0, 2)) << "@2";
+	ASSERT_EQ( 1,  s->wave.getChannelState(1, 2)) << "@2";
 
-	assertEqualsM("@3", 0, s->wave.getChannelState(0, 3));
-	assertEqualsM("@3", 0, s->wave.getChannelState(1, 3));
+	ASSERT_EQ( 0,  s->wave.getChannelState(0, 3)) << "@3";
+	ASSERT_EQ( 0,  s->wave.getChannelState(1, 3)) << "@3";
 
-	assertEqualsM("@4", 1, s->wave.getChannelState(0, 4));
-	assertEqualsM("@5", 1, s->wave.getChannelState(1, 5));
-	assertEqualsM("@8", 0, s->wave.getChannelState(1, 8));
-	assertEquals(121.90 / 720, s->wave.getSwitchTime(1));
-	assertEquals(657.03 / 720, s->wave.getSwitchTime(8));
+	ASSERT_EQ( 1,  s->wave.getChannelState(0, 4)) << "@4";
+	ASSERT_EQ( 1,  s->wave.getChannelState(1, 5)) << "@5";
+	ASSERT_EQ( 0,  s->wave.getChannelState(1, 8)) << "@8";
+	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
+	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
 
-	assertEqualsM("expecting 0", 0, s->wave.findAngleMatch(53.747 / 720.0, s->getSize()));
+	ASSERT_EQ( 0,  s->wave.findAngleMatch(53.747 / 720.0, s->getSize())) << "expecting 0";
 	assertEqualsM("expecting not found", -1, s->wave.findAngleMatch(53 / 720.0, s->getSize()));
-	assertEquals(7, s->wave.findAngleMatch(588.045 / 720.0, s->getSize()));
+	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0, s->getSize()));
 
-	assertEqualsM("expecting 0", 0, s->wave.findInsertionAngle(23.747 / 720.0, s->getSize()));
-	assertEqualsM("expecting 1", 1, s->wave.findInsertionAngle(63.747 / 720.0, s->getSize()));
+	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747 / 720.0, s->getSize())) << "expecting 0";
+	ASSERT_EQ( 1,  s->wave.findInsertionAngle(63.747 / 720.0, s->getSize())) << "expecting 1";
 }
 
-void testAngleResolver(void) {
+TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver\r\n");
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
@@ -177,51 +177,51 @@ void testAngleResolver(void) {
 	assertEqualsM("index 5", 412.76, ts->eventAngles[6]);
 	assertEqualsM("time 5", 0.5733, ts->wave.getSwitchTime(5));
 
-	assertEquals(4, ts->getTriggerShapeSynchPointIndex());
+	ASSERT_EQ(4, ts->getTriggerShapeSynchPointIndex());
 
-	assertEqualsM("shape size", 10, ts->getSize());
+	ASSERT_EQ( 10,  ts->getSize()) << "shape size";
 
 	event_trigger_position_s injectionStart;
 
 	printf("*************************************************** testAngleResolver 0\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset));
-	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
-	assertEquals(0.24, injectionStart.angleOffset);
+	ASSERT_EQ( 2,  injectionStart.eventIndex) << "eventIndex@0";
+	ASSERT_NEAR(0.24, injectionStart.angleOffset, EPS5D);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset));
-	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
-	assertEquals(42.24, injectionStart.angleOffset);
+	ASSERT_EQ( 2,  injectionStart.eventIndex) << "eventIndex@0";
+	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset));
-	assertEqualsM("eventIndex@0", 2, injectionStart.eventIndex);
-	assertEquals(68.2400, injectionStart.angleOffset);
+	ASSERT_EQ( 2,  injectionStart.eventIndex) << "eventIndex@0";
+	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset));
-	assertEquals(2, injectionStart.eventIndex);
-	assertEquals(69.24, injectionStart.angleOffset);
+	ASSERT_EQ(2, injectionStart.eventIndex);
+	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset));
-	assertEquals(2, injectionStart.eventIndex);
-	assertEquals(122.24, injectionStart.angleOffset);
+	ASSERT_EQ(2, injectionStart.eventIndex);
+	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset));
-	assertEquals(2, injectionStart.eventIndex);
-	assertEquals(178.24, injectionStart.angleOffset);
+	ASSERT_EQ(2, injectionStart.eventIndex);
+	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffset);
 
 	TriggerShape t;
 	confgiureFordAspireTriggerShape(&t);
 }
 
-void testPinHelper(void) {
+TEST(misc, testPinHelper) {
 	printf("*************************************************** testPinHelper\r\n");
-	assertEquals(0, getElectricalValue(0, OM_DEFAULT));
-	assertEquals(1, getElectricalValue(1, OM_DEFAULT));
+	ASSERT_EQ(0, getElectricalValue(0, OM_DEFAULT));
+	ASSERT_EQ(1, getElectricalValue(1, OM_DEFAULT));
 
-	assertEquals(0, getElectricalValue(1, OM_INVERTED));
-	assertEquals(1, getElectricalValue(0, OM_INVERTED));
+	ASSERT_EQ(0, getElectricalValue(1, OM_INVERTED));
+	ASSERT_EQ(1, getElectricalValue(0, OM_INVERTED));
 }

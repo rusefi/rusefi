@@ -25,11 +25,14 @@
  * On the other hand, in order to have a meaningful unit test we are passing Engine * engine as a parameter
  */
 
-#define COMMON_EXTERN_ENGINE extern Engine *engine; \
+#define EXTERN_CONFIG \
 		extern engine_configuration_s *engineConfiguration; \
 		extern board_configuration_s *boardConfiguration; \
-		extern persistent_config_s *config; \
+		extern persistent_config_s *config;
+
+#define COMMON_EXTERN_ENGINE extern Engine *engine; \
 		extern persistent_config_container_s persistentState; \
+		EXTERN_CONFIG \
 		extern engine_configuration_s activeConfiguration; \
 		extern EnginePins enginePins
 
@@ -43,11 +46,18 @@
 // Pass this after some other parameters are passed
 #define PASS_ENGINE_PARAMETER_SUFFIX
 
+// these macro are used when we should not have visibiliy to 'engine'
+#define DECLARE_CONFIG_PARAMETER_SIGNATURE void
+#define DECLARE_CONFIG_PARAMETER_SUFFIX
+#define PASS_CONFIG_PARAMETER_SIGNATURE
+#define PASS_CONFIG_PARAMETER_SUFFIX
+
 /**
  * this macro allows the compiled to figure out the complete static address, that's a performance
  * optimization which is hopefully useful at least for anything trigger-related
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
+#define CONFIGB(x) persistentState.persistentConfiguration.engineConfiguration.bc.x
 
 
 #define DEFINE_CONFIG_PARAM(x, y)

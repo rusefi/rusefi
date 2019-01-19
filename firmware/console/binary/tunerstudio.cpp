@@ -141,7 +141,7 @@ void printTsStats(void) {
 		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
 
 		scheduleMsg(&tsLogger, "TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),
-				boardConfiguration->tunerStudioSerialSpeed);
+				CONFIGB(tunerStudioSerialSpeed));
 	}
 #endif /* EFI_PROD_CODE */
 
@@ -153,7 +153,7 @@ void printTsStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(logger, "fuelTable %d", fuelMapOffset);
 //
-//	int offset = (int) (&boardConfiguration->hip9011Gain) - (int) engineConfiguration;
+//	int offset = (int) (&CONFIGB(hip9011Gain)) - (int) engineConfiguration;
 //	scheduleMsg(&tsLogger, "hip9011Gain %d", offset);
 //
 //	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
@@ -164,7 +164,7 @@ void printTsStats(void) {
 }
 
 static void setTsSpeed(int value) {
-	boardConfiguration->tunerStudioSerialSpeed = value;
+	CONFIGB(tunerStudioSerialSpeed) = value;
 	printTsStats();
 }
 
@@ -632,7 +632,7 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 	 */
 	tunerStudioDebug("got T (Test)");
 	sr5WriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.lastErrorCode, tsState.testCommandCounter);
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection
@@ -774,7 +774,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-		runIoTest(subsystem, index);
+		runBenchTest(subsystem, index);
 #endif /* EFI_PROD_CODE */
 		sendOkResponse(tsChannel, TS_CRC);
 	} else {

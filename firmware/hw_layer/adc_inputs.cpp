@@ -630,7 +630,7 @@ static void configureInputs(void) {
 	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 
-	if (boardConfiguration->isCJ125Enabled) {
+	if (CONFIGB(isCJ125Enabled)) {
 		addChannel("cj125ur", engineConfiguration->cj125ur, ADC_SLOW);
 		addChannel("cj125ua", engineConfiguration->cj125ua, ADC_SLOW);
 	}
@@ -682,7 +682,7 @@ void initAdcInputs(bool boardTestMode) {
 	pwmEnablePeriodicNotification(EFI_INTERNAL_SLOW_ADC_PWM);
 #endif /* HAL_USE_PWM */
 
-	if (boardConfiguration->isFastAdcEnabled) {
+	if (CONFIGB(isFastAdcEnabled)) {
 		fastAdc.init();
 		/*
 		 * Initializes the PWM driver.

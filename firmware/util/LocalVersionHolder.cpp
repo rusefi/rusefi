@@ -7,11 +7,6 @@
 
 #include "LocalVersionHolder.h"
 
-/**
- * we rely on external source of global version
- */
-int getGlobalConfigurationVersion(void);
-
 LocalVersionHolder::LocalVersionHolder() {
 	/**
 	 * we want local version to be 'old' on instantiation
@@ -23,10 +18,9 @@ int LocalVersionHolder::getVersion() {
 	return localVersion;
 }
 
-bool LocalVersionHolder::isOld() {
-	int global = getGlobalConfigurationVersion();
-	if (global > localVersion) {
-		localVersion = global;
+bool LocalVersionHolder::isOld(int globalVersion) {
+	if (globalVersion > localVersion) {
+		localVersion = globalVersion;
 		return true;
 	}
 	return false;

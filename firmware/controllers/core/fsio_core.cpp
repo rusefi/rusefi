@@ -253,7 +253,7 @@ bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SU
 		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
 		int index = (int) humanIndex - 1;
 		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
-			push(element->action, boardConfiguration->fsio_setting[index]);
+			push(element->action, CONFIGB(fsio_setting)[index]);
 		} else {
 			push(element->action, NAN);
 		}

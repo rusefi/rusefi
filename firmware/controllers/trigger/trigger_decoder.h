@@ -50,12 +50,12 @@ public:
 	/**
 	 * current trigger processing index, between zero and #size
 	 */
-	int getCurrentIndex();
-	int getTotalRevolutionCounter();
+	int getCurrentIndex() const;
+	int getTotalRevolutionCounter() const;
 	/**
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
-	bool isEvenRevolution();
+	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter();
 	efitime_t getStartOfRevolutionIndex();
@@ -73,6 +73,10 @@ public:
 	 * TRUE if we know where we are
 	 */
 	bool shaft_is_synchronized;
+
+	efitick_t lastDecodingErrorTime;
+	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
+	bool someSortOfTriggerError;
 
 	/**
 	 * current duration at index zero and previous durations are following
@@ -122,7 +126,7 @@ private:
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
 	TriggerStateWithRunningStatistics();
-	float instantRpm;
+	float instantRpm = 0;
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
@@ -134,7 +138,7 @@ public:
 	/**
 	 * Stores last non-zero instant RPM value to fix early instability
 	 */
-	float prevInstantRpmValue;
+	float prevInstantRpmValue = 0;
 	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**

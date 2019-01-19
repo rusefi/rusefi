@@ -21,15 +21,13 @@
 #include "efitime.h"
 #include "efilib2.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER || defined(__DOXYGEN__)
 #include "microsecond_timer.h"
 #include "tunerstudio_configuration.h"
-#endif
-
-#if (EFI_SIGNAL_EXECUTOR_ONE_TIMER && EFI_PROD_CODE )|| defined(__DOXYGEN__)
 #include "rfiutil.h"
 
-static Executor instance;
+#include "engine.h"
+EXTERN_ENGINE;
 
 extern schfunc_t globalTimerCallback;
 
@@ -52,10 +50,10 @@ static void executorCallback(void *arg) {
 //		timerIsLate++;
 //	}
 
-	instance.onTimerCallback();
+	_engine.executor.onTimerCallback();
 }
 
-Executor::Executor() {
+SingleTimerExecutor::SingleTimerExecutor() {
 	reentrantFlag = false;
 	doExecuteCounter = scheduleCounter = timerCallbackCounter = 0;
 	/**
@@ -64,10 +62,21 @@ Executor::Executor() {
 	queue.setLateDelay(US2NT(100));
 }
 
+void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
+}
+
 /**
+ * @brief Schedule an event at specific delay after now
+ *
+ * Invokes event callback after the specified amount of time.
  * callback would be executed either on ISR thread or current thread if we would need to execute right away
+ *
+ * @param [in, out] scheduling Data structure to keep this event in the collection.
+ * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
+ * @param [in] dwell the number of ticks of output duration.
  */
-void Executor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
+void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
 	scheduleCounter++;
 	bool alreadyLocked = true;
@@ -86,7 +95,7 @@ void Executor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs,
 	}
 }
 
-void Executor::onTimerCallback() {
+void SingleTimerExecutor::onTimerCallback() {
 	timerCallbackCounter++;
 	bool alreadyLocked = lockAnyContext();
 	doExecute();
@@ -98,7 +107,7 @@ void Executor::onTimerCallback() {
 /*
  * this private method is executed under lock
  */
-void Executor::doExecute() {
+void SingleTimerExecutor::doExecute() {
 	doExecuteCounter++;
 	/**
 	 * Let's execute actions we should execute at this point.
@@ -132,7 +141,7 @@ void Executor::doExecute() {
 /**
  * This method is always invoked under a lock
  */
-void Executor::scheduleTimerCallback() {
+void SingleTimerExecutor::scheduleTimerCallback() {
 	/**
 	 * Let's grab fresh time value
 	 */
@@ -147,28 +156,6 @@ void Executor::scheduleTimerCallback() {
 	hwSetTimerDuration = GET_TIMESTAMP() - beforeHwSetTimer;
 }
 
-/**
- * @brief Schedule an event at specific delay after now
- *
- * Invokes event callback after the specified amount of time.
- *
- * @param [in, out] scheduling Data structure to keep this event in the collection.
- * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
- * @param [in] dwell the number of ticks of output duration.
- */
-void scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	instance.scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
-}
-
-/**
- * @brief Schedule an event at specified timestamp
- *
- * @param [in] timeUs absolute time of the event, since ECU boot
- */
-void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	instance.scheduleByTimestamp(scheduling, time, callback, param);
-}
-
 void initSignalExecutorImpl(void) {
 	globalTimerCallback = executorCallback;
 	initMicrosecondTimer();
@@ -177,16 +164,13 @@ void initSignalExecutorImpl(void) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-#include "engine.h"
-EXTERN_ENGINE;
-
 
 void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-		tsOutputChannels.debugIntField1 = instance.timerCallbackCounter;
-		tsOutputChannels.debugIntField2 = instance.doExecuteCounter;
-		tsOutputChannels.debugIntField3 = instance.scheduleCounter;
+#if (EFI_TUNER_STUDIO && EFI_SIGNAL_EXECUTOR_ONE_TIMER) || defined(__DOXYGEN__)
+		tsOutputChannels.debugIntField1 = _engine.executor.timerCallbackCounter;
+		tsOutputChannels.debugIntField2 = _engine.executor.doExecuteCounter;
+		tsOutputChannels.debugIntField3 = _engine.executor.scheduleCounter;
 #endif /* EFI_TUNER_STUDIO */
 	}
 }

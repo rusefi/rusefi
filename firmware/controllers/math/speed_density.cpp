@@ -13,6 +13,7 @@
 #include "rpm_calculator.h"
 #include "engine_math.h"
 #include "engine_state.h"
+#include "maf2map.h"
 
 #define rpmMin 500
 #define rpmMax 8000
@@ -172,4 +173,5 @@ void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);
 	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
+	initMaf2Map();
 }

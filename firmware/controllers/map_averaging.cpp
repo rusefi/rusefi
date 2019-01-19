@@ -194,7 +194,7 @@ static void endAveraging(void *arg) {
 		}
 		currentPressure = minPressure;
 	} else {
-		warning(CUSTOM_ERR_6548, "No MAP values");
+		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
 	}
 #endif
 	if (!wasLocked)
@@ -205,7 +205,7 @@ static void endAveraging(void *arg) {
 
 static void applyMapMinBufferLength() {
 	// check range
-	mapMinBufferLength = maxI(minI(boardConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
+	mapMinBufferLength = maxI(minI(CONFIGB(mapMinBufferLength), MAX_MAP_BUFFER_LENGTH), 1);
 	// reset index
 	averagedMapBufIdx = 0;
 	// fill with maximum values
@@ -266,14 +266,14 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		return;
 	}
 
-	if (boardConfiguration->mapMinBufferLength != mapMinBufferLength) {
+	if (CONFIGB(mapMinBufferLength) != mapMinBufferLength) {
 		applyMapMinBufferLength();
 	}
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
 	measurementsPerRevolutionCounter = 0;
 
-	int samplingCount = boardConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->specs.cylindersCount;
+	int samplingCount = CONFIGB(measureMapOnlyInOneCylinder) ? 1 : engineConfiguration->specs.cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
 		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
@@ -295,7 +295,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 
 		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
-		int structIndex = getRevolutionCounter() % 2;
+		int structIndex = engine->rpmCalculator.getRevolutionCounter() % 2;
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
 				startAveraging, NULL, &engine->rpmCalculator);

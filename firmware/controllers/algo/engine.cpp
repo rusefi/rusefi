@@ -23,6 +23,7 @@
 #include "settings.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
+#include "fsio_impl.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "injector_central.h"
@@ -33,6 +34,9 @@
 static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
+
+extern int globalConfigurationVersion;
+
 
 EXTERN_ENGINE
 ;
@@ -84,8 +88,40 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-
 }
+
+static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	bool newValue;
+	if (engineConfiguration->isCylinderCleanupEnabled) {
+		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
+	} else {
+		newValue = false;
+	}
+	if (newValue != engine->isCylinderCleanupMode) {
+		engine->isCylinderCleanupMode = newValue;
+		scheduleMsg(&engineLogger, "isCylinderCleanupMode %s", boolToString(newValue));
+	}
+#endif
+}
+
+void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	watchdog();
+	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	checkShutdown();
+
+#if EFI_FSIO || defined(__DOXYGEN__)
+// todo: enable this for unit tests
+#if ! EFI_UNIT_TEST
+	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
+#endif /* EFI_PROD_CODE && EFI_FSIO */
+
+	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	slowCallBackWasInvoked = TRUE;
+}
+
 
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
@@ -94,15 +130,15 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int rpm = rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
-	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? boardConfiguration->sensorChartMode : SC_OFF;
+	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? CONFIGB(sensorChartMode) : SC_OFF;
 
 	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// todo: move this logic somewhere to sensors folder?
 	if (CONFIG(fuelLevelSensor) != EFI_ADC_NONE) {
 		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
-		sensors.fuelTankGauge = interpolateMsg("fgauge", boardConfiguration->fuelLevelEmptyTankVoltage, 0,
-				boardConfiguration->fuelLevelFullTankVoltage, 100,
+		sensors.fuelTankGauge = interpolateMsg("fgauge", CONFIGB(fuelLevelEmptyTankVoltage), 0,
+				CONFIGB(fuelLevelFullTankVoltage), 100,
 				fuelLevelVoltage);
 	}
 	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) ? getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) : 12;
@@ -131,6 +167,10 @@ Engine::Engine(persistent_config_s *config) {
 bool Engine::needToStopEngine(efitick_t nowNt) {
 	return stopEngineRequestTimeNt != 0 &&
 			nowNt - stopEngineRequestTimeNt	< 3 * US2NT(US_PER_SECOND_LL);
+}
+
+int Engine::getGlobalConfigurationVersion(void) const {
+	return globalConfigurationVersion;
 }
 
 void Engine::reset() {

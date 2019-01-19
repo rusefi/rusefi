@@ -136,7 +136,11 @@ static fuel_table_t alphaNfuel = {
 		{/*15 engineLoad=100.00*/ /*0 800.0*/xxxxx, /*1 1213.0*/xxxxx, /*2 1626.0*/xxxxx, /*3 2040.0*/xxxxx, /*4 2453.0*/xxxxx, /*5 2866.0*/xxxxx, /*6 3280.0*/xxxxx, /*7 3693.0*/xxxxx, /*8 4106.0*/xxxxx, /*9 4520.0*/xxxxx, /*10 4933.0*/xxxxx, /*11 5346.0*/xxxxx, /*12 5760.0*/xxxxx, /*13 6173.0*/xxxxx, /*14 6586.0*/xxxxx, /*15 7000.0*/xxxxx}
 		};
 
-static volatile int globalConfigurationVersion = 0;
+/**
+ * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
+ * tuning software)
+ */
+volatile int globalConfigurationVersion = 0;
 
 /**
  * Current engine configuration. On firmware start we assign empty configuration, then
@@ -153,13 +157,6 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 }
 
-/**
- * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
- * tuning software)
- */
-int getGlobalConfigurationVersion(void) {
-	return globalConfigurationVersion;
-}
 
 extern LoggingWithStorage sharedLogger;
 
@@ -228,11 +225,11 @@ void setMap(fuel_table_t table, float value) {
 	}
 }
 
-static void setWholeVEMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void setWholeVEMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->veTable, value);
 }
 
-void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->fuelTable, value);
 }
 
@@ -240,7 +237,7 @@ void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMap(config->ignitionIatCorrTable, value);
 }
 
-void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 	setLinearCurve(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 	setLinearCurve(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
@@ -261,7 +258,7 @@ void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * See also crankingTimingAngle
  */
-void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTimingMap(config->ignitionTable, value);
 }
 
@@ -467,7 +464,7 @@ static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.battLagCorr[7] = 0.726;
 }
 
-static void setDefaultWarmupIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultWarmupIdleCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, PERCENT_MULT);
 
 	float baseIdle = 30;
@@ -636,7 +633,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	prepareVoidConfiguration(engineConfiguration);
 
-	boardConfiguration->mafSensorType = Bosch0280218037;
+	CONFIGB(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -646,7 +643,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 
-	boardConfiguration->mapMinBufferLength = 1;
+	CONFIGB(mapMinBufferLength) = 1;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;
@@ -684,7 +681,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->fsioCurve4Bins, FSIO_CURVE_8, 0, 100, 1);
 
 
-	setDefaultWarmupIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setDefaultWarmupFuelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -697,10 +694,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->useConstantDwellDuringCranking = false;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
-	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER_SUFFIX);
-	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	setLinearCurve(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
 	setLinearCurve(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
@@ -708,14 +705,14 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
 
 	// set_whole_timing_map 3
-	setWholeFuelMap(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 14.7);
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setMap(config->injectionPhase, -180);
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
-	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(10, 160 PASS_CONFIG_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setLinearCurve(engineConfiguration->mapAccelTaperBins, FSIO_TABLE_8, 0, 32, 4);
@@ -1121,13 +1118,13 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 #if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
 	case DODGE_NEON_1995:
-		setDodgeNeon1995EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CAM:
-		setDodgeNeonNGCEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CRANK:
-		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case LADA_KALINA:
 		setLadaKalina(PASS_ENGINE_PARAMETER_SIGNATURE);

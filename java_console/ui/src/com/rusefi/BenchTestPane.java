@@ -1,17 +1,15 @@
 package com.rusefi;
 
-import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.EtbResearch;
 import com.rusefi.ui.widgets.EtbTestSequence;
 import org.jetbrains.annotations.NotNull;
-import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import static com.rusefi.CommandControl.TEST;
 
 public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 4));
@@ -32,7 +30,7 @@ public class BenchTestPane {
     }
 
     private Component createMILTest() {
-        BenchTestPanel panel = new BenchTestPanel("MIL", "check_engine.jpg") {
+        CommandControl panel = new CommandControl("MIL", "check_engine.jpg", TEST) {
             @NotNull
             protected String getCommand() {
                 return "milbench";
@@ -42,7 +40,7 @@ public class BenchTestPane {
     }
 
     private Component createIdleTest() {
-        BenchTestPanel panel = new BenchTestPanel("Idle Valve", "idle_valve.png") {
+        CommandControl panel = new CommandControl("Idle Valve", "idle_valve.png", TEST) {
             @NotNull
             protected String getCommand() {
                 return "idlebench";
@@ -52,38 +50,23 @@ public class BenchTestPane {
     }
 
     private Component createDizzyTest() {
-        BenchTestPanel panel = new BenchTestPanel("Dizzy", "dizzy.jpg") {
-            @NotNull
-            protected String getCommand() {
-                return "dizzybench";
-            }
-        };
+        CommandControl panel = new FixedCommandControl("Dizzy", "dizzy.jpg", TEST, "dizzybench");
         return panel.getContent();
     }
 
     private Component createFanTest() {
-        BenchTestPanel panel = new BenchTestPanel("Radiator Fan", "radiator_fan.jpg") {
-            @NotNull
-            protected String getCommand() {
-                return "fanbench";
-            }
-        };
+        CommandControl panel = new FixedCommandControl("Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
         return panel.getContent();
     }
 
     private Component createFuelPumpTest() {
-        BenchTestPanel panel = new BenchTestPanel("Fuel Pump", "fuel_pump.jpg") {
-            @NotNull
-            protected String getCommand() {
-                return "fuelpumpbench";
-            }
-        };
+        CommandControl panel = new FixedCommandControl("Fuel Pump", "fuel_pump.jpg", TEST, "fuelpumpbench");
         return panel.getContent();
     }
 
     private Component createSparkTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        BenchTestPanel panel = new BenchTestPanel("Spark #", "spark.jpg", indexes) {
+        CommandControl panel = new CommandControl("Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
                 return "sparkbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -94,7 +77,7 @@ public class BenchTestPane {
 
     private Component createInjectorTest() {
         final JComboBox<Integer> indexes = createIndexCombo();
-        BenchTestPanel panel = new BenchTestPanel("Injector #", "injector.png", indexes) {
+        CommandControl panel = new CommandControl("Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {
                 return "fuelbench2 1000 " + indexes.getSelectedItem() + " 5 333 3";
@@ -116,37 +99,4 @@ public class BenchTestPane {
         return content;
     }
 
-    private abstract static class BenchTestPanel {
-        final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        final JButton test = new JButton("Test");
-
-        public BenchTestPanel(String text, String iconFileName, JComponent... components) {
-            ImageIcon icon = UiUtils.loadIcon(iconFileName);
-            JPanel rightVerticalPanel = new JPanel(new VerticalFlowLayout());
-            rightVerticalPanel.add(new JLabel(text));
-            for (JComponent component : components)
-                rightVerticalPanel.add(component);
-            rightVerticalPanel.add(test);
-
-            panel.add(new JLabel(icon));
-            panel.add(rightVerticalPanel);
-
-            int GAP = 3;
-
-            panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP)));
-
-            test.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    CommandQueue.getInstance().write(getCommand());
-                }
-            });
-        }
-
-        protected abstract String getCommand();
-
-        public Component getContent() {
-            return UiUtils.wrap(panel);
-        }
-    }
 }

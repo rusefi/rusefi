@@ -39,13 +39,13 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * <p/>
  * <p/>
  * 12/25/12
- * (c) Andrey Belomutskiy 2013-2018
+ * (c) Andrey Belomutskiy 2013-2019
  *
  * @see StartupFrame
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20181117;
+    public static final int CONSOLE_VERSION = 20190113;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -151,8 +151,14 @@ public class Launcher {
         if (!LinkManager.isLogViewer())
             tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
 
-        if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Formulas", new FormulasPane().getContent());
+        if (!LinkManager.isLogViewer()) {
+            MessagesPane messagesPane = new MessagesPane(getConfig().getRoot().getChild("messages"));
+            tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
+        }
+        if (!LinkManager.isLogViewer()) {
+            tabbedPane.add("Bench Test", new BenchTestPane().getContent());
+            tabbedPane.add("Presets", new PresetsPans().getContent());
+        }
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
 
@@ -170,10 +176,6 @@ public class Launcher {
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        if (!LinkManager.isLogViewer()) {
-            MessagesPane messagesPane = new MessagesPane(getConfig().getRoot().getChild("messages"));
-            tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
-        }
         if (!LinkManager.isLogViewer())
             tabbedPane.addTab("Table Editor", tableEditor);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
@@ -181,7 +183,7 @@ public class Launcher {
         if (!LinkManager.isLogViewer())
             tabbedPane.add("Settings", settingsTab.createPane());
         if (!LinkManager.isLogViewer())
-            tabbedPane.add("Bench Test", new BenchTestPane().getContent());
+            tabbedPane.addTab("Formulas", new FormulasPane().getContent());
         if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.add("Logs Manager", logsManager.getContent());
         fuelTunePane = new FuelTunePane(getConfig().getRoot().getChild("fueltune"));

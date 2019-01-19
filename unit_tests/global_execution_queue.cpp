@@ -6,27 +6,42 @@
  */
 
 #include "signal_executor.h"
-#include "event_queue.h"
-
-// this global instance is used by integration tests via 'scheduleByTimestamp' global methods below
-EventQueue schedulingQueue;
+#include "global_execution_queue.h"
 
 bool_t debugSignalExecutor = false;
 
-void scheduleForLater(scheduling_s *scheduling, int delayUs,
-		schfunc_t callback, void *param) {
+TestExecutor::TestExecutor() {
+
+}
+
+void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
 		printf("scheduleTask %d\r\n", delayUs);
 	}
 	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void scheduleByTimestamp(scheduling_s *scheduling,
-		efitimeus_t time, schfunc_t callback, void *param) {
+int TestExecutor::executeAll(efitime_t now) {
+	return schedulingQueue.executeAll(now);
+}
+
+void TestExecutor::clear() {
+	schedulingQueue.clear();
+}
+
+int TestExecutor::size() {
+	return schedulingQueue.size();
+}
+
+scheduling_s* TestExecutor::getForUnitTest(int index) {
+	return schedulingQueue.getForUnitText(index);
+}
+
+void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {
-		printf("scheduleByTime %d\r\n", time);
+		printf("scheduleByTime %d\r\n", timeUs);
 	}
-	schedulingQueue.insertTask(scheduling, time, callback, param);
+	schedulingQueue.insertTask(scheduling, timeUs, callback, param);
 }
 
 void initSignalExecutorImpl(void) {

@@ -10,12 +10,12 @@
 #include "interpolation.h"
 #include "unit_test_framework.h"
 
-static int testIndex(const int expected, const float array[], int size, float value) {
-	assertEquals(expected, findIndex(array, size, value));
-	assertEquals(expected, findIndex2(array, size, value));
+static void testIndex(const int expected, const float array[], int size, float value) {
+	ASSERT_EQ(expected, findIndex(array, size, value));
+	ASSERT_EQ(expected, findIndex2(array, size, value));
 }
 
-void testFindIndex(void) {
+TEST(misc, testFindIndex) {
 	printf("*************************************************** testFindIndex\r\n");
 /*
 	{
@@ -66,7 +66,7 @@ void testFindIndex(void) {
 	}
 }
 
-void testInterpolate2d(void) {
+TEST(misc, testInterpolate2d) {
 	printf("*************************************************** testInterpolate2d\r\n");
 
 	float bins4[] = { 1, 2, 3, 4 };
@@ -77,22 +77,22 @@ void testInterpolate2d(void) {
 
 	printf("Left size\r\n");
 	result = interpolate2d("t", 0, bins4, values4, size);
-	assertEquals(1, result);
+	ASSERT_EQ(1, result);
 
 	printf("Right size\r\n");
 	result = interpolate2d("t", 10, bins4, values4, size);
-	assertEquals(400, result);
+	ASSERT_EQ(400, result);
 
 	printf("Middle1\r\n");
 	result = interpolate2d("t", 3, bins4, values4, size);
-	assertEquals(30, result);
+	ASSERT_EQ(30, result);
 
 	printf("Middle1\r\n");
 	result = interpolate2d("t", 3.5, bins4, values4, size);
-	assertEquals(215, result);
+	ASSERT_EQ(215, result);
 }
 
-void testSetTableValue(void) {
+TEST(misc, testSetTableValue) {
 	printf("*************************************************** testSetTableValue\r\n");
 
 	persistent_config_s config;
@@ -102,12 +102,12 @@ void testSetTableValue(void) {
 		config.cltFuelCorr[i] = 1;
 	}
 
-	assertEquals(1, config.cltFuelCorr[0]);
+	ASSERT_EQ(1, config.cltFuelCorr[0]);
 
 	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
-	assertEquals(1.5, config.cltFuelCorr[0]);
+	ASSERT_FLOAT_EQ(1.5, config.cltFuelCorr[0]);
 
 	setCurveValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
-	assertEquals(1.4, config.cltFuelCorr[0]);
+	ASSERT_FLOAT_EQ(1.4, config.cltFuelCorr[0]);
 
 }

@@ -23,6 +23,7 @@ public class EngineState {
         }
     };
     public static final String PACKING_DELIMITER = ":";
+    // see RUS_EFI_VERSION_TAG in firmware code
     public static final String RUS_EFI_VERSION_TAG = "rusEfiVersion";
     public static final String OUTPIN_TAG = "outpin";
     /**

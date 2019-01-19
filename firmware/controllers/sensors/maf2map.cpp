@@ -1,11 +1,11 @@
 /*
  * @file maf2map.cpp
  *
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  * @date Jan 20, 2018
  */
 
-#define ASIZE 16
+#include "maf2map.h"
 
 /* rpm bins */
 static const float rpmBins[ASIZE] = {500.0, 1000.0, 1500.0, 2000.0, 2500.0, 3000.0, 3500.0, 4000.0, 4500.0, 5000.0, 5500.0, 6000.0, 6500.0, 7000.0, 7500.0, 8000.0};
@@ -35,3 +35,14 @@ static const float maf2map16[ASIZE][ASIZE] = {
 		/*v=0.230000 kpa=*/ 225.399979, /*v=0.300000 kpa=*/ 165.699997, /*v=0.400000 kpa=*/ 102.175003, /*v=0.500000 kpa=*/ 76.000000, /*v=0.600000 kpa=*/ 61.100002, /*v=0.700000 kpa=*/ 52.335297, /*v=0.800000 kpa=*/ 41.700005, /*v=1.000000 kpa=*/ 20.438889, /*v=1.100000 kpa=*/ 12.161111, /*v=1.200000 kpa=*/ 3.883333, /*v=1.500000 kpa=*/ 1.400000, /*v=2.000000 kpa=*/ 1.400000, /*v=2.500000 kpa=*/ 1.400000, /*v=3.000000 kpa=*/ 1.400000, /*v=3.500000 kpa=*/ 1.400000, /*v=4.500000 kpa=*/ 1.400000,
 };
 
+maf2map_Map3D_t maf2MapMap("maf2map");
+
+void initMaf2Map() {
+	// RPM and load are flipped in this table, that's just the way we have data
+	maf2MapMap.init((float (*)[ASIZE])maf2map16, rpmBins, voltageBins);
+}
+
+float estimateMapByRpmAndMaf(int rpm, float maf) {
+	// RPM and load are flipped in this table, that's just the way we have data
+	return maf2MapMap.getValue(maf, rpm);
+}

@@ -74,20 +74,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	}
 }
 
-
-/**
- * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
- */
-bool isWarningNow(efitimesec_t now, bool forIndicator) {
-	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
-	return absI(now - engine->engineState.timeOfPreviousWarning) < period;
-}
-
-void addWarningCode(obd_code_e code) {
-	engine->engineState.warningCounter++;
-	engine->engineState.lastErrorCode = code;
-}
-
 // todo: look into chsnprintf
 // todo: move to some util file & reuse for 'firmwareError' method
 static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
@@ -110,14 +96,14 @@ static void printWarning(const char *fmt, va_list ap) {
 }
 
 #else
-int unitTestWarningCounter = 0;
+WarningCodeState unitTestWarningCodeState;
 
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 /**
  * OBD_PCM_Processor_Fault is the general error code for now
  *
- * @returns TRUE in case there are too many warnings
+ * @returns TRUE in case there were warnings recently
  */
 bool warning(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
@@ -132,19 +118,20 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 		firmwareError(CUSTOM_ERR_ASSERT, "warn stream not initialized for %d", code);
 		return false;
 	}
-	addWarningCode(code);
+	engine->engineState.warnings.addWarningCode(code);
 
+	// todo: move this logic into WarningCodeState?
 	efitimesec_t now = getTimeNowSeconds();
-	if (isWarningNow(now, false) || !warningEnabled)
+	if (engine->engineState.warnings.isWarningNow(now, false) || !warningEnabled)
 		return true; // we just had another warning, let's not spam
-	engine->engineState.timeOfPreviousWarning = now;
+	engine->engineState.warnings.timeOfPreviousWarning = now;
 
 	va_list ap;
 	va_start(ap, fmt);
 	printWarning(fmt, ap);
 	va_end(ap);
 #else
-	unitTestWarningCounter++;
+	unitTestWarningCodeState.addWarningCode(code);
 	printf("unit_test_warning: ");
 	va_list ap;
 	va_start(ap, fmt);
@@ -207,7 +194,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (hasFirmwareErrorFlag)
 		return;
-	addWarningCode(code);
+	engine->engineState.warnings.addWarningCode(code);
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
 	va_list ap;
 	va_start(ap, fmt);

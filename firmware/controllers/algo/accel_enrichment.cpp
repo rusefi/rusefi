@@ -18,6 +18,7 @@
  * @date Apr 21, 2014
  * @author Dmitry Sidin
  * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Matthew Kennedy
  */
 
 #include "global.h"
@@ -47,34 +48,93 @@ void WallFuel::reset() {
 	memset(wallFuel, 0, sizeof(wallFuel));
 }
 
-floatms_t WallFuel::adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(target)) {
-		return target;
+floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PARAMETER_SUFFIX) {	
+	if (cisnan(M_des)) {
+		return M_des;
 	}
 	// disable this correction for cranking
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		return target;
+		return M_des;
 	}
-	float addedToWallCoef = CONFIG(addedToWallCoef);
 
-	/**
-	 * What amount of fuel is sucked of the walls, based on current amount of fuel on the wall.
-	 */
-	floatms_t suckedOffWallsAmount = wallFuel[injectorIndex] * CONFIG(suckedOffCoef);
+	/*
+		this math is based on 
+				SAE 810494 by C. F. Aquino
+				SAE 1999-01-0553 by Peter J Maloney
 
-	floatms_t adjustedFuelPulse = (target - suckedOffWallsAmount) / (1 - addedToWallCoef);
+		M_cmd = commanded fuel mass (output of this function)
+		M_des = desired fuel mass (input to this function)
+		M_f = fuel film mass (how much is currently on the wall)
 
+		First we compute how much fuel to command, by accounting for
+		a) how much fuel will evaporate from the walls, entering the air
+		b) how much fuel from the injector will hit the walls, being deposited
+
+		Next, we compute how much fuel will be deposited on the walls.  The net
+		effect of these two steps is computed (some leaves walls, some is deposited)
+		and stored back in M_f.
+
+		alpha describes the amount of fuel that REMAINS on the wall per cycle.
+		It is computed as a function of the evaporation time constant (tau) and
+		the time the fuel spent on the wall this cycle, (recriprocal RPM).
+
+		beta describes the amount of fuel that hits the wall.  
+
+		TODO: these parameters, tau and beta vary with various engine parameters,
+		most notably manifold pressure (as a proxy for air speed), and coolant
+		temperature (as a proxy for the intake valve and runner temperature).
+
+		TAU: decreases with increasing temperature.
+		     decreases with decreasing manifold pressure.
+
+		BETA: decreases with increasing temperature.
+		     decreases with decreasing manifold pressure.
+	*/
+
+	// if tau is really small, we get div/0.
+	// you probably meant to disable wwae.
+	float tau = CONFIG(wwaeTau);
+	if(tau < 0.01f)
+	{
+		return M_des;
+	}
+
+	// Ignore really slow RPM
+	int rpm = getRpmE(engine);
+	if(rpm < 100)
+	{
+		return M_des;
+	}
+
+	float alpha = expf_taylor(-120 / (rpm * tau));
+	float beta = CONFIG(wwaeBeta);
+
+	// If beta is larger than alpha, the system is underdamped.
+	// For reasonable values {tau, beta}, this should only be possible
+	// at extremely low engine speeds (<300rpm ish)
+	// Clamp beta to less than alpha.
+	if(beta > alpha)
+	{
+		beta = alpha;
+	}
+
+	float M_f = wallFuel[injectorIndex];
+	float M_cmd = (M_des - (1 - alpha) * M_f) / (1 - beta);
+	
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
 	// but that's ok.
-	if(adjustedFuelPulse < 0) {
-		adjustedFuelPulse = 0;
+	if(M_cmd <= 0)
+	{
+		M_cmd = 0;
 	}
 
-	float addedToWallsAmount = adjustedFuelPulse * addedToWallCoef;
-	wallFuel[injectorIndex] += addedToWallsAmount - suckedOffWallsAmount;
-	engine->wallFuelCorrection = adjustedFuelPulse - target;
-	return adjustedFuelPulse;
+	// remainder on walls from last time + new from this time
+	float M_f_next = alpha * M_f + beta * M_cmd;
+
+	wallFuel[injectorIndex] = M_f_next;
+	engine->wallFuelCorrection = M_cmd - M_des;
+	return M_cmd;
 }
 
 floatms_t WallFuel::getWallFuel(int injectorIndex) {
@@ -211,7 +271,7 @@ static void accelInfo() {
 //	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
 	scheduleMsg(logger, "TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
 
-	scheduleMsg(logger, "added to wall=%.2f/sucked=%.2f", engineConfiguration->addedToWallCoef, engineConfiguration->suckedOffCoef);
+	scheduleMsg(logger, "beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
 }
 
 void setEngineLoadAccelThr(float value) {

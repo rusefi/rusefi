@@ -24,7 +24,7 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-static SimplePwm alternatorControl;
+static SimplePwm alternatorControl("alt");
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
 static Pid altPid(altPidS);
 
@@ -77,7 +77,7 @@ static msg_t AltCtrlThread(int param) {
 		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
-		if (boardConfiguration->onOffAlternatorLogic) {
+		if (CONFIGB(onOffAlternatorLogic)) {
 			float h = 0.1;
 			bool newState = (vBatt < targetVoltage - h) || (currentPlainOnOffState && vBatt < targetVoltage);
 			enginePins.alternatorPin.setValue(newState);
@@ -93,7 +93,7 @@ static msg_t AltCtrlThread(int param) {
 
 
 		currentAltDuty = altPid.getValue(targetVoltage, vBatt);
-		if (boardConfiguration->isVerboseAlternator) {
+		if (CONFIGB(isVerboseAlternator)) {
 			scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
 		}
@@ -109,7 +109,7 @@ static msg_t AltCtrlThread(int param) {
 
 void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
-			hwPortname(boardConfiguration->alternatorControlPin),
+			hwPortname(CONFIGB(alternatorControlPin)),
 			engineConfiguration->alternatorControl.period);
 	scheduleMsg(logger, "p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
@@ -139,8 +139,8 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 void setDefaultAlternatorParameters(void) {
 	engineConfiguration->alternatorOffAboveTps = 120;
 
-	boardConfiguration->alternatorControlPin = GPIO_UNASSIGNED;
-	boardConfiguration->alternatorControlPinMode = OM_DEFAULT;
+	CONFIGB(alternatorControlPin) = GPIO_UNASSIGNED;
+	CONFIGB(alternatorControlPinMode) = OM_DEFAULT;
 	engineConfiguration->targetVBatt = 14;
 
 	engineConfiguration->alternatorControl.offset = 0;
@@ -155,14 +155,17 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 void initAlternatorCtrl(Logging *sharedLogger) {
 	logger = sharedLogger;
 	addConsoleAction("altinfo", showAltInfo);
-	if (boardConfiguration->alternatorControlPin == GPIO_UNASSIGNED)
+	if (CONFIGB(alternatorControlPin) == GPIO_UNASSIGNED)
 		return;
 
-	if (boardConfiguration->onOffAlternatorLogic) {
-		enginePins.alternatorPin.initPin("on/off alternator", boardConfiguration->alternatorControlPin);
+	if (CONFIGB(onOffAlternatorLogic)) {
+		enginePins.alternatorPin.initPin("on/off alternator", CONFIGB(alternatorControlPin));
 
 	} else {
-		startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
+		startSimplePwmExt(&alternatorControl,
+				"Alternator control",
+				&engine->executor,
+				CONFIGB(alternatorControlPin),
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0.1, applyAlternatorPinState);
 	}

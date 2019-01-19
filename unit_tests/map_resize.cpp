@@ -117,7 +117,7 @@ void resizeMap(void) {
 //		}
 //	}
 
-//	assertEquals(15, interpolate3d(1.2, engineConfiguration->fuelKeyBins, FUEL_MAF_COUNT, 8000,
+//	ASSERT_EQ(15, interpolate3d(1.2, engineConfiguration->fuelKeyBins, FUEL_MAF_COUNT, 8000,
 //			engineConfiguration->fuelRpmBins,
 //			FUEL_RPM_COUNT, fuel_ptrs));
 

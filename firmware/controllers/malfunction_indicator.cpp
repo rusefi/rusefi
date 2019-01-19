@@ -106,7 +106,7 @@ static void testMil(void) {
 }
 
 bool isMilEnabled() {
-	return boardConfiguration->malfunctionIndicatorPin != GPIO_UNASSIGNED;
+	return CONFIGB(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
 }
 
 void initMalfunctionIndicator(void) {

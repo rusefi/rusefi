@@ -54,21 +54,21 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	joyTotal++;
 	joystick_button_e button;
 	// todo: I guess it's time to reduce code duplication and start working with an array
-	if (channel == getHwPin("joy", boardConfiguration->joystickCenterPin)) {
+	if (channel == getHwPin("joy", CONFIGB(joystickCenterPin))) {
 		joyCenter++;
 		button = JB_CENTER;
-	} else if (channel == getHwPin("joy", boardConfiguration->joystickAPin)) {
+	} else if (channel == getHwPin("joy", CONFIGB(joystickAPin))) {
 		joyA++;
 		button = JB_BUTTON_A;
 /* not used so far
-	} else if (channel == getHwPin("joy", boardConfiguration->joystickBPin)) {
+	} else if (channel == getHwPin("joy", CONFIGB(joystickBPin))) {
 		joyB++;
 		button = JB_BUTTON_B;
-	} else if (channel == getHwPin("joy", boardConfiguration->joystickCPin)) {
+	} else if (channel == getHwPin("joy", CONFIGB(joystickCPin))) {
 		joyC++;
 		button = JB_BUTTON_C;
 */
-	} else if (channel == getHwPin("joy", boardConfiguration->joystickDPin)) {
+	} else if (channel == getHwPin("joy", CONFIGB(joystickDPin))) {
 		joyD++;
 		button = JB_BUTTON_D;
 	} else {
@@ -84,19 +84,19 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 
 static void joystickInfo(void) {
 	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal, joyCenter,
-			hwPortname(boardConfiguration->joystickCenterPin));
-	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(boardConfiguration->joystickAPin));
-	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(boardConfiguration->joystickBPin));
-	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(boardConfiguration->joystickCPin));
-	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(boardConfiguration->joystickDPin));
+			hwPortname(CONFIGB(joystickCenterPin)));
+	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(CONFIGB(joystickAPin)));
+	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(CONFIGB(joystickBPin)));
+	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(CONFIGB(joystickCPin)));
+	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(CONFIGB(joystickDPin)));
 }
 
 static bool isJoystickEnabled() {
-	return boardConfiguration->joystickCenterPin != GPIO_UNASSIGNED ||
-			boardConfiguration->joystickAPin != GPIO_UNASSIGNED ||
-			// not used so far			boardConfiguration->joystickBPin != GPIO_UNASSIGNED ||
-			// not used so far	boardConfiguration->joystickCPin != GPIO_UNASSIGNED ||
-			boardConfiguration->joystickDPin != GPIO_UNASSIGNED;
+	return CONFIGB(joystickCenterPin) != GPIO_UNASSIGNED ||
+			CONFIGB(joystickAPin) != GPIO_UNASSIGNED ||
+			// not used so far			CONFIGB(joystickBPin) != GPIO_UNASSIGNED ||
+			// not used so far	CONFIGB(joystickCPin) != GPIO_UNASSIGNED ||
+			CONFIGB(joystickDPin) != GPIO_UNASSIGNED;
 }
 
 void initJoystick(Logging *shared) {
@@ -104,17 +104,17 @@ void initJoystick(Logging *shared) {
 		return;
 	sharedLogger = shared;
 
-	enableExti(boardConfiguration->joystickCenterPin, EXT_CH_MODE_RISING_EDGE, extCallback);
-	enableExti(boardConfiguration->joystickAPin, EXT_CH_MODE_RISING_EDGE, extCallback);
-// not used so far	applyPin(boardConfiguration->joystickBPin);
-// not used so far	applyPin(boardConfiguration->joystickCPin);
-	enableExti(boardConfiguration->joystickDPin, EXT_CH_MODE_RISING_EDGE, extCallback);
+	enableExti(CONFIGB(joystickCenterPin), EXT_CH_MODE_RISING_EDGE, extCallback);
+	enableExti(CONFIGB(joystickAPin), EXT_CH_MODE_RISING_EDGE, extCallback);
+// not used so far	applyPin(CONFIGB(joystickBPin));
+// not used so far	applyPin(CONFIGB(joystickCPin));
+	enableExti(CONFIGB(joystickDPin), EXT_CH_MODE_RISING_EDGE, extCallback);
 
-	efiSetPadMode("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy A", boardConfiguration->joystickAPin, PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy D", boardConfiguration->joystickDPin, PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy center", CONFIGB(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy A", CONFIGB(joystickAPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy B", CONFIGB(joystickBPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy C", CONFIGB(joystickCPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy D", CONFIGB(joystickDPin), PAL_MODE_INPUT_PULLUP);
 
 	addConsoleAction("joystickinfo", joystickInfo);
 

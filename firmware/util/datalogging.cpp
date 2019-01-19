@@ -103,7 +103,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	efiAssertVoid(CUSTOM_ERR_6603, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
-	append(logging, (char *) intermediateLoggingBufferData);
+	logging->append((char *)intermediateLoggingBuffer.buffer);
 }
 
 /**
@@ -275,6 +275,19 @@ void initIntermediateLoggingBuffer(void) {
 	intermediateLoggingBufferInited = true;
 }
 
+#else
+/* unit test implementations */
+void Logging::vappendPrintf(const char *fmt, va_list arg) {
+
+}
+
+void Logging::appendPrintf(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	vsprintf(buffer, fmt, ap);
+	va_end(ap);
+}
+
 #endif /* ! EFI_UNIT_TEST */
 
 void Logging::baseConstructor() {
@@ -293,6 +306,8 @@ Logging::Logging(char const *name, char *buffer, int bufferSize) {
 	baseConstructor();
 #if ! EFI_UNIT_TEST
 	initLoggingExt(name, buffer, bufferSize);
+#else
+	this->buffer = buffer;
 #endif /* ! EFI_UNIT_TEST */
 }
 

@@ -21,8 +21,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sensor_chart.h"
 #include "global.h"
+#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#include "sensor_chart.h"
+#endif
 #include "engine_configuration.h"
 #include "trigger_central.h"
 #include "engine_controller.h"
@@ -34,11 +36,15 @@
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 #include "tunerstudio.h"
+#endif
 #include "injector_central.h"
 #include "rfiutil.h"
 #include "engine_math.h"
+#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 #include "wave_analyzer.h"
+#endif
 #include "allsensors.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
@@ -207,28 +213,13 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static void cylinderCleanupControl(Engine *engine) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	bool newValue;
-	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
-	} else {
-		newValue = false;
-	}
-	if (newValue != engine->isCylinderCleanupMode) {
-		engine->isCylinderCleanupMode = newValue;
-		scheduleMsg(&logger, "isCylinderCleanupMode %s", boolToString(newValue));
-	}
-#endif
-}
-
 static LocalVersionHolder versionForConfigurationListeners;
 
 static void periodicSlowCallback(Engine *engine);
 
 static void scheduleNextSlowInvocation(void) {
 	// schedule next invocation
-	int periodMs = boardConfiguration->generalPeriodicThreadPeriod;
+	int periodMs = CONFIGB(generalPeriodicThreadPeriod);
 	if (periodMs == 0)
 		periodMs = 50; // this might happen while resetting configuration
 	chVTSetAny(&periodicSlowTimer, MS2ST(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
@@ -236,7 +227,10 @@ static void scheduleNextSlowInvocation(void) {
 
 static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->periodicFastCallback();
-
+	/**
+	 * not many reasons why we use ChibiOS timer and not say a dedicated thread here
+	 * the only down-side of a dedicated thread is the cost of thread stack
+	 */
 	chVTSetAny(&periodicFastTimer, MS2ST(20), (vtfunc_t) &periodicFastCallback, engine);
 }
 
@@ -282,7 +276,6 @@ static void invokePerSecond(void) {
 
 }
 
-
 static void periodicSlowCallback(Engine *engine) {
 	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -315,26 +308,18 @@ static void periodicSlowCallback(Engine *engine) {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (versionForConfigurationListeners.isOld()) {
+	if (versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
 		updateAccelParameters();
 		engine->engineState.warmupAfrPid.reset();
 	}
 
-	engine->watchdog();
-	engine->updateSlowSensors();
-	engine->checkShutdown();
-
-#if EFI_FSIO || defined(__DOXYGEN__)
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_PROD_CODE && EFI_FSIO */
-
-	cylinderCleanupControl(engine);
+	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	scheduleNextSlowInvocation();
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	scheduleNextSlowInvocation();
+	periodicSlowCallback(engine);
 	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -367,7 +352,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	if (fastAdc.isHwUsed(hwChannel)) {
-		scheduleMsg(&logger, "fast enabled=%s", boolToString(boardConfiguration->isFastAdcEnabled));
+		scheduleMsg(&logger, "fast enabled=%s", boolToString(CONFIGB(isFastAdcEnabled)));
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
@@ -732,7 +717,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	if (boardConfiguration->isEngineControlEnabled) {
+	if (CONFIGB(isEngineControlEnabled)) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */
@@ -761,8 +746,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_PROD_CODE */
 }
 
-static char UNUSED_RAM_SIZE[10500];
-
+// these two variables are here only to let us know how much RAM is available, also these
+// help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
+// linking process which is the way to raise the alarm
+static char UNUSED_RAM_SIZE[10200];
 static char UNUSED_CCM_SIZE[7100] CCM_OPTIONAL;
 
 /**
@@ -778,5 +765,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190105;
+	return 20190111;
 }

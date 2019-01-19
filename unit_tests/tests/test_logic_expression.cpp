@@ -8,7 +8,6 @@
  */
 
 #include "global.h"
-#include "test_logic_expression.h"
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"
@@ -46,46 +45,46 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static void testParsing(void) {
 	char buffer[64];
 
-	assertTrue(strEqualCaseInsensitive("hello", "HELlo"));
-	assertFalse(strEqualCaseInsensitive("hello", "HElo2"));
+	ASSERT_TRUE(strEqualCaseInsensitive("hello", "HELlo"));
+	ASSERT_FALSE(strEqualCaseInsensitive("hello", "HElo2"));
 
 	const char *ptr;
 	ptr = getNextToken("  hello  ", buffer, sizeof(buffer));
-	assertTrue(strEqual("hello", buffer));
+	ASSERT_TRUE(strEqual("hello", buffer));
 
 	ptr = getNextToken("hello", buffer, sizeof(buffer));
-	assertTrue(strEqual("hello", buffer));
+	ASSERT_TRUE(strEqual("hello", buffer));
 
 	ptr = getNextToken("  hello  world ", buffer, sizeof(buffer));
-	assertTrue(strEqual("hello", buffer));
+	ASSERT_TRUE(strEqual("hello", buffer));
 	ptr = getNextToken(ptr, buffer, sizeof(buffer));
-	assertTrue(strEqual("world", buffer));
+	ASSERT_TRUE(strEqual("world", buffer));
 
-	assertTrue(isNumeric("123"));
-	assertFalse(isNumeric("a123"));
+	ASSERT_TRUE(isNumeric("123"));
+	ASSERT_FALSE(isNumeric("a123"));
 
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 
 	LEElement *element;
 	element = pool.parseExpression("1 3 AND not");
-	assertTrue(element != NULL);
+	ASSERT_TRUE(element != NULL);
 
-	assertEquals(element->action, LE_NUMERIC_VALUE);
-	assertEquals(element->fValue, 1.0);
-
-	element = element->next;
-	assertEquals(element->action, LE_NUMERIC_VALUE);
-	assertEquals(element->fValue, 3.0);
+	ASSERT_EQ(element->action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(element->fValue, 1.0);
 
 	element = element->next;
-	assertEquals(element->action, LE_OPERATOR_AND);
+	ASSERT_EQ(element->action, LE_NUMERIC_VALUE);
+	ASSERT_EQ(element->fValue, 3.0);
 
 	element = element->next;
-	assertEquals(element->action, LE_OPERATOR_NOT);
+	ASSERT_EQ(element->action, LE_OPERATOR_AND);
 
 	element = element->next;
-	assertTrue(element == NULL);
+	ASSERT_EQ(element->action, LE_OPERATOR_NOT);
+
+	element = element->next;
+	ASSERT_TRUE(element == NULL);
 }
 
 static void testExpression2(float selfValue, const char *line, float expected) {
@@ -93,7 +92,7 @@ static void testExpression2(float selfValue, const char *line, float expected) {
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	LEElement * element = pool.parseExpression(line);
 	print("Parsing [%s]", line);
-	assertTrueM("Not NULL expected", element != NULL);
+	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
@@ -106,7 +105,7 @@ static void testExpression(const char *line, float expected) {
 	testExpression2(0, line, expected);
 }
 
-void testLogicExpressions(void) {
+TEST(misc, testLogicExpressions) {
 	printf("*************************************************** testLogicExpressions\r\n");
 
 	testParsing();
@@ -164,7 +163,7 @@ void testLogicExpressions(void) {
 	pool.reset();
 	LEElement *element;
 	element = pool.parseExpression("fan no_such_method");
-	assertTrueM("NULL expected", element == NULL);
+	ASSERT_TRUE(element == NULL) << "NULL expected";
 
 
 	/**
@@ -192,13 +191,13 @@ void testLogicExpressions(void) {
 		LEElement thepool[TEST_POOL_SIZE];
 		LEElementPool pool(thepool, TEST_POOL_SIZE);
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
-		assertTrueM("Not NULL expected", element != NULL);
+		ASSERT_TRUE(element != NULL) << "Not NULL expected";
 		LECalculator c;
-		assertEqualsM("that expression", 1, c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX));
+		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
 
-		assertEquals(12, c.currentCalculationLogPosition);
-		assertEquals(102, c.calcLogAction[0]);
-		assertEquals(0, c.calcLogValue[0]);
+		ASSERT_EQ(12, c.currentCalculationLogPosition);
+		ASSERT_EQ(102, c.calcLogAction[0]);
+		ASSERT_EQ(0, c.calcLogValue[0]);
 	}
 
 	testExpression("coolant", 100);

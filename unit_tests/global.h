@@ -42,6 +42,8 @@ void print(const char *fmt, ...);
 
 
 #define US_TO_NT_MULTIPLIER 100
+#define VCS_VERSION "321"
+#define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
 #define ALWAYS_INLINE INLINE
 
@@ -56,6 +58,7 @@ void print(const char *fmt, ...);
 #define CCM_OPTIONAL
 
 #define EXTERN_ENGINE extern EnginePins enginePins
+#define EXTERN_CONFIG
 
 #ifdef __cplusplus
 class Engine;
@@ -69,6 +72,10 @@ class Engine;
 #define PASS_ENGINE_PARAMETER_SIGNATURE engine, engineConfiguration, config, boardConfiguration
 #define PASS_ENGINE_PARAMETER_SUFFIX , engine, engineConfiguration, config, boardConfiguration
 
+#define DECLARE_CONFIG_PARAMETER_SIGNATURE engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
+#define DECLARE_CONFIG_PARAMETER_SUFFIX , engine_configuration_s *engineConfiguration, persistent_config_s *config, board_configuration_s *boardConfiguration
+#define PASS_CONFIG_PARAMETER_SIGNATURE engineConfiguration, config, boardConfiguration
+#define PASS_CONFIG_PARAMETER_SUFFIX , engineConfiguration, config, boardConfiguration
 
 #define DEFINE_CONFIG_PARAM(x, y) , x y
 #define PASS_CONFIG_PARAM(x) , x
@@ -91,6 +98,9 @@ class Engine;
 		EXPAND_Engine
 
 #define CONFIG(x) engineConfiguration->x
+// todo: fix this! this does not work because of 'prepareVoidConfiguration(&activeConfiguration);'
+//#define CONFIGB(x) engine->engineConfigurationPtr->bc.x
+#define CONFIGB(x) CONFIG(bc.x)
 #define ENGINE(x) engine->x
 
 #define CONFIG_PARAM(x) (x)

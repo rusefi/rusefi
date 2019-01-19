@@ -37,7 +37,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "CJ125 Wide O2 "
-Date "2018-11-15"
+Date "2019-01-08"
 Rev "R0.4.1"
 Comp "rusEFI.com"
 Comment1 ""

@@ -756,7 +756,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float tachPulseDuractionMs;;"ms",        1,     0,    0.0,    100.0,  2
 	int tachPulseTriggerIndex;+Trigger cycle index at which we start tach pulse (performance consideration);"index",     1,     0,    0.0,    360.0,  0
 	
-	float suckedOffCoef;;"%",        1,     0,    0.0,    300.0,  2
+	float wwaeTau;;"%",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
 	pid_s etb;
 	pid_s warmupAfrPid;
@@ -766,7 +766,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;See cltIdleRpmBins
-	float addedToWallCoef;Wall wetting/evaporation factor/Tau factor/fuel film;"%",        1,     0,    0.0,    300.0,  2
+	float wwaeBeta;Wall wetting/evaporation factor/Tau factor/fuel film;"%",        1,     0,    0.0,    1.0,  2
 	brain_pin_e communicationLedPin;blue LED on discovery by default	
 	brain_pin_e runningLedPin;green LED on discovery by default
 	brain_pin_e binarySerialTxPin;	
@@ -819,7 +819,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfrBins;CLT-based target AFR for PID-based control;"C",        1,     0,   -100.0,    250.0,  2
 	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfr;;"AFR",      1,     0,      0.0,    20.0,   2
-	float warmupAfrThreshold;;"tempterature",        1,     0,    0, 200,     3
+	float warmupAfrThreshold;;"temperature",        1,     0,    0, 200,     3
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
@@ -833,7 +833,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapLowValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
-	brain_input_pin_e camInput;
+	brain_input_pin_e camInput;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
 	int crankingIACposition;+IAC position during cranking;"percent",      1,     0,   -100.0,    100,    
 	float tChargeMinRpmMinTps;;"mult",        1,     0,  0,    3,  4
 	float tChargeMinRpmMaxTps;;"mult",        1,     0,  0,    3,  4
@@ -930,11 +930,11 @@ custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
 tChargeMode_e tChargeMode;
 	
 	
-		uint8_t[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%;"target TPS position",   1,   0.0,        0,  100.0,   0
+		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTOOD: use int8 data date once we template interpolation method;"target TPS position",   1,   0.0,        0,  100.0,   0
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
 	float hip9011Gain;
-	int[580] unusedEnd;
+	int[574] unusedEnd;
 	
 
 end_struct
@@ -968,7 +968,7 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"%",      1,     0,      0.0,    500.0,   2
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"%",      1,     0,      0.0,    1000.0,   2
 
-float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/h = 1 ft³/m;"kg/hour", 1, 0, -500.0, 4000.0, 2
+float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/h = 1 ftï¿½/m;"kg/hour", 1, 0, -500.0, 4000.0, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;; "V", 1, 0, -5.0, 150.0, 2
 
 angle_table_t ignitionIatCorrTable;

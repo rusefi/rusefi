@@ -51,6 +51,7 @@ cd ..
 echo Building java console
 cd java_console
 call ant clean
+call ant clean_out_folder
 call ant
 cd ..
 

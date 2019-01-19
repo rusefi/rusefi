@@ -1,1 +1,1 @@
- 1)                  TBD
+ 1) RESOLVED IN R0.2 Made reference designators match the page 23 reference found here http://www.ti.com/lit/ds/symlink/tps54340.pdf

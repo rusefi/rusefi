@@ -33,6 +33,7 @@
 #include "pin_repository.h"
 #include "efiGpio.h"
 #include "settings.h"
+#include "idle_thread.h"
 
 EXTERN_ENGINE
 ;
@@ -139,7 +140,7 @@ static void doRunFuel(int humanIndex, const char *delayStr, const char * onTimeS
 		scheduleMsg(logger, "Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = boardConfiguration->injectionPins[humanIndex - 1];
+	brain_pin_e b = CONFIGB(injectionPins)[humanIndex - 1];
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
 }
 
@@ -154,19 +155,22 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 }
 
 static void fanBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, CONFIGB(fanPin));
 }
 
 void fanBench(void) {
 	fanBenchExt("3000");
 }
 
+/**
+ * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
+ */
 void milBench(void) {
-	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, boardConfiguration->malfunctionIndicatorPin);
+	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, CONFIGB(malfunctionIndicatorPin));
 }
 
 void fuelPumpBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin);
+	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, CONFIGB(fuelPumpPin));
 }
 
 void fuelPumpBench(void) {
@@ -184,7 +188,7 @@ static void doRunSpark(int humanIndex, const char *delayStr, const char * onTime
 		scheduleMsg(logger, "Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = boardConfiguration->ignitionPins[humanIndex - 1];
+	brain_pin_e b = CONFIGB(ignitionPins)[humanIndex - 1];
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.coils[humanIndex - 1], b);
 }
 
@@ -240,7 +244,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	}
 }
 
-void runIoTest(int subsystem, int index) {
+void runBenchTest(int subsystem, int index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
 	if (subsystem == 0x12) {
@@ -248,12 +252,16 @@ void runIoTest(int subsystem, int index) {
 	} else if (subsystem == 0x13) {
 		doRunFuel(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
+		// cmd_test_fuel_pump
 		fuelPumpBench();
 	} else if (subsystem == 0x15) {
 		fanBench();
 	} else if (subsystem == 0x16) {
+		// cmd_test_check_engine_light
 		milBench();
 	} else if (subsystem == 0x17) {
+		// cmd_test_idle_valve
+		startIdleBench();
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);

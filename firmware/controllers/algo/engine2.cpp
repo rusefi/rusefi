@@ -15,6 +15,13 @@
 #include "engine_math.h"
 #include "advance_map.h"
 #include "aux_valves.h"
+#if EFI_PROD_CODE
+#include "svnversion.h"
+#endif
+
+#if ! EFI_UNIT_TEST
+#include "status_loop.h"
+#endif
 
 extern fuel_Map3D_t veMap;
 extern afr_Map3D_t afrMap;
@@ -29,6 +36,32 @@ extern LoggingWithStorage engineLogger;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
+WarningCodeState::WarningCodeState() {
+	clear();
+}
+
+void WarningCodeState::clear() {
+	warningCounter = 0;
+	lastErrorCode = 0;
+	timeOfPreviousWarning = -10;
+	recentWarnings.clear();
+}
+
+void WarningCodeState::addWarningCode(obd_code_e code) {
+	warningCounter++;
+	lastErrorCode = code;
+	if (!recentWarnings.contains(code)) {
+		recentWarnings.add((int)code);
+	}
+}
+
+/**
+ * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
+ */
+bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) const {
+	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
+	return absI(now - timeOfPreviousWarning) < period;
+}
 
 MockAdcState::MockAdcState() {
 	memset(hasMockAdc, 0, sizeof(hasMockAdc));
@@ -44,8 +77,6 @@ void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 FuelConsumptionState::FuelConsumptionState() {
-	perSecondConsumption = perSecondAccumulator = 0;
-	perMinuteConsumption = perMinuteAccumulator = 0;
 	accumulatedSecondPrevNt = accumulatedMinutePrevNt = getTimeNowNt();
 }
 
@@ -73,36 +104,10 @@ void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 }
 
 TransmissionState::TransmissionState() {
-
 }
 
 EngineState::EngineState() {
-	dwellAngle = NAN;
-	engineNoiseHipLevel = 0;
-	injectorLag = 0;
-	warningCounter = 0;
-	lastErrorCode = 0;
-	crankingTime = 0;
-	timeSinceCranking = 0;
-	vssEventCounter = 0;
-	targetAFR = 0;
-	tpsAccelEnrich = 0;
-	tCharge = tChargeK = 0;
 	timeSinceLastTChargeK = getTimeNowNt();
-	airFlow = 0;
-	cltTimingCorrection = 0;
-	runningFuel = baseFuel = currentVE = 0;
-	timeOfPreviousWarning = -10;
-	baseTableFuel = iatFuelCorrection = 0;
-	fuelPidCorrection = 0;
-	cltFuelCorrection = postCrankingFuelCorrection = 0;
-	warmupTargetAfr = airMass = 0;
-	baroCorrection = timingAdvance = 0;
-	sparkDwell = mapAveragingDuration = 0;
-	totalLoggedBytes = injectionOffset = 0;
-	auxValveStart = auxValveEnd = 0;
-	fuelCutoffCorrection = 0;
-	coastingFuelCutStartTime = 0;
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -115,6 +120,9 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (!engine->slowCallBackWasInvoked) {
+		warning(CUSTOM_ERR_6696, "Slow not invoked yet");
+	}
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		crankingTime = nowNt;
@@ -134,7 +142,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	iatFuelCorrection = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SUFFIX);
 	// todo: move this into slow callback, no reason for CLT corr to be here
-	if (boardConfiguration->useWarmupPidAfr && engine->sensors.clt < engineConfiguration->warmupAfrThreshold) {
+	if (CONFIGB(useWarmupPidAfr) && engine->sensors.clt < engineConfiguration->warmupAfrThreshold) {
 		if (rpm < 200) {
 			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
@@ -193,7 +201,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		if (CONFIG(useSeparateVeForIdle)) {
 			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
 			// interpolate between idle table and normal (running) table using TPS threshold
-			rawVe = interpolateClamped(0.0f, idleVe, boardConfiguration->idlePidDeactivationTpsThreshold, rawVe, tps);
+			rawVe = interpolateClamped(0.0f, idleVe, CONFIGB(idlePidDeactivationTpsThreshold), rawVe, tps);
 		}
 		currentVE = baroCorrection * rawVe * 0.01;
 		targetAFR = afrMap.getValue(rpm, map);
@@ -221,19 +229,14 @@ SensorsState::SensorsState() {
 	reset();
 }
 
-int MockAdcState::getMockAdcValue(int hwChannel) {
+int MockAdcState::getMockAdcValue(int hwChannel) const {
 	return fakeAdcValues[hwChannel];
-}
-
-Accelerometer::Accelerometer() {
-	x = y = z = 0;
 }
 
 void SensorsState::reset() {
 	fuelTankGauge = vBatt = 0;
 	iat = clt = NAN;
 }
-
 
 StartupFuelPumping::StartupFuelPumping() {
 	isTpsAbove50 = false;
@@ -270,4 +273,15 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+#if EFI_SIMULATOR
+#define VCS_VERSION "123"
+#endif
+
+void printCurrentState(Logging *logging, int seconds, const char *name) {
+	logging->appendPrintf("%s%s%d@%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
+			getRusEfiVersion(), VCS_VERSION,
+			name,
+			seconds,
+			DELIMETER);
+}
 

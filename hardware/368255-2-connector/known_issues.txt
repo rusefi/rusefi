@@ -1,1 +1,1 @@
-1)                         center hole for plastic latch is too small
+1) RESOLVED IN R0.2 center hole for plastic latch is too small, changed from 2.2mm to 3.7mm. 

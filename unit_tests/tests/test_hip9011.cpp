@@ -7,7 +7,8 @@
 #include "unit_test_framework.h"
 #include "hip9011_lookup.h"
 #include "HIP9011_logic.h"
-#include "gtest/gtest.h"
+#include "test_parameters.h"
+using ::testing::_;
 
 TEST(hip9011, lookup) {
 	assertEqualsM2("", 3183.1013, getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
@@ -22,12 +23,17 @@ TEST(hip9011, lookup) {
 	EXPECT_EQ(47, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.234));
 	EXPECT_EQ(63, getHip9011GainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.000001));
 
-	prepareHip9011RpmLookup(50);
+}
 
-	EXPECT_EQ(31, getIntegrationIndexByRpm(1));
-	EXPECT_EQ(21, getIntegrationIndexByRpm(1100));
-	EXPECT_EQ(1, getIntegrationIndexByRpm(6600));
-	EXPECT_EQ(0, getIntegrationIndexByRpm(16600));
+TEST(hip9011, rpmLookup) {
+	HIP9011 instance(NULL);
+
+	instance.prepareHip9011RpmLookup(50);
+
+	EXPECT_EQ(31, instance.getIntegrationIndexByRpm(1));
+	EXPECT_EQ(21, instance.getIntegrationIndexByRpm(1100));
+	EXPECT_EQ(1, instance.getIntegrationIndexByRpm(6600));
+	EXPECT_EQ(0, instance.getIntegrationIndexByRpm(16600));
 }
 
 TEST(hip9011, band) {
@@ -37,4 +43,47 @@ TEST(hip9011, band) {
 
 	EXPECT_EQ(42, getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN));
 
+}
+
+class MockHip9011Hardware : public Hip9011HardwareInterface
+{
+public:
+	MockHip9011Hardware() {  }
+
+    MOCK_METHOD1(sendSyncCommand, void(unsigned char));
+    MOCK_METHOD1(sendCommand, void(unsigned char));
+};
+
+TEST(hip9011, configurationCommands) {
+
+	MockHip9011Hardware mock;
+
+	HIP9011 instance(&mock);
+
+	instance.prepareHip9011RpmLookup(50);
+
+// want to invoke method with same parameters a few times
+#define PARAMETERS 600, _8MHZ_PRESCALER, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1
+
+	 // Not making assumptions on the message send ...
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_GAIN_CMD + 0xE)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_INTEGRATOR_CMD + 0x1C)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_BAND_PASS_CMD + 0x2A)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(SET_PRESCALER_CMD + 6)).Times(1);
+	instance.handleValue(PARAMETERS);
+
+	// initialization is over, no commands should be sent
+	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
+	EXPECT_CALL(mock, sendCommand(_)).Times(0);
+	instance.handleValue(PARAMETERS);
 }
