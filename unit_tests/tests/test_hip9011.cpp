@@ -60,10 +60,8 @@ TEST(hip9011, configurationCommands) {
 
 	HIP9011 instance(&mock);
 
-	instance.prepareHip9011RpmLookup(50);
-
 // want to invoke method with same parameters a few times
-#define PARAMETERS 600, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1, _8MHZ_PRESCALER, NAN, NAN
+#define PARAMETERS 600, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1, _8MHZ_PRESCALER, 0.0, 50.0
 
 	 // Not making assumptions on the message send ...
 	EXPECT_CALL(mock, sendSyncCommand(_)).Times(0);
