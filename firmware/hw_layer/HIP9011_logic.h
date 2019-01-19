@@ -32,17 +32,24 @@ public:
 #define PASS_HIP_PARAMS CONFIG(knockBandCustom), \
 		CONFIG(cylinderBore), \
 		CONFIG(hip9011Gain), \
-		CONFIG(hip9011PrescalerAndSDO)
+		CONFIG(hip9011PrescalerAndSDO), \
+		CONFIG(knockDetectionWindowStart), \
+		CONFIG(knockDetectionWindowEnd)
 
 #define FORWARD_HIP_PARAMS knockBandCustom, \
 		cylinderBore, \
 		hip9011Gain, \
-		hip9011PrescalerAndSDO
+		hip9011PrescalerAndSDO, \
+		knockDetectionWindowStart, \
+		knockDetectionWindowEnd
 
 #define DEFINE_HIP_PARAMS float knockBandCustom,\
 		float cylinderBore, \
 		float hip9011Gain, \
-		int hip9011PrescalerAndSDO
+		int hip9011PrescalerAndSDO, \
+		float knockDetectionWindowStart, \
+		float knockDetectionWindowEnd
+
 
 #define GET_CONFIG_VALUE(x) x
 #define DEFINE_PARAM_SUFFIX(x) , x
@@ -54,7 +61,7 @@ public:
 	void prepareHip9011RpmLookup(float angleWindowWidth);
 	int getIntegrationIndexByRpm(float rpm);
 	void setStateAndCommand(unsigned char cmd);
-	void setAngleWindowWidth(float angleWindowWidth);
+	void setAngleWindowWidth(DEFINE_HIP_PARAMS);
 	void handleValue(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS));
 
 	/**
