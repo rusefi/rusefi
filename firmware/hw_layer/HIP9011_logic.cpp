@@ -86,7 +86,8 @@ void HIP9011::setAngleWindowWidth(float angleWindowWidth) {
 	prepareHip9011RpmLookup(angleWindowWidth);
 }
 
-void HIP9011::handleValue(int rpm, int prescalerIndex DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
+void HIP9011::handleValue(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
+	int prescalerIndex = GET_CONFIG_VALUE(hip9011PrescalerAndSDO);
 	int integratorIndex = getIntegrationIndexByRpm(rpm);
 	int gainIndex = getHip9011GainIndex(FORWARD_HIP_PARAMS);
 	int bandIndex = getBandIndex(FORWARD_HIP_PARAMS);
