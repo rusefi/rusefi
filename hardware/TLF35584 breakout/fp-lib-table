@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name "TL35584 breakout")(type KiCad)(uri "${KIPRJMOD}/TL35584 breakout.pretty")(options "")(descr ""))
+)

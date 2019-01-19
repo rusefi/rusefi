@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name TLF35584_breakout)(type Legacy)(uri "${KIPRJMOD}/TLF35584 breakout.lib")(options "")(descr ""))
+)
