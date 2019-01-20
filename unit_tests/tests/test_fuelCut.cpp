@@ -9,8 +9,6 @@
 #include "event_queue.h"
 #include "tps.h"
 
-extern int timeNowUs;
-
 TEST(fuelCut, coasting) {
 	printf("*************************************************** testCoastingFuelCut\r\n");
 
