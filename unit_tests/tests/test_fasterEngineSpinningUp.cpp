@@ -7,8 +7,6 @@
 #include "engine_math.h"
 #include "engine_test_helper.h"
 
-extern int timeNowUs;
-
 TEST(sensors, testFasterEngineSpinningUp) {
 	printf("*************************************************** testFasterEngineSpinningUp\r\n");
 
@@ -81,7 +79,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	eth.fireFall(60);
 
 	eth.clearQueue();
-	timeStartUs = timeNowUs;
+	timeStartUs = eth.getTimeNowUs();
 	eth.fireTriggerEventsWithDuration(60);
 
 	// check if the mode is now changed to 'running' at higher RPM
