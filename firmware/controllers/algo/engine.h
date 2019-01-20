@@ -94,6 +94,9 @@ public:
 	 * values are in Celsius
 	 */
 	float iat;
+#if EFI_UNIT_TEST
+	float mockClt = NAN;
+#endif
 	float clt;
 
 	/**
@@ -310,6 +313,7 @@ public:
 	float fsioTimingAdjustment;
 	float fsioIdleTargetRPMAdjustment;
 	float servoValues[SERVO_COUNT];
+	float fsioLastValue[FSIO_COMMAND_COUNT];
 
 #if EFI_ENABLE_ENGINE_WARNING
 	/**
@@ -363,8 +367,6 @@ public:
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	FuelSchedule injectionEvents;
 #endif /* EFI_ENGINE_CONTROL */
-
-	float fsioLastValue[FSIO_COMMAND_COUNT];
 
 	WallFuel wallFuel;
 	bool needToStopEngine(efitick_t nowNt);
@@ -592,5 +594,6 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* H_ENGINE_H_ */

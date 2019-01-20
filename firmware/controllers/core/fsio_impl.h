@@ -17,6 +17,8 @@
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, float> fsio8_Map3D_f32t;
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, uint8_t> fsio8_Map3D_u8t;
 
+#define MAGIC_OFFSET_FOR_ENGINE_WARNING 4
+#define MAGIC_OFFSET_FOR_CRITICAL_ENGINE 5
 
 float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_SUFFIX);

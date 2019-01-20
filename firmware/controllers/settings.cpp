@@ -975,9 +975,7 @@ static void disableSpi(int index) {
  * weird: we stop pins from here? we probably should stop engine from the code which is actually stopping engine?
  */
 void scheduleStopEngine(void) {
-	engine->stopEngineRequestTimeNt = getTimeNowNt();
-	// let's close injectors or else if these happen to be open right now
-	enginePins.stopPins();
+	doScheduleStopEngine(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void printAllInfo(void) {

@@ -14,7 +14,6 @@
 
 #define TEST_POOL_SIZE 256
 
-static float mockCoolant;
 static float mockFan;
 static float mockRpm;
 static float mockCrankingRpm;
@@ -25,7 +24,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_FAN:
 		return mockFan;
 	case LE_METHOD_COOLANT:
-		return mockCoolant;
+		return engine->sensors.clt;
 	case LE_METHOD_RPM:
 		return mockRpm;
 	case LE_METHOD_CRANKING_RPM:
@@ -36,6 +35,8 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 	case LE_METHOD_FAN_OFF_SETTING:
 		return 0;
+	case LE_METHOD_VBATT:
+		return 12;
 	default:
 	firmwareError(OBD_PCM_Processor_Fault, "No mock value for %d", action);
 		return NAN;
@@ -87,7 +88,7 @@ static void testParsing(void) {
 	ASSERT_TRUE(element == NULL);
 }
 
-static void testExpression2(float selfValue, const char *line, float expected) {
+static void testExpression2(float selfValue, const char *line, float expected, Engine *engine) {
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	LEElement * element = pool.parseExpression(line);
@@ -95,9 +96,14 @@ static void testExpression2(float selfValue, const char *line, float expected) {
 	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EXPAND_Engine;
 
-	assertEqualsM(line, expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_EQ(expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX)) << line;
+}
+
+static void testExpression2(float selfValue, const char *line, float expected) {
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	testExpression2(selfValue, line, expected, engine);
 }
 
 static void testExpression(const char *line, float expected) {
@@ -108,6 +114,7 @@ TEST(misc, testLogicExpressions) {
 	printf("*************************************************** testLogicExpressions\r\n");
 
 	testParsing();
+	{
 
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
@@ -163,17 +170,20 @@ TEST(misc, testLogicExpressions) {
 	element = pool.parseExpression("fan no_such_method");
 	ASSERT_TRUE(element == NULL) << "NULL expected";
 
+	}
 
 	/**
 	 * fan = (not fan && coolant > 90) OR (fan && coolant > 85)
 	 * fan = fan NOT coolant 90 AND more fan coolant 85 more AND OR
 	 */
-
-
 	mockFan = 0;
-	mockCoolant = 100;
 
-	testExpression("coolant", 100);
+	{
+		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+		engine->sensors.mockClt = 100;
+		engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+		testExpression2(0, "coolant 1 +", 101, engine);
+	}
 	testExpression("fan", 0);
 	testExpression("fan not", 1);
 	testExpression("coolant 90 >", 1);
@@ -186,6 +196,7 @@ TEST(misc, testLogicExpressions) {
 
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
 	{
+		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 		LEElement thepool[TEST_POOL_SIZE];
 		LEElementPool pool(thepool, TEST_POOL_SIZE);
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
@@ -198,7 +209,6 @@ TEST(misc, testLogicExpressions) {
 		ASSERT_EQ(0, c.calcLogValue[0]);
 	}
 
-	testExpression("coolant", 100);
 	testExpression("fan_off_setting", 0);
 	testExpression("coolant fan_off_setting >", 1);
 
