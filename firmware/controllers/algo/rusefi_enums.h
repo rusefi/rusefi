@@ -130,7 +130,7 @@ typedef enum {
 	GEO_STORM = 40,
 
 	// Frankenso board
-	MIATA_NA_1_6 = 41,
+	MIATA_NA6_MAP = 41,
 
 	ZIL_130 = 42,
 
@@ -174,6 +174,9 @@ typedef enum {
 	MAZDA_MIATA_2003_BOARD_TEST = 55,
 
 	MAZDA_MIATA_NA8 = 56,
+
+	// see also	MIATA_NA6_MAP = 41
+	MIATA_NA6_VAF = 57,
 
 	PROMETHEUS_DEFAULTS = 100,
 
