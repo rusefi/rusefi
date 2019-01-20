@@ -59,9 +59,6 @@ RpmCalculator::RpmCalculator() {
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceBootForUnitTest = 0;
-
-	// WAT? this was just assigned a non-zero value a few lines above? which one is right?
-	lastRpmEventTimeNt = 0;
 }
 
 bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -89,11 +86,6 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return true if engine is spinning (cranking or running)
  */
 bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (lastRpmEventTimeNt == 0) {
-		// here we assume 64 bit time does not overflow
-		// zero value is the default meaning no RPM events since reboot
-		return false;
-	}
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(needToStopEngine(nowNt))) {
 		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);

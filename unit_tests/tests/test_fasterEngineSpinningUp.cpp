@@ -14,9 +14,10 @@ TEST(sensors, testFasterEngineSpinningUp) {
 
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPAND_EngineTestHelper
-
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+	eth.firePrimaryTriggerRise();
+
 	// set ignition mode
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	// set cranking threshold (used below)
@@ -65,7 +66,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// check if the mode is changed when fully synched
 	ASSERT_EQ(CRANKING, engine->rpmCalculator.getState());
 	// check RPM
-	ASSERT_EQ( 300,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#2";
+	ASSERT_EQ( 200,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#2";
 	// test if they are simultaneous in cranking mode too
 	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// test if ignition mode is restored to ind.coils
@@ -73,8 +74,8 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
-	eth.assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 97975);
-	eth.assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 100000);
+	eth.assertEvent5(&engine->executor, "inj start#2", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 147975);
+	eth.assertEvent5(&engine->executor, "inj end#2", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 150000);
 
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
