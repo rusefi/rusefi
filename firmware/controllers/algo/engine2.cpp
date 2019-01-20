@@ -113,6 +113,11 @@ EngineState::EngineState() {
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if EFI_UNIT_TEST
+	if (!cisnan(engine->sensors.mockClt)) {
+		engine->sensors.clt = engine->sensors.mockClt;
+	}
+#endif
 	engine->sensors.oilPressure = getOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	warmupTargetAfr = interpolate2d("warm", engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,

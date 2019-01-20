@@ -8,12 +8,12 @@
 #include "engine_test_helper.h"
 #include "event_queue.h"
 #include "tps.h"
+#include "fsio_impl.h"
 
 TEST(fuelCut, coasting) {
 	printf("*************************************************** testCoastingFuelCut\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// configure coastingFuelCut
 	engineConfiguration->bc.coastingFuelCutEnabled = true;
@@ -94,4 +94,31 @@ TEST(fuelCut, coasting) {
 
 	// Fuel cut-off is active again!
 	assertEqualsM("inj dur#7 cut", 0.0f, ENGINE(injectionDuration));
+}
+
+
+TEST(fuelCut, criticalEngineTemperature) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	engineConfiguration->useFSIO5ForCriticalIssueEngineStop = true;
+	setFsio(MAGIC_OFFSET_FOR_CRITICAL_ENGINE, GPIOD_7, TOO_HOT_LOGIC PASS_ENGINE_PARAMETER_SUFFIX);
+	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// we need some non-zero time as getTimeNow() which would become stopEngineRequestTimeNt
+	eth.moveTimeForwardUs(1000);
+
+	engine->rpmCalculator.mockRpm = 2000;
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ASSERT_EQ(engine->stopEngineRequestTimeNt, 0);
+
+	ASSERT_FALSE(engine->stopEngineRequestTimeNt > 0);
+
+	engine->sensors.mockClt = 200; // 200C is really hot!
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	ASSERT_TRUE(engine->stopEngineRequestTimeNt > 0);
 }

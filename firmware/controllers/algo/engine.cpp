@@ -111,10 +111,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	checkShutdown();
 
 #if EFI_FSIO || defined(__DOXYGEN__)
-// todo: enable this for unit tests
-#if ! EFI_UNIT_TEST
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
 #endif /* EFI_PROD_CODE && EFI_FSIO */
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -374,4 +371,10 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
+}
+
+void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	// let's close injectors or else if these happen to be open right now
+	enginePins.stopPins();
 }

@@ -22,6 +22,9 @@
 // Human-readable: vbatt < 14.5
 #define ALTERNATOR_LOGIC "vbatt 14.5 <"
 
+// Human-readable: coolant > 120 (Celsius)
+#define TOO_HOT_LOGIC "coolant 120 >"
+
 // Human-readable: ac_on_switch
 #define AC_RELAY_LOGIC "ac_on_switch"
 // Combined RPM, CLT and VBATT warning light
