@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 17:03:36 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 11:24:01 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -658,6 +658,8 @@ typedef struct {
 	offset 376 bit 19 */
 	bool stepperForceParkingEveryRestart : 1;
 	/**
+	 * Smarter cranking logic.
+	 * See also startOfCrankingPrimingPulse
 	offset 376 bit 20 */
 	bool isFasterEngineSpinUpEnabled : 1;
 	/**
@@ -1722,6 +1724,7 @@ typedef struct {
 	float alternatorOffAboveTps;
 	/**
 	 * Prime pulse duration in ms
+	 * See also isFasterEngineSpinUpEnabled
 	 * set cranking_priming_pulse X
 	 * offset 2148
 	 */
@@ -2475,4 +2478,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Jan 10 17:03:36 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 11:24:01 EST 2019

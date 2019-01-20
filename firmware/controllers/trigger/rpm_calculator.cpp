@@ -200,8 +200,10 @@ void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 	if (isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-	// Update ignition pin indices if needed
-	prepareIgnitionPinIndices(getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	/**
+	 * Update ignition pin indices if needed. Here we potentially switch to wasted spark temporarily.
+	 */
+	prepareIgnitionPinIndices(getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**

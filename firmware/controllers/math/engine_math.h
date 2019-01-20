@@ -47,7 +47,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-ignition_mode_e getIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
  * This lightweight method is invoked in case of a configuration change or initialization.
