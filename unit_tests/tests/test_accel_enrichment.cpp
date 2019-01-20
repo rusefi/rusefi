@@ -14,8 +14,7 @@
 TEST(big, testAccelEnrichment) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
 
-	EngineTestHelper eth(FORD_ASPIRE_1996);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	engine->rpmCalculator.setRpmValue(600 PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

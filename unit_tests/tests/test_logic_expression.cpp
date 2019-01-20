@@ -95,8 +95,7 @@ static void testExpression2(float selfValue, const char *line, float expected) {
 	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	assertEqualsM(line, expected, c.getValue2(selfValue, element PASS_ENGINE_PARAMETER_SUFFIX));
 }
@@ -110,8 +109,7 @@ TEST(misc, testLogicExpressions) {
 
 	testParsing();
 
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	LECalculator c;
 

@@ -10,8 +10,7 @@
 TEST(sensors, testFasterEngineSpinningUp) {
 	printf("*************************************************** testFasterEngineSpinningUp\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
 	eth.firePrimaryTriggerRise();

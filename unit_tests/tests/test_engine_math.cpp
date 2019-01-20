@@ -16,8 +16,7 @@
 
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
-	EngineTestHelper eth(FORD_ESCORT_GT);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("testIgnitionPlanning_AFR", 13.5, eth.engine.engineState.targetAFR);
@@ -28,8 +27,7 @@ TEST(misc, testIgnitionPlanning) {
 TEST(misc, testEngineMath) {
 	printf("*************************************************** testEngineMath\r\n");
 
-	EngineTestHelper eth(FORD_ESCORT_GT);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
 	engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
@@ -88,8 +86,7 @@ TEST(misc, testIgnitionMapGenerator) {
 TEST(misc, testMafLookup) {
 	printf("*************************************************** testMafLookup\r\n");
 
-	EngineTestHelper eth(FORD_ESCORT_GT);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
 	setBosch0280218037(config);
 	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);

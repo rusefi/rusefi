@@ -11,8 +11,7 @@
 
 TEST(big, testSpeedDensity) {
 	printf("*************************************************** testSpeedDensity\r\n");
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	eth.applyTriggerShape();

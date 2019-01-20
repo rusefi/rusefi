@@ -14,8 +14,7 @@
 
 TEST(maf2map, util) {
 
-	EngineTestHelper eth(FORD_ASPIRE_1996);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 
@@ -26,6 +25,6 @@ TEST(maf2map, util) {
 
 TEST(maf2map, integrated) {
 
-	EngineTestHelper eth(MIATA_NA6_VAF);
+	WITH_ENGINE_TEST_HELPER(MIATA_NA6_VAF);
 
 }

@@ -10,8 +10,7 @@
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	printf("*************************************************** testPlainCrankingWithoutAdvancedFeatures\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	ASSERT_EQ( 0,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM=0";
@@ -34,8 +33,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 TEST(engine, testStartOfCrankingPrimingPulse) {
 	printf("*************************************************** testStartOfCrankingPrimingPulse\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	engineConfiguration->startOfCrankingPrimingPulse = 4;
 
