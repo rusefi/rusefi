@@ -24,7 +24,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 
 	// check if it's true
 	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(IM_INDIVIDUAL_COILS, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check if the engine has the right state
 	ASSERT_EQ(STOPPED, engine->rpmCalculator.getState());
 	// check RPM
@@ -46,8 +46,8 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	ASSERT_EQ(4, engine->executor.size()) << "plain#2";
 	// test if they are simultaneous
 	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
-	// test if ignition mode is temporary changed to wasted spark, if set to ind.coils
-	ASSERT_EQ(IM_WASTED_SPARK, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	// test if ignition mode is temporary changed to wasted spark, if set to individual coils
+	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check real events
 	eth.assertEvent5(&engine->executor, "inj start#1", 0, (void*)startSimultaniousInjection, timeStartUs, MS2US(200) + 97975);
 	eth.assertEvent5(&engine->executor, "inj end#1", 1, (void*)endSimultaniousInjection, timeStartUs, MS2US(200) + 100000);
@@ -67,7 +67,7 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// test if they are simultaneous in cranking mode too
 	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// test if ignition mode is restored to ind.coils
-	ASSERT_EQ(IM_INDIVIDUAL_COILS, getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events

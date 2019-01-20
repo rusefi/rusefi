@@ -422,7 +422,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	switch (getIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	switch (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 	case IM_ONE_COIL:
 		return 0;
 		break;
@@ -451,7 +451,11 @@ void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAM
 	}
 }
 
-ignition_mode_e getIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+/**
+ * @return IM_WASTED_SPARK if in SPINNING mode and IM_INDIVIDUAL_COILS setting
+ * @return CONFIG(ignitionMode) otherwise
+ */
+ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ignition_mode_e ignitionMode = CONFIG(ignitionMode);
 	// In spin-up cranking mode we don't have full phase sync. info yet, so wasted spark mode is better
 	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)))
