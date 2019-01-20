@@ -231,16 +231,10 @@ void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUF
 }
 
 SensorsState::SensorsState() {
-	reset();
 }
 
 int MockAdcState::getMockAdcValue(int hwChannel) const {
 	return fakeAdcValues[hwChannel];
-}
-
-void SensorsState::reset() {
-	fuelTankGauge = vBatt = 0;
-	iat = clt = NAN;
 }
 
 StartupFuelPumping::StartupFuelPumping() {
