@@ -46,8 +46,7 @@ void sendOutConfirmation(char *value, int i) {
 }
 
 static int getTriggerZeroEventIndex(engine_type_e engineType) {
-	EngineTestHelper eth(engineType);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(engineType);
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -61,8 +60,7 @@ static void testDodgeNeonDecoder(void) {
 
 	ASSERT_EQ( 8,  getTriggerZeroEventIndex(DODGE_NEON_1995)) << "DODGE_NEON_1995: trigger zero index";
 
-	EngineTestHelper eth(DODGE_NEON_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(DODGE_NEON_1995);
 
 	TriggerShape * shape = &eth.engine.triggerCentral.triggerShape;
 	ASSERT_EQ(8, shape->getTriggerShapeSynchPointIndex());
@@ -114,8 +112,7 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 TEST(misc, testSomethingWeird) {
 	printf("*************************************************** testSomethingWeird\r\n");
 
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	TriggerState state_;
 	TriggerState *sta = &state_;
@@ -154,8 +151,7 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	TriggerShape * shape = &engine->triggerCentral.triggerShape;
 
@@ -197,8 +193,7 @@ TEST(misc, testFordAspire) {
 
 	ASSERT_EQ( 4,  getTriggerZeroEventIndex(FORD_ASPIRE_1996)) << "getTriggerZeroEventIndex";
 
-	EngineTestHelper eth(FORD_ASPIRE_1996);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	ASSERT_EQ( 4,  TRIGGER_SHAPE(getTriggerShapeSynchPointIndex())) << "getTriggerShapeSynchPointIndex";
 
@@ -220,8 +215,7 @@ TEST(misc, testFordAspire) {
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
 	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
-	EngineTestHelper eth(type);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(type);
 
 	TriggerShape *t = &ENGINE(triggerCentral.triggerShape);
 
@@ -242,8 +236,7 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 
 TEST(misc, testStartupFuelPumping) {
 	printf("*************************************************** testStartupFuelPumping\r\n");
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	StartupFuelPumping sf;
 
@@ -295,8 +288,7 @@ extern EnginePins enginePins;
 TEST(misc, testRpmCalculator) {
 	printf("*************************************************** testRpmCalculator\r\n");
 
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 	IgnitionEventList *ilist = &engine->ignitionEvents;
 	ASSERT_EQ( 0,  ilist->isReady) << "size #1";
 
@@ -507,8 +499,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
 	{
-		EngineTestHelper eth(MITSU_4G93);
-		EXPAND_EngineTestHelper;
+		WITH_ENGINE_TEST_HELPER(MITSU_4G93);
 
 
 //		TriggerShape *t = &eth.engine.triggerShape;
@@ -551,8 +542,7 @@ TEST(misc, testTriggerDecoder) {
 	{
 		printTriggerDebug = true;
 
-		EngineTestHelper eth(DODGE_NEON_2003_CAM);
-		EXPAND_EngineTestHelper;
+		WITH_ENGINE_TEST_HELPER(DODGE_NEON_2003_CAM);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -704,8 +694,7 @@ static void assertInjectors(const char *msg, int value0, int value1) {
 TEST(big, testFuelSchedulerBug299smallAndMedium) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setTestBug299(&eth);
 
 	FuelSchedule * t;
@@ -956,8 +945,7 @@ static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 TEST(big, testDifferentInjectionModes) {
 	printf("*************************************************** testDifferentInjectionModes\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
@@ -988,8 +976,7 @@ TEST(big, testDifferentInjectionModes) {
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	printf("*************************************************** testFuelSchedulerBug299 small to large\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
@@ -1101,8 +1088,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->isInjectionEnabled = false;
@@ -1208,8 +1194,7 @@ TEST(big, testSparkReverseOrderBug319) {
 TEST(big, testMissedSpark299) {
 	printf("*************************************************** testMissedSpark299\r\n");
 
-	EngineTestHelper eth(TEST_ENGINE);
-	EXPAND_EngineTestHelper
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

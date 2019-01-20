@@ -97,6 +97,9 @@ class Engine;
 	    Engine *engine = &eth.engine; \
 		EXPAND_Engine
 
+#define WITH_ENGINE_TEST_HELPER(x) EngineTestHelper eth(x); \
+		EXPAND_EngineTestHelper;
+
 #define CONFIG(x) engineConfiguration->x
 // todo: fix this! this does not work because of 'prepareVoidConfiguration(&activeConfiguration);'
 //#define CONFIGB(x) engine->engineConfigurationPtr->bc.x

@@ -20,8 +20,7 @@ extern float testMafValue;
 
 TEST(misc, testMafFuelMath) {
 	printf("====================================================================================== testMafFuelMath\r\n");
-	EngineTestHelper eth(FORD_ASPIRE_1996);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
@@ -36,8 +35,7 @@ TEST(misc, testFuelMap) {
 	printf("====================================================================================== testFuelMap\r\n");
 
 	printf("Setting up FORD_ASPIRE_1996\r\n");
-	EngineTestHelper eth(FORD_ASPIRE_1996);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	printf("Filling fuel map\r\n");
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
@@ -164,8 +162,7 @@ static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver\r\n");
 
-	EngineTestHelper eth(FORD_ASPIRE_1996);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 

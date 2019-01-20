@@ -13,8 +13,7 @@
 static ThermistorConf tc;
 
 TEST(sensors, mapDecoding) {
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 
 	air_pressure_sensor_config_s s;
 	s.type = MT_DENSO183;
@@ -30,8 +29,7 @@ TEST(sensors, mapDecoding) {
 TEST(sensors, tps) {
 	print("************************************************** testTps\r\n");
 
-	EngineTestHelper eth(DODGE_RAM);
-	EXPAND_EngineTestHelper;
+	WITH_ENGINE_TEST_HELPER(DODGE_RAM);
 
 	engineConfiguration->tpsMax = 193;
 	engineConfiguration->tpsMin = 43;
