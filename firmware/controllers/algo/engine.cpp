@@ -171,46 +171,13 @@ int Engine::getGlobalConfigurationVersion(void) const {
 }
 
 void Engine::reset() {
-	withError = isEngineChartEnabled = false;
-	etbAutoTune = false;
-	sensorChartMode = SC_OFF;
-	actualLastInjection = 0;
-	fsioState.fsioTimingAdjustment = 0;
-	fsioState.fsioIdleTargetRPMAdjustment = 0;
-	isAlternatorControlEnabled = false;
-	callFromPitStopEndTime = 0;
-	rpmHardLimitTimestamp = 0;
-	wallFuelCorrection = 0;
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
-	lastTriggerToothEventTimeNt = 0;
-	isCylinderCleanupMode = false;
-	engineCycleEventCount = 0;
-	stopEngineRequestTimeNt = 0;
-	isRunningPwmTest = false;
-	isTestMode = false;
-	isSpinning = false;
-	isCltBroken = false;
-	adcToVoltageInputDividerCoefficient = NAN;
-	sensors.reset();
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
 
-	knockNow = false;
-	knockEver = false;
-	knockCount = 0;
-	knockDebug = false;
-	knockVolts = 0;
-	iHead = NULL;
-
-
-	timeOfLastKnockEvent = 0;
-	injectionDuration = 0;
-	clutchDownState = clutchUpState = brakePedalState = false;
 	memset(&m, 0, sizeof(m));
-	config = NULL;
-	engineConfigurationPtr = NULL;
 }
 
 
