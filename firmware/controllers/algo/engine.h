@@ -307,6 +307,10 @@ typedef void (*configuration_callback_t)(Engine*);
 class FsioState {
 public:
 	FsioState();
+	float fsioTimingAdjustment;
+	float fsioIdleTargetRPMAdjustment;
+	float servoValues[SERVO_COUNT];
+
 #if EFI_ENABLE_ENGINE_WARNING
 	/**
 	 * Shall we purposely miss on some cylinders in order to attract driver's attention to some problem
@@ -337,7 +341,6 @@ public:
 	Engine(persistent_config_s *config);
 	Engine();
 	void setConfig(persistent_config_s *config);
-	void reset();
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
@@ -456,10 +459,6 @@ public:
 
 	bool isRunningPwmTest;
 
-	// todo: move this into FsioState class
-	float fsioTimingAdjustment;
-	float fsioIdleTargetRPMAdjustment;
-	float servoValues[SERVO_COUNT];
 
 	FsioState fsioState;
 
@@ -569,6 +568,7 @@ private:
 	 * 'spinning' means the engine is not stopped
 	 */
 	bool isSpinning;
+	void reset();
 };
 
 /**

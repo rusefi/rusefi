@@ -90,10 +90,7 @@ public:
 	LEElement * fsioLogics[FSIO_COMMAND_COUNT];
 };
 
-FsioPointers::FsioPointers() {
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		fsioLogics[i] = NULL;
-	}
+FsioPointers::FsioPointers() : fsioLogics() {
 }
 
 static FsioPointers state;
@@ -441,7 +438,7 @@ static bool updateValueOrWarning(int fsioIndex, const char *msg, float *value DE
 }
 
 static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	updateValueOrWarning(8 - 1 + servoIndex, "servo", &engine->servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
+	updateValueOrWarning(8 - 1 + servoIndex, "servo", &engine->fsioState.servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**
@@ -506,11 +503,11 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &ENGINE(fsioIdleTargetRPMAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
+		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &ENGINE(fsioState.fsioIdleTargetRPMAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
+		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (engineConfiguration->useFSIO8ForServo1) {
