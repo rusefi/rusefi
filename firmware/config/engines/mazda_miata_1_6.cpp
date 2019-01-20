@@ -115,7 +115,7 @@ void miataNAcommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 }
 
-void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
@@ -209,6 +209,11 @@ void setMiataNA_1_6_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionMode = IM_BATCH;
 
 	miataNAcommon(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// todo: MAF-based ignition table?
 	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
+}
+
+void setMiataNA6_VAF_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setMiataNA6_MAP_Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
+	// todo: MAF-based ignition table?
 }
