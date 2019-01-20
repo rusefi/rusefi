@@ -178,8 +178,8 @@ void Engine::reset() {
 	etbAutoTune = false;
 	sensorChartMode = SC_OFF;
 	actualLastInjection = 0;
-	fsioTimingAdjustment = 0;
-	fsioIdleTargetRPMAdjustment = 0;
+	fsioState.fsioTimingAdjustment = 0;
+	fsioState.fsioIdleTargetRPMAdjustment = 0;
 	isAlternatorControlEnabled = false;
 	callFromPitStopEndTime = 0;
 	rpmHardLimitTimestamp = 0;
