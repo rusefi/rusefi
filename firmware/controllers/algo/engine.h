@@ -298,11 +298,6 @@ typedef struct {
 	uint32_t rpmCbTime;
 } monitoring_timestamps_s;
 
-class Engine;
-class WallFuel;
-
-typedef void (*configuration_callback_t)(Engine*);
-
 class FsioState {
 public:
 	FsioState();
@@ -591,5 +586,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+typedef void (*configuration_callback_t)(Engine*);
 
 #endif /* H_ENGINE_H_ */
