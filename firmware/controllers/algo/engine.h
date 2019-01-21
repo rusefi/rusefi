@@ -9,9 +9,7 @@
 
 #include "global.h"
 #include "pid.h"
-#include "engine_configuration.h"
 #include "rpm_calculator.h"
-#include "engine_configuration.h"
 #include "event_registry.h"
 #include "trigger_structure.h"
 #include "table_helper.h"
