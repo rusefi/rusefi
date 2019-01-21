@@ -7,11 +7,11 @@
 
 #include "global.h"
 #include "rfi_perftest.h"
+#include "engine_math.h"
 #include "fuel_math.h"
 
 #include "eficonsole.h"
 #include "time.h"
-#include "engine_math.h"
 #include "efiGpio.h"
 #include "efilib2.h"
 #include "console_io.h"

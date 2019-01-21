@@ -17,6 +17,7 @@
 
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 
+#include "engine.h"
 #include "trigger_emulator_algo.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"

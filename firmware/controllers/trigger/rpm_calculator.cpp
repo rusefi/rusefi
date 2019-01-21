@@ -10,8 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "global.h"
 #include "rpm_calculator.h"
+#include "engine.h"
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 
@@ -344,7 +344,7 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 
-void initRpmCalculator(Logging *sharedLogger, Engine *engine) {
+void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	if (hasFirmwareError()) {
 		return;

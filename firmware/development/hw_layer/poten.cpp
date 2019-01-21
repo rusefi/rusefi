@@ -11,6 +11,7 @@
 #include "eficonsole.h"
 #include "pin_repository.h"
 #include "engine_configuration.h"
+#include "engine.h"
 #include "hardware.h"
 #include "mpu_util.h"
 

@@ -661,7 +661,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
 	 * other listeners can access current RPM value
 	 */
-	initRpmCalculator(sharedLogger, engine);
+	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
