@@ -17,6 +17,15 @@
 
 #include "boards.h"
 
+// this is needed by all DECLARE_ENGINE_PARAMETER_* usages
+#include "engine_configuration_generated_structures.h"
+
+#ifdef __cplusplus
+// this is needed by all DECLARE_ENGINE_PARAMETER_* usages
+class Engine;
+#endif /* __cplusplus */
+
+
 #ifdef __cplusplus
 // todo: include it right here? #include "unit_test_framework.h"
 extern "C"
@@ -59,10 +68,6 @@ void print(const char *fmt, ...);
 
 #define EXTERN_ENGINE extern EnginePins enginePins
 #define EXTERN_CONFIG
-
-#ifdef __cplusplus
-class Engine;
-#endif /* __cplusplus */
 
 /**
  * @see firmware/global.h for explanation
