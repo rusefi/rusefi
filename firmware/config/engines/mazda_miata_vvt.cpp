@@ -427,7 +427,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
 	boardConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
 
-	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
+//	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// enable auto_idle
 	// enable verbose_idle

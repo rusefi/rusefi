@@ -10,7 +10,6 @@
 #include "global.h"
 #include "mazda_626.h"
 #include "engine_math.h"
-#include "honda_accord.h"
 #include "custom_engine.h"
 #include "allsensors.h"
 #include "fsio_impl.h"
