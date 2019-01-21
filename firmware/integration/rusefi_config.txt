@@ -645,7 +645,7 @@ bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;enable verbose_etb
-	bit useConstantDwellDuringCranking 
+	bit useConstantDwellDuringCranking;+Use angle-based duration or fixed absolute time dwell duration?
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError
 	bit useLinearCltSensor
