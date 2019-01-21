@@ -7,7 +7,7 @@
 #include "engine_math.h"
 #include "engine_test_helper.h"
 
-TEST(sensors, testFasterEngineSpinningUp) {
+TEST(cranking, testFasterEngineSpinningUp) {
 	printf("*************************************************** testFasterEngineSpinningUp\r\n");
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
@@ -94,4 +94,15 @@ TEST(sensors, testFasterEngineSpinningUp) {
 	// Note: See addFuelEvents() fix inside setRpmValue()!
 	eth.assertEvent5(&engine->executor, "inj start#3", 0, (void*)seTurnPinHigh, timeStartUs, MS2US(60) + 27974);
 	eth.assertEvent5(&engine->executor, "inj end#3", 1, (void*)seTurnPinLow, timeStartUs, MS2US(60) + 27974 + 3000);
+}
+
+
+TEST(cranking, testFasterEngineSpinningUp60_2) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	// turn on FasterEngineSpinUp mode
+	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+
+
 }

@@ -186,7 +186,8 @@ void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX)
 	EXPECT_EQ(expectedRpm, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << msg;
 }
 
-void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode) {
+void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,
+		trigger_type_e trigger) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
@@ -197,7 +198,7 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, inject
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
 	engineConfiguration->specs.cylindersCount = 4;
 	// a bit of flexibility - the mode may be changed by some tests
-	engineConfiguration->injectionMode = injMode;
+	engineConfiguration->injectionMode = injectionMode;
 	// set cranking mode (it's used by getCurrentInjectionMode())
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 
@@ -214,4 +215,8 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, inject
 	ASSERT_EQ( 1,  readIfTriggerConfigChangedForUnitTest()) << "trigger #2";
 
 	eth->applyTriggerShape();
+}
+
+void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
+	setupSimpleTestEngineWithMaf(eth, injectionMode, TT_ONE);
 }
