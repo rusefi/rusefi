@@ -34,8 +34,6 @@ public:
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
 
-class Engine;
-
 class IgnitionEvent {
 public:
 	IgnitionEvent();
