@@ -20,6 +20,6 @@ void milBench(void);
 void initInjectorCentral(Logging *sharedLogger);
 bool isRunningBenchTest(void);
 
-void runBenchTest(int subsystem, int index);
+void runBenchTest(uint16_t subsystem, uint16_t index);
 
 #endif /* INJECTOR_CENTRAL_H_ */
