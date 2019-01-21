@@ -43,8 +43,6 @@ bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setThermistorConfiguration(ThermistorConf * tc, float temp1, float r1, float temp2, float r2, float temp3,
 		float r3);
 
-class Engine;
-
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);

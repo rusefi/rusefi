@@ -15,9 +15,6 @@
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#ifdef __cplusplus
-class Engine;
-
 #define HW_EVENT_TYPES 6
 
 /**
@@ -54,7 +51,6 @@ private:
 	efitick_t accumSignalPeriods[HW_EVENT_TYPES];
 	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
 };
-#endif
 
 void triggerInfo(void);
 efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE);
