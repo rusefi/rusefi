@@ -10,7 +10,7 @@
 #ifndef ACC_ENRICHMENT_H_
 #define ACC_ENRICHMENT_H_
 
-#include "engine_configuration.h"
+#include "global.h"
 #include "cyclic_buffer.h"
 #include "table_helper.h"
 
