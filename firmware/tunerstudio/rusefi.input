@@ -1153,6 +1153,7 @@ menuDialog = main
 		subMenu	= std_separator
 	 	subMenu = connection,            	"Connection"
 		subMenu = ioTest,					"Bench Test"
+		subMenu = engineTypeDialog,			"Popular vehicles"
 		subMenu = allPins,					"Full pinout"
 
 [ControllerCommands]
@@ -1211,6 +1212,12 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 cmd_call_from_pit            = "w\x00\x20\x34\x56"
 cmd_stop_engine              = "w\x00\x99\x00\x00"
 		
+; MIATA_NA6_MAP = 41
+cmd_set_engine_type_Miata_NA6_MAP            = "w\x00\x30\x00\x29"
+; MIATA_NA6_VAF = 57
+cmd_set_engine_type_Miata_NA6_VAF            = "w\x00\x30\x00\x39"
+; MAZDA_MIATA_2003 = 47
+cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		
 [UserDefined]
 	dialog = fuelTableBottomDialog, "", card
@@ -2245,6 +2252,11 @@ cmd_stop_engine              = "w\x00\x99\x00\x00"
 		panel = testSpark,		West
 		panel = testInjectors,	Center
 		panel = testMisc,		East
+	
+	dialog = engineTypeDialog, "Popular vehicles"	
+		commandButton = "Miata NA6 VAF", cmd_set_engine_type_Miata_NA6_VAF
+		commandButton = "Miata NA6 MAP", cmd_set_engine_type_Miata_NA6_MAP
+		commandButton = "Miata NB2 MAP", cmd_set_engine_type_Miata_NA2
 
 
 ;			Board->ECU stimulator
