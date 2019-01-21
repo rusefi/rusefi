@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 11:24:01 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 20:01:54 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1297,6 +1297,7 @@ typedef struct {
 	offset 1472 bit 3 */
 	bool isVerboseETB : 1;
 	/**
+	 * Use angle-based duration or fixed absolute time dwell duration?
 	offset 1472 bit 4 */
 	bool useConstantDwellDuringCranking : 1;
 	/**
@@ -2478,4 +2479,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 11:24:01 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 20:01:54 EST 2019
