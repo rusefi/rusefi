@@ -10,7 +10,6 @@
 #define RPM_REPORTER_H_
 
 #include <global.h>
-#include "engine_configuration.h"
 #include "scheduler.h"
 
 #define TOP_DEAD_CENTER_MESSAGE "r"
@@ -34,8 +33,6 @@
 #define RPM_LOW_THRESHOLD 25
 #endif
 
-#ifdef __cplusplus
-
 typedef enum {
 	/**
 	 * The engine is not spinning, RPM=0
@@ -55,8 +52,6 @@ typedef enum {
 	 */
 	RUNNING,
 } spinning_state_e;
-
-class Engine;
 
 #define GET_RPM() ( ENGINE(rpmCalculator.rpmValue) )
 
@@ -166,11 +161,9 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 /**
  * @brief   Initialize RPM calculator
  */
-void initRpmCalculator(Logging *sharedLogger, Engine *engine);
+void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-#endif
-
 
 int getRevolutionCounter(void);
 

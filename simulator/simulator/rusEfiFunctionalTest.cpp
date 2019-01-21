@@ -115,7 +115,7 @@ void rusEfiFunctionalTest(void) {
 	initAlgo(&sharedLogger);
 	commonInitEngineController(&sharedLogger);
 
-	initRpmCalculator(&sharedLogger, engine);
+	initRpmCalculator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 	initTriggerCentral(&sharedLogger);
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);

@@ -8,7 +8,7 @@
 #ifndef CONTROLLERS_TRIGGER_TRIGGER_TOYOTA_H_
 #define CONTROLLERS_TRIGGER_TRIGGER_TOYOTA_H_
 
-#include "engine.h"
+#include "trigger_structure.h"
 
 void initialize2jzGE1_12(TriggerShape *s);
 void initialize2jzGE3_34(TriggerShape *s);

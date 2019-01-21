@@ -9,8 +9,6 @@
 
 #include "trigger_toyota.h"
 
-EXTERN_ENGINE;
-
 void initialize2jzGE1_12(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 

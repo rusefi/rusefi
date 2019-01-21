@@ -13,10 +13,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "engine_math.h"
 #include "aux_valves.h"
 #include "allsensors.h"
 #include "trigger_central.h"
-#include "engine_math.h"
 
 EXTERN_ENGINE
 ;
