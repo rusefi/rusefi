@@ -131,7 +131,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
 static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-	if (GET_RPM() > 2 * engineConfiguration->cranking.rpm) {
+	if (GET_RPM_VALUE > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->name;
 		if (prevSparkName == outputName && getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) != IM_ONE_COIL) {
 			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);

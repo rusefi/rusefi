@@ -241,7 +241,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 		return;
 	engine->m.beforeHipCb = GET_TIMESTAMP();
 
-	int rpm = GET_RPM();
+	int rpm = GET_RPM_VALUE;
 	if (!isValidRpm(rpm))
 		return;
 
@@ -299,7 +299,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 		hipValueMax = maxF(engine->knockVolts, hipValueMax);
 		engine->knockLogic(engine->knockVolts);
 
-		instance.handleValue(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		instance.handleValue(GET_RPM_VALUE DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 
 	}
 }
