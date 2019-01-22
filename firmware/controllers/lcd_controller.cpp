@@ -212,7 +212,7 @@ static void showLine(lcd_line_e line, int screenY) {
 	case LL_RPM:
 	{
 		int seconds = minI(9999, getTimeNowSeconds());
-		lcdPrintf("RPM %d %d ", getRpmE(engine), seconds);
+		lcdPrintf("RPM %d %d ", GET_RPM(), seconds);
 	}
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 		{
@@ -372,7 +372,7 @@ void updateHD44780lcd(void) {
 //	}
 //	lcd_HD44780_set_position(0, 10);
 //
-//	char * ptr = itoa10(buffer, getRpmE(engine));
+//	char * ptr = itoa10(buffer, GET_RPM());
 //	ptr[0] = 0;
 //	int len = ptr - buffer;
 //	for (int i = 0; i < 6 - len; i++) {

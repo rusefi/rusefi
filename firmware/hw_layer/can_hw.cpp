@@ -135,7 +135,7 @@ static void canDashboardBMW(void) {
 	sendCanMessage();
 
 	commonTxInit(CAN_BMW_E46_RPM);
-	setShortValue(&txmsg, (int) (getRpmE(engine) * 6.4), 2);
+	setShortValue(&txmsg, (int) (GET_RPM() * 6.4), 2);
 	sendCanMessage();
 
 	commonTxInit(CAN_BMW_E46_DME2);
@@ -152,7 +152,7 @@ static void canMazdaRX8(void) {
 
 	float kph = getVehicleSpeed();
 
-	setShortValue(&txmsg, SWAP_UINT16(getRpmE(engine) * 4), 0);
+	setShortValue(&txmsg, SWAP_UINT16(GET_RPM() * 4), 0);
 	setShortValue(&txmsg, 0xFFFF, 2);
 	setShortValue(&txmsg, SWAP_UINT16((int )(100 * kph + 10000)), 4);
 	setShortValue(&txmsg, 0, 6);
@@ -177,7 +177,7 @@ static void canMazdaRX8(void) {
 	txmsg.data8[4] = 0x01; //Oil Pressure (not really a gauge)
 	txmsg.data8[5] = 0x00; //check engine light
 	txmsg.data8[6] = 0x00; //Coolant, oil and battery
-	if ((getRpmE(engine)>0) && (engine->sensors.vBatt<13)) {
+	if ((GET_RPM()>0) && (engine->sensors.vBatt<13)) {
 		setTxBit(6, 6); // battery light
 	}
 	if (engine->sensors.clt > 105) {
@@ -192,14 +192,14 @@ static void canDashboardFiat(void) {
 	//Fiat Dashboard
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
 	setShortValue(&txmsg, (int) (engine->sensors.clt - 40), 3); //Coolant Temp
-	setShortValue(&txmsg, getRpmE(engine) / 32, 6); //RPM
+	setShortValue(&txmsg, GET_RPM() / 32, 6); //RPM
 	sendCanMessage();
 }
 
 static void canDashboardVAG(void) {
 	//VAG Dashboard
 	commonTxInit(CAN_VAG_RPM);
-	setShortValue(&txmsg, getRpmE(engine) * 4, 2); //RPM
+	setShortValue(&txmsg, GET_RPM() * 4, 2); //RPM
 	sendCanMessage();
 
 	commonTxInit(CAN_VAG_CLT);

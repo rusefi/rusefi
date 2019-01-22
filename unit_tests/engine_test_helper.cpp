@@ -183,7 +183,7 @@ void EngineTestHelper::applyTriggerShape() {
 }
 
 void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	EXPECT_EQ(expectedRpm, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << msg;
+	EXPECT_EQ(expectedRpm, GET_RPM()) << msg;
 }
 
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,

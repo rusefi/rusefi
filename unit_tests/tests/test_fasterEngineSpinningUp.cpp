@@ -28,7 +28,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the engine has the right state
 	ASSERT_EQ(STOPPED, engine->rpmCalculator.getState());
 	// check RPM
-	ASSERT_EQ( 0,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM=0";
+	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 	// the queue should be empty, no trigger events yet
 	ASSERT_EQ(0, engine->executor.size()) << "plain#1";
 
@@ -41,7 +41,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is changed
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	// due to isFasterEngineSpinUp=true, we should have already detected RPM!
-	ASSERT_EQ( 300,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "spinning-RPM#1";
+	ASSERT_EQ( 300,  GET_RPM()) << "spinning-RPM#1";
 	// two simultaneous injections
 	ASSERT_EQ(4, engine->executor.size()) << "plain#2";
 	// test if they are simultaneous
@@ -63,7 +63,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is changed when fully synched
 	ASSERT_EQ(CRANKING, engine->rpmCalculator.getState());
 	// check RPM
-	ASSERT_EQ( 200,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#2";
+	ASSERT_EQ( 200,  GET_RPM()) << "RPM#2";
 	// test if they are simultaneous in cranking mode too
 	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// test if ignition mode is restored to ind.coils
@@ -84,7 +84,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is now changed to 'running' at higher RPM
 	ASSERT_EQ(RUNNING, engine->rpmCalculator.getState());
 	// check RPM
-	ASSERT_EQ( 1000,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#3";
+	ASSERT_EQ( 1000,  GET_RPM()) << "RPM#3";
 	// check if the injection mode is back to sequential now
 	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// 4 sequential injections for the full cycle

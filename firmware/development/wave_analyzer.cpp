@@ -243,7 +243,7 @@ static void reportWave(Logging *logging, int index) {
 		appendPrintf(logging, "%s", DELIMETER);
 
 		uint32_t offsetUs = getWaveOffset(index);
-		int rpm = getRpmE(engine);
+		int rpm = GET_RPM();
 		if (rpm != 0) {
 			float oneDegreeUs = getOneDegreeTimeUs(rpm);
 
