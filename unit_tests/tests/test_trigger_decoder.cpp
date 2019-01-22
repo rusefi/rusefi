@@ -306,7 +306,7 @@ TEST(misc, testRpmCalculator) {
 	engine->sensors.clt = 70; // 'testCltValue' does not give us exact number so we have to hack here. todo: migrate test
 	engine->sensors.iat = 30; // 'testIatValue' does not give us exact number so we have to hack here. todo: migrate test
 
-	ASSERT_EQ(0, engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
 	ASSERT_EQ(5, TRIGGER_SHAPE(triggerIndexByAngle[240]));
@@ -314,7 +314,7 @@ TEST(misc, testRpmCalculator) {
 
 	eth.fireTriggerEvents(/* count */ 48);
 
-	ASSERT_EQ( 1500,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM";
+	ASSERT_EQ( 1500,  GET_RPM()) << "RPM";
 	ASSERT_EQ( 15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 
 
@@ -676,10 +676,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	testMafValue = 0;
 	ASSERT_EQ( 0,  getMaf(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
 
-	ASSERT_EQ( 3000,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "setTestBug299: RPM";
+	ASSERT_EQ( 3000,  GET_RPM()) << "setTestBug299: RPM";
 
 	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
-	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 	testMafValue = 3;
 	ASSERT_EQ( 3,  getMaf(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
@@ -708,7 +708,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("fuel#2", 12.5, engine->injectionDuration);
-	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#1";
 	eth.moveTimeForwardUs(MS2US(20));
@@ -869,7 +869,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("fuel#3", 17.5, engine->injectionDuration);
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
-	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
 	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315, false);
@@ -987,7 +987,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	assertEqualsM("Lfuel#2", 17.5, engine->injectionDuration);
-	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#1";
@@ -1051,7 +1051,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  engine->injectionDuration) << "Lfuel#4";
-	ASSERT_EQ( 10,  getInjectorDutyCycle(eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX)) << "Lduty for maf=3";
+	ASSERT_EQ( 10,  getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX)) << "Lduty for maf=3";
 
 
 	eth.firePrimaryTriggerRise();
@@ -1117,7 +1117,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.fireFall(20);
 
-	ASSERT_EQ( 3000,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "testSparkReverseOrderBug319: RPM";
+	ASSERT_EQ( 3000,  GET_RPM()) << "testSparkReverseOrderBug319: RPM";
 
 
 	ASSERT_EQ( 7,  engine->executor.size()) << "testSparkReverseOrderBug319: queue size";
@@ -1148,7 +1148,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 545,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#2";
+	ASSERT_EQ( 545,  GET_RPM()) << "RPM#2";
 
 	ASSERT_EQ( 0,  enginePins.coils[3].outOfOrder) << "out-of-order #3";
 
@@ -1162,7 +1162,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 3000,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#3";
+	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#3";
 
 	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #5 on c4";
 
@@ -1176,7 +1176,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 3000,  eth.engine.rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#4";
+	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#4";
 
 	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #7";
 

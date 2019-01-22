@@ -185,7 +185,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 	int rpm = 0;
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	rpm = getRpmE(engine);
+	rpm = GET_RPM();
 	reportSensorI(log, fileFormat, "rpm", "RPM", rpm); // log column 2
 #endif
 	// why do we still send data into console in text mode?
@@ -535,7 +535,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 static void showFuelInfo(void) {
-	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+	showFuelInfo2((float) GET_RPM(), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 #endif
 
@@ -660,7 +660,7 @@ extern HIP9011 instance;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	int rpm = getRpmE(engine);
+	int rpm = GET_RPM();
 #else /* EFI_SHAFT_POSITION_INPUT */
 	int rpm = 0;
 #endif /* EFI_SHAFT_POSITION_INPUT */

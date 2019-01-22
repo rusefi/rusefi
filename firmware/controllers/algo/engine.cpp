@@ -125,7 +125,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int rpm = rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int rpm = GET_RPM();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? CONFIGB(sensorChartMode) : SC_OFF;
 
@@ -334,7 +334,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->m.beforeFuelCalc = GET_TIMESTAMP();
-	int rpm = rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int rpm = GET_RPM();
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 

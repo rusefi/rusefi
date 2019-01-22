@@ -94,7 +94,7 @@ public:
 
 	/**
 	 * Just a getter for rpmValue
-	 * Also hangles mockRpm if not EFI_PROD_CODE
+	 * Also handles mockRpm if not EFI_PROD_CODE
 	 */
 	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	/**
@@ -154,11 +154,10 @@ private:
 	bool isSpinning = false;
 };
 
-/**
- * @brief   Current RPM
- */
-#define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)
+// Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
+#define GET_RPM() ( ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) )
 
+// simple variable access, theoretically could be faster than getter method but that's a long stretch
 #define GET_RPM_VALUE ( ENGINE(rpmCalculator.rpmValue) )
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)

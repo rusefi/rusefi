@@ -217,7 +217,7 @@ static percent_t automaticIdleController() {
 
 
 	// check if within the dead zone
-	int rpm = getRpmE(engine);
+	int rpm = GET_RPM();
 	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
 		idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything

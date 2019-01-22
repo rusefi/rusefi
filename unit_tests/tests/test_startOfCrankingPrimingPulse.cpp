@@ -13,15 +13,15 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	ASSERT_EQ( 0,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM=0";
+	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 
 	eth.fireTriggerEventsWithDuration(/* durationMs */ 200);
 	// still no RPM since need to cycles measure cycle duration
-	ASSERT_EQ( 0,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "start-RPM#1";
+	ASSERT_EQ( 0,  GET_RPM()) << "start-RPM#1";
 
 
 	eth.fireRise(/* delayMs */ 200);
-	ASSERT_EQ( 300,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM#2";
+	ASSERT_EQ( 300,  GET_RPM()) << "RPM#2";
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 
@@ -38,7 +38,7 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 	engineConfiguration->startOfCrankingPrimingPulse = 4;
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	ASSERT_EQ( 0,  engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)) << "RPM=0";
+	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 
 	// this -70 value comes from CLT error handling code
 	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT#1";

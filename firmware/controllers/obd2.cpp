@@ -147,7 +147,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		break;
 	case PID_RPM:
 		scheduleMsg(&logger, "Got RPM request");
-		obdSendValue(1, pid, 2, getRpmE(engine) * 4.0f);	//	rotation/min.	(A*256+B)/4
+		obdSendValue(1, pid, 2, GET_RPM() * 4.0f);	//	rotation/min.	(A*256+B)/4
 		break;
 	case PID_SPEED:
 		scheduleMsg(&logger, "Got speed request");

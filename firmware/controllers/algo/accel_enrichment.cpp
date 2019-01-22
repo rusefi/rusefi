@@ -100,7 +100,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 	}
 
 	// Ignore really slow RPM
-	int rpm = getRpmE(engine);
+	int rpm = GET_RPM();
 	if(rpm < 100)
 	{
 		return M_des;

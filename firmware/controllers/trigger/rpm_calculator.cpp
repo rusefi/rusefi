@@ -296,7 +296,7 @@ static char rpmBuffer[_MAX_FILLER];
  * digital sniffer.
  */
 static void onTdcCallback(void) {
-	itoa10(rpmBuffer, getRpmE(engine));
+	itoa10(rpmBuffer, GET_RPM());
 	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 
@@ -309,7 +309,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
-		int rpm = ENGINE(rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE));
+		int rpm = GET_RPM();
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
@@ -337,7 +337,7 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	int rpm = engine->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int rpm = GET_RPM();
 	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 
