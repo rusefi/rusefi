@@ -172,7 +172,7 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.fireTriggerEvents(48);
-	assertRpm("rpm", 2000 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.assertRpm(2000, "rpm");
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	eth.fireTriggerEvents(48);
 
@@ -575,14 +575,14 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPAND_Engine
 
 
-	assertRpm("RPM=0", 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth->assertRpm(0, "RPM=0");
 	ASSERT_EQ( 0,  getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE)) << "setTestBug299 EL";
 	ASSERT_NEAR( 30,  engine->sensors.iat, EPS4D) << "setTestBug299 IAT";
 	eth->fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
-	assertRpm("setTestBug299: RPM#1", 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth->assertRpm(0, "setTestBug299: RPM#1");
 	eth->fireTriggerEventsWithDuration(20);
-	assertRpm("setTestBug299: RPM#2", 3000 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth->assertRpm(3000, "setTestBug299: RPM#2");
 
 	eth->clearQueue();
 
