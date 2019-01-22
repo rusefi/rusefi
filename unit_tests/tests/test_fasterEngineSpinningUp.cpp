@@ -104,5 +104,5 @@ TEST(cranking, testFasterEngineSpinningUp60_2) {
 
 	setupSimpleTestEngineWithMaf(&eth, IM_SEQUENTIAL, TT_TOOTHED_WHEEL_60_2);
 
-
+	eth.fireTriggerEvents2(30 /* count */, 1 /*ms*/);
 }

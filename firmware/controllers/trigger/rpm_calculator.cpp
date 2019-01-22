@@ -207,13 +207,10 @@ void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 }
 
 /**
- * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
- *
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
-// todo: add a version which does not check time & saves time? need to profile
-int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED) {
 		return mockRpm;

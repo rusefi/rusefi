@@ -68,7 +68,7 @@ static msg_t auxPidThread(int param) {
 				pidReset();
 			}
 
-			float rpm = GET_RPM();
+			float rpm = GET_RPM_VALUE;
 
 			// todo: make this configurable?
 			bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;

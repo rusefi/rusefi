@@ -315,7 +315,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		InjectorOutputPin *output = event->outputs[0];
 	#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
 		printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
-				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM())));
+				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)));
 	#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 
@@ -350,7 +350,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
-	if (GET_RPM() < CONFIG(fuelClosedLoopRpmThreshold) ||
+	if (GET_RPM_VALUE < CONFIG(fuelClosedLoopRpmThreshold) ||
 			ENGINE(sensors.clt) < CONFIG(fuelClosedLoopCltThreshold) ||
 			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < CONFIGB(fuelClosedLoopAfrLowThreshold) ||
@@ -456,7 +456,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		return;
 	}
 
-	int rpm = GET_RPM();
+	int rpm = GET_RPM_VALUE;
 	if (rpm == 0) {
 		// this happens while we just start cranking
 		// todo: check for 'trigger->is_synchnonized?'

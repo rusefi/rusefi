@@ -53,8 +53,6 @@ typedef enum {
 	RUNNING,
 } spinning_state_e;
 
-#define GET_RPM() ( ENGINE(rpmCalculator.rpmValue) )
-
 class RpmCalculator {
 public:
 #if !EFI_PROD_CODE
@@ -94,7 +92,11 @@ public:
 	 */
 	void setStopSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	/**
+	 * Just a getter for rpmValue
+	 * Also hangles mockRpm if not EFI_PROD_CODE
+	 */
+	int getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
@@ -157,6 +159,10 @@ private:
  */
 #define getRpmE(engine) (engine)->rpmCalculator.getRpm(PASS_ENGINE_PARAMETER_SIGNATURE)
 
+#define GET_RPM_VALUE ( ENGINE(rpmCalculator.rpmValue) )
+
+#define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
+
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
  * @brief   Initialize RPM calculator
@@ -166,8 +172,6 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 int getRevolutionCounter(void);
-
-#define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
 #if EFI_ENGINE_SNIFFER
 #define addEngineSnifferEvent(name, msg) if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); }
