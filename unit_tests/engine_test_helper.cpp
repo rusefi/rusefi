@@ -176,13 +176,14 @@ void EngineTestHelper::applyTriggerShape() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine
 
-
 	ENGINE(initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-void assertRpm(const char *msg, int expectedRpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void EngineTestHelper::assertRpm(int expectedRpm, const char *msg) {
+	Engine *engine = &this->engine;
+	EXPAND_Engine
 	EXPECT_EQ(expectedRpm, GET_RPM()) << msg;
 }
 
