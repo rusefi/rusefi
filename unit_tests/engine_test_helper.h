@@ -48,9 +48,11 @@ public:
 	void assertEvent(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
 	void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
 	void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
+	// todo: open question if this is worth a helper method or should be inlined?
 	void assertRpm(int expectedRpm, const char *msg);
 
 	int executeActions();
+	void moveTimeForwardMs(float deltaTimeMs);
 	void moveTimeForwardUs(int deltaTimeUs);
 	efitimeus_t getTimeNowUs(void);
 

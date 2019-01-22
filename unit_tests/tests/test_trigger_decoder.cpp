@@ -324,7 +324,7 @@ TEST(misc, testRpmCalculator) {
 
 	ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, 1);
 
-	eth.moveTimeForwardUs(MS2US(5)); // 5ms
+	eth.moveTimeForwardMs(5 /*ms*/);
 
 	int start = eth.getTimeNowUs();
 	ASSERT_EQ( 485000,  start) << "start value";
@@ -633,7 +633,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	/**
 	 * Trigger up again
 	 */
-	eth->moveTimeForwardUs(MS2US(20));
+	eth->moveTimeForwardMs(20 /*ms*/);
 	eth->assertInjectorUpEvent("22@0", 0, MS2US(-11.5), 0);
 	eth->assertInjectorDownEvent("22@1", 1, MS2US(-10), 0);
 	eth->assertInjectorUpEvent("22@2", 2, MS2US(-1.5), 1);

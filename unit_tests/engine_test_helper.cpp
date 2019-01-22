@@ -130,6 +130,10 @@ int EngineTestHelper::executeActions() {
 	return engine.executor.executeAll(timeNowUs);
 }
 
+void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
+	moveTimeForwardUs(MS2US(deltaTimeMs));
+}
+
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	timeNowUs += deltaTimeUs;
 }
@@ -181,6 +185,7 @@ void EngineTestHelper::applyTriggerShape() {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+// todo: open question if this is worth a helper method or should be inlined?
 void EngineTestHelper::assertRpm(int expectedRpm, const char *msg) {
 	Engine *engine = &this->engine;
 	EXPAND_Engine
