@@ -415,8 +415,7 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 0,  engine->executor.size()) << "queue size 7";
 	engine->executor.clear();
 
-	eth.moveTimeForwardUs(5000); // 5ms
-	eth.firePrimaryTriggerRise();
+	eth.fireRise(5 /*ms*/);
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 8";
 	// todo: assert queue elements completely
 	assertEqualsM("8/0", start + 53333 - 1515, engine->executor.getForUnitTest(0)->momentX);

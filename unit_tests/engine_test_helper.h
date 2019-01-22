@@ -31,7 +31,13 @@ public:
 	void fireRise(int delayMs);
 	void fireFall(int delayMs);
 
+	/**
+	 * See also #fireRise()
+	 */
 	void firePrimaryTriggerRise();
+	/**
+	 * See also #fireFall()
+	 */
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEventsWithDuration(int delayMs);
