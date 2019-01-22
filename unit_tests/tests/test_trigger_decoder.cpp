@@ -690,10 +690,11 @@ static void assertInjectors(const char *msg, int value0, int value1) {
 	assertEqualsM4(msg, "inj#1", value1, enginePins.injectors[1].currentLogicValue);
 }
 
-TEST(big, testFuelSchedulerBug299smallAndMedium) {
+void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	eth.moveTimeForwardMs(startUpDelayMs); // nice to know that same test works the same with different anount of idle time on start
 	setTestBug299(&eth);
 
 	FuelSchedule * t;
@@ -939,6 +940,11 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+TEST(big, testFuelSchedulerBug299smallAndMedium) {
+	doTestFuelSchedulerBug299smallAndMedium(0);
+	doTestFuelSchedulerBug299smallAndMedium(1000);
 }
 
 TEST(big, testDifferentInjectionModes) {
