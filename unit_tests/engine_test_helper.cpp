@@ -197,7 +197,6 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
 
-	timeNowUs = 0;
 	eth->clearQueue();
 
 	ASSERT_EQ(LM_PLAIN_MAF, engineConfiguration->fuelAlgorithm);
