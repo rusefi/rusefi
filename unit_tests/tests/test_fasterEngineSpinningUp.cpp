@@ -14,10 +14,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
 
-
-	// todo: it's depressing that this unit test does not survive a bit of idle time in the beginning
-	// todo: uncomment
-	//eth.moveTimeForwardMs(1000 /*ms*/);
+	eth.moveTimeForwardMs(1000 /*ms*/);
 	eth.firePrimaryTriggerRise();
 
 	// set ignition mode
