@@ -316,6 +316,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 	currentCycle.eventCount[triggerWheel]++;
 
+	efiAssertVoid(CUSTOM_OBD_93, toothed_previous_time <= nowNt, "toothed_previous_time after nowNt");
+
 	efitime_t currentDurationLong = getCurrentGapDuration(nowNt);
 
 	/**
