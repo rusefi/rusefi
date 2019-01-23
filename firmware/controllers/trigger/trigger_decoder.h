@@ -97,7 +97,7 @@ public:
 	uint32_t orderingErrorCounter;
 	uint32_t runningOrderingErrorCounter;
 
-	void reset();
+	void resetTriggerState();
 	void resetRunningCounters();
 
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);

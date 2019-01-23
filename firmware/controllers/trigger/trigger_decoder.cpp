@@ -236,10 +236,10 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 #define isLessImportant(type) (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap()) )
 
 TriggerState::TriggerState() {
-	reset();
+	resetTriggerState();
 }
 
-void TriggerState::reset() {
+void TriggerState::resetTriggerState() {
 	triggerCycleCallback = NULL;
 	shaft_is_synchronized = false;
 	toothed_previous_time = 0;
@@ -607,7 +607,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	errorDetection.clear();
 	efiAssert(CUSTOM_ERR_ASSERT, state != NULL, "NULL state", -1);
 
-	state->reset();
+	state->resetTriggerState();
 
 	if (shape->shapeDefinitionError) {
 		return 0;

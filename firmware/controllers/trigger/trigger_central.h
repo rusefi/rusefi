@@ -32,12 +32,12 @@ public:
 	void resetAccumSignalData();
 	bool noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 	TriggerStateWithRunningStatistics triggerState;
-	efitick_t nowNt;
-	angle_t vvtPosition;
+	efitick_t nowNt = 0;
+	angle_t vvtPosition = 0;
 	/**
 	 * this is similar to TriggerState#startOfCycleNt but with the crank-only sensor magic
 	 */
-	efitick_t timeAtVirtualZeroNt;
+	efitick_t timeAtVirtualZeroNt = 0;
 
 	TriggerShape triggerShape;
 

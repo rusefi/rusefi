@@ -69,7 +69,7 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 	 	 * this instance is used only to initialize 'this' TriggerShape instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		initState.reset();
+		initState.resetTriggerState();
 		calculateTriggerSynchPoint(&ENGINE(triggerCentral.triggerShape),
 				&initState PASS_ENGINE_PARAMETER_SUFFIX);
 
