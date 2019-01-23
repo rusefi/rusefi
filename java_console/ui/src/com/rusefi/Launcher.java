@@ -157,7 +157,7 @@ public class Launcher {
         }
         if (!LinkManager.isLogViewer()) {
             tabbedPane.add("Bench Test", new BenchTestPane().getContent());
-            tabbedPane.add("Presets", new PresetsPans().getContent());
+            tabbedPane.add("Presets", new PresetsPane().getContent());
         }
 
         tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
