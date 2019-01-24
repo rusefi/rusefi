@@ -60,6 +60,8 @@ public:
 	efitime_t getTotalEventCounter() const;
 	efitime_t getStartOfRevolutionIndex() const;
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
+	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	/**
 	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
 	 */
