@@ -336,6 +336,30 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+void TriggerState::onShaftSynchronization(efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	shaft_is_synchronized = true;
+	// this call would update duty cycle values
+	nextTriggerEvent()
+	;
+
+	if (triggerCycleCallback != NULL) {
+		triggerCycleCallback(this);
+	}
+
+	startOfCycleNt = nowNt;
+	resetCurrentCycleState();
+	incrementTotalEventCounter();
+	totalEventCountBase += getTriggerSize();
+
+#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+	if (printTriggerDebug) {
+		printf("index=%d %d\r\n",
+				currentCycle.current_index,
+				totalRevolutionCounter);
+	}
+#endif /* EFI_UNIT_TEST */
+}
+
 /**
  * @brief Trigger decoding happens here
  * This method is invoked every time we have a fall or rise on one of the trigger sensors.
@@ -540,29 +564,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						currentCycle.eventCount[2]);
 			}
 
-			shaft_is_synchronized = true;
-			// this call would update duty cycle values
-			nextTriggerEvent()
-			;
+			onShaftSynchronization(nowNt, triggerWheel PASS_ENGINE_PARAMETER_SUFFIX);
 
-
-			if (triggerCycleCallback != NULL) {
-				triggerCycleCallback(this);
-			}
-
-			startOfCycleNt = nowNt;
-			resetCurrentCycleState();
-			incrementTotalEventCounter();
-			totalEventCountBase += getTriggerSize();
-
-
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
-			if (printTriggerDebug) {
-				printf("index=%d %d\r\n",
-						currentCycle.current_index,
-						totalRevolutionCounter);
-			}
-#endif /* EFI_UNIT_TEST */
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
 			;
