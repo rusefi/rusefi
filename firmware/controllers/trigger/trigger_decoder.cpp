@@ -289,6 +289,53 @@ void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+bool TriggerState::validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+	bool isDecodingError = currentCycle.eventCount[0] != TRIGGER_SHAPE(expectedEventCount[0])
+					|| currentCycle.eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
+					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
+
+#if EFI_UNIT_TEST
+			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, engine->isInitializingTrigger);
+			if (isDecodingError) {
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  TRIGGER_SHAPE(expectedEventCount[0]));
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  TRIGGER_SHAPE(expectedEventCount[1]));
+				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[2],  TRIGGER_SHAPE(expectedEventCount[2]));
+			}
+#endif /* EFI_UNIT_TEST */
+
+	return isDecodingError;
+}
+
+void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+		tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
+		tsOutputChannels.debugIntField2 = currentCycle.eventCount[1];
+		tsOutputChannels.debugIntField3 = currentCycle.eventCount[2];
+#endif /* EFI_TUNER_STUDIO */
+	}
+
+	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
+			currentCycle.eventCount[0],
+			currentCycle.eventCount[1],
+			currentCycle.eventCount[2],
+			TRIGGER_SHAPE(expectedEventCount[0]),
+			TRIGGER_SHAPE(expectedEventCount[1]),
+			TRIGGER_SHAPE(expectedEventCount[2]));
+	lastDecodingErrorTime = getTimeNowNt();
+	someSortOfTriggerError = true;
+
+	totalTriggerErrorCounter++;
+	if (CONFIG(isPrintTriggerSynchDetails) || someSortOfTriggerError) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+		scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
+				currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
+				TRIGGER_SHAPE(expectedEventCount[1]), TRIGGER_SHAPE(expectedEventCount[2]),
+				currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
+#endif /* EFI_PROD_CODE */
+	}
+}
+
 /**
  * @brief Trigger decoding happens here
  * This method is invoked every time we have a fall or rise on one of the trigger sensors.
@@ -477,48 +524,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			/**
 			 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 			 */
-			bool isDecodingError = currentCycle.eventCount[0] != TRIGGER_SHAPE(expectedEventCount[0])
-					|| currentCycle.eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
-					|| currentCycle.eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
-
-#if EFI_UNIT_TEST
-			printf("sync point: isDecodingError=%d isInit=%d\r\n", isDecodingError, engine->isInitializingTrigger);
-			if (isDecodingError) {
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[0],  TRIGGER_SHAPE(expectedEventCount[0]));
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[1],  TRIGGER_SHAPE(expectedEventCount[1]));
-				printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[2],  TRIGGER_SHAPE(expectedEventCount[2]));
-			}
-#endif
+			bool isDecodingError = validateEventCounters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 			if (isDecodingError && !engine->isInitializingTrigger) {
-				if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-					tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
-					tsOutputChannels.debugIntField2 = currentCycle.eventCount[1];
-					tsOutputChannels.debugIntField3 = currentCycle.eventCount[2];
-#endif /* EFI_TUNER_STUDIO */
-				}
-
-				warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
-						currentCycle.eventCount[0],
-						currentCycle.eventCount[1],
-						currentCycle.eventCount[2],
-						TRIGGER_SHAPE(expectedEventCount[0]),
-						TRIGGER_SHAPE(expectedEventCount[1]),
-						TRIGGER_SHAPE(expectedEventCount[2]));
-				lastDecodingErrorTime = getTimeNowNt();
-				someSortOfTriggerError = true;
-
-				totalTriggerErrorCounter++;
-				if (CONFIG(isPrintTriggerSynchDetails) || someSortOfTriggerError) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-					scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
-							currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
-							TRIGGER_SHAPE(expectedEventCount[1]), TRIGGER_SHAPE(expectedEventCount[2]),
-							currentCycle.eventCount[0], currentCycle.eventCount[1], currentCycle.eventCount[2]);
-#endif /* EFI_PROD_CODE */
-				}
+				handleTriggerError(PASS_ENGINE_PARAMETER_SIGNATURE);
 			}
 
 			errorDetection.add(isDecodingError);
