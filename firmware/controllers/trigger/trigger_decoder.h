@@ -57,8 +57,8 @@ public:
 	 */
 	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
-	efitime_t getTotalEventCounter();
-	efitime_t getStartOfRevolutionIndex();
+	efitime_t getTotalEventCounter() const;
+	efitime_t getStartOfRevolutionIndex() const;
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * Resets synchronization flag and alerts rpm_calculator to reset engine spinning flag.
@@ -93,16 +93,12 @@ public:
 	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle
 	 */
 	uint32_t totalTriggerErrorCounter;
-	uint32_t runningTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
-	uint32_t runningOrderingErrorCounter;
 
 	void resetTriggerState();
-	void resetRunningCounters();
 
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-	uint32_t runningRevolutionCounter;
 	/**
 	 * this is start of real trigger cycle
 	 * for virtual double trigger see timeAtVirtualZeroNt

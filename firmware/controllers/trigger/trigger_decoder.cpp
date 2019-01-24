@@ -116,7 +116,7 @@ void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE
 	}
 }
 
-efitime_t TriggerState::getTotalEventCounter() {
+efitime_t TriggerState::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
@@ -257,7 +257,6 @@ void TriggerState::resetTriggerState() {
 	prevSignal = SHAFT_PRIMARY_FALLING;
 	startOfCycleNt = 0;
 
-	resetRunningCounters();
 	resetCurrentCycleState();
 	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
 
@@ -544,7 +543,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			startOfCycleNt = nowNt;
 			resetCurrentCycleState();
 			incrementTotalEventCounter();
-			runningRevolutionCounter++;
 			totalEventCountBase += getTriggerSize();
 
 
@@ -552,7 +550,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			if (printTriggerDebug) {
 				printf("index=%d %d\r\n",
 						currentCycle.current_index,
-						runningRevolutionCounter);
+						totalRevolutionCounter);
 			}
 #endif /* EFI_UNIT_TEST */
 		} else {	/* if (!isSynchronizationPoint) */
@@ -651,14 +649,8 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
 }
 
-efitime_t TriggerState::getStartOfRevolutionIndex() {
+efitime_t TriggerState::getStartOfRevolutionIndex() const {
 	return totalEventCountBase;
-}
-
-void TriggerState::resetRunningCounters() {
-	runningRevolutionCounter = 0;
-	runningTriggerErrorCounter = 0;
-	runningOrderingErrorCounter = 0;
 }
 
 void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {

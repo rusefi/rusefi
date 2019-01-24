@@ -219,7 +219,6 @@ int TriggerCentral::getHwEventCounter(int index) {
 
 void TriggerCentral::resetCounters() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
-	triggerState.resetRunningCounters();
 }
 
 void TriggerCentral::resetAccumSignalData() {
