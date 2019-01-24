@@ -238,6 +238,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (index == 0) {
 		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 
+		// WAT? we are here in case of trigger sync. why are we checking (incorrectly)
+		// if engine is spinning and STOPPING it (incorrectly since 'lastRpmEventTimeNt' was not assigned yet?)
 		bool hadRpmRecently = rpmState->checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		if (hadRpmRecently) {
