@@ -61,16 +61,16 @@ RpmCalculator::RpmCalculator() {
 	revolutionCounterSinceBootForUnitTest = 0;
 }
 
-bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	// Spinning-up with zero RPM means that the engine is not ready yet, and is treated as 'stopped'.
 	return state == STOPPED || (state == SPINNING_UP && rpmValue == 0);
 }
 
-bool RpmCalculator::isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool RpmCalculator::isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	return state == SPINNING_UP;
 }
 
-bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	// Spinning-up with non-zero RPM is suitable for all engine math, as good as cranking
 	return state == CRANKING || (state == SPINNING_UP && rpmValue > 0);
 }
@@ -78,15 +78,14 @@ bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return true if there was a full shaft revolution within the last second
  */
-bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	return state == RUNNING;
 }
 
 /**
  * @return true if engine is spinning (cranking or running)
  */
-bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efitick_t nowNt = getTimeNowNt();
+bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) const {
 	if (ENGINE(needToStopEngine(nowNt))) {
 		return false;
 	}
@@ -148,7 +147,7 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
-spinning_state_e RpmCalculator::getState(void) {
+spinning_state_e RpmCalculator::getState() const {
 	return state;
 }
 
@@ -237,7 +236,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (index == 0) {
 		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 
-		bool hadRpmRecently = rpmState->checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
+		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (hadRpmRecently) {
 			efitime_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;

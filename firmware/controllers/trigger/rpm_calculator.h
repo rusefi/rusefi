@@ -62,26 +62,26 @@ public:
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)
 	 */
-	bool isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	/**
 	 * Returns true if the engine is spinning up
 	 */
-	bool isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	/**
 	 * Returns true if the engine is cranking OR spinning up
 	 */
-	bool isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	/**
 	 * Returns true if the engine is running and not cranking
 	 */
-	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 
-	bool checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) const;
 
 	/**
 	 * This accessor is used in unit-tests.
 	 */
-	spinning_state_e getState(void);
+	spinning_state_e getState() const;
 
 	/**
 	 * Should be called on every trigger event when the engine is just starting to spin up.
