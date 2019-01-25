@@ -88,7 +88,6 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(needToStopEngine(nowNt))) {
-		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return false;
 	}
 
@@ -102,7 +101,6 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.previousShaftEventTimeNt >= US2NT(US_PER_SECOND_LL);
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
-		setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return false;
 	}
 
@@ -194,6 +192,7 @@ void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
 	if (isStopped(PASS_ENGINE_PARAMETER_SIGNATURE) && !isSpinning) {
 		state = SPINNING_UP;
+		engine->triggerCentral.triggerState.spinningEventIndex = 0;
 		isSpinning = true;
 	}
 	// update variables needed by early instant RPM calc.
@@ -238,8 +237,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (index == 0) {
 		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
 
-		// WAT? we are here in case of trigger sync. why are we checking (incorrectly)
-		// if engine is spinning and STOPPING it (incorrectly since 'lastRpmEventTimeNt' was not assigned yet?)
 		bool hadRpmRecently = rpmState->checkIfSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		if (hadRpmRecently) {
@@ -275,8 +272,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 #endif
 
-	// Replace 'normal' RPM with instant RPM for the initial spin-up period
 	if (rpmState->isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		// we are here only once trigger is synchronized for the first time
+		// while transitioning  from 'spinning' to 'running'
+		// Replace 'normal' RPM with instant RPM for the initial spin-up period
+		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int prevIndex;
 		int iRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		// validate instant RPM - we shouldn't skip the cranking state

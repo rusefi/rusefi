@@ -126,17 +126,21 @@ int TriggerState::getTotalRevolutionCounter() const {
 
 TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 		//https://en.cppreference.com/w/cpp/language/zero_initialization
-		instantRpmValue()
+		timeOfLastEvent(), instantRpmValue()
 		{
-	// avoid ill-defined instant RPM when the data is not gathered yet
-	efitime_t nowNt = getTimeNowNt();
-	for (int i = 0; i < PWM_PHASE_MAX_COUNT; i++) {
-		timeOfLastEvent[i] = nowNt;
+}
+
+void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// here we take timestamps of events which happened prior to synchronization and place them
+	// at appropriate locations
+	for (int i = 0; i < spinningEventIndex;i++) {
+		timeOfLastEvent[getTriggerSize() - i] = spinningEvents[i];
 	}
 }
 
 float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
+	timeOfLastEvent[current_index] = nowNt;
 	/**
 	 * Here we calculate RPM based on last 90 degrees
 	 */
@@ -149,7 +153,13 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = TRIGGER_SHAPE(eventAngles[*prevIndex]);
-	uint32_t time = nowNt - timeOfLastEvent[*prevIndex];
+	efitick_t time90ago = timeOfLastEvent[*prevIndex];
+	if (time90ago == 0) {
+		return prevInstantRpmValue;
+	}
+	// we are OK to subtract 32 bit value from more precise 64 bit since the result would 32 bit which is
+	// OK for small time differences like this one
+	uint32_t time = nowNt - time90ago;
 	angle_t angleDiff = currentAngle - prevIndexAngle;
 	// todo: angle diff should be pre-calculated
 	fixAngle(angleDiff, "angleDiff", CUSTOM_ERR_6561);
@@ -160,7 +170,6 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 	instantRpmValue[current_index] = instantRpm;
-	timeOfLastEvent[current_index] = nowNt;
 
 	// This fixes early RPM instability based on incomplete data
 	if (instantRpm < RPM_LOW_THRESHOLD)
@@ -171,7 +180,17 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 }
 
 void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	timeOfLastEvent[currentCycle.current_index] = nowNt;
+	if (shaft_is_synchronized) {
+		return;
+	}
+	// here we remember tooth timestamps which happen prior to synchronization
+	if (spinningEventIndex >= PRE_SYNC_EVENTS) {
+		// too many events while trying to find synchronization point
+		// todo: better implementation would be to shift here or use cyclic buffer so that we keep last
+		// 'PRE_SYNC_EVENTS' events
+		return;
+	}
+	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
 void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
