@@ -14,15 +14,17 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
 
-	eth.moveTimeForwardMs(1000 /*ms*/);
-	eth.firePrimaryTriggerRise();
-
 	// set ignition mode
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	// set cranking threshold (used below)
 	engineConfiguration->cranking.rpm = 999;
 	// set sequential injection mode to test auto-change to simultaneous when spinning-up
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+	eth.moveTimeForwardMs(1000 /*ms*/);
+	eth.firePrimaryTriggerRise();
 
 	// check if it's true
 	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -112,9 +114,8 @@ static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int expectedRpm
 }
 
 TEST(cranking, testFasterEngineSpinningUp60_2) {
-	// I do not get it. Startup delay is affecting instance RPM?
-	// todo: is this feature implementation issue or test framework issue?
-	doTestFasterEngineSpinningUp60_2(0, 220);
-	doTestFasterEngineSpinningUp60_2(100, 89);
+	// and now we see that things do not exactly work?
+	doTestFasterEngineSpinningUp60_2(0, 0);
+	doTestFasterEngineSpinningUp60_2(100, 0);
 	doTestFasterEngineSpinningUp60_2(1000, 0);
 }

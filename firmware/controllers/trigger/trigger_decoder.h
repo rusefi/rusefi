@@ -129,7 +129,7 @@ public:
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
-	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	efitick_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
 	/**
 	 * instant RPM calculated at this trigger wheel tooth
 	 */
