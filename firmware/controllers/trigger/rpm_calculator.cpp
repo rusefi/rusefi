@@ -88,7 +88,6 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efitick_t nowNt = getTimeNowNt();
 	if (ENGINE(needToStopEngine(nowNt))) {
-		setStopped(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return false;
 	}
 
@@ -102,7 +101,6 @@ bool RpmCalculator::checkIfSpinning(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.previousShaftEventTimeNt >= US2NT(US_PER_SECOND_LL);
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
-		setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 		return false;
 	}
 

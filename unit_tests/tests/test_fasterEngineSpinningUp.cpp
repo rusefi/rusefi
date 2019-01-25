@@ -28,9 +28,9 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	// check if it's true
 	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 	// check if the engine has the right state
-	ASSERT_EQ(STOPPED, engine->rpmCalculator.getState());
+	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	// check RPM
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 	// the queue should be empty, no trigger events yet
