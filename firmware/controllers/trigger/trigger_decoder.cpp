@@ -130,8 +130,17 @@ TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 		{
 }
 
+void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// here we take timestamps of events which happened prior to synchronization and place them
+	// at appropriate locations
+	for (int i = 0; i < spinningEventIndex;i++) {
+		timeOfLastEvent[getTriggerSize() - i] = spinningEvents[i];
+	}
+}
+
 float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
+	timeOfLastEvent[current_index] = nowNt;
 	/**
 	 * Here we calculate RPM based on last 90 degrees
 	 */
@@ -159,7 +168,6 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 	instantRpmValue[current_index] = instantRpm;
-	timeOfLastEvent[current_index] = nowNt;
 
 	// This fixes early RPM instability based on incomplete data
 	if (instantRpm < RPM_LOW_THRESHOLD)
@@ -170,7 +178,17 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 }
 
 void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	timeOfLastEvent[currentCycle.current_index] = nowNt;
+	if (shaft_is_synchronized) {
+		return;
+	}
+	// here we remember tooth timestamps which happen prior to synchronization
+	if (spinningEventIndex >= PWM_PHASE_MAX_COUNT) {
+		// too many events while trying to find synchronization point
+		// todo: better implementation would be to shift here or use cyclic buffer so that we keep last
+		// 'PWM_PHASE_MAX_COUNT' events
+		return;
+	}
+	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
 void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {

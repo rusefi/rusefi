@@ -100,7 +100,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	eth.assertEvent5(&engine->executor, "inj end#3", 1, (void*)seTurnPinLow, timeStartUs, MS2US(60) + 27974 + 3000);
 }
 
-static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int expectedRpm) {
+static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
@@ -108,14 +108,17 @@ static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int expectedRpm
 	setupSimpleTestEngineWithMaf(&eth, IM_SEQUENTIAL, TT_TOOTHED_WHEEL_60_2);
 	eth.moveTimeForwardMs(startUpDelayMs);
 
+	// fire 30 tooth rise/fall signals
 	eth.fireTriggerEvents2(30 /* count */, 1 /*ms*/);
-	eth.fireTriggerEvents2(1, 4);
-	EXPECT_EQ(expectedRpm, GET_RPM()) << "test RPM with " + std::to_string(startUpDelayMs) + " startUpDelayMs";
+	// now fire missed tooth rise/fall
+	eth.fireRise(4 /*ms*/);
+	EXPECT_EQ(rpm1, GET_RPM()) << "test RPM: After rise " + std::to_string(startUpDelayMs);
+	eth.fireFall(4 /*ms*/);
+	EXPECT_EQ(expectedRpm, GET_RPM()) << "test RPM: with " + std::to_string(startUpDelayMs) + " startUpDelayMs";
 }
 
 TEST(cranking, testFasterEngineSpinningUp60_2) {
-	// and now we see that things do not exactly work?
-	doTestFasterEngineSpinningUp60_2(0, 0);
-	doTestFasterEngineSpinningUp60_2(100, 0);
-	doTestFasterEngineSpinningUp60_2(1000, 0);
+	doTestFasterEngineSpinningUp60_2(0, 288, 263);
+	doTestFasterEngineSpinningUp60_2(100, 288, 263);
+	doTestFasterEngineSpinningUp60_2(1000, 288, 263);
 }

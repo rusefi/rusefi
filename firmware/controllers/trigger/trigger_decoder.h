@@ -129,7 +129,11 @@ public:
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
-	efitick_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	efitime_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+
+	int spinningEventIndex = 0;
+	// todo: change the implementation to reuse 'timeOfLastEvent'
+	efitime_t spinningEvents[PWM_PHASE_MAX_COUNT];
 	/**
 	 * instant RPM calculated at this trigger wheel tooth
 	 */
@@ -138,6 +142,7 @@ public:
 	 * Stores last non-zero instant RPM value to fix early instability
 	 */
 	float prevInstantRpmValue = 0;
+	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
