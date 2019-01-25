@@ -157,6 +157,8 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	if (time90ago == 0) {
 		return prevInstantRpmValue;
 	}
+	// we are OK to subtract 32 bit value from more precise 64 bit since the result would 32 bit which is
+	// OK for small time differences like this one
 	uint32_t time = nowNt - time90ago;
 	angle_t angleDiff = currentAngle - prevIndexAngle;
 	// todo: angle diff should be pre-calculated
@@ -182,10 +184,10 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t 
 		return;
 	}
 	// here we remember tooth timestamps which happen prior to synchronization
-	if (spinningEventIndex >= PWM_PHASE_MAX_COUNT) {
+	if (spinningEventIndex >= PRE_SYNC_EVENTS) {
 		// too many events while trying to find synchronization point
 		// todo: better implementation would be to shift here or use cyclic buffer so that we keep last
-		// 'PWM_PHASE_MAX_COUNT' events
+		// 'PRE_SYNC_EVENTS' events
 		return;
 	}
 	spinningEvents[spinningEventIndex++] = nowNt;

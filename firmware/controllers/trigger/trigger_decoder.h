@@ -118,6 +118,9 @@ private:
 
 };
 
+// we only need 90 degrees of events so /4 or maybe even /8 should work?
+#define PRE_SYNC_EVENTS (PWM_PHASE_MAX_COUNT / 4)
+
 
 /**
  * the reason for sub-class is simply to save RAM but not having statisics in the trigger initialization instance
@@ -129,11 +132,11 @@ public:
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
-	efitime_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
 
 	int spinningEventIndex = 0;
 	// todo: change the implementation to reuse 'timeOfLastEvent'
-	efitime_t spinningEvents[PWM_PHASE_MAX_COUNT];
+	uint32_t spinningEvents[PRE_SYNC_EVENTS];
 	/**
 	 * instant RPM calculated at this trigger wheel tooth
 	 */

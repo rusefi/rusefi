@@ -753,7 +753,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 static char UNUSED_RAM_SIZE[10200];
-static char UNUSED_CCM_SIZE[7100] CCM_OPTIONAL;
+static char UNUSED_CCM_SIZE[7000] CCM_OPTIONAL;
 
 /**
  * See also VCS_VERSION
@@ -768,5 +768,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190120;
+	return 20190124;
 }
