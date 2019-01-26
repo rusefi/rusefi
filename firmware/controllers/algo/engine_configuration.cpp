@@ -970,6 +970,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 
+#ifndef EFI_COMMUNICATION_PIN
+#define EFI_COMMUNICATION_PIN GPIOD_15
+#endif
 	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
 	engineConfiguration->runningLedPin = GPIOD_12; // greeb LED on discovery
 	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
