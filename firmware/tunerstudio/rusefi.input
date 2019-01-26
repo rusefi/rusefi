@@ -1582,6 +1582,8 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "LIS302DLCsPin",						LIS302DLCsPin
 		field = "Malfunction Indicator",				malfunctionIndicatorPin
 		field = "Saab CDM knock",						cdmInputPin
+		field = "comm status light",					communicationLedPin
+		field = "running status light",					runningLedPin
 
 
 	dialog = allPins1_2, "", xAxis
