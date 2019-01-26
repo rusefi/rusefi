@@ -79,6 +79,25 @@ void disableLCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 }
 
+void setMinimalPinsEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// not great implementation since we undo values which were set somewhere else
+	// todo: maybe use prepareVoidConfiguration method?
+	boardConfiguration->hip9011CsPin = GPIO_UNASSIGNED;
+	boardConfiguration->hip9011IntHoldPin = GPIO_UNASSIGNED;
+	CONFIGB(canTxPin) = GPIO_UNASSIGNED;
+	CONFIGB(canRxPin) = GPIO_UNASSIGNED;
+	CONFIGB(sdCardCsPin) = GPIO_UNASSIGNED;
+	for (int i = 0;i<TRIGGER_INPUT_PIN_COUNT;i++) {
+		CONFIGB(triggerInputPins)[i] = GPIO_UNASSIGNED;
+	}
+	CONFIGB(triggerSimulatorPins)[0] = GPIO_UNASSIGNED;
+	CONFIGB(triggerSimulatorPins)[1] = GPIO_UNASSIGNED;
+	CONFIGB(triggerSimulatorPins)[2] = GPIO_UNASSIGNED;
+	CONFIGB(digitalPotentiometerSpiDevice) = SPI_NONE;
+	engineConfiguration->accelerometerSpiDevice = SPI_NONE;
+	CONFIGB(is_enabled_spi_1) = CONFIGB(is_enabled_spi_2) = CONFIGB(is_enabled_spi_3) = false;
+}
+
 // todo: should this be renamed to 'setFrankensoConfiguration'?
 // todo: should this be part of more default configurations?
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

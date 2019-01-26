@@ -100,6 +100,7 @@ struct_no_prefix engine_configuration_s
 #define DIGIPOT_COUNT 4
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
+#define TRIGGER_INPUT_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define FSIO_COMMAND_COUNT 16
 #define AUX_PID_COUNT 4
@@ -508,7 +509,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e tachOutputPin;+This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	pin_output_mode_e tachOutputPinMode;
 
-	brain_input_pin_e[3 iterate] triggerInputPins;
+	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
 	brain_pin_e mainRelayPin;
 
 	int idleThreadPeriod;
