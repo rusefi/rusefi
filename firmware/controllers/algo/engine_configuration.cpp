@@ -289,6 +289,8 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
+	boardConfiguration->canTxPin = GPIO_UNASSIGNED;
+	boardConfiguration->canRxPin = GPIO_UNASSIGNED;
 	setDefaultFsioParameters(engineConfiguration);
 
 	disableLCD(boardConfiguration);
@@ -970,10 +972,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 
-#ifndef EFI_COMMUNICATION_PIN
-#define EFI_COMMUNICATION_PIN GPIOD_15
-#endif
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
 	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
+#endif
 	engineConfiguration->runningLedPin = GPIOD_12; // greeb LED on discovery
 	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
@@ -1115,6 +1118,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	switch (engineType) {
 	case CUSTOM_ENGINE:
 		setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		break;
+	case MINIMAL_PINS:
+		setMinimalPinsEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case ACURA_RSX:
 		setAcuraRSX(engineConfiguration);

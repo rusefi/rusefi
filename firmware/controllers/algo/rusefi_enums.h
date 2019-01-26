@@ -178,6 +178,10 @@ typedef enum {
 	// see also	MIATA_NA6_MAP = 41
 	MIATA_NA6_VAF = 57,
 
+	/**
+	 * this configuration has as few pins configured as possible
+	 */
+	MINIMAL_PINS = 99,
 	PROMETHEUS_DEFAULTS = 100,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
