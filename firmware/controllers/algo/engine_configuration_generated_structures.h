@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 20:01:54 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 25 21:07:52 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1752,6 +1752,7 @@ typedef struct {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
+	 * angle between cam sensor and VVT zero position
 	 * set vvt_offset X
 	 * offset 2168
 	 */
@@ -2479,4 +2480,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Jan 20 20:01:54 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Jan 25 21:07:52 EST 2019

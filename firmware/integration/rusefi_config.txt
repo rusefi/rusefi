@@ -797,7 +797,7 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	
 	int tpsAccelLength;;"cycles",        1,     0,    1, 200,     0
 	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
-	float vvtOffset;set vvt_offset X;"value",      1,      0,       -720, 1000,      1
+	float vvtOffset;+angle between cam sensor and VVT zero position\nset vvt_offset X;"value",      1,      0,       -720, 1000,      1
 	
 	int engineLoadAccelLength;;"cycles",        1,     0,    1, 200,     0
 	
