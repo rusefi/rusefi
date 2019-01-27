@@ -39,7 +39,9 @@ extern engine_configuration_s *engineConfiguration;
  * todo: an ideal solution would be to define this address in the .ld / .icf mapping file
  */
 
+#ifndef FLASH_ADDR
 #define FLASH_ADDR 0x080E0000
+#endif
 
 #define PERSISTENT_SIZE sizeof(persistent_config_container_s)
 
