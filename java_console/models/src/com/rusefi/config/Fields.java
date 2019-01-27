@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Jan 07 19:25:33 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 23:18:47 EST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -35,6 +35,7 @@ public class Fields {
 	public static final int DIGIPOT_COUNT = 4;
 	public static final int HW_MAX_ADC_INDEX = 17;
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
+	public static final int TRIGGER_INPUT_PIN_COUNT = 3;
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int FSIO_COMMAND_COUNT = 16;
 	public static final int AUX_PID_COUNT = 4;
@@ -234,7 +235,7 @@ public class Fields {
 	public static final int afr_v2_offset_hex = 244;
 	public static final int afr_value2_offset = 584;
 	public static final int afr_value2_offset_hex = 248;
-	public static final int pedalPositionAdcChannel_offset = 588;
+	public static final int throttlePedalPositionAdcChannel_offset = 588;
 	public static final int baroSensor_offset = 592;
 	public static final int baroSensor_offset_hex = 250;
 	public static final int baroSensor_lowValue_offset = 592;
@@ -1317,7 +1318,7 @@ public class Fields {
 	public static final Field AFR_VALUE1 = Field.create("AFR_VALUE1", 576, FieldType.FLOAT);
 	public static final Field AFR_V2 = Field.create("AFR_V2", 580, FieldType.FLOAT);
 	public static final Field AFR_VALUE2 = Field.create("AFR_VALUE2", 584, FieldType.FLOAT);
-	public static final Field PEDALPOSITIONADCCHANNEL = Field.create("PEDALPOSITIONADCCHANNEL", 588, FieldType.INT, adc_channel_e);
+	public static final Field THROTTLEPEDALPOSITIONADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONADCCHANNEL", 588, FieldType.INT, adc_channel_e);
 	public static final Field BAROSENSOR_LOWVALUE = Field.create("BAROSENSOR_LOWVALUE", 592, FieldType.FLOAT);
 	public static final Field BAROSENSOR_HIGHVALUE = Field.create("BAROSENSOR_HIGHVALUE", 596, FieldType.FLOAT);
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 600, FieldType.INT);

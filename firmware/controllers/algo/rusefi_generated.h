@@ -344,8 +344,8 @@
 #define afr_v2_offset_hex 244
 #define afr_value2_offset 584
 #define afr_value2_offset_hex 248
-#define pedalPositionAdcChannel_offset 588
-#define pedalPositionAdcChannel_offset_hex 24c
+#define throttlePedalPositionAdcChannel_offset 588
+#define throttlePedalPositionAdcChannel_offset_hex 24c
 #define baroSensor_offset 592
 #define baroSensor_offset_hex 250
 #define baroSensor_lowValue_offset 592

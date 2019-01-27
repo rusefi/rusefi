@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 11:15:45 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 23:18:47 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1268,11 +1268,11 @@ typedef struct {
 	 */
 	afr_sensor_s afr;
 	/**
-	 * Electronic pedal position input
+	 * Electronic throttle pedal position input
 	 * See also tpsAdcChannel
 	 * offset 588
 	 */
-	adc_channel_e pedalPositionAdcChannel;
+	adc_channel_e throttlePedalPositionAdcChannel;
 	/**
 	 * @see hasBaroSensor
 	 * offset 592
@@ -2480,4 +2480,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 11:15:45 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 23:18:47 EST 2019

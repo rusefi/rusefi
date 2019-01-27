@@ -207,7 +207,7 @@ static void showEthInfo(void) {
 			getPedalPosition(),
 			engineConfiguration->throttlePedalUpVoltage,
 			engineConfiguration->throttlePedalWOTVoltage,
-			getPinNameByAdcChannel("tPedal", engineConfiguration->pedalPositionAdcChannel, pinNameBuffer));
+			getPinNameByAdcChannel("tPedal", engineConfiguration->throttlePedalPositionAdcChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%.2f", getTPS());
 

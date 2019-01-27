@@ -449,6 +449,7 @@ public:
 	bool clutchUpState = false;
 	bool clutchDownState = false;
 	bool brakePedalState = false;
+	bool acSwitchState = false;
 
 	bool isRunningPwmTest = false;
 

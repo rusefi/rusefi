@@ -919,6 +919,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->brakePedalState = engine->brakePedalState;
+	tsOutputChannels->acSwitchState = engine->acSwitchState;
 
 	// tCharge depends on the previous state, so we should use the stored value.
 	tsOutputChannels->tCharge = ENGINE(engineState.tCharge);

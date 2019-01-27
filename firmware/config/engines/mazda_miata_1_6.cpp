@@ -129,8 +129,8 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	memcpy(config->veLoadBins, ve16LoadBins, sizeof(ve16LoadBins));
 	copyFuelTable(mapBased16VeTable, config->veTable);
 
-	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
-	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
+	// Wide band oxygen (from middle plug) to W52
+	engineConfiguration->afr.hwChannel = EFI_ADC_13; // PA3
 
 	setWholeFuelMap(6 PASS_CONFIG_PARAMETER_SUFFIX);
 
@@ -204,9 +204,18 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
+	// white wire from 1E - TOP of W4 to BOTTOM W62
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_5;
 
 	engineConfiguration->injectionMode = IM_BATCH;
+
+
+	// yellow wire from 1V/W22 to bottom of W48
+	boardConfiguration->clutchDownPin = GPIOA_3;
+	boardConfiguration->clutchDownPinMode = PI_PULLUP;
+
+	// green wire from 1Q/W17 to bottom of W46
+	engineConfiguration->acSwitchAdc = EFI_ADC_6; // PA6
 
 	miataNAcommon(PASS_ENGINE_PARAMETER_SIGNATURE);
 	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
