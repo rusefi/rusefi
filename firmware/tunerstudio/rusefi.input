@@ -195,6 +195,7 @@ fileVersion = { 20171101 }
       knockNowIndicator=bits,    U32,     72, [14:14], "true", "false";
       brakePedalIndicator=bits,  U32,     72, [15:15], "true", "false";
       toothLogReady      =bits,  U32,     72, [16:16], "true", "false";
+      acSwitchIndicator =bits,   U32,     72, [17:17], "true", "false";
       vehicleSpeedKph = scalar,  F32,     76,        "kph",   1,       0.0;
       
       ind_tps_error   = bits,    U32,     80, [0:0], "true", "false";
@@ -878,8 +879,9 @@ gaugeCategory = Fuel Data
     indicator = { hasSdCard}, "no SD",   "with SD",   white, black, green,   black
     indicator = { ind_fuel_pump}, "no pump",   "pump",   white, black, green,   black
     indicator = { clutchUpState }, "clutch",   "cltch Up",   white, black, red,   black
-    indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, red,   black
+    indicator = { clutchDownState }, "clutch",   "cltch Down",   white, black, yellow,   black
     indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
+    indicator = { acSwitchIndicator }, "AC on",   "AC off",   yellow, black, white,   black
     
     ; error codes
     indicator = { ind_tps_error}, "tps",   "tps error",   white, black, red,   black
@@ -1014,6 +1016,7 @@ gaugeCategory = Fuel Data
    entry = clutchUpState,   @@INDICATOR_NAME_CLUTCH_UP@@,int,"%d"
    entry = clutchDownState,   @@INDICATOR_NAME_CLUTCH_DOWN@@,int,"%d"
    entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
+   entry = acSwitchIndicator,   "AC switch",int,"%d"
    entry = ind_fan, "radiator fan",int,"%d"
    
    
@@ -1431,7 +1434,8 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
-		
+		field = "A/C Switch",							acSwitchAdc
+
 	dialog = mainSensorInputs,					"Main Sensor Inputs"
 		field = "MAP ADC input", 						map_sensor_hwChannel, {hasFrequencyReportingMapSensor == 0}
 		field = "MAP Freq",								frequencyReportingMapInputPin, {hasFrequencyReportingMapSensor == 1}
@@ -1478,6 +1482,7 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
+		field = "A/C Switch",							acSwitchAdc
 		field = "servo#1",								servoOutputPins1
 		field = "servo#2",								servoOutputPins2
 		field = "servo#3",								servoOutputPins3
@@ -2256,8 +2261,8 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		panel = testMisc,		East
 	
 	dialog = engineTypeDialog, "Popular vehicles"	
-		commandButton = "Miata NA6 VAF", cmd_set_engine_type_Miata_NA6_VAF
-		commandButton = "Miata NA6 MAP", cmd_set_engine_type_Miata_NA6_MAP
+		commandButton = "Miata NA6 Stage 0", cmd_set_engine_type_Miata_NA6_VAF
+		commandButton = "Miata NA6 Stage 1", cmd_set_engine_type_Miata_NA6_MAP
 		commandButton = "Miata NB2 MAP", cmd_set_engine_type_Miata_NA2
 
 

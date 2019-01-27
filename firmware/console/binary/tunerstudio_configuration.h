@@ -75,6 +75,7 @@ typedef struct {
 	unsigned int knockNowIndicator : 1; // bit 14
 	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
 	unsigned int toothLogReady : 1; // bit 16
+	unsigned int acSwitchState : 1; // bit 17. 0 - not pressed, 1 = pressed
 	float vehicleSpeedKph; // 76
 	unsigned int isTpsError : 1; // bit 0, 80
 	unsigned int isCltError : 1; // bit 1

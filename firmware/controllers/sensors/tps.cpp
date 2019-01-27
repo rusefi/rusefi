@@ -134,14 +134,14 @@ static percent_t getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #define NO_TPS_MAGIC_VALUE 66.611
 
 bool hasPedalPositionSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->pedalPositionAdcChannel != EFI_ADC_NONE;
+	return engineConfiguration->throttlePedalPositionAdcChannel != EFI_ADC_NONE;
 }
 
 percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
 	}
-	float voltage = getVoltageDivided("pPS", engineConfiguration->pedalPositionAdcChannel);
+	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	float result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 
 	// this would put the value into the 0-100 range

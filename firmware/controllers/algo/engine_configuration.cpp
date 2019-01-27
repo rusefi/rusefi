@@ -843,7 +843,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 
-	engineConfiguration->pedalPositionAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

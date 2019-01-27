@@ -431,7 +431,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e pedalPositionAdcChannel;Electronic pedal position input\nSee also tpsAdcChannel
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSee also tpsAdcChannel
 	
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
 

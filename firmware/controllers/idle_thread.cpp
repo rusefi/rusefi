@@ -296,6 +296,7 @@ static msg_t ivThread(int param) {
 		if (CONFIGB(clutchDownPin) != GPIO_UNASSIGNED) {
 			engine->clutchDownState = efiReadPin(CONFIGB(clutchDownPin));
 		}
+		engine->acSwitchState = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 		if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
 			engine->clutchUpState = efiReadPin(CONFIGB(clutchUpPin));
 		}
@@ -487,7 +488,7 @@ void startIdleThread(Logging*sharedLogger) {
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t)(void*) ivThread, NULL);
 
-	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
+	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
 	if (CONFIGB(clutchDownPin) != GPIO_UNASSIGNED) {
 		efiSetPadMode("clutch down switch", CONFIGB(clutchDownPin),
