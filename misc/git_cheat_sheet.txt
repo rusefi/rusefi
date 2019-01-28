@@ -20,6 +20,10 @@ git push -u origin BRANCHNAME
 git checkout -b 2019.01.14_release_1.19.1
 git push -u origin 2019.01.14_release_1.19.1
 
+new remote branch from another branch:
+git checkout -b stable_18.2.rusefi stable_18.2.x
+git push -u origin stable_18.2.rusefi
+
 
 =========================================
 Download submodules:
@@ -37,6 +41,12 @@ Generate diff of specific commit
 
    git diff COMMIT^ COMMIT
 (this generates diff between previous to COMMIT and COMMIT)
+=========================================
+
+Diff between two branches
+
+git diff origin/stable_17.6.x origin/stable_17.6.rusefi
+git diff origin/stable_18.2.x origin/stable_18.2.rusefi --ignore-space-at-eol
 =========================================
 
 https://help.github.com/articles/configuring-a-remote-for-a-fork/
