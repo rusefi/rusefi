@@ -10,8 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "rpm_calculator.h"
 #include "engine.h"
+#include "rpm_calculator.h"
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 

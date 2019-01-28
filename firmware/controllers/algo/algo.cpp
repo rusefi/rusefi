@@ -20,6 +20,7 @@
  */
 
 #include "global.h"
+#include "globalaccess.h"
 #include "algo.h"
 #include "advance_map.h"
 #include "fuel_math.h"
