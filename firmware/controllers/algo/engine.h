@@ -496,6 +496,9 @@ public:
 	 */
 	int ignitionPin[IGNITION_PIN_COUNT];
 
+	// Store current ignition mode for prepareIgnitionPinIndices()
+	ignition_mode_e ignitionModeForPinIndices = Force_4_bytes_size_ignition_mode;
+
 	/**
 	 * this is invoked each time we register a trigger tooth signal
 	 */
