@@ -5,7 +5,7 @@
  * See also common_headers.h
  *
  * Dec 25, 2018
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef GLOBAL_SHARED_H_

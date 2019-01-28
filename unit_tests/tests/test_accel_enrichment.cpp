@@ -7,8 +7,8 @@
  */
 
 #include "global.h"
-#include "accel_enrichment.h"
 #include "engine_configuration.h"
+#include "accel_enrichment.h"
 #include "engine_test_helper.h"
 
 TEST(big, testAccelEnrichment) {
