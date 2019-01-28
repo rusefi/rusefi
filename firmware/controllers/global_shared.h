@@ -30,18 +30,19 @@
 		extern board_configuration_s *boardConfiguration; \
 		extern persistent_config_s *config;
 
-#define COMMON_EXTERN_ENGINE extern Engine *engine; \
+#define EXTERN_ENGINE \
+		extern Engine ___engine; \
+		extern Engine *engine; \
 		extern persistent_config_container_s persistentState; \
 		EXTERN_CONFIG \
 		extern engine_configuration_s activeConfiguration; \
 		extern EnginePins enginePins
 
-
 // Use this macro to declare a function which only takes magic references
 #define DECLARE_ENGINE_PARAMETER_SIGNATURE void
 // Use this version of the macro as the suffix if method has other parameters
 #define DECLARE_ENGINE_PARAMETER_SUFFIX
-// Pass this if only magic reference are needed
+// Pass this if only magic references are needed
 #define PASS_ENGINE_PARAMETER_SIGNATURE
 // Pass this after some other parameters are passed
 #define PASS_ENGINE_PARAMETER_SUFFIX
@@ -58,7 +59,7 @@
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define CONFIGB(x) persistentState.persistentConfiguration.engineConfiguration.bc.x
-
+#define ENGINE(x) ___engine.x
 
 #define DEFINE_CONFIG_PARAM(x, y)
 #define CONFIG_PARAM(x) CONFIG(x)

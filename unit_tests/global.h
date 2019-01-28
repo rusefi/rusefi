@@ -82,7 +82,6 @@ void print(const char *fmt, ...);
 		persistent_config_s *config = engine->config; \
 		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
-
 /**
  * this macro provides references to engine from EngineTestHelper
  */
@@ -92,12 +91,6 @@ void print(const char *fmt, ...);
 
 #define WITH_ENGINE_TEST_HELPER(x) EngineTestHelper eth(x); \
 		EXPAND_EngineTestHelper;
-
-#define CONFIG(x) engineConfiguration->x
-// todo: fix this! this does not work because of 'prepareVoidConfiguration(&activeConfiguration);'
-//#define CONFIGB(x) engine->engineConfigurationPtr->bc.x
-#define CONFIGB(x) CONFIG(bc.x)
-#define ENGINE(x) engine->x
 
 #define CONFIG_PARAM(x) (x)
 

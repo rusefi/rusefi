@@ -101,9 +101,9 @@ static LoggingWithStorage logger("Engine Controller");
 /**
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
  */
-Engine _engine CCM_OPTIONAL;
-Engine * engine = &_engine;
-#endif /* EFI_PROD_CODE */
+Engine ___engine CCM_OPTIONAL;
+Engine * engine = &___engine;
+#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
