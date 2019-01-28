@@ -8,6 +8,6 @@
 #ifndef GLOBALACCESS_H_
 #define GLOBALACCESS_H_
 
-#include "controllers/global_shared.h"
+#include "global_shared.h"
 
 #endif /* GLOBALACCESS_H_ */
