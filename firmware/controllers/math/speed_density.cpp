@@ -82,14 +82,15 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 /**
  * @return air mass in grams
  */
-static float getCycleAirMass(float VE, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getCycleAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: pre-calculate cylinder displacement to save one division
 	float cylinderDisplacement = CONFIG(specs.displacement);
-	return (cylinderDisplacement * VE * MAP) / (GAS_R * tempK);
+	return (cylinderDisplacement * volumetricEfficiency * MAP) / (GAS_R * tempK);
 }
 
-float getCylinderAirMass(float VE, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getCycleAirMass(VE, MAP, tempK PASS_ENGINE_PARAMETER_SUFFIX) / CONFIG(specs.cylindersCount);
+float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return getCycleAirMass(volumetricEfficiency, MAP, tempK PASS_ENGINE_PARAMETER_SUFFIX)
+			/ CONFIG(specs.cylindersCount);
 }
 
 /**
