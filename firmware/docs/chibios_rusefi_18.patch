@@ -1,0 +1,145 @@
+diff --git a/os/hal/include/hal_uart.h b/os/hal/include/hal_uart.h
+index a07464993..3a6abb6b9 100644
+--- a/os/hal/include/hal_uart.h
++++ b/os/hal/include/hal_uart.h
+@@ -298,6 +298,26 @@ typedef enum {
+   _uart_wakeup_rx_complete_isr(uartp);                                      \
+ }
+ 
++/**
++ * @brief   Common ISR code for RX half-transfer data.
++ * @details This code handles the portable part of the ISR code:
++ *          - Callback invocation.
++ *          - Waiting thread wakeup, if any.
++ *          - Driver state transitions.
++ *          .
++ * @note    This macro is meant to be used in the low level drivers
++ *          implementation only.
++ *
++ * @param[in] uartp     pointer to the @p UARTDriver object
++ * @param[in] full      flag set to 1 for the second half, and 0 for the first half
++ *
++ * @notapi
++ */
++#define _uart_rx_half_isr_code(uartp, full) {                               \
++  if ((uartp)->config->rxhalf_cb != NULL)                                   \
++    (uartp)->config->rxhalf_cb(uartp, full);                                \
++}
++
+ /**
+  * @brief   Common ISR code for RX error.
+  * @details This code handles the portable part of the ISR code:
+diff --git a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
+index f4370d28d..e2caea0e1 100644
+--- a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
++++ b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
+@@ -236,6 +236,11 @@ static void usart_start(UARTDriver *uartp) {
+   /* Mustn't ever set TCIE here - if done, it causes an immediate
+      interrupt.*/
+   cr1 = USART_CR1_UE | USART_CR1_PEIE | USART_CR1_TE | USART_CR1_RE;
++
++  /* Add Idle interrupt if needed */
++  if (uartp->config->timeout_cb != NULL)
++    cr1 |= USART_CR1_IDLEIE;
++
+   u->CR1 = uartp->config->cr1 | cr1;
+ 
+   /* Starting the receiver idle loop.*/
+@@ -264,6 +269,15 @@ static void uart_lld_serve_rx_end_irq(UARTDriver *uartp, uint32_t flags) {
+        received character and then the driver stays in the same state.*/
+     _uart_rx_idle_code(uartp);
+   }
++  /* DMA half-transter interrupt handling - for the 1st/2nd half transfers. */
++  else if (uartp->config->rxhalf_cb != NULL) {
++    if ((flags & STM32_DMA_ISR_HTIF) != 0) {
++      _uart_rx_half_isr_code(uartp, 0);
++    }
++    else if ((flags & STM32_DMA_ISR_TCIF) != 0) {
++      _uart_rx_half_isr_code(uartp, 1);
++    }
++  }
+   else {
+     /* Receiver in active state, a callback is generated, if enabled, after
+        a completed transfer.*/
+@@ -322,6 +336,11 @@ static void serve_usart_irq(UARTDriver *uartp) {
+     /* End of transmission, a callback is generated.*/
+     _uart_tx2_isr_code(uartp);
+   }
++
++  /* Idle interrupt sources are only checked if enabled in CR1.*/
++  if ((sr & USART_SR_IDLE) && (cr1 & USART_CR1_IDLEIE)) {
++    _uart_timeout_isr_code(uartp);
++  }
+ }
+ 
+ /*===========================================================================*/
+@@ -793,8 +812,14 @@ void uart_lld_start_receive(UARTDriver *uartp, size_t n, void *rxbuf) {
+   /* RX DMA channel preparation.*/
+   dmaStreamSetMemory0(uartp->dmarx, rxbuf);
+   dmaStreamSetTransactionSize(uartp->dmarx, n);
+-  dmaStreamSetMode(uartp->dmarx, uartp->dmamode    | STM32_DMA_CR_DIR_P2M |
+-                                 STM32_DMA_CR_MINC | STM32_DMA_CR_TCIE);
++
++  uint32_t mode = STM32_DMA_CR_DIR_P2M | STM32_DMA_CR_MINC | STM32_DMA_CR_TCIE;
++
++  /* DMA half-transfer interrupt & circular mode, if needed */
++  if (uartp->config->rxhalf_cb != NULL)
++    mode |= STM32_DMA_CR_HTIE | STM32_DMA_CR_CIRC;
++
++  dmaStreamSetMode(uartp->dmarx, uartp->dmamode | mode);
+ 
+   /* Starting transfer.*/
+   dmaStreamEnable(uartp->dmarx);
+diff --git a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
+index fcf73e7fb..a0b1c1a96 100644
+--- a/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
++++ b/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
+@@ -462,6 +462,14 @@ typedef void (*uartccb_t)(UARTDriver *uartp, uint16_t c);
+  */
+ typedef void (*uartecb_t)(UARTDriver *uartp, uartflags_t e);
+ 
++/**
++ * @brief   Receive Half-transfer UART notification callback type.
++ *
++ * @param[in] uartp     pointer to the @p UARTDriver object
++ * @param[in] full      flag set to 1 for the second half, and 0 for the first half
++ */
++typedef void (*uarthcb_t)(UARTDriver *uartp, uartflags_t full);
++
+ /**
+  * @brief   Driver configuration structure.
+  * @note    It could be empty on some architectures.
+@@ -504,6 +512,16 @@ typedef struct {
+    * @brief Initialization value for the CR3 register.
+    */
+   uint16_t                  cr3;
++  /* Additional (optional) handlers. Placed here for the struct compatibility.*/
++  /**
++   * @brief   Receiver timeout (idle) callback.
++   * @details Handles an idle interrupt for USARTv1.
++   */
++  uartcb_t                  timeout_cb;
++  /**
++   * @brief Half-transfer receive buffer callback.
++   */
++  uarthcb_t                 rxhalf_cb;
+ } UARTConfig;
+ 
+ /**
+diff --git a/os/rt/include/chdebug.h b/os/rt/include/chdebug.h
+index 43163bed1..f7f86e19c 100644
+--- a/os/rt/include/chdebug.h
++++ b/os/rt/include/chdebug.h
+@@ -60,9 +60,10 @@
+ /* Module macros.                                                            */
+ /*===========================================================================*/
+ 
++//rusEfi additional hooks
+ #if CH_DBG_SYSTEM_STATE_CHECK == TRUE
+-#define _dbg_enter_lock() (ch.dbg.lock_cnt = (cnt_t)1)
+-#define _dbg_leave_lock() (ch.dbg.lock_cnt = (cnt_t)0)
++#define _dbg_enter_lock() {(ch.dbg.lock_cnt = (cnt_t)1);  ON_LOCK_HOOK;}
++#define _dbg_leave_lock() {ON_UNLOCK_HOOK;(ch.dbg.lock_cnt = (cnt_t)0);}
+ #endif
+ 
+ /* When the state checker feature is disabled then the following functions
