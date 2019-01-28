@@ -7,8 +7,6 @@
 #ifndef SPEED_DENSITY_H_
 #define SPEED_DENSITY_H_
 
-#include "engine.h"
-
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)
 
@@ -18,6 +16,6 @@ float sdMath(float airMass, float AFR DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+floatms_t getSpeedDensityFuel(float map DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* SPEED_DENSITY_H_ */

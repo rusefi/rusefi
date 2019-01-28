@@ -8,11 +8,11 @@
  */
 
 #include "global.h"
+#include "globalaccess.h"
 #include "speed_density.h"
 #include "interpolation.h"
-#include "rpm_calculator.h"
+#include "engine.h"
 #include "engine_math.h"
-#include "engine_state.h"
 #include "maf2map.h"
 
 #define rpmMin 500
@@ -117,7 +117,7 @@ EXTERN_ENGINE;
 /**
  * @return per cylinder injection time, in Milliseconds
  */
-floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+floatms_t getSpeedDensityFuel(float map DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
@@ -126,7 +126,6 @@ floatms_t getSpeedDensityFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
 		return 0;
 	}
-	float map = getMap();
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", 0);
 
 	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
