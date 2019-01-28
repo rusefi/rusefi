@@ -46,7 +46,7 @@
 // Pass this after some other parameters are passed
 #define PASS_ENGINE_PARAMETER_SUFFIX
 
-// these macro are used when we should not have visibiliy to 'engine'
+// these macro are used when we should not have visibility to 'engine'
 #define DECLARE_CONFIG_PARAMETER_SIGNATURE void
 #define DECLARE_CONFIG_PARAMETER_SUFFIX
 #define PASS_CONFIG_PARAMETER_SIGNATURE
