@@ -28,12 +28,13 @@
 #include "efiGpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
+#include "config_engine_specs.h"
 
 EXTERN_ENGINE
 ;
 
-floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
+floatms_t getEngineCycleDuration(int rpm DECLARE_GLOBAL_SUFFIX) {
+	return getCrankshaftRevolutionTimeMs(rpm) * (get_operationMode == TWO_STROKE ? 1 : 2);
 }
 
 /**
