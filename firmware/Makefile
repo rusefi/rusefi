@@ -171,7 +171,7 @@ CSRC = $(STARTUPSRC) \
 	$(PLATFORMSRC) \
 	$(BOARDSRC) \
 	$(BOOTLOADERSRC) \
-	$(CHIBIOS)/os/various/devices_lib/accel/lis302dl.c \
+	$(CHIBIOS)/os/ex/ST/lis302dl.c \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
