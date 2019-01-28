@@ -36,7 +36,6 @@ typedef unsigned int time_t;
 #endif
 
 #include "common_headers.h"
-#include "controllers/global_shared.h"
 
 #include "io_pins.h"
 

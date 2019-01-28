@@ -17,7 +17,6 @@
 #include <time.h>
 
 #include "common_headers.h"
-#include "global_shared.h"
 
 #include "boards.h"
 
