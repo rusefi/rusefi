@@ -32,11 +32,6 @@
 EXTERN_ENGINE
 ;
 
-extern EnginePins enginePins;
-
-// Store current ignition mode for prepareIgnitionPinIndices()
-static ignition_mode_e ignitionModeForPinIndices;
-
 floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getCrankshaftRevolutionTimeMs(rpm) * (engineConfiguration->operationMode == TWO_STROKE ? 1 : 2);
 }
@@ -441,13 +436,13 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (ignitionMode != ignitionModeForPinIndices) {
+	if (ignitionMode != engine->ignitionModeForPinIndices) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 #endif /* EFI_ENGINE_CONTROL */
-		ignitionModeForPinIndices = ignitionMode;
+		engine->ignitionModeForPinIndices = ignitionMode;
 	}
 }
 
