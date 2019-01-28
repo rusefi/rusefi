@@ -10,16 +10,16 @@
  */
 
 #include "global.h"
-#include "can_hw.h"
-#include "string.h"
-#include "obd2.h"
 
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
+#include "engine_configuration.h"
 #include "pin_repository.h"
+#include "can_hw.h"
+#include "string.h"
+#include "obd2.h"
 #include "mpu_util.h"
 #include "engine_state.h"
-#include "engine_configuration.h"
 #include "vehicle_speed.h"
 
 EXTERN_ENGINE

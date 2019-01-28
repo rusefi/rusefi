@@ -8,8 +8,6 @@
 #ifndef SIMULATOR_GLOBALACCESS_H_
 #define SIMULATOR_GLOBALACCESS_H_
 
-
-
-
+#include "global_shared.h"
 
 #endif /* SIMULATOR_GLOBALACCESS_H_ */
