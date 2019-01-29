@@ -81,7 +81,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	floatms_t baseFuel;
 	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
-		baseFuel = getSpeedDensityFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
+		baseFuel = getSpeedDensityFuel(getMap() PASS_ENGINE_PARAMETER_SUFFIX);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN sd baseFuel", 0);
 	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);

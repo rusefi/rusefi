@@ -500,9 +500,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	float baseFuelMs = getBaseTableFuel((int) rpm, engineLoad);
 
-	float magicAir = getCylinderAirMass(engineConfiguration, 1, 100, convertCelsiusToKelvin(20));
+	float magicAir = getCylinderAirMass(1, 100, convertCelsiusToKelvin(20) PASS_ENGINE_PARAMETER_SUFFIX);
 
-	scheduleMsg(&logger, "SD magic fuel %.2f", sdMath(engineConfiguration, magicAir, 14.7));
+	scheduleMsg(&logger, "SD magic fuel %.2f", sdMath(magicAir, 14.7 PASS_ENGINE_PARAMETER_SUFFIX));
 	scheduleMsg(&logger, "inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
 			engineConfiguration->specs.displacement);
 

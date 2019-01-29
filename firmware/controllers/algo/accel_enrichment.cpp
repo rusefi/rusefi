@@ -22,6 +22,7 @@
  */
 
 #include "global.h"
+#include "engine.h"
 #include "trigger_central.h"
 #include "accel_enrichment.h"
 #include "engine_state.h"
@@ -34,7 +35,6 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 EXTERN_ENGINE
 ;
-
 
 tps_tps_Map3D_t tpsTpsMap("tpsTps");
 

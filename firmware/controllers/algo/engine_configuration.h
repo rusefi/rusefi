@@ -12,6 +12,7 @@
 #include "global.h"
 #include "crc.h"
 #include "engine_configuration_generated_structures.h"
+#include "globalaccess.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE

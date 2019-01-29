@@ -50,7 +50,7 @@ static void executorCallback(void *arg) {
 //		timerIsLate++;
 //	}
 
-	_engine.executor.onTimerCallback();
+	___engine.executor.onTimerCallback();
 }
 
 SingleTimerExecutor::SingleTimerExecutor() {
@@ -168,9 +168,9 @@ extern TunerStudioOutputChannels tsOutputChannels;
 void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
 #if (EFI_TUNER_STUDIO && EFI_SIGNAL_EXECUTOR_ONE_TIMER) || defined(__DOXYGEN__)
-		tsOutputChannels.debugIntField1 = _engine.executor.timerCallbackCounter;
-		tsOutputChannels.debugIntField2 = _engine.executor.doExecuteCounter;
-		tsOutputChannels.debugIntField3 = _engine.executor.scheduleCounter;
+		tsOutputChannels.debugIntField1 = ___engine.executor.timerCallbackCounter;
+		tsOutputChannels.debugIntField2 = ___engine.executor.doExecuteCounter;
+		tsOutputChannels.debugIntField3 = ___engine.executor.scheduleCounter;
 #endif /* EFI_TUNER_STUDIO */
 	}
 }

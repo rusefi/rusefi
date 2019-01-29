@@ -8,6 +8,7 @@
 #define H_ENGINE_H_
 
 #include "global.h"
+#include "globalaccess.h"
 #include "pid.h"
 #include "rpm_calculator.h"
 #include "event_registry.h"
@@ -494,6 +495,9 @@ public:
 	 * todo: update documentation
 	 */
 	int ignitionPin[IGNITION_PIN_COUNT];
+
+	// Store current ignition mode for prepareIgnitionPinIndices()
+	ignition_mode_e ignitionModeForPinIndices = Force_4_bytes_size_ignition_mode;
 
 	/**
 	 * this is invoked each time we register a trigger tooth signal

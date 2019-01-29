@@ -36,7 +36,6 @@ typedef unsigned int time_t;
 #endif
 
 #include "common_headers.h"
-#include "controllers/global_shared.h"
 
 #include "io_pins.h"
 
@@ -91,12 +90,6 @@ typedef unsigned int time_t;
 #else /* !EFI_USE_CCM */
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
-
-#define EXTERN_ENGINE \
-		extern Engine _engine; \
-		COMMON_EXTERN_ENGINE
-
-#define ENGINE(x) _engine.x
 
 /**
  * low-level function is used here to reduce stack usage
