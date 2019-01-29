@@ -90,10 +90,10 @@ void startTsPort(ts_channel_s *tsChannel);
 bool stopTsPort(ts_channel_s *tsChannel);
 
 // that's 1 second
-#define BINARY_IO_TIMEOUT MS2ST(1000)
+#define BINARY_IO_TIMEOUT TIME_MS2I(1000)
 
 // that's 1 second
-#define SR5_READ_TIMEOUT MS2ST(1000)
+#define SR5_READ_TIMEOUT TIME_MS2I(1000)
 
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size);
 void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, const void *buf, const uint16_t size);

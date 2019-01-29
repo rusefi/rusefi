@@ -222,7 +222,7 @@ static void scheduleNextSlowInvocation(void) {
 	int periodMs = CONFIGB(generalPeriodicThreadPeriod);
 	if (periodMs == 0)
 		periodMs = 50; // this might happen while resetting configuration
-	chVTSetAny(&periodicSlowTimer, MS2ST(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
+	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
 }
 
 static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -231,7 +231,7 @@ static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * not many reasons why we use ChibiOS timer and not say a dedicated thread here
 	 * the only down-side of a dedicated thread is the cost of thread stack
 	 */
-	chVTSetAny(&periodicFastTimer, MS2ST(20), (vtfunc_t) &periodicFastCallback, engine);
+	chVTSetAny(&periodicFastTimer, TIME_MS2I(20), (vtfunc_t) &periodicFastCallback, engine);
 }
 
 static void resetAccel(void) {

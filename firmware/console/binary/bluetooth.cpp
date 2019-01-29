@@ -22,7 +22,7 @@ static char cmdPin[16];
 
 static const int baudRates[] = { 0, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, -1 };
 static const int baudRateIndexList[] = { 4 /*9600*/, 6 /*38400*/, 8 /*115200*/, 7, 5, 3, 2, 1, -1 };
-static const int btModuleTimeout = MS2ST(1000);
+static const int btModuleTimeout = TIME_MS2I(1000);
 
 static ts_channel_s *tsChannel;
 
