@@ -93,9 +93,6 @@ void applyNewConfiguration(void);
 
 #define hal_lld_get_counter_value() 0
 
-// a step towards ChibiOS18
-#define TIME_MS2I(x) MS2ST(x)
-
 #endif /* GLOBAL_H_ */
 
 
