@@ -206,7 +206,7 @@ void test_cpu_pulse(unsigned duration) {
   systime_t start, end, now;
 
   start = chThdSelf()->p_time;
-  end = start + MS2ST(duration);
+  end = start + TIME_MS2I(duration);
   do {
     now = chThdSelf()->p_time;
 #if defined(SIMULATOR)
@@ -252,7 +252,7 @@ static void tmr(void *p) {
  */
 void test_start_timer(unsigned ms) {
 
-  systime_t duration = MS2ST(ms);
+  systime_t duration = TIME_MS2I(ms);
   test_timer_done = FALSE;
   chVTSet(&vt, duration, tmr, NULL);
 }

@@ -113,7 +113,7 @@ static void sendCanMessage2(int size) {
 	}
 	txmsg.DLC = size;
 	// 1 second timeout
-	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, MS2ST(1000));
+	msg_t result = canTransmit(device, CAN_ANY_MAILBOX, &txmsg, TIME_MS2I(1000));
 	if (result == MSG_OK) {
 		canWriteOk++;
 	} else {
@@ -234,7 +234,7 @@ static void canRead(void) {
 		return;
 	}
 //	scheduleMsg(&logger, "Waiting for CAN");
-	msg_t result = canReceive(device, CAN_ANY_MAILBOX, &rxBuffer, MS2ST(1000));
+	msg_t result = canReceive(device, CAN_ANY_MAILBOX, &rxBuffer, TIME_MS2I(1000));
 	if (result == MSG_TIMEOUT) {
 		return;
 	}

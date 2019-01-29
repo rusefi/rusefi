@@ -32,8 +32,8 @@
 #define DFU_ACK_BYTE       0x79  // Acknowledge byte ID
 #define DFU_NACK_BYTE      0x1F  // Not-Acknowledge byte ID
 
-#define DFU_SR5_TIMEOUT_FIRST  MS2ST(200)
-#define DFU_SR5_TIMEOUT_NORMAL MS2ST(1000)
+#define DFU_SR5_TIMEOUT_FIRST  TIME_MS2I(200)
+#define DFU_SR5_TIMEOUT_NORMAL TIME_MS2I(1000)
 
 #define MCU_REVISION_MASK  0xfff // MCU Revision ID is needed by DFU protocol
 

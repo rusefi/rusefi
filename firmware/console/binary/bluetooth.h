@@ -15,7 +15,7 @@
 // The Bluetooth setup procedure will wait 10 seconds for the user to disconnect the UART cable.
 // This is required because the BT setup procedure reads a response from the module during the communication.
 // Thus any bytes sent from the Console Software may interfere with the procedure.
-#define BLUETOOTH_COMMAND_TIMEOUT MS2ST(10000)
+#define BLUETOOTH_COMMAND_TIMEOUT TIME_MS2I(10000)
 
 // Supported Bluetooth module types
 typedef enum {
