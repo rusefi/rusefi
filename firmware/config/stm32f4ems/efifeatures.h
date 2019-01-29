@@ -126,7 +126,7 @@
 #define EFI_CJ125 TRUE
 
 #if !defined(EFI_MEMS) || defined(__DOXYGEN__)
- #define EFI_MEMS TRUE
+ #define EFI_MEMS FALSE
 #endif
 
 #define EFI_INTERNAL_ADC TRUE
@@ -135,7 +135,7 @@
 
 #define EFI_DENSO_ADC FALSE
 
-#define EFI_CAN_SUPPORT TRUE
+#define EFI_CAN_SUPPORT FALSE
 
 #define EFI_HD44780_LCD TRUE
 
@@ -166,7 +166,7 @@
 /**
  * Do we need file logging (like SD card) logic?
  */
-#define EFI_FILE_LOGGING TRUE
+#define EFI_FILE_LOGGING FALSE
 
 #ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
