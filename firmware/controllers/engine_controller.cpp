@@ -277,7 +277,7 @@ static void invokePerSecond(void) {
 }
 
 static void periodicSlowCallback(Engine *engine) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
@@ -723,7 +723,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	if (CONFIGB(isEngineControlEnabled)) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition

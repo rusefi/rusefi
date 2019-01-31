@@ -13,8 +13,6 @@
 #include "engine.h"
 #include "rpm_calculator.h"
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-
 #include "trigger_central.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
@@ -40,6 +38,43 @@ extern WaveChart waveChart;
 #define NO_RPM_EVENTS_TIMEOUT_SECS 2
 #endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
 
+float RpmCalculator::getRpmAcceleration() {
+	return 1.0 * previousRpmValue / rpmValue;
+}
+
+bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+	// Spinning-up with zero RPM means that the engine is not ready yet, and is treated as 'stopped'.
+	return state == STOPPED || (state == SPINNING_UP && rpmValue == 0);
+}
+
+bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+	// Spinning-up with non-zero RPM is suitable for all engine math, as good as cranking
+	return state == CRANKING || (state == SPINNING_UP && rpmValue > 0);
+}
+
+bool RpmCalculator::isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+	return state == SPINNING_UP;
+}
+
+uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
+	return revolutionCounterSinceStart;
+}
+
+/**
+ * @return -1 in case of isNoisySignal(), current RPM otherwise
+ */
+// todo: migrate to float return result or add a float version? this would have with calculations
+int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+#if !EFI_PROD_CODE
+	if (mockRpm != MOCK_UNDEFINED) {
+		return mockRpm;
+	}
+#endif /* EFI_PROD_CODE */
+	return rpmValue;
+}
+
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+
 EXTERN_ENGINE
 ;
 
@@ -59,20 +94,6 @@ RpmCalculator::RpmCalculator() {
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceBootForUnitTest = 0;
-}
-
-bool RpmCalculator::isStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	// Spinning-up with zero RPM means that the engine is not ready yet, and is treated as 'stopped'.
-	return state == STOPPED || (state == SPINNING_UP && rpmValue == 0);
-}
-
-bool RpmCalculator::isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	return state == SPINNING_UP;
-}
-
-bool RpmCalculator::isCranking(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	// Spinning-up with non-zero RPM is suitable for all engine math, as good as cranking
-	return state == CRANKING || (state == SPINNING_UP && rpmValue > 0);
 }
 
 /**
@@ -163,14 +184,6 @@ uint32_t RpmCalculator::getRevolutionCounter(void) {
 	return revolutionCounterSinceBoot;
 }
 
-uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
-	return revolutionCounterSinceStart;
-}
-
-float RpmCalculator::getRpmAcceleration() {
-	return 1.0 * previousRpmValue / rpmValue;
-}
-
 void RpmCalculator::setStopped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	revolutionCounterSinceStart = 0;
 	if (rpmValue != 0) {
@@ -202,19 +215,6 @@ void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 	 * Update ignition pin indices if needed. Here we potentially switch to wasted spark temporarily.
 	 */
 	prepareIgnitionPinIndices(getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-/**
- * @return -1 in case of isNoisySignal(), current RPM otherwise
- */
-// todo: migrate to float return result or add a float version? this would have with calculations
-int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-#if !EFI_PROD_CODE
-	if (mockRpm != MOCK_UNDEFINED) {
-		return mockRpm;
-	}
-#endif /* EFI_PROD_CODE */
-	return rpmValue;
 }
 
 /**

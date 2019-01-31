@@ -261,7 +261,9 @@ void runBenchTest(uint16_t subsystem, uint16_t index) {
 		milBench();
 	} else if (subsystem == 0x17) {
 		// cmd_test_idle_valve
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 		startIdleBench();
+#endif
 	} else if (subsystem == 0x20 && index == 0x3456) {
 		// call to pit
 		setCallFromPitStop(30000);

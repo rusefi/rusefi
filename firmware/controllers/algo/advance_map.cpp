@@ -145,6 +145,7 @@ static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAM
 
 
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	if (cisnan(engineLoad)) {
 		return 0; // any error should already be reported
 	}
@@ -177,6 +178,9 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
 	fixAngle(angle, "getAdvance", CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
+#else
+	return 0;
+#endif
 }
 
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

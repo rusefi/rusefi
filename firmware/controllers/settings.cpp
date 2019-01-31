@@ -1128,7 +1128,9 @@ typedef struct {
 	VoidFloat callback;
 } command_f_s;
 
-const command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
+const command_f_s commandsF[] = {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+		{"mock_iat_voltage", setMockIatVoltage},
 		{"mock_pedal_position", setMockPedalPosition},
 		{"mock_maf_voltage", setMockMafVoltage},
 		{"mock_afr_voltage", setMockAfrVoltage},
@@ -1136,6 +1138,7 @@ const command_f_s commandsF[] = {{"mock_iat_voltage", setMockIatVoltage},
 		{"mock_map_voltage", setMockMapVoltage},
 		{"mock_vbatt_voltage", setMockVBattVoltage},
 		{"mock_clt_voltage", setMockCltVoltage},
+#endif
 		{"fsio_curve_1_value", setFsioCurve1Value},
 		{"fsio_curve_2_value", setFsioCurve2Value},
 		{"ignition_offset", setIgnitionOffset},

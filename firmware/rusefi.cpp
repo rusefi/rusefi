@@ -187,11 +187,13 @@ void runRusEfi(void) {
 	 */
 	initPinRepository();
 
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
 	 */
 	readConfiguration(&sharedLogger);
+#endif /* EFI_INTERNAL_FLASH */
 	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
 	prepareVoidConfiguration(&activeConfiguration);
 

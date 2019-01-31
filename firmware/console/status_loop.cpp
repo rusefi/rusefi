@@ -471,7 +471,7 @@ void updateDevConsoleState(void) {
 
 	systime_t nowSeconds = getTimeNowSeconds();
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	int currentCkpEventCounter = getCrankEventCounter();
 	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds) {
 		return;
@@ -595,8 +595,12 @@ static void setBlinkingPeriod(int value) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 static bool isTriggerErrorNow() {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
 	return justHadError || isTriggerDecoderError();
+#else
+	return false;
+#endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
 extern bool consoleByteArrived;

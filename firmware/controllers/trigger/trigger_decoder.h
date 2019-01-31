@@ -100,7 +100,9 @@ public:
 
 	void resetTriggerState();
 
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+#endif
 
 	/**
 	 * this is start of real trigger cycle
@@ -147,7 +149,9 @@ public:
 	float prevInstantRpmValue = 0;
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+#endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
 	 * Needed for early spin-up RPM detection.

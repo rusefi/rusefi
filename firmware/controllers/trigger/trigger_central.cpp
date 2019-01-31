@@ -8,8 +8,6 @@
 
 #include "global.h"
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-
 #include "trigger_central.h"
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
@@ -25,6 +23,29 @@
 #include "trigger_simulator.h"
 
 #include "rpm_calculator.h"
+
+TriggerCentral::TriggerCentral() : hwEventCounters() {
+	// we need this initial to have not_running at first invocation
+	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
+
+	clearCallbacks(&triggerListeneres);
+	triggerState.resetTriggerState();
+	resetAccumSignalData();
+}
+
+void TriggerCentral::resetAccumSignalData() {
+	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
+	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
+	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
+}
+
+int TriggerCentral::getHwEventCounter(int index) {
+	return hwEventCounters[index];
+}
+
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #include "pin_repository.h"
@@ -204,27 +225,8 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 }
 #endif /* EFI_PROD_CODE */
 
-TriggerCentral::TriggerCentral() : hwEventCounters() {
-	// we need this initial to have not_running at first invocation
-	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
-
-	clearCallbacks(&triggerListeneres);
-	triggerState.resetTriggerState();
-	resetAccumSignalData();
-}
-
-int TriggerCentral::getHwEventCounter(int index) {
-	return hwEventCounters[index];
-}
-
 void TriggerCentral::resetCounters() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
-}
-
-void TriggerCentral::resetAccumSignalData() {
-	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
-	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
-	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
 }
 
 static char shaft_signal_msg_index[15];
