@@ -496,7 +496,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	TRIGGER_SHAPE(prepareShape());
 }
 
-#endif
+#endif /* EFI_ENGINE_CONTROL */
 
 void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTableBin(config->fuelRpmBins, FUEL_RPM_COUNT, from, to);
