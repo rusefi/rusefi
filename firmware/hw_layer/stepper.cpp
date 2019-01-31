@@ -42,7 +42,7 @@ static msg_t stThread(StepperMotor *motor) {
 	// try to get saved stepper position (-1 for no data)
 	motor->currentPosition = loadStepperPos();
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	// first wait until at least 1 slowADC sampling is complete
 	waitForSlowAdc();
 #endif

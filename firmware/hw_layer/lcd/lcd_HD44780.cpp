@@ -106,6 +106,7 @@ static void lcd_HD44780_write(uint8_t data) {
 		//	LCD Pin RW -> P1
 		//	LCD Pin E  -> P2
 
+#if HAL_USE_I2C
 		// todo: finish all this stuff
 				i2cAcquireBus(&I2CD1);
 //
@@ -117,7 +118,7 @@ static void lcd_HD44780_write(uint8_t data) {
 //				i2cMasterTransmit(&I2CD1, LCD_PORT_EXP_ADDR, txbuf, 1, NULL, 0);
 //
 				i2cReleaseBus(&I2CD1);
-
+#endif /* HAL_USE_I2C */
 	}
 }
 

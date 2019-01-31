@@ -125,6 +125,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	int rpm = GET_RPM();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? CONFIGB(sensorChartMode) : SC_OFF;
@@ -141,6 +142,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) ? getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) : 12;
 
 	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 }
 
 void Engine::onTriggerSignalEvent(efitick_t nowNt) {
@@ -189,7 +191,7 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	sparkTable.preCalc(engineConfiguration->sparkDwellRpmBins,
 			engineConfiguration->sparkDwellValues);
 
-#if ! EFI_UNIT_TEST
+#if HAL_USE_ADC
 	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
 #else
 	adcToVoltageInputDividerCoefficient = engineConfigurationPtr->analogInputDividerCoefficient;
