@@ -55,6 +55,7 @@ FsioState::FsioState() {
 }
 
 void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 #if !EFI_UNIT_TEST
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
@@ -83,11 +84,12 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
-#endif
+#endif /* EFI_UNIT_TEST */
 
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
+#endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
 static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

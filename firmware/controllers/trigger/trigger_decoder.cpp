@@ -20,8 +20,6 @@
 
 #include "global.h"
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
 #include "cyclic_buffer.h"
@@ -36,6 +34,49 @@
 #include "sensor_chart.h"
 #endif
 
+TriggerState::TriggerState() {
+	resetTriggerState();
+}
+
+void TriggerState::resetTriggerState() {
+	triggerCycleCallback = NULL;
+	shaft_is_synchronized = false;
+	toothed_previous_time = 0;
+
+	memset(toothDurations, 0, sizeof(toothDurations));
+
+	totalRevolutionCounter = 0;
+	totalTriggerErrorCounter = 0;
+	orderingErrorCounter = 0;
+	lastDecodingErrorTime = US2NT(-10000000LL);
+	someSortOfTriggerError = false;
+
+	memset(toothDurations, 0, sizeof(toothDurations));
+	curSignal = SHAFT_PRIMARY_FALLING;
+	prevSignal = SHAFT_PRIMARY_FALLING;
+	startOfCycleNt = 0;
+
+	resetCurrentCycleState();
+	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
+
+	totalEventCountBase = 0;
+	isFirstEvent = true;
+}
+
+void TriggerState::resetCurrentCycleState() {
+	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
+	memset(currentCycle.timeOfPreviousEventNt, 0, sizeof(currentCycle.timeOfPreviousEventNt));
+	memset(currentCycle.totalTimeNt, 0, sizeof(currentCycle.totalTimeNt));
+	currentCycle.current_index = 0;
+}
+
+TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
+		//https://en.cppreference.com/w/cpp/language/zero_initialization
+		timeOfLastEvent(), instantRpmValue()
+		{
+}
+
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 
 EXTERN_ENGINE
 ;
@@ -122,12 +163,6 @@ efitime_t TriggerState::getTotalEventCounter() const {
 
 int TriggerState::getTotalRevolutionCounter() const {
 	return totalRevolutionCounter;
-}
-
-TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
-		//https://en.cppreference.com/w/cpp/language/zero_initialization
-		timeOfLastEvent(), instantRpmValue()
-		{
 }
 
 void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -254,35 +289,6 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 
 #define isLessImportant(type) (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap()) )
 
-TriggerState::TriggerState() {
-	resetTriggerState();
-}
-
-void TriggerState::resetTriggerState() {
-	triggerCycleCallback = NULL;
-	shaft_is_synchronized = false;
-	toothed_previous_time = 0;
-
-	memset(toothDurations, 0, sizeof(toothDurations));
-
-	totalRevolutionCounter = 0;
-	totalTriggerErrorCounter = 0;
-	orderingErrorCounter = 0;
-	lastDecodingErrorTime = US2NT(-10000000LL);
-	someSortOfTriggerError = false;
-
-	memset(toothDurations, 0, sizeof(toothDurations));
-	curSignal = SHAFT_PRIMARY_FALLING;
-	prevSignal = SHAFT_PRIMARY_FALLING;
-	startOfCycleNt = 0;
-
-	resetCurrentCycleState();
-	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
-
-	totalEventCountBase = 0;
-	isFirstEvent = true;
-}
-
 int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
@@ -293,13 +299,6 @@ void TriggerState::incrementTotalEventCounter() {
 
 bool TriggerState::isEvenRevolution() const {
 	return totalRevolutionCounter & 1;
-}
-
-void TriggerState::resetCurrentCycleState() {
-	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
-	memset(currentCycle.timeOfPreviousEventNt, 0, sizeof(currentCycle.timeOfPreviousEventNt));
-	memset(currentCycle.totalTimeNt, 0, sizeof(currentCycle.totalTimeNt));
-	currentCycle.current_index = 0;
 }
 
 void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
