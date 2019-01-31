@@ -116,41 +116,41 @@ PROJECT_DIR = .
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
 # Startup files.
-#include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
+include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 # HAL-OSAL files (optional).
-#include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-#include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
-#include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
+include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
+include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
-#include $(CHIBIOS)/os/rt/rt.mk
-#include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+include $(CHIBIOS)/os/rt/rt.mk
+include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
-#include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
-#include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
+include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
-#include console/binary/tunerstudio.mk
-#include $(PROJECT_DIR)/ext/fatfs.mk
+include console/binary/tunerstudio.mk
+include $(PROJECT_DIR)/ext/fatfs.mk
 
-#include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-#include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-#include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
-#include $(PROJECT_DIR)/development/development.mk
-#include $(PROJECT_DIR)/controllers/controllers.mk
+include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
+include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
+include $(PROJECT_DIR)/development/development.mk
+include $(PROJECT_DIR)/controllers/controllers.mk
 
-#include $(PROJECT_DIR)/util/util.mk
-#include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
-#include $(PROJECT_DIR)/config/engines/engines.mk
-#include $(PROJECT_DIR)/controllers/algo/algo.mk
-#include $(PROJECT_DIR)/controllers/core/core.mk
-#include $(PROJECT_DIR)/controllers/math/math.mk
-#include $(PROJECT_DIR)/controllers/sensors/sensors.mk
-#include $(PROJECT_DIR)/controllers/system/system.mk
-#include $(PROJECT_DIR)/controllers/trigger/trigger.mk
-#include $(PROJECT_DIR)/console/console.mk
+include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/board.mk
+include $(PROJECT_DIR)/config/engines/engines.mk
+include $(PROJECT_DIR)/controllers/algo/algo.mk
+include $(PROJECT_DIR)/controllers/core/core.mk
+include $(PROJECT_DIR)/controllers/math/math.mk
+include $(PROJECT_DIR)/controllers/sensors/sensors.mk
+include $(PROJECT_DIR)/controllers/system/system.mk
+include $(PROJECT_DIR)/controllers/trigger/trigger.mk
+include $(PROJECT_DIR)/console/console.mk
 
-#ifeq ($(USE_BOOTLOADER),yes)
-#include $(PROJECT_DIR)/bootloader/bootloader.mk
-#endif
+ifeq ($(USE_BOOTLOADER),yes)
+include $(PROJECT_DIR)/bootloader/bootloader.mk
+endif
 
 include $(PROJECT_DIR)/LED/LED.mk
 
@@ -165,55 +165,53 @@ endif
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-#CSRC = $(STARTUPSRC) \
-#	$(KERNSRC) \
-#	$(PORTSRC) \
-#	$(OSALSRC) \
-#	$(HALSRC) \
-#	$(PLATFORMSRC) \
-#	$(BOARDSRC) \
-#	$(BOOTLOADERSRC) \
-#	$(CHIBIOS)/os/various/devices_lib/accel/lis302dl.c \
-#	$(CHIBIOS)/os/various/syscalls.c \
-#	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-#	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-#	${HW_MASS_STORAGE_SRC_C} \
-#	$(UTILSRC) \
-#	$(LED_SRC) \
-#	$(ENGINES_SRC) \
-#	$(CONSOLESRC) \
-#	$(DEV_SRC) \
-#	$(HW_LAYER_EMS) \
-#	$(CONTROLLERSSRC) \
-#	$(CONTROLLERS_ALGO_SRC) \
-#	$(CONTROLLERS_CORE_SRC) \
-#	$(CONTROLLERS_SENSORS_SRC) \
-#	$(FATFSSRC) \
-#	$(SYSTEMSRC)
-CSRC = $(LED_SRC)
+CSRC = $(STARTUPSRC) \
+	$(KERNSRC) \
+	$(PORTSRC) \
+	$(OSALSRC) \
+	$(HALSRC) \
+	$(PLATFORMSRC) \
+	$(BOARDSRC) \
+	$(BOOTLOADERSRC) \
+	$(CHIBIOS)/os/various/devices_lib/accel/lis302dl.c \
+	$(CHIBIOS)/os/various/syscalls.c \
+	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+	${HW_MASS_STORAGE_SRC_C} \
+	$(UTILSRC) \
+	$(ENGINES_SRC) \
+	$(CONSOLESRC) \
+	$(DEV_SRC) \
+	$(HW_LAYER_EMS) \
+	$(CONTROLLERSSRC) \
+	$(CONTROLLERS_ALGO_SRC) \
+	$(CONTROLLERS_CORE_SRC) \
+	$(CONTROLLERS_SENSORS_SRC) \
+	$(FATFSSRC) \
+	$(SYSTEMSRC) \
+	$(LED_SRC)
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = 
-#CPPSRC = $(CHCPPSRC) \
-#	$(TRIGGER_SRC_CPP) \
-#	$(TRIGGER_DECODERS_SRC_CPP) \
-#	$(DEV_SRC_CPP) \
-#	$(CONTROLLERS_ALGO_SRC_CPP) \
-#	$(SYSTEMSRC_CPP) \
-#	$(BOARDSRC_CPP) \
-#	$(ENGINES_SRC_CPP) \
-#	$(HW_LAYER_EMS_CPP) \
-#	$(HW_SENSORS_SRC) \
-#	$(TUNERSTUDIO_SRC_CPP) \
-#	$(CONSOLE_SRC_CPP) \
-#	$(CONTROLLERS_SENSORS_SRC_CPP) \
-#	$(CONTROLLERS_SRC_CPP) \
-#	$(UTILSRC_CPP) \
-#	$(CONTROLLERS_CORE_SRC_CPP) \
-#	$(CONTROLLERS_MATH_SRC_CPP) \
-#	rusefi.cpp \
-#	main.cpp
+CPPSRC = $(CHCPPSRC) \
+	$(TRIGGER_SRC_CPP) \
+	$(TRIGGER_DECODERS_SRC_CPP) \
+	$(DEV_SRC_CPP) \
+	$(CONTROLLERS_ALGO_SRC_CPP) \
+	$(SYSTEMSRC_CPP) \
+	$(BOARDSRC_CPP) \
+	$(ENGINES_SRC_CPP) \
+	$(HW_LAYER_EMS_CPP) \
+	$(HW_SENSORS_SRC) \
+	$(TUNERSTUDIO_SRC_CPP) \
+	$(CONSOLE_SRC_CPP) \
+	$(CONTROLLERS_SENSORS_SRC_CPP) \
+	$(CONTROLLERS_SRC_CPP) \
+	$(UTILSRC_CPP) \
+	$(CONTROLLERS_CORE_SRC_CPP) \
+	$(CONTROLLERS_MATH_SRC_CPP) \
+	rusefi.cpp \
+	main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
@@ -237,7 +235,7 @@ TCPPSRC =
 
 # List ASM source files here
 # List ASM source files here
-#ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
+ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
 ifeq ($(CONFIGPATH),)
   CONFIGPATH=config/stm32f4ems

@@ -86,10 +86,12 @@
 #define STM32_HPRE                          STM32_HPRE_DIV1
 #define STM32_PPRE1                         STM32_PPRE1_DIV4
 #define STM32_PPRE2                         STM32_PPRE2_DIV2
+#ifndef STM32_RTCSEL
 #if STM32_LSE_ENABLED
  #define STM32_RTCSEL                        STM32_RTCSEL_LSE
 #else
  #define STM32_RTCSEL                        STM32_RTCSEL_LSI
+#endif
 #endif
 #ifndef STM32_RTCPRE_VALUE
 #define STM32_RTCPRE_VALUE                  8

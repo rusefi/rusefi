@@ -1,37 +1,30 @@
 #include "stm32f4xx.h"
-#include "led.h"
 #include <stdio.h>
-void DelayLED(__IO uint32_t nCount);  //函数声明
-uint8_t I2C_Test(void);
-int main(void)
-{
-  LED_GPIO_Config();                  //GPIO管脚初始化
-  while (1)
-  {
-    LED1_ON;
-    LED2_ON;
-    DelayLED(0XFFFFFF);
-    LED1_OFF;
-    LED2_OFF;
-    DelayLED(0XFFFFFF);
-  }
-}
-/********************************************************************************************
-*函数名称：void Delay(__IO uint32_t nCount)
-*
-*入口参数：无
-*
-*出口参数：无
-*
-*功能说明：延时函数
-*******************************************************************************************/
-void DelayLED(__IO uint32_t nCount)
-{
-  while(nCount--)
-  {
-  }
+
+//#include "ch.h"
+
+#define LED_PIN 9
+
+void DelayLED(__IO uint32_t nCount) {
+	while(nCount--) {
+  	}
 }
 
+void mainLED(int num) {
+	int i;
+	
+	DelayLED(0XFFFFFF);
+	DelayLED(0XFFFFFF);
 
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+	GPIOB->MODER |= (1 << (LED_PIN*2));
+	GPIOB->OTYPER &= ~(1 << LED_PIN);
 
-void _init(void){} 
+	for (i = 0; i < num; i++) {
+		GPIOB->ODR &= ~(1 << LED_PIN);
+		DelayLED(0XFFFFFF);
+		GPIOB->ODR |= (1 << LED_PIN);
+		DelayLED(0XFFFFFF);
+	}
+}
+
