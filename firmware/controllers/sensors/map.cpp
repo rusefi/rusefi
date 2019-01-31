@@ -263,7 +263,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if HAL_USE_ICU || defined(__DOXYGEN__)
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		digital_input_s* digitalMapInput = addWaveAnalyzerDriver("map freq", CONFIGB(frequencyReportingMapInputPin));
 		startInputDriver(digitalMapInput, true);

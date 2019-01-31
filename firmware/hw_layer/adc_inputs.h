@@ -10,9 +10,9 @@
 #define ADC_INPUTS_H_
 
 #include "global.h"
+#include "adc_math.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
-#include "adc_math.h"
 
 const char * getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs(bool boardTestMode);

@@ -47,6 +47,8 @@ extern fuel_Map3D_t ve2Map;
 extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
@@ -349,3 +351,5 @@ float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGIN
 	const float cc_min_to_L_h = 60.0f / 1000.0f;
 	return fuelRate * CONFIG(injector.flow) * cc_min_to_L_h;
 }
+
+#endif

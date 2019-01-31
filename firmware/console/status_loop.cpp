@@ -228,7 +228,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	// below are the more advanced data points which only go into log file
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	reportSensorF(log, fileFormat, GAUGE_NAME_CPU_TEMP, "C", getMCUInternalTemperature(), 2); // log column #3
 #endif
 
@@ -869,15 +869,21 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if	HAL_USE_ADC
 	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
-	tsOutputChannels->idlePosition = getIdlePosition();
-	tsOutputChannels->isTriggerError = isTriggerErrorNow();
+#endif /* HAL_USE_ADC */
 
 #if EFI_MAX_31855 || defined(__DOXYGEN__)
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
 		tsOutputChannels->egtValues.values[i] = getEgtValue(i);
 #endif /* EFI_MAX_31855 */
+
+#if EFI_IDLE_CONTROL
+	tsOutputChannels->idlePosition = getIdlePosition();
+#endif
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	tsOutputChannels->isTriggerError = isTriggerErrorNow();
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();

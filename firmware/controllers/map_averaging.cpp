@@ -122,7 +122,7 @@ static void startAveraging(void *arg) {
 	mapAveragingPin.setHigh();
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 /**
  * This method is invoked from ADC callback.
  * @note This method is invoked OFTEN, this method is a potential bottle-next - the implementation should be
@@ -179,7 +179,7 @@ static void endAveraging(void *arg) {
 	bool wasLocked = lockAnyContext();
 	isAveraging = false;
 	// with locking we would have a consistent state
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	if (mapMeasurementsCounter > 0) {
 		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
 		// todo: move out of locked context?
@@ -255,6 +255,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);
 	if (index != CONFIG(mapAveragingSchedulingAtIndex))
@@ -304,6 +305,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		engine->m.mapAveragingCbTime = GET_TIMESTAMP()
 				- engine->m.beforeMapAveragingCb;
 	}
+#endif
 }
 
 static void showMapStats(void) {
@@ -339,7 +341,9 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 //	endTimer[0].name = "map end0";
 //	endTimer[1].name = "map end1";
 
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
+#endif /* EFI_SHAFT_POSITION_INPUT */
 	addConsoleAction("faststat", showMapStats);
 	applyMapMinBufferLength();
 }
