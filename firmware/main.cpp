@@ -11,7 +11,14 @@
 #include "rusefi.h"
 #include "mpu_util.h"
 
+extern "C" {
+extern void mainLED(void);
+}
+
 int main(void) {
+
+	mainLED();
+#if 0
 	/*
 	 * ChibiOS/RT initialization
 	 */
@@ -21,6 +28,7 @@ int main(void) {
 	baseHardwareInit();
 
 	runRusEfi();
+#endif
 	return 0;
 }
 

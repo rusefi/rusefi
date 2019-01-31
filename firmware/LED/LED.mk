@@ -1,0 +1,13 @@
+
+LED_SRC = $(PROJECT_DIR)/LED/mainLED.c \
+	$(PROJECT_DIR)/LED/led.c \
+	$(PROJECT_DIR)/LED/misc.c \
+	$(PROJECT_DIR)/LED/stm32f4xx_gpio.c \
+	$(PROJECT_DIR)/LED/stm32f4xx_rcc.c \
+	$(PROJECT_DIR)/LED/system_stm32f4xx.c 
+
+ASMXSRC = $(PROJECT_DIR)/LED/startup_stm32f4xx.S
+
+LEDINC = $(PROJECT_DIR)/LED
+
+DDEFS += -DSTM32F4XX -DUSE_STDPERIPH_DRIVER
