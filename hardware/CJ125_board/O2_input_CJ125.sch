@@ -38,7 +38,7 @@ encoding utf-8
 Sheet 1 1
 Title "CJ125 Wide O2 "
 Date "2019-01-08"
-Rev "R0.4.1"
+Rev "R0.4.2"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -1057,4 +1057,6 @@ F 5 "DIGI,541-4.70KCCT-ND" V -1220 975 60  0001 C CNN "vend1,vend1#"
 	1    3850 3750
 	0    1    1    0   
 $EndComp
+Text Notes 3980 7815 0    60   ~ 0
+LSU4.2: R2=DNP, W1=0R\nLSU4.9: R2=21.6R, W1=DNP\n\nLSU4.2: R9=82.5, R10=DNP, W2=0R\nLSU4.9: R9=301, R10=220, W2=DNP
 $EndSCHEMATC
