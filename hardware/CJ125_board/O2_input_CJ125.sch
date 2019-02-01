@@ -513,8 +513,8 @@ F 5 "dnp,dnp" V 1130 2600 60  0001 C CNN "vend1,vend1#"
 	1    3850 5925
 	1    0    0    -1  
 $EndComp
-Text Notes 2675 6350 0    60   ~ 0
-10.0k LS4.2\n31.6k LS4.9
+Text Notes 2620 6350 0    60   ~ 0
+10.0k LSU4.2\n31.6k LS4U.9
 $Comp
 L R R3
 U 1 1 57722197
@@ -1058,5 +1058,5 @@ F 5 "DIGI,541-4.70KCCT-ND" V -1220 975 60  0001 C CNN "vend1,vend1#"
 	0    1    1    0   
 $EndComp
 Text Notes 3980 7815 0    60   ~ 0
-LSU4.2: R2=DNP, W1=0R\nLSU4.9: R2=21.6R, W1=DNP\n\nLSU4.2: R9=82.5, R10=DNP, W2=0R\nLSU4.9: R9=301, R10=220, W2=DNP
+LSU4.2: R2=DNP, W1=0R\nLSU4.9: R2=21.6k ohm, W1=DNP\n\nLSU4.2: R9=82.5, R10=DNP, W2=0R\nLSU4.9: R9=301, R10=DNP, W2=0R
 $EndSCHEMATC
