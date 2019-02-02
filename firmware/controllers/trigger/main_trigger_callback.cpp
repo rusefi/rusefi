@@ -33,7 +33,7 @@
 
 #endif
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
 #include "main_trigger_callback.h"
 #include "efiGpio.h"

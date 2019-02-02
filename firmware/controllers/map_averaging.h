@@ -12,7 +12,7 @@
 
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 void mapAveragingAdcCallback(adcsample_t newValue);
 #endif
 

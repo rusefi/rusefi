@@ -16,3 +16,4 @@
 16)                  Sepeate the signald GND and the power GND for a better design
 17)                  and the GND ring around pin 22 CF for better RF rejection. 
 18) RESOLVED IN R0.4.1 change label from sf.net/projects/rusefi/ to rusefi.com
+18) RESOLVED IN R0.4.2 Added LSU 4.2 and 4.9 notes about installing W1 and W2, etc. 

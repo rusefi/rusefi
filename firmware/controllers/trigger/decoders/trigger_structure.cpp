@@ -368,6 +368,7 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
 }
 
 void TriggerShape::prepareShape() {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
 		int triggerShapeIndex = findAngleIndex(angle);
@@ -377,6 +378,7 @@ void TriggerShape::prepareShape() {
 		}
 		triggerIndexByAngle[angle] = triggerShapeIndex;
 	}
+#endif
 }
 
 void TriggerShape::setTriggerSynchronizationGap(float syncRatio) {

@@ -146,7 +146,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->adcVcc = ADC_VCC;
 
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->pedalPositionAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 	boardConfiguration->injectionPins[0] = is469 ? GPIOD_9  : GPIOB_14; // #1
 	boardConfiguration->injectionPins[1] = is469 ? GPIOD_15 : GPIOC_7;  // #2

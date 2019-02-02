@@ -47,6 +47,8 @@ extern fuel_Map3D_t ve2Map;
 extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
@@ -149,6 +151,7 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e mode = isCranking ?
 			engineConfiguration->crankingInjectionMode :
@@ -188,6 +191,9 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0; // we can end up here during configuration reset
 	}
 	return theoreticalInjectionLength * engineConfiguration->globalFuelCorrection + injectorLag;
+#else
+	return 0;
+#endif
 }
 
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -292,6 +298,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
  * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
  */
 floatms_t getBaseTableFuel(int rpm, float engineLoad) {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD_2, "NaN engine load");
 		return 0;
@@ -303,6 +310,9 @@ floatms_t getBaseTableFuel(int rpm, float engineLoad) {
 		warning(CUSTOM_ERR_FUEL_TABLE_NOT_READY, "baseFuel table not ready");
 	}
 	return result;
+#else
+	return 0;
+#endif
 }
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -349,3 +359,5 @@ float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGIN
 	const float cc_min_to_L_h = 60.0f / 1000.0f;
 	return fuelRate * CONFIG(injector.flow) * cc_min_to_L_h;
 }
+
+#endif

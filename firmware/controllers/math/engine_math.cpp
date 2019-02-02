@@ -242,6 +242,7 @@ static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	float dwellMs;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -257,6 +258,9 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 	}
 	return dwellMs;
+#else
+	return 0;
+#endif
 }
 
 
@@ -453,9 +457,11 @@ void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAM
  */
 ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ignition_mode_e ignitionMode = CONFIG(ignitionMode);
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	// In spin-up cranking mode we don't have full phase sync. info yet, so wasted spark mode is better
 	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)))
 		ignitionMode = IM_WASTED_SPARK;
+#endif /* EFI_SHAFT_POSITION_INPUT */
 	return ignitionMode;
 }
 
@@ -490,7 +496,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	TRIGGER_SHAPE(prepareShape());
 }
 
-#endif
+#endif /* EFI_ENGINE_CONTROL */
 
 void setFuelRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTableBin(config->fuelRpmBins, FUEL_RPM_COUNT, from, to);

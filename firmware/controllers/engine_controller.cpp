@@ -277,6 +277,7 @@ static void invokePerSecond(void) {
 }
 
 static void periodicSlowCallback(Engine *engine) {
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
@@ -319,6 +320,7 @@ static void periodicSlowCallback(Engine *engine) {
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	scheduleNextSlowInvocation();
+#endif
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -596,7 +598,9 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	printf("commonInitEngineController\n");
 #endif
 	initConfigActions();
+#if EFI_ENABLE_MOCK_ADC
 	initMockVoltage();
+#endif /* EFI_ENABLE_MOCK_ADC */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	initSignalExecutor();
@@ -719,7 +723,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 	if (CONFIGB(isEngineControlEnabled)) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
@@ -768,5 +772,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190125;
+	return 20190130;
 }
