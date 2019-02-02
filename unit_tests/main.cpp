@@ -56,7 +56,8 @@ GTEST_API_ int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests
 	//::testing::GTEST_FLAG(filter) = "*testFasterEngineSpinningUp*";
-	return RUN_ALL_TESTS();
+	int result = RUN_ALL_TESTS();
+	return result == 0 ? 0 : -1;
 }
 
 void print(const char *format, ...) {
