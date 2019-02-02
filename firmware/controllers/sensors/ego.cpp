@@ -92,20 +92,20 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_CJ125 || defined(__DOXYGEN__)
+#if (EFI_CJ125 && HAL_USE_SPI) || defined(__DOXYGEN__)
 	if (CONFIGB(isCJ125Enabled)) {
 		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-#endif /* EFI_CJ125 */
+#endif /* EFI_CJ125 && HAL_USE_SPI */
 	return engineConfiguration->afr.hwChannel != EFI_ADC_NONE;
 }
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_CJ125 || defined(__DOXYGEN__)
+#if (EFI_CJ125 && HAL_USE_SPI) || defined(__DOXYGEN__)
 	if (CONFIGB(isCJ125Enabled)) {
 		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-#endif /* EFI_CJ125 */
+#endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &CONFIG(afr);
 
 	float volts = getVoltageDivided("ego", sensor->hwChannel);
