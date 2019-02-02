@@ -8,7 +8,7 @@
 #ifndef HW_LAYER_SENSORS_CJ125_H_
 #define HW_LAYER_SENSORS_CJ125_H_
 
-#include "engine_configuration.h"
+#include "CJ125_logic.h"
 
 // CJ125 SPI Registers
 #define	IDENT_REG_RD					0x48 // Read Identity Register
@@ -98,18 +98,6 @@
 #define CJ125_TICK_DELAY 				20		// 20 ms
 #define CJ125_IDLE_TICK_DELAY 			1000	// 1 sec
 
-// Heater params for Idle(cold), Preheating and Control stages
-// See http://www.waltech.com/wideband-files/boschsensordatasheet.htm
-#define CJ125_HEATER_IDLE_RATE			0.15f	// for a very cold sensor (presumably), we allow 15% duty max.
-#define CJ125_HEATER_PREHEAT_PERIOD 	300		// 300 ms
-#define CJ125_HEATER_CONTROL_PERIOD		180		// 180 ms
-#define CJ125_HEATER_OVERHEAT_PERIOD	500		// 500 ms
-#define CJ125_HEATER_PWM_FREQ 			100		// 100 Hz
-#define CJ125_HEATER_PREHEAT_RATE		(0.4f/14.0f)	// Assuming that dutycycle=1.0 equals to 14V, and max.allowed heater rate is 0.4V/sec
-
-#define CJ125_HEATER_LIMITING_VOLTAGE	12.0f	// Do not allow more than 90% heating for high battery voltage (>12V).
-#define CJ125_HEATER_LIMITING_RATE		0.92f	// This prevents sensor overheating.
-
 #define CJ125_CALIBRATE_NUM_SAMPLES 	10
 
 #define CJ125_UR_PREHEAT_THR			2.0f	// Ur > 2.0 Volts is too cold to control with PID
@@ -119,7 +107,6 @@
 #define CJ125_UACAL_MIN					1.0f	// Calibration UA values range
 #define CJ125_UACAL_MAX					2.0f
 
-#define CJ125_HEATER_MIN_DUTY			0.1f
 #define CJ125_PREHEAT_MIN_DUTY			0.9f
 
 //#define CJ125_PREHEAT_TIMEOUT	90		// 90 secs
@@ -141,54 +128,6 @@
 // Returned if there's no valid measurement
 #define CJ125_AFR_NAN					0.0f
 
-typedef enum {
-	CJ125_IDLE,
-	CJ125_INIT,
-	CJ125_CALIBRATION,
-	CJ125_PREHEAT,
-	CJ125_HEAT_UP,
-	CJ125_READY,
-	CJ125_OVERHEAT,
-	CJ125_ERROR,
-
-} cj125_state_e;
-
-typedef enum {
-	CJ125_ERROR_NONE = 0,
-	CJ125_ERROR_HEATER_MALFUNCTION = 1,
-	CJ125_ERROR_OVERHEAT = 2,
-	CJ125_ERROR_WRONG_IDENT = 3,
-	CJ125_ERROR_WRONG_INIT = 4,
-
-} cj125_error_e;
-
-typedef enum {
-	CJ125_MODE_NONE,
-	CJ125_MODE_NORMAL_8,
-	CJ125_MODE_NORMAL_17,
-	CJ125_MODE_CALIBRATION,
-} cj125_mode_e;
-
-typedef enum {
-	CJ125_LSU_42 = 0,
-	CJ125_LSU_49 = 1,
-
-} cj125_sensor_type_e;
-
-class CJ125 {
-public:
-	CJ125();
-
-	// Used by CJ125 driver state machine
-	volatile cj125_state_e state;
-	// Last Error code
-	volatile cj125_error_e errorCode;
-
-
-	void cjSetError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX);
-	bool cjIsWorkingState(void);
-
-};
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);

@@ -89,6 +89,7 @@ include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include test.mk
 
 # Define linker script file here
@@ -120,7 +121,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(PROJECT_DIR)/controllers/error_handling.cpp \
 	$(HW_LAYER_EMS_CPP) \
-		  $(PROJECT_DIR)/hw_layer/sensors/CJ125.cpp \
+	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
 	main.cpp
 

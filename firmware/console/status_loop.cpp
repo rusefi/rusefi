@@ -814,11 +814,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField2 = instance.invalidHip9011ResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
-#if EFI_CJ125 || defined(__DOXYGEN__)
+#if (EFI_CJ125 && HAL_USE_SPI) || defined(__DOXYGEN__)
 	case DBG_CJ125:
 		cjPostState(tsOutputChannels);
 		break;
-#endif /* EFI_CJ125 */
+#endif /* EFI_CJ125 && HAL_USE_SPI */
 #if EFI_MAP_AVERAGING
 		case DBG_MAP:
 		postMapState(tsOutputChannels);

@@ -6,9 +6,18 @@
  */
 
 #include "gtest/gtest.h"
+#include "CJ125_logic.h"
+#include "engine_test_helper.h"
 
-TEST(testCJ125, todo) {
-	EXPECT_EQ(1, 2 - 1);
+TEST(testCJ125, testInitialState) {
+	CJ125 cj;
+
+	ASSERT_EQ(cj.state, CJ125_INIT);
+	ASSERT_FALSE(cj.isWorkingState());
+
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	ASSERT_EQ(engine->sensors.vBatt, 0);
+
 }
 
 
