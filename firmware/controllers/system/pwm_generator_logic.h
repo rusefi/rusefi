@@ -96,7 +96,7 @@ public:
 	/**
 	 * this main callback is invoked when it's time to switch level on any of the output channels
 	 */
-	pwm_gen_callback *stateChangeCallback;
+	pwm_gen_callback *stateChangeCallback = NULL;
 private:
 	/**
 	 * float value of PWM period
