@@ -29,8 +29,6 @@ EXTERN_ENGINE;
 #include "pin_repository.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 
-static OutputPin wboHeaterPin;
-static OutputPin cj125Cs;
 static Logging *logger;
 static unsigned char tx_buff[2];
 static unsigned char rx_buff[1];
@@ -351,15 +349,6 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-static void cjStartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	scheduleMsg(logger, "cj125: Starting heater control");
-	// todo: use custom pin state method, turn pin off while not running
-	startSimplePwmExt(&globalInstance.wboHeaterControl, "wboHeaterPin",
-			&engine->executor,
-			CONFIGB(wboHeaterPin),
-			&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f, applyPinState);
-}
-
 void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	errorCode = errCode;
 	state = CJ125_ERROR;
@@ -411,18 +400,16 @@ void cj125defaultPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	cj125Cs.initPin("cj125 CS", CONFIGB(cj125CsPin),
+	globalInstance.cj125Cs.initPin("cj125 CS", CONFIGB(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
 	// Idle CS pin - SPI CS is high when idle
-	cj125Cs.setValue(true);
+	globalInstance.cj125Cs.setValue(true);
 
-#if EFI_PROD_CODE
 	cj125spicfg.ssport = getHwPort("cj125", CONFIGB(cj125CsPin));
 	cj125spicfg.sspad = getHwPin("cj125", CONFIGB(cj125CsPin));
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 	scheduleMsg(logger, "cj125: Starting SPI driver");
 	spiStart(driver, &cj125spicfg);
-#endif /* EFI_PROD_CODE */
 }
 
 /**
@@ -595,11 +582,9 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!CONFIGB(isCJ125Enabled))
 		return false;
-#if ! EFI_UNIT_TEST
 	// check if controller is functioning
 	if (!globalInstance.isWorkingState())
 		return false;
-#endif /* EFI_UNIT_TEST */
 	// check if amplification is turned on
 	if (amplCoeff == 0.0f)
 		return false;
@@ -642,8 +627,8 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	cjInitPid(PASS_ENGINE_PARAMETER_SIGNATURE);
 	cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE);
-	cjStartHeaterControl(PASS_ENGINE_PARAMETER_SIGNATURE);
-	globalInstance.SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
+	scheduleMsg(logger, "cj125: Starting heater control");
+	globalInstance.StartHeaterControl(applyPinState PASS_ENGINE_PARAMETER_SUFFIX);
 	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
 #ifdef CJ125_DEBUG

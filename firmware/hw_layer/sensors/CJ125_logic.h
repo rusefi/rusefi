@@ -54,6 +54,8 @@ public:
 	efitick_t prevNt;
 	float heaterDuty = 0.0f;
 
+	OutputPin wboHeaterPin;
+	OutputPin cj125Cs;
 
 	// Used by CJ125 driver state machine
 	volatile cj125_state_e state = CJ125_INIT;
@@ -64,6 +66,7 @@ public:
 	bool isWorkingState(void);
 	void SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 // Heater params for Idle(cold), Preheating and Control stages
