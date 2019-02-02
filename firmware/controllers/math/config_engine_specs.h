@@ -36,6 +36,7 @@
 
 #define get_operationMode CONFIG_ACCESS_FOR_CONFIG_HEADER_ONLY(operationMode)
 #define get_specs_displacement CONFIG_ACCESS_FOR_CONFIG_HEADER_ONLY(specs.displacement)
+#define get_specs_cylindersCount CONFIG_ACCESS_FOR_CONFIG_HEADER_ONLY(specs.cylindersCount)
 #define get_injector_flow CONFIG_ACCESS_FOR_CONFIG_HEADER_ONLY(injector.flow)
 
 #endif /* CONTROLLERS_MATH_CONFIG_ENGINE_SPECS_H_ */

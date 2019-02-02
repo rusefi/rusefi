@@ -89,7 +89,7 @@ static float getCycleAirMass(float volumetricEfficiency, float MAP, float tempK 
 
 float getCylinderAirMass(float volumetricEfficiency, float MAP, float tempK DECLARE_GLOBAL_SUFFIX) {
 	return getCycleAirMass(volumetricEfficiency, MAP, tempK PASS_GLOBAL_SUFFIX)
-			/ get_specs_displacement;
+			/ get_specs_cylindersCount;
 }
 
 /**
