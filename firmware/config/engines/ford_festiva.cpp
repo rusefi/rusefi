@@ -120,6 +120,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
+	/**
+	 * pin PA4: jumper W47<>W47 - ecu plug 3I
+	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
