@@ -45,3 +45,29 @@ void CJ125::StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENG
 			&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f, stateChangeCallback);
 	SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
+
+void CJ125::cjIdentify(void) {
+	// read Ident register
+	int ident = spi->ReadRegister(IDENT_REG_RD) & CJ125_IDENT_MASK;
+
+	// set initial registers
+	spi->WriteRegister(INIT_REG1_WR, CJ125_INIT1_NORMAL_17);
+	spi->WriteRegister(INIT_REG2_WR, CJ125_INIT2_DIAG);
+	// check if regs are ok
+	int init1 = spi->ReadRegister(INIT_REG1_RD);
+	int init2 = spi->ReadRegister(INIT_REG2_RD);
+
+	diag = spi->ReadRegister(DIAG_REG_RD);
+	scheduleMsg(logger, "cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
+	if (ident != CJ125_IDENT) {
+		scheduleMsg(logger, "cj125: Error! Wrong ident! Cannot communicate with CJ125!");
+	}
+	if (init1 != CJ125_INIT1_NORMAL_17 || init2 != CJ125_INIT2_DIAG) {
+		scheduleMsg(logger, "cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
+	}
+#if 0
+	if (diag != CJ125_DIAG_NORM) {
+		scheduleMsg(logger, "cj125: Diag error!");
+	}
+#endif
+}

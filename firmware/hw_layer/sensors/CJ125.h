@@ -10,13 +10,6 @@
 
 #include "CJ125_logic.h"
 
-// CJ125 SPI Registers
-#define	IDENT_REG_RD					0x48 // Read Identity Register
-#define	INIT_REG1_WR					0x56 // Write To Initialization Register 1
-#define	INIT_REG2_WR					0x5A // Write To Initialization Register 2
-#define	INIT_REG1_RD					0x6C // Read Initialization Register 1
-#define	DIAG_REG_RD						0x78 // Read Diagnostics Register
-#define	INIT_REG2_RD					0x7E // Read Initialization Register 2
 
 /**********************************************************************************
  * Courtesy "Turbo SOB"
@@ -80,19 +73,6 @@
                             10 = Short circuit to Vbatt
                             11 = No Failure
 ***********************************************************************************/
-
-#define	CJ125_INIT1_NORMAL_8			0x88 // 0b10001000 (Normal mode, Amplification 8)
-#define	CJ125_INIT1_NORMAL_17			0x89 // 0b10001001 (Normal mode, Amplification 17)
-#define	CJ125_INIT1_CALBRT				0x9D // 0b10011101 (Calibration mode, LA=1, RA=1)
-
-#define	CJ125_INIT2_NORMAL				0x00 // 0b00000000, (Normal mode)
-#define	CJ125_INIT2_DIAG 				0x10 // 0b00010000, (Extended diagnostics mode, SET_DIA_Q=1)
-#define	CJ125_INIT2_RESET				0x40 // 0b01000000, SRESET=1
-
-#define	CJ125_DIAG_NORM					0xFF // no errors
-
-#define	CJ125_IDENT						0x60 // 96
-#define	CJ125_IDENT_MASK 				0xF8
 
 #define CJ125_CALIBRATION_DELAY 		1000 	// 1 sec
 #define CJ125_TICK_DELAY 				20		// 20 ms
