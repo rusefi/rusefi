@@ -47,10 +47,6 @@ static SPIConfig cj125spicfg = { NULL,
 	/* HW dependent part.*/
 	NULL, 0, SPI_CR1_MSTR | SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
-
-// Chip diagnostics register contents
-static volatile int diag = 0;
-
 // Current values
 static volatile float vUa = 0.0f;
 static volatile float vUr = 0.0f;
@@ -169,7 +165,7 @@ static uint32_t get16bitFromVoltage(float v) {
 
 static void cjPrintData(void) {
 #ifdef CJ125_DEBUG
-	scheduleMsg(logger, "cj125: state=%d diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)", state, diag, vUa, vUr, vUaCal, vUrCal);
+	scheduleMsg(logger, "cj125: state=%d diag=0x%x (vUa=%.3f vUr=%.3f) (vUaCal=%.3f vUrCal=%.3f)", state, globalInstance.diag, vUa, vUr, vUaCal, vUrCal);
 #endif
 }
 
@@ -217,31 +213,18 @@ static void cjSetMode(cj125_mode_e m) {
 	mode = m;
 }
 
-static void cjIdentify(void) {
-	// read Ident register
-	int ident = cjReadRegister(IDENT_REG_RD) & CJ125_IDENT_MASK;
+class RealSpi : public Cj125SpiStream {
+public:
+	uint8_t ReadRegister(uint8_t reg) override {
+		return cjReadRegister(reg);
+	}
 
-	// set initial registers
-	cjWriteRegister(INIT_REG1_WR, CJ125_INIT1_NORMAL_17);
-	cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_DIAG);
-	// check if regs are ok
-	int init1 = cjReadRegister(INIT_REG1_RD);
-	int init2 = cjReadRegister(INIT_REG2_RD);
+	void WriteRegister(uint8_t regAddr, uint8_t regValue) {
+		cjWriteRegister(regAddr, regValue);
+	}
+};
 
-	diag = cjReadRegister(DIAG_REG_RD);
-	scheduleMsg(logger, "cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
-	if (ident != CJ125_IDENT) {
-		scheduleMsg(logger, "cj125: Error! Wrong ident! Cannot communicate with CJ125!");
-	}
-	if (init1 != CJ125_INIT1_NORMAL_17 || init2 != CJ125_INIT2_DIAG) {
-		scheduleMsg(logger, "cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
-	}
-#if 0
-	if (diag != CJ125_DIAG_NORM) {
-		scheduleMsg(logger, "cj125: Diag error!");
-	}
-#endif
-}
+static RealSpi spi;
 
 static void cjUpdateAnalogValues() {
 #if EFI_PROD_CODE
@@ -257,7 +240,7 @@ static void cjUpdateAnalogValues() {
 }
 
 static void cjCalibrate(void) {
-	cjIdentify();
+	globalInstance.cjIdentify();
 
 	scheduleMsg(logger, "cj125: Starting calibration...");
 	cjSetMode(CJ125_MODE_CALIBRATION);
@@ -299,7 +282,7 @@ static void cjCalibrate(void) {
 	chThdSleepMilliseconds(CJ125_CALIBRATION_DELAY);
 #endif
 	// check if everything is ok
-	diag = cjReadRegister(DIAG_REG_RD);
+	globalInstance.diag = cjReadRegister(DIAG_REG_RD);
 	cjUpdateAnalogValues();
 	cjPrintData();
 
@@ -321,7 +304,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 	
-	cjIdentify();
+	globalInstance.cjIdentify();
 
 	// Load calibration values
 #if EFI_PROD_CODE
@@ -434,7 +417,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			cjSetMode(CJ125_MODE_NORMAL_17);
 		}
 		
-		diag = cjReadRegister(DIAG_REG_RD);
+		globalInstance.diag = cjReadRegister(DIAG_REG_RD);
 
 		// check heater state
 		if (vUr > CJ125_UR_PREHEAT_THR || instance->heaterDuty < CJ125_PREHEAT_MIN_DUTY) {
@@ -605,12 +588,14 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField6 = vUaCal;
 	tsOutputChannels->debugFloatField7 = vUrCal;
 	tsOutputChannels->debugIntField1 = globalInstance.state;
-	tsOutputChannels->debugIntField2 = diag;
+	tsOutputChannels->debugIntField2 = globalInstance.diag;
 }
 #endif /* EFI_TUNER_STUDIO */
 
 void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
+	globalInstance.spi = &spi;
+	globalInstance.logger = sharedLogger;
 
 	if (!CONFIGB(isCJ125Enabled))
 		return;
