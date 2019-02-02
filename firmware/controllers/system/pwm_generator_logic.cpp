@@ -75,6 +75,15 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
 	}
+	if (dutyCycle == 0.0f)
+		/**
+		 * set the pin low just to be super sure
+		 * this custom handling of zero value comes from CJ125 heater code
+		 * TODO: is this really needed? cover by unit test?
+		 */
+		stateChangeCallback(this, 0);
+	}
+
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
 		mode = PM_ZERO;
 	} else if (dutyCycle > FULL_PWM_THRESHOLD) {

@@ -384,9 +384,6 @@ static void cjSetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: this should be moved to wboHeaterControl.setPwmDutyCycle()
 	wboHeaterControl.setFrequency(heaterDuty == 0.0f ? NAN : CJ125_HEATER_PWM_FREQ);
 	wboHeaterControl.setSimplePwmDutyCycle(heaterDuty);
-	// This fixes pwm sticking to the last pin state
-	if (heaterDuty == 0.0f)
-		wboHeaterPin.setValue(false);
 }
 
 static void cjSetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
