@@ -1,0 +1,2 @@
+ 1)                   set solder mask to 0.003 inches, per OSHPark suggestion.
+ 2)                   make footprint pads longer so that we have some metal not covered by the chip
