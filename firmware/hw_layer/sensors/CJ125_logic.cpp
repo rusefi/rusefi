@@ -10,7 +10,8 @@
 
 EXTERN_ENGINE;
 
-CJ125::CJ125() : wboHeaterControl("wbo") {
+CJ125::CJ125() : wboHeaterControl("wbo"),
+		heaterPid(&heaterPidConfig){
 }
 
 void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -70,4 +71,56 @@ void CJ125::cjIdentify(void) {
 		scheduleMsg(logger, "cj125: Diag error!");
 	}
 #endif
+}
+
+void CJ125::cjSetMode(cj125_mode_e m) {
+	if (mode == m)
+		return;
+	switch (m) {
+	case CJ125_MODE_NORMAL_8:
+		spi->WriteRegister(INIT_REG1_WR, CJ125_INIT1_NORMAL_8);
+		amplCoeff = 1.0f / 8.0f;
+		break;
+	case CJ125_MODE_NORMAL_17:
+		spi->WriteRegister(INIT_REG1_WR, CJ125_INIT1_NORMAL_17);
+		amplCoeff = 1.0f / 17.0f;
+		break;
+	case CJ125_MODE_CALIBRATION:
+		spi->WriteRegister(INIT_REG1_WR, CJ125_INIT1_CALBRT);
+		amplCoeff = 0.0f;
+		break;
+	default:
+		;
+	}
+	mode = m;
+}
+
+bool CJ125::isValidState() {
+	// check if controller is functioning
+	if (!isWorkingState())
+		return false;
+	// check if amplification is turned on
+	if (amplCoeff == 0.0f)
+		return false;
+	// check if UA calibration value is valid
+	if (vUaCal < CJ125_UACAL_MIN || vUaCal > CJ125_UACAL_MAX)
+		return false;
+	return true;
+}
+
+void CJ125::cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if(engineConfiguration->cj125isLsu49) {
+		heaterPidConfig.pFactor = CJ125_PID_LSU49_P;
+		heaterPidConfig.iFactor = CJ125_PID_LSU49_I;
+	} else {
+		heaterPidConfig.pFactor = CJ125_PID_LSU42_P;
+		heaterPidConfig.iFactor = CJ125_PID_LSU42_I;
+	}
+	heaterPidConfig.dFactor = 0.0f;
+	heaterPidConfig.minValue = 0;
+	heaterPidConfig.maxValue = 1;
+	heaterPidConfig.offset = 0;
+	// todo: period?
+	heaterPidConfig.period = 1.0f;
+	heaterPid.reset();
 }

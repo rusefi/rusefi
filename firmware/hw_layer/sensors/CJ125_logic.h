@@ -10,6 +10,7 @@
 
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
+#include "pid.h"
 
 typedef enum {
 	CJ125_LSU_42 = 0,
@@ -65,6 +66,24 @@ public:
 	efitick_t prevNt;
 	float heaterDuty = 0.0f;
 
+	pid_s heaterPidConfig;
+	Pid heaterPid;
+
+	volatile cj125_mode_e mode = CJ125_MODE_NONE;
+
+	// Amplification coefficient, needed by cjGetAfr()
+	volatile float amplCoeff = 0.0f;
+	// Calculated Lambda-value
+	volatile float lambda = 1.0f;
+
+	// Current values
+	volatile float vUa = 0.0f;
+	volatile float vUr = 0.0f;
+
+	// Calibration values
+	volatile float vUaCal = 0.0f;
+	volatile float vUrCal = 0.0f;
+
 	OutputPin wboHeaterPin;
 	OutputPin cj125Cs;
 
@@ -79,6 +98,9 @@ public:
 	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void cjIdentify(void);
+	void cjSetMode(cj125_mode_e m);
+	bool isValidState();
+	void cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 };
 
 // Heater params for Idle(cold), Preheating and Control stages
@@ -115,5 +137,15 @@ public:
 #define	CJ125_INIT2_RESET				0x40 // 0b01000000, SRESET=1
 
 #define	CJ125_DIAG_NORM					0xFF // no errors
+
+#define CJ125_UACAL_MIN					1.0f	// Calibration UA values range
+#define CJ125_UACAL_MAX					2.0f
+
+// Some experimental magic values for heater PID regulator
+#define CJ125_PID_LSU42_P				(80.0f / 16.0f * 5.0f / 1024.0f)
+#define CJ125_PID_LSU42_I				(25.0f / 16.0f * 5.0f / 1024.0f)
+
+#define CJ125_PID_LSU49_P               (8.0f)
+#define CJ125_PID_LSU49_I               (0.003f)
 
 #endif /* HW_LAYER_SENSORS_CJ125_LOGIC_H_ */

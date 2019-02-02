@@ -84,9 +84,6 @@
 #define CJ125_UR_OVERHEAT_THR			0.5f	// Ur < 0.5 Volts is overheat
 #define CJ125_UR_GOOD_THR				1.4f
 
-#define CJ125_UACAL_MIN					1.0f	// Calibration UA values range
-#define CJ125_UACAL_MAX					2.0f
-
 #define CJ125_PREHEAT_MIN_DUTY			0.9f
 
 //#define CJ125_PREHEAT_TIMEOUT	90		// 90 secs
@@ -97,13 +94,6 @@
 #define CJ125_PUMP_SHUNT_RESISTOR		61.9f
 #define CJ125_STOICH_RATIO				14.7f
 #define CJ125_PUMP_CURRENT_FACTOR		1000.0f
-
-// Some experimental magic values for heater PID regulator
-#define CJ125_PID_LSU42_P				(80.0f / 16.0f * 5.0f / 1024.0f)
-#define CJ125_PID_LSU42_I				(25.0f / 16.0f * 5.0f / 1024.0f)
-
-#define CJ125_PID_LSU49_P               (8.0f)
-#define CJ125_PID_LSU49_I               (0.003f)
 
 // Returned if there's no valid measurement
 #define CJ125_AFR_NAN					0.0f
