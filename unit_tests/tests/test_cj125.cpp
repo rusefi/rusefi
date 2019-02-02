@@ -9,14 +9,22 @@
 #include "CJ125_logic.h"
 #include "engine_test_helper.h"
 
+static void applyHeaterPinState(PwmConfig *state, int stateIndex) {
+
+}
+
 TEST(testCJ125, testInitialState) {
 	CJ125 cj;
 
 	ASSERT_EQ(cj.state, CJ125_INIT);
 	ASSERT_FALSE(cj.isWorkingState());
+	ASSERT_EQ(cj.heaterDuty, 0);
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 	ASSERT_EQ(engine->sensors.vBatt, 0);
+
+	cj.StartHeaterControl(&applyHeaterPinState PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ(cj.heaterDuty, CJ125_HEATER_IDLE_RATE);
 
 }
 
