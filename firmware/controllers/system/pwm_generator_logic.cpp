@@ -254,7 +254,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTime
 		for (int channelIndex = 0; channelIndex < waveCount; channelIndex++) {
 //			print("output switch time index (%d/%d) at %.2f to %d\r\n", phaseIndex, channelIndex,
 //					switchTimes[phaseIndex], pinStates[waveIndex][phaseIndex]);
-			int value = pinStates[channelIndex][phaseIndex];
+			pin_state_t value = pinStates[channelIndex][phaseIndex];
 			state->multiWave.channels[channelIndex].setState(phaseIndex, value);
 		}
 	}
