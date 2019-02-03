@@ -140,6 +140,6 @@ void startSimplePwmExt(SimplePwm *state,
 		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
 
 void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes,
-		int waveCount, pin_state_t **pinStates);
+		int waveCount, pin_state_t *const *pinStates);
 
 #endif /* PWM_GENERATOR_LOGIC_H_ */

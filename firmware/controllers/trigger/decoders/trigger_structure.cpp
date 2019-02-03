@@ -225,7 +225,7 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 				shapeDefinitionError = true;
 				return;
 			}
-			wave->setState(/* channelIndex */ 0, /* value */ initialState[i]);
+			wave->setState(/* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
 		isFrontEvent[0] = TV_RISE == stateParam;
