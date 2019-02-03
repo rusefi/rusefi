@@ -118,10 +118,10 @@ void miataNAcommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
+	// Frankenso middle plug 2J, W32 top <> W47 bottom "#5 Green" jumper, not OEM
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	engineConfiguration->map.sensor.type = MT_TOYOTA_89420_02010;
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 
@@ -161,11 +161,11 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 656; // convert 12to10 bit (ADC/4)
 
 
-	/**
-	 * oil pressure line
-	 * adc4/pa4/W47
-	 */
-	engineConfiguration->fsioAdc[0] = EFI_ADC_4;
+//	/**
+//	 * oil pressure line
+//	 * adc4/pa4/W47
+//	 */
+//	engineConfiguration->fsioAdc[0] = EFI_ADC_NONE;
 
 
 	// warning light
