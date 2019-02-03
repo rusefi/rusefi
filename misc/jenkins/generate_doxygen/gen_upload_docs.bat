@@ -1,5 +1,10 @@
 
-echo Should be executed from root folder
+echo Should be executed from project root folder
+
+rem ibom is part of Doxygen job simply in order to reduce workspace HDD usage on my tiny build server
+misc\jenkins\InteractiveHtmlBom\run.bat
+ncftpput -R -v -u u71977750-docs -p %RUSEFI_DOXYGEN_FTP_PASS% %FTP_SERVER% /ibom hardware/ibom/*
+
 pwd
 cd firmware
 

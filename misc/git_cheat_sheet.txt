@@ -81,6 +81,9 @@ git remote remove origin
 git remote add origin https://github.com/rusefi/RomRaider_copy_2.git
 git push -u origin master
 
+=============================
+rusEfi .git folder take about 500M on disk. Is it possible to reduce this size?
 
+A proper answer is to split or re-create rusefi repo, but in the meantime:
 
-
+See git_gc.bat
