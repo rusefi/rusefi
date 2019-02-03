@@ -20,8 +20,7 @@
 
 #include "trigger_mazda.h"
 
-// todo: remove useOnlyRisingEdgeForTrigger parameter from here see https://github.com/rusefi/rusefi/issues/635
-void initializeMazdaMiataNaShape(TriggerShape *s, bool useOnlyRisingEdgeForTrigger) {
+void initializeMazdaMiataNaShape(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
 	s->useRiseEdge = false;
