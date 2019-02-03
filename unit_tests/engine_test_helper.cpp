@@ -75,7 +75,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
-	resetTriggerConfigChangedForUnitTest();
 }
 
 /**
@@ -213,11 +212,11 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
-	ASSERT_EQ( 0,  readIfTriggerConfigChangedForUnitTest()) << "trigger #1";
+	ASSERT_EQ( 0,  readIfTriggerConfigChangedForUnitTest(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
 
 	engineConfiguration->trigger.type = trigger;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 1,  readIfTriggerConfigChangedForUnitTest()) << "trigger #2";
+	ASSERT_EQ( 1,  readIfTriggerConfigChangedForUnitTest(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
 
 	eth->applyTriggerShape();
 }
