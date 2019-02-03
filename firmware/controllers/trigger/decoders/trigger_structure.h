@@ -188,12 +188,12 @@ public:
 	// todo: maybe even automate this flag calculation?
 	pin_state_t initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	int8_t isFrontEvent[PWM_PHASE_MAX_COUNT];
+	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 	/**
 	 * this table translates trigger definition index into 'front-only' index. This translation is not so trivial
 	 * in case of a multi-channel signal with overlapping waves, for example Ford Aspire/Mitsubishi
 	 */
-	int frontOnlyIndexes[PWM_PHASE_MAX_COUNT];
+	int riseOnlyIndexes[PWM_PHASE_MAX_COUNT];
 
 	/**
 	 * This is a pretty questionable option which is considered by 'addEvent' method

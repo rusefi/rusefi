@@ -87,8 +87,8 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
 	previousAngle = 0;
-	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
-	memset(isFrontEvent, 0, sizeof(isFrontEvent));
+	memset(riseOnlyIndexes, 0, sizeof(riseOnlyIndexes));
+	memset(isRiseEvent, 0, sizeof(isRiseEvent));
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	memset(&triggerSignals, 0, sizeof(triggerSignals));
 #endif
@@ -227,7 +227,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 			wave->setState(/* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
-		isFrontEvent[0] = TV_RISE == stateParam;
+		isRiseEvent[0] = TV_RISE == stateParam;
 		wave.setSwitchTime(0, angle);
 		wave.channels[channelIndex].setState(/* channelIndex */ 0, /* value */ state);
 		return;
@@ -255,7 +255,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 */
-	isFrontEvent[index] = TV_RISE == stateParam;
+	isRiseEvent[index] = TV_RISE == stateParam;
 
 	if (index != privateTriggerDefinitionSize) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");

@@ -125,7 +125,7 @@ void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE
 	float firstAngle = shape->getAngle(shape->triggerShapeSynchPointIndex);
 	assertAngleRange(shape->triggerShapeSynchPointIndex, "firstAngle", CUSTOM_ERR_6551);
 
-	int frontOnlyIndex = 0;
+	int riseOnlyIndex = 0;
 
 	for (int eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
@@ -133,7 +133,7 @@ void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE
 			shape->eventAngles[0] = 0;
 			// this value would be used in case of front-only
 			shape->eventAngles[1] = 0;
-			shape->frontOnlyIndexes[0] = 0;
+			shape->riseOnlyIndexes[0] = 0;
 		} else {
 			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_ERR_6552);
 			int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
@@ -143,16 +143,16 @@ void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE
 			efiAssertVoid(CUSTOM_ERR_6596, !cisnan(angle), "trgSyncNaN");
 			fixAngle(angle, "trgSync", CUSTOM_ERR_6559);
 			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
-				if (shape->isFrontEvent[triggerDefinitionIndex]) {
-					frontOnlyIndex += 2;
-					shape->eventAngles[frontOnlyIndex] = angle;
-					shape->eventAngles[frontOnlyIndex + 1] = angle;
+				if (shape->isRiseEvent[triggerDefinitionIndex]) {
+					riseOnlyIndex += 2;
+					shape->eventAngles[riseOnlyIndex] = angle;
+					shape->eventAngles[riseOnlyIndex + 1] = angle;
 				}
 			} else {
 				shape->eventAngles[eventIndex] = angle;
 			}
 
-			shape->frontOnlyIndexes[eventIndex] = frontOnlyIndex;
+			shape->riseOnlyIndexes[eventIndex] = riseOnlyIndex;
 		}
 	}
 }
