@@ -466,7 +466,7 @@ void configureNeon1995TriggerShape(TriggerShape *s) {
 	s->useRiseEdge = false;
 
 
-	s->initialState[T_PRIMARY] = 1;
+	s->initialState[T_PRIMARY] = TV_RISE;
 
 	configureNeon1995TriggerShapeCommon(true, s);
 

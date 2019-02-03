@@ -69,7 +69,7 @@ void MultiWave::checkSwitchTimes(int size) {
 	}
 }
 
-int MultiWave::getChannelState(int channelIndex, int phaseIndex) const {
+pin_state_t MultiWave::getChannelState(int channelIndex, int phaseIndex) const {
 	return channels[channelIndex].pinStates[phaseIndex];
 }
 

@@ -19,7 +19,7 @@
  * todo: migrate to bit-array to save memory?
  * this would cost some CPU cycles. see std::vector<bool>
  */
-typedef int8_t pin_state_t;
+typedef trigger_value_e pin_state_t;
 
 /**
  * This class represents one channel of a digital signal state sequence
@@ -60,7 +60,7 @@ public:
 	float getSwitchTime(int phaseIndex) const;
 	void setSwitchTime(int phaseIndex, float value);
 	void checkSwitchTimes(int size);
-	int getChannelState(int channelIndex, int phaseIndex) const;
+	pin_state_t getChannelState(int channelIndex, int phaseIndex) const;
 
 	int findAngleMatch(float angle, int size) const;
 	int findInsertionAngle(float angle, int size) const;
