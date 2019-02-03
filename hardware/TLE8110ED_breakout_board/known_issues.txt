@@ -1,0 +1,5 @@
+ 1)                  set solder mask to 0.003 inches, per OSHPark suggestion.
+ 2)                  make footprint pads longer so that we have some metal not covered by the chip 
+ 3)                  since RST is not needed, connect with Pull-up resistor to VCC
+ 4)                  since EN is not needed, connect with Pull-up resistor to VCC
+ 5)                  it is highly recommended to connect the exposed pad to GND pins on the PCB.

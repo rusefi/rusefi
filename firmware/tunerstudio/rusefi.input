@@ -1574,6 +1574,14 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "aux valve #2", 						auxValves2
 
 	dialog = allPins5
+		field = "FSIO ADC #1",							fsioAdc1
+		field = "FSIO ADC #2",							fsioAdc2
+		field = "FSIO ADC #3",							fsioAdc3
+		field = "FSIO ADC #4",							fsioAdc4
+		field = "GPS RX", 								gps_rx_pin
+		field = "GPS TX", 								gps_tx_pin
+		field = "CAN RX pin",							canRxPin
+		field = "CAN TX pin",							canTxPin
 		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
 		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
 		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
@@ -1959,8 +1967,8 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "Can Write Enabled",					canWriteEnabled
 ;		field = "Can Nbc Type",							canNbcType
 		field = "Can Sleep Period",						canSleepPeriod
-		field = "TX pin",								canTxPin
 		field = "RX pin",								canRxPin
+		field = "TX pin",								canTxPin
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled

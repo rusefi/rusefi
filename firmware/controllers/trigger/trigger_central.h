@@ -41,6 +41,9 @@ public:
 
 	TriggerShape triggerShape;
 
+	efitick_t previousVvtCamTime = 0;
+	efitick_t previousVvtCamDuration = 0;
+
 	volatile efitime_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;
@@ -54,7 +57,6 @@ private:
 
 void triggerInfo(void);
 efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void hwHandleShaftSignal(trigger_event_e signal);
 void hwHandleVvtCamSignal(trigger_value_e front);
 
@@ -68,7 +70,6 @@ void resetMaxValues();
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool readIfTriggerConfigChangedForUnitTest(void);
-void resetTriggerConfigChangedForUnitTest(void);
+bool readIfTriggerConfigChangedForUnitTest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* TRIGGER_CENTRAL_H_ */

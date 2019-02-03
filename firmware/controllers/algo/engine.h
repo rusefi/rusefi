@@ -343,6 +343,12 @@ public:
 	IgnitionEventList ignitionEvents;
 
 	int getGlobalConfigurationVersion(void) const;
+	/**
+	 * true if a recent configuration change has changed any of the trigger settings which
+	 * we have not adjusted for yet
+	 */
+	bool isTriggerConfigChanged = false;
+
 
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization

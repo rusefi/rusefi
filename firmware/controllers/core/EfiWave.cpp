@@ -21,12 +21,12 @@ void SingleWave::init(pin_state_t *pinStates) {
 	this->pinStates = pinStates;
 }
 
-int SingleWave::getState(int index) {
-	return pinStates[index];
+pin_state_t SingleWave::getState(int switchIndex) {
+	return pinStates[switchIndex];
 }
 
-void SingleWave::setState(int index, int state) {
-	pinStates[index] = state;
+void SingleWave::setState(int switchIndex, pin_state_t state) {
+	pinStates[switchIndex] = state;
 }
 
 void MultiWave::baseConstructor() {
@@ -69,7 +69,7 @@ void MultiWave::checkSwitchTimes(int size) {
 	}
 }
 
-int MultiWave::getChannelState(int channelIndex, int phaseIndex) const {
+pin_state_t MultiWave::getChannelState(int channelIndex, int phaseIndex) const {
 	return channels[channelIndex].pinStates[phaseIndex];
 }
 

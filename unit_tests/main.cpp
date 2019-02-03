@@ -50,13 +50,15 @@ GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
 	//	resizeMap();
-	printf("Success 20190117\r\n");
+	printf("Success 20190201\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests
 	//::testing::GTEST_FLAG(filter) = "*testFasterEngineSpinningUp*";
-	return RUN_ALL_TESTS();
+	int result = RUN_ALL_TESTS();
+	// windows ERRORLEVEL in Jenkins batch file seems to want negative value to detect failure
+	return result == 0 ? 0 : -1;
 }
 
 void print(const char *format, ...) {

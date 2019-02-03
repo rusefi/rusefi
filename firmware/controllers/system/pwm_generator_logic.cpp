@@ -75,6 +75,15 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
 	}
+	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
+		/**
+		 * set the pin low just to be super sure
+		 * this custom handling of zero value comes from CJ125 heater code
+		 * TODO: is this really needed? cover by unit test?
+		 */
+		stateChangeCallback(this, 0);
+	}
+
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
 		mode = PM_ZERO;
 	} else if (dutyCycle > FULL_PWM_THRESHOLD) {
@@ -236,7 +245,7 @@ static void timerCallback(PwmConfig *state) {
  * Incoming parameters are potentially just values on current stack, so we have to copy
  * into our own permanent storage, right?
  */
-void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int waveCount, pin_state_t **pinStates) {
+void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes, int waveCount, pin_state_t *const *pinStates) {
 	state->phaseCount = phaseCount;
 
 	for (int phaseIndex = 0; phaseIndex < phaseCount; phaseIndex++) {
@@ -245,7 +254,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 		for (int channelIndex = 0; channelIndex < waveCount; channelIndex++) {
 //			print("output switch time index (%d/%d) at %.2f to %d\r\n", phaseIndex, channelIndex,
 //					switchTimes[phaseIndex], pinStates[waveIndex][phaseIndex]);
-			int value = pinStates[channelIndex][phaseIndex];
+			pin_state_t value = pinStates[channelIndex][phaseIndex];
 			state->multiWave.channels[channelIndex].setState(phaseIndex, value);
 		}
 	}
@@ -258,8 +267,11 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
  * this method also starts the timer cycle
  * See also startSimplePwm
  */
-void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor, int phaseCount, float *switchTimes, int waveCount,
-		pin_state_t **pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
+void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
+		const int phaseCount,
+		float const *switchTimes,
+		const int waveCount,
+		pin_state_t *const*pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	this->executor = executor;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
@@ -292,13 +304,14 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 	efiAssertVoid(CUSTOM_ERR_6692, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_6665, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
+	efiAssertVoid(CUSTOM_ERR_6693, stateChangeCallback != NULL, "listener");
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
 		return;
 	}
 
 	float switchTimes[] = { dutyCycle, 1 };
-	pin_state_t pinStates0[] = { 0, 1 };
+	pin_state_t pinStates0[] = { TV_FALL, TV_RISE };
 	state->setSimplePwmDutyCycle(dutyCycle);
 
 	pin_state_t *pinStates[1] = { pinStates0 };

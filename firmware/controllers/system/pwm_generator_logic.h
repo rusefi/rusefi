@@ -55,7 +55,7 @@ public:
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
-			int phaseCount, float *swithcTimes, int waveCount, pin_state_t **pinStates,
+			const int phaseCount, float const *swithcTimes, const int waveCount, pin_state_t *const*pinStates,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
@@ -96,7 +96,7 @@ public:
 	/**
 	 * this main callback is invoked when it's time to switch level on any of the output channels
 	 */
-	pwm_gen_callback *stateChangeCallback;
+	pwm_gen_callback *stateChangeCallback = NULL;
 private:
 	/**
 	 * float value of PWM period
@@ -139,7 +139,7 @@ void startSimplePwmExt(SimplePwm *state,
 		brain_pin_e brainPin, OutputPin *output,
 		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
 
-void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes,
-		int waveCount, pin_state_t **pinStates);
+void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes,
+		int waveCount, pin_state_t *const *pinStates);
 
 #endif /* PWM_GENERATOR_LOGIC_H_ */

@@ -20,6 +20,7 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_maf2map.cpp \
 	tests/test_fuelCut.cpp \
+	tests/test_trigger_multi_sync.cpp \
 	tests/test_pwm_generator.cpp \
 	tests/test_logic_expression.cpp \
 	tests/test_speed_density.cpp \

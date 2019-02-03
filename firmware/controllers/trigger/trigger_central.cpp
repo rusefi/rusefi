@@ -63,26 +63,12 @@ WaveChart waveChart;
 
 EXTERN_ENGINE;
 
-/**
- * true if a recent configuration change has changed any of the trigger settings which
- * we have not adjusted for yet
- */
-static bool isTriggerConfigChanged = false;
-
 #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 static histogram_s triggerCallbackHistogram;
 #endif /* EFI_HISTOGRAMS */
 
 static Logging *logger;
 static LocalVersionHolder triggerVersion;
-
-efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->triggerCentral.triggerState.getTotalEventCounter();
-}
-
-efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->triggerCentral.triggerState.getStartOfRevolutionIndex();
-}
 
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	print("registerCkpListener: %s\r\n", name);
@@ -108,9 +94,6 @@ uint32_t triggerMaxDuration = 0;
 
 static bool isInsideTriggerHandler = false;
 
-static efitick_t previousVvtCamTime = 0;
-static efitick_t previousVvtCamDuration = 0;
-
 void hwHandleVvtCamSignal(trigger_value_e front) {
 	addEngineSnifferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
 
@@ -130,12 +113,12 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 	efitick_t nowNt = getTimeNowNt();
 
 	if (engineConfiguration->vvtMode == MIATA_NB2) {
-		uint32_t currentDuration = nowNt - previousVvtCamTime;
-		float ratio = ((float) currentDuration) / previousVvtCamDuration;
+		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
+		float ratio = ((float) currentDuration) / tc->previousVvtCamDuration;
 
 
-		previousVvtCamDuration = currentDuration;
-		previousVvtCamTime = nowNt;
+		tc->previousVvtCamDuration = currentDuration;
+		tc->previousVvtCamTime = nowNt;
 
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
@@ -231,7 +214,7 @@ void TriggerCentral::resetCounters() {
 
 static char shaft_signal_msg_index[15];
 
-static bool isUpEvent[6] = { false, true, false, true, false, true };
+static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { CRANK1, CRANK1, CRANK2, CRANK2, CRANK3, CRANK3 };
 
 static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -678,28 +661,24 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING
-	scheduleMsg(logger, "isTriggerConfigChanged=%d", isTriggerConfigChanged);
+	scheduleMsg(logger, "isTriggerConfigChanged=%d", engine->isTriggerConfigChanged);
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
-	isTriggerConfigChanged = isTriggerConfigChanged || changed;
+	engine->isTriggerConfigChanged = engine->isTriggerConfigChanged || changed;
 }
 
 /**
  * @returns true if configuration just changed, and if that change has affected trigger
  */
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && isTriggerConfigChanged;
-	isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
+	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && engine->isTriggerConfigChanged;
+	engine->isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
 	return result;
 }
 
-bool readIfTriggerConfigChangedForUnitTest(void) {
-	return isTriggerConfigChanged;
-}
-
-void resetTriggerConfigChangedForUnitTest(void) {
-	isTriggerConfigChanged = false;
+bool readIfTriggerConfigChangedForUnitTest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engine->isTriggerConfigChanged;
 }
 
 void initTriggerCentral(Logging *sharedLogger) {

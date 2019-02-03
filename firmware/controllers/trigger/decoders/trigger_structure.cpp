@@ -87,8 +87,8 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
 	previousAngle = 0;
-	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
-	memset(isFrontEvent, 0, sizeof(isFrontEvent));
+	memset(riseOnlyIndexes, 0, sizeof(riseOnlyIndexes));
+	memset(isRiseEvent, 0, sizeof(isRiseEvent));
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	memset(&triggerSignals, 0, sizeof(triggerSignals));
 #endif
@@ -151,7 +151,7 @@ angle_t TriggerShape::getAngle(int index) const {
 
 void TriggerShape::addEvent3(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight)
-		addEvent(useOnlyRisingEdgeForTriggerTemp, angle / getEngineCycle(operationMode), channelIndex, stateParam);
+		addEvent(angle / getEngineCycle(operationMode), channelIndex, stateParam);
 }
 
 operation_mode_e TriggerShape::getOperationMode() {
@@ -171,14 +171,10 @@ void TriggerShape::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger
 }
 
 void TriggerShape::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
-	addEvent(useOnlyRisingEdgeForTriggerTemp, angle / 720, channelIndex, stateParam);
+	addEvent(angle / 720, channelIndex, stateParam);
 }
 
-// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
-// todo: see calculateExpectedEventCounts
-// related calculation should be done once trigger is initialized outside of trigger shape scope
-void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
-
+void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(CUSTOM_ERR_6598, channelIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
@@ -202,7 +198,10 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 #endif
 
 
-	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
+	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
+	// todo: see calculateExpectedEventCounts
+	// related calculation should be done once trigger is initialized outside of trigger shape scope
+	if (!useOnlyRisingEdgeForTriggerTemp || stateParam == TV_RISE) {
 		expectedEventCount[channelIndex]++;
 	}
 
@@ -225,10 +224,10 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 				shapeDefinitionError = true;
 				return;
 			}
-			wave->setState(/* channelIndex */ 0, /* value */ initialState[i]);
+			wave->setState(/* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
-		isFrontEvent[0] = TV_RISE == stateParam;
+		isRiseEvent[0] = TV_RISE == stateParam;
 		wave.setSwitchTime(0, angle);
 		wave.channels[channelIndex].setState(/* channelIndex */ 0, /* value */ state);
 		return;
@@ -256,7 +255,7 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 */
-	isFrontEvent[index] = TV_RISE == stateParam;
+	isRiseEvent[index] = TV_RISE == stateParam;
 
 	if (index != privateTriggerDefinitionSize) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
@@ -265,7 +264,7 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 	privateTriggerDefinitionSize++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		int value = wave.getChannelState(/* channelIndex */i, index - 1);
+		pin_state_t value = wave.getChannelState(/* channelIndex */i, index - 1);
 		wave.channels[i].setState(index, value);
 	}
 	wave.setSwitchTime(index, angle);
@@ -420,7 +419,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		break;
 
 	case TT_MAZDA_MIATA_NA:
-		initializeMazdaMiataNaShape(this, useOnlyRisingEdgeForTrigger);
+		initializeMazdaMiataNaShape(this);
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
@@ -592,6 +591,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		shapeDefinitionError = true;
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
 	}
+	/**
+	 * Feb 2019 suggestion: it would be an improvement to remove 'expectedEventCount' logic from 'addEvent'
+	 * and move it here, after all events were added.
+	 */
 	calculateExpectedEventCounts(useOnlyRisingEdgeForTrigger);
 	version++;
 

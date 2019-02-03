@@ -120,6 +120,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
+	/**
+	 * pin PA4: jumper W47<>W47 - ecu plug 3I
+	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
@@ -287,7 +290,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->isSdCardEnabled = true;
 
 //	engineConfiguration->useFSIO16ForTimingAdjustment = true;
-	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PA3
+//  we wanted to have a timinig table adjustment switch here
+//	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PC2
 
 	strcpy(config->fsioFormulas[15], ANALOG_CONDITION);
 

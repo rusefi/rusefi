@@ -185,15 +185,15 @@ public:
 	MultiWave wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
-	// tood: maybe even automate this flag calculation?
-	int initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
+	// todo: maybe even automate this flag calculation?
+	pin_state_t initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	int8_t isFrontEvent[PWM_PHASE_MAX_COUNT];
+	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 	/**
 	 * this table translates trigger definition index into 'front-only' index. This translation is not so trivial
 	 * in case of a multi-channel signal with overlapping waves, for example Ford Aspire/Mitsubishi
 	 */
-	int frontOnlyIndexes[PWM_PHASE_MAX_COUNT];
+	int riseOnlyIndexes[PWM_PHASE_MAX_COUNT];
 
 	/**
 	 * This is a pretty questionable option which is considered by 'addEvent' method
@@ -211,7 +211,7 @@ public:
 	bool useOnlyRisingEdgeForTriggerTemp;
 
 	/* 0..1 angle range */
-	void addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 	/* 0..720 angle range
 	 * Deprecated?
 	 */
