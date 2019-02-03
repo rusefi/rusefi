@@ -21,11 +21,11 @@ void SingleWave::init(pin_state_t *pinStates) {
 	this->pinStates = pinStates;
 }
 
-int SingleWave::getState(int switchIndex) {
+pin_state_t SingleWave::getState(int switchIndex) {
 	return pinStates[switchIndex];
 }
 
-void SingleWave::setState(int switchIndex, int state) {
+void SingleWave::setState(int switchIndex, pin_state_t state) {
 	pinStates[switchIndex] = state;
 }
 
