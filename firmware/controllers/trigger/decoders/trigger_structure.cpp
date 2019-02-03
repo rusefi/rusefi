@@ -420,7 +420,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		break;
 
 	case TT_MAZDA_MIATA_NA:
-		initializeMazdaMiataNaShape(this, useOnlyRisingEdgeForTrigger);
+		initializeMazdaMiataNaShape(this);
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
@@ -592,6 +592,10 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		shapeDefinitionError = true;
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
 	}
+	/**
+	 * Feb 2019 suggestion: it would be an improvement to remove 'expectedEventCount' logic from 'addEvent'
+	 * and move it here, after all events were added.
+	 */
 	calculateExpectedEventCounts(useOnlyRisingEdgeForTrigger);
 	version++;
 
