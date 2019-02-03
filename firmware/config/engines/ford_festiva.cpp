@@ -290,7 +290,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->isSdCardEnabled = true;
 
 //	engineConfiguration->useFSIO16ForTimingAdjustment = true;
-	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PA3
+//  we wanted to have a timinig table adjustment switch here
+//	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PC2
 
 	strcpy(config->fsioFormulas[15], ANALOG_CONDITION);
 
