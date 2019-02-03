@@ -245,7 +245,7 @@ static void timerCallback(PwmConfig *state) {
  * Incoming parameters are potentially just values on current stack, so we have to copy
  * into our own permanent storage, right?
  */
-void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int waveCount, pin_state_t *const *pinStates) {
+void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes, int waveCount, pin_state_t *const *pinStates) {
 	state->phaseCount = phaseCount;
 
 	for (int phaseIndex = 0; phaseIndex < phaseCount; phaseIndex++) {
@@ -267,7 +267,10 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
  * this method also starts the timer cycle
  * See also startSimplePwm
  */
-void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor, int phaseCount, float *switchTimes, int waveCount,
+void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
+		const int phaseCount,
+		float const *switchTimes,
+		const int waveCount,
 		pin_state_t *const*pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	this->executor = executor;
 
