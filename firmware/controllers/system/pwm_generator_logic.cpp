@@ -268,7 +268,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
  * See also startSimplePwm
  */
 void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor, int phaseCount, float *switchTimes, int waveCount,
-		pin_state_t **pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
+		pin_state_t *const*pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	this->executor = executor;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
