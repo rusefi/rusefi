@@ -185,7 +185,7 @@ public:
 	MultiWave wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
-	// tood: maybe even automate this flag calculation?
+	// todo: maybe even automate this flag calculation?
 	int initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	int8_t isFrontEvent[PWM_PHASE_MAX_COUNT];
