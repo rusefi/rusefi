@@ -39,6 +39,8 @@ Above mentioned modules are known to work unless stated otherwise
 
 # More info
 
+![IBOM](../misc/www/images/ibom_icon.png) [Interactive Html Boms](https://rusefi.com/docs/ibom/)
+
 See [Hardware status forum thread](http://rusefi.com/forum/viewtopic.php?f=4&t=260)
 todo: move hardware status content into git
 
