@@ -265,7 +265,7 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 	privateTriggerDefinitionSize++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		int value = wave.getChannelState(/* channelIndex */i, index - 1);
+		pin_state_t value = wave.getChannelState(/* channelIndex */i, index - 1);
 		wave.channels[i].setState(index, value);
 	}
 	wave.setSwitchTime(index, angle);

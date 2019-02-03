@@ -311,7 +311,7 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 	}
 
 	float switchTimes[] = { dutyCycle, 1 };
-	pin_state_t pinStates0[] = { 0, 1 };
+	pin_state_t pinStates0[] = { TV_FALL, TV_RISE };
 	state->setSimplePwmDutyCycle(dutyCycle);
 
 	pin_state_t *pinStates[1] = { pinStates0 };
