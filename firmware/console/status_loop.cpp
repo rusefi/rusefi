@@ -472,7 +472,7 @@ void updateDevConsoleState(void) {
 	systime_t nowSeconds = getTimeNowSeconds();
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
-	int currentCkpEventCounter = getCrankEventCounter();
+	int currentCkpEventCounter = engine->triggerCentral.triggerState.getTotalEventCounter();
 	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds) {
 		return;
 	}
