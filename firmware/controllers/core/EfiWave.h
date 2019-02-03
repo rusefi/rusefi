@@ -39,8 +39,8 @@ public:
 	 * todo: confirm that we only deal with two states here, no magic '-1'?
 	 * @return HIGH or LOW state at given index
 	 */
-	int getState(int index);
-	void setState(int index, int state);
+	int getState(int switchIndex);
+	void setState(int switchIndex, int state);
 
 	// todo: make this private by using 'getState' and 'setState' methods
 	pin_state_t *pinStates;
