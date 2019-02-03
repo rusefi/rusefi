@@ -74,7 +74,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.addEventListener(mainTriggerCallback, "main loop", engine);
+	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /**
