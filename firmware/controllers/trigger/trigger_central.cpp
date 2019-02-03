@@ -70,14 +70,6 @@ static histogram_s triggerCallbackHistogram;
 static Logging *logger;
 static LocalVersionHolder triggerVersion;
 
-efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->triggerCentral.triggerState.getTotalEventCounter();
-}
-
-efitime_t getStartOfRevolutionIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->triggerCentral.triggerState.getStartOfRevolutionIndex();
-}
-
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	print("registerCkpListener: %s\r\n", name);
 	triggerListeneres.registerCallback((VoidInt)(void*)listener, engine);
@@ -102,9 +94,6 @@ uint32_t triggerMaxDuration = 0;
 
 static bool isInsideTriggerHandler = false;
 
-static efitick_t previousVvtCamTime = 0;
-static efitick_t previousVvtCamDuration = 0;
-
 void hwHandleVvtCamSignal(trigger_value_e front) {
 	addEngineSnifferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
 
@@ -124,12 +113,12 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 	efitick_t nowNt = getTimeNowNt();
 
 	if (engineConfiguration->vvtMode == MIATA_NB2) {
-		uint32_t currentDuration = nowNt - previousVvtCamTime;
-		float ratio = ((float) currentDuration) / previousVvtCamDuration;
+		uint32_t currentDuration = nowNt - tc->previousVvtCamTime;
+		float ratio = ((float) currentDuration) / tc->previousVvtCamDuration;
 
 
-		previousVvtCamDuration = currentDuration;
-		previousVvtCamTime = nowNt;
+		tc->previousVvtCamDuration = currentDuration;
+		tc->previousVvtCamTime = nowNt;
 
 		if (engineConfiguration->isPrintTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
@@ -225,7 +214,7 @@ void TriggerCentral::resetCounters() {
 
 static char shaft_signal_msg_index[15];
 
-static bool isUpEvent[6] = { false, true, false, true, false, true };
+static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { CRANK1, CRANK1, CRANK2, CRANK2, CRANK3, CRANK3 };
 
 static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
