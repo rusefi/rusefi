@@ -63,12 +63,6 @@ WaveChart waveChart;
 
 EXTERN_ENGINE;
 
-/**
- * true if a recent configuration change has changed any of the trigger settings which
- * we have not adjusted for yet
- */
-static bool isTriggerConfigChanged = false;
-
 #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 static histogram_s triggerCallbackHistogram;
 #endif /* EFI_HISTOGRAMS */
@@ -678,28 +672,24 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING
-	scheduleMsg(logger, "isTriggerConfigChanged=%d", isTriggerConfigChanged);
+	scheduleMsg(logger, "isTriggerConfigChanged=%d", engine->isTriggerConfigChanged);
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
-	isTriggerConfigChanged = isTriggerConfigChanged || changed;
+	engine->isTriggerConfigChanged = engine->isTriggerConfigChanged || changed;
 }
 
 /**
  * @returns true if configuration just changed, and if that change has affected trigger
  */
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && isTriggerConfigChanged;
-	isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
+	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && engine->isTriggerConfigChanged;
+	engine->isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
 	return result;
 }
 
-bool readIfTriggerConfigChangedForUnitTest(void) {
-	return isTriggerConfigChanged;
-}
-
-void resetTriggerConfigChangedForUnitTest(void) {
-	isTriggerConfigChanged = false;
+bool readIfTriggerConfigChangedForUnitTest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engine->isTriggerConfigChanged;
 }
 
 void initTriggerCentral(Logging *sharedLogger) {

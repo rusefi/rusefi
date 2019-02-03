@@ -68,7 +68,6 @@ void resetMaxValues();
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool readIfTriggerConfigChangedForUnitTest(void);
-void resetTriggerConfigChangedForUnitTest(void);
+bool readIfTriggerConfigChangedForUnitTest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* TRIGGER_CENTRAL_H_ */
