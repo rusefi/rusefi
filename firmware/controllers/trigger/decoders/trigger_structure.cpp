@@ -151,7 +151,7 @@ angle_t TriggerShape::getAngle(int index) const {
 
 void TriggerShape::addEvent3(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight)
-		addEvent(useOnlyRisingEdgeForTriggerTemp, angle / getEngineCycle(operationMode), channelIndex, stateParam);
+		addEvent(angle / getEngineCycle(operationMode), channelIndex, stateParam);
 }
 
 operation_mode_e TriggerShape::getOperationMode() {
@@ -171,14 +171,10 @@ void TriggerShape::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger
 }
 
 void TriggerShape::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
-	addEvent(useOnlyRisingEdgeForTriggerTemp, angle / 720, channelIndex, stateParam);
+	addEvent(angle / 720, channelIndex, stateParam);
 }
 
-// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
-// todo: see calculateExpectedEventCounts
-// related calculation should be done once trigger is initialized outside of trigger shape scope
-void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
-
+void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	efiAssertVoid(CUSTOM_ERR_6598, channelIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
@@ -202,7 +198,10 @@ void TriggerShape::addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, tri
 #endif
 
 
-	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
+	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
+	// todo: see calculateExpectedEventCounts
+	// related calculation should be done once trigger is initialized outside of trigger shape scope
+	if (!useOnlyRisingEdgeForTriggerTemp || stateParam == TV_RISE) {
 		expectedEventCount[channelIndex]++;
 	}
 

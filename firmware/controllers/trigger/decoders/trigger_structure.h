@@ -211,7 +211,7 @@ public:
 	bool useOnlyRisingEdgeForTriggerTemp;
 
 	/* 0..1 angle range */
-	void addEvent(bool useOnlyRisingEdgeForTrigger, angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 	/* 0..720 angle range
 	 * Deprecated?
 	 */
