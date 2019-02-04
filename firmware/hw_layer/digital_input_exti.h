@@ -10,9 +10,8 @@
 
 #include "global.h"
 
-#if HAL_USE_EXT || defined(__DOXYGEN__)
-void enableExti(brain_pin_e pin, uint32_t mode, extcallback_t cb);
-void myExtStart(void);
-#endif
+#if HAL_USE_PAL || defined(__DOXYGEN__)
+void enableExti(brain_pin_e pin, uint32_t mode, palcallback_t cb);
+#endif /* HAL_USE_PAL */
 
 #endif /* HW_LAYER_DIGITAL_INPUT_EXTI_H_ */
