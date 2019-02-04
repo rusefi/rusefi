@@ -27,7 +27,7 @@ efitimesec_t getTimeNowSeconds(void) {
 }
 
 static size_t wt_writes(void *ip, const uint8_t *bp, size_t n) {
-	printToWin32Console((char*)bp);
+	printToConsole((char*)bp);
 	return CONSOLE_PORT->vmt->write(CONSOLE_PORT, bp, n);
 }
 
@@ -57,7 +57,7 @@ static char putMessageBuffer[2];
 static msg_t wt_put(void *ip, uint8_t b) {
 	putMessageBuffer[0] = b;
 	putMessageBuffer[1] = 0;
-	printToWin32Console((char*)putMessageBuffer);
+	printToConsole((char*)putMessageBuffer);
 //	cputs("wt_put");
 	return CONSOLE_PORT->vmt->put(CONSOLE_PORT, b);
 }
@@ -68,8 +68,16 @@ static msg_t wt_get(void *ip) {
 	return CONSOLE_PORT->vmt->get(CONSOLE_PORT);
 }
 
-static const struct Win32TestStreamVMT vmt = { wt_writes, wt_reads, wt_put, wt_get, wt_putt, wt_gett, wt_writet, wt_readt };
+/**
+ * These implementation print same content on console screen and send data over the underlying CONSOLE_PORT
+ * this is useful to see what's going on.
+ * See #wt_get() as a typical implementation
+ */
+static const struct BaseChannelVMT vmt = {
+		wt_writes, wt_reads, wt_put, wt_get,
+		wt_putt, wt_gett, wt_writet, wt_readt,
+};
 
-void initTestStream(TestStream *ts) {
+void initTestStream(BaseChannel *ts) {
 	ts->vmt = &vmt;
 }

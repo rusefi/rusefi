@@ -12,7 +12,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void initTestStream(TestStream *ts);
+void initTestStream(BaseChannel *ts);
 
 #ifdef __cplusplus
 }

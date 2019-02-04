@@ -799,6 +799,6 @@ void chDbgPanic3(const char *msg, const char * file, int line);
   }                                                                         \
 } while (false)
 
-#endif  /* _CHCONF_H_ */
+#endif  /* CHCONF_H */
 
 /** @} */

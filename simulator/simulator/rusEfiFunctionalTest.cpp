@@ -56,15 +56,15 @@ static void assertString(const char*actual, const char *expected) {
 }
 
 static void runChprintfTest() {
-	static MemoryStream testStream;
+	static MemoryStream ts;
 	static char testBuffer[200];
-	msObjectInit(&testStream, (uint8_t *) testBuffer, sizeof(testBuffer), 0);
+	msObjectInit(&ts, (uint8_t *) testBuffer, sizeof(testBuffer), 0);
 
 
 // it's a very, very long and mostly forgotten story how this became our %.2f precision format
-	testStream.eos = 0; // reset
-	chprintf((BaseSequentialStream*)&testStream, "%.2f/%.4f/%.4f", 0.239f, 239.932, 0.1234);
-	testStream.buffer[testStream.eos] = 0;
+	ts.eos = 0; // reset
+	chprintf((BaseSequentialStream*)&ts, "%.2f/%.4f/%.4f", 0.239f, 239.932, 0.1234);
+	ts.buffer[ts.eos] = 0;
 
 	assertString(testBuffer, "0.23/239.9320/0.1234");
 
@@ -91,10 +91,10 @@ static void runChprintfTest() {
 }
 
 void rusEfiFunctionalTest(void) {
-	printToWin32Console("Running rusEfi simulator version:");
+	printToConsole("Running rusEfi simulator version:");
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
-	printToWin32Console(versionBuffer);
+	printToConsole(versionBuffer);
 
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
