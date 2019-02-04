@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2015 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2017 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@
  * @{
  */
 
-#ifndef _CHCONF_H_
-#define _CHCONF_H_
+#ifndef CHCONF_H
+#define CHCONF_H
 
 // todo: access some existing configuration field
 #define CORE_CLOCK 168000000
@@ -112,7 +112,9 @@ extern "C"
 // but! there is no reason to use it for ICU as we've recently realized
 // so todo: migrate trigger to EXTI and try tick-less mode
 // see also CH_CFG_TIME_QUANTUM
+#if !defined(CH_CFG_ST_TIMEDELTA)
 #define CH_CFG_ST_TIMEDELTA                 0
+#endif
 
 /** @} */
 
@@ -135,7 +137,9 @@ extern "C"
  * @note    The round robin preemption is not supported in tickless mode and
  *          must be set to zero in that case.
  */
+#if !defined(CH_CFG_TIME_QUANTUM)
 #define CH_CFG_TIME_QUANTUM                 20
+#endif
 
 /**
  * @brief   Managed RAM size.
@@ -148,7 +152,9 @@ extern "C"
  *          provide the @p __heap_base__ and @p __heap_end__ symbols.
  * @note    Requires @p CH_CFG_USE_MEMCORE.
  */
+#if !defined(CH_CFG_MEMCORE_SIZE)
 #define CH_CFG_MEMCORE_SIZE                 2048
+#endif
 
 /**
  * @brief   Idle thread automatic spawn suppression.
@@ -157,7 +163,9 @@ extern "C"
  *          function becomes the idle thread and must implement an
  *          infinite loop.
  */
+#if !defined(CH_CFG_NO_IDLE_THREAD)
 #define CH_CFG_NO_IDLE_THREAD               FALSE
+#endif
 
 /** @} */
 
@@ -176,7 +184,9 @@ extern "C"
  * @note    This is not related to the compiler optimization options.
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_OPTIMIZE_SPEED)
 #define CH_CFG_OPTIMIZE_SPEED               TRUE
+#endif
 
 /** @} */
 
@@ -194,7 +204,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_TM)
 #define CH_CFG_USE_TM                       TRUE
+#endif
 
 /**
  * @brief   Threads registry APIs.
@@ -202,7 +214,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_REGISTRY)
 #define CH_CFG_USE_REGISTRY                 TRUE
+#endif
 
 /**
  * @brief   Threads synchronization APIs.
@@ -211,7 +225,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_WAITEXIT)
 #define CH_CFG_USE_WAITEXIT                 TRUE
+#endif
 
 /**
  * @brief   Semaphores APIs.
@@ -219,7 +235,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_SEMAPHORES)
 #define CH_CFG_USE_SEMAPHORES               TRUE
+#endif
 
 /**
  * @brief   Semaphores queuing mode.
@@ -230,7 +248,9 @@ extern "C"
  *          requirements.
  * @note    Requires @p CH_CFG_USE_SEMAPHORES.
  */
+#if !defined(CH_CFG_USE_SEMAPHORES_PRIORITY)
 #define CH_CFG_USE_SEMAPHORES_PRIORITY      FALSE
+#endif
 
 /**
  * @brief   Mutexes APIs.
@@ -238,7 +258,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_MUTEXES)
 #define CH_CFG_USE_MUTEXES                  TRUE
+#endif
 
 /**
  * @brief   Enables recursive behavior on mutexes.
@@ -248,7 +270,9 @@ extern "C"
  * @note    The default is @p FALSE.
  * @note    Requires @p CH_CFG_USE_MUTEXES.
  */
+#if !defined(CH_CFG_USE_MUTEXES_RECURSIVE)
 #define CH_CFG_USE_MUTEXES_RECURSIVE        FALSE
+#endif
 
 /**
  * @brief   Conditional Variables APIs.
@@ -258,7 +282,9 @@ extern "C"
  * @note    The default is @p TRUE.
  * @note    Requires @p CH_CFG_USE_MUTEXES.
  */
+#if !defined(CH_CFG_USE_CONDVARS)
 #define CH_CFG_USE_CONDVARS                 TRUE
+#endif
 
 /**
  * @brief   Conditional Variables APIs with timeout.
@@ -268,7 +294,9 @@ extern "C"
  * @note    The default is @p TRUE.
  * @note    Requires @p CH_CFG_USE_CONDVARS.
  */
+#if !defined(CH_CFG_USE_CONDVARS_TIMEOUT)
 #define CH_CFG_USE_CONDVARS_TIMEOUT         TRUE
+#endif
 
 /**
  * @brief   Events Flags APIs.
@@ -276,7 +304,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_EVENTS)
 #define CH_CFG_USE_EVENTS                   TRUE
+#endif
 
 /**
  * @brief   Events Flags APIs with timeout.
@@ -286,7 +316,9 @@ extern "C"
  * @note    The default is @p TRUE.
  * @note    Requires @p CH_CFG_USE_EVENTS.
  */
+#if !defined(CH_CFG_USE_EVENTS_TIMEOUT)
 #define CH_CFG_USE_EVENTS_TIMEOUT           TRUE
+#endif
 
 /**
  * @brief   Synchronous Messages APIs.
@@ -295,7 +327,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_MESSAGES)
 #define CH_CFG_USE_MESSAGES                 TRUE
+#endif
 
 /**
  * @brief   Synchronous Messages queuing mode.
@@ -306,7 +340,9 @@ extern "C"
  *          requirements.
  * @note    Requires @p CH_CFG_USE_MESSAGES.
  */
+#if !defined(CH_CFG_USE_MESSAGES_PRIORITY)
 #define CH_CFG_USE_MESSAGES_PRIORITY        FALSE
+#endif
 
 /**
  * @brief   Mailboxes APIs.
@@ -333,7 +369,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_MEMCORE)
 #define CH_CFG_USE_MEMCORE                  TRUE
+#endif
 
 /**
  * @brief   Heap Allocator APIs.
@@ -345,7 +383,9 @@ extern "C"
  *          @p CH_CFG_USE_SEMAPHORES.
  * @note    Mutexes are recommended.
  */
+#if !defined(CH_CFG_USE_HEAP)
 #define CH_CFG_USE_HEAP                     TRUE
+#endif
 
 /**
  * @brief   Memory Pools Allocator APIs.
@@ -354,7 +394,9 @@ extern "C"
  *
  * @note    The default is @p TRUE.
  */
+#if !defined(CH_CFG_USE_MEMPOOLS)
 #define CH_CFG_USE_MEMPOOLS                 TRUE
+#endif
 
 /**
  * @brief   Dynamic Threads APIs.
@@ -381,7 +423,9 @@ extern "C"
  *
  * @note    The default is @p FALSE.
  */
+#if !defined(CH_DBG_STATISTICS)
 #define CH_DBG_STATISTICS                   FALSE
+#endif
 
 /**
  * @brief   Debug option, system state check.
@@ -390,7 +434,9 @@ extern "C"
  *
  * @note    The default is @p FALSE.
  */
+#if !defined(CH_DBG_SYSTEM_STATE_CHECK)
 #define CH_DBG_SYSTEM_STATE_CHECK           TRUE
+#endif
 
 /**
  * micro-optimization: use same (lower-level) api for lock/unlock regardless on context
@@ -405,7 +451,9 @@ extern "C"
  *
  * @note    The default is @p FALSE.
  */
+#if !defined(CH_DBG_ENABLE_CHECKS)
 #define CH_DBG_ENABLE_CHECKS                TRUE
+#endif
 
 /**
  * @brief   Debug option, consistency checks.
@@ -415,7 +463,7 @@ extern "C"
  *
  * @note    The default is @p FALSE.
  */
-#ifndef CH_DBG_ENABLE_ASSERTS
+#if !defined(CH_DBG_ENABLE_ASSERTS)
 #define CH_DBG_ENABLE_ASSERTS               TRUE
 #endif
 
@@ -425,14 +473,18 @@ extern "C"
  *
  * @note    The default is @p CH_DBG_TRACE_MASK_DISABLED.
  */
+#if !defined(CH_DBG_TRACE_MASK)
 #define CH_DBG_TRACE_MASK                   CH_DBG_TRACE_MASK_DISABLED
+#endif
 
 /**
  * @brief   Trace buffer entries.
  * @note    The trace buffer is only allocated if @p CH_DBG_TRACE_MASK is
  *          different from @p CH_DBG_TRACE_MASK_DISABLED.
  */
+#if !defined(CH_DBG_TRACE_BUFFER_SIZE)
 #define CH_DBG_TRACE_BUFFER_SIZE            128
+#endif
 
 /**
  * @brief   Debug option, trace buffer.
@@ -455,7 +507,7 @@ extern "C"
  * @note    The default failure mode is to halt the system with the global
  *          @p panic_msg variable set to @p NULL.
  */
-#ifndef CH_DBG_ENABLE_STACK_CHECK
+#if !defined(CH_DBG_ENABLE_STACK_CHECK)
 #define CH_DBG_ENABLE_STACK_CHECK           TRUE
 #endif
 
@@ -467,7 +519,7 @@ extern "C"
  *
  * @note    The default is @p FALSE.
  */
-#ifndef CH_DBG_FILL_THREADS
+#if !defined(CH_DBG_FILL_THREADS)
 #define CH_DBG_FILL_THREADS                 TRUE
 #endif
 
@@ -480,7 +532,9 @@ extern "C"
  * @note    This debug option is not currently compatible with the
  *          tickless mode.
  */
+#if !defined(CH_DBG_THREADS_PROFILING)
 #define CH_DBG_THREADS_PROFILING            FALSE
+#endif
 
 /** @} */
 
@@ -554,6 +608,7 @@ extern "C"
  * @note    This macro can be used to activate a power saving mode.
  */
 #define CH_CFG_IDLE_ENTER_HOOK() {                                          \
+  /* Idle-enter code here.*/                                                \
 }
 
 /**
@@ -563,6 +618,7 @@ extern "C"
  * @note    This macro can be used to deactivate a power saving mode.
  */
 #define CH_CFG_IDLE_LEAVE_HOOK() {                                          \
+  /* Idle-leave code here.*/                                                \
 }
 
 /**
@@ -633,6 +689,6 @@ void chDbgPanic3(const char *msg, const char * file, int line);
   }                                                                         \
 } while (false)
 
-#endif  /* _CHCONF_H_ */
+#endif  /* CHCONF_H */
 
 /** @} */
