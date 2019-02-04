@@ -43,16 +43,13 @@ void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
 
 static CdmState instance;
 
-
-static void extIonCallback(EXTDriver *extp, expchannel_t channel) {
-        UNUSED(extp);
+static void extIonCallback(int pinIndex) {
+        UNUSED(pinIndex);
 
         int currentRevolution = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
 
         instance.onNewSignal(currentRevolution);
-
 }
-
 
 void cdmIonInit(void) {
 	// todo: allow 'GPIOA_0' once we migrate to new mandatory configuration
@@ -65,10 +62,7 @@ void cdmIonInit(void) {
 		return;
 	}
 
-
-	enableExti(CONFIGB(cdmInputPin), EXT_CH_MODE_RISING_EDGE, extIonCallback);
-
+	enableExti(CONFIGB(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extIonCallback);
 }
-
 
 #endif /* EFI_CDM_INTEGRATION */
