@@ -252,6 +252,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(CHCPPINC) \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
+	$(CHIBIOS)/os/ex/ST \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFIGPATH) \
 	config/engines \
