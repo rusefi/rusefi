@@ -68,8 +68,16 @@ static msg_t wt_get(void *ip) {
 	return CONSOLE_PORT->vmt->get(CONSOLE_PORT);
 }
 
-static const struct BaseChannelVMT vmt = { wt_writes, wt_reads, wt_put, wt_get, wt_putt, wt_gett, wt_writet, wt_readt };
+/**
+ * These implementation print same content on console screen and send data over the underlying CONSOLE_PORT
+ * this is useful to see what's going on.
+ * See #wt_get() as a typical implementation
+ */
+static const struct BaseChannelVMT vmt = {
+		wt_writes, wt_reads, wt_put, wt_get,
+		wt_putt, wt_gett, wt_writet, wt_readt,
+};
 
-void initTestStream(SerialAdapter_t *ts) {
+void initTestStream(BaseChannel *ts) {
 	ts->vmt = &vmt;
 }

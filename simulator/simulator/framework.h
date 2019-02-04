@@ -12,7 +12,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void initTestStream(SerialAdapter_t *ts);
+void initTestStream(BaseChannel *ts);
 
 #ifdef __cplusplus
 }

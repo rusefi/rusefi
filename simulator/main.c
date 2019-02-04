@@ -31,7 +31,7 @@ void printToConsole(char *p) {
 	cputs(p);
 }
 
-SerialAdapter_t serialAdapterInstance;
+BaseChannel serialAdapterInstance;
 
 /*
  * Console print server done using synchronous messages. This makes the access

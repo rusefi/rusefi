@@ -55,14 +55,7 @@
 // project-wide default thread stack size
 #define UTILITY_THREAD_STACK_SIZE 1384
 
-/**
- *
- */
-typedef struct {
-  const struct BaseChannelVMT *vmt;
-} SerialAdapter_t;
-
-extern SerialAdapter_t serialAdapterInstance;
+extern BaseChannel serialAdapterInstance;
 
 #ifdef __cplusplus
 extern "C"
