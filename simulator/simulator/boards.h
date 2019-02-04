@@ -17,7 +17,7 @@
 /**
  * This implementation writes to both windows console and console port
  */
-#define EFI_CONSOLE_UART_DEVICE (&testStream)
+#define EFI_CONSOLE_UART_DEVICE (&serialAdapterInstance)
 
 int getAdcValue(const char *msg, int channel);
 #define getSlowAdcCounter() 0
