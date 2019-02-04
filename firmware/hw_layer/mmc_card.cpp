@@ -24,7 +24,6 @@
 #include "hardware.h"
 #include "engine_configuration.h"
 #include "status_loop.h"
-#include "hal_usb_msd.h"
 #include "usb_msd_cfg.h"
 
 #include "rtc_helper.h"
@@ -53,6 +52,7 @@ EXTERN_ENGINE;
 #define FILE_LIST_MAX_COUNT 20
 
 #if HAL_USE_USB_MSD
+#include "hal_usb_msd.h"
 #if STM32_USB_USE_OTG2
   USBDriver *usb_driver = &USBD2;
 #else
