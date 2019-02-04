@@ -22,11 +22,6 @@
 #include "engine_test_helper.h"
 #include "gtest/gtest.h"
 
-typedef int32_t         msg_t;
-
-#include "hal_streams.h"
-#include "memstreams.h"
-
 int timeNowUs = 0;
 
 efitimeus_t getTimeNowUs(void) {
@@ -44,6 +39,7 @@ extern int revolutionCounterSinceBootForUnitTest;
 int getRevolutionCounter(void) {
 	return revolutionCounterSinceBootForUnitTest;
 }
+
 extern bool printTriggerDebug;
 
 GTEST_API_ int main(int argc, char **argv) {
