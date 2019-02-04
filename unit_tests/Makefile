@@ -4,16 +4,6 @@
 #
 
 PROJECT_DIR = ../firmware
-CHIBIOS=$(PROJECT_DIR)/ChibiOS4
-STREAMSFILE = $(CHIBIOS)/os/hal/include/hal_streams.h
-
-ifeq ("$(wildcard $(STREAMSFILE))","")
-$(info Invoking "git submodule update --init")
-$(shell git submodule update --init)
-$(info Invoked "git submodule update --init")
-# make is not happy about newly checked out module for some reason but next invocation would work
-$(error Please run 'make' again)
-endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -162,13 +152,9 @@ INCDIR = . \
 	$(PROJECT_DIR)/controllers/trigger \
 	$(PROJECT_DIR)/controllers/trigger/decoders \
 	$(PROJECT_DIR)/ext_algo \
-	$(CHIBIOS)/os/rt/include \
-	$(CHIBIOS)/os/rt/various \
-	$(CHIBIOS)/os/hal/lib/streams \
-	$(CHIBIOS)/os/hal/include \
 	$(PROJECT_DIR)/hw_layer \
-          $(PROJECT_DIR)/hw_layer/algo \
-          $(PROJECT_DIR)/hw_layer/sensors/ \
+	$(PROJECT_DIR)/hw_layer/algo \
+	$(PROJECT_DIR)/hw_layer/sensors/ \
 	test_data_structures \
 	googletest/googlemock/include \
 	googletest/googletest \
