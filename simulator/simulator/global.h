@@ -56,24 +56,20 @@
 #define UTILITY_THREAD_STACK_SIZE 1384
 
 /**
- * @brief   @p Win32TestStream virtual methods table.
+ *
  */
-struct Win32TestStreamVMT {
-	_base_channel_methods
-};
-
 typedef struct {
-  const struct Win32TestStreamVMT *vmt;
-} TestStream;
+  const struct BaseChannelVMT *vmt;
+} SerialAdapter_t;
 
-extern TestStream testStream;
+extern SerialAdapter_t serialAdapterInstance;
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void printToWin32Console(char *p);
+void printToConsole(char *p);
 
 int getRemainingStack(thread_t *otp);
 

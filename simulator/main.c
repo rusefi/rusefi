@@ -27,11 +27,11 @@ static thread_t *cdtp;
 
 #define cputs(msg) chMsgSend(cdtp, (msg_t)msg)
 
-void printToWin32Console(char *p) {
+void printToConsole(char *p) {
 	cputs(p);
 }
 
-TestStream testStream;
+SerialAdapter_t serialAdapterInstance;
 
 /*
  * Console print server done using synchronous messages. This makes the access
@@ -135,7 +135,7 @@ static evhandler_t fhandlers[] = { termination_handler, sd1_handler, sd2_handler
  *------------------------------------------------------------------------*/
 int main(void) {
 
-	initTestStream(&testStream);
+	initTestStream(&serialAdapterInstance);
 
 	/*
 	 * System initializations.

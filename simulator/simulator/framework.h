@@ -12,7 +12,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void initTestStream(TestStream *ts);
+void initTestStream(SerialAdapter_t *ts);
 
 #ifdef __cplusplus
 }
