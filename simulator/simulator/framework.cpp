@@ -68,14 +68,25 @@ static msg_t wt_get(void *ip) {
 	return CONSOLE_PORT->vmt->get(CONSOLE_PORT);
 }
 
+static msg_t _ctl(void *ip, unsigned int operation, void *arg) {
+
+  (void)ip;
+  (void)operation;
+  (void)arg;
+
+  return MSG_OK;
+}
+
 /**
  * These implementation print same content on console screen and send data over the underlying CONSOLE_PORT
  * this is useful to see what's going on.
  * See #wt_get() as a typical implementation
  */
 static const struct BaseChannelVMT vmt = {
+		  (size_t)0,
 		wt_writes, wt_reads, wt_put, wt_get,
 		wt_putt, wt_gett, wt_writet, wt_readt,
+		  _ctl
 };
 
 void initTestStream(BaseChannel *ts) {
