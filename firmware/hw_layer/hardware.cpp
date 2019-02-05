@@ -499,9 +499,9 @@ void initHardware(Logging *l) {
 	cdmIonInit();
 #endif
 
-#if HAL_USE_EXT || defined(__DOXYGEN__)
+#if (HAL_USE_PAL && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	initJoystick(sharedLogger);
-#endif
+#endif /* HAL_USE_PAL && EFI_PROD_CODE */
 
 	calcFastAdcIndexes();
 

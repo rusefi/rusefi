@@ -135,8 +135,5 @@ void unlockAnyContext(void);
 }
 #endif
 
-// a step towards ChibiOS18
-#define TIME_MS2I(x) MS2ST(x)
-
 #endif /* GLOBAL_H_ */
 

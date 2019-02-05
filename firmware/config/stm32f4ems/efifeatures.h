@@ -142,7 +142,7 @@
 #endif
 
 #if !defined(EFI_MEMS) || defined(__DOXYGEN__)
- #define EFI_MEMS TRUE
+ #define EFI_MEMS FALSE
 #endif
 
 #ifndef EFI_INTERNAL_ADC

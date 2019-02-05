@@ -18,7 +18,7 @@
 
 #include "engine.h"
 
-#if HAL_USE_EXT || defined(__DOXYGEN__)
+#if (HAL_USE_PAL && EFI_PROD_CODE) || defined(__DOXYGEN__)
 #include "joystick.h"
 #include "pin_repository.h"
 #include "digital_input_exti.h"
@@ -47,8 +47,7 @@ static bool isJitter() {
 	return false;
 }
 
-static void extCallback(EXTDriver *extp, expchannel_t channel) {
-        UNUSED(extp);
+static void extCallback(int channel) {
     if (isJitter())
     	 return;
 	joyTotal++;
@@ -100,26 +99,22 @@ static bool isJoystickEnabled() {
 }
 
 void initJoystick(Logging *shared) {
+	addConsoleAction("joystickinfo", joystickInfo);
 	if (!isJoystickEnabled())
 		return;
 	sharedLogger = shared;
 
-	enableExti(CONFIGB(joystickCenterPin), EXT_CH_MODE_RISING_EDGE, extCallback);
-	enableExti(CONFIGB(joystickAPin), EXT_CH_MODE_RISING_EDGE, extCallback);
+	enableExti(CONFIGB(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extCallback);
+	enableExti(CONFIGB(joystickAPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extCallback);
 // not used so far	applyPin(CONFIGB(joystickBPin));
 // not used so far	applyPin(CONFIGB(joystickCPin));
-	enableExti(CONFIGB(joystickDPin), EXT_CH_MODE_RISING_EDGE, extCallback);
+	enableExti(CONFIGB(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extCallback);
 
 	efiSetPadMode("joy center", CONFIGB(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
 	efiSetPadMode("joy A", CONFIGB(joystickAPin), PAL_MODE_INPUT_PULLUP);
 	// not used so far	efiSetPadMode("joy B", CONFIGB(joystickBPin), PAL_MODE_INPUT_PULLUP);
 	// not used so far	efiSetPadMode("joy C", CONFIGB(joystickCPin), PAL_MODE_INPUT_PULLUP);
 	efiSetPadMode("joy D", CONFIGB(joystickDPin), PAL_MODE_INPUT_PULLUP);
-
-	addConsoleAction("joystickinfo", joystickInfo);
-
-	// todo: this is not a great place to invoke this method. open question if we have to start only after enablng all EXTI?
-	myExtStart();
 }
 
-#endif /* HAL_USE_EXT */
+#endif /* HAL_USE_PAL && EFI_PROD_CODE */
