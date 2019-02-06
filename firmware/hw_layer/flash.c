@@ -1,4 +1,8 @@
 /**
+ *
+ * http://www.chibios.com/forum/viewtopic.php?f=8&t=820
+ * https://github.com/tegesoft/flash-stm32f407
+ *
  * @file    flash_main.c
  * @brief	Lower-level code related to internal flash memory
  */
