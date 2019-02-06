@@ -18,7 +18,6 @@
 #define MCUCONF_H
 
 #include "efifeatures.h"
-#include "rusefi_enums.h"
 
 /**
  * This is about SingleTimerExecutor - rusEfi 1MHz precise scheduling timer
