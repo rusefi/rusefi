@@ -53,7 +53,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->adcVcc = ADC_VCC;
 #endif
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->pedalPositionAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 	// not used
 	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;

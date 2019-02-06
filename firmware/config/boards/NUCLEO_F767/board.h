@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2016 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2018 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@
 
 #ifndef BOARD_H
 #define BOARD_H
+
+/*===========================================================================*/
+/* Driver constants.                                                         */
+/*===========================================================================*/
 
 /*
  * Setup for STMicroelectronics STM32 Nucleo144-F767ZI board.
@@ -361,7 +365,6 @@
 #define LINE_SWCLK                  PAL_LINE(GPIOA, 14U)
 #define LINE_ZIO_D20                PAL_LINE(GPIOA, 15U)
 #define LINE_I2S3_WS                PAL_LINE(GPIOA, 15U)
-
 #define LINE_ZIO_D33                PAL_LINE(GPIOB, 0U)
 #define LINE_TIM3_CH3               PAL_LINE(GPIOB, 0U)
 #define LINE_LED1                   PAL_LINE(GPIOB, 0U)
@@ -394,7 +397,6 @@
 #define LINE_LED3                   PAL_LINE(GPIOB, 14U)
 #define LINE_ZIO_D17                PAL_LINE(GPIOB, 15U)
 #define LINE_I2S2_SD                PAL_LINE(GPIOB, 15U)
-
 #define LINE_ARD_A1                 PAL_LINE(GPIOC, 0U)
 #define LINE_ADC123_IN10            PAL_LINE(GPIOC, 0U)
 #define LINE_RMII_MDC               PAL_LINE(GPIOC, 1U)
@@ -421,7 +423,6 @@
 #define LINE_BUTTON                 PAL_LINE(GPIOC, 13U)
 #define LINE_OSC32_IN               PAL_LINE(GPIOC, 14U)
 #define LINE_OSC32_OUT              PAL_LINE(GPIOC, 15U)
-
 #define LINE_ZIO_D67                PAL_LINE(GPIOD, 0U)
 #define LINE_CAN1_RX                PAL_LINE(GPIOD, 0U)
 #define LINE_ZIO_D66                PAL_LINE(GPIOD, 1U)
@@ -452,7 +453,6 @@
 #define LINE_SPI1_NSS               PAL_LINE(GPIOD, 14U)
 #define LINE_ARD_D9                 PAL_LINE(GPIOD, 15U)
 #define LINE_TIM4_CH4               PAL_LINE(GPIOD, 15U)
-
 #define LINE_ZIO_D34                PAL_LINE(GPIOE, 0U)
 #define LINE_TIM4_ETR               PAL_LINE(GPIOE, 0U)
 #define LINE_ZIO_D31                PAL_LINE(GPIOE, 2U)
@@ -483,7 +483,6 @@
 #define LINE_ZIO_D38                PAL_LINE(GPIOE, 14U)
 #define LINE_ZIO_D37                PAL_LINE(GPIOE, 15U)
 #define LINE_TIM1_BKIN1             PAL_LINE(GPIOE, 15U)
-
 #define LINE_ZIO_D68                PAL_LINE(GPIOF, 0U)
 #define LINE_I2C2_SDA               PAL_LINE(GPIOF, 0U)
 #define LINE_ZIO_D69                PAL_LINE(GPIOF, 1U)
@@ -508,7 +507,6 @@
 #define LINE_ARD_D7                 PAL_LINE(GPIOF, 13U)
 #define LINE_ARD_D4                 PAL_LINE(GPIOF, 14U)
 #define LINE_ARD_D2                 PAL_LINE(GPIOF, 15U)
-
 #define LINE_ZIO_D65                PAL_LINE(GPIOG, 0U)
 #define LINE_ZIO_D64                PAL_LINE(GPIOG, 1U)
 #define LINE_ZIO_D49                PAL_LINE(GPIOG, 2U)
@@ -521,12 +519,24 @@
 #define LINE_RMII_TXD0              PAL_LINE(GPIOG, 13U)
 #define LINE_ARD_D1                 PAL_LINE(GPIOG, 14U)
 #define LINE_USART6_TX              PAL_LINE(GPIOG, 14U)
-
 #define LINE_OSC_IN                 PAL_LINE(GPIOH, 0U)
 #define LINE_OSC_OUT                PAL_LINE(GPIOH, 1U)
 
+/*===========================================================================*/
+/* Driver pre-compile time settings.                                         */
+/*===========================================================================*/
 
+/*===========================================================================*/
+/* Derived constants and error checks.                                       */
+/*===========================================================================*/
 
+/*===========================================================================*/
+/* Driver data structures and types.                                         */
+/*===========================================================================*/
+
+/*===========================================================================*/
+/* Driver macros.                                                            */
+/*===========================================================================*/
 
 /*
  * I/O ports initial setup, this configuration is established soon after reset
@@ -1837,6 +1847,9 @@
                                      PIN_AFIO_AF(GPIOK_PIN14, 0U) |         \
                                      PIN_AFIO_AF(GPIOK_PIN15, 0U))
 
+/*===========================================================================*/
+/* External declarations.                                                    */
+/*===========================================================================*/
 
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus
