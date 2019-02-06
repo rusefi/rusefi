@@ -616,19 +616,26 @@ static void blinkingThread(void *arg) {
 	initialLedsBlink();
 
 	while (true) {
-		int delayMs = is_usb_serial_ready() ? 3 * blinkingPeriodMs : blinkingPeriodMs;
+		int onTimeMs = is_usb_serial_ready() ? 3 * blinkingPeriodMs : blinkingPeriodMs;
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 		if (getNeedToWriteConfiguration()) {
-			delayMs = 2 * delayMs;
+			onTimeMs = 2 * onTimeMs;
 		}
 #endif
+		int offTimeMs = onTimeMs;
 
-		if (!hasFirmwareError()) {
-			enginePins.communicationLedPin.setValue(0);
+		if (hasFirmwareError()) {
+			// special behavior in case of fatal error - not equal on/off time
+			// this special behaviour helps to notice that something is not right, also
+			// differentiates software firmware error from fatal interrupt error with CPU halt.
+			offTimeMs = 50;
+			onTimeMs = 450;
 		}
+
+		enginePins.communicationLedPin.setValue(0);
 		enginePins.warningLedPin.setValue(0);
-		chThdSleepMilliseconds(delayMs);
+		chThdSleepMilliseconds(offTimeMs);
 
 		enginePins.communicationLedPin.setValue(1);
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
@@ -636,8 +643,8 @@ static void blinkingThread(void *arg) {
 			consoleByteArrived = false;
 			enginePins.warningLedPin.setValue(1);
 		}
-#endif
-		chThdSleepMilliseconds(delayMs);
+#endif /* EFI_ENGINE_CONTROL */
+		chThdSleepMilliseconds(onTimeMs);
 
 	}
 }
