@@ -15,6 +15,7 @@ public class PresetsPane {
     private static final int MIATA_NA6_MAP = 41;
     private static final int MIATA_NA6_VAF = 57;
     private static final int MAZDA_MIATA_2003 = 47;
+    private static final int TEST_V_12 = 49;
 
     private JPanel content = new JPanel(new GridLayout(2, 4));
 
@@ -22,6 +23,7 @@ public class PresetsPane {
         content.add(new SetEngineTypeCommandControl("Miata NA6 Stage 0", "engines/miata_na.png", MIATA_NA6_VAF).getContent());
         content.add(new SetEngineTypeCommandControl("Miata NA6 Stage 1", "engines/miata_na.png", MIATA_NA6_MAP).getContent());
         content.add(new SetEngineTypeCommandControl("Miata NB2", "engines/miata_nb.png", MAZDA_MIATA_2003).getContent());
+        content.add(new SetEngineTypeCommandControl("V12", "engines/v12", TEST_V_12).getContent());
     }
 
     public JPanel getContent() {
