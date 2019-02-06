@@ -9,7 +9,6 @@
 #ifndef IO_PINS_H_
 #define IO_PINS_H_
 
-#include "rusefi_enums.h"
 #include "global.h"
 
 #define INITIAL_PIN_STATE -1

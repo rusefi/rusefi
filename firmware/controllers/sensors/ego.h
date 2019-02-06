@@ -11,7 +11,6 @@
 #define EGO_H_
 
 #include "global.h"
-#include "rusefi_enums.h"
 #include "engine_configuration.h"
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
