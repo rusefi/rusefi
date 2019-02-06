@@ -32,6 +32,7 @@
 #define CORE_CLOCK 168000000
 
 #define _CHIBIOS_RT_CONF_
+#define _CHIBIOS_RT_CONF_VER_5_1_
 
 #if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
  #define EFI_CLOCK_LOCKS FALSE
@@ -426,7 +427,7 @@ extern "C"
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_CFG_USE_FACTORY)
-#define CH_CFG_USE_FACTORY                  TRUE
+#define CH_CFG_USE_FACTORY                  FALSE
 #endif
 
 /**
@@ -442,21 +443,21 @@ extern "C"
  * @brief   Enables the registry of generic objects.
  */
 #if !defined(CH_CFG_FACTORY_OBJECTS_REGISTRY)
-#define CH_CFG_FACTORY_OBJECTS_REGISTRY     TRUE
+#define CH_CFG_FACTORY_OBJECTS_REGISTRY     FALSE
 #endif
 
 /**
  * @brief   Enables factory for generic buffers.
  */
 #if !defined(CH_CFG_FACTORY_GENERIC_BUFFERS)
-#define CH_CFG_FACTORY_GENERIC_BUFFERS      TRUE
+#define CH_CFG_FACTORY_GENERIC_BUFFERS      FALSE
 #endif
 
 /**
  * @brief   Enables factory for semaphores.
  */
 #if !defined(CH_CFG_FACTORY_SEMAPHORES)
-#define CH_CFG_FACTORY_SEMAPHORES           TRUE
+#define CH_CFG_FACTORY_SEMAPHORES           FALSE
 #endif
 
 /**
@@ -470,7 +471,7 @@ extern "C"
  * @brief   Enables factory for objects FIFOs.
  */
 #if !defined(CH_CFG_FACTORY_OBJ_FIFOS)
-#define CH_CFG_FACTORY_OBJ_FIFOS            TRUE
+#define CH_CFG_FACTORY_OBJ_FIFOS            FALSE
 #endif
 
 /** @} */
