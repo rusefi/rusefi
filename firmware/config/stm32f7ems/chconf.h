@@ -29,7 +29,7 @@
 #define CHCONF_H
 
 // todo: access some existing configuration field
-#define CORE_CLOCK 168000000
+#define CORE_CLOCK 216000000
 
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_5_1_
@@ -79,7 +79,7 @@ extern "C"
  *          setting also defines the system tick time unit.
  */
 #if !defined(CH_CFG_ST_FREQUENCY)
-#define CH_CFG_ST_FREQUENCY                 10000
+#define CH_CFG_ST_FREQUENCY                 1000
 #endif
 
 /**
@@ -106,8 +106,13 @@ extern "C"
  *          The value one is not valid, timeouts are rounded up to
  *          this value.
  */
+// rusEfi currently uses tick mode, see CH_CFG_ST_FREQUENCY
+// ST requires TIM2 or another 32 bit timer and we currently use it for ICU
+// but! there is no reason to use it for ICU as we've recently realized
+// so todo: migrate trigger to EXTI and try tick-less mode
+// see also CH_CFG_TIME_QUANTUM
 #if !defined(CH_CFG_ST_TIMEDELTA)
-#define CH_CFG_ST_TIMEDELTA                 2
+#define CH_CFG_ST_TIMEDELTA                 0
 #endif
 
 /** @} */
