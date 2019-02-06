@@ -582,21 +582,22 @@ static void initialLedsBlink(void) {
 		leds[i]->setValue(0);
 }
 
-int blinkingPeriod = 33;
+static int blinkingPeriodMs = 33;
 
 /**
  * this is useful to test connectivity
  */
 static void setBlinkingPeriod(int value) {
 	if (value > 0)
-		blinkingPeriod = value;
+		blinkingPeriodMs = value;
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 static bool isTriggerErrorNow() {
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
-	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
+	// todo: WAT? how is communication LED blinkingPeriodMs part of trigger error condition?!
+	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriodMs);
 	return justHadError || isTriggerDecoderError();
 #else
 	return false;
@@ -615,7 +616,7 @@ static void blinkingThread(void *arg) {
 	initialLedsBlink();
 
 	while (true) {
-		int delayMs = is_usb_serial_ready() ? 3 * blinkingPeriod : blinkingPeriod;
+		int delayMs = is_usb_serial_ready() ? 3 * blinkingPeriodMs : blinkingPeriodMs;
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 		if (getNeedToWriteConfiguration()) {
