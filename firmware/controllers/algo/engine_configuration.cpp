@@ -696,7 +696,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * if you only have one coil and many cylinders or high RPM you would need lower value at higher RPM
 	 */
 	setConstantDwell(4 PASS_ENGINE_PARAMETER_SUFFIX);
-	// Use angle-based duration during cranking
+	/**
+	 * Use angle-based duration during cranking
+	 * this is equivalent to 'disable cranking_constant_dwell' console command
+	 */
 	engineConfiguration->useConstantDwellDuringCranking = false;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
