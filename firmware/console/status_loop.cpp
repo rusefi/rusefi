@@ -623,7 +623,7 @@ static void blinkingThread(void *arg) {
 		}
 #endif
 
-		if (!hasFirmwareError() && !hasFirmwareErrorFlag) {
+		if (!hasFirmwareError()) {
 			enginePins.communicationLedPin.setValue(0);
 		}
 		enginePins.warningLedPin.setValue(0);
