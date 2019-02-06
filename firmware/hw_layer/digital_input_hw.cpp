@@ -211,7 +211,7 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 digital_input_s * addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver == NULL) {
-		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "not input pin");
+		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "w_not input pin");
 		return NULL;
 	}
 
@@ -256,7 +256,7 @@ void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 void startInputDriver(/*nullable*/digital_input_s *hw, bool isActiveHigh) {
 	if (hw == NULL) {
 		// we can get NULL driver if user somehow has invalid pin in his configuration
-		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "not input pin");
+		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "s_not input pin");
 		return;
 	}
 
