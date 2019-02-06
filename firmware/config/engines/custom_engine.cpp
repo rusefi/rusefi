@@ -160,7 +160,11 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
 	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
 	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
+#ifndef EFI_INJECTOR_PIN3
 	boardConfiguration->injectionPins[3] = GPIOB_7; // #4
+#else /* EFI_INJECTOR_PIN3 */
+	boardConfiguration->injectionPins[3] = EFI_INJECTOR_PIN3; // #4
+#endif /* EFI_INJECTOR_PIN3 */
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
