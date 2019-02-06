@@ -32,7 +32,7 @@ extern EnginePins enginePins;
 static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
 #else
 static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
-#endif
+#endif /* defined(STM32F4XX) || defined(STM32F7XX) */
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED)
