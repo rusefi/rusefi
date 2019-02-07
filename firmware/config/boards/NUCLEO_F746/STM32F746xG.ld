@@ -34,8 +34,8 @@ MEMORY
     flash6  : org = 0x00000000, len = 0
     flash7  : org = 0x00000000, len = 0
     ram0    : org = 0x20010000, len = 256k      /* SRAM1 + SRAM2 */
-    ram1    : org = 0x20010000, len = 240k      /* SRAM1 */
-    ram2    : org = 0x2004C000, len = 16k       /* SRAM2 */
+/* let's hide since it overlaps with ram0    ram1    : org = 0x20010000, len = 240k*/      /* SRAM1 */
+/* let's hide since it overlaps with ram0    ram2    : org = 0x2004C000, len = 16k*/       /* SRAM2 */
     ram3    : org = 0x20000000, len = 64k       /* DTCM-RAM */
     ram4    : org = 0x00000000, len = 16k       /* ITCM-RAM */
     ram5    : org = 0x40024000, len = 4k        /* BCKP SRAM */
@@ -82,7 +82,7 @@ REGION_ALIAS("DATA_RAM", ram0);
 REGION_ALIAS("DATA_RAM_LMA", flash0);
 
 /* RAM region to be used for BSS segment.*/
-REGION_ALIAS("BSS_RAM", ram3);
+REGION_ALIAS("BSS_RAM", ram0);
 
 /* RAM region to be used for the default heap.*/
 REGION_ALIAS("HEAP_RAM", ram0);
