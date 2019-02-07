@@ -2050,9 +2050,9 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
 		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
-        field = "Use fixed Dwell?",         			useConstantDwellDuringCranking
-        field = "Fixed Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
-		field = "Charge Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
+        field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
+        field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
+		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
 	
 		dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment"
 		field = "Target temperature", 			postCrankingTargetClt

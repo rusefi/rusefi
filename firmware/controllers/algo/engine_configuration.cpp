@@ -700,7 +700,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * Use angle-based duration during cranking
 	 * this is equivalent to 'disable cranking_constant_dwell' console command
 	 */
-	engineConfiguration->useConstantDwellDuringCranking = false;
+	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
 	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
