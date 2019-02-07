@@ -97,7 +97,11 @@ int flashSectorErase(flashsector_t sector) {
 	 * ...
 	 * 10111 sector 23 (the end of 2nd bank, 2Mb border)
 	 * others not allowed */
+#ifndef FLASH_CR_SNB_4
+	FLASH->CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3);
+#else
 	FLASH->CR &= ~(FLASH_CR_SNB_0 | FLASH_CR_SNB_1 | FLASH_CR_SNB_2 | FLASH_CR_SNB_3 | FLASH_CR_SNB_4);
+#endif
 	if (sector & 0x1)
 		FLASH->CR |= FLASH_CR_SNB_0;
 	if (sector & 0x2)
@@ -106,8 +110,10 @@ int flashSectorErase(flashsector_t sector) {
 		FLASH->CR |= FLASH_CR_SNB_2;
 	if (sector & 0x8)
 		FLASH->CR |= FLASH_CR_SNB_3;
+#ifdef FLASH_CR_SNB_4
 	if (sector & 0x10)
 		FLASH->CR |= FLASH_CR_SNB_4;
+#endif
 	FLASH->CR |= FLASH_CR_SER;
 	FLASH->CR |= FLASH_CR_STRT;
 
