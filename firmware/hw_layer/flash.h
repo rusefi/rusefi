@@ -1,3 +1,7 @@
+/**
+ * @file flash.h
+ *
+ */
 #ifndef FLASH_H
 #define FLASH_H
 
@@ -23,7 +27,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif /* __cplusplus */
 
 /**
  * @brief Maximum program/erase parallelism
@@ -163,6 +167,6 @@ int flashWrite(flashaddr_t address, const char* buffer, size_t size);
 
 #ifdef __cplusplus
 }
-#endif
+#endif /* __cplusplus */
 
 #endif /* FLASH_H */
