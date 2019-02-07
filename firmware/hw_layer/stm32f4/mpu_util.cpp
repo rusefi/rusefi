@@ -10,6 +10,7 @@
 #if EFI_PROD_CODE
 
 #include "mpu_util.h"
+#include "flash.h"
 #include "error_handling.h"
 #include "engine.h"
 #include "pin_repository.h"
@@ -419,6 +420,17 @@ CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 }
 
 #endif /* EFI_CAN_SUPPORT */
+
+size_t flashSectorSize(flashsector_t sector) {
+	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
+	if (sector <= 3 || (sector >= 12 && sector <= 15))
+		return 16 * 1024;
+	else if (sector == 4 || sector == 16)
+		return 64 * 1024;
+	else if ((sector >= 5 && sector <= 11) || (sector >= 17 && sector <= 23))
+		return 128 * 1024;
+	return 0;
+}
 
 #endif /* EFI_PROD_CODE */
 
