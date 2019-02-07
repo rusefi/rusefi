@@ -289,7 +289,7 @@ int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrea
 
 cranking_parameters_s cranking
 float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
-	float ignitionDwellForCrankingMs;;"ms",        1,     0,    0, 200,     1
+	float ignitionDwellForCrankingMs;Used if useConstantDwellDuringCranking is TRUE;"ms",        1,     0,    0, 200,     1
 float crankingChargeAngle;+While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.\nset cranking_charge_angle X;"deg",    1,      0,       0,  3000.0,      0
 
 

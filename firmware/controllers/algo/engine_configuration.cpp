@@ -691,8 +691,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setMazdaMiataNbTpsTps(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setConstantDwell(4 PASS_ENGINE_PARAMETER_SUFFIX); // 4ms is global default dwell
-	// disable constant_dwell
+	/**
+	 * 4ms is global default dwell for the whole RPM range
+	 * if you only have one coil and many cylinders or high RPM you would need lower value at higher RPM
+	 */
+	setConstantDwell(4 PASS_ENGINE_PARAMETER_SUFFIX);
+	// Use angle-based duration during cranking
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 

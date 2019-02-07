@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 23:18:47 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 05 23:48:04 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1022,6 +1022,7 @@ typedef struct {
 	 */
 	float primingSquirtDurationMs;
 	/**
+	 * Used if useConstantDwellDuringCranking is TRUE
 	 * offset 100
 	 */
 	float ignitionDwellForCrankingMs;
@@ -2480,4 +2481,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 23:18:47 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 05 23:48:04 EST 2019
