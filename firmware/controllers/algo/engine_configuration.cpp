@@ -693,7 +693,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setConstantDwell(4 PASS_ENGINE_PARAMETER_SUFFIX); // 4ms is global default dwell
 	// disable constant_dwell
-	engineConfiguration->useConstantDwellDuringCranking = false;
+	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
 
 	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
