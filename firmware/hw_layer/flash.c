@@ -14,17 +14,6 @@
 #include "flash.h"
 #include <string.h>
 
-size_t flashSectorSize(flashsector_t sector) {
-	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
-	if (sector <= 3 || (sector >= 12 && sector <= 15))
-		return 16 * 1024;
-	else if (sector == 4 || sector == 16)
-		return 64 * 1024;
-	else if ((sector >= 5 && sector <= 11) || (sector >= 17 && sector <= 23))
-		return 128 * 1024;
-	return 0;
-}
-
 flashaddr_t flashSectorBegin(flashsector_t sector) {
 	flashaddr_t address = FLASH_BASE;
 	while (sector > 0) {
