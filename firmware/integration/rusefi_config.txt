@@ -646,7 +646,7 @@ bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;enable verbose_etb
-	bit useConstantDwellDuringCranking;+Use angle-based duration or fixed absolute time dwell duration?
+	bit useConstantDwellDuringCranking;+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified charge angle.  Unless you have a really good reason to, leave this set to true.
 	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError
 	bit useLinearCltSensor
