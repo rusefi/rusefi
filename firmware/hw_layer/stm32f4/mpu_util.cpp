@@ -84,6 +84,9 @@ void baseHardwareInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
         DWT->CYCCNT = 0;
 
+    /**
+     * BOR (Brown Out Reset) is a way to reset microcontroller if target voltage is below voltage we set. When this happens, MCU is in reset state until voltage comes above selected voltage.
+     */
 	BOR_Set(BOR_Level_1); // one step above default value
 }
 
