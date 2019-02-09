@@ -579,9 +579,7 @@ typedef enum {
 
 	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
 	EFI_ADC_NONE = 16,
-	EFI_ADC_ERROR = 999,
-
-	Force_4_bytes_size_cranking_adc_channel = ENUM_32_BITS,
+	EFI_ADC_ERROR = 7,
 } adc_channel_e;
 
 typedef enum {
