@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 05 23:48:04 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 09 17:16:52 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1298,7 +1298,7 @@ typedef struct {
 	offset 1472 bit 3 */
 	bool isVerboseETB : 1;
 	/**
-	 * Use angle-based duration or fixed absolute time dwell duration?
+	 * If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle. Unless you have a really good reason to, leave this set to true to use duration mode.
 	offset 1472 bit 4 */
 	bool useConstantDwellDuringCranking : 1;
 	/**
@@ -2481,4 +2481,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 05 23:48:04 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 09 17:16:52 EST 2019
