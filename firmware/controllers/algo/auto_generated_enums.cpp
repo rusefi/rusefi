@@ -363,13 +363,6 @@ case OM_OPENDRAIN_INVERTED:
   }
  return NULL;
 }
-const char *getGpio_mode_e(gpio_mode_e value){
-switch(value) {
-case Force_4_bytes_size_gpio_mode:
-  return "Force_4_bytes_size_gpio_mode";
-  }
- return NULL;
-}
 const char *getPin_input_mode_e(pin_input_mode_e value){
 switch(value) {
 case Force_4_bytes_size_pin_input_mode:
