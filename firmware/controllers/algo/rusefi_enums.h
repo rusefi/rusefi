@@ -431,11 +431,6 @@ typedef enum {
 } pin_output_mode_e;
 
 typedef enum {
-	// todo: drop this unused enum?
-	Force_4_bytes_size_gpio_mode = ENUM_32_BITS,
-} gpio_mode_e;
-
-typedef enum {
 	PI_DEFAULT = 0,
 	PI_PULLUP = 1,
 	PI_PULLDOWN = 2,
