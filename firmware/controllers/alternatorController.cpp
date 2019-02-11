@@ -110,7 +110,7 @@ static msg_t AltCtrlThread(int param) {
 void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
 			hwPortname(CONFIGB(alternatorControlPin)),
-			engineConfiguration->alternatorControl.period);
+			engineConfiguration->alternatorControl.periodMs);
 	scheduleMsg(logger, "p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
 	scheduleMsg(logger, "vbatt=%.2f/duty=%.2f/target=%.2f", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), currentAltDuty,
@@ -145,7 +145,7 @@ void setDefaultAlternatorParameters(void) {
 
 	engineConfiguration->alternatorControl.offset = 0;
 	engineConfiguration->alternatorControl.pFactor = 30;
-	engineConfiguration->alternatorControl.period = 100;
+	engineConfiguration->alternatorControl.periodMs = 100;
 }
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {

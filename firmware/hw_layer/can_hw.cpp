@@ -258,12 +258,12 @@ static msg_t canThread(void *arg) {
 		if (engineConfiguration->canReadEnabled)
 			canRead(); // todo: since this is a blocking operation, do we need a separate thread for 'write'?
 
-		if (engineConfiguration->canSleepPeriod < 10) {
-			warning(CUSTOM_OBD_LOW_CAN_PERIOD, "%d too low CAN", engineConfiguration->canSleepPeriod);
-			engineConfiguration->canSleepPeriod = 50;
+		if (engineConfiguration->canSleepPeriodMs < 10) {
+			warning(CUSTOM_OBD_LOW_CAN_PERIOD, "%d too low CAN", engineConfiguration->canSleepPeriodMs);
+			engineConfiguration->canSleepPeriodMs = 50;
 		}
 
-		chThdSleepMilliseconds(engineConfiguration->canSleepPeriod);
+		chThdSleepMilliseconds(engineConfiguration->canSleepPeriodMs);
 	}
 #if defined __GNUC__ || defined(__DOXYGEN__)
 	return -1;
@@ -280,7 +280,7 @@ static void canInfo(void) {
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(CONFIGB(canRxPin)));
 	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
-			engineConfiguration->canSleepPeriod);
+			engineConfiguration->canSleepPeriodMs);
 
 	scheduleMsg(&logger, "CAN rx_cnt=%d/tx_ok=%d/tx_not_ok=%d", canReadCounter, canWriteOk, canWriteNotOk);
 }

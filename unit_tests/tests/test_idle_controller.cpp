@@ -17,7 +17,7 @@ TEST(idle, pid) {
 	pidS.offset = 0;
 	pidS.minValue = 10;
 	pidS.maxValue = 90;
-	pidS.period = 1;
+	pidS.periodMs = 1;
 
 	Pid pid(&pidS);
 
@@ -45,7 +45,7 @@ TEST(idle, pid) {
 	pidS.offset = 0;
 	pidS.minValue = 0;
 	pidS.maxValue = 100;
-	pidS.period = 1;
+	pidS.periodMs = 1;
 
 	pid.reset();
 

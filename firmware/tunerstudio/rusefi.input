@@ -68,7 +68,7 @@ enable2ndByteCanID = false
 
 ; CONFIG_DEFINITION_END
 	idleRpmPid_offset = "Constant base value"
-	idleRpmPid_period = "PID recalculation period"
+	idleRpmPid_periodMs = "PID recalculation period"
 	
 
 [Tuning]
@@ -1757,7 +1757,7 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "Offset",								idleRpmPid_offset
 		field = "Min",									idleRpmPid_minValue
 		field = "Max",									idleRpmPid_maxValue
-		field = "period",								idleRpmPid_period
+		field = "period",								idleRpmPid_periodMs
 		field = "RPM dead zone to deactivate IAC pid",	idlePidRpmDeadZone
 		field = "RPM upper limit to deactivate IAC pid",idlePidRpmUpperLimit
 		field = "PID Extra for low RPM",				pidExtraForLowRpm
@@ -1875,7 +1875,7 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "PWM Frequency",						auxPidFrequency1
 		field = "verbose",								isVerboseAuxPid1
 		field = "#target based on FSIO map#1"
-		field = "control period",						auxPid1_period, {activateAuxPid1 == 1}
+		field = "control period",						auxPid1_periodMs, {activateAuxPid1 == 1}
 		field = "#PID control"
 		field = "offset",								auxPid1_offset, {activateAuxPid1 == 1}
 		field = "P factor",								auxPid1_pFactor, {activateAuxPid1 == 1}
@@ -1900,7 +1900,7 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
 		field = "Verbose",								isVerboseAlternator, {isAlternatorControlEnabled == 1}
-		field = "control period",						alternatorControl_period, {isAlternatorControlEnabled == 1}
+		field = "control period",						alternatorControl_periodMs, {isAlternatorControlEnabled == 1}
 		field = "#PID control"
 		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
@@ -1966,7 +1966,7 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "Can Read Enabled",						canReadEnabled
 		field = "Can Write Enabled",					canWriteEnabled
 ;		field = "Can Nbc Type",							canNbcType
-		field = "Can Sleep Period",						canSleepPeriod
+		field = "Can Sleep Period",						canSleepPeriodMs
 		field = "RX pin",								canRxPin
 		field = "TX pin",								canTxPin
 	
@@ -2230,7 +2230,7 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "iFactor",								etb_iFactor, {pedalPositionAdcChannel != 16}
 		field = "dFactor",								etb_dFactor, {pedalPositionAdcChannel != 16}	
 		field = "offset",								etb_offset, {pedalPositionAdcChannel != 16}
-		field = "control period",						etb_period, {pedalPositionAdcChannel != 16}
+		field = "control period",						etb_periodMs, {pedalPositionAdcChannel != 16}
 		field = "pid min",								etb_minValue, {pedalPositionAdcChannel != 16}	
 		field = "pid max",								etb_maxValue, {pedalPositionAdcChannel != 16}	
 				

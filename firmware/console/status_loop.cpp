@@ -660,7 +660,7 @@ static void lcdThread(void *arg) {
 			updateHD44780lcd();
 #endif
 		}
-		chThdSleepMilliseconds(engineConfiguration->bc.lcdThreadPeriod);
+		chThdSleepMilliseconds(engineConfiguration->bc.lcdThreadPeriodMs);
 	}
 }
 

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Jan 26 23:18:47 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 10 20:05:25 EST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -188,7 +188,7 @@ public class Fields {
 	public static final int fuelLevelSensor_offset = 480;
 	public static final int vehicleSpeedCoef_offset = 484;
 	public static final int canNbcType_offset = 488;
-	public static final int canSleepPeriod_offset = 492;
+	public static final int canSleepPeriodMs_offset = 492;
 	public static final int operationMode_offset = 496;
 	public static final int displayMode_offset = 500;
 	public static final int logFormat_offset = 504;
@@ -364,14 +364,14 @@ public class Fields {
 	public static final int triggerInputPins3_offset = 904;
 	public static final int triggerInputPins3_offset_hex = 388;
 	public static final int mainRelayPin_offset = 908;
-	public static final int idleThreadPeriod_offset = 912;
-	public static final int idleThreadPeriod_offset_hex = 390;
-	public static final int consoleLoopPeriod_offset = 916;
-	public static final int consoleLoopPeriod_offset_hex = 394;
-	public static final int lcdThreadPeriod_offset = 920;
-	public static final int lcdThreadPeriod_offset_hex = 398;
+	public static final int idleThreadPeriodMs_offset = 912;
+	public static final int idleThreadPeriodMs_offset_hex = 390;
+	public static final int consoleLoopPeriodMs_offset = 916;
+	public static final int consoleLoopPeriodMs_offset_hex = 394;
+	public static final int lcdThreadPeriodMs_offset = 920;
+	public static final int lcdThreadPeriodMs_offset_hex = 398;
 	public static final int sdCardCsPin_offset = 924;
-	public static final int generalPeriodicThreadPeriod_offset = 928;
+	public static final int generalPeriodicThreadPeriodMs_offset = 928;
 	public static final int tunerStudioSerialSpeed_offset = 932;
 	public static final int boardTestModeJumperPin_offset = 936;
 	public static final int canDeviceMode_offset = 940;
@@ -735,8 +735,8 @@ public class Fields {
 	public static final int alternatorControl_dFactor_offset = 1820;
 	public static final int alternatorControl_offset_offset = 1824;
 	public static final int alternatorControl_offset_offset_hex = 720;
-	public static final int alternatorControl_period_offset = 1826;
-	public static final int alternatorControl_period_offset_hex = 722;
+	public static final int alternatorControl_periodMs_offset = 1826;
+	public static final int alternatorControl_periodMs_offset_hex = 722;
 	public static final int alternatorControl_minValue_offset = 1828;
 	public static final int alternatorControl_minValue_offset_hex = 724;
 	public static final int alternatorControl_maxValue_offset = 1830;
@@ -750,8 +750,8 @@ public class Fields {
 	public static final int etb_dFactor_offset_hex = 730;
 	public static final int etb_offset_offset = 1844;
 	public static final int etb_offset_offset_hex = 734;
-	public static final int etb_period_offset = 1846;
-	public static final int etb_period_offset_hex = 736;
+	public static final int etb_periodMs_offset = 1846;
+	public static final int etb_periodMs_offset_hex = 736;
 	public static final int etb_minValue_offset = 1848;
 	public static final int etb_minValue_offset_hex = 738;
 	public static final int etb_maxValue_offset = 1850;
@@ -763,7 +763,7 @@ public class Fields {
 	public static final int warmupAfrPid_dFactor_offset_hex = 744;
 	public static final int warmupAfrPid_offset_offset = 1864;
 	public static final int warmupAfrPid_offset_offset_hex = 748;
-	public static final int warmupAfrPid_period_offset = 1866;
+	public static final int warmupAfrPid_periodMs_offset = 1866;
 	public static final int warmupAfrPid_minValue_offset = 1868;
 	public static final int warmupAfrPid_maxValue_offset = 1870;
 	public static final int mapErrorDetectionTooLow_offset = 1872;
@@ -780,7 +780,7 @@ public class Fields {
 	public static final int idleRpmPid_dFactor_offset_hex = 764;
 	public static final int idleRpmPid_offset_offset = 1896;
 	public static final int idleRpmPid_offset_offset_hex = 768;
-	public static final int idleRpmPid_period_offset = 1898;
+	public static final int idleRpmPid_periodMs_offset = 1898;
 	public static final int idleRpmPid_minValue_offset = 1900;
 	public static final int idleRpmPid_maxValue_offset = 1902;
 	public static final int wwaeBeta_offset = 1904;
@@ -946,7 +946,7 @@ public class Fields {
 	public static final int fuelClosedLoopPid_iFactor_offset = 2696;
 	public static final int fuelClosedLoopPid_dFactor_offset = 2700;
 	public static final int fuelClosedLoopPid_offset_offset = 2704;
-	public static final int fuelClosedLoopPid_period_offset = 2706;
+	public static final int fuelClosedLoopPid_periodMs_offset = 2706;
 	public static final int fuelClosedLoopPid_minValue_offset = 2708;
 	public static final int fuelClosedLoopPid_maxValue_offset = 2710;
 	public static final int fuelClosedLoopAfrHighThreshold_offset = 2712;
@@ -980,7 +980,7 @@ public class Fields {
 	public static final int auxPid1_iFactor_offset = 2820;
 	public static final int auxPid1_dFactor_offset = 2824;
 	public static final int auxPid1_offset_offset = 2828;
-	public static final int auxPid1_period_offset = 2830;
+	public static final int auxPid1_periodMs_offset = 2830;
 	public static final int auxPid1_minValue_offset = 2832;
 	public static final int auxPid1_maxValue_offset = 2834;
 	public static final int auxPid2_offset = 2836;
@@ -988,7 +988,7 @@ public class Fields {
 	public static final int auxPid2_iFactor_offset = 2840;
 	public static final int auxPid2_dFactor_offset = 2844;
 	public static final int auxPid2_offset_offset = 2848;
-	public static final int auxPid2_period_offset = 2850;
+	public static final int auxPid2_periodMs_offset = 2850;
 	public static final int auxPid2_minValue_offset = 2852;
 	public static final int auxPid2_maxValue_offset = 2854;
 	public static final int auxPid3_offset = 2856;
@@ -996,7 +996,7 @@ public class Fields {
 	public static final int auxPid3_iFactor_offset = 2860;
 	public static final int auxPid3_dFactor_offset = 2864;
 	public static final int auxPid3_offset_offset = 2868;
-	public static final int auxPid3_period_offset = 2870;
+	public static final int auxPid3_periodMs_offset = 2870;
 	public static final int auxPid3_minValue_offset = 2872;
 	public static final int auxPid3_maxValue_offset = 2874;
 	public static final int auxPid4_offset = 2876;
@@ -1004,7 +1004,7 @@ public class Fields {
 	public static final int auxPid4_iFactor_offset = 2880;
 	public static final int auxPid4_dFactor_offset = 2884;
 	public static final int auxPid4_offset_offset = 2888;
-	public static final int auxPid4_period_offset = 2890;
+	public static final int auxPid4_periodMs_offset = 2890;
 	public static final int auxPid4_minValue_offset = 2892;
 	public static final int auxPid4_maxValue_offset = 2894;
 	public static final int oilPressure_offset = 2896;
@@ -1291,7 +1291,7 @@ public class Fields {
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 480, FieldType.INT, adc_channel_e);
 	public static final Field VEHICLESPEEDCOEF = Field.create("VEHICLESPEEDCOEF", 484, FieldType.FLOAT);
 	public static final Field CANNBCTYPE = Field.create("CANNBCTYPE", 488, FieldType.INT);
-	public static final Field CANSLEEPPERIOD = Field.create("CANSLEEPPERIOD", 492, FieldType.INT);
+	public static final Field CANSLEEPPERIODMS = Field.create("CANSLEEPPERIODMS", 492, FieldType.INT);
 	public static final Field OPERATIONMODE = Field.create("OPERATIONMODE", 496, FieldType.INT);
 	public static final Field DISPLAYMODE = Field.create("DISPLAYMODE", 500, FieldType.INT);
 	public static final Field LOGFORMAT = Field.create("LOGFORMAT", 504, FieldType.INT);
@@ -1403,11 +1403,11 @@ public class Fields {
 	public static final Field TRIGGERINPUTPINS2 = Field.create("TRIGGERINPUTPINS2", 900, FieldType.INT, brain_input_pin_e);
 	public static final Field TRIGGERINPUTPINS3 = Field.create("TRIGGERINPUTPINS3", 904, FieldType.INT, brain_input_pin_e);
 	public static final Field MAINRELAYPIN = Field.create("MAINRELAYPIN", 908, FieldType.INT, brain_pin_e);
-	public static final Field IDLETHREADPERIOD = Field.create("IDLETHREADPERIOD", 912, FieldType.INT);
-	public static final Field CONSOLELOOPPERIOD = Field.create("CONSOLELOOPPERIOD", 916, FieldType.INT);
-	public static final Field LCDTHREADPERIOD = Field.create("LCDTHREADPERIOD", 920, FieldType.INT);
+	public static final Field IDLETHREADPERIODMS = Field.create("IDLETHREADPERIODMS", 912, FieldType.INT);
+	public static final Field CONSOLELOOPPERIODMS = Field.create("CONSOLELOOPPERIODMS", 916, FieldType.INT);
+	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 920, FieldType.INT);
 	public static final Field SDCARDCSPIN = Field.create("SDCARDCSPIN", 924, FieldType.INT, brain_pin_e);
-	public static final Field GENERALPERIODICTHREADPERIOD = Field.create("GENERALPERIODICTHREADPERIOD", 928, FieldType.INT);
+	public static final Field GENERALPERIODICTHREADPERIODMS = Field.create("GENERALPERIODICTHREADPERIODMS", 928, FieldType.INT);
 	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 932, FieldType.INT);
 	public static final Field BOARDTESTMODEJUMPERPIN = Field.create("BOARDTESTMODEJUMPERPIN", 936, FieldType.INT, brain_pin_e);
 	public static final Field CANDEVICEMODE = Field.create("CANDEVICEMODE", 940, FieldType.INT);
@@ -1684,21 +1684,21 @@ public class Fields {
 	public static final Field ALTERNATORCONTROL_IFACTOR = Field.create("ALTERNATORCONTROL_IFACTOR", 1816, FieldType.FLOAT);
 	public static final Field ALTERNATORCONTROL_DFACTOR = Field.create("ALTERNATORCONTROL_DFACTOR", 1820, FieldType.FLOAT);
 	public static final Field ALTERNATORCONTROL_OFFSET = Field.create("ALTERNATORCONTROL_OFFSET", 1824, FieldType.INT);
-	public static final Field ALTERNATORCONTROL_PERIOD = Field.create("ALTERNATORCONTROL_PERIOD", 1826, FieldType.INT);
+	public static final Field ALTERNATORCONTROL_PERIODMS = Field.create("ALTERNATORCONTROL_PERIODMS", 1826, FieldType.INT);
 	public static final Field ALTERNATORCONTROL_MINVALUE = Field.create("ALTERNATORCONTROL_MINVALUE", 1828, FieldType.INT);
 	public static final Field ALTERNATORCONTROL_MAXVALUE = Field.create("ALTERNATORCONTROL_MAXVALUE", 1830, FieldType.INT);
 	public static final Field ETB_PFACTOR = Field.create("ETB_PFACTOR", 1832, FieldType.FLOAT);
 	public static final Field ETB_IFACTOR = Field.create("ETB_IFACTOR", 1836, FieldType.FLOAT);
 	public static final Field ETB_DFACTOR = Field.create("ETB_DFACTOR", 1840, FieldType.FLOAT);
 	public static final Field ETB_OFFSET = Field.create("ETB_OFFSET", 1844, FieldType.INT);
-	public static final Field ETB_PERIOD = Field.create("ETB_PERIOD", 1846, FieldType.INT);
+	public static final Field ETB_PERIODMS = Field.create("ETB_PERIODMS", 1846, FieldType.INT);
 	public static final Field ETB_MINVALUE = Field.create("ETB_MINVALUE", 1848, FieldType.INT);
 	public static final Field ETB_MAXVALUE = Field.create("ETB_MAXVALUE", 1850, FieldType.INT);
 	public static final Field WARMUPAFRPID_PFACTOR = Field.create("WARMUPAFRPID_PFACTOR", 1852, FieldType.FLOAT);
 	public static final Field WARMUPAFRPID_IFACTOR = Field.create("WARMUPAFRPID_IFACTOR", 1856, FieldType.FLOAT);
 	public static final Field WARMUPAFRPID_DFACTOR = Field.create("WARMUPAFRPID_DFACTOR", 1860, FieldType.FLOAT);
 	public static final Field WARMUPAFRPID_OFFSET = Field.create("WARMUPAFRPID_OFFSET", 1864, FieldType.INT);
-	public static final Field WARMUPAFRPID_PERIOD = Field.create("WARMUPAFRPID_PERIOD", 1866, FieldType.INT);
+	public static final Field WARMUPAFRPID_PERIODMS = Field.create("WARMUPAFRPID_PERIODMS", 1866, FieldType.INT);
 	public static final Field WARMUPAFRPID_MINVALUE = Field.create("WARMUPAFRPID_MINVALUE", 1868, FieldType.INT);
 	public static final Field WARMUPAFRPID_MAXVALUE = Field.create("WARMUPAFRPID_MAXVALUE", 1870, FieldType.INT);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1872, FieldType.FLOAT);
@@ -1708,7 +1708,7 @@ public class Fields {
 	public static final Field IDLERPMPID_IFACTOR = Field.create("IDLERPMPID_IFACTOR", 1888, FieldType.FLOAT);
 	public static final Field IDLERPMPID_DFACTOR = Field.create("IDLERPMPID_DFACTOR", 1892, FieldType.FLOAT);
 	public static final Field IDLERPMPID_OFFSET = Field.create("IDLERPMPID_OFFSET", 1896, FieldType.INT);
-	public static final Field IDLERPMPID_PERIOD = Field.create("IDLERPMPID_PERIOD", 1898, FieldType.INT);
+	public static final Field IDLERPMPID_PERIODMS = Field.create("IDLERPMPID_PERIODMS", 1898, FieldType.INT);
 	public static final Field IDLERPMPID_MINVALUE = Field.create("IDLERPMPID_MINVALUE", 1900, FieldType.INT);
 	public static final Field IDLERPMPID_MAXVALUE = Field.create("IDLERPMPID_MAXVALUE", 1902, FieldType.INT);
 	public static final Field WWAEBETA = Field.create("WWAEBETA", 1904, FieldType.FLOAT);
@@ -1817,7 +1817,7 @@ public class Fields {
 	public static final Field FUELCLOSEDLOOPPID_IFACTOR = Field.create("FUELCLOSEDLOOPPID_IFACTOR", 2696, FieldType.FLOAT);
 	public static final Field FUELCLOSEDLOOPPID_DFACTOR = Field.create("FUELCLOSEDLOOPPID_DFACTOR", 2700, FieldType.FLOAT);
 	public static final Field FUELCLOSEDLOOPPID_OFFSET = Field.create("FUELCLOSEDLOOPPID_OFFSET", 2704, FieldType.INT);
-	public static final Field FUELCLOSEDLOOPPID_PERIOD = Field.create("FUELCLOSEDLOOPPID_PERIOD", 2706, FieldType.INT);
+	public static final Field FUELCLOSEDLOOPPID_PERIODMS = Field.create("FUELCLOSEDLOOPPID_PERIODMS", 2706, FieldType.INT);
 	public static final Field FUELCLOSEDLOOPPID_MINVALUE = Field.create("FUELCLOSEDLOOPPID_MINVALUE", 2708, FieldType.INT);
 	public static final Field FUELCLOSEDLOOPPID_MAXVALUE = Field.create("FUELCLOSEDLOOPPID_MAXVALUE", 2710, FieldType.INT);
 	public static final Field FUELCLOSEDLOOPAFRHIGHTHRESHOLD = Field.create("FUELCLOSEDLOOPAFRHIGHTHRESHOLD", 2712, FieldType.FLOAT);
@@ -1850,28 +1850,28 @@ public class Fields {
 	public static final Field AUXPID1_IFACTOR = Field.create("AUXPID1_IFACTOR", 2820, FieldType.FLOAT);
 	public static final Field AUXPID1_DFACTOR = Field.create("AUXPID1_DFACTOR", 2824, FieldType.FLOAT);
 	public static final Field AUXPID1_OFFSET = Field.create("AUXPID1_OFFSET", 2828, FieldType.INT);
-	public static final Field AUXPID1_PERIOD = Field.create("AUXPID1_PERIOD", 2830, FieldType.INT);
+	public static final Field AUXPID1_PERIODMS = Field.create("AUXPID1_PERIODMS", 2830, FieldType.INT);
 	public static final Field AUXPID1_MINVALUE = Field.create("AUXPID1_MINVALUE", 2832, FieldType.INT);
 	public static final Field AUXPID1_MAXVALUE = Field.create("AUXPID1_MAXVALUE", 2834, FieldType.INT);
 	public static final Field AUXPID2_PFACTOR = Field.create("AUXPID2_PFACTOR", 2836, FieldType.FLOAT);
 	public static final Field AUXPID2_IFACTOR = Field.create("AUXPID2_IFACTOR", 2840, FieldType.FLOAT);
 	public static final Field AUXPID2_DFACTOR = Field.create("AUXPID2_DFACTOR", 2844, FieldType.FLOAT);
 	public static final Field AUXPID2_OFFSET = Field.create("AUXPID2_OFFSET", 2848, FieldType.INT);
-	public static final Field AUXPID2_PERIOD = Field.create("AUXPID2_PERIOD", 2850, FieldType.INT);
+	public static final Field AUXPID2_PERIODMS = Field.create("AUXPID2_PERIODMS", 2850, FieldType.INT);
 	public static final Field AUXPID2_MINVALUE = Field.create("AUXPID2_MINVALUE", 2852, FieldType.INT);
 	public static final Field AUXPID2_MAXVALUE = Field.create("AUXPID2_MAXVALUE", 2854, FieldType.INT);
 	public static final Field AUXPID3_PFACTOR = Field.create("AUXPID3_PFACTOR", 2856, FieldType.FLOAT);
 	public static final Field AUXPID3_IFACTOR = Field.create("AUXPID3_IFACTOR", 2860, FieldType.FLOAT);
 	public static final Field AUXPID3_DFACTOR = Field.create("AUXPID3_DFACTOR", 2864, FieldType.FLOAT);
 	public static final Field AUXPID3_OFFSET = Field.create("AUXPID3_OFFSET", 2868, FieldType.INT);
-	public static final Field AUXPID3_PERIOD = Field.create("AUXPID3_PERIOD", 2870, FieldType.INT);
+	public static final Field AUXPID3_PERIODMS = Field.create("AUXPID3_PERIODMS", 2870, FieldType.INT);
 	public static final Field AUXPID3_MINVALUE = Field.create("AUXPID3_MINVALUE", 2872, FieldType.INT);
 	public static final Field AUXPID3_MAXVALUE = Field.create("AUXPID3_MAXVALUE", 2874, FieldType.INT);
 	public static final Field AUXPID4_PFACTOR = Field.create("AUXPID4_PFACTOR", 2876, FieldType.FLOAT);
 	public static final Field AUXPID4_IFACTOR = Field.create("AUXPID4_IFACTOR", 2880, FieldType.FLOAT);
 	public static final Field AUXPID4_DFACTOR = Field.create("AUXPID4_DFACTOR", 2884, FieldType.FLOAT);
 	public static final Field AUXPID4_OFFSET = Field.create("AUXPID4_OFFSET", 2888, FieldType.INT);
-	public static final Field AUXPID4_PERIOD = Field.create("AUXPID4_PERIOD", 2890, FieldType.INT);
+	public static final Field AUXPID4_PERIODMS = Field.create("AUXPID4_PERIODMS", 2890, FieldType.INT);
 	public static final Field AUXPID4_MINVALUE = Field.create("AUXPID4_MINVALUE", 2892, FieldType.INT);
 	public static final Field AUXPID4_MAXVALUE = Field.create("AUXPID4_MAXVALUE", 2894, FieldType.INT);
 	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 2896, FieldType.INT, adc_channel_e);

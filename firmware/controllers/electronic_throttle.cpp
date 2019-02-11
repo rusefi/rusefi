@@ -245,7 +245,7 @@ void setDefaultEtbParameters(void) {
 
 	engineConfiguration->etb.pFactor = 1;
 	engineConfiguration->etb.iFactor = 0.5;
-	engineConfiguration->etb.period = 100;
+	engineConfiguration->etb.periodMs = 100;
 	engineConfiguration->etbFreq = 300;
 
 //	CONFIGB(etbControlPin1) = GPIOE_4; // test board, matched default fuel pump relay
@@ -309,7 +309,7 @@ static void setAutoStep(float value) {
 }
 
 static void setAutoPeriod(int period) {
-	tuneWorkingPidSettings.period = period;
+	tuneWorkingPidSettings.periodMs = period;
 	autoTune.reset();
 }
 
@@ -355,10 +355,10 @@ void initElectronicThrottle(void) {
 	tuneWorkingPidSettings.iFactor = 0;
 	tuneWorkingPidSettings.dFactor = 0;
 //	tuneWorkingPidSettings.offset = 10; // todo: not hard-coded value
-	//todo tuneWorkingPidSettings.period = 10;
+	//todo tuneWorkingPidSettings.periodMs = 10;
 	tuneWorkingPidSettings.minValue = 0;
 	tuneWorkingPidSettings.maxValue = 100;
-	tuneWorkingPidSettings.period = 100;
+	tuneWorkingPidSettings.periodMs = 100;
 
 	// this is useful one you do "enable etb_auto"
 	addConsoleActionF("set_etbat_output", setTempOutput);
@@ -368,7 +368,7 @@ void initElectronicThrottle(void) {
 
 	pid.reset();
 
-	int periodMs = maxI(10, engineConfiguration->etb.period);
+	int periodMs = maxI(10, engineConfiguration->etb.periodMs);
 	etbController.setPeriod(periodMs);
 	etbController.Start();
 }

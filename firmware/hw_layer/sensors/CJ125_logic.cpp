@@ -121,6 +121,6 @@ void CJ125::cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	heaterPidConfig.maxValue = 1;
 	heaterPidConfig.offset = 0;
 	// todo: period?
-	heaterPidConfig.period = 1.0f;
+	heaterPidConfig.periodMs = 1.0f;
 	heaterPid.reset();
 }
