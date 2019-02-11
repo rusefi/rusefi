@@ -31,12 +31,11 @@
 #include "idle_thread.h"
 #include "pin_repository.h"
 #include "engine.h"
+#include "PeriodicController.h"
 #include "stepper.h"
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 #include "allsensors.h"
-
-static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static Logging *logger;
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -75,7 +74,6 @@ typedef enum {
 } idle_state_e;
 
 idle_state_e idleState = INIT;
-
 
 /**
  * that's current position with CLT and IAT corrections
@@ -266,18 +264,18 @@ static percent_t automaticIdleController() {
 	return newValue;
 }
 
-static msg_t ivThread(int param) {
-	(void) param;
-	chRegSetThreadName("IdleValve");
+class IdleController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	IdleController() : PeriodicController("IdleValve") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->idleRpmPid.periodMs));
 
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,
 	 * @see stepper.cpp
 	 */
-
-	while (true) {
-		idlePid.sleep();  // in both manual and auto mode same period is used
 
 		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
 			scheduleMsg(logger, "state %d", idleState);
@@ -374,17 +372,16 @@ static msg_t ivThread(int param) {
 		// The threshold is dependent on IAC type (see initIdleHardware())
 		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
 			idleState = PWM_PRETTY_CLOSE;
-			continue; // value is pretty close, let's leave the poor valve alone
+			return; // value is pretty close, let's leave the poor valve alone
 		}
 
 		currentIdlePosition = iacPosition;
 		idleState = ADJUSTING;
 		applyIACposition(currentIdlePosition);
 	}
-#if defined __GNUC__
-	return -1;
-#endif
-}
+};
+
+static IdleController instance;
 
 void setTargetIdleRpm(int value) {
 	setTargetRpmCurve(value PASS_ENGINE_PARAMETER_SUFFIX);
@@ -486,7 +483,7 @@ void startIdleThread(Logging*sharedLogger) {
 
 	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
-	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t)(void*) ivThread, NULL);
+	instance.Start();
 
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
