@@ -4,6 +4,8 @@
  *
  * todo: make this more universal if/when we get other hardware options
  *
+ * Jan 2019 actually driven around the block but still need some work.
+ *
  * Jan 2017 status:
  * Electronic throttle body with it's spring is definitely not linear - both P and I factors of PID are required to get any results
  *  PID implementation tested on a bench only
@@ -86,8 +88,8 @@ static SimplePwm etbPwmUp("etbUp") CCM_OPTIONAL;
 static float valueOverride = NAN;
 /*
 static SimplePwm etbPwmDown("etbDown") CCM_OPTIONAL;
-static OutputPin outputDirectionOpen CCM_OPTIONAL;
 */
+static OutputPin outputDirectionOpen CCM_OPTIONAL;
 static OutputPin outputDirectionClose CCM_OPTIONAL;
 
 EXTERN_ENGINE;
@@ -157,7 +159,7 @@ static msg_t etbThread(void *arg) {
 		currentEtbDuty = pid.getValue(targetPosition, actualThrottlePosition);
 
 		etbPwmUp.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentEtbDuty));
-
+/*
 		if (CONFIGB(etbDirectionPin2) != GPIO_UNASSIGNED) {
 			bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
 			if (needEtbBraking != wasEtbBraking) {
@@ -166,7 +168,7 @@ static msg_t etbThread(void *arg) {
 			}
 			outputDirectionClose.setValue(needEtbBraking);
 		}
-
+*/
 		if (engineConfiguration->isVerboseETB) {
 			pid.showPidStatus(&logger, "ETB");
 		}
@@ -295,8 +297,8 @@ void startETBPins(void) {
 			freq,
 			0.80,
 			applyPinState);
-	outputDirectionOpen.initPin("etb dir open", CONFIGB(etbDirectionPin1));
 */
+	outputDirectionOpen.initPin("etb dir open", CONFIGB(etbDirectionPin1));
 	outputDirectionClose.initPin("etb dir close", CONFIGB(etbDirectionPin2));
 }
 

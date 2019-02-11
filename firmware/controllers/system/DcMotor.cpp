@@ -15,19 +15,23 @@ TwoPinDcMotor::TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2)
 {
 }
 
+/**
+ * @param duty value between -1.0 and 1.0
+ */
 bool TwoPinDcMotor::Set(float duty)
 {
-    bool dir;
+    bool isPositiveOrZero;
 
     if(duty < 0)
     {
-        dir = false;
+    	isPositiveOrZero = false;
         duty = -duty;
     }
     else
     {
-        dir = true;
+    	isPositiveOrZero = true;
     }
+    // below here 'duty' is a not negative
 
     // Clamp to 100%
     if(duty > 1.0f)
@@ -47,8 +51,8 @@ bool TwoPinDcMotor::Set(float duty)
     }
     else
     {
-        m_dir1->setValue(dir);
-        m_dir2->setValue(!dir);
+        m_dir1->setValue(isPositiveOrZero);
+        m_dir2->setValue(!isPositiveOrZero);
     }
 
     m_pwm->setSimplePwmDutyCycle(duty);
