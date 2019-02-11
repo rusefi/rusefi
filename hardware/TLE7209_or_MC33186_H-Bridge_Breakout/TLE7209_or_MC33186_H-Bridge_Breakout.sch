@@ -1,0 +1,469 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:TLE7209-2R
+LIBS:TLE7209_or_MC33186_H-Bridge_Breakout-cache
+EELAYER 25 0
+EELAYER END
+$Descr A 11000 8500
+encoding utf-8
+Sheet 1 1
+Title "TLE7209_or_MC33186_H-Bridge_Breakout"
+Date "2019-02-11"
+Rev "R0.1"
+Comp "rusEFI"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L TLE7209-2R U3
+U 1 1 5C756EA4
+P 4175 3650
+AR Path="/5C756EA4" Ref="U3"  Part="1" 
+AR Path="/5C754D7C/5C756EA4" Ref="U3"  Part="1" 
+F 0 "U3" H 3825 4150 50  0000 C CNN
+F 1 "TLE7209-2R" H 4025 2125 50  0000 C CNN
+F 2 "Package_SO:HSOP-20-1EP_11.0x15.9mm_P1.27mm_SlugDown_ThermalVias" H 4575 3950 50  0001 L CNN
+F 3 " " H 4025 4200 50  0001 C CNN
+F 4 "TLE7209-2R" H 0   0   50  0001 C CNN "Part #"
+F 5 "Infineon" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "MOUSER" H 0   0   50  0001 C CNN "VEND"
+F 7 "-" H 0   0   50  0001 C CNN "VEND#"
+F 8 "Infineon" H 0   0   50  0001 C CNN "Manufacturer"
+	1    4175 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4825 3300 5025 3300
+Wire Wire Line
+	4825 3450 5025 3450
+Wire Wire Line
+	5025 3450 5025 3300
+Connection ~ 5025 3300
+Text HLabel 5675 3300 2    60   Input ~ 0
+OUT1
+$Comp
+L C C23
+U 1 1 5C756FF0
+P 5600 3550
+F 0 "C23" H 5700 3650 50  0000 C CNN
+F 1 "10nF" H 5700 3450 50  0000 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 5600 3550 50  0001 C CNN
+F 3 "~" H 5600 3550 50  0001 C CNN
+F 4 "WURTH" H 0   0   50  0001 C CNN "Manufacturer"
+F 5 "885012208052" H 0   0   50  0001 C CNN "Part #"
+F 6 "MOUSER" H 0   0   50  0001 C CNN "VEND"
+F 7 "710-885012208052" H 0   0   50  0001 C CNN "VEND#"
+	1    5600 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R32
+U 1 1 5C757076
+P 5300 3550
+F 0 "R32" H 5400 3700 50  0000 C CNN
+F 1 "4.7K" V 5300 3550 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 5300 3550 50  0001 C CNN
+F 3 "~" H 5300 3550 50  0001 C CNN
+F 4 "MOUSER" H 0   0   50  0001 C CNN "VEND"
+	1    5300 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R31
+U 1 1 5C75764C
+P 3425 4225
+F 0 "R31" V 3375 4425 50  0000 C CNN
+F 1 "1M" V 3425 4225 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 6600 2900 50  0001 C CNN
+F 3 "~" H 3425 4225 50  0001 C CNN
+F 4 "MOUSER" H -1775 1325 50  0001 C CNN "VEND"
+	1    3425 4225
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4825 3800 5025 3800
+Wire Wire Line
+	4825 3650 5025 3650
+Wire Wire Line
+	5025 3650 5025 3800
+Connection ~ 5025 3800
+Wire Wire Line
+	3575 4700 2800 4700
+Wire Wire Line
+	2800 4700 2800 4550
+Connection ~ 2800 4550
+Wire Wire Line
+	2800 4850 2800 4700
+Connection ~ 2800 4700
+Wire Wire Line
+	4825 4600 5300 4600
+Wire Wire Line
+	5300 4600 5300 4700
+Wire Wire Line
+	4825 4700 5300 4700
+Connection ~ 5300 4700
+Wire Wire Line
+	5300 4700 5300 4800
+Wire Wire Line
+	4825 4800 5300 4800
+Connection ~ 5300 4800
+Wire Wire Line
+	5300 4800 5300 4900
+Wire Wire Line
+	4825 4900 5300 4900
+Connection ~ 5300 4900
+Wire Wire Line
+	5300 4900 5300 5000
+$Comp
+L C C21
+U 1 1 5C763ABB
+P 3300 5150
+F 0 "C21" H 3200 5250 50  0000 C CNN
+F 1 "100nF" V 3350 5000 50  0000 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 3300 5150 50  0001 C CNN
+F 3 "~" H 3300 5150 50  0001 C CNN
+F 4 "KEMET" H 25  -50 50  0001 C CNN "Part Manufacturer"
+F 5 "MOUSER" H 25  -50 50  0001 C CNN "VEND"
+F 6 "710-885012208087" H 25  -50 50  0001 C CNN "VEND#"
+F 7 "WURTH" H 0   0   50  0001 C CNN "Manufacturer"
+F 8 "885012208087" H 0   0   50  0001 C CNN "Part #"
+	1    3300 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C20
+U 1 1 5C7648F5
+P 3050 5150
+F 0 "C20" H 2950 5250 50  0000 C CNN
+F 1 "100nF" V 3100 5000 50  0000 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 3050 5150 50  0001 C CNN
+F 3 "~" H 3050 5150 50  0001 C CNN
+F 4 "KEMET" H -25 -50 50  0001 C CNN "Part Manufacturer"
+F 5 "MOUSER" H -25 -50 50  0001 C CNN "VEND"
+F 6 "710-885012208087" H -25 -50 50  0001 C CNN "VEND#"
+F 7 "WURTH" H 0   0   50  0001 C CNN "Manufacturer"
+F 8 "885012208087" H 0   0   50  0001 C CNN "Part #"
+	1    3050 5150
+	1    0    0    -1  
+$EndComp
+Connection ~ 2800 4850
+$Comp
+L CP1 C19
+U 1 1 5C767A32
+P 2800 5150
+F 0 "C19" H 2650 5250 50  0000 C CNN
+F 1 "220uF" V 2850 5000 50  0000 C CNN
+F 2 "Capacitor_SMD:CP_Elec_10x10.5" H 2800 5150 50  0001 C CNN
+F 3 "~" H 2800 5150 50  0001 C CNN
+F 4 "EMVE500ADA221MJA" H -25 -50 50  0001 C CNN "Part #"
+F 5 "MOUSER" H -25 -50 50  0001 C CNN "VEND"
+F 6 "661-EMVE500ADA221MJA" H -25 -50 50  0001 C CNN "VEND#"
+F 7 "United Chemi-Con" H 0   0   50  0001 C CNN "Manufacturer"
+	1    2800 5150
+	1    0    0    -1  
+$EndComp
+Text HLabel 5300 5450 2    60   Input ~ 0
+GND
+$Comp
+L D_Zener D?
+U 1 1 5C76D302
+P 2450 5150
+AR Path="/5C76D302" Ref="D?"  Part="1" 
+AR Path="/5C754D7C/5C76D302" Ref="D5"  Part="1" 
+F 0 "D?" V 2350 5150 50  0000 L CNN
+F 1 "TPSMB24A" H 2450 5050 50  0000 C CNN
+F 2 "Diode_SMD:D_SMA" H 2450 4950 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/88301/15ke.pdf" H 2400 5150 50  0001 C CNN
+F 4 "TPSMB24A" H 0   0   50  0001 C CNN "Part #"
+F 5 "Littelfuse" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "MOUSER" H 0   0   50  0001 C CNN "VEND"
+F 7 "576-TPSMB24A" H 0   0   50  0001 C CNN "VEND#"
+F 8 "LITTELFUSE" H 0   0   50  0001 C CNN "Manufacturer"
+	1    2450 5150
+	0    1    1    0   
+$EndComp
+$Comp
+L R R29
+U 1 1 5C770592
+P 2150 5450
+F 0 "R29" V 2250 5450 50  0000 C CNN
+F 1 "10K" V 2150 5450 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 2150 5450 50  0001 C CNN
+F 3 "~" H 2150 5450 50  0001 C CNN
+F 4 "MOUSER" H 0   0   50  0001 C CNN "VEND"
+	1    2150 5450
+	0    1    1    0   
+$EndComp
+Text HLabel 1150 4550 0    60   Input ~ 0
+UBR
+Wire Wire Line
+	3575 3350 3200 3350
+Wire Wire Line
+	3575 3500 3200 3500
+Wire Wire Line
+	3575 3650 3200 3650
+Wire Wire Line
+	3575 3800 3200 3800
+Text HLabel 3200 3350 0    60   Input ~ 0
+IN1
+Text HLabel 3200 3500 0    60   Input ~ 0
+IN2
+Text HLabel 3200 3650 0    60   Input ~ 0
+DI1
+Text HLabel 3200 3800 0    60   Input ~ 0
+DI2
+Text HLabel 3200 4050 0    60   Input ~ 0
+SCK-SF
+Text HLabel 3200 3925 0    60   Input ~ 0
+5V
+Text HLabel 2800 4400 0    60   Input ~ 0
+UBHR
+$Comp
+L R R30
+U 1 1 5C79560E
+P 3425 3925
+F 0 "R30" V 3375 4100 50  0000 C CNN
+F 1 "47K" V 3425 3925 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 3425 3925 50  0001 C CNN
+F 3 "~" H 3425 3925 50  0001 C CNN
+F 4 "MOUSER" H 975 1075 50  0001 C CNN "VEND"
+	1    3425 3925
+	0    1    1    0   
+$EndComp
+Text Label 2250 4550 0    60   ~ 0
+UBD
+Wire Wire Line
+	1150 4550 1175 4550
+Wire Wire Line
+	2450 5300 2450 5450
+Connection ~ 2450 5450
+Wire Wire Line
+	2450 5450 2800 5450
+Wire Wire Line
+	2450 5000 2450 4550
+Connection ~ 2450 4550
+Wire Wire Line
+	5025 3800 5300 3800
+Wire Wire Line
+	5025 3300 5300 3300
+Wire Wire Line
+	5300 3400 5300 3300
+Connection ~ 5300 3300
+Wire Wire Line
+	5300 3300 5600 3300
+Wire Wire Line
+	5300 3700 5300 3800
+Connection ~ 5300 3800
+Wire Wire Line
+	5300 3800 5600 3800
+Wire Wire Line
+	5600 3700 5600 3800
+Connection ~ 5600 3800
+Wire Wire Line
+	5600 3800 5675 3800
+Wire Wire Line
+	5600 3400 5600 3300
+Connection ~ 5600 3300
+Wire Wire Line
+	5600 3300 5675 3300
+$Comp
+L C C22
+U 1 1 5C7578B7
+P 3425 4400
+F 0 "C22" V 3475 4525 50  0000 C CNN
+F 1 "33nF" V 3475 4250 50  0000 C CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 6375 2900 50  0001 C CNN
+F 3 "~" H 6375 2900 50  0001 C CNN
+F 4 "WURTH" H -1525 1500 50  0001 C CNN "Manufacturer"
+F 5 "885012008026" H -1525 1500 50  0001 C CNN "Part #"
+F 6 "MOUSER" H -1525 1500 50  0001 C CNN "VEND"
+F 7 "710-885012008026" H -1525 1500 50  0001 C CNN "VEND#"
+	1    3425 4400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3200 4050 3575 4050
+Wire Wire Line
+	3575 4050 3575 3925
+Connection ~ 3575 4050
+Wire Wire Line
+	2300 5450 2450 5450
+Wire Wire Line
+	2800 5300 2800 5450
+Connection ~ 2800 5450
+Wire Wire Line
+	2800 4550 3050 4550
+Wire Wire Line
+	3050 5000 3050 4550
+Connection ~ 3050 4550
+Wire Wire Line
+	3050 4550 3575 4550
+Wire Wire Line
+	3050 5300 3050 5450
+Connection ~ 3050 5450
+Wire Wire Line
+	3050 5450 3300 5450
+Wire Wire Line
+	2800 4850 3300 4850
+Wire Wire Line
+	3300 4850 3300 5000
+Connection ~ 3300 4850
+Wire Wire Line
+	3300 4850 3575 4850
+Wire Wire Line
+	3300 5300 3300 5450
+Connection ~ 3300 5450
+$Comp
+L Reference_Voltage:LM4040DCK-10 D4
+U 1 1 5C773D3D
+P 1975 5100
+F 0 "D4" V 1800 5150 50  0000 C CNN
+F 1 "  BZX84/C10" H 1975 5000 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 1975 4925 50  0001 C CIN
+F 3 "http://www.jameco.com/Jameco/Products/ProdDS/760499.pdf" H 1975 5100 50  0001 C CIN
+F 4 "SZBZX84C10LT1G" H 0   0   50  0001 C CNN "Part #"
+F 5 "ON Semiconductor" H 0   0   50  0001 C CNN "Part Manufacturer"
+F 6 "MOUSER" H 0   0   50  0001 C CNN "VEND"
+F 7 "863-SZBZX84C10LT1G" H 0   0   50  0001 C CNN "VEND#"
+F 8 "ON-SEMI" H 0   0   50  0001 C CNN "Manufacturer"
+	1    1975 5100
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3200 3925 3275 3925
+Wire Wire Line
+	2800 4850 2800 5000
+Wire Wire Line
+	2450 4550 2800 4550
+$Comp
+L BSS83P Q2
+U 1 1 5C3B1A21
+P 1375 4650
+F 0 "Q2" V 1625 4650 50  0000 C CNN
+F 1 "BSS83P" V 1716 4650 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:TO-252-3_TabPin2" H 1575 4575 50  0001 L CIN
+F 3 "http://www.farnell.com/datasheets/1835997.pdf" H 1375 4650 50  0001 L CNN
+F 4 "	BSS83PH6327XTSA1" H 0   -400 50  0001 C CNN "Part #"
+F 5 "INFINEON" H 0   -400 50  0001 C CNN "Part Manufacturer"
+F 6 "MOUSER" H 0   -400 50  0001 C CNN "VEND"
+F 7 "726-BSS83PH6327XTSA" H 0   -400 50  0001 C CNN "VEND#"
+F 8 "INFINEON" H 0   -400 50  0001 C CNN "Manufacturer"
+	1    1375 4650
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	1375 4850 1375 5450
+Wire Wire Line
+	2800 5450 3050 5450
+Text HLabel 5675 3800 2    60   Input ~ 0
+OUT2
+Wire Wire Line
+	1575 4550 1975 4550
+Wire Wire Line
+	1375 5450 1975 5450
+Wire Wire Line
+	1975 5250 1975 5450
+Connection ~ 1975 5450
+Wire Wire Line
+	1975 5450 2000 5450
+Wire Wire Line
+	1975 4950 1975 4550
+Connection ~ 1975 4550
+Wire Wire Line
+	1975 4550 2450 4550
+$Comp
+L R R155
+U 1 1 5C630128
+P 4975 4300
+F 0 "R155" V 4925 4525 50  0000 C CNN
+F 1 "0R" V 4975 4300 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 4975 4300 50  0001 C CNN
+F 3 "~" H 4975 4300 50  0001 C CNN
+F 4 "MOUSER" H 2525 1450 50  0001 C CNN "VEND"
+	1    4975 4300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3300 5450 5300 5450
+Wire Wire Line
+	4825 5000 5300 5000
+Connection ~ 5300 5000
+Wire Wire Line
+	5300 5000 5300 5450
+Wire Wire Line
+	3575 4225 3575 4400
+Connection ~ 3575 4400
+Wire Wire Line
+	3275 4225 3275 4400
+Wire Wire Line
+	3275 4400 2800 4400
+Connection ~ 3275 4400
+Wire Wire Line
+	2800 4400 2800 4550
+Text HLabel 5675 4300 2    60   Input ~ 0
+SDI
+Text HLabel 5675 4200 2    60   Input ~ 0
+SDO
+Text HLabel 5675 4100 2    60   Input ~ 0
+CSN
+Wire Wire Line
+	5125 4300 5675 4300
+$Comp
+L R R157
+U 1 1 5C6455F8
+P 4975 4200
+F 0 "R157" V 4925 4425 50  0000 C CNN
+F 1 "0R" V 4975 4200 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 4975 4200 50  0001 C CNN
+F 3 "~" H 4975 4200 50  0001 C CNN
+F 4 "MOUSER" H 2525 1350 50  0001 C CNN "VEND"
+	1    4975 4200
+	0    1    1    0   
+$EndComp
+$Comp
+L R R156
+U 1 1 5C645901
+P 4975 4100
+F 0 "R156" V 4925 4325 50  0000 C CNN
+F 1 "0R" V 4975 4100 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 4975 4100 50  0001 C CNN
+F 3 "~" H 4975 4100 50  0001 C CNN
+F 4 "MOUSER" H 2525 1250 50  0001 C CNN "VEND"
+	1    4975 4100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5125 4200 5675 4200
+Wire Wire Line
+	5125 4100 5675 4100
+$EndSCHEMATC
