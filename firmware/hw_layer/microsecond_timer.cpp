@@ -141,7 +141,7 @@ private:
 	}
 };
 
-MicrosecondTimerWatchdogController watchdogControllerInstance;
+static MicrosecondTimerWatchdogController watchdogControllerInstance;
 
 static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 		hwTimerCallback, /* Timer callback.*/
