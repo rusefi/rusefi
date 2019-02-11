@@ -13,6 +13,7 @@
 #include "voltage.h"
 #include "pid.h"
 #include "LocalVersionHolder.h"
+#include "PeriodicController.h"
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 #include "pwm_generator.h"
@@ -28,8 +29,6 @@ static SimplePwm alternatorControl("alt");
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
 static Pid altPid(altPidS);
 
-static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
-
 static percent_t currentAltDuty;
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -43,18 +42,19 @@ static void pidReset(void) {
 	altPid.reset();
 }
 
-static msg_t AltCtrlThread(int param) {
-	UNUSED(param);
-	chRegSetThreadName("AlternatorController");
-	while (true) {
+class AlternatorController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	AlternatorController() : PeriodicController("AlternatorController") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->alternatorControl.periodMs));
+
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 		if (shouldResetPid) {
 			pidReset();
 			shouldResetPid = false;
 		}
 #endif
-
-		altPid.sleep();
 
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
@@ -71,7 +71,7 @@ static msg_t AltCtrlThread(int param) {
 		if (!engine->isAlternatorControlEnabled) {
 			// we need to avoid accumulating iTerm while engine is not running
 			pidReset();
-			continue;
+			return;
 		}
 
 		float vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -88,7 +88,7 @@ static msg_t AltCtrlThread(int param) {
 #endif /* EFI_TUNER_STUDIO */
 			}
 
-			continue;
+			return;
 		}
 
 
@@ -101,11 +101,9 @@ static msg_t AltCtrlThread(int param) {
 
 		alternatorControl.setSimplePwmDutyCycle(currentAltDuty / 100);
 	}
-#if defined __GNUC__
-	return -1;
-#endif
-}
+};
 
+static AlternatorController instance;
 
 void showAltInfo(void) {
 	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
@@ -169,8 +167,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0.1, applyAlternatorPinState);
 	}
-	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,
-			(tfunc_t)(void*) AltCtrlThread, NULL);
+	instance.Start();
 }
 
 #endif /* EFI_ALTERNATOR_CONTROL */

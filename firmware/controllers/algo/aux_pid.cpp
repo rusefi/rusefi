@@ -17,6 +17,7 @@
 #include "fsio_impl.h"
 #include "engine_math.h"
 #include "pin_repository.h"
+#include "PeriodicController.h"
 
 EXTERN_ENGINE
 ;
@@ -29,8 +30,6 @@ extern fsio8_Map3D_f32t fsioTable1;
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-
-static THD_WORKING_AREA(auxPidThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static LocalVersionHolder parametersVersion;
 static SimplePwm auxPidPwm[AUX_PID_COUNT];
@@ -58,11 +57,12 @@ static void pidReset(void) {
 	auxPid.reset();
 }
 
-static msg_t auxPidThread(int param) {
-	UNUSED(param);
-		chRegSetThreadName("AuxPidController");
-		while (true) {
-			auxPid.sleep();
+class AuxPidController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	AuxPidController()	: PeriodicController("AuxPidController") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->auxPid[0].periodMs));
 
 			if (parametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
 				pidReset();
@@ -76,7 +76,7 @@ static msg_t auxPidThread(int param) {
 			if (!enabledAtCurrentRpm) {
 				// we need to avoid accumulating iTerm while engine is not running
 				pidReset();
-				continue;
+				return;
 			}
 
 
@@ -101,10 +101,9 @@ static msg_t auxPidThread(int param) {
 
 
 		}
-#if defined __GNUC__
-	return -1;
-#endif
-}
+};
+
+static AuxPidController instance;
 
 static void turnAuxPidOn(int index) {
 	if (!isEnabled(index)) {
@@ -135,12 +134,10 @@ void stopAuxPins(void) {
 }
 
 void initAuxPid(Logging *sharedLogger) {
-	chThdCreateStatic(auxPidThreadStack, sizeof(auxPidThreadStack), LOWPRIO,
-			(tfunc_t)(void*) auxPidThread, NULL);
-
 	logger = sharedLogger;
 
 	startAuxPins();
+	instance.Start();
 }
 
 #endif
