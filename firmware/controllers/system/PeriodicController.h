@@ -98,3 +98,6 @@ public:
     	this->m_period = CH_CFG_ST_FREQUENCY / frequencyHz;
     }
 };
+
+// let's make sure period is not below specified threshold
+#define NOT_TOO_OFTEN(threshold, value) maxI(threshold, value)

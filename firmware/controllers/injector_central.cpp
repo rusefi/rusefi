@@ -34,6 +34,7 @@
 #include "efiGpio.h"
 #include "settings.h"
 #include "idle_thread.h"
+#include "PeriodicController.h"
 
 EXTERN_ENGINE
 ;
@@ -214,25 +215,22 @@ void dizzyBench(void) {
 	pinbench("300", "5", "400", "3", &enginePins.dizzyOutput, engineConfiguration->dizzySparkOutputPin);
 }
 
+class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	BenchController()	: PeriodicController("BenchThread") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->auxPid[0].periodMs));
 
-static THD_WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
-
-static msg_t benchThread(int param) {
-	(void) param;
-	chRegSetThreadName("BenchThread");
-
-	while (true) {
 		// naive inter-thread communication - waiting for a flag
-		while (!isBenchTestPending) {
-			chThdSleepMilliseconds(200);
+		if (isBenchTestPending) {
+			isBenchTestPending = false;
+			runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 		}
-		isBenchTestPending = false;
-		runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 	}
-#if defined __GNUC__
-	return 0;
-#endif
-}
+};
+
+static BenchController instance;
 
 void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
@@ -276,7 +274,6 @@ void runBenchTest(uint16_t subsystem, uint16_t index) {
 
 void initInjectorCentral(Logging *sharedLogger) {
 	logger = sharedLogger;
-	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t)(void*) benchThread, NULL);
 
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		is_injector_enabled[i] = true;
@@ -301,6 +298,9 @@ void initInjectorCentral(Logging *sharedLogger) {
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
+
+	instance.setPeriod(200 /*ms*/);
+	instance.Start();
 }
 
 #endif

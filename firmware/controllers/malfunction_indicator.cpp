@@ -30,8 +30,11 @@
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 #include "efiGpio.h"
+#include "PeriodicController.h"
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
+
+#define TEST_MIL_CODE FALSE
 
 EXTERN_ENGINE;
 
@@ -39,8 +42,6 @@ EXTERN_ENGINE;
 #define MFI_SHORT_BLINK	400
 #define MFI_BLINK_SEPARATOR 400
 #define MFI_CHECKENGINE_LIGHT 10000
-
-static THD_WORKING_AREA(mfiThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread
 
 static void blink_digits(int digit, int duration) {
 	for (int iter = 0; iter < digit; iter++) {
@@ -78,18 +79,12 @@ static void DisplayErrorCode(int length, int code) {
 	}
 }
 
-//  our main thread for show check engine error
-#if defined __GNUC__
-__attribute__((noreturn))    static msg_t mfiThread(void)
-#else
-		static msg_t mfiThread(void)
-#endif
-		{
-	chRegSetThreadName("MFIndicator");
-	error_codes_set_s localErrorCopy;
-
-	while (true) {
-		chThdSleepSeconds(10);
+class MILController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	MILController()	: PeriodicController("MFIndicator") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
+		static error_codes_set_s localErrorCopy;
 
 		getErrorCodes(&localErrorCopy);
 		for (int p = 0; p < localErrorCopy.count; p++) {
@@ -98,12 +93,16 @@ __attribute__((noreturn))    static msg_t mfiThread(void)
 			DisplayErrorCode(DigitLength(code), code);
 		}
 	}
-}
+};
 
+static MILController instance;
+
+#if TEST_MIL_CODE
 static void testMil(void) {
 	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
 }
+#endif /* TEST_MIL_CODE */
 
 bool isMilEnabled() {
 	return CONFIGB(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
@@ -113,10 +112,12 @@ void initMalfunctionIndicator(void) {
 	if (!isMilEnabled()) {
 		return;
 	}
-	// create static thread
-	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t)(void*) mfiThread, NULL);
+	instance.setPeriod(10);
+	instance.Start();
 
+#if	TEST_MIL_CODE
 	addConsoleAction("testmil", testMil);
+#endif /* TEST_MIL_CODE */
 }
 
 #endif /* EFI_MALFUNCTION_INDICATOR */

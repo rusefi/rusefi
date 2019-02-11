@@ -106,6 +106,8 @@ public:
 	EtbController()	: PeriodicController("ETB") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->etb.periodMs));
+
 
 		// set debug_mode 17
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
@@ -368,8 +370,6 @@ void initElectronicThrottle(void) {
 
 	pid.reset();
 
-	int periodMs = maxI(10, engineConfiguration->etb.periodMs);
-	etbController.setPeriod(periodMs);
 	etbController.Start();
 }
 

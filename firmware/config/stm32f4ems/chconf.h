@@ -35,7 +35,12 @@
 #define _CHIBIOS_RT_CONF_VER_5_1_
 
 #define PORT_IDLE_THREAD_STACK_SIZE     1024
+
+// rusEfi main processing happens on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large.
+// see also a strange comment about PORT_INT_REQUIRED_STACK in global_shared.h
+// see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
 #define PORT_INT_REQUIRED_STACK 	768
+
 #define CHPRINTF_USE_FLOAT          	TRUE
 
 #if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
@@ -613,6 +618,7 @@ extern "C"
  *
  * @note    The default is @p FALSE.
  */
+// see also CH_DBG_STACK_FILL_VALUE
 #if !defined(CH_DBG_FILL_THREADS)
 #define CH_DBG_FILL_THREADS                 TRUE
 #endif
