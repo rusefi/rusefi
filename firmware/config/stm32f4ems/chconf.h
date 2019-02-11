@@ -34,6 +34,16 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_5_1_
 
+/*
+ * __process_stack_size__ and __process_stack_size__ defaults are each hard-coded as 0x400 in ChibiOS rules.mk files
+ * rusEfi do not override these defaults.
+ *
+ * http://www.chibios.com/forum/viewtopic.php?t=309
+ * "__main_stack_size__ is the size of INTERRUPTS stack"
+ * "__process_stack_size__ is the stack of the C-runtime, in ChibiOS the "main" thread uses the C-runtime stack."
+ *
+ */
+
 #define PORT_IDLE_THREAD_STACK_SIZE     1024
 
 // rusEfi main processing happens on IRQ so PORT_INT_REQUIRED_STACK has to be pretty large.
