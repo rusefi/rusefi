@@ -24,6 +24,7 @@ EXTERN_ENGINE;
 #if EFI_MEMS || defined(__DOXYGEN__)
 #include "mpu_util.h"
 #include "lis302dl.h"
+#include "PeriodicController.h"
 
 static SPIDriver *driver;
 
@@ -56,21 +57,20 @@ void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static msg_t ivThread(int param) {
-	(void) param;
-	chRegSetThreadName("Acc SPI");
-	while (true) {
+class AccelController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	AccelController() : PeriodicController("Acc SPI") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
 		// has to be a thread since we want to use blocking method - blocking method only available in threads, not in interrupt handler
 		// todo: migrate to async SPI API?
 		engine->sensors.accelerometer.x = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTX);
 		engine->sensors.accelerometer.y = (int8_t)lis302dlReadRegister(driver, LIS302DL_OUTY);
 		chThdSleepMilliseconds(20);
 	}
+};
 
-#if defined __GNUC__
-	return -1;
-#endif
-}
+static BenchController instance;
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)

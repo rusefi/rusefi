@@ -217,7 +217,7 @@ void dizzyBench(void) {
 
 class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
-	BenchController()	: PeriodicController("BenchThread") { }
+	BenchController() : PeriodicController("BenchThread") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->auxPid[0].periodMs));

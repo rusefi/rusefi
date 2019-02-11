@@ -57,6 +57,7 @@
 #include "lcd_controller.h"
 #include "settings.h"
 #include "can_hw.h"
+#include "PeriodicController.h"
 #include "cdm_ion_sense.h"
 
 extern afr_Map3D_t afrMap;
@@ -539,8 +540,6 @@ static void showFuelInfo(void) {
 }
 #endif
 
-static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
-
 /**
  * blinking thread to show that we are alive
  * that's a trivial task - a smaller stack should work
@@ -651,18 +650,21 @@ static void blinkingThread(void *arg) {
 
 #endif /* EFI_PROD_CODE */
 
-static void lcdThread(void *arg) {
-	(void)arg;
-	chRegSetThreadName("lcd");
-	while (true) {
+class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	LcdController() : PeriodicController("BenchThread") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
+		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->bc.lcdThreadPeriodMs));
 		if (engineConfiguration->bc.useLcdScreen) {
 #if EFI_HD44780_LCD
 			updateHD44780lcd();
 #endif
 		}
-		chThdSleepMilliseconds(engineConfiguration->bc.lcdThreadPeriodMs);
 	}
-}
+};
+
+static LcdController lcdInstance;
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 extern HIP9011 instance;
@@ -977,11 +979,11 @@ void initStatusLoop(void) {
 
 void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
-	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, NULL);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initStatusLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
 #endif /* EFI_PROD_CODE */
+	lcdInstance.Start();
 }
 
 void setFullLog(int value) {
