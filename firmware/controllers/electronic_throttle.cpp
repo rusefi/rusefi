@@ -15,7 +15,7 @@
  *
  *
  *  ETB is controlled according to pedal position input (pedal position sensor is a potentiometer)
- *    petal 0% means pedal not pressed / idle
+ *    pedal 0% means pedal not pressed / idle
  *    pedal 100% means pedal all the way down
  *  (not TPS - not the one you can calibrate in TunerStudio)
  *
@@ -62,6 +62,7 @@
 #include "pwm_generator_logic.h"
 #include "pid.h"
 #include "engine_controller.h"
+#include "PeriodicController.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
@@ -77,10 +78,7 @@ static Pid tuneWorkingPid(&tuneWorkingPidSettings);
 static PID_AutoTune autoTune;
 
 static LoggingWithStorage logger("ETB");
-/**
- * @brief Control Thread stack
- */
-static THD_WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
+
 /**
  * @brief Pulse-Width Modulation state
  */
@@ -103,9 +101,12 @@ static bool wasEtbBraking = false;
 // todo: need to fix PWM so that it supports zero duty cycle
 #define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), 0.1) / 100.0)
 
-static msg_t etbThread(void *arg) {
-        UNUSED(arg);
-	while (true) {
+class EtbController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	EtbController()	: PeriodicController("ETB") { }
+private:
+	void PeriodicTask(efitime_t nowNt) override	{
+
 		// set debug_mode 17
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -125,8 +126,7 @@ static msg_t etbThread(void *arg) {
 
 		if (!cisnan(valueOverride)) {
 			etbPwmUp.setSimplePwmDutyCycle(valueOverride);
-			pid.sleep();
-			continue;
+			return;
 		}
 
 		percent_t actualThrottlePosition = getTPS();
@@ -148,8 +148,7 @@ static msg_t etbThread(void *arg) {
 				scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
 			}
 
-			tuneWorkingPid.sleep();
-			continue;
+			return;
 		}
 
 
@@ -172,15 +171,10 @@ static msg_t etbThread(void *arg) {
 		if (engineConfiguration->isVerboseETB) {
 			pid.showPidStatus(&logger, "ETB");
 		}
-
-
-		// this thread is activated 10 times per second
-		pid.sleep();
 	}
-#if defined __GNUC__
-	return -1;
-#endif
-}
+};
+
+static EtbController etbController;
 
 /**
  * set_etb X
@@ -374,7 +368,9 @@ void initElectronicThrottle(void) {
 
 	pid.reset();
 
-	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t)(void*) etbThread, NULL);
+	int periodMs = maxI(10, engineConfiguration->etb.period);
+	etbController.setPeriod(periodMs);
+	etbController.Start();
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */

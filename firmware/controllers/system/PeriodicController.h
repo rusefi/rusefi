@@ -35,13 +35,14 @@ template <int TStackSize>
 class PeriodicController : public ThreadController<TStackSize>
 {
 private:
-    const systime_t m_period;
+	// time in ChibiOS time units, see CH_CFG_ST_FREQUENCY
+    systime_t m_period;
     
 protected:
     /**
      * The target period between calls to PeriodicTask.
      */
-    const float m_periodSeconds;
+//    const float m_periodSeconds;
 
     /**
      * @brief Called before running the periodic task.  Optionally override this method to set up.
@@ -82,7 +83,18 @@ public:
         , m_period(CH_CFG_ST_FREQUENCY / frequencyHz)
         // Then compute the float period off of the integer one to
         //  get the ACTUAL period, which may be slightly different than requested.
-        , m_periodSeconds(m_period / (float)CH_CFG_ST_FREQUENCY)
+//        , m_periodSeconds(m_period / (float)CH_CFG_ST_FREQUENCY)
     {
+    }
+
+    PeriodicController(const char* name) : PeriodicController (name, NORMALPRIO, 1) {
+    }
+
+    /**
+     * sets milliseconds period
+     */
+    void setPeriod(int periodMs) {
+    	float frequencyHz = 1000.0 / periodMs;
+    	this->m_period = CH_CFG_ST_FREQUENCY / frequencyHz;
     }
 };
