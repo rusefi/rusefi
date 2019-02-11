@@ -31,7 +31,7 @@ bool Pid::isSame(pid_s *pid) {
 			&& this->pid->iFactor == pid->iFactor
 			&& this->pid->dFactor == pid->dFactor
 			&& this->pid->offset == pid->offset
-			&& this->pid->period == pid->period;
+			&& this->pid->periodMs == pid->periodMs;
 }
 
 float Pid::getValue(float target, float input) {
@@ -126,14 +126,14 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
 	tsOutputChannels->debugIntField1 = getP() * pMult;
 	tsOutputChannels->debugIntField2 = getOffset();
 	tsOutputChannels->debugIntField3 = resetCounter;
-	tsOutputChannels->debugIntField4 = pid->period;
+	tsOutputChannels->debugIntField4 = pid->periodMs;
 }
 #endif /* EFI_TUNER_STUDIO */
 
 void Pid::sleep() {
 #if !EFI_UNIT_TEST || defined(__DOXYGEN__)
-	int period = maxI(10, pid->period);
-	chThdSleepMilliseconds(period);
+	int periodMs = maxI(10, pid->periodMs);
+	chThdSleepMilliseconds(periodMs);
 #endif /* EFI_UNIT_TEST */
 }
 
@@ -144,7 +144,7 @@ void Pid::showPidStatus(Logging *logging, const char*msg) {
 			pid->pFactor,
 			pid->iFactor,
 			pid->dFactor,
-			pid->period);
+			pid->periodMs);
 
 	scheduleMsg(logging, "%s status: value=%.2f input=%.2f/target=%.2f iTerm=%.5f dTerm=%.5f",
 			msg,

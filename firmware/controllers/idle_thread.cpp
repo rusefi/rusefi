@@ -232,7 +232,7 @@ static percent_t automaticIdleController() {
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid.setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = idlePid.getValue(targetRpm, rpm, engineConfiguration->idleRpmPid.period);
+	percent_t newValue = idlePid.getValue(targetRpm, rpm, engineConfiguration->idleRpmPid.periodMs);
 	
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
@@ -420,7 +420,7 @@ void setIdleDFactor(float value) {
 }
 
 void setIdleDT(int value) {
-	engineConfiguration->idleRpmPid.period = value;
+	engineConfiguration->idleRpmPid.periodMs = value;
 	apply();
 	showIdleInfo();
 }
@@ -443,7 +443,7 @@ void setDefaultIdleParameters(void) {
 	engineConfiguration->idleRpmPid.pFactor = 0.1f;
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
-	engineConfiguration->idleRpmPid.period = 10;
+	engineConfiguration->idleRpmPid.periodMs = 10;
 }
 
 static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {

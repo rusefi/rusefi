@@ -1271,7 +1271,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
-			engineConfiguration->alternatorControl.period = valueI;
+			engineConfiguration->alternatorControl.periodMs = valueI;
 		}
 		showAltInfo();
 	} else if (strEqualCaseInsensitive(paramStr, "alt_offset")) {

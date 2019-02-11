@@ -601,7 +601,7 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
 
-	engineConfiguration->canSleepPeriod = 50;
+	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
@@ -1026,10 +1026,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mapErrorDetectionTooLow = 5;
 	engineConfiguration->mapErrorDetectionTooHigh = 250;
 
-	boardConfiguration->idleThreadPeriod = 100;
-	boardConfiguration->consoleLoopPeriod = 200;
-	boardConfiguration->lcdThreadPeriod = 300;
-	boardConfiguration->generalPeriodicThreadPeriod = 50;
+	boardConfiguration->idleThreadPeriodMs = 100;
+	boardConfiguration->consoleLoopPeriodMs = 200;
+	boardConfiguration->lcdThreadPeriodMs = 300;
+	boardConfiguration->generalPeriodicThreadPeriodMs = 50;
 	boardConfiguration->useLcdScreen = true;
 
 	boardConfiguration->boardTestModeJumperPin = GPIOB_0;

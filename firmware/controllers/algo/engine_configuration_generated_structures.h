@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 09 17:16:52 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 10 20:05:25 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -26,7 +26,7 @@ typedef struct {
 	 * PID dTime
 	 * offset 14
 	 */
-	int16_t period;
+	int16_t periodMs;
 	/**
 	 * Output min value
 	 * offset 16
@@ -541,15 +541,15 @@ typedef struct {
 	/**
 	 * offset 304
 	 */
-	int idleThreadPeriod;
+	int idleThreadPeriodMs;
 	/**
 	 * offset 308
 	 */
-	int consoleLoopPeriod;
+	int consoleLoopPeriodMs;
 	/**
 	 * offset 312
 	 */
-	int lcdThreadPeriod;
+	int lcdThreadPeriodMs;
 	/**
 	 * offset 316
 	 */
@@ -557,7 +557,7 @@ typedef struct {
 	/**
 	 * offset 320
 	 */
-	int generalPeriodicThreadPeriod;
+	int generalPeriodicThreadPeriodMs;
 	/**
 	 * offset 324
 	 */
@@ -1196,7 +1196,7 @@ typedef struct {
 	 * CANbus thread period, ms
 	 * offset 492
 	 */
-	int canSleepPeriod;
+	int canSleepPeriodMs;
 	/**
 	 * See engineCycle
 	 * set operation_mode X
@@ -2481,4 +2481,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Feb 09 17:16:52 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Feb 10 20:05:25 EST 2019

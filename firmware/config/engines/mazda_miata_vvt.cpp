@@ -261,7 +261,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.pFactor = 14;
 	engineConfiguration->alternatorControl.iFactor = 0.1;
 	engineConfiguration->alternatorControl.dFactor = 0;
-	engineConfiguration->alternatorControl.period = 10;
+	engineConfiguration->alternatorControl.periodMs = 10;
 
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
@@ -445,7 +445,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.pFactor = 0.07;
 	engineConfiguration->idleRpmPid.iFactor = 0.0001;
 	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.period = 10;
+	engineConfiguration->idleRpmPid.periodMs = 10;
 }
 
 void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

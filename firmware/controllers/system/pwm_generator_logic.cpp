@@ -156,7 +156,7 @@ void PwmConfig::handleCycleStart() {
 efitimeus_t PwmConfig::togglePwmState() {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
-	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.period);
+	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
 #endif
 
 	if (cisnan(periodNt)) {

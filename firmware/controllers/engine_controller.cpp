@@ -219,7 +219,7 @@ static void periodicSlowCallback(Engine *engine);
 
 static void scheduleNextSlowInvocation(void) {
 	// schedule next invocation
-	int periodMs = CONFIGB(generalPeriodicThreadPeriod);
+	int periodMs = CONFIGB(generalPeriodicThreadPeriodMs);
 	if (periodMs == 0)
 		periodMs = 50; // this might happen while resetting configuration
 	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
