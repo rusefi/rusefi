@@ -39,10 +39,7 @@ rem 7z a firmaware_binary.zip rusefi.hex rusefi.ini features.h flash.bat
 rem cd ../firmware
 
 
-cd build
-rem Generate human-readable version of the .map memory usage report
-java -jar ../../java_tools/gcc_map_reader.jar rusefi.map > ../rusefi_ram_report.txt
-cd ..
+call generate_memory_usage_report.bat
 
 echo Looking at size
 arm-none-eabi-size  --format=berkeley "build\rusefi.elf"
