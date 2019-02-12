@@ -15,7 +15,7 @@ include ../firmware/rusefi.mk
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
 #  USE_OPT = -Wall     -ggdb     -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g3 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
+#  USE_OPT = -Wall -O0 -ggdb -g3 -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
@@ -207,6 +207,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 ifeq ($(OS),Windows_NT)
   # base 32-bit Cygwin is needed with mingw64 32-bit version 
   # Cygwin64 would not debug if used with mingw64 32-bit version
+  # 32 bit GDB available at http://www.equation.com/servlet/equation.cmd?fa=gdb
 
   TRGT = i686-w64-mingw32-
 else
