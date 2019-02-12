@@ -88,7 +88,7 @@ REGION_ALIAS("BSS_RAM", ram0);
 REGION_ALIAS("HEAP_RAM", ram0);
 
 /* Stack rules inclusion.*/
-INCLUDE ../NUCLEO_F767/rules_stacks.ld
+INCLUDE rules_stacks.ld
 
 /*===========================================================================*/
 /* Custom sections for STM32F7xx.                                            */
@@ -126,7 +126,7 @@ SECTIONS
 }
 
 /* Code rules inclusion.*/
-INCLUDE ../NUCLEO_F767/rules_code.ld
+INCLUDE rules_code.ld
 
 /* Data rules inclusion.*/
-INCLUDE ../NUCLEO_F767/rules_data.ld
+INCLUDE rules_data.ld
