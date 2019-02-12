@@ -101,6 +101,7 @@ typedef unsigned int time_t;
 
 /*
  * Stack debugging
+ * See also getMaxUsedStack()
  */
 int getRemainingStack(thread_t *otp);
 
