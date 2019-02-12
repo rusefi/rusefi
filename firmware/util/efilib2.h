@@ -17,6 +17,10 @@ typedef struct {
 } State64;
 
 void updateAndSet(State64 *state, uint32_t value);
+/**
+ * @return for a given stack memory region returns how much stack was ever used
+ */
+int getMaxUsedStack(uint8_t *ptr, int size);
 
 class Overflow64Counter
 {
