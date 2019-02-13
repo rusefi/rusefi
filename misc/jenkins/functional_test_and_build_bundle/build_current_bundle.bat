@@ -7,15 +7,7 @@ set FTP_SERVER=home451478433.1and1-data.host
 
 echo build_current_bundle.bat: Hello rusEfi build full bundle
 
-java -version
-
 echo %date% %time%
-
-echo build_current_bundle.bat: Building win32 functional tests
-cd simulator
-gcc -v
-make -v
-cd ..
 
 
 cd firmware
@@ -43,38 +35,19 @@ if not exist deliver/rusefi_debug.hex exit -1
 
 ..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_release.hex -out deliver/rusefi_release.dfu
 ..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_debug.hex   -out deliver/rusefi_debug.dfu
-
-
 cd ..
 
-
-echo Building java console
-cd java_console
-call ant clean
-call ant clean_out_folder
-call ant
-cd ..
-
-if not exist java_console_binary/rusefi_console.jar echo CONSOLE COMPILATION FAILED
+call misc\jenkins\build_java_console.bat
 if not exist java_console_binary/rusefi_console.jar exit -1
 
-echo Building rusefi simulator
-cd simulator
-
-mkdir out
-rm -rf build
-rm -rf .dep
-call compile.bat
-
-if not exist build/rusefi_simulator.exe echo SIMULATOR COMPILATION FAILED
-if not exist build/rusefi_simulator.exe exit -1
-
-cd ..
+call misc\jenkins\build_simulator.bat
+if not exist simulator/build/rusefi_simulator.exe exit -1
 
 rm -rf temp
 mkdir temp
 
-set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_rusefi
+set stm_arch=stm32f407
+set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_%stm_arch%_rusefi
 set folder=temp\%folder%
 
 # this replaces spaces with 0s - that's needed before 10am
