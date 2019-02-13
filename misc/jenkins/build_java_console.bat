@@ -3,7 +3,7 @@ java -version
 echo Building java console
 pwd
 cd java_console
-call ant clean clean_out_folder build
+call ant clean clean_out_folder jar
 cd ..
 
 if not exist java_console_binary/rusefi_console.jar echo CONSOLE COMPILATION FAILED
