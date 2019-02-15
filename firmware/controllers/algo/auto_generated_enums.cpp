@@ -403,6 +403,8 @@ case IM_ONE_COIL:
   return "IM_ONE_COIL";
 case IM_WASTED_SPARK:
   return "IM_WASTED_SPARK";
+case IM_TWO_COILS:
+	return "IM_TWO_COILS";
   }
  return NULL;
 }

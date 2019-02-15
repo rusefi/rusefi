@@ -480,6 +480,11 @@ typedef enum {
 	IM_INDIVIDUAL_COILS = 1,
 	IM_WASTED_SPARK = 2,
 
+	/**
+	 * some v12 engines line BMW M70 and M73 run two distributors, one for each bank of cylinders
+	 */
+	IM_TWO_COILS = 3,
+
 	Force_4_bytes_size_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
