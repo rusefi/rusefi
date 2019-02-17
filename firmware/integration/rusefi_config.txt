@@ -931,7 +931,7 @@ custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
 tChargeMode_e tChargeMode;
 	
 	
-		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTOOD: use int8 data date once we template interpolation method;"target TPS position",   1,   0.0,        0,  100.0,   0
+		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position",   1,   0.0,        0,  100.0,   0
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
 	float hip9011Gain;
