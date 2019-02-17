@@ -13,7 +13,7 @@ rem 407 has two versions
 cp firmware/deliver/rusefi_release.* %folder%
 cp firmware/deliver/rusefi_debug.* %folder%
 rem 746 builds one version at the moment
-cp firmware/deliver/rusefi.* %folder%
+cp firmware/build/rusefi.* %folder%
 cp misc/console_launcher/rusefi_console.exe %folder%
 
 
