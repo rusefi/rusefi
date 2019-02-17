@@ -105,6 +105,8 @@ class EtbController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	EtbController()	: PeriodicController("ETB") { }
 private:
+	float feedForward = 0;
+
 	void PeriodicTask(efitime_t nowNt) override	{
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->etb.periodMs));
 
@@ -113,6 +115,7 @@ private:
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 			pid.postState(&tsOutputChannels);
+			tsOutputChannels.debugIntField5 = feedForward;
 #endif /* EFI_TUNER_STUDIO */
 		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -156,8 +159,9 @@ private:
 
 		percent_t targetPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues, ETB_BIAS_CURVE_LENGTH);
 
-		currentEtbDuty = pid.getValue(targetPosition, actualThrottlePosition);
+		currentEtbDuty = feedForward + pid.getValue(targetPosition, actualThrottlePosition);
 
 		etbPwmUp.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentEtbDuty));
 /*
