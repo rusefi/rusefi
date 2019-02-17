@@ -33,7 +33,7 @@ rem TODO: extract FTP duplication with 407 build
 
 echo open ftp://u71977750-build:%RUSEFI_BUILD_FTP_PASS%@%FTP_SERVER%/ > ftp_commands.txt
 echo binary >> ftp_commands.txt
-echo put rusefi_bundle.zip rusefi_bundle_746.zip >> ftp_commands.txt
+echo put rusefi_bundle.zip rusefi_bundle_F746.zip >> ftp_commands.txt
 
 echo exit >> ftp_commands.txt
 
