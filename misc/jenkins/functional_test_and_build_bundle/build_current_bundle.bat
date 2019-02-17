@@ -50,10 +50,12 @@ set stm_arch=stm32f407
 set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_%stm_arch%_rusefi
 set folder=temp\%folder%
 
-# this replaces spaces with 0s - that's needed before 10am
+rem this replaces spaces with 0s - that's needed before 10am
 set folder=%folder: =0%
+echo "folder variable=%folder%"
 
-call jenkins\build_working_folder.bat
+pwd
+call misc\jenkins\build_working_folder.bat
 
 echo "Building only console"
 cd %folder%
