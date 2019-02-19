@@ -82,13 +82,13 @@ static LoggingWithStorage logger("ETB");
 /**
  * @brief Pulse-Width Modulation state
  */
-static SimplePwm etbPwmUp("etbUp") CCM_OPTIONAL;
+/*CCM_OPTIONAL*/ static SimplePwm etbPwmUp("etbUp");
 static float valueOverride = NAN;
 /*
-static SimplePwm etbPwmDown("etbDown") CCM_OPTIONAL;
+CCM_OPTIONAL static SimplePwm etbPwmDown("etbDown");
 */
-static OutputPin outputDirectionOpen CCM_OPTIONAL;
-static OutputPin outputDirectionClose CCM_OPTIONAL;
+/*CCM_OPTIONAL*/ static OutputPin outputDirectionOpen;
+/*CCM_OPTIONAL*/ static OutputPin outputDirectionClose;
 
 EXTERN_ENGINE;
 
