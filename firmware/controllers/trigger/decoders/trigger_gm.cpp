@@ -61,7 +61,6 @@ static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, in
  */
 void initGmLS24(TriggerShape *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, false);
-	trigger_wheel_e ch = T_PRIMARY;
 
 	/* 
 	 * Okay, here's how this magic works:

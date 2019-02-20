@@ -96,7 +96,7 @@ static Pid pid(&engineConfiguration->etb);
 
 static percent_t currentEtbDuty;
 
-static bool wasEtbBraking = false;
+//static bool wasEtbBraking = false;
 
 // todo: need to fix PWM so that it supports zero duty cycle
 #define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), 0.1) / 100.0)
@@ -108,6 +108,7 @@ private:
 	float feedForward = 0;
 
 	void PeriodicTask(efitime_t nowNt) override	{
+		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->etb.periodMs));
 
 

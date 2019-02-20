@@ -632,6 +632,7 @@ static void onFindIndexCallback(TriggerState *state) {
  */
 uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	UNUSED(triggerConfig);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(CUSTOM_ERR_ASSERT, getRemainingStack(chThdGetSelfX()) > 128, "findPos", -1);
 #endif
@@ -685,6 +686,7 @@ efitime_t TriggerState::getStartOfRevolutionIndex() const {
 }
 
 void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	UNUSED(nowNt);
 	// empty base implementation
 }
 

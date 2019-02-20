@@ -220,6 +220,7 @@ public:
 	BenchController() : PeriodicController("BenchThread") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
+		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->auxPid[0].periodMs));
 
 		// naive inter-thread communication - waiting for a flag

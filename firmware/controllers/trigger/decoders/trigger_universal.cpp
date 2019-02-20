@@ -47,8 +47,6 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 
 
 void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
-	float engineCycle = getEngineCycle(operationMode);
-
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->addEvent720(180, T_PRIMARY, TV_RISE);
@@ -62,6 +60,7 @@ void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
 }
 
 void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
+	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	int totalTeethCount = 60;
@@ -80,6 +79,7 @@ void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
 }
 
 void configure3_1_cam(TriggerShape *s, operation_mode_e operationMode) {
+	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 

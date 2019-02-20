@@ -84,6 +84,7 @@ public:
 	MILController()	: PeriodicController("MFIndicator") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
+		UNUSED(nowNt);
 		static error_codes_set_s localErrorCopy;
 
 		getErrorCodes(&localErrorCopy);

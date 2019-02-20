@@ -655,6 +655,7 @@ public:
 	LcdController() : PeriodicController("BenchThread") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
+		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->bc.lcdThreadPeriodMs));
 		if (engineConfiguration->bc.useLcdScreen) {
 #if EFI_HD44780_LCD
