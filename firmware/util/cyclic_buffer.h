@@ -41,7 +41,7 @@ class cyclic_buffer
     T sum(int length) const;
     T maxValue(int length) const;
     T minValue(int length) const;
-    void setSize(int size);
+    void setSize(unsigned int size);
     bool contains(T value) const;
     int getSize() const;
     int getCount() const;
@@ -125,7 +125,7 @@ bool cyclic_buffer<T, maxSize>::contains(T value) const {
 }
 
 template<typename T, size_t maxSize>
-void cyclic_buffer<T, maxSize>::setSize(int size) {
+void cyclic_buffer<T, maxSize>::setSize(unsigned int size) {
 	clear();
 	this->size = size < maxSize ? size : maxSize;
 }
