@@ -7,8 +7,7 @@ rem weird, it used to be much nicer with openocd 0.8.0, file location was not br
 rem maybe https://sourceforge.net/p/openocd/tickets/105/ ?
 
 pwd
-cp -r ../misc/install/openocd .
-ls -l
+cd ../misc/install
 
 if not exist openocd/openocd.exe echo openocd/openocd.exe NOT FOUND
 if not exist openocd/openocd.exe exit -1
