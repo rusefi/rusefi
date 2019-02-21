@@ -19,7 +19,10 @@ if not exist flash_erase407.bat echo NOT FOUND flash_erase.bat
 if not exist flash_erase407.bat exit -1
 echo build_current_bundle.bat: Erasing chip
 pwd
+rem Using magic 'cd' system variable here
+set "cur_folder=%cd%"
 call flash_erase407.bat
+cd %cur_folder%
 pwd
 
 
