@@ -37,8 +37,6 @@ void initializeMitsubishi4g18(TriggerShape *s) {
 
 	s->setTriggerSynchronizationGap(1.6666);
 
-	int secondaryWidth = 70;
-
 	s->addEvent720(106.77999999999997, T_PRIMARY, TV_FALL);
 	s->addEvent720(120.09999999999998, T_SECONDARY, TV_RISE);
 	s->addEvent720(188.0775, T_SECONDARY, TV_FALL);

@@ -19,6 +19,7 @@ static percent_t mockPedalPosition = MOCK_UNDEFINED;
  * this allows unit tests to simulate TPS position
  */
 void setMockTpsPosition(percent_t tpsPosition) {
+	UNUSED(tpsPosition);
 #if !EFI_PROD_CODE
 	mockTps = TPS_TS_CONVERSION * tpsPosition;
 #endif
@@ -52,7 +53,7 @@ void saveTpsState(efitimeus_t now, float curValue) {
 	next->curTime = now;
 	next->curValue = curValue;
 
-	int diffSysticks = overflowDiff(now, cur->curTime);
+	//int diffSysticks = overflowDiff(now, cur->curTime);
 	float diffSeconds = 0;// TODO: do we need this? diffSysticks * 1.0 / CH_FREQUENCY;
 	next->rateOfChange = (curValue - cur->curValue) / diffSeconds;
 

@@ -36,6 +36,7 @@ static void turnOff(NamedOutputPin *output) {
 
 static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	UNUSED(ckpSignalType);
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	if (index != SCHEDULING_TRIGGER_INDEX) {
 		return;
@@ -79,6 +80,7 @@ static void auxValveTriggerCallback(trigger_event_e ckpSignalType,
 }
 
 void initAuxValves(Logging *sharedLogger) {
+	UNUSED(sharedLogger);
 #if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
 	if (engineConfiguration->auxValves[0] == GPIO_UNASSIGNED) {
 		return;

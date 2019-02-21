@@ -47,6 +47,7 @@ public:
 	AlternatorController() : PeriodicController("AlternatorController") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
+		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->alternatorControl.periodMs));
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)

@@ -27,7 +27,7 @@ extern "C"
 #if defined __GNUC__
 // GCC
 #include <sys/types.h>
-#define ALWAYS_INLINE __attribute__((always_inline))
+#define ALWAYS_INLINE __attribute__((always_inline)) inline
 #else
 // IAR
 typedef unsigned int time_t;

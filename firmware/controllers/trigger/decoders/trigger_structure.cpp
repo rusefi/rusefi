@@ -163,6 +163,7 @@ extern bool printTriggerDebug;
 #endif
 
 void TriggerShape::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
+	UNUSED(useOnlyRisingEdgeForTrigger);
 // todo: move the following logic from below here
 	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
 //		expectedEventCount[channelIndex]++;

@@ -104,11 +104,11 @@ void initJoystick(Logging *shared) {
 		return;
 	sharedLogger = shared;
 
-	enableExti(CONFIGB(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extCallback);
-	enableExti(CONFIGB(joystickAPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extCallback);
+	enableExti(CONFIGB(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback);
+	enableExti(CONFIGB(joystickAPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback);
 // not used so far	applyPin(CONFIGB(joystickBPin));
 // not used so far	applyPin(CONFIGB(joystickCPin));
-	enableExti(CONFIGB(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extCallback);
+	enableExti(CONFIGB(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback);
 
 	efiSetPadMode("joy center", CONFIGB(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
 	efiSetPadMode("joy A", CONFIGB(joystickAPin), PAL_MODE_INPUT_PULLUP);
