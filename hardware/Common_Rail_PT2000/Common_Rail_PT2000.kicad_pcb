@@ -101,7 +101,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory frankenso_gerbers/))
+      (outputdirectory gerbers/))
   )
 
   (net 0 "")
