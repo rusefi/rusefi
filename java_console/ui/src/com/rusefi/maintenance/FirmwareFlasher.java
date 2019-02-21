@@ -10,6 +10,7 @@ import java.io.File;
  * 2/4/15
  */
 public class FirmwareFlasher extends ProcessStatusWindow {
+    public static final String IMAGE_FILE = "rusefi.bin";
     public static final String IMAGE_DEBUG_FILE = "rusefi_debug.bin";
     public static final String IMAGE_RELEASE_FILE = "rusefi_release.bin";
     static final String OPENOCD_EXE = "openocd/openocd.exe";
