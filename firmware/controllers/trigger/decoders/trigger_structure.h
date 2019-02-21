@@ -206,7 +206,7 @@ public:
 	 * but name is supposed to hint at the fact that decoders should not be assigning to it
 	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
 	 */
-	int privateTriggerDefinitionSize;
+	unsigned int privateTriggerDefinitionSize;
 
 	bool useOnlyRisingEdgeForTriggerTemp;
 

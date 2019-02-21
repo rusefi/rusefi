@@ -246,7 +246,6 @@ void configureHondaCbr600custom(TriggerShape *s) {
 }
 
 void configureHondaAccordShifted(TriggerShape *s) {
-	float w = 720 / 2 / 24;
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	float sb = S24;
@@ -278,6 +277,7 @@ void configureHondaAccordShifted(TriggerShape *s) {
 }
 
 void configureOnePlus16(TriggerShape *s, operation_mode_e operationMode) {
+	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	int totalTeethCount = 16;

@@ -269,6 +269,7 @@ public:
 	IdleController() : PeriodicController("IdleValve") { }
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
+		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->idleRpmPid.periodMs));
 
 	/*

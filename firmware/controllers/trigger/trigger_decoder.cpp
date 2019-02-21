@@ -136,7 +136,7 @@ void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE
 			shape->riseOnlyIndexes[0] = 0;
 		} else {
 			assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_ERR_6552);
-			int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
+			unsigned int triggerDefinitionCoordinate = (shape->triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
 			efiAssertVoid(CUSTOM_ERR_6595, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= shape->privateTriggerDefinitionSize ? triggerDefinitionCoordinate - shape->privateTriggerDefinitionSize : triggerDefinitionCoordinate;
 			float angle = shape->getAngle(triggerDefinitionCoordinate) - firstAngle;
@@ -536,7 +536,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 					getTriggerSize());
 			}
 #endif /* EFI_UNIT_TEST */
-			int endOfCycleIndex = getTriggerSize() - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
+			unsigned int endOfCycleIndex = getTriggerSize() - (CONFIG(useOnlyRisingEdgeForTrigger) ? 2 : 1);
 
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
@@ -632,6 +632,7 @@ static void onFindIndexCallback(TriggerState *state) {
  */
 uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	UNUSED(triggerConfig);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	efiAssert(CUSTOM_ERR_ASSERT, getRemainingStack(chThdGetSelfX()) > 128, "findPos", -1);
 #endif
@@ -685,6 +686,7 @@ efitime_t TriggerState::getStartOfRevolutionIndex() const {
 }
 
 void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	UNUSED(nowNt);
 	// empty base implementation
 }
 

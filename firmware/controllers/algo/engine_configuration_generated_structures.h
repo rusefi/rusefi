@@ -1493,7 +1493,7 @@ typedef struct {
 	 * At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.
 	 * offset 1500
 	 */
-	int ignMathCalculateAtIndex;
+	unsigned int ignMathCalculateAtIndex;
 	/**
 	 * offset 1504
 	 */

@@ -62,7 +62,7 @@ void cdmIonInit(void) {
 		return;
 	}
 
-	enableExti(CONFIGB(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)extIonCallback);
+	enableExti(CONFIGB(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extIonCallback);
 }
 
 #endif /* EFI_CDM_INTEGRATION */
