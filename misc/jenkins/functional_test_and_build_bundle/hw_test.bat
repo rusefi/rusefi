@@ -2,9 +2,9 @@ echo I am hw_test.bat
 pwd
 
 cd firmware
-call flash_erase
+call flash_erase407.bat
 rem This script depends on someone else building firmware
-call flash_openocd
+call flash_openocd407.bat
 
 if not exist build/rusefi.bin echo FIRMWARE NOT FOUND
 if not exist build/rusefi.bin exit -1
