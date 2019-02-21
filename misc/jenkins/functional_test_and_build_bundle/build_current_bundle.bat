@@ -14,10 +14,13 @@ cd firmware
 echo %date% %time%
 
 
-echo Erasing chip
+echo build_current_bundle.bat: will be Erasing chip
 if not exist flash_erase407.bat echo NOT FOUND flash_erase.bat
 if not exist flash_erase407.bat exit -1
+echo build_current_bundle.bat: Erasing chip
+pwd
 call flash_erase407.bat
+pwd
 
 
 echo build_current_bundle.bat: Building firmware
