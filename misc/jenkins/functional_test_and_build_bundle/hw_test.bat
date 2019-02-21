@@ -2,9 +2,13 @@ echo I am hw_test.bat
 pwd
 
 cd firmware
+rem Using magic 'cd' system variable here
+set "cur_folder=%cd%"
 call flash_erase407.bat
 rem This script depends on someone else building firmware
 call flash_openocd407.bat
+
+cd %cur_folder%
 
 if not exist build/rusefi.bin echo FIRMWARE NOT FOUND
 if not exist build/rusefi.bin exit -1
