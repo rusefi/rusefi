@@ -16,7 +16,7 @@ if not exist openocd/openocd.exe exit -1
 rem newer discovery boards
 echo Invoking openocd...
 openocd\openocd.exe -f openocd/stm32f4discovery.cfg -c init -c targets -c "halt" -c "flash erase_address 0x08000000 0x0100000" -c shutdown
-echo Just invoked openocd!
+echo Just invoked openocd to erase chip!
 
 
 rem older disocovery boards or cheap eBay ST-Link
