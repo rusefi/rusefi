@@ -5,6 +5,9 @@ cd firmware
 rem Using magic 'cd' system variable here
 set "cur_folder=%cd%"
 call flash_erase407.bat
+cd %cur_folder%
+pwd
+echo "hw_test.bat: trying to flash"
 rem This script depends on someone else building firmware
 call flash_openocd407.bat
 
