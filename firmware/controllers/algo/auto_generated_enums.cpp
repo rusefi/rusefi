@@ -350,8 +350,6 @@ case IM_MANUAL:
 }
 const char *getPin_output_mode_e(pin_output_mode_e value){
 switch(value) {
-case Force_4_bytes_size_pin_output_mode:
-  return "Force_4_bytes_size_pin_output_mode";
 case OM_DEFAULT:
   return "OM_DEFAULT";
 case OM_INVERTED:
@@ -365,8 +363,6 @@ case OM_OPENDRAIN_INVERTED:
 }
 const char *getPin_input_mode_e(pin_input_mode_e value){
 switch(value) {
-case Force_4_bytes_size_pin_input_mode:
-  return "Force_4_bytes_size_pin_input_mode";
 case PI_DEFAULT:
   return "PI_DEFAULT";
 case PI_PULLDOWN:

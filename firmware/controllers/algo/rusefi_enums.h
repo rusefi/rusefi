@@ -425,17 +425,13 @@ typedef enum {
 	 * logical OFF is floating, logical ON is GND
 	 */
 	OM_OPENDRAIN = 2,
-	OM_OPENDRAIN_INVERTED = 3,
-
-	Force_4_bytes_size_pin_output_mode = ENUM_32_BITS,
+	OM_OPENDRAIN_INVERTED = 3
 } pin_output_mode_e;
 
 typedef enum {
 	PI_DEFAULT = 0,
 	PI_PULLUP = 1,
-	PI_PULLDOWN = 2,
-
-	Force_4_bytes_size_pin_input_mode = ENUM_32_BITS,
+	PI_PULLDOWN = 2
 } pin_input_mode_e;
 
 #define CRANK_MODE_MULTIPLIER 2.0f

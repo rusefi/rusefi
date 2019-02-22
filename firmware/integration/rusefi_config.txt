@@ -180,7 +180,10 @@ custom brain_input_pin_e 1 bits,    U32,   @OFFSET@, [0:6], @@brain_input_pin_e_
 
 custom brain_pin_e 1 bits,    U32,   @OFFSET@, [0:6], @@brain_pin_e_enum@@
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
-custom pin_output_mode_e 1 bits,    U32,   @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
+custom pin_output_mode_e 1 bits,    U08,   @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
+
+custom pin_input_mode_e 1 scalar, U08,	@OFFSET@,	"todo", 1, 0, 0, 20, 1	
+
 
 custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:3]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "INVALID"
 #define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
@@ -366,9 +369,6 @@ float vbattDividerCoeff;+Battery Voltage input resistor divider coefficient;"coe
 float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 
-adc_channel_e vbattAdcChannel;
-adc_channel_e fuelLevelSensor;
-uint8_t[6] unused40;
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
@@ -391,7 +391,9 @@ log_format_e logFormat;
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 	
 	adc_channel_e tpsAdcChannel;See aslo pedalPositionAdcChannel
-	uint8_t[3] unusedtps;
+adc_channel_e vbattAdcChannel;
+adc_channel_e fuelLevelSensor;
+	uint8_t[1] unusedtps;
 
 	int overrideCrankingIgnition;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
@@ -456,7 +458,6 @@ end_struct
 struct_no_prefix board_configuration_s
 	idle_hardware_s idle;
 
-
 	float manIdlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
 
 float mapFrequency0Kpa;;"Hz",      1,      0,       0, 100000,      2
@@ -489,16 +490,15 @@ float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 	brain_pin_e fanPin;
 
 brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal is all the way down
-	pin_input_mode_e clutchDownPinMode;
 	brain_pin_e alternatorControlPin;
 	pin_output_mode_e alternatorControlPinMode;
+	pin_input_mode_e clutchDownPinMode;
 
 	brain_pin_e[DIGIPOT_COUNT iterate] digitalPotentiometerChipSelect;
 	pin_output_mode_e electronicThrottlePin1Mode;
 	brain_pin_e wboHeaterPin;
 	brain_pin_e cj125CsPin;
 	uint8_t[1] unusedEtbM;
-	uint8_t[1] unusedIng;
 
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
@@ -509,7 +509,6 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e etbDirectionPin2;
 	brain_pin_e etbControlPin1;
 	brain_pin_e etbControlPin2;
-
 
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
@@ -526,7 +525,6 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e sdCardCsPin;
 	brain_pin_e canTxPin;
 	brain_pin_e canRxPin;
-
 
 	brain_pin_e boardTestModeJumperPin;
 	uint8_t[1] unusedMa2;
@@ -650,22 +648,19 @@ custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
 maf_sensor_type_e mafSensorType;
 
 	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finshed\nThese input pins allow us to pull toggle buttons state;
-brain_input_pin_e vehicleSpeedSensorInputPin;
+
+	brain_input_pin_e vehicleSpeedSensorInputPin;
 	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
-brain_input_pin_e frequencyReportingMapInputPin;
-
-	uint8_t[1] unusedfre;
-
+	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	int[14] unusedFsDig;
-	int[34] unusedspi;
-	int[58] unusedIf;
-	int[15] unusedlo;
+
+	int[23] unusedspi;
 
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
 board_configuration_s bc;
+	int[100] unusedspi2;
 bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled
 	bit isVerboseIAC;+Print details into rusEfi console
@@ -698,6 +693,7 @@ bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
 bit unused_bit_1472_29;
 bit unused_bit_1472_30;
+
 	adc_channel_e hipOutputChannel;
 uint8_t[3] unusedh;
 
@@ -754,8 +750,8 @@ uint8_t[3] unusuedvref;
 float idleStepperReactionTime;;"ms",      1,      0,       1, 300,      0
 	float knockVThreshold;;"V",      1,      0,       1, 5,      2
 
-custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1	
 	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
+	uint8_t[12] alFIn;
 	
 	int idleStepperTotalSteps;;"count",      1,      0,       5, 3000,      0
 
@@ -802,12 +798,6 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	brain_pin_e consoleSerialTxPin;	todo: finish pin migration from hard-coded to configurable?
 	brain_pin_e consoleSerialRxPin;todo: finish pin migration from hard-coded to configurable?
 
-	pin_output_mode_e stepperDirectionPinMode;
-	adc_channel_e externalKnockSenseAdc;
-	brain_pin_e stepperEnablePin;
-		uint8_t[1] unusedSteDiM;
-		
-	int[5] unsed2342342;
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM",      1,     0,   0.0,    18000,   2
@@ -863,10 +853,6 @@ custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 float[MAP_ACCEL_TAPER] mapAccelTaperBins;;"counter",      1,     0,   0.0,    300,   0
 float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300,   2
 
-		uint8_t[4] unusedcam;
-	int[9] unusedCom;
-	int[15] unusedServo;
-
 	adc_channel_e[FSIO_ANALOG_INPUT_COUNT iterate] fsioAdc;todo: rename to fsioAnalogInputs
 	float fixedTiming;Fixed timing, useful for TDC testing;"deg",      1,     0,   -720,    720,   2
 	float mapLowValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
@@ -916,7 +902,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	custom cfg_float_t_1f 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       -20000000, 20000000,	  1
 	cfg_float_t_1f[IGNITION_PIN_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction
 
-	pin_input_mode_e brakePedalPinMode;
+	
 	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1
 
 	spi_device_e sdCardSpiDevice;
@@ -932,9 +918,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	pin_mode_e stepperEnablePinMode;
 	adc_channel_e cj125ua;lambda input
 	adc_channel_e cj125ur;heater input
-	uint8_t[1] unusedBrake;
+	pin_input_mode_e brakePedalPinMode;
 
-	uint8_t[8] unusedcj;
 
 	pid_s[AUX_PID_COUNT iterate] auxPid;
 
@@ -952,6 +937,10 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 
 	brain_input_pin_e flexFuelSensor;
 	brain_pin_e test557pin
+	pin_output_mode_e stepperDirectionPinMode;
+	adc_channel_e externalKnockSenseAdc;
+	brain_pin_e stepperEnablePin;
+	uint8_t[1] unusedSteDiM;
 	uint8_t[2] unusedTest55;
 
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
@@ -988,8 +977,8 @@ tChargeMode_e tChargeMode;
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
 	float hip9011Gain;
-	int[574] unusedEnd;
-	
+	int[618] unusedEnd;
+
 
 end_struct
 
