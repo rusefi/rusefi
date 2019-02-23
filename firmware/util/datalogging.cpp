@@ -100,7 +100,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 		return;
 	}
 	intermediateLoggingBuffer.eos = 0; // reset
-	efiAssertVoid(CUSTOM_ERR_6603, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#1b");
+	efiAssertVoid(CUSTOM_ERR_6603, getCurrentRemainingStack() > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
 	logging->append((char *)intermediateLoggingBuffer.buffer);
@@ -110,7 +110,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
  * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
  */
 void Logging::vappendPrintf(const char *fmt, va_list arg) {
-	efiAssertVoid(CUSTOM_ERR_6604, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5b");
+	efiAssertVoid(CUSTOM_ERR_6604, getCurrentRemainingStack() > 128, "lowstck#5b");
 	int wasLocked = lockAnyContext();
 	vappendPrintfI(this, fmt, arg);
 	if (!wasLocked) {
@@ -120,7 +120,7 @@ void Logging::vappendPrintf(const char *fmt, va_list arg) {
 
 // todo: replace with logging->appendPrintf
 void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_APPEND_STACK, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
+	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	logging->vappendPrintf(fmt, ap);
@@ -128,7 +128,7 @@ void appendPrintf(Logging *logging, const char *fmt, ...) {
 }
 
 void Logging::appendPrintf(const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_APPEND_STACK, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#4");
+	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(fmt, ap);
@@ -250,7 +250,7 @@ void resetLogging(Logging *logging) {
  * This method should only be invoked on main thread because only the main thread can write to the console
  */
 void printMsg(Logging *logger, const char *fmt, ...) {
-	efiAssertVoid(CUSTOM_ERR_6605, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#5o");
+	efiAssertVoid(CUSTOM_ERR_6605, getCurrentRemainingStack() > 128, "lowstck#5o");
 //	resetLogging(logging); // I guess 'reset' is not needed here?
 	appendMsgPrefix(logger);
 

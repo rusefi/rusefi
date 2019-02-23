@@ -278,7 +278,7 @@ static void invokePerSecond(void) {
 
 static void periodicSlowCallback(Engine *engine) {
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
-	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
+	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow

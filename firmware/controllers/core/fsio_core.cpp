@@ -139,7 +139,7 @@ void LECalculator::push(le_action_e action, float value) {
  */
 bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssert(CUSTOM_ERR_ASSERT, getRemainingStack(chThdGetSelfX()) > 64, "FSIO logic", false);
+	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", false);
 #endif
 	switch (element->action) {
 
