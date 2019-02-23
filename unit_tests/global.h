@@ -17,6 +17,10 @@
 
 #include "boards.h"
 
+//#define chThdGetSelfX() 0
+//#define getRemainingStack(x) (999999)
+#define getCurrentRemainingStack() (999999)
+
 // this is needed by all DECLARE_ENGINE_PARAMETER_* usages
 #include "engine_configuration_generated_structures.h"
 

@@ -1343,7 +1343,7 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(CUSTOM_APPLY_STACK, getRemainingStack(chThdGetSelfX()) > 256, "apply c");
+	efiAssertVoid(CUSTOM_APPLY_STACK, getCurrentRemainingStack() > 256, "apply c");
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
 

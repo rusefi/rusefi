@@ -103,6 +103,8 @@ typedef unsigned int time_t;
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
 
+#define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
+
 /*
  * Stack debugging
  * See also getMaxUsedStack()

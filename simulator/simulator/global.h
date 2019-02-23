@@ -64,6 +64,8 @@ extern "C"
 
 void printToConsole(char *p);
 
+#define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
+
 int getRemainingStack(thread_t *otp);
 
 // todo: move somewhere else?

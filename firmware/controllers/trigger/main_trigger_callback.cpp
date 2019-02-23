@@ -26,13 +26,6 @@
 #include <nvic.h>
 #endif
 
-#if (!EFI_PROD_CODE && !EFI_SIMULATOR) || defined(__DOXYGEN__)
-
-#define chThdGetSelfX() 0
-#define getRemainingStack(x) (999999)
-
-#endif
-
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
 #include "main_trigger_callback.h"
@@ -373,7 +366,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssertVoid(CUSTOM_ERR_6627, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#3");
+	efiAssertVoid(CUSTOM_ERR_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
 	if (!isInjectionEnabled(PASS_ENGINE_PARAMETER_SIGNATURE) || limitedFuel) {
@@ -446,7 +439,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		 */
 		return;
 	}
-	efiAssertVoid(CUSTOM_ERR_6629, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#2");
+	efiAssertVoid(CUSTOM_ERR_6629, getCurrentRemainingStack() > 128, "lowstck#2");
 
 	if (trgEventIndex >= ENGINE(engineCycleEventCount)) {
 		/**
