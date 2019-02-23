@@ -19,7 +19,8 @@
 #define SWITCH_TO_BINARY_COMMAND "~"
 
 #define PROTOCOL  "001"
-#define TS_SIGNATURE "rusEFI v1.04"
+// this should match 'signature' in rusefi.ini
+#define TS_SIGNATURE "rusEFI v1.05"
 
 #define TS_RESPONSE_OK 0x00
 #define TS_RESPONSE_BURN_OK 0x04
