@@ -765,11 +765,8 @@ float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM",      1,     0,   0.0,    18000,   
 baro_corr_table_t baroCorrTable;
 	
 	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "mode12", "mode13", "mode14", "mode15", "mode16", "mode17", "mode18", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25", "mode26", "mode27", "mode28", "mode29", "mode30", "mode31", "PULLUP", "mode33", "mode34", "mode35"
-custom pin_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
+custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	
-	pin_mode_e spi2SckMode;
-	pin_mode_e spi2MosiMode;
-	pin_mode_e spi2MisoMode;
 	
 	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"%",      1,     0,      0.0,    700.0,   2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%",        1,     0,    0.0,    100.0,  2
@@ -906,16 +903,22 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1
 
 	spi_device_e sdCardSpiDevice;
+	pin_mode_e spi1SckMode;
+	pin_mode_e spi1MosiMode;
+	pin_mode_e spi1MisoMode;
+
+	pin_mode_e spi2SckMode;
+	pin_mode_e spi2MosiMode;
+	pin_mode_e spi2MisoMode;
+
 	pin_mode_e spi3SckMode;
 	pin_mode_e spi3MosiMode;
 	pin_mode_e spi3MisoMode;
 	
-	pin_mode_e spi1SckMode;
-	pin_mode_e spi1MosiMode;
-	pin_mode_e spi1MisoMode;
-	brain_pin_e brakePedalPin
-
 	pin_mode_e stepperEnablePinMode;
+		uint8_t[2] unuseSpi3;
+
+	brain_pin_e brakePedalPin
 	adc_channel_e cj125ua;lambda input
 	adc_channel_e cj125ur;heater input
 	pin_input_mode_e brakePedalPinMode;
@@ -977,7 +980,7 @@ tChargeMode_e tChargeMode;
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
 	float hip9011Gain;
-	int[618] unusedEnd;
+	int[625] unusedEnd;
 
 
 end_struct
