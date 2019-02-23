@@ -26,7 +26,7 @@ typedef unsigned int time_t;
 // time in seconds
 typedef time_t efitimesec_t;
 
-typedef int pin_mode_e;
+typedef uint8_t pin_mode_e;
 
 /**
  * integer time in milliseconds

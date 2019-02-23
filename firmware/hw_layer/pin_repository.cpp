@@ -16,7 +16,17 @@
 #include "memstreams.h"
 #include "chprintf.h"
 
-#define PIN_REPO_SIZE 7 * PORT_SIZE
+static ioportid_t ports[] = {GPIOA,
+		GPIOB,
+		GPIOC,
+		GPIOD,
+		GPIOE,
+		GPIOF,
+		GPIOG,
+		GPIOH,
+};
+
+#define PIN_REPO_SIZE (sizeof(ports) / sizeof(ioportid_t)) * PORT_SIZE
 // todo: move this into PinRepository class
 const char *PIN_USED[PIN_REPO_SIZE];
 static int initialized = FALSE;
@@ -24,17 +34,10 @@ static int initialized = FALSE;
 static LoggingWithStorage logger("pin repos");
 static int totalPinsUsed = 0;
 
-static ioportid_t ports[7] = {GPIOA,
-		GPIOB,
-		GPIOC,
-		GPIOD,
-		GPIOE,
-		GPIOF,
-		GPIOH,
-};
-
 PinRepository::PinRepository() {
 }
+
+static PinRepository instance;
 
 static int getPortIndex(ioportid_t port) {
 	efiAssert(CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
@@ -53,8 +56,12 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOF)
 		return 5;
 #if defined(STM32F4XX) || defined(STM32F7XX)
-	if (port == GPIOH)
+	if (port == GPIOG)
 		return 6;
+#endif /* defined(STM32F4XX) */
+#if defined(STM32F4XX) || defined(STM32F7XX)
+	if (port == GPIOH)
+		return 7;
 #endif /* defined(STM32F4XX) */
 	firmwareError(CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
@@ -125,8 +132,8 @@ void initPinRepository(void) {
 
 	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
 
-	for (int i = 0; i < PIN_REPO_SIZE; i++)
-		PIN_USED[i] = 0;
+	memset(PIN_USED, 0, sizeof(PIN_USED));
+
 	initialized = true;
 	addConsoleAction("pins", reportPins);
 }

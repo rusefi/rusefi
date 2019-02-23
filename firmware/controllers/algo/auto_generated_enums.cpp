@@ -350,8 +350,6 @@ case IM_MANUAL:
 }
 const char *getPin_output_mode_e(pin_output_mode_e value){
 switch(value) {
-case Force_4_bytes_size_pin_output_mode:
-  return "Force_4_bytes_size_pin_output_mode";
 case OM_DEFAULT:
   return "OM_DEFAULT";
 case OM_INVERTED:
@@ -365,8 +363,6 @@ case OM_OPENDRAIN_INVERTED:
 }
 const char *getPin_input_mode_e(pin_input_mode_e value){
 switch(value) {
-case Force_4_bytes_size_pin_input_mode:
-  return "Force_4_bytes_size_pin_input_mode";
 case PI_DEFAULT:
   return "PI_DEFAULT";
 case PI_PULLDOWN:
@@ -506,8 +502,6 @@ case EFI_ADC_ERROR:
   return "EFI_ADC_ERROR";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-case Force_4_bytes_size_cranking_adc_channel:
-  return "Force_4_bytes_size_cranking_adc_channel";
   }
  return NULL;
 }
@@ -545,8 +539,6 @@ case Force_4_bytes_size_ego_sensor:
 }
 const char *getBrain_pin_e(brain_pin_e value){
 switch(value) {
-case Force_4_bytes_size_brain_pin_e:
-  return "Force_4_bytes_size_brain_pin_e";
 case GPIOA_0:
   return "GPIOA_0";
 case GPIOA_1:
@@ -711,6 +703,102 @@ case GPIO_INVALID:
   return "GPIO_INVALID";
 case GPIO_UNASSIGNED:
   return "GPIO_UNASSIGNED";
+case GPIOF_0:
+  return "GPIOF_0";
+case GPIOF_1:
+  return "GPIOF_1";
+case GPIOF_10:
+  return "GPIOF_10";
+case GPIOF_11:
+  return "GPIOF_11";
+case GPIOF_12:
+  return "GPIOF_12";
+case GPIOF_13:
+  return "GPIOF_13";
+case GPIOF_14:
+  return "GPIOF_14";
+case GPIOF_15:
+  return "GPIOF_15";
+case GPIOF_2:
+  return "GPIOF_2";
+case GPIOF_3:
+  return "GPIOF_3";
+case GPIOF_4:
+  return "GPIOF_4";
+case GPIOF_5:
+  return "GPIOF_5";
+case GPIOF_6:
+  return "GPIOF_6";
+case GPIOF_7:
+  return "GPIOF_7";
+case GPIOF_8:
+  return "GPIOF_8";
+case GPIOF_9:
+  return "GPIOF_9";
+case GPIOG_0:
+  return "GPIOG_0";
+case GPIOG_1:
+  return "GPIOG_1";
+case GPIOG_10:
+  return "GPIOG_10";
+case GPIOG_11:
+  return "GPIOG_11";
+case GPIOG_12:
+  return "GPIOG_12";
+case GPIOG_13:
+  return "GPIOG_13";
+case GPIOG_14:
+  return "GPIOG_14";
+case GPIOG_15:
+  return "GPIOG_15";
+case GPIOG_2:
+  return "GPIOG_2";
+case GPIOG_3:
+  return "GPIOG_3";
+case GPIOG_4:
+  return "GPIOG_4";
+case GPIOG_5:
+  return "GPIOG_5";
+case GPIOG_6:
+  return "GPIOG_6";
+case GPIOG_7:
+  return "GPIOG_7";
+case GPIOG_8:
+  return "GPIOA_G";
+case GPIOG_9:
+  return "GPIOG_9";
+case GPIOH_0:
+  return "GPIOH_0";
+case GPIOH_1:
+  return "GPIOH_1";
+case GPIOH_10:
+  return "GPIOH_10";
+case GPIOH_11:
+  return "GPIOH_11";
+case GPIOH_12:
+  return "GPIOH_12";
+case GPIOH_13:
+  return "GPIOH_13";
+case GPIOH_14:
+  return "GPIOH_14";
+case GPIOH_15:
+  return "GPIOH_15";
+case GPIOH_2:
+  return "GPIOH_2";
+case GPIOH_3:
+  return "GPIOH_3";
+case GPIOH_4:
+  return "GPIOH_4";
+case GPIOH_5:
+  return "GPIOH_5";
+case GPIOH_6:
+  return "GPIOH_6";
+case GPIOH_7:
+  return "GPIOH_7";
+case GPIOH_8:
+  return "GPIOH_8";
+case GPIOH_9:
+  return "GPIOH_9";
   }
  return NULL;
 }
