@@ -58,6 +58,7 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
 	if (port == GPIO_NULL) {
 		return;
 	}
+	efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
 
 	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
 
