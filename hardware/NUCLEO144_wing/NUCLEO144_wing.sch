@@ -1,5 +1,4 @@
 EESchema Schematic File Version 2
-LIBS:KICAD_Older_Version
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -29,33 +28,11 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:176122-6
 LIBS:art-electro-conn
 LIBS:art-electro-conn_2
-LIBS:art-electro-ic
-LIBS:art-electro-max
-LIBS:art-electro-power
-LIBS:LMV324IDR
 LIBS:logo
 LIBS:logo_flipped
-LIBS:MAX9926-9927
-LIBS:max9939
-LIBS:max31855
-LIBS:stm32
-LIBS:tc4427
-LIBS:lm2596
-LIBS:mos_p_numbered-pins
-LIBS:rn-41
-LIBS:skqucaa010_joystick
-LIBS:itead_hc-0X_bluetooth
-LIBS:joystick_SKRHAAE010
-LIBS:STM32F407IGT6
-LIBS:slc_oem
-LIBS:mos_n_numbered-pins
-LIBS:crystal(mc306)
-LIBS:pololu_a4988
-LIBS:Pololu_DRV8880
-LIBS:fuse_BOM_only_no_pins
+LIBS:NUCLEO
 LIBS:NUCLEO144_wing-cache
 EELAYER 25 0
 EELAYER END
@@ -71,4 +48,26 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
+$Comp
+L NUCLEO144-F429ZI U1
+U 1 1 5C728F9A
+P 5000 4800
+F 0 "U1" H 4100 8525 50  0000 R CNN
+F 1 "NUCLEO144-F429ZI" H 4100 8450 50  0000 R CNN
+F 2 "rusEFI_LIB:ST_Morpho_Connector_144_STLink" H 5850 1150 50  0001 L CNN
+F 3 "" H 4100 5100 50  0001 C CNN
+	1    5000 4800
+	1    0    0    -1  
+$EndComp
+$Comp
+L NUCLEO144-F429ZI U2
+U 1 1 5C729630
+P 9700 5000
+F 0 "U2" H 8800 8725 50  0000 R CNN
+F 1 "NUCLEO144-F429ZI" H 8800 8650 50  0000 R CNN
+F 2 "rusEFI_LIB:ST_Morpho_Connector_144_STLink" H 10550 1350 50  0001 L CNN
+F 3 "" H 8800 5300 50  0001 C CNN
+	1    9700 5000
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
