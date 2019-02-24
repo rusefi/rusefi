@@ -1,5 +1,7 @@
 *-cache.lib
 *-rescue.lib
+*.bak
+*.kicad_pcb-bak
 _saved*.sch
 _autosave*.*
 ibom/*
