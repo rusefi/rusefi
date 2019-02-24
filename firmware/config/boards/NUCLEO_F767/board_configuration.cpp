@@ -43,7 +43,6 @@ void setSdCardConfigurationOverrides(void) {
 void setBoardConfigurationOverrides(void) {
 	setSerialConfigurationOverrides();
 
-	engineConfiguration->communicationLedPin = GPIOB_7; // blue LED
 	engineConfiguration->runningLedPin = GPIOB_0; //green LED
 	engineConfiguration->fatalErrorPin = GPIOB_14; //red LED
 	engineConfiguration->warninigLedPin = GPIO_UNASSIGNED;
