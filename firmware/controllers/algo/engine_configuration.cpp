@@ -396,7 +396,11 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 }
 
 void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#ifdef EFI_FATAL_ERROR_PIN
+	engineConfiguration->fatalErrorPin = EFI_FATAL_ERROR_PIN;
+#else
 	engineConfiguration->fatalErrorPin = GPIOD_14;
+#endif /* EFI_FATAL_ERROR_PIN */
 	engineConfiguration->warninigLedPin = GPIOD_13;
 	engineConfiguration->configResetPin = GPIOB_1;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
@@ -984,7 +988,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else
 	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
 #endif
-	engineConfiguration->runningLedPin = GPIOD_12; // greeb LED on discovery
+	engineConfiguration->runningLedPin = GPIOD_12; // green LED on discovery
 	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
 	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);

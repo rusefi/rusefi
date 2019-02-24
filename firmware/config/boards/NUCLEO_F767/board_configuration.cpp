@@ -44,7 +44,6 @@ void setBoardConfigurationOverrides(void) {
 	setSerialConfigurationOverrides();
 
 	engineConfiguration->runningLedPin = GPIOB_0; //green LED
-	engineConfiguration->fatalErrorPin = GPIOB_14; //red LED
 	engineConfiguration->warninigLedPin = GPIO_UNASSIGNED;
 	engineConfiguration->configResetPin = GPIO_UNASSIGNED;
 #if 0
