@@ -228,7 +228,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t nowNt = getTimeNowNt();
 #if EFI_PROD_CODE
-	efiAssertVoid(CUSTOM_ERR_6632, getRemainingStack(chThdGetSelfX()) > 256, "lowstckRCL");
+	efiAssertVoid(CUSTOM_ERR_6632, getCurrentRemainingStack() > 256, "lowstckRCL");
 #endif
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;

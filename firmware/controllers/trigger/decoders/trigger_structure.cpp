@@ -404,7 +404,7 @@ void TriggerShape::setSecondTriggerSynchronizationGap(float syncRatio) {
 void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e operationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	efiAssertVoid(CUSTOM_ERR_6641, getRemainingStack(chThdGetSelfX()) > 256, "init t");
+	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > 256, "init t");
 	scheduleMsg(logger, "initializeTriggerShape(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
 #endif
 

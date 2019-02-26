@@ -198,7 +198,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
-	efiAssertVoid(CUSTOM_ERR_6636, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#8");
+	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
 	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
 	triggerDuration = GET_TIMESTAMP() - triggerHandlerEntryTime;

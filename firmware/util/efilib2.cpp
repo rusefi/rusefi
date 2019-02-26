@@ -40,6 +40,9 @@ efitime_t Overflow64Counter::update(uint32_t value) {
 }
 #endif
 
+/**
+ * See also getRemainingStack()
+ */
 int getMaxUsedStack(uint8_t *ptr, int size) {
 	/**
 	 * maximum used stack size total stack buffer size minus position of first modified byte

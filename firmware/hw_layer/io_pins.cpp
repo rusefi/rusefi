@@ -35,13 +35,13 @@ static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 #endif /* defined(STM32F4XX) || defined(STM32F7XX) */
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED)
+	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
 		return GPIO_NULL;
-	if (brainPin > GPIO_UNASSIGNED || brainPin < 0) {
+	if (brainPin < GPIOA_0 || brainPin > GPIOH_15) {
 		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
 		return GPIO_NULL;
 	}
-	return PORTS[brainPin / PORT_SIZE];
+	return PORTS[(brainPin - GPIOA_0)/ PORT_SIZE];
 }
 
 bool efiReadPin(brain_pin_e pin) {
@@ -58,6 +58,7 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
 	if (port == GPIO_NULL) {
 		return;
 	}
+	efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
 
 	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
 
