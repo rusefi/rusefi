@@ -52,8 +52,12 @@ typedef unsigned int time_t;
 #define VALUE(x) VALUE_TO_STRING(x)
 #define VAR_NAME_VALUE(var) #var "="  VALUE(var)
 
-// project-wide default thread stack size
-// see also PORT_INT_REQUIRED_STACK
+/**
+ * project-wide default thread stack size
+ * See also PORT_INT_REQUIRED_STACK
+ * See getRemainingStack()
+ * See getMaxUsedStack()
+ */
 #define UTILITY_THREAD_STACK_SIZE 400
 
 #define EFI_ERROR_CODE 0xffffffff
@@ -98,6 +102,8 @@ typedef unsigned int time_t;
 		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1); \
 		turnAllPinsOff(); \
 		enginePins.communicationLedPin.setValue(1);
+
+#define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
 
 /*
  * Stack debugging

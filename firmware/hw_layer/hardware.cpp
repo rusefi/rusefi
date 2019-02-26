@@ -87,7 +87,7 @@ bool rtcWorks = true;
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
-	efiAssertVoid(CUSTOM_ERR_6674, getRemainingStack(chThdGetSelfX()) > 128, "lockSpi");
+	efiAssertVoid(CUSTOM_ERR_6674, getCurrentRemainingStack() > 128, "lockSpi");
 	// todo: different locks for different SPI devices!
 	chMtxLock(&spiMtx);
 }
@@ -191,7 +191,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		/**
 		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
 		 */
-		efiAssertVoid(CUSTOM_ERR_6676, getRemainingStack(chThdGetSelfX()) > 128, "lowstck#9b");
+		efiAssertVoid(CUSTOM_ERR_6676, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_MAP_AVERAGING
 		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
@@ -325,7 +325,7 @@ void showBor(void) {
 }
 
 void initHardware(Logging *l) {
-	efiAssertVoid(CUSTOM_IH_STACK, getRemainingStack(chThdGetSelfX()) > 256, "init h");
+	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > 256, "init h");
 	sharedLogger = l;
 	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");

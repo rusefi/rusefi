@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name rusEFI_LIB)(type KiCad)(uri "$(KIPRJMOD)/../rusefi_lib/rusefi_lib.pretty")(options "")(descr ""))
+  (lib (name rusEFI_local)(type KiCad)(uri "$(KIPRJMOD)/modules")(options "")(descr ""))
+)

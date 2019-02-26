@@ -42,6 +42,7 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 02/23/2019    | r16857    | improvement #688: better support for 144 and 176 pin packages |
 | 02/05/2019    | r16713    | improvement #631: ChibiOS 18 |
 | 01/11/2019    | r16346    | bugfix #663: SPI fixes for CJ125 for stm32 errata STM32f405/7/15/17 |
 | 12/09/2018    | r16057    | electronic throttle body control is now BETA version |

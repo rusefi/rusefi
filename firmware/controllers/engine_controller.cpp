@@ -278,7 +278,7 @@ static void invokePerSecond(void) {
 
 static void periodicSlowCallback(Engine *engine) {
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
-	efiAssertVoid(CUSTOM_ERR_6661, getRemainingStack(chThdGetSelfX()) > 64, "lowStckOnEv");
+	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
@@ -757,10 +757,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 10200
+#define RAM_UNUSED_SIZE 10000
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 7000
+#define CCM_UNUSED_SIZE 6800
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
@@ -778,5 +778,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190204;
+	return 20190223;
 }
