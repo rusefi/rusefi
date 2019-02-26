@@ -62,7 +62,7 @@ See also git_scripts/git_add_upstream.bat
 =========================================
 https://help.github.com/articles/syncing-a-fork/
 git fetch upstream
-git merge upstream/stable_17.6.x
+git merge upstream/stable_18.2.x
  or
 git merge upstream/master
 git push
