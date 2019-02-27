@@ -178,6 +178,8 @@ typedef enum {
 	// see also	MIATA_NA6_MAP = 41
 	MIATA_NA6_VAF = 57,
 
+	ETB_BENCH_ENGINE = 58,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
