@@ -70,6 +70,7 @@
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "pwm_generator.h"
+#include "DcMotor.h"
 #include "pid_auto_tune.h"
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
@@ -93,6 +94,8 @@ CCM_OPTIONAL static SimplePwm etbPwmDown("etbDown");
 /*CCM_OPTIONAL*/ static OutputPin outputDirectionOpen;
 /*CCM_OPTIONAL*/ static OutputPin outputDirectionClose;
 
+static TwoPinDcMotor dcMotor(&etbPwmUp, &outputDirectionOpen, &outputDirectionClose);
+
 EXTERN_ENGINE;
 
 static Pid pid(&engineConfiguration->etb);
@@ -102,7 +105,9 @@ static percent_t currentEtbDuty;
 //static bool wasEtbBraking = false;
 
 // todo: need to fix PWM so that it supports zero duty cycle
-#define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), 0.1) / 100.0)
+//#define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), 0.1) / 100.0)
+
+#define PERCENT_TO_DUTY(X) ((X) / 100.0)
 
 class EtbController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
@@ -134,7 +139,7 @@ private:
 		}
 
 		if (!cisnan(valueOverride)) {
-			etbPwmUp.setSimplePwmDutyCycle(valueOverride);
+			dcMotor.Set(valueOverride);
 			return;
 		}
 
@@ -151,7 +156,7 @@ private:
 					autoTune.output,
 					value);
 			scheduleMsg(&logger, "AT PID=%f", value);
-			etbPwmUp.setSimplePwmDutyCycle(PERCENT_TO_DUTY(value));
+			dcMotor.Set(PERCENT_TO_DUTY(value));
 
 			if (result) {
 				scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
@@ -165,9 +170,10 @@ private:
 
 		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues, ETB_BIAS_CURVE_LENGTH);
 
-		currentEtbDuty = feedForward + pid.getValue(targetPosition, actualThrottlePosition);
+		currentEtbDuty = feedForward +
+				pid.getValue(targetPosition, actualThrottlePosition);
 
-		etbPwmUp.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentEtbDuty));
+		dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
 /*
 		if (CONFIGB(etbDirectionPin2) != GPIO_UNASSIGNED) {
 			bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
@@ -199,7 +205,7 @@ static void setThrottleDutyCycle(float level) {
 
 	float dc = PERCENT_TO_DUTY(level);
 	valueOverride = dc;
-	etbPwmUp.setSimplePwmDutyCycle(dc);
+	dcMotor.Set(dc);
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
 

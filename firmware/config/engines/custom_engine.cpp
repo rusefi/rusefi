@@ -270,14 +270,20 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * remember that some H-bridges require 5v control lines, not just 3v logic outputs we have on stm32
 	 */
-
+	CONFIGB(etbDirectionPin1) = GPIOC_7;
+	CONFIGB(etbDirectionPin2) = GPIOC_9;
 	CONFIGB(etbControlPin1) = GPIOE_14;
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engineConfiguration->etb.minValue = -100;
+	engineConfiguration->etb.maxValue = 100;
 #endif
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1
+
+	engineConfiguration->debugMode = DBG_ELECTRONIC_THROTTLE_PID;
 
 }
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
