@@ -91,8 +91,4 @@ void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schf
 	doScheduleForLater(scheduling, delayUs, callback, param);
 }
 
-void initSignalExecutorImpl(void) {
-
-}
-
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

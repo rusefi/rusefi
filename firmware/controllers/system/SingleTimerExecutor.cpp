@@ -156,7 +156,7 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	hwSetTimerDuration = GET_TIMESTAMP() - beforeHwSetTimer;
 }
 
-void initSignalExecutorImpl(void) {
+void initSingleTimerExecutorHardware(void) {
 	globalTimerCallback = executorCallback;
 	initMicrosecondTimer();
 }

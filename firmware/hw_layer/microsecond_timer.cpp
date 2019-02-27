@@ -48,6 +48,7 @@ static char buff[32];
 
 static int timerFreezeCounter = 0;
 static volatile int setHwTimerCounter = 0;
+static volatile bool hwStarted = false;
 
 extern bool hasFirmwareErrorFlag;
 
@@ -56,6 +57,7 @@ extern bool hasFirmwareErrorFlag;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareUsTimer(int32_t timeUs) {
+	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
 	setHwTimerCounter++;
 	/**
 	 * #259 BUG error: not positive timeUs
@@ -99,15 +101,6 @@ static void hwTimerCallback(GPTDriver *gptp) {
 	}
 	isTimerPending = false;
 
-//	// test code
-//	setOutputPinValue(LED_CRANKING, timerCallbackCounter % 2);
-//	int mod = timerCallbackCounter % 400;
-//	chSysLockFromISR()
-//	;
-//	setHardwareUsTimer(400 - mod);
-//	chSysUnlockFromISR()
-//	;
-
 	uint32_t before = GET_TIMESTAMP();
 	globalTimerCallback(NULL);
 	uint32_t precisionCallbackDuration = GET_TIMESTAMP() - before;
@@ -115,7 +108,6 @@ static void hwTimerCallback(GPTDriver *gptp) {
 		maxPrecisionCallbackDuration = precisionCallbackDuration;
 	}
 }
-
 
 class MicrosecondTimerWatchdogController : public PeriodicController<UTILITY_THREAD_STACK_SIZE>
 {
@@ -151,18 +143,12 @@ void initMicrosecondTimer(void) {
 
 	gptStart(&GPTDEVICE, &gpt5cfg);
 	efiAssertVoid(CUSTOM_ERR_TIMER_STATE, GPTDEVICE.state == GPT_READY, "hw state");
+	hwStarted = true;
 
 	lastSetTimerTimeNt = getTimeNowNt();
 #if EFI_EMULATE_POSITION_SENSORS
 	watchdogControllerInstance.Start();
 #endif /* EFI_ENGINE_EMULATOR */
-
-//	// test code
-//	chSysLock()
-//	;
-//	setHardwareUsTimer(300);
-//	chSysUnlock()
-//	;
 }
 
 #endif /* EFI_PROD_CODE */
