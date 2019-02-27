@@ -249,12 +249,13 @@ void setEtbOffset(int value) {
 	showEthInfo();
 }
 
-void setDefaultEtbParameters(void) {
+void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalUpVoltage = 0; // that's voltage, not ADC like with TPS
 	engineConfiguration->throttlePedalWOTVoltage = 6; // that's voltage, not ADC like with TPS
 
 	engineConfiguration->etb.pFactor = 1;
-	engineConfiguration->etb.iFactor = 0.5;
+	engineConfiguration->etb.iFactor = 0.05;
+	engineConfiguration->etb.dFactor = 0.0;
 	engineConfiguration->etb.periodMs = 100;
 	engineConfiguration->etbFreq = 300;
 

@@ -20,6 +20,7 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "can_hw.h"
 #include "scheduler.h"
+#include "electronic_throttle.h"
 #endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE;
@@ -261,9 +262,22 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+
 	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	/**
+	 * remember that some H-bridges require 5v control lines, not just 3v logic outputs we have on stm32
+	 */
+
+	CONFIGB(etbControlPin1) = GPIOE_14;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
+
+	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1
+
 }
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
