@@ -43,7 +43,3 @@ void TestExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t tim
 	}
 	schedulingQueue.insertTask(scheduling, timeUs, callback, param);
 }
-
-void initSignalExecutorImpl(void) {
-}
-

@@ -375,6 +375,9 @@ void initHardware(Logging *l) {
 	resetConfigurationExt(sharedLogger, engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_INTERNAL_FLASH */
 
+	// it's important to initialize this pretty early in the game before any scheduling usages
+	initSingleTimerExecutorHardware();
+
 #if EFI_HD44780_LCD
 //	initI2Cmodule();
 	lcd_HD44780_init(sharedLogger);

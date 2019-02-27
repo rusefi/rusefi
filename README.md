@@ -42,6 +42,7 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 02/27/2019    | r16886    | bugfix #698: concurrency defect with single timer executor initialization |
 | 02/23/2019    | r16857    | improvement #688: better support for 144 and 176 pin packages |
 | 02/05/2019    | r16713    | improvement #631: ChibiOS 18 |
 | 01/11/2019    | r16346    | bugfix #663: SPI fixes for CJ125 for stm32 errata STM32f405/7/15/17 |

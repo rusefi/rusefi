@@ -27,7 +27,7 @@ private:
 	void scheduleTimerCallback();
 };
 
-void initSignalExecutorImpl(void);
+void initSingleTimerExecutorHardware(void);
 void executorStatistics();
 
 #endif /* SINGLETIMEREXECUTOR_H_ */

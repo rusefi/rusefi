@@ -48,7 +48,6 @@ InjectionSignalPair::InjectionSignalPair() {
 }
 
 void initSignalExecutor(void) {
-	initSignalExecutorImpl();
 }
 
 #if FUEL_MATH_EXTREME_LOGGING
