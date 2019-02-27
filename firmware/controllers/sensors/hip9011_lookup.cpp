@@ -49,7 +49,7 @@ float getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) {
 }
 
 /**
- * @param frequency knock frequencey, in kHz
+ * @param frequency knock frequency, in kHz
  */
 int getHip9011BandIndex(float frequency) {
 	return findIndexMsg("freq", bandFreqLookup, BAND_LOOKUP_SIZE, frequency);
