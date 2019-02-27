@@ -26,6 +26,9 @@
  *
  * Relevant console commands:
  *
+ * ETB_BENCH_ENGINE
+ * set engine_type 58
+ *
  * enable verbose_etb
  * disable verbose_etb
  * ethinfo

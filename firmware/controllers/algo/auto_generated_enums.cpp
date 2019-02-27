@@ -91,6 +91,8 @@ case MIATA_NA6_MAP:
   return "MIATA_NA6_MAP";
 case MIATA_NA6_VAF:
   return "MIATA_NA6_VAF";
+case ETB_BENCH_ENGINE:
+  return "ETB_BENCH_ENGINE";
 case MINIMAL_PINS:
   return "MINIMAL_PINS";
 case MINI_COOPER_R50:

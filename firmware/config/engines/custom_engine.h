@@ -15,5 +15,6 @@ void disableLCD(board_configuration_s *boardConfiguration);
 void runSchedulingPrecisionTestIfNeeded(void);
 void setMinimalPinsEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_H_ */
