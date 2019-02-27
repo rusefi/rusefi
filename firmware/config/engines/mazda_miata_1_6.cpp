@@ -147,7 +147,7 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// chartsize 200
 	engineConfiguration->engineChartSize = 200;
 
-	engineConfiguration->idleMode == IM_AUTO;
+	engineConfiguration->idleMode = IM_AUTO;
 
 	// cold start works better with baseFuel = 8
 	// maybe adjust CLT correction?
