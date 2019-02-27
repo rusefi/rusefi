@@ -566,8 +566,8 @@ typedef enum {
 	EFI_ADC_5 = 5, // PA5
 	EFI_ADC_6 = 6, // PA6
 	EFI_ADC_7 = 7, // PA7
-	EFI_ADC_8 = 8,
-	EFI_ADC_9 = 9,
+	EFI_ADC_8 = 8, // PB0
+	EFI_ADC_9 = 9, // PB1
 	EFI_ADC_10 = 10, // PC0
 	EFI_ADC_11 = 11, // PC1
 	EFI_ADC_12 = 12, // PC2
