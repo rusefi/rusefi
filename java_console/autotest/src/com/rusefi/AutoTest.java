@@ -472,6 +472,7 @@ public class AutoTest {
                 System.exit(-1);
             }
         });
+        boolean startSimulator = args.length == 1 && args[0].equalsIgnoreCase("start");
 
         long start = System.currentTimeMillis();
         FileLog.SIMULATOR_CONSOLE.start();
@@ -479,7 +480,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator(false);
+            IoUtil.connectToSimulator(startSimulator);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();
