@@ -88,7 +88,7 @@
         <java jar="${jar_file}" fork="true"/>
     </target>
 
-    <target name="autotest" depends="jar">
+    <target name="simlator_test" depends="jar">
         <java classpath="${jar_file}" classname="com.rusefi.AutoTest" failonerror="true">
         </java>
 
