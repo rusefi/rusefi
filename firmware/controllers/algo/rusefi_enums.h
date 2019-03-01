@@ -414,7 +414,7 @@ typedef enum {
 	Force_4_bytes_size_idle_mode = ENUM_32_BITS,
 } idle_mode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * GND for logical OFF, VCC for logical ON
 	 */
@@ -430,7 +430,9 @@ typedef enum {
 	OM_OPENDRAIN_INVERTED = 3
 } pin_output_mode_e;
 
-typedef enum {
+typedef enum
+//__attribute__ ((__packed__))
+{
 	PI_DEFAULT = 0,
 	PI_PULLUP = 1,
 	PI_PULLDOWN = 2
@@ -557,7 +559,9 @@ typedef enum {
  * Frankenso analog #12 PC4 ADC14
  */
 
-typedef enum {
+typedef enum
+//__attribute__ ((__packed__))
+{
 	EFI_ADC_0 = 0, // PA0
 	EFI_ADC_1 = 1, // PA1
 	EFI_ADC_2 = 2, // PA2
@@ -613,7 +617,9 @@ typedef enum {
 /**
  * Hardware pin. This enum is platform-specific.
  */
-typedef enum {
+typedef enum
+//__attribute__ ((__packed__))
+{
 	GPIO_UNASSIGNED = 0,
 	GPIO_INVALID = 1,
 
