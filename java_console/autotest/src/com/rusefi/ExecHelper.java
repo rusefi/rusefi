@@ -1,7 +1,5 @@
 package com.rusefi;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +11,7 @@ import java.util.function.Consumer;
  * (c) Andrey Belomutskiy
  */
 public class ExecHelper {
-    private static final String SIMULATOR_COMMAND = "../win32_functional_tests/build/rusefi_simulator.exe";
+    private static final String SIMULATOR_BINARY = "../simulator/build/rusefi_simulator.exe";
     static Process simulatorProcess;
 
     /**
@@ -24,10 +22,10 @@ public class ExecHelper {
         FileLog.MAIN.logLine("runSimulator...");
 
         try {
-            FileLog.MAIN.logLine("Binary size: " + new File(SIMULATOR_COMMAND).length());
+            FileLog.MAIN.logLine("Binary size: " + new File(SIMULATOR_BINARY).length());
 
-            FileLog.MAIN.logLine("Executing " + SIMULATOR_COMMAND);
-            ExecHelper.simulatorProcess = Runtime.getRuntime().exec(SIMULATOR_COMMAND);
+            FileLog.MAIN.logLine("Executing " + SIMULATOR_BINARY);
+            ExecHelper.simulatorProcess = Runtime.getRuntime().exec(SIMULATOR_BINARY);
             FileLog.MAIN.logLine("simulatorProcess: " + ExecHelper.simulatorProcess);
 
             dumpProcessOutput(ExecHelper.simulatorProcess);
@@ -93,6 +91,8 @@ public class ExecHelper {
     }
 
     public static void startSimulator() {
+        if (!new File(SIMULATOR_BINARY).exists())
+            throw new IllegalStateException(SIMULATOR_BINARY + " not found");
         FileLog.MAIN.logLine("startSimulator...");
         new Thread(new Runnable() {
             @Override
