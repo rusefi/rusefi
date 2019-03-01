@@ -557,9 +557,7 @@ typedef enum {
  * Frankenso analog #12 PC4 ADC14
  */
 
-typedef enum
-//__attribute__ ((__packed__))
-{
+typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_0 = 0, // PA0
 	EFI_ADC_1 = 1, // PA1
 	EFI_ADC_2 = 2, // PA2
@@ -580,6 +578,11 @@ typedef enum
 	// todo: bad choice of value since now we have ADC_CHANNEL_SENSOR and could end up with 17 and 18 also
 	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 17,
+#if EFI_UNIT_TEST
+    TEST_MAF_CHANNEL = 113,
+    TEST_CLT_CHANNEL = 114,
+    TEST_IAT_CHANNEL = 115,
+#endif
 } adc_channel_e;
 
 typedef enum {
