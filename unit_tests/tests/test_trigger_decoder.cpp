@@ -179,13 +179,13 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ( 1,  ecl->isReady) << "ford inline ignition events size";
 	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.eventIndex) << "event index";
-	assertEqualsM("angle offset#1", 7.8621, ecl->elements[0].dwellPosition.angleOffset);
+	ASSERT_NEAR(7.8621, ecl->elements[0].dwellPosition.angleOffset, EPS4D) << "angle offset#1";
 
 	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.eventIndex) << "event index";
-	assertEqualsM("angle offset#2", 7.8621, ecl->elements[5].dwellPosition.angleOffset);
+	ASSERT_NEAR(7.8621, ecl->elements[5].dwellPosition.angleOffset, EPS4D) << "angle offset#2";
 
 
-	assertEqualsM("running dwell", 0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 }
 
 TEST(misc, testFordAspire) {
@@ -709,7 +709,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 25);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("fuel#2", 12.5, engine->injectionDuration);
+	ASSERT_FLOAT_EQ(12.5, engine->injectionDuration) << "fuel#2_0";
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#1";
@@ -993,7 +993,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	assertEqualsM("Lfuel#2", 17.5, engine->injectionDuration);
+	ASSERT_FLOAT_EQ(17.5, engine->injectionDuration) << "Lfuel#2_1";
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
