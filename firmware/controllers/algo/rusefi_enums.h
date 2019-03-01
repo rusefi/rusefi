@@ -430,9 +430,7 @@ typedef enum __attribute__ ((__packed__)) {
 	OM_OPENDRAIN_INVERTED = 3
 } pin_output_mode_e;
 
-typedef enum
-//__attribute__ ((__packed__))
-{
+typedef enum __attribute__ ((__packed__)) {
 	PI_DEFAULT = 0,
 	PI_PULLUP = 1,
 	PI_PULLDOWN = 2
