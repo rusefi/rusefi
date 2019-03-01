@@ -89,7 +89,7 @@
     </target>
 
     <target name="simlator_test" depends="jar">
-        <java classpath="${jar_file}" classname="com.rusefi.AutoTest" failonerror="true">
+        <java classpath="${jar_file}" classname="com.rusefi.AutoTest" failonerror="true" args="start">
         </java>
 
     </target>
