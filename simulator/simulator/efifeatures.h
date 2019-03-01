@@ -8,6 +8,8 @@
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
 
+#include "rusefi_true.h"
+
 #define EFI_ENABLE_ASSERTS TRUE
 
 #define EFI_ENABLE_MOCK_ADC TRUE
