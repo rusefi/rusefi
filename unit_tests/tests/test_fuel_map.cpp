@@ -68,7 +68,7 @@ TEST(misc, testFuelMap) {
 	printf("*************************************************** getRunningFuel 1\r\n");
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float baseFuel = getBaseTableFuel(5, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
-	assertEqualsM("base fuel", 5.3679, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_NEAR(5.3679, getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << "base fuel";
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {

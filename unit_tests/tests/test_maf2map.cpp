@@ -9,8 +9,6 @@
 #include "maf2map.h"
 
 #define round_2d(x) efiRound(x, 0.01)
-// todo: this should be improved to use relative 6 digit precision not just digits after decimal point
-#define ASSERT_FLOAT_EQ(x, y) ASSERT_DOUBLE_EQ(round_2d(x), round_2d(y))
 
 TEST(maf2map, util) {
 
