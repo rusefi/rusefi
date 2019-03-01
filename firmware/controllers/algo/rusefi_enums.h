@@ -618,9 +618,7 @@ typedef enum {
 /**
  * Hardware pin. This enum is platform-specific.
  */
-typedef enum
-//__attribute__ ((__packed__))
-{
+typedef enum __attribute__ ((__packed__)) {
 	GPIO_UNASSIGNED = 0,
 	GPIO_INVALID = 1,
 
