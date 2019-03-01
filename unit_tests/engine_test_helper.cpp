@@ -62,9 +62,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engine->engineConfigurationPtr->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
-	engine->engineConfigurationPtr->clt.adcChannel = (adc_channel_e)TEST_CLT_CHANNEL;
-	engine->engineConfigurationPtr->iat.adcChannel = (adc_channel_e)TEST_IAT_CHANNEL;
+	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
+	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
+	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
 	testCltValue = 1.492964;
 	testIatValue = 4.03646;
 

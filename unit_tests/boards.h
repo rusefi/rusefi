@@ -8,13 +8,11 @@
 #ifndef BOARDS_H_
 #define BOARDS_H_
 
+#include "rusefi_enums.h"
+
 #define ADC_CHANNEL_VREF 0
 
-#define TEST_MAF_CHANNEL 10000013
-#define TEST_CLT_CHANNEL 10000014
-#define TEST_IAT_CHANNEL 10000015
-
-float getVoltageDivided(const char *msg, int);
+float getVoltageDivided(const char *msg, adc_channel_e);
 float getVoltage(const char *msg, int channel);
 int getAdcValue(const char *msg, int channel);
 
