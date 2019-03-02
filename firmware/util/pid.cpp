@@ -161,12 +161,19 @@ void Pid::updateITerm(float value) {
 	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
 	 * Here we limit the I-term #353
 	 */
-	if (iTerm > pid->maxValue * 100)
+	if (iTerm > pid->maxValue * 100) {
 		iTerm = pid->maxValue * 100;
+	}
+	if (iTerm > iTermMax) {
+		iTerm = iTermMax;
+	}
 
 	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValye'
 	if (iTerm < -pid->maxValue * 100)
 		iTerm = -pid->maxValue * 100;
+	if (iTerm < iTermMin) {
+		iTerm = iTermMin;
+	}
 }
 
 

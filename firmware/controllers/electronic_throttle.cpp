@@ -280,6 +280,8 @@ void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.dFactor = 0.0;
 	engineConfiguration->etb.periodMs = 100;
 	engineConfiguration->etbFreq = 300;
+	engineConfiguration->etb_iTermMin = -300;
+	engineConfiguration->etb_iTermMax = 300;
 
 //	CONFIGB(etbControlPin1) = GPIOE_4; // test board, matched default fuel pump relay
 }
@@ -353,10 +355,10 @@ static void setAutoOffset(int offset) {
 
 void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
-	engineConfiguration->etbBiasBins[1] = 5;
-	engineConfiguration->etbBiasBins[2] = 7;
-	engineConfiguration->etbBiasBins[3] = 8;
-	engineConfiguration->etbBiasBins[4] = 11;
+	engineConfiguration->etbBiasBins[1] = 1;
+	engineConfiguration->etbBiasBins[2] = 2;
+	engineConfiguration->etbBiasBins[3] = 4;
+	engineConfiguration->etbBiasBins[4] = 7;
 	engineConfiguration->etbBiasBins[5] = 98;
 	engineConfiguration->etbBiasBins[6] = 99;
 	engineConfiguration->etbBiasBins[7] = 100;

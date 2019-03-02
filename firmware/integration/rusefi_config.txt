@@ -147,8 +147,8 @@ struct pid_s
 	float dFactor;;"",      1,      0,       -10000, 10000,      7
 	int16_t offset;Linear addition to PID logic;"",      1,      0,       0, 1000,      0
 	int16_t periodMs;PID dTime;"ms",      1,      0,       0, 3000,      0
-	int16_t minValue;Output min value;"",        1,     0,  -3000,    3000.0,  3
-	int16_t maxValue;Output max value;"",        1,     0,  -3000,    3000.0,  3
+	int16_t minValue;Output min value;"",        1,     0,  -30000,    30000.0,  0
+	int16_t maxValue;Output max value;"",        1,     0,  -30000,    30000.0,  0
 end_struct
 
 struct cranking_parameters_s
@@ -976,7 +976,9 @@ tChargeMode_e tChargeMode;
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
 	float hip9011Gain;
-	int[625] mainUnusedEnd;
+	int16_t etb_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
+	int16_t etb_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
+	int[624] mainUnusedEnd;
 
 
 end_struct

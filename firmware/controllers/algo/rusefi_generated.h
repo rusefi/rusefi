@@ -1640,8 +1640,12 @@
 #define etbBiasValues_offset_hex f68
 #define hip9011Gain_offset 3976
 #define hip9011Gain_offset_hex f88
-#define mainUnusedEnd_offset 3980
-#define mainUnusedEnd_offset_hex f8c
+#define etb_iTermMin_offset 3980
+#define etb_iTermMin_offset_hex f8c
+#define etb_iTermMax_offset 3982
+#define etb_iTermMax_offset_hex f8e
+#define mainUnusedEnd_offset 3984
+#define mainUnusedEnd_offset_hex f90
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512

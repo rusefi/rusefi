@@ -1220,11 +1220,13 @@ cmd_call_from_pit            = "w\x00\x20\x34\x56"
 cmd_stop_engine              = "w\x00\x49\x00\x00"
 		
 ; MIATA_NA6_MAP = 41
-cmd_set_engine_type_Miata_NA6_MAP            = "w\x00\x30\x00\x29"
+cmd_set_engine_type_Miata_NA6_MAP			= "w\x00\x30\x00\x29"
 ; MIATA_NA6_VAF = 57
-cmd_set_engine_type_Miata_NA6_VAF            = "w\x00\x30\x00\x39"
+cmd_set_engine_type_Miata_NA6_VAF			= "w\x00\x30\x00\x39"
 ; MAZDA_MIATA_2003 = 47
-cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
+cmd_set_engine_type_Miata_NA2 				= "w\x00\x30\x00\x2F"
+; ETB_BENCH_ENGINE = 58
+cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		
 [UserDefined]
 	dialog = fuelTableBottomDialog, "", card
@@ -2236,7 +2238,9 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		field = "offset",								etb_offset, {throttlePedalPositionAdcChannel != 16}
 		field = "control period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
 		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}	
-		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}	
+		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
+		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}	
+		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
 				
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1
@@ -2276,6 +2280,7 @@ cmd_set_engine_type_Miata_NA2            = "w\x00\x30\x00\x2F"
 		commandButton = "Miata NA6 Stage 0", cmd_set_engine_type_Miata_NA6_VAF
 		commandButton = "Miata NA6 Stage 1", cmd_set_engine_type_Miata_NA6_MAP
 		commandButton = "Miata NB2 MAP", cmd_set_engine_type_Miata_NA2
+		commandButton = "ETB test bench", cmd_set_engine_type_etb_test
 
 
 ;			Board->ECU stimulator

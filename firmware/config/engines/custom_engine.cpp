@@ -259,6 +259,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
+// ETB_BENCH_ENGINE
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
