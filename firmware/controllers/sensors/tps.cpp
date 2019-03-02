@@ -13,7 +13,7 @@
 #endif /* EFI_PROD_CODE */
 
 // set mock_pedal_position X
-static percent_t mockPedalPosition = MOCK_UNDEFINED;
+percent_t mockPedalPosition = MOCK_UNDEFINED;
 
 /**
  * this allows unit tests to simulate TPS position
