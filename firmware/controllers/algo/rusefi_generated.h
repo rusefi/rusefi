@@ -892,10 +892,8 @@
 #define frequencyReportingMapInputPin_offset_hex 3ca
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
-#define unusedspi_offset 972
-#define unusedspi_offset_hex 3cc
-#define unusedspi2_offset 1064
-#define unusedspi2_offset_hex 428
+#define unusedspi2_offset 972
+#define unusedspi2_offset_hex 3cc
 #define vvtDisplayInverted_offset 1464
 #define vvtDisplayInverted_offset_hex 5b8
 #define fuelClosedLoopCorrectionEnabled_offset 1464

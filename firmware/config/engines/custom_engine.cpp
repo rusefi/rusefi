@@ -262,6 +262,13 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	// VAG test ETB
+	// set tps_min 54
+	engineConfiguration->tpsMin = 54;
+	// by the way this ETB has default position of ADC=74 which is about 4%
+	// set tps_max 540
+	engineConfiguration->tpsMax = 540;
+
 
 	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
