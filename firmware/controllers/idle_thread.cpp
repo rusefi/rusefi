@@ -295,7 +295,9 @@ private:
 		if (CONFIGB(clutchDownPin) != GPIO_UNASSIGNED) {
 			engine->clutchDownState = efiReadPin(CONFIGB(clutchDownPin));
 		}
-		engine->acSwitchState = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+			engine->acSwitchState = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		}
 		if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
 			engine->clutchUpState = efiReadPin(CONFIGB(clutchUpPin));
 		}
