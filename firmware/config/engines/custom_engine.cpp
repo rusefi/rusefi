@@ -276,8 +276,9 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engineConfiguration->etb.minValue = -100;
-	engineConfiguration->etb.maxValue = 100;
+	// values are above 100% since we have feedforward part of the total summation
+	engineConfiguration->etb.minValue = -200;
+	engineConfiguration->etb.maxValue = 200;
 #endif
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2

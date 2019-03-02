@@ -38,6 +38,11 @@
  * set debug_mode 17
  * for PID outputs
  *
+ * set etb_p X
+ * set etb_i X
+ * set etb_d X
+ *
+ *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
  * @date Dec 7, 2013
@@ -104,10 +109,11 @@ static percent_t currentEtbDuty;
 
 //static bool wasEtbBraking = false;
 
-// todo: need to fix PWM so that it supports zero duty cycle
-//#define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), 0.1) / 100.0)
+// looks like my H-bridge does not like 100% duty cycle and it just hangs up?
+// so we use 99.9% to indicate that things are alive
+#define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), -99.9) / 100.0)
 
-#define PERCENT_TO_DUTY(X) ((X) / 100.0)
+//#define PERCENT_TO_DUTY(X) ((X) / 100.0)
 
 class EtbController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
@@ -222,6 +228,7 @@ static void showEthInfo(void) {
 			getPinNameByAdcChannel("tPedal", engineConfiguration->throttlePedalPositionAdcChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%.2f", getTPS());
+	scheduleMsg(&logger, "dir=%d", dcMotor.isOpenDirection());
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
 			hwPortname(CONFIGB(etbControlPin1)),
@@ -231,18 +238,27 @@ static void showEthInfo(void) {
 	pid.showPidStatus(&logger, "ETB");
 }
 
+/**
+ * set etb_p X
+ */
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
 	pid.reset();
 	showEthInfo();
 }
 
+/**
+ * set etb_i X
+ */
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
 	pid.reset();
 	showEthInfo();
 }
 
+/**
+ * set etb_d X
+ */
 void setEtbDFactor(float value) {
 	engineConfiguration->etb.dFactor = value;
 	pid.reset();
@@ -377,7 +393,7 @@ void initElectronicThrottle(void) {
 	tuneWorkingPidSettings.maxValue = 100;
 	tuneWorkingPidSettings.periodMs = 100;
 
-	// this is useful one you do "enable etb_auto"
+	// this is useful once you do "enable etb_auto"
 	addConsoleActionF("set_etbat_output", setTempOutput);
 	addConsoleActionF("set_etbat_step", setAutoStep);
 	addConsoleActionI("set_etbat_period", setAutoPeriod);
