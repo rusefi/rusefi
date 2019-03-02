@@ -52,6 +52,9 @@ public:
 	void showPidStatus(Logging *logging, const char*msg);
 	void sleep();
 	int resetCounter;
+	// todo: move this to pid_s one day
+	float iTermMin = -1000000.0;
+	float iTermMax =  1000000.0;
 private:
 	pid_s *pid;
 

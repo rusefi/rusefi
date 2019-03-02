@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:19:29 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:30:15 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2299,9 +2299,19 @@ typedef struct {
 	 */
 	float hip9011Gain;
 	/**
+	 * iTerm min value
 	 * offset 3980
 	 */
-	int mainUnusedEnd[625];
+	int16_t etb_iTermMin;
+	/**
+	 * iTerm max value
+	 * offset 3982
+	 */
+	int16_t etb_iTermMax;
+	/**
+	 * offset 3984
+	 */
+	int mainUnusedEnd[624];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2548,4 +2558,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:19:29 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:30:15 EST 2019
