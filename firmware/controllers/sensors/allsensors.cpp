@@ -18,6 +18,10 @@ void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initFlexFuelSensor();
 }
 
+bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engineConfiguration->acSwitchAdc != EFI_ADC_NONE;
+}
+
 // todo: move this somewhere else? maybe.
 bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**

@@ -27,6 +27,7 @@
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /*SENSORS_H_*/
