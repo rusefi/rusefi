@@ -102,6 +102,7 @@ CCM_OPTIONAL static SimplePwm etbPwmDown("etbDown");
 static TwoPinDcMotor dcMotor(&etbPwmUp, &outputDirectionOpen, &outputDirectionClose);
 
 EXTERN_ENGINE;
+extern percent_t mockPedalPosition;
 
 static Pid pid(&engineConfiguration->etb);
 
@@ -247,6 +248,11 @@ void setEtbPFactor(float value) {
 	showEthInfo();
 }
 
+static void etbReset() {
+	mockPedalPosition = MOCK_UNDEFINED;
+	pid.reset();
+}
+
 /**
  * set etb_i X
  */
@@ -375,6 +381,7 @@ void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initElectronicThrottle(void) {
 	addConsoleAction("ethinfo", showEthInfo);
+	addConsoleAction("etbreset", etbReset);
 	if (!hasPedalPositionSensor()) {
 		return;
 	}
