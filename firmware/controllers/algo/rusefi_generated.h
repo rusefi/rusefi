@@ -892,8 +892,8 @@
 #define frequencyReportingMapInputPin_offset_hex 3ca
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
-#define unusedspi2_offset 972
-#define unusedspi2_offset_hex 3cc
+#define unusedAtBoardConfigurationEnd_offset 972
+#define unusedAtBoardConfigurationEnd_offset_hex 3cc
 #define vvtDisplayInverted_offset 1464
 #define vvtDisplayInverted_offset_hex 5b8
 #define fuelClosedLoopCorrectionEnabled_offset 1464
@@ -1580,10 +1580,8 @@
 #define externalKnockSenseAdc_offset_hex c37
 #define stepperEnablePin_offset 3128
 #define stepperEnablePin_offset_hex c38
-#define unusedSteDiM_offset 3129
-#define unusedSteDiM_offset_hex c39
-#define unusedTest55_offset 3130
-#define unusedTest55_offset_hex c3a
+#define unusedTest55_offset 3129
+#define unusedTest55_offset_hex c39
 #define crankingAdvanceBins_offset 3132
 #define crankingAdvanceBins_offset_hex c3c
 #define crankingAdvance_offset 3148
@@ -1642,8 +1640,8 @@
 #define etbBiasValues_offset_hex f68
 #define hip9011Gain_offset 3976
 #define hip9011Gain_offset_hex f88
-#define unusedEnd_offset 3980
-#define unusedEnd_offset_hex f8c
+#define mainUnusedEnd_offset 3980
+#define mainUnusedEnd_offset_hex f8c
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512
