@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.EtbMonteCarloSequence;
 import com.rusefi.ui.widgets.EtbResearch;
 import com.rusefi.ui.widgets.EtbTestSequence;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,7 @@ public class BenchTestPane {
         content.add(createIdleTest());
         content.add(createDizzyTest());
         content.add(UiUtils.wrap(new EtbTestSequence().getButton()));
+        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
         content.add(UiUtils.wrap(new EtbResearch().getButton()));
         content.add(new MessagesView().messagesScroll);
     }
