@@ -518,8 +518,8 @@ void AdcDevice::enableChannelAndPin(adc_channel_e hwChannel) {
 	initAdcHwChannel(hwChannel);
 }
 
-static void printAdcValue(adc_channel_e channel) {
-	int value = getAdcValue("print", channel);
+static void printAdcValue(int channel) {
+	int value = getAdcValue("print", (adc_channel_e)channel);
 	float volts = adcToVoltsDivided(value);
 	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
