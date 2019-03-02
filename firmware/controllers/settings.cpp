@@ -1092,6 +1092,12 @@ static void getValue(const char *paramStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
 		showBor();
 #endif /* EFI_PROD_CODE */
+	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
+		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
+	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
+		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
+	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
+		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "nb_vvt_index")) {
 		scheduleMsg(&logger, "nb_vvt_index=%d", engineConfiguration->nbVvtIndex);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
@@ -1293,6 +1299,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
 		engineConfiguration->step1rpm = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
+		engineConfiguration->tpsMax = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
+		engineConfiguration->tpsMin = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {

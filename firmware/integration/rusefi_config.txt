@@ -287,8 +287,8 @@ bit issue_294_28;
 bit issue_294_29;
 
 
-int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tpsAdcChannel;"ADC",      1,     0,    0, 1023,      0
-int16_t tpsMax;Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tpsAdcChannel;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tpsAdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMax;Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tpsAdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
 int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
 int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
@@ -653,14 +653,11 @@ maf_sensor_type_e mafSensorType;
 	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-
-	int[23] unusedspi;
-
+	int[123] unusedAtBoardConfigurationEnd;
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
 board_configuration_s bc;
-	int[100] unusedspi2;
 bit vvtDisplayInverted
 	bit fuelClosedLoopCorrectionEnabled
 	bit isVerboseIAC;+Print details into rusEfi console
@@ -751,7 +748,7 @@ float idleStepperReactionTime;;"ms",      1,      0,       1, 300,      0
 	float knockVThreshold;;"V",      1,      0,       1, 5,      2
 
 	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
-	uint8_t[12] alFIn;
+	int[3] alFIn;
 	
 	int idleStepperTotalSteps;;"count",      1,      0,       5, 3000,      0
 
@@ -943,8 +940,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
 	brain_pin_e stepperEnablePin;
-	uint8_t[1] unusedSteDiM;
-	uint8_t[2] unusedTest55;
+	uint8_t[3] unusedTest55;
 
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
@@ -980,7 +976,7 @@ tChargeMode_e tChargeMode;
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
 	
 	float hip9011Gain;
-	int[625] unusedEnd;
+	int[625] mainUnusedEnd;
 
 
 end_struct

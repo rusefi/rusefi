@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Feb 26 22:30:37 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:19:29 EST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -607,9 +607,7 @@ public class Fields {
 	public static final int clutchUpPin_offset = 969;
 	public static final int frequencyReportingMapInputPin_offset = 970;
 	public static final int clutchUpPinMode_offset = 971;
-	public static final int unusedspi_offset = 972;
-	public static final int unusedspi2_offset = 1064;
-	public static final int unusedspi2_offset_hex = 428;
+	public static final int unusedAtBoardConfigurationEnd_offset = 972;
 	public static final int vvtDisplayInverted_offset = 1464;
 	public static final int fuelClosedLoopCorrectionEnabled_offset = 1464;
 	public static final int isVerboseIAC_offset = 1464;
@@ -1009,8 +1007,7 @@ public class Fields {
 	public static final int stepperDirectionPinMode_offset = 3126;
 	public static final int externalKnockSenseAdc_offset = 3127;
 	public static final int stepperEnablePin_offset = 3128;
-	public static final int unusedSteDiM_offset = 3129;
-	public static final int unusedTest55_offset = 3130;
+	public static final int unusedTest55_offset = 3129;
 	public static final int crankingAdvanceBins_offset = 3132;
 	public static final int crankingAdvance_offset = 3148;
 	public static final int servoOutputPins1_offset = 3164;
@@ -1040,7 +1037,7 @@ public class Fields {
 	public static final int etbBiasBins_offset = 3912;
 	public static final int etbBiasValues_offset = 3944;
 	public static final int hip9011Gain_offset = 3976;
-	public static final int unusedEnd_offset = 3980;
+	public static final int mainUnusedEnd_offset = 3980;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1865,7 +1862,6 @@ public class Fields {
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3126, FieldType.INT, pin_output_mode_e);
 	public static final Field EXTERNALKNOCKSENSEADC = Field.create("EXTERNALKNOCKSENSEADC", 3127, FieldType.INT, adc_channel_e);
 	public static final Field STEPPERENABLEPIN = Field.create("STEPPERENABLEPIN", 3128, FieldType.INT, brain_pin_e);
-	public static final Field UNUSEDSTEDIM = Field.create("UNUSEDSTEDIM", 3129, FieldType.INT);
 	public static final Field SERVOOUTPUTPINS1 = Field.create("SERVOOUTPUTPINS1", 3164, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS2 = Field.create("SERVOOUTPUTPINS2", 3165, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS3 = Field.create("SERVOOUTPUTPINS3", 3166, FieldType.INT, brain_pin_e);

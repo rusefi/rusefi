@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 22 22:08:30 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:19:29 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -912,8 +912,8 @@ typedef struct {
 	/**
 	 * offset 372
 	 */
-	int unusedspi[23];
-	/** total size 464*/
+	int unusedAtBoardConfigurationEnd[123];
+	/** total size 864*/
 } board_configuration_s;
 
 // start of engine_configuration_s
@@ -1027,12 +1027,14 @@ typedef struct {
 	 * Closed throttle. todo: extract these two fields into a structure
 	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
 	 * See also tpsAdcChannel
+	 * set tps_min X
 	 * offset 80
 	 */
 	int16_t tpsMin;
 	/**
 	 * Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!
 	 * See also tpsAdcChannel
+	 * set tps_max X
 	 * offset 82
 	 */
 	int16_t tpsMax;
@@ -1329,10 +1331,6 @@ typedef struct {
 	 */
 	board_configuration_s bc;
 	/**
-	 * offset 1064
-	 */
-	int unusedspi2[100];
-	/**
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
 	/**
@@ -1599,7 +1597,7 @@ typedef struct {
 	/**
 	 * offset 1540
 	 */
-	uint8_t alFIn[12];
+	int alFIn[3];
 	/**
 	 * offset 1552
 	 */
@@ -2199,11 +2197,7 @@ typedef struct {
 	/**
 	 * offset 3129
 	 */
-	uint8_t unusedSteDiM;
-	/**
-	 * offset 3130
-	 */
-	uint8_t unusedTest55[2];
+	uint8_t unusedTest55[3];
 	/**
 	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	 * offset 3132
@@ -2307,7 +2301,7 @@ typedef struct {
 	/**
 	 * offset 3980
 	 */
-	int unusedEnd[625];
+	int mainUnusedEnd[625];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2554,4 +2548,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Feb 22 22:08:30 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:19:29 EST 2019
