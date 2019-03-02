@@ -2,6 +2,9 @@ package com.rusefi.config;
 
 public enum FieldType {
     INT,
+    /**
+     * signed 16 bit type
+     */
     INT16,
     BIT,
     FLOAT;
