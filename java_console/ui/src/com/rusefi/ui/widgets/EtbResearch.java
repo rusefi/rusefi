@@ -17,7 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class EtbResearch {
     private static final int SECOND = 1000;
-    private static final long SLEEP = 3 * SECOND;
+    private static final long SLEEP = SECOND;
     // how much do we want to change duty cycle on each iteration?
     private static final double DUTY_CYCLE_STEP = 0.5;
     private final JButton button = new JButton("ETB Research");
@@ -45,12 +45,10 @@ public class EtbResearch {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-
                     sleep();
 
                     double tpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
                     MessagesCentral.getInstance().postMessage(getClass(), "ETB duty " + currentValue + ": tps=" + tpsPosition);
-
 
                     if (tpsPosition >= 100) {
                         currentValue -= DUTY_CYCLE_STEP;

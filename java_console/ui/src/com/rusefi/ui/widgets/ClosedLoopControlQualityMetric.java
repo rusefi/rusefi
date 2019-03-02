@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
  * @see SensorStats
  */
 public class ClosedLoopControlQualityMetric {
-    private static final int BUFFER_SIZE = 100;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     private final ValueSource target;
@@ -31,7 +30,7 @@ public class ClosedLoopControlQualityMetric {
      * Buffer of recent error measurements
      * GuardedBy(this)
      */
-    private DataBuffer errors = new CyclicBuffer(BUFFER_SIZE);
+    private DataBuffer errorsBuffer;
 
     /**
      * @param target what value are we trying to achieve
@@ -43,23 +42,24 @@ public class ClosedLoopControlQualityMetric {
         this.destination = destination;
     }
 
-    public void start() {
+    public void start(int bufferSize, int periodMs) {
+        errorsBuffer = new CyclicBuffer(bufferSize);
         executor.scheduleAtFixedRate(() -> {
             rememberCurrentError(target.getValue() - result.getValue());
             SensorCentral.getInstance().setValue(getStandardDeviation(), destination);
 
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, periodMs, TimeUnit.MILLISECONDS);
     }
 
     public synchronized void reset() {
-        errors.clear();
+        errorsBuffer.clear();
     }
 
     private synchronized double getStandardDeviation() {
-        return DataBuffer.getStandardDeviation(errors.getValues());
+        return DataBuffer.getStandardDeviation(errorsBuffer.getValues());
     }
 
     private synchronized void rememberCurrentError(double error) {
-        errors.add(error);
+        errorsBuffer.add(error);
     }
 }
