@@ -491,7 +491,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                 int value = bb.getInt();
                 SensorCentral.getInstance().setValue(value, sensor);
             } else if (sensor.getType() == FieldType.INT16) {
-                int value = bb.getInt() & 0xFFFF;
+                short value = (short) (bb.getInt() & 0xFFFF);
                 SensorCentral.getInstance().setValue(value, sensor);
             } else if (sensor.getType() == null) {
                 // do nothing for old text sensors which I am suprised are still in the code
