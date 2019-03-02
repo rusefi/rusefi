@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * https://github.com/rusefi/rusefi/issues/494
  * <p>
+ * https://en.wikipedia.org/wiki/Standard_deviation of error posted to specified sensor
+ * <p>
  * 11/16/2017
  * (c) Andrey Belomutskiy
  *
@@ -25,6 +27,7 @@ public class ClosedLoopControlQualityMetric {
     private final ValueSource target;
     private final ValueSource result;
     private final Sensor destination;
+    private boolean isStarted;
 
     /**
      * Buffer of recent error measurements
@@ -43,6 +46,10 @@ public class ClosedLoopControlQualityMetric {
     }
 
     public void start(int bufferSize, int periodMs) {
+        if (isStarted)
+            return;
+        isStarted = true;
+
         errorsBuffer = new CyclicBuffer(bufferSize);
         executor.scheduleAtFixedRate(() -> {
             rememberCurrentError(target.getValue() - result.getValue());
