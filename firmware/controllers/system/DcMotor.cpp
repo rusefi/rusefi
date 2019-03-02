@@ -15,12 +15,20 @@ TwoPinDcMotor::TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2)
 {
 }
 
+bool TwoPinDcMotor::isOpenDirection() {
+	return isPositiveOrZero;
+}
+
+float TwoPinDcMotor::Get() {
+	return value;
+}
+
 /**
  * @param duty value between -1.0 and 1.0
  */
 bool TwoPinDcMotor::Set(float duty)
 {
-    bool isPositiveOrZero;
+	this->value = duty;
 
     if(duty < 0)
     {

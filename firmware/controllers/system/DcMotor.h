@@ -41,6 +41,8 @@ private:
     SimplePwm* const m_pwm;
     OutputPin* const m_dir1;
     OutputPin* const m_dir2;
+    float value = 0;
+    bool isPositiveOrZero = false;
 public:
     /**
      * @param pwm SimplePwm driver for enable pin, for PWM speed control.
@@ -50,4 +52,6 @@ public:
     TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2);
 
     virtual bool Set(float duty) override;
+    float Get();
+    bool isOpenDirection();
 };
