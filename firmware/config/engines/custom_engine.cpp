@@ -296,6 +296,9 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// turning off other PWMs to simplify debugging
 	engineConfiguration->bc.triggerSimulatorFrequency = 0;
+	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
+	CONFIGB(idle).stepperStepPin = GPIO_UNASSIGNED;
+	CONFIGB(idle).stepperDirectionPin = GPIO_UNASSIGNED;
 	boardConfiguration->useStepperIdle = true;
 
 }

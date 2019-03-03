@@ -21,9 +21,6 @@
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
 
-// 99% duty cycle
-#define FULL_PWM_THRESHOLD 0.99
-
 SimplePwm::SimplePwm() {
 	waveInstance.init(pinStates);
 	sr[0] = waveInstance;

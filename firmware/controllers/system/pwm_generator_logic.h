@@ -15,6 +15,9 @@
 
 #define NAN_FREQUENCY_SLEEP_PERIOD_MS 100
 
+// 99% duty cycle
+#define FULL_PWM_THRESHOLD 0.99
+
 typedef struct {
 	/**
 	 * a copy so that all phases are executed on the same period, even if another thread

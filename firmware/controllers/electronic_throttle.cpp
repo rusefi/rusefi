@@ -111,8 +111,8 @@ static percent_t currentEtbDuty;
 //static bool wasEtbBraking = false;
 
 // looks like my H-bridge does not like 100% duty cycle and it just hangs up?
-// so we use 99.9% to indicate that things are alive
-#define PERCENT_TO_DUTY(X) (maxF(minI(X, 99.9), -99.9) / 100.0)
+// so we use 98% to indicate that things are alive and never use PM_FULL of PWM generator
+#define PERCENT_TO_DUTY(X) (maxF(minF((X / 100.0), FULL_PWM_THRESHOLD - 0.01), 0.01 - FULL_PWM_THRESHOLD))
 
 //#define PERCENT_TO_DUTY(X) ((X) / 100.0)
 
@@ -177,6 +177,9 @@ private:
 
 		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues, ETB_BIAS_CURVE_LENGTH);
 
+		pid.iTermMin = engineConfiguration->etb_iTermMin;
+		pid.iTermMax = engineConfiguration->etb_iTermMax;
+
 		currentEtbDuty = feedForward +
 				pid.getValue(targetPosition, actualThrottlePosition);
 
@@ -229,7 +232,7 @@ static void showEthInfo(void) {
 			getPinNameByAdcChannel("tPedal", engineConfiguration->throttlePedalPositionAdcChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%.2f", getTPS());
-	scheduleMsg(&logger, "dir=%d", dcMotor.isOpenDirection());
+	scheduleMsg(&logger, "dir=%d DC=%f", dcMotor.isOpenDirection(), dcMotor.Get());
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
 			hwPortname(CONFIGB(etbControlPin1)),
@@ -249,6 +252,9 @@ void setEtbPFactor(float value) {
 }
 
 static void etbReset() {
+	// TODO: what is this about?
+	// I am experiencing some weird instability with my H-bridge with my Monte Carlo attempts
+	dcMotor.Break();
 	mockPedalPosition = MOCK_UNDEFINED;
 	pid.reset();
 }
@@ -271,6 +277,9 @@ void setEtbDFactor(float value) {
 	showEthInfo();
 }
 
+/**
+ * set etb_o X
+ */
 void setEtbOffset(int value) {
 	engineConfiguration->etb.offset = value;
 	pid.reset();
