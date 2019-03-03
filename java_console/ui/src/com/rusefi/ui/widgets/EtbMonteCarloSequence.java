@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import java.util.Random;
 
+import static com.rusefi.SensorLogger.getSecondsSinceFileStart;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.ui.widgets.EtbTestSequence.*;
 
@@ -17,7 +18,7 @@ import static com.rusefi.ui.widgets.EtbTestSequence.*;
  * (c) Andrey Belomutskiy
  */
 public class EtbMonteCarloSequence {
-    public static final int LIMIT = 100;
+    public static final int LIMIT = 300;
     private final JButton button = new JButton("ETB I feel lucky!");
     private final static Random r = new Random();
     private int counter;
@@ -54,7 +55,8 @@ public class EtbMonteCarloSequence {
             @Override
             protected void doJob() {
                 double result = SensorCentral.getInstance().getValue(Sensor.ETB_CONTROL_QUALITY);
-                MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class, stats + ":result:" + result);
+                MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
+                        getSecondsSinceFileStart() + ":" + stats + ":result:" + result);
                 if (counter == LIMIT) {
                     MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "ETB MC sequence done!");
                     return;
