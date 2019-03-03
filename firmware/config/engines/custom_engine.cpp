@@ -294,5 +294,9 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->debugMode = DBG_ELECTRONIC_THROTTLE_PID;
 
+	// turning off other PWMs to simplify debugging
+	engineConfiguration->bc.triggerSimulatorFrequency = 0;
+	boardConfiguration->useStepperIdle = true;
+
 }
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
