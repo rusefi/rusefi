@@ -53,11 +53,11 @@ void MultiWave::reset(void) {
 	waveCount = 0;
 }
 
-float MultiWave::getSwitchTime(int index) const {
+float MultiWave::getSwitchTime(const int index) const {
 	return switchTimes[index];
 }
 
-void MultiWave::checkSwitchTimes(int size) {
+void MultiWave::checkSwitchTimes(const int size) {
 	if (switchTimes[size - 1] != 1) {
 		firmwareError(CUSTOM_ERR_WAVE_1, "last switch time has to be 1 not %.2f", switchTimes[size - 1]);
 		return;
@@ -69,14 +69,14 @@ void MultiWave::checkSwitchTimes(int size) {
 	}
 }
 
-pin_state_t MultiWave::getChannelState(int channelIndex, int phaseIndex) const {
+pin_state_t MultiWave::getChannelState(const int channelIndex, const int phaseIndex) const {
 	return channels[channelIndex].pinStates[phaseIndex];
 }
 
 /**
  * returns the index at which given value would need to be inserted into sorted array
  */
-int MultiWave::findInsertionAngle(float angle, int size) const {
+int MultiWave::findInsertionAngle(const float angle, const int size) const {
 	for (int i = size - 1; i >= 0; i--) {
 		if (angle > switchTimes[i])
 			return i + 1;
@@ -84,7 +84,7 @@ int MultiWave::findInsertionAngle(float angle, int size) const {
 	return 0;
 }
 
-int MultiWave::findAngleMatch(float angle, int size) const {
+int MultiWave::findAngleMatch(const float angle, const int size) const {
 	for (int i = 0; i < size; i++) {
 		if (isSameF(switchTimes[i], angle))
 			return i;
@@ -92,7 +92,7 @@ int MultiWave::findAngleMatch(float angle, int size) const {
 	return EFI_ERROR_CODE;
 }
 
-void MultiWave::setSwitchTime(int index, float value) {
+void MultiWave::setSwitchTime(const int index, const float value) {
 	efiAssertVoid(CUSTOM_ERR_6690, switchTimes != NULL, "switchTimes");
 	switchTimes[index] = value;
 }

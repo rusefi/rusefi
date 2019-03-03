@@ -57,13 +57,13 @@ public:
 	MultiWave(float *switchTimes, SingleWave *waves);
 	void init(float *switchTimes, SingleWave *waves);
 	void reset(void);
-	float getSwitchTime(int phaseIndex) const;
-	void setSwitchTime(int phaseIndex, float value);
-	void checkSwitchTimes(int size);
-	pin_state_t getChannelState(int channelIndex, int phaseIndex) const;
+	float getSwitchTime(const int phaseIndex) const;
+	void setSwitchTime(const int phaseIndex, const float value);
+	void checkSwitchTimes(const int size);
+	pin_state_t getChannelState(const int channelIndex, const int phaseIndex) const;
 
-	int findAngleMatch(float angle, int size) const;
-	int findInsertionAngle(float angle, int size) const;
+	int findAngleMatch(const float angle, const int size) const;
+	int findInsertionAngle(const float angle, const int size) const;
 
 	/**
 	 * Number of signal channels
