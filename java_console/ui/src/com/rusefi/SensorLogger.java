@@ -120,10 +120,8 @@ public class SensorLogger {
         if (logFile == null)
             return;
 
-        long msSinceFileStart = System.currentTimeMillis() - fileStartTime;
-
         try {
-            logFile.write((msSinceFileStart / 1000.0) + "\t");
+            logFile.write(getSecondsSinceFileStart() + "\t");
             for (Sensor sensor : SENSORS) {
                 logFile.write(SensorCentral.getInstance().getValue(sensor) + "\t");
             }
@@ -133,6 +131,11 @@ public class SensorLogger {
             e.printStackTrace();
             logFile = null;
         }
+    }
+
+    public static double getSecondsSinceFileStart() {
+        long msSinceFileStart = System.currentTimeMillis() - fileStartTime;
+        return msSinceFileStart / 1000.0;
     }
 
     private static void startSensorLogFile() {
