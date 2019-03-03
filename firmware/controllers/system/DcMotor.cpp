@@ -23,6 +23,11 @@ float TwoPinDcMotor::Get() {
 	return value;
 }
 
+void TwoPinDcMotor::Break() {
+    m_dir1->setValue(false);
+    m_dir2->setValue(false);
+}
+
 /**
  * @param duty value between -1.0 and 1.0
  */
@@ -54,8 +59,7 @@ bool TwoPinDcMotor::Set(float duty)
 
     if(duty < 0.01f)
     {
-        m_dir1->setValue(false);
-        m_dir2->setValue(false);
+    	Break();
     }
     else
     {
