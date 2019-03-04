@@ -70,6 +70,10 @@ void MultiWave::checkSwitchTimes(const int size) {
 }
 
 pin_state_t MultiWave::getChannelState(const int channelIndex, const int phaseIndex) const {
+	if (channelIndex >= waveCount) {
+		// todo: would be nice to get this asserting working
+		//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
+	}
 	return channels[channelIndex].pinStates[phaseIndex];
 }
 
