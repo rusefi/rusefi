@@ -227,6 +227,11 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
 }
 
+void set10K_4050K(ThermistorConf *thermistorConf) {
+	// see https://www.taydaelectronics.com/datasheets/A-409.pdf
+	setThermistorConfiguration(thermistorConf, -30, 108000, 25.0, 10000, 130.0, 225);
+}
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void testCltByR(float resistance) {
 	if (logger == NULL) {
