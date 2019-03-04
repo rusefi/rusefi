@@ -15,6 +15,10 @@
  */
 #include "global.h"
 
+int getPreviousIndex(const int currentIndex, const int size) {
+	return (currentIndex + size - 1) % size;
+}
+
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 
 #include "engine.h"
@@ -32,7 +36,7 @@ EXTERN_ENGINE
 ;
 
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
-	int prevIndex = (stateIndex + state->phaseCount - 1) % state->phaseCount;
+	int prevIndex = getPreviousIndex(stateIndex, state->phaseCount);
 
 	pin_state_t primaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/prevIndex);
 	pin_state_t newPrimaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/stateIndex);
@@ -46,17 +50,14 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 
 	if (primaryWheelState != newPrimaryWheelState) {
-		primaryWheelState = newPrimaryWheelState;
 		hwHandleShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
-		secondaryWheelState = newSecondaryWheelState;
 		hwHandleShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
-		thirdWheelState = new3rdWheelState;
 		hwHandleShaftSignal(thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
 	}
 

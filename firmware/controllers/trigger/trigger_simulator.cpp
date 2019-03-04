@@ -33,21 +33,21 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 		DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ERR_6593, shape->getSize() > 0, "size not zero");
 	int stateIndex = i % shape->getSize();
-	int prevIndex = (stateIndex + shape->getSize() - 1 ) % shape->getSize();
+	int prevIndex = getPreviousIndex(stateIndex, shape->getSize());
 
 
 	int loopIndex = i / shape->getSize();
 
 	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
-	bool primaryWheelState = shape->wave.getChannelState(0, prevIndex);
-	bool newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
+	pin_state_t primaryWheelState = shape->wave.getChannelState(0, prevIndex);
+	pin_state_t newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
 
-	bool secondaryWheelState = shape->wave.getChannelState(1, prevIndex);
-	bool newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
+	pin_state_t secondaryWheelState = shape->wave.getChannelState(1, prevIndex);
+	pin_state_t newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
 
-	bool thirdWheelState = shape->wave.getChannelState(2, prevIndex);
-	bool new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
+	pin_state_t thirdWheelState = shape->wave.getChannelState(2, prevIndex);
+	pin_state_t new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
 
 #if EFI_UNIT_TEST || defined(__DOXYGEN__)
 	if (printTriggerDebug) {
