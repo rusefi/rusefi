@@ -19,4 +19,6 @@ public:
 
 void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+int getPreviousIndex(const int currentIndex, const int size);
+
 #endif /* TRIGGER_EMULATOR_ALGO_H_ */
