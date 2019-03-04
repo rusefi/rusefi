@@ -26,9 +26,6 @@
 #include "pwm_generator.h"
 
 TriggerEmulatorHelper::TriggerEmulatorHelper() {
-	primaryWheelState = false;
-	secondaryWheelState = false;
-	thirdWheelState = false;
 }
 
 EXTERN_ENGINE
@@ -37,14 +34,14 @@ EXTERN_ENGINE
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
 	int prevIndex = (stateIndex + state->phaseCount - 1) % state->phaseCount;
 
-	bool primaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/prevIndex);
-	int newPrimaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/stateIndex);
+	pin_state_t primaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/prevIndex);
+	pin_state_t newPrimaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/stateIndex);
 
-	bool secondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/prevIndex);
-	int newSecondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/stateIndex);
+	pin_state_t secondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/prevIndex);
+	pin_state_t newSecondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/stateIndex);
 
-	bool thirdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/prevIndex);
-	int new3rdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/stateIndex);
+	pin_state_t thirdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/prevIndex);
+	pin_state_t new3rdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/stateIndex);
 
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 

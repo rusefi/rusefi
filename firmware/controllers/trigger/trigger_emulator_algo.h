@@ -13,10 +13,6 @@
 
 class TriggerEmulatorHelper {
 public:
-	bool primaryWheelState;
-	bool secondaryWheelState;
-	bool thirdWheelState;
-
     TriggerEmulatorHelper();
 	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
 };
