@@ -65,7 +65,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
 	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
 	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
+	// magic voltage to get nice CLT
 	testCltValue = 1.492964;
+	// magic voltage to get nice IAT
 	testIatValue = 4.03646;
 
 	// this is needed to have valid CLT and IAT.
