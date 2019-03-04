@@ -14,9 +14,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 #include "global.h"
+#include "EfiWave.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
+}
+
+bool needEvent(const int currentIndex, const int size, MultiWave *multiWave, int channelIndex) {
+	int prevIndex = getPreviousIndex(currentIndex, size);
+	pin_state_t previousValue = multiWave->getChannelState(channelIndex, /*phaseIndex*/prevIndex);
+	pin_state_t currentValue = multiWave->getChannelState(channelIndex, /*phaseIndex*/currentIndex);
+	return previousValue != currentValue;
 }
 
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
@@ -36,29 +44,22 @@ EXTERN_ENGINE
 ;
 
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
-	int prevIndex = getPreviousIndex(stateIndex, state->phaseCount);
-
-	pin_state_t primaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/prevIndex);
-	pin_state_t newPrimaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 0, /*phaseIndex*/stateIndex);
-
-	pin_state_t secondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/prevIndex);
-	pin_state_t newSecondaryWheelState = state->multiWave.getChannelState(/* channelIndex*/ 1, /*phaseIndex*/stateIndex);
-
-	pin_state_t thirdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/prevIndex);
-	pin_state_t new3rdWheelState = state->multiWave.getChannelState(/* channelIndex*/ 2, /*phaseIndex*/stateIndex);
-
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
+	MultiWave *multiWave = &state->multiWave;
 
-	if (primaryWheelState != newPrimaryWheelState) {
-		hwHandleShaftSignal(primaryWheelState ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
+	if (needEvent(stateIndex, state->phaseCount, &state->multiWave, 0)) {
+		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/0, stateIndex);
+		hwHandleShaftSignal(currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING);
 	}
 
-	if (secondaryWheelState != newSecondaryWheelState) {
-		hwHandleShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
+	if (needEvent(stateIndex, state->phaseCount, &state->multiWave, 1)) {
+		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/1, stateIndex);
+		hwHandleShaftSignal(currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
 	}
 
-	if (thirdWheelState != new3rdWheelState) {
-		hwHandleShaftSignal(thirdWheelState ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
+	if (needEvent(stateIndex, state->phaseCount, &state->multiWave, 2)) {
+		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/2, stateIndex);
+		hwHandleShaftSignal(currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING);
 	}
 
 	//	print("hello %d\r\n", chTimeNow());

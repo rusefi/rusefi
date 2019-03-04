@@ -20,5 +20,6 @@ public:
 void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 int getPreviousIndex(const int currentIndex, const int size);
+bool needEvent(const int currentIndex, const int size, MultiWave *multiWave, int channelIndex);
 
 #endif /* TRIGGER_EMULATOR_ALGO_H_ */
