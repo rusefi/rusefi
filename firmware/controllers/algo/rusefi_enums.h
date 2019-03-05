@@ -205,6 +205,10 @@ typedef enum {
 	TT_GM_7X = 5,
 	TT_MINI_COOPER_R50 = 6,
 	TT_MAZDA_SOHC_4 = 7,
+	/**
+	 * "60/2"
+	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
+	 */
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
 
@@ -222,7 +226,9 @@ typedef enum {
 
 	TT_MAZDA_DOHC_1_4 = 15,
 
+	// "1+1"
 	TT_ONE_PLUS_ONE = 16,
+	// "1+60/2"
 	TT_ONE_PLUS_TOOTHED_WHEEL_60_2 = 17,
 	TT_ONE = 18,
 

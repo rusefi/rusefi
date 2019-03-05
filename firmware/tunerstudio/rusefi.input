@@ -1301,6 +1301,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 
 ;			Engine->Trigger configuration
 	dialog = triggerConfiguration_settings,	"Settings Trigger"
+		field = "!https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger"
 		field = "Trigger type",							trigger_type
 		field = "Operation mode / speed",				operationMode
 		field = "With VR sensors only rising edge has reliable position"
