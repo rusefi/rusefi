@@ -87,6 +87,7 @@ bool rtcWorks = true;
  * Only one consumer can use SPI bus at a given time
  */
 void lockSpi(spi_device_e device) {
+	UNUSED(device);
 	efiAssertVoid(CUSTOM_ERR_6674, getCurrentRemainingStack() > 128, "lockSpi");
 	// todo: different locks for different SPI devices!
 	chMtxLock(&spiMtx);
@@ -97,6 +98,7 @@ void unlockSpi(void) {
 }
 
 static void initSpiModules(board_configuration_s *boardConfiguration) {
+	UNUSED(boardConfiguration);
 	if (CONFIGB(is_enabled_spi_1)) {
 		 turnOnSpi(SPI_DEVICE_1);
 	}
@@ -223,6 +225,7 @@ static void calcFastAdcIndexes(void) {
 }
 
 static void adcConfigListener(Engine *engine) {
+	UNUSED(engine);
 	// todo: something is not right here - looks like should be a callback for each configuration change?
 	calcFastAdcIndexes();
 }

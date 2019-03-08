@@ -284,6 +284,7 @@ PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
 #endif /* HAL_USE_PWM */
 
 static void initAdcPin(brain_pin_e pin, const char *msg) {
+	UNUSED(msg);
 	// todo: migrate to scheduleMsg if we want this back print("adc %s\r\n", msg);
 
 	efiSetPadMode("adc input", pin, PAL_MODE_INPUT_ANALOG);

@@ -51,6 +51,7 @@ static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
+	/*may be*/UNUSED(reader);
 	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
 

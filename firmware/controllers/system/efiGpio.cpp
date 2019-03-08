@@ -307,6 +307,7 @@ bool OutputPin::getLogicValue() {
 
 void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	pin_output_mode_e mode = *outputMode;
+	/* may be*/UNUSED(mode);
 	assertOMode(mode);
 	this->modePtr = outputMode;
 	setValue(false); // initial state
@@ -447,6 +448,8 @@ const char *portname(ioportid_t GPIOx) {
 #if defined(STM32F4XX) || defined(STM32F7XX)
 	if (GPIOx == GPIOE)
 		return "PE";
+	if (GPIOx == GPIOG)
+		return "PG";
 	if (GPIOx == GPIOH)
 		return "PH";
 #endif
