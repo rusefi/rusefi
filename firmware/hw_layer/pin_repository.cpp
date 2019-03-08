@@ -26,7 +26,7 @@ static ioportid_t ports[] = {GPIOA,
 		GPIOH,
 };
 
-#define PIN_REPO_SIZE (sizeof(ports) / sizeof(ioportid_t)) * PORT_SIZE
+#define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
 // todo: move this into PinRepository class
 const char *PIN_USED[PIN_REPO_SIZE];
 static int initialized = FALSE;
@@ -166,6 +166,21 @@ bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 	PIN_USED[index] = msg;
 	totalPinsUsed++;
 	return false;
+}
+
+/**
+ * See also markUsed()
+ */
+void markUnused(ioportid_t port, ioportmask_t pin) {
+	if (!initialized) {
+		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
+		return;
+	}
+	int index = getIndex(port, pin);
+
+	if (PIN_USED[index] != NULL)
+		totalPinsUsed--;
+	PIN_USED[index] = NULL;
 }
 
 const char * getPinFunction(brain_input_pin_e brainPin) {
