@@ -448,6 +448,8 @@ const char *portname(ioportid_t GPIOx) {
 #if defined(STM32F4XX) || defined(STM32F7XX)
 	if (GPIOx == GPIOE)
 		return "PE";
+	if (GPIOx == GPIOG)
+		return "PG";
 	if (GPIOx == GPIOH)
 		return "PH";
 #endif
