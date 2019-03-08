@@ -307,6 +307,7 @@ bool OutputPin::getLogicValue() {
 
 void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	pin_output_mode_e mode = *outputMode;
+	/* may be*/UNUSED(mode);
 	assertOMode(mode);
 	this->modePtr = outputMode;
 	setValue(false); // initial state

@@ -258,7 +258,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 */
 	isRiseEvent[index] = TV_RISE == stateParam;
 
-	if (index != privateTriggerDefinitionSize) {
+	if ((unsigned)index != privateTriggerDefinitionSize) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
 	}
 

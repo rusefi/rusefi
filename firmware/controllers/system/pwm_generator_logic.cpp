@@ -269,6 +269,7 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 		float const *switchTimes,
 		const int waveCount,
 		pin_state_t *const*pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
+	UNUSED(msg);
 	this->executor = executor;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");

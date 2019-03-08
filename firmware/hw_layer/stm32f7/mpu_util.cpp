@@ -47,6 +47,7 @@ int getRemainingStack(thread_t *otp) {
 	otp->remainingStack = remainingStack;
 	return remainingStack;
 #else
+	UNUSED(otp);
 	return 99999;
 #endif /* CH_DBG_ENABLE_STACK_CHECK */
 }
