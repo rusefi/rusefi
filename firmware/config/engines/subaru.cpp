@@ -33,5 +33,12 @@ void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED; // we want to avoid PD1 conflict
 	boardConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+}
 
+/*
+ * Subaru WRX <=1996 Turbo.
+ */
+
+void setSubaruEJ20GDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engineConfiguration->trigger.type = TT_SUBARU_7_6;
 }
