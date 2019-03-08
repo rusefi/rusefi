@@ -47,6 +47,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 
 
 void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
+	UNUSED(operationMode);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->addEvent720(180, T_PRIMARY, TV_RISE);

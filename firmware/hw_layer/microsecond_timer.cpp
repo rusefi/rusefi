@@ -40,8 +40,6 @@ static volatile int timerRestartCounter = 0;
 
 schfunc_t globalTimerCallback;
 
-static THD_WORKING_AREA(mwThreadStack, UTILITY_THREAD_STACK_SIZE);
-
 static const char * msg;
 
 static char buff[32];

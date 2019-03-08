@@ -32,6 +32,7 @@ void configureMiniCooperTriggerShape(TriggerShape *s) {
 	a += 3 * w;
 
 	float firstGapAngle = a;
+	/* may be */UNUSED(firstGapAngle);
 
 	s->addEvent720(a, T_SECONDARY, TV_RISE);
 	a += 3 * w;
