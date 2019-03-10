@@ -1477,6 +1477,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "IAT ADC input", 						iat_adcChannel
 		field = "vBatt ADC input", 						vbattAdcChannel
 		field = "TPS ADC input", 						tpsAdcChannel
+		field = "TPS2 ADC input", 						tps2AdcChannel
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "fuelLevelSensor", 						fuelLevelSensor
@@ -1507,10 +1508,14 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "Idle Stepper Enable",					stepperEnablePin
 		field = "Fuel Pump Pin",						fuelPumpPin
 		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
-		field = "ETB Dir #1",							etbDirectionPin1
-		field = "ETB Dir #2",							etbDirectionPin2
-		field = "ETB Control #1",						etbControlPin1	
-		field = "ETB Control #2",						etbControlPin2	
+		field = "ETB#1 Dir #1",							etb1_directionPin1
+		field = "ETB#1 Dir #2",							etb1_directionPin2
+		field = "ETB#1 Control #1",						etb1_controlPin1	
+		field = "ETB#1 Control #2",						etb1_controlPin2	
+		field = "ETB#2 Dir #1",							etb2_directionPin1
+		field = "ETB#2 Dir #2",							etb2_directionPin2
+		field = "ETB#2 Control #1",						etb2_controlPin1	
+		field = "ETB#2 Control #2",						etb2_controlPin2	
 		field = "SD CS Pin",							sdCardCsPin
 		field = "Check Engine Pin",						malfunctionIndicatorPin
 		field = "Check Engine Pin Mode",				malfunctionIndicatorPinMode
@@ -2229,10 +2234,14 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
 		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
-		field = "Dir #1",								etbDirectionPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "Dir #2",								etbDirectionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "Control #1",							etbControlPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "Control #2",							etbControlPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "#1 Direction #1",						etb1_directionPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "#1 Direction #2",						etb1_directionPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "#1 Control #1",						etb1_controlPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "#1 Control #2",						etb1_controlPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "#2 Direction #1",						etb2_directionPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "#2 Direction #2",						etb2_directionPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "#2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "#2 Control #2",						etb2_controlPin2, {throttlePedalPositionAdcChannel != 16}
 		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
 		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
 		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}	

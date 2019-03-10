@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 09 23:22:39 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 10 11:53:40 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -204,8 +204,8 @@ public class Fields {
 	public static final int vbattAdcChannel_offset_hex = 201;
 	public static final int fuelLevelSensor_offset = 514;
 	public static final int fuelLevelSensor_offset_hex = 202;
-	public static final int unusedtps_offset = 515;
-	public static final int unusedtps_offset_hex = 203;
+	public static final int tps2AdcChannel_offset = 515;
+	public static final int tps2AdcChannel_offset_hex = 203;
 	public static final int overrideCrankingIgnition_offset = 516;
 	public static final int overrideCrankingIgnition_offset_hex = 204;
 	public static final int sensorChartFrequency_offset = 520;
@@ -359,10 +359,11 @@ public class Fields {
 	public static final int cj125CsPin_offset = 674;
 	public static final int unusedEtbM_offset = 675;
 	public static final int digitalPotentiometerSpiDevice_offset = 676;
-	public static final int etbDirectionPin1_offset = 680;
-	public static final int etbDirectionPin2_offset = 681;
-	public static final int etbControlPin1_offset = 682;
-	public static final int etbControlPin2_offset = 683;
+	public static final int etb1_offset = 680;
+	public static final int etb1_directionPin1_offset = 680;
+	public static final int etb1_directionPin2_offset = 681;
+	public static final int etb1_controlPin1_offset = 682;
+	public static final int etb1_controlPin2_offset = 683;
 	public static final int fuelLevelEmptyTankVoltage_offset = 684;
 	public static final int fuelLevelFullTankVoltage_offset = 688;
 	public static final int afr_type_offset = 692;
@@ -1040,7 +1041,12 @@ public class Fields {
 	public static final int etb_iTermMin_offset = 3980;
 	public static final int etb_iTermMax_offset = 3982;
 	public static final int etbDeadband_offset = 3984;
-	public static final int mainUnusedEnd_offset = 3988;
+	public static final int etb2_offset = 3988;
+	public static final int etb2_directionPin1_offset = 3988;
+	public static final int etb2_directionPin2_offset = 3989;
+	public static final int etb2_controlPin1_offset = 3990;
+	public static final int etb2_controlPin2_offset = 3991;
+	public static final int mainUnusedEnd_offset = 3992;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1278,7 +1284,7 @@ public class Fields {
 	public static final Field TPSADCCHANNEL = Field.create("TPSADCCHANNEL", 512, FieldType.INT, adc_channel_e);
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 513, FieldType.INT, adc_channel_e);
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT, adc_channel_e);
-	public static final Field UNUSEDTPS = Field.create("UNUSEDTPS", 515, FieldType.INT);
+	public static final Field TPS2ADCCHANNEL = Field.create("TPS2ADCCHANNEL", 515, FieldType.INT, adc_channel_e);
 	public static final Field OVERRIDECRANKINGIGNITION = Field.create("OVERRIDECRANKINGIGNITION", 516, FieldType.INT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
 	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"};
@@ -1367,10 +1373,10 @@ public class Fields {
 	public static final Field CJ125CSPIN = Field.create("CJ125CSPIN", 674, FieldType.INT, brain_pin_e);
 	public static final Field UNUSEDETBM = Field.create("UNUSEDETBM", 675, FieldType.INT);
 	public static final Field DIGITALPOTENTIOMETERSPIDEVICE = Field.create("DIGITALPOTENTIOMETERSPIDEVICE", 676, FieldType.INT);
-	public static final Field ETBDIRECTIONPIN1 = Field.create("ETBDIRECTIONPIN1", 680, FieldType.INT, brain_pin_e);
-	public static final Field ETBDIRECTIONPIN2 = Field.create("ETBDIRECTIONPIN2", 681, FieldType.INT, brain_pin_e);
-	public static final Field ETBCONTROLPIN1 = Field.create("ETBCONTROLPIN1", 682, FieldType.INT, brain_pin_e);
-	public static final Field ETBCONTROLPIN2 = Field.create("ETBCONTROLPIN2", 683, FieldType.INT, brain_pin_e);
+	public static final Field ETB1_DIRECTIONPIN1 = Field.create("ETB1_DIRECTIONPIN1", 680, FieldType.INT, brain_pin_e);
+	public static final Field ETB1_DIRECTIONPIN2 = Field.create("ETB1_DIRECTIONPIN2", 681, FieldType.INT, brain_pin_e);
+	public static final Field ETB1_CONTROLPIN1 = Field.create("ETB1_CONTROLPIN1", 682, FieldType.INT, brain_pin_e);
+	public static final Field ETB1_CONTROLPIN2 = Field.create("ETB1_CONTROLPIN2", 683, FieldType.INT, brain_pin_e);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 684, FieldType.FLOAT);
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 688, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
@@ -1891,6 +1897,10 @@ public class Fields {
 	public static final Field ETB_ITERMMIN = Field.create("ETB_ITERMMIN", 3980, FieldType.INT);
 	public static final Field ETB_ITERMMAX = Field.create("ETB_ITERMMAX", 3982, FieldType.INT);
 	public static final Field ETBDEADBAND = Field.create("ETBDEADBAND", 3984, FieldType.FLOAT);
+	public static final Field ETB2_DIRECTIONPIN1 = Field.create("ETB2_DIRECTIONPIN1", 3988, FieldType.INT, brain_pin_e);
+	public static final Field ETB2_DIRECTIONPIN2 = Field.create("ETB2_DIRECTIONPIN2", 3989, FieldType.INT, brain_pin_e);
+	public static final Field ETB2_CONTROLPIN1 = Field.create("ETB2_CONTROLPIN1", 3990, FieldType.INT, brain_pin_e);
+	public static final Field ETB2_CONTROLPIN2 = Field.create("ETB2_CONTROLPIN2", 3991, FieldType.INT, brain_pin_e);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);

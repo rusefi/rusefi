@@ -393,7 +393,7 @@ log_format_e logFormat;
 	adc_channel_e tpsAdcChannel;See aslo pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;
 adc_channel_e fuelLevelSensor;
-	uint8_t[1] unusedtps;
+	adc_channel_e tps2AdcChannel;Second throttle body position sensor
 
 	int overrideCrankingIgnition;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
@@ -454,6 +454,13 @@ struct idle_hardware_s
 	brain_pin_e stepperStepPin; 
 	pin_output_mode_e solenoidPinMode;
 end_struct
+
+struct etb_io
+	brain_pin_e directionPin1;
+	brain_pin_e directionPin2;
+	brain_pin_e controlPin1;
+	brain_pin_e controlPin2;
+end_struct
 	
 struct_no_prefix board_configuration_s
 	idle_hardware_s idle;
@@ -505,10 +512,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 
-	brain_pin_e etbDirectionPin1;
-	brain_pin_e etbDirectionPin2;
-	brain_pin_e etbControlPin1;
-	brain_pin_e etbControlPin2;
+	etb_io etb1
 
 	float fuelLevelEmptyTankVoltage;;"V",      1,      0,       0,10,      2
 	float fuelLevelFullTankVoltage;;"V",      1,      0,       0,10,      2
@@ -979,7 +983,8 @@ tChargeMode_e tChargeMode;
 	int16_t etb_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
 	int16_t etb_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
 	float etbDeadband;;"",        1,     0,  0,    100.0,  2
-	int[623] mainUnusedEnd;
+	etb_io etb2
+	int[622] mainUnusedEnd;
 
 
 end_struct

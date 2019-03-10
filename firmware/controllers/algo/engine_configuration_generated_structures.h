@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 09 23:22:39 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 10 11:52:06 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -367,6 +367,27 @@ typedef struct {
 	/** total size 8*/
 } idle_hardware_s;
 
+// start of etb_io
+typedef struct {
+	/**
+	 * offset 0
+	 */
+	brain_pin_e directionPin1;
+	/**
+	 * offset 1
+	 */
+	brain_pin_e directionPin2;
+	/**
+	 * offset 2
+	 */
+	brain_pin_e controlPin1;
+	/**
+	 * offset 3
+	 */
+	brain_pin_e controlPin2;
+	/** total size 4*/
+} etb_io;
+
 // start of board_configuration_s
 typedef struct {
 	/**
@@ -508,19 +529,7 @@ typedef struct {
 	/**
 	 * offset 80
 	 */
-	brain_pin_e etbDirectionPin1;
-	/**
-	 * offset 81
-	 */
-	brain_pin_e etbDirectionPin2;
-	/**
-	 * offset 82
-	 */
-	brain_pin_e etbControlPin1;
-	/**
-	 * offset 83
-	 */
-	brain_pin_e etbControlPin2;
+	etb_io etb1;
 	/**
 	 * offset 84
 	 */
@@ -1264,9 +1273,10 @@ typedef struct {
 	 */
 	adc_channel_e fuelLevelSensor;
 	/**
+	 * Second throttle body position sensor
 	 * offset 515
 	 */
-	uint8_t unusedtps;
+	adc_channel_e tps2AdcChannel;
 	/**
 	 * offset 516
 	 */
@@ -2315,7 +2325,11 @@ typedef struct {
 	/**
 	 * offset 3988
 	 */
-	int mainUnusedEnd[623];
+	etb_io etb2;
+	/**
+	 * offset 3992
+	 */
+	int mainUnusedEnd[622];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2562,4 +2576,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 09 23:22:39 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 10 11:52:06 EDT 2019

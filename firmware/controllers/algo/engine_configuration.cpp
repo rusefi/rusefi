@@ -360,10 +360,10 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
 	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->etbControlPin1 = GPIO_UNASSIGNED;
-	boardConfiguration->etbControlPin2 = GPIO_UNASSIGNED;
-	boardConfiguration->etbDirectionPin1 = GPIO_UNASSIGNED;
-	boardConfiguration->etbDirectionPin2 = GPIO_UNASSIGNED;
+	boardConfiguration->etb1.controlPin1 = GPIO_UNASSIGNED;
+	boardConfiguration->etb1.controlPin2 = GPIO_UNASSIGNED;
+	boardConfiguration->etb1.directionPin1 = GPIO_UNASSIGNED;
+	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
 	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->tachOutputPin = GPIO_UNASSIGNED;
