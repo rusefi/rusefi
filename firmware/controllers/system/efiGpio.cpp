@@ -15,6 +15,10 @@
 #include "io_pins.h"
 #endif /* EFI_GPIO_HARDWARE */
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
+#include "electronic_throttle.h"
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
 EXTERN_ENGINE;
 
 #if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
@@ -88,6 +92,9 @@ bool EnginePins::stopPins() {
 }
 
 void EnginePins::unregisterPins() {
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	unregisterEtbPins();
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
 	fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
@@ -97,10 +104,10 @@ void EnginePins::unregisterPins() {
 
 	sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
 	accelerometerCs.unregisterOutput(activeConfiguration.LIS302DLCsPin, engineConfiguration->LIS302DLCsPin);
-	etbOutput1.unregisterOutput(activeConfiguration.bc.etb1.directionPin1,
-			engineConfiguration->bc.etb1.directionPin1);
-	etbOutput2.unregisterOutput(activeConfiguration.bc.etb1.directionPin2,
-			engineConfiguration->bc.etb1.directionPin2);
+//	etbOutput1.unregisterOutput(activeConfiguration.bc.etb1.directionPin1,
+//			engineConfiguration->bc.etb1.directionPin1);
+//	etbOutput2.unregisterOutput(activeConfiguration.bc.etb1.directionPin2,
+//			engineConfiguration->bc.etb1.directionPin2);
 	checkEnginePin.unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
 			engineConfiguration->bc.malfunctionIndicatorPin);
 	dizzyOutput.unregisterOutput(activeConfiguration.dizzySparkOutputPin,

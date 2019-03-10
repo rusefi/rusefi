@@ -132,8 +132,6 @@ public:
 	NamedOutputPin tachOut;
 	NamedOutputPin dizzyOutput;
 
-	OutputPin etbOutput1;
-	OutputPin etbOutput2;
 	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	OutputPin triggerDecoderErrorPin;
 	OutputPin hipCs;
