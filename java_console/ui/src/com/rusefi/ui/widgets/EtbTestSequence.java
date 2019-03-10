@@ -44,11 +44,6 @@ public class EtbTestSequence {
 
     private final JButton button = new JButton("ETB Test");
 
-    private SequenceStep FIRST_STEP = new EtbTarget(10 * SECOND, 4 /*position*/);
-
-    {
-        addSequence(FIRST_STEP);
-    }
 
     protected static SequenceStep addSequence(SequenceStep first_step) {
         return first_step.addNext(new SequenceStep(SECOND) {
@@ -85,7 +80,7 @@ public class EtbTestSequence {
                 .addNext(10 * SECOND, 30 /*position*/)
                 .addNext(10 * SECOND, 50 /*position*/)
                 .addNext(10 * SECOND, 70 /*position*/)
-                .addNext(10 * SECOND, 100 /*position*/)
+                .addNext(10 * SECOND, 95 /*position*/)
                 .addNext(10 * SECOND, 50 /*position*/)
                 .addNext(10 * SECOND, 70 /*position*/)
                 .addNext(10 * SECOND, 4 /*position*/)
@@ -97,7 +92,10 @@ public class EtbTestSequence {
         button.addActionListener(e -> {
             // 3000 data points at 10Hz should be 300 seconds worth of data
             metric.start(/* buffer size: */3000, /*period, ms: */ 100);
-            FIRST_STEP.execute(executor);
+
+            SequenceStep firstStep = new EtbTarget(10 * SECOND, 4 /*position*/);
+            addSequence(firstStep);
+            firstStep.execute(executor);
         });
     }
 

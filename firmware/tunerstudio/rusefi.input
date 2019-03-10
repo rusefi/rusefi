@@ -2242,6 +2242,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
 		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}	
 		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
+		field = "etbDeadband",							Deadband, {throttlePedalPositionAdcChannel != 16}
 				
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1

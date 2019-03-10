@@ -53,6 +53,7 @@ public:
 
     virtual bool Set(float duty) override;
     float Get();
-    void Break();
+    void BrakeGnd();
+    void BrakeVcc();
     bool isOpenDirection();
 };

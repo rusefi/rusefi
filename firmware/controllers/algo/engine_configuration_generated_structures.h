@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:30:15 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 09 23:22:39 EST 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2311,7 +2311,11 @@ typedef struct {
 	/**
 	 * offset 3984
 	 */
-	int mainUnusedEnd[624];
+	float etbDeadband;
+	/**
+	 * offset 3988
+	 */
+	int mainUnusedEnd[623];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2558,4 +2562,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:30:15 EST 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 09 23:22:39 EST 2019

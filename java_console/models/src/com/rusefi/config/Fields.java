@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 02 13:30:15 EST 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 09 23:22:39 EST 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1039,7 +1039,8 @@ public class Fields {
 	public static final int hip9011Gain_offset = 3976;
 	public static final int etb_iTermMin_offset = 3980;
 	public static final int etb_iTermMax_offset = 3982;
-	public static final int mainUnusedEnd_offset = 3984;
+	public static final int etbDeadband_offset = 3984;
+	public static final int mainUnusedEnd_offset = 3988;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1889,6 +1890,7 @@ public class Fields {
 	public static final Field HIP9011GAIN = Field.create("HIP9011GAIN", 3976, FieldType.FLOAT);
 	public static final Field ETB_ITERMMIN = Field.create("ETB_ITERMMIN", 3980, FieldType.INT);
 	public static final Field ETB_ITERMMAX = Field.create("ETB_ITERMMAX", 3982, FieldType.INT);
+	public static final Field ETBDEADBAND = Field.create("ETBDEADBAND", 3984, FieldType.FLOAT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);

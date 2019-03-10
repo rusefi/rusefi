@@ -4,6 +4,8 @@
  *
  * todo: make this more universal if/when we get other hardware options
  *
+ * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30
+ *
  * Jan 2019 actually driven around the block but still need some work.
  *
  * Jan 2017 status:
@@ -112,7 +114,9 @@ static percent_t currentEtbDuty;
 
 // looks like my H-bridge does not like 100% duty cycle and it just hangs up?
 // so we use 98% to indicate that things are alive and never use PM_FULL of PWM generator
-#define PERCENT_TO_DUTY(X) (maxF(minF((X / 100.0), FULL_PWM_THRESHOLD - 0.01), 0.01 - FULL_PWM_THRESHOLD))
+//#define ETB_DUTY_LIMIT FULL_PWM_THRESHOLD
+#define ETB_DUTY_LIMIT 0.4
+#define PERCENT_TO_DUTY(X) (maxF(minF((X / 100.0), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
 //#define PERCENT_TO_DUTY(X) ((X) / 100.0)
 
@@ -180,6 +184,14 @@ private:
 		pid.iTermMin = engineConfiguration->etb_iTermMin;
 		pid.iTermMax = engineConfiguration->etb_iTermMax;
 
+/*
+		if (absF(actualThrottlePosition - targetPosition) < 0.5) {
+			// we are pretty close to desired position, let's hold it
+			dcMotor.BrakeVcc();
+			scheduleMsg(&logger, "VCC braking %f %f", targetPosition, actualThrottlePosition);
+			return;
+		}
+*/
 		currentEtbDuty = feedForward +
 				pid.getValue(targetPosition, actualThrottlePosition);
 
@@ -254,7 +266,12 @@ void setEtbPFactor(float value) {
 static void etbReset() {
 	// TODO: what is this about?
 	// I am experiencing some weird instability with my H-bridge with my Monte Carlo attempts
-	dcMotor.Break();
+	scheduleMsg(&logger, "etbReset");
+	for (int i = 0;i < 5;i++) {
+		// this is some crazy code to remind H-bridge that we are alive
+		dcMotor.BrakeGnd();
+		chThdSleepMilliseconds(10);
+	}
 	mockPedalPosition = MOCK_UNDEFINED;
 	pid.reset();
 }
@@ -378,14 +395,23 @@ void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[6] = 99;
 	engineConfiguration->etbBiasBins[7] = 100;
 
-	engineConfiguration->etbBiasValues[0] = -100 / 255.0f * 100;
-	engineConfiguration->etbBiasValues[1] = -95 / 255.0f * 100;
-	engineConfiguration->etbBiasValues[2] = -80 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[0] = -100 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[1] = -95 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[2] = -80 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[3] = 0 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[4] = 115 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[5] = 142 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[6] = 142 / 255.0f * 100;
+//	engineConfiguration->etbBiasValues[7] = 142 / 255.0f * 100;
+
+	engineConfiguration->etbBiasValues[0] = -20;
+	engineConfiguration->etbBiasValues[1] = -18;
+	engineConfiguration->etbBiasValues[2] = -17;
 	engineConfiguration->etbBiasValues[3] = 0 / 255.0f * 100;
-	engineConfiguration->etbBiasValues[4] = 115 / 255.0f * 100;
-	engineConfiguration->etbBiasValues[5] = 142 / 255.0f * 100;
-	engineConfiguration->etbBiasValues[6] = 142 / 255.0f * 100;
-	engineConfiguration->etbBiasValues[7] = 142 / 255.0f * 100;
+	engineConfiguration->etbBiasValues[4] = 20;
+	engineConfiguration->etbBiasValues[5] = 21;
+	engineConfiguration->etbBiasValues[6] = 22;
+	engineConfiguration->etbBiasValues[7] = 25;
 }
 
 void initElectronicThrottle(void) {

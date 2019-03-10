@@ -978,7 +978,8 @@ tChargeMode_e tChargeMode;
 	float hip9011Gain;
 	int16_t etb_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
 	int16_t etb_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
-	int[624] mainUnusedEnd;
+	float etbDeadband;;"",        1,     0,  0,    100.0,  2
+	int[623] mainUnusedEnd;
 
 
 end_struct

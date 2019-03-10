@@ -44,6 +44,7 @@ public class EtbMonteCarloSequence {
                 ":iFactor:" + iFactor +
                 ":dFactor:" + dFactor;
         MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class, stats);
+        CommandQueue.getInstance().write("etbreset");
         CommandQueue.getInstance().write("set etb_o " + offset);
         CommandQueue.getInstance().write("set etb_p " + pFactor);
         CommandQueue.getInstance().write("set etb_i " + iFactor);
