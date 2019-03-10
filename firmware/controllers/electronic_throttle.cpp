@@ -247,10 +247,10 @@ static void showEthInfo(void) {
 	scheduleMsg(&logger, "dir=%d DC=%f", dcMotor.isOpenDirection(), dcMotor.Get());
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
-			hwPortname(CONFIGB(etbControlPin1)),
+			hwPortname(CONFIGB(etb1.controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	scheduleMsg(&logger, "close dir=%s", hwPortname(CONFIGB(etbDirectionPin2)));
+	scheduleMsg(&logger, "close dir=%s", hwPortname(CONFIGB(etb1.directionPin2)));
 	pid.showPidStatus(&logger, "ETB");
 }
 
@@ -318,21 +318,25 @@ void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	CONFIGB(etbControlPin1) = GPIOE_4; // test board, matched default fuel pump relay
 }
 
+static bool isSamePins(etb_io *current, etb_io *active) {
+	return 	current->controlPin1 != active->controlPin1 ||
+			current->controlPin2 != active->controlPin2 ||
+			current->directionPin1 != active->directionPin1 ||
+			current->directionPin2 != active->directionPin2;
+}
+
 bool isETBRestartNeeded(void) {
 	/**
 	 * We do not want any interruption in HW pin while adjusting other properties
 	 */
-	return engineConfiguration->bc.etbControlPin1 != activeConfiguration.bc.etbControlPin1 ||
-		   engineConfiguration->bc.etbControlPin2 != activeConfiguration.bc.etbControlPin2 ||
-		   engineConfiguration->bc.etbDirectionPin1 != activeConfiguration.bc.etbDirectionPin1 ||
-		   engineConfiguration->bc.etbDirectionPin2 != activeConfiguration.bc.etbDirectionPin2;
+	return isSamePins(&engineConfiguration->bc.etb1, &activeConfiguration.bc.etb1);
 }
 
 void stopETBPins(void) {
-	unmarkPin(activeConfiguration.bc.etbControlPin1);
-	unmarkPin(activeConfiguration.bc.etbControlPin2);
-	unmarkPin(activeConfiguration.bc.etbDirectionPin1);
-	unmarkPin(activeConfiguration.bc.etbDirectionPin2);
+	unmarkPin(activeConfiguration.bc.etb1.controlPin1);
+	unmarkPin(activeConfiguration.bc.etb1.controlPin2);
+	unmarkPin(activeConfiguration.bc.etb1.directionPin1);
+	unmarkPin(activeConfiguration.bc.etb1.directionPin2);
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
@@ -346,7 +350,7 @@ void startETBPins(void) {
 	// this line used for PWM
 	startSimplePwmExt(&etbPwmUp, "etb1",
 			&engine->executor,
-			CONFIGB(etbControlPin1),
+			CONFIGB(etb1.controlPin1),
 			&enginePins.etbOutput1,
 			freq,
 			0.80,
@@ -359,8 +363,8 @@ void startETBPins(void) {
 			0.80,
 			applyPinState);
 */
-	outputDirectionOpen.initPin("etb dir open", CONFIGB(etbDirectionPin1));
-	outputDirectionClose.initPin("etb dir close", CONFIGB(etbDirectionPin2));
+	outputDirectionOpen.initPin("etb dir open", CONFIGB(etb1.directionPin1));
+	outputDirectionClose.initPin("etb dir close", CONFIGB(etb1.directionPin2));
 }
 
 static void setTempOutput(float value) {

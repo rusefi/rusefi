@@ -97,10 +97,10 @@ void EnginePins::unregisterPins() {
 
 	sdCsPin.unregisterOutput(activeConfiguration.bc.sdCardCsPin, engineConfiguration->bc.sdCardCsPin);
 	accelerometerCs.unregisterOutput(activeConfiguration.LIS302DLCsPin, engineConfiguration->LIS302DLCsPin);
-	etbOutput1.unregisterOutput(activeConfiguration.bc.etbDirectionPin1,
-			engineConfiguration->bc.etbDirectionPin1);
-	etbOutput2.unregisterOutput(activeConfiguration.bc.etbDirectionPin2,
-			engineConfiguration->bc.etbDirectionPin2);
+	etbOutput1.unregisterOutput(activeConfiguration.bc.etb1.directionPin1,
+			engineConfiguration->bc.etb1.directionPin1);
+	etbOutput2.unregisterOutput(activeConfiguration.bc.etb1.directionPin2,
+			engineConfiguration->bc.etb1.directionPin2);
 	checkEnginePin.unregisterOutput(activeConfiguration.bc.malfunctionIndicatorPin,
 			engineConfiguration->bc.malfunctionIndicatorPin);
 	dizzyOutput.unregisterOutput(activeConfiguration.dizzySparkOutputPin,

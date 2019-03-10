@@ -279,9 +279,9 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * remember that some H-bridges require 5v control lines, not just 3v logic outputs we have on stm32
 	 */
-	CONFIGB(etbDirectionPin1) = GPIOC_7;
-	CONFIGB(etbDirectionPin2) = GPIOC_9;
-	CONFIGB(etbControlPin1) = GPIOE_14;
+	CONFIGB(etb1.directionPin1) = GPIOC_7;
+	CONFIGB(etb1.directionPin2) = GPIOC_9;
+	CONFIGB(etb1.controlPin1) = GPIOE_14;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
