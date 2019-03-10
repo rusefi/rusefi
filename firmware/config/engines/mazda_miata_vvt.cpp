@@ -318,23 +318,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->etbControlPin1 = GPIOC_7;
-
-// default TPS is	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
-	// it becomes pedal sensor on test mule
-	//engineConfiguration->pedalPositionAdcChannel = EFI_ADC_2; // PA2
-	// engineConfiguration->tpsAdcChannel = EFI_ADC_13; // PC3
-
-	// 0.5; //volts
-	// 2.65; // volts
-
-	// 94;
-	// 591;
-
-	// pid: 1/0/0
-	// pid: 0.8 / 0.02 / 0.002
-
-
 	// set_whole_ve_map 80
 
 	memcpy(config->veRpmBins, ve18vvtRpmBins, sizeof(ve18vvtRpmBins));

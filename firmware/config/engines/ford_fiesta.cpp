@@ -29,16 +29,6 @@ void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->mafAdcChannel = EFI_ADC_14;
 //	engineConfiguration->mafAdcChannel = EFI_ADC_NONE; this would kill functional tests
-
-
-	// etb testing
-//	boardConfiguration->clutchUpPin
-	boardConfiguration->etbControlPin1 = GPIOD_3;
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_1;
-	boardConfiguration->etbDirectionPin2 = GPIOD_5;
-
-	engineConfiguration->tpsMin = 337;
-	engineConfiguration->tpsMax = 896;
 }
 
 #endif /* EFI_SUPPORT_FORD_FIESTA */
