@@ -20,5 +20,6 @@ bool isETBRestartNeeded(void);
 void stopETBPins(void);
 void startETBPins(void);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
+void unregisterEtbPins();
 
 #endif /* ELECTRONIC_THROTTLE_H_ */

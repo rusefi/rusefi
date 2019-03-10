@@ -74,6 +74,8 @@
 #include "engine_controller.h"
 #include "PeriodicController.h"
 
+#define ETB_MAX_COUNT 2
+
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "pwm_generator.h"
@@ -90,20 +92,43 @@ static PID_AutoTune autoTune;
 
 static LoggingWithStorage logger("ETB");
 
-/**
- * @brief Pulse-Width Modulation state
- */
-/*CCM_OPTIONAL*/ static SimplePwm etbPwmUp("etbUp");
+EXTERN_ENGINE;
+
+class EtbControl {
+public:
+	EtbControl() : etbPwmUp("etbUp"), dcMotor(&etbPwmUp, &outputDirectionOpen, &outputDirectionClose) {}
+	OutputPin outputDirectionOpen;
+	OutputPin outputDirectionClose;
+	OutputPin etbOutput;
+	SimplePwm etbPwmUp;
+	TwoPinDcMotor dcMotor;
+	void start(brain_pin_e controlPin,
+			brain_pin_e directionPin1,
+			brain_pin_e directionPin2) {
+		int freq = maxI(100, engineConfiguration->etbFreq);
+		// this line used for PWM
+		startSimplePwmExt(&etbPwmUp, "etb1",
+				&engine->executor,
+				controlPin,
+				&etbOutput,
+				freq,
+				0.80,
+				applyPinState);
+		outputDirectionOpen.initPin("etb dir open", directionPin1);
+		outputDirectionClose.initPin("etb dir close", directionPin2);
+	}
+
+
+};
+
+static EtbControl etb1;
+
 static float valueOverride = NAN;
 /*
 CCM_OPTIONAL static SimplePwm etbPwmDown("etbDown");
 */
-/*CCM_OPTIONAL*/ static OutputPin outputDirectionOpen;
-/*CCM_OPTIONAL*/ static OutputPin outputDirectionClose;
 
-static TwoPinDcMotor dcMotor(&etbPwmUp, &outputDirectionOpen, &outputDirectionClose);
 
-EXTERN_ENGINE;
 extern percent_t mockPedalPosition;
 
 static Pid pid(&engineConfiguration->etb);
@@ -150,7 +175,7 @@ private:
 		}
 
 		if (!cisnan(valueOverride)) {
-			dcMotor.Set(valueOverride);
+			etb1.dcMotor.Set(valueOverride);
 			return;
 		}
 
@@ -167,7 +192,7 @@ private:
 					autoTune.output,
 					value);
 			scheduleMsg(&logger, "AT PID=%f", value);
-			dcMotor.Set(PERCENT_TO_DUTY(value));
+			etb1.dcMotor.Set(PERCENT_TO_DUTY(value));
 
 			if (result) {
 				scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
@@ -195,7 +220,7 @@ private:
 		currentEtbDuty = feedForward +
 				pid.getValue(targetPosition, actualThrottlePosition);
 
-		dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
+		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
 /*
 		if (CONFIGB(etbDirectionPin2) != GPIO_UNASSIGNED) {
 			bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
@@ -227,7 +252,7 @@ static void setThrottleDutyCycle(float level) {
 
 	float dc = PERCENT_TO_DUTY(level);
 	valueOverride = dc;
-	dcMotor.Set(dc);
+	etb1.dcMotor.Set(dc);
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
 
@@ -244,7 +269,7 @@ static void showEthInfo(void) {
 			getPinNameByAdcChannel("tPedal", engineConfiguration->throttlePedalPositionAdcChannel, pinNameBuffer));
 
 	scheduleMsg(&logger, "TPS=%.2f", getTPS());
-	scheduleMsg(&logger, "dir=%d DC=%f", dcMotor.isOpenDirection(), dcMotor.Get());
+	scheduleMsg(&logger, "dir=%d DC=%f", etb1.dcMotor.isOpenDirection(), etb1.dcMotor.Get());
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
 			hwPortname(CONFIGB(etb1.controlPin1)),
@@ -269,7 +294,7 @@ static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	for (int i = 0;i < 5;i++) {
 		// this is some crazy code to remind H-bridge that we are alive
-		dcMotor.BrakeGnd();
+		etb1.dcMotor.BrakeGnd();
 		chThdSleepMilliseconds(10);
 	}
 	mockPedalPosition = MOCK_UNDEFINED;
@@ -345,26 +370,10 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 
 void startETBPins(void) {
 
-	int freq = maxI(100, engineConfiguration->etbFreq);
-
-	// this line used for PWM
-	startSimplePwmExt(&etbPwmUp, "etb1",
-			&engine->executor,
-			CONFIGB(etb1.controlPin1),
-			&enginePins.etbOutput1,
-			freq,
-			0.80,
-			applyPinState);
-/*
-	startSimplePwmExt(&etbPwmDown, "etb2",
-			CONFIGB(etbControlPin2),
-			&enginePins.etbOutput2,
-			freq,
-			0.80,
-			applyPinState);
-*/
-	outputDirectionOpen.initPin("etb dir open", CONFIGB(etb1.directionPin1));
-	outputDirectionClose.initPin("etb dir close", CONFIGB(etb1.directionPin2));
+	etb1.start(CONFIGB(etb1.controlPin1),
+			CONFIGB(etb1.directionPin1),
+			CONFIGB(etb1.directionPin2)
+			);
 }
 
 static void setTempOutput(float value) {
@@ -416,6 +425,10 @@ void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasValues[5] = 21;
 	engineConfiguration->etbBiasValues[6] = 22;
 	engineConfiguration->etbBiasValues[7] = 25;
+}
+
+void unregisterEtbPins() {
+
 }
 
 void initElectronicThrottle(void) {
