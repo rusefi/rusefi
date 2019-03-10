@@ -23,9 +23,14 @@ float TwoPinDcMotor::Get() {
 	return value;
 }
 
-void TwoPinDcMotor::Break() {
+void TwoPinDcMotor::BrakeGnd() {
     m_dir1->setValue(false);
     m_dir2->setValue(false);
+}
+
+void TwoPinDcMotor::BrakeVcc() {
+    m_dir1->setValue(true);
+    m_dir2->setValue(true);
 }
 
 /**
@@ -59,7 +64,7 @@ bool TwoPinDcMotor::Set(float duty)
 
     if(duty < 0.01f)
     {
-    	Break();
+    	BrakeGnd();
     }
     else
     {

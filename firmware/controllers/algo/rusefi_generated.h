@@ -1644,8 +1644,10 @@
 #define etb_iTermMin_offset_hex f8c
 #define etb_iTermMax_offset 3982
 #define etb_iTermMax_offset_hex f8e
-#define mainUnusedEnd_offset 3984
-#define mainUnusedEnd_offset_hex f90
+#define etbDeadband_offset 3984
+#define etbDeadband_offset_hex f90
+#define mainUnusedEnd_offset 3988
+#define mainUnusedEnd_offset_hex f94
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512
