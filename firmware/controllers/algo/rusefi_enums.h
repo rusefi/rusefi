@@ -764,6 +764,8 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOH_14 = 128,
 	GPIOH_15 = 129,
 
+	GPIO_EXT_START = 130,
+
 } brain_pin_e;
 
 /**

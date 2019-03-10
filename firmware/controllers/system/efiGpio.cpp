@@ -9,6 +9,7 @@
 #include "global.h"
 #include "engine.h"
 #include "efiGpio.h"
+#include "drivers/gpio/gpio_ext.h"
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 #include "pin_repository.h"
@@ -68,7 +69,17 @@ EnginePins::EnginePins() {
 	  (outputPin)->currentLogicValue = (logicValue);                               \
     }                                                                              \
   }
+
+#define gpiochip_setPinValue(outputPin, electricalValue, logicValue)               \
+  {                                                                                \
+    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
+	  gpiochips_writePad((outputPin)->brainPin, (electricalValue));                \
+	  (outputPin)->currentLogicValue = (logicValue);                               \
+    }                                                                              \
+  }
+
 #else /* EFI_PROD_CODE */
+
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
   {                                                                                \
     if ((outputPin)->currentLogicValue != (logicValue)) {                          \
@@ -295,12 +306,18 @@ void OutputPin::toggle() {
 }
 void OutputPin::setValue(int logicValue) {
 #if EFI_PROD_CODE
-	if (port != GPIO_NULL) {
-		efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
-		pin_output_mode_e mode = *modePtr;
-		efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
-		int eValue = getElectricalValue(logicValue, mode);
-		setPinValue(this, eValue, logicValue);
+	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
+	pin_output_mode_e mode = *modePtr;
+	efiAssertVoid(CUSTOM_ERR_6622, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
+	int eValue = getElectricalValue(logicValue, mode);
+	if (!this->ext) {
+		/* onchip pin */
+		if (port != GPIO_NULL) {
+			setPinValue(this, eValue, logicValue);
+		}
+	} else {
+		/* external pin */
+		gpiochip_setPinValue(this, this->brainPin, logicValue);
 	}
 
 #else /* EFI_PROD_CODE */
@@ -381,37 +398,45 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
-	ioportid_t port = getHwPort(msg, brainPin);
-	int pin = getHwPin(msg, brainPin);
-
-	/**
-	 * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
-	 */
-	if (port == GPIO_NULL) {
-		// that's for GRIO_NONE
-		this->port = port;
-		return;
-	}
 
 	assertOMode(*outputMode);
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
 		PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
-	/**
-	 * @brief Initialize the hardware output pin while also assigning it a logical name
-	 */
-	if (this->port != NULL && (this->port != port || this->pin != pin)) {
+	if (brain_pin_is_onchip(brainPin)) {
+		ioportid_t port = getHwPort(msg, brainPin);
+		int pin = getHwPin(msg, brainPin);
+
 		/**
-		 * here we check if another physical pin is already assigned to this logical output
+		 * This method is used for digital GPIO pins only, for peripheral pins see mySetPadMode
 		 */
-	// todo: need to clear '&outputs' in io_pins.c
-		warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, this->port, this->pin);
-		engine->withError = true;
-		return;
+		if (port == GPIO_NULL) {
+			// that's for GRIO_NONE
+			this->port = port;
+			return;
+		}
+
+		/**
+		 * @brief Initialize the hardware output pin while also assigning it a logical name
+		 */
+		if (this->port != NULL && (this->port != port || this->pin != pin)) {
+			/**
+			 * here we check if another physical pin is already assigned to this logical output
+			 */
+		// todo: need to clear '&outputs' in io_pins.c
+			warning(CUSTOM_OBD_PIN_CONFLICT, "outputPin [%s] already assigned to %x%d", msg, this->port, this->pin);
+			engine->withError = true;
+			return;
+		}
+		this->port = port;
+		this->pin = pin;
+		this->ext = false;
+	} else {
+		this->ext = true;
+		this->brainPin = brainPin;
 	}
+
 	this->currentLogicValue = INITIAL_PIN_STATE;
-	this->port = port;
-	this->pin = pin;
 
 	efiSetPadMode(msg, brainPin, mode);
 
@@ -462,20 +487,28 @@ const char *portname(ioportid_t GPIOx) {
 #endif
 	if (GPIOx == GPIOF)
 		return "PF";
+/*
+	char *name = portNameExt(GPIOx);
+	if (name)
+		return name;
+*/
 	return "unknown";
 }
 
 /**
  * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
  */
-ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
+ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
+{
+	if (brain_pin_is_onchip(brainPin))
+		return (brainPin - GPIOA_0) % PORT_SIZE;
+	if (brainPin >= GPIO_EXT_START)
+		return getHwPinExt((int)(brainPin));
 	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
 		return EFI_ERROR_CODE;
-	if (brainPin < GPIOA_0 || brainPin > GPIOH_15) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
-		return EFI_ERROR_CODE;
-	}
-	return (brainPin - GPIOA_0) % PORT_SIZE;
+
+	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
+	return EFI_ERROR_CODE;
 }
 
 #else /* EFI_GPIO_HARDWARE */
@@ -484,5 +517,3 @@ const char *hwPortname(brain_pin_e brainPin) {
 	return "N/A";
 }
 #endif /* EFI_GPIO_HARDWARE */
-
-

@@ -50,6 +50,9 @@ public:
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 	ioportid_t port;
 	uint8_t pin;
+	/* used for external pins */
+	brain_pin_e brainPin;
+	bool ext;
 #endif /* EFI_GPIO_HARDWARE */
 	int8_t currentLogicValue;
 	/**

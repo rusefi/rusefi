@@ -15,6 +15,11 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "chprintf.h"
+#include "drivers/gpio/gpio_ext.h"
+
+#ifndef BOARD_EXT_PINREPOPINS
+	#define BOARD_EXT_PINREPOPINS 0
+#endif
 
 static ioportid_t ports[] = {GPIOA,
 		GPIOB,
@@ -28,11 +33,27 @@ static ioportid_t ports[] = {GPIOA,
 
 #define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
 // todo: move this into PinRepository class
-const char *PIN_USED[PIN_REPO_SIZE];
+const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
 static int initialized = FALSE;
 
 static LoggingWithStorage logger("pin repos");
 static int totalPinsUsed = 0;
+
+static int brainPin_to_index(brain_pin_e brainPin)
+{
+	int index;
+
+	if (brainPin < GPIOA_0)
+		return -1;
+
+	index = brainPin - GPIOA_0;
+
+	/* if index outside array boundary */
+	if ((unsigned)index > (sizeof(PIN_USED) / sizeof(PIN_USED[0])))
+		return -1;
+
+	return index;
+}
 
 PinRepository::PinRepository() {
 }
@@ -68,13 +89,30 @@ static int getPortIndex(ioportid_t port) {
 }
 
 static void reportPins(void) {
-	for (int i = 0; i < PIN_REPO_SIZE; i++) {
-		const char *name = PIN_USED[i];
-		int portIndex = i / PORT_SIZE;
-		int pin = i % PORT_SIZE;
-		ioportid_t port = ports[portIndex];
-		if (name != NULL) {
-			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, name);
+	unsigned int i;
+
+	for (i = 0; i < PIN_REPO_SIZE; i++) {
+		const char *pin_user = PIN_USED[i];
+
+		/* show used pins */
+		if (pin_user != NULL) {
+			int portIndex = i / PORT_SIZE;
+			int pin = i % PORT_SIZE;
+			ioportid_t port = ports[portIndex];
+
+			scheduleMsg(&logger, "pin %s%d: %s\n", portname(port), pin, pin_user);
+		}
+	}
+
+	for (i = PIN_REPO_SIZE ; i < PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
+		const char *port_name = portNameExt(i);
+		const char *pin_user = PIN_USED[i];
+
+		/* here show all pins, unused too */
+		if (port_name != NULL) {
+			int pin = getHwPinExt(i);
+
+			scheduleMsg(&logger, "epin %s_%d: %s\n", port_name, pin, pin_user ? pin_user : "free");
 		}
 	}
 
@@ -135,7 +173,11 @@ void initPinRepository(void) {
 	memset(PIN_USED, 0, sizeof(PIN_USED));
 
 	initialized = true;
+
 	addConsoleAction("pins", reportPins);
+
+	/* external chip init */
+	gpiochips_init();
 }
 
 static int getIndex(ioportid_t port, ioportmask_t pin) {
@@ -143,10 +185,49 @@ static int getIndex(ioportid_t port, ioportmask_t pin) {
 	return portIndex * PORT_SIZE + pin;
 }
 
+bool brain_pin_is_onchip(brain_pin_e brainPin)
+{
+	if ((brainPin < GPIOA_0) || (brainPin > GPIOH_15))
+		return false;
+
+	return true;
+}
+
 /**
  * See also unmarkPin()
  * @return true if this pin was already used, false otherwise
  */
+bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
+{
+	int index;
+
+	if (!initialized) {
+		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
+		return false;
+	}
+
+	index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return true;
+
+	if (PIN_USED[index] != NULL) {
+		/* TODO: cleanup this */
+		ioportid_t port = getHwPort(msg, brainPin);
+		ioportmask_t pin = getHwPin(msg, brainPin);
+		/**
+		 * todo: the problem is that this warning happens before the console is even
+		 * connected, so the warning is never displayed on the console and that's quite a problem!
+		 */
+//		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		return true;
+	}
+
+	PIN_USED[index] = msg;
+	totalPinsUsed++;
+	return false;
+}
+
 bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 	if (!initialized) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
@@ -171,6 +252,25 @@ bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 /**
  * See also markUsed()
  */
+
+void brain_pin_markUnused(brain_pin_e brainPin)
+{
+	int index;
+
+	if (!initialized) {
+		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
+		return;
+	}
+
+	index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return;
+
+	if (PIN_USED[index] != NULL)
+		totalPinsUsed--;
+	PIN_USED[index] = NULL;
+}
+
 void markUnused(ioportid_t port, ioportmask_t pin) {
 	if (!initialized) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
@@ -183,11 +283,13 @@ void markUnused(ioportid_t port, ioportmask_t pin) {
 	PIN_USED[index] = NULL;
 }
 
-const char * getPinFunction(brain_input_pin_e brainPin) {
-	ioportid_t port = getHwPort("getF", brainPin);
-	ioportmask_t pin = getHwPin("getF", brainPin);
+const char *getPinFunction(brain_input_pin_e brainPin) {
+	int index;
 
-	int index = getIndex(port, pin);
+	index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return NULL;
+
 	return PIN_USED[index];
 }
 

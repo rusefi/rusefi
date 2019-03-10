@@ -12,6 +12,7 @@
 #if EFI_PROD_CODE
 #include "io_pins.h"
 #include "efiGpio.h"
+#include "drivers/gpio/gpio_ext.h"
 
 #include "pin_repository.h"
 #include "status_loop.h"
@@ -51,23 +52,28 @@ bool efiReadPin(brain_pin_e pin) {
 /**
  * This method would set an error condition if pin is already used
  */
-void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
-	ioportid_t port = getHwPort(msg, brainPin);
-	ioportmask_t pin = getHwPin(msg, brainPin);
-
-	if (port == GPIO_NULL) {
-		return;
-	}
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
+{
 	efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
 
-	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
+	scheduleMsg(&logger, "%s on %s%d", msg, getBrain_pin_e(brainPin));
 
-	bool wasUsed = markUsed(port, pin, msg);
-	if (wasUsed) {
-		return;
+	bool wasUsed = brain_pin_markUsed(brainPin, msg);
+
+	if (!wasUsed) {
+		/*check if on-chip pin or external */
+		if (brain_pin_is_onchip(brainPin)) {
+			/* on-cip */
+			ioportid_t port = getHwPort(msg, brainPin);
+			ioportmask_t pin = getHwPin(msg, brainPin);
+			if (port == GPIO_NULL)
+				return;
+
+			palSetPadMode(port, pin, mode);
+		} else {
+			gpiochips_setPadMode(brainPin, mode);
+		}
 	}
-
-	palSetPadMode(port, pin, mode);
 }
 
 iomode_t getInputMode(pin_input_mode_e mode) {
