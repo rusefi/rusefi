@@ -307,7 +307,7 @@ ThermistorConf iat;
 	
 	int step1rpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm",    1,      0,       0, 20000.0,        2
 	int step1timing;;"deg",    1,      0,       -180, 180,        2
-	int hip9011PrescalerAndSDO;6=8MHz todo solit two bit fields;"integer", 1, 0.0, 0.0, 32, 0
+	int hip9011PrescalerAndSDO;+value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0.0, 0.0, 32, 0
 	float knockBandCustom;+We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0.0, 0.0, 10.0, 2
 
 
