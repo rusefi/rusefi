@@ -302,5 +302,8 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIGB(idle).stepperDirectionPin = GPIO_UNASSIGNED;
 	boardConfiguration->useStepperIdle = true;
 
+	engineConfiguration->clt.adcChannel = EFI_ADC_15;
+	set10K_4050K(&engineConfiguration->clt);
+
 }
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
