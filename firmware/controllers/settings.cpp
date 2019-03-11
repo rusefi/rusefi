@@ -328,7 +328,7 @@ void setEngineType(int value) {
 
 static void setIdleSolenoidFrequency(int value) {
 	boardConfiguration->idle.solenoidFrequency = value;
-	incrementGlobalConfigurationVersion();
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void setInjectionPinMode(int value) {
@@ -373,7 +373,7 @@ static void setSensorChartMode(int value) {
 	doPrintConfiguration();
 }
 
-static void setOM(int value) {
+static void setOperationMode(int value) {
 	engineConfiguration->operationMode = (operation_mode_e)value;
 	doPrintConfiguration();
 }
@@ -537,6 +537,7 @@ static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
+	scheduleMsg(&logger, "Do you need to also invoke set operation_mode X?");
 }
 
 static void setDebugMode(int value) {
@@ -1220,7 +1221,7 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_pin_mode", setIdlePinMode},
 		{"fuel_pump_pin_mode", setFuelPumpPinMode},
 		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
-		{"operation_mode", setOM},
+		{"operation_mode", setOperationMode},
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
@@ -1303,6 +1304,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->tpsMax = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		engineConfiguration->tpsMin = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "rpm")) {
+		setTriggerEmulatorRPM(valueI);
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
