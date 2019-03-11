@@ -1820,6 +1820,8 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "ChipSelect mode",						hip9011CsPinMode, {isHip9011Enabled == 1}
 		field = "hip Output/stm input",					hipOutputChannel, {isHip9011Enabled == 1}
 		field = "prescaler & SDO",						hip9011PrescalerAndSDO, {isHip9011Enabled == 1}
+		field = "knockDetectionWindowStart",			knockDetectionWindowStart, {isHip9011Enabled == 1}
+		field = "knockDetectionWindowEnd",				knockDetectionWindowEnd, {isHip9011Enabled == 1}
 		field = "cylinder bore (mm)",					cylinderBore, {isHip9011Enabled == 1}
 		field = "Band Freq override",					knockBandCustom, {isHip9011Enabled == 1}
 		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
