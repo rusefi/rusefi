@@ -25,6 +25,7 @@
 #include "alternatorController.h"
 #include "idle_thread.h"
 #include "allsensors.h"
+#include "trigger_emulator.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "vehicle_speed.h"
@@ -1304,8 +1305,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->tpsMax = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		engineConfiguration->tpsMin = valueI;
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "rpm")) {
 		setTriggerEmulatorRPM(valueI);
+#endif /* ! EFI_UNIT_TEST */
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
