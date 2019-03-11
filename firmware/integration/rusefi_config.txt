@@ -744,8 +744,8 @@ uint8_t[3] unusuedsw;
 	adc_channel_e vRefAdcChannel;
 uint8_t[3] unusuedvref;
 
-	float knockDetectionWindowStart;
-	float knockDetectionWindowEnd;
+	float knockDetectionWindowStart;;"angle",      1,      0,       -1000, 1000,      2
+	float knockDetectionWindowEnd;;"angle",      1,      0,       -1000, 1000,      2
 
 
 float idleStepperReactionTime;;"ms",      1,      0,       1, 300,      0

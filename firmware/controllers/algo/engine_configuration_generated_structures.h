@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 10 11:52:06 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 11 09:37:59 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1585,10 +1585,12 @@ typedef struct {
 	 */
 	uint8_t unusuedvref[3];
 	/**
+	 * "angle", 1, 0, -1000, 1000, 2
 	 * offset 1508
 	 */
 	float knockDetectionWindowStart;
 	/**
+	 * "angle", 1, 0, -1000, 1000, 2
 	 * offset 1512
 	 */
 	float knockDetectionWindowEnd;
@@ -2576,4 +2578,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Mar 10 11:52:06 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 11 09:37:59 EDT 2019
