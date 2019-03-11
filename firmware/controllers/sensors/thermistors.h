@@ -47,5 +47,6 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);
 void setDodgeSensor(ThermistorConf *thermistorConf);
+void set10K_4050K(ThermistorConf *thermistorConf);
 
 #endif /* THERMISTORS_H_ */
