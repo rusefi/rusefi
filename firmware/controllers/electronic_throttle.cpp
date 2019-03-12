@@ -187,7 +187,7 @@ private:
 
 			tuneWorkingPid.updateFactors(autoTune.output, 0, 0);
 
-			float value = tuneWorkingPid.getValue(50, actualThrottlePosition);
+			float value = tuneWorkingPid.getOutput(50, actualThrottlePosition);
 			scheduleMsg(&logger, "AT input=%f output=%f PID=%f", autoTune.input,
 					autoTune.output,
 					value);
@@ -218,7 +218,7 @@ private:
 		}
 */
 		currentEtbDuty = feedForward +
-				pid.getValue(targetPosition, actualThrottlePosition);
+				pid.getOutput(targetPosition, actualThrottlePosition);
 
 		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
 /*

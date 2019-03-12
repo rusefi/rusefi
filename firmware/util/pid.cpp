@@ -34,34 +34,38 @@ bool Pid::isSame(pid_s *pid) {
 			&& this->pid->periodMs == pid->periodMs;
 }
 
-float Pid::getValue(float target, float input) {
-	return getValue(target, input, 1);
+/**
+ * @param Controller input / process output
+ * @returns Output from the PID controller / the input to the process
+ */
+float Pid::getOutput(float target, float input) {
+	return getOutput(target, input, 1);
 }
 
-float Pid::getRawValue(float target, float input, float dTime) {
+float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	float error = (target - input) * errorAmplificationCoef;
-	prevTarget = target;
-	prevInput = input;
+	this->target = target;
+	this->input = input;
 
 	float pTerm = pid->pFactor * error;
 	updateITerm(pid->iFactor * dTime * error);
-	dTerm = pid->dFactor / dTime * (error - prevError);
+	dTerm = pid->dFactor / dTime * (error - previousError);
 
-	prevError = error;
+	previousError = error;
 
 	return pTerm + iTerm + dTerm + pid->offset;
 }
 
-float Pid::getValue(float target, float input, float dTime) {
-	float result = getRawValue(target, input, dTime);
+float Pid::getOutput(float target, float input, float dTime) {
+	float output = getUnclampedOutput(target, input, dTime);
 
-	if (result > pid->maxValue) {
-		result = pid->maxValue;
-	} else if (result < pid->minValue) {
-		result = pid->minValue;
+	if (output > pid->maxValue) {
+		output = pid->maxValue;
+	} else if (output < pid->minValue) {
+		output = pid->minValue;
 	}
-	prevResult = result;
-	return result;
+	this->output = output;
+	return output;
 }
 
 void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
@@ -73,7 +77,7 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 
 void Pid::reset(void) {
 	dTerm = iTerm = 0;
-	prevResult = prevInput = prevTarget = prevError = 0;
+	output = input = target = previousError = 0;
 	errorAmplificationCoef = 1.0f;
 	resetCounter++;
 }
@@ -87,7 +91,7 @@ float Pid::getI(void) {
 }
 
 float Pid::getPrevError(void) {
-	return prevError;
+	return previousError;
 }
 
 float Pid::getIntegration(void) {
@@ -115,7 +119,7 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
  * see https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
  */
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
-	tsOutputChannels->debugFloatField1 = prevResult;
+	tsOutputChannels->debugFloatField1 = output;
 	tsOutputChannels->debugFloatField2 = iTerm;
 	tsOutputChannels->debugFloatField3 = getPrevError();
 	tsOutputChannels->debugFloatField4 = getI();
@@ -148,9 +152,9 @@ void Pid::showPidStatus(Logging *logging, const char*msg) {
 
 	scheduleMsg(logging, "%s status: value=%.2f input=%.2f/target=%.2f iTerm=%.5f dTerm=%.5f",
 			msg,
-			prevResult,
-			prevInput,
-			prevTarget,
+			output,
+			input,
+			target,
 			iTerm, dTerm);
 
 }
@@ -196,8 +200,8 @@ void PidCic::reset(void) {
 	iTermInvNum = 1.0f / (float)PID_AVG_BUF_SIZE;
 }
 
-float PidCic::getValue(float target, float input, float dTime) {
-	return getRawValue(target, input, dTime);
+float PidCic::getOutput(float target, float input, float dTime) {
+	return getUnclampedOutput(target, input, dTime);
 }
 
 void PidCic::updateITerm(float value) {

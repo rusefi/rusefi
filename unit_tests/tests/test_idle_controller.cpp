@@ -21,20 +21,20 @@ TEST(idle, pid) {
 
 	Pid pid(&pidS);
 
-	ASSERT_EQ( 90,  pid.getValue(14, 12, 0.1)) << "getValue#90";
+	ASSERT_EQ( 90,  pid.getOutput(14, 12, 0.1)) << "getValue#90";
 
 
-	ASSERT_EQ( 10,  pid.getValue(14, 16, 0.1)) << "getValue#10";
-	ASSERT_EQ(10, pid.getValue(14, 16, 1));
+	ASSERT_EQ( 10,  pid.getOutput(14, 16, 0.1)) << "getValue#10";
+	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
 
 	pid.updateFactors(29, 0, 0);
-	ASSERT_EQ(10, pid.getValue(14, 16, 1));
+	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
 //	ASSERT_EQ(68, pid.getIntegration());
 
-	ASSERT_EQ(10, pid.getValue(14, 16, 1));
+	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
 //	ASSERT_EQ(0, pid.getIntegration());
 
-	ASSERT_EQ(10, pid.getValue(14, 16, 1));
+	ASSERT_EQ(10, pid.getOutput(14, 16, 1));
 //	ASSERT_EQ(68, pid.getIntegration());
 
 
@@ -49,16 +49,16 @@ TEST(idle, pid) {
 
 	pid.reset();
 
-	ASSERT_EQ( 50,  pid.getValue(/*target*/50, /*input*/0)) << "target=50, input=0";
+	ASSERT_EQ( 50,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0";
 	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=0 iTerm";
 
-	ASSERT_EQ( 0,  pid.getValue(/*target*/50, /*input*/70)) << "target=50, input=70";
+	ASSERT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/70)) << "target=50, input=70";
 	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm";
 
-	ASSERT_EQ( 0,  pid.getValue(/*target*/50, /*input*/70)) << "target=50, input=70 #2";
+	ASSERT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/70)) << "target=50, input=70 #2";
 	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=70 iTerm #2";
 
-	ASSERT_EQ( 0,  pid.getValue(/*target*/50, /*input*/50)) << "target=50, input=50";
+	ASSERT_EQ( 0,  pid.getOutput(/*target*/50, /*input*/50)) << "target=50, input=50";
 	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=50 iTerm";
 
 }

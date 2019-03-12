@@ -27,11 +27,15 @@ public:
 	void initPidClass(pid_s *pid);
 	bool isSame(pid_s *pid);
 
-	float getValue(float target, float input);
+	/**
+	 * @param Controller input / process output
+	 * @returns Output from the PID controller / the input to the process
+	 */
+	float getOutput(float target, float input);
 	// todo: dTime should be taken from pid_s
-	virtual float getValue(float target, float input, float dTime);
+	virtual float getOutput(float target, float input, float dTime);
 	// doesn't limit the result (used in incremental CIC PID, see below)
-	float getRawValue(float target, float input, float dTime);
+	float getUnclampedOutput(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
 	virtual void reset(void);
 	float getP(void);
@@ -58,11 +62,11 @@ public:
 private:
 	pid_s *pid;
 
-	float prevError;
+	float previousError;
 	// these are only used for logging
-	float prevTarget;
-	float prevInput;
-	float prevResult;
+	float target;
+	float input;
+	float output;
 	float errorAmplificationCoef;
 
 private:
@@ -83,7 +87,7 @@ public:
 	PidCic(pid_s *pid);
 
 	virtual void reset(void);
-	virtual float getValue(float target, float input, float dTime);
+	virtual float getOutput(float target, float input, float dTime);
 	
 private:
 	// Circular running-average buffer for I-term, used by CIC-like filter
