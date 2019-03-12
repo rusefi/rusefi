@@ -53,4 +53,6 @@
 
 #define EFI_ANALOG_SENSORS TRUE
 
+#define BOARD_EXT_GPIOCHIPS	3
+
 #endif /* EFIFEATURES_H_ */
