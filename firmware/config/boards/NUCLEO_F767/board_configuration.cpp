@@ -63,10 +63,9 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
 	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
 	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
-	boardConfiguration->digitalPotentiometerChipSelect[0] = GPIO_UNASSIGNED;
-	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
-	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIO_UNASSIGNED;
-	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
+	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
+		boardConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
+	}
 	boardConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
