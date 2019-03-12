@@ -50,6 +50,9 @@ public class Launcher {
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
+    private static final String TOOL_NAME_COMPILE_FSIO_FILE = "compile_fsio_file";
+    // todo: rename to something more FSIO-specific? would need to update documentation somewhere
+    private static final String TOOL_NAME_COMPILE = "compile";
     private final String port;
     // todo: the logic around 'fatalError' could be implemented nicer
     private String fatalError;
@@ -288,7 +291,7 @@ public class Launcher {
 
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
-        if ("compile_fsio_file".equalsIgnoreCase(toolName)) {
+        if (TOOL_NAME_COMPILE_FSIO_FILE.equalsIgnoreCase(toolName)) {
             /**
              * re-packaging array which contains input and output file names
              */
@@ -297,7 +300,7 @@ public class Launcher {
             return;
         }
 
-        if ("compile".equals(toolName)) {
+        if (TOOL_NAME_COMPILE.equals(toolName)) {
             if (args.length != 2) {
                 System.err.println("input expression parameter expected");
                 System.exit(-1);
@@ -307,7 +310,8 @@ public class Launcher {
             System.out.println(CompileTool.handleOneFsioLine(input));
             System.exit(0);
         }
-
+        System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE, TOOL_NAME_COMPILE));
+        System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
 
         FileLog.MAIN.start();
         getConfig().load();

@@ -1,0 +1,1 @@
+java -cp ../java_console_binary/rusefi_console.jar com.rusefi.TS2C currenttune.msq fuelLoadBins fuelRpmBins fuelTable

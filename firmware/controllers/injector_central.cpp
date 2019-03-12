@@ -268,7 +268,7 @@ void runBenchTest(uint16_t subsystem, uint16_t index) {
 		setCallFromPitStop(30000);
 	} else if (subsystem == 0x30) {
 		setEngineType(index);
-	} else if (subsystem == 0x99) {
+	} else if (subsystem == 0x79) {
 		scheduleStopEngine();
 	}
 }
