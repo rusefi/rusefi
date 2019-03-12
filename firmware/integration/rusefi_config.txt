@@ -237,7 +237,7 @@ engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Ty
 int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM",      1,     0,    0,30000,      0
 
 struct injector_s
-	float flow;+cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,   1000,   2
+	float flow;+cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,  99999,   2
 
 float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;set_flat_injector_lag LAG\nset_injector_lag VOLTAGE LAG;"volts",        1,     0,      0.0,    20.0,   2
 float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;ms delay between injector open and close dead times;"ms",     1,     0,      0.0,    50.0,   2
