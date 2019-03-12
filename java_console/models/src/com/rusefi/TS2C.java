@@ -27,6 +27,7 @@ public class TS2C {
     }
 
     private TS2C(String[] args) throws IOException {
+        System.out.println("This tool reads TS tune file and produces some C code for hardcoded base tunes");
         if (args.length != 4 && args.length != 5) {
             System.out.println("Four parameters expected: ");
             System.out.println("  INPUT_MSQ_FILE NAME LOAD_SECTION_NAME RPM_SECTION_NAME TABLE_NAME");
@@ -35,21 +36,21 @@ public class TS2C {
             System.out.println("  currenttune.msq veLoadBins veRpmBins veTable");
             System.exit(-1);
         }
-        String fileName = args[0];
+        String msqFileName = args[0];
         String loadSectionName = args[1];
         String rpmSectionName = args[2];
         String tableName = args[3];
         size = Integer.parseInt(args.length > 4 ? args[4] : "16");
 
         if (!loadSectionName.equalsIgnoreCase("none")) {
-            BufferedReader r = readAndScroll(fileName, loadSectionName);
+            BufferedReader r = readAndScroll(msqFileName, loadSectionName);
 
             loadCount = size;
             loadBins = new float[loadCount];
             readAxle(loadBins, r);
         }
         if (!rpmSectionName.equalsIgnoreCase("none")) {
-            BufferedReader r = readAndScroll(fileName, rpmSectionName);
+            BufferedReader r = readAndScroll(msqFileName, rpmSectionName);
             rpmCount = size;
             rpmBins = new float[rpmCount];
             readAxle(rpmBins, r);
@@ -60,7 +61,7 @@ public class TS2C {
             table[i] = new float[size];
         }
 
-        BufferedReader r = readAndScroll(fileName, tableName);
+        BufferedReader r = readAndScroll(msqFileName, tableName);
         readTable(table, r);
 
         BufferedWriter w = new BufferedWriter(new FileWriter("output.c"));
@@ -77,6 +78,7 @@ public class TS2C {
 
         w.write("\r\n\r\n/* load bins */\r\n\r\n");
         w.write(toString(loadBins));
+        w.write("\r\n\r\n");
 
         w.close();
 

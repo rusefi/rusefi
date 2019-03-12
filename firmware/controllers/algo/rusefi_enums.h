@@ -798,6 +798,9 @@ typedef enum {
 	 */
 	DBG_ELECTRONIC_THROTTLE_PID = 17,
 	DBG_EXECUTOR = 18,
+	/**
+	 * See tunerstudio.cpp
+	 */
 	DBG_BENCH_TEST = 19,
 	DBG_AUX_VALVES = 20,
 	DBG_ADC = 21,
