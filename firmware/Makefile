@@ -132,6 +132,7 @@ include console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/ext/fatfs.mk
 
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include $(PROJECT_DIR)/development/development.mk
@@ -181,6 +182,8 @@ CSRC = $(STARTUPSRC) \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
+	$(HW_LAYER_DRIVERS_CORE) \
+	$(HW_LAYER_DRIVERS) \
 	$(CONTROLLERSSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
@@ -272,6 +275,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	hw_layer/sensors \
 	hw_layer/mass_storage \
 	hw_layer/$(CPU_HWLAYER) \
+	$(HW_LAYER_DRIVERS_INC) \
 	development \
 	development/hw_layer \
 	development/test \

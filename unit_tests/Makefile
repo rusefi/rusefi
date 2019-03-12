@@ -79,6 +79,7 @@ include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
+include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include test.mk
 
@@ -94,6 +95,7 @@ CSRC =	$(UTILSRC) \
 	$(CONTROLLERS_MATH_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
 	$(ENGINES_SRC) \
+	$(HW_LAYER_DRIVERS_CORE) \
 	$(TEST_SRC_C)
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -155,6 +157,7 @@ INCDIR = . \
 	$(PROJECT_DIR)/hw_layer \
 	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/sensors/ \
+	$(HW_LAYER_DRIVERS_INC) \
 	test_data_structures \
 	googletest/googlemock/include \
 	googletest/googletest \

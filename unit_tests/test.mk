@@ -28,5 +28,6 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	tests/test_sensors.cpp \
 	tests/test_pid_auto.cpp \
 	tests/test_accel_enrichment.cpp \
+	tests/test_gpiochip.cpp \
 	afm2mapConverter.cpp
 	
