@@ -93,7 +93,7 @@ private:
 		}
 
 
-		currentAltDuty = altPid.getValue(targetVoltage, vBatt);
+		currentAltDuty = altPid.getOutput(targetVoltage, vBatt);
 		if (CONFIGB(isVerboseAlternator)) {
 			scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());

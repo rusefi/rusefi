@@ -153,7 +153,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			cltFuelCorrection = 1;
 			warmupAfrPid.reset();
 		} else {
-			cltFuelCorrection = warmupAfrPid.getValue(warmupTargetAfr, engine->sensors.currentAfr, 1);
+			cltFuelCorrection = warmupAfrPid.getOutput(warmupTargetAfr, engine->sensors.currentAfr, 1);
 		}
 		if (engineConfiguration->debugMode == DBG_WARMUP_ENRICH) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
