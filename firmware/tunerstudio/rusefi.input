@@ -1226,6 +1226,7 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 cmd_call_from_pit            = "w\x00\x20\x34\x56"
 cmd_stop_engine              = "w\x00\x49\x00\x00"
 		
+; See 'executeTSCommand' in firmware source code
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Miata_NA6_MAP			= "w\x00\x30\x00\x29"
 ; MIATA_NA6_VAF = 57
@@ -1234,6 +1235,7 @@ cmd_set_engine_type_Miata_NA6_VAF			= "w\x00\x30\x00\x39"
 cmd_set_engine_type_Miata_NA2 				= "w\x00\x30\x00\x2F"
 ; ETB_BENCH_ENGINE = 58
 cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
+cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 [UserDefined]
 	dialog = fuelTableBottomDialog, "", card
@@ -2318,6 +2320,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		commandButton = "Miata NA6 Stage 1", cmd_set_engine_type_Miata_NA6_MAP
 		commandButton = "Miata NB2 MAP", cmd_set_engine_type_Miata_NA2
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test
+		commandButton = "Reset firmware settings", cmd_set_engine_type_default
 
 
 ;			Board->ECU stimulator
