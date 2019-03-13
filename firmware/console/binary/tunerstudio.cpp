@@ -774,7 +774,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-		runBenchTest(subsystem, index);
+		executeTSCommand(subsystem, index);
 #endif /* EFI_PROD_CODE */
 		sendOkResponse(tsChannel, TS_CRC);
 	} else {

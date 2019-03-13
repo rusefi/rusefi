@@ -243,7 +243,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	}
 }
 
-void runBenchTest(uint16_t subsystem, uint16_t index) {
+void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
 	if (subsystem == 0x12) {
@@ -268,6 +268,8 @@ void runBenchTest(uint16_t subsystem, uint16_t index) {
 		setCallFromPitStop(30000);
 	} else if (subsystem == 0x30) {
 		setEngineType(index);
+	} else if (subsystem == 0x31) {
+		setEngineType(DEFAULT_ENGINE_TYPE);
 	} else if (subsystem == 0x79) {
 		scheduleStopEngine();
 	}
