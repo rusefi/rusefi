@@ -581,6 +581,7 @@ fileVersion = { 20171101 }
    ;       table_id,    map3d_id,    "title",      page
 
    table = fuelTableMAFTbl,  fuelTableMAFMap,  "Fuel Table",   1
+   	  topicHelp = "fuelHelp"
       ;       constant, variable
       xBins       = fuelRpmBins,  RPMValue
       yBins       = fuelLoadBins,  MAFValue
@@ -590,6 +591,7 @@ fileVersion = { 20171101 }
       upDownLabel = "(RICHER)", "(LEANER)"
 
    table = fuelTableTPSTbl,  fuelTableTPSMap,  "Fuel Table",   1
+   		topicHelp = "fuelHelp"
       ;       constant, variable
       xBins       = fuelRpmBins,  RPMValue
       yBins       = fuelLoadBins,  TPSValue
@@ -599,6 +601,7 @@ fileVersion = { 20171101 }
       upDownLabel = "(RICHER)", "(LEANER)"
 
    table = fuelTableELTbl,  fuelTableELMap,  "Fuel Table",   1
+   topicHelp = "fuelHelp"
       ;       constant, variable
       xBins       = fuelRpmBins,  RPMValue
       yBins       = fuelLoadBins,  engineLoad
@@ -609,6 +612,7 @@ fileVersion = { 20171101 }
 
 ; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
    table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel(ms)",   1
+   	topicHelp = "tpstpsHelp"
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
@@ -689,6 +693,7 @@ fileVersion = { 20171101 }
 
 
    table = injPhaseTableTbl,  injPhaseTableMap,  "Injection Phase",   1
+   		topicHelp = "fuelHelp"
       ;       constant, variable
       xBins       = injPhaseRpmBins,  RPMValue
       yBins       = injPhaseLoadBins,  engineLoad
@@ -1237,7 +1242,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		panel = fuelTableELTbl, Center
 
 	dialog = fuelTableRight, "", yAxis
-	 	topicHelp = "http://rusefi.com/fuel"
+	 	topicHelp = "https://rusefi.com/s/fuel"
 		displayOnlyField = "Fuel Algorithm",						fuelAlgorithm
 		panel = fuelTableBottomDialog, Center
 		liveGraph = fuelLive, "Fuel", South
@@ -1250,6 +1255,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		gauge = MAPGauge
 
 	dialog = fuelTableDialog, "Fuel Table", xAxis
+		topicHelp = "fuelHelp"
 		panel = fuelTableGaugesPanel
 		panel = fuelTableRight
 
@@ -1355,6 +1361,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "Injection Pin 12 ",					injectionPins12, {cylindersCount > 11}	
 	
 	dialog = injectionSettings,	""
+		topicHelp = "fuelHelp"
 		panel = baseInjection
 		panel = injChars
 		
@@ -2035,11 +2042,11 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "  Threshold", 							engineSnifferRpmThreshold
 		
 	dialog = generalSettings, "General"
-		field = "http://rusefi.com/support"
+		field = "https://rusefi.com/s/support"
 		field = "RPM Hard Limit",         	    		rpmHardLimit
 		field = "Boost Cut Pressure",					boostCutPressure
 		field = ""
-		field = "http://rusefi.com/fuel"
+		field = "!https://rusefi.com/s/fuel"
 		field = "Fuel Algorithm",						fuelAlgorithm
 		field = ""
 		field = "#System hack's"
@@ -2051,6 +2058,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		
 ;			Engine->Base Engine Settings
 	dialog = engineChars, "Base Engine Settings"
+		topicHelp = "baseHelp"
 		panel = baseEngineConfig
 		panel = generalSettings
 
@@ -2224,8 +2232,21 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 				
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
-        webHelp = "http://rusefi.com/fuel"
+        webHelp = "https://rusefi.com/s/fuel"
+        
+    help = fuelHelp, "Fuel Control"    
+        text = "More about fuel control on the web"
+        webHelp = "https://rusefi.com/s/fuel"
 				
+    help = tpsTpsHelp, "Acceleration Enrichment"    
+        text = "More about Tps To Tps acceleration on the web"
+        webHelp = "https://rusefi.com/s/tpstps"
+
+    help = baseHelp, "Base Settings Control"    
+        text = "More about Tps To Tps acceleration on the web"
+        webHelp = "https://rusefi.com/s/fuel"
+        webHelp = "https://rusefi.com/s/debugmode"
+
 	dialog = veTableDialog
 		topicHelp = "veTableDialogHelp"
 		panel = veTableTbl, South
