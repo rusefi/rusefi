@@ -2245,9 +2245,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
         webHelp = "https://rusefi.com/s/tpstps"
 
     help = baseHelp, "Base Settings Control"    
-        text = "More about Tps To Tps acceleration on the web"
-        webHelp = "https://rusefi.com/s/fuel"
-        webHelp = "https://rusefi.com/s/debugmode"
+        text = "More about rusefi on the web"
+        webHelp = "https://rusefi.com/"
 
 	dialog = veTableDialog
 		topicHelp = "veTableDialogHelp"
