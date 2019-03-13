@@ -125,14 +125,13 @@ public class SensorCentral implements ISensorCentral {
         addDoubleSensor(Sensor.knockCount, es);
         addDoubleSensor(Sensor.KnockValue, es);
 
-        addDoubleSensor("tch", Sensor.T_CHARGE, es);
+        addDoubleSensor("tch", Sensor.tCharge, es);
         addDoubleSensor(Sensor.AFR, es);
-        addDoubleSensor("d_fuel", Sensor.DEFAULT_FUEL, es);
-        addDoubleSensor(Sensor.FUEL, es);
-        addDoubleSensor(Sensor.FUEL_BASE, es);
-        addDoubleSensor(Sensor.FUEL_LAG, es);
-        addDoubleSensor(Sensor.FUEL_CLT, es);
-        addDoubleSensor(Sensor.FUEL_IAT, es);
+        addDoubleSensor(Sensor.runningFuel, es);
+        addDoubleSensor(Sensor.baseFuel, es);
+        addDoubleSensor(Sensor.injectorLagMs, es);
+        addDoubleSensor(Sensor.cltCorrection, es);
+        addDoubleSensor(Sensor.iatCorrection, es);
         addDoubleSensor(Sensor.TABLE_SPARK, es);
         addDoubleSensor(Sensor.VREF, es);
         addDoubleSensor(Sensor.VBATT, es);

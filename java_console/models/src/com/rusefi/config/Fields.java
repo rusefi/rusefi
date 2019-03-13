@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 12 13:29:56 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 12 21:36:19 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1161,11 +1161,14 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
-	public static final String GAUGE_NAME_FUEL_VR = "fuel: VE";
+	public static final String GAUGE_NAME_FUEL_VE = "fuel: VE";
+	public static final String GAUGE_NAME_FUEL_CRANKING = "fuel: cranking";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: last injection";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
-	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: correction";
+	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: short correction";
+	public static final String GAUGE_NAME_FUEL_WALL_AMOUNT = "fuel: wall amount";
+	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "fuel: wall corr ms";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";

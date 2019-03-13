@@ -35,21 +35,20 @@ public class GaugesPanel {
             Sensor.TPS,
             Sensor.MAP,
             Sensor.MAP_RAW,
-            Sensor.T_CHARGE,
+            Sensor.tCharge,
             Sensor.DWELL1,
             Sensor.DWELL0,
             Sensor.DUTY0,
             Sensor.ADVANCE0,
-            Sensor.FUEL,
             Sensor.BARO,
-            Sensor.FUEL_CLT,
-            Sensor.FUEL_IAT,
-            Sensor.FUEL_LAG,
+            Sensor.baseFuel,
+            Sensor.cltCorrection,
+            Sensor.iatCorrection,
+            Sensor.injectorLagMs,
+            Sensor.lastErrorCode,
             Sensor.AFR,
-            Sensor.DEFAULT_FUEL,
             Sensor.TIMING,
             Sensor.VREF
-
     };
     private static final String GAUGES_ROWS = "gauges_rows";
     private static final String GAUGES_COLUMNS = "gauges_cols";
@@ -60,8 +59,9 @@ public class GaugesPanel {
     public static boolean IS_PAUSED; // dirty but works for not
 
     static {
-        if (DEFAULT_LAYOUT.length != SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT)
-            throw new IllegalStateException("Not expected " + DEFAULT_LAYOUT.length);
+        int expected = SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT;
+        if (DEFAULT_LAYOUT.length != expected)
+            throw new IllegalStateException("Invalid gauges panel size " + DEFAULT_LAYOUT.length + " while " + expected  + " expected");
     }
 
     private final JPanel content = new JPanel(new BorderLayout());

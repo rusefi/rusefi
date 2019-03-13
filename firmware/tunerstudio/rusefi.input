@@ -169,7 +169,7 @@ fileVersion = { 20171101 }
       baroPressure    = scalar,  F32,     36,             "pres",           1,       0.0;
       MAPValue        = scalar,  F32,     40,              "MAP",           1,       0.0;
 	  ; total fuel squirt duration (in MS) per engine cycle according to current CLT
-	  crankingFuel    = scalar,  F32,     44,              "ms",            1,       0.0;
+	  crankingFuelMs  = scalar,  F32,     44,              "ms",            1,       0.0;
       baseFuel        = scalar,  F32,     48,              "ms",           1,         0
       tCharge         = scalar,  F32,     52,              "T",             1,       0.0;
       ignitionAdvance = scalar,  F32,     56,              "deg",           1,       0.0;
@@ -816,7 +816,7 @@ gaugeCategory = Accel Data
 
 
 gaugeCategory = Fuel Data
-   crankingFuelGauge = crankingFuel,   "fuel: crank Width",      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
+   crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    cltCorrectionGauge = cltCorrection, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    injectorDutyCycleGauge=injectorDutyCycle, @@GAUGE_NAME_FUEL_INJ_DUTY@@,"%",      0,    120,      10,     10,     100,   100,   1,   1
@@ -934,9 +934,9 @@ gaugeCategory = Fuel Data
    entry = injectorLagMs,   @@GAUGE_NAME_INJECTOR_LAG@@, float,  "%.3f"
    entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
    entry = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, float,  "%.3f"
-   entry = baseFuel,	    "fuel: base",  float,  "%.2f"
-   entry = fuelPidCorrection,"fuel: pid",  float,  "%.2f"
-   entry = veValue,         @@GAUGE_NAME_FUEL_VR@@,    float,  "%.3f"
+   entry = baseFuel,	    @@GAUGE_NAME_FUEL_BASE@@,  float,  "%.2f"
+   entry = fuelPidCorrection,@@GAUGE_NAME_FUEL_PID_CORR@@,  float,  "%.2f"
+   entry = veValue,         @@GAUGE_NAME_FUEL_VE@@,    float,  "%.3f"
    entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
    entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
@@ -958,8 +958,8 @@ gaugeCategory = Fuel Data
    entry = deltaTps,		"fuel: TPS change",float,  "%.3f"
    entry = tpsAccelFuel,    @@GAUGE_NAME_FUEL_TPS_EXTRA@@,    float,  "%.3f"
 
-   entry = wallFuelCorrection,"fuel: wall corr ms",	float,   "%.3f"
-   entry = wallFuelAmount, "fuel: wall amount",	float,   "%.3f"
+   entry = wallFuelCorrection,@@GAUGE_NAME_FUEL_WALL_CORRECTION@@,	float,   "%.3f"
+   entry = wallFuelAmount, @@GAUGE_NAME_FUEL_WALL_AMOUNT@@,	float,   "%.3f"
    
    entry = baroCorrection,   "baroCorrection",float,"%.3f"
    entry = iatCorrection,   @@GAUGE_NAME_FUEL_IAT_CORR@@,	float,   "%.3f"

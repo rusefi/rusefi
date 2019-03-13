@@ -79,8 +79,6 @@ public enum Sensor {
 
     IDLE_SWITCH("idle switch", SensorCategory.OTHERS),
 
-    DEFAULT_FUEL("map fuel", SensorCategory.FUEL, "ms", 0, 40),
-
     CHARTSIZE("CHARTSIZE", SensorCategory.OTHERS),
     CHART_STATUS("CHART_STATUS", SensorCategory.OTHERS),
     ADC_STATUS("ADC_STATUS", SensorCategory.OTHERS),
@@ -92,51 +90,46 @@ public enum Sensor {
     INJECTOR_3_DWELL("inj #3", SensorCategory.SNIFFING),
     INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
-    FUEL("Fuel", SensorCategory.FUEL, "ms", 0, 30),
-    FUEL_IAT("F IAT", SensorCategory.FUEL, "", 0, 10),
-    FUEL_CLT("F CLT", SensorCategory.FUEL, "", 0, 10),
-    FUEL_LAG("F Lag", SensorCategory.FUEL, "", 0, 30),
-
     IAT(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 8, BackgroundColor.WHITE, -40, 150, "C"),
     TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"), // throttle position sensor
-    CRANKING_BASE(SensorCategory.FUEL, FieldType.FLOAT, 44, BackgroundColor.MUD, 0, 30, "ms"),
-    FUEL_BASE(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
-    T_CHARGE(SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
+    crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.FLOAT, 44, BackgroundColor.MUD, 0, 30, "ms"),
+    baseFuel(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.FLOAT, 48, BackgroundColor.MUD, 0, 30, "ms"),
+    tCharge(GAUGE_NAME_TCHARGE, SensorCategory.FUEL, FieldType.FLOAT, 52, BackgroundColor.MUD, 30, 140),
     // todo: unify with TIMING
     ignitionAdvance(SensorCategory.OPERATIONS, FieldType.FLOAT, 56, BackgroundColor.MUD, 30, 140),
     DWELL(Fields.GAUGE_COIL_DWELL_TIME, SensorCategory.OPERATIONS, FieldType.FLOAT, 60, BackgroundColor.MUD, 1, 10),
-    actualLastInjection(SensorCategory.FUEL, FieldType.FLOAT, /*offset */ 64, BackgroundColor.MUD, 0, 30, "ms"),
-    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.OPERATIONS, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
+    actualLastInjection(GAUGE_NAME_FUEL_LAST_INJECTION, SensorCategory.FUEL, FieldType.FLOAT, /*offset */ 64, BackgroundColor.MUD, 0, 30, "ms"),
+    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 68, BackgroundColor.MUD, 0, 5),
     VSS(SensorCategory.OPERATIONS, FieldType.FLOAT, 76, BackgroundColor.BLUE),
     FIRMWARE_VERSION(SensorCategory.OPERATIONS, FieldType.INT, 84, BackgroundColor.BLUE),
-    CURRENT_VE(SensorCategory.FUEL, FieldType.FLOAT, 112, BackgroundColor.MUD),
+    veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.FLOAT, 112, BackgroundColor.MUD),
 
     deltaTps(SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD),
     engineLoadAccelDelta(SensorCategory.FUEL, FieldType.FLOAT, 124, BackgroundColor.MUD),
     tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
     PPS("pedal", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 136, BackgroundColor.MUD), // pedal position sensor
 
-    injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 140, BackgroundColor.MUD),
-    wallFuelAmount(SensorCategory.FUEL, FieldType.FLOAT, 160, BackgroundColor.MUD),
-    iatCorrection(SensorCategory.FUEL, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
-    wallFuelCorrection(SensorCategory.FUEL, FieldType.FLOAT, 168, BackgroundColor.MUD),
+    injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.FUEL, FieldType.FLOAT, 140, BackgroundColor.MUD),
+    wallFuelAmount(GAUGE_NAME_FUEL_WALL_AMOUNT, SensorCategory.FUEL, FieldType.FLOAT, 160, BackgroundColor.MUD),
+    iatCorrection(GAUGE_NAME_FUEL_IAT_CORR, SensorCategory.FUEL, FieldType.FLOAT, 164, BackgroundColor.MUD, 0, 5),
+    wallFuelCorrection(GAUGE_NAME_FUEL_WALL_CORRECTION, SensorCategory.FUEL, FieldType.FLOAT, 168, BackgroundColor.MUD),
     idlePosition(SensorCategory.OPERATIONS, FieldType.FLOAT, 172, BackgroundColor.MUD),
     TARGET_AFR(SensorCategory.OPERATIONS, FieldType.FLOAT, 176, BackgroundColor.MUD),
     CHARGE_AIR_MASS(SensorCategory.OPERATIONS, FieldType.FLOAT, 180, BackgroundColor.MUD),
-    cltCorrection(SensorCategory.OPERATIONS, FieldType.FLOAT, 184, BackgroundColor.MUD, 0, 5),
-    runningFuel(SensorCategory.FUEL, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
-    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.OPERATIONS, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
-    injectorLagMs(SensorCategory.FUEL, FieldType.FLOAT, 196, BackgroundColor.MUD, 0, 15, "ms"),
+    cltCorrection(GAUGE_NAME_FUEL_CLT_CORR, SensorCategory.FUEL, FieldType.FLOAT, 184, BackgroundColor.MUD, 0, 5),
+    runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.FLOAT, 188, BackgroundColor.MUD, 0, 15, "ms"),
+    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, 192, BackgroundColor.MUD, 0, 5),
+    injectorLagMs(GAUGE_NAME_INJECTOR_LAG, SensorCategory.FUEL, FieldType.FLOAT, 196, BackgroundColor.MUD, 0, 15, "ms"),
 
-    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.OPERATIONS, FieldType.FLOAT, 200, BackgroundColor.MUD, 0, 5),
-    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.OPERATIONS, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
-    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.OPERATIONS, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
-    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.OPERATIONS, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
-    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.OPERATIONS, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
-    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.OPERATIONS, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
+    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.DEBUG, FieldType.FLOAT, 200, BackgroundColor.MUD, 0, 5),
+    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.DEBUG, FieldType.FLOAT, 204, BackgroundColor.MUD, 0, 5),
+    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.DEBUG, FieldType.FLOAT, 208, BackgroundColor.MUD, 0, 5),
+    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.DEBUG, FieldType.FLOAT, 212, BackgroundColor.MUD, 0, 5),
+    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, 216, BackgroundColor.MUD, 0, 5),
+    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 220, BackgroundColor.MUD, 0, 5),
 
-    errorCodeCounter(SensorCategory.OPERATIONS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
-    lastErrorCode(SensorCategory.OPERATIONS, FieldType.INT, 240, BackgroundColor.MUD, 0, 5),
+    errorCodeCounter(SensorCategory.STATUS, FieldType.INT, 236, BackgroundColor.MUD, 0, 5),
+    lastErrorCode(SensorCategory.STATUS, FieldType.INT, 240, BackgroundColor.MUD, 0, 5),
 
     RPM(SensorCategory.SENSOR_INPUTS, FieldType.INT, 0, BackgroundColor.RED, 0, 8000),
     TIME_SECONDS(SensorCategory.OPERATIONS, FieldType.INT, 224, BackgroundColor.MUD, 0, 5),
@@ -145,12 +138,13 @@ public enum Sensor {
     vvtPosition(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 248, BackgroundColor.MUD, 0, 5),
     engineMode(SensorCategory.OPERATIONS, FieldType.INT, 252, BackgroundColor.MUD, 0, 5),
 
-    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.OPERATIONS, FieldType.FLOAT, 256, BackgroundColor.MUD, 0, 5),
-    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.OPERATIONS, FieldType.FLOAT, 260, BackgroundColor.MUD, 0, 5),
+    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.DEBUG, FieldType.FLOAT, 256, BackgroundColor.MUD, 0, 5),
+    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.DEBUG, FieldType.FLOAT, 260, BackgroundColor.MUD, 0, 5),
+    fuelPidCorrection(SensorCategory.FUEL, FieldType.FLOAT, 268, BackgroundColor.MUD),
     coilDutyCycle(Fields.GAUGE_NAME_DWELL_DUTY, SensorCategory.OPERATIONS, FieldType.FLOAT, 272, BackgroundColor.MUD),
 
-    debugIntField4("debug i4", SensorCategory.OPERATIONS, FieldType.INT16, 292, BackgroundColor.MUD, 0, 5),
-    debugIntField5("debug i5", SensorCategory.OPERATIONS, FieldType.INT16, 294, BackgroundColor.MUD, 0, 5),
+    debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 292, BackgroundColor.MUD, 0, 5),
+    debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 294, BackgroundColor.MUD, 0, 5),
 
     INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
     INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
@@ -199,18 +193,18 @@ public enum Sensor {
 
     /**
      * Text-based protocol is not very alive
-     * @param name
-     * @param category
      */
     @Deprecated
     Sensor(String name, SensorCategory category) {
         this(name, category, "", 255);
     }
 
+    @Deprecated
     Sensor(String name, SensorCategory category, String units, double maxValue) {
         this(name, category, units, 0, maxValue);
     }
 
+    @Deprecated
     Sensor(String name, SensorCategory category, String units, double minValue, double maxValue) {
         this(name, category, units, minValue, maxValue, BackgroundColor.LIGHT_GRAY);
     }
