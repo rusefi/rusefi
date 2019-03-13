@@ -1297,13 +1297,14 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 ;		field = "Engine Preset",						engineType
 		field = "Number of Cylinders",					cylindersCount
 		field = "Engine Displacement",         			displacement
-		field = "debug fields",							debugMode
+		field = "!https://rusefi.com/s/debugmode"
+		field = "Debug mode",							debugMode
 		field = ""
 		field = "Firing Order",							firingOrder
 
 ;			Engine->Trigger configuration
 	dialog = triggerConfiguration_settings,	"Settings Trigger"
-		field = "!https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger"
+		field = "!https://rusefi.com/s/trigger"
 		field = "Trigger type",							trigger_type
 		field = "Operation mode / speed",				operationMode
 		field = "With VR sensors only rising edge has reliable position"
@@ -1315,7 +1316,7 @@ cmd_set_engine_type_etb_test				= "w\x00\x30\x00\x3A"
 		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
 
 	dialog = triggerConfiguration_IO,	"Settings I/O"
-	    field = "!https://rusefi.com/wiki/index.php?title=Manual:Software:VVT"
+	    field = "!https://rusefi.com/s/vvt"
 	    field = "VVT mode",								vvtMode, {trigger_type != 80}
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
