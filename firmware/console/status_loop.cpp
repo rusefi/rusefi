@@ -270,7 +270,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VR, "%", engine->engineState.currentVE * PERCENT_MULT, 2);
+			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VE, "%", engine->engineState.currentVE * PERCENT_MULT, 2);
 		}
 		reportSensorF(log, fileFormat, GAUGE_NAME_VVT, "deg", engine->triggerCentral.vvtPosition, 1);
 
@@ -289,8 +289,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.runningFuel), 2);
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.fuelPidCorrection), 2);
 
-		reportSensorF(log, fileFormat, "f: wall amt", "v", ENGINE(wallFuel).getWallFuel(0), 2);
-		reportSensorF(log, fileFormat, "f: wall crr", "v", ENGINE(wallFuelCorrection), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel).getWallFuel(0), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuelCorrection), 2);
 
 		reportSensorI(log, fileFormat, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 

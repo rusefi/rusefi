@@ -38,14 +38,14 @@ public class SensorLogger {
             Sensor.idlePosition,
 
             Sensor.TARGET_AFR,
-            Sensor.T_CHARGE,
-            Sensor.CURRENT_VE,
+            Sensor.tCharge,
+            Sensor.veValue,
             Sensor.ENGINE_LOAD,
 
             Sensor.DWELL,
             Sensor.TIMING,
 
-            Sensor.FUEL_BASE,
+            Sensor.baseFuel,
             Sensor.actualLastInjection,
             Sensor.ignitionAdvance,
 

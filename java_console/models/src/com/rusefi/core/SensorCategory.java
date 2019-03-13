@@ -5,6 +5,8 @@ public enum SensorCategory {
     FUEL("Fuel-related"),
     SNIFFING("Sniffing"),
     SENSOR_INPUTS("Sensor inputs"),
+    DEBUG("Debug"),
+    STATUS("Status"),
     OTHERS("Others");
 
     private final String name;

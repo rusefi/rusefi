@@ -116,7 +116,7 @@ public class FormulasPane {
             double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
             double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
 
-            String baseFuelStr = twoDecimals(Sensor.FUEL_BASE);
+            String baseFuelStr = twoDecimals(Sensor.baseFuel);
             String baseFuel = "$Table_Fuel (ms) = lookup (" +
                     "(RPM = " + rpm + ", " +
                     "MAF = " + maf + ") = " +
@@ -179,11 +179,11 @@ public class FormulasPane {
     private String getSpeedDensity(ConfigurationImage ci, String acceleration) {
         String IAT = oneDecimal(Sensor.IAT);
         String MAP = oneDecimal(Sensor.MAP);
-        String T_CHARGE = oneDecimal(Sensor.T_CHARGE);
+        String T_CHARGE = oneDecimal(Sensor.tCharge);
 
         double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
         String RPM = "" + (int) rpm;
-        String VE = twoDecimals(Sensor.CURRENT_VE);
+        String VE = twoDecimals(Sensor.veValue);
         String TARGET_AFR = twoDecimals(Sensor.TARGET_AFR);
         String tpsStr = oneDecimal(Sensor.TPS);
         String chargeAirMass = String.format("%.3fgm", SensorCentral.getInstance().getValue(Sensor.CHARGE_AIR_MASS));
@@ -205,7 +205,7 @@ public class FormulasPane {
                 chargeAirMass +
                 "$";
 
-        String baseFuelStr = twoDecimals(Sensor.FUEL_BASE);
+        String baseFuelStr = twoDecimals(Sensor.baseFuel);
         String baseFuel = "$SD_Fuel (ms) = \\frac{" +
                 "($Airmass = " + chargeAirMass + ")" +
                 "}{" +
