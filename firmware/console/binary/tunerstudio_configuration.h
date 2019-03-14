@@ -113,7 +113,7 @@ typedef struct {
 	 */
 	float injectorDutyCycle; // 140
 	int knockCount; // 144
-	float fuelTankGauge; // 148
+	float fuelTankLevel; // 148
 	float knockLevel; // 152
 	int totalTriggerErrorCounter; // 156
 	float wallFuelAmount; // 160
