@@ -110,7 +110,7 @@ public:
 	/**
 	 * that's fuel in tank - just a gauge
 	 */
-	percent_t fuelTankGauge = 0;
+	percent_t fuelTankLevel = 0;
 };
 
 class FuelConsumptionState {
