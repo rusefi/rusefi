@@ -172,20 +172,20 @@ float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
 floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int maxDeltaIndex = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 //	FuelSchedule *fs = engineConfiguration->injectionEvents;
-	float tpsTo = cb.get(index);
-	float tpsFrom = cb.get(index - 1);
-	float d = tpsTo - tpsFrom;
+	percent_t tpsTo = cb.get(maxDeltaIndex);
+	percent_t tpsFrom = cb.get(maxDeltaIndex - 1);
+	percent_t deltaTps = tpsTo - tpsFrom;
 
 	float valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
 
 	floatms_t extraFuel;
-	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
+	if (deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold) {
 		extraFuel = valueFromTable;
-	} else if (d < -engineConfiguration->tpsDecelEnleanmentThreshold) {
-		extraFuel = d * engineConfiguration->tpsDecelEnleanmentMultiplier;
+	} else if (deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold) {
+		extraFuel = deltaTps * engineConfiguration->tpsDecelEnleanmentMultiplier;
 	} else {
 		extraFuel = 0;
 	}

@@ -823,8 +823,8 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	brain_pin_e LIS302DLCsPin;
 
 
-	int tpsAccelLength;;"cycles",        1,     0,    1, 200,     0
-	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
+	int tpsAccelLength;+How many engine cycles to consider?;"cycles",        1,     0,    1, 200,     0
+	float tpsAccelEnrichmentThreshold;+Maximum delta in TPS percentange over the 'length';"roc",        1,     0,    0, 200,     3
 	float vvtOffset;+angle between cam sensor and VVT zero position\nset vvt_offset X;"value",      1,      0,       -720, 1000,      1
 	
 	int engineLoadAccelLength;;"cycles",        1,     0,    1, 200,     0
