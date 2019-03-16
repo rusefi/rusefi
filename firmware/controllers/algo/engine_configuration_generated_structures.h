@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 11 13:35:29 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 16 10:09:42 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1236,6 +1236,7 @@ typedef struct {
 	 */
 	int canSleepPeriodMs;
 	/**
+	 * '4 stroke with symmetrical crank' is a pretty special case for example on Miata NB2
 	 * See engineCycle
 	 * set operation_mode X
 	 * offset 488
@@ -1810,10 +1811,12 @@ typedef struct {
 	 */
 	brain_pin_e LIS302DLCsPin;
 	/**
+	 * How many engine cycles to consider?
 	 * offset 2064
 	 */
 	int tpsAccelLength;
 	/**
+	 * Maximum delta in TPS percentange over the 'length'
 	 * offset 2068
 	 */
 	float tpsAccelEnrichmentThreshold;
@@ -2578,4 +2581,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 11 13:35:29 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 16 10:09:42 EDT 2019
