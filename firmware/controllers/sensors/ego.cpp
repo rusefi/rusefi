@@ -3,9 +3,12 @@
  *
  * EGO Exhaust Gas Oxygen, also known as AFR Air/Fuel Ratio :)
  *
- * At the moment linear external widebands are supported, also there is a 8-point interpolation curve to emulate a wide-band with a narrow-band sensor.
+ * todo: rename this class? refactor since there is also CJ125?
  *
- * rusEfi does not have it's own wide-band controller as of Nov 2017
+ * rusEfi has three options for wideband:
+ * 1) integration with external widebands using liner analog signal wire
+ * 2) 8-point interpolation curve to emulate a wide-band with a narrow-band sensor.
+ * 3) CJ125 internal wideband controller is known to work with both 4.2 and 4.9
  *
  */
 #include "ego.h"
