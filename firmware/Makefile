@@ -3,7 +3,7 @@
 # NOTE: Can be overridden externally.
 #
 
-CHIBIOS = ChibiOS4
+CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 

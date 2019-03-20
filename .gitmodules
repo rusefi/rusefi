@@ -1,5 +1,5 @@
 [submodule "firmware/ChibiOS"]
-	path = firmware/ChibiOS4
+	path = firmware/ChibiOS
 	url = https://github.com/rusefi/ChibiOS.git
 	branch = stable_18.2.rusefi
 [submodule "firmware/ChibiOS-Contrib"]
