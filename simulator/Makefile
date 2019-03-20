@@ -4,7 +4,7 @@
 #
 
 
-CHIBIOS = ../firmware/ChibiOS4
+CHIBIOS = ../firmware/ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
