@@ -1225,7 +1225,7 @@ cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
 cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 cmd_call_from_pit            = "w\x00\x20\x34\x56"
-cmd_stop_engine              = "w\x00\x49\x00\x00"
+cmd_stop_engine              = "w\x00\x79\x00\x00"
 		
 ; See 'executeTSCommand' in firmware source code
 ; MIATA_NA6_MAP = 41
