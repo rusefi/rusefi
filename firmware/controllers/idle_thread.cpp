@@ -67,13 +67,15 @@ typedef enum {
 	INIT = 0,
 	TPS_THRESHOLD = 1,
 	RPM_DEAD_ZONE = 2,
-	PWM_PRETTY_CLOSE = 3,
-	ADJUSTING = 4,
-	BLIP = 5,
+	PID_VALUE = 3,
+	PWM_PRETTY_CLOSE = 4,
+	PID_UPPER = 5,
+	ADJUSTING = 8,
+	BLIP = 16,
 
 } idle_state_e;
 
-idle_state_e idleState = INIT;
+static idle_state_e idleState = INIT;
 
 /**
  * that's current position with CLT and IAT corrections
@@ -231,7 +233,8 @@ static percent_t automaticIdleController() {
 	idlePid.setErrorAmplification(errorAmpCoef);
 
 	percent_t newValue = idlePid.getOutput(targetRpm, rpm, engineConfiguration->idleRpmPid.periodMs);
-	
+	idleState = PID_VALUE;
+
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
 
@@ -252,6 +255,7 @@ static percent_t automaticIdleController() {
 	// Currently it's user-defined. But eventually we'll use a real calculated and stored IAC position instead.
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
+		idleState = PID_UPPER;
 		if (CONFIGB(useIacTableForCoasting)) {
 			percent_t iacPosForCoasting = interpolate2d("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
@@ -366,6 +370,7 @@ private:
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 				// see also tsOutputChannels->idlePosition
 				idlePid.postState(&tsOutputChannels, 1000000);
+				tsOutputChannels.debugIntField4 = idleState;
 #endif /* EFI_TUNER_STUDIO */
 			} else {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
@@ -377,12 +382,12 @@ private:
 
 		// The threshold is dependent on IAC type (see initIdleHardware())
 		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
-			idleState = PWM_PRETTY_CLOSE;
+			idleState = (idle_state_e)(idleState | PWM_PRETTY_CLOSE);
 			return; // value is pretty close, let's leave the poor valve alone
 		}
 
 		currentIdlePosition = iacPosition;
-		idleState = ADJUSTING;
+		idleState = (idle_state_e)(idleState | ADJUSTING);
 		applyIACposition(currentIdlePosition);
 	}
 };
