@@ -1100,6 +1100,7 @@ menuDialog = main
 		subMenu = idleVeCurve,              "Idle VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Idle Ignition Advance", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = std_separator
+		subMenu = idleTimingPidCorrDialog,	"Closed-loop Idle timing correction"
 		subMenu = cltIdleCurve,				"Warmup Idle multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
@@ -1800,6 +1801,22 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "verbose status",						isVerboseIAC
 		field = "#See Warmup idle multiplier"
 		slider = "Manual IAC Position",				manIdlePosition, horizontal
+
+	dialog = idleTimingPidCorrDialog, "", yAxis
+		field = "!This timing correction mode is Alpha Version"
+		field = "Use Auto-PID ignition advance control",	useIdleTimingPidControl
+		field = "#See Idle Target RPM Curve"
+		field = "P-factor",									idleTimingPid_pFactor, {useIdleTimingPidControl == 1}
+		field = "I-factor",									idleTimingPid_iFactor, {useIdleTimingPidControl == 1}
+		field = "D-factor",									idleTimingPid_dFactor, {useIdleTimingPidControl == 1}
+		field = "Offset",									idleTimingPid_offset, {useIdleTimingPidControl == 1}
+		field = "Min Delta",								idleTimingPid_minValue, {useIdleTimingPidControl == 1}
+		field = "Max Delta",								idleTimingPid_maxValue, {useIdleTimingPidControl == 1}
+		field = "period",									idleTimingPid_periodMs, {useIdleTimingPidControl == 1}
+		field = "#See RPM dead zone to deactivate IAC pid"
+		field = "RPM working zone for timing pid",			idleTimingPidWorkZone, {useIdleTimingPidControl == 1}
+		field = "RPM working zone falloff",					idlePidFalloffDeltaRpm, {useIdleTimingPidControl == 1}
+		field = "RPM dead zone to deactivate timing pid",	idleTimingPidDeadZone, {useIdleTimingPidControl == 1}
 
 ;			Engine->Fan Settings
 	dialog = fanSetting, "Fan Settings"
