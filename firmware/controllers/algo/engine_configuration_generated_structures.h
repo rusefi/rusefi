@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 16 10:09:42 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 21 20:25:30 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1777,7 +1777,9 @@ typedef struct {
 	 */
 	float alternatorOffAboveTps;
 	/**
-	 * Prime pulse duration in ms
+	 * Prime pulse for cold engine, duration in ms
+	 * Linear interpolation between -40F/-40C and fallout temperature
+	 * 
 	 * See also isFasterEngineSpinUpEnabled
 	 * set cranking_priming_pulse X
 	 * offset 2052
@@ -2581,4 +2583,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Mar 16 10:09:42 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 21 20:25:30 EDT 2019

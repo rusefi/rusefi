@@ -420,9 +420,9 @@ fileVersion = { 20171101 }
 	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
       columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
-      xAxis       =  -40, 120, 10
+      xAxis       =  -40, 100, 10
 #else
-      xAxis       =  -40, 250, 10
+      xAxis       =  -40, 210, 10
 #endif
       yAxis       =  0,  50, 10
       xBins       = cltFuelCorrBins, coolant
@@ -432,11 +432,11 @@ fileVersion = { 20171101 }
 	curve = crankingCltCurve, "Cranking Coolant Temperature multiplier"
       columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
-      xAxis       =  -40, 120, 10
+      xAxis       =  -40, 100, 10
 #else
-      xAxis       =  -40, 250, 10
+      xAxis       =  -40, 210, 10
 #endif
-      yAxis       =  0,  5, 10
+      yAxis       =  0,  30, 10
       xBins       = crankingFuelBins, coolant
       yBins       = crankingFuelCoef
       gauge       = CLTGauge
@@ -2082,7 +2082,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
         field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
 		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
 	
-		dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment"
+		dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment (NOT IMPLEMENTED #331)"
 		field = "Target temperature", 			postCrankingTargetClt
 		field = "Post-Cranking factor", 				postCrankingFactor
 		field = "Duraction", 				postCrankingDurationSec
