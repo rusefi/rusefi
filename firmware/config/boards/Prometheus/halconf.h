@@ -6,7 +6,8 @@
  * @date Apr 22, 2017
  * @author andreika, (c) 2017
  */
-
+ 
+#include "efifeatures.h"
 #include "mcuconf.h"
 #include "../../stm32f4ems/halconf.h"
 

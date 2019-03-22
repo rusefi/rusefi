@@ -17,14 +17,13 @@ DDEFS += -DHAL_USE_ADC=FALSE -DHAL_USE_CAN=FALSE -DHAL_USE_EXT=FALSE -DHAL_USE_G
 
 # disable USB (The bootloader has currently UART support only)
 DDEFS += -DEFI_USB_SERIAL=FALSE -DHAL_USE_SERIAL_USB=FALSE -DHAL_USE_USB=FALSE -DHAL_USE_USB_MSD=FALSE
-
+# disable CAN
+DDEFS += -DEFI_CAN_SUPPORT=FALSE
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
 endif
-
-#USE_OPT += -fPIC
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
@@ -33,7 +32,8 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++11 -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  # constexpr float expf_taylor_impl probably needs just c++14 but why not go with 17?
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -105,28 +105,29 @@ PROJECT = bootloader
 PROJECT_DIR = ..
 
 # Imported source files and paths
-CHIBIOS = $(PROJECT_DIR)/ChibiOS3
+CHIBIOS = $(PROJECT_DIR)/ChibiOS
 CHIBIOS_CONTRIB = $(PROJECT_DIR)/ChibiOS-Contrib
 
-ifeq ($(PROJECT_BOARD),)
-  PROJECT_BOARD = ST_STM32F4
-endif
-DDEFS += -D$(PROJECT_BOARD)
+RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
+RULESFILE = $(RULESPATH)/rules.mk
+
+include $(PROJECT_DIR)/rusefi.mk
 
 CONFIG = $(PROJECT_DIR)/config
 
 # Startup files.
-include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
+include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-include $(CHIBIOS_CONTRIB)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
-include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
-include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
+
+include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_stm32.mk
 
 # Define linker script file here
 ifeq ($(LDSCRIPT),)
@@ -145,7 +146,6 @@ CSRC = $(STARTUPSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-	$(CHIBIOS)/os/various/shell.c \
 	$(UTILSRC) \
 	$(ENGINES_SRC) \
 	$(CONSOLESRC) \
@@ -171,6 +171,7 @@ CPPSRC = $(CHCPPSRC) \
 	$(ENGINES_SRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
+	$(HW_STM32_SRC_CPP) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
@@ -210,9 +211,14 @@ TCPPSRC =
 
 # List ASM source files here
 # List ASM source files here
-ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
+ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-INCDIR = .. \
+ifeq ($(CONFIGPATH),)
+  CONFIGPATH=$(PROJECT_DIR)/config/stm32f4ems
+endif
+
+
+INCDIR = .. $(CHIBIOS)/os/license \
 	$(PORTINC) \
 	$(OSALINC) \
 	$(KERNINC) \
@@ -224,11 +230,9 @@ INCDIR = .. \
 	$(CHCPPINC) \
 	$(CHIBIOS)/os/hal/lib/streams \
 	$(CHIBIOS)/os/various \
-	$(CHIBIOS)/os/various/devices_lib/accel \
-    $(CHIBIOS_CONTRIB)/os/various \
-	$(CONFIG)/stm32f4ems \
-	$(CHIBIOS)/os/various \
-	$(CONFIG)/stm32f4ems \
+	$(CHIBIOS)/os/ex/ST \
+	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
+	$(CONFIGPATH) \
 	$(CONFIG)/engines \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
@@ -326,5 +330,4 @@ ULIBS = -lm
 # End of user defines
 ##############################################################################
 
-RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
-include $(RULESPATH)/rules.mk
+include $(RULESFILE)
