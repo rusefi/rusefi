@@ -7,6 +7,7 @@
  * @author andreika, (c) 2017
  */
 
+#include "efifeatures.h"
 #include "../../stm32f4ems/mcuconf.h"
 
 #ifndef _MCUCONF_PROMETHEUS_H_
