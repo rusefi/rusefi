@@ -532,6 +532,8 @@ case ES_Innovate_MTX_L:
   return "ES_Innovate_MTX_L";
 case ES_NarrowBand:
   return "ES_NarrowBand";
+case ES_AEM:
+	return "ES_AEM";
 case ES_PLX:
   return "ES_PLX";
 case Force_4_bytes_size_ego_sensor:

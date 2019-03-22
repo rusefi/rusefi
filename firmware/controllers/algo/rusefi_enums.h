@@ -618,6 +618,8 @@ typedef enum {
 
 	ES_Custom = 5,
 
+	ES_AEM = 6,
+
 	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
