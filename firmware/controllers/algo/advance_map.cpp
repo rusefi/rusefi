@@ -19,13 +19,17 @@
  */
 
 #include "global.h"
+#include "engine_configuration.h"
+#include "engine.h"
 #include "advance_map.h"
 #include "interpolation.h"
 #include "efilib2.h"
 #include "engine_math.h"
 #include "tps.h"
+#include "idle_thread.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;
@@ -35,6 +39,10 @@ static ign_Map3D_t advanceMap("advance");
 // This coeff in ctor parameter is sufficient for int16<->float conversion!
 static ign_tps_Map3D_t advanceTpsMap("advanceTps", 1.0 / ADVANCE_TPS_STORAGE_MULT);
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
+
+// Init PID later (make it compatible with unit-tests)
+static Pid idleTimingPid;
+static bool shouldResetTimingPid = false;
 
 static int minCrankingRpm = 0;
 
@@ -197,6 +205,8 @@ void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			config->ignitionRpmBins);
 	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
 			config->ignitionIatCorrRpmBins);
+	// init timing PID
+	idleTimingPid = Pid(&CONFIG(idleTimingPid));
 }
 
 /**
