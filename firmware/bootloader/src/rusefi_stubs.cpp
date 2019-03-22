@@ -29,6 +29,3 @@ Logging::Logging(char const */*name*/, char */*buffer*/, int /*bufferSize*/) {
 LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
 }
 
-int getRemainingStack(thread_t */*otp*/) {
-	return 99999;
-}

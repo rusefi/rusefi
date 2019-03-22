@@ -57,14 +57,14 @@
  *
  * See also STM32F4xx_MCUCONF is defined in mcuconf.h
  */
-#ifdef STM32F469xx
-#undef STM32F405xx
+#if !defined(_FROM_ASM_)
+#if defined(STM32F469xx) && defined(STM32F405xx)
+#error "Both STM32F469xx and STM32F405xx cannot be defined"
 #endif
-#ifndef STM32F405xx
-#ifndef STM32F469xx
-#define STM32F469xx
+#if !defined(STM32F405xx) && !defined(STM32F469xx)
+#error "You must define STM32F469xx or STM32F405xx for Prometheus board"
 #endif
-#endif
+#endif /* _FROM_ASM_ */
 
 /*
  * IO pins assignments.
