@@ -119,17 +119,49 @@ static angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else {
 		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->sensors.iat);
 	}
+	// PID Ignition Advance angle correction
+	float pidTimingCorrection = 0.0f;
+	if (CONFIGB(useIdleTimingPidControl)) {
+		int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+		int rpmDelta = absI(rpm - targetRpm);
+		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+		if (tps >= CONFIGB(idlePidDeactivationTpsThreshold)) {
+			// we are not in the idle mode anymore, so the 'reset' flag will help us when we return to the idle.
+			shouldResetTimingPid = true;
+		} 
+		else if (rpmDelta > CONFIG(idleTimingPidDeadZone) && rpmDelta < CONFIG(idleTimingPidWorkZone) + CONFIG(idlePidFalloffDeltaRpm)) {
+			// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
+			// So if we need to reset the PID, let's do it now
+			if (shouldResetTimingPid) {
+				idleTimingPid.reset();
+				shouldResetTimingPid = false;
+			}
+			// get PID value (this is not an actual Advance Angle, but just a additive correction!)
+			percent_t timingRawCorr = idleTimingPid.getOutput(targetRpm, rpm, engineConfiguration->idleTimingPid.periodMs);
+			// tps idle-running falloff
+			pidTimingCorrection = interpolateClamped(0.0f, timingRawCorr, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tps);
+			// rpm falloff
+			pidTimingCorrection = interpolateClamped(0.0f, pidTimingCorrection, CONFIG(idlePidFalloffDeltaRpm), 0.0f, rpmDelta - CONFIG(idleTimingPidWorkZone));
+		} else {
+			shouldResetTimingPid = true;
+		}
+	} else {
+		shouldResetTimingPid = true;
+	}
+
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
 		tsOutputChannels.debugFloatField3 = engine->fsioState.fsioTimingAdjustment;
+		tsOutputChannels.debugFloatField4 = pidTimingCorrection;
 #endif /* EFI_TUNER_STUDIO */
 	}
 	
 	return iatCorrection
 		+ engine->fsioState.fsioTimingAdjustment
 		+ engine->engineState.cltTimingCorrection
+		+ pidTimingCorrection
 		// todo: uncomment once we get useable knock   - engine->knockCount
 		;
 }
