@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 21 20:25:30 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 22 22:56:39 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -707,10 +707,10 @@ typedef struct {
 	bool useNoiselessTriggerDecoder : 1;
 	/**
 	offset 144 bit 24 */
-	bool unused_board_984_24 : 1;
+	bool useIdleTimingPidControl : 1;
 	/**
 	offset 144 bit 25 */
-	bool unused_board_984_25 : 1;
+	bool useTPSBasedVeTable : 1;
 	/**
 	offset 144 bit 26 */
 	bool unused_board_984_26 : 1;
@@ -1752,7 +1752,7 @@ typedef struct {
 	 */
 	int16_t startUpFuelPumpDuration;
 	/**
-	 * If RPM is close enough let's leave IAC alone
+	 * If RPM is close enough let's leave IAC alone, and maybe engage timing PID correction
 	 * offset 1914
 	 */
 	int16_t idlePidRpmDeadZone;
@@ -2334,9 +2334,33 @@ typedef struct {
 	 */
 	etb_io etb2;
 	/**
+	 * See useIdleTimingPidControl
 	 * offset 3992
 	 */
-	int mainUnusedEnd[622];
+	pid_s idleTimingPid;
+	/**
+	 * The timing correction works only if RPM is close enough, otherwise the IAC correction works
+	 * offset 4012
+	 */
+	int16_t idleTimingPidWorkZone;
+	/**
+	 * If RPM is too perfect, let's leave the advance angle alone to avoid oscillation
+	 * offset 4014
+	 */
+	int16_t idleTimingPidDeadZone;
+	/**
+	 * Added to the work zone for smooth correction falloff
+	 * offset 4016
+	 */
+	int16_t idlePidFalloffDeltaRpm;
+	/**
+	 * offset 4018
+	 */
+	int16_t unusedIdleTimingPid;
+	/**
+	 * offset 4020
+	 */
+	int mainUnusedEnd[615];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2583,4 +2607,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 21 20:25:30 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 22 22:56:39 EDT 2019
