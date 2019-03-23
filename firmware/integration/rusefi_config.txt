@@ -574,8 +574,8 @@ bit is_enabled_spi_2
 	bit coastingFuelCutEnabled
 	bit useIacTableForCoasting
 	bit useNoiselessTriggerDecoder
-	bit unused_board_984_24
-	bit unused_board_984_25
+	bit useIdleTimingPidControl
+	bit useTPSBasedVeTable
 	bit unused_board_984_26
 	bit unused_board_984_27
 	bit unused_board_984_28
@@ -804,7 +804,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:5], @@pin_mode_e_enum@@
 	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
 	
 	int16_t startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds",        1,     0,  0,    6000,  0
-	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone;"RPM",        1,     0,  0,    1000,  0
+	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone, and maybe engage timing PID correction;"RPM",        1,     0,  0,    1000,  0
 	
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
@@ -984,8 +984,15 @@ tChargeMode_e tChargeMode;
 	int16_t etb_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
 	float etbDeadband;;"",        1,     0,  0,    100.0,  2
 	etb_io etb2
-	int[622] mainUnusedEnd;
 
+	pid_s idleTimingPid;See useIdleTimingPidControl
+	int16_t idleTimingPidWorkZone;The timing correction works only if RPM is close enough, otherwise the IAC correction works;"RPM",        1,     0,  0,    1000,  0
+	int16_t idleTimingPidDeadZone;If RPM is too perfect, let's leave the advance angle alone to avoid oscillation;"RPM",        1,     0,  0,    1000,  0
+	int16_t idlePidFalloffDeltaRpm;Added to the work zone for smooth correction falloff;"RPM",        1,     0,  0,    1000,  0
+	int16_t unusedIdleTimingPid;
+
+	int[615] mainUnusedEnd;
+	
 
 end_struct
 

@@ -619,6 +619,18 @@ void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, rpm, rpm, 10);
 }
 
+int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	float clt = engine->sensors.clt;
+	int targetRpm;
+	if (cisnan(clt)) {
+		// error is already reported, let's take first value from the table should be good enough error handing solution
+		targetRpm = CONFIG(cltIdleRpm)[0];
+	} else {
+		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
+	}
+	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the global engine configuration defaults. These default values are then
