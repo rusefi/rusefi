@@ -202,7 +202,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		/**
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 		 */
-		float rawVe = veMap.getValue(rpm, map);
+		float rawVe = veMap.getValue(rpm, CONFIGB(useTPSBasedVeTable) ? tps : map);
 		// get VE from the separate table for Idle
 		if (CONFIG(useSeparateVeForIdle)) {
 			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);

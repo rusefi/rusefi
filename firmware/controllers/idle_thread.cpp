@@ -205,16 +205,7 @@ static percent_t automaticIdleController() {
 	}
 
 	// get Target RPM for Auto-PID from a separate table
-	float clt = engine->sensors.clt;
-	int targetRpm;
-	if (cisnan(clt)) {
-		// error is already reported, let's take first value from the table should be good enough error handing solution
-		targetRpm = CONFIG(cltIdleRpm)[0];
-	} else {
-		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
-	}
-	targetRpm += engine->fsioState.fsioIdleTargetRPMAdjustment;
-
+	int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// check if within the dead zone
 	int rpm = GET_RPM();
@@ -256,8 +247,8 @@ static percent_t automaticIdleController() {
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		idleState = PID_UPPER;
-		if (CONFIGB(useIacTableForCoasting)) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
+		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
