@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 12 21:36:19 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 22 22:56:39 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -418,8 +418,8 @@ public class Fields {
 	public static final int coastingFuelCutEnabled_offset = 744;
 	public static final int useIacTableForCoasting_offset = 744;
 	public static final int useNoiselessTriggerDecoder_offset = 744;
-	public static final int unused_board_984_24_offset = 744;
-	public static final int unused_board_984_25_offset = 744;
+	public static final int useIdleTimingPidControl_offset = 744;
+	public static final int useTPSBasedVeTable_offset = 744;
 	public static final int unused_board_984_26_offset = 744;
 	public static final int unused_board_984_27_offset = 744;
 	public static final int unused_board_984_28_offset = 744;
@@ -1046,7 +1046,19 @@ public class Fields {
 	public static final int etb2_directionPin2_offset = 3989;
 	public static final int etb2_controlPin1_offset = 3990;
 	public static final int etb2_controlPin2_offset = 3991;
-	public static final int mainUnusedEnd_offset = 3992;
+	public static final int idleTimingPid_offset = 3992;
+	public static final int idleTimingPid_pFactor_offset = 3992;
+	public static final int idleTimingPid_iFactor_offset = 3996;
+	public static final int idleTimingPid_dFactor_offset = 4000;
+	public static final int idleTimingPid_offset_offset = 4004;
+	public static final int idleTimingPid_periodMs_offset = 4006;
+	public static final int idleTimingPid_minValue_offset = 4008;
+	public static final int idleTimingPid_maxValue_offset = 4010;
+	public static final int idleTimingPidWorkZone_offset = 4012;
+	public static final int idleTimingPidDeadZone_offset = 4014;
+	public static final int idlePidFalloffDeltaRpm_offset = 4016;
+	public static final int unusedIdleTimingPid_offset = 4018;
+	public static final int mainUnusedEnd_offset = 4020;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1436,8 +1448,8 @@ public class Fields {
 	public static final Field COASTINGFUELCUTENABLED = Field.create("COASTINGFUELCUTENABLED", 744, FieldType.BIT, 21);
 	public static final Field USEIACTABLEFORCOASTING = Field.create("USEIACTABLEFORCOASTING", 744, FieldType.BIT, 22);
 	public static final Field USENOISELESSTRIGGERDECODER = Field.create("USENOISELESSTRIGGERDECODER", 744, FieldType.BIT, 23);
-	public static final Field UNUSED_BOARD_984_24 = Field.create("UNUSED_BOARD_984_24", 744, FieldType.BIT, 24);
-	public static final Field UNUSED_BOARD_984_25 = Field.create("UNUSED_BOARD_984_25", 744, FieldType.BIT, 25);
+	public static final Field USEIDLETIMINGPIDCONTROL = Field.create("USEIDLETIMINGPIDCONTROL", 744, FieldType.BIT, 24);
+	public static final Field USETPSBASEDVETABLE = Field.create("USETPSBASEDVETABLE", 744, FieldType.BIT, 25);
 	public static final Field UNUSED_BOARD_984_26 = Field.create("UNUSED_BOARD_984_26", 744, FieldType.BIT, 26);
 	public static final Field UNUSED_BOARD_984_27 = Field.create("UNUSED_BOARD_984_27", 744, FieldType.BIT, 27);
 	public static final Field UNUSED_BOARD_984_28 = Field.create("UNUSED_BOARD_984_28", 744, FieldType.BIT, 28);
@@ -1904,6 +1916,17 @@ public class Fields {
 	public static final Field ETB2_DIRECTIONPIN2 = Field.create("ETB2_DIRECTIONPIN2", 3989, FieldType.INT, brain_pin_e);
 	public static final Field ETB2_CONTROLPIN1 = Field.create("ETB2_CONTROLPIN1", 3990, FieldType.INT, brain_pin_e);
 	public static final Field ETB2_CONTROLPIN2 = Field.create("ETB2_CONTROLPIN2", 3991, FieldType.INT, brain_pin_e);
+	public static final Field IDLETIMINGPID_PFACTOR = Field.create("IDLETIMINGPID_PFACTOR", 3992, FieldType.FLOAT);
+	public static final Field IDLETIMINGPID_IFACTOR = Field.create("IDLETIMINGPID_IFACTOR", 3996, FieldType.FLOAT);
+	public static final Field IDLETIMINGPID_DFACTOR = Field.create("IDLETIMINGPID_DFACTOR", 4000, FieldType.FLOAT);
+	public static final Field IDLETIMINGPID_OFFSET = Field.create("IDLETIMINGPID_OFFSET", 4004, FieldType.INT);
+	public static final Field IDLETIMINGPID_PERIODMS = Field.create("IDLETIMINGPID_PERIODMS", 4006, FieldType.INT);
+	public static final Field IDLETIMINGPID_MINVALUE = Field.create("IDLETIMINGPID_MINVALUE", 4008, FieldType.INT);
+	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 4010, FieldType.INT);
+	public static final Field IDLETIMINGPIDWORKZONE = Field.create("IDLETIMINGPIDWORKZONE", 4012, FieldType.INT);
+	public static final Field IDLETIMINGPIDDEADZONE = Field.create("IDLETIMINGPIDDEADZONE", 4014, FieldType.INT);
+	public static final Field IDLEPIDFALLOFFDELTARPM = Field.create("IDLEPIDFALLOFFDELTARPM", 4016, FieldType.INT);
+	public static final Field UNUSEDIDLETIMINGPID = Field.create("UNUSEDIDLETIMINGPID", 4018, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
