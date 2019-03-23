@@ -121,6 +121,9 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->isHip9011Enabled = false;
 	boardConfiguration->isSdCardEnabled = false;
 
+	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+
+
 	// Frankenso middle plug 2J, W32 top <> W47 bottom "#5 Green" jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
@@ -151,6 +154,14 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->engineChartSize = 200;
 
 	engineConfiguration->idleMode = IM_AUTO;
+	// below 20% this valve seems to be opening for fail-safe idle air
+	engineConfiguration->idleRpmPid.minValue = 20;
+	engineConfiguration->idleRpmPid.pFactor = 0.01;
+	engineConfiguration->idleRpmPid.iFactor = 0.00001;
+	engineConfiguration->idleRpmPid.dFactor = 0.0001;
+	engineConfiguration->idleRpmPid.periodMs = 100;
+
+
 
 	// cold start works better with baseFuel = 8
 	// maybe adjust CLT correction?
