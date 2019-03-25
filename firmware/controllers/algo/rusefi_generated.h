@@ -1582,8 +1582,10 @@
 #define externalKnockSenseAdc_offset_hex c37
 #define stepperEnablePin_offset 3128
 #define stepperEnablePin_offset_hex c38
-#define unusedTest55_offset 3129
-#define unusedTest55_offset_hex c39
+#define tle8888_cs_offset 3129
+#define tle8888_cs_offset_hex c39
+#define unusedTest55_offset 3130
+#define unusedTest55_offset_hex c3a
 #define crankingAdvanceBins_offset 3132
 #define crankingAdvanceBins_offset_hex c3c
 #define crankingAdvance_offset 3148
@@ -1682,8 +1684,10 @@
 #define idlePidFalloffDeltaRpm_offset_hex fb0
 #define unusedIdleTimingPid_offset 4018
 #define unusedIdleTimingPid_offset_hex fb2
-#define mainUnusedEnd_offset 4020
-#define mainUnusedEnd_offset_hex fb4
+#define tle8888spiDevice_offset 4020
+#define tle8888spiDevice_offset_hex fb4
+#define mainUnusedEnd_offset 4024
+#define mainUnusedEnd_offset_hex fb8
 #define cltCrankingCorrBins_offset 6480
 #define cltCrankingCorrBins_offset_hex 1950
 #define cltCrankingCorr_offset 6512

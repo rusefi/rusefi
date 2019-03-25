@@ -23,6 +23,7 @@
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
 #include "max31855.h"
+#include "tle8888.h"
 #include "accelerometer.h"
 #include "eficonsole.h"
 #include "console_io.h"
@@ -427,6 +428,8 @@ void initHardware(Logging *l) {
 #if EFI_MAX_31855
 	initMax31855(sharedLogger, getSpiDevice(CONFIGB(max31855spiDevice)), CONFIGB(max31855_cs));
 #endif /* EFI_MAX_31855 */
+
+	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_CAN_SUPPORT
 	initCan();

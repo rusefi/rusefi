@@ -265,6 +265,9 @@ const char *portNameExt(unsigned int pin)
 	return NULL;
 }
 
+/**
+ * @return result code
+ */
 int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
 {
 	(void)name; (void)ops; (void)size; (void)priv;

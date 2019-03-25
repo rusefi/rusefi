@@ -524,6 +524,7 @@ typedef enum {
 	CIM_DEFAULT = 0,
 	CIM_FIXED_ANGLE = 1,
 
+	// todo: make this a one byte enum
 	Force_4_bytes_size_cranking_ignition_mode = ENUM_32_BITS,
 } cranking_ignition_mode_e;
 
@@ -533,7 +534,7 @@ typedef enum {
 	UART_DEVICE_2 = 2,
 	UART_DEVICE_3 = 3,
 	UART_DEVICE_4 = 4,
-
+// todo: make this a one byte enum
 	Force_4_bytes_size_uart_device = ENUM_32_BITS,
 } uart_device_e;
 
@@ -545,6 +546,7 @@ typedef enum {
 	SPI_DEVICE_3 = 3,
 	SPI_DEVICE_4 = 4,
 
+	// todo: make this a one byte enum
 	Force_4_bytes_size_spi_device = ENUM_32_BITS,
 } spi_device_e;
 
