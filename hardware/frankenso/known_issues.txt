@@ -181,6 +181,7 @@
 174)                    Consider adding the low cost current limiting circuit noted by Jerri Ellsworth at this video. https://www.youtube.com/watch?v=QZ0WXQWND-I
 175) RESOLVED IN R0.5.4 D12 to D23 on schematic are confusing. Aling these desinators to be more clear. 
 176)                    0805 options for VP selection on High Side VP +5/+12 selection
+177)                    adjust mounting holes to allow 89661-32590 and 89661-32260 cases
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
