@@ -36,7 +36,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-int tle6240_add(unsigned int n, const struct tle6240_config *cfg);
+int tle6240_add(unsigned int index, const struct tle6240_config *cfg);
 
 #ifdef __cplusplus
 }
