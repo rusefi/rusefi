@@ -3,10 +3,18 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#define TLE8888_CmdOE 0x1C
-
 #include "engine.h"
 #include "tle8888.h"
+
+/**
+ * 15.2 SPI Frame Definition
+ *
+ */
+#define Cmd_write_access 1
+#define CmdOE 0x1C
+#define DATA_OE_ENABLE 00000010b
+
+static unsigned char tx_buff[2];
 
 EXTERN_ENGINE;
 
