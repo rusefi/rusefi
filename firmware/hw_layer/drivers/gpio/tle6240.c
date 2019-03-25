@@ -36,8 +36,8 @@
  * - add irq support with fallback to polling mode (now polling mode only)
  * - handle low-active inputs (set with PRG pin). Now driver assume high-active
  * - add way to export native pin data of direct driven outputs. To avoid
- *   call to tle6240_writePad that will finaly call native gpio set/clear fn.
- *   In this case direct drive gpios should not be ocupaied by markUsed in init?
+ *   call to tle6240_writePad that will finally call native gpio set/clear fn.
+ *   In this case direct drive gpios should not be occupied by markUsed in init?
  * - fill deinit function with some code?
  * - support emergency shutdown using reset pin
  * - convert diagnostic to some enum
@@ -453,20 +453,20 @@ struct gpiochip_ops tle6240_ops = {
  * @details Checks for valid config
  */
 
-int tle6240_add(unsigned int n, const struct tle6240_config *cfg)
+int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
 {
 	int i;
 	struct tle6240_priv *chip;
 
 	/* no config or no such chip */
-	osalDbgCheck((cfg != NULL) && (cfg->spi_bus != NULL) && (n < BOARD_TLE6240_COUNT));
+	osalDbgCheck((cfg != NULL) && (cfg->spi_bus != NULL) && (index < BOARD_TLE6240_COUNT));
 
 	/* check for valid cs.
 	 * DOTO: remove this check? CS can be driven by SPI */
 	if (cfg->spi_config.ssport == NULL)
 		return -1;
 
-	chip = &chips[n];
+	chip = &chips[index];
 
 	/* already initted? */
 	if (chip->cfg != NULL)
@@ -490,9 +490,9 @@ int tle6240_add(unsigned int n, const struct tle6240_config *cfg)
 
 #else /* BOARD_TLE6240_COUNT > 0 */
 
-int tle6240_add(unsigned int n, const struct tle6240_config *cfg)
+int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
 {
-	(void)n; (void)cfg;
+	(void)index; (void)cfg;
 
 	return -1;
 }
