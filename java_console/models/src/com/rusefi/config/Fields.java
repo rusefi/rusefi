@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 22 22:56:39 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 14:42:37 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1008,7 +1008,8 @@ public class Fields {
 	public static final int stepperDirectionPinMode_offset = 3126;
 	public static final int externalKnockSenseAdc_offset = 3127;
 	public static final int stepperEnablePin_offset = 3128;
-	public static final int unusedTest55_offset = 3129;
+	public static final int tle8888_cs_offset = 3129;
+	public static final int unusedTest55_offset = 3130;
 	public static final int crankingAdvanceBins_offset = 3132;
 	public static final int crankingAdvance_offset = 3148;
 	public static final int servoOutputPins1_offset = 3164;
@@ -1058,7 +1059,8 @@ public class Fields {
 	public static final int idleTimingPidDeadZone_offset = 4014;
 	public static final int idlePidFalloffDeltaRpm_offset = 4016;
 	public static final int unusedIdleTimingPid_offset = 4018;
-	public static final int mainUnusedEnd_offset = 4020;
+	public static final int tle8888spiDevice_offset = 4020;
+	public static final int mainUnusedEnd_offset = 4024;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1886,6 +1888,7 @@ public class Fields {
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3126, FieldType.INT, pin_output_mode_e);
 	public static final Field EXTERNALKNOCKSENSEADC = Field.create("EXTERNALKNOCKSENSEADC", 3127, FieldType.INT, adc_channel_e);
 	public static final Field STEPPERENABLEPIN = Field.create("STEPPERENABLEPIN", 3128, FieldType.INT, brain_pin_e);
+	public static final Field TLE8888_CS = Field.create("TLE8888_CS", 3129, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS1 = Field.create("SERVOOUTPUTPINS1", 3164, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS2 = Field.create("SERVOOUTPUTPINS2", 3165, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS3 = Field.create("SERVOOUTPUTPINS3", 3166, FieldType.INT, brain_pin_e);
@@ -1927,6 +1930,7 @@ public class Fields {
 	public static final Field IDLETIMINGPIDDEADZONE = Field.create("IDLETIMINGPIDDEADZONE", 4014, FieldType.INT);
 	public static final Field IDLEPIDFALLOFFDELTARPM = Field.create("IDLEPIDFALLOFFDELTARPM", 4016, FieldType.INT);
 	public static final Field UNUSEDIDLETIMINGPID = Field.create("UNUSEDIDLETIMINGPID", 4018, FieldType.INT);
+	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4020, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);

@@ -1638,6 +1638,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Saab CDM knock",						cdmInputPin
 		field = "comm status light",					communicationLedPin
 		field = "running status light",					runningLedPin
+		field = "TLE8888 Chip Select", 					tle8888_cs
 
 
 	dialog = allPins1_2, "", xAxis
@@ -1850,8 +1851,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Main Relay Pin",  						mainRelayPin
 		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
 		field = "Fuel Pump Pin",						fuelPumpPin
-		field = "Check Engine Pin Mode",				         	malfunctionIndicatorPinMode	
-		field = "Check Engine Pin",         						malfunctionIndicatorPin
+		field = "Check Engine Pin Mode",				malfunctionIndicatorPinMode	
+		field = "Check Engine Pin",         			malfunctionIndicatorPin
+		field = "TLE8888 Chip Select", 					tle8888_cs
+		field = "TLE8888 SPI", 							tle8888spiDevice
 		
 ;			Engine->MIL Settings
 	dialog = malfunction,	"Check Engine Settings"
