@@ -22,6 +22,8 @@
 
 static unsigned char tx_buff[2];
 
+extern TunerStudioOutputChannels tsOutputChannels;
+
 EXTERN_ENGINE;
 
 static SPIDriver *driver;
@@ -36,6 +38,7 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->tle8888_cs == GPIO_UNASSIGNED) {
 		return;
 	}
+	// SPI pins are enabled in initSpiModules()
 	tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
 			&engineConfiguration->tle8888_csPinMode);
 
@@ -57,5 +60,8 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: extract 'sendSync' method?
 	spiSelect(driver);
 	spiSend(driver, 2, tx_buff);
+	if (engineConfiguration->debugMode == DBG_TLE8888) {
+		tsOutputChannels.debugIntField1 = 2;
+	}
 	spiUnselect(driver);
 }
