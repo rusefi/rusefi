@@ -38,9 +38,9 @@ static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static SPIDriver *driver;
 
-static SPIConfig cj125spicfg = { NULL,
+static SPIConfig cj125spicfg = { /* end_cb */ NULL,
 	/* HW dependent part.*/
-	NULL, 0, SPI_CR1_MSTR | SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+		/* ssport */ NULL, /* sspad */ 0, /* cr1 */ SPI_CR1_MSTR | SPI_CR1_CPHA, /* cr2*/ 0 };
 
 
 static volatile int lastSlowAdcCounter = 0;
@@ -332,6 +332,8 @@ static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			&engineConfiguration->cj125CsPinMode);
 	// Idle CS pin - SPI CS is high when idle
 	globalInstance.cj125Cs.setValue(true);
+
+	cj125spicfg.cr1 += getSpiPrescaler(_150KHz, engineConfiguration->cj125SpiDevice);
 
 	cj125spicfg.ssport = getHwPort("cj125", CONFIGB(cj125CsPin));
 	cj125spicfg.sspad = getHwPin("cj125", CONFIGB(cj125CsPin));

@@ -426,7 +426,7 @@ void initHardware(Logging *l) {
 	initOutputPins();
 
 #if EFI_MAX_31855
-	initMax31855(sharedLogger, getSpiDevice(CONFIGB(max31855spiDevice)), CONFIGB(max31855_cs));
+	initMax31855(sharedLogger, CONFIGB(max31855spiDevice), CONFIGB(max31855_cs));
 #endif /* EFI_MAX_31855 */
 
 #if EFI_TLE8888
@@ -522,3 +522,20 @@ void initHardware(Logging *l) {
 #endif /* EFI_PROD_CODE */
 
 #endif  /* EFI_PROD_CODE || EFI_SIMULATOR */
+
+#if HAL_USE_SPI || defined(__DOXYGEN__)
+// this is F4 implementation but we will keep it here for now for simplicity
+int getSpiPrescaler(spi_speed_e speed, spi_device_e device) {
+	switch (speed) {
+	case _5MHz:
+		return device == SPI_DEVICE_1 ? SPI_BaudRatePrescaler_16 : SPI_BaudRatePrescaler_8;
+	case _150KHz:
+		// SPI1 does not support 150KHz, it would be 300KHz for SPI1
+		return SPI_BaudRatePrescaler_256;
+	default:
+		// unexpected
+		return 0;
+	}
+}
+
+#endif /* HAL_USE_SPI */

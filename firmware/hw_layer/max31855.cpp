@@ -141,7 +141,8 @@ static void egtRead(void) {
 	}
 }
 
-void initMax31855(Logging *sharedLogger, SPIDriver *drv, egt_cs_array_t max31855_cs) {
+void initMax31855(Logging *sharedLogger, spi_device_e device, egt_cs_array_t max31855_cs) {
+	SPIDriver *drv = getSpiDevice(device);
 	logger = sharedLogger;
 
 	// todo:spi device is now enabled separately - should probably be enabled here
@@ -156,7 +157,7 @@ void initMax31855(Logging *sharedLogger, SPIDriver *drv, egt_cs_array_t max31855
 
 			initSpiCs(&spiConfig[i], max31855_cs[i]);
 
-			spiConfig[i].cr1 = SPI_BaudRatePrescaler_8;
+			spiConfig[i].cr1 = getSpiPrescaler(_5MHz, device);
 		}
 	}
 }

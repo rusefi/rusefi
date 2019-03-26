@@ -28,9 +28,9 @@ static SPIDriver *driver;
 
 static OutputPin tle8888Cs;
 
-static SPIConfig spiConfig = { NULL,
+static SPIConfig spiConfig = { /* end_cb */ NULL,
 	/* HW dependent part.*/
-	NULL, 0, SPI_CR1_MSTR | SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+	/* ssport */ NULL, /* sspad */ 0, /* cr1 */ SPI_CR1_MSTR | SPI_CR1_CPHA, /* cr2*/ 0 };
 
 void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->tle8888_cs == GPIO_UNASSIGNED) {
@@ -39,9 +39,10 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
 			&engineConfiguration->tle8888_csPinMode);
 
-	//spiConfig.cr1 = SPI_BaudRatePrescaler_8;
+	spiConfig.cr1 += getSpiPrescaler(_150KHz, engineConfiguration->tle8888spiDevice);
 
 	driver = getSpiDevice(engineConfiguration->tle8888spiDevice);
+	// todo: reuse initSpiCs method?
 	spiConfig.ssport = getHwPort("tle8888", engineConfiguration->tle8888_cs);
 	spiConfig.sspad = getHwPin("tle8888", engineConfiguration->tle8888_cs);
 
