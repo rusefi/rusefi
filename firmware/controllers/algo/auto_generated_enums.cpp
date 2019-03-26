@@ -808,8 +808,8 @@ case GPIOH_9:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_31:
-  return "DBG_31";
+case DBG_TLE8888:
+  return "DBG_TLE8888";
 case DBG_32:
   return "DBG_32";
 case DBG_33:

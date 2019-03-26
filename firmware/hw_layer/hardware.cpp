@@ -432,10 +432,6 @@ void initHardware(Logging *l) {
 	initMax31855(sharedLogger, CONFIGB(max31855spiDevice), CONFIGB(max31855_cs));
 #endif /* EFI_MAX_31855 */
 
-#if EFI_TLE8888
-	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
-
 #if EFI_CAN_SUPPORT
 	initCan();
 #endif /* EFI_CAN_SUPPORT */
@@ -453,6 +449,10 @@ void initHardware(Logging *l) {
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	initSpiModules(boardConfiguration);
+#endif
+
+#if EFI_TLE8888
+	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
