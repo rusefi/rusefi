@@ -532,6 +532,11 @@ int getSpiPrescaler(spi_speed_e speed, spi_device_e device) {
 	switch (speed) {
 	case _5MHz:
 		return device == SPI_DEVICE_1 ? SPI_BaudRatePrescaler_16 : SPI_BaudRatePrescaler_8;
+	case _2_5MHz:
+		return device == SPI_DEVICE_1 ? SPI_BaudRatePrescaler_32 : SPI_BaudRatePrescaler_16;
+	case _1_25MHz:
+		return device == SPI_DEVICE_1 ? SPI_BaudRatePrescaler_64 : SPI_BaudRatePrescaler_32;
+
 	case _150KHz:
 		// SPI1 does not support 150KHz, it would be 300KHz for SPI1
 		return SPI_BaudRatePrescaler_256;

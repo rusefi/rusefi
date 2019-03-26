@@ -1500,6 +1500,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = otherSensorInputs,		East
 
 	dialog = allPins1
+		field = "TLE8888 CS",							tle8888_cs	
+		field = "TLE8888 SPI",							tle8888spiDevice
 		field = "MAP ADC input", 						map_sensor_hwChannel
 		field = "frequencyReportingMapInputPin",		frequencyReportingMapInputPin
 		field = "CLT ADC input", 						clt_adcChannel
