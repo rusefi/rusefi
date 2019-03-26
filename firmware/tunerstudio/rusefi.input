@@ -1638,8 +1638,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Saab CDM knock",						cdmInputPin
 		field = "comm status light",					communicationLedPin
 		field = "running status light",					runningLedPin
-		field = "TLE8888 Chip Select", 					tle8888_cs
-		field = "TLE8888 CS Mode",						tle8888_csPinMode
+		field = "TLE8888 Chip Select",                  tle8888_cs
+		field = "TLE8888 CS Mode",                      tle8888_csPinMode
+		field = "TLE 8888 spi",                         tle8888spiDevice
 
 
 	dialog = allPins1_2, "", xAxis
