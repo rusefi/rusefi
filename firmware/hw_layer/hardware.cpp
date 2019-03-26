@@ -111,6 +111,9 @@ static void initSpiModules(board_configuration_s *boardConfiguration) {
 	}
 }
 
+/**
+ * @return NULL if SPI device not specified
+ */
 SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	if (spiDevice == SPI_NONE) {
 		return NULL;

@@ -387,6 +387,10 @@ void initHip9011(Logging *sharedLogger) {
 
 #if EFI_PROD_CODE
 	driver = getSpiDevice(engineConfiguration->hip9011SpiDevice);
+	if (driver == NULL) {
+		// error already reported
+		return;
+	}
 
 	hipSpiCfg.ssport = getHwPort("hip", CONFIGB(hip9011CsPin));
 	hipSpiCfg.sspad = getHwPin("hip", CONFIGB(hip9011CsPin));

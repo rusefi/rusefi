@@ -142,11 +142,15 @@ static void egtRead(void) {
 }
 
 void initMax31855(Logging *sharedLogger, spi_device_e device, egt_cs_array_t max31855_cs) {
-	SPIDriver *drv = getSpiDevice(device);
+	driver = getSpiDevice(device);
+	if (driver == NULL) {
+		// error already reported
+		return;
+	}
+
 	logger = sharedLogger;
 
 	// todo:spi device is now enabled separately - should probably be enabled here
-	driver = drv;
 
 	addConsoleAction("egtinfo", (Void) showEgtInfo);
 
