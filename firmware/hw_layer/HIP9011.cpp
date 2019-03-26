@@ -84,12 +84,12 @@ static Logging *logger;
 // todo: nicer method which would mention SPI speed explicitly?
 
 #if EFI_PROD_CODE
-static SPIConfig hipSpiCfg = { NULL,
+static SPIConfig hipSpiCfg = { /* end_cb */ NULL,
 /* HW dependent part.*/
-NULL, 0,
-SPI_CR1_MSTR |
+		/* ssport */ NULL, /* sspad */ 0,
+		/* cr1 */ SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
-		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2, /* cr2*/ 0 };
 #endif /* EFI_PROD_CODE */
 
 static void checkResponse(void) {
@@ -236,6 +236,7 @@ static void endIntegration(void) {
  * Shaft Position callback used to start or finish HIP integration
  */
 static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	(void)ckpEventType;
 	// this callback is invoked on interrupt thread
 	if (index != 0)
 		return;
@@ -286,6 +287,7 @@ void setHipGain(float value) {
  * this is the end of the non-synchronous exchange
  */
 static void endOfSpiExchange(SPIDriver *spip) {
+	(void)spip;
 	spiUnselectI(driver);
 	instance.state = READY_TO_INTEGRATE;
 	checkResponse();
@@ -353,6 +355,7 @@ static void hipStartupCode(void) {
 static THD_WORKING_AREA(hipTreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t hipThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("hip9011 init");
 
 	// some time to let the hardware start

@@ -538,6 +538,10 @@ typedef enum {
 	Force_4_bytes_size_uart_device = ENUM_32_BITS,
 } uart_device_e;
 
+typedef enum __attribute__ ((__packed__)) {
+	_5MHz,
+	_150KHz
+} spi_speed_e;
 
 typedef enum {
 	SPI_NONE = 0,
@@ -549,6 +553,8 @@ typedef enum {
 	// todo: make this a one byte enum
 	Force_4_bytes_size_spi_device = ENUM_32_BITS,
 } spi_device_e;
+
+
 
 /**
  * Frankenso analog #1 PC2 ADC12

@@ -430,6 +430,7 @@ void initMmcCard(void) {
 		return;
 	}
 
+	// todo: reuse initSpiCs method?
 	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort("mmc", CONFIGB(sdCardCsPin));
 	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin("mmc", CONFIGB(sdCardCsPin));
 	mmccfg.spip = getSpiDevice(engineConfiguration->sdCardSpiDevice);
