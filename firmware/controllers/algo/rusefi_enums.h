@@ -540,6 +540,8 @@ typedef enum {
 
 typedef enum __attribute__ ((__packed__)) {
 	_5MHz,
+	_2_5MHz,
+	_1_25MHz,
 	_150KHz
 } spi_speed_e;
 
