@@ -80,6 +80,10 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return; // temporary
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	driver = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
+	if (driver == NULL) {
+		// error already reported
+		return;
+	}
 
 	turnOnSpi(engineConfiguration->accelerometerSpiDevice);
 	spiStart(driver, &accelerometerCfg);

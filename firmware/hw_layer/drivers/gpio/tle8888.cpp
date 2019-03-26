@@ -42,6 +42,10 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	spiConfig.cr1 += getSpiPrescaler(_150KHz, engineConfiguration->tle8888spiDevice);
 
 	driver = getSpiDevice(engineConfiguration->tle8888spiDevice);
+	if (driver == NULL) {
+		// error already reported
+		return;
+	}
 	// todo: reuse initSpiCs method?
 	spiConfig.ssport = getHwPort("tle8888", engineConfiguration->tle8888_cs);
 	spiConfig.sspad = getHwPin("tle8888", engineConfiguration->tle8888_cs);

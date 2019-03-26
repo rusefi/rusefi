@@ -108,8 +108,13 @@ void initPotentiometers(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			continue;
                 }
 
-		initPotentiometer(&potConfig[i], getSpiDevice(CONFIGB(digitalPotentiometerSpiDevice)),
-				csPin);
+		SPIDriver *driver = getSpiDevice(CONFIGB(digitalPotentiometerSpiDevice));
+		if (driver == NULL) {
+			// error already reported
+			return;
+		}
+
+		initPotentiometer(&potConfig[i], driver, csPin);
 	}
 
 	addConsoleActionII("pot", setPotResistanceCommand);

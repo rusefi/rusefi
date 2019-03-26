@@ -338,6 +338,10 @@ static void cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	cj125spicfg.ssport = getHwPort("cj125", CONFIGB(cj125CsPin));
 	cj125spicfg.sspad = getHwPin("cj125", CONFIGB(cj125CsPin));
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
+	if (driver == NULL) {
+		// error already reported
+		return;
+	}
 	scheduleMsg(logger, "cj125: Starting SPI driver");
 	spiStart(driver, &cj125spicfg);
 }
@@ -540,16 +544,22 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (CONFIG(cj125ur) == EFI_ADC_NONE || CONFIG(cj125ua) == EFI_ADC_NONE) {
 		scheduleMsg(logger, "cj125 init error! cj125ur and cj125ua are required.");
+		warning(CUSTOM_CJ125_0, "cj ur ua");
 		return;
 	}
 
 	if (CONFIGB(wboHeaterPin) == GPIO_UNASSIGNED) {
 		scheduleMsg(logger, "cj125 init error! wboHeaterPin is required.");
+		warning(CUSTOM_CJ125_1, "cj heater");
 		return;
 	}
 
 	globalInstance.cjInitPid(PASS_ENGINE_PARAMETER_SIGNATURE);
 	cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (driver == NULL) {
+		// error already reported
+		return;
+	}
 	scheduleMsg(logger, "cj125: Starting heater control");
 	globalInstance.StartHeaterControl(applyPinState PASS_ENGINE_PARAMETER_SUFFIX);
 	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
