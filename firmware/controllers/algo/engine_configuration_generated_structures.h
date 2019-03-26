@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 14:42:37 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 20:15:52 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2218,7 +2218,11 @@ typedef struct {
 	/**
 	 * offset 3130
 	 */
-	uint8_t unusedTest55[2];
+	pin_output_mode_e tle8888_csPinMode;
+	/**
+	 * offset 3131
+	 */
+	uint8_t unusedTest55;
 	/**
 	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	 * offset 3132
@@ -2615,4 +2619,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 14:42:37 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 20:15:52 EDT 2019

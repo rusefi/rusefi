@@ -1584,8 +1584,10 @@
 #define stepperEnablePin_offset_hex c38
 #define tle8888_cs_offset 3129
 #define tle8888_cs_offset_hex c39
-#define unusedTest55_offset 3130
-#define unusedTest55_offset_hex c3a
+#define tle8888_csPinMode_offset 3130
+#define tle8888_csPinMode_offset_hex c3a
+#define unusedTest55_offset 3131
+#define unusedTest55_offset_hex c3b
 #define crankingAdvanceBins_offset 3132
 #define crankingAdvanceBins_offset_hex c3c
 #define crankingAdvance_offset 3148
