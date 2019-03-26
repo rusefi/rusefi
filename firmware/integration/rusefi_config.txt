@@ -945,7 +945,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	adc_channel_e externalKnockSenseAdc;
 	brain_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
-	uint8_t[2] unusedTest55;
+	pin_output_mode_e tle8888_csPinMode;
+	uint8_t[1] unusedTest55;
 
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2

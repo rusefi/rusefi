@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 14:42:37 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 20:16:49 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1009,7 +1009,8 @@ public class Fields {
 	public static final int externalKnockSenseAdc_offset = 3127;
 	public static final int stepperEnablePin_offset = 3128;
 	public static final int tle8888_cs_offset = 3129;
-	public static final int unusedTest55_offset = 3130;
+	public static final int tle8888_csPinMode_offset = 3130;
+	public static final int unusedTest55_offset = 3131;
 	public static final int crankingAdvanceBins_offset = 3132;
 	public static final int crankingAdvance_offset = 3148;
 	public static final int servoOutputPins1_offset = 3164;
@@ -1889,6 +1890,8 @@ public class Fields {
 	public static final Field EXTERNALKNOCKSENSEADC = Field.create("EXTERNALKNOCKSENSEADC", 3127, FieldType.INT, adc_channel_e);
 	public static final Field STEPPERENABLEPIN = Field.create("STEPPERENABLEPIN", 3128, FieldType.INT, brain_pin_e);
 	public static final Field TLE8888_CS = Field.create("TLE8888_CS", 3129, FieldType.INT, brain_pin_e);
+	public static final Field TLE8888_CSPINMODE = Field.create("TLE8888_CSPINMODE", 3130, FieldType.INT, pin_output_mode_e);
+	public static final Field UNUSEDTEST55 = Field.create("UNUSEDTEST55", 3131, FieldType.INT);
 	public static final Field SERVOOUTPUTPINS1 = Field.create("SERVOOUTPUTPINS1", 3164, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS2 = Field.create("SERVOOUTPUTPINS2", 3165, FieldType.INT, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS3 = Field.create("SERVOOUTPUTPINS3", 3166, FieldType.INT, brain_pin_e);

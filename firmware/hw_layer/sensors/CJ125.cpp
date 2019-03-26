@@ -90,14 +90,14 @@ static int cjReadRegister(unsigned char regAddr) {
 #endif /* EFI_UNIT_TEST */
 }
 
-
 static void cjWriteRegister(unsigned char regAddr, unsigned char regValue) {
+	tx_buff[0] = regAddr;
+	tx_buff[1] = regValue;
 #ifdef CJ125_DEBUG_SPI
 	scheduleMsg(logger, "cjWriteRegister: addr=%d value=%d", regAddr, regValue);
 #endif /* CJ125_DEBUG_SPI */
+	// todo: extract 'sendSync' method?
 	spiSelect(driver);
-	tx_buff[0] = regAddr;
-	tx_buff[1] = regValue;
 	spiSend(driver, 2, tx_buff);
 	spiUnselect(driver);
 }
