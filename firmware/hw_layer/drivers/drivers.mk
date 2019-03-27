@@ -2,7 +2,7 @@ DRIVERS_DIR=$(PROJECT_DIR)/hw_layer/drivers
 
 HW_LAYER_DRIVERS_INC = \
 	$(DRIVERS_DIR) \
-	$(DRIVERS_DIR)\gpio \
+	$(DRIVERS_DIR)/gpio \
 
 HW_LAYER_DRIVERS_CORE = \
 	$(DRIVERS_DIR)/gpio/core.c \
