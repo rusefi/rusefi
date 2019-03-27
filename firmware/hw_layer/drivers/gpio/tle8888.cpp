@@ -21,6 +21,7 @@
 #define DATA_OE_ENABLE 0b00000010
 
 static unsigned char tx_buff[2];
+static unsigned char rx_buff[2];
 
 extern TunerStudioOutputChannels tsOutputChannels;
 
@@ -63,5 +64,19 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->debugMode == DBG_TLE8888) {
 		tsOutputChannels.debugIntField1 = 2;
 	}
+	/**
+	 * 15.1 SPI Protocol
+	 *
+	 * after a read or write command: the address and content of the selected register
+	 * is transmitted with the next SPI transmission (for not existing addresses or
+	 * wrong access mode the data is always “0”)
+	 */
+
+	spiReceive(driver, 2, rx_buff);
+
+	if (engineConfiguration->debugMode == DBG_TLE8888) {
+		tsOutputChannels.debugIntField2 = (rx_buff[1] << 8) + rx_buff[0];
+	}
+
 	spiUnselect(driver);
 }
