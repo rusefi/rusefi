@@ -36,16 +36,16 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 ifeq ($(PROJECT_CPU),ST_STM32F7)
 HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/stm32f7/stm32f7xx_hal_flash.c \
 				$(PROJECT_DIR)/hw_layer/stm32f7/stm32f7xx_hal_flash_ex.c
-HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/stm32f7/mpu_util.cpp
+HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/mpu_util.cpp
 endif
 
 ifeq ($(PROJECT_CPU),ST_STM32F4)
 HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/stm32f4/stm32f4xx_hal_flash.c \
 				$(PROJECT_DIR)/hw_layer/stm32f4/stm32f4xx_hal_flash_ex.c
-HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp
+HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/mpu_util.cpp
 endif
 	
 ifeq ($(PROJECT_CPU),ST_STM32F1)
-HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/stm32f1/mpu_util.cpp
+HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f1/mpu_util.cpp
 endif
 	
