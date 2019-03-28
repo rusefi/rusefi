@@ -42,6 +42,14 @@ public:
 
 private:
 	float previousValue;
+	/**
+	 * Used for Fractional TPS enrichment. 
+	 */
+	floatms_t accumulatedValue;
+	floatms_t maxExtraPerCycle;
+	floatms_t maxExtraPerPeriod;
+	floatms_t maxInjectedPerPeriod;
+	int cycleCnt;
 };
 
 /**
