@@ -8,12 +8,14 @@
 
 #include "global.h"
 
+#if EFI_PROD_CODE
 extern ioportid_t PORTS[];
 #if defined(STM32F4XX) || defined(STM32F7XX)
 ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
 #else
 ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 #endif /* defined(STM32F4XX) || defined(STM32F7XX) */
+#endif /* EFI_PROD_CODE */
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
