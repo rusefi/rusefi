@@ -20,7 +20,7 @@
  * @author Andrey Gusakov, (c) 2019
  */
 
-#include <hal.h>
+#include "global.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
 #include "pin_repository.h"
