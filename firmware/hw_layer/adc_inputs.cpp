@@ -243,12 +243,16 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 #endif /* HAL_USE_PWM */
 
 float getMCUInternalTemperature(void) {
+#ifdef ADC_CHANNEL_SENSOR
 	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
 	TemperatureValue -= 0.760; // Subtract the reference voltage at 25°C
 	TemperatureValue /= .0025; // Divide by slope 2.5mV
 
 	TemperatureValue += 25.0; // Add the 25°C
 	return TemperatureValue;
+#else
+	return 0;
+#endif /* ADC_CHANNEL_SENSOR */
 }
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
