@@ -18,7 +18,7 @@ To update the firmware:
 - you may select "verify" option to check 
 - you may select "Jump to the user program" to automatically run the main firmware after the update.
 
-See STMFlashLoader_all_screenshots.png for more info.
+![image](STMFlashLoader_all_screenshots.png)
 
 !!! Note that the bootloader can update only the main firmware, but not itself !!!
 
