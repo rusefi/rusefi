@@ -2160,6 +2160,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
 		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
 ;		field = "Decel Multiplier",	 			tpsDecelEnleanmentMultiplier
+		field = "#Accelerator Pump model:"
+		field = "Fraction Period",				tpsAccelFractionPeriod
+		field = "Fraction Divisor",				tpsAccelFractionDivisor
 		
 	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
 		field = "evaporation time constant",          wwaeTau
