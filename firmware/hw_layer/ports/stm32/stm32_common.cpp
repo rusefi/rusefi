@@ -8,6 +8,13 @@
 
 #include "global.h"
 
+extern ioportid_t PORTS[];
+#if defined(STM32F4XX) || defined(STM32F7XX)
+ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
+#else
+ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
+#endif /* defined(STM32F4XX) || defined(STM32F7XX) */
+
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
 // ADC_CHANNEL_IN0 // PA0
