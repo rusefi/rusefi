@@ -236,6 +236,15 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 void AccelEnrichmemnt::reset() {
 	cb.clear();
 	previousValue = NAN;
+	resetFractionValues();
+}
+
+void AccelEnrichmemnt::resetFractionValues() {
+	accumulatedValue = 0;
+	maxExtraPerCycle = 0;
+	maxExtraPerPeriod = 0;
+	maxInjectedPerPeriod = 0;
+	cycleCnt = 0;
 }
 
 void AccelEnrichmemnt::setLength(int length) {

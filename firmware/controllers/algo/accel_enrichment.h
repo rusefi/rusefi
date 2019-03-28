@@ -36,6 +36,7 @@ public:
 	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void reset();
+	void resetFractionValues();
 	void setLength(int length);
 	cyclic_buffer<float> cb;
 	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
