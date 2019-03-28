@@ -115,4 +115,8 @@
 
 #define EFI_UNIT_TEST FALSE
 
+#define EFI_BOARD_TEST FALSE
+#define EFI_JOYSTICK FALSE
+
+
 #endif /* EFIFEATURES_H_ */

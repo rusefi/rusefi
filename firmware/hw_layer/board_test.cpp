@@ -23,7 +23,7 @@
 
 #include "global.h"
 
-#if EFI_PROD_CODE
+#if EFI_BOARD_TEST
 #include "engine.h"
 #include "board_test.h"
 #include "pin_repository.h"
@@ -231,4 +231,4 @@ void initBoardTest(void) {
 		chThdSleepSeconds(1);
 	}
 }
-#endif  /* EFI_PROD_CODE */
+#endif  /* EFI_BOARD_TEST */

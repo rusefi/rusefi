@@ -18,7 +18,7 @@
 
 #include "engine.h"
 
-#if (HAL_USE_PAL && EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if (HAL_USE_PAL && EFI_JOYSTICK) || defined(__DOXYGEN__)
 #include "joystick.h"
 #include "pin_repository.h"
 #include "digital_input_exti.h"
@@ -117,4 +117,4 @@ void initJoystick(Logging *shared) {
 	efiSetPadMode("joy D", CONFIGB(joystickDPin), PAL_MODE_INPUT_PULLUP);
 }
 
-#endif /* HAL_USE_PAL && EFI_PROD_CODE */
+#endif /* HAL_USE_PAL && EFI_JOYSTICK */
