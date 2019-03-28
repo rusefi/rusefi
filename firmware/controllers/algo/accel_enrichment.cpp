@@ -218,6 +218,10 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		tsOutputChannels.debugFloatField2 = tpsTo;
 		tsOutputChannels.debugFloatField3 = valueFromTable;
 		tsOutputChannels.debugFloatField4 = extraFuel;
+		tsOutputChannels.debugFloatField5 = accumulatedValue;
+		tsOutputChannels.debugFloatField6 = maxExtraPerPeriod;
+		tsOutputChannels.debugFloatField7 = maxInjectedPerPeriod;
+		tsOutputChannels.debugIntField1 = cycleCnt;
 #endif /* EFI_TUNER_STUDIO */
 	}
 
