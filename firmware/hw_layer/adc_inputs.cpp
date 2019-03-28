@@ -474,6 +474,8 @@ static void configureInputs(void) {
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);
 	}
+
+	setAdcChannelOverrides();
 }
 
 void initAdcInputs(bool boardTestMode) {
