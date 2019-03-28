@@ -1,0 +1,1 @@
+make -f src/Makefile clean

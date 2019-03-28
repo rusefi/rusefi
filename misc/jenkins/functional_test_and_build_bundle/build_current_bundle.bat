@@ -10,6 +10,14 @@ echo build_current_bundle.bat: Hello rusEfi build full bundle
 echo %date% %time%
 
 
+cd firmware/bootloader
+call !clean_bootloader.bat
+call !compile_bootloader_discovery407.bat
+if not exist bootloader_generated.hxx echo FAILED TO COMPILE BOOTLOADER
+if not exist bootloader_generated.hxx exit -1
+pwd
+cd ../..
+
 cd firmware
 echo %date% %time%
 
