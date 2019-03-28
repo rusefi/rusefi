@@ -17,10 +17,12 @@
 /*
  * STM32F407xG memory setup.
  * Note: Use of ram1 and ram2 is mutually exclusive with use of ram0.
+ * 'bl' is related to rusefi bootloader
  */
 MEMORY
 {
-    flash0  : org = 0x08000000, len = 1M
+    bl      : org = 0x08000000, len = 16k     /* bootloader section */
+    flash0  : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 1016k : 1024k
     flash1  : org = 0x00000000, len = 0
     flash2  : org = 0x00000000, len = 0
     flash3  : org = 0x00000000, len = 0

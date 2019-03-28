@@ -131,7 +131,7 @@ include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_stm32.mk
 
 # Define linker script file here
 ifeq ($(LDSCRIPT),)
-  LDSCRIPT= $(CONFIG)/stm32f4ems/STM32F407xG_CCM.ld
+  LDSCRIPT= $(CONFIG)/stm32f4ems/STM32F407xG.ld
 endif
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
