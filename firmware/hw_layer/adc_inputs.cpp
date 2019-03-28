@@ -53,12 +53,15 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
+#if !defined(PWM_FREQ_SLOW) || !defined(PWM_PERIOD_SLOW)
 // todo: migrate from hardware timer to software ADC conversion triggering
 // todo: I guess we would have to use ChibiOS timer and not our own timer because
 // todo: adcStartConversionI requires OS lock. currently slow ADC is 20Hz
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_SLOW 250  /* PWM period (in PWM ticks).    */
+#endif /* PWM_FREQ_SLOW PWM_PERIOD_SLOW */
 
+#if !defined(PWM_FREQ_FAST) || !defined(PWM_PERIOD_FAST)
 /**
  * 8000 RPM is 133Hz
  * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
@@ -67,12 +70,17 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 // todo: continues mode. todo: look into our options
 #define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+#endif /* PWM_FREQ_FAST PWM_PERIOD_FAST */
 
 // is there a reason to have this configurable?
+#ifndef ADC_SLOW_DEVICE
 #define ADC_SLOW_DEVICE ADCD1
+#endif /* ADC_SLOW_DEVICE */
 
 // is there a reason to have this configurable?
+#ifndef ADC_FAST_DEVICE
 #define ADC_FAST_DEVICE ADCD2
+#endif /* ADC_FAST_DEVICE */
 
 static volatile int slowAdcCounter = 0;
 static LoggingWithStorage logger("ADC");
