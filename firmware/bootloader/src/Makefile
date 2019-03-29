@@ -127,7 +127,7 @@ include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
 
-include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_stm32.mk
+include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 
 # Define linker script file here
 ifeq ($(LDSCRIPT),)
