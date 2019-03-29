@@ -190,12 +190,38 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		extraFuel = 0;
 	}
 
+	// Fractional enrichment (fuel portions are accumulated and split between several engine cycles.
+	// This is a crude imitation of carburetor's acceleration pump.
+	if (CONFIG(tpsAccelFractionPeriod) > 1 || CONFIG(tpsAccelFractionDivisor) > 1.0f) {
+		// make sure both values are non-zero
+		float periodF = (float)maxI(CONFIG(tpsAccelFractionPeriod), 1);
+		float divisor = maxF(CONFIG(tpsAccelFractionDivisor), 1.0f);
+
+		// if current extra fuel portion is not "strong" enough, then we keep up the "pump pressure" with the accumulated portion
+		floatms_t maxExtraFuel = maxF(extraFuel, accumulatedValue);
+		// use only a fixed fraction of the accumulated portion
+		floatms_t injFuel = maxExtraFuel / divisor;
+
+		// update max counters
+		maxExtraPerCycle = maxF(extraFuel, maxExtraPerCycle);
+		maxInjectedPerPeriod = maxF(injFuel, maxInjectedPerPeriod);
+
+		// evenly split it between several engine cycles
+		extraFuel = injFuel / periodF;
+	} else {
+		resetFractionValues();
+	}
+
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 		tsOutputChannels.debugFloatField1 = tpsFrom;
 		tsOutputChannels.debugFloatField2 = tpsTo;
 		tsOutputChannels.debugFloatField3 = valueFromTable;
 		tsOutputChannels.debugFloatField4 = extraFuel;
+		tsOutputChannels.debugFloatField5 = accumulatedValue;
+		tsOutputChannels.debugFloatField6 = maxExtraPerPeriod;
+		tsOutputChannels.debugFloatField7 = maxInjectedPerPeriod;
+		tsOutputChannels.debugIntField1 = cycleCnt;
 #endif /* EFI_TUNER_STUDIO */
 	}
 
@@ -236,6 +262,15 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 void AccelEnrichmemnt::reset() {
 	cb.clear();
 	previousValue = NAN;
+	resetFractionValues();
+}
+
+void AccelEnrichmemnt::resetFractionValues() {
+	accumulatedValue = 0;
+	maxExtraPerCycle = 0;
+	maxExtraPerPeriod = 0;
+	maxInjectedPerPeriod = 0;
+	cycleCnt = 0;
 }
 
 void AccelEnrichmemnt::setLength(int length) {
@@ -247,7 +282,32 @@ void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SU
 }
 
 void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	// we update values in handleFuel() directly
+	//onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// we used some extra fuel during the current cycle, so we "charge" our "acceleration pump" with it
+	accumulatedValue -= maxExtraPerPeriod;
+	maxExtraPerPeriod = maxF(maxExtraPerCycle, maxExtraPerPeriod);
+	maxExtraPerCycle = 0;
+	accumulatedValue += maxExtraPerPeriod;
+
+	// update the accumulated value every 'Period' engine cycles
+	if (--cycleCnt <= 0) {
+		maxExtraPerPeriod = 0;
+
+		// we've injected this portion during the cycle, so we set what's left for the next cycle
+		accumulatedValue -= maxInjectedPerPeriod;
+		maxInjectedPerPeriod = 0;
+
+		// it's an infinitely convergent series, so we set a limit at some point
+		// (also make sure that accumulatedValue is positive, for safety)
+		static const floatms_t smallEpsilon = 0.001f;
+		if (accumulatedValue < smallEpsilon)
+			accumulatedValue = 0;
+
+		// reset the counter
+		cycleCnt = CONFIG(tpsAccelFractionPeriod);
+	}
 }
 
 void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

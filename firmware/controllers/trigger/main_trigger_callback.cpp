@@ -391,7 +391,10 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	ENGINE(tpsAccelEnrichment.onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX));
-	ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	if (trgEventIndex == 0) {
+		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
+		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	}
 
 	/**
 	 * we have same assignment of 'getInjectionDuration' to 'injectionDuration' in periodicFastCallback()
