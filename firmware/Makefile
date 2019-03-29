@@ -76,6 +76,10 @@ ifeq ($(USE_BOOTLOADER),)
   USE_BOOTLOADER = no
 endif
 
+ifeq ($(USE_FATFS),)
+  USE_FATFS = yes
+endif
+
 #
 # Build global options
 ##############################################################################
@@ -125,11 +129,15 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
+ifeq ($(USE_FATFS),yes)
 include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
+endif
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 include console/binary/tunerstudio.mk
+ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
+endif
 
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
