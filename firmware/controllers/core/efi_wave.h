@@ -9,6 +9,12 @@
 
 #include "global.h"
 
+/**
+ * This layer has two primary usages:
+ * 1) 'simple' PWM generation is used to produce actuator square control wave
+ * 2) 'complex' PWM generation is used for trigger simulator.
+ * Some triggers like Nissan 360 slot optical wheel need a lot of points to describe the shape of the wave.
+ */
 #ifndef PWM_PHASE_MAX_COUNT
 #define PWM_PHASE_MAX_COUNT 252
 #endif /* PWM_PHASE_MAX_COUNT */
