@@ -1309,10 +1309,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->tpsMax = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		engineConfiguration->tpsMin = valueI;
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "rpm")) {
 		setTriggerEmulatorRPM(valueI);
-#endif /* ! EFI_UNIT_TEST */
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffset = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
