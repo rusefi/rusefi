@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Tue Mar 26 12:23:02 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 28 22:47:39 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1059,9 +1059,10 @@ public class Fields {
 	public static final int idleTimingPidWorkZone_offset = 4012;
 	public static final int idleTimingPidDeadZone_offset = 4014;
 	public static final int idlePidFalloffDeltaRpm_offset = 4016;
-	public static final int unusedIdleTimingPid_offset = 4018;
-	public static final int tle8888spiDevice_offset = 4020;
-	public static final int mainUnusedEnd_offset = 4024;
+	public static final int tpsAccelFractionPeriod_offset = 4018;
+	public static final int tpsAccelFractionDivisor_offset = 4020;
+	public static final int tle8888spiDevice_offset = 4024;
+	public static final int mainUnusedEnd_offset = 4028;
 	public static final int cltCrankingCorrBins_offset = 6480;
 	public static final int cltCrankingCorrBins_offset_hex = 1950;
 	public static final int cltCrankingCorr_offset = 6512;
@@ -1932,8 +1933,9 @@ public class Fields {
 	public static final Field IDLETIMINGPIDWORKZONE = Field.create("IDLETIMINGPIDWORKZONE", 4012, FieldType.INT);
 	public static final Field IDLETIMINGPIDDEADZONE = Field.create("IDLETIMINGPIDDEADZONE", 4014, FieldType.INT);
 	public static final Field IDLEPIDFALLOFFDELTARPM = Field.create("IDLEPIDFALLOFFDELTARPM", 4016, FieldType.INT);
-	public static final Field UNUSEDIDLETIMINGPID = Field.create("UNUSEDIDLETIMINGPID", 4018, FieldType.INT);
-	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4020, FieldType.INT);
+	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 4018, FieldType.INT);
+	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 4020, FieldType.FLOAT);
+	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4024, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
