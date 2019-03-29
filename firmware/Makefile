@@ -7,6 +7,13 @@ CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
 
+# Define project name here
+PROJECT = rusefi
+PROJECT_DIR = .
+
+# Imported source files and paths
+CHIBIOS_CONTRIB = ChibiOS-Contrib
+
 include rusefi.mk
 
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
@@ -108,18 +115,11 @@ MAKEFLAGS += ${NUMJOBS}
 # Project, sources and paths
 #
 
-# Define project name here
-PROJECT = rusefi
-PROJECT_DIR = .
-
-# Imported source files and paths
-CHIBIOS_CONTRIB = ChibiOS-Contrib
-
 # Startup files.
-include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/$(CPU_STARTUP)
+include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
 include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
-include $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
+include $(CPU_PLATFORM_DIR)
 include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
