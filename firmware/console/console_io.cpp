@@ -19,6 +19,7 @@
  */
 
 #include "global.h"
+#include "engine.h"
 #include "console_io.h"
 #include "rfiutil.h"
 #include "tunerstudio.h"

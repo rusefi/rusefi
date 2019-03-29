@@ -15,6 +15,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "global.h"
 #include "fsio_impl.h"
 #include "mazda_miata.h"
 #include "engine_math.h"
