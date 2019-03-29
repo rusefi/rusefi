@@ -23,7 +23,7 @@
 
 #include "global.h"
 
-#if EFI_BOARD_TEST
+#if EFI_BOARD_TEST || defined(__DOXYGEN__)
 #include "engine.h"
 #include "board_test.h"
 #include "pin_repository.h"
