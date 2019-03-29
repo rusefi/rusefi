@@ -6,7 +6,7 @@
  */
 
 #include "global.h"
-#include "EfiWave.h"
+#include "efi_wave.h"
 #include "trigger_structure.h"
 
 SingleWave::SingleWave() {

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "hardware.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 #include "flash.h"
 

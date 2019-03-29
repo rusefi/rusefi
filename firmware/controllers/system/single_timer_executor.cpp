@@ -17,7 +17,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "SingleTimerExecutor.h"
+#include "single_timer_executor.h"
 #include "efitime.h"
 #include "efilib2.h"
 

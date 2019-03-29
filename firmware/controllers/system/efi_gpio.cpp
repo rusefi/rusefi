@@ -1,5 +1,5 @@
 /**
- * @file	efiGpio.cpp
+ * @file	efi_gpio.cpp
  * @brief	EFI-related GPIO code
  *
  * @date Sep 26, 2014
@@ -8,7 +8,7 @@
 
 #include "global.h"
 #include "engine.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 #include "pin_repository.h"

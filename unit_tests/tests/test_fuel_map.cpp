@@ -13,7 +13,7 @@
 #include "engine_math.h"
 #include "trigger_decoder.h"
 #include "engine_test_helper.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "advance_map.h"
 
 extern float testMafValue;

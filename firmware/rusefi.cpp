@@ -108,7 +108,7 @@
 #include "trigger_structure.h"
 #include "hardware.h"
 #include "engine_controller.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 #include "rfi_perftest.h"
 #include "rusefi.h"

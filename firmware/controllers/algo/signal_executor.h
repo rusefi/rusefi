@@ -11,7 +11,7 @@
 
 #include "global.h"
 #include "scheduler.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 #include "signal_executor_sleep.h"

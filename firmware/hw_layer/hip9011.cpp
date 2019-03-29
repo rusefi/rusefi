@@ -195,9 +195,9 @@ void setHip9011FrankensoPinout(void) {
 	CONFIGB(hip9011IntHoldPin) = GPIOB_11;
 	CONFIGB(hip9011IntHoldPinMode) = OM_OPENDRAIN;
 
-	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
-	engineConfiguration->spi2MisoMode = PAL_STM32_PUPDR_PULLUP; // 32
+	engineConfiguration->spi2SckMode = PO_OPENDRAIN; // 4
+	engineConfiguration->spi2MosiMode = PO_OPENDRAIN; // 4
+	engineConfiguration->spi2MisoMode = PO_PULLUP; // 32
 #endif /* EFI_PROD_CODE */
 
 	engineConfiguration->hip9011Gain = 1;

@@ -13,7 +13,7 @@
 #include "voltage.h"
 #include "pid.h"
 #include "LocalVersionHolder.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 #include "pwm_generator.h"

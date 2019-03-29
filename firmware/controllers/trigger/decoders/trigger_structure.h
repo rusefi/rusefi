@@ -10,7 +10,7 @@
 
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
-#include "EfiWave.h"
+#include "efi_wave.h"
 #include "globalaccess.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720

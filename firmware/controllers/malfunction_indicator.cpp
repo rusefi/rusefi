@@ -29,8 +29,8 @@
 #include "io_pins.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
-#include "efiGpio.h"
-#include "PeriodicController.h"
+#include "efi_gpio.h"
+#include "periodic_controller.h"
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 

@@ -13,7 +13,7 @@
 
 #define DEBUG_PWM FALSE
 
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 void initPwmGenerator(void);
 

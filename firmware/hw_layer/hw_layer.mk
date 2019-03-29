@@ -22,8 +22,8 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/board_test.cpp \
 	$(PROJECT_DIR)/hw_layer/pwm_generator.cpp \
 	$(PROJECT_DIR)/hw_layer/trigger_input.cpp \
-	$(PROJECT_DIR)/hw_layer/HIP9011.cpp \
-	$(PROJECT_DIR)/hw_layer/HIP9011_logic.cpp \
+	$(PROJECT_DIR)/hw_layer/hip9011.cpp \
+	$(PROJECT_DIR)/hw_layer/hip9011_logic.cpp \
 	$(PROJECT_DIR)/hw_layer/vehicle_speed.cpp \
 	$(PROJECT_DIR)/hw_layer/joystick.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
@@ -46,5 +46,5 @@ endif
 ifeq ($(PROJECT_CPU),ST_STM32F1)
 endif
 
-include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
+-include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 	

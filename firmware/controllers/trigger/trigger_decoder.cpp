@@ -23,7 +23,7 @@
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
 #include "cyclic_buffer.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "engine.h"
 #include "engine_math.h"
 #include "trigger_central.h"

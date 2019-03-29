@@ -27,7 +27,7 @@
 #include "engine.h"
 #include "rtc_helper.h"
 #include "io_pins.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "svnversion.h"
 #include "joystick.h"
 #include "utlist.h"

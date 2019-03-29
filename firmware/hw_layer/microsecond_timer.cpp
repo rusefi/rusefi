@@ -20,7 +20,7 @@
 
 #if (EFI_PROD_CODE && HAL_USE_GPT) || defined(__DOXYGEN__)
 #include "efilib2.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 
 /**
  * Maximum duration of complete timer callback, all pending events together

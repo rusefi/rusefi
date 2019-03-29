@@ -9,7 +9,7 @@
 
 #if HAL_USE_PAL && EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "digital_input_exti.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use

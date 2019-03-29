@@ -31,10 +31,10 @@
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
 #include "pin_repository.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "settings.h"
 #include "idle_thread.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 
 EXTERN_ENGINE
 ;

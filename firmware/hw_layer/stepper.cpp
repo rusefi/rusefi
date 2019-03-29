@@ -149,7 +149,8 @@ void StepperMotor::pulse() {
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
-		float reactionTime, int totalSteps, brain_pin_e enablePin, Logging *sharedLogger) {
+		float reactionTime, int totalSteps,
+		brain_pin_e enablePin, pin_output_mode_e enablePinMode, Logging *sharedLogger) {
 	this->reactionTime = maxF(1, reactionTime);
 	this->totalSteps = maxI(3, totalSteps);
 	
@@ -173,6 +174,7 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 #endif /* EFI_PROD_CODE */
 
 	efiSetPadMode("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
+	// todo: start using enablePinMode parameter here #718
 	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
 	palWritePad(this->enablePort, enablePin, true); // disable stepper
 

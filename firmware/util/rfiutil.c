@@ -74,8 +74,6 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 	}
 }
 
-#endif
-
 /**
  * @return TRUE if already in locked context
  */
@@ -110,3 +108,6 @@ void unlockAnyContext(void) {
 	}
 #endif /* #if USE_PORT_LOCK */
 }
+
+#endif
+
