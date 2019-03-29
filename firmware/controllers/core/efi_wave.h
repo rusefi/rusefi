@@ -9,7 +9,9 @@
 
 #include "global.h"
 
+#ifndef PWM_PHASE_MAX_COUNT
 #define PWM_PHASE_MAX_COUNT 252
+#endif /* PWM_PHASE_MAX_COUNT */
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
 /**

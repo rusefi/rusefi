@@ -339,16 +339,16 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->acRelayPinMode = OM_DEFAULT;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 	setDefaultAlternatorParameters();
-#endif
+#endif /* EFI_ALTERNATOR_CONTROL */
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	setDefaultEtbBiasCurve(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	setDefaultIdleParameters();
-#endif
+#endif /* EFI_IDLE_CONTROL */
 	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
 	boardConfiguration->cj125CsPin = GPIO_UNASSIGNED;
 

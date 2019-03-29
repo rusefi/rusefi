@@ -14,8 +14,7 @@
 
 #include "engine.h"
 
-// todo: EFI_SERVO macro
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if EFI_SERVO || EFI_SIMULATOR
 #include "servo.h"
 #include "pin_repository.h"
 
@@ -84,5 +83,5 @@ void initServo(void) {
 
 	chThdCreateStatic(seThreadStack, sizeof(seThreadStack), NORMALPRIO, (tfunc_t)(void*) seThread, NULL);
 }
-#endif
+#endif /* EFI_SERVO */
 

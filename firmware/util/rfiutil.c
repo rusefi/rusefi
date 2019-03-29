@@ -74,4 +74,40 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 	}
 }
 
+/**
+ * @return TRUE if already in locked context
+ */
+bool lockAnyContext(void) {
+	int alreadyLocked = isLocked();
+	if (alreadyLocked)
+		return true;
+#if USE_PORT_LOCK
+	port_lock();
+#else /* #if USE_PORT_LOCK */
+	if (isIsrContext()) {
+		chSysLockFromISR()
+		;
+	} else {
+		chSysLock()
+		;
+	}
+#endif /* #if USE_PORT_LOCK */
+	return false;
+}
+
+void unlockAnyContext(void) {
+#if USE_PORT_LOCK
+	port_unlock();
+#else /* #if USE_PORT_LOCK */
+	if (isIsrContext()) {
+		chSysUnlockFromISR()
+		;
+	} else {
+		chSysUnlock()
+		;
+	}
+#endif /* #if USE_PORT_LOCK */
+}
+
 #endif
+

@@ -34,7 +34,7 @@ static uart_dma_s tsUartDma;
 static void tsCopyDataFromDMA() {
 	chSysLockFromISR();
 	// get 0-based DMA buffer position
-	int dmaPos = TS_DMA_BUFFER_SIZE - dmaStreamGetTransactionSize(TS_DMA_UART_DEVICE->dmarx);
+	int dmaPos = TS_DMA_BUFFER_SIZE - dmaStreamGetTransactionSize(TS_UART_DEVICE->dmarx);
 	// if the position is wrapped (circular DMA-mode enabled)
 	if (dmaPos < tsUartDma.readPos)
 		dmaPos += TS_DMA_BUFFER_SIZE;
@@ -70,6 +70,12 @@ static UARTConfig tsDmaUartConfig = {
 	0, 0, 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, 0,
 	/*timeout_cb*/tsRxIRQIdleHandler, /*rxhalf_cb*/tsRxIRQHalfHandler
 };
+#elif TS_UART_MODE
+/* Note: This structure is modified from the default ChibiOS layout! */
+static UARTConfig tsUartConfig = { 
+	NULL, NULL, NULL, NULL, NULL, 
+	0, 0, 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, 0
+};
 #else
 static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif /* TS_UART_DMA_MODE */
@@ -103,18 +109,23 @@ void startTsPort(ts_channel_s *tsChannel) {
 			
 			// start DMA driver
 			tsDmaUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
-			uartStart(TS_DMA_UART_DEVICE, &tsDmaUartConfig);
+			uartStart(TS_UART_DEVICE, &tsDmaUartConfig);
 
 			// start continuous DMA transfer using our circular buffer
 			tsUartDma.readPos = 0;
-			uartStartReceive(TS_DMA_UART_DEVICE, sizeof(tsUartDma.dmaBuffer), tsUartDma.dmaBuffer);
+			uartStartReceive(TS_UART_DEVICE, sizeof(tsUartDma.dmaBuffer), tsUartDma.dmaBuffer);
+#elif TS_UART_MODE
+			print("Using UART mode");
+			// start DMA driver
+			tsUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+			uartStart(TS_UART_DEVICE, &tsUartConfig);
 #else
 			print("Using Serial mode");
 			tsSerialConfig.speed = CONFIGB(tunerStudioSerialSpeed);
 
-			sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
+			sdStart(TS_SERIAL_DEVICE, &tsSerialConfig);
 			
-			tsChannel->channel = (BaseChannel *) TS_SERIAL_UART_DEVICE;
+			tsChannel->channel = (BaseChannel *) TS_SERIAL_DEVICE;
 #endif /* TS_UART_DMA_MODE */
 		} else
 			tsChannel->channel = (BaseChannel *) NULL;	// actually not used
@@ -138,10 +149,10 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 	{
 		if (CONFIGB(useSerialPort)) {
 			// todo: disable Rx/Tx pads?
-#if TS_UART_DMA_MODE
-			uartStop(TS_DMA_UART_DEVICE);
+#if (TS_UART_DMA_MODE || TS_UART_MODE)
+			uartStop(TS_UART_DEVICE);
 #else
-			sdStop(TS_SERIAL_UART_DEVICE);
+			sdStop(TS_SERIAL_DEVICE);
 #endif /* TS_UART_DMA_MODE */
 		}
 	}
@@ -160,10 +171,10 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
 #endif
 
-#if TS_UART_DMA_MODE && EFI_PROD_CODE
+#if (TS_UART_DMA_MODE || TS_UART_MODE) && EFI_PROD_CODE
 	UNUSED(tsChannel);
 	int transferred = size;
-	uartSendTimeout(TS_DMA_UART_DEVICE, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
+	uartSendTimeout(TS_UART_DEVICE, (size_t *)&transferred, buffer, BINARY_IO_TIMEOUT);
 #else
 	if (tsChannel->channel == NULL)
 		return;
@@ -197,6 +208,11 @@ int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int 
 #if TS_UART_DMA_MODE || defined(__DOXYGEN__)
 	UNUSED(tsChannel);
 	return (int)iqReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, timeout);
+#elif TS_UART_MODE
+	UNUSED(tsChannel);
+	size_t received = (size_t)size;
+	uartReceiveTimeout(TS_UART_DEVICE, &received, buffer, timeout);
+	return (int)received;
 #else /* TS_UART_DMA_MODE */
 	if (tsChannel->channel == NULL)
 		return 0;

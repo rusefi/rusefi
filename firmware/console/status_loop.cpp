@@ -102,8 +102,11 @@ extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
 #define FULL_LOGGING_KEY "fl"
 
+#if !defined(STATUS_LOGGING_BUFFER_SIZE) || defined(__DOXYGEN__)
+#define STATUS_LOGGING_BUFFER_SIZE 1800
+#endif /* STATUS_LOGGING_BUFFER_SIZE */
 
-static char LOGGING_BUFFER[1800] CCM_OPTIONAL;
+static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
@@ -650,6 +653,7 @@ static void blinkingThread(void *arg) {
 
 #endif /* EFI_PROD_CODE */
 
+#if EFI_LCD || defined(__DOXYGEN__)
 class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	LcdController() : PeriodicController("BenchThread") { }
@@ -666,6 +670,7 @@ private:
 };
 
 static LcdController lcdInstance;
+#endif /* EFI_LCD */
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 extern HIP9011 instance;
@@ -984,7 +989,9 @@ void startStatusThreads(void) {
 	initStatusLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
 #endif /* EFI_PROD_CODE */
+#if EFI_LCD || defined(__DOXYGEN__)
 	lcdInstance.Start();
+#endif /* EFI_LCD */
 }
 
 void setFullLog(int value) {

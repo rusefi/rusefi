@@ -452,16 +452,22 @@ const char *portname(ioportid_t GPIOx) {
 		return "PC";
 	if (GPIOx == GPIOD)
 		return "PD";
-#if defined(STM32F4XX) || defined(STM32F7XX)
+#if STM32_HAS_GPIOE
 	if (GPIOx == GPIOE)
 		return "PE";
-	if (GPIOx == GPIOG)
-		return "PG";
-	if (GPIOx == GPIOH)
-		return "PH";
-#endif
+#endif /* STM32_HAS_GPIOE */
+#if STM32_HAS_GPIOF
 	if (GPIOx == GPIOF)
 		return "PF";
+#endif /* STM32_HAS_GPIOF */
+#if STM32_HAS_GPIOG
+	if (GPIOx == GPIOG)
+		return "PG";
+#endif /* STM32_HAS_GPIOG */
+#if STM32_HAS_GPIOH
+	if (GPIOx == GPIOH)
+		return "PH";
+#endif /* STM32_HAS_GPIOH */
 	return "unknown";
 }
 
