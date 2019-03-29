@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 28 22:47:39 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 29 02:31:18 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -1836,7 +1836,7 @@ public class Fields {
 	public static final Field TIMING_OFFSET_CYLINDER12 = Field.create("TIMING_OFFSET_CYLINDER12", 2608, FieldType.INT);
 	public static final Field IDLEPIDACTIVATIONTIME = Field.create("IDLEPIDACTIVATIONTIME", 2612, FieldType.FLOAT);
 	public static final Field SDCARDSPIDEVICE = Field.create("SDCARDSPIDEVICE", 2616, FieldType.INT);
-	public static final String[] pin_mode_e = {"default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "mode12", "mode13", "mode14", "mode15", "mode16", "mode17", "mode18", "mode19", "mode20", "mode21", "mode22", "mode23", "mode24", "mode25", "mode26", "mode27", "mode28", "mode29", "mode30", "mode31", "PULLUP", "mode33", "mode34", "mode35"};
+	public static final String[] pin_mode_e = {"default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"};
 	public static final Field SPI1SCKMODE = Field.create("SPI1SCKMODE", 2620, FieldType.INT, pin_mode_e);
 	public static final Field SPI1MOSIMODE = Field.create("SPI1MOSIMODE", 2621, FieldType.INT, pin_mode_e);
 	public static final Field SPI1MISOMODE = Field.create("SPI1MISOMODE", 2622, FieldType.INT, pin_mode_e);
@@ -1846,7 +1846,7 @@ public class Fields {
 	public static final Field SPI3SCKMODE = Field.create("SPI3SCKMODE", 2626, FieldType.INT, pin_mode_e);
 	public static final Field SPI3MOSIMODE = Field.create("SPI3MOSIMODE", 2627, FieldType.INT, pin_mode_e);
 	public static final Field SPI3MISOMODE = Field.create("SPI3MISOMODE", 2628, FieldType.INT, pin_mode_e);
-	public static final Field STEPPERENABLEPINMODE = Field.create("STEPPERENABLEPINMODE", 2629, FieldType.INT, pin_mode_e);
+	public static final Field STEPPERENABLEPINMODE = Field.create("STEPPERENABLEPINMODE", 2629, FieldType.INT, pin_output_mode_e);
 	public static final Field BRAKEPEDALPIN = Field.create("BRAKEPEDALPIN", 2632, FieldType.INT, brain_pin_e);
 	public static final Field CJ125UA = Field.create("CJ125UA", 2633, FieldType.INT, adc_channel_e);
 	public static final Field CJ125UR = Field.create("CJ125UR", 2634, FieldType.INT, adc_channel_e);

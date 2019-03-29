@@ -26,8 +26,6 @@ typedef unsigned int time_t;
 // time in seconds
 typedef time_t efitimesec_t;
 
-typedef uint8_t pin_mode_e;
-
 /**
  * integer time in milliseconds
  * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.
