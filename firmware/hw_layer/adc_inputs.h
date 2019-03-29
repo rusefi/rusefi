@@ -38,6 +38,9 @@ void printFullAdcReportIfNeeded(Logging *log);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
+void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode);
+void removeChannel(const char *name, adc_channel_e setting);
+
 // max(ADC_BUF_DEPTH_SLOW, ADC_BUF_DEPTH_FAST)
 #define MAX_ADC_GRP_BUF_DEPTH 8
 

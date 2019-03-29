@@ -5,6 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
+#include "global.h"
 #include "HIP9011_logic.h"
 
 EXTERN_ENGINE;

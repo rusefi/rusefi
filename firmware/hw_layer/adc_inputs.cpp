@@ -53,12 +53,15 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
+#if !defined(PWM_FREQ_SLOW) || !defined(PWM_PERIOD_SLOW)
 // todo: migrate from hardware timer to software ADC conversion triggering
 // todo: I guess we would have to use ChibiOS timer and not our own timer because
 // todo: adcStartConversionI requires OS lock. currently slow ADC is 20Hz
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_SLOW 250  /* PWM period (in PWM ticks).    */
+#endif /* PWM_FREQ_SLOW PWM_PERIOD_SLOW */
 
+#if !defined(PWM_FREQ_FAST) || !defined(PWM_PERIOD_FAST)
 /**
  * 8000 RPM is 133Hz
  * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
@@ -67,12 +70,17 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 // todo: continues mode. todo: look into our options
 #define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+#endif /* PWM_FREQ_FAST PWM_PERIOD_FAST */
 
 // is there a reason to have this configurable?
+#ifndef ADC_SLOW_DEVICE
 #define ADC_SLOW_DEVICE ADCD1
+#endif /* ADC_SLOW_DEVICE */
 
 // is there a reason to have this configurable?
+#ifndef ADC_FAST_DEVICE
 #define ADC_FAST_DEVICE ADCD2
+#endif /* ADC_FAST_DEVICE */
 
 static volatile int slowAdcCounter = 0;
 static LoggingWithStorage logger("ADC");
@@ -235,12 +243,16 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 #endif /* HAL_USE_PWM */
 
 float getMCUInternalTemperature(void) {
+#ifdef ADC_CHANNEL_SENSOR
 	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
 	TemperatureValue -= 0.760; // Subtract the reference voltage at 25°C
 	TemperatureValue /= .0025; // Divide by slope 2.5mV
 
 	TemperatureValue += 25.0; // Add the 25°C
 	return TemperatureValue;
+#else
+	return 0;
+#endif /* ADC_CHANNEL_SENSOR */
 }
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
@@ -290,128 +302,6 @@ static void initAdcPin(brain_pin_e pin, const char *msg) {
 	efiSetPadMode("adc input", pin, PAL_MODE_INPUT_ANALOG);
 }
 
-brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
-	// todo: replace this with an array :)
-	switch (hwChannel) {
-	case EFI_ADC_0:
-		return GPIOA_0;
-	case EFI_ADC_1:
-		return GPIOA_1;
-	case EFI_ADC_2:
-		return GPIOA_2;
-	case EFI_ADC_3:
-		return GPIOA_3;
-	case EFI_ADC_4:
-		return GPIOA_4;
-	case EFI_ADC_5:
-		return GPIOA_5;
-	case EFI_ADC_6:
-		return GPIOA_6;
-	case EFI_ADC_7:
-		return GPIOA_7;
-	case EFI_ADC_8:
-		return GPIOB_0;
-	case EFI_ADC_9:
-		return GPIOB_1;
-	case EFI_ADC_10:
-		return GPIOC_0;
-	case EFI_ADC_11:
-		return GPIOC_1;
-	case EFI_ADC_12:
-		return GPIOC_2;
-	case EFI_ADC_13:
-		return GPIOC_3;
-	case EFI_ADC_14:
-		return GPIOC_4;
-	case EFI_ADC_15:
-		return GPIOC_5;
-	default:
-		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-		return GPIO_INVALID;
-	}
-}
-
-adc_channel_e getAdcChannel(brain_pin_e pin) {
-	switch (pin) {
-	case GPIOA_0:
-		return EFI_ADC_0;
-	case GPIOA_1:
-		return EFI_ADC_1;
-	case GPIOA_2:
-		return EFI_ADC_2;
-	case GPIOA_3:
-		return EFI_ADC_3;
-	case GPIOA_4:
-		return EFI_ADC_4;
-	case GPIOA_5:
-		return EFI_ADC_5;
-	case GPIOA_6:
-		return EFI_ADC_6;
-	case GPIOA_7:
-		return EFI_ADC_7;
-	case GPIOB_0:
-		return EFI_ADC_8;
-	case GPIOB_1:
-		return EFI_ADC_9;
-	case GPIOC_0:
-		return EFI_ADC_10;
-	case GPIOC_1:
-		return EFI_ADC_11;
-	case GPIOC_2:
-		return EFI_ADC_12;
-	case GPIOC_3:
-		return EFI_ADC_13;
-	case GPIOC_4:
-		return EFI_ADC_14;
-	case GPIOC_5:
-		return EFI_ADC_15;
-	default:
-		return EFI_ADC_ERROR;
-	}
-}
-
-// deprecated - migrate to 'getAdcChannelBrainPin'
-ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
-	// todo: replace this with an array :)
-	switch (hwChannel) {
-	case ADC_CHANNEL_IN0:
-		return GPIOA;
-	case ADC_CHANNEL_IN1:
-		return GPIOA;
-	case ADC_CHANNEL_IN2:
-		return GPIOA;
-	case ADC_CHANNEL_IN3:
-		return GPIOA;
-	case ADC_CHANNEL_IN4:
-		return GPIOA;
-	case ADC_CHANNEL_IN5:
-		return GPIOA;
-	case ADC_CHANNEL_IN6:
-		return GPIOA;
-	case ADC_CHANNEL_IN7:
-		return GPIOA;
-	case ADC_CHANNEL_IN8:
-		return GPIOB;
-	case ADC_CHANNEL_IN9:
-		return GPIOB;
-	case ADC_CHANNEL_IN10:
-		return GPIOC;
-	case ADC_CHANNEL_IN11:
-		return GPIOC;
-	case ADC_CHANNEL_IN12:
-		return GPIOC;
-	case ADC_CHANNEL_IN13:
-		return GPIOC;
-	case ADC_CHANNEL_IN14:
-		return GPIOC;
-	case ADC_CHANNEL_IN15:
-		return GPIOC;
-	default:
-		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-		return NULL;
-	}
-}
-
 const char * getAdcMode(adc_channel_e hwChannel) {
 	if (slowAdc.isHwUsed(hwChannel)) {
 		return "slow";
@@ -420,49 +310,6 @@ const char * getAdcMode(adc_channel_e hwChannel) {
 		return "fast";
 	}
 	return "INACTIVE - need restart";
-}
-
-// deprecated - migrate to 'getAdcChannelBrainPin'
-int getAdcChannelPin(adc_channel_e hwChannel) {
-	// todo: replace this with an array :)
-	switch (hwChannel) {
-	case ADC_CHANNEL_IN0:
-		return 0;
-	case ADC_CHANNEL_IN1:
-		return 1;
-	case ADC_CHANNEL_IN2:
-		return 2;
-	case ADC_CHANNEL_IN3:
-		return 3;
-	case ADC_CHANNEL_IN4:
-		return 4;
-	case ADC_CHANNEL_IN5:
-		return 5;
-	case ADC_CHANNEL_IN6:
-		return 6;
-	case ADC_CHANNEL_IN7:
-		return 7;
-	case ADC_CHANNEL_IN8:
-		return 0;
-	case ADC_CHANNEL_IN9:
-		return 1;
-	case ADC_CHANNEL_IN10:
-		return 0;
-	case ADC_CHANNEL_IN11:
-		return 1;
-	case ADC_CHANNEL_IN12:
-		return 2;
-	case ADC_CHANNEL_IN13:
-		return 3;
-	case ADC_CHANNEL_IN14:
-		return 4;
-	case ADC_CHANNEL_IN15:
-		return 5;
-	default:
-		// todo: better error handling, that's input parameter validation
-		firmwareError(CUSTOM_ERR_ADC_CHANNEL, "Unknown hw channel %d", hwChannel);
-		return -1;
-	}
 }
 
 static void initAdcHwChannel(adc_channel_e hwChannel) {
@@ -597,7 +444,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 
 static char errorMsgBuff[10];
 
-static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
+void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (setting == EFI_ADC_NONE) {
 		return;
 	}
@@ -608,6 +455,13 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 
 	adcHwChannelUsage[setting] = name;
 	adcHwChannelEnabled[setting] = mode;
+}
+
+void removeChannel(const char *name, adc_channel_e setting) {
+	if (setting == EFI_ADC_NONE) {
+		return;
+	}
+	adcHwChannelEnabled[setting] = ADC_OFF;
 }
 
 static void configureInputs(void) {
@@ -639,6 +493,8 @@ static void configureInputs(void) {
 	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
 		addChannel("FSIOadc", engineConfiguration->fsioAdc[i], ADC_SLOW);
 	}
+
+	setAdcChannelOverrides();
 }
 
 void initAdcInputs(bool boardTestMode) {
@@ -693,23 +549,6 @@ void initAdcInputs(bool boardTestMode) {
 		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
 #endif /* HAL_USE_PWM */
 	}
-
-	// ADC_CHANNEL_IN0 // PA0
-	// ADC_CHANNEL_IN1 // PA1
-	// ADC_CHANNEL_IN2 // PA2
-	// ADC_CHANNEL_IN3 // PA3
-	// ADC_CHANNEL_IN4 // PA4
-	// ADC_CHANNEL_IN5 // PA5 - this is also TIM2_CH1
-	// ADC_CHANNEL_IN6 // PA6
-	// ADC_CHANNEL_IN7 // PA7
-	// ADC_CHANNEL_IN8 // PB0
-	// ADC_CHANNEL_IN9 // PB1
-	// ADC_CHANNEL_IN10 // PC0
-	// ADC_CHANNEL_IN11 // PC1
-	// ADC_CHANNEL_IN12 // PC2
-	// ADC_CHANNEL_IN13 // PC3
-	// ADC_CHANNEL_IN14 // PC4
-	// ADC_CHANNEL_IN15 // PC5
 
 	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
 

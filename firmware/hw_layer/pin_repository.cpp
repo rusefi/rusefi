@@ -20,10 +20,26 @@ static ioportid_t ports[] = {GPIOA,
 		GPIOB,
 		GPIOC,
 		GPIOD,
+#if STM32_HAS_GPIOE
 		GPIOE,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOE */
+#if STM32_HAS_GPIOF
 		GPIOF,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOF */
+#if STM32_HAS_GPIOG
 		GPIOG,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOG */
+#if STM32_HAS_GPIOH
 		GPIOH,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOH */
 };
 
 #define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
@@ -49,20 +65,22 @@ static int getPortIndex(ioportid_t port) {
 		return 2;
 	if (port == GPIOD)
 		return 3;
-#if defined(STM32F4XX) || defined(STM32F7XX)
+#if STM32_HAS_GPIOE
 	if (port == GPIOE)
 		return 4;
-#endif /* defined(STM32F4XX) */
+#endif /* STM32_HAS_GPIOE */
+#if STM32_HAS_GPIOF
 	if (port == GPIOF)
 		return 5;
-#if defined(STM32F4XX) || defined(STM32F7XX)
+#endif /* STM32_HAS_GPIOF */
+#if STM32_HAS_GPIOG
 	if (port == GPIOG)
 		return 6;
-#endif /* defined(STM32F4XX) */
-#if defined(STM32F4XX) || defined(STM32F7XX)
+#endif /* STM32_HAS_GPIOG */
+#if STM32_HAS_GPIOH
 	if (port == GPIOH)
 		return 7;
-#endif /* defined(STM32F4XX) */
+#endif /* STM32_HAS_GPIOH */
 	firmwareError(CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }

@@ -29,7 +29,9 @@
 uint32_t maxPrecisionCallbackDuration = 0;
 
 // must be one of 32 bit times
+#ifndef GPTDEVICE
 #define GPTDEVICE GPTD5
+#endif /* GPTDEVICE */
 
 static volatile efitick_t lastSetTimerTimeNt;
 static int lastSetTimerValue;

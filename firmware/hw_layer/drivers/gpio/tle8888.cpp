@@ -12,6 +12,8 @@
 #include "tle8888.h"
 #include "hardware.h"
 
+#if EFI_TLE8888 || defined(__DOXYGEN__)
+
 /**
  * 15.2 SPI Frame Definition
  *
@@ -80,3 +82,5 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	spiUnselect(driver);
 }
+
+#endif /* EFI_TLE8888 */

@@ -82,3 +82,5 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->is_enabled_spi_3 = false;
 }
 
+void setAdcChannelOverrides(void) {
+}

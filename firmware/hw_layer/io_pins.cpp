@@ -27,12 +27,7 @@ EXTERN_ENGINE;
 static LoggingWithStorage logger("io_pins");
 
 extern EnginePins enginePins;
-
-#if defined(STM32F4XX) || defined(STM32F7XX)
-static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
-#else
-static ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
-#endif /* defined(STM32F4XX) || defined(STM32F7XX) */
+extern ioportid_t PORTS[];
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
