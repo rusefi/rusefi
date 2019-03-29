@@ -142,7 +142,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
 	$(HW_LAYER_EMS_CPP) \
-	$(PROJECT_DIR)/hw_layer/sensors/CJ125.cpp \
+	$(PROJECT_DIR)/hw_layer/sensors/cj125.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
