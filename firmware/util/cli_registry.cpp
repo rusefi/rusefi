@@ -43,6 +43,7 @@ void resetConsoleActions(void) {
 }
 
 static void doAddAction(const char *token, action_type_e type, Void callback, void *param) {
+#if !defined(EFI_DISABLE_CONSOLE_ACTIONS) || defined(__DOXYGEN__)
 	for (uint32_t i = 0; i < efiStrlen(token);i++) {
 		char ch = token[i];
 		if (ch != mytolower(ch)) {
@@ -61,6 +62,7 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 	current->parameterType = type;
 	current->callback = callback;
 	current->param = param;
+#endif /* EFI_DISABLE_CONSOLE_ACTIONS */
 }
 
 void addConsoleActionP(const char *token, VoidPtr callback, void *param) {

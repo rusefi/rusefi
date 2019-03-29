@@ -151,7 +151,7 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 int gpiochips_init(void)
 {
 	int i;
-	int ret;
+	int ret = -1;
 	int pins_added = 0;
 
 	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {

@@ -229,18 +229,18 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->is_enabled_spi_3 = true;
 	
 	boardConfiguration->spi1mosiPin = GPIOB_5;
-	engineConfiguration->spi1MosiMode = 0;	// PAL_STM32_OTYPE_PUSHPULL
+	engineConfiguration->spi1MosiMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
 	boardConfiguration->spi1misoPin = GPIOB_4;
-	engineConfiguration->spi1MisoMode = 0;	// PAL_STM32_OTYPE_PUSHPULL
+	engineConfiguration->spi1MisoMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
 	boardConfiguration->spi1sckPin = GPIOB_3;
-	engineConfiguration->spi1SckMode = 0;	// PAL_STM32_OTYPE_PUSHPULL
+	engineConfiguration->spi1SckMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL
 
 	boardConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+	engineConfiguration->spi3MosiMode = PO_OPENDRAIN; // 4
 	boardConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3MisoMode = PAL_STM32_PUPDR_PULLUP; // 32
+	engineConfiguration->spi3MisoMode = PO_PULLUP; // 32
 	boardConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->spi3SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
+	engineConfiguration->spi3SckMode = PO_OPENDRAIN; // 4
 
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_3;
 	boardConfiguration->hip9011CsPin = is469 ? GPIOD_1 : GPIOD_2;

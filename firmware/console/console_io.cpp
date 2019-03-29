@@ -19,6 +19,7 @@
  */
 
 #include "global.h"
+#include "engine.h"
 #include "console_io.h"
 #include "rfiutil.h"
 #include "tunerstudio.h"
@@ -293,37 +294,3 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	addConsoleAction(SWITCH_TO_BINARY_COMMAND, switchToBinaryProtocol);
 }
 
-/**
- * @return TRUE if already in locked context
- */
-bool lockAnyContext(void) {
-	int alreadyLocked = isLocked();
-	if (alreadyLocked)
-		return true;
-#if USE_PORT_LOCK
-	port_lock();
-#else /* #if USE_PORT_LOCK */
-	if (isIsrContext()) {
-		chSysLockFromISR()
-		;
-	} else {
-		chSysLock()
-		;
-	}
-#endif /* #if USE_PORT_LOCK */
-	return false;
-}
-
-void unlockAnyContext(void) {
-#if USE_PORT_LOCK
-	port_unlock();
-#else /* #if USE_PORT_LOCK */
-	if (isIsrContext()) {
-		chSysUnlockFromISR()
-		;
-	} else {
-		chSysUnlock()
-		;
-	}
-#endif /* #if USE_PORT_LOCK */
-}
