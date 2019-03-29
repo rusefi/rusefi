@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 20:15:52 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 28 22:47:39 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2362,17 +2362,23 @@ typedef struct {
 	 */
 	int16_t idlePidFalloffDeltaRpm;
 	/**
+	 * A delay in cycles between fuel-enrich. portions
 	 * offset 4018
 	 */
-	int16_t unusedIdleTimingPid;
+	int16_t tpsAccelFractionPeriod;
 	/**
+	 * A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions
 	 * offset 4020
 	 */
-	spi_device_e tle8888spiDevice;
+	float tpsAccelFractionDivisor;
 	/**
 	 * offset 4024
 	 */
-	int mainUnusedEnd[614];
+	spi_device_e tle8888spiDevice;
+	/**
+	 * offset 4028
+	 */
+	int mainUnusedEnd[613];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2619,4 +2625,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Mar 25 20:15:52 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Mar 28 22:47:39 EDT 2019
