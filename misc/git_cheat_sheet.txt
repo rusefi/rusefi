@@ -21,8 +21,8 @@ git checkout -b 2019.01.14_release_1.19.1
 git push -u origin 2019.01.14_release_1.19.1
 
 new remote branch from another branch:
-git checkout -b stable_18.2.rusefi stable_18.2.x
-git push -u origin stable_18.2.rusefi
+git checkout -b stable_19.1.rusefi stable_19.1.x
+git push -u origin stable_19.1.rusefi
 
 
 =========================================
