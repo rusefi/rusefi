@@ -1280,7 +1280,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 
 	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
 		engineConfiguration->vehicleSpeedCoef = valueF;
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
 			engineConfiguration->alternatorControl.periodMs = valueI;
@@ -1290,7 +1290,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->alternatorControl.offset = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
-#endif
+#endif /* EFI_ALTERNATOR_CONTROL */
 //	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
 //	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
 //	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {

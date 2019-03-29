@@ -283,12 +283,12 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIGB(etb1.directionPin2) = GPIOC_9;
 	CONFIGB(etb1.controlPin1) = GPIOE_14;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// values are above 100% since we have feedforward part of the total summation
 	engineConfiguration->etb.minValue = -200;
 	engineConfiguration->etb.maxValue = 200;
-#endif
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1
