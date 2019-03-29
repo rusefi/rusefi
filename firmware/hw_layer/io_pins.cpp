@@ -11,7 +11,7 @@
 
 #if EFI_PROD_CODE
 #include "io_pins.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 #include "pin_repository.h"
 #include "status_loop.h"

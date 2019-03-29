@@ -1,5 +1,5 @@
 /**
- *  @file ThreadController.h
+ *  @file thread_controller.h
  * 
  *  @date Jan 5, 2019
  *  @author Matthew Kennedy, (c) 2019
@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "ControllerBase.h"
+#include "controller_base.h"
 
 #include "ch.h"
 

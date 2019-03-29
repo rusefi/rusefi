@@ -67,7 +67,7 @@
 #include "pwm_generator.h"
 #include "adc_inputs.h"
 #include "efilib2.h"
-#include "PwmTester.h"
+#include "pwm_tester.h"
 #include "pwm_generator.h"
 #include "lcd_controller.h"
 #include "pin_repository.h"

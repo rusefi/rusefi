@@ -8,7 +8,7 @@ CONTROLLERS_SRC_CPP = $(PROJECT_DIR)/controllers/settings.cpp \
 	$(PROJECT_DIR)/controllers/flash_main.cpp \
 	$(PROJECT_DIR)/controllers/injector_central.cpp \
 	$(PROJECT_DIR)/controllers/idle_thread.cpp \
-	$(PROJECT_DIR)/controllers/PwmTester.cpp \
+	$(PROJECT_DIR)/controllers/pwm_tester.cpp \
 	$(PROJECT_DIR)/controllers/obd2.cpp \
 	$(PROJECT_DIR)/controllers/malfunction_indicator.cpp \
 	$(PROJECT_DIR)/controllers/alternatorController.cpp \

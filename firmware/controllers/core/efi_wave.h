@@ -1,5 +1,5 @@
 /**
- * @file	EfiWave.h
+ * @file	efi_wave.h
  *
  * @date May 18, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017

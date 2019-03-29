@@ -10,8 +10,8 @@
 
 #if EFI_PWM_TESTER || defined(__DOXYGEN__)
 
-#include "PwmTester.h"
-#include "EfiWave.h"
+#include "pwm_tester.h"
+#include "efi_wave.h"
 #include "pwm_generator_logic.h"
 #include "engine.h"
 #include "pwm_generator.h"

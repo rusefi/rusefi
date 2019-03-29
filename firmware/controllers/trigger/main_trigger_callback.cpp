@@ -29,7 +29,7 @@
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
 #include "main_trigger_callback.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "engine_math.h"
 #include "trigger_central.h"
 #include "spark_logic.h"
@@ -44,7 +44,7 @@
 #include "fuel_math.h"
 #include "histogram.h"
 #include "engine_controller.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #endif /* EFI_HISTOGRAMS */

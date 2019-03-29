@@ -8,7 +8,7 @@
 #define STEPPER_H_
 
 #include "global.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "backup_ram.h"
 
 class StepperMotor {

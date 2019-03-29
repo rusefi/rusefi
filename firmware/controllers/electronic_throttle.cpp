@@ -72,14 +72,14 @@
 #include "pwm_generator_logic.h"
 #include "pid.h"
 #include "engine_controller.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 
 #define ETB_MAX_COUNT 2
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "pwm_generator.h"
-#include "DcMotor.h"
+#include "dc_motor.h"
 #include "pid_auto_tune.h"
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 extern TunerStudioOutputChannels tsOutputChannels;

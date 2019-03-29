@@ -14,7 +14,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 #include "global.h"
-#include "EfiWave.h"
+#include "efi_wave.h"
 
 int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;

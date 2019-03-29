@@ -1,13 +1,13 @@
 /**
- * @file	efiGpio.h
+ * @file	efi_gpio.h
  * @brief	EFI-related GPIO code
  *
  *
  * @date Sep 26, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
-#ifndef EFIGPIO_H_
-#define EFIGPIO_H_
+#ifndef efi_gpio_H_
+#define efi_gpio_H_
 
 #include "io_pins.h"
 #include "global.h"
@@ -170,4 +170,4 @@ const char *portname(ioportid_t GPIOx);
 brain_pin_e parseBrainPin(const char *str);
 const char *hwPortname(brain_pin_e brainPin);
 
-#endif /* EFIGPIO_H_ */
+#endif /* efi_gpio_H_ */

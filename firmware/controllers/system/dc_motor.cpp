@@ -6,7 +6,7 @@
  * @author Matthew Kennedy
  */
 
-#include "DcMotor.h"
+#include "dc_motor.h"
 
 TwoPinDcMotor::TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2)
     : m_pwm(pwm)

@@ -24,7 +24,7 @@ EXTERN_ENGINE;
 #if EFI_MEMS || defined(__DOXYGEN__)
 #include "mpu_util.h"
 #include "lis302dl.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 
 static SPIDriver *driver;
 

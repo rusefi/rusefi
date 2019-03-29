@@ -27,7 +27,7 @@
 #include "engine.h"
 #include "board_test.h"
 #include "pin_repository.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "adc_inputs.h"
 #include "AdcConfiguration.h"
 

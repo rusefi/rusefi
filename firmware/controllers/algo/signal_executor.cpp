@@ -24,7 +24,7 @@
 
 #include "global.h"
 #include "signal_executor.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "engine.h"
 
 /**
@@ -39,7 +39,7 @@ EXTERN_ENGINE;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 InjectionSignalPair::InjectionSignalPair() {
 	isScheduled = false;
