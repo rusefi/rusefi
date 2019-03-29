@@ -278,7 +278,9 @@ void applyNewHardwareSettings(void) {
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	stopVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
+#if EFI_AUX_PID || defined(__DOXYGEN__)
 	stopAuxPins();
+#endif /* EFI_AUX_PID */
 
 	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
 		stopSpi(SPI_DEVICE_1);
@@ -316,7 +318,9 @@ void applyNewHardwareSettings(void) {
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
+#if EFI_AUX_PID || defined(__DOXYGEN__)
 	startAuxPins();
+#endif /* EFI_AUX_PID */
 
 	adcConfigListener(engine);
 }
@@ -419,10 +423,12 @@ void initHardware(Logging *l) {
 	initAdcInputs(isBoardTestMode_b);
 #endif
 
+#if EFI_BOARD_TEST || defined(__DOXYGEN__)
 	if (isBoardTestMode_b) {
 		// this method never returns
 		initBoardTest();
 	}
+#endif /* EFI_BOARD_TEST */
 
 	initRtc();
 
@@ -513,9 +519,9 @@ void initHardware(Logging *l) {
 	cdmIonInit();
 #endif
 
-#if (HAL_USE_PAL && EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if (HAL_USE_PAL && EFI_JOYSTICK) || defined(__DOXYGEN__)
 	initJoystick(sharedLogger);
-#endif /* HAL_USE_PAL && EFI_PROD_CODE */
+#endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 	calcFastAdcIndexes();
 

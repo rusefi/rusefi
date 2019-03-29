@@ -168,12 +168,12 @@ static int getParameterCount(action_type_e parameterType) {
  * @brief This function prints out a list of all available commands
  */
 void helpCommand(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_BOARD_TEST || defined(__DOXYGEN__)
 	if (isBoardTestMode()) {
 		printBoardTestState();
 		return;
 	}
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_BOARD_TEST */
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	scheduleMsg(logging, "%d actions available", consoleActionCount);

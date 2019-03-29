@@ -194,8 +194,9 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
+#if EFI_FSIO || defined(__DOXYGEN__)
 	onConfigurationChangeFsioCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
-
+#endif /* EFI_FSIO */
 	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -1108,6 +1109,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setBoardConfigurationOverrides();
 #endif
 
+#if EFI_FSIO || defined(__DOXYGEN__)
 	/**
 	 * to test:
 	 * set_fsio_setting 1 5000
@@ -1121,7 +1123,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// simple warning light as default configuration
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_ENGINE_PARAMETER_SUFFIX);
-
+#endif /* EFI_FSIO */
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {

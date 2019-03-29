@@ -229,6 +229,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 	// VICS solenoid
+#if EFI_FSIO || defined(__DOXYGEN__)
 	/**
 	 * to test
 	 * set_fsio_setting 1 5000
@@ -236,7 +237,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fsio_setting[0] = 5000;
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_ENGINE_PARAMETER_SUFFIX);
-
 
 	// warning light
 	/**
@@ -255,7 +255,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 //	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER_SUFFIX);
 	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_ENGINE_PARAMETER_SUFFIX);
-
+#endif /* EFI_FSIO */
 
 	config->ignitionRpmBins[0] = 800;
 	config->ignitionRpmBins[1] = 1200;
