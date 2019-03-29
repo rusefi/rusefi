@@ -102,8 +102,11 @@ extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
 #define FULL_LOGGING_KEY "fl"
 
+#if !defined(STATUS_LOGGING_BUFFER_SIZE) || defined(__DOXYGEN__)
+#define STATUS_LOGGING_BUFFER_SIZE 1800
+#endif /* STATUS_LOGGING_BUFFER_SIZE */
 
-static char LOGGING_BUFFER[1800] CCM_OPTIONAL;
+static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {

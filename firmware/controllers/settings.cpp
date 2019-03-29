@@ -47,7 +47,11 @@ extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-static char LOGGING_BUFFER[1000];
+#if !defined(SETTINGS_LOGGING_BUFFER_SIZE) || defined(__DOXYGEN__)
+#define SETTINGS_LOGGING_BUFFER_SIZE 1000
+#endif /* SETTINGS_LOGGING_BUFFER_SIZE */
+
+static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 extern int maxNesting;
