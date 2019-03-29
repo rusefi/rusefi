@@ -52,6 +52,9 @@
 #undef EFI_HD44780_LCD
 #define EFI_HD44780_LCD FALSE
 
+#undef EFI_LCD
+#define EFI_LCD FALSE
+
 /**
  * Do we need file logging (like SD card) logic?
  */

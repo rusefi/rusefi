@@ -650,6 +650,7 @@ static void blinkingThread(void *arg) {
 
 #endif /* EFI_PROD_CODE */
 
+#if EFI_LCD || defined(__DOXYGEN__)
 class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	LcdController() : PeriodicController("BenchThread") { }
@@ -666,6 +667,7 @@ private:
 };
 
 static LcdController lcdInstance;
+#endif /* EFI_LCD */
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 extern HIP9011 instance;
@@ -984,7 +986,9 @@ void startStatusThreads(void) {
 	initStatusLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
 #endif /* EFI_PROD_CODE */
+#if EFI_LCD || defined(__DOXYGEN__)
 	lcdInstance.Start();
+#endif /* EFI_LCD */
 }
 
 void setFullLog(int value) {

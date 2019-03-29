@@ -163,6 +163,10 @@
 #define EFI_HD44780_LCD TRUE
 #endif
 
+#ifndef EFI_LCD
+#define EFI_LCD TRUE
+#endif
+
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
 #endif
