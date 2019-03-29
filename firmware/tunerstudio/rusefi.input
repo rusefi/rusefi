@@ -1880,15 +1880,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "cylinder bore (mm)",					cylinderBore, {isHip9011Enabled == 1}
 		field = "Band Freq override",					knockBandCustom, {isHip9011Enabled == 1}
 		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
-		field = "SPI1sck mode",							spi1SckMode, {isHip9011Enabled == 1}
-		field = "SPI1mosi mode",						spi1MosiMode, {isHip9011Enabled == 1}
-		field = "SPI1miso mode",						spi1MisoMode, {isHip9011Enabled == 1}
-		field = "SPI2sck mode",							spi2SckMode, {isHip9011Enabled == 1}
-		field = "SPI2mosi mode",						spi2MosiMode, {isHip9011Enabled == 1}
-		field = "SPI2miso mode",						spi2MisoMode, {isHip9011Enabled == 1}
-		field = "SPI3sck mode",							spi3SckMode, {isHip9011Enabled == 1}
-		field = "SPI3mosi mode",						spi3MosiMode, {isHip9011Enabled == 1}
-		field = "SPI3miso mode",						spi3MisoMode, {isHip9011Enabled == 1}
 		panel = knockThresholdCurve
 		
 ;			Engine->cj125 Settings
@@ -1908,16 +1899,27 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "!ECU reboot needed to apply these settings"
 		field = "SPI1 enable",							is_enabled_spi_1
 		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
+		field = "SPI1mosi mode",						spi1MosiMode, {is_enabled_spi_1 == 1}
 		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
+		field = "SPI1miso mode",						spi1MisoMode, {is_enabled_spi_1 == 1}
 		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
+		field = "SPI1sck mode",							spi1SckMode, {is_enabled_spi_1 == 1}
+
 		field = "SPI2 enable",							is_enabled_spi_2
 		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
+		field = "SPI2mosi mode",						spi2MosiMode, {is_enabled_spi_2 == 1}
 		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
+		field = "SPI2miso mode",						spi2MisoMode, {is_enabled_spi_2 == 1}
 		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
+		field = "SPI2sck mode",							spi2SckMode, {is_enabled_spi_2 == 1}
+
 		field = "SPI3 enable",							is_enabled_spi_3
 		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
+		field = "SPI3mosi mode",						spi3MosiMode, {is_enabled_spi_3 == 1}
 		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
+		field = "SPI3miso mode",						spi3MisoMode, {is_enabled_spi_3 == 1}
 		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
+		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}
 		field = "LIS302DLCsPin",						LIS302DLCsPin
 
 	dialog = fuelClosedLoopDialog, "Fuel short-term closed-loop correction"

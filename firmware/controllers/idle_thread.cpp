@@ -459,9 +459,13 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 
 static void initIdleHardware() {
 	if (CONFIGB(useStepperIdle)) {
-		iacMotor.initialize(CONFIGB(idle).stepperStepPin, CONFIGB(idle).stepperDirectionPin, 
-				engineConfiguration->stepperDirectionPinMode, engineConfiguration->idleStepperReactionTime, 
-				engineConfiguration->idleStepperTotalSteps, engineConfiguration->stepperEnablePin, logger);
+		iacMotor.initialize(CONFIGB(idle).stepperStepPin,
+				CONFIGB(idle).stepperDirectionPin,
+				engineConfiguration->stepperDirectionPinMode,
+				engineConfiguration->idleStepperReactionTime,
+				engineConfiguration->idleStepperTotalSteps,
+				engineConfiguration->stepperEnablePin, engineConfiguration->stepperEnablePinMode,
+				logger);
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
 	} else {
