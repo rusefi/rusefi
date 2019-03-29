@@ -318,11 +318,11 @@
  */
 #define TS_UART_DMA_MODE FALSE
 
-#define TS_DMA_UART_DEVICE (&UARTD3)
-#define TS_SERIAL_UART_DEVICE (&SD3)
+#define TS_UART_DEVICE (&UARTD3)
+#define TS_SERIAL_DEVICE (&SD3)
 
 // todo: add DMA-mode for Console?
-#if TS_UART_DMA_MODE
+#if (TS_UART_DMA_MODE || TS_UART_MODE)
 #undef EFI_CONSOLE_UART_DEVICE
 #endif
 
