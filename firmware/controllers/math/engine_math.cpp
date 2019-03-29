@@ -25,7 +25,7 @@
 #include "interpolation.h"
 #include "allsensors.h"
 #include "event_registry.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
 #include "config_engine_specs.h"

@@ -29,7 +29,7 @@
 
 #if EFI_SIMULATOR || defined(__DOXYGEN__)
 // this is about debugging
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)

@@ -9,9 +9,9 @@
 #define PWM_GENERATOR_LOGIC_H_
 
 #include "global.h"
-#include "EfiWave.h"
+#include "efi_wave.h"
 #include "scheduler.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 #define NAN_FREQUENCY_SLEEP_PERIOD_MS 100
 

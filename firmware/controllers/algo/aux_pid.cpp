@@ -17,7 +17,7 @@
 #include "fsio_impl.h"
 #include "engine_math.h"
 #include "pin_repository.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 
 EXTERN_ENGINE
 ;

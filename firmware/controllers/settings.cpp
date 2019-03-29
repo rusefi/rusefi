@@ -20,7 +20,7 @@
 #include "trigger_decoder.h"
 #include "console_io.h"
 #include "engine.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "engine_math.h"
 #include "alternatorController.h"
 #include "idle_thread.h"

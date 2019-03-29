@@ -9,7 +9,7 @@
 #define BACKUP_RAM_H_
 
 #include "global.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 typedef enum {
 	/**

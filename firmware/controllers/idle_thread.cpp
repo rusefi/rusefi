@@ -31,7 +31,7 @@
 #include "idle_thread.h"
 #include "pin_repository.h"
 #include "engine.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 #include "stepper.h"
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)

@@ -20,7 +20,7 @@
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
-#include "SingleTimerExecutor.h"
+#include "single_timer_executor.h"
 #endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 #include "signal_executor_sleep.h"

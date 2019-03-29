@@ -1,5 +1,5 @@
 /**
- * @file SingleTimerExecutor.h
+ * @file single_timer_executor.h
  *
  * @date: Apr 18, 2014
  * @author Andrey Belomutskiy, (c) 2012-2017

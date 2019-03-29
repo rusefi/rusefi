@@ -1,5 +1,5 @@
 /**
- *  @file DcMotor.h
+ *  @file dc_motor.h
  * 
  *  @date Dec 22, 2018
  *  @author Matthew Kennedy, (c) 2018

@@ -1,5 +1,5 @@
 /**
- *  @file PeriodicController.h
+ *  @file periodic_controller.h
  * 
  *  @date Jan 5, 2019
  *  @author Matthew Kennedy, (c) 2019
@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "ThreadController.h"
+#include "thread_controller.h"
 #include "efitime.h"
 
 

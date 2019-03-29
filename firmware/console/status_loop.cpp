@@ -37,7 +37,7 @@
 #include "trigger_central.h"
 #include "engine_state.h"
 #include "io_pins.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "mmc_card.h"
 #include "console_io.h"
 #include "malfunction_central.h"
@@ -57,7 +57,7 @@
 #include "lcd_controller.h"
 #include "settings.h"
 #include "can_hw.h"
-#include "PeriodicController.h"
+#include "periodic_controller.h"
 #include "cdm_ion_sense.h"
 
 extern afr_Map3D_t afrMap;
@@ -72,7 +72,7 @@ extern bool main_loop_started;
 #include "flash_main.h"
 #include "max31855.h"
 #include "vehicle_speed.h"
-#include "SingleTimerExecutor.h"
+#include "single_timer_executor.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125 || defined(__DOXYGEN__)

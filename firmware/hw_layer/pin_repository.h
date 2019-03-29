@@ -15,7 +15,7 @@
 #include "io_pins.h"
 
 #ifdef __cplusplus
-#include "efiGpio.h"
+#include "efi_gpio.h"
 
 class PinRepository {
 	public:

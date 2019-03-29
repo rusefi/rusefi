@@ -17,7 +17,7 @@
 #include "settings.h"
 #include "allsensors.h"
 #include "rpm_calculator.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "pwm_generator_logic.h"
 
 /**

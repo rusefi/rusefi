@@ -12,7 +12,7 @@ cd firmware
 call clean.bat
 cd ..
 cho Compiling F746
-cd firmware\config\boards\NUCLEO_F746
+cd firmware\config\boards\nucleo_f746
 call !compile-nucleo_f746.bat
 cd ..
 pwd
@@ -25,7 +25,7 @@ cd firmware
 call clean.bat
 cd ..
 echo Compiling F767
-cd firmware\config\boards\NUCLEO_F767
+cd firmware\config\boards\nucleo_f767
 call !compile-nucleo_f767.bat
 cd ..
 pwd
@@ -37,7 +37,7 @@ cd firmware
 call clean.bat
 cd ..
 echo Compiling F767
-cd firmware\config\boards\NUCLEO_F767
+cd firmware\config\boards\nucleo_f767
 call !compile-f767.bat
 cd ..
 pwd

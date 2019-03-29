@@ -22,7 +22,7 @@
 #include "crc.h"
 #include "fl_stack.h"
 #include "io_pins.h"
-#include "efiGpio.h"
+#include "efi_gpio.h"
 #include "efilib.h"
 
 #include "gtest/gtest.h"
