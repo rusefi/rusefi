@@ -12,13 +12,14 @@ import java.util.regex.Pattern;
  * This is an utility to print the information from GCC linked .map file
  *
  * @author Andrey Belomutskiy
- *         10/16/13
+ * 10/16/13
  */
 public class GccMapReader {
-    private static final Pattern p2 = Pattern.compile(".*0x(\\S*)(.*)");
+    private static final Pattern MULTI_LINE_PATTERN = Pattern.compile(".*0x(\\S*)(.*)");
+    private static final Pattern SINGLE_LINE_PATTERN = Pattern.compile(".*\\.bss\\.(\\S*).*0x.*0x(\\S*)(.*)");
 
     public static void main(String[] args) throws IOException {
-        if (args.length!=1) {
+        if (args.length != 1) {
             System.err.println("file name parameter expected");
             System.exit(-1);
         }
@@ -26,7 +27,7 @@ public class GccMapReader {
         BufferedReader fr = new BufferedReader(new FileReader(fileName));
 
         String line;
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
 
         while ((line = fr.readLine()) != null)
             lines.add(line);
@@ -35,12 +36,7 @@ public class GccMapReader {
 
         List<Record> records = process(lines);
 
-        Collections.sort(records, new Comparator<Record>() {
-            @Override
-            public int compare(Record o1, Record o2) {
-                return o2.compareTo(o1);
-            }
-        });
+        Collections.sort(records, Comparator.reverseOrder());
 
         int totalSize = 0;
         for (Record record : records) {
@@ -51,9 +47,7 @@ public class GccMapReader {
         System.out.println("Total size: " + totalSize);
     }
 
-    private static List<Record> process(List<String> lines) {
-        Pattern p1 = Pattern.compile(".*\\.bss\\.(\\S*).*0x.*0x(\\S*)(.*)");
-
+    static List<Record> process(List<String> lines) {
 
         List<Record> result = new ArrayList<Record>();
         for (int i = 0; i < lines.size(); i++) {
@@ -62,7 +56,7 @@ public class GccMapReader {
                 continue;
             debug(line);
 
-            Matcher m1 = p1.matcher(line);
+            Matcher m1 = SINGLE_LINE_PATTERN.matcher(line);
 
             if (m1.matches()) {
                 parseSingleLine(result, line, m1, i);
@@ -78,7 +72,7 @@ public class GccMapReader {
         String suffix = line;
         line = lines.get(++lineIndex);
 
-        Matcher m2 = p2.matcher(line);
+        Matcher m2 = MULTI_LINE_PATTERN.matcher(line);
 
         if (!m2.matches()) {
             debug("Skipping " + line);
@@ -160,6 +154,14 @@ public class GccMapReader {
                     "size=" + size +
                     ", name='" + name + '\'' +
                     '}';
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }
