@@ -221,7 +221,9 @@ float atoff(const char *param) {
 	strcpy(todofixthismesswithcopy, param);
 	char *string = todofixthismesswithcopy;
 	if (indexOf(string, 'n') != -1 || indexOf(string, 'N') != -1) {
+#if ! EFI_SIMULATOR
 		print("NAN from [%s]\r\n", string);
+#endif
 		return (float) NAN;
 	}
 
