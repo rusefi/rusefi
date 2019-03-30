@@ -221,7 +221,7 @@ float atoff(const char *param) {
 	strcpy(todofixthismesswithcopy, param);
 	char *string = todofixthismesswithcopy;
 	if (indexOf(string, 'n') != -1 || indexOf(string, 'N') != -1) {
-		printf("NAN from [%s]\r\n", string);
+		print("NAN from [%s]\r\n", string);
 		return (float) NAN;
 	}
 
