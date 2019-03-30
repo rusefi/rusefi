@@ -3,6 +3,7 @@
 *.o.d
 *.o
 build/
+out/
 blbuild/
 Debug_EMS/
 Release_EMS/
