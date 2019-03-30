@@ -58,7 +58,9 @@ typedef unsigned int time_t;
  * See getRemainingStack()
  * See getMaxUsedStack()
  */
+#ifndef UTILITY_THREAD_STACK_SIZE
 #define UTILITY_THREAD_STACK_SIZE 400
+#endif /* UTILITY_THREAD_STACK_SIZE */
 
 #define EFI_ERROR_CODE 0xffffffff
 

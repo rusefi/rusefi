@@ -46,8 +46,13 @@ static msg_t stThread(StepperMotor *motor) {
 	// first wait until at least 1 slowADC sampling is complete
 	waitForSlowAdc();
 #endif
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+	bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+#else
+	bool isRunning = false;
+#endif /* EFI_SHAFT_POSITION_INPUT */
 	// now check if stepper motor re-initialization is requested - if the throttle pedal is pressed at startup
-	bool forceStepperParking = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > STEPPER_PARKING_TPS;
+	bool forceStepperParking = !isRunning && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > STEPPER_PARKING_TPS;
 	if (CONFIGB(stepperForceParkingEveryRestart))
 		forceStepperParking = true;
 	scheduleMsg(logger, "Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", motor->currentPosition, (forceStepperParking ? 1 : 0), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
