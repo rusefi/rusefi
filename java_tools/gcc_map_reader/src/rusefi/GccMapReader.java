@@ -54,7 +54,7 @@ public class GccMapReader {
             String line = lines.get(i);
             if (!line.contains(".bss."))
                 continue;
-            debug(line);
+            debug("Got: " + line);
 
             Matcher m1 = SINGLE_LINE_PATTERN.matcher(line);
 
@@ -75,8 +75,8 @@ public class GccMapReader {
         Matcher m2 = MULTI_LINE_PATTERN.matcher(line);
 
         if (!m2.matches()) {
-            debug("Skipping " + line);
-            return lineIndex;
+            debug("Returning into consideration: " + line);
+            return lineIndex - 1;
         }
 
         String sizeString = m2.group(1);

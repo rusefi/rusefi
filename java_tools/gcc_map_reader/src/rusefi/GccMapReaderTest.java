@@ -53,7 +53,8 @@ public class GccMapReaderTest {
                 " .bss.ch        0x1fff9320       0x80 build_kinetis/obj/chschd.o",
                 "                0x1fff9320                ch"));
         assertNotNull(r);
-        assertEquals(1, r.size());
-        assertEquals(0x80, r.get(0).getSize());
+        assertEquals(2, r.size());
+        assertEquals(0x610, r.get(0).getSize());
+        assertEquals(0x80, r.get(1).getSize());
     }
 }
