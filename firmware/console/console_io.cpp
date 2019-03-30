@@ -215,6 +215,8 @@ bool isCommandLineConsoleReady(void) {
 }
 #endif /* EFI_PROD_CODE || EFI_EGT */
 
+#if !defined(EFI_CONSOLE_NO_THREAD) || defined(__DOXYGEN__)
+
 ts_channel_s binaryConsole;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
@@ -236,6 +238,8 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 	if (binaryConsole.channel != NULL)
 		runConsoleLoop(&binaryConsole);
 }
+
+#endif /* EFI_CONSOLE_NO_THREAD */
 
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
@@ -290,7 +294,9 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	b_isCommandLineConsoleOverTTL = false;
 #endif /* EFI_PROD_CODE */
 
+#if !defined(EFI_CONSOLE_NO_THREAD) || defined(__DOXYGEN__)
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadThreadEntryPoint, NULL);
+#endif /* EFI_CONSOLE_NO_THREAD */
 	addConsoleAction(SWITCH_TO_BINARY_COMMAND, switchToBinaryProtocol);
 }
 

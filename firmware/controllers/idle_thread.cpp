@@ -306,7 +306,11 @@ private:
 		undoIdleBlipIfNeeded();
 
 		float clt = engine->sensors.clt;
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+#else
+		bool isRunning = false;
+#endif /* EFI_SHAFT_POSITION_INPUT */
 		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
 		if (cisnan(clt))
