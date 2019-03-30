@@ -101,11 +101,14 @@ extern short currentPageId;
  */
 LoggingWithStorage tsLogger("binary");
 
+#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
 /**
  * this is a local copy of the configuration. Any changes to this copy
  * have no effect until this copy is explicitly propagated to the main working copy
  */
 persistent_config_s configWorkingCopy;
+
+#endif /* EFI_NO_CONFIG_WORKING_COPY */
 
 extern persistent_config_container_s persistentState;
 
@@ -192,7 +195,11 @@ void tunerStudioDebug(const char *msg) {
 char *getWorkingPageAddr(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
+#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
 		return (char*) &configWorkingCopy.engineConfiguration;
+#else
+		return (char*) &engineConfiguration;
+#endif /* EFI_NO_CONFIG_WORKING_COPY */
 //	case 1:
 //		return (char*) &configWorkingCopy.ve2Table;
 //	case 2:
@@ -264,8 +271,10 @@ static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
 			return;
 		}
 		scheduleMsg(&tsLogger, "applying soft change from %d length %d", offset, count);
+#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
 		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
 				count);
+#endif /* EFI_NO_CONFIG_WORKING_COPY */
 	}
 }
 
@@ -430,7 +439,9 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 #endif
 
 // todo: how about some multi-threading?
+#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
+#endif /* EFI_NO_CONFIG_WORKING_COPY */
 
 	requestBurn();
 	sendResponseCode(mode, tsChannel, TS_RESPONSE_BURN_OK);
@@ -578,7 +589,9 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 }
 
 void syncTunerStudioCopy(void) {
+#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
 	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));
+#endif /* EFI_NO_CONFIG_WORKING_COPY */
 }
 
 tunerstudio_counters_s tsState;
