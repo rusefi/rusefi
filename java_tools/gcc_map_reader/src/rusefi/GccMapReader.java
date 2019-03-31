@@ -1,8 +1,9 @@
 package rusefi;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,8 +17,9 @@ import java.util.regex.Pattern;
  */
 public class GccMapReader {
     private static final Pattern MULTI_LINE_PATTERN = Pattern.compile(".*0x(\\S*)(.*)");
-    private static final String REGIONS[] = {"bss", "text", "data", "rodata"};
+    private static final String[] REGIONS = {"bss", "text", "data", "rodata"};
     private static final Pattern SINGLE_LINE_PATTERN = Pattern.compile(".*\\.(bss|text|data|rodata)\\.(\\S*).*0x.*0x(\\S*)(.*)");
+    static final String START_OF_DATA_TAG = "Linker script and memory map";
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -42,7 +44,7 @@ public class GccMapReader {
     private static void processAndPrint(List<String> lines, String region) {
         List<Record> records = process(lines, region);
 
-        Collections.sort(records, Comparator.reverseOrder());
+        records.sort(Comparator.reverseOrder());
 
         int totalSize = 0;
         for (Record record : records) {
@@ -55,9 +57,15 @@ public class GccMapReader {
 
     static List<Record> process(List<String> lines, String region) {
 
-        List<Record> result = new ArrayList<Record>();
+        List<Record> result = new ArrayList<>();
+        boolean isUsefulData = false;
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
+            if (line.contains(START_OF_DATA_TAG)) {
+                isUsefulData = true;
+            }
+            if (!isUsefulData)
+                continue;
             if (!line.contains("." + region + "."))
                 continue;
             debug("Got: " + line);
@@ -118,6 +126,7 @@ public class GccMapReader {
         String region = m1.group(i++);
         String suffix = m1.group(i++);
         String sizeString = m1.group(i++);
+        //noinspection UnusedAssignment
         String prefix = m1.group(i++);
 
         String name = prefix + "@" + suffix;
@@ -135,6 +144,7 @@ public class GccMapReader {
         result.add(new Record(size, name, region));
     }
 
+    @SuppressWarnings("unused")
     private static void debug(String s) {
 //        System.out.println(s);
     }
@@ -144,7 +154,7 @@ public class GccMapReader {
         private final String name;
         private String region;
 
-        public Record(int size, String name, String region) {
+        Record(int size, String name, String region) {
             this.size = size;
             this.name = name;
             this.region = region;
@@ -167,16 +177,8 @@ public class GccMapReader {
                     '}';
         }
 
-        public int getSize() {
+        int getSize() {
             return size;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getRegion() {
-            return region;
         }
     }
 }
