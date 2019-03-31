@@ -237,6 +237,7 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
 	$(PROJECT_DIR)/util \
+	$(PROJECT_DIR)/util/containers \
 	$(PROJECT_DIR)/console_util \
 	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/console/binary \
