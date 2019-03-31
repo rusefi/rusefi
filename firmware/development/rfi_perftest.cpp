@@ -13,7 +13,7 @@
 #include "eficonsole.h"
 #include "time.h"
 #include "efi_gpio.h"
-#include "efilib2.h"
+
 #include "console_io.h"
 #include "engine.h"
 

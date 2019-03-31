@@ -7,7 +7,7 @@
 
 #include "engine.h"
 #include "io_pins.h"
-#include "efilib2.h"
+
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global

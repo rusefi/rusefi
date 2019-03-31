@@ -22,7 +22,7 @@
  */
 
 #include "global.h"
-#include "efilib2.h"
+
 #include "map.h"
 
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)

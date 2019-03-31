@@ -23,7 +23,7 @@
 #include "engine.h"
 #include "advance_map.h"
 #include "interpolation.h"
-#include "efilib2.h"
+#include "rfiutil.h"
 #include "engine_math.h"
 #include "tps.h"
 #include "idle_thread.h"

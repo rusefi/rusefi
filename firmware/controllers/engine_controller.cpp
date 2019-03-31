@@ -67,7 +67,7 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pwm_generator.h"
 #include "adc_inputs.h"
-#include "efilib2.h"
+
 #include "pwm_tester.h"
 #include "pwm_generator.h"
 #include "lcd_controller.h"

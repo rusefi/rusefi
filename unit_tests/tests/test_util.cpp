@@ -17,7 +17,7 @@
 #include "engine_controller.h"
 
 #include "nmea.h"
-#include "efilib2.h"
+
 #include "lcd_menu_tree.h"
 #include "crc.h"
 #include "fl_stack.h"
