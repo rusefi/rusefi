@@ -16,7 +16,8 @@ import java.util.regex.Pattern;
  */
 public class GccMapReader {
     private static final Pattern MULTI_LINE_PATTERN = Pattern.compile(".*0x(\\S*)(.*)");
-    private static final Pattern SINGLE_LINE_PATTERN = Pattern.compile(".*\\.bss\\.(\\S*).*0x.*0x(\\S*)(.*)");
+    private static final String REGIONS[] = {"bss", "text", "data", "rodata"};
+    private static final Pattern SINGLE_LINE_PATTERN = Pattern.compile(".*\\.(bss|text|data|rodata)\\.(\\S*).*0x.*0x(\\S*)(.*)");
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -34,7 +35,12 @@ public class GccMapReader {
 
         debug("Got " + lines.size() + " lines");
 
-        List<Record> records = process(lines);
+        for (String region : REGIONS)
+            processAndPrint(lines, region);
+    }
+
+    private static void processAndPrint(List<String> lines, String region) {
+        List<Record> records = process(lines, region);
 
         Collections.sort(records, Comparator.reverseOrder());
 
@@ -44,15 +50,15 @@ public class GccMapReader {
             totalSize += record.size;
         }
 
-        System.out.println("Total size: " + totalSize);
+        System.out.println(region + " Total size: " + totalSize);
     }
 
-    static List<Record> process(List<String> lines) {
+    static List<Record> process(List<String> lines, String region) {
 
         List<Record> result = new ArrayList<Record>();
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
-            if (!line.contains(".bss."))
+            if (!line.contains("." + region + "."))
                 continue;
             debug("Got: " + line);
 
@@ -61,13 +67,13 @@ public class GccMapReader {
             if (m1.matches()) {
                 parseSingleLine(result, line, m1, i);
             } else {
-                i = parseMultiLine(lines, result, i, line);
+                i = parseMultiLine(lines, result, i, line, region);
             }
         }
         return result;
     }
 
-    private static int parseMultiLine(List<String> lines, List<Record> result, int lineIndex, String line) {
+    private static int parseMultiLine(List<String> lines, List<Record> result, int lineIndex, String line, String region) {
         debug("Multi-line " + line);
         String suffix = line;
         line = lines.get(++lineIndex);
@@ -101,16 +107,18 @@ public class GccMapReader {
         debug("Name " + name);
         debug("size " + size);
 
-        result.add(new Record(size, name));
+        result.add(new Record(size, name, region));
         return lineIndex;
     }
 
     private static void parseSingleLine(List<Record> result, String line, Matcher m1, int lineIndex) {
         debug("Single-line " + line);
 
-        String suffix = m1.group(1);
-        String sizeString = m1.group(2);
-        String prefix = m1.group(3);
+        int i = 1;
+        String region = m1.group(i++);
+        String suffix = m1.group(i++);
+        String sizeString = m1.group(i++);
+        String prefix = m1.group(i++);
 
         String name = prefix + "@" + suffix;
 
@@ -124,7 +132,7 @@ public class GccMapReader {
         debug("Name " + name);
         debug("size " + size);
 
-        result.add(new Record(size, name));
+        result.add(new Record(size, name, region));
     }
 
     private static void debug(String s) {
@@ -134,10 +142,12 @@ public class GccMapReader {
     static class Record implements Comparable<Record> {
         private final int size;
         private final String name;
+        private String region;
 
-        public Record(int size, String name) {
+        public Record(int size, String name, String region) {
             this.size = size;
             this.name = name;
+            this.region = region;
         }
 
         @Override
@@ -153,6 +163,7 @@ public class GccMapReader {
             return "Record{" +
                     "size=" + size +
                     ", name='" + name + '\'' +
+                    ", region='" + region + '\'' +
                     '}';
         }
 
@@ -162,6 +173,10 @@ public class GccMapReader {
 
         public String getName() {
             return name;
+        }
+
+        public String getRegion() {
+            return region;
         }
     }
 }
