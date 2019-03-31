@@ -11,7 +11,7 @@ CONTROLLERS_SRC_CPP = $(PROJECT_DIR)/controllers/settings.cpp \
 	$(PROJECT_DIR)/controllers/pwm_tester.cpp \
 	$(PROJECT_DIR)/controllers/obd2.cpp \
 	$(PROJECT_DIR)/controllers/malfunction_indicator.cpp \
-	$(PROJECT_DIR)/controllers/alternatorController.cpp \
+	$(PROJECT_DIR)/controllers/alternator_controller.cpp \
 	$(PROJECT_DIR)/controllers/lcd_controller.cpp \
 	$(PROJECT_DIR)/controllers/tachometer.cpp \
  	$(PROJECT_DIR)/controllers/engine_controller.cpp \

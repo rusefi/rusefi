@@ -86,7 +86,7 @@
 #endif /* EFI_IDLE_CONTROL */
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
-#include "alternatorController.h"
+#include "alternator_controller.h"
 #endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)

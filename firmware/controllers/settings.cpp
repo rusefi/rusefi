@@ -22,9 +22,9 @@
 #include "engine.h"
 #include "efi_gpio.h"
 #include "engine_math.h"
-#include "alternatorController.h"
 #include "idle_thread.h"
 #include "allsensors.h"
+#include "alternator_controller.h"
 #include "trigger_emulator.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
