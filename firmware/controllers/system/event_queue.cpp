@@ -14,7 +14,7 @@
 #include "global.h"
 #include "event_queue.h"
 #include "efitime.h"
-#include "efilib2.h"
+#include "rfiutil.h"
 
 uint32_t maxSchedulingPrecisionLoss = 0;
 

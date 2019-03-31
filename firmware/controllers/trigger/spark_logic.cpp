@@ -8,7 +8,7 @@
 #include "engine_math.h"
 #include "utlist.h"
 #include "event_queue.h"
-#include "efilib2.h"
+#include "rfiutil.h"
 
 EXTERN_ENGINE;
 

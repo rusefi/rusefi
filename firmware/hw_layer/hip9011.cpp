@@ -42,7 +42,7 @@
 #include "hip9011_lookup.h"
 #include "HIP9011.h"
 #include "adc_inputs.h"
-#include "efilib2.h"
+
 #include "engine_controller.h"
 
 #if EFI_PROD_CODE

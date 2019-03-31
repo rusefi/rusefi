@@ -11,6 +11,11 @@
 
 #include "global.h"
 
+/**
+ * @return for a given stack memory region returns how much stack was ever used
+ */
+int getMaxUsedStack(uint8_t *ptr, int size);
+
 #if !EFI_UNIT_TEST
 
 #include "histogram.h"

@@ -51,7 +51,7 @@
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
-#include "efilib2.h"
+
 #include "aux_valves.h"
 #include "backup_ram.h"
 
