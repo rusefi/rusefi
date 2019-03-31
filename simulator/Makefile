@@ -170,7 +170,7 @@ INCDIR = . \
           $(HALINC) \
           $(PLATFORMINC) \
           $(BOARDINC) \
-          $(PROJECT_DIR)/util \
+          $(UTIL_INC) \
           $(PROJECT_DIR)/console \
           $(PROJECT_DIR)/console/binary \
           $(PROJECT_DIR)/console/fl_binary \

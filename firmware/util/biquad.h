@@ -8,12 +8,14 @@
 #ifndef CONTROLLERS_MATH_BIQUAD_H_
 #define CONTROLLERS_MATH_BIQUAD_H_
 
-#include "engine.h"
+// todo: narrow this dependency further? only 'bi_quard_s' is needed, should it be extracted / moved to a smaller header?
+// todo: do we need to make code generation smarted and produce a larger number of smaller headers instead of one monster header?
+#include "engine_configuration.h"
 
 class Biquad {
 public:
     Biquad();
-    void initValue(float input DECLARE_ENGINE_PARAMETER_SUFFIX);
+    void initValue(float input, bi_quard_s *settings);
     float getValue(float input);
 
     float a0, a1, a2, b1, b2;

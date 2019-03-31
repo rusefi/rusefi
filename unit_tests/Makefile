@@ -143,7 +143,7 @@ ASMSRC = $(PORTASM)
 
 
 INCDIR = . \
-	$(PROJECT_DIR)/util \
+	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
 	$(PROJECT_DIR)/controllers \
 	$(PROJECT_DIR)/controllers/sensors \

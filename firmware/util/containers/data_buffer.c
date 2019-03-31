@@ -6,10 +6,6 @@
  */
 
 #include "data_buffer.h"
-#include "global.h"
-#if EFI_PROD_CODE
-//#include "eficonsole.h"
-#endif /* EFI_PROD_CODE */
 
 int dbIsFull(data_buffer_s *db) {
 	return db->size == DB_MAX_SIZE;

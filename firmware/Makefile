@@ -271,7 +271,6 @@ INCDIR = $(CHIBIOS)/os/license \
 	config \
 	ext \
 	ext_algo \
-	util \
 	console_util \
 	console \
 	$(PROJECT_DIR)/console/binary \
@@ -285,6 +284,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	hw_layer/mass_storage \
 	hw_layer/$(CPU_HWLAYER) \
 	$(HW_LAYER_DRIVERS_INC) \
+	$(UTIL_INC) \
 	development \
 	development/hw_layer \
 	development/test \

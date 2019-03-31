@@ -1,10 +1,11 @@
+UTIL_DIR=$(PROJECT_DIR)/util
 
-UTILSRC = $(PROJECT_DIR)/util/crc.c \
-	$(PROJECT_DIR)/util/data_buffer.c \
-	$(PROJECT_DIR)/util/rfiutil.c \
-	$(PROJECT_DIR)/util/histogram.c
+UTILSRC = $(UTIL_DIR)/crc.c \
+	$(UTIL_DIR)/containers/data_buffer.c \
+	$(UTIL_DIR)/rfiutil.c \
+	$(UTIL_DIR)/histogram.c
 
-UTILSRC_CPP = $(PROJECT_DIR)/util/cyclic_buffer.cpp \
+UTILSRC_CPP = $(UTIL_DIR)/cyclic_buffer.cpp \
 	$(PROJECT_DIR)/util/datalogging.cpp \
 	$(PROJECT_DIR)/util/loggingcentral.cpp \
 	$(PROJECT_DIR)/util/listener_array.cpp \
@@ -14,3 +15,8 @@ UTILSRC_CPP = $(PROJECT_DIR)/util/cyclic_buffer.cpp \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(PROJECT_DIR)/util/efilib2.cpp \
 	$(PROJECT_DIR)/util/LocalVersionHolder.cpp
+	
+UTIL_INC = \
+	$(UTIL_DIR) \
+	$(UTIL_DIR)/containers \
+	
