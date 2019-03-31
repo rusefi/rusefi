@@ -10,30 +10,10 @@
 
 #include "global.h"
 
-typedef struct {
-	// todo: would probably be better to keep the high bits as 32 bit field to be sure
-	volatile efitime_t highBits;
-	volatile uint32_t lowBits;
-} State64;
-
-void updateAndSet(State64 *state, uint32_t value);
 /**
  * @return for a given stack memory region returns how much stack was ever used
  */
 int getMaxUsedStack(uint8_t *ptr, int size);
-
-class Overflow64Counter
-{
-  public:
-	Overflow64Counter();
-
-	efitime_t get();
-#if EFI_UNIT_TEST
-	efitime_t update(uint32_t value);
-#endif
-
-	State64 state;
-};
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
  #define GET_TIMESTAMP() port_rt_get_counter_value()
