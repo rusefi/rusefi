@@ -7,19 +7,18 @@
 
 #include "biquad.h"
 
-EXTERN_ENGINE;
-
 Biquad::Biquad() {
 	a0 = a1 = a2 = b1 = b2 = 0;
 	z1 = z2 = 0;
 }
 
-void Biquad::initValue(float input DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	a0 = engineConfiguration->biQuad.a0;
-	a1 = engineConfiguration->biQuad.a1;
-	a2 = engineConfiguration->biQuad.a2;
-	b1 = engineConfiguration->biQuad.b1;
-	b2 = engineConfiguration->biQuad.b2;
+// todo: decouple from engine and just use bi_quard_s
+void Biquad::initValue(float input, bi_quard_s *settings) {
+	a0 = settings->a0;
+	a1 = settings->a1;
+	a2 = settings->a2;
+	b1 = settings->b1;
+	b2 = settings->b2;
 
 	z1 = input * (1 - a0);
 	z2 = input * (1 - a0 - a1 + b1);
