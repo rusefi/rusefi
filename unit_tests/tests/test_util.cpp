@@ -22,6 +22,7 @@
 #include "crc.h"
 #include "fl_stack.h"
 #include "io_pins.h"
+#include "counter64.h"
 #include "efi_gpio.h"
 #include "efilib.h"
 

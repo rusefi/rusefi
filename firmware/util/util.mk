@@ -9,6 +9,7 @@ UTILSRC_CPP = $(UTIL_DIR)/containers/cyclic_buffer.cpp \
 	$(PROJECT_DIR)/util/datalogging.cpp \
 	$(PROJECT_DIR)/util/loggingcentral.cpp \
 	$(UTIL_DIR)/containers/listener_array.cpp \
+	$(UTIL_DIR)/containers/counter64.cpp \
 	$(PROJECT_DIR)/util/cli_registry.cpp \
 	$(PROJECT_DIR)/util/pid.cpp \
 	$(PROJECT_DIR)/util/biquad.cpp \

@@ -58,6 +58,7 @@
 #include "settings.h"
 #include "aux_pid.h"
 #include "accelerometer.h"
+#include "counter64.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
