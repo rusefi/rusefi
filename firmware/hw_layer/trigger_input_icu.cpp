@@ -1,6 +1,6 @@
 /**
- * @file	trigger_input.cpp
- * @brief	Position sensor hardware layer
+ * @file	trigger_input_icu.cpp
+ * @brief	Position sensor hardware layer (ICU driver)
  *
  * todo: code reuse with digital_input_hw.cpp was never finished
  * todo: at the moment due to half-done code reuse we already depend on EFI_ICU_INPUTS but still have custom code
@@ -14,7 +14,7 @@
 
 #include "global.h"
 
-#if (EFI_SHAFT_POSITION_INPUT && EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if (EFI_SHAFT_POSITION_INPUT && HAL_USE_ICU) || defined(__DOXYGEN__)
 
 #include "trigger_input.h"
 #include "digital_input_hw.h"
@@ -193,4 +193,4 @@ void applyNewTriggerInputPins(void) {
 	rememberPrimaryChannel();
 }
 
-#endif /* EFI_SHAFT_POSITION_INPUT && EFI_PROD_CODE */
+#endif /* EFI_SHAFT_POSITION_INPUT && HAL_USE_ICU */

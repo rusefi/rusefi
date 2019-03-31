@@ -258,6 +258,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(TESTINC) \
 	$(STARTUPINC) \
 	$(HALINC) \
+	$(HALINC_CONTRIB) \
 	$(PLATFORMINC) \
 	$(BOARDINC) \
 	$(BOOTLOADERINC) \
