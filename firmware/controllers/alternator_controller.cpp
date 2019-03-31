@@ -1,5 +1,5 @@
 /**
- * @file    alternatorController.cpp
+ * @file    alternator_controller.cpp
  * @brief   alternator controller - some newer vehicles control alternator with ECU
  *
  * @date Apr 6, 2014
@@ -7,12 +7,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+
 #include "engine.h"
 #include "rpm_calculator.h"
-#include "alternatorController.h"
+#include "alternator_controller.h"
 #include "voltage.h"
 #include "pid.h"
-#include "LocalVersionHolder.h"
+#include "local_version_holder.h"
 #include "periodic_controller.h"
 
 #if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)

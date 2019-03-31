@@ -1,11 +1,11 @@
 /**
- * @file	LocalVersionHolder.cpp
+ * @file	local_version_holder.cpp
  *
  * @date Mar 19, 2014
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "LocalVersionHolder.h"
+#include "local_version_holder.h"
 
 LocalVersionHolder::LocalVersionHolder() {
 	/**

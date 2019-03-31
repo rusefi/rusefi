@@ -1,14 +1,14 @@
 /*
  * @file aux_pid.cpp
  *
- * This class is a copy-paste of alternatorController.cpp TODO: do something about it? extract more common logic?
+ * This class is a copy-paste of alternator_controller.cpp TODO: do something about it? extract more common logic?
  *
  * @date Jun 26, 2016
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
 #include "aux_pid.h"
-#include "LocalVersionHolder.h"
+#include "local_version_holder.h"
 #include "allsensors.h"
 
 #if EFI_AUX_PID || defined(__DOXYGEN__)
@@ -24,7 +24,7 @@ EXTERN_ENGINE
 
 extern fsio8_Map3D_f32t fsioTable1;
 
-// todo: this is to some extent a copy-paste of alternatorController. maybe same loop
+// todo: this is to some extent a copy-paste of alternator_controller. maybe same loop
 // for all PIDs?
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)

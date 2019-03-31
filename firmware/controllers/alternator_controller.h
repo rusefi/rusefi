@@ -1,5 +1,5 @@
 /**
- * @file    alternatorController.h
+ * @file    alternator_controller.h
  * @brief   alternator controller
  *
  * @date Apr 6, 2014
@@ -10,7 +10,7 @@
 #ifndef ALTERNATORCONTROLLER_H_
 #define ALTERNATORCONTROLLER_H_
 
-#include "global.h"
+#include "engine.h"
 void initAlternatorCtrl(Logging *sharedLogger);
 void setAltPFactor(float p);
 void setAltIFactor(float p);

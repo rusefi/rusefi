@@ -19,7 +19,7 @@
 #include "efilib2.h"
 #include "settings.h"
 #include "engine_math.h"
-#include "LocalVersionHolder.h"
+#include "local_version_holder.h"
 #include "trigger_simulator.h"
 
 #include "rpm_calculator.h"

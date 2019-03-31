@@ -48,7 +48,7 @@
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #endif /* EFI_HISTOGRAMS */
-#include "LocalVersionHolder.h"
+#include "local_version_holder.h"
 #include "event_queue.h"
 #include "engine.h"
 #include "efilib2.h"
