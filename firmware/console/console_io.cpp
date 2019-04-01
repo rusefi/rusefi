@@ -132,15 +132,19 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 CommandHandler console_line_callback;
 
-bool isCommandLineConsoleOverTTL(void) {
-	return true;
-}
-
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
 static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
 
 #if EFI_PROD_CODE || EFI_EGT || defined(__DOXYGEN__)
+
+bool isUsbSerial(BaseChannel * channel) {
+#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
+	return channel == (BaseChannel *) &CONSOLE_USB_DEVICE;
+#else
+	return false;
+#endif
+}
 
 BaseChannel * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
@@ -148,7 +152,7 @@ BaseChannel * getConsoleChannel(void) {
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
-	return (BaseChannel *) &SDU1;
+	return (BaseChannel *) &CONSOLE_USB_DEVICE;
 #else
 	return NULL;
 #endif /* HAL_USE_SERIAL_USB */
@@ -168,20 +172,10 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
-#if (EFI_PROD_CODE && EFI_USB_SERIAL) || defined(__DOXYGEN__)
-	if (!isCommandLineConsoleOverTTL()) {
-		/**
-		 * This method contains a long delay, that's the reason why this is not done on the main thread
-		 */
-		usb_serial_start();
-	}
-#endif /* EFI_PROD_CODE */
-
-
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
 	if (binaryConsole.channel != NULL) {
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-		runBinaryProtocolLoop(&binaryConsole, true);
+		runBinaryProtocolLoop(&binaryConsole);
 #endif /* EFI_TUNER_STUDIO */
 	}
 }
@@ -211,8 +205,6 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	console_line_callback = console_line_callback_p;
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR) || defined(__DOXYGEN__)
-
-	if (isCommandLineConsoleOverTTL()) {
 		/*
 		 * Activates the serial
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC
@@ -227,7 +219,6 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 		isSerialConsoleStarted = true;
 
 		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
-	}
 #endif /* EFI_PROD_CODE */
 
 #if !defined(EFI_CONSOLE_NO_THREAD) || defined(__DOXYGEN__)

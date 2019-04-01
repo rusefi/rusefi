@@ -23,8 +23,7 @@ extern LoggingWithStorage tsLogger;
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 extern SerialUSBDriver SDU1;
-#define CONSOLE_USB_DEVICE &SDU1
-#endif
+#endif /* HAL_USE_SERIAL_USB */
 
 #if TS_UART_DMA_MODE
 // Async. FIFO buffer takes some RAM...
@@ -85,14 +84,14 @@ static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LI
 void startTsPort(ts_channel_s *tsChannel) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #if EFI_USB_SERIAL || defined(__DOXYGEN__)
-	if (isCommandLineConsoleOverTTL()) {
+	if (true) {
 		print("TunerStudio over USB serial");
 		/**
 		 * This method contains a long delay, that's the reason why this is not done on the main thread
 		 */
 		usb_serial_start();
 		// if console uses UART then TS uses USB
-		tsChannel->channel = (BaseChannel *) CONSOLE_USB_DEVICE;
+		tsChannel->channel = (BaseChannel *) &CONSOLE_USB_DEVICE;
 	} else
 #endif
 	{
@@ -138,7 +137,7 @@ void startTsPort(ts_channel_s *tsChannel) {
 bool stopTsPort(ts_channel_s *tsChannel) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #if EFI_USB_SERIAL || defined(__DOXYGEN__)
-	if (isCommandLineConsoleOverTTL()) {
+	if (true) {
 #if 0
 		usb_serial_stop();
 #endif
@@ -257,17 +256,13 @@ void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const u
 	}
 }
 
-bool sr5IsReady(bool isConsoleRedirect) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (isCommandLineConsoleOverTTL() ^ isConsoleRedirect) {
+bool sr5IsReady(ts_channel_s *tsChannel) {
+#if EFI_USB_SERIAL || defined(__DOXYGEN__)
+	if (isUsbSerial(tsChannel->channel)) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
-	} else {
-		// TS uses serial when console uses USB
-		return true;
 	}
-#else
+#endif /* EFI_USB_SERIAL */
 	return true;
-#endif
 }
 

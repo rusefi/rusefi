@@ -66,7 +66,7 @@ void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 void syncTunerStudioCopy(void);
-void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect);
+void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 
 #if defined __GNUC__
 // GCC
