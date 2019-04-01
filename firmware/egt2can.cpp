@@ -59,7 +59,7 @@ void runRusEfi(void) {
 //      TestThread(&SD1);
     chThdSleepMilliseconds(50);
 
-    printPending();
+//    printPending();
   }
 
 

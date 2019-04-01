@@ -95,11 +95,6 @@ void appendFast(Logging *logging, const char *text);
  */
 void scheduleLogging(Logging *logging);
 
-/**
- * this should only be invoked by the 'main' thread in order to keep the console safe
- */
-void printPending(void);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

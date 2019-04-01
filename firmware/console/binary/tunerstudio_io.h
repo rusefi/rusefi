@@ -16,7 +16,6 @@
 
 // that's hex for "~\n", see
 #define BINARY_SWITCH_TAG 0x7e0a
-#define SWITCH_TO_BINARY_COMMAND "~"
 
 #define PROTOCOL  "001"
 // this should match 'signature' in rusefi.ini
