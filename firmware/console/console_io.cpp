@@ -132,11 +132,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 CommandHandler console_line_callback;
 
-/**
- * todo: what does this variable currently mean? is it still needed?
- * looks like things are a bit confusing here
- */
-static bool b_isCommandLineConsoleOverTTL;
+static const bool b_isCommandLineConsoleOverTTL = true;
 
 bool isCommandLineConsoleOverTTL(void) {
 	return b_isCommandLineConsoleOverTTL;
@@ -270,10 +266,6 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR) || defined(__DOXYGEN__)
 
-	palSetPadMode(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
-
-	b_isCommandLineConsoleOverTTL = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
-
 	if (isCommandLineConsoleOverTTL()) {
 		/*
 		 * Activates the serial
@@ -290,8 +282,6 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 
 		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
 	}
-#else
-	b_isCommandLineConsoleOverTTL = false;
 #endif /* EFI_PROD_CODE */
 
 #if !defined(EFI_CONSOLE_NO_THREAD) || defined(__DOXYGEN__)
