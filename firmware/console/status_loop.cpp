@@ -425,8 +425,6 @@ void printOverallStatus(systime_t nowSeconds) {
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
-extern bool consoleInBinaryMode;
-
 /**
  * @brief Sends all pending data to dev console
  *
@@ -443,11 +441,6 @@ void updateDevConsoleState(void) {
 
 	if (!isCommandLineConsoleReady()) {
 		return;
-	}
-// looks like this is not needed anymore
-//	checkIfShouldHalt();
-	if (!consoleInBinaryMode) {
-		printPending();
 	}
 
 	/**

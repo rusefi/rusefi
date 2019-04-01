@@ -108,22 +108,6 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	return outputBuffer;
 }
 
-/**
- * This method actually sends all the pending data to the communication layer.
- * This method is invoked by the main thread - that's the only thread which should be sending
- * actual data to console in order to avoid concurrent access to serial hardware.
- */
-void printPending(void) {
-#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
-	int actualOutputBufferSize;
-	char *output = swapOutputBuffers(&actualOutputBufferSize);
-
-	if (actualOutputBufferSize > 0) {
-		printWithLength(output);
-	}
-#endif /* EFI_TEXT_LOGGING */
-}
-
 void initLoggingCentral(void) {
 	pendingBuffers0[0] = 0;
 	pendingBuffers1[0] = 0;
