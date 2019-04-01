@@ -460,7 +460,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_FIRMWARE_VERSION;
 }
 
-
+// this function runs indefinitely
 void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
 	int wasReady = false;
 
