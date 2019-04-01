@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "CJ125_logic.h"
+#include "cj125_logic.h"
 #include "engine.h"
 
 EXTERN_ENGINE;
