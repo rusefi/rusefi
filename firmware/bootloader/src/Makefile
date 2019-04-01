@@ -126,6 +126,7 @@ include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
+include $(PROJECT_DIR)/util/util.mk
 
 include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 
@@ -146,7 +147,6 @@ CSRC = $(STARTUPSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 	$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-	$(UTILSRC) \
 	$(ENGINES_SRC) \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
@@ -175,7 +175,6 @@ CPPSRC = $(CHCPPSRC) \
 	$(CONSOLE_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
-	$(UTILSRC_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(PROJECT_DIR)/console/binary/tunerstudio_io.cpp \
@@ -236,8 +235,7 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(CONFIG)/engines \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/util \
-	$(PROJECT_DIR)/util/containers \
+	$(UTIL_INC) \
 	$(PROJECT_DIR)/console_util \
 	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/console/binary \
