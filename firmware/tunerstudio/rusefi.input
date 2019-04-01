@@ -1482,6 +1482,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "IAT Bias Resistor Value",	    		iat_bias_resistor
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "vBatt ADC input", 						vbattAdcChannel
+		field = "!See Tools>Calibrate TPS"
 		field = "Throttle position sensor",				tpsAdcChannel
 		
 	dialog = triggerInputs,					"Trigger Inputs"
