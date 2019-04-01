@@ -82,86 +82,80 @@ static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LI
 
 
 void startTsPort(ts_channel_s *tsChannel) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#if EFI_USB_SERIAL || defined(__DOXYGEN__)
-	if (true) {
-		print("TunerStudio over USB serial");
-		/**
-		 * This method contains a long delay, that's the reason why this is not done on the main thread
-		 */
-		usb_serial_start();
-		// if console uses UART then TS uses USB
-		tsChannel->channel = (BaseChannel *) &CONSOLE_USB_DEVICE;
-	} else
-#endif
-	{
-		if (CONFIGB(useSerialPort)) {
+	tsChannel->channel = (BaseChannel *) NULL;
 
-			print("TunerStudio over USART");
-			efiSetPadMode("tunerstudio rx", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-			efiSetPadMode("tunerstudio tx", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+	#if EFI_PROD_CODE || defined(__DOXYGEN__)
+		#if defined(CONSOLE_USB_DEVICE) || defined(__DOXYGEN__)
+			print("TunerStudio over USB serial");
+			/**
+			 * This method contains a long delay, that's the reason why this is not done on the main thread
+			 */
+			usb_serial_start();
+			// if console uses UART then TS uses USB
+			tsChannel->channel = (BaseChannel *) &CONSOLE_USB_DEVICE;
+			return;
+		#endif
+		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
+			if (CONFIGB(useSerialPort)) {
 
-#if TS_UART_DMA_MODE
-			print("Using UART-DMA mode");
-			// init FIFO queue
-			iqObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
-			
-			// start DMA driver
-			tsDmaUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
-			uartStart(TS_UART_DEVICE, &tsDmaUartConfig);
+				print("TunerStudio over USART");
+				efiSetPadMode("tunerstudio rx", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+				efiSetPadMode("tunerstudio tx", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 
-			// start continuous DMA transfer using our circular buffer
-			tsUartDma.readPos = 0;
-			uartStartReceive(TS_UART_DEVICE, sizeof(tsUartDma.dmaBuffer), tsUartDma.dmaBuffer);
-#elif TS_UART_MODE
-			print("Using UART mode");
-			// start DMA driver
-			tsUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
-			uartStart(TS_UART_DEVICE, &tsUartConfig);
-#else
-			print("Using Serial mode");
-			tsSerialConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+				#if TS_UART_DMA_MODE
+					print("Using UART-DMA mode");
+					// init FIFO queue
+					iqObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
 
-			sdStart(TS_SERIAL_DEVICE, &tsSerialConfig);
-			
-			tsChannel->channel = (BaseChannel *) TS_SERIAL_DEVICE;
-#endif /* TS_UART_DMA_MODE */
-		} else
-			tsChannel->channel = (BaseChannel *) NULL;	// actually not used
-	}
-#else  /* EFI_PROD_CODE */
-	tsChannel->channel = (BaseChannel *) TS_SIMULATOR_PORT;
-#endif /* EFI_PROD_CODE */
+					// start DMA driver
+					tsDmaUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+					uartStart(TS_UART_DEVICE, &tsDmaUartConfig);
+
+					// start continuous DMA transfer using our circular buffer
+					tsUartDma.readPos = 0;
+					uartStartReceive(TS_UART_DEVICE, sizeof(tsUartDma.dmaBuffer), tsUartDma.dmaBuffer);
+				#elif TS_UART_MODE
+					print("Using UART mode");
+					// start DMA driver
+					tsUartConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+					uartStart(TS_UART_DEVICE, &tsUartConfig);
+				#elif defined(TS_SERIAL_DEVICE)
+					print("Using Serial mode");
+					tsSerialConfig.speed = CONFIGB(tunerStudioSerialSpeed);
+
+					sdStart(TS_SERIAL_DEVICE, &tsSerialConfig);
+
+					tsChannel->channel = (BaseChannel *) TS_SERIAL_DEVICE;
+				#endif
+			}
+		#endif /* TS_UART_DMA_MODE || TS_UART_MODE */
+	#else  /* EFI_PROD_CODE */
+		tsChannel->channel = (BaseChannel *) TS_SIMULATOR_PORT;
+	#endif /* EFI_PROD_CODE */
 }
 
 bool stopTsPort(ts_channel_s *tsChannel) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#if EFI_USB_SERIAL || defined(__DOXYGEN__)
-	if (true) {
-#if 0
-		usb_serial_stop();
-#endif
-		// don't stop USB!
-		return false;
-	} else
-#endif
-	{
+	#if EFI_PROD_CODE || defined(__DOXYGEN__)
+		#if EFI_USB_SERIAL || defined(__DOXYGEN__)
+			// don't stop USB!
+			//usb_serial_stop();
+			return false;
+		#endif
 		if (CONFIGB(useSerialPort)) {
 			// todo: disable Rx/Tx pads?
-#if (TS_UART_DMA_MODE || TS_UART_MODE)
-			uartStop(TS_UART_DEVICE);
-#else
-			sdStop(TS_SERIAL_DEVICE);
-#endif /* TS_UART_DMA_MODE */
+			#if (TS_UART_DMA_MODE || TS_UART_MODE)
+				uartStop(TS_UART_DEVICE);
+			#endif /* TS_UART_DMA_MODE || TS_UART_MODE */
+			#ifdef TS_SERIAL_DEVICE
+				sdStop(TS_SERIAL_DEVICE);
+			#endif /* TS_SERIAL_DEVICE */
 		}
-	}
-
-	tsChannel->channel = (BaseChannel *) NULL;
-	return true;
-#else  /* EFI_PROD_CODE */
-	// don't stop simulator!
-	return false;
-#endif /* EFI_PROD_CODE */
+		tsChannel->channel = (BaseChannel *) NULL;
+		return true;
+	#else  /* EFI_PROD_CODE */
+		// don't stop simulator!
+		return false;
+	#endif /* EFI_PROD_CODE */
 }
 
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
