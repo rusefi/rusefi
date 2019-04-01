@@ -7,7 +7,7 @@
  */
 
 #include "engine.h"
-#include "CJ125.h"
+#include "cj125.h"
 #include "pwm_generator.h"
 #include "rpm_calculator.h"
 
