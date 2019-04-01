@@ -215,7 +215,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
 	efiAssertVoid(CUSTOM_ERR_6659, getCurrentRemainingStack()> 32, "lwStAdcFast");
-#if EFI_INTERNAL_ADC
+#if EFI_INTERNAL_ADC || defined(__DOXYGEN__)
 	(void) pwmp;
 
 	/*
@@ -243,7 +243,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 #endif /* HAL_USE_PWM */
 
 float getMCUInternalTemperature(void) {
-#ifdef ADC_CHANNEL_SENSOR
+#if defined(ADC_CHANNEL_SENSOR) || defined(__DOXYGEN__)
 	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
 	TemperatureValue -= 0.760; // Subtract the reference voltage at 25°C
 	TemperatureValue /= .0025; // Divide by slope 2.5mV
@@ -509,7 +509,7 @@ void initAdcInputs(bool boardTestMode) {
 	// migrate to 'enable adcdebug'
 	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
-#if EFI_INTERNAL_ADC
+#if EFI_INTERNAL_ADC || defined(__DOXYGEN__)
 	/*
 	 * Initializes the ADC driver.
 	 */
@@ -530,8 +530,10 @@ void initAdcInputs(bool boardTestMode) {
 		}
 	}
 
+#if defined(ADC_CHANNEL_SENSOR) || defined(__DOXYGEN__)
 	// Internal temperature sensor, Available on ADC1 only
 	slowAdc.enableChannel((adc_channel_e)ADC_CHANNEL_SENSOR);
+#endif /* ADC_CHANNEL_SENSOR */
 
 	slowAdc.init();
 #if HAL_USE_PWM || defined(__DOXYGEN__)
