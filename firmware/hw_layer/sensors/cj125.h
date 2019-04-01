@@ -8,7 +8,7 @@
 #ifndef HW_LAYER_SENSORS_CJ125_H_
 #define HW_LAYER_SENSORS_CJ125_H_
 
-#include "CJ125_logic.h"
+#include "cj125_logic.h"
 
 
 /**********************************************************************************

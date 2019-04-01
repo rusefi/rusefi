@@ -65,7 +65,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 	while (true) {
 		if (!isCommandLineConsoleReady()) {
-			// we better do not read from USB serial before it is ready
+			// we better do not read from serial before it is ready
 			chThdSleepMilliseconds(10);
 			continue;
 		}
@@ -168,7 +168,7 @@ bool isCommandLineConsoleReady(void) {
 ts_channel_s binaryConsole;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
-static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
+static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
@@ -222,7 +222,7 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #endif /* EFI_PROD_CODE */
 
 #if !defined(EFI_CONSOLE_NO_THREAD) || defined(__DOXYGEN__)
-	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadThreadEntryPoint, NULL);
+	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadEntryPoint, NULL);
 #endif /* EFI_CONSOLE_NO_THREAD */
 
 }
