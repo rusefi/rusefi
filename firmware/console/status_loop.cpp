@@ -26,7 +26,7 @@
 
 #include "global.h"
 #include "status_loop.h"
-#include "HIP9011_logic.h"
+#include "hip9011_logic.h"
 #include "engine_controller.h"
 
 #include "adc_inputs.h"
@@ -76,7 +76,7 @@ extern bool main_loop_started;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125 || defined(__DOXYGEN__)
-#include "CJ125.h"
+#include "cj125.h"
 #endif /* EFI_CJ125 */
 
 #if EFI_MAP_AVERAGING
