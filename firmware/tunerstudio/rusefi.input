@@ -1366,14 +1366,15 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "!ECU reboot needed to apply these settings"
 		field = "injection Pin Mode",       			injectionPinMode
+		field = "With batched injection without 'Two wire batch emulation' fill only first count / 2 values"
 		field = "Injection Pin 1",						injectionPins1
-		field = "Injection Pin 2",						injectionPins2, {cylindersCount > 1}
-		field = "Injection Pin 3",						injectionPins3, {cylindersCount > 2}
-		field = "Injection Pin 4",						injectionPins4, {cylindersCount > 3}
-		field = "Injection Pin 5 ",						injectionPins5, {cylindersCount > 4}
-		field = "Injection Pin 6 ",						injectionPins6, {cylindersCount > 5}
-		field = "Injection Pin 7 ",						injectionPins7, {cylindersCount > 6}
-		field = "Injection Pin 8 ",						injectionPins8, {cylindersCount > 7}
+		field = "Injection Pin 2",						injectionPins2, {injectionMode != 3 && cylindersCount > 1}
+		field = "Injection Pin 3",						injectionPins3, {injectionMode != 3 && cylindersCount > 2}
+		field = "Injection Pin 4",						injectionPins4, {injectionMode != 3 && cylindersCount > 3}
+		field = "Injection Pin 5 ",						injectionPins5, {injectionMode != 3 && cylindersCount > 4}
+		field = "Injection Pin 6 ",						injectionPins6, {injectionMode != 3 && cylindersCount > 5}
+		field = "Injection Pin 7 ",						injectionPins7, {injectionMode != 3 && cylindersCount > 6}
+		field = "Injection Pin 8 ",						injectionPins8, {injectionMode != 3 && cylindersCount > 7}
 		field = "Injection Pin 9 ",						injectionPins9, {cylindersCount > 8}
 		field = "Injection Pin 10 ",	    			injectionPins10, {cylindersCount > 9}
 		field = "Injection Pin 11 ",					injectionPins11, {cylindersCount > 10}
