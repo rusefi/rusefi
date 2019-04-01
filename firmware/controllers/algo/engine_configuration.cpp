@@ -413,7 +413,6 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // needed also by bootloader code
 void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	boardConfiguration->startConsoleInBinaryMode = true;
 	boardConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;

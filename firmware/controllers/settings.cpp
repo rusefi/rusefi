@@ -873,8 +873,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
 		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "binary_mode_console")) {
-		boardConfiguration->startConsoleInBinaryMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
 		boardConfiguration->isCJ125Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {

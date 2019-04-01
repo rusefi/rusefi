@@ -596,8 +596,8 @@
 #define useTpicAdvancedMode_offset_hex 2e8
 #define useLcdScreen_offset 744
 #define useLcdScreen_offset_hex 2e8
-#define startConsoleInBinaryMode_offset 744
-#define startConsoleInBinaryMode_offset_hex 2e8
+#define unusedAnotherOne_offset 744
+#define unusedAnotherOne_offset_hex 2e8
 #define useWarmupPidAfr_offset 744
 #define useWarmupPidAfr_offset_hex 2e8
 #define onOffAlternatorLogic_offset 744
