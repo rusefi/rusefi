@@ -140,7 +140,8 @@ static void printErrorCounters(void) {
 
 void printTsStats(void) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	if (!isCommandLineConsoleOverTTL()) {
+	if (false) {
+		// todo: is this code needed somewhere else?
 		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
 
 		scheduleMsg(&tsLogger, "TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),

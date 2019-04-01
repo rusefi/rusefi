@@ -74,7 +74,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		onDataArrived();
 
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
-		if (isCommandLineConsoleOverTTL()) {
+
 			uint32_t flags;
 			chSysLock()
 			;
@@ -85,7 +85,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			if (flags & SD_OVERRUN_ERROR) {
 //				firmwareError(OBD_PCM_Processor_Fault, "serial overrun");
 			}
-		}
+
 #endif
 
 #if EFI_UART_ECHO_TEST_MODE
@@ -132,10 +132,8 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 CommandHandler console_line_callback;
 
-static const bool b_isCommandLineConsoleOverTTL = true;
-
 bool isCommandLineConsoleOverTTL(void) {
-	return b_isCommandLineConsoleOverTTL;
+	return true;
 }
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
@@ -190,9 +188,7 @@ void runConsoleLoop(ts_channel_s *console) {
 
 BaseChannel * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
-	if (isCommandLineConsoleOverTTL()) {
-		return (BaseChannel *) EFI_CONSOLE_UART_DEVICE;
-	}
+	return (BaseChannel *) EFI_CONSOLE_UART_DEVICE;
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
@@ -203,11 +199,7 @@ BaseChannel * getConsoleChannel(void) {
 }
 
 bool isCommandLineConsoleReady(void) {
-	if (isCommandLineConsoleOverTTL()) {
-		return isSerialConsoleStarted;
-	} else {
-		return is_usb_serial_ready();
-	}
+	return isSerialConsoleStarted;
 }
 #endif /* EFI_PROD_CODE || EFI_EGT */
 
