@@ -2031,7 +2031,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = tsPort, "TunerStudio Port"
 		field = "tunerStudioSerialSpeed",				tunerStudioSerialSpeed
 		field = "Use PC10/PC11 serial?",				useSerialPort
-		field = "startConsoleInBinaryMode", 			startConsoleInBinaryMode
 		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
 		
 	dialog = canBus, "CAN Bus"

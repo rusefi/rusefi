@@ -563,7 +563,7 @@ bit is_enabled_spi_2
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
-	bit startConsoleInBinaryMode;
+	bit unusedAnotherOne;
 	bit useWarmupPidAfr;
 	bit onOffAlternatorLogic;
 	bit isCJ125Enabled

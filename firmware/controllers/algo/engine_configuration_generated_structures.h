@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 29 02:31:18 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 01 11:40:04 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -670,7 +670,7 @@ typedef struct {
 	bool useLcdScreen : 1;
 	/**
 	offset 144 bit 13 */
-	bool startConsoleInBinaryMode : 1;
+	bool unusedAnotherOne : 1;
 	/**
 	offset 144 bit 14 */
 	bool useWarmupPidAfr : 1;
@@ -2625,4 +2625,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 29 02:31:18 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 01 11:40:04 EDT 2019

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Mar 29 02:31:18 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 01 11:40:04 EDT 2019
 public class Fields {
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int BLOCKING_FACTOR = 400;
@@ -407,7 +407,7 @@ public class Fields {
 	public static final int enabledStep1Limiter_offset = 744;
 	public static final int useTpicAdvancedMode_offset = 744;
 	public static final int useLcdScreen_offset = 744;
-	public static final int startConsoleInBinaryMode_offset = 744;
+	public static final int unusedAnotherOne_offset = 744;
 	public static final int useWarmupPidAfr_offset = 744;
 	public static final int onOffAlternatorLogic_offset = 744;
 	public static final int isCJ125Enabled_offset = 744;
@@ -1441,7 +1441,7 @@ public class Fields {
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 744, FieldType.BIT, 10);
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 744, FieldType.BIT, 11);
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 744, FieldType.BIT, 12);
-	public static final Field STARTCONSOLEINBINARYMODE = Field.create("STARTCONSOLEINBINARYMODE", 744, FieldType.BIT, 13);
+	public static final Field UNUSEDANOTHERONE = Field.create("UNUSEDANOTHERONE", 744, FieldType.BIT, 13);
 	public static final Field USEWARMUPPIDAFR = Field.create("USEWARMUPPIDAFR", 744, FieldType.BIT, 14);
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 744, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 744, FieldType.BIT, 16);

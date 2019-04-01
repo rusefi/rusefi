@@ -143,7 +143,7 @@ static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINE
 bool consoleInBinaryMode = false;
 
 void runConsoleLoop(ts_channel_s *console) {
-	if (CONFIGB(startConsoleInBinaryMode)) {
+	if (true) {
 		// switch to binary protocol
 		consoleInBinaryMode = true;
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
