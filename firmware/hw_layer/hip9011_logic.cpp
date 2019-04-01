@@ -6,7 +6,7 @@
  */
 
 #include "global.h"
-#include "HIP9011_logic.h"
+#include "hip9011_logic.h"
 
 EXTERN_ENGINE;
 

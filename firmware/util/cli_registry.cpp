@@ -4,7 +4,7 @@
  *
  * Here we have a data structure which holds all the dynamically-registered
  * command line interface action names & callback. This logic is invoked in
- * user context by the console thread - see consoleThreadThreadEntryPoint
+ * user context by the console thread - see consoleThreadEntryPoint
  *
  * TODO: there is too much copy-paste here, this class needs some refactoring :)
  *

@@ -38,9 +38,9 @@
 #include "hardware.h"
 #include "rpm_calculator.h"
 #include "trigger_central.h"
-#include "HIP9011_logic.h"
+#include "hip9011_logic.h"
 #include "hip9011_lookup.h"
-#include "HIP9011.h"
+#include "hip9011.h"
 #include "adc_inputs.h"
 
 #include "engine_controller.h"

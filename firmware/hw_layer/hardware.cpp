@@ -35,7 +35,7 @@
 #include "electronic_throttle.h"
 #include "board_test.h"
 #include "mcp3208.h"
-#include "HIP9011.h"
+#include "hip9011.h"
 #include "histogram.h"
 #include "mmc_card.h"
 #include "neo6m.h"
