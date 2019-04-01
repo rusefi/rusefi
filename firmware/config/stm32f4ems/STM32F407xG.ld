@@ -85,5 +85,17 @@ REGION_ALIAS("BSS_RAM", ram0);
 /* RAM region to be used for the default heap.*/
 REGION_ALIAS("HEAP_RAM", ram0);
 
+/* rusEfi Bootloader section */
+SECTIONS
+{
+.bl : ALIGN(4)
+    {
+        . = ALIGN(4);
+        *(.bl)
+        *(.bl.*)
+        . = ALIGN(4);
+    } > bl AT > bl
+}
+
 /* Generic rules inclusion.*/
 INCLUDE rules.ld

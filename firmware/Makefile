@@ -81,7 +81,7 @@ ifeq ($(USE_SMART_BUILD),)
 endif
 
 ifeq ($(USE_BOOTLOADER),)
-  USE_BOOTLOADER = no
+  USE_BOOTLOADER = yes
 endif
 
 ifeq ($(USE_FATFS),)
