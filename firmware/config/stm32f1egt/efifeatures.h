@@ -16,8 +16,6 @@
 
 #define hal_lld_get_counter_value()         DWT_CYCCNT
 
-#define EFI_USE_UART_FOR_CONSOLE FALSE
-
 #define EFI_CONSOLE_TX_PORT GPIOC
 #define EFI_CONSOLE_TX_PIN 10
 #define EFI_CONSOLE_RX_PORT GPIOC
@@ -43,9 +41,6 @@
 #define EFI_EGT TRUE
 
 #define EFI_UNIT_TEST FALSE
-
-#define CONSOLE_MODE_SWITCH_PORT GPIOB
-#define CONSOLE_MODE_SWITCH_PIN 1
 
 #define EFI_MAX_31855 TRUE
 

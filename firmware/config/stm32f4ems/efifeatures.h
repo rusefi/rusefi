@@ -49,8 +49,6 @@
 
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
-#define EFI_USE_UART_FOR_CONSOLE FALSE
-
 /**
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
  */
@@ -363,9 +361,6 @@
 // For GPS we have USART1. We can start with PB7 USART1_RX and PB6 USART1_TX
 #define GPS_SERIAL_DEVICE &SD1
 #define GPS_SERIAL_SPEED 38400
-
-#define CONSOLE_MODE_SWITCH_PORT GPIOB
-#define CONSOLE_MODE_SWITCH_PIN 1
 
 #define CONFIG_RESET_SWITCH_PORT GPIOD
 #define CONFIG_RESET_SWITCH_PIN 6

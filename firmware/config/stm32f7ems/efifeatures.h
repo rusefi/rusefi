@@ -21,10 +21,6 @@
 #undef EFI_USE_CCM
 #define EFI_USE_CCM FALSE
 
-// todo: no actual selection pin configured for Nucleo
-#undef EFI_USE_UART_FOR_CONSOLE
-#define EFI_USE_UART_FOR_CONSOLE FALSE
-
 #undef EFI_POTENTIOMETER
 #define EFI_POTENTIOMETER FALSE
 
