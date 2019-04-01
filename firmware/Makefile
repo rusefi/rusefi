@@ -157,6 +157,12 @@ include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/console/console.mk
 
+ifeq ($(BOOTLOADERINC),)
+  # include default bootloader code
+  BOOTLOADERINC= $(PROJECT_DIR)/bootloader/
+endif
+
+
 ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
 endif
