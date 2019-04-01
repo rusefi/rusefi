@@ -461,11 +461,11 @@ static bool isKnownCommand(char command) {
 }
 
 // this function runs indefinitely
-void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool isConsoleRedirect) {
+void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 	int wasReady = false;
 
 	while (true) {
-		int isReady = sr5IsReady(isConsoleRedirect);
+		int isReady = sr5IsReady(tsChannel);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
 			wasReady = false;
@@ -586,7 +586,7 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 
 	startTsPort(&tsChannel);
 
-	runBinaryProtocolLoop(&tsChannel, false);
+	runBinaryProtocolLoop(&tsChannel);
 }
 
 void syncTunerStudioCopy(void) {

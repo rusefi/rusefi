@@ -85,6 +85,9 @@ typedef struct {
 // todo: double-check this
 #define CRC_WRAPPING_SIZE (CRC_VALUE_SIZE + 3)
 
+#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
+#define CONSOLE_USB_DEVICE SDU1
+#endif /* HAL_USE_SERIAL_USB */
 
 void startTsPort(ts_channel_s *tsChannel);
 bool stopTsPort(ts_channel_s *tsChannel);
@@ -100,6 +103,6 @@ void sr5WriteCrcPacket(ts_channel_s *tsChannel, const uint8_t responseCode, cons
 void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size);
 int sr5ReadData(ts_channel_s *tsChannel, uint8_t * buffer, int size);
 int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout);
-bool sr5IsReady(bool isConsoleRedirect);
+bool sr5IsReady(ts_channel_s *tsChannel);
 
 #endif /* CONSOLE_TUNERSTUDIO_TUNERSTUDIO_IO_H_ */

@@ -32,8 +32,8 @@ BaseChannel * getConsoleChannel(void);
 void consolePutChar(int x);
 void consoleOutputBuffer(const uint8_t *buf, int size);
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p);
-bool isCommandLineConsoleOverTTL(void);
 void onDataArrived(void);
+bool isUsbSerial(BaseChannel * channel);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR || EFI_EGT
 bool isCommandLineConsoleReady(void);
