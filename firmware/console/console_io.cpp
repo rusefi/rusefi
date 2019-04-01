@@ -140,37 +140,7 @@ bool isCommandLineConsoleOverTTL(void) {
 static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
 
-bool consoleInBinaryMode = false;
-
-void runConsoleLoop(ts_channel_s *console) {
-
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-	runBinaryProtocolLoop(console, true);
-#endif /* EFI_TUNER_STUDIO */
-
-	while (true) {
-		efiAssertVoid(CUSTOM_ERR_6571, getCurrentRemainingStack() > 256, "lowstck#9e");
-		bool end = getConsoleLine((BaseSequentialStream*) console->channel, console->crcReadBuffer, sizeof(console->crcReadBuffer) - 3);
-		if (end) {
-			// firmware simulator is the only case when this happens
-			continue;
-		}
-
-		char *trimmed = efiTrim(console->crcReadBuffer);
-
-		(console_line_callback)(trimmed);
-
-			// switch to binary protocol
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-		runBinaryProtocolLoop(console, true);
-#endif /* EFI_TUNER_STUDIO */
-
-	}
-}
-
-
 #if EFI_PROD_CODE || EFI_EGT || defined(__DOXYGEN__)
-
 
 BaseChannel * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
@@ -209,8 +179,11 @@ static THD_FUNCTION(consoleThreadThreadEntryPoint, arg) {
 
 
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
-	if (binaryConsole.channel != NULL)
-		runConsoleLoop(&binaryConsole);
+	if (binaryConsole.channel != NULL) {
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+		runBinaryProtocolLoop(&binaryConsole, true);
+#endif /* EFI_TUNER_STUDIO */
+	}
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */
