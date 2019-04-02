@@ -198,6 +198,12 @@ static char header[16];
  * this method should invoked on the main thread only
  */
 void printWithLength(char *line) {
+	int len;
+	char *p;
+
+	if (!isCommandLineConsoleReady())
+		return;
+
 	/**
 	 * this is my way to detect serial port transmission errors
 	 * following code is functionally identical to
@@ -209,9 +215,10 @@ void printWithLength(char *line) {
 	 */
 	// todo: if needed we can probably know line length without calculating it, but seems like this is done not
 	// under a lock so not a problem?
-	int len = efiStrlen(line);
+
+	len = efiStrlen(line);
 	strcpy(header, "line:");
-	char *p = header + efiStrlen(header);
+	p = header + efiStrlen(header);
 	p = itoa10(p, len);
 	*p++ = ':';
 	*p++ = '\0';
@@ -221,8 +228,6 @@ void printWithLength(char *line) {
 	*p++ = '\r';
 	*p++ = '\n';
 
-	if (!isCommandLineConsoleReady())
-		return;
 	consoleOutputBuffer((const uint8_t *) header, strlen(header));
 	consoleOutputBuffer((const uint8_t *) line, p - line);
 }
