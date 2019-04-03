@@ -11,8 +11,8 @@ import java.util.Date;
 public class ConfigDefinition {
     public static final String EOL = "\n";
     private static final String INPUT_FILE_NAME = "rusefi_config.txt";
-    public static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
-    public static final String TS_FILE_INPUT_NAME = "rusefi.input";
+    static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
+    static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
     private static final String END_STRUCT = "end_struct";
@@ -26,9 +26,9 @@ public class ConfigDefinition {
     public static StringBuilder settingContextHelp = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 4) {
+        if (args.length != 4 && args.length != 5) {
             System.out.println("Please specify path to '" + INPUT_FILE_NAME + "' file, path to " + TS_FILE_INPUT_NAME +
-                    " and destination folder");
+                    ", destination folder and [optional] file name of custom prepend file");
             return;
         }
 
@@ -36,14 +36,18 @@ public class ConfigDefinition {
         String tsPath = args[1];
         String headerDestinationFolder = args[2];
         String javaConsolePath = args[3];
+        String prependFile = args.length == 5 ? args[4] : null;
         String fullFileName = definitionInputPath + File.separator + INPUT_FILE_NAME;
         System.out.println("Reading from " + fullFileName);
         String destCHeader = headerDestinationFolder + File.separator + ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H;
         System.out.println("Writing C header to " + destCHeader);
 
+        if (prependFile != null)
+            readPrependValues(prependFile);
+
         BufferedWriter cHeader = new BufferedWriter(new FileWriter(destCHeader));
 
-        BufferedReader br = new BufferedReader(new FileReader(fullFileName));
+        BufferedReader definitionReader = new BufferedReader(new FileReader(fullFileName));
 
         CharArrayWriter tsWriter = new CharArrayWriter();
 
@@ -56,7 +60,7 @@ public class ConfigDefinition {
         ConfigurationConsumer tsProjectConsumer = new TSProjectConsumer(tsWriter, tsPath, state);
         ConfigurationConsumer javaFieldsConsumer = new JavaFieldsConsumer(javaFieldsWriter, state, javaConsolePath);
 
-        processFile(state, br, cHeaderConsumer, tsProjectConsumer, javaFieldsConsumer);
+        processFile(state, definitionReader, cHeaderConsumer, tsProjectConsumer, javaFieldsConsumer);
 
         state.ensureEmptyAfterProcessing();
 
@@ -68,6 +72,23 @@ public class ConfigDefinition {
         String inputFileName = definitionInputPath + File.separator + ROM_RAIDER_XML_TEMPLATE;
         String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
         processTextTemplate(inputFileName, outputFileName);
+    }
+
+    private static void readPrependValues(String prependFile) throws IOException {
+        BufferedReader definitionReader = new BufferedReader(new FileReader(prependFile));
+        String line;
+        while ((line = definitionReader.readLine()) != null) {
+            line = trimLine(line);
+            /**
+             * we should ignore empty lines and comments
+             */
+            if (isEmptyDefinitionLine(line))
+                continue;
+            if (startsWithToken(line, DEFINE)) {
+                processDefine(line.substring(DEFINE.length()).trim());
+            }
+
+        }
     }
 
     private static void processTextTemplate(String inputFileName, String outputFileName) throws IOException {
@@ -90,7 +111,7 @@ public class ConfigDefinition {
         fw.close();
     }
 
-    private static void processFile(ReaderState state, BufferedReader br,
+    private static void processFile(ReaderState state, BufferedReader definitionReader,
                                     ConfigurationConsumer cHeaderConsumer,
                                     ConfigurationConsumer tsProjectConsumer,
                                     ConfigurationConsumer javaFieldsConcumer) throws IOException {
@@ -98,13 +119,12 @@ public class ConfigDefinition {
 
         cHeaderConsumer.startFile();
 
-        while ((line = br.readLine()) != null) {
-            line = line.trim();
-            line = line.replaceAll("\\s+", " ");
+        while ((line = definitionReader.readLine()) != null) {
+            line = trimLine(line);
             /**
              * we should ignore empty lines and comments
              */
-            if (line.length() == 0 || line.startsWith("!"))
+            if (isEmptyDefinitionLine(line))
                 continue;
 
             if (line.startsWith(STRUCT)) {
@@ -132,6 +152,16 @@ public class ConfigDefinition {
         cHeaderConsumer.endFile();
         tsProjectConsumer.endFile();
         javaFieldsConcumer.endFile();
+    }
+
+    private static boolean isEmptyDefinitionLine(String line) {
+        return line.length() == 0 || line.startsWith("!");
+    }
+
+    private static String trimLine(String line) {
+        line = line.trim();
+        line = line.replaceAll("\\s+", " ");
+        return line;
     }
 
     private static void handleCustomLine(ReaderState state, String line) {
@@ -222,7 +252,7 @@ public class ConfigDefinition {
         if (cf.isIterate) {
             structure.addC(cf);
             for (int i = 1; i <= cf.arraySize; i++) {
-                ConfigField element = new ConfigField(state,cf.name + i, cf.comment, false, null,
+                ConfigField element = new ConfigField(state, cf.name + i, cf.comment, false, null,
                         cf.type, 1, cf.tsInfo, false);
                 structure.addTs(element);
             }
@@ -248,8 +278,10 @@ public class ConfigDefinition {
     }
 
     public static int getSize(String s) {
-        if (VariableRegistry.INSTANCE.intValues.containsKey(s))
+        if (VariableRegistry.INSTANCE.intValues.containsKey(s)) {
+            VariableRegistry.INSTANCE.usedValues.add(s);
             return VariableRegistry.INSTANCE.intValues.get(s);
+        }
         return Integer.parseInt(s);
     }
 
