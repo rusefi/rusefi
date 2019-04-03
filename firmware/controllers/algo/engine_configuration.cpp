@@ -30,7 +30,9 @@
 #include "advance_map.h"
 
 #include "hip9011_lookup.h"
+#if EFI_MEMS || defined(__DOXYGEN__)
 #include "accelerometer.h"
+#endif
 
 #include "custom_engine.h"
 #include "engine_template.h"
@@ -1084,7 +1086,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->hip9011Gain = 1;
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 	setHip9011FrankensoPinout();
-#endif
+#endif /* EFI_HIP_9011 */
 
 	setDefaultSdCardParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
