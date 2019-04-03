@@ -23,7 +23,7 @@ void SingleWave::init(pin_state_t *pinStates) {
 
 pin_state_t SingleWave::getState(int switchIndex) {
 	pin_state_t state = pinStates[switchIndex];
-	efiAssertVoid(OBD_PCM_Processor_Fault, state == 0 || state == 1, "wave state get");
+	efiAssert(OBD_PCM_Processor_Fault, state == 0 || state == 1, "wave state get", TV_FALL);
 	return state;
 }
 
