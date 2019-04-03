@@ -9,7 +9,6 @@ HW_LAYER_EMS = $(HW_LAYER_EGT) \
 	$(PROJECT_DIR)/hw_layer/flash.c
 		
 HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
-	$(PROJECT_DIR)/hw_layer/accelerometer.cpp \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input_hw.cpp \
@@ -25,7 +24,6 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/hip9011.cpp \
 	$(PROJECT_DIR)/hw_layer/hip9011_logic.cpp \
 	$(PROJECT_DIR)/hw_layer/vehicle_speed.cpp \
-	$(PROJECT_DIR)/hw_layer/joystick.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \

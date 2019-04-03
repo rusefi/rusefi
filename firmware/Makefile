@@ -287,7 +287,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
 	hw_layer/lcd \
-	hw_layer/sensors \
+	$(HW_SENSORS_INC) \
 	hw_layer/mass_storage \
 	hw_layer/$(CPU_HWLAYER) \
 	$(HW_LAYER_DRIVERS_INC) \
