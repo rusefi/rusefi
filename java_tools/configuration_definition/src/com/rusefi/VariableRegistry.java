@@ -19,7 +19,6 @@ public class VariableRegistry extends TreeMap<String, String> {
     private final Pattern VAR = Pattern.compile("(@@(.*?)@@)");
 
     public Map<String, Integer> intValues = new HashMap<>();
-    public Set<String> usedValues = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -49,6 +48,10 @@ public class VariableRegistry extends TreeMap<String, String> {
     }
 
     public void register(String var, String value) {
+        if (containsKey(var)) {
+            System.out.println("Not redefining " + var);
+            return;
+        }
         System.out.println("Registering " + var + " as " + value);
         put(var, value);
 
@@ -61,8 +64,6 @@ public class VariableRegistry extends TreeMap<String, String> {
         try {
             int intValue = Integer.parseInt(value);
             System.out.println("key [" + var + "] value: " + intValue);
-            if (usedValues.contains(var))
-                throw new IllegalStateException("Not allowed to redefine after value was used: " + var);
             intValues.put(var, intValue);
             javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
         } catch (NumberFormatException e) {

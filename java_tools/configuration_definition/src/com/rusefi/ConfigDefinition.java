@@ -279,7 +279,6 @@ public class ConfigDefinition {
 
     public static int getSize(String s) {
         if (VariableRegistry.INSTANCE.intValues.containsKey(s)) {
-            VariableRegistry.INSTANCE.usedValues.add(s);
             return VariableRegistry.INSTANCE.intValues.get(s);
         }
         return Integer.parseInt(s);
