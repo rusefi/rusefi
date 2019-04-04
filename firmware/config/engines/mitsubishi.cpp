@@ -41,9 +41,6 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set_whole_fuel_map 3
 	setWholeFuelMap(3 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	// set cranking_fuel 4
-	engineConfiguration->cranking.baseFuel = 4;
-
 //	/**
 //	 * 29150 Ohm @ 40C
 //	 * 10160 Ohm @ 70C

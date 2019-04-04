@@ -1026,7 +1026,7 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"%",      1,     0,      0.0,    500.0,   2
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C",        1,     0,    -80.0,    170.0,  2
 
 	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"%",      1,     0,      0.0,    500.0,   2
-	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter",        1,     0,    -80.0,    170.0,  2
+	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter",        1,     0,    -80.0,    170.0,  0
 
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"%",      1,     0,      0.0,    1000.0,   2

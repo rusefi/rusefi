@@ -60,8 +60,6 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->engineChartSize = 450;
 
-	// set cranking_fuel 7
-	engineConfiguration->cranking.baseFuel = 7;
 
 	// set global_trigger_offset_angle -50
 	engineConfiguration->globalTriggerAngleOffset = -50;
