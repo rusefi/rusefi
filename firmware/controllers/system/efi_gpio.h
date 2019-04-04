@@ -21,6 +21,7 @@ void turnAllPinsOff(void);
 #define turnAllPinsOff() {}
 #endif /* EFI_GPIO_HARDWARE */
 
+#ifdef __cplusplus
 /**
  * @brief   Single output pin reference and state
  */
@@ -143,6 +144,8 @@ public:
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
 };
 
+#endif /* __cplusplus */
+
 /**
  * it's a macro to be sure that stack is not used
  * @return 0 for OM_DEFAULT and OM_OPENDRAIN
@@ -161,8 +164,8 @@ public:
 
 #if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
 
-ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin);
-ioportid_t getHwPort(const char *msg, brain_pin_e brainPin);
+EXTERNC ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin);
+EXTERNC ioportid_t getHwPort(const char *msg, brain_pin_e brainPin);
 const char *portname(ioportid_t GPIOx);
 
 #endif /* EFI_GPIO_HARDWARE */

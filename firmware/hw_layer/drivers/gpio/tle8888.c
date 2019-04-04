@@ -19,6 +19,7 @@
 EXTERN_CONFIG;
 
 #include "hardware.h"
+#include "efi_gpio.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
@@ -261,7 +262,7 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 
 /* this should be in board file */
 static struct tle8888_config tle8888_cfg = {
-	.spi_bus = NULL/*&SPID4*/,
+	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -291,7 +292,19 @@ static struct tle8888_config tle8888_cfg = {
 
 void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 {
+	if (engineConfiguration->tle8888_cs == GPIO_UNASSIGNED) {
+		return;
+	}
+
+	// todo: reuse initSpiCs method?
+	tle8888_cfg.spi_config.ssport = getHwPort("tle8888", engineConfiguration->tle8888_cs);
+	tle8888_cfg.spi_config.sspad = getHwPin("tle8888", engineConfiguration->tle8888_cs);
+
 	tle8888_cfg.spi_bus = getSpiDevice(engineConfiguration->tle8888spiDevice);
+	if (tle8888_cfg.spi_bus == NULL) {
+		// error already reported
+		return;
+	}
 
 	tle8888_add(0, &tle8888_cfg);
 }

@@ -159,6 +159,8 @@ void initI2Cmodule(void) {
 //static char txbuf[1];
 
 static void sendI2Cbyte(int addr, int data) {
+	(void)addr;
+	(void)data;
 //	i2cAcquireBus(&I2CD1);
 //	txbuf[0] = data;
 //	i2cMasterTransmit(&I2CD1, addr, txbuf, 1, NULL, 0);
@@ -458,6 +460,13 @@ void initHardware(Logging *l) {
 #endif
 
 #if EFI_TLE8888
+	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
+		static OutputPin tle8888Cs;
+//		// SPI pins are enabled in initSpiModules()
+		tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
+					&engineConfiguration->tle8888_csPinMode);
+	}
+
 	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
