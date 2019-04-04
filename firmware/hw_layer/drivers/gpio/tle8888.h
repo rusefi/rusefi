@@ -25,7 +25,7 @@
 /* note that spi transfer should be LSB first */
 struct tle8888_config {
 	SPIDriver		*spi_bus;
-	const SPIConfig	spi_config;
+	SPIConfig	spi_config;
 	/* bidirectional, check DS */
 	struct {
 		ioportid_t		port;

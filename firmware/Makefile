@@ -38,7 +38,7 @@ endif
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
   # constexpr float expf_taylor_impl probably needs just c++14 but why not go with 17?
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
 endif
 
 # Enable this if you want the linker to remove unused code and data
