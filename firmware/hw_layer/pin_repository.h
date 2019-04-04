@@ -34,8 +34,11 @@ class PinRepository {
 #endif
 
 void initPinRepository(void);
+EXTERNC bool brain_pin_is_onchip(brain_pin_e brainPin);
 EXTERNC bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg);
+EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg);
 EXTERNC void markUnused(ioportid_t port, ioportmask_t pin);
+EXTERNC void brain_pin_markUnused(brain_pin_e brainPin);
 const char * getPinFunction(brain_input_pin_e brainPin);
 void unmarkPin(brain_pin_e brainPin);
 
