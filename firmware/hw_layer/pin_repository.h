@@ -27,12 +27,6 @@ class PinRepository {
 
 #define PORT_SIZE 16
 
-#ifdef __cplusplus
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
 void initPinRepository(void);
 EXTERNC bool brain_pin_is_onchip(brain_pin_e brainPin);
 EXTERNC bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg);
@@ -41,7 +35,5 @@ EXTERNC void markUnused(ioportid_t port, ioportmask_t pin);
 EXTERNC void brain_pin_markUnused(brain_pin_e brainPin);
 const char * getPinFunction(brain_input_pin_e brainPin);
 void unmarkPin(brain_pin_e brainPin);
-
-#undef EXTERNC
 
 #endif /* PIN_REPOSITORY_H_ */
