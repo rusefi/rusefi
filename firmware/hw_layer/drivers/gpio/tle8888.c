@@ -16,6 +16,9 @@
 /* to be removed */
 #include "engine_configuration.h"
 
+EXTERN_CONFIG;
+
+#include "hardware.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
@@ -257,7 +260,7 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 /*********TO BE REMOVED FROM THIS FILE***************/
 
 /* this should be in board file */
-static const struct tle8888_config tle8888_cfg = {
+static struct tle8888_config tle8888_cfg = {
 	.spi_bus = NULL/*&SPID4*/,
 	.spi_config = {
 		.circular = false,
@@ -288,6 +291,8 @@ static const struct tle8888_config tle8888_cfg = {
 
 void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 {
+	tle8888_cfg.spi_bus = getSpiDevice(engineConfiguration->tle8888spiDevice);
+
 	tle8888_add(0, &tle8888_cfg);
 }
 

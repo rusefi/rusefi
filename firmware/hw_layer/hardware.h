@@ -33,7 +33,7 @@
 
 int getSpiPrescaler(spi_speed_e speed, spi_device_e device);
 
-SPIDriver * getSpiDevice(spi_device_e spiDevice);
+EXTERNC SPIDriver * getSpiDevice(spi_device_e spiDevice);
 void turnOnSpi(spi_device_e device);
 void lockSpi(spi_device_e device);
 void unlockSpi(void);
