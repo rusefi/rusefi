@@ -265,11 +265,13 @@ void markUnused(ioportid_t port, ioportmask_t pin) {
 	PIN_USED[index] = NULL;
 }
 
-const char * getPinFunction(brain_input_pin_e brainPin) {
-	ioportid_t port = getHwPort("getF", brainPin);
-	ioportmask_t pin = getHwPin("getF", brainPin);
+const char *getPinFunction(brain_input_pin_e brainPin) {
+	int index;
 
-	int index = getIndex(port, pin);
+	index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return NULL;
+
 	return PIN_USED[index];
 }
 
