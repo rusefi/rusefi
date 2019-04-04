@@ -104,7 +104,8 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
-	rxb = spiPolledExchange(spi, tx);
+	// todo 16 bit for F4? rxb = spiPolledExchange(spi, tx);
+	spiExchange(spi, 2, &tx, &rxb);
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
@@ -257,7 +258,7 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 
 /* this should be in board file */
 static const struct tle8888_config tle8888_cfg = {
-	.spi_bus = &SPID4,
+	.spi_bus = NULL/*&SPID4*/,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
@@ -270,7 +271,7 @@ static const struct tle8888_config tle8888_cfg = {
 			(((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
 			SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR),
 		/* 16-bit transfer */
-		.cr2 = SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+		.cr2 = 0/* not for F4? SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0*/
 	},
 	/* not implemented yet, use STM32 gpios directly */
 	.direct_io = {
