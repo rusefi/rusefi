@@ -9,10 +9,13 @@
  * Andrey Gusakov, (c) 2019
  */
 
+#include "global.h"
+
+#if EFI_TLE8888 || defined(__DOXYGEN__)
+
 /* to be removed */
 #include "engine_configuration.h"
 
-#include "global.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
@@ -288,3 +291,5 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 }
 
 /*********TO BE REMOVED FROM THIS FILE ENDS***********/
+
+#endif /* EFI_TLE8888 */
