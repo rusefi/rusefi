@@ -177,6 +177,14 @@ static int getIndex(ioportid_t port, ioportmask_t pin) {
 	return portIndex * PORT_SIZE + pin;
 }
 
+bool brain_pin_is_onchip(brain_pin_e brainPin)
+{
+	if ((brainPin < GPIOA_0) || (brainPin > GPIOH_15))
+		return false;
+
+	return true;
+}
+
 /**
  * See also unmarkPin()
  * @return true if this pin was already used, false otherwise
