@@ -102,7 +102,9 @@ static int getPortIndex(ioportid_t port) {
 }
 
 static void reportPins(void) {
-	for (int i = 0; i < PIN_REPO_SIZE; i++) {
+	unsigned int i;
+
+	for (i = 0; i < PIN_REPO_SIZE; i++) {
 		const char *name = PIN_USED[i];
 		int portIndex = i / PORT_SIZE;
 		int pin = i % PORT_SIZE;
