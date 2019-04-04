@@ -146,8 +146,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set cranking_timing_angle 3
 	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->crankingChargeAngle = 70;
-	// set cranking_fuel 9
-	engineConfiguration->cranking.baseFuel = 9;
 
 	setLinearCurve(config->ignitionLoadBins, IGN_LOAD_COUNT, 20, 105, 5);
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -196,9 +194,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[0] = GPIOD_3;
 	boardConfiguration->injectionPins[1] = GPIOE_2;
 
-
-	//setDefaultCrankingFuel(engineConfiguration);
-	engineConfiguration->cranking.baseFuel = 5;
 
 	// 40% idle is good default
 	boardConfiguration->idle.solenoidFrequency = 300;

@@ -163,7 +163,6 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 
-	// cold start works better with baseFuel = 8
 	// maybe adjust CLT correction?
 	// set cranking_fuel 8
 	engineConfiguration->cranking.baseFuel = 1;

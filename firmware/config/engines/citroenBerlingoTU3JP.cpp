@@ -90,12 +90,6 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	memcpy(config->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
 
 	/**
-	* Cranking fuel setting
-	* TODO: they recomend using something like -40C for low point and +80C for high point
-	*/
-	engineConfiguration->cranking.baseFuel = 15;
-
-	/**
 	 * Algorithm Alpha-N setting
 	 */
 	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);

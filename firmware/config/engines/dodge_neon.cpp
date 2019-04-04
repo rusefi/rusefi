@@ -167,8 +167,6 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_cranking_rpm 550
 	engineConfiguration->cranking.rpm = 550;
 
-	// set cranking_fuel 5
-	engineConfiguration->cranking.baseFuel = 5;
 
 //	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
@@ -273,13 +271,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->specs.displacement = 1.996;
 	engineConfiguration->specs.cylindersCount = 4;
-
-	/**
-	 * that's NGC config
-	 *
-	 * set_cranking_fuel 5
-	 */
-	engineConfiguration->cranking.baseFuel = 5;
 
 	engineConfiguration->biQuad.a0 = 0.0000024635293743901;
 	engineConfiguration->biQuad.a1 = 0.00000492705874878021;
