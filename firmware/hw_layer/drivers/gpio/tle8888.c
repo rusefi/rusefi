@@ -290,12 +290,15 @@ static struct tle8888_config tle8888_cfg = {
 		.ssport = GPIOF,
 		.sspad = 0U,
 		.cr1 =
-			/* TODO: set LSB first mode !!!! */
-			/* SPI_CR1_CPOL | */ // = 0
-			SPI_CR1_CPHA | // = 1
-			(((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
-			SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR),
-		/* 16-bit transfer */
+			SPI_CR1_DFF	|		// 16-bit transfer
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			SPI_CR1_LSBFIRST |	//LSB first
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+			SPI_CR1_MSTR |
+			// SPI_CR1_CPOL |	// = 0 CHECK!
+			SPI_CR1_CPHA | 		// = 1 CHECK!
+			0,
 		.cr2 = 0/* not for F4? SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0*/
 	},
 	/* not implemented yet, use STM32 gpios directly */
