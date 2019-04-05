@@ -7,9 +7,10 @@
 
 #pragma once
 
+#include "global.h"
 #include "controller_base.h"
 
-#include "ch.h"
+#if ! EFI_UNIT_TEST
 
 /**
  * @brief A base class for a controller that requires its own thread.
@@ -60,3 +61,5 @@ public:
         m_thread->name = GetName();
     }
 };
+
+#endif

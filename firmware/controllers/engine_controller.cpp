@@ -603,10 +603,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initMockVoltage();
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
-	initSignalExecutor();
-#endif
-
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
