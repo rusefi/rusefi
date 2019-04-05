@@ -13,5 +13,4 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/lcd_menu_tree.cpp \
 	$(PROJECT_DIR)/controllers/algo/event_registry.cpp \
 	$(PROJECT_DIR)/controllers/algo/algo.cpp \
-	$(PROJECT_DIR)/controllers/algo/aux_pid.cpp \
 	$(PROJECT_DIR)/controllers/algo/signal_executor.cpp

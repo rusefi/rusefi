@@ -41,8 +41,4 @@ public:
 	InjectionEvent *event;
 };
 
-void initSignalExecutor(void);
-
-void initSignalExecutorImpl(void);
-
 #endif /* SIGNAL_EXECUTOR_H_ */

@@ -46,10 +46,3 @@ InjectionSignalPair::InjectionSignalPair() {
 	memset(outputs, 0, sizeof(outputs));
 	event = NULL;
 }
-
-void initSignalExecutor(void) {
-}
-
-#if FUEL_MATH_EXTREME_LOGGING
-extern LoggingWithStorage sharedLogger;
-#endif /* FUEL_MATH_EXTREME_LOGGING */
