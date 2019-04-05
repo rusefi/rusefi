@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 20:47:55 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 21:45:00 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1474,6 +1474,7 @@ typedef struct {
 	 */
 	uint8_t unusedh[3];
 	/**
+	 * See also idleRpmPid
 	 * offset 1472
 	 */
 	idle_mode_e idleMode;
@@ -2647,4 +2648,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 20:47:55 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 21:45:00 EDT 2019
