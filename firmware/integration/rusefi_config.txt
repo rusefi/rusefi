@@ -706,7 +706,7 @@ bit unused_bit_1472_30;
 uint8_t[3] unusedh;
 
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
-	idle_mode_e idleMode;
+	idle_mode_e idleMode;See also idleRpmPid;
 
 	bit isInjectionEnabled;+enable injection
 	bit isIgnitionEnabled;+enable ignition
