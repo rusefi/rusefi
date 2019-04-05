@@ -163,12 +163,10 @@ int tle8888_chip_init(void * data)
 //	ret = markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
 		ret |= markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
-	/*
-	error: iteration 4 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++)
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++)
 		if (cfg->direct_io[i].port)
 			ret |= markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
-*/
+
 	if (ret) {
 		ret = -1;
 		goto err_gpios;
@@ -228,15 +226,13 @@ int tle8888_chip_init(void * data)
 
 err_gpios:
 	/* unmark pins */
-	markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+	//markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
 	if (cfg->reset.port != NULL)
 		markUnused(cfg->reset.port, cfg->reset.pad);
-	/*
-	error: iteration 4 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++)
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++)
 		if (cfg->direct_io[i].port)
 			markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
-	*/
+
 	return ret;
 }
 
@@ -290,12 +286,15 @@ static struct tle8888_config tle8888_cfg = {
 		.ssport = GPIOF,
 		.sspad = 0U,
 		.cr1 =
-			/* TODO: set LSB first mode !!!! */
-			/* SPI_CR1_CPOL | */ // = 0
-			SPI_CR1_CPHA | // = 1
-			(((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
-			SPI_CR1_SSM | SPI_CR1_SSI | SPI_CR1_MSTR),
-		/* 16-bit transfer */
+			SPI_CR1_DFF	|		// 16-bit transfer
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			SPI_CR1_LSBFIRST |	//LSB first
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+			SPI_CR1_MSTR |
+			// SPI_CR1_CPOL |	// = 0 CHECK!
+			SPI_CR1_CPHA | 		// = 1 CHECK!
+			0,
 		.cr2 = 0/* not for F4? SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0*/
 	},
 	/* not implemented yet, use STM32 gpios directly */
