@@ -128,6 +128,7 @@ include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 include $(CONFIG)/boards/$(PROJECT_BOARD)/board.mk
 include $(PROJECT_DIR)/util/util.mk
 
+include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
 
 # Define linker script file here
@@ -151,7 +152,6 @@ CSRC = $(STARTUPSRC) \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
-	$(CONTROLLERSSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
@@ -174,7 +174,6 @@ CPPSRC = $(CHCPPSRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(PROJECT_DIR)/console/binary/tunerstudio_io.cpp \
@@ -251,7 +250,7 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/development \
 	$(PROJECT_DIR)/development/hw_layer \
 	$(PROJECT_DIR)/development/test \
-	$(PROJECT_DIR)/controllers \
+	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/controllers/system \
 	$(PROJECT_DIR)/controllers/algo \
