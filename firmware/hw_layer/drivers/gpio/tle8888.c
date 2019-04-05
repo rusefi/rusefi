@@ -216,10 +216,12 @@ err_gpios:
 	markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
 	if (cfg->reset.port != NULL)
 		markUnused(cfg->reset.port, cfg->reset.pad);
+	/*
+	error: iteration 4 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
 	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++)
 		if (cfg->direct_io[i].port)
 			markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
-
+	*/
 	return ret;
 }
 
