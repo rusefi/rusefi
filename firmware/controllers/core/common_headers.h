@@ -10,6 +10,12 @@
 #ifndef CONTROLLERS_CORE_COMMON_HEADERS_H_
 #define CONTROLLERS_CORE_COMMON_HEADERS_H_
 
+#ifdef __cplusplus
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
 #include "efifeatures.h"
 #include "rusefi_types.h"
 

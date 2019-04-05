@@ -31,7 +31,7 @@ typedef uint8_t fatal_msg_t[200];
  *
  * see also warning()
  */
-void firmwareError(obd_code_e code, const char *fmt, ...);
+EXTERNC void firmwareError(obd_code_e code, const char *fmt, ...);
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
