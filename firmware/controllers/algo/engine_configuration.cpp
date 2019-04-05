@@ -1197,6 +1197,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
+	case TLE8888_BENCH_ENGINE:
+		setTle8888TestConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		break;
 	case MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;

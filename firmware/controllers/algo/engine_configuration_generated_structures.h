@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 01 11:40:04 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 20:47:55 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -61,6 +61,28 @@ typedef struct {
 	uint8_t alignmentFill[2];
 	/** total size 8*/
 } cranking_parameters_s;
+
+// start of spi_pins
+typedef struct {
+	/**
+	 * offset 0
+	 */
+	brain_pin_e mosiPin;
+	/**
+	 * offset 1
+	 */
+	brain_pin_e misoPin;
+	/**
+	 * offset 2
+	 */
+	brain_pin_e sckPin;
+	/**
+	 * need 4 byte alignment
+	 * offset 3
+	 */
+	uint8_t alignmentFill;
+	/** total size 4*/
+} spi_pins;
 
 // start of air_pressure_sensor_config_s
 typedef struct {
@@ -2625,4 +2647,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 01 11:40:04 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 20:47:55 EDT 2019

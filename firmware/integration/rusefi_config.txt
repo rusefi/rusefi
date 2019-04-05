@@ -184,6 +184,12 @@ custom pin_output_mode_e 1 bits,    U08,   @OFFSET@, [0:1], @@pin_output_mode_e_
 
 custom pin_input_mode_e 1 scalar, U08,	@OFFSET@,	"todo", 1, 0, 0, 20, 1	
 
+struct spi_pins
+	brain_pin_e mosiPin;
+	brain_pin_e misoPin;
+	brain_pin_e sckPin;
+end_struct
+
 
 custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:3]  "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "INVALID"
 #define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
@@ -621,6 +627,7 @@ custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,
 custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  4
 	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
 
+! todo: migrate to spi_pins & combine with spi pin modes
 	brain_pin_e spi1mosiPin;
 	brain_pin_e spi1misoPin;
 	brain_pin_e spi1sckPin;

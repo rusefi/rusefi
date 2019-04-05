@@ -180,6 +180,8 @@ typedef enum {
 
 	ETB_BENCH_ENGINE = 58,
 
+	TLE8888_BENCH_ENGINE = 59,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */

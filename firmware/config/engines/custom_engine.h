@@ -16,5 +16,6 @@ void runSchedulingPrecisionTestIfNeeded(void);
 void setMinimalPinsEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_H_ */
