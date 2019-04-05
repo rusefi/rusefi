@@ -148,9 +148,12 @@ int tle8888_chip_init(void * data)
 	ret = markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
 		ret |= markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
+	/*
+	error: iteration 4 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
 	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++)
 		if (cfg->direct_io[i].port)
 			ret |= markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
+*/
 	if (ret) {
 		ret = -1;
 		goto err_gpios;
@@ -233,7 +236,7 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 	osalDbgCheck((cfg != NULL) && (cfg->spi_bus != NULL) && (index < BOARD_TLE8888_COUNT));
 
 	/* check for valid cs.
-	 * DOTO: remove this check? CS can be driven by SPI */
+	 * TODO: remove this check? CS can be driven by SPI */
 	if (cfg->spi_config.ssport == NULL)
 		return -1;
 
