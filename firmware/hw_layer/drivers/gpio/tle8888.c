@@ -163,12 +163,10 @@ int tle8888_chip_init(void * data)
 //	ret = markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
 		ret |= markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
-	/*
-	error: iteration 4 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++)
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++)
 		if (cfg->direct_io[i].port)
 			ret |= markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
-*/
+
 	if (ret) {
 		ret = -1;
 		goto err_gpios;
@@ -228,15 +226,13 @@ int tle8888_chip_init(void * data)
 
 err_gpios:
 	/* unmark pins */
-	markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+	//markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
 	if (cfg->reset.port != NULL)
 		markUnused(cfg->reset.port, cfg->reset.pad);
-	/*
-	error: iteration 4 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
-	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++)
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++)
 		if (cfg->direct_io[i].port)
 			markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
-	*/
+
 	return ret;
 }
 
