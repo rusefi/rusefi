@@ -306,4 +306,34 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	set10K_4050K(&engineConfiguration->clt);
 
 }
+
+// TLE8888_BENCH_ENGINE
+// set engine_type 59
+void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setMinimalPinsEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	engineConfiguration->specs.cylindersCount = 8;
+	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+
+	engineConfiguration->tle8888_cs = GPIOD_5;
+	engineConfiguration->directSelfStimulation = true;
+
+	boardConfiguration->ignitionPins[0] = GPIOG_3;
+	boardConfiguration->ignitionPins[1] = GPIOG_4;
+	boardConfiguration->ignitionPins[2] = GPIOG_5;
+	boardConfiguration->ignitionPins[3] = GPIOG_6;
+	boardConfiguration->ignitionPins[4] = GPIOG_7;
+	boardConfiguration->ignitionPins[5] = GPIOG_8;
+	boardConfiguration->ignitionPins[6] = GPIOC_6;
+	boardConfiguration->ignitionPins[7] = GPIOC_7;
+
+	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
+
+	boardConfiguration->is_enabled_spi_1 = true;
+
+}
+
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
