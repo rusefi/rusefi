@@ -24,6 +24,11 @@ EXTERN_CONFIG;
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
 
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#include "tunerstudio.h"
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
+
 /* TODO: move to board.h file */
 #define BOARD_TLE8888_COUNT 	1
 
@@ -115,6 +120,14 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+	if (engineConfiguration->debugMode == DBG_TLE8888) {
+		tsOutputChannels.debugIntField1++;
+		tsOutputChannels.debugIntField2 = tx;
+		tsOutputChannels.debugIntField3 = rxb;
+	}
+#endif /* EFI_TUNER_STUDIO */
+
 	if (rx)
 		*rx = rxb;
 
@@ -138,14 +151,16 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 int tle8888_chip_init(void * data)
 {
 	int i;
-	int ret;
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
+	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
 	uint8_t dd[4] = {0, 0, 0, 0};
 	uint8_t oe[4] = {0, 0, 0, 0};
 
+	int ret = 0;
 	/* mark pins used */
-	ret = markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+// we do not initialize CS pin so we should not be marking it used
+//	ret = markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
 		ret |= markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
 	/*
@@ -247,6 +262,7 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 	/* already initted? */
 	if (chip->cfg != NULL)
 		return -1;
+	chip->cfg = cfg;
 
 	/* TODO: remove this when gpiochips integrated */
 	return tle8888_chip_init(chip);

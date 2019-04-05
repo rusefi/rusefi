@@ -15,13 +15,6 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-// todo: move this magic to somewhere shared between firmware and simulator?
-#ifdef __cplusplus
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
 #ifdef __cplusplus
 extern "C"
 {

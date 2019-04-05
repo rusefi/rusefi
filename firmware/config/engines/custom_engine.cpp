@@ -319,6 +319,7 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->tle8888_cs = GPIOD_5;
+	engineConfiguration->tle8888_csPinMode = OM_OPENDRAIN;
 	engineConfiguration->directSelfStimulation = true;
 
 	boardConfiguration->ignitionPins[0] = GPIOG_3;
@@ -333,6 +334,11 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
 
 	boardConfiguration->is_enabled_spi_1 = true;
+	engineConfiguration->debugMode = DBG_TLE8888;
+
+	engineConfiguration->spi1MosiMode = PO_OPENDRAIN;
+	engineConfiguration->spi1MisoMode = PO_PULLUP;
+	engineConfiguration->spi1SckMode = PO_OPENDRAIN;
 
 }
 
