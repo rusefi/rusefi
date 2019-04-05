@@ -182,6 +182,7 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(HW_SENSORS_INC) \
+          $(CONTROLLERS_INC) \
           $(PROJECT_DIR)/development \
           $(PROJECT_DIR)/controllers/algo \
           $(PROJECT_DIR)/controllers/core \
