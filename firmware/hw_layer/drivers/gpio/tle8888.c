@@ -63,9 +63,12 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #define CMD_WR(a, d)		(CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))
 
 #define CMD_SR				CMD_WR(0x1a, 0x03)
+// 0x238 = 568
 #define CMD_OE_SET			CMD_WR(0x1c, 0x02)
+/* not used
 #define CMD_OE_CLR			CMD_WR(0x1c, 0x01)
 #define CMD_LOCK			CMD_WR(0x1e, 0x02)
+*/
 #define CMD_UNLOCK			CMD_WR(0x1e, 0x01)
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
 #define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + (n & 0x03), d)
@@ -175,7 +178,11 @@ int tle8888_chip_init(void * data)
 	/* Software reset */
 	tle8888_spi_rw(chip, CMD_SR, NULL);
 
-	/* delay? */
+	/**
+	 * Table 8. Reset Times. All reset times not more than 20uS
+	 *
+	 */
+	chThdSleepMilliseconds(3);
 
 	/* Set LOCK bit to 0 */
 	tle8888_spi_rw(chip, CMD_UNLOCK, NULL);
