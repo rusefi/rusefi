@@ -302,7 +302,7 @@ static struct tle8888_config tle8888_cfg = {
 			SPI_CR1_LSBFIRST |	//LSB first
 			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
 			SPI_CR1_MSTR |
-			SPI_CR1_CPHA
+			SPI_CR1_CPHA |
 			0,
 		.cr2 = 0/* not for F4? SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0*/
 	},
