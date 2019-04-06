@@ -24,8 +24,12 @@ typedef void (*CommandHandler)(char *);
 #include "efifeatures.h"
 #include "datalogging.h"
 
+#ifdef CONFIG_RESET_SWITCH_PORT
 // todo: make this pin configurable
-#define SHOULD_INGORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
+#define SHOULD_INGORE_FLASH() (CONFIG_RESET_SWITCH_PORT != NULL && palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
+#else
+#define SHOULD_INGORE_FLASH() (false)
+#endif
 
 BaseChannel * getConsoleChannel(void);
 
