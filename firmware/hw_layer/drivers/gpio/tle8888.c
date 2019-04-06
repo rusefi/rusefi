@@ -113,8 +113,8 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
-	// todo 16 bit for F4? rxb = spiPolledExchange(spi, tx);
-	spiExchange(spi, 2, &tx, &rxb);
+	rxb = spiPolledExchange(spi, tx);
+	//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
