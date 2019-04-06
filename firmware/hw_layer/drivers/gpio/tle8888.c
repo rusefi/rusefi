@@ -3,6 +3,9 @@
  *
  * TLE8888 Engine Machine System IC driver
  *
+ * This has worked on a bench - see https://youtu.be/yjs5dh_NKo4
+ * All SPI and CS pin in OM_DEFAULT mode
+ *
  * @date Mar 25, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  *
@@ -299,8 +302,7 @@ static struct tle8888_config tle8888_cfg = {
 			SPI_CR1_LSBFIRST |	//LSB first
 			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
 			SPI_CR1_MSTR |
-			// SPI_CR1_CPOL |	// = 0 CHECK!
-			SPI_CR1_CPHA | 		// = 1 CHECK!
+			SPI_CR1_CPHA
 			0,
 		.cr2 = 0/* not for F4? SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0*/
 	},
