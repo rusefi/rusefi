@@ -375,6 +375,8 @@ void initHardware(Logging *l) {
 	/**
 	 * this call reads configuration from flash memory or sets default configuration
 	 * if flash state does not look right.
+	 *
+	 * interesting fact that we have another read from flash before we get here
 	 */
 	if (SHOULD_INGORE_FLASH()) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;

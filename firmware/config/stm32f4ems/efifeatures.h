@@ -362,8 +362,13 @@
 #define GPS_SERIAL_DEVICE &SD1
 #define GPS_SERIAL_SPEED 38400
 
+#ifndef CONFIG_RESET_SWITCH_PORT
 #define CONFIG_RESET_SWITCH_PORT GPIOD
+#endif
+
+#ifndef CONFIG_RESET_SWITCH_PIN
 #define CONFIG_RESET_SWITCH_PIN 6
+#endif
 
 /**
  * This is the size of the MemoryStream used by chvprintf
