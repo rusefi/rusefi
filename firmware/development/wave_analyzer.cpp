@@ -108,7 +108,7 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 static void setWaveModeSilent(int index, int mode) {
 	WaveReader *reader = &readers[index];
 
-	startInputDriver(reader->hw, mode);
+	startInputDriver("wave", reader->hw, mode);
 }
 
 //static int getEventCounter(int index) {
@@ -135,7 +135,7 @@ static void initWave(const char *name, int index) {
 	}
 
 	print("wave%d input on %s\r\n", index, hwPortname(brainPin));
-	startInputDriver(reader->hw, mode);
+	startInputDriver("wave", reader->hw, mode);
 }
 #endif
 
