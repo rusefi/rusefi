@@ -42,6 +42,7 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
+| 04/07/2019    | r17098    | improvement #714: TLE8888 Enable Outputs SPI integration |
 | 02/27/2019    | r16886    | bugfix #698: concurrency defect with single timer executor initialization |
 | 02/23/2019    | r16857    | improvement #688: better support for 144 and 176 pin packages |
 | 02/05/2019    | r16713    | improvement #631: ChibiOS 18 |
