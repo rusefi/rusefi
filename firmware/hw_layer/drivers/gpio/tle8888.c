@@ -295,7 +295,7 @@ static struct tle8888_config tle8888_cfg = {
 		.end_cb = NULL,
 		.ssport = GPIOF,
 		.sspad = 0U,
-#if defined(STM32F405xx) || defined(STM32F407xx) || defined (DSTM32F469xx)
+#if defined(STM32F405xx) || defined(STM32F407xx) || defined (STM32F469xx)
 		.cr1 =
 			SPI_CR1_DFF	|		// 16-bit transfer
 			SPI_CR1_SSM |
@@ -306,8 +306,7 @@ static struct tle8888_config tle8888_cfg = {
 			SPI_CR1_CPHA |
 			0,
 		.cr2 = 0
-#endif
-#if defined(DSTM32F767xx) || defined(DSTM32F746xx)
+#elif defined(STM32F767xx) || defined(STM32F746xx)
 		.cr1 =
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
@@ -318,6 +317,8 @@ static struct tle8888_config tle8888_cfg = {
 			0,
 			/* 16-bit transfer */
 		.cr2 = SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+#else
+		unexpected platform
 #endif
 
 
