@@ -295,6 +295,7 @@ static struct tle8888_config tle8888_cfg = {
 		.end_cb = NULL,
 		.ssport = GPIOF,
 		.sspad = 0U,
+#if defined(STM32F405xx) || defined(STM32F407xx) || defined (DSTM32F469xx)
 		.cr1 =
 			SPI_CR1_DFF	|		// 16-bit transfer
 			SPI_CR1_SSM |
@@ -304,7 +305,22 @@ static struct tle8888_config tle8888_cfg = {
 			SPI_CR1_MSTR |
 			SPI_CR1_CPHA |
 			0,
-		.cr2 = 0/* not for F4? SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0*/
+		.cr2 = 0
+#endif
+#if defined(DSTM32F767xx) || defined(DSTM32F746xx)
+		.cr1 =
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			SPI_CR1_LSBFIRST |
+			SPI_CR1_MSTR |
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
+			SPI_CR1_CPHA |
+			0,
+			/* 16-bit transfer */
+		.cr2 = SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+#endif
+
+
 	},
 	/* not implemented yet, use STM32 gpios directly */
 	.direct_io = {
