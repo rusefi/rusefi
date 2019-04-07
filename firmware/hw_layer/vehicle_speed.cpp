@@ -74,7 +74,7 @@ void startVSSPins(void) {
 	if (!hasVehicleSpeedSensor())
 		return;
 	digital_input_s* vehicleSpeedInput = addWaveAnalyzerDriver("VSS", CONFIGB(vehicleSpeedSensorInputPin));
-	startInputDriver(vehicleSpeedInput, true);
+	startInputDriver("VSS", vehicleSpeedInput, true);
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
 }
 

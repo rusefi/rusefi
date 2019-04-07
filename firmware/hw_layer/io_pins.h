@@ -58,7 +58,7 @@ bool efiReadPin(brain_pin_e pin);
 
 iomode_t getInputMode(pin_input_mode_e mode);
 #if HAL_USE_ICU || defined(__DOXYGEN__)
-void efiIcuStart(ICUDriver *icup, const ICUConfig *config);
+void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config);
 #endif /* HAL_USE_ICU */
 #endif /* EFI_GPIO_HARDWARE */
 

@@ -253,7 +253,7 @@ void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
-void startInputDriver(/*nullable*/digital_input_s *hw, bool isActiveHigh) {
+void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isActiveHigh) {
 	if (hw == NULL) {
 		// we can get NULL driver if user somehow has invalid pin in his configuration
 		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "s_not input pin");
@@ -275,7 +275,7 @@ void startInputDriver(/*nullable*/digital_input_s *hw, bool isActiveHigh) {
 			icuStop(driver);
 		}
 		wave_icucfg.channel = getInputCaptureChannel(hw->brainPin);
-		efiIcuStart(driver, &wave_icucfg);
+		efiIcuStart(msg, driver, &wave_icucfg);
 		efiAssertVoid(CUSTOM_ERR_6672, driver != NULL, "di: driver is NULL");
 		efiAssertVoid(CUSTOM_ERR_6673, driver->state == ICU_READY, "di: driver not ready");
         icuStartCapture(driver); // this would change state from READY to WAITING

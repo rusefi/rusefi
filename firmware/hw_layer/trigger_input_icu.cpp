@@ -125,7 +125,7 @@ static ICUDriver *turnOnTriggerInputPin(const char *msg, brain_pin_e hwPin, ICUC
 //		bool needPeriodCallback = !CONFIG(useOnlyRisingEdgeForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
 //		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
 
-		efiIcuStart(driver, icucfg);
+		efiIcuStart(msg, driver, icucfg);
 		if (driver->state == ICU_READY) {
 			efiAssert(CUSTOM_ERR_ASSERT, driver != NULL, "ti: driver is NULL", NULL);
 			efiAssert(CUSTOM_ERR_ASSERT, driver->state == ICU_READY, "ti: driver not ready", NULL);
