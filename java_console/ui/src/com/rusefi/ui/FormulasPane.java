@@ -56,10 +56,10 @@ public class FormulasPane {
                 UiUtils.setPauseButtonText(pauseButton, isPaused);
             }
         });
-        JPanel top = new JPanel(new FlowLayout());
-        top.add(saveImage);
-        top.add(pauseButton);
-        content.add(top, BorderLayout.NORTH);
+        JPanel topButtonsPanel = new JPanel(new FlowLayout());
+        topButtonsPanel.add(saveImage);
+        topButtonsPanel.add(pauseButton);
+        content.add(topButtonsPanel, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
         bottomPanel.add(new IntGaugeLabel("count", Sensor.errorCodeCounter));
@@ -133,16 +133,20 @@ public class FormulasPane {
 
         TeXFormula formula = new TeXFormula("\r\n" +
                 algo.title + NL3 + page + "");
-        TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 20);
+        TeXIcon formulasTeX = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 20);
 
-        BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(formulasTeX.getIconWidth(), formulasTeX.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
         g2.setColor(Color.white);
-        g2.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
-        JLabel label = new JLabel(icon);
+        g2.fillRect(0, 0, formulasTeX.getIconWidth(), formulasTeX.getIconHeight());
+        JLabel formulaLabel = new JLabel(formulasTeX);
 
         centerProxy.removeAll();
-        centerProxy.add(label, BorderLayout.CENTER);
+
+        JLabel warning = new JLabel("These values are for reference only and do not always reflect ECU logic completely. During cranking different logic is applied.");
+        warning.setForeground(Color.red);
+        centerProxy.add(warning, BorderLayout.NORTH);
+        centerProxy.add(formulaLabel, BorderLayout.CENTER);
     }
 
     @NotNull
