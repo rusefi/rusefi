@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * @see EnumConfigField
+ */
 public class SettingsTab {
     public static final String WRITECONFIG = "writeconfig";
     private final JPanel content = new JPanel(new BorderLayout());
@@ -48,12 +51,7 @@ public class SettingsTab {
                 menu.setLayout(new GridLayout(dialogs.keySet().size() / 2 + 1, 2));
                 for (final String name : dialogs.keySet()) {
                     JMenuItem item = new JMenuItem(name);
-                    item.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            selectDialog(name);
-                        }
-                    });
+                    item.addActionListener(e1 -> selectDialog(name));
                     menu.add(item);
                 }
                 menu.show(c, -1, c.getHeight());

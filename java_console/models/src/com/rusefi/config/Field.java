@@ -5,14 +5,16 @@ import com.rusefi.core.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.rusefi.config.FieldType.*;
+
 /**
  * @see Fields
  */
 
 public class Field {
-    private static final String BIT_VALUE_PREFIX = "bit @";
-    private static final String INT_VALUE_PREFIX = "int @";
-    private static final String FLOAT_VALUE_PREFIX = "float @";
+    private static final String BIT_VALUE_PREFIX = "bit" + Fields.CONSOLE_DATA_PROTOCOL_TAG;
+    private static final String INT_VALUE_PREFIX = INT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
+    private static final String FLOAT_VALUE_PREFIX = FLOAT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
     public static final int NO_BIT_OFFSET = -1;
 
     public final static Map<String, Field> VALUES = new HashMap<>();
@@ -76,7 +78,7 @@ public class Field {
     }
 
     public static boolean isIntValueMessage(String message) {
-        return message.startsWith(INT_VALUE_PREFIX);
+        return message.startsWith(INT_VALUE_PREFIX) || message.startsWith(BYTE_TYPE_STRING) || message.startsWith(SHORT_TYPE_STRING);
     }
 
     public static boolean isBitValueMessage(String message) {
@@ -89,8 +91,12 @@ public class Field {
 
     public static Pair<Integer, ?> parseResponse(String message) {
         try {
-            if (isIntValueMessage(message)) {
-                message = message.substring(INT_VALUE_PREFIX.length());
+            int atPosition = message.indexOf(Fields.CONSOLE_DATA_PROTOCOL_TAG);
+            if (atPosition == -1)
+                return null;
+            String firstToken = message.substring(0, atPosition);
+            if (firstToken.equals(INT_TYPE_STRING) || firstToken.equals(BYTE_TYPE_STRING) || firstToken.equals(SHORT_TYPE_STRING)) {
+                message = message.substring(atPosition + Fields.CONSOLE_DATA_PROTOCOL_TAG.length());
                 String[] a = message.split(" is ");
                 if (a.length != 2)
                     return null;

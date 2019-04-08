@@ -368,6 +368,7 @@
 #define communicationLedPin_offset_hex 728
 #define configResetPin_offset 2062
 #define configResetPin_offset_hex 80e
+#define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define consoleLoopPeriodMs_offset 716
 #define consoleLoopPeriodMs_offset_hex 2cc
 #define consoleSerialRxPin_offset 1839

@@ -427,7 +427,18 @@ static void getShort(int offset) {
 	/**
 	 * this response is part of dev console API
 	 */
-	scheduleMsg(&logger, "short @%d is %d", offset, value);
+	scheduleMsg(&logger, "short%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
+}
+
+static void getByte(int offset) {
+	if (isOutOfBounds(offset))
+		return;
+	uint8_t *ptr = (uint8_t *) (&((char *) engineConfiguration)[offset]);
+	uint8_t value = *ptr;
+	/**
+	 * this response is part of dev console API
+	 */
+	scheduleMsg(&logger, "byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
@@ -454,7 +465,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	/**
 	 * this response is part of dev console API
 	 */
-	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
+	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
@@ -467,6 +478,15 @@ static void setShort(const int offset, const int value) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+static void setByte(const int offset, const int value) {
+	if (isOutOfBounds(offset))
+		return;
+	uint8_t *ptr = (uint8_t *) (&((char *) engineConfiguration)[offset]);
+	*ptr = (uint8_t) value;
+	getByte(offset);
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 static void getBit(int offset, int bit) {
 	if (isOutOfBounds(offset))
 		return;
@@ -475,7 +495,7 @@ static void getBit(int offset, int bit) {
 	/**
 	 * this response is part of dev console API
 	 */
-	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
+	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 }
 
 static void getInt(int offset) {
@@ -486,7 +506,7 @@ static void getInt(int offset) {
 	/**
 	 * this response is part of dev console API
 	 */
-	scheduleMsg(&logger, "int @%d is %d", offset, value);
+	scheduleMsg(&logger, "int%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void setInt(const int offset, const int value) {
@@ -506,7 +526,7 @@ static void getFloat(int offset) {
 	/**
 	 * this response is part of dev console API
 	 */
-	scheduleMsg(&logger, "float @%d is %.5f", offset, value);
+	scheduleMsg(&logger, "float%s%d is %.5f", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
 static void setFloat(const char *offsetStr, const char *valueStr) {
@@ -578,10 +598,13 @@ static void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionII("set_int", (VoidIntInt) setInt);
 	addConsoleActionII("set_short", (VoidIntInt) setShort);
+	addConsoleActionII("set_byte", (VoidIntInt) setByte);
 	addConsoleActionSSS("set_bit", setBit);
+
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 	addConsoleActionI("get_short", getShort);
+	addConsoleActionI("get_byte", getByte);
 	addConsoleActionII("get_bit", getBit);
 }
 
@@ -775,5 +798,5 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190407;
+	return 20190408;
 }
