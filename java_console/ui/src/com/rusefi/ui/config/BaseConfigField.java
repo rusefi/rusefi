@@ -16,7 +16,7 @@ import java.nio.ByteOrder;
 
 public abstract class BaseConfigField {
     protected final JLabel status = new JLabel("P");
-    protected final JPanel panel = new JPanel(new BorderLayout());
+    private final JPanel panel = new JPanel(new BorderLayout());
     protected final Field field;
 
     public BaseConfigField(final Field field) {
@@ -36,11 +36,6 @@ public abstract class BaseConfigField {
         if (ci == null)
             return;
         loadValue(ci);
-
-//        CommandQueue.getInstance().write(field.getCommand(),
-//                CommandQueue.DEFAULT_TIMEOUT,
-//                InvocationConfirmationListener.VOID,
-//                false);
     }
 
     protected abstract void loadValue(ConfigurationImage ci);
@@ -72,7 +67,7 @@ public abstract class BaseConfigField {
 
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),
                 BorderFactory.createEmptyBorder(2, 2, 2, 2)));
-        panel.add(new JLabel(topLabel), BorderLayout.NORTH);
+        panel.add(new JLabel(topLabel), BorderLayout.WEST);
         panel.add(center, BorderLayout.CENTER);
     }
 

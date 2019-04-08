@@ -2,6 +2,7 @@ package com.rusefi.ui.config;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
+import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 
@@ -76,7 +77,14 @@ public class EnumConfigField extends BaseConfigField {
 
     @Override
     protected void loadValue(ConfigurationImage ci) {
-        int ordinal = getByteBuffer(ci).getInt();
+        int ordinal;
+        if (field.getType() == FieldType.INT8) {
+            ordinal = getByteBuffer(ci).get();
+        } else if (field.getType() == FieldType.INT16) {
+            ordinal = getByteBuffer(ci).getShort();
+        } else {
+            ordinal = getByteBuffer(ci).getInt();
+        }
         setValue(ordinal);
     }
 }

@@ -239,7 +239,13 @@ public class ConfigField {
             }
 
             writeJavaFieldName(javaFieldsWriter, nameWithPrefix, tsPosition);
-            javaFieldsWriter.write("FieldType.INT");
+            if (elementSize == 1) {
+                javaFieldsWriter.write("FieldType.INT8");
+            } else if (elementSize == 2) {
+                    javaFieldsWriter.write("FieldType.INT16");
+            } else {
+                javaFieldsWriter.write("FieldType.INT");
+            }
             if (enumOptions != null) {
                 javaFieldsWriter.write(", " + type);
             }

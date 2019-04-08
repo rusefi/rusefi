@@ -53,6 +53,8 @@ struct_no_prefix engine_configuration_s
 
 #define SERVO_COUNT 8
 
+#define CONSOLE_DATA_PROTOCOL_TAG " @"
+
 #define ETB_BIAS_CURVE_LENGTH 8
 
 ! this is here so that rusEfi console can access it, too
