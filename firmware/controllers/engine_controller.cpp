@@ -441,6 +441,16 @@ static void getByte(int offset) {
 	scheduleMsg(&logger, "byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
+static void onConfigurationChanged() {
+#if EFI_TUNER_STUDIO
+	// on start-up rusEfi would read from working copy of TS while
+	// we have a lot of console commands which write into real copy of configuration directly
+	// we have a bit of a mess here
+	syncTunerStudioCopy();
+#endif /* EFI_TUNER_STUDIO */
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
@@ -466,7 +476,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of dev console API
 	 */
 	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	onConfigurationChanged();
 }
 
 static void setShort(const int offset, const int value) {
@@ -475,7 +485,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	onConfigurationChanged();
 }
 
 static void setByte(const int offset, const int value) {
@@ -484,7 +494,7 @@ static void setByte(const int offset, const int value) {
 	uint8_t *ptr = (uint8_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint8_t) value;
 	getByte(offset);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	onConfigurationChanged();
 }
 
 static void getBit(int offset, int bit) {
@@ -515,7 +525,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	onConfigurationChanged();
 }
 
 static void getFloat(int offset) {
@@ -545,6 +555,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getFloat(offset);
+	onConfigurationChanged();
 }
 
 #if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR

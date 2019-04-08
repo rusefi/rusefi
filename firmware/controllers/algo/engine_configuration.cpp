@@ -1357,7 +1357,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
-#endif
+#endif /* EFI_TUNER_STUDIO */
 }
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

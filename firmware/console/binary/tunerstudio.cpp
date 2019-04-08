@@ -254,6 +254,8 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 }
 
 /**
+ * Copy specified amount of bytes from specified offset from communication layer working copy into real configuration
+ *
  * Some changes like changing VE table or timing table are applied right away, meaning
  * that the values are copied from communication copy into actual engine control copy right away.
  * We call these parameters 'soft parameters'
@@ -263,7 +265,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
  * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
  * would be increased and much more complicated logic would be executed.
  */
-static void onlineTuneBytes(int currentPageId, uint32_t offset, int count) {
+static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int count) {
 	UNUSED(currentPageId);
 	if (offset > sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
@@ -312,7 +314,7 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	memcpy(addr, content, count);
-	onlineTuneBytes(currentPageId, offset, count);
+	onlineApplyWorkingCopyBytes(currentPageId, offset, count);
 
 	sendOkResponse(tsChannel, mode);
 }
@@ -370,7 +372,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	getWorkingPageAddr(currentPageId)[offset] = value;
 
-	onlineTuneBytes(currentPageId, offset, 1);
+	onlineApplyWorkingCopyBytes(currentPageId, offset, 1);
 
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
@@ -589,6 +591,9 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
 	runBinaryProtocolLoop(&tsChannel);
 }
 
+/**
+ * Copy real configuration into the communications layer working copy
+ */
 void syncTunerStudioCopy(void) {
 #if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
 	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));

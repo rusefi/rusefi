@@ -171,6 +171,16 @@ static void rewriteConfig(void) {
 	writeToFlashNow();
 }
 
+static void writeConfigCommand() {
+#if EFI_TUNER_STUDIO
+	// on start-up rusEfi would read from working copy of TS while
+	// we have a lot of console commands which write into real copy of configuration directly
+	// we have a bit of a mess here
+	syncTunerStudioCopy();
+#endif /* EFI_TUNER_STUDIO */
+	writeToFlashNow();
+}
+
 void initFlash(Logging *sharedLogger) {
 	logger = sharedLogger;
 
@@ -178,7 +188,7 @@ void initFlash(Logging *sharedLogger) {
 	/**
 	 * This would write NOW (you should not be doing this while connected to real engine)
 	 */
-	addConsoleAction("writeconfig", writeToFlashNow);
+	addConsoleAction("writeconfig", writeConfigCommand);
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 	/**
 	 * This would schedule write to flash once the engine is stopped
