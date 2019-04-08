@@ -369,7 +369,9 @@ void initHardware(Logging *l) {
 
 #if EFI_INTERNAL_FLASH
 
+#ifdef CONFIG_RESET_SWITCH_PORT
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
+#endif /* CONFIG_RESET_SWITCH_PORT */
 
 	initFlash(sharedLogger);
 	/**
