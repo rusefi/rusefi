@@ -68,7 +68,7 @@ static struct gpiochip *gpiochip_find(unsigned int pin)
  * @details
  */
 
-int getHwPinExt(unsigned int pin)
+int gpiochips_getPinOffset(unsigned int pin)
 {
 	struct gpiochip *chip = gpiochip_find(pin);
 
@@ -78,12 +78,28 @@ int getHwPinExt(unsigned int pin)
 	return EFI_ERROR_CODE;
 }
 
+
 /**
- * @brief Register gpiochip
+ * @brief Get external chip name
+ * @details return gpiochip name
+ */
+
+const char *gpiochips_getChipName(unsigned int pin)
+{
+	struct gpiochip *chip = gpiochip_find(pin);
+
+	if (chip)
+		return chip->name;
+
+	return NULL;
+}
+
+/**
+ * @brief Get external chip port name
  * @details return pin name or gpiochip name (if no pins names provided)
  */
 
-const char *portNameExt(unsigned int pin)
+const char *gpiochips_getPinName(unsigned int pin)
 {
 	struct gpiochip *chip = gpiochip_find(pin);
 
@@ -251,14 +267,21 @@ int gpiochips_get_total_pins(void)
 
 #else /* BOARD_EXT_GPIOCHIPS > 0 */
 
-int getHwPinExt(unsigned int pin)
+int gpiochips_getPinOffset(unsigned int pin)
 {
 	(void)pin;
 
 	return -1;
 }
 
-const char *portNameExt(unsigned int pin)
+const char *gpiochips_getChipName(unsigned int pin)
+{
+	(void)pin;
+
+	return NULL;
+}
+
+const char *gpiochips_getPinName(unsigned int pin)
 {
 	(void)pin;
 
