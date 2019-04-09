@@ -173,7 +173,7 @@ ifeq ($(LDSCRIPT),)
 endif
 
 ifeq ($(PROJECT_CPU),)
-  PROJECT_CPU=ST_STM32F4
+  PROJECT_CPU=st_stm32f4
 endif                 
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
