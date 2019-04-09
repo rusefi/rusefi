@@ -96,7 +96,7 @@
 #endif
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
-#include "HIP9011.h"
+#include "hip9011.h"
 #endif
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)

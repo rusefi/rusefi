@@ -18,7 +18,7 @@
 #include "cyclic_buffer.h"
 
 #if EFI_CJ125 || defined(__DOXYGEN__)
-#include "CJ125.h"
+#include "cj125.h"
 #endif /* EFI_CJ125 */
 
 EXTERN_ENGINE;

@@ -76,7 +76,7 @@
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125 || defined(__DOXYGEN__)
-#include "CJ125.h"
+#include "cj125.h"
 #endif
 
 #if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
