@@ -66,6 +66,11 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	return index;
 }
 
+static brain_pin_e index_to_brainPin(int i)
+{
+	return (brain_pin_e)((int)GPIOA_0 + i);
+}
+
 PinRepository::PinRepository() {
 }
 
@@ -181,16 +186,25 @@ static int getIndex(ioportid_t port, ioportmask_t pin) {
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
 {
-	if ((brainPin < GPIOA_0) || (brainPin > GPIOH_15))
+	if ((brainPin < GPIOA_0) || (brainPin > BRAIN_PIN_LAST_ONCHIP))
 		return false;
 
 	return true;
 }
 
+bool brain_pin_is_ext(brain_pin_e brainPin)
+{
+	if (brainPin > BRAIN_PIN_LAST_ONCHIP)
+		return true;
+
+	return false;
+}
+
 /**
- * See also unmarkPin()
+ * See also brain_pin_markUnused()
  * @return true if this pin was already used, false otherwise
  */
+
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 {
 	int index;
@@ -220,7 +234,34 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 	return false;
 }
 
-bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
+/**
+ * See also brain_pin_markUsed()
+ */
+
+void brain_pin_markUnused(brain_pin_e brainPin)
+{
+	int index;
+
+	if (!initialized) {
+		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
+		return;
+	}
+
+	index = brainPin_to_index(brainPin);
+	if (index < 0)
+		return;
+
+	if (PIN_USED[index] != NULL)
+		totalPinsUsed--;
+	PIN_USED[index] = NULL;
+}
+
+/**
+ * Marks on-chip gpio port-pin as used. Works only for on-chip gpios
+ * To be replaced with brain_pin_markUsed later
+ */
+
+bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 	if (!initialized) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
 		return false;
@@ -242,28 +283,11 @@ bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 }
 
 /**
- * See also markUsed()
+ * Marks on-chip gpio port-pin as UNused. Works only for on-chip gpios
+ * To be replaced with brain_pin_markUnused later
  */
 
-void brain_pin_markUnused(brain_pin_e brainPin)
-{
-	int index;
-
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return;
-	}
-
-	index = brainPin_to_index(brainPin);
-	if (index < 0)
-		return;
-
-	if (PIN_USED[index] != NULL)
-		totalPinsUsed--;
-	PIN_USED[index] = NULL;
-}
-
-void markUnused(ioportid_t port, ioportmask_t pin) {
+void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 	if (!initialized) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
 		return;
@@ -283,22 +307,6 @@ const char *getPinFunction(brain_input_pin_e brainPin) {
 		return NULL;
 
 	return PIN_USED[index];
-}
-
-
-void unmarkPin(brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED) {
-		return;
-	}
-	ioportid_t port = getHwPort("unmark", brainPin);
-	ioportmask_t pin = getHwPin("unmark", brainPin);
-
-	int index = getIndex(port, pin);
-
-	if (PIN_USED[index] != NULL) {
-		PIN_USED[index] = NULL;
-		totalPinsUsed--;
-	}
 }
 
 #endif

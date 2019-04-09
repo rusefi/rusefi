@@ -358,10 +358,10 @@ bool isETBRestartNeeded(void) {
 }
 
 void stopETBPins(void) {
-	unmarkPin(activeConfiguration.bc.etb1.controlPin1);
-	unmarkPin(activeConfiguration.bc.etb1.controlPin2);
-	unmarkPin(activeConfiguration.bc.etb1.directionPin1);
-	unmarkPin(activeConfiguration.bc.etb1.directionPin2);
+	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin1);
+	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin2);
+	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin1);
+	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin2);
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
