@@ -166,12 +166,12 @@ int tle8888_chip_init(void * data)
 	int ret = 0;
 	/* mark pins used */
 // we do not initialize CS pin so we should not be marking it used
-//	ret = markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+//	ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
-		ret |= markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
+		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
 	for (i = 0; i < TLE8888_DIRECT_MISC; i++)
 		if (cfg->direct_io[i].port)
-			ret |= markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
+			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
 
 	if (ret) {
 		ret = -1;
@@ -236,12 +236,12 @@ int tle8888_chip_init(void * data)
 
 err_gpios:
 	/* unmark pins */
-	//markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
 	if (cfg->reset.port != NULL)
-		markUnused(cfg->reset.port, cfg->reset.pad);
+		gpio_pin_markUnused(cfg->reset.port, cfg->reset.pad);
 	for (i = 0; i < TLE8888_DIRECT_MISC; i++)
 		if (cfg->direct_io[i].port)
-			markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
+			gpio_pin_markUnused(cfg->direct_io[i].port, cfg->direct_io[i].pad);
 
 	return ret;
 }

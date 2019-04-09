@@ -191,6 +191,7 @@ bool brain_pin_is_onchip(brain_pin_e brainPin)
  * See also brain_pin_markUnused()
  * @return true if this pin was already used, false otherwise
  */
+
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 {
 	int index;
@@ -220,27 +221,6 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 	return false;
 }
 
-bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
-	if (!initialized) {
-		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
-		return false;
-	}
-	int index = getIndex(port, pin);
-
-	if (PIN_USED[index] != NULL) {
-		/**
-		 * todo: the problem is that this warning happens before the console is even
-		 * connected, so the warning is never displayed on the console and that's quite a problem!
-		 */
-//		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
-		return true;
-	}
-	PIN_USED[index] = msg;
-	totalPinsUsed++;
-	return false;
-}
-
 /**
  * See also brain_pin_markUsed()
  */
@@ -263,7 +243,38 @@ void brain_pin_markUnused(brain_pin_e brainPin)
 	PIN_USED[index] = NULL;
 }
 
-void markUnused(ioportid_t port, ioportmask_t pin) {
+/**
+ * Marks on-chip gpio port-pin as used. Works only for on-chip gpios
+ * To be replaced with brain_pin_markUsed later
+ */
+
+bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
+	if (!initialized) {
+		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
+		return false;
+	}
+	int index = getIndex(port, pin);
+
+	if (PIN_USED[index] != NULL) {
+		/**
+		 * todo: the problem is that this warning happens before the console is even
+		 * connected, so the warning is never displayed on the console and that's quite a problem!
+		 */
+//		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		return true;
+	}
+	PIN_USED[index] = msg;
+	totalPinsUsed++;
+	return false;
+}
+
+/**
+ * Marks on-chip gpio port-pin as UNused. Works only for on-chip gpios
+ * To be replaced with brain_pin_markUnused later
+ */
+
+void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 	if (!initialized) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
 		return;

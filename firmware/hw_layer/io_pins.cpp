@@ -57,7 +57,7 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
 
 	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
 
-	bool wasUsed = markUsed(port, pin, msg);
+	bool wasUsed = gpio_pin_markUsed(port, pin, msg);
 	if (wasUsed) {
 		return;
 	}
