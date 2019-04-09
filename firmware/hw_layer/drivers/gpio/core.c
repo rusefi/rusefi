@@ -16,8 +16,8 @@
 /*==========================================================================*/
 
 /* fist available gpio number after on-chip gpios */
-#define EXT_GPIOS_FIRST (GPIOH_15 + 1)
-static size_t gpio_base_free = EXT_GPIOS_FIRST;
+#define EXT_GPIOS_FIRST (BRAIN_PIN_LAST_ONCHIP + 1)
+static brain_pin_e gpio_base_free = EXT_GPIOS_FIRST;
 
 /*==========================================================================*/
 /* Exported variables.														*/
@@ -29,7 +29,7 @@ static size_t gpio_base_free = EXT_GPIOS_FIRST;
 
 /* TODO: chnage array to list? */
 struct gpiochip {
-	size_t				base;
+	brain_pin_e			base;
 	size_t				size;
 	struct gpiochip_ops	*ops;
 	const char			*name;
