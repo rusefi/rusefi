@@ -474,14 +474,13 @@ const char *portname(ioportid_t GPIOx) {
 /**
  * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
  */
-ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
-		return EFI_ERROR_CODE;
-	if (brainPin < GPIOA_0 || brainPin > GPIOH_15) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
-		return EFI_ERROR_CODE;
-	}
-	return (brainPin - GPIOA_0) % PORT_SIZE;
+ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
+{
+	if (brain_pin_is_onchip(brainPin))
+		return (brainPin - GPIOA_0) % PORT_SIZE;
+
+	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip brain_pin_e: %d", msg, brainPin);
+	return EFI_ERROR_CODE;
 }
 
 #else /* EFI_GPIO_HARDWARE */
