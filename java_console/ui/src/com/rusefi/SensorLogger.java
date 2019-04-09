@@ -165,7 +165,7 @@ public class SensorLogger {
 
             logFile.write("Time\t");
             for (Sensor sensor : SENSORS) {
-                logFile.write("v\t");
+                logFile.write(sensor.getUnits() + "\t");
             }
             logFile.write("\r\n");
             logFile.flush();
