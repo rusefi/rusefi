@@ -1,5 +1,5 @@
 /*
- * @file CJ125.h
+ * @file cj125.h
  *
  * @date: Jul 17, 2016
  * @author Andrey Belomutskiy, (c) 2012-2018

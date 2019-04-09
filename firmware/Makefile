@@ -310,8 +310,11 @@ INCDIR = $(CHIBIOS)/os/license \
 
 MCU  = cortex-m4
 
-#TRGT = arm-elf-
-TRGT = arm-none-eabi-
+ifeq ($(CROSS_COMPILE),)
+  TRGT = arm-none-eabi-
+else
+  TRGT = $(CROSS_COMPILE)
+endif
 CC   = $(TRGT)gcc
 CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.

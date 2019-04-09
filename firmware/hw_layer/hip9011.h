@@ -1,5 +1,5 @@
 /**
- * @file	HIP9011.h
+ * @file	hip9011.h
  * @brief	HIP9011/TPIC8101 driver
  *
  * @date Nov 27, 2013
