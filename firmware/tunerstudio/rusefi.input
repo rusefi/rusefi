@@ -2364,7 +2364,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = testInjectors,	Center
 		panel = testMisc,		East
 	
-	dialog = engineTypeDialog, "Popular vehicles"	
+	dialog = engineTypeDialog, "Popular vehicles"
+		field = "!These buttons send a command to rusEfi controller to apply preset values"
+		field = "!Once you send the command, please reconnect to rusEfi controller in order to read fresh values"			
 		commandButton = "Miata NA6 Stage 0", cmd_set_engine_type_Miata_NA6_VAF
 		commandButton = "Miata NA6 Stage 1", cmd_set_engine_type_Miata_NA6_MAP
 		commandButton = "Miata NB2 MAP", cmd_set_engine_type_Miata_NA2
