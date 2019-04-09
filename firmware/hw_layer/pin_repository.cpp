@@ -66,6 +66,11 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	return index;
 }
 
+static brain_pin_e index_to_brainPin(int i)
+{
+	return (brain_pin_e)((int)GPIOA_0 + i);
+}
+
 PinRepository::PinRepository() {
 }
 
@@ -181,10 +186,18 @@ static int getIndex(ioportid_t port, ioportmask_t pin) {
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
 {
-	if ((brainPin < GPIOA_0) || (brainPin > GPIOH_15))
+	if ((brainPin < GPIOA_0) || (brainPin > BRAIN_PIN_LAST_ONCHIP))
 		return false;
 
 	return true;
+}
+
+bool brain_pin_is_ext(brain_pin_e brainPin)
+{
+	if (brainPin > BRAIN_PIN_LAST_ONCHIP)
+		return true;
+
+	return false;
 }
 
 /**
