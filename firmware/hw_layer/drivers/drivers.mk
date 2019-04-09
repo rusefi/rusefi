@@ -9,7 +9,8 @@ HW_LAYER_DRIVERS_CORE = \
 
 HW_LAYER_DRIVERS = \
 	$(DRIVERS_DIR)/gpio/tle6240.c \
-	$(DRIVERS_DIR)/gpio/tle8888.c
+	$(DRIVERS_DIR)/gpio/tle8888.c \
+	$(DRIVERS_DIR)/gpio/mc33972.c
 
 HW_LAYER_DRIVERS_CPP =
 
