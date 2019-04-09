@@ -104,6 +104,13 @@ struct tle6240_priv {
 
 static struct tle6240_priv chips[BOARD_TLE6240_COUNT];
 
+static const char* tle6240_pin_names[TLE6240_OUTPUTS] = {
+	"tle6240.OUT1",		"tle6240.OUT2",		"tle6240.OUT3",		"tle6240.OUT4",
+	"tle6240.OUT5",		"tle6240.OUT6",		"tle6240.OUT7",		"tle6240.OUT8",
+	"tle6240.OUT9",		"tle6240.OUT10",	"tle6240.OUT11",	"tle6240.OUT12",
+	"tle6240.OUT13",	"tle6240.OUT14",	"tle6240.OUT15",	"tle6240.OUT16",
+};
+
 /*==========================================================================*/
 /* Driver local functions.													*/
 /*==========================================================================*/
@@ -456,6 +463,7 @@ struct gpiochip_ops tle6240_ops = {
 int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
 {
 	int i;
+	int ret;
 	struct tle6240_priv *chip;
 
 	/* no config or no such chip */
@@ -485,7 +493,12 @@ int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
 	chip->drv_state = TLE6240_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	return gpiochip_register(DRIVER_NAME, &tle6240_ops, TLE6240_OUTPUTS, chip);
+	ret = gpiochip_register(DRIVER_NAME, &tle6240_ops, TLE6240_OUTPUTS, chip);
+
+	/* set default pin names, board init code can rewrite */
+	gpiochips_setPinNames(ret, tle6240_pin_names);
+
+	return ret;
 }
 
 #else /* BOARD_TLE6240_COUNT > 0 */
