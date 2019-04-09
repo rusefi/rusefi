@@ -200,12 +200,12 @@ static int tle6240_chip_init(struct tle6240_priv *chip)
 	const struct tle6240_config *cfg = chip->cfg;
 
 	/* mark pins used */
-	ret = markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+	ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
-		ret |= markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
+		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
 	for (n = 0; n < TLE6240_DIRECT_OUTPUTS; n++)
 		if (cfg->direct_io[n].port)
-			ret |= markUsed(cfg->direct_io[n].port, cfg->direct_io[n].pad, DRIVER_NAME " DIRECT IO");
+			ret |= gpio_pin_markUsed(cfg->direct_io[n].port, cfg->direct_io[n].pad, DRIVER_NAME " DIRECT IO");
 
 	if (ret) {
 		ret = -1;
@@ -289,12 +289,12 @@ static int tle6240_chip_init(struct tle6240_priv *chip)
 
 err_gpios:
 	/* unmark pins */
-	markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+	gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
 	if (cfg->reset.port != NULL)
-		markUnused(cfg->reset.port, cfg->reset.pad);
+		gpio_pin_markUnused(cfg->reset.port, cfg->reset.pad);
 	for (n = 0; n < TLE6240_DIRECT_OUTPUTS; n++)
 		if (cfg->direct_io[n].port)
-			markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
+			gpio_pin_markUnused(cfg->direct_io[n].port, cfg->direct_io[n].pad);
 
 	return ret;
 }

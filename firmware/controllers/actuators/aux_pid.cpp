@@ -130,7 +130,7 @@ void startAuxPins(void) {
 
 void stopAuxPins(void) {
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		unmarkPin(activeConfiguration.auxPidPins[i]);
+		brain_pin_markUnused(activeConfiguration.auxPidPins[i]);
 	}
 }
 

@@ -790,6 +790,9 @@ typedef enum __attribute__ ((__packed__)) {
 
 } brain_pin_e;
 
+/* Plase keep updating this define */
+#define BRAIN_PIN_LAST_ONCHIP	GPIOH_15
+
 /**
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
  */

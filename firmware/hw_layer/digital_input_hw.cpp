@@ -232,7 +232,7 @@ void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
-	unmarkPin(brainPin);
+	brain_pin_markUnused(brainPin);
 
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (driver == NULL) {
