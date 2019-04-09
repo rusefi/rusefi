@@ -244,7 +244,7 @@ void turnOnHardware(Logging *sharedLogger) {
 
 static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
 	if (currentPin != prevPin) {
-		unmarkPin(prevPin);
+		brain_pin_markUnused(prevPin);
 	}
 }
 
@@ -253,9 +253,9 @@ void stopSpi(spi_device_e device) {
 	if (!isSpiInitialized[device])
 		return; // not turned on
 	isSpiInitialized[device] = false;
-	unmarkPin(getSckPin(device));
-	unmarkPin(getMisoPin(device));
-	unmarkPin(getMosiPin(device));
+	brain_pin_markUnused(getSckPin(device));
+	brain_pin_markUnused(getMisoPin(device));
+	brain_pin_markUnused(getMosiPin(device));
 #endif /* HAL_USE_SPI */
 }
 
@@ -420,7 +420,7 @@ void initHardware(Logging *l) {
 		isBoardTestMode_b = (!efiReadPin(CONFIGB(boardTestModeJumperPin)));
 
 		// we can now relese this pin, it is actually used as output sometimes
-		unmarkPin(CONFIGB(boardTestModeJumperPin));
+		brain_pin_markUnused(CONFIGB(boardTestModeJumperPin));
 	} else {
 		isBoardTestMode_b = false;
 	}

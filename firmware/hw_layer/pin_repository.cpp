@@ -188,7 +188,7 @@ bool brain_pin_is_onchip(brain_pin_e brainPin)
 }
 
 /**
- * See also unmarkPin()
+ * See also brain_pin_markUnused()
  * @return true if this pin was already used, false otherwise
  */
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
@@ -242,7 +242,7 @@ bool markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 }
 
 /**
- * See also markUsed()
+ * See also brain_pin_markUsed()
  */
 
 void brain_pin_markUnused(brain_pin_e brainPin)
@@ -283,22 +283,6 @@ const char *getPinFunction(brain_input_pin_e brainPin) {
 		return NULL;
 
 	return PIN_USED[index];
-}
-
-
-void unmarkPin(brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED) {
-		return;
-	}
-	ioportid_t port = getHwPort("unmark", brainPin);
-	ioportmask_t pin = getHwPin("unmark", brainPin);
-
-	int index = getIndex(port, pin);
-
-	if (PIN_USED[index] != NULL) {
-		PIN_USED[index] = NULL;
-		totalPinsUsed--;
-	}
 }
 
 #endif

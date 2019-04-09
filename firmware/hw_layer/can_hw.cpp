@@ -303,8 +303,8 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	unmarkPin(activeConfiguration.bc.canTxPin);
-	unmarkPin(activeConfiguration.bc.canRxPin);
+	brain_pin_markUnused(activeConfiguration.bc.canTxPin);
+	brain_pin_markUnused(activeConfiguration.bc.canRxPin);
 }
 
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
