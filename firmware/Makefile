@@ -172,10 +172,6 @@ ifeq ($(LDSCRIPT),)
   LDSCRIPT= config/stm32f4ems/STM32F407xG.ld
 endif
 
-ifeq ($(PROJECT_CPU),)
-  PROJECT_CPU=st_stm32f4
-endif                 
-
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC = $(STARTUPSRC) \
