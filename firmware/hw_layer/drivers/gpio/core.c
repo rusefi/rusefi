@@ -101,11 +101,13 @@ const char *gpiochips_getChipName(unsigned int pin)
 
 const char *gpiochips_getPinName(unsigned int pin)
 {
+	int offset;
 	struct gpiochip *chip = gpiochip_find(pin);
 
 	if (chip) {
-		if (chip->gpio_names)
-			return chip->gpio_names[pin - chip->base];
+		offset = pin - chip->base;
+		if ((chip->gpio_names) && (chip->gpio_names[offset]))
+			return chip->gpio_names[offset];
 		else
 			return chip->name;
 	}
@@ -156,6 +158,24 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 	gpio_base_free += size;
 
 	return (chip->base);
+}
+
+/**
+ * @brief Set pins names for registered gpiochip
+ * @details should be called after chip registration. May be called several times
+ * Names array size should be aqual to chip gpio count
+ */
+
+int gpiochips_setPinNames(brain_pin_e pin, const char **names)
+{
+	struct gpiochip *chip = gpiochip_find(pin);
+
+	if (!chip)
+		return -1;
+
+	chip->gpio_names = names;
+
+	return 0;
 }
 
 /**
@@ -294,6 +314,13 @@ const char *gpiochips_getPinName(unsigned int pin)
 int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
 {
 	(void)name; (void)ops; (void)size; (void)priv;
+
+	return 0;
+}
+
+int gpiochips_setPinNames(brain_pin_e pin, const char **names)
+{
+	(void)pin; (void)names;
 
 	return 0;
 }
