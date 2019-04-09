@@ -31,17 +31,17 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/cdm_ion_sense.cpp \
 	$(PROJECT_DIR)/hw_layer/backup_ram.cpp
 	
-ifeq ($(PROJECT_CPU),ST_STM32F7)
+ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/stm32f7xx_hal_flash.c \
 				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/stm32f7xx_hal_flash_ex.c
 endif
 
-ifeq ($(PROJECT_CPU),ST_STM32F4)
+ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/stm32f4xx_hal_flash.c \
 				$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/stm32f4xx_hal_flash_ex.c
 endif
 	
-ifeq ($(PROJECT_CPU),ST_STM32F1)
+ifeq ($(PROJECT_CPU),ARCH_STM32F1)
 endif
 
 -include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
