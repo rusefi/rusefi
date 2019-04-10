@@ -260,11 +260,11 @@ void stopSpi(spi_device_e device) {
 }
 
 void applyNewHardwareSettings(void) {
+    // all 'stop' methods need to go before we begin starting pins
+
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	applyNewTriggerInputPins();
+	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
-	
-        // all 'stop' methods need to go before we begin starting pins
        
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
@@ -293,8 +293,6 @@ void applyNewHardwareSettings(void) {
 	if (engineConfiguration->bc.is_enabled_spi_3 != activeConfiguration.bc.is_enabled_spi_3)
 		stopSpi(SPI_DEVICE_3);
 
-
-
 	unregisterPin(engineConfiguration->bc.HD44780_rs, activeConfiguration.bc.HD44780_rs);
 	unregisterPin(engineConfiguration->bc.HD44780_e, activeConfiguration.bc.HD44780_e);
 	unregisterPin(engineConfiguration->bc.HD44780_db4, activeConfiguration.bc.HD44780_db4);
@@ -306,6 +304,9 @@ void applyNewHardwareSettings(void) {
 
 	enginePins.unregisterPins();
 
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+	startTriggerInputPins();
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();

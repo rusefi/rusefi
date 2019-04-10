@@ -13,5 +13,7 @@
 
 void turnOnTriggerInputPins(Logging *sharedLogger);
 void applyNewTriggerInputPins(void);
+void startTriggerInputPins(void);
+void stopTriggerInputPins(void);
 
 #endif /* CRANK_INPUT_H_ */
