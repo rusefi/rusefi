@@ -8,7 +8,7 @@
  */
 
 #include "global.h"
-
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 #include "flash_main.h"
 #include "eficonsole.h"
 #include "flash.h"
@@ -21,7 +21,6 @@
 #include "tunerstudio.h"
 #endif
 
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 
 #include "engine_controller.h"
 

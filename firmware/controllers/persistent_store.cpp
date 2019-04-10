@@ -21,8 +21,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sensor_chart.h"
 #include "global.h"
+#if !EFI_UNIT_TEST
+#include "sensor_chart.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"
 #include "engine_controller.h"
@@ -40,3 +41,4 @@ const persistent_config_s *config = &persistentState.persistentConfiguration;
 const engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
 const board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 
+#endif /* EFI_UNIT_TEST */

@@ -22,6 +22,7 @@
  */
 
 #include "global.h"
+#if !EFI_UNIT_TEST
 #if EFI_SENSOR_CHART || defined(__DOXYGEN__)
 #include "sensor_chart.h"
 #endif
@@ -811,3 +812,4 @@ int getRusEfiVersion(void) {
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 	return 20190409;
 }
+#endif /* EFI_UNIT_TEST */
