@@ -70,14 +70,6 @@ EnginePins::EnginePins() {
     }                                                                              \
   }
 
-#define gpiochip_setPinValue(outputPin, electricalValue, logicValue)               \
-  {                                                                                \
-    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
-	  gpiochips_writePad((outputPin)->brainPin, (electricalValue));                \
-	  (outputPin)->currentLogicValue = (logicValue);                               \
-    }                                                                              \
-  }
-
 #else /* EFI_PROD_CODE */
 
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
@@ -319,7 +311,7 @@ void OutputPin::setValue(int logicValue) {
 			}
 		} else {
 			/* external pin */
-			gpiochip_setPinValue(this, this->brainPin, logicValue);
+			gpiochips_writePad(this->brainPin, logicValue);
 		}
 	#else
 		if (port != GPIO_NULL) {
