@@ -52,6 +52,18 @@ bool efiReadPin(brain_pin_e pin) {
 	return false;
 }
 
+static const char *getBrain_pin_eExt(brain_pin_e value){
+	const char * result = getBrain_pin_e(value);
+	if (result != NULL)
+		return result;
+#if (BOARD_EXT_GPIOCHIPS > 0)
+    /* gpichips */
+    return gpiochips_getPinName(value);
+#else
+    return NULL;
+#endif
+}
+
 /**
  * This method would set an error condition if pin is already used
  */
@@ -62,7 +74,7 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 	//efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
 
 #if ! EFI_BOOTLOADER
-	scheduleMsg(&logger, "%s on %s", msg, getBrain_pin_e(brainPin));
+	scheduleMsg(&logger, "%s on %s", msg, getBrain_pin_eExt(brainPin));
 #endif
 
 	wasUsed = brain_pin_markUsed(brainPin, msg);

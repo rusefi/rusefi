@@ -7,7 +7,6 @@
 
 #include "global.h"
 #include "rusefi_enums.h"
-#include "drivers/gpio/gpio_ext.h"
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
 case ACURA_RSX:
@@ -806,11 +805,6 @@ case GPIOH_8:
   return "GPIOH_8";
 case GPIOH_9:
   return "GPIOH_9";
-#if (BOARD_EXT_GPIOCHIPS > 0)
-  default:
-    /* gpichips */
-    return gpiochips_getPinName(value);
-#endif
   }
  return NULL;
 }
