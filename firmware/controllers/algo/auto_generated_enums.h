@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Thu Nov 22 18:48:26 EST 2018
+// on Wed Apr 10 18:05:03 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -20,12 +20,14 @@ const char *getDisplay_mode_e(display_mode_e value);
 const char *getLog_format_e(log_format_e value);
 const char *getIdle_mode_e(idle_mode_e value);
 const char *getPin_output_mode_e(pin_output_mode_e value);
+const char *getPin_mode_e(pin_mode_e value);
 const char *getPin_input_mode_e(pin_input_mode_e value);
 const char *getOperation_mode_e(operation_mode_e value);
 const char *getIgnition_mode_e(ignition_mode_e value);
 const char *getInjection_mode_e(injection_mode_e value);
 const char *getCranking_ignition_mode_e(cranking_ignition_mode_e value);
 const char *getUart_device_e(uart_device_e value);
+const char *getSpi_speed_e(spi_speed_e value);
 const char *getSpi_device_e(spi_device_e value);
 const char *getAdc_channel_e(adc_channel_e value);
 const char *getMass_storage_e(mass_storage_e value);
