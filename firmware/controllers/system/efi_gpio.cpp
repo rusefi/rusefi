@@ -476,6 +476,9 @@ const char *portname(ioportid_t GPIOx) {
  */
 ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 {
+	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
+			return EFI_ERROR_CODE;
+
 	if (brain_pin_is_onchip(brainPin))
 		return (brainPin - GPIOA_0) % PORT_SIZE;
 
