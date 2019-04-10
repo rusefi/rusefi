@@ -24,6 +24,7 @@
 #include "global.h"
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if !EFI_UNIT_TEST
 
 #include "injector_central.h"
 #include "io_pins.h"
@@ -301,9 +302,9 @@ void initInjectorCentral(Logging *sharedLogger) {
 
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
-
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();
 }
 
+#endif /* EFI_UNIT_TEST */
 #endif

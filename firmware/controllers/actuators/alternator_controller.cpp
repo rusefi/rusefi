@@ -7,7 +7,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-
+#include "global.h"
+#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 #include "engine.h"
 #include "rpm_calculator.h"
 #include "alternator_controller.h"
@@ -16,7 +17,6 @@
 #include "local_version_holder.h"
 #include "periodic_controller.h"
 
-#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
 #include "pwm_generator.h"
 #include "pin_repository.h"
 #include "tunerstudio_configuration.h"

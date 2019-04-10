@@ -7,6 +7,7 @@
  */
 
 #include "global.h"
+#if !EFI_UNIT_TEST
 #include "settings.h"
 #include "eficonsole.h"
 #include "engine_configuration.h"
@@ -1409,3 +1410,4 @@ void initSettings(void) {
 #endif /* EFI_PROD_CODE */
 }
 
+#endif /* !EFI_UNIT_TEST */
