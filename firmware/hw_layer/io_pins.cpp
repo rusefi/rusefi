@@ -12,6 +12,7 @@
 #if EFI_PROD_CODE
 #include "io_pins.h"
 #include "efi_gpio.h"
+#include "drivers/gpio/gpio_ext.h"
 
 #include "pin_repository.h"
 #include "status_loop.h"
@@ -40,29 +41,48 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 }
 
 bool efiReadPin(brain_pin_e pin) {
-	return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
+	if (brain_pin_is_onchip(pin))
+		return palReadPad(getHwPort("readPin", pin), getHwPin("readPin", pin));
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else if (brain_pin_is_ext(pin))
+			return (gpiochips_readPad(pin) > 0);
+	#endif
+
+	/* incorrect pin */
+	return false;
 }
 
 /**
  * This method would set an error condition if pin is already used
  */
-void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
-	ioportid_t port = getHwPort(msg, brainPin);
-	ioportmask_t pin = getHwPin(msg, brainPin);
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
+{
+	bool wasUsed;
 
-	if (port == GPIO_NULL) {
-		return;
+	//efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
+
+	scheduleMsg(&logger, "%s on %s", msg, getBrain_pin_e(brainPin));
+
+	wasUsed = brain_pin_markUsed(brainPin, msg);
+
+	if (!wasUsed) {
+		/*check if on-chip pin or external */
+		if (brain_pin_is_onchip(brainPin)) {
+			/* on-cip */
+			ioportid_t port = getHwPort(msg, brainPin);
+			ioportmask_t pin = getHwPin(msg, brainPin);
+			/* paranoid */
+			if (port == GPIO_NULL)
+				return;
+
+			palSetPadMode(port, pin, mode);
+		}
+		#if (BOARD_EXT_GPIOCHIPS > 0)
+			else {
+				gpiochips_setPadMode(brainPin, mode);
+			}
+		#endif
 	}
-	efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
-
-	scheduleMsg(&logger, "%s on %s%d", msg, portname(port), pin);
-
-	bool wasUsed = gpio_pin_markUsed(port, pin, msg);
-	if (wasUsed) {
-		return;
-	}
-
-	palSetPadMode(port, pin, mode);
 }
 
 iomode_t getInputMode(pin_input_mode_e mode) {

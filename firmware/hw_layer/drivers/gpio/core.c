@@ -16,8 +16,8 @@
 /*==========================================================================*/
 
 /* fist available gpio number after on-chip gpios */
-#define EXT_GPIOS_FIRST (GPIOH_15 + 1)
-static size_t gpio_base_free = EXT_GPIOS_FIRST;
+#define EXT_GPIOS_FIRST (BRAIN_PIN_LAST_ONCHIP + 1)
+static brain_pin_e gpio_base_free = EXT_GPIOS_FIRST;
 
 /*==========================================================================*/
 /* Exported variables.														*/
@@ -29,7 +29,7 @@ static size_t gpio_base_free = EXT_GPIOS_FIRST;
 
 /* TODO: chnage array to list? */
 struct gpiochip {
-	size_t				base;
+	brain_pin_e			base;
 	size_t				size;
 	struct gpiochip_ops	*ops;
 	const char			*name;
@@ -68,7 +68,7 @@ static struct gpiochip *gpiochip_find(unsigned int pin)
  * @details
  */
 
-int getHwPinExt(unsigned int pin)
+int gpiochips_getPinOffset(unsigned int pin)
 {
 	struct gpiochip *chip = gpiochip_find(pin);
 
@@ -78,18 +78,36 @@ int getHwPinExt(unsigned int pin)
 	return EFI_ERROR_CODE;
 }
 
+
 /**
- * @brief Register gpiochip
- * @details return pin name or gpiochip name (if no pins names provided)
+ * @brief Get external chip name
+ * @details return gpiochip name
  */
 
-const char *portNameExt(unsigned int pin)
+const char *gpiochips_getChipName(unsigned int pin)
 {
 	struct gpiochip *chip = gpiochip_find(pin);
 
+	if (chip)
+		return chip->name;
+
+	return NULL;
+}
+
+/**
+ * @brief Get external chip port name
+ * @details return pin name or gpiochip name (if no pins names provided)
+ */
+
+const char *gpiochips_getPinName(unsigned int pin)
+{
+	int offset;
+	struct gpiochip *chip = gpiochip_find(pin);
+
 	if (chip) {
-		if (chip->gpio_names)
-			return chip->gpio_names[pin - chip->base];
+		offset = pin - chip->base;
+		if ((chip->gpio_names) && (chip->gpio_names[offset]))
+			return chip->gpio_names[offset];
 		else
 			return chip->name;
 	}
@@ -140,6 +158,24 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 	gpio_base_free += size;
 
 	return (chip->base);
+}
+
+/**
+ * @brief Set pins names for registered gpiochip
+ * @details should be called after chip registration. May be called several times
+ * Names array size should be aqual to chip gpio count
+ */
+
+int gpiochips_setPinNames(brain_pin_e pin, const char **names)
+{
+	struct gpiochip *chip = gpiochip_find(pin);
+
+	if (!chip)
+		return -1;
+
+	chip->gpio_names = names;
+
+	return 0;
 }
 
 /**
@@ -251,14 +287,21 @@ int gpiochips_get_total_pins(void)
 
 #else /* BOARD_EXT_GPIOCHIPS > 0 */
 
-int getHwPinExt(unsigned int pin)
+int gpiochips_getPinOffset(unsigned int pin)
 {
 	(void)pin;
 
 	return -1;
 }
 
-const char *portNameExt(unsigned int pin)
+const char *gpiochips_getChipName(unsigned int pin)
+{
+	(void)pin;
+
+	return NULL;
+}
+
+const char *gpiochips_getPinName(unsigned int pin)
 {
 	(void)pin;
 
@@ -271,6 +314,13 @@ const char *portNameExt(unsigned int pin)
 int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
 {
 	(void)name; (void)ops; (void)size; (void)priv;
+
+	return 0;
+}
+
+int gpiochips_setPinNames(brain_pin_e pin, const char **names)
+{
+	(void)pin; (void)names;
 
 	return 0;
 }

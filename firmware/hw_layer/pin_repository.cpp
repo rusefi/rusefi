@@ -15,6 +15,11 @@
 #include "eficonsole.h"
 #include "memstreams.h"
 #include "chprintf.h"
+#include "drivers/gpio/gpio_ext.h"
+
+#ifndef BOARD_EXT_PINREPOPINS
+	#define BOARD_EXT_PINREPOPINS 0
+#endif
 
 static ioportid_t ports[] = {GPIOA,
 		GPIOB,
@@ -44,7 +49,7 @@ static ioportid_t ports[] = {GPIOA,
 
 #define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
 // todo: move this into PinRepository class
-const char *PIN_USED[PIN_REPO_SIZE];
+const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
 static int initialized = FALSE;
 
 static LoggingWithStorage logger("pin repos");
@@ -110,14 +115,37 @@ static void reportPins(void) {
 	unsigned int i;
 
 	for (i = 0; i < PIN_REPO_SIZE; i++) {
-		const char *name = PIN_USED[i];
-		int portIndex = i / PORT_SIZE;
-		int pin = i % PORT_SIZE;
-		ioportid_t port = ports[portIndex];
-		if (name != NULL) {
-			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, name);
+		const char *pin_user = PIN_USED[i];
+
+		/* show used pins */
+		if (pin_user != NULL) {
+			int portIndex = i / PORT_SIZE;
+			int pin = i % PORT_SIZE;
+			ioportid_t port = ports[portIndex];
+
+			scheduleMsg(&logger, "pin %s%d: %s\n", portname(port), pin, pin_user);
 		}
 	}
+
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		for (i = PIN_REPO_SIZE ; i < PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
+			const char *pin_name;
+			const char *pin_user;
+			brain_pin_e brainPin = index_to_brainPin(i);
+
+			pin_name = gpiochips_getPinName(brainPin);
+			pin_user = PIN_USED[i];
+
+			/* here show all pins, unused too */
+			if (pin_name != NULL) {
+				scheduleMsg(&logger, "ext %s: %s\n",
+					pin_name, pin_user ? pin_user : "free");
+			} else {
+				scheduleMsg(&logger, "ext %s.%d: %s\n",
+					gpiochips_getChipName(brainPin), gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free");
+			}
+		}
+	#endif
 
 	scheduleMsg(&logger, "Total pins count: %d", totalPinsUsed);
 }
@@ -155,14 +183,25 @@ const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
 	}
-	ioportid_t hwPort = getHwPort("hostname", brainPin);
-	if (hwPort == GPIO_NULL) {
-		return "NONE";
-	}
-	int hwPin = getHwPin("hostname", brainPin);
 	portNameStream.eos = 0; // reset
-	chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
+	if (brain_pin_is_onchip(brainPin)) {
+		int hwPin;
+
+		ioportid_t hwPort = getHwPort("hostname", brainPin);
+		if (hwPort == GPIO_NULL) {
+			return "NONE";
+		}
+		hwPin = getHwPin("hostname", brainPin);
+		chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
+	}
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else {
+			chprintf((BaseSequentialStream *) &portNameStream, "ext:%s.%d (%s)",
+				gpiochips_getChipName(brainPin), gpiochips_getPinOffset(brainPin), gpiochips_getPinName(brainPin));
+		}
+	#endif
 	portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
+
 	return portNameBuffer;
 }
 
@@ -176,6 +215,12 @@ void initPinRepository(void) {
 	memset(PIN_USED, 0, sizeof(PIN_USED));
 
 	initialized = true;
+
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		/* external chip init */
+		gpiochips_init();
+	#endif
+
 	addConsoleAction("pins", reportPins);
 }
 
