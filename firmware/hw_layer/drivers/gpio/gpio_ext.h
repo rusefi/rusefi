@@ -38,11 +38,15 @@ struct gpiochip_ops {
 	int (*deinit)(void *data);
 };
 
-int getHwPinExt(unsigned int pin);
-const char *portNameExt(unsigned int pin);
+int gpiochips_getPinOffset(unsigned int pin);
+const char *gpiochips_getChipName(unsigned int pin);
+const char *gpiochips_getPinName(unsigned int pin);
 
 /* register gpio cgip */
 int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv);
+
+/* Set individual names for pins */
+int gpiochips_setPinNames(brain_pin_e pin, const char **names);
 
 /* gpio extenders subsystem init */
 int gpiochips_init(void);
