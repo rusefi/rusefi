@@ -61,7 +61,9 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 
 	//efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
 
+#if ! EFI_BOOTLOADER
 	scheduleMsg(&logger, "%s on %s", msg, getBrain_pin_e(brainPin));
+#endif
 
 	wasUsed = brain_pin_markUsed(brainPin, msg);
 
