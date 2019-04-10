@@ -65,6 +65,9 @@
  */
 
 #include "global.h"
+
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+
 #include "electronic_throttle.h"
 #include "tps.h"
 #include "io_pins.h"
@@ -76,7 +79,6 @@
 
 #define ETB_MAX_COUNT 2
 
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 #include "pin_repository.h"
 #include "pwm_generator.h"
 #include "dc_motor.h"
