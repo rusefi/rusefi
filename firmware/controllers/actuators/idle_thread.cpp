@@ -25,6 +25,8 @@
  */
 
 #include "global.h"
+
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 #include "engine_configuration.h"
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
@@ -33,8 +35,6 @@
 #include "engine.h"
 #include "periodic_controller.h"
 #include "stepper.h"
-
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 #include "allsensors.h"
 
 static Logging *logger;

@@ -13,6 +13,8 @@
 #include "tachometer.h"
 #include "trigger_central.h"
 
+#if !EFI_UNIT_TEST
+
 EXTERN_ENGINE;
 
 static scheduling_s tachTurnSignalOff;
@@ -48,3 +50,5 @@ void initTachometer(void) {
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
+
+#endif /* EFI_UNIT_TEST */
