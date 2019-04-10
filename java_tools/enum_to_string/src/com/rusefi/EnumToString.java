@@ -14,7 +14,7 @@ import java.util.TreeSet;
 public class EnumToString {
     private final static Set<String> currentValues = new TreeSet<>();
 
-    private final static StringBuilder cppFileContent = new StringBuilder();
+    public final static StringBuilder cppFileContent = new StringBuilder();
     private final static StringBuilder headerFileContent = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
@@ -46,7 +46,6 @@ public class EnumToString {
     }
 
     private static void process(String inFileName) throws IOException {
-        BufferedReader reader;
 
         String header = "// auto-generated from" + inFileName + "\r\n" +
                 "// by enum2string.jar tool\r\n" +
@@ -59,7 +58,6 @@ public class EnumToString {
         cppFileContent.append(header);
         EnumToString.headerFileContent.insert(0, header);
 
-        boolean isInsideEnum = false;
 
         File f = new File(inFileName);
         System.out.println("Reading from " + inFileName);
@@ -69,12 +67,21 @@ public class EnumToString {
         cppFileContent.append("#include \"" + simpleFileName + "\"\r\n");
         EnumToString.headerFileContent.append("#include \"" + simpleFileName + "\"\r\n");
 
-        reader = new BufferedReader(new FileReader(inFileName));
+        process(new FileReader(inFileName));
+    }
+
+    public static void clear() {
+        cppFileContent.setLength(0);
+    }
+
+    public static void process(Reader in) throws IOException {
+        boolean isInsideEnum = false;
+        BufferedReader reader = new BufferedReader(in);
         String line;
         while ((line = reader.readLine()) != null) {
             line = removeSpaces(line);
 
-            if (line.startsWith("typedefenum{")) {
+            if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
                 System.out.println("Entering enum");
                 currentValues.clear();
                 isInsideEnum = true;

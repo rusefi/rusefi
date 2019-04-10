@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Thu Nov 22 20:05:41 EST 2018
+// on Wed Apr 10 18:38:13 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -35,6 +35,8 @@ case DODGE_RAM:
   return "DODGE_RAM";
 case DODGE_STRATUS:
   return "DODGE_STRATUS";
+case ETB_BENCH_ENGINE:
+  return "ETB_BENCH_ENGINE";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -91,10 +93,6 @@ case MIATA_NA6_MAP:
   return "MIATA_NA6_MAP";
 case MIATA_NA6_VAF:
   return "MIATA_NA6_VAF";
-case ETB_BENCH_ENGINE:
-  return "ETB_BENCH_ENGINE";
-case TLE8888_BENCH_ENGINE:
-	return "TLE8888_BENCH_ENGINE";
 case MINIMAL_PINS:
   return "MINIMAL_PINS";
 case MINI_COOPER_R50:
@@ -127,6 +125,8 @@ case TEST_ISSUE_366_BOTH:
   return "TEST_ISSUE_366_BOTH";
 case TEST_ISSUE_366_RISE:
   return "TEST_ISSUE_366_RISE";
+case TLE8888_BENCH_ENGINE:
+  return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
@@ -365,6 +365,19 @@ case OM_OPENDRAIN_INVERTED:
   }
  return NULL;
 }
+const char *getPin_mode_e(pin_mode_e value){
+switch(value) {
+case PO_DEFAULT:
+  return "PO_DEFAULT";
+case PO_OPENDRAIN:
+  return "PO_OPENDRAIN";
+case PO_PULLDOWN:
+  return "PO_PULLDOWN";
+case PO_PULLUP:
+  return "PO_PULLUP";
+  }
+ return NULL;
+}
 const char *getPin_input_mode_e(pin_input_mode_e value){
 switch(value) {
 case PI_DEFAULT:
@@ -401,10 +414,10 @@ case IM_INDIVIDUAL_COILS:
   return "IM_INDIVIDUAL_COILS";
 case IM_ONE_COIL:
   return "IM_ONE_COIL";
+case IM_TWO_COILS:
+  return "IM_TWO_COILS";
 case IM_WASTED_SPARK:
   return "IM_WASTED_SPARK";
-case IM_TWO_COILS:
-	return "IM_TWO_COILS";
   }
  return NULL;
 }
@@ -448,6 +461,19 @@ case UART_DEVICE_4:
   return "UART_DEVICE_4";
 case UART_NONE:
   return "UART_NONE";
+  }
+ return NULL;
+}
+const char *getSpi_speed_e(spi_speed_e value){
+switch(value) {
+case _150KHz:
+  return "_150KHz";
+case _1_25MHz:
+  return "_1_25MHz";
+case _2_5MHz:
+  return "_2_5MHz";
+case _5MHz:
+  return "_5MHz";
   }
  return NULL;
 }
@@ -526,6 +552,8 @@ const char *getEgo_sensor_e(ego_sensor_e value){
 switch(value) {
 case ES_14Point7_Free:
   return "ES_14Point7_Free";
+case ES_AEM:
+  return "ES_AEM";
 case ES_BPSX_D1:
   return "ES_BPSX_D1";
 case ES_Custom:
@@ -534,8 +562,6 @@ case ES_Innovate_MTX_L:
   return "ES_Innovate_MTX_L";
 case ES_NarrowBand:
   return "ES_NarrowBand";
-case ES_AEM:
-	return "ES_AEM";
 case ES_PLX:
   return "ES_PLX";
 case Force_4_bytes_size_ego_sensor:
@@ -705,10 +731,6 @@ case GPIOE_8:
   return "GPIOE_8";
 case GPIOE_9:
   return "GPIOE_9";
-case GPIO_INVALID:
-  return "GPIO_INVALID";
-case GPIO_UNASSIGNED:
-  return "GPIO_UNASSIGNED";
 case GPIOF_0:
   return "GPIOF_0";
 case GPIOF_1:
@@ -770,7 +792,7 @@ case GPIOG_6:
 case GPIOG_7:
   return "GPIOG_7";
 case GPIOG_8:
-  return "GPIOA_G";
+  return "GPIOG_8";
 case GPIOG_9:
   return "GPIOG_9";
 case GPIOH_0:
@@ -805,13 +827,15 @@ case GPIOH_8:
   return "GPIOH_8";
 case GPIOH_9:
   return "GPIOH_9";
+case GPIO_INVALID:
+  return "GPIO_INVALID";
+case GPIO_UNASSIGNED:
+  return "GPIO_UNASSIGNED";
   }
  return NULL;
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_TLE8888:
-  return "DBG_TLE8888";
 case DBG_32:
   return "DBG_32";
 case DBG_33:
@@ -854,6 +878,8 @@ case DBG_IGNITION_TIMING:
   return "DBG_IGNITION_TIMING";
 case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
+case DBG_ION:
+  return "DBG_ION";
 case DBG_KNOCK:
   return "DBG_KNOCK";
 case DBG_MAP:
@@ -866,6 +892,8 @@ case DBG_SR5_PROTOCOL:
   return "DBG_SR5_PROTOCOL";
 case DBG_STATUS:
   return "DBG_STATUS";
+case DBG_TLE8888:
+  return "DBG_TLE8888";
 case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_INPUT:
@@ -878,8 +906,6 @@ case DBG_VVT:
   return "DBG_VVT";
 case DBG_WARMUP_ENRICH:
   return "DBG_WARMUP_ENRICH";
-case DBG_ION:
-  return "DBG_ION";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
   }
