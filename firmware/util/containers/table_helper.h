@@ -48,7 +48,6 @@ Table2D<SIZE>::Table2D() {
 	bin = NULL;
 }
 
-
 template<int SIZE>
 void Table2D<SIZE>::preCalc(float *bin, float *values) {
 	this->bin = bin;

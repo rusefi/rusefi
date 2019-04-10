@@ -17,7 +17,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/scheduling/pwm_generator_logic.cpp \
 	$(CONTROLLERS_DIR)/scheduling/event_queue.cpp \
 	$(PROJECT_DIR)/controllers/settings.cpp \
-	$(PROJECT_DIR)/controllers/error_handling.cpp \
+	$(PROJECT_DIR)/controllers/core/error_handling.cpp \
 	$(PROJECT_DIR)/controllers/map_averaging.cpp \
 	$(PROJECT_DIR)/controllers/flash_main.cpp \
 	$(PROJECT_DIR)/controllers/injector_central.cpp \
