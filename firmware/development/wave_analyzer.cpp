@@ -120,6 +120,9 @@ static void setWaveModeSilent(int index, int mode) {
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = CONFIGB(logicAnalyzerPins)[index];
 
+	if (brainPin == GPIO_UNASSIGNED)
+		return;
+
 	bool mode = CONFIGB(logicAnalyzerMode)[index];
 
 	waveReaderCount++;
