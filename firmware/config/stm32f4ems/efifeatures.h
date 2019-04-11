@@ -348,14 +348,10 @@
 // todo: this should be detected automatically based on pin selection
 #define TS_SERIAL_AF 7
 
-#define LED_WARNING_BRAIN_PIN GPIOD_13
-
 // LED_ERROR_BRAIN_PIN should match LED_ERROR_PORT/LED_ERROR_PIN
 #define LED_ERROR_BRAIN_PIN GPIOD_14
 #define LED_ERROR_PORT GPIOD
 #define LED_ERROR_PIN 14
-
-#define EFI_WARNING_LED TRUE
 
 // USART1 -> check defined STM32_SERIAL_USE_USART1
 // For GPS we have USART1. We can start with PB7 USART1_RX and PB6 USART1_TX

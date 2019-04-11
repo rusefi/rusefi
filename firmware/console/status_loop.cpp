@@ -550,11 +550,8 @@ static void initStatusLeds(void) {
 	// we initialize this here so that we can blink it on start-up
 	enginePins.checkEnginePin.initPin("MalfunctionIndicator", CONFIGB(malfunctionIndicatorPin), &CONFIGB(malfunctionIndicatorPinMode));
 
-
-#if EFI_WARNING_LED || defined(__DOXYGEN__)
-	enginePins.warningLedPin.initPin("led: warning status", LED_WARNING_BRAIN_PIN);
+	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warninigLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
-#endif /* EFI_WARNING_LED */
 }
 
 /**
