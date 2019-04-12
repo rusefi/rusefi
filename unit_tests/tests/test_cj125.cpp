@@ -6,7 +6,7 @@
  */
 
 #include "gtest/gtest.h"
-#include "CJ125_logic.h"
+#include "cj125_logic.h"
 #include "engine_test_helper.h"
 
 static void applyHeaterPinState(PwmConfig *state, int stateIndex) {
