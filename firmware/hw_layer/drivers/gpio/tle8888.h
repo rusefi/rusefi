@@ -12,7 +12,7 @@
 
 #include <hal.h>
 
-#define TLE8888_OUTPUTS				20 /* ? */
+#define TLE8888_OUTPUTS				24
 /* 4 misc channels */
 #define TLE8888_DIRECT_MISC			4
 /* 4 IGN channels - INJ1..4 - IN1..4
@@ -31,14 +31,13 @@ struct tle8888_config {
 		ioportid_t		port;
 		uint_fast8_t	pad;
 	} reset;
-	/* currently not used.
-	 * TODO: update as it is done in TLE6240 */
 	struct {
+		/* MCU port-pin routed to IN9..12 */
 		ioportid_t		port;
 		uint_fast8_t	pad;
+		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
+		int 			output;
 	} direct_io[TLE8888_DIRECT_MISC];
-	/* maping array for IN9..12, output numbers starts from 1, as in DS */
-	uint8_t 			direct_map[TLE8888_DIRECT_MISC];
 };
 
 #ifdef __cplusplus
