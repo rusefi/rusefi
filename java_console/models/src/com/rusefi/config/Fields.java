@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon Apr 08 10:00:09 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 21:45:26 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -226,7 +226,6 @@ public class Fields {
 	public static final int coastingFuelCutTps_offset = 3176;
 	public static final int communicationLedPin_offset = 1832;
 	public static final int communicationLedPin_offset_hex = 728;
-	public static final int configResetPin_offset = 2062;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int consoleLoopPeriodMs_offset = 716;
 	public static final int consoleSerialRxPin_offset = 1839;
@@ -1113,6 +1112,7 @@ public class Fields {
 	public static final int uartConsoleSerialSpeed_offset = 2096;
 	public static final int uartConsoleSerialSpeed_offset_hex = 830;
 	public static final int unrealisticRpmThreashold_offset = 760;
+	public static final int unused1234234_offset = 2062;
 	public static final int unused_1484_bit_20_offset = 1476;
 	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_bit_1472_29_offset = 1464;
@@ -1734,7 +1734,7 @@ public class Fields {
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 2058, FieldType.INT16);
 	public static final Field FATALERRORPIN = Field.create("FATALERRORPIN", 2060, FieldType.INT8, brain_pin_e);
 	public static final Field WARNINIGLEDPIN = Field.create("WARNINIGLEDPIN", 2061, FieldType.INT8, brain_pin_e);
-	public static final Field CONFIGRESETPIN = Field.create("CONFIGRESETPIN", 2062, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSED1234234 = Field.create("UNUSED1234234", 2062, FieldType.INT8, brain_pin_e);
 	public static final Field LIS302DLCSPIN = Field.create("LIS302DLCSPIN", 2063, FieldType.INT8, brain_pin_e);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2064, FieldType.INT);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 2068, FieldType.FLOAT);
