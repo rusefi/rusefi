@@ -306,7 +306,7 @@ static struct tle8888_config tle8888_cfg = {
 			SPI_CR1_CPHA |
 			0,
 		.cr2 = 0
-#elif defined(STM32F767xx) || defined(STM32F746xx)
+#elif defined (STM32F765xx) || defined(STM32F767xx) || defined(STM32F746xx)
 		.cr1 =
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
