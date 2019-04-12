@@ -11,4 +11,4 @@ set USE_BOOTLOADER=yes
 rem call compile.bat -r
 rem temp stuff trying to fix CI
 make clean
-make
+make -r
