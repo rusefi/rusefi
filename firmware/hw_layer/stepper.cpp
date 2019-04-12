@@ -116,10 +116,14 @@ static msg_t stThread(StepperMotor *motor) {
 StepperMotor::StepperMotor() {
 	currentPosition = 0;
 	targetPosition = 0;
+
+#if EFI_PROD_CODE
 	enablePort = NULL;
 	enablePin = 0;
 	stepPort = NULL;
 	stepPin = 0;
+#endif
+
 	reactionTime = 0;
 	totalSteps = 0;
 }
@@ -143,6 +147,7 @@ void StepperMotor::setDirection(bool isIncrementing) {
 }
 
 void StepperMotor::pulse() {
+#if EFI_PROD_CODE
 	palWritePad(enablePort, enablePin, false); // ebable stepper
 
 	palWritePad(stepPort, stepPin, true);
@@ -151,6 +156,7 @@ void StepperMotor::pulse() {
 	chThdSleepMilliseconds(reactionTime);
 
 	palWritePad(enablePort, enablePin, true); // disable stepper
+#endif
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
@@ -181,10 +187,14 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 	efiSetPadMode("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
 	// todo: start using enablePinMode parameter here #718
 	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
+
+#if EFI_PROD_CODE
 	palWritePad(this->enablePort, enablePin, true); // disable stepper
 
 	// All pins must be 0 for correct hardware startup (e.g. stepper auto-disabling circuit etc.).
 	palWritePad(this->stepPort, this->stepPin, false);
+#endif
+
 	this->directionPin.setValue(false);
 	this->currentDirection = false;
 

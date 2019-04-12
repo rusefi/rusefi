@@ -28,11 +28,14 @@ public:
 	int totalSteps;
 private:
 	int targetPosition;
+
+#if EFI_PROD_CODE
 	ioportid_t stepPort;
 	ioportmask_t stepPin;
 
 	ioportid_t enablePort;
 	ioportmask_t enablePin;
+#endif
 
 	pin_output_mode_e directionPinMode;
 

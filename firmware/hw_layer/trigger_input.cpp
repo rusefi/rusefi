@@ -34,6 +34,7 @@ static Logging *logger;
 int vvtEventRiseCounter = 0;
 int vvtEventFallCounter = 0;
 
+#if EFI_PROD_CODE
 /* PAL based implementation */
 #if (HAL_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 
@@ -262,7 +263,7 @@ static void setPrimaryChannel(brain_pin_e brainPin) {
 }
 
 #endif /* HAL_USE_ICU */
-
+#endif /* EFI_PROD_CODE */
 
 /*==========================================================================*/
 /* Exported functions.														*/
