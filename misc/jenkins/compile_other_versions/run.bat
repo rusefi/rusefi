@@ -33,6 +33,8 @@ set bundle_name=stm32f767_nucleo
 call misc\jenkins\compile_other_versions\build_version.bat
 echo Done with F767-nucleo
 
+
+
 cd firmware
 call clean.bat
 cd ..
@@ -59,8 +61,7 @@ set bundle_name=prometheus_405
 call misc\jenkins\compile_other_versions\build_version.bat
 echo Done with prometheus_405
 
-rem temp exit
-exit 0
+
 
 cd firmware
 call clean.bat
