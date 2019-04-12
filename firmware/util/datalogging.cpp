@@ -295,7 +295,7 @@ void Logging::appendPrintf(const char *fmt, ...) {
 
 #endif /* ! EFI_UNIT_TEST */
 
-void Logging::baseConstructor() {
+Logging::Logging() {
 	name = NULL;
 	buffer = NULL;
 	linePointer = NULL;
@@ -303,12 +303,7 @@ void Logging::baseConstructor() {
 	isInitialized = false;
 }
 
-Logging::Logging() {
-	baseConstructor();
-}
-
-Logging::Logging(char const *name, char *buffer, int bufferSize) {
-	baseConstructor();
+Logging::Logging(char const *name, char *buffer, int bufferSize) : Logging(){
 #if ! EFI_UNIT_TEST
 	initLoggingExt(name, buffer, bufferSize);
 #else

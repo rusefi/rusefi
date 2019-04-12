@@ -32,18 +32,13 @@ void SingleWave::setState(int switchIndex, pin_state_t state) {
 	pinStates[switchIndex] = state;
 }
 
-void MultiWave::baseConstructor() {
+MultiWave::MultiWave() {
 	channels = NULL;
 	switchTimes = NULL;
 	reset();
 }
 
-MultiWave::MultiWave() {
-	baseConstructor();
-}
-
-MultiWave::MultiWave(float *switchTimes, SingleWave *waves) {
-	baseConstructor();
+MultiWave::MultiWave(float *switchTimes, SingleWave *waves) : MultiWave(){
 	init(switchTimes, waves);
 }
 
