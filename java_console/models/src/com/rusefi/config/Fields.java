@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 21:45:26 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 23:16:46 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -303,11 +303,13 @@ public class Fields {
 	public static final int etb1_directionPin1_offset = 680;
 	public static final int etb1_directionPin2_offset = 681;
 	public static final int etb1_offset = 680;
+	public static final int etb1_use_two_wires_offset = 76;
 	public static final int etb2_controlPin1_offset = 3990;
 	public static final int etb2_controlPin2_offset = 3991;
 	public static final int etb2_directionPin1_offset = 3988;
 	public static final int etb2_directionPin2_offset = 3989;
 	public static final int etb2_offset = 3988;
+	public static final int etb2_use_two_wires_offset = 76;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int etb_dFactor_offset = 1764;
 	public static final int etb_iFactor_offset = 1760;
@@ -804,8 +806,6 @@ public class Fields {
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isPrintTriggerSynchDetails_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_12_offset = 76;
-	public static final int issue_294_13_offset = 76;
 	public static final int issue_294_14_offset = 76;
 	public static final int issue_294_15_offset = 76;
 	public static final int issue_294_16_offset = 76;
@@ -1220,8 +1220,8 @@ public class Fields {
 	public static final Field USEBIQUADANALOGFILTERING = Field.create("USEBIQUADANALOGFILTERING", 76, FieldType.BIT, 9);
 	public static final Field CJ125ISUADIVIDED = Field.create("CJ125ISUADIVIDED", 76, FieldType.BIT, 10);
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
-	public static final Field ISSUE_294_12 = Field.create("ISSUE_294_12", 76, FieldType.BIT, 12);
-	public static final Field ISSUE_294_13 = Field.create("ISSUE_294_13", 76, FieldType.BIT, 13);
+	public static final Field ETB1_USE_TWO_WIRES = Field.create("ETB1_USE_TWO_WIRES", 76, FieldType.BIT, 12);
+	public static final Field ETB2_USE_TWO_WIRES = Field.create("ETB2_USE_TWO_WIRES", 76, FieldType.BIT, 13);
 	public static final Field ISSUE_294_14 = Field.create("ISSUE_294_14", 76, FieldType.BIT, 14);
 	public static final Field ISSUE_294_15 = Field.create("ISSUE_294_15", 76, FieldType.BIT, 15);
 	public static final Field ISSUE_294_16 = Field.create("ISSUE_294_16", 76, FieldType.BIT, 16);

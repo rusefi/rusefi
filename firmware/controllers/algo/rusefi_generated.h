@@ -481,6 +481,8 @@
 #define etb1_directionPin2_offset_hex 2a9
 #define etb1_offset 680
 #define etb1_offset_hex 2a8
+#define etb1_use_two_wires_offset 76
+#define etb1_use_two_wires_offset_hex 4c
 #define etb2_controlPin1_offset 3990
 #define etb2_controlPin1_offset_hex f96
 #define etb2_controlPin2_offset 3991
@@ -491,6 +493,8 @@
 #define etb2_directionPin2_offset_hex f95
 #define etb2_offset 3988
 #define etb2_offset_hex f94
+#define etb2_use_two_wires_offset 76
+#define etb2_use_two_wires_offset_hex 4c
 #define ETB_BIAS_CURVE_LENGTH 8
 #define etb_dFactor_offset 1764
 #define etb_dFactor_offset_hex 6e4
@@ -1218,10 +1222,6 @@
 #define isPrintTriggerSynchDetails_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_12_offset 76
-#define issue_294_12_offset_hex 4c
-#define issue_294_13_offset 76
-#define issue_294_13_offset_hex 4c
 #define issue_294_14_offset 76
 #define issue_294_14_offset_hex 4c
 #define issue_294_15_offset 76
