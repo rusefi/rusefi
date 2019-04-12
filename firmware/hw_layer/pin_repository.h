@@ -34,10 +34,10 @@ EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg);
 EXTERNC void brain_pin_markUnused(brain_pin_e brainPin);
 const char * getPinFunction(brain_input_pin_e brainPin);
 
-#if !EFI_UNIT_TEST && EFI_PROD_CODE
+#if EFI_PROD_CODE
 /* For on-chip gpios only */
 EXTERNC bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg);
 EXTERNC void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin);
-#endif /* !EFI_UNIT_TEST && EFI_PROD_CODE*/
+#endif /* EFI_PROD_CODE*/
 
 #endif /* PIN_REPOSITORY_H_ */
