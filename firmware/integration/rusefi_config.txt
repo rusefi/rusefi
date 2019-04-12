@@ -348,7 +348,7 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",     
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:1], @@engine_load_mode_e_enum@@
-engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nset algorithm X
+engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nSee also useTPSAdvanceTable\nset algorithm X
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
@@ -729,7 +729,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking
 bit useAdvanceCorrectionsForCranking
-bit useTPSAdvanceTable
+bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 bit unused_1484_bit_20
 bit unused_1484_bit_21
 

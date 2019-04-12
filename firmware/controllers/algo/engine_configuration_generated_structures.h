@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 23:16:46 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 12 18:24:15 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1167,6 +1167,7 @@ typedef struct {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which fuel quantity control algorithm is used.
+	 * See also useTPSAdvanceTable
 	 * set algorithm X
 	 * offset 420
 	 */
@@ -1550,6 +1551,7 @@ typedef struct {
 	offset 1476 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
+	 * This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 	offset 1476 bit 19 */
 	bool useTPSAdvanceTable : 1;
 	/**
@@ -2648,4 +2650,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 23:16:46 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 12 18:24:15 EDT 2019

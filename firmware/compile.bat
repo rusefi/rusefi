@@ -11,8 +11,13 @@ rem magic once needed
 
 call update_version.bat
 
+rem WHY??? do we have to sometimes create this folder manually?! is this about '-r' flag with make?
+mkdir .dep
+
+
 echo Starting compilation
 rem the important piece (pass external args if needed)
+
 make %1 %2 %3
 
 rem cd build
