@@ -11,7 +11,7 @@ if not exist java_console_binary/rusefi_console.jar exit -1
 cd firmware
 call clean.bat
 cd ..
-cho Compiling F746
+echo Compiling F746
 cd firmware\config\boards\nucleo_f746
 call !compile-nucleo_f746.bat
 cd ..
