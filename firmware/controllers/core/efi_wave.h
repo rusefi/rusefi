@@ -61,7 +61,6 @@ public:
  */
 class MultiWave {
 public:
-	void baseConstructor();
 	MultiWave();
 	MultiWave(float *switchTimes, SingleWave *waves);
 	void init(float *switchTimes, SingleWave *waves);

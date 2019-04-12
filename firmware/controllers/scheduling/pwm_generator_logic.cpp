@@ -32,7 +32,7 @@ SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
 	this->name = name;
 }
 
-void PwmConfig::baseConstructor() {
+PwmConfig::PwmConfig() {
 	memset((void*)&scheduling, 0, sizeof(scheduling));
 	memset((void*)&safe, 0, sizeof(safe));
 	dbgNestingLevel = 0;
@@ -46,12 +46,7 @@ void PwmConfig::baseConstructor() {
 	name = "[noname]";
 }
 
-PwmConfig::PwmConfig() {
-	baseConstructor();
-}
-
-PwmConfig::PwmConfig(float *st, SingleWave *waves) {
-	baseConstructor();
+PwmConfig::PwmConfig(float *st, SingleWave *waves) : PwmConfig() {
 	multiWave.init(st, waves);
 }
 

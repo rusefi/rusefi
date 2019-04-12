@@ -53,7 +53,6 @@ class PwmConfig {
 public:
 	PwmConfig();
 	PwmConfig(float *switchTimes, SingleWave *waves);
-	void baseConstructor();
 	void init(float *switchTimes, SingleWave *waves);
 
 	void weComplexInit(const char *msg,
