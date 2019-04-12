@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 21:45:00 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 21:45:26 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1818,19 +1818,18 @@ typedef struct {
 	 */
 	int16_t iacByTpsTaper;
 	/**
-	 * RED led on Discovery by default. TODO: start using this property
+	 * RED led on Discovery by default.
 	 * offset 2060
 	 */
 	brain_pin_e fatalErrorPin;
 	/**
-	 * TODO: start using this property
 	 * offset 2061
 	 */
 	brain_pin_e warninigLedPin;
 	/**
 	 * offset 2062
 	 */
-	brain_pin_e configResetPin;
+	brain_pin_e unused1234234;
 	/**
 	 * offset 2063
 	 */
@@ -2648,4 +2647,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 04 21:45:00 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 21:45:26 EDT 2019

@@ -366,8 +366,6 @@
 #define coastingFuelCutTps_offset_hex c68
 #define communicationLedPin_offset 1832
 #define communicationLedPin_offset_hex 728
-#define configResetPin_offset 2062
-#define configResetPin_offset_hex 80e
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define consoleLoopPeriodMs_offset 716
 #define consoleLoopPeriodMs_offset_hex 2cc
@@ -1725,6 +1723,8 @@
 #define uartConsoleSerialSpeed_offset_hex 830
 #define unrealisticRpmThreashold_offset 760
 #define unrealisticRpmThreashold_offset_hex 2f8
+#define unused1234234_offset 2062
+#define unused1234234_offset_hex 80e
 #define unused_1484_bit_20_offset 1476
 #define unused_1484_bit_20_offset_hex 5c4
 #define unused_1484_bit_21_offset 1476

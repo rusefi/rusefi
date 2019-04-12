@@ -25,7 +25,7 @@ typedef void (*CommandHandler)(char *);
 #include "datalogging.h"
 
 #ifdef CONFIG_RESET_SWITCH_PORT
-// todo: make this pin configurable? or maybe it should not be configurable?
+// this pin is not configurable at runtime so that we have a reliable way to reset configuration
 #define SHOULD_INGORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
 #else
 #define SHOULD_INGORE_FLASH() (false)

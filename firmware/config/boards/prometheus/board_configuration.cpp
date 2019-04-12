@@ -173,7 +173,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->runningLedPin = GPIOA_13; //GPIOA_13; // yellow LED
 	engineConfiguration->fatalErrorPin = GPIOA_13;
 	engineConfiguration->warninigLedPin = GPIO_UNASSIGNED;
-	engineConfiguration->configResetPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->triggerInputPins[0] = is469 ? GPIOA_5 : GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
