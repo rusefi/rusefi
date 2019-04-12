@@ -187,6 +187,7 @@ typedef enum {
 	 */
 	MINIMAL_PINS = 99,
 	PROMETHEUS_DEFAULTS = 100,
+	SUBARUEJ20G_DEFAULTS = 101,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;

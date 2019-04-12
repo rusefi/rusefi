@@ -1318,6 +1318,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case PROMETHEUS_DEFAULTS:
 		setPrometheusDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
+	case SUBARUEJ20G_DEFAULTS:
+		setSubaruEJ20GDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+		break;
 	case TEST_ENGINE_VVT:
 		setTestVVTEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;

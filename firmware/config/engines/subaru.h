@@ -10,5 +10,6 @@
 #include "engine.h"
 
 void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setSubaruEJ20GDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif /* SUBARU_H_ */
