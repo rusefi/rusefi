@@ -16,6 +16,7 @@
 #include "custom_engine.h"
 #include "allsensors.h"
 #include "engine_math.h"
+#include "fsio_impl.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "can_hw.h"
@@ -335,6 +336,31 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// PB3 is nicely both SWO and SPI1 SCK so logic analyzer could be used on SWO header
 	boardConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->debugMode = DBG_TLE8888;
+
+	// ETB #1 top one - closer to 121 connector
+	// DIS PF12
+	// EN  PF13
+	// IN1 PF15
+	// IN2 PF14
+	// SF  PF11
+	setFsio(12, GPIOF_12, "0" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(14, GPIOF_13, "1" PASS_ENGINE_PARAMETER_SUFFIX);
+	CONFIG(etb1_use_two_wires) = true;
+	CONFIGB(etb1.directionPin1) = GPIOF_15;
+	CONFIGB(etb1.directionPin2) = GPIOF_14;
+
+	// ETB #2
+	// DIS PE5
+	// EN  PE6
+	// IN1 PE2
+	// IN2 PE4
+	// SF  PE3
+	setFsio(13, GPIOE_5, "0" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(15, GPIOE_6, "1" PASS_ENGINE_PARAMETER_SUFFIX);
+	CONFIG(etb2_use_two_wires) = true;
+	CONFIG(etb2.directionPin1) = GPIOE_2;
+	CONFIG(etb2.directionPin2) = GPIOE_4;
+
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */

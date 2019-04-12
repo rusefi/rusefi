@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 21:45:26 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 23:16:46 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -404,6 +404,7 @@ typedef struct {
 	 */
 	brain_pin_e controlPin1;
 	/**
+	 * currently UNUSED
 	 * offset 3
 	 */
 	brain_pin_e controlPin2;
@@ -1005,10 +1006,10 @@ typedef struct {
 	bool cj125isLsu49 : 1;
 	/**
 	offset 76 bit 12 */
-	bool issue_294_12 : 1;
+	bool etb1_use_two_wires : 1;
 	/**
 	offset 76 bit 13 */
-	bool issue_294_13 : 1;
+	bool etb2_use_two_wires : 1;
 	/**
 	offset 76 bit 14 */
 	bool issue_294_14 : 1;
@@ -2647,4 +2648,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 21:45:26 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 23:16:46 EDT 2019
