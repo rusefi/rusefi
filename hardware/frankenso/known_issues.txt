@@ -182,6 +182,10 @@
 175) RESOLVED IN R0.5.4 D12 to D23 on schematic are confusing. Aling these desinators to be more clear. 
 176)                    0805 options for VP selection on High Side VP +5/+12 selection
 177)                    adjust mounting holes to allow 89661-32590 and 89661-32260 cases
+178) RESOLVED IN R0.5.5 Update AN input schematic to note "low pass filter knee at 1kHz or 10Hz with 10k series resistor"
+179) RESOLVED IN R0.5.5 Update AN input schematic to note "low pass filter knee at 10kHz or 100Hz with 10k series resistor"
+180) RESOLVED IN R0.5.5 Update AN input schematic to note "low pass filter knee at 100kHz or 1kHz with 10k series resistor"
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

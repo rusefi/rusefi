@@ -63,8 +63,8 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 3 15
 Title "frankenso"
-Date "2018-02-24"
-Rev "0.5.3"
+Date "2019-04-12"
+Rev "0.5.5"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -3176,10 +3176,10 @@ Text Notes 12450 4000 2    60   ~ 0
 50.2k\n
 Wire Wire Line
 	4300 9000 4200 9000
-Text Notes 13950 6425 0    60   ~ 0
-low pass filter knee at 100kHz typical
-Text Notes 3100 7725 0    60   ~ 0
-low pass filter knee at 1kHz 
+Text Notes 13950 6500 0    60   ~ 0
+low pass filter knee at 100kHz typical or \n1kHz with 10k series resistor
+Text Notes 3100 7800 0    60   ~ 0
+low pass filter knee at 1kHz or \n10Hz with 10k series resistor
 Wire Notes Line
 	14025 5975 13900 6350
 Wire Notes Line
@@ -3190,20 +3190,20 @@ Wire Notes Line
 	3275 7275 3050 7675
 Wire Notes Line
 	3050 7675 3075 7675
-Text Notes 3275 9250 0    60   ~ 0
-low pass filter knee at 1kHz 
+Text Notes 3275 9325 0    60   ~ 0
+low pass filter knee at 1kHz or \n10Hz with 10k series resistor
 Wire Notes Line
 	3450 8800 3225 9200
 Wire Notes Line
 	3225 9200 3250 9200
-Text Notes 13950 5100 0    60   ~ 0
-low pass filter knee at 10kHz 
+Text Notes 13950 5175 0    60   ~ 0
+low pass filter knee at 10kHz or \n100Hz with 10k series resistor
 Wire Notes Line
 	14125 4650 13900 5050
 Wire Notes Line
 	13900 5050 13925 5050
-Text Notes 3350 5150 0    60   ~ 0
-low pass filter knee at 1kHz 
+Text Notes 3350 5225 0    60   ~ 0
+low pass filter knee at 1kHz or \n10Hz with 10k series resistor
 Wire Notes Line
 	3525 4700 3300 5100
 Wire Notes Line
