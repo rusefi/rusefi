@@ -14,7 +14,7 @@
 
 #include "global.h"
 
-#if (EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if (EFI_SHAFT_POSITION_INPUT && (HAL_USE_PAL == TRUE) || (HAL_USE_ICU == TRUE)) || defined(__DOXYGEN__)
 
 #include "trigger_input.h"
 #include "digital_input_hw.h"
@@ -34,6 +34,7 @@ static Logging *logger;
 int vvtEventRiseCounter = 0;
 int vvtEventFallCounter = 0;
 
+#if EFI_PROD_CODE
 /* PAL based implementation */
 #if (HAL_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 
@@ -262,7 +263,7 @@ static void setPrimaryChannel(brain_pin_e brainPin) {
 }
 
 #endif /* HAL_USE_ICU */
-
+#endif /* EFI_PROD_CODE */
 
 /*==========================================================================*/
 /* Exported functions.														*/
@@ -313,4 +314,4 @@ void applyNewTriggerInputPins(void) {
 	startTriggerInputPins();
 }
 
-#endif /* EFI_SHAFT_POSITION_INPUT */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_PAL == TRUE) || (HAL_USE_ICU == TRUE)) */
