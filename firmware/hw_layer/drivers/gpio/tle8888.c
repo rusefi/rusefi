@@ -51,9 +51,14 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 #define DRIVER_NAME				"tle8888"
 
-/*==========================================================================*/
-/* Driver exported variables.												*/
-/*==========================================================================*/
+static bool drv_task_ready = false;
+
+typedef enum {
+	TLE8888_DISABLED = 0,
+	TLE8888_WAIT_INIT,
+	TLE8888_READY,
+	TLE8888_FAILED
+} tle8888_drv_state;
 
 /* C0 */
 #define CMD_READ			(0 << 0)
@@ -76,17 +81,54 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
 #define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + (n & 0x03), d)
 #define CMD_OECONFIG(n, d)	CMD_WR(0x5b + (n & 0x03), d)
+#define CMD_CONT(n, d)		CMD_WR(0x7b + (n & 0x03), d)
+/*==========================================================================*/
+/* Driver exported variables.												*/
+/*==========================================================================*/
 
 /*==========================================================================*/
 /* Driver local variables and types.										*/
 /*==========================================================================*/
 
+/* OS */
+SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
+static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
+
+/*
+ * Masks/inputs bits:
+ * 0..3   - OUT1 .. 4 - INJ - OD: 2.2A - direct
+ * 4..6   - OUT5 .. 7 -       OD: 4.5A
+ * 7..12  - OUT8 ..13 -       PP: 20mA
+ * 13..19 - OUT14..20 -       OD: 0.6A
+ * 20..23 - OUT21..24 -       PP: ?A
+ * 24..27 - IGN1 .. 4 -       PP: 20mA - direct
+ */
+
 /* Driver private data */
 struct tle8888_priv {
 	const struct tle8888_config	*cfg;
+	/* cached output state - state last send to chip */
+	uint32_t					o_state_cached;
+	/* state to be sended to chip */
+	uint32_t					o_state;
+	/* direct driven output mask */
+	uint32_t					o_direct_mask;
+	/* output enabled mask */
+	uint32_t					o_oe_mask;
+
+	tle8888_drv_state			drv_state;
 };
 
 static struct tle8888_priv chips[BOARD_TLE8888_COUNT];
+
+static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
+	"TLE8888.INJ1",		"TLE8888.INJ2",		"TLE8888.INJ3",		"TLE8888.INJ4",
+	"TLE8888.OUT5",		"TLE8888.OUT6",		"TLE8888.OUT7",		"TLE8888.OUT8",
+	"TLE8888.OUT9",		"TLE8888.OUT10",	"TLE8888.OUT11",	"TLE8888.OUT12",
+	"TLE8888.OUT13",	"TLE8888.OUT14",	"TLE8888.OUT15",	"TLE8888.OUT16",
+	"TLE8888.OUT17",	"TLE8888.OUT18",	"TLE8888.OUT19",	"TLE8888.OUT20",
+	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4"
+};
 
 /*==========================================================================*/
 /* Driver local functions.													*/
@@ -141,10 +183,111 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	return 0;
 }
 
+/**
+ * @brief TLE8888 send output registers data.
+ * @details Sends ORed data to register, also receive 2-bit diagnostic.
+ */
+
+static int tle8888_update_output(struct tle8888_priv *chip)
+{
+	int i;
+	int ret = 0;
+	uint32_t out_data;
+
+	/* TODO: lock? */
+
+	/* set value only for non-direct driven pins */
+	out_data = chip->o_state & (~chip->o_direct_mask);
+	for (i = 0; i < 4; i++) {
+		uint8_t od;
+
+		od = (out_data >> (8 * i)) & 0xff;
+		ret |= tle8888_spi_rw(chip, CMD_CONT(i, od), NULL);
+	}
+
+	if (ret == 0) {
+		/* atomic */
+		chip->o_state_cached = out_data;
+	}
+
+	/* TODO: unlock? */
+
+	return ret;
+}
+
+static int tle8888_update_direct_output(struct tle8888_priv *chip, int pin, int value)
+{
+	int i;
+	const struct tle8888_config	*cfg = chip->cfg;
+
+	/* find direct drive gpio */
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		/* again: outputs in cfg counted starting from 1 - hate this */
+		if (cfg->direct_io[i].output == pin + 1) {
+			if (value)
+				palSetPort(cfg->direct_io[i].port,
+						   PAL_PORT_BIT(cfg->direct_io[i].pad));
+			else
+				palClearPort(cfg->direct_io[i].port,
+						   PAL_PORT_BIT(cfg->direct_io[i].pad));
+			return 0;
+		}
+	}
+
+	/* direct gpio not found */
+	return -1;
+}
+
+/**
+ * @brief TLE8888 chip driver wakeup.
+ * @details Wake up driver. Will cause output register update
+ */
+
+static int tle8888_wake_driver(struct tle8888_priv *chip)
+{
+	(void)chip;
+
+	chSemSignal(&tle8888_wake);
+
+	return 0;
+}
 
 /*==========================================================================*/
 /* Driver thread.															*/
 /*==========================================================================*/
+
+static THD_FUNCTION(tle8888_driver_thread, p)
+{
+	int i;
+	msg_t msg;
+
+	(void)p;
+
+	chRegSetThreadName(DRIVER_NAME);
+
+	while(1) {
+		msg = chSemWaitTimeout(&tle8888_wake, TIME_MS2I(TLE8888_POLL_INTERVAL_MS));
+
+		/* should we care about msg == MSG_TIMEOUT? */
+		(void)msg;
+
+		for (i = 0; i < BOARD_TLE8888_COUNT; i++) {
+			int ret;
+			struct tle8888_priv *chip;
+
+			chip = &chips[i];
+			if ((chip->cfg == NULL) ||
+				(chip->drv_state == TLE8888_DISABLED) ||
+				(chip->drv_state == TLE8888_FAILED))
+				continue;
+
+			ret = tle8888_update_output(chip);
+			if (ret) {
+				/* set state to TLE8888_FAILED? */
+			}
+		}
+	}
+}
 
 /*==========================================================================*/
 /* Driver interrupt handlers.												*/
@@ -154,19 +297,40 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
+int tle8888_writePad(void *data, unsigned int pin, int value)
+{
+	struct tle8888_priv *chip;
+
+	if ((pin >= TLE8888_DIRECT_OUTPUTS) || (data == NULL))
+		return -1;
+
+	chip = (struct tle8888_priv *)data;
+
+	/* TODO: lock */
+	if (value)
+		chip->o_state |=  (1 << pin);
+	else
+		chip->o_state &= ~(1 << pin);
+	/* TODO: unlock */
+	/* direct driven? */
+	if (chip->o_direct_mask & (1 << pin)) {
+		return tle8888_update_direct_output(chip, pin, value);
+	} else {
+		return tle8888_wake_driver(chip);
+	}
+	return 0;
+}
+
 int tle8888_chip_init(void * data)
 {
 	int i;
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
-	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
-	uint8_t dd[4] = {0, 0, 0, 0};
-	uint8_t oe[4] = {0, 0, 0, 0};
 
 	int ret = 0;
 	/* mark pins used */
-// we do not initialize CS pin so we should not be marking it used
-//	ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+	// we do not initialize CS pin so we should not be marking it used - i'm sad
+	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 	if (cfg->reset.port != NULL)
 		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
 	for (i = 0; i < TLE8888_DIRECT_MISC; i++)
@@ -190,45 +354,61 @@ int tle8888_chip_init(void * data)
 	/* Set LOCK bit to 0 */
 	tle8888_spi_rw(chip, CMD_UNLOCK, NULL);
 
+	chip->o_direct_mask = 0;
+	chip->o_oe_mask		= 0;
 	/* enable direct drive of OUTPUT4..1
 	 * ...still need INJEN signal */
-	dd[0] |= 0x0f;
-	oe[0] |= 0x0f;
+	chip->o_direct_mask	|= 0x0000000f;
+	chip->o_oe_mask		|= 0x0000000f;
 	/* enable direct drive of IGN4..1
 	 * ...still need IGNEN signal */
-	dd[3] |= 0x0f;
-	oe[3] |= 0x0f;
+	chip->o_direct_mask |= 0x0f000000;
+	chip->o_oe_mask		|= 0x0f000000;
 
 	/* map and enable outputs for direct driven channels */
 	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
-		int reg;
-		int mask;
-		int out = cfg->direct_map[i];
+		int out;
+		uint32_t mask;
 
-		/* OUT1..4 driven direct only */
+		out = cfg->direct_io[i].output;
+
+		/* not used? */
+		if (out == 0)
+			continue;
+
+		/* OUT1..4 driven direct only through dedicated pins */
 		if (out < 5)
 			return -1;
 
-		reg = (out - 1)/ 8;
-		mask = 1 << ((out - 1) % 8);
+		/* in config counted from 1 */
+		mask = (1 << (out - 1));
 
 		/* check if output already ocupied */
-		if (dd[reg] & mask) {
+		if (chip->o_direct_mask & mask) {
 			/* incorrect config? */
 			return -1;
 		}
 
 		/* enable direct drive and output enable */
-		dd[reg] |= mask;
-		oe[reg] |= mask;
+		chip->o_direct_mask	|= mask;
+		chip->o_oe_mask		|= mask;
 
-		tle8888_spi_rw(chip, CMD_INCONFIG(reg, out - 5), NULL);
+		/* set INCONFIG - aux input mapping */
+		tle8888_spi_rw(chip, CMD_INCONFIG(i, out - 5), NULL);
 	}
 
-	/* set registers */
+	/* enable all ouputs
+	 * TODO: add API to enable/disable? */
+	chip->o_oe_mask		|= 0x0ffffff0;
+
+	/* set OE and DD registers */
 	for (i = 0; i < 4; i++) {
-		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe[i]), NULL);
-		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd[i]), NULL);
+		uint8_t oe, dd;
+
+		oe = (chip->o_oe_mask >> (8 * i)) & 0xff;
+		dd = (chip->o_direct_mask >> (8 * i)) & 0xff;
+		tle8888_spi_rw(chip, CMD_OECONFIG(i, oe), NULL);
+		tle8888_spi_rw(chip, CMD_DDCONFIG(i, dd), NULL);
 	}
 
 	/* enable outputs */
@@ -246,6 +426,48 @@ err_gpios:
 	return ret;
 }
 
+int tle8888_init(void * data)
+{
+	int ret;
+	struct tle8888_priv *chip;
+
+	chip = (struct tle8888_priv *)data;
+
+	/* check for multiple init */
+	if (chip->drv_state != TLE8888_WAIT_INIT)
+		return -1;
+
+	ret = tle8888_chip_init(chip);
+	if (ret)
+		return ret;
+
+	chip->drv_state = TLE8888_READY;
+
+	if (!drv_task_ready) {
+		chThdCreateStatic(tle8888_thread_1_wa, sizeof(tle8888_thread_1_wa),
+						  NORMALPRIO + 1, tle8888_driver_thread, NULL);
+		drv_task_ready = true;
+	}
+
+	return 0;
+}
+
+int tle8888_deinit(void *data)
+{
+	(void)data;
+
+	/* TODO: set all pins to inactive state, stop task? */
+	return 0;
+}
+
+struct gpiochip_ops tle8888_ops = {
+	.writePad	= tle8888_writePad,
+	.readPad	= NULL,	/* chip outputs only */
+	//.getDiag	= tle8888_getDiag,
+	.init		= tle8888_init,
+	.deinit 	= tle8888_deinit,
+};
+
 /**
  * @brief TLE8888 driver add.
  * @details Checks for valid config
@@ -253,7 +475,10 @@ err_gpios:
 
 int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 {
+	int ret;
 	struct tle8888_priv *chip;
+
+	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
 
 	/* no config or no such chip */
 	osalDbgCheck((cfg != NULL) && (cfg->spi_bus != NULL) && (index < BOARD_TLE8888_COUNT));
@@ -268,10 +493,20 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 	/* already initted? */
 	if (chip->cfg != NULL)
 		return -1;
-	chip->cfg = cfg;
 
-	/* TODO: remove this when gpiochips integrated */
-	return tle8888_chip_init(chip);
+	chip->cfg = cfg;
+	chip->o_state = 0;
+	chip->o_state_cached = 0;
+	chip->o_direct_mask = 0;
+	chip->drv_state = TLE8888_WAIT_INIT;
+
+	/* register, return gpio chip base */
+	ret = gpiochip_register(DRIVER_NAME, &tle8888_ops, TLE8888_OUTPUTS, chip);
+
+	/* set default pin names, board init code can rewrite */
+	gpiochips_setPinNames(ret, tle8888_pin_names);
+
+	return ret;
 }
 
 #else /* BOARD_TLE8888_COUNT > 0 */
@@ -323,16 +558,11 @@ static struct tle8888_config tle8888_cfg = {
 
 
 	},
-	/* not implemented yet, use STM32 gpios directly */
 	.direct_io = {
-		[0] = {.port = NULL},
-		[1] = {.port = NULL},
-		[2] = {.port = NULL},
-		[3] = {.port = NULL},
-	},
-	.direct_map = {
-		/* to be fixed */
-		9, 10, 11, 12
+		[0] = {.port = NULL,	.pad = 0,	.output = 9},
+		[1] = {.port = NULL,	.pad = 0,	.output = 10},
+		[2] = {.port = NULL,	.pad = 0,	.output = 11},
+		[3] = {.port = NULL,	.pad = 0,	.output = 12},
 	},
 };
 
@@ -343,8 +573,8 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	}
 
 	// todo: reuse initSpiCs method?
-	tle8888_cfg.spi_config.ssport = getHwPort("tle8888", engineConfiguration->tle8888_cs);
-	tle8888_cfg.spi_config.sspad = getHwPin("tle8888", engineConfiguration->tle8888_cs);
+	tle8888_cfg.spi_config.ssport = getHwPort(DRIVER_NAME " CS", engineConfiguration->tle8888_cs);
+	tle8888_cfg.spi_config.sspad = getHwPin(DRIVER_NAME " CS", engineConfiguration->tle8888_cs);
 
 	tle8888_cfg.spi_bus = getSpiDevice(engineConfiguration->tle8888spiDevice);
 	if (tle8888_cfg.spi_bus == NULL) {
@@ -353,6 +583,19 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	}
 
 	tle8888_add(0, &tle8888_cfg);
+
+	/* Initial idea of gpiochips:
+	 * _add function should be called early on board init.
+	 * _init firnction called later from gpiochips_init() after initial gpios init....
+	 * BUT
+	 * we want everithing to be configurable, this initTle8888 is called after gpiochips_init()
+	 * so we need manually call _init
+	 * HOPE THIS WILL NOT BREAK ANYTHING
+	 */
+#if (BOARD_TLE8888_COUNT > 0)
+	/* thisisahack */
+	tle8888_chip_init(&chips[0]);
+#endif
 }
 
 /*********TO BE REMOVED FROM THIS FILE ENDS***********/
