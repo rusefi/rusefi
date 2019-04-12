@@ -736,23 +736,13 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = . \
+	bootloader \
 	config \
-	config/engines \
-	config/boards \
 	console_util \
 	util \
 	console \
-	console/binary \
 	controllers \
-	controllers/algo \
-	controllers/core \
-	controllers/math \
-	controllers/sensors \
-	controllers/system \
-	controllers/trigger \
 	emulation \
-	emulation/hw_layer \
-	hw_layer/lcd \
 	hw_layer
 			
 
@@ -780,7 +770,7 @@ FILE_PATTERNS          =
 # be searched for input files as well.
 # The default value is: NO.
 
-RECURSIVE              = NO
+RECURSIVE              = YES
 
 # The EXCLUDE tag can be used to specify files and/or directories that should be
 # excluded from the INPUT source files. This way you can easily exclude a
@@ -1916,7 +1906,7 @@ PERLMOD_MAKEVAR_PREFIX =
 # C-preprocessor directives found in the sources and include files.
 # The default value is: YES.
 
-ENABLE_PREPROCESSING   = YES
+ENABLE_PREPROCESSING   = NO
 
 # If the MACRO_EXPANSION tag is set to YES doxygen will expand all macro names
 # in the source code. If set to NO only conditional compilation will be
