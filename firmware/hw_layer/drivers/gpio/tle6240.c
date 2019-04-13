@@ -24,6 +24,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
 #include "pin_repository.h"
+#include "rfiutil.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 
@@ -312,7 +313,17 @@ static int tle6240_wake_driver(struct tle6240_priv *chip)
 {
 	(void)chip;
 
-	chSemSignal(&tle6240_wake);
+	if (isIsrContext()) {
+		// this is for normal runtime
+		int wasLocked = lockAnyContext();
+		chSemSignalI(&tle6240_wake);
+		if (!wasLocked) {
+			unlockAnyContext();
+		}
+	} else {
+		// this is for start-up to not hang up
+		chSemSignal(&tle6240_wake);
+	}
 
 	return 0;
 }
