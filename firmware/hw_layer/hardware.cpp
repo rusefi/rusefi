@@ -23,7 +23,7 @@
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
 #include "max31855.h"
-#include "tle8888.h"
+#include "smart_gpio.h"
 #include "accelerometer.h"
 #include "eficonsole.h"
 #include "console_io.h"
@@ -464,16 +464,7 @@ void initHardware(Logging *l) {
 	initSpiModules(boardConfiguration);
 #endif
 
-#if EFI_TLE8888
-	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
-		static OutputPin tle8888Cs;
-//		// SPI pins are enabled in initSpiModules()
-		tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
-					&engineConfiguration->tle8888_csPinMode);
-	}
-
-	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
+	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_HIP_9011
 	initHip9011(sharedLogger);

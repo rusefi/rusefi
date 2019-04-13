@@ -11,6 +11,12 @@
 #include "global.h"
 
 #include <hal.h>
+#include "efifeatures.h"
+
+#ifndef  BOARD_TLE8888_COUNT
+	#define BOARD_TLE8888_COUNT 0
+#endif
+
 
 #define TLE8888_OUTPUTS				24
 /* 4 misc channels */
@@ -48,6 +54,9 @@ extern "C"
 /* cleanup !!!! */
 void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+/**
+ * @return return gpio chip base
+ */
 int tle8888_add(unsigned int index, const struct tle8888_config *cfg);
 
 #ifdef __cplusplus

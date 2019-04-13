@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 11 23:16:46 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 13 10:44:04 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -861,7 +861,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4028;
+	public static final int mainUnusedEnd_offset = 4036;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPin_offset_hex = 294;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
@@ -913,6 +913,7 @@ public class Fields {
 	public static final int max31855spiDevice_offset_hex = 324;
 	public static final int maxKnockSubDeg_offset = 552;
 	public static final int maxKnockSubDeg_offset_hex = 228;
+	public static final int mc33972spiDevice_offset = 4032;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int narrowToWideOxygen_offset = 2320;
@@ -1048,6 +1049,7 @@ public class Fields {
 	public static final int timingMode_offset = 448;
 	public static final int timingMultiplier_offset = 9872;
 	public static final int timingMultiplier_offset_hex = 2690;
+	public static final int tle6240spiDevice_offset = 4028;
 	public static final int tle8888_cs_offset = 3129;
 	public static final int tle8888_csPinMode_offset = 3130;
 	public static final int tle8888spiDevice_offset = 4024;
@@ -1374,12 +1376,13 @@ public class Fields {
 	public static final Field HD44780_DB7 = Field.create("HD44780_DB7", 655, FieldType.INT8, brain_pin_e);
 	public static final Field GPS_RX_PIN = Field.create("GPS_RX_PIN", 656, FieldType.INT8, brain_pin_e);
 	public static final Field GPS_TX_PIN = Field.create("GPS_TX_PIN", 657, FieldType.INT8, brain_pin_e);
-	public static final Field FUELPUMPPIN = Field.create("FUELPUMPPIN", 658, FieldType.INT8, brain_pin_e);
+	public static final String[] smart_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
+	public static final Field FUELPUMPPIN = Field.create("FUELPUMPPIN", 658, FieldType.INT8, smart_pin_e);
 	public static final Field FUELPUMPPINMODE = Field.create("FUELPUMPPINMODE", 659, FieldType.INT8, pin_output_mode_e);
-	public static final Field MALFUNCTIONINDICATORPIN = Field.create("MALFUNCTIONINDICATORPIN", 660, FieldType.INT8, brain_pin_e);
+	public static final Field MALFUNCTIONINDICATORPIN = Field.create("MALFUNCTIONINDICATORPIN", 660, FieldType.INT8, smart_pin_e);
 	public static final Field MALFUNCTIONINDICATORPINMODE = Field.create("MALFUNCTIONINDICATORPINMODE", 661, FieldType.INT8, pin_output_mode_e);
 	public static final Field FANPINMODE = Field.create("FANPINMODE", 662, FieldType.INT8, pin_output_mode_e);
-	public static final Field FANPIN = Field.create("FANPIN", 663, FieldType.INT8, brain_pin_e);
+	public static final Field FANPIN = Field.create("FANPIN", 663, FieldType.INT8, smart_pin_e);
 	public static final Field CLUTCHDOWNPIN = Field.create("CLUTCHDOWNPIN", 664, FieldType.INT8, brain_pin_e);
 	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 665, FieldType.INT8, brain_pin_e);
 	public static final Field ALTERNATORCONTROLPINMODE = Field.create("ALTERNATORCONTROLPINMODE", 666, FieldType.INT8, pin_output_mode_e);
@@ -1937,6 +1940,8 @@ public class Fields {
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 4018, FieldType.INT16);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 4020, FieldType.FLOAT);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4024, FieldType.INT);
+	public static final Field TLE6240SPIDEVICE = Field.create("TLE6240SPIDEVICE", 4028, FieldType.INT);
+	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4032, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);

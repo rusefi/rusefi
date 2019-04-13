@@ -1,5 +1,5 @@
 /*
- * gpio_ext.h
+ * @file gpio_ext.h
  *
  * Abstraction layer definitions for extrenal gpios
  *

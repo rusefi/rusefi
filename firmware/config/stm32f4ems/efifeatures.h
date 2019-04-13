@@ -123,6 +123,17 @@
 //#define EFI_POTENTIOMETER FALSE
 #define EFI_POTENTIOMETER TRUE
 
+#define BOARD_TLE6240_COUNT         0
+#define BOARD_MC33972_COUNT			0
+#define BOARD_TLE8888_COUNT 	1
+
+// todo: move this outside of efifeatures.h
+#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
+
+// todo: move this outside of efifeatures.h
+#define BOARD_EXT_PINREPOPINS 24
+
+// todo: remove this, use 'BOARD_TLE8888_COUNT'
 #define EFI_TLE8888 TRUE
 
 #define EFI_ANALOG_SENSORS TRUE

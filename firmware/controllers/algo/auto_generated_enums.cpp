@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Wed Apr 10 18:38:13 EDT 2019
+// on Sat Apr 13 10:34:52 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -103,14 +103,14 @@ case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROMETHEUS_DEFAULTS:
   return "PROMETHEUS_DEFAULTS";
-case SUBARUEJ20G_DEFAULTS:
-  return "SUBARUEJ20G_DEFAULTS";
 case ROVER_V8:
   return "ROVER_V8";
 case SACHS:
   return "SACHS";
 case SATURN_ION_2004:
   return "SATURN_ION_2004";
+case SUBARUEJ20G_DEFAULTS:
+  return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
 case SUZUKI_VITARA:
@@ -833,6 +833,92 @@ case GPIO_INVALID:
   return "GPIO_INVALID";
 case GPIO_UNASSIGNED:
   return "GPIO_UNASSIGNED";
+case MC33972_PIN_1:
+  return "MC33972_PIN_1";
+case MC33972_PIN_21:
+  return "MC33972_PIN_21";
+case MC33972_PIN_22:
+  return "MC33972_PIN_22";
+case TLE6240_PIN_1:
+  return "TLE6240_PIN_1";
+case TLE6240_PIN_10:
+  return "TLE6240_PIN_10";
+case TLE6240_PIN_11:
+  return "TLE6240_PIN_11";
+case TLE6240_PIN_12:
+  return "TLE6240_PIN_12";
+case TLE6240_PIN_13:
+  return "TLE6240_PIN_13";
+case TLE6240_PIN_14:
+  return "TLE6240_PIN_14";
+case TLE6240_PIN_15:
+  return "TLE6240_PIN_15";
+case TLE6240_PIN_16:
+  return "TLE6240_PIN_16";
+case TLE6240_PIN_2:
+  return "TLE6240_PIN_2";
+case TLE6240_PIN_3:
+  return "TLE6240_PIN_3";
+case TLE6240_PIN_4:
+  return "TLE6240_PIN_4";
+case TLE6240_PIN_5:
+  return "TLE6240_PIN_5";
+case TLE6240_PIN_6:
+  return "TLE6240_PIN_6";
+case TLE6240_PIN_7:
+  return "TLE6240_PIN_7";
+case TLE6240_PIN_8:
+  return "TLE6240_PIN_8";
+case TLE6240_PIN_9:
+  return "TLE6240_PIN_9";
+case TLE8888_PIN_1:
+  return "TLE8888_PIN_1";
+case TLE8888_PIN_10:
+  return "TLE8888_PIN_10";
+case TLE8888_PIN_11:
+  return "TLE8888_PIN_11";
+case TLE8888_PIN_12:
+  return "TLE8888_PIN_12";
+case TLE8888_PIN_13:
+  return "TLE8888_PIN_13";
+case TLE8888_PIN_14:
+  return "TLE8888_PIN_14";
+case TLE8888_PIN_15:
+  return "TLE8888_PIN_15";
+case TLE8888_PIN_16:
+  return "TLE8888_PIN_16";
+case TLE8888_PIN_17:
+  return "TLE8888_PIN_17";
+case TLE8888_PIN_18:
+  return "TLE8888_PIN_18";
+case TLE8888_PIN_19:
+  return "TLE8888_PIN_19";
+case TLE8888_PIN_2:
+  return "TLE8888_PIN_2";
+case TLE8888_PIN_20:
+  return "TLE8888_PIN_20";
+case TLE8888_PIN_21:
+  return "TLE8888_PIN_21";
+case TLE8888_PIN_22:
+  return "TLE8888_PIN_22";
+case TLE8888_PIN_23:
+  return "TLE8888_PIN_23";
+case TLE8888_PIN_24:
+  return "TLE8888_PIN_24";
+case TLE8888_PIN_3:
+  return "TLE8888_PIN_3";
+case TLE8888_PIN_4:
+  return "TLE8888_PIN_4";
+case TLE8888_PIN_5:
+  return "TLE8888_PIN_5";
+case TLE8888_PIN_6:
+  return "TLE8888_PIN_6";
+case TLE8888_PIN_7:
+  return "TLE8888_PIN_7";
+case TLE8888_PIN_8:
+  return "TLE8888_PIN_8";
+case TLE8888_PIN_9:
+  return "TLE8888_PIN_9";
   }
  return NULL;
 }

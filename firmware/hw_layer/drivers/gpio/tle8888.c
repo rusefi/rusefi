@@ -16,10 +16,11 @@
 
 #if EFI_TLE8888
 
-/* to be removed */
+/* to be moved to smart_gpio.cpp */
 #include "engine_configuration.h"
-
+/* to be moved to smart_gpio.cpp */
 EXTERN_CONFIG;
+#include "smart_gpio.h"
 
 #include "hardware.h"
 #include "efi_gpio.h"
@@ -27,17 +28,11 @@ EXTERN_CONFIG;
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
 
+
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-
-/* TODO: move to board.h file */
-#define BOARD_TLE8888_COUNT 	1
-
-#ifndef  BOARD_TLE8888_COUNT
-	#define BOARD_TLE8888_COUNT 0
-#endif
 
 #if (BOARD_TLE8888_COUNT > 0)
 
@@ -471,6 +466,7 @@ struct gpiochip_ops tle8888_ops = {
 /**
  * @brief TLE8888 driver add.
  * @details Checks for valid config
+ * @return return gpio chip base
  */
 
 int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
@@ -530,9 +526,9 @@ static struct tle8888_config tle8888_cfg = {
 		.end_cb = NULL,
 		.ssport = GPIOF,
 		.sspad = 0U,
-#if defined(STM32F405xx) || defined(STM32F407xx) || defined (STM32F469xx)
+#if defined(STM_F4_FAMILY)
 		.cr1 =
-			SPI_CR1_DFF	|		// 16-bit transfer
+			SPI_CR1_16BIT_MODE	|
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			SPI_CR1_LSBFIRST |	//LSB first
@@ -540,9 +536,10 @@ static struct tle8888_config tle8888_cfg = {
 			SPI_CR1_MSTR |
 			SPI_CR1_CPHA |
 			0,
-		.cr2 = 0
-#elif defined (STM32F765xx) || defined(STM32F767xx) || defined(STM32F746xx)
+		.cr2 = SPI_CR2_16BIT_MODE
+#elif defined(STM_F7_FAMILY)
 		.cr1 =
+			SPI_CR1_16BIT_MODE	|
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			SPI_CR1_LSBFIRST |
@@ -550,8 +547,7 @@ static struct tle8888_config tle8888_cfg = {
 			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
 			SPI_CR1_CPHA |
 			0,
-			/* 16-bit transfer */
-		.cr2 = SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+		.cr2 = SPI_CR2_16BIT_MODE
 #else
 		unexpected platform
 #endif
@@ -582,7 +578,8 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return;
 	}
 
-	tle8888_add(0, &tle8888_cfg);
+	int chipBase = tle8888_add(0, &tle8888_cfg);
+	efiAssertVoid(OBD_PCM_Processor_Fault, chipBase == TLE8888_PIN_1, "tle8888");
 
 	/* Initial idea of gpiochips:
 	 * _add function should be called early on board init.
