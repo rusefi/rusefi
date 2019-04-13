@@ -332,7 +332,7 @@ void startSimplePwmExt(SimplePwm *state, const char *msg,
  *
  * This method takes ~350 ticks.
  */
-void applyPinState(PwmConfig *state, int stateIndex, void *arg) /* pwm_gen_callback */ {
+void applyPinState(PwmConfig *unused, int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6664, state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiWave.waveCount; channelIndex++) {

@@ -561,7 +561,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 	scheduleMsg(logger, "cj125: Starting heater control");
-	globalInstance.StartHeaterControl(applyPinState PASS_ENGINE_PARAMETER_SUFFIX);
+	globalInstance.StartHeaterControl((pwm_gen_callback*)applyPinState PASS_ENGINE_PARAMETER_SUFFIX);
 	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
 #ifdef CJ125_DEBUG
