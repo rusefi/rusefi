@@ -27,7 +27,7 @@ EXTERN_CONFIG;
 #include "gpio/gpio_ext.h"
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
-
+#include "rfiutil.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -242,7 +242,17 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 {
 	(void)chip;
 
-	chSemSignal(&tle8888_wake);
+	if (isIsrContext()) {
+		// this is for normal runtime
+		int wasLocked = lockAnyContext();
+		chSemSignalI(&tle8888_wake);
+		if (!wasLocked) {
+			unlockAnyContext();
+		}
+	} else {
+		// this is for start-up to not hang up
+		chSemSignal(&tle8888_wake);
+	}
 
 	return 0;
 }
@@ -296,8 +306,7 @@ int tle8888_writePad(void *data, unsigned int pin, int value)
 {
 	struct tle8888_priv *chip;
 
-	// todo: so for TLE8888_PIN_20 we 'return -1' here since below TLE8888_DIRECT_OUTPUTS. bug or feature?
-	if ((pin >= TLE8888_DIRECT_OUTPUTS) || (data == NULL))
+	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;
 
 	chip = (struct tle8888_priv *)data;
@@ -592,7 +601,7 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	 */
 #if (BOARD_TLE8888_COUNT > 0)
 	/* thisisahack */
-	tle8888_chip_init(&chips[0]);
+	tle8888_init(&chips[0]);
 #endif
 }
 
