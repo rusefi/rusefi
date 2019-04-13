@@ -17,7 +17,7 @@ ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
 #endif /* defined(STM32F4XX) || defined(STM32F7XX) */
 #endif /* EFI_PROD_CODE */
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 
 // ADC_CHANNEL_IN0 // PA0
 // ADC_CHANNEL_IN1 // PA1

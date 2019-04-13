@@ -14,7 +14,7 @@
 
 #include "global.h"
 
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 
 #include <stdio.h>
 #include <string.h>

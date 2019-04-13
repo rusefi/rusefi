@@ -18,7 +18,7 @@
 
 #include "global.h"
 
-#if EFI_MCP_3208 || defined(__DOXYGEN__)
+#if EFI_MCP_3208
 
 #define MCP3208_CS_PORT GPIOD
 #define MCP3208_CS_PIN 11

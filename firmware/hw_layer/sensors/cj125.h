@@ -99,7 +99,7 @@
 #define CJ125_AFR_NAN					0.0f
 
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 

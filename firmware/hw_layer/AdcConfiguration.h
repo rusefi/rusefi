@@ -7,7 +7,7 @@
 #ifndef ADCCONFIGURATION_H_
 #define ADCCONFIGURATION_H_
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 
 class AdcDevice {
 public:

@@ -7,7 +7,7 @@
 
 #include "vehicle_speed.h"
 
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+#if EFI_VEHICLE_SPEED
 
 #include "engine.h"
 #include "digital_input_hw.h"

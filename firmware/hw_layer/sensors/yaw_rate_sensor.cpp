@@ -19,7 +19,7 @@
 
 #include "yaw_rate_sensor.h"
 
-#if EFI_BOSCH_YAW || defined(__DOXYGEN__)
+#if EFI_BOSCH_YAW
 
 EXTERN_ENGINE;
 

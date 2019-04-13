@@ -21,7 +21,7 @@
 
 EXTERN_ENGINE;
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"
 #endif /* EFI_ENGINE_CONTROL */
 
@@ -111,7 +111,7 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 	}
 }
 
-#if HAL_USE_ICU || defined(__DOXYGEN__)
+#if HAL_USE_ICU
 void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 	if (icup->state != ICU_STOP && icup->state != ICU_READY) {
 		static char icuError[30];

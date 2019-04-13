@@ -10,7 +10,7 @@
 
 #include "global.h"
 
-#if HAL_USE_ICU || defined(__DOXYGEN__)
+#if HAL_USE_ICU
 
 #include "listener_array.h"
 

@@ -14,7 +14,7 @@
 
 #include "global.h"
 
-#if (EFI_SHAFT_POSITION_INPUT && (HAL_USE_PAL == TRUE || HAL_USE_ICU == TRUE)) || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT && (HAL_USE_PAL == TRUE || HAL_USE_ICU == TRUE)
 
 #include "trigger_input.h"
 #include "digital_input_hw.h"

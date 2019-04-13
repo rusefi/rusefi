@@ -16,7 +16,7 @@
 #include <time.h>
 #include "global.h"
 
-#if EFI_UART_GPS || defined(__DOXYGEN__)
+#if EFI_UART_GPS
 
 #include "console_io.h"
 #include "eficonsole.h"

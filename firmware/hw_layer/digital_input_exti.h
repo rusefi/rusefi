@@ -10,7 +10,7 @@
 
 #include "global.h"
 
-#if HAL_USE_PAL || defined(__DOXYGEN__)
+#if HAL_USE_PAL
 void enableExti(brain_pin_e pin, uint32_t mode, palcallback_t cb);
 #endif /* HAL_USE_PAL */
 

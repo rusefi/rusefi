@@ -49,7 +49,7 @@
 #include "pin_repository.h"
 #endif
 
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 
 static NamedOutputPin intHold(HIP_NAME);
 

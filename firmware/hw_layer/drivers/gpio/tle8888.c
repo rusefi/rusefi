@@ -14,7 +14,7 @@
 
 #include "global.h"
 
-#if EFI_TLE8888 || defined(__DOXYGEN__)
+#if EFI_TLE8888
 
 /* to be removed */
 #include "engine_configuration.h"
@@ -27,7 +27,7 @@ EXTERN_CONFIG;
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
@@ -168,7 +168,7 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_TLE8888) {
 		tsOutputChannels.debugIntField1++;
 		tsOutputChannels.debugIntField2 = tx;
