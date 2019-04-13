@@ -51,6 +51,8 @@ public:
      */
     TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2);
 
+    bool useTwoWires = false;
+    OutputPin* twoWireModeControl = NULL;
     virtual bool Set(float duty) override;
     float Get();
     void BrakeGnd();

@@ -96,6 +96,10 @@ static LoggingWithStorage logger("ETB");
 
 EXTERN_ENGINE;
 
+class EtbControl;
+
+static void applyEtbPinState(int stateIndex, EtbControl *etb) /* pwm_gen_callback */;
+
 class EtbControl {
 public:
 	EtbControl() : etbPwmUp("etbUp"), dcMotor(&etbPwmUp, &outputDirectionOpen, &outputDirectionClose) {}
@@ -104,18 +108,22 @@ public:
 	OutputPin etbOutput;
 	SimplePwm etbPwmUp;
 	TwoPinDcMotor dcMotor;
-	void start(brain_pin_e controlPin,
+	void start(bool useTwoWires, brain_pin_e controlPin,
 			brain_pin_e directionPin1,
 			brain_pin_e directionPin2) {
+		etbPwmUp.arg = this;
+		dcMotor.useTwoWires = useTwoWires;
+		if (!dcMotor.useTwoWires) {
+			// this line used for PWM in case of three wire mode
+			etbOutput.initPin("etb", controlPin);
+		}
 		int freq = maxI(100, engineConfiguration->etbFreq);
-		// this line used for PWM
-		startSimplePwmExt(&etbPwmUp, "etb1",
+		startSimplePwm(&etbPwmUp, "etb1",
 				&engine->executor,
-				controlPin,
 				&etbOutput,
 				freq,
 				0.80,
-				(pwm_gen_callback*)applyPinState);
+				(pwm_gen_callback*)applyEtbPinState);
 		outputDirectionOpen.initPin("etb dir open", directionPin1);
 		outputDirectionClose.initPin("etb dir close", directionPin2);
 	}
@@ -372,7 +380,9 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 
 void startETBPins(void) {
 
-	etb1.start(CONFIGB(etb1.controlPin1),
+	etb1.start(
+			CONFIG(etb1_use_two_wires),
+			CONFIGB(etb1.controlPin1),
 			CONFIGB(etb1.directionPin1),
 			CONFIGB(etb1.directionPin2)
 			);
@@ -431,6 +441,20 @@ void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void unregisterEtbPins() {
 
+}
+
+static void applyEtbPinState(int stateIndex, EtbControl *etb) /* pwm_gen_callback */ {
+	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
+	int value = etb->etbPwmUp.multiWave.getChannelState(0, stateIndex);
+	if (etb->dcMotor.useTwoWires) {
+		OutputPin *output = etb->dcMotor.twoWireModeControl;
+		if (output != NULL) {
+			output->setValue(value);
+		}
+	} else {
+		OutputPin *output = &etb->etbOutput;
+		output->setValue(value);
+	}
 }
 
 void initElectronicThrottle(void) {

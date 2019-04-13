@@ -68,6 +68,12 @@ bool TwoPinDcMotor::Set(float duty)
     }
     else
     {
+    	if (isPositiveOrZero) {
+    		twoWireModeControl = m_dir1;
+    	} else {
+    		twoWireModeControl = m_dir2;
+    	}
+
         m_dir1->setValue(isPositiveOrZero);
         m_dir2->setValue(!isPositiveOrZero);
     }
