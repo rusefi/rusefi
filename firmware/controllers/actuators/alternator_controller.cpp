@@ -124,7 +124,7 @@ void setAltPFactor(float p) {
 	showAltInfo();
 }
 
-static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
+static void applyAlternatorPinState(PwmConfig *state, int stateIndex, PwmConfig *arg) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6643, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_IDLE_WAVE_CNT, state->multiWave.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
@@ -167,7 +167,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 				&engine->executor,
 				CONFIGB(alternatorControlPin),
 				&enginePins.alternatorPin,
-				engineConfiguration->alternatorPwmFrequency, 0.1, applyAlternatorPinState);
+				engineConfiguration->alternatorPwmFrequency, 0.1, (pwm_gen_callback*)applyAlternatorPinState);
 	}
 	instance.Start();
 }

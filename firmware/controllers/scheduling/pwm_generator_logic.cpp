@@ -44,6 +44,7 @@ PwmConfig::PwmConfig() {
 	stateChangeCallback = NULL;
 	executor = NULL;
 	name = "[noname]";
+	arg = this;
 }
 
 PwmConfig::PwmConfig(float *st, SingleWave *waves) : PwmConfig() {
@@ -74,7 +75,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		 * this custom handling of zero value comes from CJ125 heater code
 		 * TODO: is this really needed? cover by unit test?
 		 */
-		stateChangeCallback(this, 0);
+		stateChangeCallback(this, 0, arg);
 	}
 
 	if (dutyCycle < ZERO_PWM_THRESHOLD) {
@@ -156,7 +157,7 @@ efitimeus_t PwmConfig::togglePwmState() {
 		/**
 		 * NaN period means PWM is paused, we also set the pin low
 		 */
-		stateChangeCallback(this, 0);
+		stateChangeCallback(this, 0, arg);
 		return getTimeNowUs() + MS2US(NAN_FREQUENCY_SLEEP_PERIOD_MS);
 	}
 	if (mode != PM_NORMAL) {
@@ -181,7 +182,7 @@ efitimeus_t PwmConfig::togglePwmState() {
 		cbStateIndex = 1;
 	}
 
-	stateChangeCallback(this, cbStateIndex);
+	stateChangeCallback(this, cbStateIndex, arg);
 
 	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(this);
 #if DEBUG_PWM
@@ -331,7 +332,7 @@ void startSimplePwmExt(SimplePwm *state, const char *msg,
  *
  * This method takes ~350 ticks.
  */
-void applyPinState(PwmConfig *state, int stateIndex) {
+void applyPinState(PwmConfig *state, int stateIndex, void *arg) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6664, state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiWave.waveCount; channelIndex++) {

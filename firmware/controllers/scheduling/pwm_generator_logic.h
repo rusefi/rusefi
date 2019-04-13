@@ -38,7 +38,7 @@ typedef struct {
 class PwmConfig;
 
 typedef void (pwm_cycle_callback)(PwmConfig *state);
-typedef void (pwm_gen_callback)(PwmConfig *state, int stateIndex);
+typedef void (pwm_gen_callback)(PwmConfig *state, int stateIndex, void *arg);
 
 typedef enum {
 	PM_ZERO,
@@ -54,6 +54,7 @@ public:
 	PwmConfig();
 	PwmConfig(float *switchTimes, SingleWave *waves);
 	void init(float *switchTimes, SingleWave *waves);
+	void *arg = NULL;
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
