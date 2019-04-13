@@ -13,11 +13,6 @@
 #include <hal.h>
 #include "efifeatures.h"
 
-#ifndef  BOARD_TLE8888_COUNT
-	#define BOARD_TLE8888_COUNT 0
-#endif
-
-
 #define TLE8888_OUTPUTS				24
 /* 4 misc channels */
 #define TLE8888_DIRECT_MISC			4
