@@ -21,7 +21,7 @@
 #include "efitime.h"
 
 
-#if EFI_SIGNAL_EXECUTOR_ONE_TIMER || defined(__DOXYGEN__)
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 #include "microsecond_timer.h"
 #include "tunerstudio_configuration.h"
 #include "rfiutil.h"
@@ -161,13 +161,13 @@ void initSingleTimerExecutorHardware(void) {
 	initMicrosecondTimer();
 }
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
-#if (EFI_TUNER_STUDIO && EFI_SIGNAL_EXECUTOR_ONE_TIMER) || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO && EFI_SIGNAL_EXECUTOR_ONE_TIMER
 		tsOutputChannels.debugIntField1 = ___engine.executor.timerCallbackCounter;
 		tsOutputChannels.debugIntField2 = ___engine.executor.doExecuteCounter;
 		tsOutputChannels.debugIntField3 = ___engine.executor.scheduleCounter;

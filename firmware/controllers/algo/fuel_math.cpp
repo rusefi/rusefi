@@ -47,7 +47,7 @@ extern fuel_Map3D_t ve2Map;
 extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
@@ -151,7 +151,7 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
 floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	bool isCranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injection_mode_e mode = isCranking ?
 			engineConfiguration->crankingInjectionMode :
@@ -169,7 +169,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		floatms_t baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		fuelPerCycle = getRunningFuel(baseFuel PASS_ENGINE_PARAMETER_SUFFIX);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelPerCycle), "NaN fuelPerCycle", 0);
-#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+#if EFI_PRINTF_FUEL_DETAILS
 	printf("baseFuel=%.2f fuelPerCycle=%.2f \t\n",
 			baseFuel, fuelPerCycle);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -298,7 +298,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
  * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
  */
 floatms_t getBaseTableFuel(int rpm, float engineLoad) {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD_2, "NaN engine load");
 		return 0;
@@ -323,7 +323,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 /**
  * @return Duration of fuel injection while craning
  */

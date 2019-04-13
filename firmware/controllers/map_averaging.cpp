@@ -25,7 +25,7 @@
 
 #include "map.h"
 
-#if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
+#if EFI_MAP_AVERAGING
 
 #include "map_averaging.h"
 #include "trigger_central.h"
@@ -37,7 +37,7 @@
 #include "engine.h"
 #include "engine_math.h"
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
@@ -122,7 +122,7 @@ static void startAveraging(void *arg) {
 	mapAveragingPin.setHigh();
 }
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 /**
  * This method is invoked from ADC callback.
  * @note This method is invoked OFTEN, this method is a potential bottle-next - the implementation should be
@@ -137,7 +137,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	measurementsPerRevolutionCounter++;
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
-#if (EFI_SENSOR_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART && EFI_ANALOG_SENSORS
 	if (ENGINE(sensorChartMode) == SC_MAP) {
 		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
 				== 0) {
@@ -179,7 +179,7 @@ static void endAveraging(void *arg) {
 	bool wasLocked = lockAnyContext();
 	isAveraging = false;
 	// with locking we would have a consistent state
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	if (mapMeasurementsCounter > 0) {
 		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
 		// todo: move out of locked context?
@@ -215,7 +215,7 @@ static void applyMapMinBufferLength() {
 }
 
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
 	tsOutputChannels->debugFloatField3 = currentPressure;
@@ -255,7 +255,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);
 	if (index != CONFIG(mapAveragingSchedulingAtIndex))
@@ -312,7 +312,7 @@ static void showMapStats(void) {
 	scheduleMsg(logger, "per revolution %d", measurementsPerRevolution);
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 
 /**
  * Because of MAP window averaging, MAP is only available while engine is spinning
@@ -323,7 +323,7 @@ float getMap(void) {
 		return getRawMap();
 	}
 
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	if (!isValidRpm(GET_RPM_VALUE) || currentPressure == NO_VALUE_YET)
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
 	return validateMap(currentPressure);
@@ -341,7 +341,7 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 //	endTimer[0].name = "map end0";
 //	endTimer[1].name = "map end1";
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(&mapAveragingTriggerCallback, "MAP averaging", engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	addConsoleAction("faststat", showMapStats);
@@ -350,10 +350,10 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 
 #else
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 
 float getMap(void) {
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	return getRawMap();
 #else
 	return NAN;

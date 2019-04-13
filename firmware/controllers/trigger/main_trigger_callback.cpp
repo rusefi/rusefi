@@ -22,11 +22,11 @@
  */
 
 #include "global.h"
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include <nvic.h>
 #endif
 
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 #include "main_trigger_callback.h"
 #include "efi_gpio.h"
@@ -45,7 +45,7 @@
 #include "histogram.h"
 #include "engine_controller.h"
 #include "efi_gpio.h"
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "rfiutil.h"
 #endif /* EFI_HISTOGRAMS */
 #include "local_version_holder.h"
@@ -67,7 +67,7 @@ static Logging *logger;
 #if ! EFI_UNIT_TEST
 static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
 static Pid fuelPid(fuelPidS);
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 #endif
@@ -92,7 +92,7 @@ static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 }
 
 void endSimultaniousInjection(InjectionEvent *event) {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	Engine *engine = event->engine;
 	EXPAND_Engine;
 #endif
@@ -103,7 +103,7 @@ void endSimultaniousInjection(InjectionEvent *event) {
 static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 	output->overlappingCounter++;
 
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 	printf("seTurnPinHigh %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -112,11 +112,11 @@ static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 //		 * #299
 //		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
 //		 */
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 		printf("overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 		const char * w = output->currentLogicValue == true ? "err" : "";
 //	scheduleMsg(&sharedLogger, "^ %spin=%s eventIndex %d %d", w, output->name,
 //			getRevolutionCounter(), getTimeNowUs());
@@ -137,7 +137,7 @@ void seTurnPinHigh(InjectionSignalPair *pair) {
 }
 
 static inline void tempTurnPinLow(InjectorOutputPin *output) {
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 	printf("seTurnPinLow %s %d %d\r\n", output->name, output->overlappingCounter, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -152,12 +152,12 @@ static inline void tempTurnPinLow(InjectorOutputPin *output) {
 		 *
 		 */
 		output->cancelNextTurningInjectorOff = false;
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 		printf("was cancelled %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* EFI_SIMULATOR */
 	} else {
 
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 		const char * w = output->currentLogicValue == false ? "err" : "";
 
 //	scheduleMsg(&sharedLogger, "- %spin=%s eventIndex %d %d", w, output->name,
@@ -166,7 +166,7 @@ static inline void tempTurnPinLow(InjectorOutputPin *output) {
 
 		output->overlappingCounter--;
 		if (output->overlappingCounter > 0) {
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 			printf("was overlapping, no need to touch pin %s %d\r\n", output->name, (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		} else {
@@ -184,7 +184,7 @@ void seTurnPinLow(InjectionSignalPair *pair) {
 		}
 	}
 	efiAssertVoid(CUSTOM_ERR_6626, pair->event != NULL, "pair event");
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	Engine *engine = pair->event->engine;
 	EXPAND_Engine;
 #endif
@@ -192,7 +192,7 @@ void seTurnPinLow(InjectionSignalPair *pair) {
 }
 
 static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionSignalPair *pair DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 	InjectorOutputPin *param = pair->outputs[0];
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
 //	scheduleMsg(&sharedLogger, "schX %s", param->name);
@@ -213,7 +213,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	 * x2 or /2?
 	 */
 	const floatms_t injectionDuration = ENGINE(wallFuel).adjust(event->outputs[0]->injectorIndex, ENGINE(injectionDuration) PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+#if EFI_PRINTF_FUEL_DETAILS
 	printf("fuel injectionDuration=%.2f adjusted=%.2f\t\n", ENGINE(injectionDuration), injectionDuration);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
@@ -253,14 +253,14 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	floatus_t durationUs = MS2US(injectionDuration);
 
 
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 //	scheduleMsg(logger, "handleFuel totalPerCycle=%.2f", totalPerCycle);
 //	scheduleMsg(logger, "handleFuel engineCycleDuration=%.2f", engineCycleDuration);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
-#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
+#if EFI_DEFAILED_LOGGING
 	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->outputs[0]->name,
 			injEventIndex,
 			injectionDuration,
@@ -287,7 +287,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 					(schfunc_t) &endSimultaniousInjection, event);
 
 	} else {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffset, injectionStartDelayUs, injectionDuration);
 #endif
 
@@ -306,14 +306,14 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		efitimeus_t nowUs = getTimeNowUs();
 
 		InjectorOutputPin *output = event->outputs[0];
-	#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+	#if EFI_PRINTF_FUEL_DETAILS
 		printf("fuelout %s duration %d total=%d\t\n", output->name, (int)durationUs,
 				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM_VALUE)));
 	#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 
 		if (pair->isScheduled) {
-	#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+	#if EFI_UNIT_TEST || EFI_SIMULATOR
 		printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 			return; // this InjectionSignalPair is still needed for an extremely long injection scheduled previously
@@ -330,7 +330,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 		if (isSecondaryOverlapping) {
 			output->cancelNextTurningInjectorOff = true;
-	#if EFI_UNIT_TEST || EFI_SIMULATOR || defined(__DOXYGEN__)
+	#if EFI_UNIT_TEST || EFI_SIMULATOR
 		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		} else {
@@ -355,7 +355,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->engineState.fuelPidCorrection = fuelPid.getOutput(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), 1);
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.debugFloatField1 = engine->engineState.fuelPidCorrection;
 		fuelPid.postState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
@@ -386,7 +386,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		fs->addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-#if FUEL_MATH_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if FUEL_MATH_EXTREME_LOGGING
 	scheduleMsg(logger, "handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -414,17 +414,17 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 	}
 }
 
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 static histogram_s mainLoopHistogram;
 #endif /* EFI_HISTOGRAMS */
 
 void showMainHistogram(void) {
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 	printHistogram(logger, &mainLoopHistogram);
 #endif /* EFI_HISTOGRAMS */
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 /**
  * this field is used as an Expression in IAR debugger
  */
@@ -483,7 +483,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		warning(CUSTOM_SKIPPING_STROKE, "skipping stroke due to rpm=%d", rpm);
 	}
 
-#if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 
@@ -523,7 +523,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	handleSpark(limitedSpark, trgEventIndex, rpm PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
 	hsAdd(&mainLoopHistogram, diff);
@@ -548,7 +548,7 @@ static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	uint32_t ignSwitchCounter = backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
 #else /* EFI_PROD_CODE */
 	uint32_t ignSwitchCounter = 0;
@@ -564,7 +564,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
 		// fill-in the prime event struct
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		primeInjEvent.engine = engine;
 #endif /* EFI_UNIT_TEST */
 		primeInjEvent.ownIndex = 0;
@@ -582,14 +582,14 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engine->executor.scheduleForLater(sDown, turnOffDelayUs, (schfunc_t) &endSimultaniousInjectionOnlyTogglePins, engine);
 		}
 	}
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// we'll reset it later when the engine starts
 	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
 #endif /* EFI_PROD_CODE */
 }
 
 void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	static bool counterWasReset = false;
 	if (counterWasReset)
 		return;
@@ -601,20 +601,20 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 #endif
 
 static void showTriggerHistogram(void) {
 	printAllCallbacksHistogram();
 	showMainHistogram();
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 	showWaveChartHistogram();
 #endif
 }
 
 static void showMainInfo(Engine *engine) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	int rpm = GET_RPM();
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 	scheduleMsg(logger, "rpm %d engine_load %.2f", rpm, el);
@@ -629,7 +629,7 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 
 	initAuxValves(logger);
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
@@ -638,7 +638,7 @@ void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX
 		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 	initHistogram(&mainLoopHistogram, "main callback");
 #endif /* EFI_HISTOGRAMS */
 

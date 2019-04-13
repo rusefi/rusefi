@@ -79,13 +79,13 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		// too much noise with simulator
 		warning(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "TPS too low: %.2f", result);
 #endif /* EFI_PROD_CODE */
 	}
 	if (result > engineConfiguration->tpsErrorDetectionTooHigh) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		// too much noise with simulator
 		warning(OBD_Throttle_Position_Sensor_Range_Performance_Problem, "TPS too high: %.2f", result);
 #endif /* EFI_PROD_CODE */

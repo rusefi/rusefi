@@ -27,19 +27,19 @@
 #include "signal_executor.h"
 #include "main_trigger_callback.h"
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 // this is about debugging
 #include "efi_gpio.h"
 #endif /* EFI_SIMULATOR */
 
-#if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
+#if EFI_SIGNAL_EXECUTOR_SLEEP
 
 void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param) {
 	scheduleForLater(scheduling, timeUs - getTimeNowUs(), callback, param);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
-#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+#if EFI_PRINTF_FUEL_DETAILS
 	if (scheduling->callback == (schfunc_t)&seTurnPinLow) {
 		printf("executing cb=seTurnPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->param, (int)scheduling,
 				(int)getTimeNowUs());
@@ -73,7 +73,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t 
 		chVTResetI(&scheduling->timer);
 	}
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 	if (callback == (schfunc_t)&seTurnPinLow) {
 		printf("setTime cb=seTurnPinLow p=%d\r\n", (int)param);
 	} else {

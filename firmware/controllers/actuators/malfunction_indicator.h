@@ -14,7 +14,7 @@
 #include "global.h"
 #include "engine.h"
 
-#if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
+#if EFI_MALFUNCTION_INDICATOR
 
 bool isMilEnabled();
 void initMalfunctionIndicator(void);

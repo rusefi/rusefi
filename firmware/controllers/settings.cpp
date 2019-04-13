@@ -28,7 +28,7 @@
 #include "alternator_controller.h"
 #include "trigger_emulator.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "vehicle_speed.h"
 #include "electronic_throttle.h"
 #include "rtc_helper.h"
@@ -38,17 +38,17 @@
 #include "hardware.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 #include "flash_main.h"
 #endif /* EFI_INTERNAL_FLASH */
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-#if !defined(SETTINGS_LOGGING_BUFFER_SIZE) || defined(__DOXYGEN__)
+#if !defined(SETTINGS_LOGGING_BUFFER_SIZE)
 #define SETTINGS_LOGGING_BUFFER_SIZE 1000
 #endif /* SETTINGS_LOGGING_BUFFER_SIZE */
 
@@ -319,7 +319,7 @@ void setEngineType(int value) {
 
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 	if (engine->isTestMode)
 		waveChart.reset();
 #endif
@@ -409,7 +409,7 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 }
 
 static void printTPSInfo(void) {
-#if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE && HAL_USE_ADC
 	if (!hasTpsSensor()) {
 		scheduleMsg(&logger, "NO TPS SENSOR");
 		return;
@@ -424,7 +424,7 @@ static void printTPSInfo(void) {
 }
 
 static void printTemperatureInfo(void) {
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
 			engineConfiguration->useLinearCltSensor);
 	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
@@ -767,7 +767,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -880,9 +880,9 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
 		boardConfiguration->enabledStep1Limiter = isEnabled;
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(param, "auto_idle")) {
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 		setIdleMode(isEnabled ? IM_MANUAL : IM_AUTO);
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
@@ -1007,7 +1007,7 @@ typedef struct {
 } plain_get_float_s;
 
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
 		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
@@ -1065,7 +1065,7 @@ const plain_get_float_s getF_plain[] = {
 
 
 static void getValue(const char *paramStr) {
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 	{
 		const plain_get_integer_s *currentI = &getI_plain[0];
 		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
@@ -1093,7 +1093,7 @@ static void getValue(const char *paramStr) {
 
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
 		scheduleMsg(&logger, "isCJ125Enabled=%d", boardConfiguration->isCJ125Enabled);
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
 		showBor();
 #endif /* EFI_PROD_CODE */
@@ -1111,7 +1111,7 @@ static void getValue(const char *paramStr) {
 		scheduleMsg(&logger, "isHip9011Enabled=%d", boardConfiguration->isHip9011Enabled);
 	}
 
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	else if (strEqualCaseInsensitive(paramStr, "date")) {
 		printDateTime();
 	}
@@ -1140,7 +1140,7 @@ typedef struct {
 } command_f_s;
 
 const command_f_s commandsF[] = {
-#if (EFI_ENGINE_CONTROL && EFI_ENABLE_MOCK_ADC) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_ENABLE_MOCK_ADC
 		{"mock_iat_voltage", setMockIatVoltage},
 		{"mock_pedal_position", setMockPedalPosition},
 		{"mock_maf_voltage", setMockMafVoltage},
@@ -1172,11 +1172,11 @@ const command_f_s commandsF[] = {
 		{"engine_decel_threshold", setDecelThr},
 		{"engine_decel_multiplier", setDecelMult},
 		{"flat_injector_lag", setFlatInjectorLag},
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
+#if EFI_VEHICLE_SPEED
 		{"mock_vehicle_speed", setMockVehicleSpeed},
 #endif /* EFI_VEHICLE_SPEED */
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 		{"idle_offset", setIdleOffset},
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
@@ -1231,12 +1231,12 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 		{"tps_accel_len", setTpsAccelLen},
 		{"engine_load_accel_len", setEngineLoadAccelLen},
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		{"bor", setBor},
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
 #endif /* EFI_CAN_SUPPORT */
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 		{"idle_position", setIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
 		{"idle_dt", setIdleDT},
@@ -1279,7 +1279,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 
 	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
 		engineConfiguration->vehicleSpeedCoef = valueF;
-#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL
 	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
 			engineConfiguration->alternatorControl.periodMs = valueI;
@@ -1308,7 +1308,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->tpsMax = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		engineConfiguration->tpsMin = valueI;
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#if EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(paramStr, "rpm")) {
 		setTriggerEmulatorRPM(valueI);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
@@ -1330,7 +1330,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	} else if (strEqualCaseInsensitive(paramStr, "date")) {
 		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);
@@ -1385,7 +1385,7 @@ void initSettings(void) {
 	addConsoleActionSS("set", setValue);
 	addConsoleActionS("get", getValue);
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	addConsoleActionS("showpin", showPinFunction);
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
@@ -1402,7 +1402,7 @@ void initSettings(void) {
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif
 	addConsoleActionSS("set_logic_input_pin", setLogicInputPin);

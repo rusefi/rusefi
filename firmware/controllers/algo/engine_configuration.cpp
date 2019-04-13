@@ -30,7 +30,7 @@
 #include "advance_map.h"
 
 #include "hip9011_lookup.h"
-#if EFI_MEMS || defined(__DOXYGEN__)
+#if EFI_MEMS
 #include "accelerometer.h"
 #endif
 
@@ -83,32 +83,32 @@
 #include "zil130.h"
 #include "honda_600.h"
 
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 #include "idle_thread.h"
 #endif /* EFI_IDLE_CONTROL */
 
-#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL
 #include "alternator_controller.h"
 #endif
 
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
 #endif
 
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 #include "hip9011.h"
 #endif
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "hardware.h"
 #include "board.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#if EFI_EMULATE_POSITION_SENSORS
 #include "trigger_emulator.h"
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
 
@@ -174,29 +174,29 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
  */
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	applyNewHardwareSettings();
 #endif /* EFI_PROD_CODE */
 	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
-#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
 #endif /* EFI_ALTERNATOR_CONTROL */
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 	onConfigurationChangeIdleCallback(&activeConfiguration);
 #endif /* EFI_IDLE_CONTROL */
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	onConfigurationChangeTriggerCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_SHAFT_POSITION_INPUT */
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#if EFI_EMULATE_POSITION_SENSORS
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	onConfigurationChangeFsioCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -342,14 +342,14 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->acRelayPinMode = OM_DEFAULT;
 
-#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL
 	setDefaultAlternatorParameters();
 #endif /* EFI_ALTERNATOR_CONTROL */
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	setDefaultEtbBiasCurve(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 	setDefaultIdleParameters();
 #endif /* EFI_IDLE_CONTROL */
 	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
@@ -405,7 +405,7 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fatalErrorPin = GPIOD_14;
 #endif /* EFI_FATAL_ERROR_PIN */
 	engineConfiguration->warninigLedPin = GPIOD_13;
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
 	// needed also by bootloader code
 	setPinConfigurationOverrides();
@@ -422,7 +422,7 @@ void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
 	setSerialConfigurationOverrides();
 #endif
@@ -435,7 +435,7 @@ void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->sdCardCsPin = GPIOD_4;
 	boardConfiguration->isSdCardEnabled = true;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
 	setSdCardConfigurationOverrides();
 #endif
@@ -648,7 +648,7 @@ int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * anything else.
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if (! EFI_UNIT_TEST) || defined(__DOXYGEN__)
+#if (! EFI_UNIT_TEST)
 	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
 #endif
 	prepareVoidConfiguration(engineConfiguration);
@@ -769,7 +769,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	engineConfiguration->warningPeriod = 10;
 #else
 	engineConfiguration->warningPeriod = 0;
@@ -953,7 +953,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	engineConfiguration->engineChartSize = 300;
 #else
 	// need more events for automated test
@@ -1070,7 +1070,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->spi1misoPin = GPIOB_4;
 	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
 
-#if EFI_MEMS || defined(__DOXYGEN__)
+#if EFI_MEMS
 	// this would override some values from above
 	configureAccelerometerPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
@@ -1084,7 +1084,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->spi3sckPin = GPIOB_3;
 
 	engineConfiguration->hip9011Gain = 1;
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 	setHip9011FrankensoPinout();
 #endif /* EFI_HIP_9011 */
 
@@ -1105,12 +1105,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardConfigurationOverrides();
 #endif
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	/**
 	 * to test:
 	 * set_fsio_setting 1 5000
@@ -1133,7 +1133,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	 * Let's apply global defaults first
 	 */
 	setDefaultConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 	engineConfiguration->directSelfStimulation = true;
 #endif /* */
 	engineConfiguration->engineType = engineType;
@@ -1151,7 +1151,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case ACURA_RSX:
 		setAcuraRSX(engineConfiguration);
 		break;
-#if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
+#if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1166,17 +1166,17 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
-#if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)
+#if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
-#if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
+#if EFI_SUPPORT_FORD_FIESTA
 	case FORD_FIESTA:
 		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_FORD_FIESTA */
-#if EFI_SUPPORT_NISSAN_PRIMERA || defined(__DOXYGEN__)
+#if EFI_SUPPORT_NISSAN_PRIMERA
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(engineConfiguration);
 		break;
@@ -1223,7 +1223,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
-#if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
+#if EFI_SUPPORT_1995_FORD_INLINE_6
 	case FORD_INLINE_6_1995:
 		setFordInline6(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
@@ -1370,23 +1370,23 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_APPLY_STACK, getCurrentRemainingStack() > 256, "apply c");
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
 
 	assertEngineReference();
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	ENGINE(initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
 #endif
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 }
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);

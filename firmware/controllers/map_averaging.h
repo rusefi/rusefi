@@ -10,9 +10,9 @@
 
 #include "engine.h"
 
-#if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
+#if EFI_MAP_AVERAGING
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 void mapAveragingAdcCallback(adcsample_t newValue);
 #endif
 

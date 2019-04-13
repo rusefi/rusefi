@@ -11,7 +11,7 @@
 
 #include "global.h"
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 
 #include "fsio_impl.h"
 #include "settings.h"
@@ -97,7 +97,7 @@ static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 static LEElement * alternatorLogic;
 
-#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+#if EFI_MAIN_RELAY_CONTROL
 static LEElement * mainRelayLogic;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
@@ -151,7 +151,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 
 #include "pin_repository.h"
 #include "pwm_generator.h"
@@ -266,7 +266,7 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 }
@@ -401,7 +401,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 }
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 static void setFsioFrequency(int index, int frequency) {
 	index--;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
@@ -446,13 +446,13 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		handleFsio(index PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-#if EFI_FUEL_PUMP || defined(__DOXYGEN__)
+#if EFI_FUEL_PUMP
 	if (CONFIGB(fuelPumpPin) != GPIO_UNASSIGNED) {
 		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_FUEL_PUMP */
 
-#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+#if EFI_MAIN_RELAY_CONTROL
 	if (CONFIGB(mainRelayPin) != GPIO_UNASSIGNED)
 		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
 #else /* EFI_MAIN_RELAY_CONTROL */
@@ -640,7 +640,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 #endif
 
-#if EFI_FUEL_PUMP || defined(__DOXYGEN__)
+#if EFI_FUEL_PUMP
 	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);
 #endif /* EFI_FUEL_PUMP */
 
@@ -649,12 +649,12 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
 	
-#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+#if EFI_MAIN_RELAY_CONTROL
 	if (CONFIGB(mainRelayPin) != GPIO_UNASSIGNED)
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = CONFIGB(fsioOutputPins)[i];
 
@@ -680,7 +680,7 @@ void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	addConsoleActionSS("set_fsio_pid_output_pin", (VoidCharPtrCharPtr) setFsioPidOutputPin);
 	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
 #endif
 	addConsoleActionSS("set_fsio_digital_input_pin", (VoidCharPtrCharPtr) setFsioDigitalInputPin);

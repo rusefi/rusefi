@@ -17,7 +17,7 @@
 #include "analog_input.h"
 #include "cyclic_buffer.h"
 
-#if EFI_CJ125 || defined(__DOXYGEN__)
+#if EFI_CJ125
 #include "cj125.h"
 #endif /* EFI_CJ125 */
 
@@ -95,7 +95,7 @@ void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if (EFI_CJ125 && HAL_USE_SPI) || defined(__DOXYGEN__)
+#if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIGB(isCJ125Enabled)) {
 		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -104,7 +104,7 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if (EFI_CJ125 && HAL_USE_SPI) || defined(__DOXYGEN__)
+#if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIGB(isCJ125Enabled)) {
 		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}

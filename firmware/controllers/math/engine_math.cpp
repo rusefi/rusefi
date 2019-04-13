@@ -92,7 +92,7 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->sparkDwellValues[7] = 0;
 }
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 
 FuelSchedule::FuelSchedule() {
 	clear();
@@ -189,7 +189,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	InjectionEvent *ev = &elements[i];
 	ev->ownIndex = i;
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	ev->engine = engine;
 #endif
 	fixAngle(angle, "addFuel#1", CUSTOM_ERR_6554);
@@ -207,7 +207,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
 	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
 	TRIGGER_SHAPE(findTriggerPosition(&ev->injectionStart, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.eventIndex, injectorIndex);
 #endif
 	return true;
@@ -242,7 +242,7 @@ static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	float dwellMs;
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -442,7 +442,7 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ignitionMode != engine->ignitionModeForPinIndices) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER_SUFFIX);
 		}
@@ -457,7 +457,7 @@ void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAM
  */
 ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ignition_mode_e ignitionMode = CONFIG(ignitionMode);
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	// In spin-up cranking mode we don't have full phase sync. info yet, so wasted spark mode is better
 	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp(PASS_ENGINE_PARAMETER_SIGNATURE)))
 		ignitionMode = IM_WASTED_SPARK;
@@ -465,7 +465,7 @@ ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return ignitionMode;
 }
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 
 /**
  * This heavy method is only invoked in case of a configuration change or initialization.

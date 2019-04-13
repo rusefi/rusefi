@@ -15,7 +15,7 @@ class scheduling_s {
 public:
 	scheduling_s();
 
-#if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
+#if EFI_SIGNAL_EXECUTOR_SLEEP
 	virtual_timer_t timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 

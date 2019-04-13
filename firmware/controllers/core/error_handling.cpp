@@ -21,7 +21,7 @@ static MemoryStream firmwareErrorMessageStream;
 static char warningBuffer[WARNING_BUFFER_SIZE];
 static bool isWarningStreamInitialized = false;
 
-#if EFI_HD44780_LCD || defined(__DOXYGEN__)
+#if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
@@ -52,18 +52,18 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		return;
 	dbg_panic_file = file;
 	dbg_panic_line = line;
-#if CH_DBG_SYSTEM_STATE_CHECK || defined(__DOXYGEN__)
+#if CH_DBG_SYSTEM_STATE_CHECK
 	ch.dbg.panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	ON_FATAL_ERROR();
 #else
 	printf("chDbgPanic3 %s %s%d", msg, file, line);
 	exit(-1);
 #endif
 
-#if EFI_HD44780_LCD || defined(__DOXYGEN__)
+#if EFI_HD44780_LCD
 	lcdShowPanicMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
 
@@ -109,11 +109,11 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return true;
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 	printf("sim_warning %s\r\n", fmt);
 #endif /* EFI_SIMULATOR */
 
-#if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_SIMULATOR || EFI_PROD_CODE
 	if (!isWarningStreamInitialized) {
 		firmwareError(CUSTOM_ERR_ASSERT, "warn stream not initialized for %d", code);
 		return false;
@@ -148,7 +148,7 @@ char *getWarning(void) {
 }
 
 
-#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+#if EFI_CLOCK_LOCKS
 uint32_t lastLockTime;
 /**
  * Maximum time before requesting lock and releasing lock at the end of critical section
@@ -183,7 +183,7 @@ void onUnlockHook(void) {
 
 
 void initErrorHandling(void) {
-#if EFI_SIMULATOR || EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_SIMULATOR || EFI_PROD_CODE
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 #endif
@@ -191,7 +191,7 @@ void initErrorHandling(void) {
 }
 
 void firmwareError(obd_code_e code, const char *fmt, ...) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
 		return;
 	engine->engineState.warnings.addWarningCode(code);
@@ -230,7 +230,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	va_end(ap);
 	printf("\r\n");
 
-#if EFI_SIMULATOR || EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_SIMULATOR || EFI_UNIT_TEST
 	exit(-1);
 #endif /* EFI_SIMULATOR */
 #endif

@@ -32,7 +32,7 @@ EXTERN_ENGINE
 // this does not look exactly right
 extern LoggingWithStorage engineLogger;
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
@@ -125,7 +125,7 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	if (!engine->slowCallBackWasInvoked) {
 		warning(CUSTOM_ERR_6696, "Slow not invoked yet");
 	}
@@ -156,7 +156,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			cltFuelCorrection = warmupAfrPid.getOutput(warmupTargetAfr, engine->sensors.currentAfr, 1);
 		}
 		if (engineConfiguration->debugMode == DBG_WARMUP_ENRICH) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 			tsOutputChannels.debugFloatField1 = warmupTargetAfr;
 			warmupAfrPid.postState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
@@ -218,7 +218,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	float coolantC = ENGINE(sensors.clt);
 	float intakeC = ENGINE(sensors.iat);
 	float newTCharge = getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER_SUFFIX);

@@ -31,7 +31,7 @@
 EXTERN_ENGINE
 ;
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
@@ -150,7 +150,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
 		tsOutputChannels.debugFloatField3 = engine->fsioState.fsioTimingAdjustment;
@@ -185,7 +185,7 @@ static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAM
 
 
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (cisnan(engineLoad)) {
 		return 0; // any error should already be reported
 	}

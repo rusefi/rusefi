@@ -18,7 +18,7 @@
 
 #include "global.h"
 
-#if EFI_HD44780_LCD || defined(__DOXYGEN__)
+#if EFI_HD44780_LCD
 
 #include "lcd_controller.h"
 #include "lcd_HD44780.h"
@@ -214,7 +214,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		int seconds = minI(9999, getTimeNowSeconds());
 		lcdPrintf("RPM %d %d ", GET_RPM(), seconds);
 	}
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 		{
 			char sdState;
 			if (CONFIGB(isSdCardEnabled)) {
@@ -267,7 +267,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("Knock %s %.2fv", buffer, engine->knockVolts);
 		return;
 
-#if	EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if	EFI_ANALOG_SENSORS
 	case LL_BARO:
 		if (hasBaroSensor()) {
 			lcdPrintf("Baro: %.2f", getBaroPressure());

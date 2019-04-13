@@ -25,7 +25,7 @@
 #include "map_averaging.h"
 #include "fsio_impl.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "injector_central.h"
 #else
 #define isRunningBenchTest() true
@@ -41,7 +41,7 @@ extern int globalConfigurationVersion;
 EXTERN_ENGINE
 ;
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
@@ -55,7 +55,7 @@ FsioState::FsioState() {
 }
 
 void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 #if !EFI_UNIT_TEST
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
@@ -93,7 +93,7 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 }
 
 static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
 		newValue = !engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE) && getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CLEANUP_MODE_TPS;
@@ -112,7 +112,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown();
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_FSIO */
 
@@ -127,7 +127,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	int rpm = GET_RPM();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? CONFIGB(sensorChartMode) : SC_OFF;
@@ -277,7 +277,7 @@ void Engine::watchdog() {
 	}
 	isSpinning = false;
 	ignitionEvents.isReady = false;
-#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&engineLogger, "engine has STOPPED");
 	scheduleMsg(&engineLogger, "templog engine has STOPPED [%x][%x] [%x][%x] %d",
 			(int)(nowNt >> 32), (int)nowNt,
@@ -292,7 +292,7 @@ void Engine::watchdog() {
 }
 
 void Engine::checkShutdown() {
-#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+#if EFI_MAIN_RELAY_CONTROL
 	int rpm = rpmCalculator.getRpm();
 
 	/**
@@ -308,7 +308,7 @@ void Engine::checkShutdown() {
 }
 
 bool Engine::isInShutdownMode() {
-#if EFI_MAIN_RELAY_CONTROL || defined(__DOXYGEN__)
+#if EFI_MAIN_RELAY_CONTROL
 	if (stopEngineRequestTimeNt == 0)	// the shutdown procedure is not started
 		return false;
 	

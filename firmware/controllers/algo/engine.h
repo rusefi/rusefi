@@ -259,7 +259,7 @@ public:
 
 	angle_t injectionOffset = 0;
 
-#if EFI_ENABLE_MOCK_ADC || defined(__DOXYGEN__)
+#if EFI_ENABLE_MOCK_ADC
 	MockAdcState mockAdcState;
 #endif /* EFI_ENABLE_MOCK_ADC */
 };
@@ -362,7 +362,7 @@ public:
 	TestExecutor executor;
 #endif
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	FuelSchedule injectionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 

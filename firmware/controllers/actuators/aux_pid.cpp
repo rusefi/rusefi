@@ -11,7 +11,7 @@
 #include "local_version_holder.h"
 #include "allsensors.h"
 
-#if EFI_AUX_PID || defined(__DOXYGEN__)
+#if EFI_AUX_PID
 #include "pwm_generator.h"
 #include "tunerstudio_configuration.h"
 #include "fsio_impl.h"
@@ -27,7 +27,7 @@ extern fsio8_Map3D_f32t fsioTable1;
 // todo: this is to some extent a copy-paste of alternator_controller. maybe same loop
 // for all PIDs?
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
@@ -92,7 +92,7 @@ private:
 
 
 			if (engineConfiguration->debugMode == DBG_AUX_PID_1) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 				auxPid.postState(&tsOutputChannels);
 				tsOutputChannels.debugIntField3 = (int)(10 * targetValue);
 #endif /* EFI_TUNER_STUDIO */

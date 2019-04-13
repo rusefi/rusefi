@@ -43,27 +43,27 @@ int TriggerCentral::getHwEventCounter(int index) {
 	return hwEventCounters[index];
 }
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "rfiutil.h"
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 EXTERN_ENGINE;
 
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 static histogram_s triggerCallbackHistogram;
 #endif /* EFI_HISTOGRAMS */
 
@@ -85,7 +85,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 int triggerReentraint = 0;
 int maxTriggerReentraint = 0;
@@ -130,7 +130,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
 		if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 			tsOutputChannels.debugIntField1++;
 #endif /* EFI_TUNER_STUDIO */
 		}
@@ -157,7 +157,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			 */
 			tc->triggerState.incrementTotalEventCounter();
 			if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 				tsOutputChannels.debugIntField1++;
 #endif /* EFI_TUNER_STUDIO */
 			}
@@ -168,7 +168,7 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 			// see above comment
 			tc->triggerState.incrementTotalEventCounter();
 			if (engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 				tsOutputChannels.debugIntField1++;
 #endif /* EFI_TUNER_STUDIO */
 			}
@@ -369,7 +369,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	}
 
 	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-#if TRIGGER_EXTREME_LOGGING || defined(__DOXYGEN__)
+#if TRIGGER_EXTREME_LOGGING
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -382,7 +382,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 		}
 
 	}
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 	int afterCallback = hal_lld_get_counter_value();
 	int diff = afterCallback - beforeCallback;
 	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
@@ -393,7 +393,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 }
 
 void printAllCallbacksHistogram(void) {
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 	printHistogram(logger, &triggerCallbackHistogram);
 #endif
 }
@@ -402,7 +402,7 @@ EXTERN_ENGINE
 ;
 
 static void triggerShapeInfo(void) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	TriggerShape *s = &engine->triggerCentral.triggerShape;
 	scheduleMsg(logger, "useRise=%s", boolToString(TRIGGER_SHAPE(useRiseEdge)));
 	scheduleMsg(logger, "gap from %.2f to %.2f", TRIGGER_SHAPE(syncronizationRatioFrom[0]), TRIGGER_SHAPE(syncronizationRatioTo[0]));
@@ -413,7 +413,7 @@ static void triggerShapeInfo(void) {
 #endif
 }
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 #include <stdlib.h>
 
 #define TRIGGERS_FILE_NAME "triggers.txt"
@@ -475,7 +475,7 @@ void printAllTriggers() {
 #endif
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
@@ -488,7 +488,7 @@ extern uint32_t maxEventCallbackDuration;
 extern int perSecondIrqDuration;
 extern int perSecondIrqCounter;
 
-#if (EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 extern uint32_t maxPrecisionCallbackDuration;
 #endif /* EFI_PROD_CODE  */
 
@@ -499,23 +499,23 @@ extern int vvtEventRiseCounter;
 extern int vvtEventFallCounter;
 
 void resetMaxValues() {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	maxEventCallbackDuration = triggerMaxDuration = 0;
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 	maxSchedulingPrecisionLoss = 0;
 
-#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+#if EFI_CLOCK_LOCKS
 	maxLockedDuration = 0;
 #endif /* EFI_CLOCK_LOCKS */
 
-#if (EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	maxPrecisionCallbackDuration = 0;
 #endif /* EFI_PROD_CODE  */
 }
 
 void triggerInfo(void) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 	TriggerShape *ts = &engine->triggerCentral.triggerShape;
 
@@ -556,7 +556,7 @@ void triggerInfo(void) {
 
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
 		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInput),
 				getVvt_mode_e(engineConfiguration->vvtMode));
@@ -572,7 +572,7 @@ void triggerInfo(void) {
 
 	if (ts->needSecondTriggerInput) {
 		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(CONFIGB(triggerInputPins)[1]));
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#if EFI_EMULATE_POSITION_SENSORS
 		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
 				hwPortname(CONFIGB(triggerSimulatorPins)[1]),
 				getPin_output_mode_e(CONFIGB(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
@@ -603,7 +603,7 @@ void triggerInfo(void) {
 			engine->m.rpmCbTime,
 			engine->m.mainTriggerCallbackTime);
 
-#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+#if EFI_CLOCK_LOCKS
 	scheduleMsg(logger, "maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
 
 	scheduleMsg(logger, "perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
@@ -613,7 +613,7 @@ void triggerInfo(void) {
 
 	scheduleMsg(logger, "maxEventCallbackDuration=%d", maxEventCallbackDuration);
 
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
 #endif /* EFI_HIP_9011 */
 	scheduleMsg(logger, "hwSetTimerDuration=%d", hwSetTimerDuration);
@@ -626,7 +626,7 @@ void triggerInfo(void) {
 }
 
 static void resetRunningTriggerCounters() {
-#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if !EFI_UNIT_TEST
 	engine->triggerCentral.resetCounters();
 	triggerInfo();
 #endif
@@ -655,7 +655,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 	if (changed) {
 		assertEngineReference();
 
-	#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	#if EFI_ENGINE_CONTROL
 		ENGINE(initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
 		engine->triggerCentral.resetAccumSignalData();
 	#endif
@@ -685,17 +685,17 @@ void initTriggerCentral(Logging *sharedLogger) {
 	logger = sharedLogger;
 	strcpy((char*) shaft_signal_msg_index, "x_");
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 	initWaveChart(&waveChart);
 #endif /* EFI_ENGINE_SNIFFER */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	addConsoleAction("triggerinfo", triggerInfo);
 	addConsoleAction("trigger_shape_info", triggerShapeInfo);
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif
 
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 	initHistogram(&triggerCallbackHistogram, "all callbacks");
 #endif /* EFI_HISTOGRAMS */
 }

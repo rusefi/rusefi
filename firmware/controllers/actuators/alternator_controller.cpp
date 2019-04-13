@@ -8,7 +8,7 @@
  */
 
 #include "global.h"
-#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL
 #include "engine.h"
 #include "rpm_calculator.h"
 #include "alternator_controller.h"
@@ -32,7 +32,7 @@ static Pid altPid(altPidS);
 
 static percent_t currentAltDuty;
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
@@ -51,7 +51,7 @@ private:
 		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->alternatorControl.periodMs));
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 		if (shouldResetPid) {
 			pidReset();
 			shouldResetPid = false;
@@ -61,7 +61,7 @@ private:
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
 			// but at least we would reflect latest state
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 			altPid.postState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 		}
@@ -85,7 +85,7 @@ private:
 			enginePins.alternatorPin.setValue(newState);
 			currentPlainOnOffState = newState;
 			if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 				tsOutputChannels.debugIntField1 = newState;
 #endif /* EFI_TUNER_STUDIO */
 			}

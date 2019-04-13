@@ -28,7 +28,7 @@
 #include "engine_state.h"
 #include "engine_math.h"
 #include "signal_executor.h"
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
@@ -213,7 +213,7 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	}
 
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.debugFloatField1 = tpsFrom;
 		tsOutputChannels.debugFloatField2 = tpsTo;
 		tsOutputChannels.debugFloatField3 = valueFromTable;
@@ -250,7 +250,7 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 	}
 
 	if (engineConfiguration->debugMode == DBG_EL_ACCEL) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.debugIntField1 = distance;
 		tsOutputChannels.debugFloatField1 = result;
 		tsOutputChannels.debugFloatField2 = taper;
@@ -319,7 +319,7 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 	cb.setSize(4);
 }
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 
 static void accelInfo() {
 	if (logger == NULL)
@@ -399,7 +399,7 @@ void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	logger = sharedLogger;
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 
 	addConsoleAction("accelinfo", accelInfo);
 
