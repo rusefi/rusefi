@@ -66,7 +66,7 @@
 
 #include "global.h"
 
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 
 #include "electronic_throttle.h"
 #include "tps.h"
@@ -83,7 +83,7 @@
 #include "pwm_generator.h"
 #include "dc_motor.h"
 #include "pid_auto_tune.h"
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 static bool shouldResetPid = false;
@@ -160,12 +160,12 @@ private:
 
 		// set debug_mode 17
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 			pid.postState(&tsOutputChannels);
 			tsOutputChannels.debugIntField5 = feedForward;
 #endif /* EFI_TUNER_STUDIO */
 		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 			// set debug_mode 29
 			tsOutputChannels.debugFloatField1 = valueOverride;
 #endif /* EFI_TUNER_STUDIO */

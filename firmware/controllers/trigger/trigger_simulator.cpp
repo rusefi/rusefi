@@ -25,7 +25,7 @@ bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfig
 	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
@@ -51,7 +51,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 	pin_state_t thirdWheelState = multiWave->getChannelState(2, prevIndex);
 	pin_state_t new3rdWheelState = multiWave->getChannelState(2, stateIndex);
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	if (printTriggerDebug) {
 		printf("feedSimulatedEvent: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
 				secondaryWheelState, newSecondaryWheelState );

@@ -30,7 +30,7 @@
 #include "trigger_simulator.h"
 #include "rfiutil.h"
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif
 
@@ -76,7 +76,7 @@ TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 		{
 }
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 
 EXTERN_ENGINE
 ;
@@ -87,12 +87,12 @@ EXTERN_ENGINE
 // only TriggerStateWithRunningStatistics would have the field?
 static cyclic_buffer<int> errorDetection;
 
-#if ! EFI_PROD_CODE || defined(__DOXYGEN__)
+#if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
@@ -106,7 +106,7 @@ bool isTriggerDecoderError(void) {
 }
 
 void calculateTriggerSynchPoint(TriggerShape *shape, TriggerState *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6642, getCurrentRemainingStack() > 256, "calc s");
 #endif
 	trigger_config_s const*triggerConfig = &engineConfiguration->trigger;
@@ -237,7 +237,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLAR
 		int prevIndex;
 		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 		angle_t currentAngle = TRIGGER_SHAPE(eventAngles[currentCycle.current_index]);
 		if (CONFIGB(sensorChartMode) == SC_DETAILED_RPM) {
 			scAddData(currentAngle, instantRpm);
@@ -258,7 +258,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 #define getCurrentGapDuration(nowNt) \
 	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 #define PRINT_INC_INDEX 		if (printTriggerDebug) {\
 		printf("nextTriggerEvent index=%d\r\n", currentCycle.current_index); \
 		}
@@ -326,7 +326,7 @@ bool TriggerState::validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) con
 
 void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->debugMode == DBG_TRIGGER_SYNC) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.debugIntField1 = currentCycle.eventCount[0];
 		tsOutputChannels.debugIntField2 = currentCycle.eventCount[1];
 		tsOutputChannels.debugIntField3 = currentCycle.eventCount[2];
@@ -345,7 +345,7 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	totalTriggerErrorCounter++;
 	if (CONFIG(isPrintTriggerSynchDetails) || someSortOfTriggerError) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
 				TRIGGER_SHAPE(expectedEventCount[1]), TRIGGER_SHAPE(expectedEventCount[2]),
@@ -369,7 +369,7 @@ void TriggerState::onShaftSynchronization(efitime_t nowNt, trigger_wheel_e trigg
 	incrementTotalEventCounter();
 	totalEventCountBase += getTriggerSize();
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	if (printTriggerDebug) {
 		printf("index=%d %d\r\n",
 				currentCycle.current_index,
@@ -418,7 +418,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 	bool isPrimary = triggerWheel == T_PRIMARY;
 
 	if (isLessImportant(type)) {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		if (printTriggerDebug) {
 			printf("%s isLessImportant %s now=%lld index=%d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
@@ -435,7 +435,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		;
 	} else {
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		if (printTriggerDebug) {
 			printf("%s event %s %d\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
@@ -447,7 +447,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		isFirstEvent = false;
 // todo: skip a number of signal from the beginning
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 //	scheduleMsg(&logger, "from %.2f to %.2f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, toothDurations[0], shaftPositionState->toothDurations[1]);
 //	scheduleMsg(&logger, "ratio %.2f", 1.0 * toothDurations[0]/ shaftPositionState->toothDurations[1]);
 #else
@@ -464,7 +464,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
 				float currentGap = 1.0 * toothDurations[0] / toothDurations[1];
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField1 = currentGap;
 				tsOutputChannels.debugFloatField2 = currentCycle.current_index;
 #endif /* EFI_TUNER_STUDIO */
@@ -484,13 +484,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			isSynchronizationPoint = isSync;
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 			if (CONFIG(isPrintTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
@@ -528,7 +528,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			 * in case of noise the counter could be above the expected number of events, that's why 'more or equals' and not just 'equals'
 			 */
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 			if (printTriggerDebug) {
 				printf("sync=%d index=%d size=%d\r\n",
 					shaft_is_synchronized,
@@ -541,7 +541,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			isSynchronizationPoint = !shaft_is_synchronized || (currentCycle.current_index >= endOfCycleIndex);
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 			if (printTriggerDebug) {
 				printf("isSynchronizationPoint=%d index=%d size=%d\r\n",
 						isSynchronizationPoint,
@@ -552,7 +552,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		}
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		if (printTriggerDebug) {
 			printf("%s isSynchronizationPoint=%d index=%d %s\r\n",
 					getTrigger_type_e(engineConfiguration->trigger.type),
@@ -633,7 +633,7 @@ static void onFindIndexCallback(TriggerState *state) {
 uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(triggerConfig);
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "findPos", -1);
 #endif
 	errorDetection.clear();
@@ -657,7 +657,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, state->getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	if (printTriggerDebug) {
 		printf("findTriggerZeroEventIndex: syncIndex located %d!\r\n", syncIndex);
 	}
@@ -691,7 +691,7 @@ void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SU
 }
 
  void initTriggerDecoder(void) {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIGB(triggerErrorPin),
 			&CONFIGB(triggerErrorPinMode));
 #endif /* EFI_GPIO_HARDWARE */

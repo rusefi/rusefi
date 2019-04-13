@@ -11,7 +11,7 @@
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 #include "pin_repository.h"
 #include "io_pins.h"
 #endif /* EFI_GPIO_HARDWARE */
@@ -22,7 +22,7 @@
 
 EXTERN_ENGINE;
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
@@ -98,7 +98,7 @@ void EnginePins::unregisterPins() {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
 	fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
 	hipCs.unregisterOutput(activeConfiguration.bc.hip9011CsPin, engineConfiguration->bc.hip9011CsPin);
@@ -143,7 +143,7 @@ void EnginePins::reset() {
 }
 
 void EnginePins::stopIgnitionPins(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		output->unregisterOutput(activeConfiguration.bc.ignitionPins[i],
@@ -153,7 +153,7 @@ void EnginePins::stopIgnitionPins(void) {
 }
 
 void EnginePins::stopInjectionPins(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		output->unregisterOutput(activeConfiguration.bc.injectionPins[i],
@@ -163,7 +163,7 @@ void EnginePins::stopInjectionPins(void) {
 }
 
 void EnginePins::startAuxValves(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
 		output->initPin(output->name, engineConfiguration->auxValves[i]);
@@ -172,7 +172,7 @@ void EnginePins::startAuxValves(void) {
 }
 
 void EnginePins::startIgnitionPins(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		// todo: we need to check if mode has changed
@@ -191,7 +191,7 @@ void EnginePins::startIgnitionPins(void) {
 }
 
 void EnginePins::startInjectionPins(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
@@ -214,14 +214,14 @@ NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
 }
 
 void NamedOutputPin::setHigh() {
-#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
+#if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// turn the output level ACTIVE
 	setValue(true);
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 
 	addEngineSnifferEvent(name, WC_UP);
 #endif /* EFI_ENGINE_SNIFFER */
@@ -231,13 +231,13 @@ void NamedOutputPin::setLow() {
 	// turn off the output
 	setValue(false);
 
-#if EFI_DEFAILED_LOGGING || defined(__DOXYGEN__)
+#if EFI_DEFAILED_LOGGING
 //	systime_t after = getTimeNowUs();
 //	debugInt(&signal->logging, "a_time", after - signal->hi_time);
 //	scheduleLogging(&signal->logging);
 #endif /* EFI_DEFAILED_LOGGING */
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 	addEngineSnifferEvent(name, WC_DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
 }
@@ -248,7 +248,7 @@ InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 }
 
 bool NamedOutputPin::stop() {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 	if (isInitialized() && getLogicValue()) {
 		setValue(false);
 		scheduleMsg(&sharedLogger, "turning off %s", name);
@@ -277,7 +277,7 @@ void IgnitionOutputPin::reset() {
 
 OutputPin::OutputPin() {
 	modePtr = &DEFAULT_OUTPUT;
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 	port = NULL;
 	pin = 0;
 #endif /* EFI_GPIO_HARDWARE */
@@ -285,7 +285,7 @@ OutputPin::OutputPin() {
 }
 
 bool OutputPin::isInitialized() {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 	return port != NULL;
 #else /* EFI_GPIO_HARDWARE */
 	return true;
@@ -337,7 +337,7 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 }
 
 void initOutputPins(void) {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 	/**
 	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
 	 */
@@ -345,7 +345,7 @@ void initOutputPins(void) {
 // todo: fix this?
 //	memset(&outputs, 0, sizeof(outputs));
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 	enginePins.sdCsPin.initPin("spi CS5", CONFIGB(sdCardCsPin));
 #endif /* HAL_USE_SPI */
 
@@ -394,7 +394,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
@@ -448,7 +448,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 #endif /* EFI_GPIO_HARDWARE */
 }
 
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 
 void initPrimaryPins(void) {
 	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN);

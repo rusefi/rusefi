@@ -22,7 +22,7 @@
 #include "engine.h"
 #endif
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif
 
@@ -73,7 +73,7 @@ int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	return rpmValue;
 }
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 
 EXTERN_ENGINE
 ;
@@ -159,7 +159,7 @@ void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		 */
 		state = CRANKING;
 	}
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	// This presumably fixes injection mode change for cranking-to-running transition.
 	// 'isSimultanious' flag should be updated for events if injection modes differ for cranking and running.
 	if (state != oldState) {
@@ -261,7 +261,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 	// this 'index==0' case is here so that it happens after cycle callback so
 	// it goes into sniffer report into the first position
 	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
@@ -291,7 +291,7 @@ static scheduling_s tdcScheduler[2];
 
 static char rpmBuffer[_MAX_FILLER];
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 /**
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the dev console
  * digital sniffer.
@@ -347,7 +347,7 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (hasFirmwareError()) {
 		return;
 	}
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
 #endif
@@ -355,7 +355,7 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addTriggerEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 }
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 /**
  * Schedules a callback 'angle' degree of crankshaft from now.
  * The callback would be executed once after the duration of time which

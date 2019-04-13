@@ -148,7 +148,7 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	float T1 = tc->tempC_1 + KELV;
 	float T2 = tc->tempC_2 + KELV;
 	float T3 = tc->tempC_3 + KELV;
-#if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
+#if EXTREME_TERM_LOGGING
 	scheduleMsg(logger, "T1=%.5f/T2=%.5f/T3=%.5f", T1, T2, T3);
 #endif
 
@@ -162,7 +162,7 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	}
 	float L2 = logf(tc->resistance_2);
 	float L3 = logf(tc->resistance_3);
-#if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
+#if EXTREME_TERM_LOGGING
 	scheduleMsg(logger, "R1=%.5f/R2=%.5f/R3=%.5f", tc->resistance_1, tc->resistance_2,
 			tc->resistance_3);
 	scheduleMsg(logger, "L1=%.5f/L2=%.5f/L3=%.5f", L1, L2, L3);
@@ -181,7 +181,7 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 	s_h_b = U2 - s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
 	s_h_a = Y1 - (s_h_b + L1 * L1 * s_h_c) * L1;
 
-#if EXTREME_TERM_LOGGING || defined(__DOXYGEN__)
+#if EXTREME_TERM_LOGGING
 	scheduleMsg(logger, "Y1=%.5f/Y2=%.5f/Y3=%.5f", Y1, Y2, Y3);
 	scheduleMsg(logger, "U2=%.5f/U3=%.5f", U2, U3);
 	scheduleMsg(logger, "s_h_c=%.5f/s_h_b=%.5f/s_h_a=%.5f", curve->s_h_c, curve->s_h_b,
@@ -204,7 +204,7 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engineConfiguration->useLinearIatSensor);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-#if EFI_PROD_CODE || EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT %.2f", temperature);
 #endif /* EFI_PROD_CODE */
 		return LIMPING_MODE_IAT_TEMPERATURE;
@@ -232,7 +232,7 @@ void set10K_4050K(ThermistorConf *thermistorConf) {
 	setThermistorConfiguration(thermistorConf, -30, 108000, 25.0, 10000, 130.0, 225);
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 static void testCltByR(float resistance) {
 	if (logger == NULL) {
 		firmwareError(CUSTOM_ERR_THERM, "thermstr not initialized");
@@ -249,7 +249,7 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	efiAssertVoid(CUSTOM_ERR_6578, engine!=NULL, "e NULL initThermistors");
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	addConsoleActionF("test_clt_by_r", testCltByR);
 #endif
 }

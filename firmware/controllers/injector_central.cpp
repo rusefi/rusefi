@@ -23,7 +23,7 @@
 // todo: rename this file
 #include "global.h"
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 #if !EFI_UNIT_TEST
 
 #include "injector_central.h"
@@ -237,7 +237,7 @@ static BenchController instance;
 void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	if (oldPin != GPIO_UNASSIGNED && oldPin != newPin) {
 		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 		brain_pin_markUnused(oldPin);
 		port = NULL;
 #endif /* EFI_GPIO_HARDWARE */
@@ -261,7 +261,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		milBench();
 	} else if (subsystem == 0x17) {
 		// cmd_test_idle_valve
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 		startIdleBench();
 #endif
 	} else if (subsystem == 0x20 && index == 0x3456) {

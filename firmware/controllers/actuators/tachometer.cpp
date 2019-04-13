@@ -46,7 +46,7 @@ void initTachometer(void) {
 
 	enginePins.tachOut.initPin("analog tach output", CONFIGB(tachOutputPin), &CONFIGB(tachOutputPinMode));
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	addTriggerEventListener(tachSignalCallback, "tach", engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }

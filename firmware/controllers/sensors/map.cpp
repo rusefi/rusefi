@@ -13,12 +13,12 @@
 #include "map.h"
 #include "engine_controller.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "digital_input_hw.h"
 #include "pin_repository.h"
 #endif
 
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 
 EXTERN_ENGINE;
 
@@ -129,7 +129,7 @@ float validateBaroMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @returns kPa value
  */
 float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_ENABLE_MOCK_ADC || defined(__DOXYGEN__)
+#if EFI_ENABLE_MOCK_ADC
 	int mapChannel = engineConfiguration->map.sensor.hwChannel;
 	if (engine->engineState.mockAdcState.hasMockAdc[mapChannel])
 		voltage = adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(mapChannel) * engineConfiguration->analogInputDividerCoefficient);
@@ -212,12 +212,12 @@ static void digitalMapWidthCallback(void) {
 	prevWidthTimeNt = nowNt;
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 
 extern int mapMinBufferLength;
 
 static void printMAPInfo(void) {
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	scheduleMsg(logger, "instant value=%.2fkPa", getRawMap());
 
 
@@ -263,7 +263,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 
-#if HAL_USE_ICU || defined(__DOXYGEN__)
+#if HAL_USE_ICU
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		digital_input_s* digitalMapInput = addWaveAnalyzerDriver("map freq", CONFIGB(frequencyReportingMapInputPin));
 		startInputDriver("MAP", digitalMapInput, true);

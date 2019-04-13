@@ -27,7 +27,7 @@ bool needEvent(const int currentIndex, const int size, MultiWave *multiWave, int
 	return previousValue != currentValue;
 }
 
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#if EFI_EMULATE_POSITION_SENSORS
 
 #include "engine.h"
 #include "trigger_emulator_algo.h"
@@ -140,7 +140,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 	if (!isEmulating) {
 		return;
 	}
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	applyPinState(stateIndex, state);
 #endif /* EFI_PROD_CODE */
 	if (engineConfiguration->directSelfStimulation) {

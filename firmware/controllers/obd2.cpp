@@ -23,7 +23,7 @@
 
 #include "global.h"
 
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 
 
 #include "engine.h"
@@ -192,7 +192,7 @@ static void handleDtcRequest(int numCodes, int *dtcCode) {
 	}
 }
 
-#if HAL_USE_CAN || defined(__DOXYGEN__)
+#if HAL_USE_CAN
 void obdOnCanPacketRx(CANRxFrame *rx) {
 	if (rx->SID != OBD_TEST_REQUEST) {
 		return;

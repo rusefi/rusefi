@@ -37,7 +37,7 @@
 #define PID_SUPPORTED_PIDS_REQUEST_41_60 0x40
 #define PID_FUEL_RATE 0x5E
 
-#if HAL_USE_CAN || defined(__DOXYGEN__)
+#if HAL_USE_CAN
 void obdOnCanPacketRx(CANRxFrame *rx);
 #endif /* HAL_USE_CAN */
 

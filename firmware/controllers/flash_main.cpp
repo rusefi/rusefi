@@ -8,7 +8,7 @@
  */
 
 #include "global.h"
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 #include "flash_main.h"
 #include "eficonsole.h"
 #include "flash.h"
@@ -17,7 +17,7 @@
 // this message is part of console API, see FLASH_SUCCESS_MSG in java code
 #define FLASH_SUCCESS_MSG "FLASH_SUCESS"
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
 
@@ -188,7 +188,7 @@ void initFlash(Logging *sharedLogger) {
 	 * This would write NOW (you should not be doing this while connected to real engine)
 	 */
 	addConsoleAction("writeconfig", writeConfigCommand);
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 	/**
 	 * This would schedule write to flash once the engine is stopped
 	 */

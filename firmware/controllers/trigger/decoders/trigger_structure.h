@@ -175,7 +175,7 @@ public:
 	 */
 	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	/**
 	 * These signals are used for trigger export only
 	 */

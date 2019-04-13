@@ -27,7 +27,7 @@
 
 #include "global.h"
 
-#if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
+#if EFI_MALFUNCTION_INDICATOR
 #include "io_pins.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"

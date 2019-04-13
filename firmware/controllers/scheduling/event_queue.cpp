@@ -39,7 +39,7 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
  * @return true if inserted into the head of the list
  */
 bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param) {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 	efiAssert(CUSTOM_ERR_ASSERT, callback != NULL, "NULL callback", false);
@@ -47,7 +47,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
 	if (scheduling->isScheduled) {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
 		printf("Already scheduled now %d\r\n", (int)timeX);
 #endif /* EFI_UNIT_TEST */
@@ -62,7 +62,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 	if (head == NULL || timeX < head->momentX) {
 		// here we insert into head of the linked list
 		LL_PREPEND(head, scheduling);
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 		return true;
@@ -75,7 +75,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 
 		scheduling->next = insertPosition->next;
 		insertPosition->next = scheduling;
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 		return false;
@@ -154,7 +154,7 @@ int EventQueue::executeAll(efitime_t now) {
 			break;
 		}
 	}
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif
 
@@ -169,7 +169,7 @@ int EventQueue::executeAll(efitime_t now) {
 		current->isScheduled = false;
 		uint32_t howFarOff = now - current->momentX;
 		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->param);
 #endif
 		current->callback(current->param);
@@ -192,7 +192,7 @@ int EventQueue::size(void) {
 	return result;
 }
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 void EventQueue::assertListIsSorted() {
 	scheduling_s *current = head;
 	while (current != NULL && current->next != NULL) {

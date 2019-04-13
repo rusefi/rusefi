@@ -26,7 +26,7 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	bool isOverlapping;
 	int ownIndex;
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	Engine *engine;
 #endif
 	event_trigger_position_s injectionStart;
@@ -53,7 +53,7 @@ public:
 	 */
 	int cylinderIndex;
 	char *name;
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	Engine *engine;
 #endif
 	IgnitionOutputPin *getOutputForLoggins();

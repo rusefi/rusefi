@@ -135,7 +135,7 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return 0;
 	}
-#if EFI_PRINTF_FUEL_DETAILS || defined(__DOXYGEN__)
+#if EFI_PRINTF_FUEL_DETAILS
 	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
 			map, adjustedMap, engine->engineState.airMass);
 #endif /*EFI_PRINTF_FUEL_DETAILS */

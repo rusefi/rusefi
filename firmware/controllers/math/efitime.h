@@ -59,7 +59,7 @@ efitimesec_t getTimeNowSeconds(void);
 }
 #endif /* __cplusplus */
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR)
+#if EFI_PROD_CODE || EFI_SIMULATOR
  #define GET_TIMESTAMP() port_rt_get_counter_value()
 #else
  #define GET_TIMESTAMP() 0

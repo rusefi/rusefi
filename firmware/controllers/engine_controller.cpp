@@ -23,7 +23,7 @@
 
 #include "global.h"
 #if !EFI_UNIT_TEST
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif
 #include "engine_configuration.h"
@@ -37,13 +37,13 @@
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
 #include "injector_central.h"
 #include "rfiutil.h"
 #include "engine_math.h"
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 #include "wave_analyzer.h"
 #endif
 #include "allsensors.h"
@@ -61,11 +61,11 @@
 #include "accelerometer.h"
 #include "counter64.h"
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 #include "AdcConfiguration.h"
 #endif /* HAL_USE_ADC */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
 
@@ -76,11 +76,11 @@
 #include "tachometer.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_CJ125 || defined(__DOXYGEN__)
+#if EFI_CJ125
 #include "cj125.h"
 #endif
 
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
 #include "bootloader/bootloader.h"
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 
@@ -98,7 +98,7 @@ static virtual_timer_t periodicFastTimer; // 50Hz
 
 static LoggingWithStorage logger("Engine Controller");
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 /**
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
@@ -109,7 +109,7 @@ Engine * engine = &___engine;
 
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	while (true) {
 		int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -129,7 +129,7 @@ static msg_t csThread(void) {
 	return -1;
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 static Overflow64Counter halTime;
 
 /**
@@ -176,7 +176,7 @@ efitick_t getTimeNowNt(void) {
 		localH = halTime.state.highBits;
 		localLow = halTime.state.lowBits;
 		localH2 = halTime.state.highBits;
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		if (counter++ == 10000)
 			chDbgPanic("lock-free frozen");
 #endif /* EFI_PROD_CODE */
@@ -279,7 +279,7 @@ static void invokePerSecond(void) {
 }
 
 static void periodicSlowCallback(Engine *engine) {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
@@ -306,7 +306,7 @@ static void periodicSlowCallback(Engine *engine) {
 	}
 
 	if (engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 		writeToFlashIfPending();
 #endif /* EFI_INTERNAL_FLASH */
 		resetAccel();
@@ -331,7 +331,7 @@ void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	if (hwChannel == EFI_ADC_NONE) {
 		strcpy(buffer, "NONE");
 	} else {
@@ -346,13 +346,13 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 
 static char pinNameBuffer[16];
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 extern AdcDevice fastAdc;
 #endif
 
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage,
 		float dividerCoeff) {
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	if (hwChannel == EFI_ADC_NONE) {
 		scheduleMsg(&logger, "ADC is not assigned for %s", name);
 		return;
@@ -369,7 +369,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel), engineConfiguration->analogInputDividerCoefficient);
 #endif
 }
@@ -594,11 +594,11 @@ void setMockVBattVoltage(float voltage) {
 }
 
 static void initMockVoltage(void) {
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 	setMockCltVoltage(2);
 #endif /* EFI_SIMULATOR */
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 	setMockIatVoltage(2);
 #endif /* EFI_SIMULATOR */
 
@@ -638,16 +638,16 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	initMockVoltage();
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	// todo: this is a mess, remove code duplication with simulator
 	initSettings();
 #endif
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 	if (engineConfiguration->isTunerStudioEnabled) {
 		startTunerStudioConnectivity();
 	}
@@ -658,7 +658,7 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	}
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
@@ -675,19 +675,19 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	initPwmGenerator();
 #endif
 
 	initAlgo(sharedLogger);
 
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
 		initWaveAnalyzer(sharedLogger);
 	}
 #endif /* EFI_WAVE_ANALYZER */
 
-#if EFI_CJ125 || defined(__DOXYGEN__)
+#if EFI_CJ125
 	/**
 	 * this uses SimplePwm which depends on scheduler, has to be initialized after scheduler
 	 */
@@ -695,7 +695,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_CJ125 */
 
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	/**
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
 	 * other listeners can access current RPM value
@@ -703,7 +703,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initRpmCalculator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
 	initInjectorCentral(sharedLogger);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
@@ -717,7 +717,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t)(void*) csThread, NULL);
 
-#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE && EFI_ENGINE_CONTROL
 	/**
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
 	 * properly detect un-assigned output pins
@@ -725,29 +725,29 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
 
-#if EFI_PWM_TESTER || defined(__DOXYGEN__)
+#if EFI_PWM_TESTER
 	initPwmTester();
 #endif /* EFI_PWM_TESTER */
 
 	initMalfunctionCentral();
 
-#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+#if EFI_ALTERNATOR_CONTROL
 	initAlternatorCtrl(sharedLogger);
 #endif
 
-#if EFI_AUX_PID || defined(__DOXYGEN__)
+#if EFI_AUX_PID
 	initAuxPid(sharedLogger);
 #endif
 
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-#if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
+#if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
-#if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
+#if EFI_MAP_AVERAGING
 	if (engineConfiguration->isMapAveragingEnabled) {
 		initMapAveraging(sharedLogger, engine);
 	}
@@ -755,7 +755,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (CONFIGB(isEngineControlEnabled)) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
@@ -764,7 +764,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 	startIdleThread(sharedLogger);
 #endif /* EFI_IDLE_CONTROL */
 
@@ -772,15 +772,15 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		addConsoleAction("knockinfo", getKnockInfo);
 	}
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
 #endif /* EFI_PROD_CODE */
 
-#if EFI_HD44780_LCD || defined(__DOXYGEN__)
+#if EFI_HD44780_LCD
 	initLcdController();
 #endif /* EFI_HD44780_LCD */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	initTachometer();
 #endif /* EFI_PROD_CODE */
 }
@@ -805,7 +805,7 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
 	// make bootloader code happy too
 	if (initBootloader() != 0)
 		return 123;

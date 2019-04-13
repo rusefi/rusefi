@@ -26,7 +26,7 @@
 
 #include "global.h"
 
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 #include "engine_configuration.h"
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
@@ -38,7 +38,7 @@
 #include "allsensors.h"
 
 static Logging *logger;
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 EXTERN_ENGINE
@@ -48,7 +48,7 @@ static bool shouldResetPid = false;
 // we might reset PID state when the state is changed, but only if needed (See autoIdle())
 static bool mightResetPid = false;
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
+#if EFI_IDLE_INCREMENTAL_PID_CIC
 // Use new PID with CIC integrator
 static PidCic idlePid(&engineConfiguration->idleRpmPid);
 #else
@@ -229,7 +229,7 @@ static percent_t automaticIdleController() {
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC || defined(__DOXYGEN__)
+#if EFI_IDLE_INCREMENTAL_PID_CIC
 	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
 	// So we add this delta to the base IAC position, with a smooth taper for TPS transients.
 	newValue = baseIdlePosition + interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tpsPos);
@@ -285,7 +285,7 @@ private:
 		}
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		// this value is not used yet
 		if (CONFIGB(clutchDownPin) != GPIO_UNASSIGNED) {
 			engine->clutchDownState = efiReadPin(CONFIGB(clutchDownPin));
@@ -306,7 +306,7 @@ private:
 		undoIdleBlipIfNeeded();
 
 		float clt = engine->sensors.clt;
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else
 		bool isRunning = false;
@@ -362,13 +362,13 @@ private:
 
 		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 			if (engineConfiguration->idleMode == IM_AUTO) {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 				// see also tsOutputChannels->idlePosition
 				idlePid.postState(&tsOutputChannels, 1000000);
 				tsOutputChannels.debugIntField4 = idleState;
 #endif /* EFI_TUNER_STUDIO */
 			} else {
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField1 = iacPosition;
 				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
@@ -508,7 +508,7 @@ void startIdleThread(Logging*sharedLogger) {
 	}
 
 	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
 				getInputMode(engineConfiguration->brakePedalPinMode));
 #endif /* EFI_PROD_CODE */

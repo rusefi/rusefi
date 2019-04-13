@@ -15,7 +15,7 @@
 void initPrimaryPins(void);
 void initOutputPins(void);
 
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 void turnAllPinsOff(void);
 #else /* EFI_GPIO_HARDWARE */
 #define turnAllPinsOff() {}
@@ -48,7 +48,7 @@ public:
 	bool getLogicValue();
 
 
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 	ioportid_t port;
 	uint8_t pin;
 	#if (BOARD_EXT_GPIOCHIPS > 0)
@@ -167,7 +167,7 @@ public:
 #define getElectricalValue(logicalValue, mode) \
 	(logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode))
 
-#if EFI_GPIO_HARDWARE || defined(__DOXYGEN__)
+#if EFI_GPIO_HARDWARE
 
 EXTERNC ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin);
 EXTERNC ioportid_t getHwPort(const char *msg, brain_pin_e brainPin);

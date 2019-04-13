@@ -36,7 +36,7 @@
 #include "trigger_vw.h"
 #include "trigger_universal.h"
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
@@ -89,7 +89,7 @@ void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTri
 	previousAngle = 0;
 	memset(riseOnlyIndexes, 0, sizeof(riseOnlyIndexes));
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	memset(&triggerSignals, 0, sizeof(triggerSignals));
 #endif
 }
@@ -158,7 +158,7 @@ operation_mode_e TriggerShape::getOperationMode() {
 	return operationMode;
 }
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 extern bool printTriggerDebug;
 #endif
 
@@ -180,7 +180,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 
 	efiAssertVoid(CUSTOM_ERR_6598, channelIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	if (printTriggerDebug) {
 		printf("addEvent2 %.2f i=%d r/f=%d\r\n", angle, channelIndex, stateParam);
 	}
@@ -193,7 +193,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 		state = stateParam;
 	}
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	int signal = channelIndex * 1000 + stateParam;
 	triggerSignals[privateTriggerDefinitionSize] = signal;
 #endif
@@ -278,7 +278,7 @@ angle_t TriggerShape::getSwitchAngle(int index) const {
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 		operation_mode_e operationMode) {
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 
 	s->useRiseEdge = true;
 
@@ -300,7 +300,7 @@ void TriggerShape::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFr
 		this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
 	}
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 	if (printTriggerDebug) {
 		printf("setTriggerSynchronizationGap3 %d %.2f %.2f\r\n", gapIndex, syncRatioFrom, syncRatioTo);
 	}
@@ -368,7 +368,7 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
 }
 
 void TriggerShape::prepareShape() {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
 		int triggerShapeIndex = findAngleIndex(angle);
@@ -403,7 +403,7 @@ void TriggerShape::setSecondTriggerSynchronizationGap(float syncRatio) {
  */
 void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e operationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > 256, "init t");
 	scheduleMsg(logger, "initializeTriggerShape(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
 #endif
