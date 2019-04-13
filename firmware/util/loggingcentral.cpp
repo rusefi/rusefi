@@ -121,6 +121,10 @@ void initLoggingCentral(void) {
  * in order to reduce memory usage
  */
 void scheduleMsg(Logging *logging, const char *fmt, ...) {
+	for (unsigned int i = 0;i<strlen(fmt);i++) {
+		// todo: open question which layer would not handle CR/LF propertly?
+		efiAssertVoid(OBD_PCM_Processor_Fault, fmt[i] != '\n', "No CRLF please");
+	}
 #if EFI_TEXT_LOGGING
 	if (logging == NULL) {
 		warning(CUSTOM_ERR_LOGGING_NULL, "logging NULL");

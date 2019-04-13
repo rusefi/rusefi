@@ -112,9 +112,7 @@ static int getPortIndex(ioportid_t port) {
 }
 
 static void reportPins(void) {
-	unsigned int i;
-
-	for (i = 0; i < PIN_REPO_SIZE; i++) {
+	for (unsigned int i = 0; i < PIN_REPO_SIZE; i++) {
 		const char *pin_user = PIN_USED[i];
 
 		/* show used pins */
@@ -123,12 +121,12 @@ static void reportPins(void) {
 			int pin = i % PORT_SIZE;
 			ioportid_t port = ports[portIndex];
 
-			scheduleMsg(&logger, "pin %s%d: %s\n", portname(port), pin, pin_user);
+			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, pin_user);
 		}
 	}
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
-		for (i = PIN_REPO_SIZE ; i < PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
+		for (unsigned int i = PIN_REPO_SIZE ; i < PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
 			const char *pin_name;
 			const char *pin_user;
 			brain_pin_e brainPin = index_to_brainPin(i);
@@ -138,10 +136,10 @@ static void reportPins(void) {
 
 			/* here show all pins, unused too */
 			if (pin_name != NULL) {
-				scheduleMsg(&logger, "ext %s: %s\n",
+				scheduleMsg(&logger, "ext %s: %s",
 					pin_name, pin_user ? pin_user : "free");
 			} else {
-				scheduleMsg(&logger, "ext %s.%d: %s\n",
+				scheduleMsg(&logger, "ext %s.%d: %s",
 					gpiochips_getChipName(brainPin), gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free");
 			}
 		}
