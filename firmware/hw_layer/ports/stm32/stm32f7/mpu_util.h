@@ -86,7 +86,7 @@ void HardFaultVector(void);
 
 #endif /* MPU_UTIL_H_ */
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		brain_pin_e mosi,
 		int sckMode,
@@ -98,7 +98,7 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 #endif /* HAL_USE_SPI */
 
-#if HAL_USE_CAN || defined(__DOXYGEN__)
+#if HAL_USE_CAN
 bool isValidCanTxPin(brain_pin_e pin);
 bool isValidCanRxPin(brain_pin_e pin);
 CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);

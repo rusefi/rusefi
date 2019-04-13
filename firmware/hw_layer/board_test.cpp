@@ -23,7 +23,7 @@
 
 #include "global.h"
 
-#if EFI_BOARD_TEST || defined(__DOXYGEN__)
+#if EFI_BOARD_TEST
 #include "engine.h"
 #include "board_test.h"
 #include "pin_repository.h"
@@ -38,7 +38,7 @@ static bool isTimeForNextStep(int copy) {
 	return copy != stepCoutner;
 }
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 extern AdcDevice slowAdc;
 extern AdcDevice fastAdc;
 
@@ -148,7 +148,7 @@ bool isBoardTestMode(void) {
 void printBoardTestState(void) {
 	print("Current index=%d\r\n", currentIndex);
 	print("'n' for next step and 'set X' to return to step X\r\n");
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	print("ADC count: slow %d/fast %d\r\n", slowAdc.size(), fastAdc.size());
 #endif
 
@@ -204,7 +204,7 @@ void initBoardTest(void) {
 	chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t)(void*) ivThread, NULL);
 	// this code is ugly as hell, I had no time to think. Todo: refactor
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	/**
 	 * in board test mode all currently enabled ADC channels are running in slow mode
 	 */

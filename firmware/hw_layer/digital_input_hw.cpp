@@ -27,7 +27,7 @@
 #include "digital_input_hw.h"
 #include "fl_stack.h"
 
-#if EFI_ICU_INPUTS || defined(__DOXYGEN__)
+#if EFI_ICU_INPUTS
 
 #include "mpu_util.h"
 #include "eficonsole.h"

@@ -10,7 +10,7 @@
 
 #include "global.h"
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 
 // Peripherial Clock 42MHz SPI2 SPI3
 // Peripherial Clock 84MHz SPI1                                SPI1        SPI2/3

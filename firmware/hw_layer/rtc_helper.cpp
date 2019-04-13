@@ -12,7 +12,7 @@
 #include "rfiutil.h"
 #include "rtc_helper.h"
 
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 static LoggingWithStorage logger("RTC");
 static RTCDateTime timespec;
 
@@ -22,21 +22,21 @@ extern bool rtcWorks;
 
 void date_set_tm(struct tm *timp) {
 	(void)timp;
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
         rtcConvertStructTmToDateTime(timp, 0, &timespec);
 	rtcSetTime(&RTCD1, &timespec);
 #endif /* EFI_RTC */
 }
 
 void date_get_tm(struct tm *timp) {
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	rtcGetTime(&RTCD1, &timespec);
         rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
 #endif /* EFI_RTC */
 }
 
 static time_t GetTimeUnixSec(void) {
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
   struct tm tim;
 
   rtcGetTime(&RTCD1, &timespec);
@@ -48,7 +48,7 @@ static time_t GetTimeUnixSec(void) {
 }
 
 static void SetTimeUnixSec(time_t unix_time) {
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
   struct tm tim;
 
 #if defined __GNUC__
@@ -84,7 +84,7 @@ static void put2(int offset, char *lcd_str, int value) {
  * @return true if we seem to know current date, false if no valid RTC state
  */
 bool dateToStringShort(char *lcd_str) {
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	strcpy(lcd_str, "0000_000000\0");
 	struct tm timp;
 	date_get_tm(&timp);
@@ -107,7 +107,7 @@ bool dateToStringShort(char *lcd_str) {
 }
 
 void dateToString(char *lcd_str) {
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	// todo:
 	// re-implement this along the lines of 	chvprintf("%04u-%02u-%02u %02u:%02u:%02u\r\n", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
 	// timp.tm_min, timp.tm_sec);
@@ -128,7 +128,7 @@ void dateToString(char *lcd_str) {
 #endif /* EFI_RTC */
 }
 
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 void printDateTime(void) {
 	static time_t unix_time;
 	struct tm timp;
@@ -162,7 +162,7 @@ void setDateTime(const char *strDate) {
 #endif /* EFI_RTC */
 
 void initRtc(void) {
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	GetTimeUnixSec(); // this would test RTC, see 'rtcWorks' variable, see #311
 	printMsg(&logger, "initRtc()");
 #endif /* EFI_RTC */

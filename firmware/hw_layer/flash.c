@@ -9,7 +9,7 @@
 
 #include "global.h"
 
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 
 #include "flash.h"
 #include <string.h>

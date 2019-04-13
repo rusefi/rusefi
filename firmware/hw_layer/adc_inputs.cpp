@@ -17,7 +17,7 @@
 
 #include "global.h"
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 
 #include "engine.h"
 #include "adc_inputs.h"
@@ -207,7 +207,7 @@ void doSlowAdc(void) {
 #endif /* EFI_INTERNAL_ADC */
 }
 
-#if HAL_USE_PWM || defined(__DOXYGEN__)
+#if HAL_USE_PWM
 static void pwmpcb_slow(PWMDriver *pwmp) {
 	(void) pwmp;
 	doSlowAdc();
@@ -215,7 +215,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
 	efiAssertVoid(CUSTOM_ERR_6659, getCurrentRemainingStack()> 32, "lwStAdcFast");
-#if EFI_INTERNAL_ADC || defined(__DOXYGEN__)
+#if EFI_INTERNAL_ADC
 	(void) pwmp;
 
 	/*
@@ -243,7 +243,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 #endif /* HAL_USE_PWM */
 
 float getMCUInternalTemperature(void) {
-#if defined(ADC_CHANNEL_SENSOR) || defined(__DOXYGEN__)
+#if defined(ADC_CHANNEL_SENSOR)
 	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
 	TemperatureValue -= 0.760; // Subtract the reference voltage at 25°C
 	TemperatureValue /= .0025; // Divide by slope 2.5mV
@@ -281,7 +281,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	return slowAdc.getAdcValueByHwChannel(hwChannel);
 }
 
-#if HAL_USE_PWM || defined(__DOXYGEN__)
+#if HAL_USE_PWM
 static PWMConfig pwmcfg_slow = { PWM_FREQ_SLOW, PWM_PERIOD_SLOW, pwmpcb_slow, { {
 PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL }, {
 PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
@@ -509,7 +509,7 @@ void initAdcInputs(bool boardTestMode) {
 	// migrate to 'enable adcdebug'
 	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
-#if EFI_INTERNAL_ADC || defined(__DOXYGEN__)
+#if EFI_INTERNAL_ADC
 	/*
 	 * Initializes the ADC driver.
 	 */
@@ -530,13 +530,13 @@ void initAdcInputs(bool boardTestMode) {
 		}
 	}
 
-#if defined(ADC_CHANNEL_SENSOR) || defined(__DOXYGEN__)
+#if defined(ADC_CHANNEL_SENSOR)
 	// Internal temperature sensor, Available on ADC1 only
 	slowAdc.enableChannel((adc_channel_e)ADC_CHANNEL_SENSOR);
 #endif /* ADC_CHANNEL_SENSOR */
 
 	slowAdc.init();
-#if HAL_USE_PWM || defined(__DOXYGEN__)
+#if HAL_USE_PWM
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
 	pwmEnablePeriodicNotification(EFI_INTERNAL_SLOW_ADC_PWM);
 #endif /* HAL_USE_PWM */
@@ -546,7 +546,7 @@ void initAdcInputs(bool boardTestMode) {
 		/*
 		 * Initializes the PWM driver.
 		 */
-#if HAL_USE_PWM || defined(__DOXYGEN__)
+#if HAL_USE_PWM
 		pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
 		pwmEnablePeriodicNotification(EFI_INTERNAL_FAST_ADC_PWM);
 #endif /* HAL_USE_PWM */

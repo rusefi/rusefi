@@ -8,7 +8,7 @@
 
 #include "global.h"
 
-#if EFI_USB_SERIAL || defined(__DOXYGEN__)
+#if EFI_USB_SERIAL
 
 #include "usbconsole.h"
 #include "usbcfg.h"

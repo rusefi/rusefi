@@ -11,7 +11,7 @@
 
 #include "global.h"
 
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 
 #include "engine_configuration.h"
 #include "pin_repository.h"
@@ -265,7 +265,7 @@ static msg_t canThread(void *arg) {
 
 		chThdSleepMilliseconds(engineConfiguration->canSleepPeriodMs);
 	}
-#if defined __GNUC__ || defined(__DOXYGEN__)
+#if defined __GNUC__
 	return -1;
 #endif
 }
@@ -325,7 +325,7 @@ void initCan(void) {
 	if (!isCanEnabled)
 		return;
 
-#if STM32_CAN_USE_CAN2 || defined(__DOXYGEN__)
+#if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2
 	canStart(&CAND1, &canConfig500);
 	canStart(&CAND2, &canConfig500);

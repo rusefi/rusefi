@@ -8,7 +8,7 @@
 
 #include "global.h"
 
-#if EFI_MCP_3208 || defined(__DOXYGEN__)
+#if EFI_MCP_3208
 #include "mcp3208.h"
 #include "pin_repository.h"
 

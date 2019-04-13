@@ -18,7 +18,7 @@
 
 #include "engine.h"
 
-#if (HAL_USE_PAL && EFI_JOYSTICK) || defined(__DOXYGEN__)
+#if (HAL_USE_PAL && EFI_JOYSTICK)
 #include "joystick.h"
 #include "pin_repository.h"
 #include "digital_input_exti.h"
@@ -74,7 +74,7 @@ static void extCallback(int channel) {
 		// unexpected channel
 		return;
 	}
-#if EFI_HD44780_LCD || defined(__DOXYGEN__)
+#if EFI_HD44780_LCD
 	onJoystick(button);
 #else
 	UNUSED(button);

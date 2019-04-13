@@ -76,7 +76,7 @@ static mutex_t spiMtx;
 // todo: rename this to 'rusefiMaxISRNesting' one day
 int maxNesting = 0;
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 extern bool isSpiInitialized[5];
 
 /**
@@ -118,17 +118,17 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	if (spiDevice == SPI_NONE) {
 		return NULL;
 	}
-#if STM32_SPI_USE_SPI1 || defined(__DOXYGEN__)
+#if STM32_SPI_USE_SPI1
 	if (spiDevice == SPI_DEVICE_1) {
 		return &SPID1;
 	}
 #endif
-#if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
+#if STM32_SPI_USE_SPI2
 	if (spiDevice == SPI_DEVICE_2) {
 		return &SPID2;
 	}
 #endif
-#if STM32_SPI_USE_SPI3 || defined(__DOXYGEN__)
+#if STM32_SPI_USE_SPI3
 	if (spiDevice == SPI_DEVICE_3) {
 		return &SPID3;
 	}
@@ -138,7 +138,7 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
-#if HAL_USE_I2C || defined(__DOXYGEN__)
+#if HAL_USE_I2C
 #if defined(STM32F7XX)
 // values calculated with STM32CubeMX tool, 100kHz I2C clock for Nucleo-767 @168 MHz, PCK1=42MHz
 #define HAL_I2C_F7_100_TIMINGR 0x00A0A3F7
@@ -204,7 +204,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 #if EFI_MAP_AVERAGING
 		mapAveragingAdcCallback(fastAdc.samples[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 		if (CONFIGB(isHip9011Enabled)) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
@@ -237,7 +237,7 @@ static void adcConfigListener(Engine *engine) {
 }
 
 void turnOnHardware(Logging *sharedLogger) {
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins(sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
@@ -249,7 +249,7 @@ static void unregisterPin(brain_pin_e currentPin, brain_pin_e prevPin) {
 }
 
 void stopSpi(spi_device_e device) {
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 	if (!isSpiInitialized[device])
 		return; // not turned on
 	isSpiInitialized[device] = false;
@@ -262,25 +262,25 @@ void stopSpi(spi_device_e device) {
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
        
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	bool etbRestartNeeded = isETBRestartNeeded();
 	if (etbRestartNeeded) {
 		stopETBPins();
 	}
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+#if EFI_VEHICLE_SPEED
 	stopVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
-#if EFI_AUX_PID || defined(__DOXYGEN__)
+#if EFI_AUX_PID
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
 
@@ -304,24 +304,24 @@ void applyNewHardwareSettings(void) {
 
 	enginePins.unregisterPins();
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	if (etbRestartNeeded) {
 		startETBPins();
 	}
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+#if EFI_VEHICLE_SPEED
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
-#if EFI_AUX_PID || defined(__DOXYGEN__)
+#if EFI_AUX_PID
 	startAuxPins();
 #endif /* EFI_AUX_PID */
 
@@ -410,7 +410,7 @@ void initHardware(Logging *l) {
 		return;
 	}
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	initTriggerDecoder();
 #endif
 
@@ -426,11 +426,11 @@ void initHardware(Logging *l) {
 		isBoardTestMode_b = false;
 	}
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	initAdcInputs(isBoardTestMode_b);
 #endif
 
-#if EFI_BOARD_TEST || defined(__DOXYGEN__)
+#if EFI_BOARD_TEST
 	if (isBoardTestMode_b) {
 		// this method never returns
 		initBoardTest();
@@ -452,7 +452,7 @@ void initHardware(Logging *l) {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	// todo: figure out better startup logic
 	initTriggerCentral(sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -460,7 +460,7 @@ void initHardware(Logging *l) {
 	turnOnHardware(sharedLogger);
 
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 	initSpiModules(boardConfiguration);
 #endif
 
@@ -475,27 +475,27 @@ void initHardware(Logging *l) {
 	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 	initHip9011(sharedLogger);
 #endif /* EFI_HIP_9011 */
 
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
-#if EFI_MEMS || defined(__DOXYGEN__)
+#if EFI_MEMS
 	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 //	initFixedLeds();
 
 
-#if EFI_BOSCH_YAW || defined(__DOXYGEN__)
+#if EFI_BOSCH_YAW
 	initBoschYawRateSensor();
 #endif /* EFI_BOSCH_YAW */
 
 	//	initBooleanInputs();
 
-#if EFI_UART_GPS || defined(__DOXYGEN__)
+#if EFI_UART_GPS
 	initGps();
 #endif
 
@@ -503,11 +503,11 @@ void initHardware(Logging *l) {
 	initServo();
 #endif
 
-#if ADC_SNIFFER || defined(__DOXYGEN__)
+#if ADC_SNIFFER
 	initAdcDriver();
 #endif
 
-#if HAL_USE_I2C || defined(__DOXYGEN__)
+#if HAL_USE_I2C
 	addConsoleActionII("i2c", sendI2Cbyte);
 #endif
 
@@ -525,7 +525,7 @@ void initHardware(Logging *l) {
 //		}
 //	}
 
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+#if EFI_VEHICLE_SPEED
 	initVehicleSpeed(sharedLogger);
 #endif
 
@@ -533,7 +533,7 @@ void initHardware(Logging *l) {
 	cdmIonInit();
 #endif
 
-#if (HAL_USE_PAL && EFI_JOYSTICK) || defined(__DOXYGEN__)
+#if (HAL_USE_PAL && EFI_JOYSTICK)
 	initJoystick(sharedLogger);
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
@@ -546,7 +546,7 @@ void initHardware(Logging *l) {
 
 #endif  /* EFI_PROD_CODE || EFI_SIMULATOR */
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 // this is F4 implementation but we will keep it here for now for simplicity
 int getSpiPrescaler(spi_speed_e speed, spi_device_e device) {
 	switch (speed) {

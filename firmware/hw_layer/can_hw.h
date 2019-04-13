@@ -41,7 +41,7 @@ void sendCanMessage();
 void setCanType(int type);
 void setTxBit(int offset, int index);
 
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);

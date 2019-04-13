@@ -16,7 +16,7 @@
 
 #include "global.h"
 
-#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
+#if HAL_USE_SERIAL_USB
 
 /* Virtual serial port over USB.*/
 SerialUSBDriver SDU1;

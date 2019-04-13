@@ -11,7 +11,7 @@
 #include "pwm_generator.h"
 #include "rpm_calculator.h"
 
-#if (EFI_CJ125 && HAL_USE_SPI) || defined(__DOXYGEN__)
+#if EFI_CJ125 && HAL_USE_SPI
 
 // looks like 3v range should be enough, divider not needed
 #define EFI_CJ125_DIRECTLY_CONNECTED_UR TRUE
@@ -70,7 +70,7 @@ static const float cjLSULambda[2][CJ125_LSU_CURVE_SIZE] = { {
 
 
 static int cjReadRegister(unsigned char regAddr) {
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 	spiSelect(driver);
 	tx_buff[0] = regAddr;
 	spiSend(driver, 1, tx_buff);
@@ -225,7 +225,7 @@ static void cjCalibrate(void) {
 		cjUpdateAnalogValues();
 		cjPrintData();
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 		if (engineConfiguration->debugMode == DBG_CJ125) {
 			cjPostState(&tsOutputChannels);
 		}
@@ -456,7 +456,7 @@ static msg_t cjThread(void)
 	return -1;
 }
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 static bool cjCheckConfig(void) {
 	if (!CONFIGB(isCJ125Enabled)) {
 		scheduleMsg(logger, "cj125 is disabled. Failed!");
@@ -519,7 +519,7 @@ bool cjHasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return globalInstance.isValidState();
 }
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 // used by DBG_CJ125
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = globalInstance.heaterDuty;

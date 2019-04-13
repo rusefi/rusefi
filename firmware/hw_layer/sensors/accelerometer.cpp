@@ -21,7 +21,7 @@
 
 EXTERN_ENGINE;
 
-#if EFI_MEMS || defined(__DOXYGEN__)
+#if EFI_MEMS
 #include "mpu_util.h"
 #include "lis302dl.h"
 #include "periodic_controller.h"
@@ -53,7 +53,7 @@ void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 
-#if EFI_MEMS || defined(__DOXYGEN__)
+#if EFI_MEMS
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -78,7 +78,7 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (!CONFIGB(is_enabled_spi_1))
 		return; // temporary
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 	driver = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
 	if (driver == NULL) {
 		// error already reported
