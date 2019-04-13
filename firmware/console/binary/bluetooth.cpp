@@ -7,7 +7,7 @@
 #include "bluetooth.h"
 #include "engine_configuration.h"
 
-#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+#if EFI_BLUETOOTH_SETUP
 
 static bool btProcessIsStarted = false;
 static bool btProcessIsRunning = false;

@@ -10,10 +10,10 @@
 #include "engine.h"
 #include "rpm_calculator.h"
 
-#if EFI_SENSOR_CHART || defined(__DOXYGEN__)
+#if EFI_SENSOR_CHART
 #include "status_loop.h"
 
-#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
+#if EFI_TEXT_LOGGING
 static char LOGGING_BUFFER[5000] CCM_OPTIONAL;
 static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 #endif /* EFI_TEXT_LOGGING */
@@ -24,7 +24,7 @@ static int initialized = false;
 EXTERN_ENGINE;
 
 void scAddData(float angle, float value) {
-#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
+#if EFI_TEXT_LOGGING
 	if (!initialized) {
 		return; // this is possible because of initialization sequence
 	}

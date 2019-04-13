@@ -16,7 +16,7 @@
 
 #include "global.h"
 
-#if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
+#if EFI_SUPPORT_DODGE_NEON
 
 #include "dodge_neon.h"
 #include "engine_configuration.h"
@@ -454,7 +454,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].dFactor = 0.1;
 
 	
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 //	/**
 //	 * set_fsio_setting 1 0.55
 //	 */

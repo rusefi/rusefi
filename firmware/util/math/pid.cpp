@@ -110,7 +110,7 @@ void Pid::setErrorAmplification(float coef) {
 	errorAmplificationCoef = coef;
 }
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) {
 	postState(tsOutputChannels, 1);
 }
@@ -135,7 +135,7 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
 #endif /* EFI_TUNER_STUDIO */
 
 void Pid::sleep() {
-#if !EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if !EFI_UNIT_TEST
 	int periodMs = maxI(10, pid->periodMs);
 	chThdSleepMilliseconds(periodMs);
 #endif /* EFI_UNIT_TEST */

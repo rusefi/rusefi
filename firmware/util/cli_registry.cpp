@@ -43,7 +43,7 @@ void resetConsoleActions(void) {
 }
 
 static void doAddAction(const char *token, action_type_e type, Void callback, void *param) {
-#if !defined(EFI_DISABLE_CONSOLE_ACTIONS) || defined(__DOXYGEN__)
+#if !defined(EFI_DISABLE_CONSOLE_ACTIONS)
 	for (uint32_t i = 0; i < efiStrlen(token);i++) {
 		char ch = token[i];
 		if (ch != mytolower(ch)) {
@@ -168,14 +168,14 @@ static int getParameterCount(action_type_e parameterType) {
  * @brief This function prints out a list of all available commands
  */
 void helpCommand(void) {
-#if EFI_BOARD_TEST || defined(__DOXYGEN__)
+#if EFI_BOARD_TEST
 	if (isBoardTestMode()) {
 		printBoardTestState();
 		return;
 	}
 #endif /* EFI_BOARD_TEST */
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(logging, "%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
 		TokenCallback *current = &consoleActions[i];
@@ -347,7 +347,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		REPLACE_SPACES_WITH_ZERO;
 		int value1 = atoi(parameter);
 		if (absI(value1) == ERROR_CODE) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 			scheduleMsg(logging, "not an integer [%s]", parameter);
 #endif
 			return;
@@ -355,7 +355,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		parameter += spaceIndex + 1;
 		int value2 = atoi(parameter);
 		if (absI(value2) == ERROR_CODE) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 			scheduleMsg(logging, "not an integer [%s]", parameter);
 #endif
 			return;
@@ -531,7 +531,7 @@ static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
 	return false;
 }
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 static void sendOutConfirmation(const char *command, int length) {
 	scheduleMsg(logging, "%s%d", command, length);
 }
@@ -561,7 +561,7 @@ void handleConsoleLine(char *line) {
 	sendOutConfirmation(confirmation, lineLength);
 #endif
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 	printf("handleConsoleLine [%s]\r\n", line);
 #endif /* EFI_SIMULATOR */
 

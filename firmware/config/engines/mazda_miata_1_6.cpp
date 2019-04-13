@@ -230,7 +230,7 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// set_fsio_expression 0 "((rpm > fsio_setting(4) & (fsio_analog_input < fsio_setting(5)) | rpm > fsio_setting(1) | (coolant > fsio_setting(2)  > | (vbatt < fsio_setting(3)"
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	// todo: convert
 	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */

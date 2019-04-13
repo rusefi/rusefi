@@ -59,7 +59,7 @@
  */
 
 static Semaphore sem1;
-#if CH_USE_MUTEXES || defined(__DOXYGEN__)
+#if CH_USE_MUTEXES
 static Mutex mtx1;
 #endif
 
@@ -443,7 +443,7 @@ ROMCONST struct testcase testbmk8 = {
   bmk8_execute
 };
 
-#if CH_USE_QUEUES || defined(__DOXYGEN__)
+#if CH_USE_QUEUES
 /**
  * @page test_benchmarks_009 I/O Queues throughput
  *
@@ -533,7 +533,7 @@ ROMCONST struct testcase testbmk10 = {
   bmk10_execute
 };
 
-#if CH_USE_SEMAPHORES || defined(__DOXYGEN__)
+#if CH_USE_SEMAPHORES
 /**
  * @page test_benchmarks_011 Semaphores wait/signal performance
  *
@@ -581,7 +581,7 @@ ROMCONST struct testcase testbmk11 = {
 };
 #endif /* CH_USE_SEMAPHORES */
 
-#if CH_USE_MUTEXES || defined(__DOXYGEN__)
+#if CH_USE_MUTEXES
 /**
  * @page test_benchmarks_012 Mutexes lock/unlock performance
  *
@@ -651,12 +651,12 @@ static void bmk13_execute(void) {
   test_print("--- Timer : ");
   test_printn(sizeof(VirtualTimer));
   test_println(" bytes");
-#if CH_USE_SEMAPHORES || defined(__DOXYGEN__)
+#if CH_USE_SEMAPHORES
   test_print("--- Semaph: ");
   test_printn(sizeof(Semaphore));
   test_println(" bytes");
 #endif
-#if CH_USE_EVENTS || defined(__DOXYGEN__)
+#if CH_USE_EVENTS
   test_print("--- EventS: ");
   test_printn(sizeof(EventSource));
   test_println(" bytes");
@@ -664,22 +664,22 @@ static void bmk13_execute(void) {
   test_printn(sizeof(EventListener));
   test_println(" bytes");
 #endif
-#if CH_USE_MUTEXES || defined(__DOXYGEN__)
+#if CH_USE_MUTEXES
   test_print("--- Mutex : ");
   test_printn(sizeof(Mutex));
   test_println(" bytes");
 #endif
-#if CH_USE_CONDVARS || defined(__DOXYGEN__)
+#if CH_USE_CONDVARS
   test_print("--- CondV.: ");
   test_printn(sizeof(CondVar));
   test_println(" bytes");
 #endif
-#if CH_USE_QUEUES || defined(__DOXYGEN__)
+#if CH_USE_QUEUES
   test_print("--- Queue : ");
   test_printn(sizeof(GenericQueue));
   test_println(" bytes");
 #endif
-#if CH_USE_MAILBOXES || defined(__DOXYGEN__)
+#if CH_USE_MAILBOXES
   test_print("--- MailB.: ");
   test_printn(sizeof(Mailbox));
   test_println(" bytes");
@@ -706,14 +706,14 @@ ROMCONST struct testcase * ROMCONST patternbmk[] = {
   &testbmk6,
   &testbmk7,
   &testbmk8,
-#if CH_USE_QUEUES || defined(__DOXYGEN__)
+#if CH_USE_QUEUES
   &testbmk9,
 #endif
   &testbmk10,
-#if CH_USE_SEMAPHORES || defined(__DOXYGEN__)
+#if CH_USE_SEMAPHORES
   &testbmk11,
 #endif
-#if CH_USE_MUTEXES || defined(__DOXYGEN__)
+#if CH_USE_MUTEXES
   &testbmk12,
 #endif
   &testbmk13,

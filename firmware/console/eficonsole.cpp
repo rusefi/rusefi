@@ -96,7 +96,7 @@ static void sayHello(void) {
 	scheduleMsg(&logger, "EFI_SIGNAL_EXECUTOR_HW_TIMER=%d", EFI_SIGNAL_EXECUTOR_HW_TIMER);
 #endif
 
-#if defined(EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if defined(EFI_SHAFT_POSITION_INPUT)
 	scheduleMsg(&logger, "EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
 #endif
 #ifdef EFI_INTERNAL_ADC
@@ -116,7 +116,7 @@ static void sayHello(void) {
  * This methods prints all threads and their total times
  */
 static void cmd_threads(void) {
-#if CH_DBG_THREADS_PROFILING || defined(__DOXYGEN__)
+#if CH_DBG_THREADS_PROFILING
 	 /* todo: fix this code to work with fresh chibios
   static const char *states[] = { CH_STATE_NAMES };
   thread_t *tp;

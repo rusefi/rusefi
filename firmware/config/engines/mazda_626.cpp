@@ -97,7 +97,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
 
 
-//#if EFI_FSIO || defined(__DOXYGEN__)
+//#if EFI_FSIO
 //	// backup main relay pin
 //	setFsio(0, GPIOE_6, "1" PASS_ENGINE_PARAMETER_SUFFIX);
 //#endif

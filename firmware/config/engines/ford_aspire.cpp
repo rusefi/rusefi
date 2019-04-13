@@ -18,7 +18,7 @@
 #include "advance_map.h"
 #include "engine_configuration.h"
 
-#if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)
+#if EFI_SUPPORT_FORD_ASPIRE
 
 /**
  * This is just the default map which is stored into flash memory in case flash is empty

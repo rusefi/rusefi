@@ -82,11 +82,11 @@
 #include "loggingcentral.h"
 #include "status_loop.h"
 #include "mmc_card.h"
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 
 EXTERN_ENGINE
 ;
@@ -101,7 +101,7 @@ extern short currentPageId;
  */
 LoggingWithStorage tsLogger("binary");
 
-#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
+#if !defined(EFI_NO_CONFIG_WORKING_COPY)
 /**
  * this is a local copy of the configuration. Any changes to this copy
  * have no effect until this copy is explicitly propagated to the main working copy
@@ -139,7 +139,7 @@ static void printErrorCounters(void) {
 }
 
 void printTsStats(void) {
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	if (false) {
 		// todo: is this code needed somewhere else?
 		scheduleMsg(&tsLogger, "TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
@@ -172,7 +172,7 @@ static void setTsSpeed(int value) {
 	printTsStats();
 }
 
-#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+#if EFI_BLUETOOTH_SETUP
 // Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
 static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
 	bluetoothStart(&tsChannel, BLUETOOTH_HC_05, baudRate, name, pinCode);
@@ -188,7 +188,7 @@ static void bluetoothSPP(const char *baudRate, const char *name, const char *pin
 #endif  /* EFI_BLUETOOTH_SETUP */
 
 void tunerStudioDebug(const char *msg) {
-#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "%s", msg);
 #endif
 }
@@ -196,7 +196,7 @@ void tunerStudioDebug(const char *msg) {
 char *getWorkingPageAddr(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
-#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
+#if !defined(EFI_NO_CONFIG_WORKING_COPY)
 		return (char*) &configWorkingCopy.engineConfiguration;
 #else
 		return (char*) &engineConfiguration;
@@ -274,7 +274,7 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 			return;
 		}
 		scheduleMsg(&tsLogger, "applying soft change from %d length %d", offset, count);
-#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
+#if !defined(EFI_NO_CONFIG_WORKING_COPY)
 		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
 				count);
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
@@ -285,7 +285,7 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
  * read log file content for rusEfi console
  */
 static void handleReadFileContent(ts_channel_s *tsChannel, short fileId, short offset, short length) {
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 	readLogFileContent(tsChannel->crcReadBuffer, fileId, offset, length);
 #endif /* EFI_FILE_LOGGING */
 }
@@ -350,7 +350,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
-#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO_VERBOSE
 //	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
 #endif
 
@@ -386,7 +386,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 	tsState.readPageCommandsCounter++;
 	currentPageId = pageId;
 
-#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "READ mode=%d page=%d offset=%d size=%d", mode, (int) currentPageId, offset, count);
 #endif
 
@@ -407,13 +407,13 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	sr5SendResponse(tsChannel, mode, addr, count);
-#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO_VERBOSE
 //	scheduleMsg(&tsLogger, "Sending %d done", count);
 #endif
 }
 
 void requestBurn(void) {
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 	setNeedToWriteConfiguration();
 #endif
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -436,13 +436,13 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 
 	currentPageId = page;
 
-#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO_VERBOSE
 	// pointless since we only have one page now
 //	scheduleMsg(logger, "Page number %d", currentPageId);
 #endif
 
 // todo: how about some multi-threading?
-#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
+#if !defined(EFI_NO_CONFIG_WORKING_COPY)
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
@@ -483,14 +483,14 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 
 		uint8_t firstByte;
 		int received = sr5ReadData(tsChannel, &firstByte, 1);
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("received %d\r\n", received);
 #endif
 
 
 		if (received != 1) {
 //			tunerStudioError("ERROR: no command");
-#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+#if EFI_BLUETOOTH_SETUP
 			// assume there's connection loss and notify the bluetooth init code
 			bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
@@ -538,7 +538,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 			continue;
 		}
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("command %c\r\n", command);
 #endif
 
@@ -595,7 +595,7 @@ static THD_FUNCTION(tsThreadEntryPoint, arg) {
  * Copy real configuration into the communications layer working copy
  */
 void syncTunerStudioCopy(void) {
-#if !defined(EFI_NO_CONFIG_WORKING_COPY) || defined(__DOXYGEN__)
+#if !defined(EFI_NO_CONFIG_WORKING_COPY)
 	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 }
@@ -617,7 +617,7 @@ void tunerStudioError(const char *msg) {
  */
 void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
-#if EFI_TUNER_STUDIO_VERBOSE || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
@@ -675,12 +675,12 @@ static void handleGetText(ts_channel_s *tsChannel) {
 
 	int outputSize;
 	char *output = swapOutputBuffers(&outputSize);
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
 	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
@@ -689,7 +689,7 @@ static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomi
 	sr5WriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("execute [%s]\r\n", trimmed);
 #endif
 	(console_line_callback)(trimmed);
@@ -792,7 +792,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 
 		}
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 		executeTSCommand(subsystem, index);
 #endif /* EFI_PROD_CODE */
 		sendOkResponse(tsChannel, TS_CRC);
@@ -817,7 +817,7 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("reset_ts", resetTs);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
 	
-#if EFI_BLUETOOTH_SETUP || defined(__DOXYGEN__)
+#if EFI_BLUETOOTH_SETUP
 	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
 	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);

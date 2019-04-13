@@ -7,7 +7,7 @@
 
 #ifndef FORD_FIESTA_H_
 #define FORD_FIESTA_H_
-#if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
+#if EFI_SUPPORT_FORD_FIESTA
 
 #include "engine.h"
 

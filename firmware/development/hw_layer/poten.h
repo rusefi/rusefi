@@ -11,7 +11,7 @@
 
 #include "global.h"
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 
 #include "engine_configuration.h"
 

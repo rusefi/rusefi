@@ -2,7 +2,7 @@
 #include "global.h"
 #include "bootloader/bootloader.h"
 
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE) || defined(__DOXYGEN__)
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
 
 #if defined __GNUC__
 #define BOOTLOADER_SECTION __attribute__((section(".bl")))	/* todo: add 'used'? */

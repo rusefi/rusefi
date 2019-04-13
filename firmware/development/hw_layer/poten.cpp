@@ -15,7 +15,7 @@
 #include "hardware.h"
 #include "mpu_util.h"
 
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 
 EXTERN_ENGINE;
 
@@ -52,7 +52,7 @@ EXTERN_ENGINE;
 
 static Logging * logger;
 
-#if EFI_POTENTIOMETER || defined(__DOXYGEN__)
+#if EFI_POTENTIOMETER
 static Mcp42010Driver potConfig[DIGIPOT_COUNT];
 
 void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, brain_pin_e csPin) {

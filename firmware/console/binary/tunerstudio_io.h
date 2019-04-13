@@ -85,7 +85,7 @@ typedef struct {
 // todo: double-check this
 #define CRC_WRAPPING_SIZE (CRC_VALUE_SIZE + 3)
 
-#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
+#if HAL_USE_SERIAL_USB
 #define CONSOLE_USB_DEVICE SDU1
 #endif /* HAL_USE_SERIAL_USB */
 

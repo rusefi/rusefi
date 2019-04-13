@@ -11,7 +11,7 @@
 
 #include "global.h"
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 #include "datalogging.h"
 
 /**

@@ -24,7 +24,7 @@
 
 #include "global.h"
 
-#if EFI_PERF_METRICS || defined(__DOXYGEN__)
+#if EFI_PERF_METRICS
 
 #include "test.h"
 #include "testbmk.h"

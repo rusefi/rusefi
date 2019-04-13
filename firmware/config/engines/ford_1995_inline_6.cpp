@@ -18,7 +18,7 @@
 #include "engine_math.h"
 #include "allsensors.h"
 
-#if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
+#if EFI_SUPPORT_1995_FORD_INLINE_6
 
 EXTERN_ENGINE;
 

@@ -12,7 +12,7 @@
 
 #include "global.h"
 
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 
 #include "digital_input_hw.h"
 #include "engine_sniffer.h"

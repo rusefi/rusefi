@@ -126,7 +126,7 @@
 #include "lcd_HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
-#if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
+#if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
@@ -168,7 +168,7 @@ void runRusEfi(void) {
 	initErrorHandling();
 	addConsoleAction("reboot", scheduleReboot);
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	/**
 	 * This is so early because we want to init logger
 	 * which would be used while finding trigger sync index
@@ -187,7 +187,7 @@ void runRusEfi(void) {
 	 */
 	initPinRepository();
 
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 	/**
 	 * First thing is reading configuration from flash memory.
 	 * In order to have complete flexibility configuration has to go before anything else.
@@ -215,11 +215,11 @@ void runRusEfi(void) {
 	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 	rememberCurrentConfiguration();
 
-#if EFI_PERF_METRICS || defined(__DOXYGEN__)
+#if EFI_PERF_METRICS
 	initTimePerfActions(&sharedLogger);
 #endif
         
-#if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
+#if EFI_ENGINE_EMULATOR
 	initEngineEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 	startStatusThreads();
@@ -235,7 +235,7 @@ void runRusEfi(void) {
 	while (true) {
 		efiAssertVoid(CUSTOM_RM_STACK, getCurrentRemainingStack() > 128, "stack#1");
 
-#if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)
+#if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own dev console
 		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
@@ -256,7 +256,7 @@ void runRusEfi(void) {
 void chDbgStackOverflowPanic(thread_t *otp) {
 	(void)otp;
 	strcpy(panicMessage, "stack overflow: ");
-#if defined(CH_USE_REGISTRY) || defined(__DOXYGEN__)
+#if defined(CH_USE_REGISTRY)
 	int p_name_len = strlen(otp->p_name);
 	if (p_name_len < sizeof(panicMessage) - 2)
 		strcat(panicMessage, otp->p_name);

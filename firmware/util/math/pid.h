@@ -45,7 +45,7 @@ public:
 	float getIntegration(void);
 	float getPrevError(void);
 	void setErrorAmplification(float coef);
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
 #endif /* EFI_TUNER_STUDIO */

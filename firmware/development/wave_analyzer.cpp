@@ -26,14 +26,14 @@
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
 
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 
 EXTERN_ENGINE;
 
 #define CHART_RESET_DELAY 1
 #define MAX_ICU_COUNT 5
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 extern WaveChart waveChart;
 #endif
 extern bool hasFirmwareErrorFlag;
@@ -55,7 +55,7 @@ static void ensureInitialized(WaveReader *reader) {
 	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
 
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 
 static void waAnaWidthCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
@@ -274,7 +274,7 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 	if (hasFirmwareError()) {
 		return;
 	}
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 	initWave(WA_CHANNEL_1, 0);
 	initWave(WA_CHANNEL_2, 1);
 

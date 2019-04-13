@@ -119,7 +119,7 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerCentral(&sharedLogger);
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
+#if EFI_MAP_AVERAGING
 	initMapAveraging(&sharedLogger, engine);
 #endif /* EFI_MAP_AVERAGING */
 
