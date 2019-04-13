@@ -19,7 +19,8 @@ void initPwmGenerator(void);
 
 /**
  * default implementation of pwm_gen_callback which simply toggles the pins
+ *
  */
-void applyPinState(PwmConfig *state, int stateIndex);
+void applyPinState(PwmConfig *state, int stateIndex, void* arg) /* pwm_gen_callback */;
 
 #endif /* PWM_GENERATOR_H_ */
