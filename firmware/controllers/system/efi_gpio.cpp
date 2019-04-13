@@ -316,6 +316,8 @@ void OutputPin::setValue(int logicValue) {
 		} else {
 			/* external pin */
 			gpiochips_writePad(this->brainPin, logicValue);
+			/* TODO: check return value */
+			currentLogicValue = logicValue;
 		}
 	#else
 		if (port != GPIO_NULL) {
