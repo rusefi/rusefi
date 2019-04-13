@@ -9,6 +9,10 @@
 #include "global.h"
 #include "gpio/gpio_ext.h"
 
+#define STRING2(x) #x
+#define STRING(x) STRING2(x)
+#pragma message(STRING(BOARD_EXT_GPIOCHIPS))
+
 #if (BOARD_EXT_GPIOCHIPS > 0)
 
 /*==========================================================================*/
