@@ -11,6 +11,7 @@
 #include "smart_gpio.h"
 #include "efi_gpio.h"
 #include "engine_configuration.h"
+#include "hardware.h"
 #include "gpio_ext.h"
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
@@ -19,7 +20,7 @@
 EXTERN_CONFIG;
 
 #if (BOARD_TLE6240_COUNT > 0)
-const struct tle6240_config tle6240 = {
+struct tle6240_config tle6240 = {
 	.spi_bus = NULL /* TODO software lookup &SPID4 */,
 	.spi_config = {
 		.circular = false,
@@ -58,7 +59,7 @@ const struct tle6240_config tle6240 = {
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 
 #if (BOARD_MC33972_COUNT > 0)
-const struct mc33972_config mc33972 = {
+struct mc33972_config mc33972 = {
 	.spi_bus = NULL /* TODO software lookup &SPID4 */,
 	.spi_config = {
 		.circular = false,
@@ -107,6 +108,11 @@ void initSmartGpio() {
 
 	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* (BOARD_TLE6240_COUNT > 0) */
+
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	/* external chip init */
+	gpiochips_init();
+#endif
 }
 
 #endif /* EFI_PROD_CODE */
