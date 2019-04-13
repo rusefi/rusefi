@@ -352,6 +352,7 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(etb1_use_two_wires) = true;
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
 	CONFIGB(etb1.directionPin2) = GPIOF_14;
+	boardConfiguration->isHip9011Enabled = false;
 
 	// ETB #2
 	// DIS PE5
