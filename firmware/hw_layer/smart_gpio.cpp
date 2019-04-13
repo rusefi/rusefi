@@ -6,6 +6,8 @@
  */
 
 #include "global.h"
+
+#if EFI_PROD_CODE
 #include "smart_gpio.h"
 #include "efi_gpio.h"
 #include "engine_configuration.h"
@@ -14,10 +16,9 @@
 #include "drivers/gpio/mc33972.h"
 #include "drivers/gpio/tle8888.h"
 
-#if EFI_PROD_CODE
-
 EXTERN_CONFIG;
 
+#if (BOARD_TLE6240_COUNT > 0)
 const struct tle6240_config tle6240 = {
 	.spi_bus = NULL /* TODO software lookup &SPID4 */,
 	.spi_config = {
@@ -54,8 +55,9 @@ const struct tle6240_config tle6240 = {
 	},
 	.reset = {.port = GPIOG, .pad = 3}
 };
+#endif /* (BOARD_TLE6240_COUNT > 0) */
 
-
+#if (BOARD_MC33972_COUNT > 0)
 const struct mc33972_config mc33972 = {
 	.spi_bus = NULL /* TODO software lookup &SPID4 */,
 	.spi_config = {
@@ -75,8 +77,7 @@ const struct mc33972_config mc33972 = {
 		.cr2 = SPI_CR2_24BIT_MODE
 	},
 };
-
-#endif /* EFI_PROD_CODE */
+#endif /* (BOARD_MC33972_COUNT > 0) */
 
 void initSmartGpio() {
 
@@ -85,7 +86,7 @@ void initSmartGpio() {
 	tle6240_add(0, &tle6240);
 #else
 	gpiochip_use_gpio_base(TLE6240_OUTPUTS);
-#endif
+#endif /* (BOARD_TLE6240_COUNT > 0) */
 
 #if (BOARD_MC33972_COUNT > 0)
 	mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
@@ -93,10 +94,10 @@ void initSmartGpio() {
 	mc33972_add(0, &mc33972);
 #else
 	gpiochip_use_gpio_base(MC33972_INPUTS);
-#endif
+#endif /* (BOARD_MC33972_COUNT > 0) */
 
 
-#if EFI_TLE8888
+#if (BOARD_TLE6240_COUNT > 0)
 	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
 		static OutputPin tle8888Cs;
 //		// SPI pins are enabled in initSpiModules()
@@ -105,5 +106,7 @@ void initSmartGpio() {
 	}
 
 	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_TLE8888 */
+#endif /* (BOARD_TLE6240_COUNT > 0) */
 }
+
+#endif /* EFI_PROD_CODE */
