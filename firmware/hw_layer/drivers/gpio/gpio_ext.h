@@ -20,10 +20,6 @@
 /* Checks																	*/
 /*==========================================================================*/
 
-#ifndef BOARD_EXT_GPIOCHIPS
-	#define BOARD_EXT_GPIOCHIPS	0
-#endif
-
 #ifdef __cplusplus
 extern "C"
 {
