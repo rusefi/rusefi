@@ -286,6 +286,10 @@ OutputPin::OutputPin() {
 
 bool OutputPin::isInitialized() {
 #if EFI_GPIO_HARDWARE
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	if (ext)
+		return true;
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 	return port != NULL;
 #else /* EFI_GPIO_HARDWARE */
 	return true;

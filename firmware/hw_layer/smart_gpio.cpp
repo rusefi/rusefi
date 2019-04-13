@@ -97,7 +97,7 @@ void initSmartGpio() {
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
 
-#if (BOARD_TLE6240_COUNT > 0)
+#if (BOARD_TLE8888_COUNT > 0)
 	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
 		static OutputPin tle8888Cs;
 //		// SPI pins are enabled in initSpiModules()

@@ -24,7 +24,7 @@ void initSmartGpio(void);
 #endif
 
 
-#if (BOARD_TLE6240_COUNT > 0)
+#if (BOARD_EXT_GPIOCHIPS > 0)
 
 #if defined(STM_F4_FAMILY)
  #define SPI_CR1_16BIT_MODE SPI_CR1_DFF
@@ -44,6 +44,6 @@ void initSmartGpio(void);
  unexpected platform
 #endif
 
-#endif /* (BOARD_TLE6240_COUNT > 0) */
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 #endif /* HW_LAYER_SMART_GPIO_H_ */

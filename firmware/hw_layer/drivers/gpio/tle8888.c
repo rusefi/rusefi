@@ -14,7 +14,7 @@
 
 #include "global.h"
 
-#if (BOARD_TLE6240_COUNT > 0)
+#if (BOARD_TLE8888_COUNT > 0)
 
 /* to be moved to smart_gpio.cpp */
 #include "engine_configuration.h"
@@ -296,6 +296,7 @@ int tle8888_writePad(void *data, unsigned int pin, int value)
 {
 	struct tle8888_priv *chip;
 
+	// todo: so for TLE8888_PIN_20 we 'return -1' here since below TLE8888_DIRECT_OUTPUTS. bug or feature?
 	if ((pin >= TLE8888_DIRECT_OUTPUTS) || (data == NULL))
 		return -1;
 
@@ -528,7 +529,7 @@ static struct tle8888_config tle8888_cfg = {
 		.sspad = 0U,
 #if defined(STM_F4_FAMILY)
 		.cr1 =
-			SPI_CR1_16BIT_MODE	|
+			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			SPI_CR1_LSBFIRST |	//LSB first
@@ -539,7 +540,7 @@ static struct tle8888_config tle8888_cfg = {
 		.cr2 = SPI_CR2_16BIT_MODE
 #elif defined(STM_F7_FAMILY)
 		.cr1 =
-			SPI_CR1_16BIT_MODE	|
+			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			SPI_CR1_LSBFIRST |

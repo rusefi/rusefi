@@ -439,6 +439,13 @@ void initHardware(Logging *l) {
 
 	initRtc();
 
+#if HAL_USE_SPI
+	initSpiModules(boardConfiguration);
+#endif
+	// initSmartGpio depends on 'initSpiModules'
+	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins();
 
 #if EFI_MAX_31855
@@ -458,13 +465,6 @@ void initHardware(Logging *l) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 	turnOnHardware(sharedLogger);
-
-
-#if HAL_USE_SPI
-	initSpiModules(boardConfiguration);
-#endif
-
-	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_HIP_9011
 	initHip9011(sharedLogger);
