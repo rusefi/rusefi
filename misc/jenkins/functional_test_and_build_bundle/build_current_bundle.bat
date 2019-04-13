@@ -41,10 +41,10 @@ git submodule update --init
 call update_version.bat
 
 call clean_compile_two_versions.bat
-if not exist deliver/rusefi_release.hex echo FAILED to compile RELEASE
+if not exist deliver/rusefi_release.hex echo Just to confirm - FAILED to compile RELEASE
 if not exist deliver/rusefi_release.hex exit -1
 
-if not exist deliver/rusefi_debug.hex echo FAILED to compile DEBUG
+if not exist deliver/rusefi_debug.hex echo Just to confirm - FAILED to compile DEBUG
 if not exist deliver/rusefi_debug.hex exit -1
 
 ..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_release.hex -out deliver/rusefi_release.dfu
