@@ -359,7 +359,8 @@
 #define GPS_SERIAL_SPEED 38400
 
 #ifndef CONFIG_RESET_SWITCH_PORT
-#define CONFIG_RESET_SWITCH_PORT GPIOD
+// looks like this feature is not extremely popular, we can try living without it now :)
+//#define CONFIG_RESET_SWITCH_PORT GPIOD
 #endif
 
 #ifndef CONFIG_RESET_SWITCH_PIN
