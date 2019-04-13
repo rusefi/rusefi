@@ -107,6 +107,11 @@ void initSmartGpio() {
 
 	initTle8888(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* (BOARD_TLE6240_COUNT > 0) */
+
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	/* external chip init */
+	gpiochips_init();
+#endif
 }
 
 #endif /* EFI_PROD_CODE */
