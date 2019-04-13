@@ -215,11 +215,6 @@ void initPinRepository(void) {
 
 	initialized = true;
 
-	#if (BOARD_EXT_GPIOCHIPS > 0)
-		/* external chip init */
-		gpiochips_init();
-	#endif
-
 	addConsoleAction("pins", reportPins);
 }
 
