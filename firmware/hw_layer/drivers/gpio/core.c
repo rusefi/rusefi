@@ -6,6 +6,7 @@
  * @author Andrey Gusakov, (c) 2019
  */
 
+#include "efifeatures.h"
 #include "global.h"
 #include "gpio/gpio_ext.h"
 
