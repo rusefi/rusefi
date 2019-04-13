@@ -14,7 +14,7 @@
 
 #include "global.h"
 
-#if EFI_TLE8888
+#if (BOARD_TLE6240_COUNT > 0)
 
 /* to be moved to smart_gpio.cpp */
 #include "engine_configuration.h"
@@ -597,4 +597,4 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 
 /*********TO BE REMOVED FROM THIS FILE ENDS***********/
 
-#endif /* EFI_TLE8888 */
+#endif /* (BOARD_TLE6240_COUNT > 0) */

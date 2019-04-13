@@ -179,6 +179,7 @@ INCDIR = . \
           $(PROJECT_DIR)/config/engines \
           $(PROJECT_DIR)/ext_algo \
           $(PROJECT_DIR)/controllers \
+          $(HW_LAYER_DRIVERS_INC) \
           $(PROJECT_DIR)/hw_layer \
           $(PROJECT_DIR)/hw_layer/algo \
           $(HW_SENSORS_INC) \

@@ -136,6 +136,7 @@ static void reportPins(void) {
 
 			/* here show all pins, unused too */
 			if (pin_name != NULL) {
+				// this probably uses a lot of output buffer!
 				scheduleMsg(&logger, "ext %s: %s",
 					pin_name, pin_user ? pin_user : "free");
 			} else {
