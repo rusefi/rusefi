@@ -5,7 +5,7 @@
  * @note this file should probably not include any other files
  *
  * @date Jan 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef RUSEFI_ENUMS_H_
@@ -789,7 +789,58 @@ typedef enum __attribute__ ((__packed__)) {
 	GPIOH_14 = 128,
 	GPIOH_15 = 129,
 
+	/* TLE6240 pins go right after on chips */
+	//#define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
+	TLE6240_PIN_1 = 130,
+	TLE6240_PIN_2 = 131,
+	TLE6240_PIN_3 = 132,
+	TLE6240_PIN_4 = 133,
+	TLE6240_PIN_5 = 134,
+	TLE6240_PIN_6 = 135,
+	TLE6240_PIN_7 = 136,
+	TLE6240_PIN_8 = 137,
+	TLE6240_PIN_9 = 138,
+	TLE6240_PIN_10 = 139,
+	TLE6240_PIN_11 = 140,
+	TLE6240_PIN_12 = 141,
+	TLE6240_PIN_13 = 142,
+	TLE6240_PIN_14 = 143,
+	TLE6240_PIN_15 = 144,
+	TLE6240_PIN_16 = 145,
+
+	/* MC33972 pins go right after TLE6240 */
+	//#define MC33972_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + 16 + (n)))
+	MC33972_PIN_1 = 146,
+	MC33972_PIN_21 = 166,
+	MC33972_PIN_22 = 167,
+
+	TLE8888_PIN_1 = 168,
+	TLE8888_PIN_2 = 169,
+	TLE8888_PIN_3 = 170,
+	TLE8888_PIN_4 = 171,
+	TLE8888_PIN_5 = 172,
+	TLE8888_PIN_6 = 173,
+	TLE8888_PIN_7 = 174,
+	TLE8888_PIN_8 = 175,
+	TLE8888_PIN_9 = 176,
+	TLE8888_PIN_10 = 177,
+	TLE8888_PIN_11 = 178,
+	TLE8888_PIN_12 = 179,
+	TLE8888_PIN_13 = 180,
+	TLE8888_PIN_14 = 181,
+	TLE8888_PIN_15 = 182,
+	TLE8888_PIN_16 = 183,
+	TLE8888_PIN_17 = 184,
+	TLE8888_PIN_18 = 185,
+	TLE8888_PIN_19 = 186,
+	TLE8888_PIN_20 = 187,
+	TLE8888_PIN_21 = 188,
+	TLE8888_PIN_22 = 189,
+	TLE8888_PIN_23 = 190,
+	TLE8888_PIN_24 = 191,
 } brain_pin_e;
+
+typedef brain_pin_e smart_pin_e;
 
 /* Plase keep updating this define */
 #define BRAIN_PIN_LAST_ONCHIP	GPIOH_15

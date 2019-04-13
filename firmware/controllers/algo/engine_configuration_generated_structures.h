@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 12 18:24:15 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 13 10:44:04 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -486,7 +486,7 @@ typedef struct {
 	/**
 	 * offset 58
 	 */
-	brain_pin_e fuelPumpPin;
+	smart_pin_e fuelPumpPin;
 	/**
 	 * offset 59
 	 */
@@ -494,7 +494,7 @@ typedef struct {
 	/**
 	 * offset 60
 	 */
-	brain_pin_e malfunctionIndicatorPin;
+	smart_pin_e malfunctionIndicatorPin;
 	/**
 	 * offset 61
 	 */
@@ -506,7 +506,7 @@ typedef struct {
 	/**
 	 * offset 63
 	 */
-	brain_pin_e fanPin;
+	smart_pin_e fanPin;
 	/**
 	 * some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 64
@@ -2403,7 +2403,15 @@ typedef struct {
 	/**
 	 * offset 4028
 	 */
-	int mainUnusedEnd[613];
+	spi_device_e tle6240spiDevice;
+	/**
+	 * offset 4032
+	 */
+	spi_device_e mc33972spiDevice;
+	/**
+	 * offset 4036
+	 */
+	int mainUnusedEnd[611];
 	/** total size 6480*/
 } engine_configuration_s;
 
@@ -2650,4 +2658,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 12 18:24:15 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 13 10:44:04 EDT 2019

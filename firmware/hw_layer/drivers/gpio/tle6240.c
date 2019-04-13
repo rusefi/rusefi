@@ -25,10 +25,6 @@
 #include "gpio/tle6240.h"
 #include "pin_repository.h"
 
-#ifndef  BOARD_TLE6240_COUNT
-	#define BOARD_TLE6240_COUNT 0
-#endif
-
 #if (BOARD_TLE6240_COUNT > 0)
 
 /*

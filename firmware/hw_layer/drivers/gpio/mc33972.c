@@ -19,10 +19,6 @@
 #include "gpio/mc33972.h"
 #include "pin_repository.h"
 
-#ifndef  BOARD_MC33972_COUNT
-	#define BOARD_MC33972_COUNT 0
-#endif
-
 #if (BOARD_MC33972_COUNT > 0)
 
 /*

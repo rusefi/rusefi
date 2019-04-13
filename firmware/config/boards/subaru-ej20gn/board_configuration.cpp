@@ -13,11 +13,7 @@
 #include "allsensors.h"
 #include "fsio_impl.h"
 #include "engine_configuration.h"
-
-/* TLE6240 pins go right after on chips */
-#define TLE6240_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + (n)))
-/* MC33972 pins go right after TLE6240 */
-#define MC33972_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + 16 + (n)))
+#include "smart_gpio.h"
 
 EXTERN_ENGINE;
 

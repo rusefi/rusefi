@@ -11,6 +11,11 @@
 #define HW_LAYER_MC33972_H_
 
 #include <hal.h>
+#include "efifeatures.h"
+
+#ifndef  BOARD_MC33972_COUNT
+	#define BOARD_MC33972_COUNT 0
+#endif
 
 #define MC33972_INPUTS				22
 
