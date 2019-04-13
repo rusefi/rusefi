@@ -89,6 +89,8 @@ void setMinimalPinsEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIGB(canTxPin) = GPIO_UNASSIGNED;
 	CONFIGB(canRxPin) = GPIO_UNASSIGNED;
 	CONFIGB(sdCardCsPin) = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	CONFIGB(idle).solenoidPin = GPIO_UNASSIGNED;
 	for (int i = 0;i<TRIGGER_INPUT_PIN_COUNT;i++) {
 		CONFIGB(triggerInputPins)[i] = GPIO_UNASSIGNED;
 	}
@@ -337,6 +339,7 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->debugMode = DBG_TLE8888;
 
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1 // just any non-empty value for now
 	// ETB #1 top one - closer to 121 connector
 	// DIS PF12
 	// EN  PF13
