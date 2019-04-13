@@ -13,10 +13,6 @@
 #include "efifeatures.h"
 #include <hal.h>
 
-#ifndef  BOARD_TLE6240_COUNT
-	#define BOARD_TLE6240_COUNT 0
-#endif
-
 #define TLE6240_OUTPUTS				16
 #define TLE6240_DIRECT_OUTPUTS		8
 

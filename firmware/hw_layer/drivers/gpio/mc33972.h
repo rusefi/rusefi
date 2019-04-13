@@ -13,10 +13,6 @@
 #include <hal.h>
 #include "efifeatures.h"
 
-#ifndef  BOARD_MC33972_COUNT
-	#define BOARD_MC33972_COUNT 0
-#endif
-
 #define MC33972_INPUTS				22
 
 /* DOTO: add irq support */
