@@ -42,6 +42,22 @@
 #undef EFI_MEMS
 #define EFI_MEMS FALSE
 
+#ifndef BOARD_TLE6240_COUNT
+#define BOARD_TLE6240_COUNT         0
+#endif
+
+#ifndef BOARD_MC33972_COUNT
+#define BOARD_MC33972_COUNT			0
+#endif
+
+#ifndef BOARD_TLE8888_COUNT
+#define BOARD_TLE8888_COUNT 	0
+#endif
+
+// todo: move this outside of efifeatures.h
+#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
+
+
 #undef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT FALSE
 

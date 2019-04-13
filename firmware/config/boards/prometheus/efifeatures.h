@@ -56,6 +56,22 @@
 #undef SERIAL_SPEED
 #define SERIAL_SPEED 115200
 
+#ifndef BOARD_TLE6240_COUNT
+#define BOARD_TLE6240_COUNT         0
+#endif
+
+#ifndef BOARD_MC33972_COUNT
+#define BOARD_MC33972_COUNT			0
+#endif
+
+#ifndef BOARD_TLE8888_COUNT
+#define BOARD_TLE8888_COUNT 	0
+#endif
+
+// todo: move this outside of efifeatures.h
+#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
+
+
 #undef EFI_CONSOLE_TX_PORT
 #define EFI_CONSOLE_TX_PORT GPIOA
 #undef EFI_CONSOLE_TX_PIN
