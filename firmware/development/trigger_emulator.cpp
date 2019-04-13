@@ -17,7 +17,7 @@
 #include "trigger_central.h"
 #include "settings.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
@@ -39,14 +39,14 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 void initTriggerEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+#if EFI_EMULATE_POSITION_SENSORS
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
 
 	triggerSignal.outputPins[0] = &emulatorOutputs[0];
 	triggerSignal.outputPins[1] = &emulatorOutputs[1];
 	triggerSignal.outputPins[2] = &emulatorOutputs[2];
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// todo: refactor, make this a loop
 	triggerSignal.outputPins[0]->initPin("trg emulator ch1", CONFIGB(triggerSimulatorPins)[0],
 			&CONFIGB(triggerSimulatorPinModes)[0]);

@@ -8,7 +8,7 @@
 #include "global.h"
 #include "efilib.h"
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 
 typedef char log_buf_t[DL_OUTPUT_BUFFER];
 
@@ -41,7 +41,7 @@ static char * outputBuffer;
  * of logging content
  */
 void scheduleLogging(Logging *logging) {
-#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
+#if EFI_TEXT_LOGGING
 	// this could be done without locking
 	int newLength = efiStrlen(logging->buffer);
 
@@ -71,7 +71,7 @@ void scheduleLogging(Logging *logging) {
  * this method should always be invoked from the same thread!
  */
 char * swapOutputBuffers(int *actualOutputBufferSize) {
-#if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
+#if EFI_ENABLE_ASSERTS
 	int expectedOutputSize;
 #endif /* EFI_ENABLE_ASSERTS */
 	{ // start of critical section
@@ -81,7 +81,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 		 */
 		char *temp = outputBuffer;
 
-#if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
+#if EFI_ENABLE_ASSERTS
 		expectedOutputSize = accumulatedSize;
 #endif /* EFI_ENABLE_ASSERTS */
 		outputBuffer = accumulationBuffer;
@@ -96,7 +96,7 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	} // end of critical section
 
 	*actualOutputBufferSize = efiStrlen(outputBuffer);
-#if EFI_ENABLE_ASSERTS || defined(__DOXYGEN__)
+#if EFI_ENABLE_ASSERTS
 	if (*actualOutputBufferSize != expectedOutputSize) {
 		int sizeToShow = minI(10, *actualOutputBufferSize);
 		int offsetToShow = *actualOutputBufferSize - sizeToShow;
@@ -121,7 +121,7 @@ void initLoggingCentral(void) {
  * in order to reduce memory usage
  */
 void scheduleMsg(Logging *logging, const char *fmt, ...) {
-#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
+#if EFI_TEXT_LOGGING
 	if (logging == NULL) {
 		warning(CUSTOM_ERR_LOGGING_NULL, "logging NULL");
 		return;

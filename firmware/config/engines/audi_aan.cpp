@@ -22,7 +22,7 @@
 
 #include "global.h"
 
-#if EFI_ENGINE_AUDI_AAN || defined(__DOXYGEN__)
+#if EFI_ENGINE_AUDI_AAN
 
 #include "engine_controller.h"
 

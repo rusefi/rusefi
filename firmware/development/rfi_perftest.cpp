@@ -17,7 +17,7 @@
 #include "console_io.h"
 #include "engine.h"
 
-#if EFI_PERF_METRICS || defined(__DOXYGEN__)
+#if EFI_PERF_METRICS
 #include "test.h"
 
 static Logging* logger;
@@ -261,7 +261,7 @@ static void runTests(const int count) {
 
 extern Overflow64Counter halTime;
 
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 static int rtcStartTime;
 #endif
 
@@ -271,7 +271,7 @@ static void timeInfo(void) {
 	scheduleMsg(logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
 	scheduleMsg(logger, "hal seconds = %d", halTime.get() / (long)CORE_CLOCK);
 
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
 	scheduleMsg(logger, "unix seconds = %d", unix);
 #endif
@@ -299,7 +299,7 @@ static void runChibioTest(void) {
 
 void initTimePerfActions(Logging *sharedLogger) {
 	logger = sharedLogger;
-#if EFI_RTC || defined(__DOXYGEN__)
+#if EFI_RTC
 	rtcStartTime = rtcGetTimeUnixSec(&RTCD1);
 #endif
 

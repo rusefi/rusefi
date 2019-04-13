@@ -38,11 +38,11 @@
  * in chconf.h
  *
  */
-#if !defined(EFI_ENABLE_ASSERTS) || defined(__DOXYGEN__)
+#if !defined(EFI_ENABLE_ASSERTS)
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
-#if !defined(EFI_ENABLE_MOCK_ADC) || defined(__DOXYGEN__)
+#if !defined(EFI_ENABLE_MOCK_ADC)
  #define EFI_ENABLE_MOCK_ADC TRUE
 #endif /* EFI_ENABLE_MOCK_ADC */
 
@@ -141,7 +141,7 @@
 #define EFI_CJ125 TRUE
 #endif
 
-#if !defined(EFI_MEMS) || defined(__DOXYGEN__)
+#if !defined(EFI_MEMS)
  #define EFI_MEMS FALSE
 #endif
 

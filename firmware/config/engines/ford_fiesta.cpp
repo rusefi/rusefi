@@ -11,7 +11,7 @@
 
 #include "global.h"
 
-#if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
+#if EFI_SUPPORT_FORD_FIESTA
 
 #include "ford_fiesta.h"
 #include "engine_math.h"

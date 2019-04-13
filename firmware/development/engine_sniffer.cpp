@@ -28,7 +28,7 @@
 #include "engine_sniffer.h"
 #include "adc_inputs.h"
 
-#if EFI_ENGINE_SNIFFER || defined(__DOXYGEN__)
+#if EFI_ENGINE_SNIFFER
 
 #include "engine_configuration.h"
 #include "eficonsole.h"
@@ -36,7 +36,7 @@
 
 #define CHART_DELIMETER	'!'
 
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 #include "rfiutil.h"
 #include "histogram.h"
 static histogram_s engineSnifferHisto;
@@ -71,7 +71,7 @@ static LoggingWithStorage logger("wave info");
  */
 static uint32_t skipUntilEngineCycle = 0;
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 extern WaveChart waveChart;
 static void resetNow(void) {
 	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
@@ -114,7 +114,7 @@ static void printStatus(void) {
 static void setChartActive(int value) {
 	engineConfiguration->isEngineChartEnabled = value;
 	printStatus();
-#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+#if EFI_CLOCK_LOCKS
 	maxLockedDuration = 0; // todo: why do we reset this here? why only this and not all metrics?
 #endif /* EFI_CLOCK_LOCKS */
 }
@@ -163,7 +163,7 @@ void WaveChart::publish() {
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
-#if EFI_TEXT_LOGGING || defined(__DOXYGEN__)
+#if EFI_TEXT_LOGGING
 	if (!ENGINE(isEngineChartEnabled)) {
 		return;
 	}
@@ -237,7 +237,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 }
 
 void showWaveChartHistogram(void) {
-#if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
 	printHistogram(&logger, &engineSnifferHisto);
 #endif
 }
@@ -250,17 +250,17 @@ void initWaveChart(WaveChart *chart) {
 
 	printStatus();
 
-#if DEBUG_WAVE || defined(__DOXYGEN__)
+#if DEBUG_WAVE
 	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));
 #endif
 
-#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
+#if EFI_HISTOGRAMS
 	initHistogram(&engineSnifferHisto, "wave chart");
 #endif /* EFI_HISTOGRAMS */
 
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 	addConsoleAction("reset_engine_chart", resetNow);
 #endif
 }

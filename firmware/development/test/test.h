@@ -28,14 +28,14 @@
 /**
  * @brief   Delay inserted between test cases.
  */
-#if !defined(DELAY_BETWEEN_TESTS) || defined(__DOXYGEN__)
+#if !defined(DELAY_BETWEEN_TESTS)
 #define DELAY_BETWEEN_TESTS     200
 #endif
 
 /**
  * @brief   If @p TRUE then benchmarks are not included.
  */
-#if !defined(TEST_NO_BENCHMARKS) || defined(__DOXYGEN__)
+#if !defined(TEST_NO_BENCHMARKS)
 #define TEST_NO_BENCHMARKS      FALSE
 #endif
 

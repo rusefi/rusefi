@@ -30,7 +30,7 @@
 #include "engine_controller.h"
 
 #include "adc_inputs.h"
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 #include "wave_analyzer.h"
 #endif /* EFI_WAVE_ANALYZER */
 
@@ -63,7 +63,7 @@
 extern afr_Map3D_t afrMap;
 extern bool main_loop_started;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 // todo: move this logic to algo folder!
 #include "rtc_helper.h"
 #include "lcd_HD44780.h"
@@ -75,7 +75,7 @@ extern bool main_loop_started;
 #include "single_timer_executor.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_CJ125 || defined(__DOXYGEN__)
+#if EFI_CJ125
 #include "cj125.h"
 #endif /* EFI_CJ125 */
 
@@ -83,7 +83,7 @@ extern bool main_loop_started;
 #include "map_averaging.h"
 #endif
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 #include "fsio_impl.h"
 #endif /* EFI_FSIO */
 
@@ -92,7 +92,7 @@ static volatile bool fullLog = true;
 int warningEnabled = true;
 //int warningEnabled = FALSE;
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 extern tunerstudio_counters_s tsState;
 #endif
@@ -102,7 +102,7 @@ extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
 #define FULL_LOGGING_KEY "fl"
 
-#if !defined(STATUS_LOGGING_BUFFER_SIZE) || defined(__DOXYGEN__)
+#if !defined(STATUS_LOGGING_BUFFER_SIZE)
 #define STATUS_LOGGING_BUFFER_SIZE 1800
 #endif /* STATUS_LOGGING_BUFFER_SIZE */
 
@@ -113,7 +113,7 @@ static void setWarningEnabled(int value) {
 	warningEnabled = value;
 }
 
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
 static char FILE_LOGGER[1000] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
@@ -125,12 +125,12 @@ static int logFileLineIndex = 0;
 static void reportSensorF(Logging *log, bool isLogFileFormatting, const char *caption, const char *units, float value,
 		int precision) {
 	if (!isLogFileFormatting) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 		debugFloat(log, caption, value, precision);
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 	} else {
 
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 		if (logFileLineIndex == 0) {
 			append(log, caption);
 			append(log, TAB);
@@ -148,11 +148,11 @@ static void reportSensorF(Logging *log, bool isLogFileFormatting, const char *ca
 static void reportSensorI(Logging *log, bool fileFormat, const char *caption, const char *units, int value) {
 	if (!fileFormat) {
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || EFI_SIMULATOR
 		debugInt(log, caption, value);
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 	} else {
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 		if (logFileLineIndex == 0) {
 			append(log, caption);
 			append(log, TAB);
@@ -188,7 +188,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	reportSensorF(log, fileFormat, "time", "", sec, 3); // log column 1
 
 	int rpm = 0;
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	rpm = GET_RPM();
 	reportSensorI(log, fileFormat, "rpm", "RPM", rpm); // log column 2
 #endif
@@ -208,13 +208,13 @@ static void printSensors(Logging *log, bool fileFormat) {
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, fileFormat, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
 	}
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
 //		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
 #endif /* EFI_ANALOG_SENSORS */
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	if (hasBaroSensor()) {
 		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);
 	}
@@ -232,7 +232,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	// below are the more advanced data points which only go into log file
 
 
-#if HAL_USE_ADC || defined(__DOXYGEN__)
+#if HAL_USE_ADC
 	reportSensorF(log, fileFormat, GAUGE_NAME_CPU_TEMP, "C", getMCUInternalTemperature(), 2); // log column #3
 #endif
 
@@ -246,18 +246,18 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 	}
 
-#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+#if EFI_IDLE_CONTROL
 	reportSensorF(log, fileFormat, GAUGE_NAME_IAC, "%", getIdlePosition(), 2);
 #endif /* EFI_IDLE_CONTROL */
 
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	reportSensorF(log, fileFormat, GAUGE_NAME_TARGET_AFR, "AFR", engine->engineState.targetAFR, 2);
 #endif /* EFI_ANALOG_SENSORS */
 
 
 #define DEBUG_F_PRECISION 6
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField1, DEBUG_F_PRECISION);
 		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField2, DEBUG_F_PRECISION);
 		reportSensorF(log, fileFormat, GAUGE_NAME_DEBUG_F1, "v", tsOutputChannels.debugFloatField3, DEBUG_F_PRECISION);
@@ -297,7 +297,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 		reportSensorI(log, fileFormat, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+#if EFI_VEHICLE_SPEED
 	if (hasVehicleSpeedSensor()) {
 		float vehicleSpeed = getVehicleSpeed();
 		reportSensorF(log, fileFormat, GAUGE_NAME_VVS, "kph", vehicleSpeed, 2);
@@ -347,7 +347,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 
 void writeLogLine(void) {
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 	if (!main_loop_started)
 		return;
 	resetLogging(&fileLogger);
@@ -379,7 +379,7 @@ static void printStatus(void) {
  */
 static systime_t timeOfPreviousPrintVersion = (systime_t) -1;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 	if (hwPin != GPIO_UNASSIGNED) {
 		appendPrintf(&logger, "outpin%s%s@%s%s", DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
@@ -398,14 +398,14 @@ void printOverallStatus(systime_t nowSeconds) {
 	timeOfPreviousPrintVersion = nowSeconds;
 	int seconds = getTimeNowSeconds();
 	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType));
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	printOutPin(CRANK1, CONFIGB(triggerInputPins)[0]);
 	printOutPin(CRANK2, CONFIGB(triggerInputPins)[1]);
 	printOutPin(VVT_NAME, engineConfiguration->camInput);
 	printOutPin(HIP_NAME, CONFIGB(hip9011IntHoldPin));
 	printOutPin(TACH_NAME, CONFIGB(tachOutputPin));
 	printOutPin(DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
-#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+#if EFI_WAVE_ANALYZER
 	printOutPin(WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
 	printOutPin(WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
 #endif /* EFI_WAVE_ANALYZER */
@@ -448,7 +448,7 @@ void updateDevConsoleState(void) {
 	 */
 	printSensors(&logger, false);
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
 		scheduleMsg(&logger, "FATAL error: %s", getFirmwareError());
@@ -458,7 +458,7 @@ void updateDevConsoleState(void) {
 	}
 #endif
 
-#if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE && HAL_USE_ADC
 	printFullAdcReportIfNeeded(&logger);
 #endif
 
@@ -468,7 +468,7 @@ void updateDevConsoleState(void) {
 
 	systime_t nowSeconds = getTimeNowSeconds();
 
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	int currentCkpEventCounter = engine->triggerCentral.triggerState.getTotalEventCounter();
 	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds) {
 		return;
@@ -510,7 +510,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	scheduleMsg(&logger2, "baro correction=%.2f", engine->engineState.baroCorrection);
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	scheduleMsg(&logger, "base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
 	scheduleMsg(&logger2, "cranking fuel: %.2f", getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE));
 
@@ -530,7 +530,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 #endif
 }
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 static void showFuelInfo(void) {
 	showFuelInfo2((float) GET_RPM(), getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
@@ -584,10 +584,10 @@ static void setBlinkingPeriod(int value) {
 		blinkingPeriodMs = value;
 }
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 
 static bool isTriggerErrorNow() {
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// todo: WAT? how is communication LED blinkingPeriodMs part of trigger error condition?!
 	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriodMs);
 	return justHadError || isTriggerDecoderError();
@@ -610,7 +610,7 @@ static void blinkingThread(void *arg) {
 	while (true) {
 		int onTimeMs = is_usb_serial_ready() ? 3 * blinkingPeriodMs : blinkingPeriodMs;
 
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 		if (getNeedToWriteConfiguration()) {
 			onTimeMs = 2 * onTimeMs;
 		}
@@ -630,7 +630,7 @@ static void blinkingThread(void *arg) {
 		chThdSleepMilliseconds(offTimeMs);
 
 		enginePins.communicationLedPin.setValue(1);
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 		if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
 			consoleByteArrived = false;
 			enginePins.warningLedPin.setValue(1);
@@ -643,7 +643,7 @@ static void blinkingThread(void *arg) {
 
 #endif /* EFI_PROD_CODE */
 
-#if EFI_LCD || defined(__DOXYGEN__)
+#if EFI_LCD
 class LcdController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	LcdController() : PeriodicController("BenchThread") { }
@@ -662,20 +662,20 @@ private:
 static LcdController lcdInstance;
 #endif /* EFI_LCD */
 
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 extern HIP9011 instance;
 #endif /* EFI_HIP_9011 */
 
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+#if EFI_TUNER_STUDIO
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+#if EFI_SHAFT_POSITION_INPUT
 	int rpm = GET_RPM();
 #else /* EFI_SHAFT_POSITION_INPUT */
 	int rpm = 0;
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
 
@@ -717,7 +717,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	tsOutputChannels->tpsADC = getTPS12bitAdc(PASS_ENGINE_PARAMETER_SIGNATURE) / TPS_TS_CONVERSION;
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+#if EFI_ANALOG_SENSORS
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
 	tsOutputChannels->engineLoad = engineLoad;
@@ -747,7 +747,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
@@ -757,7 +757,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
 		break;
 	case DBG_METRICS:
-#if EFI_CLOCK_LOCKS || defined(__DOXYGEN__)
+#if EFI_CLOCK_LOCKS
 		tsOutputChannels->debugIntField1 = maxLockedDuration;
 		tsOutputChannels->debugIntField2 = maxTriggerReentraint;
 #endif /* EFI_CLOCK_LOCKS */
@@ -794,7 +794,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		}
 		break;
 	case DBG_FSIO_EXPRESSION:
-#if EFI_PROD_CODE && EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_PROD_CODE && EFI_FSIO
 		tsOutputChannels->debugFloatField1 = getFsioOutputValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField2 = getFsioOutputValue(1 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField3 = getFsioOutputValue(2 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -813,14 +813,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_CRANKING_DETAILS:
 		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 		break;
-#if EFI_HIP_9011 || defined(__DOXYGEN__)
+#if EFI_HIP_9011
 	case DBG_KNOCK:
 		// todo: maybe extract hipPostState(tsOutputChannels);
 		tsOutputChannels->debugIntField1 = instance.correctResponsesCount;
 		tsOutputChannels->debugIntField2 = instance.invalidHip9011ResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
-#if (EFI_CJ125 && HAL_USE_SPI) || defined(__DOXYGEN__)
+#if EFI_CJ125 && HAL_USE_SPI
 	case DBG_CJ125:
 		cjPostState(tsOutputChannels);
 		break;
@@ -830,7 +830,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		postMapState(tsOutputChannels);
 		break;
 #endif /* EFI_MAP_AVERAGING */
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 	case DBG_CAN:
 		postCanState(tsOutputChannels);
 		break;
@@ -883,7 +883,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
 #endif /* HAL_USE_ADC */
 
-#if EFI_MAX_31855 || defined(__DOXYGEN__)
+#if EFI_MAX_31855
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
 		tsOutputChannels->egtValues.values[i] = getEgtValue(i);
 #endif /* EFI_MAX_31855 */
@@ -892,14 +892,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->idlePosition = getIdlePosition();
 #endif
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	tsOutputChannels->isTriggerError = isTriggerErrorNow();
 
-#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
+#if EFI_INTERNAL_FLASH
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 #endif /* EFI_INTERNAL_FLASH */
 
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
+#if EFI_FILE_LOGGING
 	tsOutputChannels->hasSdCard = isSdCardAlive();
 #endif /* EFI_FILE_LOGGING */
 
@@ -911,7 +911,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
-#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+#if EFI_VEHICLE_SPEED
 	float vehicleSpeed = getVehicleSpeed();
 	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
 	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
@@ -960,12 +960,12 @@ void initStatusLoop(void) {
 	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
 	addConsoleActionI("warn", setWarningEnabled);
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if EFI_ENGINE_CONTROL
 	addConsoleActionFF("fuelinfo2", (VoidFloatFloat) showFuelInfo2);
 	addConsoleAction("fuelinfo", showFuelInfo);
 #endif
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 
 	addConsoleActionI("set_led_blinking_period", setBlinkingPeriod);
 
@@ -975,11 +975,11 @@ void initStatusLoop(void) {
 
 void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 	initStatusLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
 #endif /* EFI_PROD_CODE */
-#if EFI_LCD || defined(__DOXYGEN__)
+#if EFI_LCD
 	lcdInstance.Start();
 #endif /* EFI_LCD */
 }

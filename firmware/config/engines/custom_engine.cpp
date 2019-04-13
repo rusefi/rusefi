@@ -18,7 +18,7 @@
 #include "engine_math.h"
 #include "fsio_impl.h"
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "can_hw.h"
 #include "scheduler.h"
 #include "electronic_throttle.h"
@@ -27,7 +27,7 @@
 EXTERN_ENGINE;
 
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 static int periodIndex = 0;
 
 static OutputPin testPin;
@@ -206,7 +206,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
-#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
+#if EFI_CAN_SUPPORT
 	enableFrankensoCan();
 #endif /* EFI_CAN_SUPPORT */
 }
@@ -284,7 +284,7 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIGB(etb1.directionPin2) = GPIOC_9;
 	CONFIGB(etb1.controlPin1) = GPIOE_14;
 
-#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// values are above 100% since we have feedforward part of the total summation
 	engineConfiguration->etb.minValue = -200;

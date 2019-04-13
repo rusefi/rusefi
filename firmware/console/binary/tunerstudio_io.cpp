@@ -9,7 +9,7 @@
 #include "tunerstudio_io.h"
 #include "console_io.h"
 #include "engine.h"
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif
 
@@ -17,11 +17,11 @@ EXTERN_ENGINE;
 
 extern LoggingWithStorage tsLogger;
 
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#if EFI_PROD_CODE
 #include "pin_repository.h"
 #include "usbconsole.h"
 
-#if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
+#if HAL_USE_SERIAL_USB
 extern SerialUSBDriver SDU1;
 #endif /* HAL_USE_SERIAL_USB */
 
@@ -84,8 +84,8 @@ static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LI
 void startTsPort(ts_channel_s *tsChannel) {
 	tsChannel->channel = (BaseChannel *) NULL;
 
-	#if EFI_PROD_CODE || defined(__DOXYGEN__)
-		#if defined(CONSOLE_USB_DEVICE) || defined(__DOXYGEN__)
+	#if EFI_PROD_CODE
+		#if defined(CONSOLE_USB_DEVICE)
 			print("TunerStudio over USB serial");
 			/**
 			 * This method contains a long delay, that's the reason why this is not done on the main thread
@@ -135,8 +135,8 @@ void startTsPort(ts_channel_s *tsChannel) {
 }
 
 bool stopTsPort(ts_channel_s *tsChannel) {
-	#if EFI_PROD_CODE || defined(__DOXYGEN__)
-		#if EFI_USB_SERIAL || defined(__DOXYGEN__)
+	#if EFI_PROD_CODE
+		#if EFI_USB_SERIAL
 			// don't stop USB!
 			//usb_serial_stop();
 			return false;
@@ -160,7 +160,7 @@ bool stopTsPort(ts_channel_s *tsChannel) {
 
 void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
         efiAssertVoid(CUSTOM_ERR_6570, getCurrentRemainingStack() > 64, "tunerStudioWriteData");
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("chSequentialStreamWrite [%d]\r\n", size);
 #endif
 
@@ -186,11 +186,11 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 
 #endif
 
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("transferred [%d]\r\n", transferred);
 #endif
 	if (transferred != size) {
-#if EFI_SIMULATOR || defined(__DOXYGEN__)
+#if EFI_SIMULATOR
 			logMsg("!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
 #endif /* EFI_SIMULATOR */
 		scheduleMsg(&tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
@@ -198,7 +198,7 @@ void sr5WriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 }
 
 int sr5ReadDataTimeout(ts_channel_s *tsChannel, uint8_t * buffer, int size, int timeout) {
-#if TS_UART_DMA_MODE || defined(__DOXYGEN__)
+#if TS_UART_DMA_MODE
 	UNUSED(tsChannel);
 	return (int)iqReadTimeout(&tsUartDma.fifoRxQueue, (uint8_t * )buffer, (size_t)size, timeout);
 #elif TS_UART_MODE
@@ -251,7 +251,7 @@ void sr5SendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const u
 }
 
 bool sr5IsReady(ts_channel_s *tsChannel) {
-#if EFI_USB_SERIAL || defined(__DOXYGEN__)
+#if EFI_USB_SERIAL
 	if (isUsbSerial(tsChannel->channel)) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();

@@ -9,7 +9,7 @@
 
 #include "global.h"
 
-#if EFI_SUPPORT_NISSAN_PRIMERA || defined(__DOXYGEN__)
+#if EFI_SUPPORT_NISSAN_PRIMERA
 #include "nissan_primera.h"
 
 void setNissanPrimeraEngineConfiguration(engine_configuration_s *engineConfiguration) {

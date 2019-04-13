@@ -211,7 +211,7 @@ int findIndexMsg(const char *msg, const float array[], int size, float value) {
 			break;
 
 		if (middle != 0 && array[middle - 1] > array[middle]) {
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 			firmwareError(CUSTOM_ERR_6610, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
 #else
 			warning(CUSTOM_ERR_OUT_OF_ORDER, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);

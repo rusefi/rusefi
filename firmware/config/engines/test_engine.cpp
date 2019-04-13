@@ -73,7 +73,7 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->debugMode = DBG_VVT;
 }
 
-#if EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if EFI_UNIT_TEST
 void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setTestEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 

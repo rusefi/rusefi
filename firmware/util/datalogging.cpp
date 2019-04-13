@@ -32,7 +32,7 @@
 
 #include "global.h"
 
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+#if ! EFI_UNIT_TEST
 #include "chprintf.h"
 #include "chmtx.h"
 #include "memstreams.h"

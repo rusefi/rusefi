@@ -50,7 +50,7 @@ void setLadaKalina(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	// starter relay solenoid
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if EFI_FSIO
 	/**
 	 * to test
 	 * set_fsio_setting 1 5000

@@ -99,7 +99,7 @@ void initEngineEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 
 #if EFI_POTENTIOMETER
-#if HAL_USE_SPI || defined(__DOXYGEN__)
+#if HAL_USE_SPI
 	initPotentiometers(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* HAL_USE_SPI */
 #endif /* EFI_POTENTIOMETER */
