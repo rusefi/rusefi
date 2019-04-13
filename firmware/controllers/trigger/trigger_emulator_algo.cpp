@@ -133,7 +133,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 
 static TriggerEmulatorHelper helper;
 
-static void emulatorApplyPinState(PwmConfig *unused, int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
+static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	if (stopEmulationAtIndex == stateIndex) {
 		isEmulating = false;
 	}
@@ -141,7 +141,7 @@ static void emulatorApplyPinState(PwmConfig *unused, int stateIndex, PwmConfig *
 		return;
 	}
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	applyPinState(unused, stateIndex, state);
+	applyPinState(stateIndex, state);
 #endif /* EFI_PROD_CODE */
 	if (engineConfiguration->directSelfStimulation) {
 		/**
