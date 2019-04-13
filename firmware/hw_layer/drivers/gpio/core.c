@@ -115,6 +115,11 @@ const char *gpiochips_getPinName(unsigned int pin)
 	return NULL;
 }
 
+void gpiochip_use_gpio_base(int size) {
+	gpio_base_free += size;
+}
+
+
 /**
  * @brief Register gpiochip
  * @details should be called from board file. Can be called before os ready.
@@ -155,7 +160,7 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 	chip->size = size;
 	chip->priv = priv;
 
-	gpio_base_free += size;
+	gpiochip_use_gpio_base(size);
 
 	return (chip->base);
 }

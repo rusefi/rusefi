@@ -45,6 +45,8 @@ const char *gpiochips_getPinName(unsigned int pin);
 /* register gpio cgip */
 int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv);
 
+void gpiochip_use_gpio_base(int size);
+
 /* Set individual names for pins */
 int gpiochips_setPinNames(brain_pin_e pin, const char **names);
 
