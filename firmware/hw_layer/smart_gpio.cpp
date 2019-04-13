@@ -85,7 +85,7 @@ void initSmartGpio() {
 #if (BOARD_TLE6240_COUNT > 0)
 	tle6240.spi_bus = getSpiDevice(engineConfiguration->tle6240spiDevice);
 	tle6240_add(0, &tle6240);
-#else
+#elif (BOARD_EXT_GPIOCHIPS > 0)
 	gpiochip_use_gpio_base(TLE6240_OUTPUTS);
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 
@@ -93,7 +93,7 @@ void initSmartGpio() {
 	mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
 	// todo: propogate 'basePinOffset' parameter
 	mc33972_add(0, &mc33972);
-#else
+#elif (BOARD_EXT_GPIOCHIPS > 0)
 	gpiochip_use_gpio_base(MC33972_INPUTS);
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
