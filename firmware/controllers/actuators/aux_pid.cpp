@@ -119,7 +119,7 @@ static void turnAuxPidOn(int index) {
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
 			&auxPidPin[0],
-			engineConfiguration->auxPidFrequency[index], 0.1, applyPinState);
+			engineConfiguration->auxPidFrequency[index], 0.1, (pwm_gen_callback*)applyPinState);
 }
 
 void startAuxPins(void) {

@@ -449,7 +449,7 @@ void setDefaultIdleParameters(void) {
 	engineConfiguration->idleRpmPid.periodMs = 10;
 }
 
-static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex, void *arg) /* pwm_gen_callback */ {
+static void applyIdleSolenoidPinState(PwmConfig *unused, int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6645, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6646, state->multiWave.waveCount == 1, "invalid idle waveCount");
 	OutputPin *output = state->outputPins[0];
@@ -480,7 +480,7 @@ static void initIdleHardware() {
 				&engine->executor,
 				CONFIGB(idle).solenoidPin, &enginePins.idleSolenoidPin,
 				CONFIGB(idle).solenoidFrequency, CONFIGB(manIdlePosition) / 100,
-				applyIdleSolenoidPinState);
+				(pwm_gen_callback*)applyIdleSolenoidPinState);
 		idlePositionSensitivityThreshold = 0.0f;
 	}
 }

@@ -115,7 +115,7 @@ public:
 				&etbOutput,
 				freq,
 				0.80,
-				applyPinState);
+				(pwm_gen_callback*)applyPinState);
 		outputDirectionOpen.initPin("etb dir open", directionPin1);
 		outputDirectionClose.initPin("etb dir close", directionPin2);
 	}

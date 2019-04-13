@@ -133,7 +133,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 
 static TriggerEmulatorHelper helper;
 
-static void emulatorApplyPinState(PwmConfig *state, int stateIndex, void *arg) /* pwm_gen_callback */ {
+static void emulatorApplyPinState(PwmConfig *unused, int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	if (stopEmulationAtIndex == stateIndex) {
 		isEmulating = false;
 	}
@@ -141,7 +141,7 @@ static void emulatorApplyPinState(PwmConfig *state, int stateIndex, void *arg) /
 		return;
 	}
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	applyPinState(state, stateIndex, arg);
+	applyPinState(unused, stateIndex, state);
 #endif /* EFI_PROD_CODE */
 	if (engineConfiguration->directSelfStimulation) {
 		/**
@@ -172,7 +172,7 @@ void initTriggerEmulatorLogic(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUF
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
 			s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
-			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
+			pinStates, updateTriggerShapeIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	addConsoleActionI("rpm", setTriggerEmulatorRPM);
 	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
