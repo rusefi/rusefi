@@ -91,6 +91,7 @@ void setMinimalPinsEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIGB(sdCardCsPin) = GPIO_UNASSIGNED;
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 	CONFIGB(idle).solenoidPin = GPIO_UNASSIGNED;
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 	for (int i = 0;i<TRIGGER_INPUT_PIN_COUNT;i++) {
 		CONFIGB(triggerInputPins)[i] = GPIO_UNASSIGNED;
 	}
@@ -364,6 +365,7 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(etb2.directionPin1) = GPIOE_2;
 	CONFIG(etb2.directionPin2) = GPIOE_4;
 
+	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
