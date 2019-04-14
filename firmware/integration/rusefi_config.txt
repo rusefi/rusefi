@@ -431,8 +431,9 @@ end_struct
 
 trigger_config_s trigger;
 
-custom spi_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "SPI1", "SPI2", "SPI3" 
+custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
 	spi_device_e hip9011SpiDevice;
+	uint8_t[3] unusedSpiPadding1;
 	
 	
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
@@ -440,7 +441,7 @@ float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0, 
 	float adcVcc;;         "volts",    1,    0.0,       0,    4.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
 	adc_channel_e mafAdcChannel;See hasMafSensor
-	uint8_t[3] alignMaf;
+	uint8_t[3] unusedAlignMaf;
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
@@ -522,6 +523,7 @@ brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal 
 
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
+	uint8_t[3] unusedSpiPadding9;
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 
@@ -589,7 +591,7 @@ bit is_enabled_spi_2
 	bit useNoiselessTriggerDecoder
 	bit useIdleTimingPidControl
 	bit useTPSBasedVeTable
-	bit unused_board_984_26
+	bit is_enabled_spi_4
 	bit unused_board_984_27
 	bit unused_board_984_28
 	bit unused_board_984_29
@@ -611,10 +613,13 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
 
 	spi_device_e max31855spiDevice;
+	uint8_t[3] unusedSpiPadding2;
 
 
-custom uart_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
+custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	uart_device_e consoleUartDevice;
+		uint8_t[3] unuseduartPadding1;
+	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
@@ -888,6 +893,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 	mass_storage_e storageMode;
 	spi_device_e cj125SpiDevice;
+	uint8_t[3] unusedSpiPadding3;
 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V",        1,     0,   -10.0,    10.0,  3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2
@@ -918,6 +924,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float idlePidActivationTime;;"seconds",        1,     0,  0,    60,  1
 
 	spi_device_e sdCardSpiDevice;
+	uint8_t[3] unusedSpiPadding4;
+
 	pin_mode_e spi1SckMode;
 	pin_mode_e spi1MosiMode;
 	pin_mode_e spi1MisoMode;
@@ -944,6 +952,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	oil_pressure_config_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
+	uint8_t[3] unusedSpiPadding5;
 	float[FSIO_CURVE_16] fsioCurve1Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_16] fsioCurve1;;"y",      1,     0,      -999,    1000.0,   3
 	float[FSIO_CURVE_16] fsioCurve2Bins;;"x",        1,     0,   -999,    1000.0,  3
@@ -1010,8 +1019,11 @@ tChargeMode_e tChargeMode;
 	float tpsAccelFractionDivisor;+A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef",        1,     0,  0,    100,  2
 
 	spi_device_e tle8888spiDevice;
+	uint8_t[3] unusedSpiPadding6;
 	spi_device_e tle6240spiDevice;
+	uint8_t[3] unusedSpiPadding7;
 	spi_device_e mc33972spiDevice;
+	uint8_t[3] unusedSpiPadding8;
 
 	int[611] mainUnusedEnd;
 	

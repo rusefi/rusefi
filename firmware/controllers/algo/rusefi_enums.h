@@ -541,14 +541,12 @@ typedef enum {
 	Force_4_bytes_size_cranking_ignition_mode = ENUM_32_BITS,
 } cranking_ignition_mode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	UART_NONE = 0,
 	UART_DEVICE_1 = 1,
 	UART_DEVICE_2 = 2,
 	UART_DEVICE_3 = 3,
 	UART_DEVICE_4 = 4,
-// todo: make this a one byte enum
-	Force_4_bytes_size_uart_device = ENUM_32_BITS,
 } uart_device_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -558,15 +556,12 @@ typedef enum __attribute__ ((__packed__)) {
 	_150KHz
 } spi_speed_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SPI_NONE = 0,
 	SPI_DEVICE_1 = 1,
 	SPI_DEVICE_2 = 2,
 	SPI_DEVICE_3 = 3,
 	SPI_DEVICE_4 = 4,
-
-	// todo: make this a one byte enum
-	Force_4_bytes_size_spi_device = ENUM_32_BITS,
 } spi_device_e;
 
 

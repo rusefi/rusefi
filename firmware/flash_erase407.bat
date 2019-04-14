@@ -1,7 +1,7 @@
 rem st-link_cli -c SWD ur -ME
 rem 0x100000 would erase both code and configuration
 rem use 0x080000 if you want to erase only configuratio
-echo I am flash_erase.bat
+echo I am flash_erase407.bat
 
 rem weird, it used to be much nicer with openocd 0.8.0, file location was not broken?
 rem maybe https://sourceforge.net/p/openocd/tickets/105/ ?
