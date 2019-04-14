@@ -47,9 +47,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-/* cleanup !!!! */
-int initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
 /**
  * @return return gpio chip base
  */

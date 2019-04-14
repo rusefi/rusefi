@@ -14,28 +14,19 @@
 
 #include "global.h"
 
+#include "gpio/tle8888.h"
+
 #if (BOARD_TLE8888_COUNT > 0)
 
-/* to be moved to smart_gpio.cpp */
-#include "engine_configuration.h"
-/* to be moved to smart_gpio.cpp */
-EXTERN_CONFIG;
-#include "smart_gpio.h"
-
 #include "hardware.h"
-#include "efi_gpio.h"
 #include "gpio/gpio_ext.h"
-#include "gpio/tle8888.h"
 #include "pin_repository.h"
 #include "rfiutil.h"
-#include "mpu_util.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
-
-#if (BOARD_TLE8888_COUNT > 0)
 
 /*
  * TODO list:
@@ -525,62 +516,5 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 
 	return -1;
 }
-
-#endif /* BOARD_TLE8888_COUNT */
-
-/*********TO BE REMOVED FROM THIS FILE***************/
-
-/* this should be in board file */
-static struct tle8888_config tle8888_cfg = {
-	.spi_bus = NULL,
-	.spi_config = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = GPIOF,
-		.sspad = 0U,
-		.cr1 =
-			SPI_CR1_16BIT_MODE |
-			SPI_CR1_SSM |
-			SPI_CR1_SSI |
-			SPI_CR1_LSBFIRST |	//LSB first
-			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
-			SPI_CR1_MSTR |
-			SPI_CR1_CPHA |
-			0,
-		.cr2 = SPI_CR2_16BIT_MODE
-	},
-	.direct_io = {
-		[0] = {.port = NULL,	.pad = 0,	.output = 9},
-		[1] = {.port = NULL,	.pad = 0,	.output = 10},
-		[2] = {.port = NULL,	.pad = 0,	.output = 11},
-		[3] = {.port = NULL,	.pad = 0,	.output = 12},
-	},
-};
-
-int initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
-{
-	int chipBase;
-
-	if (engineConfiguration->tle8888_cs == GPIO_UNASSIGNED) {
-		return -1;
-	}
-
-	// todo: reuse initSpiCs method?
-	tle8888_cfg.spi_config.ssport = getHwPort(DRIVER_NAME " CS", engineConfiguration->tle8888_cs);
-	tle8888_cfg.spi_config.sspad = getHwPin(DRIVER_NAME " CS", engineConfiguration->tle8888_cs);
-
-	tle8888_cfg.spi_bus = getSpiDevice(engineConfiguration->tle8888spiDevice);
-	if (tle8888_cfg.spi_bus == NULL) {
-		// error already reported
-		return -1;
-	}
-
-	chipBase = tle8888_add(0, &tle8888_cfg);
-	efiAssert(OBD_PCM_Processor_Fault, chipBase == TLE8888_PIN_1, "tle8888", -1);
-
-	return chipBase;
-}
-
-/*********TO BE REMOVED FROM THIS FILE ENDS***********/
 
 #endif /* (BOARD_TLE8888_COUNT > 0) */
