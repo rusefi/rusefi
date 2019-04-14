@@ -573,10 +573,12 @@ static struct tle8888_config tle8888_cfg = {
 	},
 };
 
-void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
+int initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 {
+	int chipBase;
+
 	if (engineConfiguration->tle8888_cs == GPIO_UNASSIGNED) {
-		return;
+		return -1;
 	}
 
 	// todo: reuse initSpiCs method?
@@ -586,11 +588,13 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	tle8888_cfg.spi_bus = getSpiDevice(engineConfiguration->tle8888spiDevice);
 	if (tle8888_cfg.spi_bus == NULL) {
 		// error already reported
-		return;
+		return -1;
 	}
 
-	int chipBase = tle8888_add(0, &tle8888_cfg);
-	efiAssertVoid(OBD_PCM_Processor_Fault, chipBase == TLE8888_PIN_1, "tle8888");
+	chipBase = tle8888_add(0, &tle8888_cfg);
+	efiAssert(OBD_PCM_Processor_Fault, chipBase == TLE8888_PIN_1, "tle8888", -1);
+
+	return chipBase;
 }
 
 /*********TO BE REMOVED FROM THIS FILE ENDS***********/
