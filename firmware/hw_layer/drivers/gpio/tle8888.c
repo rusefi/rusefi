@@ -607,4 +607,4 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 
 /*********TO BE REMOVED FROM THIS FILE ENDS***********/
 
-#endif /* (BOARD_TLE6240_COUNT > 0) */
+#endif /* (BOARD_TLE8888_COUNT > 0) */
