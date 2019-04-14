@@ -595,7 +595,7 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	 * _add function should be called early on board init.
 	 * _init firnction called later from gpiochips_init() after initial gpios init....
 	 * BUT
-	 * we want everithing to be configurable, this initTle8888 is called after gpiochips_init()
+	 * we want everything to be configurable, this initTle8888 is called after gpiochips_init()
 	 * so we need manually call _init
 	 * HOPE THIS WILL NOT BREAK ANYTHING
 	 */
