@@ -12,6 +12,7 @@
 #include "efi_gpio.h"
 #include "engine_configuration.h"
 #include "hardware.h"
+#include "mpu_util.h"
 #include "gpio_ext.h"
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
@@ -28,6 +29,7 @@ struct tle6240_config tle6240 = {
 		.ssport = GPIOF,
 		.sspad = 0U,
 		.cr1 =
+			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 			/* SPI_CR1_LSBFIRST | */
