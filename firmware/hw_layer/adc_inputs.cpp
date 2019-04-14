@@ -458,6 +458,7 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
+	(void)name;
 	if (setting == EFI_ADC_NONE) {
 		return;
 	}
