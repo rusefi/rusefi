@@ -135,6 +135,9 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 
 		, // In this field must be specified the sample times for channels 0...9
 
+		0,
+		0,
+
 		0, // Conversion group sequence 13...16 + sequence length
 		0, // Conversion group sequence 7...12
 		0  // Conversion group sequence 1...6
@@ -169,6 +172,9 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_FAST) |
 		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_FAST) |
 		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
+
+		0,
+		0,
 
 		0, // Conversion group sequence 13...16 + sequence length
 

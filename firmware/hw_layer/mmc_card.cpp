@@ -71,10 +71,20 @@ static THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC m
  */
 MMCDriver MMCD1;
 
-static SPIConfig hs_spicfg = { NULL, NULL, 0,
-SPI_BaudRatePrescaler_8 };
-static SPIConfig ls_spicfg = { NULL, NULL, 0,
-SPI_BaudRatePrescaler_256 };
+static SPIConfig hs_spicfg = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 = SPI_BaudRatePrescaler_8,
+		.cr2 = 0};
+static SPIConfig ls_spicfg = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 = SPI_BaudRatePrescaler_256,
+		.cr2 = 0};
 
 /* MMC/SD over SPI driver configuration.*/
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp

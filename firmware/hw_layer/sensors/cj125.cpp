@@ -38,10 +38,13 @@ static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static SPIDriver *driver;
 
-static SPIConfig cj125spicfg = { /* end_cb */ NULL,
-	/* HW dependent part.*/
-		/* ssport */ NULL, /* sspad */ 0, /* cr1 */ SPI_CR1_MSTR | SPI_CR1_CPHA, /* cr2*/ 0 };
-
+static SPIConfig cj125spicfg = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 = SPI_CR1_MSTR | SPI_CR1_CPHA,
+		.cr2 = 0 };
 
 static volatile int lastSlowAdcCounter = 0;
 

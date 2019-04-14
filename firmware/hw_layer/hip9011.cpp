@@ -84,12 +84,14 @@ static Logging *logger;
 // todo: nicer method which would mention SPI speed explicitly?
 
 #if EFI_PROD_CODE
-static SPIConfig hipSpiCfg = { /* end_cb */ NULL,
-/* HW dependent part.*/
-		/* ssport */ NULL, /* sspad */ 0,
-		/* cr1 */ SPI_CR1_MSTR |
+static SPIConfig hipSpiCfg = { .circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 = SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
-		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2, /* cr2*/ 0 };
+		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2,
+		.cr2 = 0};
 #endif /* EFI_PROD_CODE */
 
 static void checkResponse(void) {
