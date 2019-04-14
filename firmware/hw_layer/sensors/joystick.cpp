@@ -47,7 +47,7 @@ static bool isJitter() {
 	return false;
 }
 
-static void extCallback(int channel) {
+static void extCallback(ioportmask_t channel) {
     if (isJitter())
     	 return;
 	joyTotal++;
