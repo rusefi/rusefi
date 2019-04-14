@@ -12,6 +12,7 @@
 #include "efi_gpio.h"
 #include "engine_configuration.h"
 #include "hardware.h"
+#include "mpu_util.h"
 #include "gpio_ext.h"
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"

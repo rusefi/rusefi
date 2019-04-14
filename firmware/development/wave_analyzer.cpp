@@ -180,11 +180,13 @@ static THD_FUNCTION(waThread, arg) {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
+/*
 static uint32_t getWaveLowWidth(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	return reader->last_wave_low_widthUs;
 }
+*/
 
 static float getSignalOnTime(int index) {
 	WaveReader *reader = &readers[index];

@@ -34,24 +34,25 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 	efiAssertVoid(CUSTOM_ERR_6593, shape->getSize() > 0, "size not zero");
 	int stateIndex = i % shape->getSize();
 	int size = shape->getSize();
-	int prevIndex = getPreviousIndex(stateIndex, shape->getSize());
-
 
 	int loopIndex = i / shape->getSize();
 
 	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
 	MultiWave *multiWave = &shape->wave;
+
+#if EFI_UNIT_TEST
+	int prevIndex = getPreviousIndex(stateIndex, shape->getSize());
+
 	pin_state_t primaryWheelState = multiWave->getChannelState(0, prevIndex);
 	pin_state_t newPrimaryWheelState = multiWave->getChannelState(0, stateIndex);
 
 	pin_state_t secondaryWheelState = multiWave->getChannelState(1, prevIndex);
 	pin_state_t newSecondaryWheelState = multiWave->getChannelState(1, stateIndex);
 
-	pin_state_t thirdWheelState = multiWave->getChannelState(2, prevIndex);
-	pin_state_t new3rdWheelState = multiWave->getChannelState(2, stateIndex);
+//	pin_state_t thirdWheelState = multiWave->getChannelState(2, prevIndex);
+//	pin_state_t new3rdWheelState = multiWave->getChannelState(2, stateIndex);
 
-#if EFI_UNIT_TEST
 	if (printTriggerDebug) {
 		printf("feedSimulatedEvent: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
 				secondaryWheelState, newSecondaryWheelState );

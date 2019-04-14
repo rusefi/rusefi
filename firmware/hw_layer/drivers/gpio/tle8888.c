@@ -28,6 +28,7 @@ EXTERN_CONFIG;
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
 #include "rfiutil.h"
+#include "mpu_util.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
