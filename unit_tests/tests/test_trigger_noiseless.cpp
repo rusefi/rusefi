@@ -21,7 +21,6 @@
 #include "spark_logic.h"
 #include "trigger_universal.h"
 
-extern int timeNowUs;
 extern bool printTriggerDebug;
 extern float actualSynchGap;
 
