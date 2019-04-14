@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Sat Apr 13 10:34:52 EDT 2019
+// on Sun Apr 14 11:21:22 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -451,8 +451,6 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getUart_device_e(uart_device_e value){
 switch(value) {
-case Force_4_bytes_size_uart_device:
-  return "Force_4_bytes_size_uart_device";
 case UART_DEVICE_1:
   return "UART_DEVICE_1";
 case UART_DEVICE_2:
@@ -481,8 +479,6 @@ case _5MHz:
 }
 const char *getSpi_device_e(spi_device_e value){
 switch(value) {
-case Force_4_bytes_size_spi_device:
-  return "Force_4_bytes_size_spi_device";
 case SPI_DEVICE_1:
   return "SPI_DEVICE_1";
 case SPI_DEVICE_2:

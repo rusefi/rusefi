@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 13 10:44:04 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 14 11:23:20 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -550,6 +550,10 @@ typedef struct {
 	 */
 	spi_device_e digitalPotentiometerSpiDevice;
 	/**
+	 * offset 77
+	 */
+	uint8_t unusedSpiPadding9[3];
+	/**
 	 * offset 80
 	 */
 	etb_io etb1;
@@ -736,7 +740,7 @@ typedef struct {
 	bool useTPSBasedVeTable : 1;
 	/**
 	offset 144 bit 26 */
-	bool unused_board_984_26 : 1;
+	bool is_enabled_spi_4 : 1;
 	/**
 	offset 144 bit 27 */
 	bool unused_board_984_27 : 1;
@@ -796,9 +800,17 @@ typedef struct {
 	 */
 	spi_device_e max31855spiDevice;
 	/**
+	 * offset 205
+	 */
+	uint8_t unusedSpiPadding2[3];
+	/**
 	 * offset 208
 	 */
 	uart_device_e consoleUartDevice;
+	/**
+	 * offset 209
+	 */
+	uint8_t unuseduartPadding1[3];
 	/**
 	 * offset 212
 	 */
@@ -1321,6 +1333,10 @@ typedef struct {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
+	 * offset 541
+	 */
+	uint8_t unusedSpiPadding1[3];
+	/**
 	 * set global_fuel_correction X
 	 * offset 544
 	 */
@@ -1343,7 +1359,7 @@ typedef struct {
 	/**
 	 * offset 557
 	 */
-	uint8_t alignMaf[3];
+	uint8_t unusedAlignMaf[3];
 	/**
 	 * offset 560
 	 */
@@ -2007,6 +2023,10 @@ typedef struct {
 	 */
 	spi_device_e cj125SpiDevice;
 	/**
+	 * offset 2285
+	 */
+	uint8_t unusedSpiPadding3[3];
+	/**
 	 * Narrow Band WBO Approximation
 	 * offset 2288
 	 */
@@ -2111,6 +2131,10 @@ typedef struct {
 	 */
 	spi_device_e sdCardSpiDevice;
 	/**
+	 * offset 2617
+	 */
+	uint8_t unusedSpiPadding4[3];
+	/**
 	 * offset 2620
 	 */
 	pin_mode_e spi1SckMode;
@@ -2184,6 +2208,10 @@ typedef struct {
 	 * offset 2736
 	 */
 	spi_device_e accelerometerSpiDevice;
+	/**
+	 * offset 2737
+	 */
+	uint8_t unusedSpiPadding5[3];
 	/**
 	 * offset 2740
 	 */
@@ -2401,13 +2429,25 @@ typedef struct {
 	 */
 	spi_device_e tle8888spiDevice;
 	/**
+	 * offset 4025
+	 */
+	uint8_t unusedSpiPadding6[3];
+	/**
 	 * offset 4028
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
+	 * offset 4029
+	 */
+	uint8_t unusedSpiPadding7[3];
+	/**
 	 * offset 4032
 	 */
 	spi_device_e mc33972spiDevice;
+	/**
+	 * offset 4033
+	 */
+	uint8_t unusedSpiPadding8[3];
 	/**
 	 * offset 4036
 	 */
@@ -2658,4 +2698,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 13 10:44:04 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 14 11:23:20 EDT 2019
