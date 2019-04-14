@@ -65,6 +65,14 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
 
+#define SPI_CR1_16BIT_MODE 0
+#define SPI_CR2_16BIT_MODE SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+
+#define SPI_CR1_24BIT_MODE 0
+/* 3 x 8-bit transfer */
+#define SPI_CR2_24BIT_MODE SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+
+
 void baseHardwareInit(void);
 void turnOnSpi(spi_device_e device);
 
