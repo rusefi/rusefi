@@ -2,6 +2,8 @@
  * @file	engine_emulator.cpp
  * @brief	Entry point for all the emulation and analysis code
  *
+ * there is a chance that 90% of the code here is dead
+ *
  * @date Mar 15, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
@@ -82,6 +84,7 @@ void startEmulator(void) {
 //	print("advance for %d rpm %d maf100: %.2f\r\n", rpm, maf100, advance);
 //}
 
+#if defined(EFI_ENGINE_STIMULATOR)
 static void initECUstimulator(Engine *engine) {
 	efiSetPadMode("TEN", DIAG_PIN, PAL_MODE_OUTPUT_PUSHPULL);
 
@@ -93,16 +96,15 @@ static void initECUstimulator(Engine *engine) {
 
 	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t)(void*) eeThread, engine);
 }
+#endif /* EFI_ENGINE_STIMULATOR */
 
 void initEngineEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (hasFirmwareError())
 		return;
 
-#if EFI_POTENTIOMETER
-#if HAL_USE_SPI
+#if EFI_POTENTIOMETER && HAL_USE_SPI
 	initPotentiometers(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* HAL_USE_SPI */
-#endif /* EFI_POTENTIOMETER */
+#endif /* EFI_POTENTIOMETER && HAL_USE_SPI*/
 
 	//initECUstimulator();
 	initTriggerEmulator(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
