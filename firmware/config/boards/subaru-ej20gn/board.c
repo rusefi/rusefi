@@ -22,8 +22,9 @@
 #include "hal.h"
 #include "stm32_gpio.h"
 #include "efilib.h"
+#include "efifeatures.h"
 
-/* drivers */
+/* drivers configs */
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
 
@@ -32,8 +33,71 @@
 /*==========================================================================*/
 
 /*==========================================================================*/
-/* Driver exported variables.												*/
+/* Board exported variables.												*/
 /*==========================================================================*/
+
+#if (BOARD_TLE6240_COUNT > 0)
+struct tle6240_config tle6240 = {
+	.spi_bus = &SPID4,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = GPIOF,
+		.sspad = 0U,
+		.cr1 =
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			/* SPI_CR1_LSBFIRST | */
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+			SPI_CR1_MSTR |
+			/* SPI_CR1_CPOL | */ // = 0
+			SPI_CR1_CPHA | // = 1
+			0,
+		/* 16-bit transfer */
+		.cr2 = SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+	},
+	.direct_io = {
+		/* IN1  - D_TACH_OUT */
+		[0] = {.port = GPIOG, .pad = 2},
+		/* IN2..4 grounded */
+		[1] = {.port = NULL},
+		[2] = {.port = NULL},
+		[3] = {.port = NULL},
+		/* IN9  - D_INJ_5 */
+		[4] = {.port = GPIOD, .pad = 15},
+		/* IN10 - D_WASTGATE */
+		[5] = {.port = GPIOD, .pad = 14},
+		/* IN11 - D_IDLE_OPEN */
+		[6] = {.port = GPIOC, .pad = 6},
+		/* IN12 - D_IDLE_CLOSE */
+		[7] = {.port = GPIOC, .pad = 7},
+	},
+	.reset = {.port = GPIOG, .pad = 3}
+};
+#endif /* (BOARD_TLE6240_COUNT > 0) */
+
+#if (BOARD_MC33972_COUNT > 0)
+struct mc33972_config mc33972 = {
+	.spi_bus = &SPID4,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = GPIOB,
+		.sspad = 4U,
+		.cr1 =
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			/* SPI_CR1_LSBFIRST | */
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
+			SPI_CR1_MSTR |
+			/* SPI_CR1_CPOL | */ /* = 0 */
+			SPI_CR1_CPHA | /* = 1 */
+			0,
+		/* 3 x 8-bit transfer */
+		.cr2 = SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
+	},
+};
+#endif /* (BOARD_MC33972_COUNT > 0) */
 
 /*==========================================================================*/
 /* Driver local variables and types.										*/
