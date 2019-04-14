@@ -28,6 +28,7 @@ EXTERN_CONFIG;
 #include "gpio/tle8888.h"
 #include "pin_repository.h"
 #include "rfiutil.h"
+#include "mpu_util.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -536,7 +537,6 @@ static struct tle8888_config tle8888_cfg = {
 		.end_cb = NULL,
 		.ssport = GPIOF,
 		.sspad = 0U,
-#if defined(STM_F4_FAMILY)
 		.cr1 =
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
@@ -547,22 +547,6 @@ static struct tle8888_config tle8888_cfg = {
 			SPI_CR1_CPHA |
 			0,
 		.cr2 = SPI_CR2_16BIT_MODE
-#elif defined(STM_F7_FAMILY)
-		.cr1 =
-			SPI_CR1_16BIT_MODE |
-			SPI_CR1_SSM |
-			SPI_CR1_SSI |
-			SPI_CR1_LSBFIRST |
-			SPI_CR1_MSTR |
-			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |
-			SPI_CR1_CPHA |
-			0,
-		.cr2 = SPI_CR2_16BIT_MODE
-#else
-		unexpected platform
-#endif
-
-
 	},
 	.direct_io = {
 		[0] = {.port = NULL,	.pad = 0,	.output = 9},
