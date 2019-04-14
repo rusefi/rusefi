@@ -448,6 +448,7 @@ int tle8888_init(void * data)
 
 	chip->drv_state = TLE8888_READY;
 
+	/* one task for all TLE8888 instances, so create only once */
 	if (!drv_task_ready) {
 		chThdCreateStatic(tle8888_thread_1_wa, sizeof(tle8888_thread_1_wa),
 						  NORMALPRIO + 1, tle8888_driver_thread, NULL);
@@ -590,19 +591,6 @@ void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 
 	int chipBase = tle8888_add(0, &tle8888_cfg);
 	efiAssertVoid(OBD_PCM_Processor_Fault, chipBase == TLE8888_PIN_1, "tle8888");
-
-	/* Initial idea of gpiochips:
-	 * _add function should be called early on board init.
-	 * _init firnction called later from gpiochips_init() after initial gpios init....
-	 * BUT
-	 * we want everything to be configurable, this initTle8888 is called after gpiochips_init()
-	 * so we need manually call _init
-	 * HOPE THIS WILL NOT BREAK ANYTHING
-	 */
-#if (BOARD_TLE8888_COUNT > 0)
-	/* thisisahack */
-	tle8888_init(&chips[0]);
-#endif
 }
 
 /*********TO BE REMOVED FROM THIS FILE ENDS***********/
