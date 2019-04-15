@@ -151,12 +151,18 @@ volatile int globalConfigurationVersion = 0;
  *
  * todo: place this field next to 'engineConfiguration'?
  */
+#ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
+engine_configuration_s EFI_ACTIVE_CONFIGURATION_IN_FLASH activeConfiguration;
+#else
 engine_configuration_s activeConfiguration;
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 extern engine_configuration_s *engineConfiguration;
 
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 }
 
 
