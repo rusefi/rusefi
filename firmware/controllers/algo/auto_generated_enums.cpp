@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Sun Apr 14 11:21:22 EDT 2019
+// on Mon Apr 15 19:05:50 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -901,6 +901,14 @@ case TLE8888_PIN_23:
   return "TLE8888_PIN_23";
 case TLE8888_PIN_24:
   return "TLE8888_PIN_24";
+case TLE8888_PIN_25:
+  return "TLE8888_PIN_25";
+case TLE8888_PIN_26:
+  return "TLE8888_PIN_26";
+case TLE8888_PIN_27:
+  return "TLE8888_PIN_27";
+case TLE8888_PIN_28:
+  return "TLE8888_PIN_28";
 case TLE8888_PIN_3:
   return "TLE8888_PIN_3";
 case TLE8888_PIN_4:

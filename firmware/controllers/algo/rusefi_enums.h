@@ -833,6 +833,10 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE8888_PIN_22 = 189,
 	TLE8888_PIN_23 = 190,
 	TLE8888_PIN_24 = 191,
+	TLE8888_PIN_25 = 192,
+	TLE8888_PIN_26 = 193,
+	TLE8888_PIN_27 = 194,
+	TLE8888_PIN_28 = 195,
 } brain_pin_e;
 
 typedef brain_pin_e smart_pin_e;
