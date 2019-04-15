@@ -194,8 +194,10 @@ void runRusEfi(void) {
 	 */
 	readConfiguration(&sharedLogger);
 #endif /* EFI_INTERNAL_FLASH */
+#ifndef EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	// TODO: need to fix this place!!! should be a version of PASS_ENGINE_PARAMETER_SIGNATURE somehow
 	prepareVoidConfiguration(&activeConfiguration);
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
