@@ -65,18 +65,19 @@ static void tsRxIRQIdleHandler(UARTDriver *uartp) {
 
 /* Note: This structure is modified from the default ChibiOS layout! */
 static UARTConfig tsDmaUartConfig = { 
-	NULL, NULL, NULL, NULL, NULL, 
-	0, 0, 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, 0,
-	/*timeout_cb*/tsRxIRQIdleHandler, /*rxhalf_cb*/tsRxIRQHalfHandler
+	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
+	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
+	.timeout_cb = tsRxIRQIdleHandler, .rxhalf_cb = tsRxIRQHalfHandler
 };
 #elif TS_UART_MODE
 /* Note: This structure is modified from the default ChibiOS layout! */
 static UARTConfig tsUartConfig = { 
-	NULL, NULL, NULL, NULL, NULL, 
-	0, 0, 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, 0
+	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
+	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
+	.timeout_cb = NULL, .rxhalf_cb = NULL
 };
 #else
-static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+static SerialConfig tsSerialConfig = { .speed = 0, .cr1 = 0, .cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN, .cr3 = 0 };
 #endif /* TS_UART_DMA_MODE */
 #endif /* EFI_PROD_CODE */
 

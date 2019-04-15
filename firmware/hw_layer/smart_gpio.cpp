@@ -20,14 +20,45 @@
 
 EXTERN_CONFIG;
 
+// todo: migrate to TS or board config
+#ifndef TLE6240_SS_PORT
+#define TLE6240_SS_PORT GPIOF
+#endif /* TLE6240_SS_PORT */
+#ifndef TLE6240_SS_PAD
+#define TLE6240_SS_PAD 0U
+#endif /* TLE6240_SS_PAD */
+#ifndef TLE6240_RESET_PORT
+#define TLE6240_RESET_PORT GPIOG
+#endif /* TLE6240_RESET_PORT */
+#ifndef TLE6240_RESET_PAD
+#define TLE6240_RESET_PAD 3U
+#endif /* TLE6240_RESET_PAD */
+#ifndef TLE6240_DIRECT_IO
+#define TLE6240_DIRECT_IO \
+		/* IN1  - D_TACH_OUT */ \
+		[0] = {.port = GPIOG, .pad = 2}, \
+		/* IN2..4 grounded */ \
+		[1] = {.port = NULL, .pad = 0}, \
+		[2] = {.port = NULL, .pad = 0}, \
+		[3] = {.port = NULL, .pad = 0}, \
+		/* IN9  - D_INJ_5 */ \
+		[4] = {.port = GPIOD, .pad = 15}, \
+		/* IN10 - D_WASTGATE */ \
+		[5] = {.port = GPIOD, .pad = 14}, \
+		/* IN11 - D_IDLE_OPEN */ \
+		[6] = {.port = GPIOC, .pad = 6}, \
+		/* IN12 - D_IDLE_CLOSE */ \
+		[7] = {.port = GPIOC, .pad = 7},
+#endif /* TLE6240_DIRECT_IO */
+
 #if (BOARD_TLE6240_COUNT > 0)
 struct tle6240_config tle6240 = {
 	.spi_bus = NULL /* TODO software lookup &SPID4 */,
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
-		.ssport = GPIOF,
-		.sspad = 0U,
+		.ssport = TLE6240_SS_PORT,
+		.sspad = TLE6240_SS_PAD,
 		.cr1 =
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
@@ -41,22 +72,9 @@ struct tle6240_config tle6240 = {
 		.cr2 = SPI_CR2_16BIT_MODE
 	},
 	.direct_io = {
-		/* IN1  - D_TACH_OUT */
-		[0] = {.port = GPIOG, .pad = 2},
-		/* IN2..4 grounded */
-		[1] = {.port = NULL},
-		[2] = {.port = NULL},
-		[3] = {.port = NULL},
-		/* IN9  - D_INJ_5 */
-		[4] = {.port = GPIOD, .pad = 15},
-		/* IN10 - D_WASTGATE */
-		[5] = {.port = GPIOD, .pad = 14},
-		/* IN11 - D_IDLE_OPEN */
-		[6] = {.port = GPIOC, .pad = 6},
-		/* IN12 - D_IDLE_CLOSE */
-		[7] = {.port = GPIOC, .pad = 7},
+		TLE6240_DIRECT_IO
 	},
-	.reset = {.port = GPIOG, .pad = 3}
+	.reset = {.port = TLE6240_RESET_PORT, .pad = TLE6240_RESET_PAD}
 };
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 
