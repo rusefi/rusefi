@@ -25,6 +25,10 @@
 /* do not use serial device for console */
 #undef TS_SERIAL_DEVICE
 
+/* additional space for pins on gpioext */
+#undef BOARD_EXT_PINREPOPINS
+#define BOARD_EXT_PINREPOPINS		(16 + 22)
+
 #undef EFI_RTC
 #define EFI_RTC						FALSE
 
