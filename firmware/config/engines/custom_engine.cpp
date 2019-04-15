@@ -347,8 +347,10 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// IN1 PF15
 	// IN2 PF14
 	// SF  PF11
+#if EFI_FSIO
 	setFsio(12, GPIOF_12, "0" PASS_ENGINE_PARAMETER_SUFFIX);
 	setFsio(14, GPIOF_13, "1" PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 	CONFIG(etb1_use_two_wires) = true;
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
 	CONFIGB(etb1.directionPin2) = GPIOF_14;
@@ -360,8 +362,10 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// IN1 PE2
 	// IN2 PE4
 	// SF  PE3
+#if EFI_FSIO
 	setFsio(13, GPIOE_5, "0" PASS_ENGINE_PARAMETER_SUFFIX);
 	setFsio(15, GPIOE_6, "1" PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 	CONFIG(etb2_use_two_wires) = true;
 	CONFIG(etb2.directionPin1) = GPIOE_2;
 	CONFIG(etb2.directionPin2) = GPIOE_4;
