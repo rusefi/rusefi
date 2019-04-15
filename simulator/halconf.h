@@ -177,6 +177,13 @@
 #define HAL_USE_WDG                 FALSE
 #endif
 
+/**
+ * @brief   Enables the COMP subsystem.
+ */
+#if !defined(HAL_USE_COMP) || defined(__DOXYGEN__)
+#define HAL_USE_COMP                FALSE
+#endif
+
 /*===========================================================================*/
 /* ADC driver related settings.                                              */
 /*===========================================================================*/
