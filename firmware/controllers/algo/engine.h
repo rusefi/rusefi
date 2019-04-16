@@ -426,6 +426,12 @@ public:
 	efitick_t stopEngineRequestTimeNt = 0;
 
 	/**
+	 * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
+	 * tuning software)
+	 */
+	volatile int globalConfigurationVersion = 0;
+
+	/**
 	 * always 360 or 720, never zero
 	 */
 	angle_t engineCycle;

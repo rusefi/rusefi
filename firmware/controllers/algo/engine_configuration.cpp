@@ -139,12 +139,6 @@ static fuel_table_t alphaNfuel = {
 		};
 
 /**
- * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
- * tuning software)
- */
-volatile int globalConfigurationVersion = 0;
-
-/**
  * Current engine configuration. On firmware start we assign empty configuration, then
  * we copy actual configuration after reading settings.
  * This is useful to compare old and new configurations in order to apply new settings.
@@ -165,7 +159,6 @@ void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 }
 
-
 extern LoggingWithStorage sharedLogger;
 
 /**
@@ -173,7 +166,7 @@ extern LoggingWithStorage sharedLogger;
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	globalConfigurationVersion++;
+	ENGINE(globalConfigurationVersion++);
 #if EFI_DEFAILED_LOGGING
 	scheduleMsg(&sharedLogger, "set globalConfigurationVersion=%d", globalConfigurationVersion);
 #endif /* EFI_DEFAILED_LOGGING */
