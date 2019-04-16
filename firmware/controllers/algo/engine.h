@@ -17,6 +17,7 @@
 #include "listener_array.h"
 #include "accel_enrichment.h"
 #include "trigger_central.h"
+#include "local_version_holder.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -348,7 +349,7 @@ public:
 	 * we have not adjusted for yet
 	 */
 	bool isTriggerConfigChanged = false;
-
+	LocalVersionHolder triggerVersion;
 
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization

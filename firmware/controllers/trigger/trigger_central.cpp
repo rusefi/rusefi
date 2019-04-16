@@ -68,7 +68,6 @@ static histogram_s triggerCallbackHistogram;
 #endif /* EFI_HISTOGRAMS */
 
 static Logging *logger;
-static LocalVersionHolder triggerVersion;
 
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	print("registerCkpListener: %s\r\n", name);
@@ -672,7 +671,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
  * @returns true if configuration just changed, and if that change has affected trigger
  */
 bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && engine->isTriggerConfigChanged;
+	bool result = engine->triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && engine->isTriggerConfigChanged;
 	engine->isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
 	return result;
 }
