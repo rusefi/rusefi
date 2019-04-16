@@ -128,7 +128,7 @@
 #endif
 
 #ifndef BOARD_MC33972_COUNT
-#define BOARD_MC33972_COUNT			0
+#define BOARD_MC33972_COUNT			1
 #endif
 
 #ifndef BOARD_TLE8888_COUNT
