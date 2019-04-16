@@ -8,10 +8,6 @@
 #include "local_version_holder.h"
 
 LocalVersionHolder::LocalVersionHolder() {
-	/**
-	 * we want local version to be 'old' on instantiation
-	 */
-	localVersion = -1;
 }
 
 int LocalVersionHolder::getVersion() {
