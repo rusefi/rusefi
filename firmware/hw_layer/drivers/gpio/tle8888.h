@@ -13,8 +13,7 @@
 #include <hal.h>
 #include "efifeatures.h"
 
-// todo: did we forget some outputs? should it be 28?
-#define TLE8888_OUTPUTS				24
+#define TLE8888_OUTPUTS				28
 /* 4 misc channels */
 #define TLE8888_DIRECT_MISC			4
 /* 4 IGN channels - INJ1..4 - IN1..4
@@ -46,9 +45,6 @@ struct tle8888_config {
 extern "C"
 {
 #endif /* __cplusplus */
-
-/* cleanup !!!! */
-void initTle8888(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 /**
  * @return return gpio chip base

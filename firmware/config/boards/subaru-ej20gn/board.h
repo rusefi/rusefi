@@ -27,13 +27,15 @@
  */
 #define BOARD_NAME                  "Subaru EJ20G/STM32F765 for RusEFI"
 
+#undef BOARD_TLE6240_COUNT
 #define BOARD_TLE6240_COUNT         1
+#undef BOARD_MC33972_COUNT
 #define BOARD_MC33972_COUNT			1
+#undef BOARD_TLE8888_COUNT
+#define BOARD_TLE8888_COUNT			0
 
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT)
-
-/* additional space for pins on gpioext */
-#define BOARD_EXT_PINREPOPINS		(16 + 22)
+#undef BOARD_EXT_GPIOCHIPS
+#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
 
 /*
  * Board oscillators-related settings.
