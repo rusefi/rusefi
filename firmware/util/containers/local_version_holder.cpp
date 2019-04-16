@@ -7,9 +7,6 @@
 
 #include "local_version_holder.h"
 
-LocalVersionHolder::LocalVersionHolder() {
-}
-
 int LocalVersionHolder::getVersion() {
 	return localVersion;
 }
