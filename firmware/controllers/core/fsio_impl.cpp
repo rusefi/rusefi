@@ -161,7 +161,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 // todo: reduce code duplication between all "set pin methods"
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
+	if (index < 0 || index >= FSIO_ANALOG_INPUT_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
 		return;
 	}
