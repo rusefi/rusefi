@@ -73,6 +73,7 @@ void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+int getGlobalConfigurationVersion(void);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
