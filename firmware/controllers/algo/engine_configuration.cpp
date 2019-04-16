@@ -298,9 +298,9 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	disableLCD(boardConfiguration);
 
 	engineConfiguration->camInput = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	for (int i = 0;i<TRIGGER_INPUT_PIN_COUNT;i++) {
+		CONFIGB(triggerInputPins)[i] = GPIO_UNASSIGNED;
+	}
 
 	for (int i = 0; i < SERVO_COUNT; i++) {
 		engineConfiguration->servoOutputPins[i] = GPIO_UNASSIGNED;
@@ -325,11 +325,26 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 
 	engineConfiguration->sdCardSpiDevice = SPI_NONE;
 	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
-	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->accelerometerSpiDevice = SPI_NONE;
+	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
+	boardConfiguration->max31855spiDevice = SPI_NONE;
 
 	engineConfiguration->cj125ua = EFI_ADC_NONE;
 	engineConfiguration->cj125ur = EFI_ADC_NONE;
-
+	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
+	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
+	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
+	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
+	
 	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
 	engineConfiguration->stepperDirectionPinMode = OM_DEFAULT;
 	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
@@ -355,6 +370,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->cj125CsPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->hip9011CsPin = GPIO_UNASSIGNED;
+	boardConfiguration->hip9011IntHoldPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
@@ -386,6 +402,9 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
 	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
 
+	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
+	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
+	
 	for (int i = 0;i < INJECTION_PIN_COUNT;i++) {
 		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
@@ -395,6 +414,26 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 		boardConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
+	for (int i = 0; i < TRIGGER_SIMULATOR_PIN_COUNT; i++) {
+		boardConfiguration->triggerSimulatorPins[i] = GPIO_UNASSIGNED;
+		boardConfiguration->triggerSimulatorPinModes[i] = OM_DEFAULT;
+	}
+
+	for (int i = 0; i < LOGIC_ANALYZER_CHANNEL_COUNT; i++) {
+		boardConfiguration->logicAnalyzerPins[i] = GPIO_UNASSIGNED;
+	}
+	
+	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
+		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
+	}
+
+	for (int i = 0; i < DIGIPOT_COUNT; i++) {
+		boardConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
+	}
+
+	boardConfiguration->is_enabled_spi_1 = boardConfiguration->is_enabled_spi_2 = false;
+	boardConfiguration->is_enabled_spi_3 = boardConfiguration->is_enabled_spi_4 = false;
 }
 
 void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -404,6 +443,14 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->fatalErrorPin = GPIOD_14;
 #endif /* EFI_FATAL_ERROR_PIN */
 	engineConfiguration->warninigLedPin = GPIOD_13;
+
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
+	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
+#endif
+	engineConfiguration->runningLedPin = GPIOD_12; // green LED on discovery
+
 #if EFI_PROD_CODE
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
 	// needed also by bootloader code
@@ -765,9 +812,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // todo: this value is way off! I am pretty sure temp coeffs are off also
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
-
 #if EFI_PROD_CODE
 	engineConfiguration->warningPeriod = 10;
 #else
@@ -864,11 +908,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->storageMode = MS_AUTO;
 
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
-
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
-
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -892,8 +931,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
-	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
-	
 	engineConfiguration->oilPressure.v1 = 0.5f;
 	engineConfiguration->oilPressure.v2 = 4.5f;
 	engineConfiguration->oilPressure.value1 = 0;
@@ -921,13 +958,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
 
-	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->clt.adcChannel = EFI_ADC_6;
-	engineConfiguration->iat.adcChannel = EFI_ADC_7;
-	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->afr.hwChannel = EFI_ADC_14;
-
 	engineConfiguration->cylinderBore = 87.5;
 
 	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER_SUFFIX);
@@ -944,13 +974,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->isEngineChartEnabled = true;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-
-
-	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
-
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
-
-
 
 #if EFI_PROD_CODE
 	engineConfiguration->engineChartSize = 300;
@@ -976,65 +999,23 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockDetectionWindowStart = 35;
 	engineConfiguration->knockDetectionWindowEnd = 135;
 
-	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	boardConfiguration->fuelLevelEmptyTankVoltage = 0;
 	boardConfiguration->fuelLevelFullTankVoltage = 5;
-
-	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
 
 	/**
 	 * this is RPM. 10000 rpm is only 166Hz, 800 rpm is 13Hz
 	 */
 	boardConfiguration->triggerSimulatorFrequency = 1200;
 
-	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->max31855spiDevice = SPI_NONE;
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
-	}
-
 	engineConfiguration->alternatorPwmFrequency = 300;
-
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
-#endif
-	engineConfiguration->runningLedPin = GPIOD_12; // green LED on discovery
-	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
-	
-	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
-	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
-	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
-
-	boardConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
-	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
-
 
 	strcpy(config->timingMultiplier, "1");
 	strcpy(config->timingAdditive, "0");
-
-	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
-	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
 	engineConfiguration->cj125isUaDivided = true;
 
 	engineConfiguration->isAlternatorControlEnabled = true;
 
-//	boardConfiguration->gps_rx_pin = GPIOB_7;
-//	boardConfiguration->gps_tx_pin = GPIOB_6;
-
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5;
-	boardConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED; // GPIOE_5 is a popular option (if available)
-	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 	engineConfiguration->vehicleSpeedCoef = 1.0f;
 
 	boardConfiguration->logicAnalyzerMode[0] = false;
@@ -1049,46 +1030,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->generalPeriodicThreadPeriodMs = 50;
 	boardConfiguration->useLcdScreen = true;
 
-	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
-
-	setCanDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-
-	// set this to SPI_DEVICE_3 to enable stimulation
-	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	boardConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
-	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
-	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
-	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
-
-	boardConfiguration->is_enabled_spi_1 = false;
-	boardConfiguration->is_enabled_spi_2 = false;
-	boardConfiguration->is_enabled_spi_3 = true;
-
-	boardConfiguration->spi1mosiPin = GPIOB_5;
-	boardConfiguration->spi1misoPin = GPIOB_4;
-	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
-
-#if EFI_MEMS
-	// this would override some values from above
-	configureAccelerometerPins(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif
-
-	boardConfiguration->spi2mosiPin = GPIOB_15;
-	boardConfiguration->spi2misoPin = GPIOB_14;
-	boardConfiguration->spi2sckPin = GPIOB_13;
-
-	boardConfiguration->spi3mosiPin = GPIOB_5;
-	boardConfiguration->spi3misoPin = GPIOB_4;
-	boardConfiguration->spi3sckPin = GPIOB_3;
-
 	engineConfiguration->hip9011Gain = 1;
-#if EFI_HIP_9011
-	setHip9011FrankensoPinout();
-#endif /* EFI_HIP_9011 */
 
-	setDefaultSdCardParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-	
 	boardConfiguration->isFastAdcEnabled = true;
 	boardConfiguration->isEngineControlEnabled = true;
 
@@ -1103,11 +1046,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
-
-#if EFI_PROD_CODE
-	// call overrided board-specific configuration setup, if needed (for custom boards only)
-	setBoardConfigurationOverrides();
-#endif
 
 #if EFI_FSIO
 	/**
@@ -1126,12 +1064,95 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_FSIO */
 }
 
+/**
+ * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
+ */
+void setDefaultBoardConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// set initial pin groups
+	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	setCanDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->clt.adcChannel = EFI_ADC_6;
+	engineConfiguration->iat.adcChannel = EFI_ADC_7;
+	engineConfiguration->afr.hwChannel = EFI_ADC_14;
+
+	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
+	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
+
+//	boardConfiguration->gps_rx_pin = GPIOB_7;
+//	boardConfiguration->gps_tx_pin = GPIOB_6;
+
+	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
+	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
+
+	boardConfiguration->triggerInputPins[0] = GPIOC_6;
+	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+
+	//boardConfiguration->logicAnalyzerPins[1] = GPIOE_5; // GPIOE_5 is a popular option (if available)
+
+	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
+
+	// set this to SPI_DEVICE_3 to enable stimulation
+	//boardConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
+	boardConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
+	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
+	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
+	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
+
+	boardConfiguration->spi1mosiPin = GPIOB_5;
+	boardConfiguration->spi1misoPin = GPIOB_4;
+	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
+
+	boardConfiguration->spi2mosiPin = GPIOB_15;
+	boardConfiguration->spi2misoPin = GPIOB_14;
+	boardConfiguration->spi2sckPin = GPIOB_13;
+
+	boardConfiguration->spi3mosiPin = GPIOB_5;
+	boardConfiguration->spi3misoPin = GPIOB_4;
+	boardConfiguration->spi3sckPin = GPIOB_3;
+	
+	// set optional subsystem configs
+#if EFI_MEMS
+	// this would override some values from above
+	configureAccelerometerPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_MEMS */
+
+#if EFI_HIP_9011
+	setHip9011FrankensoPinout();
+#endif /* EFI_HIP_9011 */
+
+#if EFI_FILE_LOGGING
+	setDefaultSdCardParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_FILE_LOGGING */
+
+	boardConfiguration->is_enabled_spi_1 = false;
+	boardConfiguration->is_enabled_spi_2 = false;
+	boardConfiguration->is_enabled_spi_3 = true;
+}
+
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	enginePins.reset(); // that's mostly important for functional tests
 	/**
 	 * Let's apply global defaults first
 	 */
 	setDefaultConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	/**
+	 * Let's apply global board defaults too, for most of the boards
+	 */
+	if (engineType != MINIMAL_PINS) {
+		setDefaultBoardConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+#if EFI_PROD_CODE
+	// call overrided board-specific configuration setup, if needed (for custom boards only)
+	setBoardConfigurationOverrides();
+#endif
+
 #if EFI_SIMULATOR
 	engineConfiguration->directSelfStimulation = true;
 #endif /* */
