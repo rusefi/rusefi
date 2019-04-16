@@ -62,12 +62,14 @@ void PwmConfig::init(float *st, SingleWave *waves) {
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	if (cisnan(dutyCycle)) {
-		warning(CUSTOM_ERR_6691, "spwd:dutyCycle %.2f", dutyCycle);
+		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
-	}
-	if (dutyCycle < 0 || dutyCycle > 1) {
-		warning(CUSTOM_ERR_6579, "spwd:dutyCycle %.2f", dutyCycle);
-		return;
+	} else if (dutyCycle < 0) {
+		warning(CUSTOM_DUTY_TOO_LOW, "spwd:dutyCycle %.2f", dutyCycle);
+		dutyCycle = 0;
+	} else if (dutyCycle > 1) {
+		warning(CUSTOM_DUTY_TOO_HIGH, "spwd:dutyCycle %.2f", dutyCycle);
+		dutyCycle = 1;
 	}
 	if (dutyCycle == 0.0f && stateChangeCallback != NULL) {
 		/**
