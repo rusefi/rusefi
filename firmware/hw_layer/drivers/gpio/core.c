@@ -317,9 +317,11 @@ const char *gpiochips_getPinName(unsigned int pin)
 	return NULL;
 }
 
-/**
- * @return result code
- */
+void gpiochip_use_gpio_base(int size)
+{
+	(void)size;
+}
+
 int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv)
 {
 	(void)name; (void)ops; (void)size; (void)priv;
