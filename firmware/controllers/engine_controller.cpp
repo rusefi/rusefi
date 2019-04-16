@@ -215,8 +215,6 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static LocalVersionHolder versionForConfigurationListeners;
-
 static void periodicSlowCallback(Engine *engine);
 
 static void scheduleNextSlowInvocation(void) {
@@ -275,7 +273,6 @@ static void invokePerSecond(void) {
 	perSecondIrqCounter = currentIrqCounter;
 	currentIrqDurationAccumulator = currentIrqCounter = 0;
 #endif /* EFI_CLOCK_LOCKS */
-
 }
 
 static void periodicSlowCallback(Engine *engine) {
@@ -314,7 +311,7 @@ static void periodicSlowCallback(Engine *engine) {
 		updatePrimeInjectionPulseState(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
-	if (versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
+	if (engine->versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
 		updateAccelParameters();
 		engine->engineState.warmupAfrPid.reset();
 	}

@@ -342,6 +342,8 @@ public:
 
 	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
 	IgnitionEventList ignitionEvents;
+	LocalVersionHolder versionForConfigurationListeners;
+	LocalVersionHolder auxParametersVersion;
 
 	int getGlobalConfigurationVersion(void) const;
 	/**

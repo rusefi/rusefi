@@ -31,7 +31,6 @@ extern fsio8_Map3D_f32t fsioTable1;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-static LocalVersionHolder parametersVersion;
 static SimplePwm auxPidPwm[AUX_PID_COUNT];
 static OutputPin auxPidPin[AUX_PID_COUNT];
 
@@ -65,7 +64,7 @@ private:
 		UNUSED(nowNt);
 		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->auxPid[0].periodMs));
 
-			if (parametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
+			if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
 				pidReset();
 			}
 
