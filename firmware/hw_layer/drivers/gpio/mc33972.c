@@ -343,7 +343,8 @@ int mc33972_add(unsigned int index, const struct mc33972_config *cfg)
 	struct mc33972_priv *chip;
 
 	/* no config or no such chip */
-	osalDbgCheck((cfg != NULL) && (cfg->spi_bus != NULL) && (index < BOARD_MC33972_COUNT));
+	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_MC33972_COUNT))
+		return -1;
 
 	/* check for valid cs.
 	 * DOTO: remove this check? CS can be driven by SPI */
