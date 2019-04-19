@@ -166,6 +166,8 @@ void initSmartGpio() {
 		ret = tle8888_add(0, &tle8888_cfg);
 
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == TLE8888_PIN_1, "tle8888");
+	} else {
+		ret = 0;
 	}
 	if (ret < 0)
 #endif /* (BOARD_TLE6240_COUNT > 0) */
