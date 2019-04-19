@@ -98,6 +98,20 @@ static bool isJoystickEnabled() {
 			CONFIGB(joystickDPin) != GPIO_UNASSIGNED;
 }
 
+void stopJoystickPins() {
+	brain_pin_markUnused(CONFIGB(joystickCenterPin));
+	brain_pin_markUnused(CONFIGB(joystickAPin));
+	brain_pin_markUnused(CONFIGB(joystickDPin));
+}
+
+void startJoystickPins() {
+	efiSetPadMode("joy center", CONFIGB(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy A", CONFIGB(joystickAPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy B", CONFIGB(joystickBPin), PAL_MODE_INPUT_PULLUP);
+	// not used so far	efiSetPadMode("joy C", CONFIGB(joystickCPin), PAL_MODE_INPUT_PULLUP);
+	efiSetPadMode("joy D", CONFIGB(joystickDPin), PAL_MODE_INPUT_PULLUP);
+}
+
 void initJoystick(Logging *shared) {
 	addConsoleAction("joystickinfo", joystickInfo);
 	if (!isJoystickEnabled())
@@ -110,11 +124,7 @@ void initJoystick(Logging *shared) {
 // not used so far	applyPin(CONFIGB(joystickCPin));
 	enableExti(CONFIGB(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback);
 
-	efiSetPadMode("joy center", CONFIGB(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy A", CONFIGB(joystickAPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy B", CONFIGB(joystickBPin), PAL_MODE_INPUT_PULLUP);
-	// not used so far	efiSetPadMode("joy C", CONFIGB(joystickCPin), PAL_MODE_INPUT_PULLUP);
-	efiSetPadMode("joy D", CONFIGB(joystickDPin), PAL_MODE_INPUT_PULLUP);
+	startJoystickPins();
 }
 
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */

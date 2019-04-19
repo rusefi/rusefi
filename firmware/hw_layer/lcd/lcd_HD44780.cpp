@@ -180,6 +180,15 @@ static void lcdInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	scheduleMsg(logger, "HD44780 D7=%s", hwPortname(CONFIGB(HD44780_db7)));
 }
 
+void stopHD44780_pins() {
+	unregisterPin(engineConfiguration->bc.HD44780_rs, activeConfiguration.bc.HD44780_rs);
+	unregisterPin(engineConfiguration->bc.HD44780_e, activeConfiguration.bc.HD44780_e);
+	unregisterPin(engineConfiguration->bc.HD44780_db4, activeConfiguration.bc.HD44780_db4);
+	unregisterPin(engineConfiguration->bc.HD44780_db5, activeConfiguration.bc.HD44780_db5);
+	unregisterPin(engineConfiguration->bc.HD44780_db6, activeConfiguration.bc.HD44780_db6);
+	unregisterPin(engineConfiguration->bc.HD44780_db7, activeConfiguration.bc.HD44780_db7);
+}
+
 void lcd_HD44780_init(Logging *sharedLogger) {
 	logger = sharedLogger;
 
