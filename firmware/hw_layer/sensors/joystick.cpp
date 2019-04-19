@@ -99,9 +99,9 @@ static bool isJoystickEnabled() {
 }
 
 void stopJoystickPins() {
-	brain_pin_markUnused(CONFIGB(joystickCenterPin));
-	brain_pin_markUnused(CONFIGB(joystickAPin));
-	brain_pin_markUnused(CONFIGB(joystickDPin));
+	brain_pin_markUnused(activeConfiguration.bc.joystickCenterPin);
+	brain_pin_markUnused(activeConfiguration.bc.joystickAPin);
+	brain_pin_markUnused(activeConfiguration.bc.joystickDPin);
 }
 
 void startJoystickPins() {
