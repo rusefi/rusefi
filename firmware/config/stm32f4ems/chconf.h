@@ -34,6 +34,10 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_5_1_
 
+#if !defined(_FROM_ASM_)
+#include "obd_error_codes.h"
+#endif /* _FROM_ASM_ */
+
 /*
  * __process_stack_size__ and __process_stack_size__ defaults are each hard-coded as 0x400 in ChibiOS rules.mk files
  * rusEfi do not override these defaults.
@@ -58,12 +62,12 @@
  #define EFI_CLOCK_LOCKS FALSE
 #endif /* EFI_CLOCK_LOCKS */
 
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
  #ifndef __ASSEMBLER__
+ void firmwareError(obd_code_e code, const char *fmt, ...);
   #if EFI_CLOCK_LOCKS
     void irqEnterHook(void);
     void irqExitHook(void);
@@ -806,10 +810,11 @@ void chDbgPanic3(const char *msg, const char * file, int line);
 #endif
 
 
-#define chDbgAssert(c, remark) do {                                              \
+#define chDbgAssert(c, remark) do {                                         \
   if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
     if (!(c)) {                                                             \
   /*lint -restore*/                                                         \
+	  firmwareError(OBD_PCM_Processor_Fault, "chDbg %s", remark);           \
       chSysHalt(remark);                                                    \
     }                                                                       \
   }                                                                         \

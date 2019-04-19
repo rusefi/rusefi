@@ -11,12 +11,16 @@
 #ifndef OBD_ERROR_CODES_H_
 #define OBD_ERROR_CODES_H_
 
+// this header should not depend on anything - actually chconf.h usually depends on this header
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-#include "rusefi_enums.h"
+// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
+// this is about offsets and sizes in TunerStudio
+#define ENUM_32_BITS 2000000000
 
 typedef enum {
 //P0001 Fuel Volume Regulator Control Circuit/Open
