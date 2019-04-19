@@ -189,19 +189,7 @@ void stopHD44780_pins() {
 	brain_pin_markUnused(activeConfiguration.bc.HD44780_db7);
 }
 
-void lcd_HD44780_init(Logging *sharedLogger) {
-	logger = sharedLogger;
-
-	addConsoleAction("lcdinfo", lcdInfo);
-
-	if (engineConfiguration->displayMode > DM_HD44780_OVER_PCF8574) {
-		warning(CUSTOM_ERR_DISPLAY_MODE, "Unexpected displayMode %d", engineConfiguration->displayMode);
-		// I2C pins need initialization, code needs more work & testing
-		return;
-	}
-
-	printMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
-
+void startHD44780_pins() {
 	if (engineConfiguration->displayMode == DM_HD44780) {
 		// initialize hardware lines
 		efiSetPadMode("lcd RS", CONFIGB(HD44780_rs), PAL_MODE_OUTPUT_PUSHPULL);
@@ -218,6 +206,22 @@ void lcd_HD44780_init(Logging *sharedLogger) {
 		palWritePad(getHwPort("lcd", CONFIGB(HD44780_db6)), getHwPin("lcd", CONFIGB(HD44780_db6)), 0);
 		palWritePad(getHwPort("lcd", CONFIGB(HD44780_db7)), getHwPin("lcd", CONFIGB(HD44780_db7)), 0);
 	}
+}
+
+void lcd_HD44780_init(Logging *sharedLogger) {
+	logger = sharedLogger;
+
+	addConsoleAction("lcdinfo", lcdInfo);
+
+	if (engineConfiguration->displayMode > DM_HD44780_OVER_PCF8574) {
+		warning(CUSTOM_ERR_DISPLAY_MODE, "Unexpected displayMode %d", engineConfiguration->displayMode);
+		// I2C pins need initialization, code needs more work & testing
+		return;
+	}
+
+	printMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
+
+	startHD44780_pins();
 
 	chThdSleepMilliseconds(20); // LCD needs some time to wake up
 	lcd_HD44780_write(LCD_HD44780_RESET); // reset 1x

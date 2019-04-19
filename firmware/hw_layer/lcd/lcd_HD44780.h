@@ -13,6 +13,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+void startHD44780_pins();
 void stopHD44780_pins();
 void lcd_HD44780_init(Logging *sharedLogger);
 void lcd_HD44780_set_position(uint8_t row, uint8_t column);
