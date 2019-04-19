@@ -36,6 +36,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->is_enabled_spi_2 = false;
 	boardConfiguration->isHip9011Enabled = false;
+	CONFIGB(hip9011IntHoldPin) = GPIO_UNASSIGNED;
 	setFrankenstein_01_LCD(boardConfiguration);
 
 	engineConfiguration->specs.displacement = 3.528;
