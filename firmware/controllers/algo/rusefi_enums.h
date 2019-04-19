@@ -12,10 +12,7 @@
 #define RUSEFI_ENUMS_H_
 
 #include "efifeatures.h"
-
-// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
-// this is about offsets and sizes in TunerStudio
-#define ENUM_32_BITS 2000000000
+#include "obd_error_codes.h"
 
 #define HIP_NAME "HIP"
 #define TACH_NAME "tach"
