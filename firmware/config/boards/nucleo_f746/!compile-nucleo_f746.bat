@@ -16,6 +16,7 @@ make -j4
 
 rem Clean up so that no one inherits this value
 set PROJECT_BOARD=
+set PROJECT_CPU=
 set EXTRA_PARAMS=
 set DEBUG_LEVEL_OPT=
 set USE_BOOTLOADER=
