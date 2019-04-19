@@ -265,6 +265,10 @@ void applyNewHardwareSettings(void) {
 #if EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
+#if (HAL_USE_PAL && EFI_JOYSTICK)
+	stopJoystickPins();
+#endif /* HAL_USE_PAL && EFI_JOYSTICK */
        
 	enginePins.stopInjectionPins();
     enginePins.stopIgnitionPins();
@@ -293,12 +297,9 @@ void applyNewHardwareSettings(void) {
 	if (engineConfiguration->bc.is_enabled_spi_3 != activeConfiguration.bc.is_enabled_spi_3)
 		stopSpi(SPI_DEVICE_3);
 
-	unregisterPin(engineConfiguration->bc.HD44780_rs, activeConfiguration.bc.HD44780_rs);
-	unregisterPin(engineConfiguration->bc.HD44780_e, activeConfiguration.bc.HD44780_e);
-	unregisterPin(engineConfiguration->bc.HD44780_db4, activeConfiguration.bc.HD44780_db4);
-	unregisterPin(engineConfiguration->bc.HD44780_db5, activeConfiguration.bc.HD44780_db5);
-	unregisterPin(engineConfiguration->bc.HD44780_db6, activeConfiguration.bc.HD44780_db6);
-	unregisterPin(engineConfiguration->bc.HD44780_db7, activeConfiguration.bc.HD44780_db7);
+#if EFI_HD44780_LCD
+	stopHD44780_pins();
+#endif /* #if EFI_HD44780_LCD */
 
 	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
 
@@ -308,19 +309,31 @@ void applyNewHardwareSettings(void) {
 	startTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
+#if (HAL_USE_PAL && EFI_JOYSTICK)
+	startJoystickPins();
+#endif /* HAL_USE_PAL && EFI_JOYSTICK */
+
+#if EFI_HD44780_LCD
+	startHD44780_pins();
+#endif /* #if EFI_HD44780_LCD */
+
 	enginePins.startInjectionPins();
 	enginePins.startIgnitionPins();
+
 #if EFI_CAN_SUPPORT
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	if (etbRestartNeeded) {
 		startETBPins();
 	}
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
 #if EFI_VEHICLE_SPEED
 	startVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
+
 #if EFI_AUX_PID
 	startAuxPins();
 #endif /* EFI_AUX_PID */
