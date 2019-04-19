@@ -23,7 +23,10 @@
 #include "pin_repository.h"
 #include "rfiutil.h"
 
+/* to be rmeoved  */
 #if EFI_TUNER_STUDIO
+#include "engine_configuration.h"
+EXTERN_CONFIG;
 #include "tunerstudio.h"
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
