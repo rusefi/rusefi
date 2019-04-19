@@ -124,7 +124,7 @@
 #define EFI_POTENTIOMETER TRUE
 
 #ifndef BOARD_TLE6240_COUNT
-#define BOARD_TLE6240_COUNT         1
+#define BOARD_TLE6240_COUNT         0
 #endif
 
 #ifndef BOARD_MC33972_COUNT
