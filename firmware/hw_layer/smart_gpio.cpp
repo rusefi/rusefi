@@ -120,6 +120,7 @@ static struct tle8888_config tle8888_cfg = {
 			0,
 		.cr2 = SPI_CR2_16BIT_MODE
 	},
+	.reset =  {.port = NULL,	.pad = 0},
 	.direct_io = {
 		[0] = {.port = NULL,	.pad = 0,	.output = 9},
 		[1] = {.port = NULL,	.pad = 0,	.output = 10},
