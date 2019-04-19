@@ -14,6 +14,8 @@ cd ..
 echo Compiling F746
 cd firmware\config\boards\nucleo_f746
 call !compile-nucleo_f746.bat
+if not exist build/rusefi.hex echo Just to confirm - FAILED to compile nucleo_f746
+if not exist build/rusefi.hex exit -1
 cd ..
 pwd
 set bundle_name=stm32f746_nucleo
@@ -27,6 +29,8 @@ cd ..
 echo Compiling F767
 cd firmware\config\boards\nucleo_f767
 call !compile-nucleo_f767.bat
+if not exist build/rusefi.hex echo Just to confirm - FAILED to compile nucleo_f767
+if not exist build/rusefi.hex exit -1
 cd ..
 pwd
 set bundle_name=stm32f767_nucleo
@@ -40,7 +44,10 @@ call clean.bat
 cd ..
 echo Compiling F767
 cd firmware\config\boards\nucleo_f767
-call !compile-f767.bat
+call !compile-osc_f767.bat
+if not exist build/rusefi.hex echo Just to confirm - FAILED to compile osc_f767
+if not exist build/rusefi.hex exit -1
+
 cd ..
 pwd
 set bundle_name=stm32f767_osc
