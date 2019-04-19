@@ -16,6 +16,8 @@
 #define HIP_THREAD_PERIOD 100
 
 void initHip9011(Logging *sharedLogger);
+void startHip9001_pins();
+void stopHip9001_pins();
 void setHip9011FrankensoPinout(void);
 #if HAL_USE_ADC
 void hipAdcCallback(adcsample_t value);

@@ -378,6 +378,18 @@ static msg_t hipThread(void *arg) {
 	return -1;
 }
 
+void stopHip9001_pins() {
+#if EFI_PROD_CODE
+	brain_pin_markUnused(activeConfiguration.bc.hip9011IntHoldPin);
+	brain_pin_markUnused(activeConfiguration.bc.hip9011CsPin);
+#endif /* EFI_PROD_CODE */
+}
+
+void startHip9001_pins() {
+	intHold.initPin("hip int/hold", CONFIGB(hip9011IntHoldPin), &CONFIGB(hip9011IntHoldPinMode));
+	enginePins.hipCs.initPin("hip CS", CONFIGB(hip9011CsPin), &CONFIGB(hip9011CsPinMode));
+}
+
 void initHip9011(Logging *sharedLogger) {
 	logger = sharedLogger;
 	addConsoleAction("hipinfo", showHipInfo);
@@ -398,10 +410,7 @@ void initHip9011(Logging *sharedLogger) {
 	hipSpiCfg.sspad = getHwPin("hip", CONFIGB(hip9011CsPin));
 #endif
 
-	intHold.initPin("hip int/hold", CONFIGB(hip9011IntHoldPin),
-			&CONFIGB(hip9011IntHoldPinMode));
-	enginePins.hipCs.initPin("hip CS", CONFIGB(hip9011CsPin),
-			&CONFIGB(hip9011CsPinMode));
+	startHip9001_pins();
 
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &hipSpiCfg);
