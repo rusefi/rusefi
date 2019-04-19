@@ -275,15 +275,22 @@ void applyNewHardwareSettings(void) {
 #if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
+
+#if EFI_HIP_9011
+	stopHip9001_pins();
+#endif /* EFI_HIP_9011 */
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	bool etbRestartNeeded = isETBRestartNeeded();
 	if (etbRestartNeeded) {
 		stopETBPins();
 	}
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
 #if EFI_VEHICLE_SPEED
 	stopVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
+
 #if EFI_AUX_PID
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
@@ -323,6 +330,11 @@ void applyNewHardwareSettings(void) {
 #if EFI_CAN_SUPPORT
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
+
+#if EFI_HIP_9011
+	startHip9001_pins();
+#endif /* EFI_HIP_9011 */
+
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	if (etbRestartNeeded) {
