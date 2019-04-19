@@ -62,6 +62,8 @@ cd ..
 echo Compiling prometheus_405
 cd firmware\config\boards\prometheus
 call !compile-prometheus-405.bat
+if not exist build/rusefi.hex echo Just to confirm - FAILED to compile prometheus-405
+if not exist build/rusefi.hex exit -1
 cd ..
 pwd
 set bundle_name=prometheus_405
@@ -76,6 +78,8 @@ cd ..
 echo Compiling prometheus_469
 cd firmware\config\boards\prometheus
 call !compile-prometheus-469.bat
+if not exist build/rusefi.hex echo Just to confirm - FAILED to compile prometheus-469
+if not exist build/rusefi.hex exit -1
 cd ..
 pwd
 set bundle_name=prometheus_469
