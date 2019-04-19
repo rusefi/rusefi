@@ -474,7 +474,8 @@ int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
 	struct tle6240_priv *chip;
 
 	/* no config or no such chip */
-	osalDbgCheck((cfg != NULL) && (cfg->spi_bus != NULL) && (index < BOARD_TLE6240_COUNT));
+	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_TLE6240_COUNT))
+		return -1;
 
 	/* check for valid cs.
 	 * DOTO: remove this check? CS can be driven by SPI */

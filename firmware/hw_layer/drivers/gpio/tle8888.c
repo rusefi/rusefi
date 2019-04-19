@@ -480,7 +480,8 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
 
 	/* no config or no such chip */
-	osalDbgCheck((cfg != NULL) && (cfg->spi_bus != NULL) && (index < BOARD_TLE8888_COUNT));
+	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_TLE8888_COUNT))
+		return -1;
 
 	/* check for valid cs.
 	 * TODO: remove this check? CS can be driven by SPI */
