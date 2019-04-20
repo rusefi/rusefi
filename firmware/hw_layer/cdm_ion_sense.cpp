@@ -43,8 +43,8 @@ void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
 
 static CdmState instance;
 
-static void extIonCallback(int pinIndex) {
-        UNUSED(pinIndex);
+static void extIonCallback(void *arg) {
+        UNUSED(arg);
 
         int currentRevolution = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
 
@@ -62,7 +62,7 @@ void cdmIonInit(void) {
 		return;
 	}
 
-	enableExti(CONFIGB(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extIonCallback);
+	efiExtiEnablePin("ion", CONFIGB(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
 }
 
 #endif /* EFI_CDM_INTEGRATION */
