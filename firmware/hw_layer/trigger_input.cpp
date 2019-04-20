@@ -104,6 +104,7 @@ static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
 
 	pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
+	// todo efiSetPadMode(msg, brainPin, mode); or reuse joystick code? configurePalInputPin?
 	brain_pin_markUsed(brainPin, msg);
 
 	palEnableLineEvent(pal_line, PAL_EVENT_MODE_BOTH_EDGES);

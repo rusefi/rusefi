@@ -102,6 +102,7 @@ void stopJoystickPins() {
 }
 
 void startJoystickPins() {
+	// todo: extract 'configurePalInputPin() method?
 	efiSetPadMode("joy center", CONFIGB(joystickCenterPin), PAL_MODE_INPUT_PULLUP);
 	efiSetPadMode("joy A", CONFIGB(joystickAPin), PAL_MODE_INPUT_PULLUP);
 	// not used so far	efiSetPadMode("joy B", CONFIGB(joystickBPin), PAL_MODE_INPUT_PULLUP);
