@@ -104,6 +104,7 @@ static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
 
 	pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
+	brain_pin_markUsed(brainPin, msg);
 
 	palEnableLineEvent(pal_line, PAL_EVENT_MODE_BOTH_EDGES);
 	if (is_shaft)
@@ -121,6 +122,7 @@ static void turnOffTriggerInputPin(brain_pin_e brainPin)
 	/* check for on-chip? */
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
+	brain_pin_markUnused(brainPin);
 
 	pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 	palDisableLineEvent(pal_line);
