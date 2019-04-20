@@ -132,7 +132,7 @@
 #endif
 
 #ifndef BOARD_TLE8888_COUNT
-#define BOARD_TLE8888_COUNT 	1
+#define BOARD_TLE8888_COUNT 	0
 #endif
 
 // todo: move this outside of efifeatures.h
