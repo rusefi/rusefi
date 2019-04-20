@@ -1,3 +1,4 @@
+echo "TIMESTAMP %date% %time%"
 echo I am hw_test.bat
 pwd
 
@@ -34,5 +35,5 @@ ant realtest
 IF NOT ERRORLEVEL echo ERROR DETECTED
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo %date% %time%
+echo "TIMESTAMP %date% %time%"
 echo hw_test.bat: done
