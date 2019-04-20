@@ -99,6 +99,27 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 	}
 }
 
+void efiSetPadUnused(brain_pin_e brainPin)
+{
+	/* input with pull up, is it safe? */
+	iomode_t mode = PAL_STM32_MODE_INPUT | PAL_STM32_PUPDR_PULLUP;
+
+	if (brain_pin_is_onchip(brainPin)) {
+		ioportid_t port = getHwPort("unused", brainPin);
+		ioportmask_t pin = getHwPin("unused", brainPin);
+
+		/* input with pull up, is it safe? */
+		palSetPadMode(port, pin, mode);
+	}
+	#if (BOARD_EXT_GPIOCHIPS > 0)
+		else {
+			gpiochips_setPadMode(brainPin, mode);
+		}
+	#endif
+
+	brain_pin_markUnused(brainPin);
+}
+
 iomode_t getInputMode(pin_input_mode_e mode) {
 	switch (mode) {
 	case PI_PULLUP:
