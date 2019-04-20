@@ -108,7 +108,7 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
 cd ..
-echo %date% %time%
+echo "TIMESTAMP %date% %time%"
 echo "build_current_bundle: DONE here"
 pwd
 

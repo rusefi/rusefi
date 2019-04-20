@@ -11,5 +11,5 @@ ant simlator_test
 IF NOT ERRORLEVEL echo ERROR DETECTED
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo %date% %time%
+echo "TIMESTAMP %date% %time%"
 echo simulator_test.bat: done

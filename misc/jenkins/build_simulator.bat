@@ -1,4 +1,4 @@
-echo Building rusefi simulator
+echo "TIMESTAMP %date% %time% Building rusefi simulator"
 pwd
 cd simulator
 gcc -v
