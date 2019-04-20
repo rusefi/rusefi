@@ -9,9 +9,6 @@
  * be using same EXTI line. See https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
  * See also comments in digital_input_hw.cpp
  *
- *
- * TODO: In release 18.2.0 the EXT driver is no more provided for STM32, there is a PAL demo under /testhal/STM32/multi/PAL with examples of callbacks and synchronous API.
- *
  * @date Jan 2, 2015
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
