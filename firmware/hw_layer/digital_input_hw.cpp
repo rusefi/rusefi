@@ -205,6 +205,10 @@ void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	}
 }
 
+void turnOffCapturePin(brain_pin_e brainPin) {
+	efiSetPadUnused(brainPin);
+}
+
 /**
  * takes next digital_input_s from the registeredIcus pool
  */

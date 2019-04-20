@@ -262,7 +262,7 @@ static void turnOffTriggerInputPin(brain_pin_e brainPin) {
         icuStopCapture(driver);
 		icuStop(driver);
 		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(brainPin));
-		brain_pin_markUnused(brainPin);
+		turnOffCapturePin(brainPin);
 	}
 }
 
