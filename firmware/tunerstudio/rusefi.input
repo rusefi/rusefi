@@ -965,7 +965,7 @@ gaugeCategory = Fuel Data
    entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
    entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
 
-   entry = deltaTps,		"fuel: TPS change",float,  "%.3f"
+   entry = deltaTps,		@@GAUGE_NAME_FUEL_TPS_ROC@@,float,  "%.3f"
    entry = tpsAccelFuel,    @@GAUGE_NAME_FUEL_TPS_EXTRA@@,    float,  "%.3f"
 
    entry = wallFuelCorrection,@@GAUGE_NAME_FUEL_WALL_CORRECTION@@,	float,   "%.3f"
@@ -2162,6 +2162,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Decel Multiplier",	 			engineLoadDecelEnleanmentMultiplier
 
 	dialog = TpsAccelPanel, "TPS"
+		field = "Set 'Debug Mode' to see detailed 'TPS acceleration enrichment' diagnostics"
    		field = "Length",						tpsAccelLength
 		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
 		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
@@ -2177,6 +2178,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 ;			Tuning->AccelEnrichment
 	dialog = AccelEnrich,	"Accel/Decel Enrichment"
+		field = "Debug mode",							debugMode
 		panel = TpsAccelPanel
 		panel = WallWettingAccelPanel
 		panel = EngineLoadAccelPanel

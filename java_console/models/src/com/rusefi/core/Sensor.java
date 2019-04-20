@@ -104,7 +104,7 @@ public enum Sensor {
     FIRMWARE_VERSION(SensorCategory.OPERATIONS, FieldType.INT, 84, BackgroundColor.BLUE),
     veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.FLOAT, 112, BackgroundColor.MUD),
 
-    deltaTps(SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD),
+    deltaTps(Fields.GAUGE_NAME_FUEL_TPS_ROC, SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD, -100, 100, "%"),
     engineLoadAccelDelta(SensorCategory.FUEL, FieldType.FLOAT, 124, BackgroundColor.MUD),
     tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD),
     PPS("pedal", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 136, BackgroundColor.MUD), // pedal position sensor

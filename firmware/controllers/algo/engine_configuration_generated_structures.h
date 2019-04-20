@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 14 11:23:20 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 14:53:36 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1859,7 +1859,7 @@ typedef struct {
 	 */
 	int tpsAccelLength;
 	/**
-	 * Maximum delta in TPS percentange over the 'length'
+	 * Maximum delta in TPS percentage over the 'length'. Actual TPS change has to be above this value in order to TPS/TPS acceleration to kick in.
 	 * offset 2068
 	 */
 	float tpsAccelEnrichmentThreshold;
@@ -1907,6 +1907,8 @@ typedef struct {
 	 */
 	float slowAdcAlpha;
 	/**
+	 * See http://rusefi.com/s/debugmode
+	 * 
 	 * set debug_mode X
 	 * offset 2112
 	 */
@@ -2698,4 +2700,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 14 11:23:20 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 14:53:36 EDT 2019
