@@ -309,10 +309,10 @@
                                      PIN_MODE_INPUT(GPIOA_PIN1) |           \
                                      PIN_MODE_INPUT(GPIOA_PIN2) |           \
                                      PIN_MODE_INPUT(GPIOA_PIN3) |           \
-                                     PIN_MODE_ALTERNATE(GPIOA_LRCK) |       \
-                                     PIN_MODE_ALTERNATE(GPIOA_PIN5) |        \
-                                     PIN_MODE_ALTERNATE(GPIOA_PIN6) |        \
-                                     PIN_MODE_ALTERNATE(GPIOA_PIN7) |        \
+                                     PIN_MODE_INPUT(GPIOA_LRCK) |       \
+                                     PIN_MODE_INPUT(GPIOA_PIN5) |        \
+                                     PIN_MODE_INPUT(GPIOA_PIN6) |        \
+                                     PIN_MODE_INPUT(GPIOA_PIN7) |        \
                                      PIN_MODE_INPUT(GPIOA_PIN8) |           \
                                      PIN_MODE_INPUT(GPIOA_VBUS_FS) |        \
                                      PIN_MODE_ALTERNATE(GPIOA_OTG_FS_ID) |  \
