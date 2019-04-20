@@ -14,7 +14,12 @@
 
 #include "global.h"
 
-#if EFI_SHAFT_POSITION_INPUT && (HAL_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
+#ifndef HAL_TRIGGER_USE_PAL
+#define HAL_TRIGGER_USE_PAL FALSE
+#endif /* HAL_TRIGGER_USE_PAL */
+
+
+#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
 
 #include "trigger_input.h"
 #include "digital_input_hw.h"
@@ -36,7 +41,7 @@ int vvtEventFallCounter = 0;
 
 #if EFI_PROD_CODE
 /* PAL based implementation */
-#if (HAL_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
+#if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 
 /* static vars for PAL implementation */
 static ioline_t primary_line;
@@ -317,4 +322,4 @@ void applyNewTriggerInputPins(void) {
 	startTriggerInputPins();
 }
 
-#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)) */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)) */
