@@ -167,7 +167,7 @@ int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	return (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
+	return (cb.get(index) - (cb.get(index - 1)));
 }
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
