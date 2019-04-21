@@ -25,7 +25,9 @@ ifeq ($(DEBUG_LEVEL_OPT),)
 endif
 
 
-ifneq ($(CCACHE_DIR),)
+ifeq ($(CCACHE_DIR),)
+ $(info No CCACHE_DIR)
+else
  $(info CCACHE_DIR is ${CCACHE_DIR})
  CCPREFIX=ccache
 endif
