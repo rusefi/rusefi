@@ -257,7 +257,6 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set tps_max 540
 	engineConfiguration->tpsMax = 540;
 
-
 	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
@@ -291,6 +290,7 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->clt.adcChannel = EFI_ADC_15;
 	set10K_4050K(&engineConfiguration->clt);
 
+	// see also setDefaultEtbBiasCurve
 }
 
 // TLE8888_BENCH_ENGINE
