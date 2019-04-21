@@ -25,6 +25,12 @@ ifeq ($(DEBUG_LEVEL_OPT),)
 endif
 
 
+ifneq ($(CCACHE_DIR),)
+ $(info CCACHE_DIR is ${CCACHE_DIR})
+ CCPREFIX=ccache
+endif
+
+
 # Compiler options here.
 ifeq ($(USE_OPT),)
   USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
@@ -315,8 +321,8 @@ ifeq ($(CROSS_COMPILE),)
 else
   TRGT = $(CROSS_COMPILE)
 endif
-CC   = $(TRGT)gcc
-CPPC = $(TRGT)g++
+CC   = $(CCPREFIX) $(TRGT)gcc
+CPPC = $(CCPREFIX) $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
