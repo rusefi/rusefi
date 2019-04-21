@@ -24,20 +24,17 @@ static ioportmask_t ext_used = 0;
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
 int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
-	int index;
-	ioportid_t port;
-	ioline_t line;
 
-	/* paranoid chech, in case of GPIO_UNASSIGNED getHwPort will return NULL
+	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
 	if (brainPin == GPIO_UNASSIGNED)
 		return -1;
 
-	port = getHwPort(msg, brainPin);
+	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL)
 		return -1;
 
-	index = getHwPin(msg, brainPin);
+	int index = getHwPin(msg, brainPin);
 
 	/* is this index already used? */
 	if (ext_used & PAL_PORT_BIT(index)) {
@@ -45,7 +42,7 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palca
 		return -1;
 	}
 
-	line = PAL_LINE(port, index);
+	ioline_t line = PAL_LINE(port, index);
 	palEnableLineEvent(line, mode);
 	palSetLineCallback(line, cb, cb_data);
 
@@ -57,26 +54,23 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palca
 
 void efiExtiDisablePin(brain_pin_e brainPin)
 {
-	int index;
-	ioportid_t port;
-	ioline_t line;
-
-	/* paranoid chech, in case of GPIO_UNASSIGNED getHwPort will return NULL
+	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
-	port = getHwPort("exti", brainPin);
+	ioportid_t port = getHwPort("exti", brainPin);
 	if (port == NULL)
 		return;
 
-	index = getHwPin("exti", brainPin);
+	int index = getHwPin("exti", brainPin);
 
 	/* is this index was used? */
 	if (!(ext_used & PAL_PORT_BIT(index))) {
 		return;
 	}
 
+	ioline_t line = PAL_LINE(port, index);
 	palDisableLineEvent(line);
 
 	/* mark unused */
