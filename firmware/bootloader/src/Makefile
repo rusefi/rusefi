@@ -239,6 +239,7 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFIGPATH) \
 	$(CONFIG)/engines \
+	$(CONFIG) \
 	$(PROJECT_DIR)/ext \
 	$(PROJECT_DIR)/ext_algo \
 	$(UTIL_INC) \
