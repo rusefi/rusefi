@@ -455,7 +455,10 @@ end_struct
 afr_sensor_s afr
 
 adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSee also tpsAdcChannel
-uint8_t[3] unusedt;
+	brain_pin_e tle6240_cs;
+	pin_output_mode_e tle6240_csPinMode;
+
+uint8_t[1] unusedt;
 
 
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
@@ -523,7 +526,10 @@ brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal 
 
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
-	uint8_t[3] unusedSpiPadding9;
+	brain_pin_e mc33972_cs;
+	pin_output_mode_e mc33972_csPinMode;
+
+	uint8_t[1] unusedSpiPadding9;
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 

@@ -1398,6 +1398,10 @@
 #define max31855spiDevice_offset_hex 324
 #define maxKnockSubDeg_offset 552
 #define maxKnockSubDeg_offset_hex 228
+#define mc33972_cs_offset 677
+#define mc33972_cs_offset_hex 2a5
+#define mc33972_csPinMode_offset 678
+#define mc33972_csPinMode_offset_hex 2a6
 #define mc33972spiDevice_offset 4032
 #define mc33972spiDevice_offset_hex fc0
 #define measureMapOnlyInOneCylinder_offset 744
@@ -1635,6 +1639,10 @@
 #define timingMode_offset_hex 1c0
 #define timingMultiplier_offset 9872
 #define timingMultiplier_offset_hex 2690
+#define tle6240_cs_offset 581
+#define tle6240_cs_offset_hex 245
+#define tle6240_csPinMode_offset 582
+#define tle6240_csPinMode_offset_hex 246
 #define tle6240spiDevice_offset 4028
 #define tle6240spiDevice_offset_hex fbc
 #define tle8888_cs_offset 3129
@@ -1777,10 +1785,10 @@
 #define unusedSpiPadding7_offset_hex fbd
 #define unusedSpiPadding8_offset 4033
 #define unusedSpiPadding8_offset_hex fc1
-#define unusedSpiPadding9_offset 677
-#define unusedSpiPadding9_offset_hex 2a5
-#define unusedt_offset 581
-#define unusedt_offset_hex 245
+#define unusedSpiPadding9_offset 679
+#define unusedSpiPadding9_offset_hex 2a7
+#define unusedt_offset 583
+#define unusedt_offset_hex 247
 #define unusedTest55_offset 3131
 #define unusedTest55_offset_hex c3b
 #define unuseduartPadding1_offset 809

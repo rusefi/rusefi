@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 14:42:58 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 23:18:45 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -914,6 +914,8 @@ public class Fields {
 	public static final int max31855spiDevice_offset_hex = 324;
 	public static final int maxKnockSubDeg_offset = 552;
 	public static final int maxKnockSubDeg_offset_hex = 228;
+	public static final int mc33972_cs_offset = 677;
+	public static final int mc33972_csPinMode_offset = 678;
 	public static final int mc33972spiDevice_offset = 4032;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
@@ -1050,6 +1052,10 @@ public class Fields {
 	public static final int timingMode_offset = 448;
 	public static final int timingMultiplier_offset = 9872;
 	public static final int timingMultiplier_offset_hex = 2690;
+	public static final int tle6240_cs_offset = 581;
+	public static final int tle6240_cs_offset_hex = 245;
+	public static final int tle6240_csPinMode_offset = 582;
+	public static final int tle6240_csPinMode_offset_hex = 246;
 	public static final int tle6240spiDevice_offset = 4028;
 	public static final int tle8888_cs_offset = 3129;
 	public static final int tle8888_csPinMode_offset = 3130;
@@ -1140,9 +1146,9 @@ public class Fields {
 	public static final int unusedSpiPadding6_offset = 4025;
 	public static final int unusedSpiPadding7_offset = 4029;
 	public static final int unusedSpiPadding8_offset = 4033;
-	public static final int unusedSpiPadding9_offset = 677;
-	public static final int unusedt_offset = 581;
-	public static final int unusedt_offset_hex = 245;
+	public static final int unusedSpiPadding9_offset = 679;
+	public static final int unusedt_offset = 583;
+	public static final int unusedt_offset_hex = 247;
 	public static final int unusedTest55_offset = 3131;
 	public static final int unuseduartPadding1_offset = 809;
 	public static final int unuseduartPadding1_offset_hex = 329;
@@ -1340,16 +1346,19 @@ public class Fields {
 	public static final Field AFR_V2 = Field.create("AFR_V2", 572, FieldType.FLOAT);
 	public static final Field AFR_VALUE2 = Field.create("AFR_VALUE2", 576, FieldType.FLOAT);
 	public static final Field THROTTLEPEDALPOSITIONADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONADCCHANNEL", 580, FieldType.INT8, adc_channel_e);
+	public static final String[] brain_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
+	public static final Field TLE6240_CS = Field.create("TLE6240_CS", 581, FieldType.INT8, brain_pin_e);
+	public static final String[] pin_output_mode_e = {"default", "default inverted", "open collector", "open collector inverted"};
+	public static final Field TLE6240_CSPINMODE = Field.create("TLE6240_CSPINMODE", 582, FieldType.INT8, pin_output_mode_e);
+	public static final Field UNUSEDT = Field.create("UNUSEDT", 583, FieldType.INT8);
 	public static final Field BAROSENSOR_LOWVALUE = Field.create("BAROSENSOR_LOWVALUE", 584, FieldType.FLOAT);
 	public static final Field BAROSENSOR_HIGHVALUE = Field.create("BAROSENSOR_HIGHVALUE", 588, FieldType.FLOAT);
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 592, FieldType.INT);
 	public static final Field BAROSENSOR_HWCHANNEL = Field.create("BAROSENSOR_HWCHANNEL", 596, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_SOLENOIDFREQUENCY = Field.create("IDLE_SOLENOIDFREQUENCY", 600, FieldType.INT);
-	public static final String[] brain_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field IDLE_SOLENOIDPIN = Field.create("IDLE_SOLENOIDPIN", 604, FieldType.INT8, brain_pin_e);
 	public static final Field IDLE_STEPPERDIRECTIONPIN = Field.create("IDLE_STEPPERDIRECTIONPIN", 605, FieldType.INT8, brain_pin_e);
 	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 606, FieldType.INT8, brain_pin_e);
-	public static final String[] pin_output_mode_e = {"default", "default inverted", "open collector", "open collector inverted"};
 	public static final Field IDLE_SOLENOIDPINMODE = Field.create("IDLE_SOLENOIDPINMODE", 607, FieldType.INT8, pin_output_mode_e);
 	public static final Field MANIDLEPOSITION = Field.create("MANIDLEPOSITION", 608, FieldType.FLOAT);
 	public static final Field MAPFREQUENCY0KPA = Field.create("MAPFREQUENCY0KPA", 612, FieldType.FLOAT);
@@ -1409,6 +1418,9 @@ public class Fields {
 	public static final Field CJ125CSPIN = Field.create("CJ125CSPIN", 674, FieldType.INT8, brain_pin_e);
 	public static final Field UNUSEDETBM = Field.create("UNUSEDETBM", 675, FieldType.INT8);
 	public static final Field DIGITALPOTENTIOMETERSPIDEVICE = Field.create("DIGITALPOTENTIOMETERSPIDEVICE", 676, FieldType.INT8);
+	public static final Field MC33972_CS = Field.create("MC33972_CS", 677, FieldType.INT8, brain_pin_e);
+	public static final Field MC33972_CSPINMODE = Field.create("MC33972_CSPINMODE", 678, FieldType.INT8, pin_output_mode_e);
+	public static final Field UNUSEDSPIPADDING9 = Field.create("UNUSEDSPIPADDING9", 679, FieldType.INT8);
 	public static final Field ETB1_DIRECTIONPIN1 = Field.create("ETB1_DIRECTIONPIN1", 680, FieldType.INT8, brain_pin_e);
 	public static final Field ETB1_DIRECTIONPIN2 = Field.create("ETB1_DIRECTIONPIN2", 681, FieldType.INT8, brain_pin_e);
 	public static final Field ETB1_CONTROLPIN1 = Field.create("ETB1_CONTROLPIN1", 682, FieldType.INT8, brain_pin_e);

@@ -14,19 +14,17 @@
 #include "hardware.h"
 #include "mpu_util.h"
 #include "gpio_ext.h"
+#include "pin_repository.h"
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
 #include "drivers/gpio/tle8888.h"
 
 EXTERN_CONFIG;
+static OutputPin tle8888Cs;
+static OutputPin tle6240Cs;
+static OutputPin mc33972Cs;
 
 // todo: migrate to TS or board config
-#ifndef TLE6240_SS_PORT
-#define TLE6240_SS_PORT GPIOF
-#endif /* TLE6240_SS_PORT */
-#ifndef TLE6240_SS_PAD
-#define TLE6240_SS_PAD 0U
-#endif /* TLE6240_SS_PAD */
 #ifndef TLE6240_RESET_PORT
 #define TLE6240_RESET_PORT GPIOG
 #endif /* TLE6240_RESET_PORT */
@@ -57,8 +55,8 @@ struct tle6240_config tle6240 = {
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
-		.ssport = TLE6240_SS_PORT,
-		.sspad = TLE6240_SS_PAD,
+		.ssport = NULL,
+		.sspad = 0,
 		.cr1 =
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |
@@ -84,8 +82,8 @@ struct mc33972_config mc33972 = {
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
-		.ssport = GPIOB,
-		.sspad = 4U,
+		.ssport = NULL,
+		.sspad = 0,
 		.cr1 =
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
@@ -101,8 +99,7 @@ struct mc33972_config mc33972 = {
 #endif /* (BOARD_MC33972_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
-/* this is homeless tle8888, please find better place for it */
-static struct tle8888_config tle8888_cfg = {
+struct tle8888_config tle8888_cfg = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
@@ -131,20 +128,32 @@ static struct tle8888_config tle8888_cfg = {
 #endif
 
 void initSmartGpio() {
+	startSmartCsPins();
 	int ret;
 
 #if (BOARD_TLE6240_COUNT > 0)
-	tle6240.spi_bus = getSpiDevice(engineConfiguration->tle6240spiDevice);
-	ret = tle6240_add(0, &tle6240);
+	if (engineConfiguration->tle6240_cs != GPIO_UNASSIGNED) {
+		tle6240.spi_bus = getSpiDevice(engineConfiguration->tle6240spiDevice);
+		ret = tle6240_add(0, &tle6240);
+	} else {
+		ret = 0;
+	}
 	if (ret < 0)
 #endif /* (BOARD_TLE6240_COUNT > 0) */
 		/* whenever chip is disabled or error returned - occupy its gpio range */
 		gpiochip_use_gpio_base(TLE6240_OUTPUTS);
 
 #if (BOARD_MC33972_COUNT > 0)
-	mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
-	// todo: propogate 'basePinOffset' parameter
-	ret = mc33972_add(0, &mc33972);
+	if (boardConfiguration->mc33972_cs != GPIO_UNASSIGNED) {
+		// todo: reuse initSpiCs method?
+		mc33972.spi_config.ssport = getHwPort("tle8888 CS", boardConfiguration->mc33972_cs);
+		mc33972.spi_config.sspad = getHwPin("tle8888 CS", boardConfiguration->mc33972_cs);
+		mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
+		// todo: propogate 'basePinOffset' parameter
+		ret = mc33972_add(0, &mc33972);
+	} else {
+		ret = 0;
+	}
 	if (ret < 0)
 #endif /* (BOARD_MC33972_COUNT > 0) */
 		/* whenever chip is disabled or error returned - occupy its gpio range */
@@ -152,10 +161,7 @@ void initSmartGpio() {
 
 #if (BOARD_TLE8888_COUNT > 0)
 	if (engineConfiguration->tle8888_cs != GPIO_UNASSIGNED) {
-		static OutputPin tle8888Cs;
 		// SPI pins are enabled in initSpiModules()
-		tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
-					&engineConfiguration->tle8888_csPinMode);
 
 		// todo: reuse initSpiCs method?
 		tle8888_cfg.spi_config.ssport = getHwPort("tle8888 CS", engineConfiguration->tle8888_cs);
@@ -177,7 +183,24 @@ void initSmartGpio() {
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	/* external chip init */
 	gpiochips_init();
-#endif
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 }
+
+#if (BOARD_EXT_GPIOCHIPS > 0)
+void stopSmartCsPins() {
+	brain_pin_markUnused(activeConfiguration.tle8888_cs);
+	brain_pin_markUnused(activeConfiguration.tle6240_cs);
+	brain_pin_markUnused(activeConfiguration.bc.mc33972_cs);
+}
+
+void startSmartCsPins() {
+	tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
+				&engineConfiguration->tle8888_csPinMode);
+	tle6240Cs.initPin("tle8888 CS", engineConfiguration->tle6240_cs,
+				&engineConfiguration->tle6240_csPinMode);
+	mc33972Cs.initPin("mc33972 CS", boardConfiguration->mc33972_cs,
+				&boardConfiguration->mc33972_csPinMode);
+}
+#endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 #endif /* EFI_PROD_CODE */
