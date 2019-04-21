@@ -242,6 +242,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 // ETB_BENCH_ENGINE
+// set engine_type 58
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
 	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
