@@ -456,7 +456,7 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
 	// needed also by bootloader code
 	setPinConfigurationOverrides();
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 // needed also by bootloader code
@@ -472,10 +472,11 @@ void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
 	setSerialConfigurationOverrides();
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 // needed also by bootloader code
+// at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
@@ -485,7 +486,7 @@ void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
 	setSdCardConfigurationOverrides();
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 
@@ -1145,7 +1146,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	/**
 	 * Let's apply global board defaults too, for most of the boards
 	 */
-	if (engineType != MINIMAL_PINS) {
+	if (engineType != MINIMAL_PINS
+			/* this is a bit nasty */
+			 && engineType != ETB_BENCH_ENGINE
+			 && engineType != TLE8888_BENCH_ENGINE) {
 		setDefaultBoardConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
@@ -1167,7 +1171,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 	case MINIMAL_PINS:
-		setMinimalPinsEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		break;
 	case ACURA_RSX:
 		setAcuraRSX(engineConfiguration);

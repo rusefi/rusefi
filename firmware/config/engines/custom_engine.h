@@ -13,7 +13,6 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
 void disableLCD(board_configuration_s *boardConfiguration);
 void runSchedulingPrecisionTestIfNeeded(void);
-void setMinimalPinsEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);

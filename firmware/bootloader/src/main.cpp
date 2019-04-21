@@ -41,8 +41,10 @@ int main(void) {
 	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// set UART pads configuration based on the board
 	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+/* at the moment SD card is not needed by bootloader
 	// set SD card configuration also
 	setDefaultSdCardParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+*/
 
 	// start UART
 	startTsPort(getTsChannel());
