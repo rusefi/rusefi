@@ -34,6 +34,10 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_5_1_
 
+#if !defined(_FROM_ASM_)
+#include "obd_error_codes.h"
+#endif /* _FROM_ASM_ */
+
 #if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
  #define EFI_CLOCK_LOCKS FALSE
 #endif /* EFI_CLOCK_LOCKS */
