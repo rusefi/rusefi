@@ -291,6 +291,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
+	// Now that GPIO_UNASSIGNED == 0 we do not really need explicit zero assignments since memset above does that
 	boardConfiguration->canTxPin = GPIO_UNASSIGNED;
 	boardConfiguration->canRxPin = GPIO_UNASSIGNED;
 	setDefaultFsioParameters(engineConfiguration);
