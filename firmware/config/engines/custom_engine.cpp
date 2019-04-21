@@ -242,6 +242,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 // ETB_BENCH_ENGINE
+// set engine_type 58
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// VAG test ETB
 	// set tps_min 54
