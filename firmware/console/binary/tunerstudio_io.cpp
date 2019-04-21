@@ -90,12 +90,13 @@ void startTsPort(ts_channel_s *tsChannel) {
 			print("TunerStudio over USB serial");
 			/**
 			 * This method contains a long delay, that's the reason why this is not done on the main thread
+			 * TODO: actually now with some refactoring this IS on the main thread :(
 			 */
 			usb_serial_start();
 			// if console uses UART then TS uses USB
 			tsChannel->channel = (BaseChannel *) &CONSOLE_USB_DEVICE;
 			return;
-		#endif
+		#endif /* CONSOLE_USB_DEVICE */
 		#if defined(TS_UART_DEVICE) || defined(TS_SERIAL_DEVICE)
 			if (CONFIGB(useSerialPort)) {
 

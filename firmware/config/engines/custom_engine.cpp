@@ -81,10 +81,6 @@ void disableLCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 }
 
-void setMinimalPinsEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
-}
-
 // todo: should this be renamed to 'setFrankensoConfiguration'?
 // todo: should this be part of more default configurations?
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -247,9 +243,6 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // ETB_BENCH_ENGINE
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	setMinimalPinsEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	// VAG test ETB
 	// set tps_min 54
 	engineConfiguration->tpsMin = 54;
@@ -296,9 +289,6 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // TLE8888_BENCH_ENGINE
 // set engine_type 59
 void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	setMinimalPinsEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -353,6 +343,9 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(etb2.directionPin2) = GPIOE_4;
 
 	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
+
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3; // PA3
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4; // PA4
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */

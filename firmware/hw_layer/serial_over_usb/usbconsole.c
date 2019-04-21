@@ -17,6 +17,9 @@
 
 static bool isUsbSerialInitialized = false;
 
+/**
+ * start USB serial using hard-coded communications pins (see comments inside the code)
+ */
 void usb_serial_start(void) {
 	/*
 	 * Initializes a serial-over-USB CDC driver.
