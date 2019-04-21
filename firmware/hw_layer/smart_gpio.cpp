@@ -148,8 +148,8 @@ void initSmartGpio() {
 #if (BOARD_MC33972_COUNT > 0)
 	if (boardConfiguration->mc33972_cs != GPIO_UNASSIGNED) {
 		// todo: reuse initSpiCs method?
-		mc33972.spi_config.ssport = getHwPort("tle8888 CS", boardConfiguration->mc33972_cs);
-		mc33972.spi_config.sspad = getHwPin("tle8888 CS", boardConfiguration->mc33972_cs);
+		mc33972.spi_config.ssport = getHwPort("mc33972 CS", boardConfiguration->mc33972_cs);
+		mc33972.spi_config.sspad = getHwPin("mc33972 CS", boardConfiguration->mc33972_cs);
 		mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
 		// todo: propogate 'basePinOffset' parameter
 		ret = mc33972_add(0, &mc33972);
