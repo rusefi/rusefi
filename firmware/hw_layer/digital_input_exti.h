@@ -11,7 +11,8 @@
 #include "global.h"
 
 #if HAL_USE_PAL
-void enableExti(brain_pin_e pin, uint32_t mode, palcallback_t cb);
+int efiExtiEnablePin(const char *msg, brain_pin_e pin, uint32_t mode, palcallback_t cb, void *cb_data);
+void efiExtiDisablePin(brain_pin_e brainPin);
 #endif /* HAL_USE_PAL */
 
 #endif /* HW_LAYER_DIGITAL_INPUT_EXTI_H_ */

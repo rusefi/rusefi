@@ -23,6 +23,7 @@
 
 #include "trigger_input.h"
 #include "digital_input_hw.h"
+#include "digital_input_exti.h"
 #include "pin_repository.h"
 #include "trigger_structure.h"
 #include "trigger_central.h"
@@ -100,40 +101,20 @@ static void cam_callback(void *arg)
 static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft)
 {
 	ioline_t pal_line;
-	(void)is_shaft;
-
-	/* check for on-chip? */
-	if (brainPin == GPIO_UNASSIGNED)
-		return -1;
 
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
 
+	/* TODO:
+	 * * do not set to both edges if we need only one
+	 * * simplify callback in case of one edge */
 	pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
-	// todo efiSetPadMode(msg, brainPin, mode); or reuse joystick code? configurePalInputPin?
-	brain_pin_markUsed(brainPin, msg);
-
-	palEnableLineEvent(pal_line, PAL_EVENT_MODE_BOTH_EDGES);
-	if (is_shaft)
-		palSetLineCallback(pal_line, shaft_callback, (void*)pal_line);
-	else
-		palSetLineCallback(pal_line, cam_callback, (void*)pal_line);
-
-	return 0;
+	return efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, is_shaft ? shaft_callback : cam_callback, (void *)pal_line);
 }
 
 static void turnOffTriggerInputPin(brain_pin_e brainPin)
 {
-	uint32_t pal_line;
-
-	/* check for on-chip? */
-	if (brainPin == GPIO_UNASSIGNED)
-		return;
-	brain_pin_markUnused(brainPin);
-
-	pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
-	palDisableLineEvent(pal_line);
+	efiExtiDisablePin(brainPin);
 }
-
 
 static void setPrimaryChannel(brain_pin_e brainPin)
 {
@@ -262,7 +243,7 @@ static void turnOffTriggerInputPin(brain_pin_e brainPin) {
         icuStopCapture(driver);
 		icuStop(driver);
 		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(brainPin));
-		brain_pin_markUnused(brainPin);
+		turnOffCapturePin(brainPin);
 	}
 }
 

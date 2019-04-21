@@ -53,6 +53,7 @@
 
 #if EFI_GPIO_HARDWARE
 void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
+void efiSetPadUnused(brain_pin_e brainPin);
 
 bool efiReadPin(brain_pin_e pin);
 
