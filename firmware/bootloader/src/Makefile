@@ -41,6 +41,13 @@ ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
 endif
 
+ifeq ($(CCACHE_DIR),)
+ $(info No CCACHE_DIR)
+else
+ $(info CCACHE_DIR is ${CCACHE_DIR})
+ CCPREFIX=ccache
+endif
+
 # Linker extra options here.
 ifeq ($(USE_LDOPT),)
   USE_LDOPT =
@@ -274,8 +281,8 @@ MCU  = cortex-m4
 
 #TRGT = arm-elf-
 TRGT = arm-none-eabi-
-CC   = $(TRGT)gcc
-CPPC = $(TRGT)g++
+CC   = $(CCPREFIX) $(TRGT)gcc
+CPPC = $(CCPREFIX) $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
