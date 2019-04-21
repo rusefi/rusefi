@@ -129,14 +129,14 @@ struct tle8888_config tle8888_cfg = {
 
 void initSmartGpio() {
 	startSmartCsPins();
-	int ret;
+	int ret = -1;
 
 #if (BOARD_TLE6240_COUNT > 0)
 	if (engineConfiguration->tle6240_cs != GPIO_UNASSIGNED) {
 		tle6240.spi_bus = getSpiDevice(engineConfiguration->tle6240spiDevice);
 		ret = tle6240_add(0, &tle6240);
 	} else {
-		ret = 0;
+		ret = -1;
 	}
 	if (ret < 0)
 #endif /* (BOARD_TLE6240_COUNT > 0) */
@@ -152,7 +152,7 @@ void initSmartGpio() {
 		// todo: propogate 'basePinOffset' parameter
 		ret = mc33972_add(0, &mc33972);
 	} else {
-		ret = 0;
+		ret = -1;
 	}
 	if (ret < 0)
 #endif /* (BOARD_MC33972_COUNT > 0) */
@@ -173,7 +173,7 @@ void initSmartGpio() {
 
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == TLE8888_PIN_1, "tle8888");
 	} else {
-		ret = 0;
+		ret = -1;
 	}
 	if (ret < 0)
 #endif /* (BOARD_TLE6240_COUNT > 0) */
