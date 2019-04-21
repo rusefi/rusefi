@@ -304,7 +304,7 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->tle8888_cs = GPIOH_5;
+	engineConfiguration->tle8888_cs = GPIOD_5;
 	engineConfiguration->directSelfStimulation = true;
 
 	boardConfiguration->ignitionPins[0] = GPIOG_3;
