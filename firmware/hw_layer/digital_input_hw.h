@@ -24,6 +24,7 @@ typedef struct {
 } digital_input_s;
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin);
+void turnOffCapturePin(brain_pin_e brainPin);
 
 digital_input_s *addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isActiveHigh);

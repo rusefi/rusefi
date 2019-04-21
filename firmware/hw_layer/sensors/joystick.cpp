@@ -111,16 +111,20 @@ void startJoystickPins() {
 }
 
 void initJoystick(Logging *shared) {
+	int channel;
 	addConsoleAction("joystickinfo", joystickInfo);
 	if (!isJoystickEnabled())
 		return;
 	sharedLogger = shared;
 
-	enableExti(CONFIGB(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback);
-	enableExti(CONFIGB(joystickAPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback);
+	channel = getHwPin("joy", CONFIGB(joystickCenterPin));
+	efiExtiEnablePin("joy", CONFIGB(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
+	channel = getHwPin("joy", CONFIGB(joystickAPin));
+	efiExtiEnablePin("joy", CONFIGB(joystickAPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
 // not used so far	applyPin(CONFIGB(joystickBPin));
 // not used so far	applyPin(CONFIGB(joystickCPin));
-	enableExti(CONFIGB(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback);
+	channel = getHwPin("joy", CONFIGB(joystickDPin));
+	efiExtiEnablePin("joy", CONFIGB(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
 
 	startJoystickPins();
 }
