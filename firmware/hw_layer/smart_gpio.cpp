@@ -104,8 +104,8 @@ struct tle8888_config tle8888_cfg = {
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
-		.ssport = GPIOF,
-		.sspad = 0U,
+		.ssport = NULL,
+		.sspad = 0,
 		.cr1 =
 			SPI_CR1_16BIT_MODE |
 			SPI_CR1_SSM |

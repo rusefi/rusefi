@@ -287,6 +287,10 @@ void applyNewHardwareSettings(void) {
 	}
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
+#if (BOARD_TLE6240_COUNT > 0)
+	stopSmartCsPins();
+#endif /* (BOARD_MC33972_COUNT > 0) */
+
 #if EFI_VEHICLE_SPEED
 	stopVSSPins();
 #endif /* EFI_VEHICLE_SPEED */
@@ -311,6 +315,10 @@ void applyNewHardwareSettings(void) {
 	unregisterPin(engineConfiguration->bc.clutchUpPin, activeConfiguration.bc.clutchUpPin);
 
 	enginePins.unregisterPins();
+
+#if (BOARD_TLE6240_COUNT > 0)
+	startSmartCsPins();
+#endif /* (BOARD_MC33972_COUNT > 0) */
 
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
