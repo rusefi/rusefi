@@ -243,6 +243,8 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // ETB_BENCH_ENGINE
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
+	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// VAG test ETB
 	// set tps_min 54
 	engineConfiguration->tpsMin = 54;

@@ -330,6 +330,9 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
 	boardConfiguration->max31855spiDevice = SPI_NONE;
 
+	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
+
 	engineConfiguration->cj125ua = EFI_ADC_NONE;
 	engineConfiguration->cj125ur = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
