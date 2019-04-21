@@ -63,8 +63,8 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 1 15
 Title "frankenso"
-Date "2019-04-12"
-Rev "0.5.5"
+Date "2019-04-21"
+Rev "0.5.6"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
@@ -646,12 +646,8 @@ F 5 "DIGI,P0.0ADKR-ND" V 1030 3150 60  0001 C CNN "VEND1,VEND1#"
 $EndComp
 Text Label 8500 2150 3    60   ~ 0
 12V-SNUB
-Text Label 8400 2150 3    60   ~ 0
-2I
 Text Label 8100 2150 3    60   ~ 0
-2F
-Text Label 8000 2150 3    60   ~ 0
-2E
+5V
 Text Label 11300 2150 3    60   ~ 0
 3R
 $Comp
@@ -1396,9 +1392,6 @@ Text Label 10100 2150 3    60   ~ 0
 AN12-HARN
 Text Label 8200 2150 3    60   ~ 0
 KNOCK-INPUT-1
-NoConn ~ 8000 2150
-NoConn ~ 8100 2150
-NoConn ~ 8400 2150
 $Sheet
 S 7750 3550 1250 6850
 U 53A0541A
@@ -3075,4 +3068,8 @@ Text GLabel 8700 550  0    60   Input ~ 0
 12V-SNUB
 Wire Wire Line
 	9625 8100 10300 8100
+Text Label 8000 2150 3    60   ~ 0
+AN3-HARN
+Text Label 8400 2150 3    60   ~ 0
+AN4-HARN
 $EndSCHEMATC

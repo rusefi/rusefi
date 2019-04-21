@@ -180,11 +180,15 @@
 173) 			At least some connector silkscreen 1A-3Z see viewtopic.php?f=4&t=507#p29006
 174)                    Consider adding the low cost current limiting circuit noted by Jerri Ellsworth at this video. https://www.youtube.com/watch?v=QZ0WXQWND-I
 175) RESOLVED IN R0.5.4 D12 to D23 on schematic are confusing. Aling these desinators to be more clear. 
-176)                    0805 options for VP selection on High Side VP +5/+12 selection
+176) RESOLVED IN R0.5.6 0805 options for VP selection on High Side VP +5/+12 selection
 177)                    adjust mounting holes to allow 89661-32590 and 89661-32260 cases
 178) RESOLVED IN R0.5.5 Update AN input schematic to note "low pass filter knee at 1kHz or 10Hz with 10k series resistor"
 179) RESOLVED IN R0.5.5 Update AN input schematic to note "low pass filter knee at 10kHz or 100Hz with 10k series resistor"
 180) RESOLVED IN R0.5.5 Update AN input schematic to note "low pass filter knee at 100kHz or 1kHz with 10k series resistor"
+181) RESOLVED IN R0.5.6 W28 was connected to 5F which was a no connect. It is now connected to 5V. 
+182) RESOLVED IN R0.5.6 W27 was connected to 2E which was a no connect. It is now connected to AN3-HARN for an optional external MAP. 
+183) RESOLVED IN R0.5.6 W31 was connected to 2I which was a no connect. It is now connected to AN4-HARN for an optional external W02. 
+
 
 
 For honda add-on / rewiring board
