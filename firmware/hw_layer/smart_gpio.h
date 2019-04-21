@@ -14,5 +14,7 @@
 #define MC33972_PIN(n)		((brain_pin_e)((int)BRAIN_PIN_LAST_ONCHIP + 1 + 16 + (n)))
 
 void initSmartGpio(void);
+void startSmartCsPins();
+void stopSmartCsPins();
 
 #endif /* HW_LAYER_SMART_GPIO_H_ */

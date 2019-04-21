@@ -28,6 +28,7 @@
 #define EXTERN_CONFIG \
 		extern engine_configuration_s *engineConfiguration; \
 		extern board_configuration_s *boardConfiguration; \
+		extern engine_configuration_s activeConfiguration; \
 		extern persistent_config_s *config;
 
 #define EXTERN_ENGINE \
@@ -35,7 +36,6 @@
 		extern Engine *engine; \
 		extern persistent_config_container_s persistentState; \
 		EXTERN_CONFIG \
-		extern engine_configuration_s activeConfiguration; \
 		extern EnginePins enginePins
 
 // Use this macro to declare a function which only takes magic references

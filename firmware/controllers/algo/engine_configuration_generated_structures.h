@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 14:53:36 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 23:18:45 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -552,7 +552,15 @@ typedef struct {
 	/**
 	 * offset 77
 	 */
-	uint8_t unusedSpiPadding9[3];
+	brain_pin_e mc33972_cs;
+	/**
+	 * offset 78
+	 */
+	pin_output_mode_e mc33972_csPinMode;
+	/**
+	 * offset 79
+	 */
+	uint8_t unusedSpiPadding9;
 	/**
 	 * offset 80
 	 */
@@ -1373,7 +1381,15 @@ typedef struct {
 	/**
 	 * offset 581
 	 */
-	uint8_t unusedt[3];
+	brain_pin_e tle6240_cs;
+	/**
+	 * offset 582
+	 */
+	pin_output_mode_e tle6240_csPinMode;
+	/**
+	 * offset 583
+	 */
+	uint8_t unusedt;
 	/**
 	 * @see hasBaroSensor
 	 * offset 584
@@ -2700,4 +2716,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 14:53:36 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 23:18:45 EDT 2019

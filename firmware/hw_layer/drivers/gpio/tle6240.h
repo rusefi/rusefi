@@ -21,7 +21,7 @@
 
 struct tle6240_config {
 	SPIDriver		*spi_bus;
-	const SPIConfig	spi_config;
+	SPIConfig	spi_config;
 	struct {
 		ioportid_t		port;
 		uint_fast8_t	pad;

@@ -20,7 +20,7 @@
 
 struct mc33972_config {
 	SPIDriver		*spi_bus;
-	const SPIConfig	spi_config;
+	SPIConfig	spi_config;
 };
 
 #ifdef __cplusplus
