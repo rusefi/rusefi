@@ -133,6 +133,8 @@ void initSmartGpio() {
 
 #if (BOARD_TLE6240_COUNT > 0)
 	if (engineConfiguration->tle6240_cs != GPIO_UNASSIGNED) {
+		tle6240.spi_config.ssport = getHwPort("tle6240 CS", engineConfiguration->tle6240_cs);
+		tle6240.spi_config.sspad = getHwPin("tle6240 CS", engineConfiguration->tle6240_cs);
 		tle6240.spi_bus = getSpiDevice(engineConfiguration->tle6240spiDevice);
 		ret = tle6240_add(0, &tle6240);
 	} else {
