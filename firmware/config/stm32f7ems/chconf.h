@@ -34,33 +34,12 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_5_1_
 
-#if !defined(_FROM_ASM_)
-#include "obd_error_codes.h"
-#endif /* _FROM_ASM_ */
-
 #if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
  #define EFI_CLOCK_LOCKS FALSE
 #endif /* EFI_CLOCK_LOCKS */
 
+#include "chconf_common.h"
 
-#if EFI_CLOCK_LOCKS
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-#ifndef __ASSEMBLER__
-  void onLockHook(void);
-  void onUnlockHook(void);
-#endif /* __ASSEMBLER__ */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-  #define ON_LOCK_HOOK onLockHook()
-  #define ON_UNLOCK_HOOK onUnlockHook()
-#else /* EFI_CLOCK_LOCKS */
-  #define ON_LOCK_HOOK
-  #define ON_UNLOCK_HOOK
-#endif /* EFI_CLOCK_LOCKS */
 
 /*===========================================================================*/
 /**
@@ -745,10 +724,11 @@ void chDbgPanic3(const char *msg, const char * file, int line);
 #endif
 
 
-#define chDbgAssert(c, remark) do {                                              \
+#define chDbgAssert(c, remark) do {                                         \
   if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
     if (!(c)) {                                                             \
   /*lint -restore*/                                                         \
+	  firmwareError(OBD_PCM_Processor_Fault, "chDbg %s", remark);           \
       chSysHalt(remark);                                                    \
     }                                                                       \
   }                                                                         \
