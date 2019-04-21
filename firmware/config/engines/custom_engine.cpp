@@ -352,7 +352,7 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(etb2.directionPin1) = GPIOE_2;
 	CONFIG(etb2.directionPin2) = GPIOE_4;
 
-//?	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
+	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
