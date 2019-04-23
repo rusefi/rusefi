@@ -794,7 +794,7 @@ baro_corr_table_t baroCorrTable;
 custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	
 	
-	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"%",      1,     0,      0.0,    700.0,   2
+	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio",      1,     0,      0.0,    700.0,   2
 	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%",        1,     0,    0.0,    100.0,  2
 	
 	float tachPulseDuractionMs;;"ms",        1,     0,    0.0,    100.0,  2
