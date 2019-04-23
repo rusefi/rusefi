@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.io.LinkManager;
 
 import static com.rusefi.AutoTest.*;
+import static com.rusefi.Timeouts.SECOND;
 
 /**
  * this test connects to real hardware via serial port
@@ -11,7 +12,6 @@ import static com.rusefi.AutoTest.*;
  */
 public class RealHwTest {
     private static final int STARTUP_SLEEP = 45;
-    private static final long SECOND = 1000L;
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Sleeping " + STARTUP_SLEEP + " seconds to give OS time to connect VCP driver");
