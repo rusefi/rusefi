@@ -2349,6 +2349,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "etbDeadband",							etbDeadband, {throttlePedalPositionAdcChannel != 16}
 
 	dialog = etbDialogRight
+		field = "!https://rusefi.com/s/debugmode"
+		field = "Debug mode",							debugMode
 		field = "Press buttons to calibrate sensors"
 		field = "You would have to remove air filter to move throttle manually"
 	    commandButton = "TPS#1 closed position", cmd_calibrate_tps_1_closed
