@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets;
 
 import com.rusefi.CyclicBuffer;
 import com.rusefi.DataBuffer;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SensorStats;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @see SensorStats
  */
 public class ClosedLoopControlQualityMetric {
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(ClosedLoopControlQualityMetric.class.getSimpleName()));
 
     private final ValueSource target;
     private final ValueSource result;
