@@ -434,7 +434,7 @@ fileVersion = { 20171101 }
       yBins       = cltFuelCorr
       gauge       = CLTGauge
 
-	curve = crankingCltCurve, "Cranking Coolant Temperature multiplier"
+	curve = crankingCltCurve, "Cranking Coolant Temperature Multiplier"
       columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
       xAxis       =  -40, 100, 10

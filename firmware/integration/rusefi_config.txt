@@ -1056,7 +1056,7 @@ float[CLT_CURVE_SIZE] cltFuelCorr;;"%",      1,     0,      0.0,    500.0,   2
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,   2
 float[IAT_CURVE_SIZE] iatFuelCorr;;"%",      1,     0,      0.0,    500.0,   2
 
-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"%",      1,     0,      0.0,    700.0,   2
+	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"Ratio",      1,     0,      0.0,    300.0,   2
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C",        1,     0,    -80.0,    170.0,  2
 
 	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"%",      1,     0,      0.0,    500.0,   2
