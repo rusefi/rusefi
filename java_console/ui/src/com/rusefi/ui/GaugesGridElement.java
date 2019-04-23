@@ -27,7 +27,11 @@ public class GaugesGridElement {
         this.config = config;
     }
 
-    private Component createLiveBarElement(final Node config, final Sensor defaultSensor) {
+    public GaugesGridElement create(Sensor sensor) {
+        return new GaugesGridElement(new Node()).create(sensor);
+    }
+
+    private Component createLiveBarElement(final Sensor defaultSensor) {
         wrapper.setLayout(new GridLayout(2, 1));
 
         JMenuItem switchToGauge = new JMenuItem("Switch to Gauge Mode");
@@ -61,7 +65,7 @@ public class GaugesGridElement {
                 wrapper.removeAllChildrenAndListeners();
                 config.setBoolProperty(IS_LIVE_GRAPH, true);
 
-                createLiveBarElement(config, sensor);
+                createLiveBarElement(sensor);
             }
         });
 
@@ -74,7 +78,7 @@ public class GaugesGridElement {
     public static Component read(final Node config, Sensor defaultSensor) {
 
         if (config.getBoolProperty(IS_LIVE_GRAPH)) {
-            return new GaugesGridElement(config).createLiveBarElement(config, defaultSensor);
+            return new GaugesGridElement(config).createLiveBarElement(defaultSensor);
         }
 
         String gaugeName = config.getProperty(GAUGE_TYPE, defaultSensor.name());
