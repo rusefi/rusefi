@@ -1,6 +1,7 @@
 package com.rusefi.io;
 
 import com.rusefi.FileLog;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
@@ -82,15 +83,7 @@ public class LinkManager {
     public static final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             COMMUNICATION_QUEUE,
-            new ThreadFactory() {
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread t = Executors.defaultThreadFactory().newThread(r);
-                    t.setName("communication executor");
-                    ;
-                    return t;
-                }
-            });
+            new NamedThreadFactory("communication executor"));
     private static Thread COMMUNICATION_THREAD;
 
     static {
