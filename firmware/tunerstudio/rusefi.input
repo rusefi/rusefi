@@ -1834,7 +1834,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
 		panel = idlePidSettings, { idleMode == 0}
 		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;
-		field = "verbose status",						isVerboseIAC
+		field = "Detailed status in console",						isVerboseIAC
 		field = "#See Warmup idle multiplier"
 		slider = "Manual IAC Position",				manIdlePosition, horizontal
 
@@ -1957,7 +1957,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Enabled",								activateAuxPid1
 		field = "FSIO pin #1",							auxPidPins1
 		field = "PWM Frequency",						auxPidFrequency1
-		field = "verbose",								isVerboseAuxPid1
+		field = "Detailed status in console",			isVerboseAuxPid1
 		field = "#target based on FSIO map#1"
 		field = "control period",						auxPid1_periodMs, {activateAuxPid1 == 1}
 		field = "#PID control"
@@ -1983,7 +1983,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Pin Mode",								alternatorControlPinMode, {isAlternatorControlEnabled == 1}
 		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
 		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
-		field = "Verbose",								isVerboseAlternator, {isAlternatorControlEnabled == 1}
+		field = "Detailed status in console",			isVerboseAlternator, {isAlternatorControlEnabled == 1}
 		field = "control period",						alternatorControl_periodMs, {isAlternatorControlEnabled == 1}
 		field = "#PID control"
 		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
@@ -2325,7 +2325,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
-		field = "verbose",								isVerboseETB
+		field = "Detailed status in console",			isVerboseETB
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
 		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
