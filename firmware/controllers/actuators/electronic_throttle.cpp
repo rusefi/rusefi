@@ -135,7 +135,7 @@ public:
 
 static EtbControl etb1;
 
-static float valueOverride = NAN;
+static float directPwmValue = NAN;
 /*
 CCM_OPTIONAL static SimplePwm etbPwmDown("etbDown");
 */
@@ -177,7 +177,7 @@ private:
 		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
 #if EFI_TUNER_STUDIO
 			// set debug_mode 29
-			tsOutputChannels.debugFloatField1 = valueOverride;
+			tsOutputChannels.debugFloatField1 = directPwmValue;
 #endif /* EFI_TUNER_STUDIO */
 		}
 
@@ -186,8 +186,8 @@ private:
 			shouldResetPid = false;
 		}
 
-		if (!cisnan(valueOverride)) {
-			etb1.dcMotor.Set(valueOverride);
+		if (!cisnan(directPwmValue)) {
+			etb1.dcMotor.Set(directPwmValue);
 			return;
 		}
 
@@ -258,12 +258,12 @@ static EtbController etbController;
 void setThrottleDutyCycle(float level) {
 	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
 	if (cisnan(level)) {
-		valueOverride = NAN;
+		directPwmValue = NAN;
 		return;
 	}
 
 	float dc = PERCENT_TO_DUTY(level);
-	valueOverride = dc;
+	directPwmValue = dc;
 	etb1.dcMotor.Set(dc);
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
