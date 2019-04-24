@@ -34,4 +34,8 @@ public abstract class TestSequenceStep {
         next = step;
         return next;
     }
+
+    public TestSequenceStep getNext() {
+        return next;
+    }
 }

@@ -41,6 +41,7 @@ public class EtbTestSequence {
             StandardTestSequence.metric.start(/* buffer size: */3000, /*period, ms: */ 100);
 
             AtomicInteger stepCounter = new AtomicInteger();
+            AtomicInteger totalSteps = new AtomicInteger();
 
             TestSequenceStep lastStep = new TestSequenceStep(SECOND) {
                 @Override
@@ -48,22 +49,40 @@ public class EtbTestSequence {
                     button.setEnabled(true);
                     button.setText(BUTTON_TEXT);
                     double value = StandardTestSequence.metric.getStandardDeviation();
-                    result.setText(String.format("Result: %.3f", value));
+                    result.setText(String.format("Final Result: %.3f", value));
                 }
             };
 
             Runnable onEachStep = new Runnable() {
                 @Override
                 public void run() {
-                    SwingUtilities.invokeLater(() -> button.setText("Running " + stepCounter.incrementAndGet()));
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            String state = stepCounter.incrementAndGet() + "/" + totalSteps.get();
+                            button.setText("Running " + state);
+                            double value = StandardTestSequence.metric.getStandardDeviation();
+                            result.setText(String.format(state + " Result: %.3f", value));
+                        }
+                    });
                 }
             };
 
             TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, /*position*/onEachStep);
             TestSequenceStep result = StandardTestSequence.addSequence(firstStep, onEachStep);
             result.addNext(lastStep);
+
+            totalSteps.set(count(firstStep));
+
             firstStep.execute(executor);
         });
+    }
+
+    private static int count(TestSequenceStep step) {
+        int result = 0;
+        while ((step = step.getNext()) != null)
+            result++;
+        return result;
     }
 
     public JButton getButton() {
