@@ -5,6 +5,7 @@ import com.rusefi.FileLog;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.storage.Node;
+import com.rusefi.ui.util.JTextFieldWithWidth;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -195,13 +196,7 @@ public class AnyCommand {
     }
 
     public static AnyCommand createField(Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
-        final JTextField text = new JTextField() {
-            @Override
-            public Dimension getPreferredSize() {
-                Dimension size = super.getPreferredSize();
-                return new Dimension(200, size.height);
-            }
-        };
+        final JTextField text = new JTextFieldWithWidth(200);
 
         final AnyCommand command = new AnyCommand(text, config, defaultCommand, listenToCommands, withCommandCaption);
         text.addActionListener(new ActionListener() {
