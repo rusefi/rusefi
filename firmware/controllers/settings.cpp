@@ -1188,6 +1188,7 @@ const command_f_s commandsF[] = {
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},
+		{"etb", setThrottleDutyCycle},
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 		//		{"", },

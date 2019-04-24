@@ -43,7 +43,9 @@
  * set etb_p X
  * set etb_i X
  * set etb_d X
+ * set etb_o X
  *
+ * set_etb X
  *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
@@ -253,7 +255,7 @@ static EtbController etbController;
  * set_etb X
  * manual duty cycle control without PID. Percent value from 0 to 100
  */
-static void setThrottleDutyCycle(float level) {
+void setThrottleDutyCycle(float level) {
 	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
 	if (cisnan(level)) {
 		valueOverride = NAN;
