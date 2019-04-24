@@ -1,8 +1,11 @@
-package com.rusefi.ui.widgets;
+package com.rusefi.ui.etb;
 
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.etb.EtbTarget;
+import com.rusefi.etb.StandardTestSequence;
+import com.rusefi.etb.TestSequenceStep;
 import com.rusefi.io.CommandQueue;
 
 import javax.swing.*;
@@ -11,7 +14,7 @@ import java.util.Random;
 
 import static com.rusefi.SensorLogger.getSecondsSinceFileStart;
 import static com.rusefi.Timeouts.SECOND;
-import static com.rusefi.ui.widgets.EtbTestSequence.*;
+import static com.rusefi.ui.etb.EtbTestSequence.*;
 
 /**
  * 3/2/2019
@@ -28,7 +31,7 @@ public class EtbMonteCarloSequence {
             counter = 0;
 
             // 3000 data points at 10Hz should be 300 seconds worth of data
-            metric.start(/* buffer size: */3000, /*period, ms: */ 100);
+            StandardTestSequence.metric.start(/* buffer size: */3000, /*period, ms: */ 100);
 
             executor.execute(this::runRandomCycle);
         });
@@ -50,9 +53,9 @@ public class EtbMonteCarloSequence {
         CommandQueue.getInstance().write("set etb_i " + iFactor);
         CommandQueue.getInstance().write("set etb_d " + dFactor);
 
-        SequenceStep firstStep = new EtbTarget(10 * SECOND, 4 /*position*/);
-        SequenceStep last = addSequence(firstStep);
-        last.addNext(new SequenceStep(5 * SECOND) {
+        TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, null);
+        TestSequenceStep last = StandardTestSequence.addSequence(firstStep, null);
+        last.addNext(new TestSequenceStep(5 * SECOND) {
             @Override
             protected void doJob() {
                 double result = SensorCentral.getInstance().getValue(Sensor.ETB_CONTROL_QUALITY);

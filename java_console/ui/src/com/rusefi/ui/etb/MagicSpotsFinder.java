@@ -1,4 +1,4 @@
-package com.rusefi.ui.widgets;
+package com.rusefi.ui.etb;
 
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -11,12 +11,16 @@ import java.awt.event.ActionEvent;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static com.rusefi.Timeouts.SECOND;
+
 /**
+ * This tool finds interesting ETB duty cycles like the value when in starts to open or the value
+ * when it's completely open
+ * <p>
  * (c) Andrey Belomutskiy
  * 10/21/2018
  */
-public class EtbResearch {
-    private static final int SECOND = 1000;
+public class MagicSpotsFinder {
     private static final long SLEEP = SECOND;
     // how much do we want to change duty cycle on each iteration?
     private static final double DUTY_CYCLE_STEP = 0.5;
@@ -27,7 +31,7 @@ public class EtbResearch {
 //    private boolean isStarted;
 
 
-    State state;
+    private State state;
     private double currentValue;
     /**
      * here we record at which duty cycle ETB would start moving
@@ -149,7 +153,7 @@ public class EtbResearch {
         backToZeroValue = 0;
     }
 
-    public EtbResearch() {
+    public MagicSpotsFinder() {
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

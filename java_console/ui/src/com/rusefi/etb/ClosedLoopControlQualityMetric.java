@@ -1,4 +1,4 @@
-package com.rusefi.ui.widgets;
+package com.rusefi.etb;
 
 import com.rusefi.CyclicBuffer;
 import com.rusefi.DataBuffer;
@@ -63,7 +63,7 @@ public class ClosedLoopControlQualityMetric {
         errorsBuffer.clear();
     }
 
-    private synchronized double getStandardDeviation() {
+    public synchronized double getStandardDeviation() {
         return DataBuffer.getStandardDeviation(errorsBuffer.getValues());
     }
 
