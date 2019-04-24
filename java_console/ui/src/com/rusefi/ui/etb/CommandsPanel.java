@@ -1,15 +1,33 @@
 package com.rusefi.ui.etb;
 
+import com.rusefi.ETBPane;
+import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.AnyCommand;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 
 public class CommandsPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
+    private final JLabel currentOverride = new JLabel();
 
     public CommandsPanel() {
+        content.add(currentOverride);
+        CommandQueue.getInstance().addListener(command -> {
+            if (command.startsWith(ETBPane.SET_ETB)) {
+                command = command.substring(ETBPane.SET_ETB.length());
+                String finalCommand = command;
+                SwingUtilities.invokeLater(() -> currentOverride.setText("PWM override " + finalCommand));
+            }
+        });
 
+        JPanel spotsPane = new JPanel(new VerticalFlowLayout());
+        spotsPane.setBorder(BorderFactory.createTitledBorder("Magic Spots"));
+        MagicSpotsFinder magicSpotsFinder = new MagicSpotsFinder();
+        spotsPane.add(UiUtils.wrap(magicSpotsFinder.getButton()));
+        spotsPane.add(magicSpotsFinder.getPoints());
 
         JPanel testParameters = new JPanel(new VerticalFlowLayout());
         testParameters.setBorder(BorderFactory.createTitledBorder("Try PID settings"));
@@ -24,13 +42,13 @@ public class CommandsPanel {
         testParameters.add(new JLabel("For example:"));
         testParameters.add(new JLabel("set etb_p 1.1"));
 
-
-
         content.setBorder(BorderFactory.createTitledBorder("Commands"));
 
         content.add(testParameters);
+        content.add(spotsPane);
 //        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
-//        content.add(UiUtils.wrap(new MagicSpotsFinder().getButton()));
+
+        content.add(AnyCommand.createArea(new Node(), ETBPane.SET_ETB + "10", false, false).getContent());
     }
 
     public JPanel getContent() {

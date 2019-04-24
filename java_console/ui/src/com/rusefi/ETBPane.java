@@ -15,6 +15,7 @@ import java.awt.*;
  * (c) Andrey Belomutskiy 2013-2019
  */
 public class ETBPane {
+    public static final String SET_ETB = "set_etb ";
     private final JPanel content = new JPanel(new BorderLayout());
 
     public ETBPane() {
