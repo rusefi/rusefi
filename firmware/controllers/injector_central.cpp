@@ -244,6 +244,17 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 	}
 }
 
+static void handleCommandX14(uint16_t index) {
+	switch (index) {
+	case 1:
+		// cmd_test_fuel_pump
+		fuelPumpBench();
+		return;
+
+	}
+}
+
+// todo: this is probably a wrong place for this method now
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
 
@@ -252,8 +263,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	} else if (subsystem == 0x13) {
 		doRunFuel(index, "300", "4", "400", "3");
 	} else if (subsystem == 0x14) {
-		// cmd_test_fuel_pump
-		fuelPumpBench();
+		handleCommandX14(index);
 	} else if (subsystem == 0x15) {
 		fanBench();
 	} else if (subsystem == 0x16) {
