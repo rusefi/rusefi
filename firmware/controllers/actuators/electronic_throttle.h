@@ -16,6 +16,7 @@ void setEtbPFactor(float value);
 void setEtbIFactor(float value);
 void setEtbDFactor(float value);
 void setEtbOffset(int value);
+void setThrottleDutyCycle(float level);
 bool isETBRestartNeeded(void);
 void stopETBPins(void);
 void startETBPins(void);
