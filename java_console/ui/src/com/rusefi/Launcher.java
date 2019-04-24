@@ -45,7 +45,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190420;
+    public static final int CONSOLE_VERSION = 20190423;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -160,6 +160,7 @@ public class Launcher {
         }
         if (!LinkManager.isLogViewer()) {
             tabbedPane.add("Bench Test", new BenchTestPane().getContent());
+            tabbedPane.add("ETB", new ETBPane().getContent());
             tabbedPane.add("Presets", new PresetsPane().getContent());
         }
 

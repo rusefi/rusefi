@@ -29,8 +29,8 @@ public class CommandsPanel {
         content.setBorder(BorderFactory.createTitledBorder("Commands"));
 
         content.add(testParameters);
-        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
-        content.add(UiUtils.wrap(new MagicSpotsFinder().getButton()));
+//        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
+//        content.add(UiUtils.wrap(new MagicSpotsFinder().getButton()));
     }
 
     public JPanel getContent() {
