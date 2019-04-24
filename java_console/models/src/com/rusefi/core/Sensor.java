@@ -107,7 +107,7 @@ public enum Sensor {
     deltaTps(Fields.GAUGE_NAME_FUEL_TPS_ROC, SensorCategory.FUEL, FieldType.FLOAT, 116, BackgroundColor.MUD, -100, 100, "%"),
     engineLoadAccelDelta(SensorCategory.FUEL, FieldType.FLOAT, 124, BackgroundColor.MUD),
     tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.FLOAT, 128, BackgroundColor.MUD, 0, 200, "ms"),
-    PPS("pedal", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 136, BackgroundColor.MUD), // pedal position sensor
+    PPS("Throttle Pedal", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 136, BackgroundColor.MUD, 0, 100, "%"), // pedal position sensor
 
     injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.FUEL, FieldType.FLOAT, 140, BackgroundColor.MUD),
     wallFuelAmount(GAUGE_NAME_FUEL_WALL_AMOUNT, SensorCategory.FUEL, FieldType.FLOAT, 160, BackgroundColor.MUD),
