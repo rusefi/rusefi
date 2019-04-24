@@ -1,7 +1,6 @@
 package com.rusefi.ui.etb;
 
 import com.rusefi.ETBPane;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
@@ -11,17 +10,9 @@ import javax.swing.*;
 
 public class CommandsPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
-    private final JLabel currentOverride = new JLabel();
 
     public CommandsPanel() {
-        content.add(currentOverride);
-        CommandQueue.getInstance().addListener(command -> {
-            if (command.startsWith(ETBPane.SET_ETB)) {
-                command = command.substring(ETBPane.SET_ETB.length());
-                String finalCommand = command;
-                SwingUtilities.invokeLater(() -> currentOverride.setText("PWM override " + finalCommand));
-            }
-        });
+        content.add(new DirectDrivePanel().getContent());
 
         JPanel spotsPane = new JPanel(new VerticalFlowLayout());
         spotsPane.setBorder(BorderFactory.createTitledBorder("Magic Spots"));

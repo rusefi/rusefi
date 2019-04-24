@@ -5,6 +5,9 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 
+/**
+ * (c) Andrey Belomutskiy
+ */
 public class CalibrationPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
