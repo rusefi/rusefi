@@ -265,7 +265,7 @@ public:
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->idleRpmPid.periodMs));
+		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid));
 
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate

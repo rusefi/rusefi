@@ -49,7 +49,7 @@ public:
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->alternatorControl.periodMs));
+		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->alternatorControl));
 
 #if ! EFI_UNIT_TEST
 		if (shouldResetPid) {
