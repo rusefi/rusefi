@@ -1,8 +1,10 @@
 /**
  * @file	electronic_throttle.cpp
- * @brief	Electronic Throttle Module driver L298N
+ * @brief	Electronic Throttle driver
  *
  * todo: make this more universal if/when we get other hardware options
+ *
+ * Apr 2019 two-wire TLE7209 support added
  *
  * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30
  *
