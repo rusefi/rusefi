@@ -752,6 +752,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_HIP_9011 */
 
 	switch (engineConfiguration->debugMode)	{
+	case DBG_ANALOG_INFO:
+		tsOutputChannels->debugFloatField1 = getVoltage("debug", engineConfiguration->tpsAdcChannel);
+		tsOutputChannels->debugFloatField2 = getVoltage("debug", engineConfiguration->clt.adcChannel);
+		tsOutputChannels->debugFloatField3 = getVoltage("debug", engineConfiguration->iat.adcChannel);
+		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel);
+		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
