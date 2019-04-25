@@ -232,7 +232,7 @@ private:
 		}
 */
 		currentEtbDuty = feedForward +
-				pid.getOutput(targetPosition, actualThrottlePosition);
+				pid.getOutput(targetPosition, actualThrottlePosition, engineConfiguration->etb.periodMs / 1000.0);
 
 		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
 /*
@@ -349,8 +349,8 @@ void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.pFactor = 1;
 	engineConfiguration->etb.iFactor = 0.05;
 	engineConfiguration->etb.dFactor = 0.0;
-	engineConfiguration->etb.periodMs = 100;
-	engineConfiguration->etbFreq = 300;
+	engineConfiguration->etb.periodMs = (1000 / DEFAULT_ETB_LOOP_FREQUENCY);
+	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 	engineConfiguration->etb_iTermMin = -300;
 	engineConfiguration->etb_iTermMax = 300;
 

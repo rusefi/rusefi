@@ -350,7 +350,25 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3; // PA3
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4; // PA4
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7; // PA7
+
+	engineConfiguration->etb.pFactor = 1.07;
+	engineConfiguration->etb.iFactor = 	0.18;
+	engineConfiguration->etb.dFactor = 0.24;
+	engineConfiguration->etb.offset = 80;
+#if EFI_PROD_CODE
+	engineConfiguration->etb.periodMs = (1000 / DEFAULT_ETB_LOOP_FREQUENCY);
+	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
+#endif
+	engineConfiguration->etb_iTermMin = -300;
+	engineConfiguration->etb_iTermMax = 300;
+
+	// VAG test ETB, no divider on red board - direct 3v TPS sensor
+	// set tps_min 332
+	engineConfiguration->tpsMin = 332;
+	// by the way this ETB has default position of ADC=74 which is about 4%
+	// set tps_max 540
+	engineConfiguration->tpsMax = 799;
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */

@@ -56,6 +56,9 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	return pTerm + iTerm + dTerm + pid->offset;
 }
 
+/**
+ * @param dTime seconds probably? :)
+ */
 float Pid::getOutput(float target, float input, float dTime) {
 	float output = getUnclampedOutput(target, input, dTime);
 

@@ -8,6 +8,10 @@
 #ifndef ELECTRONIC_THROTTLE_H_
 #define ELECTRONIC_THROTTLE_H_
 
+// https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
+#define DEFAULT_ETB_LOOP_FREQUENCY 200
+#define DEFAULT_ETB_PWM_FREQUENCY 300
+
 #include "engine.h"
 void initElectronicThrottle(void);
 void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE);
