@@ -878,7 +878,11 @@ typedef enum {
 	 */
 	DBG_BENCH_TEST = 19,
 	DBG_AUX_VALVES = 20,
-	DBG_ADC = 21,
+	/**
+	 * ADC
+	 * See also DBG_ANALOG_INPUTS2
+	 */
+	DBG_ANALOG_INPUTS = 21,
 	
 	DBG_INSTANT_RPM = 22,
 	DBG_FSIO_EXPRESSION = 23,
@@ -890,7 +894,10 @@ typedef enum {
 	DBG_ELECTRONIC_THROTTLE_EXTRA = 29,
 	DBG_ION = 30,
 	DBG_TLE8888 = 31,
-	DBG_ANALOG_INFO = 32,
+	/**
+	 * See also DBG_ANALOG_INPUTS
+	 */
+	DBG_ANALOG_INPUTS2 = 32,
 	DBG_33 = 33,
 	DBG_34 = 34,
 

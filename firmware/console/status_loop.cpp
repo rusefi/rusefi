@@ -752,14 +752,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_HIP_9011 */
 
 	switch (engineConfiguration->debugMode)	{
-	case DBG_ANALOG_INFO:
-		tsOutputChannels->debugFloatField1 = getVoltage("debug", engineConfiguration->tpsAdcChannel);
-		tsOutputChannels->debugFloatField2 = getVoltage("debug", engineConfiguration->clt.adcChannel);
-		tsOutputChannels->debugFloatField3 = getVoltage("debug", engineConfiguration->iat.adcChannel);
-		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel);
-		tsOutputChannels->debugFloatField5 = getVoltage("debug", engineConfiguration->afr.hwChannel);
-		tsOutputChannels->debugFloatField6 = getVoltage("debug", engineConfiguration->map.sensor.hwChannel);
-		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
@@ -843,7 +835,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		postCanState(tsOutputChannels);
 		break;
 #endif /* EFI_CAN_SUPPORT */
-	case DBG_ADC:
+	case DBG_ANALOG_INPUTS:
 		tsOutputChannels->debugFloatField1 = (engineConfiguration->vbattAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField2 = (engineConfiguration->tpsAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("tps", engineConfiguration->tpsAdcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField3 = (engineConfiguration->mafAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("maf", engineConfiguration->mafAdcChannel) : 0.0f;
@@ -851,6 +843,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField5 = (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("clt", engineConfiguration->clt.adcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField6 = (engineConfiguration->iat.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("iat", engineConfiguration->iat.adcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
+		break;
+	case DBG_ANALOG_INPUTS2:
+		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel);
 		break;
 	case DBG_INSTANT_RPM:
 		{

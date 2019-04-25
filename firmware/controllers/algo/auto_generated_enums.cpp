@@ -928,14 +928,14 @@ case TLE8888_PIN_9:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_ANALOG_INFO:
-  return "DBG_ANALOG_INFO";
+case DBG_ANALOG_INPUTS2:
+  return "DBG_ANALOG_INPUTS2";
 case DBG_33:
   return "DBG_33";
 case DBG_34:
   return "DBG_34";
-case DBG_ADC:
-  return "DBG_ADC";
+case DBG_ANALOG_INPUTS:
+  return "DBG_ANALOG_INPUTS";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_AUX_PID_1:
