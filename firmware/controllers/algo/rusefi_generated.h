@@ -416,7 +416,7 @@
 #define cylinderBore_offset_hex 198
 #define cylindersCount_offset 400
 #define cylindersCount_offset_hex 190
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "Warmup PID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "ADC", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "Warmup PID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "ADC", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog Info", "mode33"
 #define debugMode_offset 2112
 #define debugMode_offset_hex 840
 #define DIGIPOT_COUNT 4
