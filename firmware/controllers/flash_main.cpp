@@ -89,6 +89,7 @@ void writeToFlashNow(void) {
 	scheduleMsg(logger, "Flashing with CRC=%d", crcResult);
 	efitimems_t nowMs = currentTimeMillis();
 	int result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
+	flashErase(FLASH_ADDR_SECOND_COPY, PERSISTENT_SIZE);
 	flashWrite(FLASH_ADDR_SECOND_COPY, (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(logger, "Flash programmed in %dms", currentTimeMillis() - nowMs);
 	bool isSuccess = result == FLASH_RETURN_SUCCESS;
