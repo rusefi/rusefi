@@ -47,10 +47,12 @@ extern engine_configuration_s *engineConfiguration;
 /**
  * https://sourceforge.net/p/rusefi/tickets/335/
  *
- * Address of second config copy, rounded to 4K. 4K is the page size is it?
- *
+ * In order to preserve at least one copy of the tune in case of electrical issues address of second configuration copy
+ * should be in a different sector of flash since complete flash sectors are erased on write.
  */
-#define FLASH_ADDR_SECOND_COPY (FLASH_ADDR + ((PERSISTENT_SIZE + 4095) & 0xFFFFF000))
+#ifndef FLASH_ADDR_SECOND_COPY
+#define FLASH_ADDR_SECOND_COPY 0x080C0000
+#endif
 
 crc_t flashStateCrc(persistent_config_container_s *state) {
 	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));

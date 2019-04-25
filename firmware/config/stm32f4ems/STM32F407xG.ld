@@ -22,7 +22,8 @@
 MEMORY
 {
     bl      : org = 0x08000000, len = 16k     /* bootloader section */
-    flash0  : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 992k : 1024k
+    /* 1M minus 128k for first copy of tune minus another 128k since another sector for another copy of tune */
+    flash0  : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 736k : 768k
     flash1  : org = 0x00000000, len = 0
     flash2  : org = 0x00000000, len = 0
     flash3  : org = 0x00000000, len = 0
