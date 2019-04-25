@@ -167,7 +167,7 @@ private:
 
 	void PeriodicTask(efitime_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->etb.periodMs));
+		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->etb));
 
 
 		// set debug_mode 17

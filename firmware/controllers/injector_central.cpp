@@ -222,7 +222,7 @@ public:
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
 		UNUSED(nowNt);
-		setPeriod(NOT_TOO_OFTEN(10 /* ms */, engineConfiguration->auxPid[0].periodMs));
+		setPeriod(50 /* ms */);
 
 		// naive inter-thread communication - waiting for a flag
 		if (isBenchTestPending) {
