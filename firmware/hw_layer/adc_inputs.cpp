@@ -7,7 +7,7 @@
  *
  * Fast ADC group is used for TPS, MAP, MAF HIP - this one is currently sampled at 10KHz
  *  We need frequent MAP for map_averaging.cpp
- *  We need frequent TPS for ???
+ *  We need frequent TPS for better TPS/TPS enrichment and better ETB control
  *
  * 10KHz equals one measurement every 3.6 degrees at 6000 RPM
  *
@@ -482,7 +482,7 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_SLOW);
+	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_FAST);
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
