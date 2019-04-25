@@ -757,6 +757,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField2 = getVoltage("debug", engineConfiguration->clt.adcChannel);
 		tsOutputChannels->debugFloatField3 = getVoltage("debug", engineConfiguration->iat.adcChannel);
 		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel);
+		tsOutputChannels->debugFloatField5 = getVoltage("debug", engineConfiguration->afr.hwChannel);
+		tsOutputChannels->debugFloatField6 = getVoltage("debug", engineConfiguration->map.sensor.hwChannel);
 		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
