@@ -598,7 +598,7 @@ bit is_enabled_spi_2
 	bit useIdleTimingPidControl
 	bit useTPSBasedVeTable
 	bit is_enabled_spi_4
-	bit unused_board_984_27
+	bit pauseEtbControl
 	bit unused_board_984_28
 	bit unused_board_984_29
 	bit unused_board_984_30

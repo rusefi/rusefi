@@ -1447,6 +1447,8 @@
 #define overrideCrankingIacSetting_offset_hex 5c4
 #define overrideCrankingIgnition_offset 516
 #define overrideCrankingIgnition_offset_hex 204
+#define pauseEtbControl_offset 744
+#define pauseEtbControl_offset_hex 2e8
 #define pidExtraForLowRpm_offset 3180
 #define pidExtraForLowRpm_offset_hex c6c
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
@@ -1747,8 +1749,6 @@
 #define unused_bit_1472_29_offset_hex 5b8
 #define unused_bit_1472_30_offset 1464
 #define unused_bit_1472_30_offset_hex 5b8
-#define unused_board_984_27_offset 744
-#define unused_board_984_27_offset_hex 2e8
 #define unused_board_984_28_offset 744
 #define unused_board_984_28_offset_hex 2e8
 #define unused_board_984_29_offset 744

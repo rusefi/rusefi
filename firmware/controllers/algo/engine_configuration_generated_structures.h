@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 23:18:45 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 26 11:52:57 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -751,7 +751,7 @@ typedef struct {
 	bool is_enabled_spi_4 : 1;
 	/**
 	offset 144 bit 27 */
-	bool unused_board_984_27 : 1;
+	bool pauseEtbControl : 1;
 	/**
 	offset 144 bit 28 */
 	bool unused_board_984_28 : 1;
@@ -2716,4 +2716,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat Apr 20 23:18:45 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 26 11:52:57 EDT 2019
