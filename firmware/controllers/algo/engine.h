@@ -43,6 +43,7 @@ public:
 };
 
 #define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
+#define FAST_CALLBACK_PERIOD_MS 20
 
 /**
  * This class knows about when to inject fuel

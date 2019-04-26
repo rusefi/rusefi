@@ -353,7 +353,7 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	engine->engineState.fuelPidCorrection = fuelPid.getOutput(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), 1);
+	engine->engineState.fuelPidCorrection = fuelPid.getOutput(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), NOT_TIME_BASED_PID);
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.debugFloatField1 = engine->engineState.fuelPidCorrection;
