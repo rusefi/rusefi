@@ -39,7 +39,8 @@ bool Pid::isSame(pid_s *pid) {
  * @returns Output from the PID controller / the input to the process
  */
 float Pid::getOutput(float target, float input) {
-	return getOutput(target, input, 1);
+	float dTime = MS2SEC(GET_PERIOD_LIMITED(pid));
+	return getOutput(target, input, dTime);
 }
 
 float Pid::getUnclampedOutput(float target, float input, float dTime) {
