@@ -85,7 +85,7 @@ private:
 
 
 /**
- * A PID impl. with a modified cascaded integrator-comb (CIC) filtering.
+ * A PID implementation with a modified cascaded integrator-comb (CIC) filtering.
  * Used for incremental auto-IAC control. See autoIdle() in idle_thread.cpp
  *
  * https://rusefi.com/forum/viewtopic.php?f=9&t=1315
@@ -97,6 +97,7 @@ public:
 	PidCic(pid_s *pid);
 
 	virtual void reset(void);
+	using Pid::getOutput;
 	virtual float getOutput(float target, float input, float dTime);
 	
 private:
