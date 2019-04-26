@@ -232,7 +232,7 @@ private:
 		}
 */
 		currentEtbDuty = feedForward +
-				pid.getOutput(targetPosition, actualThrottlePosition, engineConfiguration->etb.periodMs / 1000.0);
+				pid.getOutput(targetPosition, actualThrottlePosition);
 
 		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
 /*

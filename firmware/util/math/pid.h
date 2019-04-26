@@ -19,6 +19,8 @@
 #define PID_AVG_BUF_SIZE_SHIFT 5
 #define PID_AVG_BUF_SIZE (1<<PID_AVG_BUF_SIZE_SHIFT) // 32*sizeof(float)
 
+#define NOT_TIME_BASED_PID 1
+
 // minimal period 5m meaning maximum control frequency 200Hz
 #define PID_MINIMAL_PERIOD_MS 5
 

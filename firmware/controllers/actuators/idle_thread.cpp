@@ -223,7 +223,7 @@ static percent_t automaticIdleController() {
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid.setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = idlePid.getOutput(targetRpm, rpm, engineConfiguration->idleRpmPid.periodMs);
+	percent_t newValue = idlePid.getOutput(targetRpm, rpm);
 	idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)

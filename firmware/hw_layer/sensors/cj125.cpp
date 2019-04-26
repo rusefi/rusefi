@@ -425,7 +425,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				 * error value as the difference of (target - input). and if we swap them we'll just get a sign inversion. If target=vUrCal, and input=vUr, then error=vUrCal-vUr, i.e. if vUr<vUrCal then the error will cause the heater to increase it's duty cycle. But it's not exactly what we want! Lesser vUr means HOTTER cell. That's why we even have this safety check for overheating: (vUr < CJ125_UR_OVERHEAT_THR)...
 				 * So the simple trick is to inverse the error by swapping the target and input values.
 				 */
-				float duty = globalInstance.heaterPid.getOutput(globalInstance.vUr, globalInstance.vUrCal);
+				float duty = globalInstance.heaterPid.getOutput(globalInstance.vUr, globalInstance.vUrCal, MS2SEC(CJ125_TICK_DELAY));
 				globalInstance.heaterPid.showPidStatus(logger, "cj");
 				instance->SetHeater(duty PASS_ENGINE_PARAMETER_SUFFIX);
 				cjPrintData();
