@@ -37,11 +37,12 @@ public:
 	bool isSame(pid_s *pid);
 
 	/**
+	 * This version of the methor takes dTime from pid_s
+	 *
 	 * @param Controller input / process output
 	 * @returns Output from the PID controller / the input to the process
 	 */
 	float getOutput(float target, float input);
-	// todo: dTime should be taken from pid_s
 	virtual float getOutput(float target, float input, float dTime);
 	// doesn't limit the result (used in incremental CIC PID, see below)
 	float getUnclampedOutput(float target, float input, float dTime);
