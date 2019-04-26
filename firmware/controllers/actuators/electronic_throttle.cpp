@@ -193,6 +193,11 @@ private:
 			return;
 		}
 
+		if (boardConfiguration->pauseEtbControl) {
+			etb1.dcMotor.Set(0);
+			return;
+		}
+
 		percent_t actualThrottlePosition = getTPS();
 
 		if (engine->etbAutoTune) {

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu Apr 25 08:26:25 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 26 11:52:57 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -945,6 +945,7 @@ public class Fields {
 	public static final int overrideCrankingIacSetting_offset = 1476;
 	public static final int overrideCrankingIgnition_offset = 516;
 	public static final int overrideCrankingIgnition_offset_hex = 204;
+	public static final int pauseEtbControl_offset = 744;
 	public static final int pidExtraForLowRpm_offset = 3180;
 	public static final int postCrankingDurationSec_offset = 2464;
 	public static final int postCrankingFactor_offset = 2460;
@@ -1126,7 +1127,6 @@ public class Fields {
 	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_bit_1472_29_offset = 1464;
 	public static final int unused_bit_1472_30_offset = 1464;
-	public static final int unused_board_984_27_offset = 744;
 	public static final int unused_board_984_28_offset = 744;
 	public static final int unused_board_984_29_offset = 744;
 	public static final int unused_board_984_30_offset = 744;
@@ -1484,7 +1484,7 @@ public class Fields {
 	public static final Field USEIDLETIMINGPIDCONTROL = Field.create("USEIDLETIMINGPIDCONTROL", 744, FieldType.BIT, 24);
 	public static final Field USETPSBASEDVETABLE = Field.create("USETPSBASEDVETABLE", 744, FieldType.BIT, 25);
 	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 744, FieldType.BIT, 26);
-	public static final Field UNUSED_BOARD_984_27 = Field.create("UNUSED_BOARD_984_27", 744, FieldType.BIT, 27);
+	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 744, FieldType.BIT, 27);
 	public static final Field UNUSED_BOARD_984_28 = Field.create("UNUSED_BOARD_984_28", 744, FieldType.BIT, 28);
 	public static final Field UNUSED_BOARD_984_29 = Field.create("UNUSED_BOARD_984_29", 744, FieldType.BIT, 29);
 	public static final Field UNUSED_BOARD_984_30 = Field.create("UNUSED_BOARD_984_30", 744, FieldType.BIT, 30);
