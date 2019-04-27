@@ -31,6 +31,9 @@ todo: move Connectors wiki page content into git
 * [TLE8810ED module](TLE8110ED_breakout_board) integrated low side switch (fabricated, not tested)
 * [MC33816](Common_Rail_MC33816) common rail driver (never actually fabricated)
 * [LM1949](Low-Z_LM1949) low impedance injector driver (never actually fabricated)
+
+New modules are being added to https://github.com/rusefi/hw_modular
+
 Above mentioned modules are known to work unless stated otherwise
 
 ### Frankenstein
