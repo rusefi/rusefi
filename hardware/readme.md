@@ -56,7 +56,12 @@ and evaluate KICAD version 6 once it's available.
 
 # Important note
 
-We now use submodules:
+Depends on libraries from https://github.com/rusefi/kicad-libraries
+
+If you download complete repo do not forget to download libraries. If you git clone be sure to also
+
+`git submodule update --init`
+
 
 `git submodule update --init`
 
