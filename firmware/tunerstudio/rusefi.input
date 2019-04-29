@@ -781,7 +781,7 @@ gaugeCategory = Debug
    debugIntField4Gauge = debugIntField4, "debug i4", "%",     0,   100,     0,    0,    100,  100,   0,   0
    debugIntField5Gauge = debugIntField5, "debug i5", "%",     0,   100,     0,    0,    100,  100,   0,   0
    timeSecondsGauge     =   timeSeconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
-   
+
 gaugeCategory = Sensors  
    RPMGauge        = RPMValue,           "Engine Speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
 #if CELSIUS
@@ -1181,7 +1181,8 @@ menuDialog = main
 	 	subMenu = connection,            	"Connection"
 		subMenu = ioTest,					"Bench Test & Commands"
 		subMenu = engineTypeDialog,			"Popular vehicles"
-		subMenu = allPins,					"Full pinout"
+		subMenu = allPins1,					"Full pinout 1/2"
+		subMenu = allPins2,					"Full pinout 2/2"
 
 [ControllerCommands]
 ; commandName    = command1, command2, commandn...
@@ -1510,17 +1511,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = mainSensorInputs,		Center
 		panel = otherSensorInputs,		East
 
-	dialog = allPins1
-		field = "TLE8888 CS",							tle8888_cs	
-		field = "TLE8888 SPI",							tle8888spiDevice
-		field = "tle6240_cs",							tle6240_cs
-		field = "tle6240 SPI",							tle6240spiDevice
-		field = "mc33972_cs",							mc33972_cs
-		field = "mc33972 SPI",							mc33972spiDevice
-		field = "warninig Led",							warninigLedPin
-		field = "fatal Error Led",						fatalErrorPin
-		field = "MAP ADC input", 						map_sensor_hwChannel
-		field = "frequencyReportingMapInputPin",		frequencyReportingMapInputPin
+	dialog = allPinsSensors, "Sensors"
 		field = "CLT ADC input", 						clt_adcChannel
 		field = "IAT ADC input", 						iat_adcChannel
 		field = "vBatt ADC input", 						vbattAdcChannel
@@ -1528,24 +1519,30 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TPS2 ADC input", 						tps2AdcChannel
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "AFR ADC input", 						afr_hwChannel
-		field = "fuelLevelSensor", 						fuelLevelSensor
 		field = "Baro ADC input", 						baroSensor_hwChannel
-		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
-		field = "Primary input channel", 				triggerInputPins1
-		field = "Secondary channel", 					triggerInputPins2
-		field = "Cam Sync/VVT input",					camInput
+		field = "MAP ADC input", 						map_sensor_hwChannel
+		field = "FrequencyReportingMapInputPin",		frequencyReportingMapInputPin
+		field = "FuelLevelSensor", 						fuelLevelSensor
 		field = "Vehicle Speed Input pin",				vehicleSpeedSensorInputPin
 		field = "clutchDownPin",						clutchDownPin
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
 		field = "A/C Switch",							acSwitchAdc
-		field = "servo#1",								servoOutputPins1
-		field = "servo#2",								servoOutputPins2
-		field = "servo#3",								servoOutputPins3
-		field = "servo#4",								servoOutputPins4
-		field = "servo#5",								servoOutputPins5
 
-	dialog = allPins2
+	dialog = allPins1_1
+		field = "Warning Led",							warningLedPin
+		field = "Fatal Error Led",						fatalErrorPin
+		field = "tle6240_cs",							tle6240_cs
+		field = "tle6240 SPI",							tle6240spiDevice
+		field = "mc33972_cs",							mc33972_cs
+		field = "mc33972 SPI",							mc33972spiDevice
+		panel = allPinsSensors
+		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
+		field = "Primary input channel", 				triggerInputPins1
+		field = "Secondary channel", 					triggerInputPins2
+		field = "Cam Sync/VVT input",					camInput
+
+	dialog = allPins1_2
 		field = "Tachometer output Pin",					tachOutputPin
 		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
 		field = "O2 heater pin",						o2heaterPin
@@ -1574,8 +1571,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Fan Pin Mode",							fanPinMode
 		field = "Main Relay Pin",  						mainRelayPin
 		field = "Main Relay Mode",			         	mainRelayPinMode
+		field = "aux valve #1", 						auxValves1
+		field = "aux valve #2", 						auxValves2
 
-	dialog = allPins3
+	dialog = allPins2_1
 		field = "Injection Pin 1",						injectionPins1
 		field = "Injection Pin 2",						injectionPins2
 		field = "Injection Pin 3",						injectionPins3
@@ -1588,8 +1587,26 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Injection Pin 10 ",	    			injectionPins10
 		field = "Injection Pin 11 ",					injectionPins11
 		field = "Injection Pin 12 ",					injectionPins12
-		
-		field = "Ignition Pin 1",                       ignitionPins1 
+		field = "FSIO dig inp #1",						fsioDigitalInputs1
+		field = "FSIO dig inp #2",						fsioDigitalInputs2
+		field = "FSIO dig inp #3",						fsioDigitalInputs3
+		field = "FSIO dig inp #4",						fsioDigitalInputs4
+		field = "FSIO dig inp #5",						fsioDigitalInputs5
+		field = "FSIO dig inp #6",						fsioDigitalInputs6
+		field = "FSIO dig inp #7",						fsioDigitalInputs7
+		field = "FSIO dig inp #8",						fsioDigitalInputs8
+		field = "FSIO dig inp #9",						fsioDigitalInputs9
+		field = "FSIO dig inp #10",						fsioDigitalInputs10
+		field = "FSIO dig inp #11",						fsioDigitalInputs11
+		field = "FSIO dig inp #12",						fsioDigitalInputs12
+		field = "FSIO dig inp #13",						fsioDigitalInputs13
+		field = "FSIO dig inp #14",						fsioDigitalInputs14
+		field = "FSIO dig inp #15",						fsioDigitalInputs15
+		field = "FSIO dig inp #16",						fsioDigitalInputs16
+
+
+	dialog = allPins2_2
+		field = "Ignition Pin 1",                       ignitionPins1
 		field = "Ignition Pin 2",                       ignitionPins2
 		field = "Ignition Pin 3",                       ignitionPins3
 		field = "Ignition Pin 4",                       ignitionPins4
@@ -1601,17 +1618,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Ignition Pin 10",                      ignitionPins10
 		field = "Ignition Pin 11",                      ignitionPins11
 		field = "Ignition Pin 12",                      ignitionPins12
-
-	dialog = allPins4
-		field = "FSIO dig inp #1",						fsioDigitalInputs1
-		field = "FSIO dig inp #2",						fsioDigitalInputs2
-		field = "FSIO dig inp #3",						fsioDigitalInputs3
-		field = "FSIO dig inp #4",						fsioDigitalInputs4
-		field = "FSIO dig inp #5",						fsioDigitalInputs5
-		field = "FSIO dig inp #6",						fsioDigitalInputs6
-		field = "FSIO dig inp #7",						fsioDigitalInputs7
-		field = "FSIO dig inp #8",						fsioDigitalInputs8
-		field = "FSIO dig inp #9",						fsioDigitalInputs9
 		field = "output #1", 							fsioOutputPins1
 		field = "output #2", 							fsioOutputPins2
 		field = "output #3", 							fsioOutputPins3
@@ -1628,10 +1634,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "output #14", 							fsioOutputPins14
 		field = "output #15", 							fsioOutputPins15
 		field = "output #16", 							fsioOutputPins16
-		field = "aux valve #1", 						auxValves1
-		field = "aux valve #2", 						auxValves2
 
-	dialog = allPins5
+	dialog = allPins1_3
 		field = "FSIO ADC #1",							fsioAdc1
 		field = "FSIO ADC #2",							fsioAdc2
 		field = "FSIO ADC #3",							fsioAdc3
@@ -1658,20 +1662,28 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TLE8888 Chip Select",                  tle8888_cs
 		field = "TLE8888 CS Mode",                      tle8888_csPinMode
 		field = "TLE 8888 spi",                         tle8888spiDevice
+		field = "servo#1",								servoOutputPins1
+		field = "servo#2",								servoOutputPins2
+		field = "servo#3",								servoOutputPins3
+		field = "servo#4",								servoOutputPins4
+		field = "servo#5",								servoOutputPins5
 
 
-	dialog = allPins1_2, "", xAxis
-		panel = allPins1
-		panel = allPins2
-
-	dialog = allPins3_4, "", xAxis
-		panel = allPins3
-		panel = allPins4
-
-	dialog = allPins, "All Pins", xAxis
+	dialog = allPins1_1_and_2, "", xAxis
+		panel = allPins1_1
 		panel = allPins1_2
-		panel = allPins3_4
-		panel = allPins5
+
+	dialog = allPins1, "All Pins 1/2", xAxis
+		panel = allPins1_1_and_2
+		panel = allPins1_3
+
+	dialog = allPins2_1_and_2, "", xAxis
+		panel = allPins2_1
+		panel = allPins2_2
+
+	dialog = allPins2, "All Pins 2/2", xAxis
+		panel = allPins2_1_and_2
+
 
 ;			Sensors->CLT Sensor Settings
 	dialog = clt_thermistor, "CLT Sensor Settings"
@@ -2309,7 +2321,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
         text = "More about electronic throttle body on the web"
         webHelp = "https://rusefi.com/s/etb"
 
-    help = tpsTpsHelp, "Acceleration Enrichment"    
+    help = tpsTpsHelp, "Acceleration Enrichment"
         text = "More about Tps To Tps acceleration on the web"
         webHelp = "https://rusefi.com/s/tpstps"
 
@@ -2324,6 +2336,18 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = veTableDialog3D, "VE Table"
 		topicHelp = "veTableDialogHelp"
 		panel = veTableMap, South
+
+	dialog = etbPidDialog, "PID settings"
+		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "offset",								etb_offset, {throttlePedalPositionAdcChannel != 16}
+		field = "control period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
+		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
+		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
+		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
+		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
+
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
@@ -2340,16 +2364,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "No2 Direction #2",						etb2_directionPin2, {throttlePedalPositionAdcChannel != 16}
 		field = "Two-wire mode",						etb2_use_two_wires, {throttlePedalPositionAdcChannel != 16}
 		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb2_use_two_wires == 0}
-		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}	
-		field = "offset",								etb_offset, {throttlePedalPositionAdcChannel != 16}
-		field = "control period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
-		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}	
-		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}	
-		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
 		field = "etbDeadband",							etbDeadband, {throttlePedalPositionAdcChannel != 16}
+		panel = etbPidDialog
 
 	dialog = etbDialogRight
 		field = "!https://rusefi.com/s/debugmode"
@@ -2369,7 +2385,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = etbDialogLeft, West
 		panel = etbDialogRight, East
 
-				
+
 	dialog = testSpark, "Spark"
 		commandButton = "Spark #1", cmd_test_spk1
 		commandButton = "Spark #2", cmd_test_spk2

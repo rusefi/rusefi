@@ -446,7 +446,7 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else
 	engineConfiguration->fatalErrorPin = GPIOD_14;
 #endif /* EFI_FATAL_ERROR_PIN */
-	engineConfiguration->warninigLedPin = GPIOD_13;
+	engineConfiguration->warningLedPin = GPIOD_13;
 
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 26 11:52:57 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1860,7 +1860,7 @@ typedef struct {
 	/**
 	 * offset 2061
 	 */
-	brain_pin_e warninigLedPin;
+	brain_pin_e warningLedPin;
 	/**
 	 * offset 2062
 	 */
@@ -2716,4 +2716,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 26 11:52:57 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019

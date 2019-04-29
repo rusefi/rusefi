@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri Apr 26 11:52:57 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1220,8 +1220,8 @@ public class Fields {
 	public static final int warmupTargetAfr_offset_hex = 854;
 	public static final int warmupTargetAfrBins_offset = 2116;
 	public static final int warmupTargetAfrBins_offset_hex = 844;
+	public static final int warningLedPin_offset = 2061;
 	public static final int warningPeriod_offset = 1502;
-	public static final int warninigLedPin_offset = 2061;
 	public static final int wboHeaterPin_offset = 673;
 	public static final int wwaeBeta_offset = 1828;
 	public static final int wwaeBeta_offset_hex = 724;
@@ -1761,7 +1761,7 @@ public class Fields {
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 2056, FieldType.INT16);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 2058, FieldType.INT16);
 	public static final Field FATALERRORPIN = Field.create("FATALERRORPIN", 2060, FieldType.INT8, brain_pin_e);
-	public static final Field WARNINIGLEDPIN = Field.create("WARNINIGLEDPIN", 2061, FieldType.INT8, brain_pin_e);
+	public static final Field WARNINGLEDPIN = Field.create("WARNINGLEDPIN", 2061, FieldType.INT8, brain_pin_e);
 	public static final Field UNUSED1234234 = Field.create("UNUSED1234234", 2062, FieldType.INT8, brain_pin_e);
 	public static final Field LIS302DLCSPIN = Field.create("LIS302DLCSPIN", 2063, FieldType.INT8, brain_pin_e);
 	public static final Field TPSACCELLENGTH = Field.create("TPSACCELLENGTH", 2064, FieldType.INT);
