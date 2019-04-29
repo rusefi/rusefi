@@ -1906,10 +1906,10 @@
 #define warmupTargetAfr_offset_hex 854
 #define warmupTargetAfrBins_offset 2116
 #define warmupTargetAfrBins_offset_hex 844
+#define warningLedPin_offset 2061
+#define warningLedPin_offset_hex 80d
 #define warningPeriod_offset 1502
 #define warningPeriod_offset_hex 5de
-#define warninigLedPin_offset 2061
-#define warninigLedPin_offset_hex 80d
 #define wboHeaterPin_offset 673
 #define wboHeaterPin_offset_hex 2a1
 #define wwaeBeta_offset 1828
