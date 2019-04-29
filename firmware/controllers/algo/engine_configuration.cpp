@@ -440,7 +440,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->is_enabled_spi_3 = boardConfiguration->is_enabled_spi_4 = false;
 }
 
-void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #ifdef EFI_FATAL_ERROR_PIN
 	engineConfiguration->fatalErrorPin = EFI_FATAL_ERROR_PIN;
 #else
@@ -463,7 +463,7 @@ void setDefaultBasePins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 // needed also by bootloader code
-void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultSerialParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;
@@ -480,7 +480,7 @@ void setDefaultSerialParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // needed also by bootloader code
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
-void setDefaultSdCardParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	boardConfiguration->sdCardCsPin = GPIOD_4;
@@ -1074,9 +1074,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 void setDefaultBoardConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set initial pin groups
-	setDefaultBasePins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultSerialParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setCanDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 
