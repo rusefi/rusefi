@@ -1,5 +1,6 @@
 <project default="jar">
-    <property name="jar_file" value="../java_console_binary/rusefi_console.jar"/>
+    <property name="jar_file_folder" value="../java_console_binary"/>
+    <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -62,6 +63,7 @@
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
         </tstamp>
 
+        <mkdir dir="${jar_file_folder}"/>
         <jar destfile="${jar_file}" basedir="build/classes">
             <manifest>
                 <attribute name="Main-Class" value="com.rusefi.Launcher"/>
