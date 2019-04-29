@@ -244,6 +244,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // ETB_BENCH_ENGINE
 // set engine_type 58
 void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setDefaultBasePins();
 	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
 	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// VAG test ETB
@@ -292,6 +293,7 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // TLE8888_BENCH_ENGINE
 // set engine_type 59
 void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setDefaultBasePins();
 	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
 	setDefaultSerialParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.cylindersCount = 8;
