@@ -36,6 +36,7 @@
 #include "settings.h"
 #include "idle_thread.h"
 #include "periodic_controller.h"
+#include "tps.h"
 
 EXTERN_ENGINE
 ;
@@ -250,8 +251,15 @@ static void handleCommandX14(uint16_t index) {
 		// cmd_test_fuel_pump
 		fuelPumpBench();
 		return;
+	case 2:
+		grabTPSIsClosed();
+		return;
+	case 3:
+		grabTPSIsWideOpen();
+		return;
 
 	}
+
 }
 
 // todo: this is probably a wrong place for this method now

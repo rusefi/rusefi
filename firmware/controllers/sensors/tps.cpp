@@ -5,8 +5,11 @@
 #include "tps.h"
 #include "interpolation.h"
 #include "analog_input.h"
+#if EFI_PROD_CODE
+#include "settings.h"
+#endif /* EFI_PROD_CODE */
 
-	EXTERN_ENGINE;
+EXTERN_ENGINE;
 
 #if !EFI_PROD_CODE
 	static int mockTps;
@@ -124,6 +127,20 @@ int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//	return tpsFastAdc / 4;
 #else
 	return 0;
+#endif /* EFI_PROD_CODE */
+}
+
+void grabTPSIsClosed() {
+#if EFI_PROD_CODE
+	engineConfiguration->tpsMin = getTPS10bitAdc();
+	printTPSInfo();
+#endif /* EFI_PROD_CODE */
+}
+
+void grabTPSIsWideOpen() {
+#if EFI_PROD_CODE
+	engineConfiguration->tpsMax = getTPS10bitAdc();
+	printTPSInfo();
 #endif /* EFI_PROD_CODE */
 }
 
