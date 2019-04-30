@@ -32,8 +32,9 @@
 #define CAN_MAZDA_RX_STEERING_WARNING 0x300
 #define CAN_MAZDA_RX_STATUS_1 0x212
 #define CAN_MAZDA_RX_STATUS_2 0x420
+// https://wiki.openstreetmap.org/wiki/VW-CAN
 #define CAN_VAG_RPM 0x280
-#define CAN_VAG_CLT 0x289
+#define CAN_VAG_CLT 0x288
 
 void initCan(void);
 void commonTxInit(int eid);
