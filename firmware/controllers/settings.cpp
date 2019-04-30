@@ -408,7 +408,7 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 	scheduleMsg(&logger, "==============================");
 }
 
-static void printTPSInfo(void) {
+void printTPSInfo(void) {
 #if EFI_PROD_CODE && HAL_USE_ADC
 	if (!hasTpsSensor()) {
 		scheduleMsg(&logger, "NO TPS SENSOR");
@@ -419,7 +419,7 @@ static void printTPSInfo(void) {
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
 			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tpsAdcChannel, pinNameBuffer));
 #endif /* EFI_PROD_CODE */
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS12bitAdc() / TPS_TS_CONVERSION, getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
+	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
 			getTpsRateOfChange());
 }
 
