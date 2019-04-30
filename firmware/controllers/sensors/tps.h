@@ -35,6 +35,8 @@ void setMockTpsPosition(percent_t tpsPosition);
 void setMockPedalPosition(percent_t value);
 void grabTPSIsClosed();
 void grabTPSIsWideOpen();
+void grabPedalIsUp();
+void grabPedalIsWideOpen();
 
 typedef struct {
 	efitimeus_t prevTime;
