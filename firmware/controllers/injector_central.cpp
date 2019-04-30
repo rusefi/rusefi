@@ -257,6 +257,12 @@ static void handleCommandX14(uint16_t index) {
 	case 3:
 		grabTPSIsWideOpen();
 		return;
+	case 4:
+		grabPedalIsUp();
+		return;
+	case 5:
+		grabPedalIsWideOpen();
+		return;
 
 	}
 
