@@ -174,7 +174,7 @@ public class Launcher {
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (SHOW_STIMULATOR && !LinkManager.isStimulationMode && !LinkManager.isLogViewerMode(port)) {
+        if (SHOW_STIMULATOR && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
             // todo: rethink this UI? special command line key to enable it?
             EcuStimulator stimulator = EcuStimulator.getInstance();
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
