@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Mon Apr 15 19:05:50 EDT 2019
+// on Wed May 01 12:54:14 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -133,6 +133,8 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
+case VAG_18_TURBO:
+  return "VAG_18_TURBO";
 case VW_ABA:
   return "VW_ABA";
 case ZIL_130:
@@ -928,16 +930,16 @@ case TLE8888_PIN_9:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_ANALOG_INPUTS2:
-  return "DBG_ANALOG_INPUTS2";
 case DBG_33:
   return "DBG_33";
 case DBG_34:
   return "DBG_34";
-case DBG_ANALOG_INPUTS:
-  return "DBG_ANALOG_INPUTS";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
+case DBG_ANALOG_INPUTS:
+  return "DBG_ANALOG_INPUTS";
+case DBG_ANALOG_INPUTS2:
+  return "DBG_ANALOG_INPUTS2";
 case DBG_AUX_PID_1:
   return "DBG_AUX_PID_1";
 case DBG_AUX_VALVES:
