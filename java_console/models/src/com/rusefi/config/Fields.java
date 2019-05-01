@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 01 09:30:56 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -918,6 +918,7 @@ public class Fields {
 	public static final int mc33972_csPinMode_offset = 678;
 	public static final int mc33972spiDevice_offset = 4032;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
+	public static final String MOCK_IAT_COMMAND = "mock_iat_voltage";
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int narrowToWideOxygen_offset = 2320;
 	public static final int narrowToWideOxygen_offset_hex = 910;

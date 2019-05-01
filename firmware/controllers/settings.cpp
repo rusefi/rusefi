@@ -1141,7 +1141,7 @@ typedef struct {
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL && EFI_ENABLE_MOCK_ADC
-		{"mock_iat_voltage", setMockIatVoltage},
+		{MOCK_IAT_COMMAND, setMockIatVoltage},
 		{"mock_pedal_position", setMockPedalPosition},
 		{"mock_maf_voltage", setMockMafVoltage},
 		{"mock_afr_voltage", setMockAfrVoltage},

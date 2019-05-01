@@ -1118,6 +1118,8 @@ float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to u
 
 end_struct
 
+#define MOCK_IAT_COMMAND "mock_iat_voltage"
+
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVT "VVT postion"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
