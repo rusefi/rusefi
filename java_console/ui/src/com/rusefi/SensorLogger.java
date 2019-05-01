@@ -178,6 +178,9 @@ public class SensorLogger {
     }
 
     private static String getSensorName(Sensor sensor, int debugMode) {
+        if (sensor == Sensor.debugFloatField1 && isPidDebugMode(debugMode)) {
+            return "PID: output";
+        }
         if (sensor == Sensor.debugFloatField2 && isPidDebugMode(debugMode)) {
             return "PID: I-term";
         }
@@ -204,6 +207,9 @@ public class SensorLogger {
         }
         if (sensor == Sensor.debugIntField4 && isPidDebugMode(debugMode)) {
             return "PID: period";
+        }
+        if (sensor == Sensor.debugIntField5 && isPidDebugMode(debugMode)) {
+            return "PID: feed forward";
         }
         return sensor.getName();
     }
