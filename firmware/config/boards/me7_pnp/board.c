@@ -21,11 +21,6 @@
 
 #include "hal.h"
 #include "stm32_gpio.h"
-#include "efilib.h"
-
-/* drivers */
-#include "drivers/gpio/tle6240.h"
-#include "drivers/gpio/mc33972.h"
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
 /*===========================================================================*/

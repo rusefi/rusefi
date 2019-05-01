@@ -10,7 +10,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
  
-#include "../stm32f4ems/efifeatures.h"
+#include "../stm32f7ems/efifeatures.h"
 
 #ifndef EFIFEATURES_STM32F7_H_
 #define EFIFEATURES_STM32F7_H_
@@ -110,14 +110,14 @@
 
 // todo: start using consoleSerialTxPin? Not sure
 #undef EFI_CONSOLE_TX_PORT
-#define EFI_CONSOLE_TX_PORT GPIOB
+#define EFI_CONSOLE_TX_PORT GPIOD
 #undef EFI_CONSOLE_TX_PIN
-#define EFI_CONSOLE_TX_PIN 10
+#define EFI_CONSOLE_TX_PIN 8
 // todo: start using consoleSerialRxPin? Not sure
 #undef EFI_CONSOLE_RX_PORT
-#define EFI_CONSOLE_RX_PORT GPIOB
+#define EFI_CONSOLE_RX_PORT GPIOD
 #undef EFI_CONSOLE_RX_PIN
-#define EFI_CONSOLE_RX_PIN 11
+#define EFI_CONSOLE_RX_PIN 9
 
 // LED_ERROR_BRAIN_PIN should match LED_ERROR_PORT/LED_ERROR_PIN
 #undef LED_ERROR_BRAIN_PIN
