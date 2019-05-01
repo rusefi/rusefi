@@ -11,7 +11,9 @@
 #define ADC_LOGIC_INTAKE_AIR 0
 #define ADC_LOGIC_COOLANT 0
 
+// see SIM_SD1_PORT
 #define CONSOLE_PORT (&SD1)
+// see SIM_SD2_PORT
 #define TS_SIMULATOR_PORT (&SD2)
 
 /**
