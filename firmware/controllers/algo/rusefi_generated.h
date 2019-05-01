@@ -1406,6 +1406,7 @@
 #define mc33972spiDevice_offset_hex fc0
 #define measureMapOnlyInOneCylinder_offset 744
 #define measureMapOnlyInOneCylinder_offset_hex 2e8
+#define MOCK_IAT_COMMAND "mock_iat_voltage"
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 #define narrowToWideOxygen_offset 2320
 #define narrowToWideOxygen_offset_hex 910

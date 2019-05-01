@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.rusefi.config.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -27,7 +28,15 @@ import java.util.Hashtable;
 public class DetachedSensor {
     private static final String NAME = "name";
     private static final String WIDTH = "width";
-    private static final Collection<Sensor> MOCKABLE = Arrays.asList(Sensor.CLT, Sensor.AFR, Sensor.IAT, Sensor.MAF,
+    /**
+     * @see Fields#MOCK_IAT_COMMAND
+     */
+    private static final Collection<Sensor> MOCKABLE = Arrays.asList(
+            Sensor.CLT,
+            Sensor.AFR,
+            Sensor.IAT,
+            Sensor.MAF,
+            Sensor.MAP,
             Sensor.TPS);
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
@@ -127,7 +136,7 @@ public class DetachedSensor {
             @Override
             public void stateChanged(ChangeEvent e) {
                 double value = slider.getValue() / 10.0;
-                CommandQueue.getInstance().write("set_mock_" + sensor.name().toLowerCase() + "_voltage " + value);
+                CommandQueue.getInstance().write("set mock_" + sensor.name().toLowerCase() + "_voltage " + value);
             }
         });
 
