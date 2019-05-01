@@ -30,13 +30,14 @@ public class MagicSpotsFinder {
     private static final int INITIAL_SLEEP = 10 * SECOND;
     private final JButton button = new JButton(MAGIC_SPOTS_FINDER);
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    // close to zero but not really zero so that we can validate this value
-    private final static double LOW_VALUE = 0.5;
+    private final static double MEASURMENT_PRECISION = 0.5;
+    private double defaultTpsPosition;
+
 //    private boolean isStarted;
 
 
     private State state;
-    private double currentValue;
+    private double currentDutyCycle;
     /**
      * here we record at which duty cycle ETB would start moving
      */
@@ -62,24 +63,24 @@ public class MagicSpotsFinder {
                     sleep(SLEEP);
 
                     double tpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
-                    MessagesCentral.getInstance().postMessage(getClass(), "ETB duty " + currentValue + ": tps=" + tpsPosition);
+                    MessagesCentral.getInstance().postMessage(getClass(), "ETB duty " + currentDutyCycle + ": tps=" + tpsPosition);
 
-                    if (tpsPosition >= 100) {
-                        currentValue -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentValue, goingDown);
-                    } else if (tpsPosition > 0) {
+                    if (tpsPosition >= 100 - MEASURMENT_PRECISION) {
+                        currentDutyCycle -= DUTY_CYCLE_STEP;
+                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentDutyCycle, goingDown);
+                    } else if (tpsPosition > defaultTpsPosition + MEASURMENT_PRECISION) {
 
                         if (startedToCloseValue == 0) {
                             // if that's the first we've moved let's remember duty cycle value
-                            startedToCloseValue = currentValue;
+                            startedToCloseValue = currentDutyCycle;
                             startedToCloseValueLabel.setText(String.format("Started Close %.1f", startedToCloseValue));
                             MessagesCentral.getInstance().postMessage(getClass(), "Started to close at " + startedToCloseValue);
                         }
 
-                        currentValue -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentValue, goingDown);
+                        currentDutyCycle -= DUTY_CYCLE_STEP;
+                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentDutyCycle, goingDown);
                     } else {
-                        backToZeroValue = currentValue;
+                        backToZeroValue = currentDutyCycle;
                         backToZeroValueLabel.setText(String.format("Back Zero %.1f", backToZeroValue));
                         MessagesCentral.getInstance().postMessage(getClass(), "Back closed to close at " + backToZeroValue);
 
@@ -104,34 +105,34 @@ public class MagicSpotsFinder {
                     sleep(SLEEP);
 
                     double tpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
-                    MessagesCentral.getInstance().postMessage(getClass(), "ETB duty " + currentValue + ": tps=" + tpsPosition);
+                    MessagesCentral.getInstance().postMessage(getClass(), "ETB duty " + currentDutyCycle + ": tps=" + tpsPosition);
 
-                    if (tpsPosition == 0) {
+                    if (tpsPosition < defaultTpsPosition + MEASURMENT_PRECISION) {
                         // ETB has not moved yet, keep going up
-                        currentValue += DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentValue, goingUp);
-                    } else if (tpsPosition < 100) {
+                        currentDutyCycle += DUTY_CYCLE_STEP;
+                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentDutyCycle, goingUp);
+                    } else if (tpsPosition < 100 - MEASURMENT_PRECISION) {
 
                         if (startedToOpenValue == 0) {
                             // if that's the first we've moved let's remember duty cycle value
-                            startedToOpenValue = currentValue;
+                            startedToOpenValue = currentDutyCycle;
                             startedToOpenValueLabel.setText(String.format("Start to open: %.1f", startedToOpenValue));
                             MessagesCentral.getInstance().postMessage(getClass(), "Started to open at " + startedToOpenValue);
                         }
 
 
                         // ETB has not reached 100%, keep going up
-                        currentValue += DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentValue, goingUp);
+                        currentDutyCycle += DUTY_CYCLE_STEP;
+                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentDutyCycle, goingUp);
 
                     } else {
                         // looks like we have reached 100%, cool!
-                        reached100Value = currentValue;
+                        reached100Value = currentDutyCycle;
                         reached100ValueLabel.setText(String.format("Reached 100: %.1f", reached100Value));
                         MessagesCentral.getInstance().postMessage(getClass(), "startedToOpenValue = " + startedToOpenValue + ", reached100Value = " + reached100Value);
 
-                        currentValue -= DUTY_CYCLE_STEP;
-                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentValue, goingDown);
+                        currentDutyCycle -= DUTY_CYCLE_STEP;
+                        CommandQueue.getInstance().write(ETBPane.SET_ETB + currentDutyCycle, goingDown);
                     }
                 }
 
@@ -156,15 +157,16 @@ public class MagicSpotsFinder {
                     MessagesCentral.getInstance().postMessage(getClass(), "Start!");
                     resetValues();
 
-                    CommandQueue.getInstance().write(ETBPane.SET_ETB + currentValue, goingUp);
+                    CommandQueue.getInstance().write(ETBPane.SET_ETB + currentDutyCycle, goingUp);
                     sleep(INITIAL_SLEEP);
+                    defaultTpsPosition = SensorCentral.getInstance().getValue(Sensor.TPS);
                 }
             });
         }
     };
 
     private void resetValues() {
-        currentValue = LOW_VALUE;
+        currentDutyCycle = 0.5;
         startedToOpenValue = 0;
         reached100Value = 0;
         startedToCloseValue = 0;
