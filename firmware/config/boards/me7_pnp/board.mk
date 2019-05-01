@@ -1,11 +1,17 @@
 # List of all the board related files.
-BOARDSRC = $(PROJECT_DIR)/config/boards/NUCLEO_F767/board.c
-BOARDSRC_CPP = $(PROJECT_DIR)/config/boards/ME7_PNP/board_configuration.cpp
+BOARDSRC = $(PROJECT_DIR)/config/boards/me7_pnp/board.c
+BOARDSRC_CPP = $(PROJECT_DIR)/config/boards/me7_pnp/board_configuration.cpp
 
 # Required include directories
-BOARDINC = $(PROJECT_DIR)/config/boards/NUCLEO_F767 $(PROJECT_DIR)/config/stm32f7ems
+BOARDINC = $(PROJECT_DIR)/config/boards/me7_pnp
+# Override LD script
+ifeq ($(USE_BOOTLOADER),yes)
+  # include Prometheus bootloader code
+  BOOTLOADERINC= $(PROJECT_DIR)/bootloader/subaru-ej20gn
+endif
 
-LDSCRIPT= $(PROJECT_DIR)/config/boards/NUCLEO_F767/STM32F76xxI.ld
+LDSCRIPT= $(PROJECT_DIR)/config/boards/me7_pnp/STM32F76xxI.ld
+
 
 # Override DEFAULT_ENGINE_TYPE
-DDEFS += -DDEFAULT_ENGINE_TYPE=CUSTOM_ENGINE -DSTM32F767xx
+DDEFS += -DDEFAULT_ENGINE_TYPE=VAG_18_TURBO -DSTM32F767xx
