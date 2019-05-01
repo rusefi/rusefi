@@ -3,6 +3,7 @@ package com.rusefi.ui.engine;
 import com.rusefi.Launcher;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
@@ -35,7 +36,7 @@ public class UpDownImage extends JPanel {
     public static final Color ENGINE_CYCLE_COLOR = Color.green;
 
     private long lastUpdateTime;
-    private EngineReport wr;
+    private EngineReport engineReport;
     private StringBuilder revolutions;
     private final String name;
     private TimeAxisTranslator translator;
@@ -78,7 +79,9 @@ public class UpDownImage extends JPanel {
     }
 
     public void setToolTip() {
-        UiUtils.setTwoLineToolTip(this, "Channel " + NameUtil.getUiName(name), "Physical pin: " + pin);
+        // no physical pin information in simulator
+        String secondLine = LinkManager.isSimulationMode ? "" : "Physical pin: " + pin;
+        UiUtils.setToolTip(this, "Channel " + NameUtil.getUiName(name), secondLine);
     }
 
     public void setZoomProvider(ZoomProvider zoomProvider) {
@@ -115,22 +118,22 @@ public class UpDownImage extends JPanel {
         return new TimeAxisTranslator() {
             @Override
             public int timeToScreen(int time, int width) {
-                return UpDownImage.this.wr.timeToScreen(time, width);
+                return UpDownImage.this.engineReport.timeToScreen(time, width);
             }
 
             @Override
             public double screenToTime(int screen, int width) {
-                return UpDownImage.this.wr.screenToTime(screen, width);
+                return UpDownImage.this.engineReport.screenToTime(screen, width);
             }
 
             @Override
             public int getMaxTime() {
-                return UpDownImage.this.wr.getMaxTime();
+                return UpDownImage.this.engineReport.getMaxTime();
             }
 
             @Override
             public int getMinTime() {
-                return UpDownImage.this.wr.getMinTime();
+                return UpDownImage.this.engineReport.getMinTime();
             }
 
             @Override
@@ -141,7 +144,7 @@ public class UpDownImage extends JPanel {
     }
 
     public void setWaveReport(EngineReport wr, StringBuilder revolutions) {
-        this.wr = wr;
+        this.engineReport = wr;
         propagateDwellIntoSensor(wr);
         this.revolutions = revolutions;
         lastUpdateTime = System.currentTimeMillis();
@@ -168,13 +171,13 @@ public class UpDownImage extends JPanel {
         g.setColor(getBackground());
         g.fillRect(0, 0, d.width, d.height);
 
-        for (EngineReport.UpDown upDown : wr.getList())
+        for (EngineReport.UpDown upDown : engineReport.getList())
             paintUpDown(d, upDown, g);
 
         if (showMouseOverText)
             paintScaleLines(g2, d);
 
-        int duration = wr.getDuration();
+        int duration = engineReport.getDuration();
         g2.setColor(Color.black);
 
         int line = 0;
@@ -197,8 +200,9 @@ public class UpDownImage extends JPanel {
         }
 
         if (showMouseOverText) {
-            g.drawString("Tick length: " + duration + "; count=" + wr.getList().size(), 5, ++line * LINE_SIZE);
-            g.drawString("Total seconds: " + (duration / EngineReport.SYS_TICKS_PER_MS / 000.0), 5, ++line * LINE_SIZE);
+            g.drawString("Showing " + engineReport.getList().size() + " events", 5, ++line * LINE_SIZE);
+            // todo: this has to be broken in case of real engine since 'SYS_TICKS_PER_MS' here is not correct?
+//            g.drawString("Total seconds: " + (duration / EngineReport.SYS_TICKS_PER_MS / 1000.0), 5, ++line * LINE_SIZE);
             g.drawString(FORMAT.format(new Date(lastUpdateTime)), 5, ++line * LINE_SIZE);
         }
 

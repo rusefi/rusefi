@@ -119,7 +119,7 @@ public class DetachedSensor {
     }
 
     private boolean isMockable() {
-        return MOCKABLE.contains(sensor) && LinkManager.isStimulationMode;
+        return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
 
     private static Component createMockVoltageSlider(final Sensor sensor) {

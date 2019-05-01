@@ -48,8 +48,8 @@ public class SensorGauge {
                                         final JMenuItem extraMenuItem) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
-        UiUtils.setTwoLineToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
-        UiUtils.setTwoLineToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);
+        UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
+        UiUtils.setToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);
 
         gauge.setBackgroundColor(sensor.getColor());
 

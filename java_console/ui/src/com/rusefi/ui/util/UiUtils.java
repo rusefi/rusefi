@@ -100,8 +100,14 @@ public class UiUtils {
         component.repaint();
     }
 
-    public static void setTwoLineToolTip(JComponent component, String line1, String line2) {
-        component.setToolTipText("<html>" + line1 + "<br>" + line2 + "</html>");
+    public static void setToolTip(JComponent component, String... lines) {
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines) {
+            if (sb.length() != 0)
+                sb.append("<br>");
+            sb.append(line);
+        }
+        component.setToolTipText("<html>" + sb + "</html>");
     }
 
     public static JComponent wrap(JComponent component) {

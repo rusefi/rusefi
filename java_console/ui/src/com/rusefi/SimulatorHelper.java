@@ -22,7 +22,7 @@ public class SimulatorHelper {
      * todo: unify with the code which starts simulator for auto tests?
      */
     private static void startSimulator() {
-        LinkManager.isStimulationMode = true;
+        LinkManager.isSimulationMode = true;
 
         FileLog.MAIN.logLine("Executing " + BINARY);
         new Thread(new Runnable() {

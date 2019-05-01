@@ -112,7 +112,7 @@ public class LinkManager {
     /**
      * This flag controls if mock controls are needed
      */
-    public static boolean isStimulationMode;
+    public static boolean isSimulationMode;
 
     public static void start(String port) {
         FileLog.MAIN.logLine("LinkManager: Starting " + port);
@@ -120,7 +120,7 @@ public class LinkManager {
             connector = LinkConnector.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
             connector = new TcpConnector(port);
-            isStimulationMode = true;
+            isSimulationMode = true;
         } else {
             connector = new SerialConnector(port);
         }

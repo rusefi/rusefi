@@ -13,7 +13,7 @@ import java.util.List;
  * Date: 6/23/13
  * (c) Andrey Belomutskiy
  *
- * @see com.rusefi.ui.engine.EngineSnifferPanel.AnalogChart
+ * @see SensorSnifferPane
  */
 public class EngineReport implements TimeAxisTranslator {
     public static final String ENGINE_CHART = "wave_chart";
@@ -136,7 +136,7 @@ public class EngineReport implements TimeAxisTranslator {
     }
 
     /**
-     * @return Length of this chart ini systicks
+     * @return Length of this chart in systicks
      */
     public int getDuration() {
         return maxTime - minTime;
