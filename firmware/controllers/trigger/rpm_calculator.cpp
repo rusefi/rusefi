@@ -298,6 +298,9 @@ static char rpmBuffer[_MAX_FILLER];
  */
 static void onTdcCallback(void) {
 	itoa10(rpmBuffer, GET_RPM());
+#if EFI_ENGINE_SNIFFER
+	waveChart.startDataCollection();
+#endif
 	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 

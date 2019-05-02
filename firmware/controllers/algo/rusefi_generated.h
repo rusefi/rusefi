@@ -53,6 +53,8 @@
 #define afterCrankingIACtaperDuration_offset_hex 808
 #define alFIn_offset 1540
 #define alFIn_offset_hex 604
+#define alignEngineSnifferAtTDC_offset 744
+#define alignEngineSnifferAtTDC_offset_hex 2e8
 #define alternatorControl_dFactor_offset 1744
 #define alternatorControl_dFactor_offset_hex 6d0
 #define alternatorControl_iFactor_offset 1740
@@ -1750,12 +1752,12 @@
 #define unused_bit_1472_29_offset_hex 5b8
 #define unused_bit_1472_30_offset 1464
 #define unused_bit_1472_30_offset_hex 5b8
-#define unused_board_984_28_offset 744
-#define unused_board_984_28_offset_hex 2e8
 #define unused_board_984_29_offset 744
 #define unused_board_984_29_offset_hex 2e8
 #define unused_board_984_30_offset 744
 #define unused_board_984_30_offset_hex 2e8
+#define unused_board_984_31_offset 744
+#define unused_board_984_31_offset_hex 2e8
 #define unusedAlignMaf_offset 557
 #define unusedAlignMaf_offset_hex 22d
 #define unusedAnotherOne_offset 744

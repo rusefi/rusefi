@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 11:21:08 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 18:19:27 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -754,13 +754,16 @@ typedef struct {
 	bool pauseEtbControl : 1;
 	/**
 	offset 144 bit 28 */
-	bool unused_board_984_28 : 1;
+	bool alignEngineSnifferAtTDC : 1;
 	/**
 	offset 144 bit 29 */
 	bool unused_board_984_29 : 1;
 	/**
 	offset 144 bit 30 */
 	bool unused_board_984_30 : 1;
+	/**
+	offset 144 bit 31 */
+	bool unused_board_984_31 : 1;
 	/**
 	 * offset 148
 	 */
@@ -2716,4 +2719,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 11:21:08 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 18:19:27 EDT 2019

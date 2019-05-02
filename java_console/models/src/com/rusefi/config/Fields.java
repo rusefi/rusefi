@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 11:21:08 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 18:19:27 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -36,6 +36,7 @@ public class Fields {
 	public static final int afterCrankingIACtaperDuration_offset_hex = 808;
 	public static final int alFIn_offset = 1540;
 	public static final int alFIn_offset_hex = 604;
+	public static final int alignEngineSnifferAtTDC_offset = 744;
 	public static final int alternatorControl_dFactor_offset = 1744;
 	public static final int alternatorControl_iFactor_offset = 1740;
 	public static final int alternatorControl_maxValue_offset = 1754;
@@ -1128,9 +1129,9 @@ public class Fields {
 	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_bit_1472_29_offset = 1464;
 	public static final int unused_bit_1472_30_offset = 1464;
-	public static final int unused_board_984_28_offset = 744;
 	public static final int unused_board_984_29_offset = 744;
 	public static final int unused_board_984_30_offset = 744;
+	public static final int unused_board_984_31_offset = 744;
 	public static final int unusedAlignMaf_offset = 557;
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtBoardConfigurationEnd_offset = 972;
@@ -1486,9 +1487,10 @@ public class Fields {
 	public static final Field USETPSBASEDVETABLE = Field.create("USETPSBASEDVETABLE", 744, FieldType.BIT, 25);
 	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 744, FieldType.BIT, 26);
 	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 744, FieldType.BIT, 27);
-	public static final Field UNUSED_BOARD_984_28 = Field.create("UNUSED_BOARD_984_28", 744, FieldType.BIT, 28);
+	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 744, FieldType.BIT, 28);
 	public static final Field UNUSED_BOARD_984_29 = Field.create("UNUSED_BOARD_984_29", 744, FieldType.BIT, 29);
 	public static final Field UNUSED_BOARD_984_30 = Field.create("UNUSED_BOARD_984_30", 744, FieldType.BIT, 30);
+	public static final Field UNUSED_BOARD_984_31 = Field.create("UNUSED_BOARD_984_31", 744, FieldType.BIT, 31);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 748, FieldType.INT8, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 749, FieldType.INT8, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 750, FieldType.INT8, brain_input_pin_e);
