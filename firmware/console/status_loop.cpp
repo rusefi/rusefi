@@ -2,7 +2,7 @@
  * @file	status_loop.cpp
  * @brief Human-readable protocol status messages
  *
- * http://rusefi.com/forum/viewtopic.php?t=263 Dev console overview
+ * http://rusefi.com/forum/viewtopic.php?t=263 rusEfi console overview
  * http://rusefi.com/forum/viewtopic.php?t=210 Commands overview
  *
  *
@@ -426,7 +426,7 @@ void printOverallStatus(systime_t nowSeconds) {
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
 /**
- * @brief Sends all pending data to dev console
+ * @brief Sends all pending data to rusEfi console
  *
  * This method is periodically invoked by the main loop
  */

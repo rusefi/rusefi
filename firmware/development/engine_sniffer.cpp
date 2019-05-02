@@ -1,14 +1,14 @@
 /**
  * @file	engine_sniffer.cpp
- * @brief	Dev console wave sniffer logic
+ * @brief	rusEfi console wave sniffer logic
  *
  * Here we have our own build-in logic analyzer. The data we aggregate here is sent to the
- * java UI Dev Console so that it can be displayed nicely in the Sniffer tab.
+ * java UI rusEfi Console so that it can be displayed nicely in the Sniffer tab.
  *
  * Both external events (see wave_analyzer.c) and internal (see signal executors) are supported
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

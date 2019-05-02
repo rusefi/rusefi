@@ -1,9 +1,9 @@
 /**
  * @file	wave_analyzer.cpp
- * @brief	Initialization of Input Capture pins used for dev console sniffer
+ * @brief	Initialization of Input Capture pins used for rusEfi console sniffer
  *
  * This file is responsible for sniffing of external digital signals and registering
- * these digital events in WaveChart used by the Sniffer tab of Dev Console.
+ * these digital events in WaveChart used by the Engine Sniffer tab of rusEfi Console.
  *
  * this is rusEfi build-in logic analyzer
  *

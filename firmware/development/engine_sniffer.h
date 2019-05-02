@@ -1,6 +1,6 @@
 /**
  * @file	engine_sniffer.h
- * @brief	Dev console wave sniffer
+ * @brief	rusEfi console wave sniffer
  *
  * @date Jun 23, 2013
  * @author Andrey Belomutskiy, (c) 2012-2017
@@ -15,7 +15,7 @@
 #include "datalogging.h"
 
 /**
- * @brief	Dev console sniffer data buffer
+ * @brief	rusEfi console sniffer data buffer
  */
 class WaveChart {
 public:
