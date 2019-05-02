@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 01 22:24:41 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -602,7 +602,7 @@ typedef struct {
 	/**
 	 * offset 106
 	 */
-	brain_pin_e mainRelayPin;
+	smart_pin_e mainRelayPin;
 	/**
 	 * offset 107
 	 */
@@ -798,7 +798,7 @@ typedef struct {
 	 * todo: more comments
 	 * offset 180
 	 */
-	brain_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
+	smart_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 196
 	 */
@@ -851,7 +851,7 @@ typedef struct {
 	/**
 	 * offset 230
 	 */
-	brain_pin_e acRelayPin;
+	smart_pin_e acRelayPin;
 	/**
 	 * offset 231
 	 */
@@ -2716,4 +2716,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 01 22:24:41 EDT 2019

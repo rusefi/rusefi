@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 01 09:30:56 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 01 22:24:41 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1438,7 +1438,7 @@ public class Fields {
 	public static final Field HIP9011CSPINMODE = Field.create("HIP9011CSPINMODE", 703, FieldType.INT8, pin_output_mode_e);
 	public static final Field TACHOUTPUTPIN = Field.create("TACHOUTPUTPIN", 704, FieldType.INT8, brain_pin_e);
 	public static final Field TACHOUTPUTPINMODE = Field.create("TACHOUTPUTPINMODE", 705, FieldType.INT8, pin_output_mode_e);
-	public static final Field MAINRELAYPIN = Field.create("MAINRELAYPIN", 706, FieldType.INT8, brain_pin_e);
+	public static final Field MAINRELAYPIN = Field.create("MAINRELAYPIN", 706, FieldType.INT8, smart_pin_e);
 	public static final Field SDCARDCSPIN = Field.create("SDCARDCSPIN", 707, FieldType.INT8, brain_pin_e);
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 708, FieldType.INT8, brain_pin_e);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
@@ -1514,22 +1514,22 @@ public class Fields {
 	public static final Field GPIOPINMODES14 = Field.create("GPIOPINMODES14", 777, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES15 = Field.create("GPIOPINMODES15", 778, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES16 = Field.create("GPIOPINMODES16", 779, FieldType.INT8, pin_output_mode_e);
-	public static final Field FSIOOUTPUTPINS1 = Field.create("FSIOOUTPUTPINS1", 780, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS2 = Field.create("FSIOOUTPUTPINS2", 781, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS3 = Field.create("FSIOOUTPUTPINS3", 782, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS4 = Field.create("FSIOOUTPUTPINS4", 783, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS5 = Field.create("FSIOOUTPUTPINS5", 784, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS6 = Field.create("FSIOOUTPUTPINS6", 785, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS7 = Field.create("FSIOOUTPUTPINS7", 786, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS8 = Field.create("FSIOOUTPUTPINS8", 787, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS9 = Field.create("FSIOOUTPUTPINS9", 788, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS10 = Field.create("FSIOOUTPUTPINS10", 789, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS11 = Field.create("FSIOOUTPUTPINS11", 790, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS12 = Field.create("FSIOOUTPUTPINS12", 791, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS13 = Field.create("FSIOOUTPUTPINS13", 792, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS14 = Field.create("FSIOOUTPUTPINS14", 793, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS15 = Field.create("FSIOOUTPUTPINS15", 794, FieldType.INT8, brain_pin_e);
-	public static final Field FSIOOUTPUTPINS16 = Field.create("FSIOOUTPUTPINS16", 795, FieldType.INT8, brain_pin_e);
+	public static final Field FSIOOUTPUTPINS1 = Field.create("FSIOOUTPUTPINS1", 780, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS2 = Field.create("FSIOOUTPUTPINS2", 781, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS3 = Field.create("FSIOOUTPUTPINS3", 782, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS4 = Field.create("FSIOOUTPUTPINS4", 783, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS5 = Field.create("FSIOOUTPUTPINS5", 784, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS6 = Field.create("FSIOOUTPUTPINS6", 785, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS7 = Field.create("FSIOOUTPUTPINS7", 786, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS8 = Field.create("FSIOOUTPUTPINS8", 787, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS9 = Field.create("FSIOOUTPUTPINS9", 788, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS10 = Field.create("FSIOOUTPUTPINS10", 789, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS11 = Field.create("FSIOOUTPUTPINS11", 790, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS12 = Field.create("FSIOOUTPUTPINS12", 791, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS13 = Field.create("FSIOOUTPUTPINS13", 792, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS14 = Field.create("FSIOOUTPUTPINS14", 793, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS15 = Field.create("FSIOOUTPUTPINS15", 794, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS16 = Field.create("FSIOOUTPUTPINS16", 795, FieldType.INT8, smart_pin_e);
 	public static final Field MAX31855_CS1 = Field.create("MAX31855_CS1", 796, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS2 = Field.create("MAX31855_CS2", 797, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS3 = Field.create("MAX31855_CS3", 798, FieldType.INT8, brain_pin_e);
@@ -1547,7 +1547,7 @@ public class Fields {
 	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 824, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 828, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 829, FieldType.INT8, pin_output_mode_e);
-	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, brain_pin_e);
+	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, smart_pin_e);
 	public static final Field ACRELAYPINMODE = Field.create("ACRELAYPINMODE", 831, FieldType.INT8, pin_output_mode_e);
 	public static final Field FSIOFREQUENCY1 = Field.create("FSIOFREQUENCY1", 832, FieldType.INT16);
 	public static final Field FSIOFREQUENCY2 = Field.create("FSIOFREQUENCY2", 834, FieldType.INT16);

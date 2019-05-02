@@ -807,6 +807,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190430;
+	return 20190501;
 }
 #endif /* EFI_UNIT_TEST */
