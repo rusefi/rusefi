@@ -546,7 +546,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e tachOutputPin;+This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	pin_output_mode_e tachOutputPinMode;
 
-	brain_pin_e mainRelayPin;
+	smart_pin_e mainRelayPin;
 	brain_pin_e sdCardCsPin;
 	brain_pin_e canTxPin;
 	brain_pin_e canRxPin;
@@ -615,7 +615,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
-	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
+	smart_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
 
 	spi_device_e max31855spiDevice;
@@ -634,7 +634,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 
 	brain_pin_e triggerErrorPin;This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;
-	brain_pin_e acRelayPin;
+	smart_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
 custom pid_dt 4 scalar, U32,  @OFFSET@, "ms",      1,      0,       0, 3000,      0
