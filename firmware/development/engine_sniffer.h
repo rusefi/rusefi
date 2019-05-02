@@ -23,6 +23,7 @@ public:
 	void init();
 	void addEvent3(const char *name, const char *msg);
 	void reset();
+	void startDataCollection();
 	void publishIfFull();
 	void publish();
 	bool isFull();
@@ -30,9 +31,14 @@ public:
 private:
 	Logging logging;
 	char timeBuffer[10];
-	uint32_t counter;
-	efitime_t startTimeNt;
-	volatile int isInitialized;
+	uint32_t counter = 0;
+	/**
+	 * We want to avoid visual jitter thus we want the left edge to be aligned
+	 * https://github.com/rusefi/rusefi/issues/780
+	 */
+	bool collectingData = false;
+	efitime_t startTimeNt = 0;
+	volatile int isInitialized = false;
 };
 
 void initWaveChart(WaveChart *chart);

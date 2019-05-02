@@ -599,9 +599,10 @@ bit is_enabled_spi_2
 	bit useTPSBasedVeTable
 	bit is_enabled_spi_4
 	bit pauseEtbControl
-	bit unused_board_984_28
+	bit alignEngineSnifferAtTDC
 	bit unused_board_984_29
 	bit unused_board_984_30
+	bit unused_board_984_31
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;

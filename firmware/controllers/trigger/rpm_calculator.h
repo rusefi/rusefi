@@ -12,6 +12,7 @@
 #include <global.h>
 #include "scheduler.h"
 
+// see TOP_DEAD_CENTER_MESSAGE in rusEfi console source code
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
 #define WC_DOWN "d"
