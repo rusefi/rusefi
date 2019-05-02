@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import static com.rusefi.ui.util.UiUtils.setToolTip;
+
 public class SimulatorHelper {
     public static final String BINARY = "rusefi_simulator.exe";
     private static Process process;
@@ -55,7 +57,6 @@ public class SimulatorHelper {
         FileLog.MAIN.logLine("Port " + TcpConnector.DEFAULT_PORT + " is alive");
 
         new Launcher("" + TcpConnector.DEFAULT_PORT);
-
     }
 
     public static JComponent createSimulatorComponent(final StartupFrame portSelector) {
@@ -65,7 +66,7 @@ public class SimulatorHelper {
         if (TcpConnector.isTcpPortOpened())
             return new JLabel("Port " + TcpConnector.DEFAULT_PORT + " already busy. Simulator running?");
 
-        JButton simulatorButton = new JButton("Start Simulator");
+        JButton simulatorButton = new JButton("Start Virtual Simulator");
         simulatorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -73,6 +74,9 @@ public class SimulatorHelper {
                 startSimulator();
             }
         });
+        setToolTip(simulatorButton, "Connect to totally virtual simulator",
+                "You do not need any hardware to try rusEfi",
+                "This works via localhost: " + TcpConnector.DEFAULT_PORT + " TCP/IP port");
 
         return simulatorButton;
     }
