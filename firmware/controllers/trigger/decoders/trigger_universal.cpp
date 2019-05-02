@@ -19,13 +19,13 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int to
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
 		float angleUp = engineCycle / totalTeethCount * (i + 1);
-		s->addEvent3(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
-		s->addEvent3(offset + angleUp, wheel, TV_FALL, filterLeft, filterRight);
+		s->addEventClamped(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
+		s->addEventClamped(offset + angleUp, wheel, TV_FALL, filterLeft, filterRight);
 	}
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
-	s->addEvent3(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
-	s->addEvent3(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
+	s->addEventClamped(offset + angleDown, wheel, TV_RISE, filterLeft, filterRight);
+	s->addEventClamped(offset + engineCycle, wheel, TV_FALL, filterLeft, filterRight);
 }
 
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
