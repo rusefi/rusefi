@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Wed May 01 22:24:41 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 11:21:08 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1407,7 +1407,7 @@ public class Fields {
 	public static final Field FANPINMODE = Field.create("FANPINMODE", 662, FieldType.INT8, pin_output_mode_e);
 	public static final Field FANPIN = Field.create("FANPIN", 663, FieldType.INT8, smart_pin_e);
 	public static final Field CLUTCHDOWNPIN = Field.create("CLUTCHDOWNPIN", 664, FieldType.INT8, brain_pin_e);
-	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 665, FieldType.INT8, brain_pin_e);
+	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 665, FieldType.INT8, smart_pin_e);
 	public static final Field ALTERNATORCONTROLPINMODE = Field.create("ALTERNATORCONTROLPINMODE", 666, FieldType.INT8, pin_output_mode_e);
 	public static final Field CLUTCHDOWNPINMODE = Field.create("CLUTCHDOWNPINMODE", 667, FieldType.INT8);
 	public static final Field DIGITALPOTENTIOMETERCHIPSELECT1 = Field.create("DIGITALPOTENTIOMETERCHIPSELECT1", 668, FieldType.INT8, brain_pin_e);
@@ -1789,10 +1789,10 @@ public class Fields {
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 2228, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 2232, FieldType.FLOAT);
 	public static final Field EGOVALUESHIFT = Field.create("EGOVALUESHIFT", 2236, FieldType.FLOAT);
-	public static final Field AUXPIDPINS1 = Field.create("AUXPIDPINS1", 2240, FieldType.INT8, brain_pin_e);
-	public static final Field AUXPIDPINS2 = Field.create("AUXPIDPINS2", 2241, FieldType.INT8, brain_pin_e);
-	public static final Field AUXPIDPINS3 = Field.create("AUXPIDPINS3", 2242, FieldType.INT8, brain_pin_e);
-	public static final Field AUXPIDPINS4 = Field.create("AUXPIDPINS4", 2243, FieldType.INT8, brain_pin_e);
+	public static final Field AUXPIDPINS1 = Field.create("AUXPIDPINS1", 2240, FieldType.INT8, smart_pin_e);
+	public static final Field AUXPIDPINS2 = Field.create("AUXPIDPINS2", 2241, FieldType.INT8, smart_pin_e);
+	public static final Field AUXPIDPINS3 = Field.create("AUXPIDPINS3", 2242, FieldType.INT8, smart_pin_e);
+	public static final Field AUXPIDPINS4 = Field.create("AUXPIDPINS4", 2243, FieldType.INT8, smart_pin_e);
 	public static final Field CAMINPUT = Field.create("CAMINPUT", 2244, FieldType.INT8, brain_input_pin_e);
 	public static final Field CJ125CSPINMODE = Field.create("CJ125CSPINMODE", 2245, FieldType.INT8, pin_output_mode_e);
 	public static final Field DIZZYSPARKOUTPUTPIN = Field.create("DIZZYSPARKOUTPUTPIN", 2246, FieldType.INT8, brain_pin_e);
