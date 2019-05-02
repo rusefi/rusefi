@@ -28,7 +28,7 @@
 #include "engine.h"
 
 /**
- * Signal executors feed digital events right into WaveChart used by Sniffer tab of Dev Console
+ * Signal executors feed digital events right into WaveChart used by Engine Sniffer tab of rusEfi Console
  */
 #include "rpm_calculator.h"
 

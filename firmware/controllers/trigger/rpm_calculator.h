@@ -17,7 +17,7 @@
 #define WC_DOWN "d"
 #define WC_UP "u"
 /**
- * See also 'CRANK1' in java dev console code
+ * See also 'CRANK1' in java rusEfi console code
  */
 #define CRANK1 "t1"
 #define CRANK2 "t2"

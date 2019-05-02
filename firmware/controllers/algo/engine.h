@@ -427,7 +427,7 @@ public:
 	efitick_t stopEngineRequestTimeNt = 0;
 
 	/**
-	 * This counter is incremented every time user adjusts ECU parameters online (either via dev console or other
+	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
 	 * tuning software)
 	 */
 	volatile int globalConfigurationVersion = 0;

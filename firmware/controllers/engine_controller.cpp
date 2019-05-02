@@ -423,7 +423,7 @@ static void getShort(int offset) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	uint16_t value = *ptr;
 	/**
-	 * this response is part of dev console API
+	 * this response is part of rusEfi console API
 	 */
 	scheduleMsg(&logger, "short%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
@@ -434,7 +434,7 @@ static void getByte(int offset) {
 	uint8_t *ptr = (uint8_t *) (&((char *) engineConfiguration)[offset]);
 	uint8_t value = *ptr;
 	/**
-	 * this response is part of dev console API
+	 * this response is part of rusEfi console API
 	 */
 	scheduleMsg(&logger, "byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
@@ -471,7 +471,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr ^= (-value ^ *ptr) & (1 << bit);
 	/**
-	 * this response is part of dev console API
+	 * this response is part of rusEfi console API
 	 */
 	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 	onConfigurationChanged();
@@ -501,7 +501,7 @@ static void getBit(int offset, int bit) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	int value = (*ptr >> bit) & 1;
 	/**
-	 * this response is part of dev console API
+	 * this response is part of rusEfi console API
 	 */
 	scheduleMsg(&logger, "bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
 }
@@ -512,7 +512,7 @@ static void getInt(int offset) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	int value = *ptr;
 	/**
-	 * this response is part of dev console API
+	 * this response is part of rusEfi console API
 	 */
 	scheduleMsg(&logger, "int%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
@@ -532,7 +532,7 @@ static void getFloat(int offset) {
 	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
 	float value = *ptr;
 	/**
-	 * this response is part of dev console API
+	 * this response is part of rusEfi console API
 	 */
 	scheduleMsg(&logger, "float%s%d is %.5f", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }

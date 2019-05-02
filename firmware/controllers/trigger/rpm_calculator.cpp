@@ -293,7 +293,7 @@ static char rpmBuffer[_MAX_FILLER];
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 /**
- * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the dev console
+ * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
  * digital sniffer.
  */
 static void onTdcCallback(void) {
