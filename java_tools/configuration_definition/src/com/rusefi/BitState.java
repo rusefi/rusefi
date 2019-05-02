@@ -12,9 +12,9 @@ public class BitState {
             bitIndex = 0;
             return;
         }
-        bitIndex++;
         if (bitIndex == 32)
             throw new IllegalStateException("Too many bits: " + cf.name);
+        bitIndex++;
     }
 
     public void reset() {
