@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.ui.util.UiUtils.setToolTip;
 
 /**
  * This frame is used on startup to select the port we would be using
@@ -40,7 +41,7 @@ public class StartupFrame {
     // todo: figure out a better way to work with absolute path
     private static final String APPICON = "appicon.png";
     private static final String LOGO = "logo.gif";
-    public static final String LINK_TEXT = "rusEfi (c) 2012-2018";
+    public static final String LINK_TEXT = "rusEfi (c) 2012-2019";
     private static final String URI = "http://rusefi.com/?java_console";
     private static final String VCP_DRIVER_TEXT = "vcp driver";
     private static final String VCP_DRIVER_URI = "http://www.st.com/st-web-ui/static/active/en/st_prod_software_internet/resource/technical/software/driver/stsw-stm32102.zip";
@@ -112,6 +113,7 @@ public class StartupFrame {
         connectPanel.add(comboSpeeds);
 
         final JButton connect = new JButton("Connect");
+        setToolTip(connect, "Connect to real hardware");
         connectPanel.add(connect);
         connect.addActionListener(new ActionListener() {
             @Override
