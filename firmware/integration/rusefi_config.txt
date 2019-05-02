@@ -514,7 +514,7 @@ float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 	smart_pin_e fanPin;
 
 brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal is all the way down
-	brain_pin_e alternatorControlPin;
+	smart_pin_e alternatorControlPin;
 	pin_output_mode_e alternatorControlPinMode;
 	pin_input_mode_e clutchDownPinMode;
 
@@ -882,7 +882,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
 
-	brain_pin_e[AUX_PID_COUNT iterate] auxPidPins;
+	smart_pin_e[AUX_PID_COUNT iterate] auxPidPins;
 
 	brain_input_pin_e camInput;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
 	pin_output_mode_e cj125CsPinMode;
