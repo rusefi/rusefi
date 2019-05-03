@@ -31,10 +31,10 @@
 #define EFI_MCP_3208 FALSE
 
 #undef EFI_HIP_9011
-#define EFI_HIP_9011 FALSE
+#define EFI_HIP_9011 TRUE
 
 #undef EFI_CJ125
-#define EFI_CJ125 FALSE
+#define EFI_CJ125 TRUE
 
 #undef EFI_DENSO_ADC
 #define EFI_DENSO_ADC FALSE
@@ -43,15 +43,15 @@
 #define EFI_MEMS FALSE
 
 #ifndef BOARD_TLE6240_COUNT
-#define BOARD_TLE6240_COUNT         0
+#define BOARD_TLE6240_COUNT         1
 #endif
 
 #ifndef BOARD_MC33972_COUNT
-#define BOARD_MC33972_COUNT			0
+#define BOARD_MC33972_COUNT			1
 #endif
 
 #ifndef BOARD_TLE8888_COUNT
-#define BOARD_TLE8888_COUNT 	0
+#define BOARD_TLE8888_COUNT 	1
 #endif
 
 // todo: move this outside of efifeatures.h
@@ -59,10 +59,10 @@
 
 
 #undef EFI_CAN_SUPPORT
-#define EFI_CAN_SUPPORT FALSE
+#define EFI_CAN_SUPPORT TRUE
 
 #undef EFI_HD44780_LCD
-#define EFI_HD44780_LCD FALSE
+#define EFI_HD44780_LCD TRUE
 
 #undef EFI_LCD
 #define EFI_LCD FALSE
