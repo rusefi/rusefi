@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.Fields;
@@ -45,7 +46,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190501;
+    public static final int CONSOLE_VERSION = 20190502;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -308,7 +309,7 @@ public class Launcher {
                 return;
             }
             String input = args[1];
-            System.out.println(CompileTool.handleOneFsioLine(input));
+            System.out.println(DoubleEvaluator.process(input).getPosftfixExpression());
             System.exit(0);
         }
         System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE, TOOL_NAME_COMPILE));

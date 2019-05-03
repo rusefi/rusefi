@@ -29,7 +29,7 @@ import static com.rusefi.Timeouts.SECOND;
 public class EtbTestSequence {
     protected static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-    private static final String BUTTON_TEXT = "Measure Quality Control";
+    private static final String BUTTON_TEXT = "Measure Control Quality";
 
     private final JButton button = new JButton(BUTTON_TEXT);
     private final JLabel result = new JLabel("Result: N/A");

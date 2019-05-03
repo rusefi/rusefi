@@ -220,7 +220,7 @@ public:
 	/* 0..720 angle range
 	 * Deprecated?
 	 */
-	void addEvent3(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
+	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
 	operation_mode_e getOperationMode();
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);

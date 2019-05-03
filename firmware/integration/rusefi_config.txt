@@ -514,7 +514,7 @@ float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 	smart_pin_e fanPin;
 
 brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal is all the way down
-	brain_pin_e alternatorControlPin;
+	smart_pin_e alternatorControlPin;
 	pin_output_mode_e alternatorControlPinMode;
 	pin_input_mode_e clutchDownPinMode;
 
@@ -523,13 +523,12 @@ brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal 
 	brain_pin_e wboHeaterPin;
 	brain_pin_e cj125CsPin;
 	uint8_t[1] unusedEtbM;
-
+	uint8_t[1] unusedSpiPadding9;
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	brain_pin_e mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 
-	uint8_t[1] unusedSpiPadding9;
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 
@@ -546,7 +545,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e tachOutputPin;+This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	pin_output_mode_e tachOutputPinMode;
 
-	brain_pin_e mainRelayPin;
+	smart_pin_e mainRelayPin;
 	brain_pin_e sdCardCsPin;
 	brain_pin_e canTxPin;
 	brain_pin_e canRxPin;
@@ -599,9 +598,10 @@ bit is_enabled_spi_2
 	bit useTPSBasedVeTable
 	bit is_enabled_spi_4
 	bit pauseEtbControl
-	bit unused_board_984_28
-	bit unused_board_984_29
+	bit alignEngineSnifferAtTDC
+	bit useETBforIdleControl
 	bit unused_board_984_30
+	bit unused_board_984_31
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
@@ -615,7 +615,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
-	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
+	smart_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
 
 	spi_device_e max31855spiDevice;
@@ -634,7 +634,7 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 
 	brain_pin_e triggerErrorPin;This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;
-	brain_pin_e acRelayPin;
+	smart_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
 custom pid_dt 4 scalar, U32,  @OFFSET@, "ms",      1,      0,       0, 3000,      0
@@ -682,7 +682,8 @@ maf_sensor_type_e mafSensorType;
 	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	int[123] unusedAtBoardConfigurationEnd;
+	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
+	int[122] unusedAtBoardConfigurationEnd;
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
@@ -882,7 +883,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float mapHighValueVoltage;MAP voltage for low point;"v",      1,     0,   0.0,    10,   2 
 	float egoValueShift;EGO value correction;"value",      1,     0,   -10.0,    10,   2 
 
-	brain_pin_e[AUX_PID_COUNT iterate] auxPidPins;
+	smart_pin_e[AUX_PID_COUNT iterate] auxPidPins;
 
 	brain_input_pin_e camInput;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
 	pin_output_mode_e cj125CsPinMode;

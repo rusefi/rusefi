@@ -656,7 +656,7 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds", getTimeNowSeconds());
 	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
 	/**
-	 * Please note that this response is a magic constant used by dev console for protocol detection
+	 * Please note that this response is a magic constant used by rusEfi console for protocol detection
 	 * @see EngineState#TS_PROTOCOL_TAG
 	 */
 	sr5WriteData(tsChannel, (const uint8_t *) TEST_RESPONSE_TAG, sizeof(TEST_RESPONSE_TAG));

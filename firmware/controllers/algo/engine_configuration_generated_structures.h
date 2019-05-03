@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 22:11:03 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -515,7 +515,7 @@ typedef struct {
 	/**
 	 * offset 65
 	 */
-	brain_pin_e alternatorControlPin;
+	smart_pin_e alternatorControlPin;
 	/**
 	 * offset 66
 	 */
@@ -545,22 +545,22 @@ typedef struct {
 	 */
 	uint8_t unusedEtbM;
 	/**
-	 * Digital Potentiometer is used by stock ECU stimulation code
 	 * offset 76
+	 */
+	uint8_t unusedSpiPadding9;
+	/**
+	 * Digital Potentiometer is used by stock ECU stimulation code
+	 * offset 77
 	 */
 	spi_device_e digitalPotentiometerSpiDevice;
 	/**
-	 * offset 77
+	 * offset 78
 	 */
 	brain_pin_e mc33972_cs;
 	/**
-	 * offset 78
-	 */
-	pin_output_mode_e mc33972_csPinMode;
-	/**
 	 * offset 79
 	 */
-	uint8_t unusedSpiPadding9;
+	pin_output_mode_e mc33972_csPinMode;
 	/**
 	 * offset 80
 	 */
@@ -602,7 +602,7 @@ typedef struct {
 	/**
 	 * offset 106
 	 */
-	brain_pin_e mainRelayPin;
+	smart_pin_e mainRelayPin;
 	/**
 	 * offset 107
 	 */
@@ -754,13 +754,16 @@ typedef struct {
 	bool pauseEtbControl : 1;
 	/**
 	offset 144 bit 28 */
-	bool unused_board_984_28 : 1;
+	bool alignEngineSnifferAtTDC : 1;
 	/**
 	offset 144 bit 29 */
-	bool unused_board_984_29 : 1;
+	bool useETBforIdleControl : 1;
 	/**
 	offset 144 bit 30 */
 	bool unused_board_984_30 : 1;
+	/**
+	offset 144 bit 31 */
+	bool unused_board_984_31 : 1;
 	/**
 	 * offset 148
 	 */
@@ -798,7 +801,7 @@ typedef struct {
 	 * todo: more comments
 	 * offset 180
 	 */
-	brain_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
+	smart_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 196
 	 */
@@ -851,7 +854,7 @@ typedef struct {
 	/**
 	 * offset 230
 	 */
-	brain_pin_e acRelayPin;
+	smart_pin_e acRelayPin;
 	/**
 	 * offset 231
 	 */
@@ -964,7 +967,11 @@ typedef struct {
 	/**
 	 * offset 372
 	 */
-	int unusedAtBoardConfigurationEnd[123];
+	float etbIdleRange;
+	/**
+	 * offset 376
+	 */
+	int unusedAtBoardConfigurationEnd[122];
 	/** total size 864*/
 } board_configuration_s;
 
@@ -1983,7 +1990,7 @@ typedef struct {
 	/**
 	 * offset 2240
 	 */
-	brain_pin_e auxPidPins[AUX_PID_COUNT];
+	smart_pin_e auxPidPins[AUX_PID_COUNT];
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * TODO #660
@@ -2716,4 +2723,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun Apr 28 23:03:20 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 22:11:03 EDT 2019

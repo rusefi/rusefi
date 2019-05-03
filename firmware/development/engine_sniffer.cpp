@@ -1,14 +1,14 @@
 /**
  * @file	engine_sniffer.cpp
- * @brief	Dev console wave sniffer logic
+ * @brief	rusEfi console wave sniffer logic
  *
  * Here we have our own build-in logic analyzer. The data we aggregate here is sent to the
- * java UI Dev Console so that it can be displayed nicely in the Sniffer tab.
+ * java UI rusEfi Console so that it can be displayed nicely in the Sniffer tab.
  *
  * Both external events (see wave_analyzer.c) and internal (see signal executors) are supported
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -40,7 +40,7 @@
 #include "rfiutil.h"
 #include "histogram.h"
 static histogram_s engineSnifferHisto;
-#endif
+#endif /* EFI_HISTOGRAMS */
 
 EXTERN_ENGINE
 ;
@@ -55,6 +55,8 @@ extern uint32_t maxLockedDuration;
 #else
 #define WAVE_LOGGING_SIZE 35000
 #endif
+
+static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
 
 int waveChartUsedSize;
 
@@ -79,6 +81,15 @@ static void resetNow(void) {
 }
 #endif
 
+WaveChart::WaveChart() {
+}
+
+void WaveChart::init() {
+	logging.initLoggingExt("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
+	isInitialized = true;
+	reset();
+}
+
 void WaveChart::reset() {
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
@@ -86,10 +97,13 @@ void WaveChart::reset() {
 	resetLogging(&logging);
 	counter = 0;
 	startTimeNt = 0;
+	collectingData = false;
 	appendPrintf(&logging, "wave_chart%s", DELIMETER);
 }
 
-static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
+void WaveChart::startDataCollection() {
+	collectingData = true;
+}
 
 bool WaveChart::isStartedTooLongAgo() {
 	/**
@@ -134,18 +148,6 @@ void WaveChart::publishIfFull() {
 	}
 }
 
-WaveChart::WaveChart() {
-	isInitialized = false;
-	startTimeNt = 0;
-	counter = 0;
-}
-
-void WaveChart::init() {
-	logging.initLoggingExt("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
-	isInitialized = true;
-	reset();
-}
-
 void WaveChart::publish() {
 	appendPrintf(&logging, DELIMETER);
 	waveChartUsedSize = loggingSize(&logging);
@@ -169,16 +171,23 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	}
 	if (skipUntilEngineCycle != 0 && ENGINE(rpmCalculator.getRevolutionCounter()) < skipUntilEngineCycle)
 		return;
+#if EFI_SIMULATOR
+	// todo: add UI control to enable this for firmware if desired
+	// CONFIG(alignEngineSnifferAtTDC) &&
+	if (!collectingData) {
+		return;
+	}
+#endif
 	efiAssertVoid(CUSTOM_ERR_6651, name!=NULL, "WC: NULL name");
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6652, getCurrentRemainingStack() > 32, "lowstck#2c");
-#endif
+#endif /* EFI_PROD_CODE */
 
 	efiAssertVoid(CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
-#endif
+#endif /* DEBUG_WAVE */
 	if (isFull()) {
 		return;
 	}
