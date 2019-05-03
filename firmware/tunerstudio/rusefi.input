@@ -1841,8 +1841,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 		
 	dialog = idleSettings, "", yAxis
-		field = "!Automatic Mode is now Beta Version"
 		field = "Idle IAC control mode",					idleMode
+		field = "use ETB for idle",						useETBforIdleControl
 		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
 		field = "Use separate IAC Table For Coasting",	useIacTableForCoasting, {idleMode == 0}
@@ -2373,6 +2373,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Debug mode",							debugMode
 		field = "TPS",									tpsAdcChannel
 		field = "Pedal",								throttlePedalPositionAdcChannel
+		field = "use ETB for idle",						useETBforIdleControl
+		field = "ETB idle maximum angle",				etbIdleRange
 		field = "Press buttons to calibrate sensors"
 		field = "You would have to remove air filter to move throttle manually"
 	    commandButton = "TPS#1 closed position", cmd_calibrate_tps_1_closed

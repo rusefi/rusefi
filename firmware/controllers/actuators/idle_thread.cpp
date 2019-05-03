@@ -3,7 +3,7 @@
  * @brief   Idle Air Control valve thread.
  *
  * This thread looks at current RPM and decides if it should increase or decrease IAC duty cycle.
- * This file is has the hardware & scheduling logic, desired idle level lives separately
+ * This file has the hardware & scheduling logic, desired idle level lives separately.
  *
  *
  * @date May 23, 2013

@@ -523,13 +523,12 @@ brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal 
 	brain_pin_e wboHeaterPin;
 	brain_pin_e cj125CsPin;
 	uint8_t[1] unusedEtbM;
-
+	uint8_t[1] unusedSpiPadding9;
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	brain_pin_e mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 
-	uint8_t[1] unusedSpiPadding9;
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
 
@@ -600,7 +599,7 @@ bit is_enabled_spi_2
 	bit is_enabled_spi_4
 	bit pauseEtbControl
 	bit alignEngineSnifferAtTDC
-	bit unused_board_984_29
+	bit useETBforIdleControl
 	bit unused_board_984_30
 	bit unused_board_984_31
 
@@ -683,7 +682,8 @@ maf_sensor_type_e mafSensorType;
 	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
-	int[123] unusedAtBoardConfigurationEnd;
+	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
+	int[122] unusedAtBoardConfigurationEnd;
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
