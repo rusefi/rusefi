@@ -8,9 +8,9 @@
 #ifndef CONFIG_ENGINES_TOYOTA_JZS147_H_
 #define CONFIG_ENGINES_TOYOTA_JZS147_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_TOYOTA_JZS147_H_ */

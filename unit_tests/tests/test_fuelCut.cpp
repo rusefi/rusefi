@@ -103,7 +103,7 @@ TEST(fuelCut, criticalEngineTemperature) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	engineConfiguration->useFSIO5ForCriticalIssueEngineStop = true;
-	setFsio(MAGIC_OFFSET_FOR_CRITICAL_ENGINE, GPIOD_7, TOO_HOT_LOGIC PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(MAGIC_OFFSET_FOR_CRITICAL_ENGINE, GPIOD_7, TOO_HOT_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// we need some non-zero time as getTimeNow() which would become stopEngineRequestTimeNt

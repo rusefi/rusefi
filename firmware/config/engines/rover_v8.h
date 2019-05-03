@@ -7,9 +7,9 @@
 #ifndef ROVER_V8_H_
 #define ROVER_V8_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
 void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration);
-void setRoverv8(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* ROVER_V8_H_ */

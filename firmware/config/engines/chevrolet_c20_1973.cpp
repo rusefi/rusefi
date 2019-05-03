@@ -16,9 +16,9 @@
 #include "chevrolet_c20_1973.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void set1973c20(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void set1973c20(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.displacement = 5.7;
 	engineConfiguration->specs.cylindersCount = 8;

@@ -234,7 +234,7 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 /**
  * index is between zero and LE_COMMAND_LENGTH-1
  */
-void setFsioExt(int index, brain_pin_e pin, const char * formula, int pwmFrequency DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setFsioExt(int index, brain_pin_e pin, const char * formula, int pwmFrequency DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	CONFIGB(fsioOutputPins)[index] = pin;
 	int len = strlen(formula);
 	if (len >= LE_COMMAND_LENGTH) {
@@ -244,8 +244,8 @@ void setFsioExt(int index, brain_pin_e pin, const char * formula, int pwmFrequen
 	CONFIGB(fsioFrequency)[index] = pwmFrequency;
 }
 
-void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setFsioExt(index, pin, exp, NO_PWM PASS_ENGINE_PARAMETER_SUFFIX);
+void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_CONFIG_PARAMETER_SUFFIX) {
+	setFsioExt(index, pin, exp, NO_PWM PASS_CONFIG_PARAMETER_SUFFIX);
 }
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

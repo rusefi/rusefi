@@ -8,8 +8,8 @@
 #ifndef CONFIG_ENGINES_GM_2_2_H_
 #define CONFIG_ENGINES_GM_2_2_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setGm2_2(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setGm2_2(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_GM_2_2_H_ */

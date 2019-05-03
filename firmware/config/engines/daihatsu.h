@@ -5,6 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setDaihatsu(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setDaihatsu(DECLARE_CONFIG_PARAMETER_SIGNATURE);

@@ -12,10 +12,10 @@
 #include "engine_template.h"
 #include "custom_engine.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setZil130(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setZil130(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->specs.cylindersCount = 8;
 

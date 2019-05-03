@@ -12,12 +12,10 @@
 #include "engine_math.h"
 #include "custom_engine.h"
 
+EXTERN_CONFIG;
 
-EXTERN_ENGINE
-;
-
-void setCamaro4(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);

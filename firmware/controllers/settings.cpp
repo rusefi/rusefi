@@ -1300,7 +1300,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
-		setConstantDwell(valueF PASS_ENGINE_PARAMETER_SUFFIX);
+		setConstantDwell(valueF PASS_CONFIG_PARAMETER_SUFFIX);
 	} else if (strEqualCaseInsensitive(paramStr, "engineSnifferRpmThreshold")) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {

@@ -13,10 +13,10 @@
 #include "ego.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setWholeTimingTable_d(20 PASS_CONFIG_PARAMETER_SUFFIX);
 	// set cranking_timing_angle 10
@@ -56,7 +56,7 @@ void setVwAba(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	float mapRange = 110;
 
-	setEgoSensor(ES_PLX PASS_ENGINE_PARAMETER_SUFFIX);
+	setEgoSensor(ES_PLX PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelTablesLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
 

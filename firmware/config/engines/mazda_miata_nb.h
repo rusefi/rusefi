@@ -8,8 +8,8 @@
 #ifndef MAZDA_MIATA_NB1_H_
 #define MAZDA_MIATA_NB1_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setMazdaMiataNb1EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* MAZDA_MIATA_NB1_H_ */

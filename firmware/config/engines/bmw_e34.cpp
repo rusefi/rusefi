@@ -16,10 +16,10 @@
 #include "thermistors.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE
+EXTERN_CONFIG
 ;
 
-void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// chartsize 450
 	engineConfiguration->engineChartSize = 450;
 
@@ -69,7 +69,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
 
-	setConstantDwell(3 PASS_ENGINE_PARAMETER_SUFFIX); // a bit shorter dwell
+	setConstantDwell(3 PASS_CONFIG_PARAMETER_SUFFIX); // a bit shorter dwell
 	engineConfiguration->ignMathCalculateAtIndex = 14;
 
 	engineConfiguration->mapAveragingSchedulingAtIndex = 6;

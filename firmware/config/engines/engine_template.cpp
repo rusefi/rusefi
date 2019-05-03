@@ -8,8 +8,8 @@
 #include "engine_template.h"
 #include "custom_engine.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setEngineTemplateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setEngineTemplateConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 }

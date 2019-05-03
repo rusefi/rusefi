@@ -9,7 +9,7 @@
 
 #include "prometheus.h"
 
-void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setPrometheusDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 

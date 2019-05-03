@@ -49,8 +49,8 @@ typedef struct {
 } persistent_config_container_s;
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
-void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setDefaultConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setAfrMap(afr_table_t table, float value);
 /**
@@ -58,12 +58,12 @@ void setAfrMap(afr_table_t table, float value);
  */
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
 #define setWholeTimingTable(x) setWholeTimingTable_d(x PASS_CONFIG_PARAMETER_SUFFIX);
-void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX);
 void printFloatArray(const char *prefix, float array[], int size);
 
 // needed by bootloader

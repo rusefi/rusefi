@@ -16,7 +16,7 @@
 #include "ford_fiesta.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
 void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->rpmHardLimit = 7000;

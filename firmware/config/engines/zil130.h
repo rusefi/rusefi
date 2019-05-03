@@ -8,7 +8,8 @@
 #ifndef ZIL130_H_
 #define ZIL130_H_
 
-#include "engine.h"
-void setZil130(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+#include "engine_configuration.h"
+
+void setZil130(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* ZIL130_H_ */

@@ -8,8 +8,8 @@
 #ifndef CONFIG_ENGINES_LADA_KALINA_H_
 #define CONFIG_ENGINES_LADA_KALINA_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setLadaKalina(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_LADA_KALINA_H_ */

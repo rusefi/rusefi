@@ -10,10 +10,9 @@
 #include "global.h"
 #include "gm_2_2.h"
 
-EXTERN_ENGINE
-;
+EXTERN_CONFIG;
 
-void setGm2_2(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setGm2_2(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
 

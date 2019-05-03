@@ -14,7 +14,7 @@
 #include "thermistors.h"
 #include "mazda_miata_1_6.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
 // todo:
 // extern const float ve16RpmBins[FUEL_RPM_COUNT];
@@ -92,7 +92,7 @@ static const fuel_table_t miataNA6_maf_fuel_table = {
 		{/* 15 4.400	*//* 0 800.0*/7.000,	/* 1 1213.33*/7.000,	/* 2 1626.6699*/7.000,	/* 3 2040.0*/7.000,	/* 4 2453.3298*/7.000,	/* 5 2866.67*/7.000,	/* 6 3280.0*/7.000,	/* 7 3693.3298*/7.000,	/* 8 4106.67*/6.000,	/* 9 4520.0*/6.000,	/* 10 4933.33*/6.000,	/* 11 5346.67*/6.000,	/* 12 5760.0*/6.000,	/* 13 6173.33*/6.000,	/* 14 6586.67*/6.000,	/* 15 7000.0*/6.000,	},
 };
 
-void miataNAcommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -115,8 +115,8 @@ void miataNAcommon(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 }
 
-void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setMiataNA6_MAP_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	boardConfiguration->isHip9011Enabled = false;
 	boardConfiguration->isSdCardEnabled = false;
@@ -232,7 +232,7 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_FSIO
 	// todo: convert
-	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 
 	boardConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
@@ -253,12 +253,12 @@ void setMiataNA6_MAP_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// green wire from 1Q/W17 to bottom of W46
 	engineConfiguration->acSwitchAdc = EFI_ADC_6; // PA6
 
-	miataNAcommon(PASS_ENGINE_PARAMETER_SIGNATURE);
+	miataNAcommon(PASS_CONFIG_PARAMETER_SIGNATURE);
 	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
 }
 
-void setMiataNA6_VAF_Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setMiataNA6_MAP_Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setMiataNA6_VAF_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNA6_MAP_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 
 	/**

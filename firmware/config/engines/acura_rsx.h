@@ -9,6 +9,6 @@
 
 #include "engine_configuration.h"
 
-void setAcuraRSX(engine_configuration_s *engineConfiguration);
+void setAcuraRSX(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_ACURA_RSX_H_ */

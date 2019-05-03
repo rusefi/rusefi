@@ -21,10 +21,10 @@
 #include "custom_engine.h"
 #include "thermistors.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-static void common2jz(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE); // default pinout
+static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE); // default pinout
 
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
@@ -67,8 +67,8 @@ static void common2jz(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	common2jz(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_2JZ_1_12;
@@ -95,8 +95,8 @@ void setToyota_jzs147EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-void setToyota_2jz_vics(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	common2jz(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	boardConfiguration->isSdCardEnabled = true;
 

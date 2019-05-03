@@ -8,8 +8,8 @@
 #ifndef CONFIG_ENGINES_FORD_FESTIVA_H_
 #define CONFIG_ENGINES_FORD_FESTIVA_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_FORD_FESTIVA_H_ */
