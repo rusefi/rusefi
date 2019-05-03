@@ -34,7 +34,7 @@ setPinConfigurationOverrides (void)
   boardConfiguration->is_enabled_spi_2 = false;
   boardConfiguration->is_enabled_spi_3 = false;
   engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
-
+  boardConfiguration->isFastAdcEnabled = true;
   engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
   engineConfiguration->canReadEnabled = true;
   engineConfiguration->canWriteEnabled = true;

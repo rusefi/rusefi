@@ -42,7 +42,7 @@
 #define EFI_HIP_9011 FALSE
 
 #undef EFI_CJ125
-#define EFI_CJ125 FALSE
+#define EFI_CJ125 TRUE
 
 #undef EFI_DENSO_ADC
 #define EFI_DENSO_ADC FALSE
@@ -110,14 +110,14 @@
 
 // todo: start using consoleSerialTxPin? Not sure
 #undef EFI_CONSOLE_TX_PORT
-#define EFI_CONSOLE_TX_PORT GPIOD
+#define EFI_CONSOLE_TX_PORT GPIOB
 #undef EFI_CONSOLE_TX_PIN
-#define EFI_CONSOLE_TX_PIN 8
+#define EFI_CONSOLE_TX_PIN 10
 // todo: start using consoleSerialRxPin? Not sure
 #undef EFI_CONSOLE_RX_PORT
-#define EFI_CONSOLE_RX_PORT GPIOD
+#define EFI_CONSOLE_RX_PORT GPIOB
 #undef EFI_CONSOLE_RX_PIN
-#define EFI_CONSOLE_RX_PIN 9
+#define EFI_CONSOLE_RX_PIN 11
 
 // LED_ERROR_BRAIN_PIN should match LED_ERROR_PORT/LED_ERROR_PIN
 #undef LED_ERROR_BRAIN_PIN

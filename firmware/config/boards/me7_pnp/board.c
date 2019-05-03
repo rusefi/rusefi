@@ -21,6 +21,7 @@
 
 #include "hal.h"
 #include "stm32_gpio.h"
+#include "efilib.h"
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
 /*===========================================================================*/
@@ -272,7 +273,7 @@ void setAdcChannelOverrides(void) {
 }
 
 
-#define STATUS_LED_PIN	8
+#define STATUS_LED_PIN	0
 #define STATUS_LED_PORT	GPIOG
 
 void BLIIINK(int t) {
