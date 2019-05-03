@@ -78,7 +78,7 @@ public class StartupFrame {
     private JLabel noPortsMessage = new JLabel("No ports found!");
 
     public StartupFrame() {
-        frame = new JFrame("rusEfi console v" + Launcher.CONSOLE_VERSION);
+        frame = new JFrame("rusEfi console version " + Launcher.CONSOLE_VERSION);
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -102,11 +102,6 @@ public class StartupFrame {
     public void chooseSerialPort() {
         realHardwarePanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Real stm32"));
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
-
-
-//        leftPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
-//                BorderFactory.createLineBorder(Color.darkGray)));
-
 
         connectPanel.add(comboPorts);
         final JComboBox<String> comboSpeeds = createSpeedCombo();
@@ -174,6 +169,7 @@ public class StartupFrame {
             rightPanel.add(logo);
         }
         rightPanel.add(new URLLabel(LINK_TEXT, URI));
+        rightPanel.add(new JLabel("Version " + Launcher.CONSOLE_VERSION));
 
         JPanel content = new JPanel(new BorderLayout());
         content.add(leftPanel, BorderLayout.WEST);
