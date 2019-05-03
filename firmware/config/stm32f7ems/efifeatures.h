@@ -51,7 +51,7 @@
 #endif
 
 #ifndef BOARD_TLE8888_COUNT
-#define BOARD_TLE8888_COUNT 	0
+#define BOARD_TLE8888_COUNT 	1
 #endif
 
 // todo: move this outside of efifeatures.h
@@ -59,7 +59,7 @@
 
 
 #undef EFI_CAN_SUPPORT
-#define EFI_CAN_SUPPORT FALSE
+#define EFI_CAN_SUPPORT TRUE
 
 #undef EFI_HD44780_LCD
 #define EFI_HD44780_LCD FALSE
@@ -102,14 +102,14 @@
 
 // todo: start using consoleSerialTxPin? Not sure
 #undef EFI_CONSOLE_TX_PORT
-#define EFI_CONSOLE_TX_PORT GPIOD
+#define EFI_CONSOLE_TX_PORT GPIOB
 #undef EFI_CONSOLE_TX_PIN
-#define EFI_CONSOLE_TX_PIN 8
+#define EFI_CONSOLE_TX_PIN 10
 // todo: start using consoleSerialRxPin? Not sure
 #undef EFI_CONSOLE_RX_PORT
-#define EFI_CONSOLE_RX_PORT GPIOD
+#define EFI_CONSOLE_RX_PORT GPIOB
 #undef EFI_CONSOLE_RX_PIN
-#define EFI_CONSOLE_RX_PIN 9
+#define EFI_CONSOLE_RX_PIN 11
 
 // LED_ERROR_BRAIN_PIN should match LED_ERROR_PORT/LED_ERROR_PIN
 #undef LED_ERROR_BRAIN_PIN

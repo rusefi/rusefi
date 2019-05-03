@@ -10,7 +10,7 @@ ifeq ($(USE_BOOTLOADER),yes)
   BOOTLOADERINC= $(PROJECT_DIR)/bootloader/subaru-ej20gn
 endif
 
-LDSCRIPT= $(PROJECT_DIR)/config/boards/me7_pnp/STM32F76xxI.ld
+LDSCRIPT= $(PROJECT_DIR)/config/boards/nucleo_f767/STM32F76xxI.ld
 
 
 # Override DEFAULT_ENGINE_TYPE
