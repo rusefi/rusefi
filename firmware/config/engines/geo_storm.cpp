@@ -8,9 +8,9 @@
 #include "geo_storm.h"
 #include "custom_engine.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setGeoStormConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setGeoStormConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 

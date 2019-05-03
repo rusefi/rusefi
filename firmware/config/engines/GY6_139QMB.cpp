@@ -14,8 +14,7 @@
 #include "allsensors.h"
 #include "advance_map.h"
 
-EXTERN_ENGINE
-;
+EXTERN_CONFIG;
 
 static const fuel_table_t default_139qmb_fuel_table = {
 
@@ -64,7 +63,7 @@ static const fuel_table_t default_139qmb_fuel_table = {
 
 };
 
-static void setDefault139qmbMaps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefault139qmbMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setFuelLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelRpmBin(1000, 11000 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -75,14 +74,14 @@ static void setDefault139qmbMaps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//copyTimingTable(default_139qmb_timing_table, config->ignitionTable);
 }
 
-void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setDefault139qmbMaps(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefault139qmbMaps(PASS_CONFIG_PARAMETER_SIGNATURE);
 //        engineConfiguration->map.sensor.type = MT_3V_SENSOR;
-	setEgoSensor(ES_NarrowBand PASS_ENGINE_PARAMETER_SUFFIX);
+	setEgoSensor(ES_NarrowBand PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->cranking.rpm = 1100;
-	setTargetRpmCurve(2000 PASS_ENGINE_PARAMETER_SUFFIX);
+	setTargetRpmCurve(2000 PASS_CONFIG_PARAMETER_SUFFIX);
 	engineConfiguration->analogInputDividerCoefficient = 1;
 	engineConfiguration->fuelAlgorithm = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 45;

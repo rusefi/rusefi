@@ -9,7 +9,7 @@
 #define FORD_FIESTA_H_
 #if EFI_SUPPORT_FORD_FIESTA
 
-#include "engine.h"
+#include "engine_configuration.h"
 
 void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

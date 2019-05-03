@@ -15,9 +15,9 @@
 #include "mazda_miata_nb.h"
 #include "thermistors.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setMazdaMiataNb1EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_rpm_hard_limit 3000
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
 
@@ -88,5 +88,5 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fsio_setting[0] = 5000;
 	// (self and (rpm > 4800)) OR (rpm > 5000)
 	// set_rpn_expression 1 "self rpm 4800 > & rpm 5000 > OR"
-//	setFsioExt(0, GPIOE_3, "self rpm 4800 > & rpm 5000 > OR", 150 PASS_ENGINE_PARAMETER_SUFFIX);
+//	setFsioExt(0, GPIOE_3, "self rpm 4800 > & rpm 5000 > OR", 150 PASS_CONFIG_PARAMETER_SUFFIX);
 }

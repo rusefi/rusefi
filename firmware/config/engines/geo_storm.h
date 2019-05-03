@@ -8,7 +8,8 @@
 #ifndef CONFIG_ENGINES_GEO_STORM_H_
 #define CONFIG_ENGINES_GEO_STORM_H_
 
-#include "engine.h"
-void setGeoStormConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+#include "engine_configuration.h"
+
+void setGeoStormConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_GEO_STORM_H_ */

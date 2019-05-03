@@ -15,10 +15,10 @@
 #include "fsio_impl.h"
 #include "settings.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -94,12 +94,12 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 // todo	engineConfiguration->afr.hwChannel = EFI_ADC_3;
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 //#if EFI_FSIO
 //	// backup main relay pin
-//	setFsio(0, GPIOE_6, "1" PASS_ENGINE_PARAMETER_SUFFIX);
+//	setFsio(0, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 //#endif
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;

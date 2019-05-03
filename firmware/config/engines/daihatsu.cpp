@@ -11,9 +11,9 @@
 #include "global.h"
 #include "daihatsu.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setDaihatsu(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDaihatsu(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_36_2_2_2;
 
 	engineConfiguration->specs.cylindersCount = 3;

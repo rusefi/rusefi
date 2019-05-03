@@ -160,7 +160,7 @@ void setBoardConfigurationOverrides(void) {
 
 	// starter block
 	/* Starter signal connected through MC33972 - SG11 */
-	//setFsio(0, (GPIOB_1), STARTER_BLOCK PASS_ENGINE_PARAMETER_SUFFIX);
+	//setFsio(0, (GPIOB_1), STARTER_BLOCK PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	// not used

@@ -7,8 +7,8 @@
 #ifndef MITSUBISHI_H_
 #define MITSUBISHI_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* MITSUBISHI_H_ */

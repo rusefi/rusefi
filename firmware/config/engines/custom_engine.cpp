@@ -83,7 +83,7 @@ void disableLCD(board_configuration_s *boardConfiguration) {
 
 // todo: should this be renamed to 'setFrankensoConfiguration'?
 // todo: should this be part of more default configurations?
-void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setCustomEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	setFrankenso_01_LCD(boardConfiguration);
@@ -192,8 +192,8 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_CAN_SUPPORT */
 }
 
-void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
@@ -243,7 +243,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // ETB_BENCH_ENGINE
 // set engine_type 58
-void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
 	setDefaultSerialParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -266,7 +266,7 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIGB(etb1.controlPin1) = GPIOE_14;
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
-	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultEtbParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	// values are above 100% since we have feedforward part of the total summation
 	engineConfiguration->etb.minValue = -200;
 	engineConfiguration->etb.maxValue = 200;
@@ -292,7 +292,7 @@ void setEtbTestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // TLE8888_BENCH_ENGINE
 // set engine_type 59
-void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
 	setDefaultSerialParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -327,8 +327,8 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// IN2 PF14
 	// SF  PF11
 #if EFI_FSIO
-	setFsio(12, GPIOF_12, "0" PASS_ENGINE_PARAMETER_SUFFIX);
-	setFsio(14, GPIOF_13, "1" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etb1_use_two_wires) = true;
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
@@ -342,8 +342,8 @@ void setTle8888TestConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// IN2 PE4
 	// SF  PE3
 #if EFI_FSIO
-	setFsio(13, GPIOE_5, "0" PASS_ENGINE_PARAMETER_SUFFIX);
-	setFsio(15, GPIOE_6, "1" PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(13, GPIOE_5, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+	setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etb2_use_two_wires) = true;
 	CONFIG(etb2.directionPin1) = GPIOE_2;

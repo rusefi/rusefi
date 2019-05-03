@@ -10,8 +10,5 @@
 #define AUDI_AAN_H_
 
 #include "global.h"
-#if EFI_ENGINE_AUDI_AAN
-
-#endif /* EFI_ENGINE_AUDI_AAN */
 
 #endif /* AUDI_AAN_H_ */

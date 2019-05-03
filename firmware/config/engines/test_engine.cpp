@@ -11,13 +11,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "engine.h"
+#include "engine_configuration.h"
 #include "test_engine.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
@@ -32,10 +32,10 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 
-	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	setConstantDwell(3 PASS_ENGINE_PARAMETER_SUFFIX); // 50% duty cycle @ 5000 rpm
+	setConstantDwell(3 PASS_CONFIG_PARAMETER_SUFFIX); // 50% duty cycle @ 5000 rpm
 
 	board_configuration_s *bc = &engineConfiguration->bc;
 	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
@@ -53,7 +53,7 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 }
 
-void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
@@ -74,8 +74,8 @@ void setTestVVTEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 #if EFI_UNIT_TEST
-void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setTestEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setTestEngineIssue366both(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
@@ -86,8 +86,8 @@ void setTestEngineIssue366both(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-void setTestEngineIssue366rise(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setTestEngineIssue366both(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setTestEngineIssue366both(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

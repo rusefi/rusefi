@@ -288,7 +288,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 *
 	 * set_whole_fuel_map 12
 	 */
-	//setWholeFuelMap(12 PASS_ENGINE_PARAMETER_SUFFIX);
+	//setWholeFuelMap(12 PASS_CONFIG_PARAMETER_SUFFIX);
 //	copyFuelTable(alphaNfuel, config->fuelTable);
 	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 	copyTimingTable(fromODB, config->ignitionTable);
@@ -459,7 +459,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	 * set_fsio_setting 1 0.55
 //	 */
 //	boardConfiguration->fsio_setting[0] = 0.55;
-//	setFsioExt(0, GPIOE_5, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER_SUFFIX);
+//	setFsioExt(0, GPIOE_5, "0 fsio_setting", 400 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;

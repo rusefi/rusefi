@@ -60,13 +60,13 @@ static const fuel_table_t racingFestivaVeTable = {
 		{/* 15 160.000	*//* 0 800.0*/100.000,	/* 1 1200.0*/100.000,	/* 2 1600.0*/100.000,	/* 3 2000.0*/100.000,	/* 4 2400.0*/100.000,	/* 5 2800.0*/120.000,	/* 6 3200.0*/120.000,	/* 7 3600.0*/120.000,	/* 8 4100.0*/120.000,	/* 9 4500.0*/120.000,	/* 10 4900.0*/120.000,	/* 11 5300.0*/120.000,	/* 12 5700.0*/120.000,	/* 13 6100.0*/120.000,	/* 14 6500.0*/120.000,	/* 15 7000.0*/120.000,	},
 };
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
 /**
  * pin 1I/W9 - extra +5v
  * set engine_type 14
  */
-void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
@@ -125,14 +125,14 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10
 	boardConfiguration->manIdlePosition = 10;
 	engineConfiguration->crankingIACposition = 65;
 
-	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	// set global_trigger_offset_angle -37
@@ -231,7 +231,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	boardConfiguration->fsio_setting[0] = 5000;
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// warning light
 	/**
@@ -248,8 +248,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fsio_setting[2] = 90; // CLT threshold
 	boardConfiguration->fsio_setting[3] = 13.5; // voltage threshold
 
-//	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_ENGINE_PARAMETER_SUFFIX);
-	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_ENGINE_PARAMETER_SUFFIX);
+//	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_CONFIG_PARAMETER_SUFFIX);
+	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 
 	config->ignitionRpmBins[0] = 800;

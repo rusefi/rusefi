@@ -9,8 +9,8 @@
 #ifndef GY6_139QMB_H_
 #define GY6_139QMB_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* GY6_139QMB_H_ */

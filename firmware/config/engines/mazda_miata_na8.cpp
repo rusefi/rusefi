@@ -13,13 +13,13 @@
 #include "custom_engine.h"
 #include "mazda_miata_1_6.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
 /**
  * See also setMiataNA_1_6_Configuration
  */
-void setMazdaMiataNA8Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// blue jumper wire to W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
@@ -43,7 +43,7 @@ void setMazdaMiataNA8Configuration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	miataNAcommon(PASS_ENGINE_PARAMETER_SIGNATURE);
+	miataNAcommon(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 }
 

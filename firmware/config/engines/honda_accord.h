@@ -8,14 +8,14 @@
 #ifndef HONDA_ACCORD_H_
 #define HONDA_ACCORD_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setHondaAccordConfiguration1_24(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setHondaAccordConfiguration1_24_shifted(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setHondaCivic4_0_both(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setHondaCivic4_0_rise(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setHondaAccordConfigurationTwoWires(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHondaAccordConfigurationThreeWires(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHondaAccordConfigurationDip(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHondaAccordConfiguration1_24(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHondaAccordConfiguration1_24_shifted(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHondaCivic4_0_both(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHondaCivic4_0_rise(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* HONDA_ACCORD_H_ */

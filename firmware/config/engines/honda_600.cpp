@@ -45,9 +45,9 @@ static const ignition_table_t default_custom_timing_table = {
  /* Load 100% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
 };
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-static void setDefaultCustomMaps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setFuelLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setFuelRpmBin(0, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -59,7 +59,7 @@ static void setDefaultCustomMaps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	copyTimingTable(default_custom_timing_table, config->ignitionTable);
 }
 
-void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_HONDA_CBR_600_CUSTOM;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
@@ -144,7 +144,7 @@ void setHonda600(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[2] = GPIOB_7; // #3
 	boardConfiguration->injectionPins[3] = GPIOB_8; // #4
 
-  setDefaultCustomMaps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultCustomMaps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
 
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;

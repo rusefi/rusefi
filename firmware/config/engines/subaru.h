@@ -7,9 +7,9 @@
 #ifndef SUBARU_H_
 #define SUBARU_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setSubaruEJ20GDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setSubaruEJ20GDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* SUBARU_H_ */

@@ -204,7 +204,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @brief Sets the same dwell time across the whole getRpm() range
  */
-void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
 	}
@@ -235,7 +235,7 @@ void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->fuelTable, value);
 }
 
-void setWholeIgnitionIatCorr(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->ignitionIatCorrTable, value);
 }
 
@@ -253,7 +253,7 @@ void setTimingMap(ignition_table_t map, float value) {
 	}
 }
 
-void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setTimingMap(config->ignitionIatCorrTable, value);
 }
 
@@ -667,7 +667,7 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * see also setDefaultIdleSpeedTarget()
  */
-void setTargetRpmCurve(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, -40, 90, 10);
 	setLinearCurve(engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, rpm, rpm, 10);
 }
@@ -758,13 +758,13 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultFuelCutParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setMazdaMiataNbTpsTps(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setMazdaMiataNbTpsTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	/**
 	 * 4ms is global default dwell for the whole RPM range
 	 * if you only have one coil and many cylinders or high RPM you would need lower value at higher RPM
 	 */
-	setConstantDwell(4 PASS_ENGINE_PARAMETER_SUFFIX);
+	setConstantDwell(4 PASS_CONFIG_PARAMETER_SUFFIX);
 	/**
 	 * Use angle-based duration during cranking
 	 * this is equivalent to 'disable cranking_constant_dwell' console command
@@ -965,7 +965,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->cylinderBore = 87.5;
 
-	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER_SUFFIX);
+	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->globalFuelCorrection = 1;
 	engineConfiguration->adcVcc = 3.0;
@@ -1065,7 +1065,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fsio_setting[0] = 5000;
 	// simple warning light as default configuration
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 }
 
@@ -1171,13 +1171,13 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	 */
 	switch (engineType) {
 	case CUSTOM_ENGINE:
-		setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		break;
 	case ACURA_RSX:
-		setAcuraRSX(engineConfiguration);
+		setAcuraRSX(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
@@ -1190,13 +1190,13 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case LADA_KALINA:
-		setLadaKalina(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setLadaKalina(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
-		setFordAspireEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
 #if EFI_SUPPORT_FORD_FIESTA
@@ -1210,121 +1210,121 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 #endif
 	case HONDA_ACCORD_CD:
-		setHondaAccordConfigurationThreeWires(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setHondaAccordConfigurationThreeWires(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ZIL_130:
-		setZil130(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setZil130(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_MAP:
-		setMiataNA6_MAP_Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMiataNA6_MAP_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_VAF:
-		setMiataNA6_VAF_Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMiataNA6_VAF_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ETB_BENCH_ENGINE:
-		setEtbTestConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TLE8888_BENCH_ENGINE:
-		setTle8888TestConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NA8:
-		setMazdaMiataNA8Configuration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_CIVIC_4_0_BOTH:
-		setHondaCivic4_0_both(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setHondaCivic4_0_both(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_CIVIC_4_0_RISE:
-		setHondaCivic4_0_rise(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setHondaCivic4_0_rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_CD_TWO_WIRES:
-		setHondaAccordConfiguration1_24(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setHondaAccordConfiguration1_24(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_1_24_SHIFTED:
-		setHondaAccordConfiguration1_24_shifted(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setHondaAccordConfiguration1_24_shifted(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FRANKENSO_QA_ENGINE:
-		setFrankensoBoardTestConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_CD_DIP:
-		setHondaAccordConfigurationDip(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MITSU_4G93:
-		setMitsubishiConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6
 	case FORD_INLINE_6_1995:
-		setFordInline6(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setFordInline6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
 	case GY6_139QMB:
-		setGy6139qmbDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setGy6139qmbDefaultEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_600:
-		setHonda600(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NB1:
-		setMazdaMiataNb1EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_323:
 		setMazda323EngineConfiguration(engineConfiguration);
 		break;
 	case MAZDA_626:
-		setMazda626EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SATURN_ION_2004:
 		setSaturnIonEngineConfiguration(engineConfiguration);
 		break;
 	case SUZUKI_VITARA:
-		setSuzukiVitara(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setSuzukiVitara(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MINI_COOPER_R50:
 		setMiniCooperR50(engineConfiguration);
 		break;
 	case FORD_ESCORT_GT:
-		setFordEscortGt(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1990:
-		setMiata1990(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_DEVIATOR:
-		setMiata1994_d(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMiata1994_d(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_SPAGS:
-		setMiata1994_s(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMiata1994_s(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1996:
-		setMiata1996(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:
-		setCitroenBerlingoTU3JPConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ROVER_V8:
-		setRoverv8(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARU_2003_WRX:
-		setSubaru2003Wrx(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_E34:
-		setBmwE34(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case GM_2_2:
-		setGm2_2(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setGm2_2(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_RAM:
-		setDodgeRam1996(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_STRATUS:
-		setDodgeStratus(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDodgeStratus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case VW_ABA:
-		setVwAba(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
-		setTestEngineIssue366both(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setTestEngineIssue366both(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ISSUE_366_RISE:
-		setTestEngineIssue366rise(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setTestEngineIssue366rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #else
 	case TEST_ISSUE_366_BOTH:
@@ -1332,46 +1332,46 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif
 
 	case TEST_ENGINE:
-		setTestEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003:
-		setMazdaMiata2003EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_NA_RAIL:
-		setMazdaMiata2003EngineConfigurationNaFuelRail(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMazdaMiata2003EngineConfigurationNaFuelRail(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_BOARD_TEST:
-		setMazdaMiata2003EngineConfigurationBoardTest(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setMazdaMiata2003EngineConfigurationBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROMETHEUS_DEFAULTS:
-		setPrometheusDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setPrometheusDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARUEJ20G_DEFAULTS:
-		setSubaruEJ20GDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setSubaruEJ20GDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE_VVT:
-		setTestVVTEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setTestVVTEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SACHS:
-		setSachs(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setSachs(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DAIHATSU:
-		setDaihatsu(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDaihatsu(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CAMARO_4:
-		setCamaro4(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setCamaro4(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CHEVY_C20_1973:
-		set1973c20(PASS_ENGINE_PARAMETER_SIGNATURE);
+		set1973c20(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TOYOTA_2JZ_GTE_VVTi:
-		setToyota_2jz_vics(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setToyota_2jz_vics(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TOYOTA_JZS147:
-		setToyota_jzs147EngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setToyota_jzs147EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case GEO_STORM:
-		setGeoStormConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setGeoStormConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 
 	default:

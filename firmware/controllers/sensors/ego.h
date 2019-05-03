@@ -15,7 +15,7 @@
 
 float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setEgoSensor(ego_sensor_e type DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setEgoSensor(ego_sensor_e type DECLARE_CONFIG_PARAMETER_SUFFIX);
 void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif

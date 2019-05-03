@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#include "engine.h"
+#include "engine_configuration.h"
 
 //const float ve16RpmBins[FUEL_RPM_COUNT] = {
 //650.0,1100.0,1550.0,2000.0,

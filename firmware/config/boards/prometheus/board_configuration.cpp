@@ -191,7 +191,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	// starter block
-	setFsio(0, (is469 ? GPIOB_10 : GPIOB_1), STARTER_BLOCK PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsio(0, (is469 ? GPIOB_10 : GPIOB_1), STARTER_BLOCK PASS_CONFIG_PARAMETER_SUFFIX);
 
 	
 	// debug pad

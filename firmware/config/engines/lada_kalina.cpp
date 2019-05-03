@@ -11,11 +11,10 @@
 #include "custom_engine.h"
 #include "fsio_impl.h"
 
+EXTERN_CONFIG;
 
-EXTERN_ENGINE;
-
-void setLadaKalina(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	disableLCD(boardConfiguration);
 
 	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
@@ -57,6 +56,6 @@ void setLadaKalina(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->bc.fsio_setting[0] = 500;
 	// set_rpn_expression 1 "rpm 0 fsio_setting <"
-	setFsioExt(0, GPIOE_3, RPM_BELOW_USER_SETTING_1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExt(0, GPIOE_3, RPM_BELOW_USER_SETTING_1, 0 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 }

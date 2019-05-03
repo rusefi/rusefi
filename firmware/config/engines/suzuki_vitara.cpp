@@ -9,9 +9,9 @@
 
 #include "suzuki_vitara.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setSuzukiVitara(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setSuzukiVitara(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_SOHC_4;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.590;

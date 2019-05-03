@@ -10,13 +10,13 @@
 #ifndef CONFIG_ENGINES_MAZDA_MIATA_VVT_H_
 #define CONFIG_ENGINES_MAZDA_MIATA_VVT_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setMazdaMiataNbInjectorLag(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setMazdaMiataNbTpsTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-void setMazdaMiata2003EngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_MAZDA_MIATA_VVT_H_ */

@@ -12,9 +12,9 @@
 #include "allsensors.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
 
@@ -25,7 +25,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 // set injection_offset 0
 	engineConfiguration->extraInjectionOffset = 0;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/**
 	 * 50/2 trigger

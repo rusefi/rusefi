@@ -11,9 +11,9 @@
 #include "subaru.h"
 #include "custom_engine.h"
 
-EXTERN_ENGINE;
+EXTERN_CONFIG;
 
-void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
@@ -39,6 +39,6 @@ void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Subaru WRX <=1996 Turbo.
  */
 
-void setSubaruEJ20GDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setSubaruEJ20GDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_SUBARU_7_6;
 }

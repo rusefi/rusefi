@@ -11,7 +11,7 @@
 
 #if EFI_SUPPORT_DODGE_NEON
 
-#include "engine.h"
+#include "engine_configuration.h"
 
 void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
@@ -21,7 +21,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
  * testing or broken CAM sensor option
  */
 void setDodgeNeonNGCEngineConfigurationCrankBased(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
 

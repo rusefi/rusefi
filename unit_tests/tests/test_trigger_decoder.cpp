@@ -1101,7 +1101,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	setConstantDwell(45 PASS_ENGINE_PARAMETER_SUFFIX);
+	setConstantDwell(45 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);

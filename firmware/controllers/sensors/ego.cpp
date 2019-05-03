@@ -172,7 +172,7 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 	}
 }
 
-void setEgoSensor(ego_sensor_e type DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setEgoSensor(ego_sensor_e type DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	CONFIGB(afr_type) = type;
 	initEgoSensor(&engineConfiguration->afr, type);
 }

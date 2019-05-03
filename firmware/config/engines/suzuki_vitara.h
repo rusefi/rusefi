@@ -8,8 +8,8 @@
 #ifndef CONFIG_ENGINES_SUZUKI_VITARA_H_
 #define CONFIG_ENGINES_SUZUKI_VITARA_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setSuzukiVitara(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setSuzukiVitara(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_SUZUKI_VITARA_H_ */

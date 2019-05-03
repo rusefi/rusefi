@@ -8,8 +8,8 @@
 #ifndef CITROENBERLINGOTU3JP_H_
 #define CITROENBERLINGOTU3JP_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CITROENBERLINGOTU3JP_H_ */

@@ -8,8 +8,8 @@
 #ifndef BMW_E34_H_
 #define BMW_E34_H_
 
-#include "engine.h"
+#include "engine_configuration.h"
 
-void setBmwE34(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* BMW_E34_H_ */

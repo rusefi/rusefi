@@ -8,7 +8,8 @@
 #ifndef CONFIG_ENGINES_ENGINE_TEMPLATE_H_
 #define CONFIG_ENGINES_ENGINE_TEMPLATE_H_
 
-#include "engine.h"
-void setEngineTemplateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+#include "engine_configuration.h"
+
+void setEngineTemplateConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 #endif /* CONFIG_ENGINES_ENGINE_TEMPLATE_H_ */
