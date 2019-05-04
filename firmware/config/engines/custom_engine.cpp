@@ -244,31 +244,31 @@ void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
 	engineConfiguration->etbBiasBins[1] = 1;
-	engineConfiguration->etbBiasBins[2] = 2;
+	engineConfiguration->etbBiasBins[2] = 5;
 	/**
 	 * This specific throttle has default position of about 7% open
 	 */
-	engineConfiguration->etbBiasBins[3] = 4;
-	engineConfiguration->etbBiasBins[4] = 7;
-	engineConfiguration->etbBiasBins[5] = 98;
-	engineConfiguration->etbBiasBins[6] = 99;
+	engineConfiguration->etbBiasBins[3] = 7;
+	engineConfiguration->etbBiasBins[4] = 14;
+	engineConfiguration->etbBiasBins[5] = 65;
+	engineConfiguration->etbBiasBins[6] = 66;
 	engineConfiguration->etbBiasBins[7] = 100;
 
 	/**
 	 * Some negative bias for below-default position
 	 */
-	engineConfiguration->etbBiasValues[0] = -20;
-	engineConfiguration->etbBiasValues[1] = -18;
-	engineConfiguration->etbBiasValues[2] = -17;
+	engineConfiguration->etbBiasValues[0] = -15;
+	engineConfiguration->etbBiasValues[1] = -15;
+	engineConfiguration->etbBiasValues[2] = -10;
 	/**
 	 * Zero bias for index which corresponds to default throttle position, when no current is applied
 	 * This specific throttle has default position of about 7% open
 	 */
 	engineConfiguration->etbBiasValues[3] = 0;
-	engineConfiguration->etbBiasValues[4] = 20;
-	engineConfiguration->etbBiasValues[5] = 21;
-	engineConfiguration->etbBiasValues[6] = 22;
-	engineConfiguration->etbBiasValues[7] = 25;
+	engineConfiguration->etbBiasValues[4] = 19;
+	engineConfiguration->etbBiasValues[5] = 20;
+	engineConfiguration->etbBiasValues[6] = 26;
+	engineConfiguration->etbBiasValues[7] = 28;
 }
 
 // ETB_BENCH_ENGINE
@@ -315,8 +315,13 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIGB(idle).stepperDirectionPin = GPIO_UNASSIGNED;
 	boardConfiguration->useStepperIdle = true;
 
+	// no analog dividers - all sensors with 3v supply, naked discovery bench setup
+	engineConfiguration->analogInputDividerCoefficient = 1;
+
+	// EFI_ADC_15 = PC5
 	engineConfiguration->clt.adcChannel = EFI_ADC_15;
 	set10K_4050K(&engineConfiguration->clt);
+	engineConfiguration->clt.config.bias_resistor = 10000;
 
 	// see also setDefaultEtbBiasCurve
 }

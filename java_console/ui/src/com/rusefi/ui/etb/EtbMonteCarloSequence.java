@@ -21,7 +21,7 @@ import static com.rusefi.ui.etb.EtbTestSequence.*;
  * (c) Andrey Belomutskiy
  */
 public class EtbMonteCarloSequence {
-    public static final int LIMIT = 300;
+    private static final int TOTAL_CYCLES_COUNT = 300;
     private static final double DEFAULT_POSITION = 7;
     private final JButton button = new JButton("ETB I feel lucky!");
     private final static Random r = new Random();
@@ -83,12 +83,12 @@ public class EtbMonteCarloSequence {
                 }
                 MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                         getSecondsSinceFileStart() + ":" + stats + ":result:" + cycleResult);
-                if (counter == LIMIT) {
+                if (counter == TOTAL_CYCLES_COUNT) {
                     MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "ETB MC sequence done!");
                     return;
                 }
                 counter++;
-                MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "Starting " + counter + " of " + LIMIT);
+                MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "Starting " + counter + " of " + TOTAL_CYCLES_COUNT);
                 runRandomCycle();
             }
         });
