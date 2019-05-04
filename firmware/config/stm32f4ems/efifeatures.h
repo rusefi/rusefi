@@ -4,11 +4,11 @@
  * @brief In this header we can configure which firmware modules are used.
  *
  * @date Aug 29, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef EFIFEATURES_H_
-#define EFIFEATURES_H_
+#ifndef EFIFEATURES_STM32F4_H_
+#define EFIFEATURES_STM32F4_H_
 
 #define EFI_GPIO_HARDWARE TRUE
 
@@ -393,4 +393,4 @@
 #define EFI_BOARD_TEST TRUE
 #define EFI_JOYSTICK TRUE
 
-#endif /* EFIFEATURES_H_ */
+#endif /* EFIFEATURES_STM32F4_H_ */
