@@ -337,15 +337,15 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
-	if (cisnan(coolantTemperature)) // todo: move this check down, below duration correction?
-		return baseCrankingFuel;
 	float durationCoef = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef, CRANKING_CURVE_SIZE);
 
-	float coolantTempCoef = interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
+	float coolantTempCoef = cisnan(coolantTemperature) ? 1 : interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
 			config->crankingFuelCoef, CRANKING_CURVE_SIZE);
 
-	float tpsCoef = interpolate2d("crank", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), engineConfiguration->crankingTpsBins,
+	percent_t tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	float tpsCoef = cisnan(tps) ? 1 : interpolate2d("crankTps", , engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE);
 
 	return baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
