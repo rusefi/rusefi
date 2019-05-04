@@ -1,5 +1,6 @@
 package com.rusefi.ui.etb;
 
+import com.rusefi.ETBPane;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -11,9 +12,13 @@ import com.rusefi.io.CommandQueue;
 import javax.swing.*;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.romraider.util.ThreadUtil.sleep;
 import static com.rusefi.SensorLogger.getSecondsSinceFileStart;
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.etb.TestSequenceStep.count;
+import static com.rusefi.ui.etb.DirectDrivePanel.CANCEL_DIRECT_DRIVE_COMMAND;
 import static com.rusefi.ui.etb.EtbTestSequence.*;
 
 /**
@@ -33,11 +38,18 @@ public class EtbMonteCarloSequence {
         button.addActionListener(e -> {
             counter = 0;
 
-            // 3000 data points at 10Hz should be 300 seconds worth of data
-            StandardTestSequence.metric.start(/* buffer size: */3000, /*period, ms: */ 100);
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    CommandQueue.getInstance().write(CANCEL_DIRECT_DRIVE_COMMAND);
+                    sleep(3 * SECOND);
+                    // 3000 data points at 10Hz should be 300 seconds worth of data
+                    StandardTestSequence.metric.start(/* buffer size: */3000, /*period, ms: */ 100);
 
-            // start first cycle. At the end of the run it would decide if it wants to start from beginning again
-            executor.execute(this::runRandomCycle);
+                    // start first cycle. At the end of the run it would decide if it wants to start from beginning again
+                    executor.execute(() -> runRandomCycle());
+                }
+            });
         });
     }
 
@@ -57,21 +69,34 @@ public class EtbMonteCarloSequence {
         CommandQueue.getInstance().write("set etb_i " + iFactor);
         CommandQueue.getInstance().write("set etb_d " + dFactor);
 
+        MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
+                getSecondsSinceFileStart() + " running " + stats);
+
         TestSequenceStep firstStep = new EtbTarget(10 * SECOND, DEFAULT_POSITION, null, TestSequenceStep.Condition.YES);
         TestSequenceStep.Condition condition = new TestSequenceStep.Condition() {
             @Override
-            public boolean shouldContinue() {
+            public boolean shouldRunTask() {
                 double currentValue = StandardTestSequence.metric.getStandardDeviation();
-                boolean shouldContinue = currentValue < bestResultSoFar;
-                if (!shouldContinue) {
+                boolean shouldRun = currentValue < bestResultSoFar;
+                if (!shouldRun) {
                     MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                             "Two much error accumulated, aborting! " + currentValue + " > " + bestResultSoFar);
 
                 }
-                return shouldContinue;
+                return shouldRun;
             }
         };
-        TestSequenceStep last = StandardTestSequence.addSequence(firstStep, null, condition);
+
+        AtomicInteger stepCounter = new AtomicInteger();
+        AtomicInteger totalSteps = new AtomicInteger();
+
+        Runnable onEachStep = () -> SwingUtilities.invokeLater(() -> {
+            String state = stepCounter.incrementAndGet() + "/" + totalSteps.get();
+            double value = StandardTestSequence.metric.getStandardDeviation();
+            MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,"Running " + state + ", current=" + value);
+        });
+
+        TestSequenceStep last = StandardTestSequence.addSequence(firstStep, onEachStep, condition);
         last.addNext(new TestSequenceStep(5 * SECOND, EtbTarget.Condition.YES) {
             @Override
             protected void doJob() {
@@ -84,6 +109,7 @@ public class EtbMonteCarloSequence {
                 MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                         getSecondsSinceFileStart() + ":" + stats + ":result:" + cycleResult);
                 if (counter == TOTAL_CYCLES_COUNT) {
+                    CommandQueue.getInstance().write(ETBPane.SET_ETB + 0);
                     MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "ETB MC sequence done!");
                     return;
                 }
@@ -92,6 +118,7 @@ public class EtbMonteCarloSequence {
                 runRandomCycle();
             }
         });
+        totalSteps.set(count(firstStep));
         firstStep.execute(executor);
     }
 

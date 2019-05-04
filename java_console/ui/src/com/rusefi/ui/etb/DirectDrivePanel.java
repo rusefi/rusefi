@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
  * @see ETBPane#SET_ETB
  */
 public class DirectDrivePanel {
+    public static final String CANCEL_DIRECT_DRIVE_COMMAND = ETBPane.SET_ETB + "NaN";
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel currentOverride = new JLabel("NaN");
     private final JTextArea increment = new JTextArea("0.5");
@@ -58,7 +59,7 @@ public class DirectDrivePanel {
         reset.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommandQueue.getInstance().write(ETBPane.SET_ETB + "NaN");
+                CommandQueue.getInstance().write(CANCEL_DIRECT_DRIVE_COMMAND);
             }
         });
 

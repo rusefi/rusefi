@@ -19,11 +19,25 @@ public abstract class TestSequenceStep {
         this.condition = condition;
     }
 
+    public static int count(TestSequenceStep step) {
+        int result = 0;
+        while ((step = step.getNext()) != null)
+            result++;
+        return result;
+    }
+
     public void execute(ScheduledExecutorService executor) {
-        doJob();
-        if (next != null && condition.shouldContinue()) {
-            FileLog.MAIN.logLine("Scheduling " + next + " with " + nextStepDelay + "ms delay");
-            executor.schedule(() -> next.execute(executor), nextStepDelay, TimeUnit.MILLISECONDS);
+        boolean shouldRun = condition.shouldRunTask();
+        if (shouldRun)
+            doJob();
+        if (next != null) {
+            if (shouldRun) {
+                FileLog.MAIN.logLine("Scheduling " + next + " with " + nextStepDelay + "ms delay");
+                executor.schedule(() -> next.execute(executor), nextStepDelay, TimeUnit.MILLISECONDS);
+            } else {
+                // we've skipped current job and we skip the delay as well
+                next.execute(executor);
+            }
         } else {
             MessagesCentral.getInstance().postMessage(TestSequenceStep.class, "ETB test sequence done!");
         }
@@ -45,7 +59,7 @@ public abstract class TestSequenceStep {
     }
 
     public interface Condition {
-        boolean shouldContinue();
+        boolean shouldRunTask();
 
         Condition YES = () -> true;
     }
