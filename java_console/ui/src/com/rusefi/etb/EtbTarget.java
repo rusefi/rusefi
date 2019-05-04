@@ -9,8 +9,8 @@ public class EtbTarget extends TestSequenceStep {
     private final double position;
     private final Runnable onEachStep;
 
-    public EtbTarget(long duration, double position, Runnable onEachStep) {
-        super(duration);
+    public EtbTarget(long duration, double position, Runnable onEachStep, Condition condition) {
+        super(duration, condition);
         this.position = position;
         this.onEachStep = onEachStep;
     }
@@ -24,7 +24,7 @@ public class EtbTarget extends TestSequenceStep {
     @Override
     public String toString() {
         return "EtbTarget{" +
-                "duration=" + duration +
+                "nextStepDelay=" + nextStepDelay +
                 ", position=" + position +
                 '}';
     }

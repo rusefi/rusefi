@@ -18,47 +18,47 @@ public class StandardTestSequence {
         );
     }
 
-    public static TestSequenceStep addSequence(TestSequenceStep first_step, Runnable onEachStep) {
-        TestSequenceStep secondStep = new TestSequenceStep(SECOND) {
+    public static TestSequenceStep addSequence(TestSequenceStep first_step, Runnable onEachStep, TestSequenceStep.Condition condition) {
+        TestSequenceStep secondStep = new TestSequenceStep(SECOND, EtbTarget.Condition.YES) {
             @Override
             protected void doJob() {
                 metric.reset();
             }
         };
         TestSequenceStep result = first_step.addNext(secondStep)
-                .addNext(10 * SECOND, 4 /*position*/, onEachStep)
-                .addNext(5 * SECOND, 6, /*position*/onEachStep)
-                .addNext(5 * SECOND, 8, /*position*/onEachStep)
-                .addNext(5 * SECOND, 6, /*position*/onEachStep)
-                .addNext(5 * SECOND, 4, /*position*/onEachStep)
-                .addNext(5 * SECOND, 2, /*position*/onEachStep)
-                .addNext(5 * SECOND, 0, /*position*/onEachStep)
-                .addNext(5 * SECOND, 10, /*position*/onEachStep)
-                .addNext(3 * SECOND, 0, /*position*/onEachStep)
-                .addNext(1 * SECOND, 6, /*position*/onEachStep)
-                .addNext(1 * SECOND, 8, /*position*/onEachStep)
-                .addNext(1 * SECOND, 6, /*position*/onEachStep)
-                .addNext(1 * SECOND, 4, /*position*/onEachStep)
-                .addNext(1 * SECOND, 2, /*position*/onEachStep)
-                .addNext(1 * SECOND, 0, /*position*/onEachStep)
-                .addNext(1 * SECOND, 10, /*position*/onEachStep)
-                .addNext(3 * SECOND, 7, /*position*/onEachStep)
-                .addNext(3 * SECOND, 6, /*position*/onEachStep)
-                .addNext(3 * SECOND, 5, /*position*/onEachStep)
-                .addNext(3 * SECOND, 4, /*position*/onEachStep)
-                .addNext(3 * SECOND, 3, /*position*/onEachStep)
-                .addNext(3 * SECOND, 2, /*position*/onEachStep)
-                .addNext(3 * SECOND, 1, /*position*/onEachStep)
-                .addNext(3 * SECOND, 0, /*position*/onEachStep)
-                .addNext(10 * SECOND, 6, /*position*/onEachStep)
-                .addNext(10 * SECOND, 30, /*position*/onEachStep)
-                .addNext(10 * SECOND, 50, /*position*/onEachStep)
-                .addNext(10 * SECOND, 70, /*position*/onEachStep)
-                .addNext(10 * SECOND, 95, /*position*/onEachStep)
-                .addNext(10 * SECOND, 50, /*position*/onEachStep)
-                .addNext(10 * SECOND, 70, /*position*/onEachStep)
-                .addNext(10 * SECOND, 4, /*position*/onEachStep)
-                .addNext(10 * SECOND, 0, /*position*/onEachStep)
+                .addNext(10 * SECOND, 4 /*position*/, onEachStep, condition)
+                .addNext(5 * SECOND, 6, /*position*/onEachStep, condition)
+                .addNext(5 * SECOND, 8, /*position*/onEachStep, condition)
+                .addNext(5 * SECOND, 6, /*position*/onEachStep, condition)
+                .addNext(5 * SECOND, 4, /*position*/onEachStep, condition)
+                .addNext(5 * SECOND, 2, /*position*/onEachStep, condition)
+                .addNext(5 * SECOND, 0, /*position*/onEachStep, condition)
+                .addNext(5 * SECOND, 10, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 0, /*position*/onEachStep, condition)
+                .addNext(1 * SECOND, 6, /*position*/onEachStep, condition)
+                .addNext(1 * SECOND, 8, /*position*/onEachStep, condition)
+                .addNext(1 * SECOND, 6, /*position*/onEachStep, condition)
+                .addNext(1 * SECOND, 4, /*position*/onEachStep, condition)
+                .addNext(1 * SECOND, 2, /*position*/onEachStep, condition)
+                .addNext(1 * SECOND, 0, /*position*/onEachStep, condition)
+                .addNext(1 * SECOND, 10, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 7, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 6, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 5, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 4, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 3, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 2, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 1, /*position*/onEachStep, condition)
+                .addNext(3 * SECOND, 0, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 6, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 30, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 50, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 70, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 95, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 50, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 70, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 4, /*position*/onEachStep, condition)
+                .addNext(10 * SECOND, 0, /*position*/onEachStep, condition)
                 ;
         return result;
     }

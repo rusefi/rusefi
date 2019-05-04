@@ -22,9 +22,12 @@ import static com.rusefi.ui.etb.EtbTestSequence.*;
  */
 public class EtbMonteCarloSequence {
     public static final int LIMIT = 300;
+    private static final double DEFAULT_POSITION = 7;
     private final JButton button = new JButton("ETB I feel lucky!");
     private final static Random r = new Random();
     private int counter;
+
+    private double bestResultSoFar = 75;
 
     public EtbMonteCarloSequence() {
         button.addActionListener(e -> {
@@ -33,6 +36,7 @@ public class EtbMonteCarloSequence {
             // 3000 data points at 10Hz should be 300 seconds worth of data
             StandardTestSequence.metric.start(/* buffer size: */3000, /*period, ms: */ 100);
 
+            // start first cycle. At the end of the run it would decide if it wants to start from beginning again
             executor.execute(this::runRandomCycle);
         });
     }
@@ -53,14 +57,32 @@ public class EtbMonteCarloSequence {
         CommandQueue.getInstance().write("set etb_i " + iFactor);
         CommandQueue.getInstance().write("set etb_d " + dFactor);
 
-        TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, null);
-        TestSequenceStep last = StandardTestSequence.addSequence(firstStep, null);
-        last.addNext(new TestSequenceStep(5 * SECOND) {
+        TestSequenceStep firstStep = new EtbTarget(10 * SECOND, DEFAULT_POSITION, null, TestSequenceStep.Condition.YES);
+        TestSequenceStep.Condition condition = new TestSequenceStep.Condition() {
+            @Override
+            public boolean shouldContinue() {
+                double currentValue = StandardTestSequence.metric.getStandardDeviation();
+                boolean shouldContinue = currentValue < bestResultSoFar;
+                if (!shouldContinue) {
+                    MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
+                            "Two much error accumulated, aborting! " + currentValue + " > " + bestResultSoFar);
+
+                }
+                return shouldContinue;
+            }
+        };
+        TestSequenceStep last = StandardTestSequence.addSequence(firstStep, null, condition);
+        last.addNext(new TestSequenceStep(5 * SECOND, EtbTarget.Condition.YES) {
             @Override
             protected void doJob() {
-                double result = SensorCentral.getInstance().getValue(Sensor.ETB_CONTROL_QUALITY);
+                double cycleResult = SensorCentral.getInstance().getValue(Sensor.ETB_CONTROL_QUALITY);
+                if (cycleResult < bestResultSoFar) {
+                    bestResultSoFar = cycleResult;
+                    MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
+                            getSecondsSinceFileStart() + ":" + stats + ":new_record:" + bestResultSoFar);
+                }
                 MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
-                        getSecondsSinceFileStart() + ":" + stats + ":result:" + result);
+                        getSecondsSinceFileStart() + ":" + stats + ":result:" + cycleResult);
                 if (counter == LIMIT) {
                     MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "ETB MC sequence done!");
                     return;
