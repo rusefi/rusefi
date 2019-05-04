@@ -19,8 +19,9 @@ public class ETBPane {
     private final JPanel content = new JPanel(new BorderLayout());
 
     public ETBPane() {
-        JPanel centerPanel = new JPanel(new GridLayout(2, 1));
+        JPanel centerPanel = new JPanel(new GridLayout(3, 1));
         centerPanel.add(GaugesGridElement.create(Sensor.PPS));
+        centerPanel.add(GaugesGridElement.create(Sensor.ETB_CONTROL_QUALITY));
         centerPanel.add(GaugesGridElement.create(Sensor.TPS));
 
         content.add(new CommandsPanel().getContent(), BorderLayout.WEST);

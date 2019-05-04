@@ -37,7 +37,7 @@ public class CommandsPanel {
 
         content.add(testParameters);
         content.add(spotsPane);
-//        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
+        content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
 
         content.add(AnyCommand.createArea(new Node(), ETBPane.SET_ETB + "10", false, false).getContent());
     }
