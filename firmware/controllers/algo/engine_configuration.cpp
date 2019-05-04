@@ -348,6 +348,7 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	
 	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
 	engineConfiguration->stepperDirectionPinMode = OM_DEFAULT;
