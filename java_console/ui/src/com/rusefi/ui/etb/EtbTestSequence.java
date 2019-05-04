@@ -53,36 +53,21 @@ public class EtbTestSequence {
                 }
             };
 
-            Runnable onEachStep = new Runnable() {
-                @Override
-                public void run() {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            String state = stepCounter.incrementAndGet() + "/" + totalSteps.get();
-                            button.setText("Running " + state);
-                            double value = StandardTestSequence.metric.getStandardDeviation();
-                            result.setText(String.format(state + " Result: %.3f", value));
-                        }
-                    });
-                }
-            };
+            Runnable onEachStep = () -> SwingUtilities.invokeLater(() -> {
+                String state = stepCounter.incrementAndGet() + "/" + totalSteps.get();
+                button.setText("Running " + state);
+                double value = StandardTestSequence.metric.getStandardDeviation();
+                result.setText(String.format(state + " Result: %.3f", value));
+            });
 
             TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, /*position*/onEachStep, TestSequenceStep.Condition.YES);
             TestSequenceStep result = StandardTestSequence.addSequence(firstStep, onEachStep, TestSequenceStep.Condition.YES);
             result.addNext(lastStep);
 
-            totalSteps.set(count(firstStep));
+            totalSteps.set(TestSequenceStep.count(firstStep));
 
             firstStep.execute(executor);
         });
-    }
-
-    private static int count(TestSequenceStep step) {
-        int result = 0;
-        while ((step = step.getNext()) != null)
-            result++;
-        return result;
     }
 
     public JButton getButton() {
