@@ -23,6 +23,7 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/pwm_generator.cpp \
 	$(PROJECT_DIR)/hw_layer/trigger_input.cpp \
 	$(PROJECT_DIR)/hw_layer/hip9011.cpp \
+	$(PROJECT_DIR)/hw_layer/mc33816.cpp \
 	$(PROJECT_DIR)/hw_layer/hip9011_logic.cpp \
 	$(PROJECT_DIR)/hw_layer/vehicle_speed.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \

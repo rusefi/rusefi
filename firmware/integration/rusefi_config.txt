@@ -976,7 +976,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	brain_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
-	uint8_t[1] unusedTest55;
+	brain_pin_e mc33816_cs;
 
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
@@ -1026,7 +1026,8 @@ tChargeMode_e tChargeMode;
 	float tpsAccelFractionDivisor;+A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef",        1,     0,  0,    100,  2
 
 	spi_device_e tle8888spiDevice;
-	uint8_t[3] unusedSpiPadding6;
+	spi_device_e mc33816spiDevice;
+	uint8_t[2] unusedSpiPadding6;
 	spi_device_e tle6240spiDevice;
 	uint8_t[3] unusedSpiPadding7;
 	spi_device_e mc33972spiDevice;

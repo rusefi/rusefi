@@ -49,6 +49,9 @@
 #include "engine_configuration.h"
 #include "aux_pid.h"
 
+#if EFI_MC33816
+#include "mc33816.h"
+#endif /* EFI_MC33816 */
 
 #if EFI_SPEED_DENSITY
 #include "map_averaging.h"
@@ -480,6 +483,10 @@ void initHardware(Logging *l) {
 
 	// output pins potentially depend on 'initSmartGpio'
 	initOutputPins();
+
+#if EFI_MC33816
+	initMc33816();
+#endif /* EFI_MC33816 */
 
 #if EFI_MAX_31855
 	initMax31855(sharedLogger, CONFIGB(max31855spiDevice), CONFIGB(max31855_cs));
