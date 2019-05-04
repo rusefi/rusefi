@@ -7,18 +7,23 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public abstract class TestSequenceStep {
-    protected final long duration;
+    /**
+     * First we execute {{@link #doJob()}} then we schedule next step for after 'nextStepDelay' time passes.
+     */
+    protected final long nextStepDelay;
+    private final EtbTarget.Condition condition;
     private TestSequenceStep next;
 
-    public TestSequenceStep(long duration) {
-        this.duration = duration;
+    public TestSequenceStep(long nextStepDelay, EtbTarget.Condition condition) {
+        this.nextStepDelay = nextStepDelay;
+        this.condition = condition;
     }
 
     public void execute(ScheduledExecutorService executor) {
         doJob();
-        if (next != null) {
-            FileLog.MAIN.logLine("Scheduling " + next + " with " + duration + "ms delay");
-            executor.schedule(() -> next.execute(executor), duration, TimeUnit.MILLISECONDS);
+        if (next != null && condition.shouldContinue()) {
+            FileLog.MAIN.logLine("Scheduling " + next + " with " + nextStepDelay + "ms delay");
+            executor.schedule(() -> next.execute(executor), nextStepDelay, TimeUnit.MILLISECONDS);
         } else {
             MessagesCentral.getInstance().postMessage(TestSequenceStep.class, "ETB test sequence done!");
         }
@@ -26,8 +31,8 @@ public abstract class TestSequenceStep {
 
     protected abstract void doJob();
 
-    public TestSequenceStep addNext(long duration, double position, Runnable onEachStep) {
-        return addNext(new EtbTarget(duration, position, onEachStep));
+    public TestSequenceStep addNext(long duration, double position, Runnable onEachStep, Condition condition) {
+        return addNext(new EtbTarget(duration, position, onEachStep, condition));
     }
 
     public TestSequenceStep addNext(TestSequenceStep step) {
@@ -37,5 +42,11 @@ public abstract class TestSequenceStep {
 
     public TestSequenceStep getNext() {
         return next;
+    }
+
+    public interface Condition {
+        boolean shouldContinue();
+
+        Condition YES = () -> true;
     }
 }

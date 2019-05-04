@@ -43,13 +43,13 @@ public class EtbTestSequence {
             AtomicInteger stepCounter = new AtomicInteger();
             AtomicInteger totalSteps = new AtomicInteger();
 
-            TestSequenceStep lastStep = new TestSequenceStep(SECOND) {
+            TestSequenceStep lastStep = new TestSequenceStep(SECOND, EtbTarget.Condition.YES) {
                 @Override
                 protected void doJob() {
                     button.setEnabled(true);
                     button.setText(BUTTON_TEXT);
-                    double value = StandardTestSequence.metric.getStandardDeviation();
-                    result.setText(String.format("Final Result: %.3f", value));
+                    double finalValue = StandardTestSequence.metric.getStandardDeviation();
+                    result.setText(String.format("Final Result: %.3f", finalValue));
                 }
             };
 
@@ -68,8 +68,8 @@ public class EtbTestSequence {
                 }
             };
 
-            TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, /*position*/onEachStep);
-            TestSequenceStep result = StandardTestSequence.addSequence(firstStep, onEachStep);
+            TestSequenceStep firstStep = new EtbTarget(10 * SECOND, 4, /*position*/onEachStep, TestSequenceStep.Condition.YES);
+            TestSequenceStep result = StandardTestSequence.addSequence(firstStep, onEachStep, TestSequenceStep.Condition.YES);
             result.addNext(lastStep);
 
             totalSteps.set(count(firstStep));
