@@ -1,6 +1,10 @@
 /**
  * @file	loggingcentral.cpp
  *
+ *
+ * As of May 2019 we have given up on text-based 'push' terminal mode. At the moment binary protocol
+ * is the consumen of this logging buffer.
+ *
  * @date Mar 8, 2015
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
@@ -37,8 +41,8 @@ static uint32_t accumulatedSize;
 static char * outputBuffer;
 
 /**
- * This method appends the content of this thread-local logger into the global buffer
- * of logging content
+ * This method appends the content of specified thread-local logger into the global buffer
+ * of logging content.
  */
 void scheduleLogging(Logging *logging) {
 #if EFI_TEXT_LOGGING
@@ -68,7 +72,10 @@ void scheduleLogging(Logging *logging) {
 }
 
 /**
+ * Actual communication layer invokes this method when it's ready to send some data out
+ *
  * this method should always be invoked from the same thread!
+ * @return pointer to the buffer which should be print to console
  */
 char * swapOutputBuffers(int *actualOutputBufferSize) {
 #if EFI_ENABLE_ASSERTS
@@ -117,12 +124,16 @@ void initLoggingCentral(void) {
 }
 
 /**
+ * rusEfi business logic invokes this method in order to eventually print stuff to rusEfi console
+ *
  * this whole method is executed under syslock so that we can have multiple threads use the same shared buffer
  * in order to reduce memory usage
+ *
+ * this is really 'global lock + printf + scheduleLogging + unlock' a bit more clear
  */
 void scheduleMsg(Logging *logging, const char *fmt, ...) {
 	for (unsigned int i = 0;i<strlen(fmt);i++) {
-		// todo: open question which layer would not handle CR/LF propertly?
+		// todo: open question which layer would not handle CR/LF properly?
 		efiAssertVoid(OBD_PCM_Processor_Fault, fmt[i] != '\n', "No CRLF please");
 	}
 #if EFI_TEXT_LOGGING
