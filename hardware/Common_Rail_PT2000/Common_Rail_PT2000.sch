@@ -37,7 +37,7 @@ $Descr B 11000 17000 portrait
 encoding utf-8
 Sheet 1 1
 Title "Common Rail PT2000"
-Date "2019-02-17"
+Date "2019-02-21"
 Rev "R0.1"
 Comp "rusEFI.com"
 Comment1 ""
@@ -1888,9 +1888,9 @@ F 6 "," H 11650 6425 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   1    0   
 $EndComp
 Text Notes 9025 6125 2    40   ~ 0
-INJ_1\n
-Text Notes 7675 6125 2    40   ~ 0
 INJ_2\n
+Text Notes 7675 6125 2    40   ~ 0
+INJ_1\n
 Text Notes 7525 9725 0    40   ~ 0
 INJ_3\n
 Text Notes 8875 9725 0    40   ~ 0
@@ -2592,11 +2592,11 @@ INJ_B2_HIGH
 Text Label 8500 5950 2    60   ~ 0
 INJ_B1_HIGH
 Text Label 6350 6550 0    60   ~ 0
-INJ2_LOW
-Text Label 6350 7100 0    60   ~ 0
 INJ1_LOW
+Text Label 6350 7100 0    60   ~ 0
+INJ2_LOW
 Text Label 6350 7300 0    60   ~ 0
-G_L_INJ1
+G_L_INJ2
 Text Label 6350 5150 0    60   ~ 0
 G_HB1_BAT
 Text Label 6350 5750 0    60   ~ 0
@@ -2636,7 +2636,7 @@ INJ3_LOW
 Text Label 6350 10700 0    60   ~ 0
 INJ4_LOW
 Text Label 6350 6750 0    60   ~ 0
-G_L_INJ2
+G_L_INJ1
 Text Label 6350 10350 0    60   ~ 0
 G_L_INJ3
 Text Label 3750 14850 2    60   ~ 0
@@ -3147,9 +3147,9 @@ F 6 "," H 4150 13625 60  0001 C CNN "VEND2,VEND2#"
 	0    -1   1    0   
 $EndComp
 Text Notes 7525 13325 0    40   ~ 0
-INJ_3\n
+INJ_5\n
 Text Notes 8875 13325 0    40   ~ 0
-INJ_4
+INJ_6
 Wire Notes Line
 	7400 13250 7700 13250
 Wire Notes Line
@@ -3353,13 +3353,13 @@ Wire Wire Line
 	7500 13250 7500 13150
 Connection ~ 7500 13150
 Text Label 7950 13150 0    60   ~ 0
-INJ_B6_HIGH
+INJ_B3_HIGH
 Text Label 7975 12625 0    60   ~ 0
 BANK3_BAT
 Text Label 6350 12350 0    60   ~ 0
-G_HB5_BAT
+G_HB3_BAT
 Text Label 6350 12950 0    60   ~ 0
-G_HB6_BST
+G_HB3_BST
 Text Label 6350 14500 0    60   ~ 0
 G_L_INJ6
 Text Label 6350 14850 0    60   ~ 0
