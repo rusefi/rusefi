@@ -8,6 +8,6 @@
 #ifndef HW_LAYER_MC33816_H_
 #define HW_LAYER_MC33816_H_
 
-void initMc33816();
+void initMc33816(void);
 
 #endif /* HW_LAYER_MC33816_H_ */
