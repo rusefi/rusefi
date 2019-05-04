@@ -33,6 +33,8 @@
 #undef EFI_HIP_9011
 #define EFI_HIP_9011 TRUE
 
+#define EFI_MC33816 FALSE
+
 #undef EFI_CJ125
 #define EFI_CJ125 TRUE
 

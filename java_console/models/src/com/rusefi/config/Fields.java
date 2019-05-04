@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 22:11:03 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri May 03 21:08:34 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -916,6 +916,8 @@ public class Fields {
 	public static final int max31855spiDevice_offset_hex = 324;
 	public static final int maxKnockSubDeg_offset = 552;
 	public static final int maxKnockSubDeg_offset_hex = 228;
+	public static final int mc33816_cs_offset = 3131;
+	public static final int mc33816spiDevice_offset = 4025;
 	public static final int mc33972_cs_offset = 678;
 	public static final int mc33972_csPinMode_offset = 679;
 	public static final int mc33972spiDevice_offset = 4032;
@@ -1145,13 +1147,12 @@ public class Fields {
 	public static final int unusedSpiPadding3_offset = 2285;
 	public static final int unusedSpiPadding4_offset = 2617;
 	public static final int unusedSpiPadding5_offset = 2737;
-	public static final int unusedSpiPadding6_offset = 4025;
+	public static final int unusedSpiPadding6_offset = 4026;
 	public static final int unusedSpiPadding7_offset = 4029;
 	public static final int unusedSpiPadding8_offset = 4033;
 	public static final int unusedSpiPadding9_offset = 676;
 	public static final int unusedt_offset = 583;
 	public static final int unusedt_offset_hex = 247;
-	public static final int unusedTest55_offset = 3131;
 	public static final int unuseduartPadding1_offset = 809;
 	public static final int unuseduartPadding1_offset_hex = 329;
 	public static final int unuseSpi3_offset = 2630;
@@ -1926,7 +1927,7 @@ public class Fields {
 	public static final Field STEPPERENABLEPIN = Field.create("STEPPERENABLEPIN", 3128, FieldType.INT8, brain_pin_e);
 	public static final Field TLE8888_CS = Field.create("TLE8888_CS", 3129, FieldType.INT8, brain_pin_e);
 	public static final Field TLE8888_CSPINMODE = Field.create("TLE8888_CSPINMODE", 3130, FieldType.INT8, pin_output_mode_e);
-	public static final Field UNUSEDTEST55 = Field.create("UNUSEDTEST55", 3131, FieldType.INT8);
+	public static final Field MC33816_CS = Field.create("MC33816_CS", 3131, FieldType.INT8, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS1 = Field.create("SERVOOUTPUTPINS1", 3164, FieldType.INT8, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS2 = Field.create("SERVOOUTPUTPINS2", 3165, FieldType.INT8, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS3 = Field.create("SERVOOUTPUTPINS3", 3166, FieldType.INT8, brain_pin_e);
@@ -1970,6 +1971,7 @@ public class Fields {
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 4018, FieldType.INT16);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 4020, FieldType.FLOAT);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4024, FieldType.INT8);
+	public static final Field MC33816SPIDEVICE = Field.create("MC33816SPIDEVICE", 4025, FieldType.INT8);
 	public static final Field TLE6240SPIDEVICE = Field.create("TLE6240SPIDEVICE", 4028, FieldType.INT8);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4032, FieldType.INT8);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);

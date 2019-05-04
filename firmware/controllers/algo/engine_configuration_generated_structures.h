@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 22:11:03 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri May 03 21:08:34 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2300,7 +2300,7 @@ typedef struct {
 	/**
 	 * offset 3131
 	 */
-	uint8_t unusedTest55;
+	brain_pin_e mc33816_cs;
 	/**
 	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	 * offset 3132
@@ -2456,7 +2456,11 @@ typedef struct {
 	/**
 	 * offset 4025
 	 */
-	uint8_t unusedSpiPadding6[3];
+	spi_device_e mc33816spiDevice;
+	/**
+	 * offset 4026
+	 */
+	uint8_t unusedSpiPadding6[2];
 	/**
 	 * offset 4028
 	 */
@@ -2723,4 +2727,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 02 22:11:03 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri May 03 21:08:34 EDT 2019
