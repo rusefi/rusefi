@@ -2,7 +2,7 @@
  * @file max31855.h
  *
  * @date Sep 17, 2014
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef MAX31855_H_

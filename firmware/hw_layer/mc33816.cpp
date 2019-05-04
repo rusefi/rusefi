@@ -15,6 +15,8 @@
 #include "engine_configuration.h"
 #include "efi_gpio.h"
 #include "hardware.h"
+#include "mc33816_data.h"
+#include "mpu_util.h"
 
 EXTERN_CONFIG;
 
@@ -24,7 +26,9 @@ static SPIConfig spiCfg = { .circular = false,
 		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
-		.cr1 = SPI_CR1_MSTR |
+		.cr1 =
+				SPI_CR1_16BIT_MODE |
+				SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
 		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2,
 		.cr2 = 0};
@@ -36,10 +40,15 @@ static void showStats() {
 
 }
 
-static void sentByte(int param) {
+static void send_16bit_SPI(short param) {
 	spiSelect(driver);
+	// we are in 16 bit mode so '1' means 16 bits word hopefully?
 	spiSend(driver, 1, &param);
 	spiUnselect(driver);
+}
+
+static void sentWord(int word) {
+	send_16bit_SPI(word);
 }
 
 void initMc33816() {
@@ -72,7 +81,19 @@ void initMc33816() {
 
 	addConsoleAction("mc33_stats", showStats);
 
-	addConsoleActionI("mc33_send", sentByte);
+	addConsoleActionI("mc33_send", sentWord);
+
+	int size = 105;
+
+	unsigned short * RAM_ptr = MC33816_code_RAM1;
+
+    for (int k = 0; k < size; k++)            // downloads RAM
+    {
+        short data = *RAM_ptr;                  // retrieves data to be sent
+        send_16bit_SPI(data);             // sends data
+        RAM_ptr++;
+    }
+
 
 }
 
