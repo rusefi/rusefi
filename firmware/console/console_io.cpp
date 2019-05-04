@@ -60,6 +60,7 @@ void onDataArrived(void) {
  * @retval TRUE         the channel was reset or CTRL-D pressed.
  * @retval FALSE        operation successful.
  */
+/* let's keep this dead code for a bit
 static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size) {
 	char *p = line;
 
@@ -89,9 +90,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 #endif
 
 #if EFI_UART_ECHO_TEST_MODE
-		/**
-		 * That's test code - let's test connectivity
-		 */
+		// That's test code - let's test connectivity
 		consolePutChar((uint8_t) c);
 		continue;
 #endif
@@ -129,7 +128,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		}
 	}
 }
-
+*/
 CommandHandler console_line_callback;
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
