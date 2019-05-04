@@ -30,13 +30,8 @@
 #undef EFI_MCP_3208
 #define EFI_MCP_3208 FALSE
 
-#undef EFI_HIP_9011
-#define EFI_HIP_9011 TRUE
-
+#undef EFI_MC33816
 #define EFI_MC33816 FALSE
-
-#undef EFI_CJ125
-#define EFI_CJ125 TRUE
 
 #undef EFI_DENSO_ADC
 #define EFI_DENSO_ADC FALSE
