@@ -13,22 +13,36 @@
 #include "engine.h"
 
 CdmState::CdmState() {
-	currentRevolution = 0;
+	accumilatingAtRevolution = 0;
 	currentValue = 0;
-	accumulator = 0;
+	accumulatingCurrentValue = 0;
 }
 
-int CdmState::getValue() {
-	return currentValue;
+int CdmState::getValue(int currentRevolution) {
+	applyAccumulatedData(currentRevolution);
+	if (currentRevolution == currentValueAtIndex + 1) {
+		// returning total result of previous engine cycle
+		return currentValue;
+	}
+	// we are here if previous engine cycle had no knock events
+	return 0;
+}
+
+void CdmState::applyAccumulatedData(int currentRevolution) {
+	if (currentRevolution > accumilatingAtRevolution) {
+		currentValue = accumulatingCurrentValue;
+		currentValueAtIndex = accumilatingAtRevolution;
+	}
 }
 
 void CdmState::onNewSignal(int currentRevolution) {
-	if (this->currentRevolution == currentRevolution) {
-		accumulator++;
+	if (this->accumilatingAtRevolution == currentRevolution) {
+		accumulatingCurrentValue++;
 	} else {
-		this->currentRevolution = currentRevolution;
-		currentValue = accumulator;
-		accumulator = 1;
+		applyAccumulatedData(currentRevolution);
+		// start new accumulation
+		accumilatingAtRevolution = currentRevolution;
+		accumulatingCurrentValue = 1;
 	}
 }
 
@@ -40,6 +54,10 @@ void CdmState::onNewSignal(int currentRevolution) {
 EXTERN_ENGINE;
 
 static CdmState instance;
+
+int getCurrentCdmValue(int currentRevolution) {
+	return instance.getValue(currentRevolution);
+}
 
 #if EFI_TUNER_STUDIO
 void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
@@ -56,8 +74,7 @@ static void extIonCallback(void *arg) {
 }
 
 void cdmIonInit(void) {
-	// todo: allow 'GPIOA_0' once we migrate to new mandatory configuration
-	if (CONFIGB(cdmInputPin) == GPIOA_0 || CONFIGB(cdmInputPin) == GPIO_UNASSIGNED) {
+	if (CONFIGB(cdmInputPin) == GPIO_UNASSIGNED) {
 		return;
 	}
 	int pin = (int)CONFIGB(cdmInputPin);
