@@ -44,8 +44,10 @@ public class EtbMonteCarloSequence {
                 public void run() {
                     CommandQueue.getInstance().write(CANCEL_DIRECT_DRIVE_COMMAND);
                     sleep(3 * SECOND);
-                    // 3000 data points at 10Hz should be 300 seconds worth of data
-                    StandardTestSequence.metric.start(/* buffer size: */3000, /*period, ms: */ 100);
+                    int durationSeconds = 300;
+                    int frequencyHz = 100;
+                    // 30000 data points at 100Hz should be 300 seconds worth of data
+                    StandardTestSequence.metric.start(/* buffer size: */durationSeconds * frequencyHz, /*period, ms: */ 1000 / frequencyHz);
 
                     // start first cycle. At the end of the run it would decide if it wants to start from beginning again
                     executor.execute(() -> runRandomCycle());
