@@ -390,10 +390,16 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7; // PA7
 
-	engineConfiguration->etb.pFactor = 1.07;
-	engineConfiguration->etb.iFactor = 	0.18;
-	engineConfiguration->etb.dFactor = 0.24;
-	engineConfiguration->etb.offset = 80;
+//	engineConfiguration->etb.pFactor = 1.07;
+//	engineConfiguration->etb.iFactor = 	0.18;
+//	engineConfiguration->etb.dFactor = 0.24;
+//	engineConfiguration->etb.offset = 80;
+
+	engineConfiguration->etb.pFactor = 22;
+	engineConfiguration->etb.iFactor = 	0;
+	engineConfiguration->etb.dFactor = 0;
+	engineConfiguration->etb.offset = 0;
+
 #if EFI_PROD_CODE
 	engineConfiguration->etb.periodMs = (1000 / DEFAULT_ETB_LOOP_FREQUENCY);
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
