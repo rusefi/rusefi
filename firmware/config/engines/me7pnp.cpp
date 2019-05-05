@@ -130,7 +130,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_FSIO
 	setFsio (12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio (14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_ENGINE_PARAMETER_SUFFIX);
+	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	engineConfiguration->auxPidFrequency[3] = 25;
 	CONFIG(etb1_use_two_wires) = true;
