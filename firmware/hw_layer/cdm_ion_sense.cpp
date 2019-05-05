@@ -1,6 +1,8 @@
 /*
  * @file cdm_ion_sense.cpp
  *
+ * Saab Ion Sensing Module integration
+ *
  * See https://github.com/rusefi/rusefi_documentation/tree/master/misc/Saab_Trionic_8_Combustion%20Detection%20Module_on_Mazda_Miata_running_rusEfi
  *
  *  Created on: Dec 31, 2018
@@ -30,24 +32,26 @@ void CdmState::onNewSignal(int currentRevolution) {
 	}
 }
 
+// above logic compiles unconditionally so that unit tests are happy, but without an instance linker would have nothing to link
 #if EFI_CDM_INTEGRATION
+
 #include "digital_input_exti.h"
 
 EXTERN_ENGINE;
 
+static CdmState instance;
+
 #if EFI_TUNER_STUDIO
 void ionPostState(TunerStudioOutputChannels *tsOutputChannels) {
-
+	tsOutputChannels->debugIntField1 = instance.totalCdmEvents;
 }
-#endif
-
-static CdmState instance;
+#endif /* EFI_TUNER_STUDIO */
 
 static void extIonCallback(void *arg) {
         UNUSED(arg);
+        instance.totalCdmEvents++;
 
         int currentRevolution = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
-
         instance.onNewSignal(currentRevolution);
 }
 

@@ -855,7 +855,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		}
 		break;
 	case DBG_ION:
-		//ionPostState(tsOutputChannels);
+#if EFI_CDM_INTEGRATION
+		ionPostState(tsOutputChannels);
+#endif /* EFI_CDM_INTEGRATION */
 		break;
 	default:
 		;

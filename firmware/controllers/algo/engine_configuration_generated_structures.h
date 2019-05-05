@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 05 11:03:35 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 05 17:20:47 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -905,6 +905,7 @@ typedef struct {
 	brain_pin_e spi3sckPin;
 	/**
 	 * Saab Combustion Detection Module knock signal input pin
+	 * also known as Saab Ion Sensing Module
 	 * offset 337
 	 */
 	brain_pin_e cdmInputPin;
@@ -1314,7 +1315,7 @@ typedef struct {
 	 */
 	int HD44780height;
 	/**
-	 * First TPS, first channel. See aslo pedalPositionAdcChannel
+	 * First TPS, single channel so far. See aslo pedalPositionAdcChannel
 	 * offset 512
 	 */
 	adc_channel_e tps1_1AdcChannel;
@@ -1327,7 +1328,7 @@ typedef struct {
 	 */
 	adc_channel_e fuelLevelSensor;
 	/**
-	 * Second throttle body position sensor
+	 * Second throttle body position sensor, single channel so far
 	 * offset 515
 	 */
 	adc_channel_e tps2_1AdcChannel;
@@ -2728,4 +2729,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 05 11:03:35 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 05 17:20:47 EDT 2019
