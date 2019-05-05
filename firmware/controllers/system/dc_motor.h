@@ -40,8 +40,8 @@ class TwoPinDcMotor : public DcMotor
 public:
     enum class ControlType
     {
-        TwoDirection,
-        TwoDirectionAndEnable,
+        PwmDirectionPins,
+        PwmEnablePin,
     };
 
 private:
