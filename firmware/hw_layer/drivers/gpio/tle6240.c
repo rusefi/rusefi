@@ -204,7 +204,8 @@ static int tle6240_chip_init(struct tle6240_priv *chip)
 	const struct tle6240_config *cfg = chip->cfg;
 
 	/* mark pins used */
-	ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+	ret = 0;
 	if (cfg->reset.port != NULL)
 		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
 	for (n = 0; n < TLE6240_DIRECT_OUTPUTS; n++)
@@ -293,7 +294,7 @@ static int tle6240_chip_init(struct tle6240_priv *chip)
 
 err_gpios:
 	/* unmark pins */
-	gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
+	//gpio_pin_markUnused(cfg->spi_config.ssport, cfg->spi_config.sspad);
 	if (cfg->reset.port != NULL)
 		gpio_pin_markUnused(cfg->reset.port, cfg->reset.pad);
 	for (n = 0; n < TLE6240_DIRECT_OUTPUTS; n++)
@@ -478,9 +479,9 @@ int tle6240_add(unsigned int index, const struct tle6240_config *cfg)
 		return -1;
 
 	/* check for valid cs.
-	 * DOTO: remove this check? CS can be driven by SPI */
-	if (cfg->spi_config.ssport == NULL)
-		return -1;
+	 * TODO: remove this check? CS can be driven by SPI */
+	//if (cfg->spi_config.ssport == NULL)
+	//	return -1;
 
 	chip = &chips[index];
 
