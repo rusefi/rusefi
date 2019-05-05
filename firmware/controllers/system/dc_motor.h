@@ -37,25 +37,31 @@ public:
  */
 class TwoPinDcMotor : public DcMotor
 {
+public:
+    enum class ControlType
+    {
+        TwoDirection,
+        TwoDirectionAndEnable,
+    };
+
 private:
-    SimplePwm* const m_pwm;
-    OutputPin* const m_dir1;
-    OutputPin* const m_dir2;
-    float value = 0;
-    bool isPositiveOrZero = false;
+    SimplePwm* const m_enable;
+    SimplePwm* const m_dir1;
+    SimplePwm* const m_dir2;
+    float m_value = 0;
+
+    ControlType m_type;
 public:
     /**
-     * @param pwm SimplePwm driver for enable pin, for PWM speed control.
+     * @param enable SimplePwm driver for enable pin, for PWM speed control.
      * @param dir1 Enable 1 or direction 1 pin.  Gets set high to rotate forward.
      * @param dir2 Enable 2 or direction 2 pin.  Gets set high to rotate backward.
      */
-    TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2);
+    TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2);
 
-    bool useTwoWires = false;
-    OutputPin* twoWireModeControl = NULL;
     virtual bool Set(float duty) override;
     float Get();
-    void BrakeGnd();
-    void BrakeVcc();
     bool isOpenDirection();
+
+    void SetType(ControlType type) { m_type = type; }
 };

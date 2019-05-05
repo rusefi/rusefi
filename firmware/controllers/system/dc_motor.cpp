@@ -8,29 +8,19 @@
 
 #include "dc_motor.h"
 
-TwoPinDcMotor::TwoPinDcMotor(SimplePwm* pwm, OutputPin* dir1, OutputPin* dir2)
-    : m_pwm(pwm)
+TwoPinDcMotor::TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2)
+    : m_enable(enable)
     , m_dir1(dir1)
     , m_dir2(dir2)
 {
 }
 
 bool TwoPinDcMotor::isOpenDirection() {
-	return isPositiveOrZero;
+	return m_value >= 0;
 }
 
 float TwoPinDcMotor::Get() {
-	return value;
-}
-
-void TwoPinDcMotor::BrakeGnd() {
-    m_dir1->setValue(false);
-    m_dir2->setValue(false);
-}
-
-void TwoPinDcMotor::BrakeVcc() {
-    m_dir1->setValue(true);
-    m_dir2->setValue(true);
+	return m_value;
 }
 
 /**
@@ -38,17 +28,15 @@ void TwoPinDcMotor::BrakeVcc() {
  */
 bool TwoPinDcMotor::Set(float duty)
 {
-	this->value = duty;
+	m_value = duty;
 
-    if(duty < 0)
+    bool isPositive = duty > 0;
+
+    if(!isPositive)
     {
-    	isPositiveOrZero = false;
         duty = -duty;
     }
-    else
-    {
-    	isPositiveOrZero = true;
-    }
+
     // below here 'duty' is a not negative
 
     // Clamp to 100%
@@ -62,23 +50,15 @@ bool TwoPinDcMotor::Set(float duty)
         duty = 0.0f;
     }
 
-    if(duty < 0.01f)
-    {
-    	BrakeGnd();
-    }
-    else
-    {
-    	if (isPositiveOrZero) {
-    		twoWireModeControl = m_dir1;
-    	} else {
-    		twoWireModeControl = m_dir2;
-    	}
+    // If we're in two pin mode, force 100%, else use this pin to PWM
+    float enableDuty = m_type == ControlType::TwoDirection ? 1 : duty;
 
-        m_dir1->setValue(isPositiveOrZero);
-        m_dir2->setValue(!isPositiveOrZero);
-    }
+    // If we're in dir + en mode, force 100%, else use the dir pins for PMW
+    float dirDuty = m_type == ControlType::TwoDirection ? duty : 1;
 
-    m_pwm->setSimplePwmDutyCycle(duty);
+    m_enable->setSimplePwmDutyCycle(enableDuty);
+    m_dir1->setSimplePwmDutyCycle(isPositive ? dirDuty : 0);
+    m_dir2->setSimplePwmDutyCycle(isPositive ? 0 : dirDuty);
 
     // This motor has no fault detection, so always return false (indicate success).
     return false;

@@ -100,48 +100,62 @@ static LoggingWithStorage logger("ETB");
 
 EXTERN_ENGINE;
 
-class EtbControl;
-
-static void applyEtbPinState(int stateIndex, EtbControl *etb) /* pwm_gen_callback */;
-
 class EtbControl {
-public:
-	EtbControl() : etbPwmUp("etbUp"), dcMotor(&etbPwmUp, &outputDirectionOpen, &outputDirectionClose) {}
-	OutputPin outputDirectionOpen;
-	OutputPin outputDirectionClose;
-	OutputPin etbOutput;
+private:
+	OutputPin m_pinEnable;
+	OutputPin m_pinDir1;
+	OutputPin m_pinDir2;
+
+	SimplePwm m_pwmEnable;
+	SimplePwm m_pwmDir1;
+	SimplePwm m_pwmDir2;
+
 	SimplePwm etbPwmUp;
+
+public:
+	EtbControl() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2) {}
+
 	TwoPinDcMotor dcMotor;
-	void start(bool useTwoWires, brain_pin_e controlPin,
-			brain_pin_e directionPin1,
-			brain_pin_e directionPin2) {
-		etbPwmUp.arg = this;
-		dcMotor.useTwoWires = useTwoWires;
-		if (!dcMotor.useTwoWires) {
-			// this line used for PWM in case of three wire mode
-			etbOutput.initPin("etb", controlPin);
-		}
+	
+	void start(bool useTwoWires, 
+			brain_pin_e pinEnable,
+			brain_pin_e pinDir1,
+			brain_pin_e pinDir2) {
+		dcMotor.SetType(useTwoWires ? TwoPinDcMotor::ControlType::TwoDirection : TwoPinDcMotor::ControlType::TwoDirectionAndEnable);
+
+		m_pinEnable.initPin("ETB Enable", pinEnable);
+		m_pinDir1.initPin("ETB Dir 1", pinDir1);
+		m_pinDir2.initPin("ETB Dir 2", pinDir2);
+
+		// Clamp to >100hz
 		int freq = maxI(100, engineConfiguration->etbFreq);
-		startSimplePwm(&etbPwmUp, "etb1",
+
+		startSimplePwm(&m_pwmEnable, "ETB Enable",
 				&engine->executor,
-				&etbOutput,
+				&m_pinEnable,
 				freq,
-				0.80,
-				(pwm_gen_callback*)applyEtbPinState);
-		outputDirectionOpen.initPin("etb dir open", directionPin1);
-		outputDirectionClose.initPin("etb dir close", directionPin2);
+				0,
+				(pwm_gen_callback*)applyPinState);
+
+		startSimplePwm(&m_pwmDir1, "ETB Dir 1",
+				&engine->executor,
+				&m_pinDir1,
+				freq,
+				0,
+				(pwm_gen_callback*)applyPinState);
+
+		startSimplePwm(&m_pwmDir2, "ETB Dir 2",
+				&engine->executor,
+				&m_pinDir2,
+				freq,
+				0,
+				(pwm_gen_callback*)applyPinState);
 	}
-
-
 };
 
 static EtbControl etb1;
 
 static float directPwmValue = NAN;
-/*
-CCM_OPTIONAL static SimplePwm etbPwmDown("etbDown");
-*/
-
 
 extern percent_t mockPedalPosition;
 
@@ -149,15 +163,8 @@ static Pid pid(&engineConfiguration->etb);
 
 static percent_t currentEtbDuty;
 
-//static bool wasEtbBraking = false;
-
-// looks like my H-bridge does not like 100% duty cycle and it just hangs up?
-// so we use 98% to indicate that things are alive and never use PM_FULL of PWM generator
-//#define ETB_DUTY_LIMIT FULL_PWM_THRESHOLD
-#define ETB_DUTY_LIMIT 0.4
+#define ETB_DUTY_LIMIT 0.9
 #define PERCENT_TO_DUTY(X) (maxF(minF((X / 100.0), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
-
-//#define PERCENT_TO_DUTY(X) ((X) / 100.0)
 
 class EtbController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
@@ -228,28 +235,11 @@ private:
 		pid.iTermMin = engineConfiguration->etb_iTermMin;
 		pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-/*
-		if (absF(actualThrottlePosition - targetPosition) < 0.5) {
-			// we are pretty close to desired position, let's hold it
-			dcMotor.BrakeVcc();
-			scheduleMsg(&logger, "VCC braking %f %f", targetPosition, actualThrottlePosition);
-			return;
-		}
-*/
 		currentEtbDuty = feedForward +
 				pid.getOutput(targetPosition, actualThrottlePosition);
 
 		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
-/*
-		if (CONFIGB(etbDirectionPin2) != GPIO_UNASSIGNED) {
-			bool needEtbBraking = absF(targetPosition - actualThrottlePosition) < 3;
-			if (needEtbBraking != wasEtbBraking) {
-				scheduleMsg(&logger, "need ETB braking: %d", needEtbBraking);
-				wasEtbBraking = needEtbBraking;
-			}
-			outputDirectionClose.setValue(needEtbBraking);
-		}
-*/
+
 		if (engineConfiguration->isVerboseETB) {
 			pid.showPidStatus(&logger, "ETB");
 		}
@@ -308,16 +298,12 @@ void setEtbPFactor(float value) {
 }
 
 static void etbReset() {
-	// TODO: what is this about?
-	// I am experiencing some weird instability with my H-bridge with my Monte Carlo attempts
 	scheduleMsg(&logger, "etbReset");
-	for (int i = 0;i < 5;i++) {
-		// this is some crazy code to remind H-bridge that we are alive
-		etb1.dcMotor.BrakeGnd();
-		chThdSleepMilliseconds(10);
-	}
-	mockPedalPosition = MOCK_UNDEFINED;
+	
+	etb1.dcMotor.Set(0);
 	pid.reset();
+
+	mockPedalPosition = MOCK_UNDEFINED;
 }
 
 /**
@@ -451,20 +437,6 @@ void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void unregisterEtbPins() {
 
-}
-
-static void applyEtbPinState(int stateIndex, EtbControl *etb) /* pwm_gen_callback */ {
-	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	int value = etb->etbPwmUp.multiWave.getChannelState(0, stateIndex);
-	if (etb->dcMotor.useTwoWires) {
-		OutputPin *output = etb->dcMotor.twoWireModeControl;
-		if (output != NULL) {
-			output->setValue(value);
-		}
-	} else {
-		OutputPin *output = &etb->etbOutput;
-		output->setValue(value);
-	}
 }
 
 void initElectronicThrottle(void) {
