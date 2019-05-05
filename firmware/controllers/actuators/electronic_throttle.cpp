@@ -121,7 +121,7 @@ public:
 			brain_pin_e pinEnable,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2) {
-		dcMotor.SetType(useTwoWires ? TwoPinDcMotor::ControlType::TwoDirection : TwoPinDcMotor::ControlType::TwoDirectionAndEnable);
+		dcMotor.SetType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
 		m_pinEnable.initPin("ETB Enable", pinEnable);
 		m_pinDir1.initPin("ETB Dir 1", pinDir1);
