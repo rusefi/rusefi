@@ -403,10 +403,10 @@ log_format_e logFormat;
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 	
-	adc_channel_e tpsAdcChannel;See aslo pedalPositionAdcChannel
+	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See aslo pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;
 adc_channel_e fuelLevelSensor;
-	adc_channel_e tps2AdcChannel;Second throttle body position sensor
+	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
 
 	int overrideCrankingIgnition;
 	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
@@ -454,7 +454,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSee also tpsAdcChannel
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tpsAdcChannel
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 

@@ -38,7 +38,7 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setThermistorConfiguration(&engineConfiguration->iat, -10, 160310, 60, 7700, 120.00, 1180);
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3; // 15 is the old value
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // 15 is the old value
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0; // 1 is the old value
 //  engineConfiguration->map.channel = 1;
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;

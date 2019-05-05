@@ -194,7 +194,7 @@ void common079721_2351(engine_configuration_s *engineConfiguration, board_config
 	// Frankenstein analog input #11: adc
 	// Frankenstein analog input #12: adc
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 	engineConfiguration->clt.adcChannel = EFI_ADC_11;
 
 }
@@ -294,7 +294,7 @@ static void setMiata1994_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2; // PA2
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
@@ -381,7 +381,7 @@ void setMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->clt.adcChannel = EFI_ADC_11;
-	engineConfiguration->tpsAdcChannel = EFI_ADC_13;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;

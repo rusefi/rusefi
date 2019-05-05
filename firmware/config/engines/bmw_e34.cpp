@@ -86,7 +86,7 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vbattDividerCoeff = 5.33;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_15; // PC5
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;

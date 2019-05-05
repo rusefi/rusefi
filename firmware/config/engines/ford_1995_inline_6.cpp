@@ -69,7 +69,7 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// input channel 10 is PC3, that's ADC13
 	// input channel 12 is PC1, that's ADC11
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_4;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->iat.adcChannel = EFI_ADC_2;
 	engineConfiguration->clt.adcChannel = EFI_ADC_1;
 	engineConfiguration->afr.hwChannel = EFI_ADC_11;

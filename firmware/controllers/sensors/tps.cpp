@@ -105,7 +105,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * Return voltage on TPS AND channel
  * */
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("tps", engineConfiguration->tpsAdcChannel);
+	return getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel);
 }
 
 /*
@@ -119,11 +119,11 @@ int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return mockTps;
 	}
 #endif
-	if (engineConfiguration->tpsAdcChannel == EFI_ADC_NONE)
+	if (engineConfiguration->tps1_1AdcChannel == EFI_ADC_NONE)
 		return -1;
 #if EFI_PROD_CODE
 
-	return getAdcValue("tps10", engineConfiguration->tpsAdcChannel);
+	return getAdcValue("tps10", engineConfiguration->tps1_1AdcChannel);
 	//	return tpsFastAdc / 4;
 #else
 	return 0;
@@ -184,7 +184,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->tpsAdcChannel != EFI_ADC_NONE;
+	return engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE;
 }
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

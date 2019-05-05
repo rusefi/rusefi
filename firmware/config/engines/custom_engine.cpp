@@ -104,7 +104,7 @@ void setCustomEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * Frankenso analog #11 PC5 ADC15
 	 * Frankenso analog #12 PC4 ADC14 VBatt
 	 */
-	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2; // PA2
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
 
@@ -303,7 +303,7 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.maxValue = 200;
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_2; // PA2
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2; // PA2
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1
 
 	engineConfiguration->debugMode = DBG_ELECTRONIC_THROTTLE_PID;
@@ -387,7 +387,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3; // PA3
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7; // PA7
 
 	engineConfiguration->etb.pFactor = 1.07;

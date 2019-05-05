@@ -376,7 +376,7 @@ static void printAnalogInfo(void) {
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
-	printAnalogChannelInfo("TPS", engineConfiguration->tpsAdcChannel);
+	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	if (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) {
 		printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
@@ -579,7 +579,7 @@ void setMockAfrVoltage(float voltage) {
 }
 
 void setMockTpsVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->tpsAdcChannel, voltage);
+	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage);
 }
 
 void setMockMapVoltage(float voltage) {
