@@ -52,6 +52,10 @@ typedef unsigned int time_t;
 #define VALUE(x) VALUE_TO_STRING(x)
 #define VAR_NAME_VALUE(var) #var "="  VALUE(var)
 
+#define CORE_CLOCK STM32_SYSCLK
+//#pragma message(VAR_NAME_VALUE(CORE_CLOCK))
+
+
 /**
  * project-wide default thread stack size
  * See also PORT_INT_REQUIRED_STACK
