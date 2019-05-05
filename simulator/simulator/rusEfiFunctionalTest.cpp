@@ -168,5 +168,5 @@ void logMsg(const char *format, ...) {
 }
 
 BaseChannel * getConsoleChannel(void) {
-	return (BaseChannel *)EFI_CONSOLE_UART_DEVICE;
+	return (BaseChannel *)EFI_CONSOLE_SERIAL_DEVICE;
 }

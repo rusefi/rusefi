@@ -178,7 +178,7 @@ void initSmartGpio() {
 		ret = -1;
 	}
 	if (ret < 0)
-#endif /* (BOARD_TLE6240_COUNT > 0) */
+#endif /* (BOARD_TLE8888_COUNT > 0) */
 		/* whenever chip is disabled or error returned - occupy its gpio range */
 		gpiochip_use_gpio_base(TLE8888_OUTPUTS);
 
@@ -190,18 +190,30 @@ void initSmartGpio() {
 
 #if (BOARD_EXT_GPIOCHIPS > 0)
 void stopSmartCsPins() {
+#if (BOARD_TLE8888_COUNT > 0)
 	brain_pin_markUnused(activeConfiguration.tle8888_cs);
+#endif /* BOARD_TLE8888_COUNT */
+#if (BOARD_TLE6240_COUNT > 0)
 	brain_pin_markUnused(activeConfiguration.tle6240_cs);
+#endif /* BOARD_TLE6240_COUNT */
+#if (BOARD_MC33972_COUNT > 0)
 	brain_pin_markUnused(activeConfiguration.bc.mc33972_cs);
+#endif /* BOARD_MC33972_COUNT */
 }
 
 void startSmartCsPins() {
+#if (BOARD_TLE8888_COUNT > 0)
 	tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
 				&engineConfiguration->tle8888_csPinMode);
-	tle6240Cs.initPin("tle8888 CS", engineConfiguration->tle6240_cs,
+#endif /* BOARD_TLE8888_COUNT */
+#if (BOARD_TLE6240_COUNT > 0)
+	tle6240Cs.initPin("tle6240 CS", engineConfiguration->tle6240_cs,
 				&engineConfiguration->tle6240_csPinMode);
+#endif /* BOARD_TLE6240_COUNT */
+#if (BOARD_MC33972_COUNT > 0)
 	mc33972Cs.initPin("mc33972 CS", boardConfiguration->mc33972_cs,
 				&boardConfiguration->mc33972_csPinMode);
+#endif /* BOARD_MC33972_COUNT */
 }
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 

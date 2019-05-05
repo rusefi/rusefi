@@ -15,8 +15,8 @@
 /* debug console */
 #undef EFI_USE_UART_FOR_CONSOLE
 #define EFI_USE_UART_FOR_CONSOLE	TRUE
-#undef EFI_CONSOLE_UART_DEVICE
-#define EFI_CONSOLE_UART_DEVICE		(&SD1)
+#undef EFI_CONSOLE_SERIAL_DEVICE
+#define EFI_CONSOLE_SERIAL_DEVICE		(&SD1)
 
 /* TunerStudio binary protocol */
 /* do not use UART  device for console */
@@ -61,7 +61,7 @@
 #undef SERIAL_SPEED
 #define SERIAL_SPEED				115200
 
-#ifdef EFI_CONSOLE_UART_DEVICE
+#ifdef EFI_CONSOLE_SERIAL_DEVICE
 	#undef EFI_CONSOLE_TX_PORT
 	#define EFI_CONSOLE_TX_PORT 		GPIOA
 	#undef EFI_CONSOLE_TX_PIN
