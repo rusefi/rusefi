@@ -164,7 +164,6 @@ CSRC = $(STARTUPSRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
 	$(FATFSSRC) \
 	$(SYSTEMSRC) \
-	$(PROJECT_DIR)/hw_layer/flash.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
