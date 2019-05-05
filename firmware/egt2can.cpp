@@ -31,7 +31,7 @@ static msg_t Thread1(void *arg) {
 
 void runRusEfi(void) {
 
-#if defined(EFI_CONSOLE_UART_DEVICE)
+#if defined(EFI_CONSOLE_SERIAL_DEVICE)
   /*
    * Activates the serial driver 1 using the driver default configuration.
    * PA9 and PA10 are routed to USART1.

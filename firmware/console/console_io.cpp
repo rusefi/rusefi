@@ -74,7 +74,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		short c = (short) streamGet(chp);
 		onDataArrived();
 
-#if defined(EFI_CONSOLE_UART_DEVICE)
+#if defined(EFI_CONSOLE_SERIAL_DEVICE)
 
 			uint32_t flags;
 			chSysLock()
@@ -146,6 +146,10 @@ bool isUsbSerial(BaseChannel * channel) {
 }
 
 BaseChannel * getConsoleChannel(void) {
+#if defined(EFI_CONSOLE_SERIAL_DEVICE)
+	return (BaseChannel *) EFI_CONSOLE_SERIAL_DEVICE;
+#endif /* EFI_CONSOLE_SERIAL_DEVICE */
+
 #if defined(EFI_CONSOLE_UART_DEVICE)
 	return (BaseChannel *) EFI_CONSOLE_UART_DEVICE;
 #endif /* EFI_CONSOLE_UART_DEVICE */
@@ -203,13 +207,13 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
 
-#if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR)
+#if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
 		/*
 		 * Activates the serial
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC
 		 */
 		serialConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
-		sdStart(EFI_CONSOLE_UART_DEVICE, &serialConfig);
+		sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
 
 // cannot use pin repository here because pin repository prints to console
 		palSetPadMode(EFI_CONSOLE_RX_PORT, EFI_CONSOLE_RX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));

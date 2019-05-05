@@ -80,8 +80,8 @@
 #define EFI_UART_GPS FALSE
 
 // todo: start using consoleUartDevice? Not sure
-#undef EFI_CONSOLE_UART_DEVICE
-#define EFI_CONSOLE_UART_DEVICE (&SD3)
+#undef EFI_CONSOLE_SERIAL_DEVICE
+#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 
 // todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7
 #undef TS_UART_DMA_MODE
@@ -94,7 +94,7 @@
 
 // todo: add DMA-mode for Console?
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
-#undef EFI_CONSOLE_UART_DEVICE
+#undef EFI_CONSOLE_SERIAL_DEVICE
 #endif
 
 // todo: start using consoleSerialTxPin? Not sure
