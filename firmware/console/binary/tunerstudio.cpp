@@ -110,8 +110,6 @@ persistent_config_s configWorkingCopy;
 
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
-extern persistent_config_container_s persistentState;
-
 static efitimems_t previousWriteReportMs = 0;
 
 static ts_channel_s tsChannel;
@@ -199,7 +197,7 @@ char *getWorkingPageAddr(int pageIndex) {
 #if !defined(EFI_NO_CONFIG_WORKING_COPY)
 		return (char*) &configWorkingCopy.engineConfiguration;
 #else
-		return (char*) &engineConfiguration;
+		return (char*) engineConfiguration;
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 //	case 1:
 //		return (char*) &configWorkingCopy.ve2Table;
