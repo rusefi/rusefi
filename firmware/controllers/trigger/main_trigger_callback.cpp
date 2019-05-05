@@ -43,6 +43,7 @@
 #include "histogram.h"
 #include "fuel_math.h"
 #include "histogram.h"
+#include "cdm_ion_sense.h"
 #include "engine_controller.h"
 #include "efi_gpio.h"
 #if EFI_PROD_CODE
@@ -447,6 +448,13 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		return;
 	}
 	efiAssertVoid(CUSTOM_STACK_6629, getCurrentRemainingStack() > 128, "lowstck#2");
+
+#if EFI_CDM_INTEGRATION
+	if (trgEventIndex == 0 && CONFIGB(cdmInputPin) != GPIO_UNASSIGNED) {
+		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+		engine->knockLogic(cdmKnockValue);
+	}
+#endif /* EFI_CDM_INTEGRATION */
 
 	if (trgEventIndex >= ENGINE(engineCycleEventCount)) {
 		/**
