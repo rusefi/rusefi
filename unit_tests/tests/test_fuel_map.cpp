@@ -109,7 +109,7 @@ TEST(misc, testFuelMap) {
 
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor
-	ASSERT_EQ( 4,  getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER_SUFFIX)) << "getStartingFuel nan";
+	ASSERT_EQ( 6.0,  getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER_SUFFIX)) << "getStartingFuel nan";
 	assertEqualsM("getStartingFuel#1", 116, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEqualsM("getStartingFuel#2", 58.2120, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER_SUFFIX));
 	assertEqualsM("getStartingFuel#3", 60.00, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER_SUFFIX));
