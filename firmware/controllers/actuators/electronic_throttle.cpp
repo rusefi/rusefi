@@ -4,12 +4,10 @@
  *
  * todo: make this more universal if/when we get other hardware options
  *
+ * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30
  * Apr 2019 two-wire TLE7209 support added
- *
  * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30
- *
  * Jan 2019 actually driven around the block but still need some work.
- *
  * Jan 2017 status:
  * Electronic throttle body with it's spring is definitely not linear - both P and I factors of PID are required to get any results
  *  PID implementation tested on a bench only
