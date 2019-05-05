@@ -51,10 +51,10 @@ bool TwoPinDcMotor::Set(float duty)
     }
 
     // If we're in two pin mode, force 100%, else use this pin to PWM
-    float enableDuty = m_type == ControlType::TwoDirection ? 1 : duty;
+    float enableDuty = m_type == ControlType::PwmEnablePin ? duty : 1;
 
-    // If we're in dir + en mode, force 100%, else use the dir pins for PMW
-    float dirDuty = m_type == ControlType::TwoDirection ? duty : 1;
+    // Direction pins get 100% duty unless we're in PwmDirectionPins mode
+    float dirDuty = m_type == ControlType::PwmDirectionPins ? duty : 1;
 
     m_enable->setSimplePwmDutyCycle(enableDuty);
     m_dir1->setSimplePwmDutyCycle(isPositive ? dirDuty : 0);
