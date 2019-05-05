@@ -214,7 +214,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 630; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 115; // convert 12to10 bit (ADC/4)
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;

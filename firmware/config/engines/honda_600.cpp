@@ -103,7 +103,7 @@ void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * Frankenso analog #11 PC5 ADC15
 	 * Frankenso analog #12 PC4 ADC14 VBatt
 	 */
-	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
 

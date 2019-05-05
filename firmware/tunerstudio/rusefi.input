@@ -169,8 +169,8 @@ fileVersion = { 20171101 }
       engineLoad      = scalar,	 F32,     24,	    "%",            1,       0.0 ; Blend of MAP and TPS, depends on algorithm
       VBatt	          = scalar,	 F32,     28,	            "V",            1,       0.0
       ; 10 bit TPS ADC value (from 0 to 1023 in 5v scale)
-      tpsADC          = scalar,  U16,     32,             "ADC",            1,       0.0;
-      alignmet        = scalar,  U16,     34,              "al",            1,       0.0;
+      tpsADC1         = scalar,  U16,     32,             "ADC",            1,       0.0;
+      tpsADC2         = scalar,  U16,     34,             "ADC",            1,       0.0;
       baroPressure    = scalar,  F32,     36,             "pres",           1,       0.0;
       MAPValue        = scalar,  F32,     40,              "MAP",           1,       0.0;
 	  ; total fuel squirt duration (in MS) per engine cycle according to current CLT
@@ -800,7 +800,7 @@ gaugeCategory = Sensors
    MAFGauge			 = MAFValue,          "Mass Air Flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
    VBattGauge        = VBatt,      "Battery Voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
    MAPGauge     	 = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
-   tpsADCGauge       = tpsADC,             "tps ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
+   tpsADCGauge       = tpsADC1,           "tps1 ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
 
 gaugeCategory = Sensors2
    VSSGauge          = vehicleSpeedKph,     "Speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
@@ -1044,7 +1044,7 @@ gaugeCategory = Fuel Data
    entry = ind_fan, "radiator fan",int,"%d"
    
    
-;     tpsADC          = U16,    "ADC",
+;     tpsADC1         = U16,    "ADC",
 ;     alignmet        = U16,    "al",
 ;     atmPres         = F32,    "pres",
 ;	  crankingFuel    = F32,    "ms",
@@ -1495,7 +1495,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "vBatt ADC input", 						vbattAdcChannel
 		field = "!See Tools>Calibrate TPS"
-		field = "Throttle position sensor",				tpsAdcChannel
+		field = "Throttle1 position sensor",			tpsAdc1_1Channel
+		field = "Throttle2 position sensor",			tpsAdc2_1Channel
 		
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "!ECU reboot needed to apply these settings"
@@ -1516,8 +1517,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "CLT ADC input", 						clt_adcChannel
 		field = "IAT ADC input", 						iat_adcChannel
 		field = "vBatt ADC input", 						vbattAdcChannel
-		field = "TPS ADC input", 						tpsAdcChannel
-		field = "TPS2 ADC input", 						tps2AdcChannel
+		field = "TPS1 ADC input", 						tps1_1AdcChannel
+		field = "TPS2 ADC input", 						tps2_2AdcChannel
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "Baro ADC input", 						baroSensor_hwChannel
@@ -2374,7 +2375,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = etbDialogRight
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
-		field = "TPS",									tpsAdcChannel
+		field = "TPS1",									tps1_1AdcChannel
 		field = "Pedal",								throttlePedalPositionAdcChannel
 		field = "use ETB for idle",						useETBforIdleControl
 		field = "ETB idle maximum angle",				etbIdleRange

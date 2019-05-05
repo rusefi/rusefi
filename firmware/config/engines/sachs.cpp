@@ -49,7 +49,7 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Frankenstein analog input #11: PC4 adc14
 	// Frankenstein analog input #12: PC5 adc15
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 
 	/**

@@ -1664,8 +1664,10 @@
 #define tle8888spiDevice_offset_hex fb8
 #define TOTAL_CONFIG_SIZE 20000
 #define TOTAL_CONFIG_SIZE_hex 4e20
-#define tps2AdcChannel_offset 515
-#define tps2AdcChannel_offset_hex 203
+#define tps1_1AdcChannel_offset 512
+#define tps1_1AdcChannel_offset_hex 200
+#define tps2_1AdcChannel_offset 515
+#define tps2_1AdcChannel_offset_hex 203
 #define TPS_TPS_ACCEL_TABLE 8
 #define tpsAccelEnrichmentThreshold_offset 2068
 #define tpsAccelEnrichmentThreshold_offset_hex 814
@@ -1675,8 +1677,6 @@
 #define tpsAccelFractionPeriod_offset_hex fb2
 #define tpsAccelLength_offset 2064
 #define tpsAccelLength_offset_hex 810
-#define tpsAdcChannel_offset 512
-#define tpsAdcChannel_offset_hex 200
 #define tpsDecelEnleanmentMultiplier_offset 2104
 #define tpsDecelEnleanmentMultiplier_offset_hex 838
 #define tpsDecelEnleanmentThreshold_offset 2100

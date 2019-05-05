@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Fri May 03 21:08:34 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 05 11:03:35 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1067,8 +1067,10 @@ public class Fields {
 	public static final int tle8888_csPinMode_offset = 3130;
 	public static final int tle8888spiDevice_offset = 4024;
 	public static final int TOTAL_CONFIG_SIZE = 20000;
-	public static final int tps2AdcChannel_offset = 515;
-	public static final int tps2AdcChannel_offset_hex = 203;
+	public static final int tps1_1AdcChannel_offset = 512;
+	public static final int tps1_1AdcChannel_offset_hex = 200;
+	public static final int tps2_1AdcChannel_offset = 515;
+	public static final int tps2_1AdcChannel_offset_hex = 203;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int tpsAccelEnrichmentThreshold_offset = 2068;
 	public static final int tpsAccelEnrichmentThreshold_offset_hex = 814;
@@ -1076,8 +1078,6 @@ public class Fields {
 	public static final int tpsAccelFractionPeriod_offset = 4018;
 	public static final int tpsAccelLength_offset = 2064;
 	public static final int tpsAccelLength_offset_hex = 810;
-	public static final int tpsAdcChannel_offset = 512;
-	public static final int tpsAdcChannel_offset_hex = 200;
 	public static final int tpsDecelEnleanmentMultiplier_offset = 2104;
 	public static final int tpsDecelEnleanmentMultiplier_offset_hex = 838;
 	public static final int tpsDecelEnleanmentThreshold_offset = 2100;
@@ -1326,10 +1326,10 @@ public class Fields {
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 500, FieldType.INT);
 	public static final Field HD44780WIDTH = Field.create("HD44780WIDTH", 504, FieldType.INT);
 	public static final Field HD44780HEIGHT = Field.create("HD44780HEIGHT", 508, FieldType.INT);
-	public static final Field TPSADCCHANNEL = Field.create("TPSADCCHANNEL", 512, FieldType.INT8, adc_channel_e);
+	public static final Field TPS1_1ADCCHANNEL = Field.create("TPS1_1ADCCHANNEL", 512, FieldType.INT8, adc_channel_e);
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 513, FieldType.INT8, adc_channel_e);
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT8, adc_channel_e);
-	public static final Field TPS2ADCCHANNEL = Field.create("TPS2ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
+	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
 	public static final Field OVERRIDECRANKINGIGNITION = Field.create("OVERRIDECRANKINGIGNITION", 516, FieldType.INT);
 	public static final Field SENSORCHARTFREQUENCY = Field.create("SENSORCHARTFREQUENCY", 520, FieldType.INT);
 	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "1+60/2", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "2JZ", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped" , "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "trg44", "trg45", "INVALID"};
