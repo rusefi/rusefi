@@ -36,6 +36,9 @@ EXTERN_ENGINE;
 extern SerialUSBDriver SDU1;
 #endif /* HAL_USE_SERIAL_USB */
 
+// 10 seconds
+#define CONSOLE_WRITE_TIMEOUT 10000
+
 int lastWriteSize;
 int lastWriteActual;
 
@@ -74,7 +77,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		short c = (short) streamGet(chp);
 		onDataArrived();
 
-#if defined(EFI_CONSOLE_UART_DEVICE)
+#if defined(EFI_CONSOLE_SERIAL_DEVICE)
 
 			uint32_t flags;
 			chSysLock()
@@ -131,9 +134,69 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 */
 CommandHandler console_line_callback;
 
-#if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
+#if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR )
 static SerialConfig serialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
+
+#if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR )
+/* Note: This structure is modified from the default ChibiOS layout! */
+static UARTConfig uartConfig = { 
+	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL, 
+	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
+	.timeout_cb = NULL, .rxhalf_cb = NULL
+};
+
+// To use UART driver instead of Serial, we need to imitate "BaseChannel" streaming functionality
+static msg_t _putt(void *, uint8_t b, sysinterval_t timeout) {
+	int n = 1;
+	uartSendTimeout(EFI_CONSOLE_UART_DEVICE, (size_t *)&n, &b, timeout);
+	return MSG_OK;
+}
+static size_t _writet(void *, const uint8_t *bp, size_t n, sysinterval_t timeout) {
+	uartSendTimeout(EFI_CONSOLE_UART_DEVICE, (size_t *)&n, bp, timeout);
+	return n;
+}
+static msg_t _put(void *ip, uint8_t b) {
+#ifdef UART_USE_BLOCKING_SEND
+	// this version can be called from the locked state (no interrupts)
+	uart_lld_blocking_send(EFI_CONSOLE_UART_DEVICE, 1, (void *)&b);
+#else
+	// uartSendTimeout() needs interrupts to wait for the end of transfer, so we have to unlock them temporary
+	bool wasLocked = isLocked();
+	if (wasLocked)
+		unlockAnyContext();
+	_putt(ip, b, CONSOLE_WRITE_TIMEOUT);
+	if (wasLocked)
+		lockAnyContext();
+#endif /* UART_USE_BLOCKING_WRITE */
+	return MSG_OK;
+}
+static size_t _write(void *ip, const uint8_t *bp, size_t n) {
+	return _writet(ip, bp, n, CONSOLE_WRITE_TIMEOUT);
+}
+static msg_t _gett(void *, sysinterval_t /*timeout*/) {
+	return 0;
+}
+static size_t _readt(void *, uint8_t */*bp*/, size_t /*n*/, sysinterval_t /*timeout*/) {
+	return 0;
+}
+static msg_t _get(void *) {
+	return 0;
+}
+static size_t _read(void *, uint8_t */*bp*/, size_t /*n*/) {
+	return 0;
+}
+static msg_t _ctl(void *, unsigned int /*operation*/, void */*arg*/) {
+	return MSG_OK;
+}
+
+// This is a "fake" channel for getConsoleChannel() filled with our handlers
+static const struct BaseChannelVMT uartChannelVmt = {
+  .instance_offset = (size_t)0, .write = _write, .read = _read, .put = _put, .get = _get,
+  .putt = _putt, .gett = _gett, .writet = _writet, .readt = _readt, .ctl = _ctl
+};
+static const BaseChannel uartChannel = { .vmt = &uartChannelVmt };
+#endif /* EFI_CONSOLE_UART_DEVICE */
 
 #if EFI_PROD_CODE || EFI_EGT
 
@@ -146,8 +209,12 @@ bool isUsbSerial(BaseChannel * channel) {
 }
 
 BaseChannel * getConsoleChannel(void) {
+#if defined(EFI_CONSOLE_SERIAL_DEVICE)
+	return (BaseChannel *) EFI_CONSOLE_SERIAL_DEVICE;
+#endif /* EFI_CONSOLE_SERIAL_DEVICE */
+
 #if defined(EFI_CONSOLE_UART_DEVICE)
-	return (BaseChannel *) EFI_CONSOLE_UART_DEVICE;
+	return (BaseChannel *) &uartChannel;
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
 #if HAL_USE_SERIAL_USB
@@ -164,7 +231,7 @@ bool isCommandLineConsoleReady(void) {
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 
-ts_channel_s binaryConsole;
+static ts_channel_s binaryConsole;
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
@@ -180,9 +247,6 @@ static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */
-
-// 10 seconds
-#define CONSOLE_WRITE_TIMEOUT 10000
 
 void consolePutChar(int x) {
 	chnWriteTimeout(getConsoleChannel(), (const uint8_t *)&x, 1, CONSOLE_WRITE_TIMEOUT);
@@ -203,22 +267,31 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
 
-#if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR)
+#if (defined(EFI_CONSOLE_SERIAL_DEVICE) && ! EFI_SIMULATOR)
 		/*
 		 * Activates the serial
 		 * it is important to set 'NONE' as flow control! in terminal application on the PC
 		 */
 		serialConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
-		sdStart(EFI_CONSOLE_UART_DEVICE, &serialConfig);
+		sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
 
-// cannot use pin repository here because pin repository prints to console
+		// cannot use pin repository here because pin repository prints to console
 		palSetPadMode(EFI_CONSOLE_RX_PORT, EFI_CONSOLE_RX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 		palSetPadMode(EFI_CONSOLE_TX_PORT, EFI_CONSOLE_TX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 
 		isSerialConsoleStarted = true;
 
-		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
-#endif /* EFI_PROD_CODE */
+		chEvtRegisterMask((event_source_t *) chnGetEventSource(EFI_CONSOLE_SERIAL_DEVICE), &consoleEventListener, 1);
+#elif (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR)
+		uartConfig.speed = engineConfiguration->uartConsoleSerialSpeed;
+		uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
+
+		// cannot use pin repository here because pin repository prints to console
+		palSetPadMode(EFI_CONSOLE_RX_PORT, EFI_CONSOLE_RX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+		palSetPadMode(EFI_CONSOLE_TX_PORT, EFI_CONSOLE_TX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+
+		isSerialConsoleStarted = true;
+#endif /* EFI_CONSOLE_SERIAL_DEVICE || EFI_CONSOLE_UART_DEVICE */
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, (tfunc_t)consoleThreadEntryPoint, NULL);

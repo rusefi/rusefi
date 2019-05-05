@@ -319,10 +319,6 @@ void applyNewHardwareSettings(void) {
 
 	enginePins.unregisterPins();
 
-#if (BOARD_TLE6240_COUNT > 0)
-	startSmartCsPins();
-#endif /* (BOARD_MC33972_COUNT > 0) */
-
 #if EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */

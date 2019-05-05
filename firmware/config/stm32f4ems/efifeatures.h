@@ -324,8 +324,8 @@
 
 
 // todo: start using consoleUartDevice? Not sure
-#ifndef EFI_CONSOLE_UART_DEVICE
-#define EFI_CONSOLE_UART_DEVICE (&SD3)
+#ifndef EFI_CONSOLE_SERIAL_DEVICE
+#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
 
 /**
@@ -343,7 +343,7 @@
 
 // todo: add DMA-mode for Console?
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
-#undef EFI_CONSOLE_UART_DEVICE
+#undef EFI_CONSOLE_SERIAL_DEVICE
 #endif
 
 // todo: start using consoleSerialTxPin? Not sure

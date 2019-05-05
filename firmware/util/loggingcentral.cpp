@@ -46,6 +46,10 @@ static char * outputBuffer;
  */
 void scheduleLogging(Logging *logging) {
 #if EFI_TEXT_LOGGING
+#ifdef EFI_PRINT_MESSAGES_TO_TERMINAL
+	print(logging->buffer);
+	print("\r\n");
+#endif /* EFI_PRINT_MESSAGES_TO_TERMINAL */
 	// this could be done without locking
 	int newLength = efiStrlen(logging->buffer);
 
