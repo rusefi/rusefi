@@ -177,7 +177,7 @@
 170) RESOLVED IN R0.5.3 Q1002 seems to be thermally limited to about 0.7A. Make Q1002 have better thermal properties. I hope this helps make the thermal better.
 171) RESOLVED IN R0.5.3 Fix the 3D, such that 3D works. 
 172)                    Change DN2625 to the physically larger IXTA6N50D2 as noted here https://rusefi.com/forum/viewtopic.php?p=28759#p28759
-173) 			At least some connector silkscreen 1A-3Z see viewtopic.php?f=4&t=507#p29006
+173) RESOLVED IN R0.5.5 At least some connector silkscreen 1A-3Z see viewtopic.php?f=4&t=507#p29006
 174)                    Consider adding the low cost current limiting circuit noted by Jerri Ellsworth at this video. https://www.youtube.com/watch?v=QZ0WXQWND-I
 175) RESOLVED IN R0.5.4 D12 to D23 on schematic are confusing. Aling these desinators to be more clear. 
 176) RESOLVED IN R0.5.6 0805 options for VP selection on High Side VP +5/+12 selection
