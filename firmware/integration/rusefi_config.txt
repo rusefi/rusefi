@@ -300,8 +300,8 @@ bit issue_294_28;
 bit issue_294_29;
 
 
-int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tpsAdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
-int16_t tpsMax;Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tpsAdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMax;Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
 int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
 int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
@@ -454,7 +454,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tpsAdcChannel
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tps1_1AdcChannel
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 
@@ -657,7 +657,7 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e spi3misoPin;
 
 	brain_pin_e spi3sckPin;
-	brain_pin_e cdmInputPin;Saab Combustion Detection Module knock signal input pin
+	brain_pin_e cdmInputPin;Saab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module
 	brain_pin_e joystickCenterPin;
 	brain_pin_e joystickAPin;
 

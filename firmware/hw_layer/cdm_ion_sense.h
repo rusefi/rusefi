@@ -18,6 +18,7 @@ public:
 	 * accumulated value for engine cycle which is not over yet
 	 */
 	int accumulator;
+	int totalCdmEvents = 0;
 	/**
 	 * event counter for previous complete engine cycle
 	 */
