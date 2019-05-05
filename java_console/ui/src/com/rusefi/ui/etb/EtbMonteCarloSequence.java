@@ -28,6 +28,7 @@ import static com.rusefi.ui.etb.EtbTestSequence.*;
 public class EtbMonteCarloSequence {
     private static final int TOTAL_CYCLES_COUNT = 300;
     private static final double DEFAULT_POSITION = 7;
+    private static final int CLT_THRESHOLD = 75;
     private final JButton button = new JButton("ETB I feel lucky!");
     private final static Random r = new Random();
     private int counter;
@@ -54,7 +55,7 @@ public class EtbMonteCarloSequence {
     }
 
     private void runRandomCycle() {
-        final int offset = r.nextInt(100);
+        final int offset = 0;//r.nextInt(100);
         final double pFactor = 1 + (r.nextInt(300) / 100.0);
         final double iFactor = r.nextInt(30) / 100.0;
         final double dFactor = r.nextInt(30) / 100.0;
@@ -100,6 +101,12 @@ public class EtbMonteCarloSequence {
         last.addNext(new TestSequenceStep(5 * SECOND, EtbTarget.Condition.YES) {
             @Override
             protected void doJob() {
+                double clt = SensorCentral.getInstance().getValue(Sensor.CLT);
+                if (clt > CLT_THRESHOLD) {
+                    stopETB();
+                    sleep(10 * SECOND);
+                    System.exit(-1);
+                }
                 double cycleResult = SensorCentral.getInstance().getValue(Sensor.ETB_CONTROL_QUALITY);
                 if (cycleResult < bestResultSoFar) {
                     bestResultSoFar = cycleResult;
@@ -109,7 +116,7 @@ public class EtbMonteCarloSequence {
                 MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
                         getSecondsSinceFileStart() + ":" + stats + ":result:" + cycleResult);
                 if (counter == TOTAL_CYCLES_COUNT) {
-                    CommandQueue.getInstance().write(ETBPane.SET_ETB + 0);
+                    stopETB();
                     MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "ETB MC sequence done!");
                     return;
                 }
@@ -117,6 +124,7 @@ public class EtbMonteCarloSequence {
                 MessagesCentral.getInstance().postMessage(EtbTestSequence.class, "Starting " + counter + " of " + TOTAL_CYCLES_COUNT);
                 runRandomCycle();
             }
+
         });
         totalSteps.set(count(firstStep));
         firstStep.execute(executor);
@@ -124,5 +132,9 @@ public class EtbMonteCarloSequence {
 
     public JButton getButton() {
         return button;
+    }
+
+    private void stopETB() {
+        CommandQueue.getInstance().write(ETBPane.SET_ETB + 0);
     }
 }
