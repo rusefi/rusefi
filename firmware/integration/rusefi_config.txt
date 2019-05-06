@@ -269,7 +269,7 @@ end_struct
 injector_s injector
 
 
-bit directSelfStimulation;+Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?\nPS: Funny name, right? :)
+bit directSelfStimulation;+Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?\nSee also triggerSimulatorPins\nPS: Funny name, right? :)
 bit activateAuxPid1;
 bit isVerboseAuxPid1;
 bit activateAuxPid2;
@@ -488,7 +488,7 @@ float mapFrequency0Kpa;;"Hz",      1,      0,       0, 100000,      2
 float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 
 ! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;rpm X;"Rpm",     1,      0,       0,30000,      0
+	int triggerSimulatorFrequency;See also triggerSimulatorPins\nSee also directSelfStimulation\nrpm X;"Rpm",     1,      0,       0,30000,      0
 
 	brain_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
 	brain_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
@@ -563,7 +563,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 
 	can_device_mode_e canDeviceMode;
 	
-	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;
+	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;See also directSelfStimulation
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
 	brain_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
