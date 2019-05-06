@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 05 17:20:47 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 06 09:14:48 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -431,6 +431,8 @@ typedef struct {
 	 */
 	float mapFrequency100Kpa;
 	/**
+	 * See also triggerSimulatorPins
+	 * See also directSelfStimulation
 	 * rpm X
 	 * offset 20
 	 */
@@ -648,6 +650,7 @@ typedef struct {
 	 */
 	can_device_mode_e canDeviceMode;
 	/**
+	 * See also directSelfStimulation
 	 * offset 136
 	 */
 	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
@@ -996,6 +999,7 @@ typedef struct {
 	injector_s injector;
 	/**
 	 * Should trigger emulator push data right into trigger handling logic, eliminating the need for physical jumper wires?
+	 * See also triggerSimulatorPins
 	 * PS: Funny name, right? :)
 	offset 76 bit 0 */
 	bool directSelfStimulation : 1;
@@ -2729,4 +2733,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sun May 05 17:20:47 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 06 09:14:48 EDT 2019
