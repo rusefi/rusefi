@@ -48,6 +48,10 @@ enable2ndByteCanID = false
    pageValueWrite      = "W\x00\x00%2o%v"
    pageChunkWrite      = "C\x00\x00%2o%2c%v"
 ;   crc32CheckCommand   = "k%2i%2o\xB8\x36"
+	;
+	; TODO: interesting - 0x36B8 equals 14008 which looks like pageSize at some point in the past? is this a defect here - should
+	; we have current pageSize or (pageSize + 8) here?
+	;
    crc32CheckCommand   = "k\x00\x00\x00\x00\x36\xB8"
 
 ;communication settings
