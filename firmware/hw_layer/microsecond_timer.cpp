@@ -101,9 +101,9 @@ static void hwTimerCallback(GPTDriver *gptp) {
 	}
 	isTimerPending = false;
 
-	uint32_t before = GET_TIMESTAMP();
+	uint32_t before = getTimeNowLowerNt();
 	globalTimerCallback(NULL);
-	uint32_t precisionCallbackDuration = GET_TIMESTAMP() - before;
+	uint32_t precisionCallbackDuration = getTimeNowLowerNt() - before;
 	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
 		maxPrecisionCallbackDuration = precisionCallbackDuration;
 	}

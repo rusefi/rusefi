@@ -147,7 +147,7 @@ efitick_t getTimeNowNt(void) {
 	efitime_t localH = halTime.state.highBits;
 	uint32_t localLow = halTime.state.lowBits;
 
-	uint32_t value = GET_TIMESTAMP();
+	uint32_t value = getTimeNowLowerNt();
 
 	if (value < localLow) {
 		// new value less than previous value means there was an overflow in that 32 bit counter
@@ -184,7 +184,7 @@ efitick_t getTimeNowNt(void) {
 	/**
 	 * We need to take current counter after making a local 64 bit snapshot
 	 */
-	uint32_t value = GET_TIMESTAMP();
+	uint32_t value = getTimeNowLowerNt();
 
 	if (value < localLow) {
 		// new value less than previous value means there was an overflow in that 32 bit counter
@@ -249,7 +249,7 @@ typedef FLStack<int, 16> irq_enter_timestamps_t;
 static irq_enter_timestamps_t irqEnterTimestamps;
 
 void irqEnterHook(void) {
-	irqEnterTimestamps.push(GET_TIMESTAMP());
+	irqEnterTimestamps.push(getTimeNowLowerNt());
 }
 
 static int currentIrqDurationAccumulator = 0;
@@ -261,7 +261,7 @@ int perSecondIrqDuration = 0;
 int perSecondIrqCounter = 0;
 void irqExitHook(void) {
 	int enterTime = irqEnterTimestamps.pop();
-	currentIrqDurationAccumulator += (GET_TIMESTAMP() - enterTime);
+	currentIrqDurationAccumulator += (getTimeNowLowerNt() - enterTime);
 	currentIrqCounter++;
 }
 #endif /* EFI_CLOCK_LOCKS */
@@ -283,7 +283,7 @@ static void periodicSlowCallback(Engine *engine) {
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
 	bool alreadyLocked = lockAnyContext();
-	updateAndSet(&halTime.state, GET_TIMESTAMP());
+	updateAndSet(&halTime.state, getTimeNowLowerNt());
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}

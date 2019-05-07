@@ -242,7 +242,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	// this callback is invoked on interrupt thread
 	if (index != 0)
 		return;
-	engine->m.beforeHipCb = GET_TIMESTAMP();
+	engine->m.beforeHipCb = getTimeNowLowerNt();
 
 	int rpm = GET_RPM_VALUE;
 	if (!isValidRpm(rpm))
@@ -258,7 +258,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
 			(schfunc_t) &endIntegration,
 			NULL, &engine->rpmCalculator);
-	engine->m.hipCbTime = GET_TIMESTAMP() - engine->m.beforeHipCb;
+	engine->m.hipCbTime = getTimeNowLowerNt() - engine->m.beforeHipCb;
 }
 
 void setMaxKnockSubDeg(int value) {
