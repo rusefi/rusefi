@@ -228,9 +228,11 @@ typedef enum {
 	TT_MAZDA_DOHC_1_4 = 15,
 
 	// "1+1"
+	// see also TT_ONE a bit below
 	TT_ONE_PLUS_ONE = 16,
 	// "1+60/2"
 	TT_ONE_PLUS_TOOTHED_WHEEL_60_2 = 17,
+	// just one channel with just one tooth
 	TT_ONE = 18,
 
 	TT_DODGE_RAM = 19,
