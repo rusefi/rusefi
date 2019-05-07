@@ -117,10 +117,15 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 			fireSparkBySettingPinLow(event, output);
 		}
 	}
+#if !EFI_UNIT_TEST
+if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
+
+}
+#endif /* EFI_UNIT_TEST */
 #if EFI_UNIT_TEST
 	Engine *engine = event->engine;
 	EXPAND_Engine;
-#endif
+#endif /* EFI_UNIT_TEST */
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
 	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
