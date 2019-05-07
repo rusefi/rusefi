@@ -234,7 +234,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
 	if (index == 0) {
-		ENGINE(m.beforeRpmCb) = GET_TIMESTAMP();
+		ENGINE(m.beforeRpmCb) = getTimeNowLowerNt();
 
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -257,7 +257,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		}
 		rpmState->onNewEngineCycle();
 		rpmState->lastRpmEventTimeNt = nowNt;
-		ENGINE(m.rpmCbTime) = GET_TIMESTAMP() - ENGINE(m.beforeRpmCb);
+		ENGINE(m.rpmCbTime) = getTimeNowLowerNt() - ENGINE(m.beforeRpmCb);
 	}
 
 

@@ -439,7 +439,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	(void) ckpSignalType;
 
-	ENGINE(m.beforeMainTrigger) = GET_TIMESTAMP();
+	ENGINE(m.beforeMainTrigger) = getTimeNowLowerNt();
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
@@ -538,7 +538,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 #endif /* EFI_HISTOGRAMS */
 
 	if (trgEventIndex == 0) {
-		ENGINE(m.mainTriggerCallbackTime) = GET_TIMESTAMP() - ENGINE(m.beforeMainTrigger);
+		ENGINE(m.mainTriggerCallbackTime) = getTimeNowLowerNt() - ENGINE(m.beforeMainTrigger);
 	}
 }
 

@@ -154,9 +154,9 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
 	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
-	uint32_t beforeHwSetTimer = GET_TIMESTAMP();
+	uint32_t beforeHwSetTimer = getTimeNowLowerNt();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
-	hwSetTimerDuration = GET_TIMESTAMP() - beforeHwSetTimer;
+	hwSetTimerDuration = getTimeNowLowerNt() - beforeHwSetTimer;
 }
 
 void initSingleTimerExecutorHardware(void) {

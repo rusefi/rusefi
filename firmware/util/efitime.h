@@ -40,6 +40,9 @@ efitimeus_t getTimeNowUs(void);
 
 /**
  * 64-bit counter CPU cycles since MCU reset
+ *
+ * See getTimeNowLowerNt for a quicker version which returns only lower 32 bits
+ * Lower 32 bits are enough if all we need is to measure relatively short time durations
  */
 efitick_t getTimeNowNt(void);
 
@@ -60,9 +63,9 @@ efitimesec_t getTimeNowSeconds(void);
 #endif /* __cplusplus */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
- #define GET_TIMESTAMP() port_rt_get_counter_value()
+ #define getTimeNowLowerNt() port_rt_get_counter_value()
 #else
- #define GET_TIMESTAMP() 0
+ #define getTimeNowLowerNt() 0
 #endif
 
 #endif /* EFITIME_H_ */

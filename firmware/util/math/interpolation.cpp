@@ -40,21 +40,21 @@ static void testBinary(void) {
 	for (int v = 0; v <= 16; v++) {
 		uint32_t timeOld;
 		{
-			uint32_t start = GET_TIMESTAMP();
+			uint32_t start = getTimeNowLowerNt();
 			int temp = 0;
 			for (int i = 0; i < COUNT; i++) {
 				temp += findIndex(array16, size16, v);
 			}
-			timeOld = GET_TIMESTAMP() - start;
+			timeOld = getTimeNowLowerNt() - start;
 		}
 		uint32_t timeNew;
 		{
-			uint32_t start = GET_TIMESTAMP();
+			uint32_t start = getTimeNowLowerNt();
 			int temp = 0;
 			for (int i = 0; i < COUNT; i++) {
 				temp += findIndex2(array16, size16, v);
 			}
-			timeNew = GET_TIMESTAMP() - start;
+			timeNew = getTimeNowLowerNt() - start;
 		}
 		scheduleMsg(logger, "for v=%d old=%d ticks", v, timeOld);
 		scheduleMsg(logger, "for v=%d new=%d ticks", v, timeNew);

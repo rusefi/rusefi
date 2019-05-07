@@ -165,7 +165,7 @@ int EventQueue::executeAll(efitime_t now) {
 	LL_FOREACH_SAFE(executionList, current, tmp)
 	{
 		efiAssert(CUSTOM_ERR_ASSERT, current->callback != NULL, "callback==null2", 0);
-		uint32_t before = GET_TIMESTAMP();
+		uint32_t before = getTimeNowLowerNt();
 		current->isScheduled = false;
 		uint32_t howFarOff = now - current->momentX;
 		maxSchedulingPrecisionLoss = maxI(maxSchedulingPrecisionLoss, howFarOff);
@@ -174,7 +174,7 @@ int EventQueue::executeAll(efitime_t now) {
 #endif
 		current->callback(current->param);
 		// even with overflow it's safe to subtract here
-		lastEventCallbackDuration = GET_TIMESTAMP() - before;
+		lastEventCallbackDuration = getTimeNowLowerNt() - before;
 		if (lastEventCallbackDuration > maxEventCallbackDuration)
 			maxEventCallbackDuration = lastEventCallbackDuration;
 		if (lastEventCallbackDuration > 2000) {

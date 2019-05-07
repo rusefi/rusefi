@@ -337,14 +337,14 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->m.beforeFuelCalc = GET_TIMESTAMP();
+	engine->m.beforeFuelCalc = getTimeNowLowerNt();
 	int rpm = GET_RPM();
 	/**
 	 * we have same assignment of 'getInjectionDuration' to 'injectionDuration' in handleFuel()
 	 * Open question why do we refresh that in two places?
 	 */
 	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
+	engine->m.fuelCalcTime = getTimeNowLowerNt() - engine->m.beforeFuelCalc;
 
 }
 

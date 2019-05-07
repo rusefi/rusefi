@@ -192,7 +192,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 			return;
 		}
 	}
-	uint32_t triggerHandlerEntryTime = GET_TIMESTAMP();
+	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	isInsideTriggerHandler = true;
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
@@ -200,7 +200,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	efiAssertVoid(CUSTOM_ERR_6636, getCurrentRemainingStack() > 128, "lowstck#8");
 	engine->triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER_SUFFIX);
 	triggerReentraint--;
-	triggerDuration = GET_TIMESTAMP() - triggerHandlerEntryTime;
+	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	isInsideTriggerHandler = false;
 	if (triggerDuration > triggerMaxDuration)
 		triggerMaxDuration = triggerDuration;

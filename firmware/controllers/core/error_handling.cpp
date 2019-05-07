@@ -165,11 +165,11 @@ uint32_t maxLockedDuration = 0;
  #endif
  */
 void onLockHook(void) {
-	lastLockTime = GET_TIMESTAMP();
+	lastLockTime = getTimeNowLowerNt();
 }
 
 void onUnlockHook(void) {
-	uint32_t lockedDuration = GET_TIMESTAMP() - lastLockTime;
+	uint32_t lockedDuration = getTimeNowLowerNt() - lastLockTime;
 	if (lockedDuration > maxLockedDuration) {
 		maxLockedDuration = lockedDuration;
 	}

@@ -79,14 +79,14 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	if (CONFIG(timingMode) == TM_FIXED)
 		return engineConfiguration->fixedTiming;
 
-	engine->m.beforeAdvance = GET_TIMESTAMP();
+	engine->m.beforeAdvance = getTimeNowLowerNt();
 	if (cisnan(engineLoad)) {
 		warning(CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
 		return NAN;
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
-	engine->m.beforeZeroTest = GET_TIMESTAMP();
-	engine->m.zeroTestTime = GET_TIMESTAMP() - engine->m.beforeZeroTest;
+	engine->m.beforeZeroTest = getTimeNowLowerNt();
+	engine->m.zeroTestTime = getTimeNowLowerNt() - engine->m.beforeZeroTest;
 
 	if (isStep1Condition(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
 		return engineConfiguration->step1timing;
@@ -108,7 +108,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIGB(idlePidDeactivationTpsThreshold), advanceAngle, tps);
 	}
 
-	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
+	engine->m.advanceLookupTime = getTimeNowLowerNt() - engine->m.beforeAdvance;
 	return advanceAngle;
 }
 

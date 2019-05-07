@@ -313,7 +313,7 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 
 static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	engine->m.beforeIgnitionSch = GET_TIMESTAMP();
+	engine->m.beforeIgnitionSch = getTimeNowLowerNt();
 	/**
 	 * TODO: warning. there is a bit of a hack here, todo: improve.
 	 * currently output signals/times signalTimerUp from the previous revolutions could be
@@ -339,7 +339,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 	IgnitionEventList *list = &engine->ignitionEvents;
 
 	initializeIgnitionActions(list PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
+	engine->m.ignitionSchTime = getTimeNowLowerNt() - engine->m.beforeIgnitionSch;
 }
 
 
