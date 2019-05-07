@@ -310,9 +310,11 @@
  *          buffers depending on the requirements of your application.
  * @note    The default is 16 bytes for both the transmission and receive
  *          buffers.
+ * with rusEfi we want this to be above blockingFactor Tuner Studio setting
+ * even while it does not help with https://github.com/rusefi/rusefi/issues/794
  */
 #if !defined(SERIAL_BUFFERS_SIZE) || defined(__DOXYGEN__)
-#define SERIAL_BUFFERS_SIZE         32
+#define SERIAL_BUFFERS_SIZE         1024
 #endif
 
 /*===========================================================================*/
