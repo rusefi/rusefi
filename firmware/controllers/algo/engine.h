@@ -184,13 +184,17 @@ public:
 	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
 	angle_t mapAveragingDuration = 0;
 
-	// spark-related
-	floatms_t sparkDwell = 0;
 	angle_t timingAdvance = 0;
-
+	// spark-related
+	/**
+	 * ignition dwell duration in ms
+	 * See also dwellAngle
+	 */
+	floatms_t sparkDwell = 0;
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
+	 * See also sparkDwell
 	 */
 	angle_t dwellAngle = NAN;
 
