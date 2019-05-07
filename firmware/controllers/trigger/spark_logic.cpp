@@ -171,8 +171,6 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	}
 }
 
-static int globalSparkIdCoutner = 0;
-
 static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
@@ -198,7 +196,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
-	iEvent->sparkId = globalSparkIdCoutner++;
+	iEvent->sparkId = engine->globalSparkIdCoutner++;
 
 	/**
 	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
@@ -334,23 +332,8 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 	engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 }
 
-void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
-		 DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
-	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
-		 // this might happen for instance in case of a single trigger event after a pause
-		return;
-	}
-
-	if (!ENGINE(ignitionEvents.isReady)) {
-		prepareIgnitionSchedule(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-
-	/**
-	 * Ignition schedule is defined once per revolution
-	 * See initializeIgnitionActions()
-	 */
-
+static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	IgnitionEvent *current, *tmp;
 
 	LL_FOREACH_SAFE(ENGINE(iHead), current, tmp)
@@ -370,6 +353,27 @@ void handleSpark(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current);
 		}
 	}
+}
+
+void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
+		 DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
+	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
+		 // this might happen for instance in case of a single trigger event after a pause
+		return;
+	}
+
+	if (!ENGINE(ignitionEvents.isReady)) {
+		prepareIgnitionSchedule(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+
+	/**
+	 * Ignition schedule is defined once per revolution
+	 * See initializeIgnitionActions()
+	 */
+	scheduleAllSparkEventsUntilNextTriggerTooth(trgEventIndex PASS_ENGINE_PARAMETER_SUFFIX);
+
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
 	if (ENGINE(ignitionEvents.isReady)) {
