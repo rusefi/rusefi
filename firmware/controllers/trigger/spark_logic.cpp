@@ -30,7 +30,7 @@ int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
 
-static void turnSparkPinLow2(IgnitionEvent *event, IgnitionOutputPin *output) {
+static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING
 	scheduleMsg(logger, "spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
@@ -107,11 +107,11 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, IgnitionEvent *e
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 }
 
-void turnSparkPinLow(IgnitionEvent *event) {
+void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
-			turnSparkPinLow2(event, output);
+			fireSparkBySettingPinLow(event, output);
 		}
 	}
 #if EFI_UNIT_TEST
@@ -128,7 +128,7 @@ void turnSparkPinLow(IgnitionEvent *event) {
  	prepareCylinderIgnitionSchedule(dwellAngle, event PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-static void turnSparkPinHigh2(IgnitionEvent *event, IgnitionOutputPin *output) {
+static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
 
 #if ! EFI_UNIT_TEST
 	if (GET_RPM_VALUE > 2 * engineConfiguration->cranking.rpm) {
@@ -166,7 +166,7 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
-			turnSparkPinHigh2(event, output);
+			startDwellByTurningSparkPinHigh(event, output);
 		}
 	}
 }
@@ -261,7 +261,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, iEvent);
+		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, iEvent);
 	} else {
 #if SPARK_EXTREME_LOGGING
 		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkPosition.eventIndex);
@@ -350,7 +350,7 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex D
 
 
 			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
-			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnSparkPinLow, current);
+			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, current);
 		}
 	}
 }
