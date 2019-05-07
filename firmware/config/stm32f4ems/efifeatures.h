@@ -213,8 +213,12 @@
 #endif
 
 /**
- * This macros is used to hide pieces of the code from unit tests, so it only makes sense in folders exposed to the tests project.
+ * This macros is used to hide hardware-specific pieces of the code from unit tests and simulator, so it only makes
+ * sense in folders exposed to the tests projects (simulator and unit tests).
  * This macros is NOT about taking out logging in general.
+ * See also EFI_UNIT_TEST
+ * See also EFI_SIMULATOR
+ * todo: do we want to rename any of these three options?
  */
 #define EFI_PROD_CODE TRUE
 
