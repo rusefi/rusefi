@@ -346,6 +346,9 @@ public:
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
 
+	int globalSparkIdCoutner = 0;
+
+
 	int getGlobalConfigurationVersion(void) const;
 	/**
 	 * true if a recent configuration change has changed any of the trigger settings which
