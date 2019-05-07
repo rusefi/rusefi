@@ -41,6 +41,7 @@ public:
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
 	angle_t advance;
+	floatms_t sparkDwell;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
 	IgnitionEvent *next;

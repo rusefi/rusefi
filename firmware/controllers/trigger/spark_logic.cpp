@@ -65,8 +65,11 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 		} \
 }
 
-static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, floatms_t sparkDwell, IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// todo: clean up this implementation? does not look too nice as is.
+
+	// let's save planned duration so that we can later compare it with reality
+	event->sparkDwell = sparkDwell;
 
 	// change of sign here from 'before TDC' to 'after TDC'
 	angle_t ignitionPositionWithinEngineCycle = ENGINE(ignitionPositionWithinEngineCycle[event->cylinderIndex]);
@@ -121,11 +124,12 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
 	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
-	if (cisnan(dwellAngle)) {
+	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
+	if (cisnan(dwellAngle) || cisnan(sparkDwell)) {
 		// we are here if engine has just stopped
 		return;
 	}
- 	prepareCylinderIgnitionSchedule(dwellAngle, event PASS_ENGINE_PARAMETER_SUFFIX);
+ 	prepareCylinderIgnitionSchedule(dwellAngle, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -283,6 +287,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
+	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
 	if (cisnan(ENGINE(engineState.timingAdvance)) || cisnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
@@ -296,7 +301,7 @@ static void initializeIgnitionActions(IgnitionEventList *list DECLARE_ENGINE_PAR
 #if EFI_UNIT_TEST
 		list->elements[cylinderIndex].engine = engine;
 #endif /* EFI_UNIT_TEST */
-		prepareCylinderIgnitionSchedule(dwellAngle, &list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
+		prepareCylinderIgnitionSchedule(dwellAngle, sparkDwell, &list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	list->isReady = true;
 }
