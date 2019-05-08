@@ -3,6 +3,10 @@
  *
  * The NXP MC33816 is a programmable gate driver IC for precision solenoid control applications.
  *
+ *
+ * For MC33816 vs PT2000 differences see
+ * https://www.nxp.com/docs/en/application-note/AN5203.pdf
+ *
  * @date May 3, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
