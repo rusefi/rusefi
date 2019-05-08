@@ -10,6 +10,11 @@
 #include "event_queue.h"
 #include "rfiutil.h"
 
+#if EFI_TUNER_STUDIO
+#include "tunerstudio_configuration.h"
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
+
 EXTERN_ENGINE;
 
 static cyclic_buffer<int> ignitionErrorDetection;
@@ -119,6 +124,24 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 #if !EFI_UNIT_TEST
 if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
+	uint32_t actualDwellDurationNt = getTimeNowLowerNt() - event->startOfDwell;
+	/**
+	 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
+	 */
+	float ratio = NT2US(actualDwellDurationNt) / 1000.0 / event->sparkDwell;
+
+#if EFI_TUNER_STUDIO
+	// todo: smarted solution for index to field mapping
+	if (event->cylinderIndex == 0) {
+		tsOutputChannels.debugFloatField1 = ratio;
+	} else if (event->cylinderIndex == 1) {
+		tsOutputChannels.debugFloatField2 = ratio;
+	} else if (event->cylinderIndex == 2) {
+		tsOutputChannels.debugFloatField3 = ratio;
+	} else if (event->cylinderIndex == 3) {
+		tsOutputChannels.debugFloatField4 = ratio;
+	}
+#endif
 
 }
 #endif /* EFI_UNIT_TEST */
@@ -140,6 +163,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
 
 #if ! EFI_UNIT_TEST
+
 	if (GET_RPM_VALUE > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->name;
 		if (prevSparkName == outputName && getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) != IM_ONE_COIL) {
@@ -172,6 +196,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {
+	event->startOfDwell = getTimeNowLowerNt();
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
