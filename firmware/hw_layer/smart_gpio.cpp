@@ -205,14 +205,17 @@ void startSmartCsPins() {
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888Cs.initPin("tle8888 CS", engineConfiguration->tle8888_cs,
 				&engineConfiguration->tle8888_csPinMode);
+	tle8888Cs.setValue(true);
 #endif /* BOARD_TLE8888_COUNT */
 #if (BOARD_TLE6240_COUNT > 0)
 	tle6240Cs.initPin("tle6240 CS", engineConfiguration->tle6240_cs,
 				&engineConfiguration->tle6240_csPinMode);
+	tle6240Cs.setValue(true);
 #endif /* BOARD_TLE6240_COUNT */
 #if (BOARD_MC33972_COUNT > 0)
 	mc33972Cs.initPin("mc33972 CS", boardConfiguration->mc33972_cs,
 				&boardConfiguration->mc33972_csPinMode);
+	mc33972Cs.setValue(true);
 #endif /* BOARD_MC33972_COUNT */
 }
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */

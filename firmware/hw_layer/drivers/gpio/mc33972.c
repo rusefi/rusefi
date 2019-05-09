@@ -294,13 +294,8 @@ int mc33972_init(void * data)
 {
 	int ret;
 	struct mc33972_priv *chip;
-	const struct mc33972_config *cfg;
 
 	chip = (struct mc33972_priv *)data;
-	cfg = chip->cfg;
-
-	/* mark pins used */
-	ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
 
 	ret = mc33972_chip_init(chip);
 	if (ret)

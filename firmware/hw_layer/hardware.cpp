@@ -136,6 +136,11 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 		return &SPID3;
 	}
 #endif
+#if STM32_SPI_USE_SPI4
+	if (spiDevice == SPI_DEVICE_4) {
+		return &SPID4;
+	}
+#endif
 	firmwareError(CUSTOM_ERR_UNEXPECTED_SPI, "Unexpected SPI device: %d", spiDevice);
 	return NULL;
 }
