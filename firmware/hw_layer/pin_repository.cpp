@@ -260,6 +260,10 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 		return false;
 	}
 
+#if ! EFI_BOOTLOADER
+	scheduleMsg(&logger, "%s on %s", msg, hwPortname(brainPin));
+#endif
+
 	index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return true;
