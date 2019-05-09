@@ -489,6 +489,8 @@ static void configureInputs(void) {
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
+	addChannel("AUX#1", engineConfiguration->auxTempSensor1.adcChannel, ADC_SLOW);
+	addChannel("AUX#2", engineConfiguration->auxTempSensor2.adcChannel, ADC_SLOW);
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("OilP", engineConfiguration->oilPressure.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);

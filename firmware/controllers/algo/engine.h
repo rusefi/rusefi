@@ -99,6 +99,8 @@ public:
 	float mockClt = NAN;
 #endif
 	float clt = NAN;
+	float auxTemp1 = NAN;
+	float auxTemp2 = NAN;
 
 	/**
 	 * Oil pressure in kPa
@@ -175,8 +177,11 @@ public:
 	float auxValveStart = 0;
 	float auxValveEnd = 0;
 
+	// too much copy-paste here, something should be improved :)
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
+	ThermistorMath auxTemp1Curve;
+	ThermistorMath auxTemp2Curve;
 
 	/**
 	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
