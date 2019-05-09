@@ -932,10 +932,14 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_DWELL_METRIC:
   return "DBG_DWELL_METRIC";
-case DBG_34:
-  return "DBG_34";
+case DBG_AUX_TEMPERATURE:
+  return "DBG_AUX_TEMPERATURE";
 case DBG_35:
   return "DBG_35";
+case DBG_36:
+  return "DBG_36";
+case DBG_37:
+  return "DBG_37";
 case DBG_ALTERNATOR_PID:
   return "DBG_ALTERNATOR_PID";
 case DBG_ANALOG_INPUTS:

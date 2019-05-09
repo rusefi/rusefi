@@ -902,8 +902,10 @@ typedef enum {
 	 */
 	DBG_ANALOG_INPUTS2 = 32,
 	DBG_DWELL_METRIC = 33,
-	DBG_34 = 34,
+	DBG_AUX_TEMPERATURE = 34,
 	DBG_35 = 35,
+	DBG_36 = 36,
+	DBG_37 = 37,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
