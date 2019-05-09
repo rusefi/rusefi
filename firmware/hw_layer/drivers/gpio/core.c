@@ -112,8 +112,6 @@ const char *gpiochips_getPinName(unsigned int pin)
 		offset = pin - chip->base;
 		if ((chip->gpio_names) && (chip->gpio_names[offset]))
 			return chip->gpio_names[offset];
-		else
-			return chip->name;
 	}
 
 	return NULL;

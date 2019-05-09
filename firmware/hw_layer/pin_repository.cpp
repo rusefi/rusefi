@@ -195,8 +195,15 @@ const char *hwPortname(brain_pin_e brainPin) {
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
-			chprintf((BaseSequentialStream *) &portNameStream, "ext:%s.%d (%s)",
-				gpiochips_getChipName(brainPin), gpiochips_getPinOffset(brainPin), gpiochips_getPinName(brainPin));
+			const char *pin_name = gpiochips_getPinName(brainPin);
+
+			if (pin_name) {
+				chprintf((BaseSequentialStream *) &portNameStream, "ext:%s",
+					pin_name);
+			} else {
+				chprintf((BaseSequentialStream *) &portNameStream, "ext:%s.%d",
+					gpiochips_getChipName(brainPin), gpiochips_getPinOffset(brainPin));
+			}
 		}
 	#endif
 	portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
@@ -253,6 +260,10 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 		return false;
 	}
 
+#if ! EFI_BOOTLOADER
+	scheduleMsg(&logger, "%s on %s", msg, hwPortname(brainPin));
+#endif
+
 	index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return true;
@@ -264,7 +275,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
 //		warning(OBD_PCM_Processor_Fault, "brain pin %d req by %s used by %s", brainPin, msg, PIN_USED[index]);
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "brain pin %d req by %s used by %s", brainPin, msg, PIN_USED[index]);
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "brain pin %s req by %s used by %s", hwPortname(brainPin), msg, PIN_USED[index]);
 		return true;
 	}
 
