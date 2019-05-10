@@ -1722,7 +1722,7 @@ typedef enum {
 	 * This error happens if some pinout configuration changes were applied but ECU was not reset afterwards.
 	 */
 	CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED = 6038,
-	CUSTOM_OBD_39 = 6039,
+	CUSTOM_OBD_WRONG_ADC_MODE = 6039,
 
 	CUSTOM_OBD_LOW_CAN_PERIOD = 6040,
 	CUSTOM_OBD_KNOCK_PROCESSOR = 6041,
