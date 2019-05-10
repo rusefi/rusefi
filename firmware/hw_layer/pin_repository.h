@@ -30,7 +30,13 @@ class PinRepository {
 void initPinRepository(void);
 EXTERNC bool brain_pin_is_onchip(brain_pin_e brainPin);
 EXTERNC bool brain_pin_is_ext(brain_pin_e brainPin);
+/**
+ * See also efiSetPadMode
+ */
 EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg);
+/**
+ * See also efiSetPadUnused
+ */
 EXTERNC void brain_pin_markUnused(brain_pin_e brainPin);
 const char * getPinFunction(brain_input_pin_e brainPin);
 
