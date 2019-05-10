@@ -41,15 +41,9 @@ void usb_serial_start(void) {
 	usbConnectBus(serusbcfg.usbp);
 	
 #if HAL_USE_SERIAL
-	/**
-	 * todo: start taking USB pins from configuration?
-	 * at the moment USB pinout is hard-coded in board.h file
-	 *
-	 * PA10/PA11/PA12
-	 * #define GPIOA_OTG_FS_ID             10
-	 * #define GPIOA_OTG_FS_DM             11
-	 * #define GPIOA_OTG_FS_DP             12
-	 */
+	efiSetPadMode("USB ID", EFI_USB_SERIAL_ID, PAL_MODE_ALTERNATE(EFI_USB_AF));
+	efiSetPadMode("USB ID", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
+	efiSetPadMode("USB ID", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
 	/*
 	 * Activates the serial driver 2 using the driver default configuration.
 	 */
