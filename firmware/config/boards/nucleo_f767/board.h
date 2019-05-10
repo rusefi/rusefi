@@ -37,6 +37,9 @@
 #define BOARD_NAME                  "STM32 Nucleo144-F767ZI for RusEFI"
 
 #define EFI_USB_AF 10U
+#define EFI_USB_SERIAL_ID GPIOA_10
+#define EFI_USB_SERIAL_DM GPIOA_11
+#define EFI_USB_SERIAL_DP GPIOA_12
 
 /*
  * Ethernet PHY type.
@@ -98,9 +101,9 @@
 #define GPIOA_RMII_RX_DV            7U
 #define GPIOA_USB_SOF               8U
 #define GPIOA_USB_VBUS              9U
-#define GPIOA_USB_ID                10U
-#define GPIOA_USB_DM                11U
-#define GPIOA_USB_DP                12U
+#define GPIOA_PIN10                 10U
+#define GPIOA_PIN11                 11U
+#define GPIOA_PIN12                 12U
 #define GPIOA_SWDIO                 13U
 #define GPIOA_SWCLK                 14U
 #define GPIOA_ZIO_D20               15U
@@ -597,9 +600,9 @@
                                      PIN_MODE_ALTERNATE(GPIOA_ARD_D11) |    \
                                      PIN_MODE_ALTERNATE(GPIOA_USB_SOF) |    \
                                      PIN_MODE_ANALOG(GPIOA_USB_VBUS) |      \
-                                     PIN_MODE_ALTERNATE(GPIOA_USB_ID) |     \
-                                     PIN_MODE_ALTERNATE(GPIOA_USB_DM) |     \
-                                     PIN_MODE_ALTERNATE(GPIOA_USB_DP) |     \
+                                     PIN_MODE_ALTERNATE(GPIOA_PIN10) |     \
+                                     PIN_MODE_ALTERNATE(GPIOA_PIN11) |     \
+                                     PIN_MODE_ALTERNATE(GPIOA_PIN12) |     \
                                      PIN_MODE_ALTERNATE(GPIOA_SWDIO) |      \
                                      PIN_MODE_ALTERNATE(GPIOA_SWCLK) |      \
                                      PIN_MODE_INPUT(GPIOA_ZIO_D20))
@@ -613,9 +616,9 @@
                                      PIN_OTYPE_PUSHPULL(GPIOA_ARD_D11) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOA_USB_SOF) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOA_USB_VBUS) |   \
-                                     PIN_OTYPE_PUSHPULL(GPIOA_USB_ID) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOA_USB_DM) |     \
-                                     PIN_OTYPE_PUSHPULL(GPIOA_USB_DP) |     \
+                                     PIN_OTYPE_PUSHPULL(GPIOA_PIN10) |     \
+                                     PIN_OTYPE_PUSHPULL(GPIOA_PIN11) |     \
+                                     PIN_OTYPE_PUSHPULL(GPIOA_PIN12) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOA_SWDIO) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOA_SWCLK) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOA_ZIO_D20))
@@ -629,9 +632,9 @@
                                      PIN_OSPEED_HIGH(GPIOA_ARD_D11) |       \
                                      PIN_OSPEED_HIGH(GPIOA_USB_SOF) |       \
                                      PIN_OSPEED_HIGH(GPIOA_USB_VBUS) |      \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_ID) |        \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_DM) |        \
-                                     PIN_OSPEED_HIGH(GPIOA_USB_DP) |        \
+                                     PIN_OSPEED_HIGH(GPIOA_PIN10) |        \
+                                     PIN_OSPEED_HIGH(GPIOA_PIN11) |        \
+                                     PIN_OSPEED_HIGH(GPIOA_PIN12) |        \
                                      PIN_OSPEED_HIGH(GPIOA_SWDIO) |         \
                                      PIN_OSPEED_HIGH(GPIOA_SWCLK) |         \
                                      PIN_OSPEED_HIGH(GPIOA_ZIO_D20))
@@ -645,9 +648,9 @@
                                      PIN_PUPDR_PULLUP(GPIOA_ARD_D11) |      \
                                      PIN_PUPDR_FLOATING(GPIOA_USB_SOF) |    \
                                      PIN_PUPDR_FLOATING(GPIOA_USB_VBUS) |   \
-                                     PIN_PUPDR_FLOATING(GPIOA_USB_ID) |     \
-                                     PIN_PUPDR_FLOATING(GPIOA_USB_DM) |     \
-                                     PIN_PUPDR_FLOATING(GPIOA_USB_DP) |     \
+                                     PIN_PUPDR_FLOATING(GPIOA_PIN10) |     \
+                                     PIN_PUPDR_FLOATING(GPIOA_PIN11) |     \
+                                     PIN_PUPDR_FLOATING(GPIOA_PIN12) |     \
                                      PIN_PUPDR_FLOATING(GPIOA_SWDIO) |      \
                                      PIN_PUPDR_FLOATING(GPIOA_SWCLK) |      \
                                      PIN_PUPDR_PULLUP(GPIOA_ZIO_D20))
@@ -661,9 +664,9 @@
                                      PIN_ODR_HIGH(GPIOA_ARD_D11) |          \
                                      PIN_ODR_HIGH(GPIOA_USB_SOF) |          \
                                      PIN_ODR_HIGH(GPIOA_USB_VBUS) |         \
-                                     PIN_ODR_HIGH(GPIOA_USB_ID) |           \
-                                     PIN_ODR_HIGH(GPIOA_USB_DM) |           \
-                                     PIN_ODR_HIGH(GPIOA_USB_DP) |           \
+                                     PIN_ODR_HIGH(GPIOA_PIN10) |           \
+                                     PIN_ODR_HIGH(GPIOA_PIN11) |           \
+                                     PIN_ODR_HIGH(GPIOA_PIN12) |           \
                                      PIN_ODR_HIGH(GPIOA_SWDIO) |            \
                                      PIN_ODR_HIGH(GPIOA_SWCLK) |            \
                                      PIN_ODR_HIGH(GPIOA_ZIO_D20))
@@ -677,9 +680,9 @@
                                      PIN_AFIO_AF(GPIOA_ARD_D11, 11U))
 #define VAL_GPIOA_AFRH              (PIN_AFIO_AF(GPIOA_USB_SOF, 10U) |      \
                                      PIN_AFIO_AF(GPIOA_USB_VBUS, 0U) |      \
-                                     PIN_AFIO_AF(GPIOA_USB_ID, EFI_USB_AF) |       \
-                                     PIN_AFIO_AF(GPIOA_USB_DM, EFI_USB_AF) |       \
-                                     PIN_AFIO_AF(GPIOA_USB_DP, EFI_USB_AF) |       \
+                                     PIN_AFIO_AF(GPIOA_PIN10, EFI_USB_AF) |       \
+                                     PIN_AFIO_AF(GPIOA_PIN11, EFI_USB_AF) |       \
+                                     PIN_AFIO_AF(GPIOA_PIN12, EFI_USB_AF) |       \
                                      PIN_AFIO_AF(GPIOA_SWDIO, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_SWCLK, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_ZIO_D20, 0U))
