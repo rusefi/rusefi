@@ -57,11 +57,7 @@ bool efiReadPin(brain_pin_e pin) {
  */
 void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode)
 {
-	bool wasUsed;
-
-	//efiAssertVoid(OBD_PCM_Processor_Fault, pin != EFI_ERROR_CODE, "pin_error");
-
-	wasUsed = brain_pin_markUsed(brainPin, msg);
+	bool wasUsed = brain_pin_markUsed(brainPin, msg);
 
 	if (!wasUsed) {
 		/*check if on-chip pin or external */
