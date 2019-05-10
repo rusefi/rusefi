@@ -33,6 +33,9 @@
 #define BOARD_ST_STM32F4_DISCOVERY
 #define BOARD_NAME                  "STM32F407 for RusEFI"
 
+#define EFI_USB_AF 10U
+
+
 /*
  * Board oscillators-related settings.
  * NOTE: LSE not fitted.
@@ -395,9 +398,9 @@
                                      PIN_AFIO_AF(GPIOA_PIN7, 5U))
 #define VAL_GPIOA_AFRH              (PIN_AFIO_AF(GPIOA_PIN8, 0U) |          \
                                      PIN_AFIO_AF(GPIOA_VBUS_FS, 0U) |       \
-                                     PIN_AFIO_AF(GPIOA_OTG_FS_ID, 10U) |    \
-                                     PIN_AFIO_AF(GPIOA_OTG_FS_DM, 10U) |    \
-                                     PIN_AFIO_AF(GPIOA_OTG_FS_DP, 10U) |    \
+                                     PIN_AFIO_AF(GPIOA_OTG_FS_ID, EFI_USB_AF) |    \
+                                     PIN_AFIO_AF(GPIOA_OTG_FS_DM, EFI_USB_AF) |    \
+                                     PIN_AFIO_AF(GPIOA_OTG_FS_DP, EFI_USB_AF) |    \
                                      PIN_AFIO_AF(GPIOA_SWDIO, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_SWCLK, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_PIN15, 0U))
