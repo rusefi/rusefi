@@ -52,8 +52,8 @@
 //	LED_HUGE_20,
 
 #if EFI_GPIO_HARDWARE
-void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
-void efiSetPadUnused(brain_pin_e brainPin);
+EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
+EXTERNC void efiSetPadUnused(brain_pin_e brainPin);
 
 bool efiReadPin(brain_pin_e pin);
 
