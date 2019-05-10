@@ -281,7 +281,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return value;
 	}
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-		warning(CUSTOM_OBD_39, "ADC is off [%s] index=%d", msg, hwChannel);
+		warning(CUSTOM_OBD_WRONG_ADC_MODE, "ADC is off [%s] index=%d", msg, hwChannel);
 	}
 
 	return slowAdc.getAdcValueByHwChannel(hwChannel);
