@@ -1536,6 +1536,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "clutchUpPin",							clutchUpPin
 		field = "brakePedalPin",						brakePedalPin
 		field = "A/C Switch",							acSwitchAdc
+		field = "Aux Temperature #1",					auxTempSensor1_adcChannel
+		field = "Aux Temperature #2",					auxTempSensor2_adcChannel
 
 	dialog = allPins1_1
 		field = mc33816_cs,								mc33816_cs
