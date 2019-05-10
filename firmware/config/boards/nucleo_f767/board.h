@@ -36,6 +36,8 @@
 #define BOARD_ST_NUCLEO144_F767ZI
 #define BOARD_NAME                  "STM32 Nucleo144-F767ZI for RusEFI"
 
+#define EFI_USB_AF 10U
+
 /*
  * Ethernet PHY type.
  */
@@ -675,9 +677,9 @@
                                      PIN_AFIO_AF(GPIOA_ARD_D11, 11U))
 #define VAL_GPIOA_AFRH              (PIN_AFIO_AF(GPIOA_USB_SOF, 10U) |      \
                                      PIN_AFIO_AF(GPIOA_USB_VBUS, 0U) |      \
-                                     PIN_AFIO_AF(GPIOA_USB_ID, 10U) |       \
-                                     PIN_AFIO_AF(GPIOA_USB_DM, 10U) |       \
-                                     PIN_AFIO_AF(GPIOA_USB_DP, 10U) |       \
+                                     PIN_AFIO_AF(GPIOA_USB_ID, EFI_USB_AF) |       \
+                                     PIN_AFIO_AF(GPIOA_USB_DM, EFI_USB_AF) |       \
+                                     PIN_AFIO_AF(GPIOA_USB_DP, EFI_USB_AF) |       \
                                      PIN_AFIO_AF(GPIOA_SWDIO, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_SWCLK, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_ZIO_D20, 0U))
