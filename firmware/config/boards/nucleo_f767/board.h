@@ -680,9 +680,9 @@
                                      PIN_AFIO_AF(GPIOA_ARD_D11, 11U))
 #define VAL_GPIOA_AFRH              (PIN_AFIO_AF(GPIOA_USB_SOF, 10U) |      \
                                      PIN_AFIO_AF(GPIOA_USB_VBUS, 0U) |      \
-                                     PIN_AFIO_AF(GPIOA_PIN10, EFI_USB_AF) |       \
-                                     PIN_AFIO_AF(GPIOA_PIN11, EFI_USB_AF) |       \
-                                     PIN_AFIO_AF(GPIOA_PIN12, EFI_USB_AF) |       \
+                                     PIN_AFIO_AF(GPIOA_PIN10, 0U) |       \
+                                     PIN_AFIO_AF(GPIOA_PIN11, 0U) |       \
+                                     PIN_AFIO_AF(GPIOA_PIN12, 0U) |       \
                                      PIN_AFIO_AF(GPIOA_SWDIO, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_SWCLK, 0U) |         \
                                      PIN_AFIO_AF(GPIOA_ZIO_D20, 0U))
