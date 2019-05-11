@@ -1108,10 +1108,7 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
 
-	engineConfiguration->trigger.type = TT_ONE;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	eth.applyTriggerShape();
+	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	setWholeTimingTable(0);

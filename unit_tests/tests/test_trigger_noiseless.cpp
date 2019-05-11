@@ -175,9 +175,7 @@ TEST(big, testNoiselessDecoder) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	// we'll test on 60-2 wheel
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	eth.applyTriggerShape();
+	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoiselessDecoder RPM";

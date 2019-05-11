@@ -214,13 +214,17 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
-	ASSERT_EQ( 0,  readIfTriggerConfigChangedForUnitTest(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
 
+
+	ASSERT_EQ( 0,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
+	eth->setTriggerType(trigger PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->trigger.type = trigger;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 1,  readIfTriggerConfigChangedForUnitTest(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
-
-	eth->applyTriggerShape();
+	ASSERT_EQ( 1,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
+	applyTriggerShape();
 }
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
