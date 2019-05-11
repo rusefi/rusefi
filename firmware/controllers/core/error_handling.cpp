@@ -131,6 +131,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	printWarning(fmt, ap);
 	va_end(ap);
 #else
+	// todo: we need access to 'engine' here so that we can migrate to real 'engine->engineState.warnings'
 	unitTestWarningCodeState.addWarningCode(code);
 	printf("unit_test_warning: ");
 	va_list ap;
