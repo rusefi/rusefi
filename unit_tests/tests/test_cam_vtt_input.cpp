@@ -54,6 +54,27 @@ TEST(sensors, testNoStartUpWarnings) {
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
+TEST(sensors, testNoisyInput) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	ASSERT_EQ( 0,  GET_RPM()) << "testNoisyInput RPM";
+
+	eth.firePrimaryTriggerRise();
+	eth.firePrimaryTriggerFall();
+	eth.firePrimaryTriggerRise();
+	eth.firePrimaryTriggerFall();
+	eth.firePrimaryTriggerRise();
+	eth.firePrimaryTriggerFall();
+	eth.firePrimaryTriggerRise();
+	eth.firePrimaryTriggerFall();
+	// error condition since events happened too quick while time does not move
+	ASSERT_EQ(NOISY_RPM,  GET_RPM()) << "testNoisyInput RPM should be noisy";
+
+	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoisyInput";
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
+	ASSERT_EQ(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(1)) << "@0";
+}
+
 TEST(sensors, testCamInput) {
 	// setting some weird engine
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
@@ -67,28 +88,13 @@ TEST(sensors, testCamInput) {
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testCamInput RPM";
 
-	eth.firePrimaryTriggerRise();
-	eth.firePrimaryTriggerFall();
-	eth.firePrimaryTriggerRise();
-	eth.firePrimaryTriggerFall();
-	eth.firePrimaryTriggerRise();
-	eth.firePrimaryTriggerFall();
-	eth.firePrimaryTriggerRise();
-	eth.firePrimaryTriggerFall();
-	// error condition since events happened too quick while time does not move
-	ASSERT_EQ(NOISY_RPM,  GET_RPM()) << "testCamInput RPM should be noisy";
-
-	// todo: open question what are these warnings about?
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
-	unitTestWarningCodeState.recentWarnings.clear();
-
 	eth.fireRise(50);
 	eth.fireRise(50);
 	eth.fireRise(50);
 	eth.fireRise(50);
 	eth.fireRise(50);
 	ASSERT_EQ(1200,  GET_RPM()) << "testCamInput RPM";
-	ASSERT_EQ(2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
+	ASSERT_EQ(1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
 
 	for (int i = 0; i < 100;i++)
 		eth.fireRise(50);
