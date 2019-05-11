@@ -1,0 +1,1 @@
+java -jar ../logicdata2c.jar
