@@ -84,16 +84,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 	engine->triggerCentral.addEventListener(listener, name, engine);
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
-int triggerReentraint = 0;
-int maxTriggerReentraint = 0;
-uint32_t triggerDuration;
-uint32_t triggerMaxDuration = 0;
-
-static bool isInsideTriggerHandler = false;
-
-void hwHandleVvtCamSignal(trigger_value_e front) {
+void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addEngineSnifferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
 
 	if (CONFIGB(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
@@ -183,6 +174,16 @@ void hwHandleVvtCamSignal(trigger_value_e front) {
 	}
 
 }
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+
+int triggerReentraint = 0;
+int maxTriggerReentraint = 0;
+uint32_t triggerDuration;
+uint32_t triggerMaxDuration = 0;
+
+static bool isInsideTriggerHandler = false;
+
 
 void hwHandleShaftSignal(trigger_event_e signal) {
 	// for effective noise filtering, we need both signal edges, 

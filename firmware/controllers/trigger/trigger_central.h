@@ -60,7 +60,7 @@ private:
 void triggerInfo(void);
 efitime_t getCrankEventCounter(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void hwHandleShaftSignal(trigger_event_e signal);
-void hwHandleVvtCamSignal(trigger_value_e front);
+void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void initTriggerCentral(Logging *sharedLogger);
 void printAllCallbacksHistogram(void);

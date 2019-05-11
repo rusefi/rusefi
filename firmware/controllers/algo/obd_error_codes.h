@@ -366,7 +366,7 @@ typedef enum {
 	//P0332 Knock Sensor 2 Circuit Low Input (Bank 2)
 	//P0333 Knock Sensor 2 Circuit High Input (Bank 2)
 	//P0334 Knock Sensor 2 Circuit Intermittent (Bank 2)
-	//P0335 Crankshaft Position Sensor A Circuit Malfunction
+	OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction = 335,
 	//P0336 Crankshaft Position Sensor A Circuit Range/Performance
 	//P0337 Crankshaft Position Sensor A Circuit Low Input
 	//P0338 Crankshaft Position Sensor A Circuit High Input
