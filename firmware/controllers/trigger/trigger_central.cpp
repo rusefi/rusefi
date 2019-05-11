@@ -556,7 +556,7 @@ void triggerInfo(void) {
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_PROD_CODE
-	if (engineConfiguration->camInput != GPIO_UNASSIGNED) {
+	if (HAVE_CAM_INPUT()) {
 		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInput),
 				getVvt_mode_e(engineConfiguration->vvtMode));
 		scheduleMsg(logger, "VVT event counters: %d/%d", vvtEventRiseCounter, vvtEventFallCounter);
