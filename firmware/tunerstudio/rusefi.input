@@ -813,7 +813,7 @@ gaugeCategory = Sensors2
    accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    atmPresCGauge     = baroPressure,          "Baro",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
    vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
-   internalMcuTemperatureGauge = internalMcuTemperature, "internal temperature", "C",     0,   100,     0,    0,    100,  100,   0,   0
+   internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    100,  100,   0,   0
    OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
    fuelConsumptionPerHourGauge=fuelConsumptionPerHour,  "f","kPa",        0,    750,      35,     75,     550,   700,   0,   0	
 

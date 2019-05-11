@@ -1134,6 +1134,8 @@ end_struct
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 
+#define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
+
 
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
