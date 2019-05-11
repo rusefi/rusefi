@@ -865,6 +865,7 @@
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_FUEL_BASE "fuel: base"
+#define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: charge T"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
