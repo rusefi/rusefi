@@ -63,18 +63,6 @@ static StepperMotor iacMotor;
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
-typedef enum {
-	INIT = 0,
-	TPS_THRESHOLD = 1,
-	RPM_DEAD_ZONE = 2,
-	PID_VALUE = 3,
-	PWM_PRETTY_CLOSE = 4,
-	PID_UPPER = 5,
-	ADJUSTING = 8,
-	BLIP = 16,
-
-} idle_state_e;
-
 static idle_state_e idleState = INIT;
 
 /**
@@ -274,6 +262,7 @@ private:
 	 */
 
 		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
+			// todo: print each bit using 'getIdle_state_e' method
 			scheduleMsg(logger, "state %d", idleState);
 			idlePid.showPidStatus(logger, "idle");
 		}
