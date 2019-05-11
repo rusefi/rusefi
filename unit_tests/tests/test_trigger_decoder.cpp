@@ -933,9 +933,8 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	mockMapValue = 0;
 	testMafValue = 0;
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
-	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(1));
+	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
+	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 }
 
 static void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -976,7 +975,7 @@ TEST(big, testDifferentInjectionModes) {
 	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
@@ -1086,9 +1085,8 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
-	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(1));
+	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
+	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 }
 
 TEST(big, testSparkReverseOrderBug319) {
@@ -1188,10 +1186,9 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireFall(20);
 	eth.executeActions();
 	ASSERT_EQ( 0,  enginePins.coils[3].outOfOrder) << "out-of-order #8";
-	ASSERT_EQ( 3,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#SparkReverseOrderBug319";
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
-	ASSERT_EQ(CUSTOM_DWELL_TOO_LONG, unitTestWarningCodeState.recentWarnings.get(1));
-	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(2));
+	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#SparkReverseOrderBug319";
+	ASSERT_EQ(CUSTOM_DWELL_TOO_LONG, unitTestWarningCodeState.recentWarnings.get(0)) << "warning @0";
+	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
 TEST(big, testMissedSpark299) {
@@ -1274,6 +1271,5 @@ TEST(big, testMissedSpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#1";
-	assertEqualsM("warningCounter code", CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#1";
 }

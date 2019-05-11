@@ -458,6 +458,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif
 
 		bool isSynchronizationPoint;
+		bool wasSynchronized = shaft_is_synchronized;
 
 		if (triggerShape->isSynchronizationNeeded) {
 			// this is getting a little out of hand, any ideas?
@@ -563,23 +564,29 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		if (isSynchronizationPoint) {
 
-			/**
-			 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-			 */
-			bool isDecodingError = validateEventCounters(PASS_ENGINE_PARAMETER_SIGNATURE);
+			// We only care about trigger shape once we have synchronized trigger. Anything could happen
+			// during first revolution and it's fine
+			if (wasSynchronized) {
 
-			enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
-			if (isDecodingError && !engine->isInitializingTrigger) {
-				handleTriggerError(PASS_ENGINE_PARAMETER_SIGNATURE);
-			}
+				/**
+			 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
+			 	 */
+				bool isDecodingError = validateEventCounters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-			errorDetection.add(isDecodingError);
+				enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
-			if (isTriggerDecoderError()) {
-				warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
-						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
-						TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1],
-						currentCycle.eventCount[2]);
+				if (isDecodingError && !engine->isInitializingTrigger) {
+					handleTriggerError(PASS_ENGINE_PARAMETER_SIGNATURE);
+				}
+
+				errorDetection.add(isDecodingError);
+
+				if (isTriggerDecoderError()) {
+					warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
+							TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
+							TRIGGER_SHAPE(expectedEventCount[2]), currentCycle.eventCount[0], currentCycle.eventCount[1],
+							currentCycle.eventCount[2]);
+				}
 			}
 
 			onShaftSynchronization(nowNt, triggerWheel PASS_ENGINE_PARAMETER_SUFFIX);
