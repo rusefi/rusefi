@@ -2080,6 +2080,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "SdCard", 								isSdCardEnabled
+		field = "showSdCardWarning",					showSdCardWarning
 		field = "CS Pin",								sdCardCsPin
 		field = "SPI",									sdCardSpiDevice
 		field = "log format",							logFormat

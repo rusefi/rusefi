@@ -1229,8 +1229,6 @@
 #define isPrintTriggerSynchDetails_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_14_offset 76
-#define issue_294_14_offset_hex 4c
 #define issue_294_15_offset 76
 #define issue_294_15_offset_hex 4c
 #define issue_294_16_offset 76
@@ -1259,6 +1257,10 @@
 #define issue_294_28_offset_hex 4c
 #define issue_294_29_offset 76
 #define issue_294_29_offset_hex 4c
+#define issue_294_30_offset 76
+#define issue_294_30_offset_hex 4c
+#define issue_294_31_offset 76
+#define issue_294_31_offset_hex 4c
 #define isTunerStudioEnabled_offset 1476
 #define isTunerStudioEnabled_offset_hex 5c4
 #define isVerboseAlternator_offset 744
@@ -1508,6 +1510,8 @@
 #define servoOutputPins7_offset_hex c62
 #define servoOutputPins8_offset 3171
 #define servoOutputPins8_offset_hex c63
+#define showSdCardWarning_offset 76
+#define showSdCardWarning_offset_hex 4c
 #define silentTriggerError_offset 1464
 #define silentTriggerError_offset_hex 5b8
 #define slowAdcAlpha_offset 2108
