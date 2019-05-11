@@ -1852,6 +1852,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 		
 	dialog = idleSettings, "", yAxis
+		field = "Debug mode",							debugMode
 		field = "Idle IAC control mode",					idleMode
 		field = "use ETB for idle",						useETBforIdleControl
 		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle

@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Wed Apr 10 18:05:03 EDT 2019
+// on Sat May 11 10:22:02 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -46,4 +46,5 @@ const char *getHip_state_e(hip_state_e value);
 const char *getTChargeMode_e(tChargeMode_e value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
+const char *getIdle_state_e(idle_state_e value);
 #endif /*_A_H_HEADER_ */

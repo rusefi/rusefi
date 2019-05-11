@@ -1,6 +1,6 @@
 // auto-generated from.\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
-// on Wed May 01 12:54:14 EDT 2019
+// on Sat May 11 10:22:02 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -930,10 +930,6 @@ case TLE8888_PIN_9:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_DWELL_METRIC:
-  return "DBG_DWELL_METRIC";
-case DBG_AUX_TEMPERATURE:
-  return "DBG_AUX_TEMPERATURE";
 case DBG_35:
   return "DBG_35";
 case DBG_36:
@@ -948,6 +944,8 @@ case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
 case DBG_AUX_PID_1:
   return "DBG_AUX_PID_1";
+case DBG_AUX_TEMPERATURE:
+  return "DBG_AUX_TEMPERATURE";
 case DBG_AUX_VALVES:
   return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
@@ -958,6 +956,8 @@ case DBG_CJ125:
   return "DBG_CJ125";
 case DBG_CRANKING_DETAILS:
   return "DBG_CRANKING_DETAILS";
+case DBG_DWELL_METRIC:
+  return "DBG_DWELL_METRIC";
 case DBG_ELECTRONIC_THROTTLE_EXTRA:
   return "DBG_ELECTRONIC_THROTTLE_EXTRA";
 case DBG_ELECTRONIC_THROTTLE_PID:
@@ -1192,6 +1192,27 @@ case STEADY_STATE_AFTER_STEP_UP:
   return "STEADY_STATE_AFTER_STEP_UP";
 case STEADY_STATE_AT_BASELINE:
   return "STEADY_STATE_AT_BASELINE";
+  }
+ return NULL;
+}
+const char *getIdle_state_e(idle_state_e value){
+switch(value) {
+case ADJUSTING:
+  return "ADJUSTING";
+case BLIP:
+  return "BLIP";
+case INIT:
+  return "INIT";
+case PID_UPPER:
+  return "PID_UPPER";
+case PID_VALUE:
+  return "PID_VALUE";
+case PWM_PRETTY_CLOSE:
+  return "PWM_PRETTY_CLOSE";
+case RPM_DEAD_ZONE:
+  return "RPM_DEAD_ZONE";
+case TPS_THRESHOLD:
+  return "TPS_THRESHOLD";
   }
  return NULL;
 }

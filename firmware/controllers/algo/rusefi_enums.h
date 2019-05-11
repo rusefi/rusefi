@@ -1072,5 +1072,16 @@ typedef enum {
   FAILED = 128
 } PidAutoTune_AutoTunerState;
 
+typedef enum {
+	INIT = 0,
+	TPS_THRESHOLD = 1,
+	RPM_DEAD_ZONE = 2,
+	PID_VALUE = 3,
+	PWM_PRETTY_CLOSE = 4,
+	PID_UPPER = 5,
+	ADJUSTING = 8,
+	BLIP = 16,
+
+} idle_state_e;
 
 #endif /* RUSEFI_ENUMS_H_ */
