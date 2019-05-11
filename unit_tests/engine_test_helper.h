@@ -28,6 +28,7 @@ class EngineTestHelper : public EngineTestHelperBase {
 public:
 	EngineTestHelper(engine_type_e engineType);
 	void applyTriggerShape();
+	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void fireRise(int delayMs);
 	void fireFall(int delayMs);
 

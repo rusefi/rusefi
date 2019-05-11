@@ -676,7 +676,7 @@ bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return result;
 }
 
-bool readIfTriggerConfigChangedForUnitTest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->isTriggerConfigChanged;
 }
 
