@@ -283,7 +283,7 @@ bit cj125isUaDivided;
 bit cj125isLsu49;
 bit etb1_use_two_wires;
 bit etb2_use_two_wires;
-bit issue_294_14;
+bit showSdCardWarning;
 bit issue_294_15;
 bit issue_294_16;
 bit issue_294_17;
@@ -298,6 +298,8 @@ bit issue_294_26;
 bit issue_294_27;
 bit issue_294_28;
 bit issue_294_29;
+bit issue_294_30;
+bit issue_294_31;
 
 
 int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0

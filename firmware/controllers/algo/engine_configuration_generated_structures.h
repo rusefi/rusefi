@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 06 09:14:48 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 13:38:32 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1044,7 +1044,7 @@ typedef struct {
 	bool etb2_use_two_wires : 1;
 	/**
 	offset 76 bit 14 */
-	bool issue_294_14 : 1;
+	bool showSdCardWarning : 1;
 	/**
 	offset 76 bit 15 */
 	bool issue_294_15 : 1;
@@ -1087,6 +1087,12 @@ typedef struct {
 	/**
 	offset 76 bit 28 */
 	bool issue_294_29 : 1;
+	/**
+	offset 76 bit 29 */
+	bool issue_294_30 : 1;
+	/**
+	offset 76 bit 30 */
+	bool issue_294_31 : 1;
 	/**
 	 * Closed throttle. todo: extract these two fields into a structure
 	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
@@ -2733,4 +2739,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Mon May 06 09:14:48 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 13:38:32 EDT 2019

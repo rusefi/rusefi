@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 10:55:06 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 13:38:32 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -811,7 +811,6 @@ public class Fields {
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isPrintTriggerSynchDetails_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_14_offset = 76;
 	public static final int issue_294_15_offset = 76;
 	public static final int issue_294_16_offset = 76;
 	public static final int issue_294_17_offset = 76;
@@ -826,6 +825,8 @@ public class Fields {
 	public static final int issue_294_27_offset = 76;
 	public static final int issue_294_28_offset = 76;
 	public static final int issue_294_29_offset = 76;
+	public static final int issue_294_30_offset = 76;
+	public static final int issue_294_31_offset = 76;
 	public static final int isTunerStudioEnabled_offset = 1476;
 	public static final int isVerboseAlternator_offset = 744;
 	public static final int isVerboseAuxPid1_offset = 76;
@@ -980,6 +981,7 @@ public class Fields {
 	public static final int servoOutputPins6_offset = 3169;
 	public static final int servoOutputPins7_offset = 3170;
 	public static final int servoOutputPins8_offset = 3171;
+	public static final int showSdCardWarning_offset = 76;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2108;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1249,7 +1251,7 @@ public class Fields {
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 76, FieldType.BIT, 11);
 	public static final Field ETB1_USE_TWO_WIRES = Field.create("ETB1_USE_TWO_WIRES", 76, FieldType.BIT, 12);
 	public static final Field ETB2_USE_TWO_WIRES = Field.create("ETB2_USE_TWO_WIRES", 76, FieldType.BIT, 13);
-	public static final Field ISSUE_294_14 = Field.create("ISSUE_294_14", 76, FieldType.BIT, 14);
+	public static final Field SHOWSDCARDWARNING = Field.create("SHOWSDCARDWARNING", 76, FieldType.BIT, 14);
 	public static final Field ISSUE_294_15 = Field.create("ISSUE_294_15", 76, FieldType.BIT, 15);
 	public static final Field ISSUE_294_16 = Field.create("ISSUE_294_16", 76, FieldType.BIT, 16);
 	public static final Field ISSUE_294_17 = Field.create("ISSUE_294_17", 76, FieldType.BIT, 17);
@@ -1264,6 +1266,8 @@ public class Fields {
 	public static final Field ISSUE_294_27 = Field.create("ISSUE_294_27", 76, FieldType.BIT, 26);
 	public static final Field ISSUE_294_28 = Field.create("ISSUE_294_28", 76, FieldType.BIT, 27);
 	public static final Field ISSUE_294_29 = Field.create("ISSUE_294_29", 76, FieldType.BIT, 28);
+	public static final Field ISSUE_294_30 = Field.create("ISSUE_294_30", 76, FieldType.BIT, 29);
+	public static final Field ISSUE_294_31 = Field.create("ISSUE_294_31", 76, FieldType.BIT, 30);
 	public static final Field TPSMIN = Field.create("TPSMIN", 80, FieldType.INT16);
 	public static final Field TPSMAX = Field.create("TPSMAX", 82, FieldType.INT16);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 84, FieldType.INT16);
