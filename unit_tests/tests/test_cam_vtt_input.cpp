@@ -72,7 +72,7 @@ TEST(sensors, testNoisyInput) {
 
 	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoisyInput";
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
-	ASSERT_EQ(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(1)) << "@0";
+	ASSERT_EQ(OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1)) << "@0";
 }
 
 TEST(sensors, testCamInput) {
@@ -82,9 +82,9 @@ TEST(sensors, testCamInput) {
 	// and now changing to ONE trigger on CRANK with CAM/VVT
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	engineConfiguration->camInput = GPIOA_10;
+	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	engineConfiguration->camInput = GPIOA_10; // we just need to indicate that we have CAM
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testCamInput RPM";
 
@@ -93,10 +93,20 @@ TEST(sensors, testCamInput) {
 	eth.fireRise(50);
 	eth.fireRise(50);
 	eth.fireRise(50);
+
 	ASSERT_EQ(1200,  GET_RPM()) << "testCamInput RPM";
-	ASSERT_EQ(1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
+	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
 
-	for (int i = 0; i < 100;i++)
+	for (int i = 0; i < 50;i++) {
 		eth.fireRise(50);
+	}
 
+	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #2";
+
+	for (int i = 0; i < 50;i++) {
+		eth.fireRise(50);
+	}
+
+
+	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
 }

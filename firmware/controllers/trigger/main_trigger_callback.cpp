@@ -472,7 +472,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 		return;
 	}
 	if (rpm == NOISY_RPM) {
-		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "noisy trigger");
+		warning(OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, "noisy trigger");
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
 		return;
 	}
