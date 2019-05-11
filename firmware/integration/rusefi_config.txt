@@ -1152,6 +1152,7 @@ end_struct
 
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
+#define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: charge T"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"

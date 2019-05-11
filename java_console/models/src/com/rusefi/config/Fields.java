@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Thu May 09 19:31:34 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 10:55:06 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -554,8 +554,10 @@ public class Fields {
 	public static final String GAUGE_NAME_DEBUG_I4 = "debug i4";
 	public static final String GAUGE_NAME_DEBUG_I5 = "debug i5";
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
+	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
+	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: charge T";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CRANKING = "fuel: cranking";
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
