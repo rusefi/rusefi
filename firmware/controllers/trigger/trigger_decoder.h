@@ -56,6 +56,7 @@ public:
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
 	bool isEvenRevolution() const;
+	void validateCamVvtCounters();
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 	efitime_t getStartOfRevolutionIndex() const;
@@ -109,6 +110,7 @@ public:
 	 * for virtual double trigger see timeAtVirtualZeroNt
 	 */
 	efitick_t startOfCycleNt;
+	int vvtCamCounter = 0;
 private:
 	void resetCurrentCycleState();
 
@@ -117,7 +119,6 @@ private:
 	efitime_t totalEventCountBase;
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
-
 };
 
 // we only need 90 degrees of events so /4 or maybe even /8 should work?

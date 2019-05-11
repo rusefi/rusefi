@@ -99,6 +99,7 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 	}
 
 	TriggerCentral *tc = &engine->triggerCentral;
+	tc->triggerState.vvtCamCounter++;
 
 	efitick_t nowNt = getTimeNowNt();
 

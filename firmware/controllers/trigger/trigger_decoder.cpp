@@ -293,6 +293,17 @@ int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
 
+void TriggerState::validateCamVvtCounters() {
+	// micro-optimized 'totalRevolutionCounter % 256'
+	int camVvtValidationIndex = totalRevolutionCounter & 0xFF;
+	if (camVvtValidationIndex == 0) {
+		vvtCamCounter = 0;
+	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
+		// magic logic: we expect at least 60 CAM/VVT events for each 256 trigger cycles, otherwise throw a code
+		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "no CAM signals");
+	}
+}
+
 void TriggerState::incrementTotalEventCounter() {
 	totalRevolutionCounter++;
 }

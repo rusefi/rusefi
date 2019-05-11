@@ -496,6 +496,9 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 #endif
 
 	if (trgEventIndex == 0) {
+		if (HAVE_CAM_INPUT()) {
+			engine->triggerCentral.triggerState.validateCamVvtCounters();
+		}
 
 		if (checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild ignition schedule

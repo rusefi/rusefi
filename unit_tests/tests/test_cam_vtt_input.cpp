@@ -88,25 +88,25 @@ TEST(sensors, testCamInput) {
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testCamInput RPM";
 
-	eth.fireRise(50);
-	eth.fireRise(50);
-	eth.fireRise(50);
-	eth.fireRise(50);
-	eth.fireRise(50);
+	for (int i = 0; i < 5;i++) {
+		eth.fireRise(50);
+	}
 
 	ASSERT_EQ(1200,  GET_RPM()) << "testCamInput RPM";
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
 
-	for (int i = 0; i < 50;i++) {
+	for (int i = 0; i < 600;i++) {
 		eth.fireRise(50);
 	}
 
-	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #2";
+	ASSERT_EQ(1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #2";
+	ASSERT_EQ(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
+	unitTestWarningCodeState.recentWarnings.clear();
 
-	for (int i = 0; i < 50;i++) {
+	for (int i = 0; i < 600;i++) {
 		eth.fireRise(50);
+		hwHandleVvtCamSignal(TV_FALL PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-
 
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
 }
