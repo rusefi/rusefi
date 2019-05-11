@@ -21,23 +21,38 @@ TEST(sensors, testNoStartUpWarningsNoSyncronizationTrigger) {
 
 TEST(sensors, testNoStartUpWarnings) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	// for this test we need a trigger with isSynchronizationNeeded=true
+	engineConfiguration->trigger.customTotalToothCount = 3;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
+	eth.setTriggerType(TT_TOOTHED_WHEEL PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
 
-	// for this test we need a trigger with isSynchronizationNeeded=true
+	for (int i = 0;i < 10;i++) {
+		eth.fireRise(50);
+		eth.fireFall(50);
+		eth.fireRise(50);
+		eth.fireFall(150);
+	}
 
-	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
-	ASSERT_EQ(1200,  GET_RPM()) << "testNoStartUpWarnings RPM";
+	ASSERT_EQ(400,  GET_RPM()) << "testNoStartUpWarnings RPM";
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings";
-	// now let's post invalid shape
+	// now let's post something unneeded
 	eth.fireRise(50);
+	eth.fireFall(50);
+	eth.fireRise(50); // this is noise
+	eth.fireFall(50); // this is noise
 	eth.fireRise(50);
-	eth.fireRise(50);
-	eth.fireRise(50);
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
-//	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0));
+	eth.fireFall(150);
+	for (int i = 0;i < 1;i++) {
+		eth.fireRise(50);
+		eth.fireFall(50);
+		eth.fireRise(50);
+		eth.fireFall(150);
+	}
+	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
+	ASSERT_EQ(CUSTOM_SYNC_ERROR, unitTestWarningCodeState.recentWarnings.get(0));
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(1));
 }
-
 
 TEST(sensors, testCamInput) {
 	// setting some weird engine
