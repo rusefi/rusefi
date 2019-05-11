@@ -145,7 +145,7 @@ void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destinat
 
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t> afr_Map3D_t;
 typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float> ign_Map3D_t;
-typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, int16_t> ign_tps_Map3D_t;
+typedef Map3D<IGN_RPM_COUNT, IGN_TPS_COUNT, int16_t> ign_tps_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float> baroCorr_Map3D_t;
 
