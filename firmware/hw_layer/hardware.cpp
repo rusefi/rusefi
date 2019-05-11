@@ -465,7 +465,9 @@ void initHardware(Logging *l) {
 
 #if HAL_USE_ADC
 	initAdcInputs(isBoardTestMode_b);
-#endif
+	// wait for first set of ADC values so that we do not produce invalid sensor data
+	waitForSlowAdc(1);
+#endif /* HAL_USE_ADC */
 
 #if EFI_BOARD_TEST
 	if (isBoardTestMode_b) {
