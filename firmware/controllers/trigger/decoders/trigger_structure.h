@@ -89,7 +89,7 @@ public:
 
 	/**
 	 * Simplest trigger shape does not require any synchronization - for example if there is only
-	 * one primary channel tooth each raising (or falling depedning on configuration) front would synchronize
+	 * one primary channel tooth each raising (or falling depending on configuration) front would synchronize
 	 */
 	bool isSynchronizationNeeded;
 	/**
