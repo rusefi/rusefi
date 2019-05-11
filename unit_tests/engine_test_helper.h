@@ -33,11 +33,11 @@ public:
 	void fireFall(int delayMs);
 
 	/**
-	 * See also #fireRise()
+	 * See also #fireRise() which would also move time forward
 	 */
 	void firePrimaryTriggerRise();
 	/**
-	 * See also #fireFall()
+	 * See also #fireFall() which would also move time forward
 	 */
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);

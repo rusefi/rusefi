@@ -62,6 +62,7 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
 
 /**
  * @return -1 in case of isNoisySignal(), current RPM otherwise
+ * See NOISY_RPM
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
 int RpmCalculator::getRpm(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {

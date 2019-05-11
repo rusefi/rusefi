@@ -15,6 +15,8 @@
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+#define HAVE_CAM_INPUT() engineConfiguration->camInput != GPIO_UNASSIGNED
+
 #define HW_EVENT_TYPES 6
 
 /**
