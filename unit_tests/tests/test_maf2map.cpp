@@ -1,7 +1,7 @@
 /*
- * test_maf2map.cpp
+ * @file test_maf2map.cpp
  *
- *  Created on: Jan 13, 2019
+ * @date Jan 13, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
