@@ -13,6 +13,7 @@ TEST_SRC_CPP = unit_test_framework.cpp \
 	tests/test_cam_vtt_input.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_startOfCrankingPrimingPulse.cpp \
+	tests/test_miata_na6_real_cranking.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_idle_controller.cpp \
 	tests/test_trigger_decoder.cpp \
