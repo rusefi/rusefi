@@ -4,6 +4,9 @@
  * ISO 15765-4
  * http://en.wikipedia.org/wiki/OBD-II_PIDs
  *
+ * May 2019 status: looks like this code was never tested on any real hardware?
+ * @see obd2viaCAN.c
+ *
  * @date Jun 9, 2015
  * @author Andrey Belomutskiy, (c) 2012-2018
  *
