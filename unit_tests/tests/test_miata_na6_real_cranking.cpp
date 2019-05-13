@@ -130,7 +130,7 @@ TEST(miataNA6, realCranking) {
 	/* 134 */ EVENT(/* timestamp*/3.031735, /*index*/1, /*value*/true);
 
 
-	ASSERT_EQ( 4,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	ASSERT_EQ( 3,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 //	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
 
 

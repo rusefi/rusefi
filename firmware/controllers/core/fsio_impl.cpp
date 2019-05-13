@@ -638,6 +638,9 @@ static void rpnEval(char *line) {
 void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	logger = sharedLogger;
+#else
+	// only unit test needs this
+	sysPool.reset();
 #endif
 
 #if EFI_FUEL_PUMP
