@@ -83,6 +83,9 @@
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#if EFI_FSIO
+	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_FSIO */
 }
 
 #if !EFI_UNIT_TEST
@@ -661,10 +664,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 		return;
 	}
 	mostCommonInitEngineController(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-
-#if EFI_FSIO
-	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
 }
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
