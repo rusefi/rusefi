@@ -50,10 +50,13 @@ TEST(miataNA6, realCranking) {
 	/* 12 */ EVENT(/* timestamp*/1.076422, /*index*/0, /*value*/false);
 	/* 13 */ EVENT(/* timestamp*/1.125428, /*index*/0, /*value*/true);
 	/* 14 */ EVENT(/* timestamp*/1.194742, /*index*/1, /*value*/true);
+
 	/* 15 */ EVENT(/* timestamp*/1.20417975, /*index*/0, /*value*/false);
 	/* 16 */ EVENT(/* timestamp*/1.25380075, /*index*/0, /*value*/true);
 	/* 17 */ EVENT(/* timestamp*/1.30114225, /*index*/1, /*value*/true);
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 18 */ EVENT(/* timestamp*/1.3341915, /*index*/0, /*value*/false);
+	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 19 */ EVENT(/* timestamp*/1.383534, /*index*/0, /*value*/true);
 	/* 22 */ EVENT(/* timestamp*/1.45352675, /*index*/1, /*value*/true);
 	/* 23 */ EVENT(/* timestamp*/1.46291525, /*index*/0, /*value*/false);
@@ -73,6 +76,7 @@ TEST(miataNA6, realCranking) {
 	/* 45 */ EVENT(/* timestamp*/2.0070235, /*index*/0, /*value*/true);
 	/* 48 */ EVENT(/* timestamp*/2.04448175, /*index*/0, /*value*/false);
 	/* 49 */ EVENT(/* timestamp*/2.06135875, /*index*/0, /*value*/true);
+	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 52 */ EVENT(/* timestamp*/2.08529325, /*index*/1, /*value*/true);
 	/* 53 */ EVENT(/* timestamp*/2.089132, /*index*/0, /*value*/false);
 	/* 54 */ EVENT(/* timestamp*/2.107152, /*index*/0, /*value*/true);
@@ -131,7 +135,9 @@ TEST(miataNA6, realCranking) {
 
 
 	ASSERT_EQ( 3,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
-//	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
+	ASSERT_EQ(CUSTOM_OBD_TRG_DECODING, unitTestWarningCodeState.recentWarnings.get(1)) << "@1";
+	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(2)) << "@2";
 
 
 	ASSERT_EQ( 2401,  GET_RPM()) << "RPM at the end";
