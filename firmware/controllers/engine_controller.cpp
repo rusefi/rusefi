@@ -22,7 +22,6 @@
  */
 
 #include "global.h"
-#if !EFI_UNIT_TEST
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif
@@ -79,6 +78,14 @@
 #if EFI_CJ125
 #include "cj125.h"
 #endif
+
+// this method is used by real firmware and simulator and unit test
+void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+#if !EFI_UNIT_TEST
 
 #if defined(EFI_BOOTLOADER_INCLUDE_CODE)
 #include "bootloader/bootloader.h"
@@ -160,7 +167,7 @@ efitick_t getTimeNowNt(void) {
 		unlockAnyContext();
 	}
 	return result;
-#else
+#else /* EFI_PROD_CODE */
 // todo: why is this implementation not used?
 	/**
 	 * this method is lock-free and thread-safe, that's because the 'update' method
@@ -192,7 +199,7 @@ efitick_t getTimeNowNt(void) {
 	}
 
 	return localH + value;
-#endif
+#endif /* EFI_PROD_CODE */
 
 }
 
@@ -625,7 +632,7 @@ static void getKnockInfo(void) {
 	engine->printKnockState();
 }
 
-// this method is used by real firmware and simulator
+// this method is used by real firmware and simulator but not unit tests
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SIMULATOR
 	printf("commonInitEngineController\n");
@@ -648,19 +655,16 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 	if (engineConfiguration->isTunerStudioEnabled) {
 		startTunerStudioConnectivity();
 	}
-#endif
+#endif /* EFI_TUNER_STUDIO */
 
 	if (hasFirmwareError()) {
 		return;
 	}
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SIGNATURE);
+	mostCommonInitEngineController(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_FSIO
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif
-
-	initAccelEnrichment(sharedLogger);
-
+#endif /* EFI_FSIO */
 }
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {

@@ -12,6 +12,7 @@
 #include "fuel_math.h"
 #include "accel_enrichment.h"
 #include "allsensors.h"
+#include "engine_controller.h"
 #include "advance_map.h"
 #include "algo.h"
 
@@ -57,8 +58,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initAccelEnrichment(NULL PASS_ENGINE_PARAMETER_SUFFIX);
-	initSensors(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	mostCommonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
