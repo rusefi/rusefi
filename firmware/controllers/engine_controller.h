@@ -18,6 +18,7 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setMockVBattVoltage(float voltage);
 void setMockMapVoltage(float voltage);
