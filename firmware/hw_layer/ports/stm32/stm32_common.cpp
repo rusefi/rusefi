@@ -7,6 +7,7 @@
  */
 
 #include "global.h"
+#include "efi_gpio.h"
 
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
@@ -121,89 +122,16 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
-// deprecated - migrate to 'getAdcChannelBrainPin'
+// deprecated - inline?
 ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
-	// todo: replace this with an array :)
-	switch (hwChannel) {
-	case ADC_CHANNEL_IN0:
-		return GPIOA;
-	case ADC_CHANNEL_IN1:
-		return GPIOA;
-	case ADC_CHANNEL_IN2:
-		return GPIOA;
-	case ADC_CHANNEL_IN3:
-		return GPIOA;
-	case ADC_CHANNEL_IN4:
-		return GPIOA;
-	case ADC_CHANNEL_IN5:
-		return GPIOA;
-	case ADC_CHANNEL_IN6:
-		return GPIOA;
-	case ADC_CHANNEL_IN7:
-		return GPIOA;
-	case ADC_CHANNEL_IN8:
-		return GPIOB;
-	case ADC_CHANNEL_IN9:
-		return GPIOB;
-	case ADC_CHANNEL_IN10:
-		return GPIOC;
-	case ADC_CHANNEL_IN11:
-		return GPIOC;
-	case ADC_CHANNEL_IN12:
-		return GPIOC;
-	case ADC_CHANNEL_IN13:
-		return GPIOC;
-	case ADC_CHANNEL_IN14:
-		return GPIOC;
-	case ADC_CHANNEL_IN15:
-		return GPIOC;
-	default:
-		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-		return NULL;
-	}
+	brain_pin_e brainPin = getAdcChannelBrainPin(msg, hwChannel);
+	return getHwPort(msg, brainPin);
 }
 
-// deprecated - migrate to 'getAdcChannelBrainPin'
+// deprecated - inline?
 int getAdcChannelPin(adc_channel_e hwChannel) {
-	// todo: replace this with an array :)
-	switch (hwChannel) {
-	case ADC_CHANNEL_IN0:
-		return 0;
-	case ADC_CHANNEL_IN1:
-		return 1;
-	case ADC_CHANNEL_IN2:
-		return 2;
-	case ADC_CHANNEL_IN3:
-		return 3;
-	case ADC_CHANNEL_IN4:
-		return 4;
-	case ADC_CHANNEL_IN5:
-		return 5;
-	case ADC_CHANNEL_IN6:
-		return 6;
-	case ADC_CHANNEL_IN7:
-		return 7;
-	case ADC_CHANNEL_IN8:
-		return 0;
-	case ADC_CHANNEL_IN9:
-		return 1;
-	case ADC_CHANNEL_IN10:
-		return 0;
-	case ADC_CHANNEL_IN11:
-		return 1;
-	case ADC_CHANNEL_IN12:
-		return 2;
-	case ADC_CHANNEL_IN13:
-		return 3;
-	case ADC_CHANNEL_IN14:
-		return 4;
-	case ADC_CHANNEL_IN15:
-		return 5;
-	default:
-		// todo: better error handling, that's input parameter validation
-		firmwareError(CUSTOM_ERR_ADC_CHANNEL, "Unknown hw channel %d", hwChannel);
-		return -1;
-	}
+	brain_pin_e brainPin = getAdcChannelBrainPin("get_pin", hwChannel);
+	return getHwPin("get_pin", brainPin);
 }
 
 #endif /* HAL_USE_ADC */
