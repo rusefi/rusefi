@@ -382,7 +382,7 @@ void TriggerState::onShaftSynchronization(efitime_t nowNt, trigger_wheel_e trigg
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("index=%d %d\r\n",
+		printf("onShaftSynchronization index=%d %d\r\n",
 				currentCycle.current_index,
 				totalRevolutionCounter);
 	}
