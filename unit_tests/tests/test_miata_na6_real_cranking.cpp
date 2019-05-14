@@ -12,11 +12,14 @@ extern WarningCodeState unitTestWarningCodeState;
 
 static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, int channel, bool isRise) {
 	trigger_event_e event;
-	if (channel == 0 && isRise == true) {
+	// in this trigger data file second channel is the primary
+	// interesting how logic analyzer and trigger are flipped - logical '1' from logicdata file seems to be 'falling'
+	// for trigger definition?!
+	if (channel == 1 && isRise == false) {
 		event = SHAFT_PRIMARY_RISING;
-	} else if (channel == 0 && isRise == false){
+	} else if (channel == 1 && isRise == true) {
 		event = SHAFT_PRIMARY_FALLING;
-	} else 	if (channel == 0 && isRise == true) {
+	} else 	if (channel == 0 && isRise == false) {
 		event = SHAFT_SECONDARY_RISING;
 	} else {
 		event = SHAFT_SECONDARY_FALLING;
@@ -25,6 +28,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, int channe
 	Engine *engine = &eth->engine;
 	EXPAND_Engine;
 	timeNowUs = 1000000 * timestampS;
+	printf("MIATANA: posting time=%d event=%d\r\n", timeNowUs, event);
 	engine->triggerCentral.handleShaftSignal(event, engine, engine->engineConfigurationPtr, &eth->persistentConfig, boardConfiguration);
 }
 
@@ -49,16 +53,23 @@ TEST(miataNA6, realCranking) {
 	/* 11 */ EVENT(/* timestamp*/0.99523975, /*index*/0, /*value*/true);
 	/* 12 */ EVENT(/* timestamp*/1.076422, /*index*/0, /*value*/false);
 	/* 13 */ EVENT(/* timestamp*/1.125428, /*index*/0, /*value*/true);
+	ASSERT_EQ( 0,  GET_RPM()) << "RPM at the 14";
 	/* 14 */ EVENT(/* timestamp*/1.194742, /*index*/1, /*value*/true);
-
+	// first synch & fast spinning RPM
+	ASSERT_EQ( 48,  GET_RPM()) << "RPM at the 14";
 	/* 15 */ EVENT(/* timestamp*/1.20417975, /*index*/0, /*value*/false);
 	/* 16 */ EVENT(/* timestamp*/1.25380075, /*index*/0, /*value*/true);
 	/* 17 */ EVENT(/* timestamp*/1.30114225, /*index*/1, /*value*/true);
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 18 */ EVENT(/* timestamp*/1.3341915, /*index*/0, /*value*/false);
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 19 */ EVENT(/* timestamp*/1.383534, /*index*/0, /*value*/true);
+	ASSERT_EQ( 107,  GET_RPM()) << "RPM at the 19";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+
+	// second synch
 	/* 22 */ EVENT(/* timestamp*/1.45352675, /*index*/1, /*value*/true);
+	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	ASSERT_EQ( 463,  GET_RPM()) << "RPM at the 22";
 	/* 23 */ EVENT(/* timestamp*/1.46291525, /*index*/0, /*value*/false);
 	/* 25 */ EVENT(/* timestamp*/1.49939025, /*index*/1, /*value*/false);
 	/* 27 */ EVENT(/* timestamp*/1.511785, /*index*/0, /*value*/true);
@@ -72,11 +83,14 @@ TEST(miataNA6, realCranking) {
 	/* 41 */ EVENT(/* timestamp*/1.9011835, /*index*/0, /*value*/true);
 	/* 42 */ EVENT(/* timestamp*/1.97691675, /*index*/1, /*value*/true);
 	/* 43 */ EVENT(/* timestamp*/1.9822455, /*index*/0, /*value*/false);
+	ASSERT_EQ( 449,  GET_RPM()) << "RPM at the 17";
 	/* 44 */ EVENT(/* timestamp*/2.001249, /*index*/1, /*value*/false);
+	ASSERT_EQ( 449,  GET_RPM()) << "RPM at the 17";
+
+
 	/* 45 */ EVENT(/* timestamp*/2.0070235, /*index*/0, /*value*/true);
 	/* 48 */ EVENT(/* timestamp*/2.04448175, /*index*/0, /*value*/false);
 	/* 49 */ EVENT(/* timestamp*/2.06135875, /*index*/0, /*value*/true);
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 52 */ EVENT(/* timestamp*/2.08529325, /*index*/1, /*value*/true);
 	/* 53 */ EVENT(/* timestamp*/2.089132, /*index*/0, /*value*/false);
 	/* 54 */ EVENT(/* timestamp*/2.107152, /*index*/0, /*value*/true);
@@ -125,7 +139,11 @@ TEST(miataNA6, realCranking) {
 	/* 119 */ EVENT(/* timestamp*/2.8642345, /*index*/0, /*value*/true);
 	/* 120 */ EVENT(/* timestamp*/2.89112225, /*index*/0, /*value*/false);
 	/* 123 */ EVENT(/* timestamp*/2.9089625, /*index*/0, /*value*/true);
+
+	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	/* 124 */ EVENT(/* timestamp*/2.93429275, /*index*/1, /*value*/true);
+	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+
 	/* 125 */ EVENT(/* timestamp*/2.93850475, /*index*/0, /*value*/false);
 	/* 128 */ EVENT(/* timestamp*/2.958108, /*index*/0, /*value*/true);
 	/* 129 */ EVENT(/* timestamp*/2.974461, /*index*/1, /*value*/true);
@@ -134,13 +152,8 @@ TEST(miataNA6, realCranking) {
 	/* 134 */ EVENT(/* timestamp*/3.031735, /*index*/1, /*value*/true);
 
 
-	ASSERT_EQ( 3,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
-	ASSERT_EQ(CUSTOM_OBD_TRG_DECODING, unitTestWarningCodeState.recentWarnings.get(1)) << "@1";
-	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(2)) << "@2";
 
-
-	ASSERT_EQ( 2401,  GET_RPM()) << "RPM at the end";
-
+	ASSERT_EQ( 1231,  GET_RPM()) << "RPM at the end";
 }
-
