@@ -108,9 +108,19 @@
  * ADC driver system settings.
  */
 #define STM32_ADC_ADCPRE                    ADC_CCR_ADCPRE_DIV4
+
+#ifndef STM32_ADC_USE_ADC1
 #define STM32_ADC_USE_ADC1                  TRUE
+#endif /* STM32_ADC_USE_ADC1 */
+
+#ifndef STM32_ADC_USE_ADC2
 #define STM32_ADC_USE_ADC2                  TRUE
+#endif /* STM32_ADC_USE_ADC2 */
+
+#ifndef STM32_ADC_USE_ADC3
 #define STM32_ADC_USE_ADC3                  FALSE
+#endif /* STM32_ADC_USE_ADC3 */
+
 #define STM32_ADC_ADC1_DMA_STREAM           STM32_DMA_STREAM_ID(2, 4)
 #define STM32_ADC_ADC2_DMA_STREAM           STM32_DMA_STREAM_ID(2, 2)
 #define STM32_ADC_ADC3_DMA_STREAM           STM32_DMA_STREAM_ID(2, 1)

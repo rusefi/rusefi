@@ -72,12 +72,12 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 #define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 #endif /* PWM_FREQ_FAST PWM_PERIOD_FAST */
 
-// is there a reason to have this configurable?
+// is there a reason to have this configurable at runtime?
 #ifndef ADC_SLOW_DEVICE
 #define ADC_SLOW_DEVICE ADCD1
 #endif /* ADC_SLOW_DEVICE */
 
-// is there a reason to have this configurable?
+// is there a reason to have this configurable at runtime?
 #ifndef ADC_FAST_DEVICE
 #define ADC_FAST_DEVICE ADCD2
 #endif /* ADC_FAST_DEVICE */
