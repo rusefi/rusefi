@@ -77,12 +77,15 @@ public:
 	NamedOutputPin(const char *name);
 	void setHigh();
 	void setLow();
+	const char *getName();
+	const char *getShortName();
 	/**
 	 * @return true if pin was stopped
 	 */
 	bool stop();
 	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
 	const char *name;
+	const char *shortName = NULL;
 };
 
 class InjectorOutputPin : public NamedOutputPin {
