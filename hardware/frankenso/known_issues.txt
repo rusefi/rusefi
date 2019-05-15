@@ -188,7 +188,7 @@
 181) RESOLVED IN R0.5.6 W28 was connected to 5F which was a no connect. It is now connected to 5V. 
 182) RESOLVED IN R0.5.6 W27 was connected to 2E which was a no connect. It is now connected to AN3-HARN for an optional external MAP. 
 183) RESOLVED IN R0.5.6 W31 was connected to 2I which was a no connect. It is now connected to AN4-HARN for an optional external W02. 
-
+184)                    both sot23 and BAS70-04FILM pinouts are wrong ending up with correct PCB
 
 
 For honda add-on / rewiring board
