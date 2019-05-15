@@ -51,7 +51,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	output->signalFallSparkId = event->sparkId;
 
 	if (!output->currentLogicValue) {
-		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->name);
+		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 		output->outOfOrder = true;
 	}
 
@@ -66,7 +66,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 // todo: make this a class method?
 #define assertPinAssigned(output) { \
 		if (!output->isInitialized()) { \
-			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->name); \
+			warning(CUSTOM_OBD_COIL_PIN_NOT_ASSIGNED, "no_pin_cl #%s", (output)->getName()); \
 		} \
 }
 
@@ -165,7 +165,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 #if ! EFI_UNIT_TEST
 
 	if (GET_RPM_VALUE > 2 * engineConfiguration->cranking.rpm) {
-		const char *outputName = output->name;
+		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) != IM_ONE_COIL) {
 			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
 		}

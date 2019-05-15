@@ -251,10 +251,7 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
  * @return true if this pin was already used, false otherwise
  */
 
-bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
-{
-	int index;
-
+bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 	if (!initialized) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
 		return false;
@@ -264,7 +261,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg)
 	scheduleMsg(&logger, "%s on %s", msg, hwPortname(brainPin));
 #endif
 
-	index = brainPin_to_index(brainPin);
+	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return true;
 

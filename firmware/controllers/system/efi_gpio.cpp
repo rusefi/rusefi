@@ -33,13 +33,20 @@ extern LoggingWithStorage sharedLogger;
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
-static const char *sparkNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
+static const char *sparkNames[IGNITION_PIN_COUNT] = { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8",
+		"coil9", "coil10", "coil11", "coil12"};
+
+// these short names are part of engine sniffer protocol
+static const char *sparkShortNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
+static const char *injectorNames[INJECTION_PIN_COUNT] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
+		"injector7", "injector8", "jnjector9", "injector10", "injector11", "injector12"};
+
+static const char *injectorShortNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
-static const char *auxValveNames[INJECTION_PIN_COUNT] = { "a1", "a2"};
+static const char *auxValveShortNames[INJECTION_PIN_COUNT] = { "a1", "a2"};
 
 EnginePins::EnginePins() {
 	dizzyOutput.name = DIZZY_NAME;
@@ -47,13 +54,15 @@ EnginePins::EnginePins() {
 
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
+		enginePins.coils[i].shortName = sparkShortNames[i];
 	}
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
+		enginePins.injectors[i].shortName = injectorShortNames[i];
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
-		enginePins.auxValve[i].name = auxValveNames[i];
+		enginePins.auxValve[i].name = auxValveShortNames[i];
 	}
 }
 
@@ -209,6 +218,14 @@ NamedOutputPin::NamedOutputPin() : OutputPin() {
 	name = NULL;
 }
 
+const char *NamedOutputPin::getName() {
+	return name;
+}
+
+const char *NamedOutputPin::getShortName() {
+	return shortName == NULL ? name : shortName;
+}
+
 NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
 	this->name = name;
 }
@@ -223,7 +240,7 @@ void NamedOutputPin::setHigh() {
 
 #if EFI_ENGINE_SNIFFER
 
-	addEngineSnifferEvent(name, WC_UP);
+	addEngineSnifferEvent(getShortName(), WC_UP);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -238,7 +255,7 @@ void NamedOutputPin::setLow() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(name, WC_DOWN);
+	addEngineSnifferEvent(getShortName(), WC_DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
