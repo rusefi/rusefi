@@ -15,9 +15,11 @@ public class VariableRegistryTest {
 
         VariableRegistry.INSTANCE.register("var", 256);
 
+        // trivial key-value substitution
         assertEquals("256", VariableRegistry.INSTANCE.applyVariables("@@var@@"));
         assertEquals("ab256", VariableRegistry.INSTANCE.applyVariables("ab@@var@@"));
         assertEquals("ab256cd", VariableRegistry.INSTANCE.applyVariables("ab@@var@@cd"));
+        // both decimal and hex values here
         assertEquals("aa256qwe100fff", VariableRegistry.INSTANCE.applyVariables("aa@@var@@qwe@@var_hex@@fff"));
     }
 }

@@ -28,8 +28,9 @@ public class VariableRegistry extends TreeMap<String, String> {
     }
 
     /**
-     * This methos replaces variables references like @@var@@ with actual values
+     * This method replaces variables references like @@var@@ with actual values
      * An exception is thrown if we do not have such variable
+     * @return string with variable values inlined
      */
     public String applyVariables(String line) {
         Matcher m;
@@ -85,9 +86,12 @@ public class VariableRegistry extends TreeMap<String, String> {
         return value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"';
     }
 
-    public void register(String var, int i) {
-        register(var, Integer.toString(i));
-        register(var + "_hex", Integer.toString(i, 16));
+    /**
+     * Registers decimal and hex versions of this integer variable
+     */
+    public void register(String name, int value) {
+        register(name, Integer.toString(value));
+        register(name + "_hex", Integer.toString(value, 16));
     }
 
     public void writeNumericsToFile(String headerDestinationFolder) throws IOException {

@@ -11,14 +11,7 @@ import static org.junit.Assert.*;
  * (c) Andrey Belomutskiy
  * 1/15/15
  */
-public class ConfigDefinitionTest {
-    @Test
-    public void testComment() {
-        assertEquals("", ConfigDefinition.packComment("", "\t"));
-        assertEquals("\t * abc\n", ConfigDefinition.packComment("abc", "\t"));
-        assertEquals("\t * abc\n" +
-                "\t * vbn\n", ConfigDefinition.packComment("abc\\nvbn", "\t"));
-    }
+public class ConfigFieldParserTest {
 
     @Test
     public void testByteArray() {
@@ -30,7 +23,6 @@ public class ConfigDefinitionTest {
             assertEquals(cf.getSize(null), 8);
             assertFalse("isIterate", cf.isIterate);
         }
-
     }
 
     @Test

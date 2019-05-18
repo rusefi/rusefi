@@ -1,7 +1,9 @@
 package com.rusefi;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * (c) Andrey Belomutskiy
@@ -117,7 +119,10 @@ public class ConfigDefinition {
                                     ConfigurationConsumer javaFieldsConcumer) throws IOException {
         String line;
 
-        cHeaderConsumer.startFile();
+        List<ConfigurationConsumer> consumers = Arrays.asList(cHeaderConsumer, tsProjectConsumer, javaFieldsConcumer);
+
+        for (ConfigurationConsumer consumer : consumers)
+            consumer.startFile();
 
         while ((line = definitionReader.readLine()) != null) {
             line = trimLine(line);
@@ -149,9 +154,8 @@ public class ConfigDefinition {
                 processField(state, line);
             }
         }
-        cHeaderConsumer.endFile();
-        tsProjectConsumer.endFile();
-        javaFieldsConcumer.endFile();
+        for (ConfigurationConsumer consumer : consumers)
+            consumer.endFile();
     }
 
     private static boolean isEmptyDefinitionLine(String line) {
