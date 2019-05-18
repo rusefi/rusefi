@@ -1,5 +1,10 @@
 package com.rusefi;
 
+import com.rusefi.output.CHeaderConsumer;
+import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.output.JavaFieldsConsumer;
+import com.rusefi.output.TSProjectConsumer;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.Date;
@@ -12,8 +17,7 @@ import java.util.Date;
 public class ConfigDefinition {
     public static final String EOL = "\n";
     private static final String INPUT_FILE_NAME = "rusefi_config.txt";
-    static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
-    static final String TS_FILE_INPUT_NAME = "rusefi.input";
+    public static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
@@ -22,7 +26,7 @@ public class ConfigDefinition {
 
     public static void main(String[] args) throws IOException {
         if (args.length != 4 && args.length != 5) {
-            System.out.println("Please specify path to '" + INPUT_FILE_NAME + "' file, path to " + TS_FILE_INPUT_NAME +
+            System.out.println("Please specify path to '" + INPUT_FILE_NAME + "' file, path to " + TSProjectConsumer.TS_FILE_INPUT_NAME +
                     ", destination folder and [optional] file name of custom prepend file");
             return;
         }
