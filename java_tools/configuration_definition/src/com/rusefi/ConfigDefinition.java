@@ -3,7 +3,6 @@ package com.rusefi;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * (c) Andrey Belomutskiy
@@ -15,12 +14,6 @@ public class ConfigDefinition {
     private static final String INPUT_FILE_NAME = "rusefi_config.txt";
     static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
     static final String TS_FILE_INPUT_NAME = "rusefi.input";
-    private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
-    private static final String STRUCT = "struct ";
-    private static final String END_STRUCT = "end_struct";
-    private static final String CUSTOM = "custom";
-    private static final String DEFINE = "#define";
-    private static final String BIT = "bit";
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
@@ -62,7 +55,7 @@ public class ConfigDefinition {
         ConfigurationConsumer tsProjectConsumer = new TSProjectConsumer(tsWriter, tsPath, state);
         ConfigurationConsumer javaFieldsConsumer = new JavaFieldsConsumer(javaFieldsWriter, state, javaConsolePath);
 
-        processFile(state, definitionReader, cHeaderConsumer, tsProjectConsumer, javaFieldsConsumer);
+        state.readBufferedReader(definitionReader, Arrays.asList(cHeaderConsumer, tsProjectConsumer, javaFieldsConsumer));
 
         state.ensureEmptyAfterProcessing();
 
@@ -84,10 +77,10 @@ public class ConfigDefinition {
             /**
              * we should ignore empty lines and comments
              */
-            if (isEmptyDefinitionLine(line))
+            if (ReaderState.isEmptyDefinitionLine(line))
                 continue;
-            if (startsWithToken(line, DEFINE)) {
-                processDefine(line.substring(DEFINE.length()).trim());
+            if (startsWithToken(line, ReaderState.DEFINE)) {
+                processDefine(line.substring(ReaderState.DEFINE.length()).trim());
             }
 
         }
@@ -113,157 +106,16 @@ public class ConfigDefinition {
         fw.close();
     }
 
-    private static void processFile(ReaderState state, BufferedReader definitionReader,
-                                    ConfigurationConsumer cHeaderConsumer,
-                                    ConfigurationConsumer tsProjectConsumer,
-                                    ConfigurationConsumer javaFieldsConcumer) throws IOException {
-        String line;
-
-        List<ConfigurationConsumer> consumers = Arrays.asList(cHeaderConsumer, tsProjectConsumer, javaFieldsConcumer);
-
-        for (ConfigurationConsumer consumer : consumers)
-            consumer.startFile();
-
-        while ((line = definitionReader.readLine()) != null) {
-            line = trimLine(line);
-            /**
-             * we should ignore empty lines and comments
-             */
-            if (isEmptyDefinitionLine(line))
-                continue;
-
-            if (line.startsWith(STRUCT)) {
-                handleStartStructure(state, line.substring(STRUCT.length()), true);
-            } else if (line.startsWith(STRUCT_NO_PREFIX)) {
-                handleStartStructure(state, line.substring(STRUCT_NO_PREFIX.length()), false);
-            } else if (line.startsWith(END_STRUCT)) {
-                handleEndStruct(state, cHeaderConsumer, tsProjectConsumer, javaFieldsConcumer);
-            } else if (line.startsWith(BIT)) {
-                handleBitLine(state, line);
-
-            } else if (startsWithToken(line, CUSTOM)) {
-                handleCustomLine(state, line);
-
-            } else if (startsWithToken(line, DEFINE)) {
-                /**
-                 * for example
-                 * #define CLT_CURVE_SIZE 16
-                 */
-                processDefine(line.substring(DEFINE.length()).trim());
-            } else {
-                processField(state, line);
-            }
-        }
-        for (ConfigurationConsumer consumer : consumers)
-            consumer.endFile();
-    }
-
-    private static boolean isEmptyDefinitionLine(String line) {
-        return line.length() == 0 || line.startsWith("!");
-    }
-
-    private static String trimLine(String line) {
+    static String trimLine(String line) {
         line = line.trim();
         line = line.replaceAll("\\s+", " ");
         return line;
     }
 
-    private static void handleCustomLine(ReaderState state, String line) {
-        line = line.substring(CUSTOM.length() + 1).trim();
-        int index = line.indexOf(' ');
-        String name = line.substring(0, index);
-        line = line.substring(index).trim();
-        index = line.indexOf(' ');
-        String customSize = line.substring(0, index);
-
-        String tunerStudioLine = line.substring(index).trim();
-        tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
-        int size;
-        try {
-            size = Integer.parseInt(customSize);
-        } catch (NumberFormatException e) {
-            throw new IllegalStateException("Size in " + line);
-        }
-        state.tsCustomSize.put(name, size);
-        state.tsCustomLine.put(name, tunerStudioLine);
-    }
-
-    private static void handleBitLine(ReaderState state, String line) {
-        line = line.substring(BIT.length() + 1).trim();
-
-        String bitName;
-        String comment;
-        if (!line.contains(";")) {
-            bitName = line;
-            comment = "";
-        } else {
-            int index = line.indexOf(";");
-            bitName = line.substring(0, index);
-            comment = line.substring(index + 1);
-        }
-
-        ConfigField bitField = new ConfigField(state, bitName, comment, true, null, null, 0, null, false);
-        state.stack.peek().addBoth(bitField);
-    }
-
-    private static boolean startsWithToken(String line, String token) {
+    static boolean startsWithToken(String line, String token) {
         return line.startsWith(token + " ") || line.startsWith(token + "\t");
     }
 
-    private static void handleStartStructure(ReaderState state, String line, boolean withPrefix) {
-        String name;
-        String comment;
-        if (line.contains(" ")) {
-            int index = line.indexOf(' ');
-            name = line.substring(0, index);
-            comment = line.substring(index + 1).trim();
-        } else {
-            name = line;
-            comment = null;
-        }
-        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
-        state.stack.push(structure);
-        System.out.println("Starting structure " + structure.getName());
-    }
-
-    private static void handleEndStruct(ReaderState state, ConfigurationConsumer cHeaderConsumer,
-                                        ConfigurationConsumer tsProjectConsumer,
-                                        ConfigurationConsumer javaFieldsConcumer) throws IOException {
-        if (state.stack.isEmpty())
-            throw new IllegalStateException("Unexpected end_struct");
-        ConfigStructure structure = state.stack.pop();
-        System.out.println("Ending structure " + structure.getName());
-        structure.addAlignmentFill(state);
-
-        state.structures.put(structure.getName(), structure);
-
-        cHeaderConsumer.handleEndStruct(structure);
-        tsProjectConsumer.handleEndStruct(structure);
-        javaFieldsConcumer.handleEndStruct(structure);
-
-    }
-
-    private static void processField(ReaderState state, String line) {
-
-        ConfigField cf = ConfigField.parse(state, line);
-        if (cf == null)
-            throw new IllegalStateException("Cannot parse line [" + line + "]");
-
-        if (state.stack.isEmpty())
-            throw new IllegalStateException(cf.name + ": Not enclosed in a struct");
-        ConfigStructure structure = state.stack.peek();
-
-        if (cf.isIterate) {
-            structure.addC(cf);
-            for (int i = 1; i <= cf.arraySize; i++) {
-                ConfigField element = new ConfigField(state, cf.name + i, cf.comment, false, null,
-                        cf.type, 1, cf.tsInfo, false);
-                structure.addTs(element);
-            }
-        } else {
-            structure.addBoth(cf);
-        }
-    }
 
     public static String getComment(String comment, int currentOffset) {
         return "\t/**" + EOL + packComment(comment, "\t") + "\t * offset " + currentOffset + EOL + "\t */" + EOL;
@@ -288,7 +140,7 @@ public class ConfigDefinition {
         return Integer.parseInt(s);
     }
 
-    private static void processDefine(String line) {
+     static void processDefine(String line) {
         int index = line.indexOf(' ');
         String name;
         if (index == -1) {
