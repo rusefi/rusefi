@@ -1,11 +1,16 @@
 package com.rusefi;
 
+import com.rusefi.output.CHeaderConsumer;
+import com.rusefi.output.ConfigurationConsumer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import static com.rusefi.ConfigField.BOOLEAN_T;
 
 /**
  * We keep state here as we read configuration definition
@@ -20,7 +25,7 @@ public class ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
-    Stack<ConfigStructure> stack = new Stack<>();
+    public Stack<ConfigStructure> stack = new Stack<>();
     public Map<String, Integer> tsCustomSize = new HashMap<>();
     public Map<String, String> tsCustomLine = new HashMap<>();
     public Map<String, ConfigStructure> structures = new HashMap<>();
@@ -39,7 +44,7 @@ public class ReaderState {
             comment = line.substring(index + 1);
         }
 
-        ConfigField bitField = new ConfigField(state, bitName, comment, true, null, null, 0, null, false);
+        ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false);
         state.stack.peek().addBoth(bitField);
     }
 
@@ -147,14 +152,14 @@ public class ReaderState {
             throw new IllegalStateException("Cannot parse line [" + line + "]");
 
         if (state.stack.isEmpty())
-            throw new IllegalStateException(cf.name + ": Not enclosed in a struct");
+            throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
         ConfigStructure structure = state.stack.peek();
 
         if (cf.isIterate) {
             structure.addC(cf);
-            for (int i = 1; i <= cf.arraySize; i++) {
-                ConfigField element = new ConfigField(state, cf.name + i, cf.comment, false, null,
-                        cf.type, 1, cf.tsInfo, false);
+            for (int i = 1; i <= cf.getArraySize(); i++) {
+                ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
+                        cf.getType(), 1, cf.tsInfo, false);
                 structure.addTs(element);
             }
         } else {

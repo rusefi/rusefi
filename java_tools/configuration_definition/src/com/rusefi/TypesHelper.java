@@ -1,15 +1,17 @@
 package com.rusefi;
 
-import static com.rusefi.ConfigStructure.INT_16_T;
-import static com.rusefi.ConfigStructure.UINT8_T;
-import static com.rusefi.ConfigStructure.UINT_16_T;
+import java.util.Objects;
 
 /**
  * 1/22/15
  */
 public class TypesHelper {
+    public static final String UINT8_T = "uint8_t";
+    public static final String UINT_16_T = "uint16_t";
+    public static final String INT_16_T = "int16_t";
 
     public static int getElementSize(ReaderState state, String type) {
+        Objects.requireNonNull(state);
         if (type == null)
             return 0;
         if (state != null && state.structures.containsKey(type))
@@ -24,7 +26,7 @@ public class TypesHelper {
         return 4;
     }
 
-    static String convertToTs(String type) {
+    public static String convertToTs(String type) {
         if (isFloat(type))
             return "F32";
         if ("uint32_t".equals(type))

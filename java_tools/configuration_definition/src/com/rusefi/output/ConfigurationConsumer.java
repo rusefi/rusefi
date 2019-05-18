@@ -1,4 +1,6 @@
-package com.rusefi;
+package com.rusefi.output;
+
+import com.rusefi.ConfigStructure;
 
 import java.io.IOException;
 

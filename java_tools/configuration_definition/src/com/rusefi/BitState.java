@@ -8,12 +8,12 @@ public class BitState {
     private int bitIndex;
 
     public void incrementBitIndex(ConfigField cf, ConfigField next) {
-        if (!cf.isBit) {
+        if (!cf.isBit()) {
             bitIndex = 0;
             return;
         }
         if (bitIndex == 32)
-            throw new IllegalStateException("Too many bits: " + cf.name);
+            throw new IllegalStateException("Too many bits: " + cf.getName());
         bitIndex++;
     }
 
