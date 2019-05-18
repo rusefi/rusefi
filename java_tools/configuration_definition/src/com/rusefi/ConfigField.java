@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.rusefi.test.ConfigDefinitionTest;
+import com.rusefi.test.ConfigFieldParserTest;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -73,7 +73,7 @@ public class ConfigField {
     }
 
     /**
-     * @see ConfigDefinitionTest#testParseLine()
+     * @see ConfigFieldParserTest#testParseLine()
      */
     public static ConfigField parse(ReaderState state, String line) {
         Matcher matcher = FIELD.matcher(line);
