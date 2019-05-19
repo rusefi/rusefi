@@ -29,7 +29,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         VariableRegistry.INSTANCE.register(nameWithPrefix + "_offset", tsPosition);
 
-        ConfigStructure cs = configField.state.structures.get(configField.getType());
+        ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
             return cs.writeTunerStudio(prefix + extraPrefix, tsHeader, tsPosition);
@@ -47,17 +47,17 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             return tsPosition;
         }
 
-        if (configField.state.tsCustomLine.containsKey(configField.getType())) {
-            String bits = configField.state.tsCustomLine.get(configField.getType());
+        if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
+            String bits = configField.getState().tsCustomLine.get(configField.getType());
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH));
-            int size = configField.state.tsCustomSize.get(configField.getType());
+            int size = configField.getState().tsCustomSize.get(configField.getType());
 //            tsHeader.headerWrite("\t" + size + ",");
             //          tsHeader.headerWrite("\t" + tsPosition + ",");
             bits = bits.replaceAll("@OFFSET@", "" + tsPosition);
             tsHeader.write("\t = " + bits);
 
             tsPosition += size;
-        } else if (configField.tsInfo == null) {
+        } else if (configField.getTsInfo() == null) {
             tsHeader.write(";no TS info - skipping " + prefix + configField.getName() + " offset " + tsPosition);
             tsPosition += configField.getArraySize() * configField.getElementSize();
         } else if (configField.getArraySize() != 1) {
@@ -65,14 +65,14 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write("\t" + tsPosition + ",");
             tsHeader.write("\t[" + configField.getArraySize() + "],");
-            tsHeader.write("\t" + configField.tsInfo);
+            tsHeader.write("\t" + configField.getTsInfo());
 
             tsPosition += configField.getArraySize() * configField.getElementSize();
         } else {
             tsHeader.write("\t" + addTabsUpTo(nameWithPrefix, LENGTH) + "\t\t= scalar, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write("\t" + tsPosition + ",");
-            tsHeader.write("\t" + configField.tsInfo);
+            tsHeader.write("\t" + configField.getTsInfo());
             tsPosition += configField.getArraySize() * configField.getElementSize();
         }
         tsHeader.write(EOL);

@@ -8,8 +8,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.rusefi.ConfigDefinition.EOL;
-
 /**
  * This is an immutable model of an individual field
  * (c) Andrey Belomutskiy
@@ -31,16 +29,13 @@ public class ConfigField {
 
     private final String name;
     private final String comment;
-    public final String arraySizeAsText;
+    public final String arraySizeVariableName;
     private final String type;
     private final int arraySize;
 
-    public final String tsInfo;
-    /**
-     * this property of array expands field into a bunch of variables like field1 field2 field3 etc
-     */
-    public final boolean isIterate;
-    public final ReaderState state;
+    private final String tsInfo;
+    private final boolean isIterate;
+    private final ReaderState state;
 
     public ConfigField(ReaderState state,
                        String name,
@@ -62,7 +57,7 @@ public class ConfigField {
         if (!isVoid())
             Objects.requireNonNull(type);
         this.type = type;
-        this.arraySizeAsText = arraySizeAsText;
+        this.arraySizeVariableName = arraySizeAsText;
         this.arraySize = arraySize;
         this.tsInfo = tsInfo;
         this.isIterate = isIterate;
@@ -167,6 +162,21 @@ public class ConfigField {
 
     public int getElementSize() {
         return isVoid() ? 0 : TypesHelper.getElementSize(state, type);
+    }
+
+    /**
+     * this property of array expands field into a bunch of variables like field1 field2 field3 etc
+     */
+    public boolean isIterate() {
+        return isIterate;
+    }
+
+    public ReaderState getState() {
+        return state;
+    }
+
+    public String getTsInfo() {
+        return tsInfo;
     }
 }
 

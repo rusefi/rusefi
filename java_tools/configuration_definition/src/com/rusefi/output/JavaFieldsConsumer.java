@@ -43,10 +43,10 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     public static int writeJavaFields(ConfigField configField, String prefix, Writer javaFieldsWriter, int tsPosition, ConfigField next, int bitIndex) throws IOException {
-        ConfigStructure cs = configField.state.structures.get(configField.getType());
+        ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return writeJavaFields(cs.tsFields, configField.state, prefix + extraPrefix, javaFieldsWriter, tsPosition);
+            return writeJavaFields(cs.tsFields, configField.getState(), prefix + extraPrefix, javaFieldsWriter, tsPosition);
         }
 
         String nameWithPrefix = prefix + configField.getName();
