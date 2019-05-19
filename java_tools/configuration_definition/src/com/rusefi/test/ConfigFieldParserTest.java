@@ -20,7 +20,7 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getType(), "uint8_t");
             assertEquals(cf.getArraySize(), 8);
             assertEquals(cf.getSize(null), 8);
-            assertFalse("isIterate", cf.isIterate);
+            assertFalse("isIterate", cf.isIterate());
         }
     }
 
@@ -43,13 +43,13 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getType(), "int_8");
             assertEquals(cf.getName(), "fi_eld");
             assertEquals("Comment", cf.getComment(), "comm_");
-            assertEquals(cf.tsInfo, "ts");
+            assertEquals(cf.getTsInfo(), "ts");
         }
         {
             ConfigField cf = ConfigField.parse(state, "int[3 iterate] field");
             assertEquals(cf.getType(), "int");
             assertEquals(cf.getArraySize(), 3);
-            assertTrue("isIterate", cf.isIterate);
+            assertTrue("isIterate", cf.isIterate());
         }
         {
             ConfigField cf = ConfigField.parse(state, "int16_t crankingRpm;This,. value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')\\nAnything above 'crankingRpm' would be 'running'");

@@ -37,7 +37,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
             // not an array
             cEntry += "\t" + configField.getType() + " " + configField.getName() + ";" + EOL;
         } else {
-            cEntry += "\t" + configField.getType() + " " + configField.getName() + "[" + configField.arraySizeAsText + "];" + EOL;
+            cEntry += "\t" + configField.getType() + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
         }
         return cEntry;
     }

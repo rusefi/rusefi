@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.output.CHeaderConsumer;
 import com.rusefi.output.ConfigurationConsumer;
 
 import java.io.BufferedReader;
@@ -155,11 +154,11 @@ public class ReaderState {
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
         ConfigStructure structure = state.stack.peek();
 
-        if (cf.isIterate) {
+        if (cf.isIterate()) {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySize(); i++) {
                 ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
-                        cf.getType(), 1, cf.tsInfo, false);
+                        cf.getType(), 1, cf.getTsInfo(), false);
                 structure.addTs(element);
             }
         } else {
