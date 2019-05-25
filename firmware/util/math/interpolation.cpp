@@ -237,6 +237,8 @@ int findIndex(const float array[], int size, float value) {
 
 /**
  * @brief	One-dimensional table lookup with linear interpolation
+ *
+ * @see setLinearCurve()
  */
 float interpolate2d(const char *msg, float value, const float bin[], const float values[], int size) {
 	if (isnan(value)) {

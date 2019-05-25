@@ -569,8 +569,11 @@ static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurve(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, 1, 1, 1);
+	setLinearCurve(engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE, /*from*/1, /*to*/1, 1);
 	setLinearCurve(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
+
+	setLinearCurve(config->cltCrankingCorrBins, CLT_CRANKING_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 100, 1);
+	setLinearCurve(config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE, 100, 100, 1);
 
 	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
@@ -626,7 +629,7 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * see also setTargetRpmCurve()
  */
 static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, -40, 140, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 140, 10);
 
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
@@ -669,7 +672,7 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * see also setDefaultIdleSpeedTarget()
  */
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, -40, 90, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 90, 10);
 	setLinearCurve(engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, rpm, rpm, 10);
 }
 
@@ -740,7 +743,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.minValue = 10;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setLinearCurve(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, -40, 120, 1);
+	setLinearCurve(engineConfiguration->cltTimingBins, CLT_TIMING_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 120, 1);
 	setLinearCurve(engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE, 0, 0, 1);
 
 	setLinearCurve(engineConfiguration->fsioCurve1Bins, FSIO_CURVE_16, 0, 100, 1);

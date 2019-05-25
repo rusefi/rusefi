@@ -12,6 +12,9 @@
 #include "interpolation.h"
 #include "efilib.h"
 
+// popular left edge of CLT-based correction curvers
+#define CLT_CURVE_RANGE_FROM -40
+
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
