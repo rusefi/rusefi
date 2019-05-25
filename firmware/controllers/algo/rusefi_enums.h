@@ -609,6 +609,8 @@ typedef enum __attribute__ ((__packed__)) {
 #endif
 } adc_channel_e;
 
+#define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0
+
 typedef enum {
 	MS_AUTO = 0,
 	MS_ALWAYS = 1,
