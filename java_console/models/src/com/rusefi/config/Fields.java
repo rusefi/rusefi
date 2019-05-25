@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 13:42:47 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 15:28:18 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -627,6 +627,8 @@ public class Fields {
 	public static final int HD44780_rs_offset = 650;
 	public static final int HD44780height_offset = 508;
 	public static final int HD44780width_offset = 504;
+	public static final int high_fuel_pressure_sensor_1_offset = 541;
+	public static final int high_fuel_pressure_sensor_2_offset = 542;
 	public static final int hip9011CsPin_offset = 753;
 	public static final int hip9011CsPinMode_offset = 703;
 	public static final int hip9011Gain_offset = 3976;
@@ -1147,7 +1149,7 @@ public class Fields {
 	public static final int unusedh_offset = 1469;
 	public static final int unusedjoy_offset = 943;
 	public static final int unusedMa2_offset = 711;
-	public static final int unusedSpiPadding1_offset = 541;
+	public static final int unusedSpiPadding1_offset = 543;
 	public static final int unusedSpiPadding2_offset = 805;
 	public static final int unusedSpiPadding2_offset_hex = 325;
 	public static final int unusedSpiPadding3_offset = 2285;
@@ -1347,6 +1349,9 @@ public class Fields {
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 532, FieldType.INT);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 536, FieldType.INT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 540, FieldType.INT8);
+	public static final Field HIGH_FUEL_PRESSURE_SENSOR_1 = Field.create("HIGH_FUEL_PRESSURE_SENSOR_1", 541, FieldType.INT8, adc_channel_e);
+	public static final Field HIGH_FUEL_PRESSURE_SENSOR_2 = Field.create("HIGH_FUEL_PRESSURE_SENSOR_2", 542, FieldType.INT8, adc_channel_e);
+	public static final Field UNUSEDSPIPADDING1 = Field.create("UNUSEDSPIPADDING1", 543, FieldType.INT8);
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 544, FieldType.FLOAT);
 	public static final Field ADCVCC = Field.create("ADCVCC", 548, FieldType.FLOAT);
 	public static final Field MAXKNOCKSUBDEG = Field.create("MAXKNOCKSUBDEG", 552, FieldType.FLOAT);

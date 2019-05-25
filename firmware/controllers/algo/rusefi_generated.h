@@ -952,6 +952,10 @@
 #define HD44780height_offset_hex 1fc
 #define HD44780width_offset 504
 #define HD44780width_offset_hex 1f8
+#define high_fuel_pressure_sensor_1_offset 541
+#define high_fuel_pressure_sensor_1_offset_hex 21d
+#define high_fuel_pressure_sensor_2_offset 542
+#define high_fuel_pressure_sensor_2_offset_hex 21e
 #define hip9011CsPin_offset 753
 #define hip9011CsPin_offset_hex 2f1
 #define hip9011CsPinMode_offset 703
@@ -1786,8 +1790,8 @@
 #define unusedjoy_offset_hex 3af
 #define unusedMa2_offset 711
 #define unusedMa2_offset_hex 2c7
-#define unusedSpiPadding1_offset 541
-#define unusedSpiPadding1_offset_hex 21d
+#define unusedSpiPadding1_offset 543
+#define unusedSpiPadding1_offset_hex 21f
 #define unusedSpiPadding2_offset 805
 #define unusedSpiPadding2_offset_hex 325
 #define unusedSpiPadding3_offset 2285
