@@ -435,7 +435,9 @@ trigger_config_s trigger;
 
 custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
 	spi_device_e hip9011SpiDevice;
-	uint8_t[3] unusedSpiPadding1;
+	adc_channel_e high_fuel_pressure_sensor_1;
+	adc_channel_e high_fuel_pressure_sensor_2;
+	uint8_t[1] unusedSpiPadding1;
 	
 	
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2

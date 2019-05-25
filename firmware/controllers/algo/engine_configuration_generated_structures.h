@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 13:41:46 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 15:28:18 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -1361,7 +1361,15 @@ typedef struct {
 	/**
 	 * offset 541
 	 */
-	uint8_t unusedSpiPadding1[3];
+	adc_channel_e high_fuel_pressure_sensor_1;
+	/**
+	 * offset 542
+	 */
+	adc_channel_e high_fuel_pressure_sensor_2;
+	/**
+	 * offset 543
+	 */
+	uint8_t unusedSpiPadding1;
 	/**
 	 * set global_fuel_correction X
 	 * offset 544
@@ -2744,4 +2752,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 13:41:46 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 15:28:18 EDT 2019
