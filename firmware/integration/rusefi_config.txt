@@ -948,7 +948,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	pin_mode_e spi3MisoMode;
 	
 	pin_output_mode_e stepperEnablePinMode;
-		uint8_t[2] unuseSpi3;
+	brain_pin_e mc33816_rstb;ResetB
+	brain_pin_e mc33816_driven
 
 	brain_pin_e brakePedalPin
 	adc_channel_e cj125ua;lambda input

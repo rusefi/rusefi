@@ -1408,6 +1408,10 @@
 #define maxKnockSubDeg_offset_hex 228
 #define mc33816_cs_offset 3131
 #define mc33816_cs_offset_hex c3b
+#define mc33816_driven_offset 2631
+#define mc33816_driven_offset_hex a47
+#define mc33816_rstb_offset 2630
+#define mc33816_rstb_offset_hex a46
 #define mc33816spiDevice_offset 4025
 #define mc33816spiDevice_offset_hex fb9
 #define mc33972_cs_offset 678
@@ -1804,8 +1808,6 @@
 #define unusedt_offset_hex 247
 #define unuseduartPadding1_offset 809
 #define unuseduartPadding1_offset_hex 329
-#define unuseSpi3_offset 2630
-#define unuseSpi3_offset_hex a46
 #define unusuedsw_offset 1489
 #define unusuedsw_offset_hex 5d1
 #define unusuedvref_offset 1505

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 13:38:32 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 13:42:47 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -920,6 +920,8 @@ public class Fields {
 	public static final int maxKnockSubDeg_offset = 552;
 	public static final int maxKnockSubDeg_offset_hex = 228;
 	public static final int mc33816_cs_offset = 3131;
+	public static final int mc33816_driven_offset = 2631;
+	public static final int mc33816_rstb_offset = 2630;
 	public static final int mc33816spiDevice_offset = 4025;
 	public static final int mc33972_cs_offset = 678;
 	public static final int mc33972_csPinMode_offset = 679;
@@ -1159,7 +1161,6 @@ public class Fields {
 	public static final int unusedt_offset_hex = 247;
 	public static final int unuseduartPadding1_offset = 809;
 	public static final int unuseduartPadding1_offset_hex = 329;
-	public static final int unuseSpi3_offset = 2630;
 	public static final int unusuedsw_offset = 1489;
 	public static final int unusuedvref_offset = 1505;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1476;
@@ -1888,6 +1889,8 @@ public class Fields {
 	public static final Field SPI3MOSIMODE = Field.create("SPI3MOSIMODE", 2627, FieldType.INT8, pin_mode_e);
 	public static final Field SPI3MISOMODE = Field.create("SPI3MISOMODE", 2628, FieldType.INT8, pin_mode_e);
 	public static final Field STEPPERENABLEPINMODE = Field.create("STEPPERENABLEPINMODE", 2629, FieldType.INT8, pin_output_mode_e);
+	public static final Field MC33816_RSTB = Field.create("MC33816_RSTB", 2630, FieldType.INT8, brain_pin_e);
+	public static final Field MC33816_DRIVEN = Field.create("MC33816_DRIVEN", 2631, FieldType.INT8, brain_pin_e);
 	public static final Field BRAKEPEDALPIN = Field.create("BRAKEPEDALPIN", 2632, FieldType.INT8, brain_pin_e);
 	public static final Field CJ125UA = Field.create("CJ125UA", 2633, FieldType.INT8, adc_channel_e);
 	public static final Field CJ125UR = Field.create("CJ125UR", 2634, FieldType.INT8, adc_channel_e);

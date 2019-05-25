@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 13:38:32 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 13:41:46 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -2212,9 +2212,14 @@ typedef struct {
 	 */
 	pin_output_mode_e stepperEnablePinMode;
 	/**
+	 * ResetB
 	 * offset 2630
 	 */
-	uint8_t unuseSpi3[2];
+	brain_pin_e mc33816_rstb;
+	/**
+	 * offset 2631
+	 */
+	brain_pin_e mc33816_driven;
 	/**
 	 * offset 2632
 	 */
@@ -2739,4 +2744,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 11 13:38:32 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on rusefi_config.txt Sat May 25 13:41:46 EDT 2019
