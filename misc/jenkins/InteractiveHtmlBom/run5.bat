@@ -14,6 +14,9 @@ set ibom_cmd=%kicad_path%\bin\python.exe C:\stuff\InteractiveHtmlBom\Interactive
 echo "ibom_cmd=%ibom_cmd%"
 %ibom_cmd% hw_microRusEfi/microRusEfi.kicad_pcb
 
+set ibom_cmd=%kicad_path%\bin\python.exe C:\stuff\InteractiveHtmlBom\InteractiveHtmlBom\generate_interactive_bom.py --no-browser --name-format %%f_latest --dest-dir ../../ibom 
+echo "ibom_cmd=%ibom_cmd%"
+
 %ibom_cmd% hw_modular/TLE8888_Module/TLE8888_Module.kicad_pcb
 %ibom_cmd% hw_modular/TLE7209_or_MC33186_H-Bridge_Breakout/TLE7209_Module.kicad_pcb
 %ibom_cmd% hw_modular/Analog_Input_Module/Analog_Input_Module.kicad_pcb
