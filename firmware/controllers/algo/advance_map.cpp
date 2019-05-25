@@ -225,7 +225,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurve(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, -40, 110, 1);
+	setLinearCurve(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
 	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
 	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
 }

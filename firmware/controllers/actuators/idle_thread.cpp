@@ -320,7 +320,7 @@ private:
 			baseIdlePosition = iacPosition;
 			idleState = BLIP;
 		} else if (!isRunning) {
-			// during cranking it's always manual mode, PID would make no sence during cranking
+			// during cranking it's always manual mode, PID would make no sense during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
 			// save cranking position & cycles counter for taper transition
 			lastCrankingIacPosition = iacPosition;

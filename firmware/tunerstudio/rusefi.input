@@ -499,14 +499,14 @@ fileVersion = { 20171101 }
       yBins       = iacCoasting
       gauge       = idleAirValvePositionGauge
 
-	curve = cltCrankingCurve, "Cranking IAC multiplier"
+	curve = cltCrankingCurve, "Cranking Idle Air multiplier"
       columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
       xAxis       = -40, 120, 10
 #else
       xAxis       =  -40, 250, 10
 #endif
-      yAxis       =  0,  50, 10
+      yAxis       =  0,  300, 10
       xBins       = cltCrankingCorrBins, coolant
       yBins       = cltCrankingCorr
       gauge       = CLTGauge
@@ -2155,7 +2155,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = crankingIAC, "IAC"
 		field = "Cranking IAC position",					crankingIACposition
 		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
-		field = "Override IAC Multiplier for Cranking",	overrideCrankingIacSetting	
+		field = "Override Idle Air Multiplier for Cranking",	overrideCrankingIacSetting
 		
 	dialog = crankingIgnition, "Ignition"
 		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
