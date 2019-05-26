@@ -6,8 +6,12 @@ import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 
 import java.io.*;
-import java.util.Arrays;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * (c) Andrey Belomutskiy
@@ -21,56 +25,124 @@ public class ConfigDefinition {
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
+    private static final String KEY_DEFINITION = "-definition";
+    private static final String KEY_TS_DESTINATION = "-ts_destination";
+    private static final String KEY_C_DESTINATION = "-c_destination";
+    private static final String KEY_CONSOLE_DESTINATION = "-java_destination";
+    private static final String KEY_PREPEND = "-prepend";
+    private static final String KEY_SKIP = "-skip";
 
     public static StringBuilder settingContextHelp = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 4 && args.length != 5) {
-            System.out.println("Please specify path to '" + INPUT_FILE_NAME + "' file, path to " + TSProjectConsumer.TS_FILE_INPUT_NAME +
-                    ", destination folder and [optional] file name of custom prepend file");
+        if (args.length < 2) {
+            System.out.println("Please specify\r\n"
+                    + KEY_DEFINITION + " x\r\n"
+                    + KEY_TS_DESTINATION + " x\r\n"
+                    + KEY_C_DESTINATION + " x\r\n"
+                    + KEY_CONSOLE_DESTINATION + " x\r\n"
+            );
             return;
         }
 
-        String definitionInputPath = args[0];
-        String tsPath = args[1];
-        String headerDestinationFolder = args[2];
-        String javaConsolePath = args[3];
-        String prependFile = args.length == 5 ? args[4] : null;
+        String definitionInputPath = null;
+        String tsPath = null;
+        String headerDestinationFolder = null;
+        String javaConsolePath = null;
+        String prependFile = null;
+        String skipRebuildFile = null;
+
+        for (int i = 0; i < args.length - 1; i += 2) {
+            String key = args[i];
+            if (key.equals(KEY_DEFINITION)) {
+                definitionInputPath = args[i + 1];
+            } else if (key.equals(KEY_TS_DESTINATION)) {
+                tsPath = args[i + 1];
+            } else if (key.equals(KEY_C_DESTINATION)) {
+                headerDestinationFolder = args[i + 1];
+            } else if (key.equals(KEY_CONSOLE_DESTINATION)) {
+                javaConsolePath = args[i + 1];
+            } else if (key.equals(KEY_PREPEND)) {
+                prependFile = args[i + 1];
+            } else if (key.equals(KEY_SKIP)) {
+                skipRebuildFile = args[i + 1];
+            }
+        }
+
+
         String fullFileName = definitionInputPath + File.separator + INPUT_FILE_NAME;
         System.out.println("Reading from " + fullFileName);
+
+        String currentMD5 = getDefinitionMD5(fullFileName);
+
+        if (skipRebuildFile != null) {
+            boolean nothingToDoHere = needToSkipRebuild(skipRebuildFile, currentMD5);
+            if (nothingToDoHere) {
+                System.out.println("Nothing to do here according to " + skipRebuildFile + " hash " + currentMD5);
+                return;
+            }
+        }
         String destCHeader = headerDestinationFolder + File.separator + ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H;
         System.out.println("Writing C header to " + destCHeader);
 
         if (prependFile != null)
             readPrependValues(prependFile);
 
-        BufferedWriter cHeader = new BufferedWriter(new FileWriter(destCHeader));
-
         BufferedReader definitionReader = new BufferedReader(new FileReader(fullFileName));
-
-        CharArrayWriter tsWriter = new CharArrayWriter();
-
-        CharArrayWriter javaFieldsWriter = new CharArrayWriter();
-
-
         ReaderState state = new ReaderState();
 
-        ConfigurationConsumer cHeaderConsumer = new CHeaderConsumer(cHeader);
-        ConfigurationConsumer tsProjectConsumer = new TSProjectConsumer(tsWriter, tsPath, state);
-        ConfigurationConsumer javaFieldsConsumer = new JavaFieldsConsumer(javaFieldsWriter, state, javaConsolePath);
+        List<ConfigurationConsumer> destinations = new ArrayList<>();
+        BufferedWriter cHeader = null;
+        if (destCHeader != null) {
+            cHeader = new BufferedWriter(new FileWriter(destCHeader));
+            destinations.add(new CHeaderConsumer(cHeader));
+        }
+        if (tsPath != null) {
+            CharArrayWriter tsWriter = new CharArrayWriter();
+            destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
+        }
+        if (javaConsolePath != null) {
+            CharArrayWriter javaFieldsWriter = new CharArrayWriter();
+            destinations.add(new JavaFieldsConsumer(javaFieldsWriter, state, javaConsolePath));
+        }
 
-        state.readBufferedReader(definitionReader, Arrays.asList(cHeaderConsumer, tsProjectConsumer, javaFieldsConsumer));
+        if (destinations.isEmpty())
+            throw new IllegalArgumentException("No destinations specified");
+        state.readBufferedReader(definitionReader, destinations);
 
         state.ensureEmptyAfterProcessing();
 
         cHeader.close();
 
-
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
         String inputFileName = definitionInputPath + File.separator + ROM_RAIDER_XML_TEMPLATE;
-        String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
-        processTextTemplate(inputFileName, outputFileName);
+        if (javaConsolePath != null) {
+            String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
+            processTextTemplate(inputFileName, outputFileName);
+        }
+        if (skipRebuildFile != null) {
+            System.out.println("Writing " + currentMD5 + " to " + skipRebuildFile);
+            PrintWriter writer = new PrintWriter(new FileWriter(skipRebuildFile));
+            writer.write(currentMD5);
+            writer.close();
+        }
+    }
+
+    private static boolean needToSkipRebuild(String skipRebuildFile, String currentMD5) throws IOException {
+        if (currentMD5 == null || !(new File(skipRebuildFile).exists()))
+            return false;
+        String finishedMD5 = new BufferedReader(new FileReader(skipRebuildFile)).readLine();
+        return finishedMD5 != null && finishedMD5.equals(currentMD5);
+    }
+
+    private static String getDefinitionMD5(String fullFileName) throws IOException {
+        File source = new File(fullFileName);
+        FileInputStream fileInputStream = new FileInputStream(fullFileName);
+        byte content[] = new byte[(int) source.length()];
+        if (fileInputStream.read(content) != content.length)
+            return "";
+        return getMd5(content);
     }
 
     private static void readPrependValues(String prependFile) throws IOException {
@@ -144,7 +216,7 @@ public class ConfigDefinition {
         return Integer.parseInt(s);
     }
 
-     static void processDefine(String line) {
+    static void processDefine(String line) {
         int index = line.indexOf(' ');
         String name;
         if (index == -1) {
@@ -155,5 +227,29 @@ public class ConfigDefinition {
             line = line.substring(index).trim();
         }
         VariableRegistry.INSTANCE.register(name, line);
+    }
+
+    private static String getMd5(byte[] content) {
+        try {
+            // Static getInstance method is called with hashing MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            // digest() method is called to calculate message digest
+            //  of an input digest() return array of byte
+            byte[] messageDigest = md.digest(content);
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            // For specifying wrong message digest algorithms
+            throw new RuntimeException(e);
+        }
     }
 }
