@@ -24,11 +24,11 @@ public class ConfigDefinition {
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
-    private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
     private static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROM_INPUT = "-romraider";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
+    private static final String KEY_C_DEFINES = "-c_defines";
     private static final String KEY_CONSOLE_DESTINATION = "-java_destination";
     private static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SKIP = "-skip";
@@ -48,7 +48,8 @@ public class ConfigDefinition {
 
         String definitionInputFile = null;
         String tsPath = null;
-        String headerDestinationFolder = null;
+        String destCHeader = null;
+        String destCDefines = null;
         String javaConsolePath = null;
         String prependFile = null;
         String skipRebuildFile = null;
@@ -61,7 +62,9 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_TS_DESTINATION)) {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
-                headerDestinationFolder = args[i + 1];
+                destCHeader = args[i + 1];
+            } else if (key.equals(KEY_C_DEFINES)) {
+                destCDefines = args[i + 1];
             } else if (key.equals(KEY_CONSOLE_DESTINATION)) {
                 javaConsolePath = args[i + 1];
             } else if (key.equals(KEY_PREPEND)) {
@@ -86,8 +89,6 @@ public class ConfigDefinition {
                 return;
             }
         }
-        String destCHeader = headerDestinationFolder + File.separator + ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H;
-        System.out.println("Writing C header to " + destCHeader);
 
         if (prependFile != null)
             readPrependValues(prependFile);
@@ -98,6 +99,7 @@ public class ConfigDefinition {
         List<ConfigurationConsumer> destinations = new ArrayList<>();
         BufferedWriter cHeader = null;
         if (destCHeader != null) {
+            System.out.println("Writing C header to " + destCHeader);
             cHeader = new BufferedWriter(new FileWriter(destCHeader));
             destinations.add(new CHeaderConsumer(cHeader));
         }
@@ -118,7 +120,8 @@ public class ConfigDefinition {
 
         cHeader.close();
 
-        VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
+        if (destCDefines != null)
+            VariableRegistry.INSTANCE.writeNumericsToFile(destCDefines);
 
         if (javaConsolePath != null && romRaiderInputFile != null) {
             String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
