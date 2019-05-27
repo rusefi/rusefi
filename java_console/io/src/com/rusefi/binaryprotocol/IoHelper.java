@@ -35,7 +35,7 @@ public class IoHelper {
         return packet;
     }
 
-    static int swap16(int x) {
+    public static int swap16(int x) {
         return (((x & 0xFF) << 8) | ((x) >> 8));
     }
 
@@ -51,7 +51,7 @@ public class IoHelper {
         }
     }
 
-    static void putShort(byte[] packet, int offset, int value) {
+    public static void putShort(byte[] packet, int offset, int value) {
         int index = offset + 1;
         for (int i = 0; i < 2; i++) {
             packet[index--] = (byte) value;
