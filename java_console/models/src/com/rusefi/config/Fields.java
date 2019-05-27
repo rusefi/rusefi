@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun May 26 20:52:16 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 06:54:36 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1283,7 +1283,7 @@ public class Fields {
 	public static final Field MAP_SENSOR_LOWVALUE = Field.create("MAP_SENSOR_LOWVALUE", 236, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_HIGHVALUE = Field.create("MAP_SENSOR_HIGHVALUE", 240, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_TYPE = Field.create("MAP_SENSOR_TYPE", 244, FieldType.INT);
-	public static final String[] adc_channel_e = {"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
+	public static final String[] adc_channel_e = {"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "PB12", "PB13", "PC14", "PC15", "PC16", "PC17", "PD3", "PD4", "PE2", "PE6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field MAP_SENSOR_HWCHANNEL = Field.create("MAP_SENSOR_HWCHANNEL", 248, FieldType.INT8, adc_channel_e);
 	public static final Field CLT_TEMPC_1 = Field.create("CLT_TEMPC_1", 252, FieldType.FLOAT);
 	public static final Field CLT_TEMPC_2 = Field.create("CLT_TEMPC_2", 256, FieldType.FLOAT);

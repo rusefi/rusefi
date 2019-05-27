@@ -24,7 +24,7 @@
 #define activateAuxPid3_offset_hex 4c
 #define activateAuxPid4_offset 76
 #define activateAuxPid4_offset_hex 4c
-#define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define adc_channel_e_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "Disabled", "PB12", "PB13", "PC14", "PC15", "PC16", "PC17", "PD3", "PD4", "PE2", "PE6", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define adcVcc_offset 548
 #define adcVcc_offset_hex 224
 #define afr_alignAf_offset 561
