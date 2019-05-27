@@ -210,7 +210,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	}
 #if EFI_ANALOG_SENSORS
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
+		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 //		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
 #endif /* EFI_ANALOG_SENSORS */
@@ -318,7 +318,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 
 		reportSensorF(log, fileFormat, "f: el delta", "v", engine->engineLoadAccelEnrichment.getMaxDelta(), 2);
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(), 2);
+			reportSensorF(log, fileFormat, "f: el fuel", "v", engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 		}
 
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_INJ_DUTY, "%", getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 2);
@@ -704,7 +704,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
     tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
 
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		float mapValue = getMap();
+		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 		tsOutputChannels->veValue = engine->engineState.currentBaroCorrectedVE * PERCENT_MULT;
 		// todo: bug here? target afr could work based on real MAF?
 		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
@@ -874,7 +874,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	// engine load acceleration
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap();
+		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
 

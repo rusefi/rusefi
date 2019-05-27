@@ -7,7 +7,7 @@
 
 #include "global.h"
 #include "engine_math.h"
-#include "engine_configuration.h"
+#include "engine.h"
 #include "map.h"
 #include "speed_density.h"
 #include "engine_test_helper.h"
@@ -107,8 +107,6 @@ TEST(misc, testMafLookup) {
 	ASSERT_EQ( 738,  engine->mafDecodingLookup[255]) << "@255";
 }
 
-float mockMapValue = 0;
-
-float getMap(void) {
-	return mockMapValue;
+float getMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engine->mockMapValue;
 }

@@ -358,6 +358,12 @@ public:
 
 	int globalSparkIdCoutner = 0;
 
+#if !EFI_PROD_CODE
+	float mockMapValue = 0;
+	// for historical reasons we have options to mock TPS on different layers :(
+	int mockTpsAdcValue = 0;
+	float mockTpsValue = NAN;
+#endif
 
 	int getGlobalConfigurationVersion(void) const;
 	/**

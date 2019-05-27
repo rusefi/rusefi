@@ -146,7 +146,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		break;
 	case PID_INTAKE_MAP:
 		scheduleMsg(&logger, "Got MAP request");
-		obdSendValue(1, pid, 1, getMap());
+		obdSendValue(1, pid, 1, getMap(PASS_ENGINE_PARAMETER_SIGNATURE));
 		break;
 	case PID_RPM:
 		scheduleMsg(&logger, "Got RPM request");

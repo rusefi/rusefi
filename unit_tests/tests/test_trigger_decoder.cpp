@@ -31,7 +31,6 @@
 #include "spark_logic.h"
 #include "trigger_universal.h"
 
-extern float mockMapValue;
 extern float testMafValue;
 extern WarningCodeState unitTestWarningCodeState;
 extern bool printTriggerDebug;
@@ -246,11 +245,11 @@ TEST(misc, testStartupFuelPumping) {
 	engineConfiguration->tpsMin = 0;
 	engineConfiguration->tpsMax = 10;
 
-	setMockTpsAdc(6);
+	setMockTpsAdc(6 PASS_ENGINE_PARAMETER_SUFFIX);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#1";
 
-	setMockTpsAdc(3);
+	setMockTpsAdc(3 PASS_ENGINE_PARAMETER_SUFFIX);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pumpsCounter#2";
 
@@ -261,16 +260,16 @@ TEST(misc, testStartupFuelPumping) {
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
 
-	setMockTpsAdc(7);
+	setMockTpsAdc(7 PASS_ENGINE_PARAMETER_SUFFIX);
 	engine->rpmCalculator.mockRpm = 0;
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
 
-	setMockTpsAdc(3);
+	setMockTpsAdc(3 PASS_ENGINE_PARAMETER_SUFFIX);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#6";
 
-	setMockTpsAdc(7);
+	setMockTpsAdc(7 PASS_ENGINE_PARAMETER_SUFFIX);
 	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 2,  sf.pumpsCounter) << "pc#7";
 }
@@ -931,7 +930,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.executeActions();
 
-	mockMapValue = 0;
+	engine->mockMapValue = 0;
 	testMafValue = 0;
 	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
