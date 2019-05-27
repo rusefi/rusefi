@@ -26,6 +26,7 @@ public class ConfigDefinition {
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
     private static final String KEY_DEFINITION = "-definition";
+    private static final String KEY_ROM_INPUT = "-romraider";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_CONSOLE_DESTINATION = "-java_destination";
@@ -51,6 +52,7 @@ public class ConfigDefinition {
         String javaConsolePath = null;
         String prependFile = null;
         String skipRebuildFile = null;
+        String romRaiderInputFile = null;
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
@@ -66,6 +68,8 @@ public class ConfigDefinition {
                 prependFile = args[i + 1];
             } else if (key.equals(KEY_SKIP)) {
                 skipRebuildFile = args[i + 1];
+            } else if (key.equals(KEY_ROM_INPUT)) {
+                romRaiderInputFile = args[i + 1];
             }
         }
 
@@ -116,8 +120,8 @@ public class ConfigDefinition {
 
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
-        String inputFileName = definitionInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
-        if (javaConsolePath != null) {
+        if (javaConsolePath != null && romRaiderInputFile != null) {
+            String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
             String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
             processTextTemplate(inputFileName, outputFileName);
         }
