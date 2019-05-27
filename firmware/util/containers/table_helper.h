@@ -23,15 +23,15 @@ class Map3D {
 public:
 	Map3D(const char*name);
 	Map3D(const char*name, float multiplier);
-	void create(const char*name, float multiplier);
 	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const float loadBins[LOAD_BIN_SIZE], const float rpmBins[RPM_BIN_SIZE]);
 	float getValue(float xRpm, float y);
 	void setAll(vType value);
 	vType *pointers[LOAD_BIN_SIZE];
 private:
-	const float *loadBins;
-	const float *rpmBins;
-	bool initialized;
+	void create(const char*name, float multiplier);
+	const float *loadBins = NULL;
+	const float *rpmBins = NULL;
+	bool initialized =  false;
 	const char *name;
 	float multiplier;
 };
@@ -112,10 +112,7 @@ template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::create(const char *name, float multiplier) {
 	this->name = name;
 	this->multiplier = multiplier;
-	initialized = false;
 	memset(&pointers, 0, sizeof(pointers));
-	loadBins = NULL;
-	rpmBins = NULL;
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
