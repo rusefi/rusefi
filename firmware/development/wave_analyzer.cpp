@@ -16,7 +16,7 @@
 #include "eficonsole.h"
 #include "data_buffer.h"
 #include "pin_repository.h"
-#include "engine_state.h"
+#include "allsensors.h"
 #include "signal_executor.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"

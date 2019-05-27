@@ -35,7 +35,7 @@
 #endif /* EFI_WAVE_ANALYZER */
 
 #include "trigger_central.h"
-#include "engine_state.h"
+#include "allsensors.h"
 #include "io_pins.h"
 #include "efi_gpio.h"
 #include "mmc_card.h"
