@@ -215,7 +215,12 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		/**
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 		 */
-		currentRawVE = veMap.getValue(rpm, CONFIGB(useTPSBasedVeTable) ? tps : map);
+		if (CONFIGB(useTPSBasedVeTable)) {
+			// todo: should we have 'veTpsMap' fuel_Map3D_t variable here?
+			currentRawVE = interpolate3d<float>(tps, CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
+		} else {
+			currentRawVE = veMap.getValue(rpm, map);
+		}
 		// get VE from the separate table for Idle
 		if (CONFIG(useSeparateVeForIdle)) {
 			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
