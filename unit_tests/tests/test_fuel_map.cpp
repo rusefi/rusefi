@@ -254,6 +254,6 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	setMockTpsValue(7 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engine->engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// we have a problem - we get value on the edge of the MAP axis, not middle of TPS axis
-	ASSERT_EQ(100, engine->engineState.currentRawVE);
+	// value in the middle of the map as expected
+	ASSERT_EQ(107, engine->engineState.currentRawVE);
 }
