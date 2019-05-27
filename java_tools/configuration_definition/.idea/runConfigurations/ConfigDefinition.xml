@@ -2,7 +2,7 @@
   <configuration default="false" name="ConfigDefinition" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.ConfigDefinition" />
     <module name="configuration_definition" />
-    <option name="PROGRAM_PARAMETERS" value="-definition ../../firmware/integration -ts_destination ../../firmware/tunerstudio -c_destination ../../firmware/controllers\algo -java_destination ../../java_console -skip lastMd5" />
+    <option name="PROGRAM_PARAMETERS" value="-definition ../../firmware/integration/rusefi_config.txt -ts_destination ../../firmware/tunerstudio -c_destination ../../firmware/controllers\algo -java_destination ../../java_console -skip lastMd5" />
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
