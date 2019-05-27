@@ -94,8 +94,7 @@ public class VariableRegistry extends TreeMap<String, String> {
         register(name + "_hex", Integer.toString(value, 16));
     }
 
-    public void writeNumericsToFile(String headerDestinationFolder) throws IOException {
-        String fileName = headerDestinationFolder + File.separator + "rusefi_generated.h";
+    public void writeNumericsToFile(String fileName) throws IOException {
         System.out.println("Writing to " + fileName);
         BufferedWriter cHeader = new BufferedWriter(new FileWriter(fileName));
 
