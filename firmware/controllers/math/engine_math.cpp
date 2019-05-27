@@ -64,7 +64,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case LM_SPEED_DENSITY:
 		// SD engine load is used for timing lookup but not for fuel calculation
 	case LM_MAP:
-		return getMap();
+		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:
 		return getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_REAL_MAF: {

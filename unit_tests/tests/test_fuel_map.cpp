@@ -224,7 +224,6 @@ TEST(misc, testPinHelper) {
 }
 
 extern fuel_Map3D_t veMap;
-extern float mockMapValue;
 
 TEST(fuel, testTpsBasedVeDefect799) {
 
@@ -251,8 +250,8 @@ TEST(fuel, testTpsBasedVeDefect799) {
 	setLinearCurve(CONFIG(ignitionTpsBins), IGN_TPS_COUNT, 0, 15, 1);
 
 
-	mockMapValue = 107;
-	setMockTpsValue(7);
+	engine->mockMapValue = 107;
+	setMockTpsValue(7 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engine->engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// we have a problem - we get value on the edge of the MAP axis, not middle of TPS axis

@@ -480,7 +480,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 	bool limitedFuel = rpm > CONFIG(rpmHardLimit);
 
 	if (CONFIG(boostCutPressure) !=0) {
-		if (getMap() > CONFIG(boostCutPressure)) {
+		if (getMap(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(boostCutPressure)) {
 			limitedSpark = true;
 			limitedFuel = true;
 		}

@@ -83,7 +83,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	floatms_t baseFuel;
 	if (CONFIG(fuelAlgorithm) == LM_SPEED_DENSITY) {
-		baseFuel = getSpeedDensityFuel(getMap() PASS_ENGINE_PARAMETER_SUFFIX);
+		baseFuel = getSpeedDensityFuel(getMap(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN sd baseFuel", 0);
 	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -268,7 +268,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 	// coasting fuel cut-off correction
 	if (CONFIGB(coastingFuelCutEnabled)) {
 		percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-		float map = getMap();
+		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	
 		// gather events
 		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));

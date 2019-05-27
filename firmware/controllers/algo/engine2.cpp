@@ -210,7 +210,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->fuelAlgorithm == LM_SPEED_DENSITY) {
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 		updateTChargeK(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
-		float map = getMap();
+		float map = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		/**
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/

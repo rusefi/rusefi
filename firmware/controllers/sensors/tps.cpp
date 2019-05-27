@@ -11,12 +11,6 @@
 
 EXTERN_ENGINE;
 
-#if !EFI_PROD_CODE
-	// for historical reasons we have options to mock TPS on different layers :(
-	static int mockTpsAdcValue;
-	static float mockTpsValue = NAN;
-#endif /* EFI_PROD_CODE */
-
 /**
  * set mock_pedal_position X
  * See also directPwmValue
@@ -27,16 +21,16 @@ percent_t mockPedalPosition = MOCK_UNDEFINED;
 /**
  * this allows unit tests to simulate TPS position
  */
-void setMockTpsAdc(percent_t tpsPosition) {
-	mockTpsAdcValue = TPS_TS_CONVERSION * tpsPosition;
+void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	engine->mockTpsAdcValue = TPS_TS_CONVERSION * tpsPosition;
 }
 
-void setMockTpsValue(percent_t tpsPosition) {
-	mockTpsValue = tpsPosition;
+void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	engine->mockTpsValue = tpsPosition;
 }
 #endif /* EFI_PROD_CODE */
 
-void setMockPedalPosition(percent_t value) {
+void setMockPedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	mockPedalPosition = value;
 }
 
@@ -120,8 +114,8 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
-	if (mockTpsAdcValue != MOCK_UNDEFINED) {
-		return mockTpsAdcValue;
+	if (engine->mockTpsAdcValue != MOCK_UNDEFINED) {
+		return engine->mockTpsAdcValue;
 	}
 #endif
 	if (engineConfiguration->tps1_1AdcChannel == EFI_ADC_NONE)
@@ -194,8 +188,8 @@ bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_PROD_CODE
-	if (!cisnan(mockTpsValue)) {
-		return mockTpsValue;
+	if (!cisnan(engine->mockTpsValue)) {
+		return engine->mockTpsValue;
 	}
 #endif /* EFI_PROD_CODE */
 	if (!hasTpsSensor(PASS_ENGINE_PARAMETER_SIGNATURE))
