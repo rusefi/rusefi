@@ -9,6 +9,136 @@
 #ifndef ENGINE_STATE_H_
 #define ENGINE_STATE_H_
 
-#include "allsensors.h"
+#include "global.h"
+#include "engine_parts.h"
+#include "pid.h"
+
+class EngineState {
+public:
+	EngineState();
+	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	FuelConsumptionState fuelConsumption;
+
+	efitick_t crankingTime = 0;
+	efitick_t timeSinceCranking = 0;
+
+	WarningCodeState warnings;
+
+	/**
+	 * speed-density logic, calculated air mass in grams
+	 */
+	float airMass = 0;
+	/**
+	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
+	 */
+	float airFlow = 0;
+
+	float engineNoiseHipLevel = 0;
+
+	float auxValveStart = 0;
+	float auxValveEnd = 0;
+
+	// too much copy-paste here, something should be improved :)
+	ThermistorMath iatCurve;
+	ThermistorMath cltCurve;
+	ThermistorMath auxTemp1Curve;
+	ThermistorMath auxTemp2Curve;
+
+	/**
+	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
+	 */
+	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
+	angle_t mapAveragingDuration = 0;
+
+	angle_t timingAdvance = 0;
+	// spark-related
+	/**
+	 * ignition dwell duration in ms
+	 * See also dwellAngle
+	 */
+	floatms_t sparkDwell = 0;
+	/**
+	 * ignition dwell duration as crankshaft angle
+	 * NAN if engine is stopped
+	 * See also sparkDwell
+	 */
+	angle_t dwellAngle = NAN;
+
+	angle_t cltTimingCorrection = 0;
+
+	// fuel-related;
+	float iatFuelCorrection = 0;
+	float cltFuelCorrection = 0;
+	float postCrankingFuelCorrection = 0;
+	float fuelCutoffCorrection = 0;
+	efitick_t coastingFuelCutStartTime = 0;
+	/**
+	 * injectorLag(VBatt)
+	 *
+	 * this value depends on a slow-changing VBatt value, so
+	 * we update it once in a while
+	 */
+	floatms_t injectorLag = 0;
+
+	/**
+	 * See useWarmupPidAfr
+	 */
+	Pid warmupAfrPid;
+	float warmupTargetAfr = 0;
+
+	float baroCorrection = 0;
+
+	// speed density
+	// Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
+	float tCharge = 0;
+	float tChargeK = 0;
+	efitick_t timeSinceLastTChargeK;
+
+	float currentRawVE = 0;
+	float currentBaroCorrectedVE = 0;
+	float targetAFR = 0;
+
+	int vssEventCounter = 0;
+	int totalLoggedBytes = 0;
+
+
+	/**
+	 * pre-calculated value from simple fuel lookup
+	 */
+	floatms_t baseTableFuel = 0;
+	/**
+	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
+	 */
+	floatms_t baseFuel = 0;
+
+	/**
+	 * closed-loop fuel correction
+	 */
+	floatms_t fuelPidCorrection = 0;
+
+	/**
+	 * Total fuel with CLT, IAT and TPS acceleration corrections per cycle,
+	 * as squirt duration.
+	 * Without injector lag.
+	 * @see baseFuel
+	 * @see actualLastInjection
+	 */
+	floatms_t runningFuel = 0;
+
+	/**
+	 * TPS acceleration: extra fuel amount
+	 */
+	floatms_t tpsAccelEnrich = 0;
+
+	angle_t injectionOffset = 0;
+
+#if EFI_ENABLE_MOCK_ADC
+	MockAdcState mockAdcState;
+#endif /* EFI_ENABLE_MOCK_ADC */
+};
+
 
 #endif /* ENGINE_STATE_H_ */
