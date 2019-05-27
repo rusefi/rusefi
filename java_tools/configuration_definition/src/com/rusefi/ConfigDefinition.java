@@ -20,8 +20,8 @@ import java.util.List;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     public static final String EOL = "\n";
-    private static final String INPUT_FILE_NAME = "rusefi_config.txt";
-    public static final String MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + INPUT_FILE_NAME + " " + new Date();
+    public static String MESSAGE;
+
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     private static final String ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H = "engine_configuration_generated_structures.h";
@@ -45,7 +45,7 @@ public class ConfigDefinition {
             return;
         }
 
-        String definitionInputPath = null;
+        String definitionInputFile = null;
         String tsPath = null;
         String headerDestinationFolder = null;
         String javaConsolePath = null;
@@ -55,7 +55,7 @@ public class ConfigDefinition {
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
             if (key.equals(KEY_DEFINITION)) {
-                definitionInputPath = args[i + 1];
+                definitionInputFile = args[i + 1];
             } else if (key.equals(KEY_TS_DESTINATION)) {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
@@ -69,11 +69,11 @@ public class ConfigDefinition {
             }
         }
 
+        MESSAGE = "was generated automatically by ConfigDefinition.jar based on " + definitionInputFile + " " + new Date();
 
-        String fullFileName = definitionInputPath + File.separator + INPUT_FILE_NAME;
-        System.out.println("Reading from " + fullFileName);
+        System.out.println("Reading from " + definitionInputFile);
 
-        String currentMD5 = getDefinitionMD5(fullFileName);
+        String currentMD5 = getDefinitionMD5(definitionInputFile);
 
         if (skipRebuildFile != null) {
             boolean nothingToDoHere = needToSkipRebuild(skipRebuildFile, currentMD5);
@@ -88,7 +88,7 @@ public class ConfigDefinition {
         if (prependFile != null)
             readPrependValues(prependFile);
 
-        BufferedReader definitionReader = new BufferedReader(new FileReader(fullFileName));
+        BufferedReader definitionReader = new BufferedReader(new FileReader(definitionInputFile));
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
@@ -116,7 +116,7 @@ public class ConfigDefinition {
 
         VariableRegistry.INSTANCE.writeNumericsToFile(headerDestinationFolder);
 
-        String inputFileName = definitionInputPath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+        String inputFileName = definitionInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
         if (javaConsolePath != null) {
             String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
             processTextTemplate(inputFileName, outputFileName);
