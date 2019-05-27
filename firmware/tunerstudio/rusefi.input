@@ -1860,6 +1860,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
 		field = "Use separate IAC Table For Coasting",	useIacTableForCoasting, {idleMode == 0}
+		field = idleIncrementalPidCic,					idleIncrementalPidCic
 		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
 		panel = idlePidSettings, { idleMode == 0}
 		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;

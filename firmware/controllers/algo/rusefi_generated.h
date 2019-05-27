@@ -1024,6 +1024,8 @@
 #define idleAdvance_offset_hex 19b0
 #define idleAdvanceBins_offset 6544
 #define idleAdvanceBins_offset_hex 1990
+#define idleIncrementalPidCic_offset 744
+#define idleIncrementalPidCic_offset_hex 2e8
 #define idleMode_offset 1472
 #define idleMode_offset_hex 5c0
 #define idlePidActivationTime_offset 2612
@@ -1772,8 +1774,6 @@
 #define unused_bit_1472_29_offset_hex 5b8
 #define unused_bit_1472_30_offset 1464
 #define unused_bit_1472_30_offset_hex 5b8
-#define unused_board_984_30_offset 744
-#define unused_board_984_30_offset_hex 2e8
 #define unused_board_984_31_offset 744
 #define unused_board_984_31_offset_hex 2e8
 #define unusedAlignMaf_offset 557
