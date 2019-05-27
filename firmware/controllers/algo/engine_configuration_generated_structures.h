@@ -1,10 +1,10 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 07:56:59 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 19:21:18 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
 #include "rusefi_types.h"
 // start of pid_s
-typedef struct {
+struct pid_s {
 	/**
 	 * offset 0
 	 */
@@ -38,10 +38,12 @@ typedef struct {
 	 */
 	int16_t maxValue;
 	/** total size 20*/
-} pid_s;
+};
+
+typedef struct pid_s pid_s;
 
 // start of cranking_parameters_s
-typedef struct {
+struct cranking_parameters_s {
 	/**
 	 * Fuel squirt duration while cranking
 	 * A number of curves adjust this value according to CLT/IAT/TPS etc
@@ -60,10 +62,12 @@ typedef struct {
 	 */
 	uint8_t alignmentFill[2];
 	/** total size 8*/
-} cranking_parameters_s;
+};
+
+typedef struct cranking_parameters_s cranking_parameters_s;
 
 // start of spi_pins
-typedef struct {
+struct spi_pins {
 	/**
 	 * offset 0
 	 */
@@ -82,10 +86,12 @@ typedef struct {
 	 */
 	uint8_t alignmentFill;
 	/** total size 4*/
-} spi_pins;
+};
+
+typedef struct spi_pins spi_pins;
 
 // start of air_pressure_sensor_config_s
-typedef struct {
+struct air_pressure_sensor_config_s {
 	/**
 	 * kPa value at low volts
 	 * offset 0
@@ -109,14 +115,16 @@ typedef struct {
 	 */
 	uint8_t align[3];
 	/** total size 16*/
-} air_pressure_sensor_config_s;
+};
+
+typedef struct air_pressure_sensor_config_s air_pressure_sensor_config_s;
 
 /**
  * @brief MAP averaging configuration
 
 */
 // start of MAP_sensor_config_s
-typedef struct {
+struct MAP_sensor_config_s {
 	/**
 	 * offset 0
 	 */
@@ -140,14 +148,16 @@ typedef struct {
 	 */
 	air_pressure_sensor_config_s sensor;
 	/** total size 144*/
-} MAP_sensor_config_s;
+};
+
+typedef struct MAP_sensor_config_s MAP_sensor_config_s;
 
 /**
  * @brief Thermistor known values
 
 */
 // start of thermistor_conf_s
-typedef struct {
+struct thermistor_conf_s {
 	/**
 	 * these values are in Celcuus
 	 * offset 0
@@ -178,14 +188,16 @@ typedef struct {
 	 */
 	float bias_resistor;
 	/** total size 28*/
-} thermistor_conf_s;
+};
+
+typedef struct thermistor_conf_s thermistor_conf_s;
 
 /**
  * @brief Oil pressure sensor interpolation
 
 */
 // start of oil_pressure_config_s
-typedef struct {
+struct oil_pressure_config_s {
 	/**
 	 * offset 0
 	 */
@@ -211,14 +223,16 @@ typedef struct {
 	 */
 	float value2;
 	/** total size 20*/
-} oil_pressure_config_s;
+};
+
+typedef struct oil_pressure_config_s oil_pressure_config_s;
 
 /**
  * @brief Thermistor curve parameters
 
 */
 // start of ThermistorConf
-typedef struct {
+struct ThermistorConf {
 	/**
 	 * offset 0
 	 */
@@ -233,10 +247,12 @@ typedef struct {
 	 */
 	uint8_t alignmentFill[3];
 	/** total size 32*/
-} ThermistorConf;
+};
+
+typedef struct ThermistorConf ThermistorConf;
 
 // start of injector_s
-typedef struct {
+struct injector_s {
 	/**
 	 * cc/min, cubic centimeter per minute
 	 * By the way, g/s = 0.125997881 * (lb/hr)
@@ -257,10 +273,12 @@ typedef struct {
 	 */
 	float battLagCorr[VBAT_INJECTOR_CURVE_SIZE];
 	/** total size 68*/
-} injector_s;
+};
+
+typedef struct injector_s injector_s;
 
 // start of bi_quard_s
-typedef struct {
+struct bi_quard_s {
 	/**
 	 * offset 0
 	 */
@@ -282,10 +300,12 @@ typedef struct {
 	 */
 	float b2;
 	/** total size 20*/
-} bi_quard_s;
+};
+
+typedef struct bi_quard_s bi_quard_s;
 
 // start of specs_s
-typedef struct {
+struct specs_s {
 	/**
 	 * Engine displacement, in liters
 	 * see also cylindersCount
@@ -301,14 +321,16 @@ typedef struct {
 	 */
 	firing_order_e firingOrder;
 	/** total size 12*/
-} specs_s;
+};
+
+typedef struct specs_s specs_s;
 
 /**
  * @brief Trigger wheel(s) configuration
 
 */
 // start of trigger_config_s
-typedef struct {
+struct trigger_config_s {
 	/**
 	 * set trigger_type X
 	 * offset 0
@@ -333,10 +355,12 @@ typedef struct {
 	 */
 	int customSkippedToothCount;
 	/** total size 16*/
-} trigger_config_s;
+};
+
+typedef struct trigger_config_s trigger_config_s;
 
 // start of afr_sensor_s
-typedef struct {
+struct afr_sensor_s {
 	/**
 	 * offset 0
 	 */
@@ -362,10 +386,12 @@ typedef struct {
 	 */
 	float value2;
 	/** total size 20*/
-} afr_sensor_s;
+};
+
+typedef struct afr_sensor_s afr_sensor_s;
 
 // start of idle_hardware_s
-typedef struct {
+struct idle_hardware_s {
 	/**
 	 * offset 0
 	 */
@@ -387,10 +413,12 @@ typedef struct {
 	 */
 	pin_output_mode_e solenoidPinMode;
 	/** total size 8*/
-} idle_hardware_s;
+};
+
+typedef struct idle_hardware_s idle_hardware_s;
 
 // start of etb_io
-typedef struct {
+struct etb_io {
 	/**
 	 * offset 0
 	 */
@@ -409,10 +437,12 @@ typedef struct {
 	 */
 	brain_pin_e controlPin2;
 	/** total size 4*/
-} etb_io;
+};
+
+typedef struct etb_io etb_io;
 
 // start of board_configuration_s
-typedef struct {
+struct board_configuration_s {
 	/**
 	 * offset 0
 	 */
@@ -977,10 +1007,12 @@ typedef struct {
 	 */
 	int unusedAtBoardConfigurationEnd[122];
 	/** total size 864*/
-} board_configuration_s;
+};
+
+typedef struct board_configuration_s board_configuration_s;
 
 // start of engine_configuration_s
-typedef struct {
+struct engine_configuration_s {
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
 	 * set engine_type X
@@ -2507,10 +2539,12 @@ typedef struct {
 	 */
 	int mainUnusedEnd[611];
 	/** total size 6480*/
-} engine_configuration_s;
+};
+
+typedef struct engine_configuration_s engine_configuration_s;
 
 // start of persistent_config_s
-typedef struct {
+struct persistent_config_s {
 	/**
 	 * offset 0
 	 */
@@ -2748,8 +2782,10 @@ typedef struct {
 	 */
 	float fsioTable4RpmBins[FSIO_TABLE_8];
 	/** total size 20000*/
-} persistent_config_s;
+};
+
+typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 07:56:59 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 19:21:18 EDT 2019
