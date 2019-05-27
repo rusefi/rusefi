@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 06:54:36 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 07:56:59 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -676,6 +676,7 @@ public class Fields {
 	public static final int idleAdvance_offset = 6576;
 	public static final int idleAdvanceBins_offset = 6544;
 	public static final int idleAdvanceBins_offset_hex = 1990;
+	public static final int idleIncrementalPidCic_offset = 744;
 	public static final int idleMode_offset = 1472;
 	public static final int idlePidActivationTime_offset = 2612;
 	public static final int idlePidDeactivationTpsThreshold_offset = 816;
@@ -1140,7 +1141,6 @@ public class Fields {
 	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_bit_1472_29_offset = 1464;
 	public static final int unused_bit_1472_30_offset = 1464;
-	public static final int unused_board_984_30_offset = 744;
 	public static final int unused_board_984_31_offset = 744;
 	public static final int unusedAlignMaf_offset = 557;
 	public static final int unusedAnotherOne_offset = 744;
@@ -1503,7 +1503,7 @@ public class Fields {
 	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 744, FieldType.BIT, 27);
 	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 744, FieldType.BIT, 28);
 	public static final Field USEETBFORIDLECONTROL = Field.create("USEETBFORIDLECONTROL", 744, FieldType.BIT, 29);
-	public static final Field UNUSED_BOARD_984_30 = Field.create("UNUSED_BOARD_984_30", 744, FieldType.BIT, 30);
+	public static final Field IDLEINCREMENTALPIDCIC = Field.create("IDLEINCREMENTALPIDCIC", 744, FieldType.BIT, 30);
 	public static final Field UNUSED_BOARD_984_31 = Field.create("UNUSED_BOARD_984_31", 744, FieldType.BIT, 31);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 748, FieldType.INT8, brain_input_pin_e);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 749, FieldType.INT8, brain_input_pin_e);

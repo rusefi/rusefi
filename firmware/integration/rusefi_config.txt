@@ -607,7 +607,7 @@ bit is_enabled_spi_2
 	bit pauseEtbControl
 	bit alignEngineSnifferAtTDC
 	bit useETBforIdleControl
-	bit unused_board_984_30
+	bit idleIncrementalPidCic
 	bit unused_board_984_31
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;

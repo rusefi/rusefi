@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun May 26 20:52:16 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 07:56:59 EDT 2019
 // begin
 #ifndef ENGINE_CONFIGURATION_GENERATED_H_
 #define ENGINE_CONFIGURATION_GENERATED_H_
@@ -763,7 +763,7 @@ typedef struct {
 	bool useETBforIdleControl : 1;
 	/**
 	offset 144 bit 30 */
-	bool unused_board_984_30 : 1;
+	bool idleIncrementalPidCic : 1;
 	/**
 	offset 144 bit 31 */
 	bool unused_board_984_31 : 1;
@@ -2752,4 +2752,4 @@ typedef struct {
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun May 26 20:52:16 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 07:56:59 EDT 2019
