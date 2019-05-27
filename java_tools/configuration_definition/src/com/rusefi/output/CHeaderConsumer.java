@@ -53,7 +53,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
         }
 
         cHeader.write("// start of " + structure.name + EOL);
-        cHeader.write("typedef struct {" + EOL);
+        cHeader.write("struct " + structure.name + " {" + EOL);
 
         structure.bitState.reset();
         for (int i = 0; i < structure.cFields.size(); i++) {
@@ -66,7 +66,10 @@ public class CHeaderConsumer implements ConfigurationConsumer {
         }
 
         cHeader.write("\t/** total size " + structure.currentOffset + "*/" + EOL);
-        cHeader.write("} " + structure.name + ";" + EOL + EOL);
+        cHeader.write("};" + EOL + EOL);
+
+        // https://stackoverflow.com/questions/1675351/typedef-struct-vs-struct-definitions
+        cHeader.write("typedef struct " + structure.name + " " + structure.name + ";" + EOL + EOL);
     }
 
     @Override
