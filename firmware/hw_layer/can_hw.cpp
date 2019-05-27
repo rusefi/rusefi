@@ -19,7 +19,7 @@
 #include "string.h"
 #include "obd2.h"
 #include "mpu_util.h"
-#include "engine_state.h"
+#include "allsensors.h"
 #include "vehicle_speed.h"
 
 EXTERN_ENGINE

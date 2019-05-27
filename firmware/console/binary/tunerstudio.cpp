@@ -61,7 +61,7 @@
 
 #include "global.h"
 
-#include "engine_state.h"
+#include "allsensors.h"
 #include "tunerstudio.h"
 
 #include "main_trigger_callback.h"

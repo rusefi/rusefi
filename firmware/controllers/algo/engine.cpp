@@ -11,7 +11,7 @@
 
 #include "global.h"
 #include "engine.h"
-#include "engine_state.h"
+#include "allsensors.h"
 #include "efi_gpio.h"
 #include "trigger_central.h"
 #include "fuel_math.h"

@@ -30,7 +30,7 @@
 #include "map_averaging.h"
 #include "trigger_central.h"
 #include "adc_inputs.h"
-#include "engine_state.h"
+#include "allsensors.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "signal_executor.h"

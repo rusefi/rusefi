@@ -10,6 +10,5 @@
 #define ENGINE_STATE_H_
 
 #include "allsensors.h"
-#include "rpm_calculator.h"
 
 #endif /* ENGINE_STATE_H_ */

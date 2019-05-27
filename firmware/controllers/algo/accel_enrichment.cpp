@@ -25,7 +25,7 @@
 #include "engine.h"
 #include "trigger_central.h"
 #include "accel_enrichment.h"
-#include "engine_state.h"
+#include "allsensors.h"
 #include "engine_math.h"
 #include "signal_executor.h"
 #if EFI_TUNER_STUDIO

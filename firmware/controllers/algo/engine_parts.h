@@ -162,4 +162,20 @@ public:
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 };
 
+/**
+ * 6 crossing over 50% TPS means pressing and releasing three times
+ * TODO: looks like this code is not finished / not used?
+ */
+#define PUMPS_TO_PRIME 6
+
+class StartupFuelPumping {
+public:
+	StartupFuelPumping();
+	void update(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isTpsAbove50;
+	int pumpsCounter;
+private:
+	void setPumpsCounter(int newValue);
+};
+
 #endif /* CONTROLLERS_ALGO_ENGINE_PARTS_H_ */

@@ -455,21 +455,6 @@ private:
 	void reset();
 };
 
-/**
- * 6 crossing over 50% TPS means pressing and releasing three times
- */
-#define PUMPS_TO_PRIME 6
-
-class StartupFuelPumping {
-public:
-	StartupFuelPumping();
-	void update(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	bool isTpsAbove50;
-	int pumpsCounter;
-private:
-	void setPumpsCounter(int newValue);
-};
-
 void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX);
