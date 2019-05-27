@@ -408,7 +408,7 @@ void initHip9011(Logging *sharedLogger) {
 
 	hipSpiCfg.ssport = getHwPort("hip", CONFIGB(hip9011CsPin));
 	hipSpiCfg.sspad = getHwPin("hip", CONFIGB(hip9011CsPin));
-#endif
+#endif /* EFI_PROD_CODE */
 
 	startHip9001_pins();
 
