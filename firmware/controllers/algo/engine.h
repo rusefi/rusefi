@@ -233,7 +233,8 @@ public:
 	float tChargeK = 0;
 	efitick_t timeSinceLastTChargeK;
 
-	float currentVE = 0;
+	float currentRawVE = 0;
+	float currentBaroCorrectedVE = 0;
 	float targetAFR = 0;
 
 	int vssEventCounter = 0;

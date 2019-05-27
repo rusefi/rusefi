@@ -215,14 +215,14 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		/**
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 		 */
-		float rawVe = veMap.getValue(rpm, CONFIGB(useTPSBasedVeTable) ? tps : map);
+		currentRawVE = veMap.getValue(rpm, CONFIGB(useTPSBasedVeTable) ? tps : map);
 		// get VE from the separate table for Idle
 		if (CONFIG(useSeparateVeForIdle)) {
 			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
 			// interpolate between idle table and normal (running) table using TPS threshold
-			rawVe = interpolateClamped(0.0f, idleVe, CONFIGB(idlePidDeactivationTpsThreshold), rawVe, tps);
+			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIGB(idlePidDeactivationTpsThreshold), currentRawVE, tps);
 		}
-		currentVE = baroCorrection * rawVe * 0.01;
+		currentBaroCorrectedVE = baroCorrection * currentRawVE * PERCENT_DIV;
 		targetAFR = afrMap.getValue(rpm, map);
 	} else {
 		baseTableFuel = getBaseTableFuel(rpm, engineLoad);
