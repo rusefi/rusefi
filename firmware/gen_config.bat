@@ -1,6 +1,10 @@
 rem This batch files reads rusefi_config.txt and produses firmware persistent configuration headers
 rem the storage section of rusefi.ini is updated as well
 
+
+rem lazy is broken - TS input is not considered a change
+rm build/config.gen
+
 java -jar ../java_tools/ConfigDefinition.jar -definition integration\rusefi_config.txt -romraider integration -ts_destination tunerstudio -c_destination controllers\algo -java_destination ../java_console -skip build/config.gen
 
 
