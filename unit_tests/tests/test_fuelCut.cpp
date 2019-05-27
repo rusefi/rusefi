@@ -34,7 +34,7 @@ TEST(fuelCut, coasting) {
 	// mock CLT - just above threshold ('hot engine')
 	float hotClt = engine->sensors.clt = engineConfiguration->coastingFuelCutClt + 1;
 	// mock TPS - throttle is opened
-	setMockTpsPosition(6);
+	setMockTpsAdc(6);
 	// set 'running' RPM - just above RpmHigh threshold
 	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh + 1;
 	// 'advance' time (amount doesn't matter)
@@ -52,7 +52,7 @@ TEST(fuelCut, coasting) {
 	assertEqualsM("inj dur#1 norm", normalInjDuration, ENGINE(injectionDuration));
 
 	// 'releasing' the throttle
-	setMockTpsPosition(0);
+	setMockTpsAdc(0);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Fuel cut-off is enabled now
