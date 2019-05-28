@@ -97,11 +97,8 @@ public class ConfigDefinition {
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        BufferedWriter cHeader = null;
         if (destCHeader != null) {
-            System.out.println("Writing C header to " + destCHeader);
-            cHeader = new BufferedWriter(new FileWriter(destCHeader));
-            destinations.add(new CHeaderConsumer(cHeader));
+            destinations.add(new CHeaderConsumer(destCHeader));
         }
         if (tsPath != null) {
             CharArrayWriter tsWriter = new CharArrayWriter();
@@ -118,7 +115,6 @@ public class ConfigDefinition {
 
         state.ensureEmptyAfterProcessing();
 
-        cHeader.close();
 
         if (destCDefines != null)
             VariableRegistry.INSTANCE.writeNumericsToFile(destCDefines);
