@@ -1,7 +1,7 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 19:21:18 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 20:05:22 EDT 2019
 // begin
-#ifndef ENGINE_CONFIGURATION_GENERATED_H_
-#define ENGINE_CONFIGURATION_GENERATED_H_
+#ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
+#define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #include "rusefi_types.h"
 // start of pid_s
 struct pid_s {
@@ -2788,4 +2788,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 19:21:18 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 20:05:22 EDT 2019

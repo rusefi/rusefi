@@ -5,6 +5,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ConfigStructure;
 
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import static com.rusefi.ConfigDefinition.EOL;
@@ -16,12 +17,14 @@ public class CHeaderConsumer implements ConfigurationConsumer {
     public static final String BOOLEAN_TYPE = "bool";
     private final BufferedWriter cHeader;
 
-    public CHeaderConsumer(BufferedWriter cHeader) throws IOException {
-        this.cHeader = cHeader;
+    public CHeaderConsumer(String destCHeader) throws IOException {
+        System.out.println("Writing C header to " + destCHeader);
+        cHeader = new BufferedWriter(new FileWriter(destCHeader));
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
         cHeader.write("// begin" + EOL);
-        cHeader.write("#ifndef ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
-        cHeader.write("#define ENGINE_CONFIGURATION_GENERATED_H_" + EOL);
+        String id = destCHeader.replaceAll("[\\\\\\.\\/]", "_").toUpperCase();
+        cHeader.write("#ifndef " + id + EOL);
+        cHeader.write("#define " + id + EOL);
         cHeader.write("#include \"rusefi_types.h\"" + EOL);
     }
 
@@ -77,5 +80,6 @@ public class CHeaderConsumer implements ConfigurationConsumer {
         cHeader.write("#endif" + EOL);
         cHeader.write("// end" + EOL);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
+        cHeader.close();
     }
 }
