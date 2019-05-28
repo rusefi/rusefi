@@ -6,7 +6,7 @@
  * fast and slow devices. The idea is that but only having few channels in 'fast' mode we can sample those faster?
  *
  * At the moment rusEfi does not allow to have more than 16 ADC channels combined. At the moment there is no flexibility to use
- * any ADC pins, only the hardcoded choise of 16 pins.
+ * any ADC pins, only the hardcoded choice of 16 pins.
  *
  * Slow ADC group is used for IAT, CLT, AFR, VBATT etc - this one is currently sampled at 20Hz
  *
