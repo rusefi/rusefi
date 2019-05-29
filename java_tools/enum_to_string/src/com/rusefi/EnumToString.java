@@ -2,8 +2,8 @@ package com.rusefi;
 
 import java.io.*;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * (c) Andrey Belomutskiy
@@ -12,8 +12,6 @@ import java.util.TreeSet;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class EnumToString {
-    private final static Set<String> currentValues = new TreeSet<>();
-
     public final static StringBuilder cppFileContent = new StringBuilder();
     private final static StringBuilder headerFileContent = new StringBuilder();
 
@@ -28,7 +26,7 @@ public class EnumToString {
         headerFileContent.append("#ifndef _A_H_HEADER_\r\n");
         headerFileContent.append("#define _A_H_HEADER_\r\n");
 
-        process(inputPath + File.separator + "controllers/algo/rusefi_enums.h");
+        processFile(inputPath + File.separator + "controllers/algo/rusefi_enums.h");
 
         headerFileContent.append("#endif /*_A_H_HEADER_ */\r\n");
 
@@ -45,8 +43,7 @@ public class EnumToString {
         bw.close();
     }
 
-    private static void process(String inFileName) throws IOException {
-
+    private static void processFile(String inFileName) throws IOException {
         String header = "// auto-generated from" + inFileName + "\r\n" +
                 "// by enum2string.jar tool\r\n" +
                 "// on " + new Date() +"\r\n" +
@@ -70,58 +67,26 @@ public class EnumToString {
         process(new FileReader(inFileName));
     }
 
+    public static void process(Reader reader) throws IOException {
+        EnumsReader.process(reader);
+        for (Map.Entry<String, Set<String>> e : EnumsReader.enums.entrySet()) {
+            String enumName = e.getKey();
+            cppFileContent.append(makeCode(enumName, e.getValue()));
+            EnumToString.headerFileContent.append(getMethodSignature(enumName) + ";\r\n");
+        }
+    }
+
     public static void clear() {
         cppFileContent.setLength(0);
     }
 
-    public static void process(Reader in) throws IOException {
-        boolean isInsideEnum = false;
-        BufferedReader reader = new BufferedReader(in);
-        String line;
-        while ((line = reader.readLine()) != null) {
-            line = removeSpaces(line);
-
-            if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
-                System.out.println("Entering enum");
-                currentValues.clear();
-                isInsideEnum = true;
-            } else if (line.startsWith("}") && line.endsWith(";")) {
-                isInsideEnum = false;
-                line = line.substring(1, line.length() - 1);
-                System.out.println("Ending enum " + line);
-                cppFileContent.append(makeCode(line));
-                EnumToString.headerFileContent.append(getMethodSignature(line) + ";\r\n");
-            } else {
-                line = line.replaceAll("//.+", "");
-                if (isInsideEnum) {
-                    if (isKeyValueLine(line)) {
-                        line = line.replace(",", "");
-                        int index = line.indexOf('=');
-                        if (index != -1)
-                            line = line.substring(0, index);
-                        System.out.println("Line " + line);
-                        currentValues.add(line);
-                    }
-                }
-            }
-        }
-    }
-
-    static String removeSpaces(String line) {
-        return line.replaceAll("\\s+", "");
-    }
-
-    static boolean isKeyValueLine(String line) {
-        return removeSpaces(line).matches("[a-zA-Z_$][a-zA-Z\\d_$]*[=-a-zA-Z\\d_*]*,?");
-    }
-
-    private static String makeCode(String enumName) {
+    private static String makeCode(String enumName, Set<String> values) {
         StringBuilder sb = new StringBuilder();
         sb.append(getMethodSignature(enumName) + "{\r\n");
 
         sb.append("switch(value) {\r\n");
 
-        for (String e : currentValues) {
+        for (String e : values) {
             sb.append("case " + e + ":\r\n");
             sb.append("  return \"" + e + "\";\r\n");
         }
