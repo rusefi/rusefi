@@ -12,7 +12,7 @@ cd ..
 set kicad_path=c:\progra~1\KiCad
 set ibom_cmd=%kicad_path%\bin\python.exe C:\stuff\InteractiveHtmlBom\InteractiveHtmlBom\generate_interactive_bom.py --no-browser --name-format %%f_latest --dest-dir ../ibom 
 echo "ibom_cmd=%ibom_cmd%"
-%ibom_cmd% hw_microRusEfi/microRusEfi.kicad_pcb
+%ibom_cmd% --extra-fields "Part #","VEND#" hw_microRusEfi/microRusEfi.kicad_pcb --netlist-file hw_microRusEfi/microRusEfi.net
 
 set ibom_cmd=%kicad_path%\bin\python.exe C:\stuff\InteractiveHtmlBom\InteractiveHtmlBom\generate_interactive_bom.py --no-browser --name-format %%f_latest --dest-dir ../../ibom 
 echo "ibom_cmd=%ibom_cmd%"
