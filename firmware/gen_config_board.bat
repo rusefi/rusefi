@@ -5,6 +5,7 @@ rem the storage section of rusefi.ini is updated as well
 rem lazy is broken - TS input is not considered a change
 rm build/config.gen
 
+java -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar com.rusefi.board_generator.BoardReader -board microrusefi -firmware_path .
 java -jar ../java_tools/ConfigDefinition.jar -definition integration\rusefi_config.txt -ts_destination tunerstudio -ts_output_name rusefi_microrusefi.ini -prepend config/boards/microrusefi/temp.txt -skip build/config.gen
 
 
