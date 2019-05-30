@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.enum_reader.Value;
+
 import java.io.*;
 import java.util.Date;
 import java.util.Map;
@@ -14,6 +16,7 @@ import java.util.Set;
 public class EnumToString {
     public final static StringBuilder cppFileContent = new StringBuilder();
     private final static StringBuilder headerFileContent = new StringBuilder();
+    public static final String RELATIVE_PATH = "controllers/algo/rusefi_enums.h";
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -26,7 +29,7 @@ public class EnumToString {
         headerFileContent.append("#ifndef _A_H_HEADER_\r\n");
         headerFileContent.append("#define _A_H_HEADER_\r\n");
 
-        processFile(inputPath + File.separator + "controllers/algo/rusefi_enums.h");
+        processFile(inputPath + File.separator + RELATIVE_PATH);
 
         headerFileContent.append("#endif /*_A_H_HEADER_ */\r\n");
 
@@ -69,7 +72,7 @@ public class EnumToString {
 
     public static void process(Reader reader) throws IOException {
         EnumsReader.process(reader);
-        for (Map.Entry<String, Set<String>> e : EnumsReader.enums.entrySet()) {
+        for (Map.Entry<String, Set<Value>> e : EnumsReader.enums.entrySet()) {
             String enumName = e.getKey();
             cppFileContent.append(makeCode(enumName, e.getValue()));
             EnumToString.headerFileContent.append(getMethodSignature(enumName) + ";\r\n");
@@ -80,15 +83,15 @@ public class EnumToString {
         cppFileContent.setLength(0);
     }
 
-    private static String makeCode(String enumName, Set<String> values) {
+    private static String makeCode(String enumName, Set<Value> values) {
         StringBuilder sb = new StringBuilder();
         sb.append(getMethodSignature(enumName) + "{\r\n");
 
         sb.append("switch(value) {\r\n");
 
-        for (String e : values) {
-            sb.append("case " + e + ":\r\n");
-            sb.append("  return \"" + e + "\";\r\n");
+        for (Value e : values) {
+            sb.append("case " + e.getName() + ":\r\n");
+            sb.append("  return \"" + e.getName() + "\";\r\n");
         }
 
         sb.append("  }\r\n");
