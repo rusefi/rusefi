@@ -10,3 +10,10 @@ outputs:
   TLE8888_PIN_20: "Extra Low #5"
   TLE8888_PIN_21: "Extra Low #6"
   
+analog_inputs:
+  EFI_ADC_2: "analog x"
+  EFI_ADC_5: "analog y"
+  EFI_ADC_7: "analog z"
+  EFI_ADC_11: "analog whatever"
+    
+  
