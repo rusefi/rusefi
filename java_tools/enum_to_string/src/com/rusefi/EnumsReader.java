@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.enum_reader.Value;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -9,9 +11,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class EnumsReader {
-    private final static Set<String> currentValues = new TreeSet<>();
+    private final static Set<Value> currentValues = new TreeSet<>();
 
-    public final static Map<String, Set<String>> enums = new TreeMap<>();
+    public final static Map<String, Set<Value>> enums = new TreeMap<>();
 
     public static void process(Reader in) throws IOException {
         boolean isInsideEnum = false;
@@ -28,7 +30,7 @@ public class EnumsReader {
                 isInsideEnum = false;
                 line = line.substring(1, line.length() - 1);
                 System.out.println("Ending enum " + line);
-                enums.put(line, new TreeSet<>(currentValues));
+                enums.put(line, new TreeSet<Value>(currentValues));
             } else {
                 line = line.replaceAll("//.+", "");
                 if (isInsideEnum) {
@@ -38,7 +40,7 @@ public class EnumsReader {
                         if (index != -1)
                             line = line.substring(0, index);
                         System.out.println("Line " + line);
-                        currentValues.add(line);
+                        currentValues.add(new Value(line));
                     }
                 }
             }
