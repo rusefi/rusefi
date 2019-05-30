@@ -9,6 +9,23 @@
  * @date Mar 25, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  *
+ * 3.2 Pin Definitions and Functions
+ *
+ * IN1-4  Parallel input; Input pin for direct control of power stage OUT1-4
+ *
+ * IN5-8  Parallel input; Input pin for direct control of push pull state IGN1-IGN4
+ *
+ * Table 24 Direct Drive Input Assignment to Output Stages
+ * IN9 to IN12 OUT5 to OUT24
+ *
+ * Masks/inputs bits:
+ * 0..3   - OUT1 .. 4 - INJ - OpenDrain: 2.2A - direct
+ * 4..6   - OUT5 .. 7 -       OpenDrain: 4.5A
+ * 7..12  - OUT8 ..13 -       Push/Pull: 20mA - quite weak
+ * 13..19 - OUT14..20 -       OpenDrain: 0.6A
+ * 20..23 - OUT21..24 -       Push/Pull: 0.6A - half bridge (GND or +12v)
+ * 24..27 - IGN1 .. 4 -       Push/Pull: 20mA - direct
+ *
  * Andrey Gusakov, (c) 2019
  */
 
@@ -83,16 +100,6 @@ typedef enum {
 /* OS */
 SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
 static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
-
-/*
- * Masks/inputs bits:
- * 0..3   - OUT1 .. 4 - INJ - OD: 2.2A - direct
- * 4..6   - OUT5 .. 7 -       OD: 4.5A
- * 7..12  - OUT8 ..13 -       PP: 20mA
- * 13..19 - OUT14..20 -       OD: 0.6A
- * 20..23 - OUT21..24 -       PP: ?A
- * 24..27 - IGN1 .. 4 -       PP: 20mA - direct
- */
 
 /* Driver private data */
 struct tle8888_priv {
