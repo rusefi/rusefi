@@ -3,3 +3,10 @@ outputs:
   GPIOE_13: "Injector #2"
   GPIOE_12: "Injector #3"
   GPIOE_11: "Injector #4"
+  GPIOE_10: "Extra Low #1"
+  GPIOE_9: "Extra Low #2"
+  GPIOE_8: "Extra Low #3"
+  GPIOE_7: "Extra Low #4"
+  TLE8888_PIN_20: "Extra Low #5"
+  TLE8888_PIN_21: "Extra Low #6"
+  
