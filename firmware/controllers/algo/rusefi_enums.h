@@ -846,7 +846,7 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE8888_PIN_28 = 195,
 } brain_pin_e;
 
-typedef brain_pin_e smart_pin_e;
+typedef brain_pin_e output_pin_e;
 
 /* Plase keep updating this define */
 #define BRAIN_PIN_LAST_ONCHIP	GPIOH_15

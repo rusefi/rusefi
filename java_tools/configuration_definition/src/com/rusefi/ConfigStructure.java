@@ -63,18 +63,6 @@ public class ConfigStructure {
         totalSize += fillSize;
     }
 
-    public int writeTunerStudio(String prefix, Writer tsHeader, int tsPosition) throws IOException {
-        FieldIterator fieldIterator = new FieldIterator();
-        for (int i = 0; i < tsFields.size(); i++) {
-            ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
-            ConfigField cf = tsFields.get(i);
-            tsPosition = TSProjectConsumer.writeTunerStudio(cf, prefix, tsHeader, tsPosition, next, fieldIterator.bitState.get());
-
-            fieldIterator.bitState.incrementBitIndex(cf, next);
-        }
-        return tsPosition;
-    }
-
     public void addBoth(ConfigField cf) {
         cFields.add(cf);
         tsFields.add(cf);

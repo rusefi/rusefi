@@ -11,9 +11,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class EnumsReader {
-    private final static Set<Value> currentValues = new TreeSet<>();
+    private final static Map<String, Value> currentValues = new TreeMap<>();
 
-    public final static Map<String, Set<Value>> enums = new TreeMap<>();
+    public final static Map<String, Map<String, Value>> enums = new TreeMap<>();
 
     public static void process(Reader in) throws IOException {
         boolean isInsideEnum = false;
@@ -30,17 +30,20 @@ public class EnumsReader {
                 isInsideEnum = false;
                 line = line.substring(1, line.length() - 1);
                 System.out.println("Ending enum " + line);
-                enums.put(line, new TreeSet<Value>(currentValues));
+                enums.put(line, new TreeMap<>(currentValues));
             } else {
                 line = line.replaceAll("//.+", "");
                 if (isInsideEnum) {
                     if (isKeyValueLine(line)) {
                         line = line.replace(",", "");
+                        String value = "";
                         int index = line.indexOf('=');
-                        if (index != -1)
+                        if (index != -1) {
+                            value = line.substring(index + 1);
                             line = line.substring(0, index);
+                        }
                         System.out.println("Line " + line);
-                        currentValues.add(new Value(line));
+                        currentValues.put(line, new Value(line, value));
                     }
                 }
             }

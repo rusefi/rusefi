@@ -3,9 +3,7 @@ package com.rusefi;
 import com.rusefi.enum_reader.Value;
 
 import java.io.*;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * (c) Andrey Belomutskiy
@@ -72,9 +70,9 @@ public class EnumToString {
 
     public static void process(Reader reader) throws IOException {
         EnumsReader.process(reader);
-        for (Map.Entry<String, Set<Value>> e : EnumsReader.enums.entrySet()) {
+        for (Map.Entry<String, Map<String, Value>> e : EnumsReader.enums.entrySet()) {
             String enumName = e.getKey();
-            cppFileContent.append(makeCode(enumName, e.getValue()));
+            cppFileContent.append(makeCode(enumName, e.getValue().values()));
             EnumToString.headerFileContent.append(getMethodSignature(enumName) + ";\r\n");
         }
     }
@@ -83,7 +81,7 @@ public class EnumToString {
         cppFileContent.setLength(0);
     }
 
-    private static String makeCode(String enumName, Set<Value> values) {
+    private static String makeCode(String enumName, Collection<Value> values) {
         StringBuilder sb = new StringBuilder();
         sb.append(getMethodSignature(enumName) + "{\r\n");
 

@@ -17,5 +17,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="snakeyaml" level="project" />
+    <orderEntry type="module" module-name="enum_to_string" />
   </component>
 </module>

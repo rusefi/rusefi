@@ -33,8 +33,6 @@ public class ConfigDefinition {
     private static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SKIP = "-skip";
 
-    public static StringBuilder settingContextHelp = new StringBuilder();
-
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
             System.out.println("Please specify\r\n"
@@ -71,6 +69,8 @@ public class ConfigDefinition {
                 prependFile = args[i + 1];
             } else if (key.equals(KEY_SKIP)) {
                 skipRebuildFile = args[i + 1];
+            } else if (key.equals("-ts_output_name")) {
+                TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
             } else if (key.equals(KEY_ROM_INPUT)) {
                 romRaiderInputFile = args[i + 1];
             }

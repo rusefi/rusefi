@@ -7,11 +7,12 @@ import java.io.*;
 import static com.rusefi.ConfigDefinition.EOL;
 
 public class TSProjectConsumer implements ConfigurationConsumer {
-    public static final String TS_FILE_INPUT_NAME = "rusefi.input";
+    private static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final int LENGTH = 24;
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
-    private static final String TS_FILE_OUTPUT_NAME = "rusefi.ini";
+    public static String TS_FILE_OUTPUT_NAME = "rusefi.ini";
+    private StringBuilder settingContextHelp = new StringBuilder();
 
     private final CharArrayWriter tsWriter;
     private final String tsPath;
@@ -24,15 +25,18 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         this.state = state;
     }
 
-    public static int writeTunerStudio(ConfigField configField, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
+    private int writeTunerStudio(ConfigField configField, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
         String nameWithPrefix = prefix + configField.getName();
 
+        if (configField.getComment() != null && configField.getComment().startsWith(ConfigField.TS_COMMENT_TAG + "")) {
+            settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
+        }
         VariableRegistry.INSTANCE.register(nameWithPrefix + "_offset", tsPosition);
 
         ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return cs.writeTunerStudio(prefix + extraPrefix, tsHeader, tsPosition);
+            return writeTunerStudio(cs, prefix + extraPrefix, tsHeader, tsPosition);
         }
 
         if (configField.isBit()) {
@@ -79,6 +83,18 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return tsPosition;
     }
 
+    private int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
+        FieldIterator fieldIterator = new FieldIterator();
+        for (int i = 0; i < configStructure.tsFields.size(); i++) {
+            ConfigField next = i == configStructure.tsFields.size() - 1 ? ConfigField.VOID : configStructure.tsFields.get(i + 1);
+            ConfigField cf = configStructure.tsFields.get(i);
+            tsPosition = writeTunerStudio(cf, prefix, tsHeader, tsPosition, next, fieldIterator.bitState.get());
+
+            fieldIterator.bitState.incrementBitIndex(cf, next);
+        }
+        return tsPosition;
+    }
+
     private void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
         TsFileContent tsContent = readTsFile(tsPath);
         System.out.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
@@ -91,9 +107,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.write("pageSize            = " + totalTsSize + ConfigDefinition.EOL);
         tsHeader.write("page = 1" + ConfigDefinition.EOL);
         tsHeader.write(fieldsSection);
-        if (ConfigDefinition.settingContextHelp.length() > 0) {
+        if (settingContextHelp.length() > 0) {
             tsHeader.write("[SettingContextHelp]" + ConfigDefinition.EOL);
-            tsHeader.write(ConfigDefinition.settingContextHelp.toString() + ConfigDefinition.EOL + ConfigDefinition.EOL);
+            tsHeader.write(settingContextHelp.toString() + ConfigDefinition.EOL + ConfigDefinition.EOL);
         }
         tsHeader.write("; " + CONFIG_DEFINITION_END + ConfigDefinition.EOL);
         tsHeader.write(tsContent.getPostfix());
@@ -142,7 +158,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
-            totalTsSize = structure.writeTunerStudio("", tsWriter, 0);
+            totalTsSize = writeTunerStudio(structure, "", tsWriter, 0);
             tsWriter.write("; total TS size = " + totalTsSize + EOL);
             VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
         }

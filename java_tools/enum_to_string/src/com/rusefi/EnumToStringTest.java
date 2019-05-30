@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.rusefi.EnumsReader.isKeyValueLine;
@@ -28,7 +30,10 @@ public class EnumToStringTest {
                         "\tGPIO_INVALID = 1,\n" +
                         "}brain_pin_e;"));
 
-        Set<Value> values = EnumsReader.enums.get("brain_pin_e");
+        List<Value> values = new ArrayList<>(EnumsReader.enums.get("brain_pin_e").values());
+        assertEquals(2, values.size());
+        assertEquals("GPIO_INVALID", values.get(0).getName());
+        assertEquals("1", values.get(0).getValue());
 
         assertEquals("const char *getBrain_pin_e(brain_pin_e value){\r\n" +
                 "switch(value) {\r\n" +
