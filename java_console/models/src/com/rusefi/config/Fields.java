@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Wed May 29 23:14:19 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Wed May 29 23:53:28 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1414,15 +1414,15 @@ public class Fields {
 	public static final Field HD44780_DB7 = Field.create("HD44780_DB7", 655, FieldType.INT8, brain_pin_e);
 	public static final Field GPS_RX_PIN = Field.create("GPS_RX_PIN", 656, FieldType.INT8, brain_pin_e);
 	public static final Field GPS_TX_PIN = Field.create("GPS_TX_PIN", 657, FieldType.INT8, brain_pin_e);
-	public static final String[] smart_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
-	public static final Field FUELPUMPPIN = Field.create("FUELPUMPPIN", 658, FieldType.INT8, smart_pin_e);
+	public static final String[] output_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
+	public static final Field FUELPUMPPIN = Field.create("FUELPUMPPIN", 658, FieldType.INT8, output_pin_e);
 	public static final Field FUELPUMPPINMODE = Field.create("FUELPUMPPINMODE", 659, FieldType.INT8, pin_output_mode_e);
-	public static final Field MALFUNCTIONINDICATORPIN = Field.create("MALFUNCTIONINDICATORPIN", 660, FieldType.INT8, smart_pin_e);
+	public static final Field MALFUNCTIONINDICATORPIN = Field.create("MALFUNCTIONINDICATORPIN", 660, FieldType.INT8, output_pin_e);
 	public static final Field MALFUNCTIONINDICATORPINMODE = Field.create("MALFUNCTIONINDICATORPINMODE", 661, FieldType.INT8, pin_output_mode_e);
 	public static final Field FANPINMODE = Field.create("FANPINMODE", 662, FieldType.INT8, pin_output_mode_e);
-	public static final Field FANPIN = Field.create("FANPIN", 663, FieldType.INT8, smart_pin_e);
+	public static final Field FANPIN = Field.create("FANPIN", 663, FieldType.INT8, output_pin_e);
 	public static final Field CLUTCHDOWNPIN = Field.create("CLUTCHDOWNPIN", 664, FieldType.INT8, brain_pin_e);
-	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 665, FieldType.INT8, smart_pin_e);
+	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 665, FieldType.INT8, output_pin_e);
 	public static final Field ALTERNATORCONTROLPINMODE = Field.create("ALTERNATORCONTROLPINMODE", 666, FieldType.INT8, pin_output_mode_e);
 	public static final Field CLUTCHDOWNPINMODE = Field.create("CLUTCHDOWNPINMODE", 667, FieldType.INT8);
 	public static final Field DIGITALPOTENTIOMETERCHIPSELECT1 = Field.create("DIGITALPOTENTIOMETERCHIPSELECT1", 668, FieldType.INT8, brain_pin_e);
@@ -1453,7 +1453,7 @@ public class Fields {
 	public static final Field HIP9011CSPINMODE = Field.create("HIP9011CSPINMODE", 703, FieldType.INT8, pin_output_mode_e);
 	public static final Field TACHOUTPUTPIN = Field.create("TACHOUTPUTPIN", 704, FieldType.INT8, brain_pin_e);
 	public static final Field TACHOUTPUTPINMODE = Field.create("TACHOUTPUTPINMODE", 705, FieldType.INT8, pin_output_mode_e);
-	public static final Field MAINRELAYPIN = Field.create("MAINRELAYPIN", 706, FieldType.INT8, smart_pin_e);
+	public static final Field MAINRELAYPIN = Field.create("MAINRELAYPIN", 706, FieldType.INT8, output_pin_e);
 	public static final Field SDCARDCSPIN = Field.create("SDCARDCSPIN", 707, FieldType.INT8, brain_pin_e);
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 708, FieldType.INT8, brain_pin_e);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
@@ -1531,22 +1531,22 @@ public class Fields {
 	public static final Field GPIOPINMODES14 = Field.create("GPIOPINMODES14", 777, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES15 = Field.create("GPIOPINMODES15", 778, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES16 = Field.create("GPIOPINMODES16", 779, FieldType.INT8, pin_output_mode_e);
-	public static final Field FSIOOUTPUTPINS1 = Field.create("FSIOOUTPUTPINS1", 780, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS2 = Field.create("FSIOOUTPUTPINS2", 781, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS3 = Field.create("FSIOOUTPUTPINS3", 782, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS4 = Field.create("FSIOOUTPUTPINS4", 783, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS5 = Field.create("FSIOOUTPUTPINS5", 784, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS6 = Field.create("FSIOOUTPUTPINS6", 785, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS7 = Field.create("FSIOOUTPUTPINS7", 786, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS8 = Field.create("FSIOOUTPUTPINS8", 787, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS9 = Field.create("FSIOOUTPUTPINS9", 788, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS10 = Field.create("FSIOOUTPUTPINS10", 789, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS11 = Field.create("FSIOOUTPUTPINS11", 790, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS12 = Field.create("FSIOOUTPUTPINS12", 791, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS13 = Field.create("FSIOOUTPUTPINS13", 792, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS14 = Field.create("FSIOOUTPUTPINS14", 793, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS15 = Field.create("FSIOOUTPUTPINS15", 794, FieldType.INT8, smart_pin_e);
-	public static final Field FSIOOUTPUTPINS16 = Field.create("FSIOOUTPUTPINS16", 795, FieldType.INT8, smart_pin_e);
+	public static final Field FSIOOUTPUTPINS1 = Field.create("FSIOOUTPUTPINS1", 780, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS2 = Field.create("FSIOOUTPUTPINS2", 781, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS3 = Field.create("FSIOOUTPUTPINS3", 782, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS4 = Field.create("FSIOOUTPUTPINS4", 783, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS5 = Field.create("FSIOOUTPUTPINS5", 784, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS6 = Field.create("FSIOOUTPUTPINS6", 785, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS7 = Field.create("FSIOOUTPUTPINS7", 786, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS8 = Field.create("FSIOOUTPUTPINS8", 787, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS9 = Field.create("FSIOOUTPUTPINS9", 788, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS10 = Field.create("FSIOOUTPUTPINS10", 789, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS11 = Field.create("FSIOOUTPUTPINS11", 790, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS12 = Field.create("FSIOOUTPUTPINS12", 791, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS13 = Field.create("FSIOOUTPUTPINS13", 792, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS14 = Field.create("FSIOOUTPUTPINS14", 793, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS15 = Field.create("FSIOOUTPUTPINS15", 794, FieldType.INT8, output_pin_e);
+	public static final Field FSIOOUTPUTPINS16 = Field.create("FSIOOUTPUTPINS16", 795, FieldType.INT8, output_pin_e);
 	public static final Field MAX31855_CS1 = Field.create("MAX31855_CS1", 796, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS2 = Field.create("MAX31855_CS2", 797, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS3 = Field.create("MAX31855_CS3", 798, FieldType.INT8, brain_pin_e);
@@ -1564,7 +1564,7 @@ public class Fields {
 	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 824, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 828, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 829, FieldType.INT8, pin_output_mode_e);
-	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, smart_pin_e);
+	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, output_pin_e);
 	public static final Field ACRELAYPINMODE = Field.create("ACRELAYPINMODE", 831, FieldType.INT8, pin_output_mode_e);
 	public static final Field FSIOFREQUENCY1 = Field.create("FSIOFREQUENCY1", 832, FieldType.INT16);
 	public static final Field FSIOFREQUENCY2 = Field.create("FSIOFREQUENCY2", 834, FieldType.INT16);
@@ -1808,10 +1808,10 @@ public class Fields {
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 2228, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 2232, FieldType.FLOAT);
 	public static final Field EGOVALUESHIFT = Field.create("EGOVALUESHIFT", 2236, FieldType.FLOAT);
-	public static final Field AUXPIDPINS1 = Field.create("AUXPIDPINS1", 2240, FieldType.INT8, smart_pin_e);
-	public static final Field AUXPIDPINS2 = Field.create("AUXPIDPINS2", 2241, FieldType.INT8, smart_pin_e);
-	public static final Field AUXPIDPINS3 = Field.create("AUXPIDPINS3", 2242, FieldType.INT8, smart_pin_e);
-	public static final Field AUXPIDPINS4 = Field.create("AUXPIDPINS4", 2243, FieldType.INT8, smart_pin_e);
+	public static final Field AUXPIDPINS1 = Field.create("AUXPIDPINS1", 2240, FieldType.INT8, output_pin_e);
+	public static final Field AUXPIDPINS2 = Field.create("AUXPIDPINS2", 2241, FieldType.INT8, output_pin_e);
+	public static final Field AUXPIDPINS3 = Field.create("AUXPIDPINS3", 2242, FieldType.INT8, output_pin_e);
+	public static final Field AUXPIDPINS4 = Field.create("AUXPIDPINS4", 2243, FieldType.INT8, output_pin_e);
 	public static final Field CAMINPUT = Field.create("CAMINPUT", 2244, FieldType.INT8, brain_input_pin_e);
 	public static final Field CJ125CSPINMODE = Field.create("CJ125CSPINMODE", 2245, FieldType.INT8, pin_output_mode_e);
 	public static final Field DIZZYSPARKOUTPUTPIN = Field.create("DIZZYSPARKOUTPUTPIN", 2246, FieldType.INT8, brain_pin_e);

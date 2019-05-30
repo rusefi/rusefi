@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 20:05:22 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Wed May 29 23:53:28 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -518,7 +518,7 @@ struct board_configuration_s {
 	/**
 	 * offset 58
 	 */
-	smart_pin_e fuelPumpPin;
+	output_pin_e fuelPumpPin;
 	/**
 	 * offset 59
 	 */
@@ -526,7 +526,7 @@ struct board_configuration_s {
 	/**
 	 * offset 60
 	 */
-	smart_pin_e malfunctionIndicatorPin;
+	output_pin_e malfunctionIndicatorPin;
 	/**
 	 * offset 61
 	 */
@@ -538,7 +538,7 @@ struct board_configuration_s {
 	/**
 	 * offset 63
 	 */
-	smart_pin_e fanPin;
+	output_pin_e fanPin;
 	/**
 	 * some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 64
@@ -547,7 +547,7 @@ struct board_configuration_s {
 	/**
 	 * offset 65
 	 */
-	smart_pin_e alternatorControlPin;
+	output_pin_e alternatorControlPin;
 	/**
 	 * offset 66
 	 */
@@ -634,7 +634,7 @@ struct board_configuration_s {
 	/**
 	 * offset 106
 	 */
-	smart_pin_e mainRelayPin;
+	output_pin_e mainRelayPin;
 	/**
 	 * offset 107
 	 */
@@ -834,7 +834,7 @@ struct board_configuration_s {
 	 * todo: more comments
 	 * offset 180
 	 */
-	smart_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
+	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
 	/**
 	 * offset 196
 	 */
@@ -887,7 +887,7 @@ struct board_configuration_s {
 	/**
 	 * offset 230
 	 */
-	smart_pin_e acRelayPin;
+	output_pin_e acRelayPin;
 	/**
 	 * offset 231
 	 */
@@ -2042,7 +2042,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2240
 	 */
-	smart_pin_e auxPidPins[AUX_PID_COUNT];
+	output_pin_e auxPidPins[AUX_PID_COUNT];
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * TODO #660
@@ -2788,4 +2788,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 20:05:22 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Wed May 29 23:53:28 EDT 2019

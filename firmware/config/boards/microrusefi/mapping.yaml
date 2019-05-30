@@ -1,0 +1,5 @@
+outputs:
+  GPIOE_14: "Injector #1"
+  GPIOE_13: "Injector #2"
+  GPIOE_12: "Injector #3"
+  GPIOE_11: "Injector #4"

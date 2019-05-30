@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/configuration_definition.iml" filepath="$PROJECT_DIR$/configuration_definition.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../enum_to_string/enum_to_string.iml" filepath="$PROJECT_DIR$/../enum_to_string/enum_to_string.iml" />
     </modules>
   </component>
 </project>
-

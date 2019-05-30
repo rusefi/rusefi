@@ -51,9 +51,6 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
 
         String nameWithPrefix = prefix + configField.getName();
 
-        if (configField.getComment() != null && configField.getComment().startsWith(ConfigField.TS_COMMENT_TAG + "")) {
-            ConfigDefinition.settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
-        }
 
         if (configField.isBit()) {
             configField.writeJavaFieldName(javaFieldsWriter, nameWithPrefix, tsPosition);
