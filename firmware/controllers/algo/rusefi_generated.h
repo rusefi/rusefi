@@ -269,6 +269,7 @@
 #define byFirmwareVersion_offset_hex 1f4
 #define camInput_offset 2244
 #define camInput_offset_hex 8c4
+#define can_device_mode_e_enum "v0", "v1"
 #define canDeviceMode_offset 732
 #define canDeviceMode_offset_hex 2dc
 #define canNbcType_offset 480
@@ -1326,6 +1327,7 @@
 #define logicAnalyzerPins4_offset 751
 #define logicAnalyzerPins4_offset_hex 2ef
 #define MAF_DECODING_COUNT 256
+#define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 #define mafAdcChannel_offset 556
 #define mafAdcChannel_offset_hex 22c
 #define mafDecoding_offset 10784

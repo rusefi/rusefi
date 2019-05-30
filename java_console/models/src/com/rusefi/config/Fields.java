@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon May 27 07:56:59 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Wed May 29 23:14:19 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1464,7 +1464,8 @@ public class Fields {
 	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 720, FieldType.INT);
 	public static final Field GENERALPERIODICTHREADPERIODMS = Field.create("GENERALPERIODICTHREADPERIODMS", 724, FieldType.INT);
 	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 728, FieldType.INT);
-	public static final Field CANDEVICEMODE = Field.create("CANDEVICEMODE", 732, FieldType.INT);
+	public static final String[] can_device_mode_e = {"v0", "v1"};
+	public static final Field CANDEVICEMODE = Field.create("CANDEVICEMODE", 732, FieldType.INT, can_device_mode_e);
 	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 736, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS2 = Field.create("TRIGGERSIMULATORPINS2", 737, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORPINS3 = Field.create("TRIGGERSIMULATORPINS3", 738, FieldType.INT8, brain_pin_e);
@@ -1615,7 +1616,8 @@ public class Fields {
 	public static final Field UNUSEDJOY = Field.create("UNUSEDJOY", 943, FieldType.INT8);
 	public static final String[] sensor_chart_e = {"none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"};
 	public static final Field SENSORCHARTMODE = Field.create("SENSORCHARTMODE", 944, FieldType.INT, sensor_chart_e);
-	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 948, FieldType.INT);
+	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
+	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 948, FieldType.INT, maf_sensor_type_e);
 	public static final Field FSIODIGITALINPUTS1 = Field.create("FSIODIGITALINPUTS1", 952, FieldType.INT8, brain_pin_e);
 	public static final Field FSIODIGITALINPUTS2 = Field.create("FSIODIGITALINPUTS2", 953, FieldType.INT8, brain_pin_e);
 	public static final Field FSIODIGITALINPUTS3 = Field.create("FSIODIGITALINPUTS3", 954, FieldType.INT8, brain_pin_e);

@@ -164,6 +164,8 @@ custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
 custom vvt_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@vvt_mode_e_enum@@
 
+#define can_device_mode_e_enum "v0", "v1"
+custom can_device_mode_e 4 bits,    U32,   @OFFSET@, [0:2], @@can_device_mode_e_enum@@
 
 #define mass_storage_e_enum "Auto", "Always", "Never"
 custom mass_storage_e 4 bits, U32, @OFFSET@, [0:1], @@mass_storage_e_enum@@
@@ -680,6 +682,9 @@ sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode
 
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
 custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:2], @@ego_sensor_e_enum@@
+
+#define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
+custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:2], @@maf_sensor_type_e_enum@@
 
 maf_sensor_type_e mafSensorType;
 
