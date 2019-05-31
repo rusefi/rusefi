@@ -12,3 +12,7 @@ rem This would automatically copy latest file to 'dev' TS project
 set ts_path="%HOMEDRIVE%%HOMEPATH%\Documents\TunerStudioProjects\dev\projectCfg"
 echo %ts_path%
 cp tunerstudio/rusefi.ini %ts_path%\mainController.ini
+
+call gen_config_board microrusefi
+call gen_config_board frankenso
+call gen_config_board prometheus
