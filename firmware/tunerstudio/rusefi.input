@@ -1322,7 +1322,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 #endif
 
 	dialog = ignitionOutputs, "Ignition Outputs"
-		field = "Ignition Pin Mode",         	        ignitionPinMode
+		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
 		field = "Ignition Pin 1",                       ignitionPins1, {isIgnitionEnabled == 1}
 		field = "Ignition Pin 2",                       ignitionPins2, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 1) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 2) || (firingOrder == 7) || (firingOrder == 9) || (firingOrder == 11) || (firingOrder == 12)))}
 		field = "Ignition Pin 3",                       ignitionPins3, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 2) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 1) || (firingOrder == 3) || (firingOrder == 4) || (firingOrder == 5) || (firingOrder == 9)))}
@@ -1401,7 +1401,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "!ECU reboot needed to apply these settings"
-		field = "injection Pin Mode",       			injectionPinMode
+		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}
 		field = "With batched injection without 'Two wire batch emulation'"
 		field = "   fill only first count / 2 values"
 		field = "Injection Pin 1",						injectionPins1, {isInjectionEnabled == 1}
