@@ -1,3 +1,6 @@
+In TunerStudio or rusEfi console please use "Popular Vehicles" dialog to apply some of these presets.
+
+
 Please do not be afraid of the content of this folder. You would NOT need your own file to start your own engine.
 
 See http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
