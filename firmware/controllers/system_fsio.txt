@@ -9,11 +9,13 @@
 # Andrey Belomutskiy, (c) 2012-2017
 #
 
-FAN_CONTROL_LOGIC=(fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting)
+FAN_CONTROL_LOGIC=(fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting) | is_clt_broken
 
 FUEL_PUMP_LOGIC=(time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
 
 ALTERNATOR_LOGIC=vbatt < 14.5
+
+TOO_HOT_LOGIC=coolant > 120
 
 AC_RELAY_LOGIC=ac_on_switch
 
