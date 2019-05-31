@@ -5,17 +5,15 @@ import com.rusefi.EnumsReader;
 import com.rusefi.enum_reader.Value;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collection;
 import java.util.Map;
 
 public class BoardReader {
     private static final String KEY_BOARD_NAME = "-board";
+    private static final String KEY_OUTFOLDER = "-out";
     private static final String KEY_FIRMWARE_PATH = "-firmware_path";
-    public static final String INVALID = "INVALID";
+    private static final String INVALID = "INVALID";
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
@@ -28,12 +26,15 @@ public class BoardReader {
 
         String boardName = null;
         String firmwarePath = "firmware";
+        String outputPath = ".";
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
             if (key.equals(KEY_BOARD_NAME)) {
                 boardName = args[i + 1];
             } else if (key.equals(KEY_FIRMWARE_PATH)) {
                 firmwarePath = args[i + 1];
+            } else if (key.equals(KEY_OUTFOLDER)) {
+                outputPath = args[i + 1];
             }
         }
 
@@ -41,9 +42,9 @@ public class BoardReader {
         Map<String, Object> data = yaml.load(new FileReader(firmwarePath + "/config/boards/" + boardName + "/mapping.yaml"));
         System.out.println(data);
 
-        EnumsReader.process(new FileReader(firmwarePath + "/" + EnumToString.RELATIVE_PATH));
+        EnumsReader.process(new FileReader(firmwarePath + File.separator + EnumToString.RELATIVE_PATH));
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(boardName + "_prefix.txt"));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
 
         bw.write(processSection(data, "brain_pin_e", "outputs", "GPIO_UNASSIGNED"));
         bw.write(processSection(data, "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
