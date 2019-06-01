@@ -22,3 +22,5 @@ rem actually Cygwin http://rusefi.com/wiki/index.php?title=Internal:Software:Bui
 cd ../doxygen
 echo Uploading Doxygen
 ncftpput -R -v -u %RUSEFI_DOXYGEN_FTP_USER% -p %RUSEFI_DOXYGEN_FTP_PASS% %RUSEFI_FTP_SERVER% /html html/*
+IF NOT ERRORLEVEL echo upload FAILED
+IF NOT ERRORLEVEL 0 EXIT /B 1

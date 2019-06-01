@@ -19,7 +19,7 @@ IF NOT ERRORLEVEL echo ERROR INVOKING VERSION HEADER GENERATOR
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
-make -j4
+make -j6
 if not exist build/rusefi.hex echo FAILED TO COMPILE FIRMWARE
 if not exist build/rusefi.hex exit -1
 cd ..
@@ -58,6 +58,6 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 echo "TIMESTAMP %date% %time% Now uploading only firmware
 
-ncftpput -u u71977750-build -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip
 IF NOT ERRORLEVEL echo Invoking ncftpput has failed
 IF NOT ERRORLEVEL 0 EXIT /B 1
