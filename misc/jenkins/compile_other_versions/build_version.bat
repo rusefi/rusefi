@@ -10,18 +10,9 @@ call misc\jenkins\build_working_folder.bat
 
 rem TODO: extract FTP duplication with 407 build
 
-echo open ftp://%RUSEFI_BUILD_FTP_USER%:%RUSEFI_BUILD_FTP_PASS%@%FTP_SERVER%/ > ftp_commands.txt
-echo binary >> ftp_commands.txt
-echo put rusefi_bundle.zip rusefi_bundle_%bundle_name%.zip >> ftp_commands.txt
-
-echo exit >> ftp_commands.txt
-
 cd temp
 mv rusefi_bundle.zip rusefi_bundle_%bundle_name%.zip
 
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% . rusefi_bundle_%bundle_name%.zip
 
-rem call winscp.com /script=../ftp_commands.txt
-rem IF NOT ERRORLEVEL 0 echo winscp error DETECTED
-rem IF NOT ERRORLEVEL 0 EXIT /B 1
 cd ..
