@@ -8,6 +8,8 @@ import com.rusefi.util.LazyFile;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.List;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     public static final String EOL = "\n";
+    public static final Charset CHARSET = StandardCharsets.ISO_8859_1;
     public static final String GENERATED_AUTOMATICALLY_TAG = "was generated automatically by ConfigDefinition.jar based on ";
     public static String MESSAGE;
 
@@ -95,7 +98,7 @@ public class ConfigDefinition {
         if (prependFile != null)
             readPrependValues(prependFile);
 
-        BufferedReader definitionReader = new BufferedReader(new FileReader(definitionInputFile));
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), CHARSET.name()));
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();

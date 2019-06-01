@@ -3,6 +3,8 @@ package com.rusefi.util;
 import com.rusefi.ConfigDefinition;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -43,10 +45,14 @@ public class LazyFile {
         for (int i = 0; i < Math.min(fileContent.length(), newContent.length()); i++) {
             if (fileContent.charAt(i) != newContent.charAt(i)) {
                 System.out.println(getClass().getSimpleName() + " " + filename + ": Not same at " + i);
+                if (i > 15) {
+                    System.out.println("file       " + fileContent.substring(i - 15, i + 5));
+                    System.out.println("newContent " + newContent.substring(i - 15, i + 5));
+                }
                 break;
             }
         }
-        FileWriter fw = new FileWriter(filename);
+        Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), ConfigDefinition.CHARSET));
         fw.write(content.toString());
         fw.close();
     }
@@ -58,10 +64,9 @@ public class LazyFile {
     private String readCurrentContent(String filename) throws IOException {
         if (!new File(filename).exists())
             return "";
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        Scanner in = new Scanner(Paths.get(filename), "UTF-8");
-        String line;
+        Scanner in = new Scanner(Paths.get(filename), ConfigDefinition.CHARSET.name());
         Pattern pat = Pattern.compile(".*\\R|.+\\z");
+        String line;
         StringBuffer sb = new StringBuffer();
         while ((line = in.findWithinHorizon(pat, 0)) != null) {
             if (!line.contains(ConfigDefinition.GENERATED_AUTOMATICALLY_TAG))
