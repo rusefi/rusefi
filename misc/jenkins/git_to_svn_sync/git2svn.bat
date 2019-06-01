@@ -7,7 +7,7 @@ pwd
 echo Updating from GIT
 call git fetch --all
 call git reset --hard origin/master
-IF NOT ERRORLEVEL echo ERROR git pull-ing
+IF NOT ERRORLEVEL 0 echo ERROR git pull-ing
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
