@@ -15,6 +15,9 @@ git submodule update --init
 rm -fR .dep
 rm -fR build
 call update_version.bat
+IF NOT ERRORLEVEL echo ERROR INVOKING VERSION HEADER GENERATOR
+IF NOT ERRORLEVEL 0 EXIT /B 1
+
 
 make -j4
 if not exist build/rusefi.hex echo FAILED TO COMPILE FIRMWARE

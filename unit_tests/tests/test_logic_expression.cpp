@@ -37,8 +37,10 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 	case LE_METHOD_VBATT:
 		return 12;
+	case LE_METHOD_IS_COOLANT_BROKEN:
+		return 0;
 	default:
-	firmwareError(OBD_PCM_Processor_Fault, "No mock value for %d", action);
+	firmwareError(OBD_PCM_Processor_Fault, "FSIO: No mock value for %d", action);
 		return NAN;
 	}
 }
