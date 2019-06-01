@@ -10,7 +10,7 @@ call misc\jenkins\build_working_folder.bat
 
 rem TODO: extract FTP duplication with 407 build
 
-echo open ftp://u71977750-build:%RUSEFI_BUILD_FTP_PASS%@%FTP_SERVER%/ > ftp_commands.txt
+echo open ftp://%RUSEFI_BUILD_FTP_USER%:%RUSEFI_BUILD_FTP_PASS%@%FTP_SERVER%/ > ftp_commands.txt
 echo binary >> ftp_commands.txt
 echo put rusefi_bundle.zip rusefi_bundle_%bundle_name%.zip >> ftp_commands.txt
 
