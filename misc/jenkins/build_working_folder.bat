@@ -1,7 +1,8 @@
 set script_name=build_working_folder.bat
 echo Entering %script_name%
 
-echo Working folder: %folder%
+pwd
+echo %script_name%: Working folder: %folder%
 mkdir %folder%
 
 cp java_console_binary/rusefi_console.jar %folder%
@@ -37,8 +38,8 @@ zip -r %zip_name% *
 IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING zip
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo "Bundle %zip_name% ready"
-ls %zip_name%
+echo %script_name%: Bundle %zip_name% ready
+ls -l %zip_name%
 cd ..
 echo "%script_name%: We are back in root directory"
 
