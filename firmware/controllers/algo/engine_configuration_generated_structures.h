@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Wed May 29 23:53:28 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 01 17:13:22 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2635,7 +2635,7 @@ struct persistent_config_s {
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
 	 * kg/hour value.
-	 * By the way 2.081989116 kg/h = 1 ft�/m
+	 * By the way 2.081989116 kg/h = 1 ft3/m
 	 * offset 10784
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
@@ -2788,4 +2788,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Wed May 29 23:53:28 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 01 17:13:22 EDT 2019
