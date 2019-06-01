@@ -15,7 +15,7 @@ git submodule update --init
 rm -fR .dep
 rm -fR build
 call update_version.bat
-IF NOT ERRORLEVEL echo ERROR INVOKING VERSION HEADER GENERATOR
+IF NOT ERRORLEVEL 0 echo ERROR INVOKING VERSION HEADER GENERATOR
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
@@ -40,7 +40,7 @@ echo "TIMESTAMP %date% %time% Unit tests build looks good, now executing unit te
 
 cd build
 call rusefi_test.exe
-IF NOT ERRORLEVEL echo UNIT TEST FAILED
+IF NOT ERRORLEVEL 0 echo UNIT TEST FAILED
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
 cd ..
@@ -53,11 +53,11 @@ pwd
 
 echo Preparing firmware-only fast upload
 zip -j firmware/build/rusefi_firmware.zip firmware/svnversion.h firmware/build/rusefi.hex firmware/build/rusefi.bin  firmware/build/rusefi.elf firmware/tunerstudio/rusefi.ini
-IF NOT ERRORLEVEL echo Invoking ZIP has failed
+IF NOT ERRORLEVEL 0 echo Invoking ZIP has failed
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
 echo "TIMESTAMP %date% %time% Now uploading only firmware
 
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip
-IF NOT ERRORLEVEL echo Invoking ncftpput has failed
+IF NOT ERRORLEVEL 0 echo Invoking ncftpput has failed
 IF NOT ERRORLEVEL 0 EXIT /B 1

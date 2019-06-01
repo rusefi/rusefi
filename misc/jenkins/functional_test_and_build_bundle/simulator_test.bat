@@ -8,7 +8,7 @@ which java
 which javac
 ant simlator_test
 
-IF NOT ERRORLEVEL echo ERROR DETECTED
+IF NOT ERRORLEVEL 0 echo ERROR DETECTED
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
 echo "TIMESTAMP %date% %time%"

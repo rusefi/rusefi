@@ -1,3 +1,5 @@
+set script_name=build_working_folder.bat
+echo Entering %script_name%
 
 echo Working folder: %folder%
 mkdir %folder%
@@ -20,6 +22,9 @@ cp misc/console_launcher/rusefi_console.exe %folder%
 cd temp
 echo "Please copy find.exe to findcyg.exe in cygwin folder"
 findcyg . -name '.svn' > folders_to_delete.txt
+IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING findcyg
+IF NOT ERRORLEVEL 0 EXIT /B 1
+
 echo "Deleting .svn"
 xargs rm  -rf < folders_to_delete.txt
 echo "Deleted .svn"
@@ -27,11 +32,15 @@ rm -rf folders_to_delete.txt
 
 echo "Building bundle"
 pwd
-zip -r rusefi_bundle.zip *
-IF NOT ERRORLEVEL echo build_working_folder.bat: ERROR INVOKING zip
+set zip_name=rusefi_bundle.zip
+zip -r %zip_name$ *
+IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING zip
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo "Bundle ready"
+echo "Bundle %zip_name$ ready"
+ls %zip_name%
 cd ..
-echo "build_working_folder.bat: We are back in root directory"
+echo "%script_name%: We are back in root directory"
+
 pwd
+echo Exiting %script_name%
