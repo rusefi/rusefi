@@ -5,6 +5,7 @@ import com.rusefi.util.LazyFile;
 
 import java.io.*;
 
+import static com.rusefi.ConfigDefinition.CHARSET;
 import static com.rusefi.ConfigDefinition.EOL;
 
 public class TSProjectConsumer implements ConfigurationConsumer {
@@ -12,6 +13,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private static final int LENGTH = 24;
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
+    private static final String TS_CONDITION = "@@if_";
     public static String TS_FILE_OUTPUT_NAME = "rusefi.ini";
     private StringBuilder settingContextHelp = new StringBuilder();
 
@@ -118,7 +120,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     private static TsFileContent readTsFile(String tsPath) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader(tsPath + File.separator + TS_FILE_INPUT_NAME));
+        String fileName = tsPath + File.separator + TS_FILE_INPUT_NAME;
+        BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET.name()));
 
         StringBuilder prefix = new StringBuilder();
         StringBuilder postfix = new StringBuilder();
@@ -136,6 +139,15 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 continue;
             }
 
+            if (line.contains(TS_CONDITION)) {
+                String token = getToken(line);
+                String strValue = VariableRegistry.INSTANCE.get(token);
+                boolean value = Boolean.valueOf(strValue);
+                if (!value)
+                    continue; // skipping this line
+                line = removeToken(line);
+            }
+
             if (isBeforeStartTag)
                 prefix.append(line + ConfigDefinition.EOL);
 
@@ -144,6 +156,26 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
+    }
+
+    static String removeToken(String line) {
+        int index = line.indexOf(TS_CONDITION);
+        String token = getToken(line);
+        int afterTokenIndex = index + TS_CONDITION.length() + token.length();
+        if (afterTokenIndex < line.length())
+            afterTokenIndex++; // skipping one whitestace after token
+        line = line.substring(0, index) + line.substring(afterTokenIndex);
+        return line;
+    }
+
+    static String getToken(String line) {
+        int index = line.indexOf(TS_CONDITION) + TS_CONDITION.length();
+        String token = "";
+        while (index < line.length() && !Character.isWhitespace(line.charAt(index))) {
+            token += line.charAt(index);
+            index++;
+        }
+        return token;
     }
 
     @Override
