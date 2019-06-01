@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
+import com.rusefi.util.LazyFile;
 
 import java.io.*;
 import java.util.HashSet;
@@ -20,14 +21,14 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
     private final CharArrayWriter javaFieldsWriter;
     private final ReaderState state;
     private final String javaConsolePath;
-    private final BufferedWriter javaFields;
+    private final LazyFile javaFields;
 
     public JavaFieldsConsumer(CharArrayWriter javaFieldsWriter, ReaderState state, String javaConsolePath) throws IOException {
         this.javaFieldsWriter = javaFieldsWriter;
         this.state = state;
         this.javaConsolePath = javaConsolePath;
 
-        javaFields = new BufferedWriter(new FileWriter(javaConsolePath + File.separator + JAVA_SOURCE_CODE_FILE_NAME));
+        javaFields = new LazyFile(javaConsolePath + File.separator + JAVA_SOURCE_CODE_FILE_NAME);
     }
 
     public static int writeJavaFields(List<ConfigField> tsFields, ReaderState state, String prefix, Writer javaFieldsWriter, int tsPosition) throws IOException {
