@@ -28,7 +28,10 @@ rm -rf folders_to_delete.txt
 echo "Building bundle"
 pwd
 zip -r rusefi_bundle.zip *
+IF NOT ERRORLEVEL echo build_working_folder.bat: ERROR INVOKING zip
+IF NOT ERRORLEVEL 0 EXIT /B 1
+
 echo "Bundle ready"
 cd ..
-echo "We are back in root directory"
+echo "build_working_folder.bat: We are back in root directory"
 pwd

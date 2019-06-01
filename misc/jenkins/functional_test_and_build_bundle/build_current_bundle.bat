@@ -92,19 +92,23 @@ pwd
 zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 
-echo open ftp://%RUSEFI_BUILD_FTP_USER%:%RUSEFI_BUILD_FTP_PASS%@%FTP_SERVER%/ > ftp_commands.txt
-echo binary >> ftp_commands.txt
-echo put rusefi_bundle.zip >> ftp_commands.txt
+rem echo open ftp://%RUSEFI_BUILD_FTP_USER%:%RUSEFI_BUILD_FTP_PASS%@%FTP_SERVER%/ > ftp_commands.txt
+rem echo binary >> ftp_commands.txt
+rem echo put rusefi_bundle.zip >> ftp_commands.txt
 
-echo cd separate_files >> ftp_commands.txt
-echo put rusefi_simulator.zip >> ftp_commands.txt
-echo put rusefi_console.zip >> ftp_commands.txt
-echo exit >> ftp_commands.txt
+rem echo cd separate_files >> ftp_commands.txt
+rem echo put rusefi_simulator.zip >> ftp_commands.txt
+rem echo put rusefi_console.zip >> ftp_commands.txt
+rem echo exit >> ftp_commands.txt
 
 cd temp
-call winscp.com /script=../ftp_commands.txt
-IF NOT ERRORLEVEL 0 echo winscp error DETECTED
-IF NOT ERRORLEVEL 0 EXIT /B 1
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% . rusefi_bundle.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files rusefi_simulator.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files rusefi_console.zip
+
+rem call winscp.com /script=../ftp_commands.txt
+rem IF NOT ERRORLEVEL 0 echo winscp error DETECTED
+rem IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
 cd ..
