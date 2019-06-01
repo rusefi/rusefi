@@ -1065,8 +1065,8 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = fanSetting,				"Fan Settings"
 		subMenu = malfunction,				"MIL Settings"
-		subMenu = etbDialog,				"Electronic Throttle Body (beta version)"
-		subMenu = etbTpsBiasCurve, 			"Electronic Throttle Body Bias Curve"
+		subMenu = etbDialog,				"Electronic Throttle Body (beta version)" @@if_ts_show_etb
+		subMenu = etbTpsBiasCurve, 			"Electronic Throttle Body Bias Curve" @@if_ts_show_etb
 		subMenu = std_separator
 		subMenu = std_realtime,    			"&Realtime Display",              0	
 		
@@ -1159,7 +1159,7 @@ menuDialog = main
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
 		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)"
 		subMenu = std_separator
-		subMenu = hipFunction,				"HIP9011 Settings (knock sensor) (alpha version)"			
+		subMenu = hipFunction,				"HIP9011 Settings (knock sensor) (alpha version)" @@if_ts_show_hip9011 
 		subMenu = speedSensor,				"Vehicle Speed sensor"
 		subMenu = oilPressureSensor,		"Oil Pressure sensor"			
 

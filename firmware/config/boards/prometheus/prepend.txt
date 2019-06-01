@@ -1,0 +1,2 @@
+#define ts_show_hip9011 false
+#define ts_show_etb false

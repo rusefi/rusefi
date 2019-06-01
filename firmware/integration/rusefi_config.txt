@@ -1203,3 +1203,7 @@ end_struct
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
+
+! some board files override this value using prepend file
+#define ts_show_hip9011 true
+#define ts_show_etb true
