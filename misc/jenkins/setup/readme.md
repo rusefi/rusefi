@@ -1,7 +1,9 @@
 
 https://git-scm.com/downloads
 
-https://cygwin.com/install.html needs to be added to PATH manually
+https://sliksvn.com/download/ used to produce numeric revision number
+
+https://cygwin.com/install.html needs to be added to System PATH manually
 
 cygwin: ccache
 
@@ -11,9 +13,20 @@ c:\ccache
 
 https://jenkins.io/download/
 
-http://www.doxygen.nl/download.html needs to be added to PATH manually
+Additional plugings:
 
-https://graphviz.gitlab.io/download/ needs to be added to PATH manually, used by Doxygen
+Pipeline GitHub Notify Step
+
+Discard Old Build
+
+smtphost: smtp.gmail.com
+r***@gmail.com
+useSsl=yes
+
+
+http://www.doxygen.nl/download.html needs to be added to System PATH manually
+
+https://graphviz.gitlab.io/download/ needs to be added to System PATH manually, used by Doxygen
 
 http://www.kicad-pcb.org/download/ for iBom automation
 
