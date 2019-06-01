@@ -1756,6 +1756,8 @@
 #define triggerSimulatorPins3_offset_hex 2e2
 #define TS_FILE_VERSION 20171101
 #define TS_OUTPUT_SIZE 356
+#define ts_show_etb true
+#define ts_show_hip9011 true
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
 #define twoWireBatchIgnition_offset 1476

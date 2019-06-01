@@ -29,13 +29,13 @@ public class ConfigDefinition {
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
-    private static final String KEY_DEFINITION = "-definition";
+    public static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROM_INPUT = "-romraider";
-    private static final String KEY_TS_DESTINATION = "-ts_destination";
+    public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     private static final String KEY_CONSOLE_DESTINATION = "-java_destination";
-    private static final String KEY_PREPEND = "-prepend";
+    public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SKIP = "-skip";
     public static String definitionInputFile = null;
 
@@ -54,7 +54,7 @@ public class ConfigDefinition {
         String destCHeader = null;
         String destCDefines = null;
         String javaConsolePath = null;
-        String prependFile = null;
+        List<String> prependFiles = new ArrayList<>();
         String skipRebuildFile = null;
         String romRaiderInputFile = null;
 
@@ -71,7 +71,7 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_CONSOLE_DESTINATION)) {
                 javaConsolePath = args[i + 1];
             } else if (key.equals(KEY_PREPEND)) {
-                prependFile = args[i + 1];
+                prependFiles.add(args[i + 1]);
             } else if (key.equals(KEY_SKIP)) {
                 skipRebuildFile = args[i + 1];
             } else if (key.equals("-ts_output_name")) {
@@ -95,7 +95,7 @@ public class ConfigDefinition {
             }
         }
 
-        if (prependFile != null)
+        for (String prependFile : prependFiles)
             readPrependValues(prependFile);
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), CHARSET.name()));
