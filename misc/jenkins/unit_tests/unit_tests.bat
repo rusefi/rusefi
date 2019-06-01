@@ -53,7 +53,11 @@ pwd
 
 echo Preparing firmware-only fast upload
 zip -j firmware/build/rusefi_firmware.zip firmware/svnversion.h firmware/build/rusefi.hex firmware/build/rusefi.bin  firmware/build/rusefi.elf firmware/tunerstudio/rusefi.ini
+IF NOT ERRORLEVEL echo Invoking ZIP has failed
+IF NOT ERRORLEVEL 0 EXIT /B 1
 
 echo "TIMESTAMP %date% %time% Now uploading only firmware
 
 ncftpput -u u71977750-build -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip
+IF NOT ERRORLEVEL echo Invoking ncftpput has failed
+IF NOT ERRORLEVEL 0 EXIT /B 1
