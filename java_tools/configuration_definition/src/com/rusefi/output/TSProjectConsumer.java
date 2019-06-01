@@ -102,7 +102,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         TsFileContent tsContent = readTsFile(tsPath);
         System.out.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
-        LazyFile tsHeader = new LazyFile(tsPath + File.separator + TS_FILE_OUTPUT_NAME);
+        // File.getPath() would eliminate potential separator at the end of the path
+        String fileName = new File(tsPath).getPath() + File.separator + TS_FILE_OUTPUT_NAME;
+        LazyFile tsHeader = new LazyFile(fileName);
         tsHeader.write(tsContent.getPrefix());
 
         tsHeader.write("; " + CONFIG_DEFINITION_START + ConfigDefinition.EOL);
@@ -158,7 +160,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return new TsFileContent(prefix.toString(), postfix.toString());
     }
 
-    static String removeToken(String line) {
+    public static String removeToken(String line) {
         int index = line.indexOf(TS_CONDITION);
         String token = getToken(line);
         int afterTokenIndex = index + TS_CONDITION.length() + token.length();
@@ -168,7 +170,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return line;
     }
 
-    static String getToken(String line) {
+    public static String getToken(String line) {
         int index = line.indexOf(TS_CONDITION) + TS_CONDITION.length();
         String token = "";
         while (index < line.length() && !Character.isWhitespace(line.charAt(index))) {
