@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
+import com.rusefi.util.LazyFile;
 
 import java.io.*;
 
@@ -99,7 +100,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         TsFileContent tsContent = readTsFile(tsPath);
         System.out.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
-        BufferedWriter tsHeader = new BufferedWriter(new FileWriter(tsPath + File.separator + TS_FILE_OUTPUT_NAME));
+        LazyFile tsHeader = new LazyFile(tsPath + File.separator + TS_FILE_OUTPUT_NAME);
         tsHeader.write(tsContent.getPrefix());
 
         tsHeader.write("; " + CONFIG_DEFINITION_START + ConfigDefinition.EOL);

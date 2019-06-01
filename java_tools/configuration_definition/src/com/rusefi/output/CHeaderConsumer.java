@@ -3,6 +3,7 @@ package com.rusefi.output;
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ConfigField;
 import com.rusefi.ConfigStructure;
+import com.rusefi.util.LazyFile;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -15,11 +16,11 @@ import static com.rusefi.ConfigDefinition.EOL;
  */
 public class CHeaderConsumer implements ConfigurationConsumer {
     public static final String BOOLEAN_TYPE = "bool";
-    private final BufferedWriter cHeader;
+    private final LazyFile cHeader;
 
     public CHeaderConsumer(String destCHeader) throws IOException {
         System.out.println("Writing C header to " + destCHeader);
-        cHeader = new BufferedWriter(new FileWriter(destCHeader));
+        cHeader = new LazyFile(destCHeader);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
         cHeader.write("// begin" + EOL);
         String id = destCHeader.replaceAll("[\\\\\\.\\/]", "_").toUpperCase();
