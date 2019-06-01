@@ -7,6 +7,8 @@ https://cygwin.com/install.html needs to be added to System PATH manually
 
 cygwin: make, gcc, zip
 
+cp c:\cygwin\bin\find.exe c:\cygwin\bin\findcyg.exe
+
 cygwin: ccache
 
 Add System Environment Variable

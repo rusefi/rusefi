@@ -27,17 +27,17 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 echo "Deleting .svn"
 xargs rm  -rf < folders_to_delete.txt
-echo "Deleted .svn"
+echo "%script_name%: Deleted .svn"
 rm -rf folders_to_delete.txt
 
 echo "Building bundle"
 pwd
 set zip_name=rusefi_bundle.zip
-zip -r %zip_name$ *
+zip -r %zip_name% *
 IF NOT ERRORLEVEL 0 echo %script_name%: ERROR INVOKING zip
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-echo "Bundle %zip_name$ ready"
+echo "Bundle %zip_name% ready"
 ls %zip_name%
 cd ..
 echo "%script_name%: We are back in root directory"

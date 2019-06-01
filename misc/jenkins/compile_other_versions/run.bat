@@ -1,3 +1,5 @@
+set script_name=build_working_folder.bat
+echo Entering %script_name%
 
 set FTP_SERVER=home451478433.1and1-data.host
 
@@ -20,7 +22,7 @@ cd ..
 pwd
 set bundle_name=stm32f746_nucleo
 call misc\jenkins\compile_other_versions\build_version.bat
-echo Done with F746-nucleo
+echo %script_name%: Done with F746-nucleo
 
 
 cd firmware
@@ -35,7 +37,7 @@ cd ..
 pwd
 set bundle_name=stm32f767_nucleo
 call misc\jenkins\compile_other_versions\build_version.bat
-echo Done with F767-nucleo
+echo %script_name%: Done with F767-nucleo
 
 
 
@@ -68,7 +70,7 @@ cd ..
 pwd
 set bundle_name=prometheus_405
 call misc\jenkins\compile_other_versions\build_version.bat
-echo Done with prometheus_405
+echo %script_name%: Done with prometheus_405
 
 
 
@@ -84,6 +86,6 @@ cd ..
 pwd
 set bundle_name=prometheus_469
 call misc\jenkins\compile_other_versions\build_version.bat
-echo Done with prometheus_469
+echo %script_name%: Done with prometheus_469
 
 
