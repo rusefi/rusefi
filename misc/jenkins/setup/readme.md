@@ -54,7 +54,7 @@ http://www.st.com/web/en/catalog/tools/PF257938 ST virtual serial driver
 
 Jobs:
 
-1) unit tests
+1) unit_tests
 
 2) integration_and_primary_bundle
 
