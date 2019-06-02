@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "efi_gpio.h"
 
+#if EFI_GPIO_HARDWARE
 
 #define PORT_SIZE 16
 
@@ -42,8 +43,6 @@ static ioportid_t ports[] = {GPIOA,
 #define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
 // todo: move this into PinRepository class
 static const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
-
-#if EFI_GPIO_HARDWARE
 
 #include "pin_repository.h"
 #include "io_pins.h"
