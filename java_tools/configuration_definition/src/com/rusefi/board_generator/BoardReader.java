@@ -43,7 +43,7 @@ public class BoardReader {
         Map<String, Object> data = yaml.load(new FileReader(firmwarePath + "/config/boards/" + boardName + "/mapping.yaml"));
         System.out.println(data);
 
-        EnumsReader.process(new FileReader(firmwarePath + File.separator + EnumToString.RELATIVE_PATH));
+        EnumsReader.process(new FileReader(firmwarePath + File.separator + EnumToString.COMMON_HEADER_RELATIVE_NAME));
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
 

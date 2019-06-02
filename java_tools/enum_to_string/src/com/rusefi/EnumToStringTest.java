@@ -4,16 +4,21 @@ import com.rusefi.enum_reader.Value;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.rusefi.EnumsReader.isKeyValueLine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class EnumToStringTest {
+    public static void process(Reader reader) throws IOException {
+        EnumsReader.process(reader);
+        EnumToString.outputData();
+    }
+
     @Test
     public void testParseLine() {
         assertTrue(isKeyValueLine("MIN"));
@@ -24,7 +29,7 @@ public class EnumToStringTest {
     @Test
     public void parseEnum() throws IOException {
         EnumToString.clear();
-        EnumToString.process(new StringReader(
+        process(new StringReader(
                 "typedef enum {\n" +
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
@@ -43,13 +48,13 @@ public class EnumToStringTest {
                 "  return \"GPIO_UNASSIGNED\";\r\n" +
                 "  }\r\n" +
                 " return NULL;\r\n" +
-                "}\r\n", EnumToString.cppFileContent.toString());
+                "}\r\n", EnumToString.getCppFileContent());
     }
 
     @Test
     public void parsePackedEnum() throws IOException {
         EnumToString.clear();
-        EnumToString.process(new StringReader(
+        process(new StringReader(
                 "typedef enum __attribute__ ((__packed__)) {\n" +
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
@@ -62,6 +67,6 @@ public class EnumToStringTest {
                 "  return \"GPIO_UNASSIGNED\";\r\n" +
                 "  }\r\n" +
                 " return NULL;\r\n" +
-                "}\r\n", EnumToString.cppFileContent.toString());
+                "}\r\n", EnumToString.getCppFileContent());
     }
 }

@@ -1,13 +1,13 @@
-// auto-generated from.\controllers/algo/rusefi_enums.h
+// auto-generated from rusefi_enums.h
 // by enum2string.jar tool
-// on Tue May 28 22:08:21 EDT 2019
+// on Sun Jun 02 16:14:34 EDT 2019
 // see also gen_config_and_enums.bat
 
 
 
+#include "rusefi_enums.h"
 #ifndef _A_H_HEADER_
 #define _A_H_HEADER_
-#include "rusefi_enums.h"
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getAdc_channel_e(adc_channel_e value);

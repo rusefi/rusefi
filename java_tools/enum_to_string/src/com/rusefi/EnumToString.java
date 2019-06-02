@@ -12,26 +12,70 @@ import java.util.*;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class EnumToString {
-    public final static StringBuilder cppFileContent = new StringBuilder();
+    private final static StringBuilder cppFileContent = new StringBuilder();
+    private final static StringBuilder includesSection = new StringBuilder();
+
+    private final static StringBuilder bothFilesHeader = new StringBuilder("// by enum2string.jar tool\r\n" +
+            "// on " + new Date() + "\r\n" +
+            "// see also gen_config_and_enums.bat\r\n" +
+            "\r\n" +
+            "\r\n" +
+            "\r\n");
+
     private final static StringBuilder headerFileContent = new StringBuilder();
-    public static final String RELATIVE_PATH = "controllers/algo/rusefi_enums.h";
+
+    public static final String COMMON_HEADER_RELATIVE_NAME = "controllers/algo/rusefi_enums.h";
+
+    private final static String KEY_INPUT_PATH = "-inputPath";
+    //    private final static String KEY_INPUT_FILE = "-inputFile";
+    private final static String KEY_OUTPUT = "-outputPath";
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            System.out.println("Please specify two parameters: path to firmware folder and path to output folder");
+        if (args.length < 4) {
+            System.out.println("Please specify at least\n\n" +
+                            KEY_INPUT_PATH + "XXX\r\n" +
+//                            KEY_INPUT_FILE + "XXX" +
+                            KEY_OUTPUT + "XXX\r\n"
+            );
             return;
         }
-        String inputPath = args[0];
-        String outputPath = args[1];
+
+        String inputPath = null;
+        String outputPath = null;
+        for (int i = 0; i < args.length - 1; i += 2) {
+            String key = args[i];
+            if (key.equals(KEY_INPUT_PATH)) {
+                inputPath = args[i + 1];
+//            } else if (key.equals(KEY_INPUT_FILE)) {
+//                String inputFile = args[i + 1];
+//                consumeFile(inputPath, inputFile);
+            } else if (key.equals(KEY_OUTPUT)) {
+                outputPath = args[i + 1];
+            }
+
+        }
+
+        consumeFile(inputPath, COMMON_HEADER_RELATIVE_NAME);
 
         headerFileContent.append("#ifndef _A_H_HEADER_\r\n");
         headerFileContent.append("#define _A_H_HEADER_\r\n");
 
-        processFile(inputPath + File.separator + RELATIVE_PATH);
+        outputData();
+
+        cppFileContent.insert(0, bothFilesHeader.toString());
+
+        cppFileContent.insert(0, includesSection);
+        headerFileContent.insert(0, includesSection);
+
+        System.out.println("includesSection:\r\n" + includesSection + "end of includesSection\r\n");
+
+        cppFileContent.insert(0, "#include \"global.h\"\r\n");
+        headerFileContent.insert(0, bothFilesHeader.toString());
 
         headerFileContent.append("#endif /*_A_H_HEADER_ */\r\n");
 
         writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_enums");
+
     }
 
     private static void writeCppAndHeaderFiles(String outFileName) throws IOException {
@@ -44,32 +88,18 @@ public class EnumToString {
         bw.close();
     }
 
-    private static void processFile(String inFileName) throws IOException {
-        String header = "// auto-generated from" + inFileName + "\r\n" +
-                "// by enum2string.jar tool\r\n" +
-                "// on " + new Date() +"\r\n" +
-                "// see also gen_config_and_enums.bat\r\n" +
-                "\r\n" +
-                "\r\n" +
-                "\r\n";
-
-        cppFileContent.append(header);
-        EnumToString.headerFileContent.insert(0, header);
-
-
-        File f = new File(inFileName);
+    private static void consumeFile(String inputPath, String inFileName) throws IOException {
+        File f = new File(inputPath + File.separator + inFileName);
         System.out.println("Reading from " + inFileName);
         String simpleFileName = f.getName();
 
-        cppFileContent.append("#include \"global.h\"\r\n");
-        cppFileContent.append("#include \"" + simpleFileName + "\"\r\n");
-        EnumToString.headerFileContent.append("#include \"" + simpleFileName + "\"\r\n");
+        bothFilesHeader.insert(0, "// auto-generated from " + simpleFileName + "\r\n");
 
-        process(new FileReader(inFileName));
+        includesSection.append("#include \"" + simpleFileName + "\"\r\n");
+        EnumsReader.process(new FileReader(inFileName));
     }
 
-    public static void process(Reader reader) throws IOException {
-        EnumsReader.process(reader);
+    public static void outputData() {
         for (Map.Entry<String, Map<String, Value>> e : EnumsReader.enums.entrySet()) {
             String enumName = e.getKey();
             cppFileContent.append(makeCode(enumName, e.getValue().values()));
@@ -105,5 +135,9 @@ public class EnumToString {
 
     private static String capitalize(String enumName) {
         return Character.toUpperCase(enumName.charAt(0)) + enumName.substring(1);
+    }
+
+    public static String getCppFileContent() {
+        return cppFileContent.toString();
     }
 }
