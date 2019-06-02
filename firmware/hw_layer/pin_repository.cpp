@@ -36,7 +36,7 @@ static int brainPin_to_index(brain_pin_e brainPin)
 	index = brainPin - GPIOA_0;
 
 	/* if index outside array boundary */
-	if ((unsigned)index > (sizeof(PIN_USED) / sizeof(PIN_USED[0])))
+	if ((unsigned)index >= getNumBrainPins() + BOARD_EXT_PINREPOPINS)
 		return -1;
 
 	return index;
@@ -52,58 +52,28 @@ PinRepository::PinRepository() {
 
 static PinRepository instance;
 
-static int getPortIndex(ioportid_t port) {
-	efiAssert(CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
-	if (port == GPIOA)
-		return 0;
-	if (port == GPIOB)
-		return 1;
-	if (port == GPIOC)
-		return 2;
-	if (port == GPIOD)
-		return 3;
-#if STM32_HAS_GPIOE
-	if (port == GPIOE)
-		return 4;
-#endif /* STM32_HAS_GPIOE */
-#if STM32_HAS_GPIOF
-	if (port == GPIOF)
-		return 5;
-#endif /* STM32_HAS_GPIOF */
-#if STM32_HAS_GPIOG
-	if (port == GPIOG)
-		return 6;
-#endif /* STM32_HAS_GPIOG */
-#if STM32_HAS_GPIOH
-	if (port == GPIOH)
-		return 7;
-#endif /* STM32_HAS_GPIOH */
-	firmwareError(CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
-	return -1;
-}
-
 static void reportPins(void) {
-	for (unsigned int i = 0; i < PIN_REPO_SIZE; i++) {
-		const char *pin_user = PIN_USED[i];
+	for (unsigned int i = 0; i < getNumBrainPins(); i++) {
+		const char *pin_user = getBrainUsedPin(i);
 
 		/* show used pins */
 		if (pin_user != NULL) {
-			int portIndex = i / PORT_SIZE;
-			int pin = i % PORT_SIZE;
-			ioportid_t port = ports[portIndex];
+			brain_pin_e brainPin = index_to_brainPin(i);
+			int pin = getBrainPinIndex(brainPin);
+			ioportid_t port = getBrainPort(brainPin);
 
 			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, pin_user);
 		}
 	}
 
 	#if (BOARD_EXT_GPIOCHIPS > 0)
-		for (unsigned int i = PIN_REPO_SIZE ; i < PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
+		for (unsigned int i = getNumBrainPins() ; i < getNumBrainPins() + BOARD_EXT_PINREPOPINS /* gpiochips_get_total_pins()*/ ; i++) {
 			const char *pin_name;
 			const char *pin_user;
 			brain_pin_e brainPin = index_to_brainPin(i);
 
 			pin_name = gpiochips_getPinName(brainPin);
-			pin_user = PIN_USED[i];
+			pin_user = getBrainUsedPin(i);
 
 			/* here show all pins, unused too */
 			if (pin_name != NULL) {
@@ -163,7 +133,7 @@ void initPinRepository(void) {
 
 	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
 
-	memset(PIN_USED, 0, sizeof(PIN_USED));
+	initBrainUsedPins();
 
 	initialized = true;
 
@@ -205,18 +175,18 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 	if (index < 0)
 		return true;
 
-	if (PIN_USED[index] != NULL) {
+	if (getBrainUsedPin(index) != NULL) {
 		/* TODO: get readable name of brainPin... */
 		/**
 		 * todo: the problem is that this warning happens before the console is even
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
-//		warning(OBD_PCM_Processor_Fault, "brain pin %d req by %s used by %s", brainPin, msg, PIN_USED[index]);
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "brain pin %s req by %s used by %s", hwPortname(brainPin), msg, PIN_USED[index]);
+//		warning(OBD_PCM_Processor_Fault, "brain pin %d req by %s used by %s", brainPin, msg, getBrainUsedPin(index));
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "brain pin %s req by %s used by %s", hwPortname(brainPin), msg, getBrainUsedPin(index));
 		return true;
 	}
 
-	PIN_USED[index] = msg;
+	getBrainUsedPin(index) = msg;
 	totalPinsUsed++;
 	return false;
 }
@@ -238,9 +208,9 @@ void brain_pin_markUnused(brain_pin_e brainPin)
 	if (index < 0)
 		return;
 
-	if (PIN_USED[index] != NULL)
+	if (getBrainUsedPin(index) != NULL)
 		totalPinsUsed--;
-	PIN_USED[index] = NULL;
+	getBrainUsedPin(index) = NULL;
 }
 
 /**
@@ -253,18 +223,18 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
 		return false;
 	}
-	int index = getIndex(port, pin);
+	int index = getBrainIndex(port, pin);
 
-	if (PIN_USED[index] != NULL) {
+	if (getBrainUsedPin(index) != NULL) {
 		/**
 		 * todo: the problem is that this warning happens before the console is even
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
-//		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+//		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, getBrainUsedPin(index));
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, getBrainUsedPin(index));
 		return true;
 	}
-	PIN_USED[index] = msg;
+	getBrainUsedPin(index) = msg;
 	totalPinsUsed++;
 	return false;
 }
@@ -279,11 +249,11 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 		firmwareError(CUSTOM_ERR_PIN_REPO, "repository not initialized");
 		return;
 	}
-	int index = getIndex(port, pin);
+	int index = getBrainIndex(port, pin);
 
-	if (PIN_USED[index] != NULL)
+	if (getBrainUsedPin(index) != NULL)
 		totalPinsUsed--;
-	PIN_USED[index] = NULL;
+	getBrainUsedPin(index) = NULL;
 }
 
 const char *getPinFunction(brain_input_pin_e brainPin) {
@@ -293,7 +263,7 @@ const char *getPinFunction(brain_input_pin_e brainPin) {
 	if (index < 0)
 		return NULL;
 
-	return PIN_USED[index];
+	return getBrainUsedPin(index);
 }
 
 #endif
