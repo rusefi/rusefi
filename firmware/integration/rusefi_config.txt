@@ -499,8 +499,8 @@ float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 ! todo: rename to triggerSimulatorRpm
 	int triggerSimulatorFrequency;See also triggerSimulatorPins\nSee also directSelfStimulation\nrpm X;"Rpm",     1,      0,       0,30000,      0
 
-	brain_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
-	brain_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
+	output_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
+	output_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
 
 	pin_output_mode_e injectionPinMode;
 	pin_output_mode_e ignitionPinMode;
@@ -551,7 +551,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
 	pin_output_mode_e hip9011CsPinMode;
-	brain_pin_e tachOutputPin;+This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
+	output_pin_e tachOutputPin;+This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	pin_output_mode_e tachOutputPinMode;
 
 	output_pin_e mainRelayPin;
@@ -574,7 +574,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	
 	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;See also directSelfStimulation
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
-	brain_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
+	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
 
 

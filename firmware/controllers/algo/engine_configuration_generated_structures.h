@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 01 17:13:22 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 02 14:03:15 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -470,11 +470,11 @@ struct board_configuration_s {
 	/**
 	 * offset 24
 	 */
-	brain_pin_e injectionPins[INJECTION_PIN_COUNT];
+	output_pin_e injectionPins[INJECTION_PIN_COUNT];
 	/**
 	 * offset 36
 	 */
-	brain_pin_e ignitionPins[IGNITION_PIN_COUNT];
+	output_pin_e ignitionPins[IGNITION_PIN_COUNT];
 	/**
 	 * offset 48
 	 */
@@ -626,7 +626,7 @@ struct board_configuration_s {
 	 * This implementation produces one pulse per engine cycle. See also dizzySparkOutputPin.
 	 * offset 104
 	 */
-	brain_pin_e tachOutputPin;
+	output_pin_e tachOutputPin;
 	/**
 	 * offset 105
 	 */
@@ -692,7 +692,7 @@ struct board_configuration_s {
 	 * Narrow band o2 heater, not used for CJ125. See wboHeaterPin
 	 * offset 142
 	 */
-	brain_pin_e o2heaterPin;
+	output_pin_e o2heaterPin;
 	/**
 	 * offset 143
 	 */
@@ -2788,4 +2788,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 01 17:13:22 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 02 14:03:15 EDT 2019
