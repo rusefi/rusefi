@@ -1,3 +1,4 @@
+
 May, 31 2019 status:
 * https://github.com/rusefi/rusefi/issues/796 should be addressed
 * Electronic throttle body - two and three wire control seems good enough, next step ETB-based idle control see https://github.com/rusefi/rusefi/issues/783 
