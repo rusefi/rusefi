@@ -491,53 +491,6 @@ void turnAllPinsOff(void) {
 	}
 }
 
-
-/**
- * @deprecated - use hwPortname() instead
- */
-const char *portname(ioportid_t GPIOx) {
-	if (GPIOx == GPIOA)
-		return "PA";
-	if (GPIOx == GPIOB)
-		return "PB";
-	if (GPIOx == GPIOC)
-		return "PC";
-	if (GPIOx == GPIOD)
-		return "PD";
-#if STM32_HAS_GPIOE
-	if (GPIOx == GPIOE)
-		return "PE";
-#endif /* STM32_HAS_GPIOE */
-#if STM32_HAS_GPIOF
-	if (GPIOx == GPIOF)
-		return "PF";
-#endif /* STM32_HAS_GPIOF */
-#if STM32_HAS_GPIOG
-	if (GPIOx == GPIOG)
-		return "PG";
-#endif /* STM32_HAS_GPIOG */
-#if STM32_HAS_GPIOH
-	if (GPIOx == GPIOH)
-		return "PH";
-#endif /* STM32_HAS_GPIOH */
-	return "unknown";
-}
-
-/**
- * this method returns the numeric part of pin name. For instance, for PC13 this would return '13'
- */
-ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
-{
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
-			return EFI_ERROR_CODE;
-
-	if (brain_pin_is_onchip(brainPin))
-		return (brainPin - GPIOA_0) % PORT_SIZE;
-
-	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip brain_pin_e: %d", msg, brainPin);
-	return EFI_ERROR_CODE;
-}
-
 #else /* EFI_GPIO_HARDWARE */
 const char *hwPortname(brain_pin_e brainPin) {
 	(void)brainPin;

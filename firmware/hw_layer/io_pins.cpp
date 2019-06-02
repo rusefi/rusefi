@@ -28,17 +28,6 @@ EXTERN_ENGINE;
 static LoggingWithStorage logger("io_pins");
 
 extern EnginePins enginePins;
-extern ioportid_t PORTS[];
-
-ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID)
-		return GPIO_NULL;
-	if (brainPin < GPIOA_0 || brainPin > GPIOH_15) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
-		return GPIO_NULL;
-	}
-	return PORTS[(brainPin - GPIOA_0)/ PORT_SIZE];
-}
 
 bool efiReadPin(brain_pin_e pin) {
 	if (brain_pin_is_onchip(pin))
