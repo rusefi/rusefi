@@ -10,8 +10,6 @@ echo "%script_name%: erasing first"
 call flash_erase407.bat
 cd %cur_folder%
 pwd
-rem there is some instability with failed flash sometimes, maybe sleep would help?
-sleep 3
 echo "%script_name%: trying to flash"
 rem This script depends on someone else building firmware
 call flash_openocd407.bat
