@@ -1,12 +1,12 @@
-// auto-generated from.\controllers/algo/rusefi_enums.h
+#include "global.h"
+#include "rusefi_enums.h"
+// auto-generated from rusefi_enums.h
 // by enum2string.jar tool
-// on Tue May 28 22:08:21 EDT 2019
+// on Sun Jun 02 16:14:34 EDT 2019
 // see also gen_config_and_enums.bat
 
 
 
-#include "global.h"
-#include "rusefi_enums.h"
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value){
 switch(value) {
 case AUTOTUNER_OFF:
