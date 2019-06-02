@@ -21,35 +21,6 @@
 	#define BOARD_EXT_PINREPOPINS 0
 #endif
 
-static ioportid_t ports[] = {GPIOA,
-		GPIOB,
-		GPIOC,
-		GPIOD,
-#if STM32_HAS_GPIOE
-		GPIOE,
-#else
-		nullptr,
-#endif /* STM32_HAS_GPIOE */
-#if STM32_HAS_GPIOF
-		GPIOF,
-#else
-		nullptr,
-#endif /* STM32_HAS_GPIOF */
-#if STM32_HAS_GPIOG
-		GPIOG,
-#else
-		nullptr,
-#endif /* STM32_HAS_GPIOG */
-#if STM32_HAS_GPIOH
-		GPIOH,
-#else
-		nullptr,
-#endif /* STM32_HAS_GPIOH */
-};
-
-#define PIN_REPO_SIZE (sizeof(ports) / sizeof(ports[0])) * PORT_SIZE
-// todo: move this into PinRepository class
-const char *PIN_USED[PIN_REPO_SIZE + BOARD_EXT_PINREPOPINS];
 static int initialized = FALSE;
 
 static LoggingWithStorage logger("pin repos");
@@ -152,32 +123,6 @@ static void reportPins(void) {
 static MemoryStream portNameStream;
 static char portNameBuffer[20];
 
-/**
- * Parse string representation of physical pin into brain_pin_e ordinal.
- *
- * @return GPIO_UNASSIGNED for "none", GPIO_INVALID for invalid entry
- */
-brain_pin_e parseBrainPin(const char *str) {
-	if (strEqual(str, "none"))
-		return GPIO_UNASSIGNED;
-	// todo: create method toLowerCase?
-	if (str[0] != 'p' && str[0] != 'P') {
-		return GPIO_INVALID;
-	}
-	char port = str[1];
-	brain_pin_e basePin;
-	if (port >= 'a' && port <= 'z') {
-		basePin = (brain_pin_e) ((int) GPIOA_0 + 16 * (port - 'a'));
-	} else if (port >= 'A' && port <= 'Z') {
-		basePin = (brain_pin_e) ((int) GPIOA_0 + 16 * (port - 'A'));
-	} else {
-		return GPIO_INVALID;
-	}
-	const char *pinStr = str + 2;
-	int pin = atoi(pinStr);
-	return (brain_pin_e)(basePin + pin);
-}
-
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
@@ -223,11 +168,6 @@ void initPinRepository(void) {
 	initialized = true;
 
 	addConsoleAction("pins", reportPins);
-}
-
-static int getIndex(ioportid_t port, ioportmask_t pin) {
-	int portIndex = getPortIndex(port);
-	return portIndex * PORT_SIZE + pin;
 }
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
