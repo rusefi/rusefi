@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 02 14:03:15 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 03 10:01:41 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1311,7 +1311,7 @@ public class Fields {
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 408, FieldType.FLOAT);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 412, FieldType.INT);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 416, FieldType.INT);
-	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY"};
+	public static final String[] engine_load_mode_e = {"MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 420, FieldType.INT, engine_load_mode_e);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 424, FieldType.INT);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 428, FieldType.INT);
