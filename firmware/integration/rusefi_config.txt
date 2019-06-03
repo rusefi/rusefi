@@ -356,10 +356,10 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM",     
 	int rpmHardLimit;set rpm_hard_limit X;"rpm",    1,      0,       0, 20000.0,        2
 
 
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY" 
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge" 
 
 
-custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:1], @@engine_load_mode_e_enum@@
+custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
 engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nSee also useTPSAdvanceTable\nset algorithm X
 
 

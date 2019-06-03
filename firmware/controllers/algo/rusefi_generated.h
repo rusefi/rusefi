@@ -452,7 +452,7 @@
 #define electronicThrottlePin1Mode_offset_hex 2a0
 #define enabledStep1Limiter_offset 744
 #define enabledStep1Limiter_offset_hex 2e8
-#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY"
+#define engine_load_mode_e_enum "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY", "MAF Air Charge"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define engineChartSize_offset 1480
 #define engineChartSize_offset_hex 5c8
