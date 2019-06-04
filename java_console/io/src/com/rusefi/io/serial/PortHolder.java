@@ -6,6 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
+import com.rusefi.io.IoStream;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import org.jetbrains.annotations.Nullable;
@@ -17,8 +18,6 @@ import org.jetbrains.annotations.Nullable;
  * (c) Andrey Belomutskiy
  */
 public class PortHolder {
-    //    private static final int BAUD_RATE = 8 * 115200;// 921600;
-//    private static final int BAUD_RATE = 2 * 115200;
     public static int BAUD_RATE = 115200;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
@@ -29,7 +28,7 @@ public class PortHolder {
     }
 
     @Nullable
-    private SerialPort serialPort;
+    private IoStream serialPort;
 
     boolean openPort(String port, DataListener dataListener, ConnectionStateListener listener) {
         CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
@@ -69,12 +68,13 @@ public class PortHolder {
             throw new IllegalStateException(e);
         }
 
+        SerialIoStreamJSSC stream = new SerialIoStreamJSSC(serialPort, FileLog.LOGGER);
         synchronized (portLock) {
-            this.serialPort = serialPort;
+            this.serialPort = stream;
             portLock.notifyAll();
         }
 
-        bp = BinaryProtocolHolder.create(FileLog.LOGGER, new SerialIoStreamJSSC(serialPort, FileLog.LOGGER));
+        bp = BinaryProtocolHolder.create(FileLog.LOGGER, stream);
 
         return bp.connectAndReadConfiguration(listener);
     }
@@ -93,10 +93,8 @@ public class PortHolder {
         synchronized (portLock) {
             if (serialPort != null) {
                 try {
-                    serialPort.closePort();
+                    serialPort.close();
                     serialPort = null;
-                } catch (SerialPortException e) {
-                    FileLog.MAIN.logLine("Error while closing: " + e);
                 } finally {
                     portLock.notifyAll();
                 }
