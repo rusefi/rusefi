@@ -11,7 +11,7 @@ Debug/
 .settings/
 firmware/rusefi_ram_report.txt
 doxygen/
-.idea
+/.idea
 workspace.xml
 java_console_binary
 .vscode
