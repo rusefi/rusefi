@@ -13,7 +13,7 @@
     <target name="compile">
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
-               classpath="lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
+               classpath="lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
             <src path="autotest/src"/>
             <src path="io/src"/>
             <src path="models/src"/>
@@ -76,6 +76,7 @@
             <zipfileset src="lib/log4j.jar" includes="**/*.class"/>
             <zipfileset src="lib/jep.jar" includes="**/*.class"/>
             <zipfileset src="lib/jssc.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
+            <zipfileset src="lib/jSerialComm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/annotations.jar" includes="**/*.class"/>
             <zipfileset src="lib/miglayout-4.0.jar" includes="**/*.class"/>
             <zipfileset src="lib/surfaceplotter-2.0.1.jar" includes="**/*.class **/*.properties"/>
