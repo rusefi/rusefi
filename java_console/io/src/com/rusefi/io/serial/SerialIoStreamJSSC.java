@@ -13,12 +13,12 @@ import java.io.IOException;
  * (c) Andrey Belomutskiy
  * 5/11/2015.
  */
-public class SerialIoStream implements IoStream {
+public class SerialIoStreamJSSC implements IoStream {
     private final SerialPort serialPort;
     private final Logger logger;
     private boolean isClosed;
 
-    public SerialIoStream(SerialPort serialPort, Logger logger) {
+    public SerialIoStreamJSSC(SerialPort serialPort, Logger logger) {
         this.serialPort = serialPort;
         this.logger = logger;
     }
