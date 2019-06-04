@@ -8206,9 +8206,6 @@
 "AFR ADC input" = "Вход датчика"
 "O2 heater pin" = "Выход подогрева датчика"
 "LCD screen" = "ЖКИ экран"
-"GPS Receiver" = "GPS приемник"
-"gps RX" = "gps RX"
-"gps TX" = "gps TX"
 "TPS/TPS Acceleration Extra Fuel(ms)" = "TPS/TPS ускорение обогащением топлива(мс)"
 
 
