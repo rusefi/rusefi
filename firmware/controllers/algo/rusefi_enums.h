@@ -13,7 +13,9 @@
 
 #include "efifeatures.h"
 #include "obd_error_codes.h"
-#include "rusefi_hw_enums.h"
+// we do not want to start the search for header from current folder so we use brackets here
+// https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
+#include <rusefi_hw_enums.h>
 
 #define HIP_NAME "HIP"
 #define TACH_NAME "tach"
