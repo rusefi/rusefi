@@ -16,7 +16,15 @@ echo BOARDNAME=%BOARDNAME%
 rem lazy is broken - TS input is not considered a change
 rm build/config.gen
 
-java -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar com.rusefi.board_generator.BoardReader -board %BOARDNAME% -firmware_path . -out tunerstudio
+java -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
+ com.rusefi.board_generator.BoardReader ^
+ -board %BOARDNAME% ^
+ -firmware_path . ^
+ -out tunerstudio ^
+ -enumInputFile controllers/algo/rusefi_enums.h ^
+ -enumInputFile controllers/algo/rusefi_hw_enums.h
+
+
 java -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration\rusefi_config.txt ^
  -ts_destination tunerstudio ^
