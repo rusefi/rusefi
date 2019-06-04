@@ -47,7 +47,9 @@ public class PortHolder {
      * @return true if everything fine
      */
     private boolean open(String port, final DataListener listener) {
-        SerialIoStreamJSSC stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
+        IoStream stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
+        // this implementation is way simpler but seems to kind of work, keeping just in case
+        //IoStream stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
         if (stream == null)
             return false;
 
