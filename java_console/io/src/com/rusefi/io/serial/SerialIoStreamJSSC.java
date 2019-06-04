@@ -36,6 +36,7 @@ public class SerialIoStreamJSSC implements IoStream {
     }
 
     public static SerialIoStreamJSSC open(String port, int baudRate, Logger logger) {
+        logger.info("[SerialIoStreamJSSC]");
         SerialPort serialPort = new SerialPort(port);
         try {
             FileLog.MAIN.logLine("Opening " + port + " @ " + baudRate);
