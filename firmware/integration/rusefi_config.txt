@@ -512,8 +512,7 @@ float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 	brain_pin_e HD44780_db6;
 	brain_pin_e HD44780_db7;
 
-	brain_pin_e gps_rx_pin;
-	brain_pin_e gps_tx_pin;
+	uint8_t[2] unused_old_gps;
 	output_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
 
