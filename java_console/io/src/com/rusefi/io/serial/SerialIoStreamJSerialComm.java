@@ -65,6 +65,7 @@ public class SerialIoStreamJSerialComm implements IoStream {
     }
 
     public static IoStream open(String port, int baudRate, Logger logger) {
+        logger.info("[SerialIoStreamJSerialComm]");
         SerialPort sp = SerialPort.getCommPort(port);
         sp.setBaudRate(baudRate);
         sp.openPort();
