@@ -1184,9 +1184,9 @@ menuDialog = main
 		subMenu = std_separator
 		
 		# Misc sensors
-		subMenu = speedSensor,				"Vehicle Speed sensor"
-		subMenu = oilPressureSensor,		"Oil Pressure sensor"
-		subMenu = egtInputs,				"EGT Inputs"
+		subMenu = speedSensor,				"Vehicle speed sensor"
+		subMenu = oilPressureSensor,		"Oil pressure"
+		subMenu = egtInputs,				"EGT"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1196,8 +1196,8 @@ menuDialog = main
 		
 		subMenu = lcdScreen,				"LCD"
 		subMenu = joystickPanel,			"Joystick"
-		subMenu = spiFunction,				"SPI Settings"
-		subMenu = monitoringSettings,		"rusEfi Console Settings"
+		subMenu = spiFunction,				"SPI"
+		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
 		subMenu = connection,            	"Connection"
