@@ -15,6 +15,7 @@ public class BoardReader {
     private static final String KEY_OUTFOLDER = "-out";
     private static final String KEY_FIRMWARE_PATH = "-firmware_path";
     private static final String INVALID = "INVALID";
+    private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
@@ -34,6 +35,9 @@ public class BoardReader {
                 boardName = args[i + 1];
             } else if (key.equals(KEY_FIRMWARE_PATH)) {
                 firmwarePath = args[i + 1];
+            } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
+                String inputFile = args[i + 1];
+                EnumsReader.process(new FileReader(firmwarePath + File.separator + inputFile));
             } else if (key.equals(KEY_OUTFOLDER)) {
                 outputPath = args[i + 1];
             }
@@ -43,7 +47,6 @@ public class BoardReader {
         Map<String, Object> data = yaml.load(new FileReader(firmwarePath + "/config/boards/" + boardName + "/mapping.yaml"));
         System.out.println(data);
 
-        EnumsReader.process(new FileReader(firmwarePath + File.separator + EnumToString.COMMON_HEADER_RELATIVE_NAME));
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
 
