@@ -7,8 +7,6 @@ import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
-import jssc.SerialPort;
-import jssc.SerialPortException;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -49,26 +47,10 @@ public class PortHolder {
      * @return true if everything fine
      */
     private boolean open(String port, final DataListener listener) {
-        SerialPort serialPort = new SerialPort(port);
-        try {
-            FileLog.MAIN.logLine("Opening " + port + " @ " + BAUD_RATE);
-            boolean opened = serialPort.openPort();//Open serial port
-            if (!opened)
-                FileLog.MAIN.logLine(port + ": not opened!");
-            setupPort(serialPort, BAUD_RATE);
-        } catch (SerialPortException e) {
-            FileLog.MAIN.logLine("ERROR " + e.getMessage());
+        SerialIoStreamJSSC stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
+        if (stream == null)
             return false;
-        }
-        FileLog.MAIN.logLine("PortHolder: Sleeping a bit");
-        try {
-            // todo: why is this delay here? add a comment
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
 
-        SerialIoStreamJSSC stream = new SerialIoStreamJSSC(serialPort, FileLog.LOGGER);
         synchronized (portLock) {
             this.serialPort = stream;
             portLock.notifyAll();
@@ -77,16 +59,6 @@ public class PortHolder {
         bp = BinaryProtocolHolder.create(FileLog.LOGGER, stream);
 
         return bp.connectAndReadConfiguration(listener);
-    }
-
-    public static void setupPort(SerialPort serialPort, int baudRate) throws SerialPortException {
-        serialPort.setRTS(false);
-        serialPort.setDTR(false);
-        serialPort.setParams(baudRate, 8, 1, 0);//Set params.
-        int mask = SerialPort.MASK_RXCHAR;
-        //Set the prepared mask
-        serialPort.setEventsMask(mask);
-        serialPort.setFlowControlMode(0);
     }
 
     public void close() {
