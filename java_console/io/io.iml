@@ -13,5 +13,6 @@
     <orderEntry type="module" module-name="models" />
     <orderEntry type="module" module-name="logging" exported="" />
     <orderEntry type="library" exported="" name="jcip-annotations" level="project" />
+    <orderEntry type="library" name="jSerialComm" level="project" />
   </component>
 </module>
