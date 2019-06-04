@@ -74,7 +74,7 @@ public class PortHolder {
             portLock.notifyAll();
         }
 
-        bp = BinaryProtocolHolder.create(FileLog.LOGGER, new SerialIoStream(serialPort, FileLog.LOGGER));
+        bp = BinaryProtocolHolder.create(FileLog.LOGGER, new SerialIoStreamJSSC(serialPort, FileLog.LOGGER));
 
         return bp.connectAndReadConfiguration(listener);
     }
