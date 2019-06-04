@@ -24,10 +24,8 @@ public class EnumToString {
 
     private final static StringBuilder headerFileContent = new StringBuilder();
 
-    public static final String COMMON_HEADER_RELATIVE_NAME = "controllers/algo/rusefi_enums.h";
-
     private final static String KEY_INPUT_PATH = "-inputPath";
-    //    private final static String KEY_INPUT_FILE = "-inputFile";
+    private final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
     private final static String KEY_OUTPUT = "-outputPath";
 
     public static void main(String[] args) throws IOException {
@@ -46,16 +44,14 @@ public class EnumToString {
             String key = args[i];
             if (key.equals(KEY_INPUT_PATH)) {
                 inputPath = args[i + 1];
-//            } else if (key.equals(KEY_INPUT_FILE)) {
-//                String inputFile = args[i + 1];
-//                consumeFile(inputPath, inputFile);
+            } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
+                String inputFile = args[i + 1];
+                consumeFile(inputPath, inputFile);
             } else if (key.equals(KEY_OUTPUT)) {
                 outputPath = args[i + 1];
             }
 
         }
-
-        consumeFile(inputPath, COMMON_HEADER_RELATIVE_NAME);
 
         headerFileContent.append("#ifndef _A_H_HEADER_\r\n");
         headerFileContent.append("#define _A_H_HEADER_\r\n");

@@ -1,11 +1,13 @@
+// auto-generated from rusefi_hw_enums.h
 // auto-generated from rusefi_enums.h
 // by enum2string.jar tool
-// on Sun Jun 02 16:14:34 EDT 2019
+// on Tue Jun 04 12:17:32 EDT 2019
 // see also gen_config_and_enums.bat
 
 
 
 #include "rusefi_enums.h"
+#include "rusefi_hw_enums.h"
 #ifndef _A_H_HEADER_
 #define _A_H_HEADER_
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);

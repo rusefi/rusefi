@@ -348,6 +348,9 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[6] = GPIOC_6;
 	boardConfiguration->ignitionPins[7] = GPIOC_7;
 
+	// sckPin  = GPIOB_3
+	// misoPin = GPIOB_4
+	// mosiPin = GPIOB_5
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
 
 	// PB3 is nicely both SWO and SPI1 SCK so logic analyzer could be used on SWO header

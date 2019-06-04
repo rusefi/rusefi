@@ -9,18 +9,54 @@ import jssc.SerialPortException;
 
 import java.io.IOException;
 
+import static com.rusefi.io.serial.PortHolder.BAUD_RATE;
+
 /**
  * (c) Andrey Belomutskiy
  * 5/11/2015.
  */
-public class SerialIoStream implements IoStream {
+public class SerialIoStreamJSSC implements IoStream {
     private final SerialPort serialPort;
     private final Logger logger;
     private boolean isClosed;
 
-    public SerialIoStream(SerialPort serialPort, Logger logger) {
+    public SerialIoStreamJSSC(SerialPort serialPort, Logger logger) {
         this.serialPort = serialPort;
         this.logger = logger;
+    }
+
+    public static void setupPort(SerialPort serialPort, int baudRate) throws SerialPortException {
+        serialPort.setRTS(false);
+        serialPort.setDTR(false);
+        serialPort.setParams(baudRate, 8, 1, 0);//Set params.
+        int mask = SerialPort.MASK_RXCHAR;
+        //Set the prepared mask
+        serialPort.setEventsMask(mask);
+        serialPort.setFlowControlMode(0);
+    }
+
+    public static SerialIoStreamJSSC open(String port, int baudRate, Logger logger) {
+        logger.info("[SerialIoStreamJSSC]");
+        SerialPort serialPort = new SerialPort(port);
+        try {
+            FileLog.MAIN.logLine("Opening " + port + " @ " + baudRate);
+            boolean opened = serialPort.openPort();//Open serial port
+            if (!opened)
+                FileLog.MAIN.logLine(port + ": not opened!");
+            SerialIoStreamJSSC.setupPort(serialPort, baudRate);
+        } catch (SerialPortException e) {
+            FileLog.MAIN.logLine("ERROR " + e.getMessage());
+            return null;
+        }
+        FileLog.MAIN.logLine("PortHolder: Sleeping a bit");
+        try {
+            // todo: why is this delay here? add a comment
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
+        SerialIoStreamJSSC stream = new SerialIoStreamJSSC(serialPort, logger);
+        return stream;
     }
 
     @Override

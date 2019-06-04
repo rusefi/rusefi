@@ -6,8 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.PortHolder;
-import com.rusefi.io.serial.SerialIoStream;
+import com.rusefi.io.serial.SerialIoStreamJSSC;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.SettingsTab;
 import com.rusefi.ui.StatusWindow;
@@ -67,14 +66,14 @@ public class UploadChanges {
         if (!opened) {
             logger.error("failed to open " + port);
         }
-        PortHolder.setupPort(serialPort, 38400);
+        SerialIoStreamJSSC.setupPort(serialPort, 38400);
         logger.info("Configuration looks good!");
 
         final ConfigurationImage ci1 = ConfigurationImageFile.readFromFile("rus_saved.bin");
 
         final ConfigurationImage ci2 = ConfigurationImageFile.readFromFile("rusefi_configuration.bin");
 
-        final BinaryProtocol bp = BinaryProtocolHolder.create(logger, new SerialIoStream(serialPort, logger));
+        final BinaryProtocol bp = BinaryProtocolHolder.create(logger, new SerialIoStreamJSSC(serialPort, logger));
         bp.setController(ci1);
 
         scheduleUpload(ci2);

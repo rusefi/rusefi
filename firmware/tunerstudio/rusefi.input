@@ -1180,7 +1180,7 @@ menuDialog = main
 		# O2 sensor(s)
 		subMenu = egoSettings,				"EGO sensor"
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
-		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)"
+		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)" @@if_ts_show_cj125
 		subMenu = std_separator
 		
 		# Misc sensors
