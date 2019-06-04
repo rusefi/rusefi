@@ -1206,4 +1206,5 @@ end_struct
 
 ! some board files override this value using prepend file
 #define ts_show_hip9011 true
+#define ts_show_cj125 true
 #define ts_show_etb true
