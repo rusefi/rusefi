@@ -73,12 +73,6 @@
 #undef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
 
-/**
- * Do we need GPS logic?
- */
-#undef EFI_UART_GPS
-#define EFI_UART_GPS FALSE
-
 // todo: start using consoleUartDevice? Not sure
 #undef EFI_CONSOLE_SERIAL_DEVICE
 #define EFI_CONSOLE_SERIAL_DEVICE (&SD3)

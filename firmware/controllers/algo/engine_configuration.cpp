@@ -406,9 +406,6 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->brakePedalPin = GPIO_UNASSIGNED;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
 
-	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
-	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
-
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
 	
@@ -1094,9 +1091,6 @@ void setDefaultBoardConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
-
-//	boardConfiguration->gps_rx_pin = GPIOB_7;
-//	boardConfiguration->gps_tx_pin = GPIOB_6;
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;

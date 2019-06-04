@@ -38,7 +38,6 @@
 #include "hip9011.h"
 #include "histogram.h"
 #include "mmc_card.h"
-#include "neo6m.h"
 #include "lcd_HD44780.h"
 #include "settings.h"
 #include "algo.h"
@@ -528,10 +527,6 @@ void initHardware(Logging *l) {
 #endif /* EFI_BOSCH_YAW */
 
 	//	initBooleanInputs();
-
-#if EFI_UART_GPS
-	initGps();
-#endif
 
 #if EFI_SERVO
 	initServo();
