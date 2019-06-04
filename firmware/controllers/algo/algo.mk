@@ -1,6 +1,5 @@
 
 CONTROLLERS_ALGO_SRC = $(PROJECT_DIR)/controllers/algo/map_adjuster.c \
-	$(PROJECT_DIR)/controllers/algo/nmea.c \
 	
 	
 	

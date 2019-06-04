@@ -38,9 +38,6 @@
 #undef EFI_CONSOLE_SERIAL_DEVICE
 #undef EFI_CONSOLE_UART_DEVICE
 
-#undef EFI_UART_GPS
-#define EFI_UART_GPS FALSE
-
 //!!!!!!!!!!!!!!!!!
 #undef TS_UART_DMA_MODE
 #define TS_UART_DMA_MODE TRUE
