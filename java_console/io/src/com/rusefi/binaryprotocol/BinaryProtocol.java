@@ -115,7 +115,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      * @return true if everything fine
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
-        switchToBinaryProtocol();
+//        switchToBinaryProtocol();
         readImage(Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
             return false;
