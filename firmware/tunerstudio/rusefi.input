@@ -1058,18 +1058,20 @@ gaugeCategory = Fuel Data
 
 menuDialog = main
 	menu = "&Base &Engine"
-		subMenu = engineChars,				"Base Engine Settings"
-		subMenu = triggerConfiguration,		"Trigger Configuration"
+		subMenu = engineChars,				"Base engine"
+		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = std_separator
-		subMenu = energySystems,			"Battery and Alternator Settings"
+		subMenu = energySystems,			"Battery and alternator"
 		subMenu = std_separator
-		subMenu = fanSetting,				"Fan Settings"
-		subMenu = malfunction,				"MIL Settings"
-		subMenu = etbDialog,				"Electronic Throttle Body (beta version)" @@if_ts_show_etb
-		subMenu = etbTpsBiasCurve, 			"Electronic Throttle Body Bias Curve" @@if_ts_show_etb
-		subMenu = std_separator
-		subMenu = std_realtime,    			"&Realtime Display",              0	
 		
+		# Digital outputs
+		subMenu = mainRelay,				"Main relay"
+		subMenu = fuelPump,					"Fuel pump"
+		subMenu = fanSetting,				"Fan"
+		subMenu = tachSettings,				"Tachometer"
+		subMenu = malfunction,				"Check engine light"
+		subMenu = statusLeds,				"Status LEDs"
+
 	menu = "Fuel"
 		# basic
 		subMenu = injectionSettings,		"Injection Settings"
@@ -1133,6 +1135,7 @@ menuDialog = main
 		
 	menu = "&Idle"
 		subMenu = idleSettings,				"Idle Settings"
+		subMenu = idlehw,					"Idle Hardware"
 		subMenu = std_separator	
 		subMenu = cltIdleRPMCurve,			"Target RPM", 0, {idleMode == 0}
 		subMenu = idleVeCurve,              "VE", 0, {useSeparateVeForIdle == 1}
@@ -1142,10 +1145,6 @@ menuDialog = main
 		subMenu = cltIdleCurve,				"CLT multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	menu = "&Tuning"
-		subMenu = smLaunchControl,           "Launch Control"
-		
-menuDialog = main
 	menu = "&FSIO" 
 		subMenu = fsioInputsDialog,        	"FSIO inputs"
 		subMenu = auxPidDialog,				"Aux PID"
@@ -1160,47 +1159,64 @@ menuDialog = main
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
 
-menuDialog = main
 	menu = "&Sensors"
+		# Base analog input settings
+		subMenu = sensorInputs,				"Sensor Inputs"
+		subMenu = analogInputSettings,		"Analog Input Settings"
+		subMenu = std_separator
+
+		# Thermistors
 		subMenu = cltSensor,				"CLT sensor"
 		subMenu = iatSensor,				"IAT sensor"
 		subMenu = auxTempSensor1Sensor,		"AuxTemp1 sensor"
 		subMenu = auxTempSensor2Sensor,		"AuxTemp2 sensor"
 		subMenu = std_separator
+
+		# MAP/MAF
 		subMenu = mapSettings,				"MAP sensor"
 		subMenu = mafDecodingCurve,			"MAF sensor"
 		subMenu = std_separator
+
+		# O2 sensor(s)
 		subMenu = egoSettings,				"EGO sensor"
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
 		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)"
 		subMenu = std_separator
-		subMenu = hipFunction,				"HIP9011 Settings (knock sensor) (alpha version)" @@if_ts_show_hip9011 
+		
+		# Misc sensors
 		subMenu = speedSensor,				"Vehicle Speed sensor"
-		subMenu = oilPressureSensor,		"Oil Pressure sensor"			
-
-menuDialog = main
-	menu = "&Controller"
-		subMenu = sensorInputs,				"Sensor Inputs"
-		subMenu = analogInputSettings,		"Analog Input Settings"
+		subMenu = oilPressureSensor,		"Oil Pressure sensor"
 		subMenu = egtInputs,				"EGT Inputs"
-		subMenu = tachSettings,				"Tachometer output"
-		subMenu = idlehw,					"Idle Valve Hardware"
-		subMenu	= std_separator
-		subMenu = deviceOutputSettings,		"Actuator Outputs"
-		subMenu	= std_separator
+
+	menu = "&Controller"
+		subMenu = ecuStimulator,			"ECU stimulator"
+		subMenu = ioTest,					"Bench test"
+		subMenu = engineTypeDialog,			"Popular vehicles"
+		subMenu = std_separator
+		
 		subMenu = lcdScreen,				"LCD"
 		subMenu = joystickPanel,			"Joystick"
-		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = spiFunction,				"SPI Settings"
 		subMenu = monitoringSettings,		"rusEfi Console Settings"
-		subMenu	= std_separator
-	 	subMenu = connection,            	"Connection"
-		subMenu = ioTest,					"Bench Test & Commands"
-		subMenu = engineTypeDialog,			"Popular vehicles"
+		subMenu = std_separator
+		
+		subMenu = connection,            	"Connection"
 		subMenu = allPins1,					"Full pinout 1/2"
 		subMenu = allPins2,					"Full pinout 2/2"
+		subMenu = std_separator
+
+
+		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target"
+		subMenu = smLaunchControl,           "Launch Control"
+		subMenu = std_separator
+		
+		subMenu = hipFunction,				"HIP9011 Settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
+		subMenu = std_separator
+
+		subMenu = etbDialog,				"Electronic Throttle Body (beta version)" @@if_ts_show_etb
+		subMenu = etbTpsBiasCurve, 			"Electronic Throttle Body Bias Curve" @@if_ts_show_etb
 
 
 [ControllerCommands]
@@ -1400,8 +1416,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "NB2 from temp",						nb2ratioFrom
 	    field = "NB2 to temp",							nb2ratioTo
 	    field = "nbVvtIndex",							nbVvtIndex
-	    field = "Trigger error LED",					triggerErrorPin
-	    field = "Trigger error LED mode",				triggerErrorPinMode
 	    field = "print sync details to console",		isPrintTriggerSynchDetails
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8}
 	dialog = triggerConfiguration
@@ -1901,25 +1915,31 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 ;			Engine->Fan Settings
 	dialog = fanSetting, "Fan Settings"
-		field = "Fan On Temperature",					fanOnTemperature
-		field = "Fan Off Temperature",					fanOffTemperature
-		
+		field = "Pin",								fanPin
+		field = "Pin mode",							fanPinMode
+		field = "On temperature",					fanOnTemperature
+		field = "Off temperature",					fanOffTemperature
+
+	dialog = fuelPump, "Fuel Pump"
+		field = "Pin",						fuelPumpPin
+		field = "Pin mode",         	        fuelPumpPinMode
+		field = "Prime duration",				startUpFuelPumpDuration
+
 ;			Controller->Actuator Outputs
-	dialog = deviceOutputSettings, "Actuator Outputs"
-		field = "!ECU reboot needed to apply these settings"
-		field = "Fan Pin Mode",							fanPinMode
-		field = "Fan Pin",								fanPin
-		field = "Main Relay Mode",			         	mainRelayPinMode	
-		field = "Main Relay Pin",  						mainRelayPin
-		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
-		field = "Fuel Pump Pin",						fuelPumpPin
-		field = "Check Engine Pin Mode",				malfunctionIndicatorPinMode	
-		field = "Check Engine Pin",         			malfunctionIndicatorPin
-		field = "TLE8888 Chip Select", 					tle8888_cs
-		field = "TLE8888 SPI", 							tle8888spiDevice
-		
+	dialog = mainRelay, "Main relay output"
+		field = "Pin",  						mainRelayPin
+		field = "Pin mode",			         	mainRelayPinMode
+
+	dialog = statusLeds, "Status LEDs"
+		field = "Running status LED",					runningLedPin
+		field = "TS communication status LED",					communicationLedPin
+	    field = "Trigger error LED",					triggerErrorPin
+		field = "Fatal Error Led",						fatalErrorPin
+
 ;			Engine->MIL Settings
 	dialog = malfunction,	"Check Engine Settings"
+		field = "Pin",         			malfunctionIndicatorPin
+		field = "Pin mode",				malfunctionIndicatorPinMode	
 		field = "Warning Period",									warningPeriod
 
 ;			Engine->hip9011 Settings
@@ -2077,11 +2097,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = tachSettings, "Tachometer output"
 		field = "!See also dizzySparkOutputPin"
-		field = "pin",									tachOutputPin
-		field = "pin mode",								tachOutputPinMode
-		field = "rise at trigger index",				tachPulseTriggerIndex
-		field = "pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
-		field = "pulse duration",						tachPulseDuractionMs
+		field = "Pin",									tachOutputPin
+		field = "Pin mode",								tachOutputPinMode
+		field = "Rise at trigger index",				tachPulseTriggerIndex
+		field = "Pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
+		field = "Pulse duration",						tachPulseDuractionMs
 
 
 ;			Board->Connection
@@ -2121,12 +2141,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "D6 pin", 								HD44780_db6
 		field = "D7 pin", 								HD44780_db7
 		
+	dialog = tle8888, "TLE8888", yAxis
+		field = "TLE8888 Chip Select", 					tle8888_cs
+		field = "TLE8888 SPI", 							tle8888spiDevice
+
 	dialog = connection, "", 	yAxis
+		field = "STM32 vRef voltage",					adcVcc
 		panel = tsPort
 		panel = canBus
 		panel = sdCard
 		panel = gpsReceiver
-		field = "stm32 voltage",						adcVcc
+		panel = tle8888
 
 	dialog = joystickPanel, "Joystick"
 		field = "joustick center button",				joystickCenterPin
@@ -2145,9 +2170,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = generalSettings, "General"
 		field = "!https://rusefi.com/s/fuel"
 		field = "Fuel strategy",						fuelAlgorithm
-		field = ""
-		field = "comm status light",					communicationLedPin
-		field = "running status light",					runningLedPin
 		
 	dialog = debugging, "Debug"
 		field = "!https://rusefi.com/s/debugmode"
@@ -2196,7 +2218,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Cranking->Cranking Settings
 	dialog = crankingDialog, "Cranking Settings"
 		field = "Cranking RPM limit",                	cranking_rpm
-		field = "Fuel pump prime duration",				startUpFuelPumpDuration
 		field = "Enable cylinder cleanup",				isCylinderCleanupEnabled
 		field = ""
 		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
