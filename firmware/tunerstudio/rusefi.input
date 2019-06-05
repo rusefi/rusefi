@@ -1186,7 +1186,7 @@ menuDialog = main
 		# Misc sensors
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
-		subMenu = egtInputs,				"EGT"
+		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1194,15 +1194,15 @@ menuDialog = main
 		subMenu = engineTypeDialog,			"Popular vehicles"
 		subMenu = std_separator
 		
-		subMenu = lcdScreen,				"LCD"
-		subMenu = joystickPanel,			"Joystick"
+		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
+		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
 		subMenu = spiFunction,				"SPI"
 		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
 		
 		subMenu = connection,            	"Connection"
-		subMenu = allPins1,					"Full pinout 1/2"
-		subMenu = allPins2,					"Full pinout 2/2"
+		subMenu = allPins1,					"Full pinout 1/2" @@if_ts_show_full_pinout
+		subMenu = allPins2,					"Full pinout 2/2" @@if_ts_show_full_pinout
 		subMenu = std_separator
 
 
