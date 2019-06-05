@@ -11,9 +11,18 @@ outputs:
   TLE8888_PIN_21: "Extra Low #6"
   
 analog_inputs:
-  EFI_ADC_2: "analog x"
-  EFI_ADC_5: "analog y"
-  EFI_ADC_7: "analog z"
-  EFI_ADC_11: "analog whatever"
-    
-  
+  EFI_ADC_0: "AN-TEMP-1"
+  EFI_ADC_1: "AN-TEMP-2"
+  EFI_ADC_2: "AN-TEMP-3"
+  EFI_ADC_3: "AN-TEMP-4"
+  EFI_ADC_4: "AN-VOLT-10"
+  EFI_ADC_6: "AN-VOLT-2"
+  EFI_ADC_7: "AN-VOLT-3"
+  EFI_ADC_8: "AN-VOLT-8"
+  EFI_ADC_9: "AN-VOLT-9"
+  EFI_ADC_10: "AN-VOLT-1"
+  EFI_ADC_11: "VBAT"
+  EFI_ADC_12: "AN-VOLT-4"
+  EFI_ADC_13: "AN-VOLT-5"
+  EFI_ADC_14: "AN-VOLT-6"
+  EFI_ADC_15: "AN-VOLT-7"
