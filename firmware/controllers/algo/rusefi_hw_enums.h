@@ -256,10 +256,14 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 17,
 #if EFI_UNIT_TEST
+	/**
+	 * these values are unfortunately visible to BoardReader
+	 * and TunerStudio would need these ordinals to fit into field size
+	 */
     TEST_MAF_CHANNEL = 18,
     TEST_CLT_CHANNEL = 19,
     TEST_IAT_CHANNEL = 20,
-#endif
+#endif /* EFI_UNIT_TEST */
 } adc_channel_e;
 
 #define INCOMPATIBLE_CONFIG_CHANGE EFI_ADC_0
