@@ -17,6 +17,10 @@ public class Value implements Comparable<Value> {
         return value;
     }
 
+    public int getIntValue() {
+        return Integer.parseInt(value);
+    }
+
     @Override
     public int compareTo(Value o) {
         return name.compareTo(o.name);
