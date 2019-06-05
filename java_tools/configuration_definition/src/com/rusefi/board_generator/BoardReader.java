@@ -1,6 +1,5 @@
 package com.rusefi.board_generator;
 
-import com.rusefi.EnumToString;
 import com.rusefi.EnumsReader;
 import com.rusefi.enum_reader.Value;
 import org.yaml.snakeyaml.Yaml;
@@ -59,19 +58,21 @@ public class BoardReader {
     private static String processSection(Map<String, Object> data, String headerEnumName, String oututEnumName, String sectionName, String NOTHING_NAME) {
         Map<String, Object> outputs = (Map<String, Object>) data.get(sectionName);
 
-        Map<String, Value> s = EnumsReader.enums.get(headerEnumName);
-        Objects.requireNonNull(s, "enum for " + headerEnumName);
-        System.out.println(s.size());
+        Map<String, Value> enumMap = EnumsReader.enums.get(headerEnumName);
+        Objects.requireNonNull(enumMap, "enum for " + headerEnumName);
+        System.out.println(enumMap.size());
 
         StringBuffer sb = new StringBuffer();
 
-        for (int i = 0; i < 255; i++) {
+        int maxValue = getMaxValue(enumMap.values());
+
+        for (int i = 0; i < maxValue; i++) {
             if (sb.length() > 0)
                 sb.append(",");
 
             String code;
 
-            Value v = findByOrdinal(i, s.values());
+            Value v = findByOrdinal(i, enumMap.values());
 
             if (v == null) {
                 code = INVALID;
@@ -86,6 +87,13 @@ public class BoardReader {
         }
 
         return " #define " + oututEnumName + "_enum " + sb + "\r\n";
+    }
+
+    private static int getMaxValue(Collection<Value> values) {
+        int result = -1;
+        for (Value v : values)
+            result = Math.max(result, v.getIntValue());
+        return result;
     }
 
     private static Value findByOrdinal(int ordinal, Collection<Value> values) {

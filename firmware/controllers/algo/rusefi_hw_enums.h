@@ -256,9 +256,9 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_NONE = 16,
 	EFI_ADC_ERROR = 17,
 #if EFI_UNIT_TEST
-    TEST_MAF_CHANNEL = 113,
-    TEST_CLT_CHANNEL = 114,
-    TEST_IAT_CHANNEL = 115,
+    TEST_MAF_CHANNEL = 18,
+    TEST_CLT_CHANNEL = 19,
+    TEST_IAT_CHANNEL = 20,
 #endif
 } adc_channel_e;
 
