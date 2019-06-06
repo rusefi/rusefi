@@ -1074,8 +1074,8 @@ menuDialog = main
 
 	menu = "Fuel"
 		# basic
-		subMenu = injectionSettings,		"Injection Settings"
-		subMenu = injectionDeadTime,		"Injector Dead Time", 0, {isInjectionEnabled == 1}
+		subMenu = injectionSettings,		"Injection settings"
+		subMenu = injectionDeadTime,		"Injector dead time", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Targets & closed loop
@@ -1085,7 +1085,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Fuel table/VE
-		subMenu = fuelTableDialog,			"Alpha-N fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
+		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
 		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
@@ -1094,17 +1094,17 @@ menuDialog = main
 		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1 && useWarmupPidAfr == 0}
 		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = baroCorrTbl,				"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = tChargeSettings, "tCharge Settings", 0, {isInjectionEnabled == 1}
+		subMenu = tChargeSettings,			"tCharge settings", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Accel enrichment
-		subMenu = AccelEnrich,				"Accel/Decel Enrichment/Enleanment", 0, {isInjectionEnabled == 1}
+		subMenu = AccelEnrich,				"Accel/decel enrichment/enleanment", 0, {isInjectionEnabled == 1}
 		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
 		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
 
 
 	menu = "Ignition"
-		subMenu = ignitionSettings,			"Ignition Settings"
+		subMenu = ignitionSettings,			"Ignition settings"
         subMenu = std_separator
 
 		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
@@ -1120,7 +1120,7 @@ menuDialog = main
 		subMenu = ignitionIatCorrTableTbl,	"IAT correction", 0, {isIgnitionEnabled == 1}
 		
 	menu = "&Cranking"
-		subMenu = crankingDialog,			"Cranking Settings"
+		subMenu = crankingDialog,			"Cranking settings"
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
@@ -1134,8 +1134,8 @@ menuDialog = main
 		subMenu = cltCrankingCurve,			"IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
 		
 	menu = "&Idle"
-		subMenu = idleSettings,				"Idle Settings"
-		subMenu = idlehw,					"Idle Hardware"
+		subMenu = idleSettings,				"Idle settings"
+		subMenu = idlehw,					"Idle hardware"
 		subMenu = std_separator	
 		subMenu = cltIdleRPMCurve,			"Target RPM", 0, {idleMode == 0}
 		subMenu = idleVeCurve,              "VE", 0, {useSeparateVeForIdle == 1}
@@ -1161,8 +1161,9 @@ menuDialog = main
 
 	menu = "&Sensors"
 		# Base analog input settings
-		subMenu = sensorInputs,				"Sensor Inputs"
-		subMenu = analogInputSettings,		"Analog Input Settings"
+		subMenu = triggerInputs,			"Trigger inputs"
+		subMenu = otherSensorInputs,		"Misc sensors"
+		subMenu = analogInputSettings,		"Analog input settings"
 		subMenu = std_separator
 
 		# Thermistors
@@ -1172,17 +1173,28 @@ menuDialog = main
 		subMenu = auxTempSensor2Sensor,		"AuxTemp2 sensor"
 		subMenu = std_separator
 
-		# MAP/MAF
+		# TPS/pedal
+		subMenu = tpsSensor,				"TPS"
+		subMenu = pedalSensor,				"Accelerator pedal"
+		subMenu = std_separator
+
+		# MAP/Baro
 		subMenu = mapSettings,				"MAP sensor"
-		subMenu = mafDecodingCurve,			"MAF sensor"
+		subMenu = mapCurves,				"MAP sampling"
+		subMenu = baroSettings,				"Baro sensor"
+		subMenu = std_separator
+
+		# MAF
+		subMenu = mafSettings,				"MAF sensor"
+		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != 16}
 		subMenu = std_separator
 
 		# O2 sensor(s)
 		subMenu = egoSettings,				"EGO sensor"
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
-		subMenu = cj125Function,			"CJ125 Settings (wbo decoder)" @@if_ts_show_cj125
+		subMenu = cj125Function,			"CJ125 settings (wbo decoder)" @@if_ts_show_cj125
 		subMenu = std_separator
-		
+
 		# Misc sensors
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
@@ -1209,14 +1221,14 @@ menuDialog = main
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target"
-		subMenu = smLaunchControl,           "Launch Control"
+		subMenu = smLaunchControl,			"Launch control"
 		subMenu = std_separator
 		
-		subMenu = hipFunction,				"HIP9011 Settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
+		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
 		subMenu = std_separator
 
-		subMenu = etbDialog,				"Electronic Throttle Body (beta version)" @@if_ts_show_etb
-		subMenu = etbTpsBiasCurve, 			"Electronic Throttle Body Bias Curve" @@if_ts_show_etb
+		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
+		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 
 
 [ControllerCommands]
@@ -1475,63 +1487,57 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 ;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
+		field = "Input channel",			auxTempSensor1_adcChannel
+		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != 16}
+
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
-		field = "Lowest temperature",  					auxTempSensor1_tempC_1		
-		field = "Resistance @ LT",         	   			auxTempSensor1_resistance_1
+		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != 16}
+		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != 16}
 		field = ""
-		field = "Middle temperature",    		  	    auxTempSensor1_tempC_2
-		field = "Resistance @ MT",         	    		auxTempSensor1_resistance_2
+		field = "Middle temperature",					auxTempSensor1_tempC_2, {auxTempSensor1_adcChannel != 16}
+		field = "Resistance @ MT",						auxTempSensor1_resistance_2, {auxTempSensor1_adcChannel != 16}
 		field = ""
-		field = "Highest temperature",				 	auxTempSensor1_tempC_3
-		field = "Resistance @ HT",         	    		auxTempSensor1_resistance_3
+		field = "Highest temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != 16}
+		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != 16}
 
 ;			Sensors->AUX2 Thermistor Sensor Setting
 	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
+		field = "Input channel",						auxTempSensor2_adcChannel
+		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != 16}
+
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
-		field = "Lowest temperature",  					auxTempSensor2_tempC_1		
-		field = "Resistance @ LT",         	   			auxTempSensor2_resistance_1
+		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != 16}
+		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != 16}
 		field = ""
-		field = "Middle temperature",    		  	    auxTempSensor2_tempC_2
-		field = "Resistance @ MT",         	    		auxTempSensor2_resistance_2
+		field = "Middle temperature",					auxTempSensor2_tempC_2, {auxTempSensor2_adcChannel != 16}
+		field = "Resistance @ MT",						auxTempSensor2_resistance_2, {auxTempSensor2_adcChannel != 16}
 		field = ""
-		field = "Highest temperature",				 	auxTempSensor2_tempC_3
-		field = "Resistance @ HT",         	    		auxTempSensor2_resistance_3
-		
-;			Sensor Inputs
-	dialog = otherSensorInputs,					"Other Sensor Inputs"		
-		field = "aux1 TempSensor ADC input",			auxTempSensor1_adcChannel
-		field = "aux1 Bias Resistor Value",       		auxTempSensor1_bias_resistor
-		field = "aux2 TempSensor ADC input",			auxTempSensor2_adcChannel
-		field = "aux2 Bias Resistor Value",    	   		auxTempSensor2_bias_resistor
-		field = "Accelerator position sensor", 			throttlePedalPositionAdcChannel
-		field = "Oil Pressure ADC input",				oilPressure_hwChannel
-		field = "fuelLevelSensor", 						fuelLevelSensor
-		field = "Baro ADC input", 						baroSensor_hwChannel
-		field = "Flex Fuel",							flexFuelSensor
-		field = "Vehicle speed sensor",					vehicleSpeedSensorInputPin
-		field = "clutchDownPin",						clutchDownPin
-		field = "clutchUpPin",							clutchUpPin
-		field = "brakePedalPin",						brakePedalPin
-		field = "A/C Switch",							acSwitchAdc
-
-	dialog = mainSensorInputs,					"Main Sensor Inputs"
-		field = "MAP ADC input", 						map_sensor_hwChannel, {hasFrequencyReportingMapSensor == 0}
-		field = "MAP Freq",								frequencyReportingMapInputPin, {hasFrequencyReportingMapSensor == 1}
-		field = "MAF ADC input", 						mafAdcChannel
-		field = "CLT ADC input", 						clt_adcChannel
-		field = "CLT Bias Resistor Value",	    		clt_bias_resistor
-		field = "IAT ADC input", 						iat_adcChannel
-		field = "IAT Bias Resistor Value",	    		iat_bias_resistor
-		field = "AFR ADC input", 						afr_hwChannel
-		field = "vBatt ADC input", 						vbattAdcChannel
+		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != 16}
+		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != 16}
+	
+	dialog = tpsSensor, "TPS"
 		field = "!See Tools>Calibrate TPS"
 		field = "Throttle1 position sensor",			tps1_1AdcChannel
 		field = "Throttle2 position sensor",			tps2_1AdcChannel
-		
+		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
+		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
+
+	dialog = pedalSensor, "Accelerator pedal"
+		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
+
+;			Sensor Inputs
+	dialog = otherSensorInputs,					"Other Sensor Inputs"
+		field = "Fuel level", 						fuelLevelSensor
+		field = "Flex fuel",							flexFuelSensor
+		field = "Clutch down pin",						clutchDownPin
+		field = "Clutch up pin",							clutchUpPin
+		field = "Brake pedal pin",						brakePedalPin
+		field = "A/C switch",							acSwitchAdc
+
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "!ECU reboot needed to apply these settings"
 		field = "#Cam is primary if you have cam sensor"
@@ -1541,12 +1547,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Cam Sync/VVT input",					camInput
 		
-	    
-	dialog = sensorInputs, "", xAxis
-		panel = triggerInputs,		West
-		panel = mainSensorInputs,		Center
-		panel = otherSensorInputs,		East
-
 	dialog = allPinsSensors, "Sensors"
 		field = "CLT ADC input", 						clt_adcChannel
 		field = "IAT ADC input", 						iat_adcChannel
@@ -1731,19 +1731,22 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 ;			Sensors->CLT sensor
 	dialog = clt_thermistor, "CLT sensor"
+		field = "Input channel",						clt_adcChannel
+		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
+
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
-		field = "Lowest temperature",  					clt_tempC_1		
-		field = "Resistance @ LT",         	   			clt_resistance_1
+		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
+		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
 		field = ""
-		field = "Middle temperature",    		  	    clt_tempC_2
-		field = "Resistance @ MT",         	    		clt_resistance_2
+		field = "Middle temperature",    		  	    clt_tempC_2, {clt_adcChannel != 16}
+		field = "Resistance @ MT",         	    		clt_resistance_2, {clt_adcChannel != 16}
 		field = ""
-		field = "Highest temperature",				 	clt_tempC_3
-		field = "Resistance @ HT",         	    		clt_resistance_3
+		field = "Highest temperature",				 	clt_tempC_3, {clt_adcChannel != 16}
+		field = "Resistance @ HT",         	    		clt_resistance_3, {clt_adcChannel != 16}
 		field = ""
-		field = "Linear characteristic",				useLinearCltSensor
+		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != 16}
 
 	dialog = cltSensor, "", xAxis
 		panel = clt_thermistor
@@ -1751,19 +1754,22 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
+		field = "Input channel",						iat_adcChannel
+		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
+
 		field = "#Here is three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
-		field = "Lowest temperature",                   iat_tempC_1		
-		field = "Resistance @ LT",         	   			iat_resistance_1
+		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
+		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
 		field = ""
-		field = "Middle temperature",         	    	iat_tempC_2
-		field = "Resistance @ MT",         	    		iat_resistance_2
+		field = "Middle temperature",					iat_tempC_2, {iat_adcChannel != 16}
+		field = "Resistance @ MT",						iat_resistance_2, {iat_adcChannel != 16}
 		field = ""
-		field = "Highest temperature",         	    	iat_tempC_3
-		field = "Resistance @ HT",         	    		iat_resistance_3
+		field = "Highest temperature",					iat_tempC_3, {iat_adcChannel != 16}
+		field = "Resistance @ HT",						iat_resistance_3, {iat_adcChannel != 16}
 		field = ""
-		field = "Linear characteristic",				useLinearIatSensor
+		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != 16}
 
 	dialog = iatSensor, "", xAxis
 		panel = iat_thermistor
@@ -1771,50 +1777,56 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 ;			Sensors->Oil pressure sensor
 	dialog = oilp_settings, "Oil pressure sensor"
-		field = "low voltage",							oilPressure_v1
-		field = "low pressure",							oilPressure_value1
-		field = "high voltage",							oilPressure_v2
-		field = "high pressure",						oilPressure_value2
+		field = "Oil Pressure ADC input",				oilPressure_hwChannel
+		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != 16}
+		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != 16}
+		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != 16}
+		field = "high pressure",						oilPressure_value2, {oilPressure_hwChannel != 16}
 
 	dialog = oilPressureSensor, "", xAxis
 		panel = oilp_settings
 		gauge = OilPressGauge
 
 ;			Sensors->MAP sensor
-	dialog = mapSensorVDlg, "MAP sensor", yAxis		
-		field = "MAP type", map_sensor_type, 			{hasFrequencyReportingMapSensor == 0}
-		field = "MAP value low point",  		        map_sensor_lowValue, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
-		field = "MAP voltage low point", 	 		    mapLowValueVoltage, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
-		field = "MAP value high point",               	map_sensor_highValue, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
-		field = "MAP voltage high value",               mapHighValueVoltage, { map_sensor_type == 0 && hasFrequencyReportingMapSensor == 0}
-		field = "Use minimal value of",					mapMinBufferLength
+	dialog = mapSensorAnalog, "MAP sensor", yAxis		
+		field = "MAP ADC input", 						map_sensor_hwChannel
+		field = "MAP type",								map_sensor_type
+		field = "MAP value low point",  		        map_sensor_lowValue
+		field = "MAP voltage low point", 	 		    mapLowValueVoltage
+		field = "MAP value high point",               	map_sensor_highValue
+		field = "MAP voltage high value",               mapHighValueVoltage
+		
+	dialog = mapSensorFreq, "MAP frequency sensor", yAxis
+		field = "MAP Freq",								frequencyReportingMapInputPin
+		field = "0 kPa freq",							mapFrequency0Kpa
+		field = "100 kpa freq",							mapFrequency100Kpa
+
+	dialog = mapCommon, "MAP common settings"
+		field = "frequency-based MAP",					hasFrequencyReportingMapSensor
+		field = "Low value threshold",					mapErrorDetectionTooLow
+		field = "High value threshold",					mapErrorDetectionTooHigh
+		field = ""
 		field = "Measure Map Only In One Cylinder",		measureMapOnlyInOneCylinder
-		field = baroSensor_lowValue, 					baroSensor_lowValue
-		field = baroSensor_highValue,					baroSensor_highValue
-		field = baroSensor_type,						baroSensor_type
+		field = "Minimum MAP samples",					mapMinBufferLength
 
-	dialog = mapSensorFDlg, "MAP frequency sensor", yAxis
-		field = "0 kPa freq",		mapFrequency0Kpa, {hasFrequencyReportingMapSensor == 1}
-		field = "100 kpa freq",		mapFrequency100Kpa, {hasFrequencyReportingMapSensor == 1}
+	dialog = mapSettings, "", yAxis
+		panel = mapCommon
+		panel = mapSensorAnalog, {hasFrequencyReportingMapSensor == 0}
+		panel = mapSensorFreq, {hasFrequencyReportingMapSensor == 1}
+		panel = mapErrorDetection
 
-	dialog = mapSwitch, "MAP input type"
-	    field = "frequency-based MAP",				hasFrequencyReportingMapSensor
-	    
-	dialog = mapSwitchAndSettings, "", yAxis
-		field = "Low value threshold", mapErrorDetectionTooLow
-		field = "High value threshold", mapErrorDetectionTooHigh
-		
-		panel = mapSwitch
-		panel = mapSensorVDlg
-		panel = mapSensorFDlg
-	
-	dialog = mapCurves, "", yAxis
-	    panel = map_samplingAngleCurve
+	dialog = baroSettings, "Baro sensor"
+		field = "Baro ADC input",						baroSensor_hwChannel
+		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != 16}
+		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != 16}
+		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
+
+	dialog = mapCurves, "MAP sampling", yAxis
+		panel = map_samplingAngleCurve
 		panel = map_samplingWindowCurve
-		
-	dialog = mapSettings, "", xAxis
-		panel = mapCurves
-		panel = mapSwitchAndSettings
+
+	dialog = mafSettings, "MAF sensor", yAxis
+		field = "MAF ADC input", 						mafAdcChannel
 
 ;			Sensors->EGO sensor
 	dialog = egoSettings_sensor,	"EGO sensor"
@@ -1825,12 +1837,14 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "high voltage", 						afr_v2
 		field = "high value", 							afr_value2
 		field = "Correction",							egoValueShift
+
 	dialog = egoSettings_IO,	"EGO Sensor I/O"
-		field = "AFR ADC input", 						afr_hwChannel
-		field = "O2 heater pin",						o2heaterPin
+		field = "Input channel", 						afr_hwChannel
+		field = "Heater pin",						o2heaterPin
+
 	dialog = egoSettings, "", yAxis
-		panel = egoSettings_sensor,	North
-		panel = egoSettings_IO,		South
+		panel = egoSettings_IO
+		panel = egoSettings_sensor,	{afr_hwChannel != 16}
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
@@ -2074,17 +2088,17 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = batteryDialog
 		panel = alternator
 
-;			Sensors->Vehicle Speed Sensor Setting
-	dialog = speedSensor, "Speed sensor", xAxis
+	dialog = speedSensorLeft
+		field = "Input pin",					vehicleSpeedSensorInputPin
 		field = "revolution to speed mult",				vehicleSpeedCoef
+
+	dialog = speedSensor, "Speed sensor", xAxis
+		panel = speedSensorLeft
 		gauge = VSSGauge
 
 ;			Engine->Other inputs	
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
-		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow
-		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh
-		field = "!todo: move MAF channel to maf curve dialog"
 		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
 		field = "Analog divider",						analogInputDividerCoefficient
 		field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
