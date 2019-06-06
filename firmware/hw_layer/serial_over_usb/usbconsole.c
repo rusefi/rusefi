@@ -42,13 +42,13 @@ void usb_serial_start(void) {
 	
 #if HAL_USE_SERIAL
 	efiSetPadMode("USB ID", EFI_USB_SERIAL_ID, PAL_MODE_ALTERNATE(EFI_USB_AF));
-	efiSetPadMode("USB ID", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
-	efiSetPadMode("USB ID", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
+	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
+	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
 	/*
 	 * Activates the serial driver 2 using the driver default configuration.
 	 */
 	sdStart(&SD2, NULL);
-#endif
+#endif /* HAL_USE_SERIAL */
 
 	isUsbSerialInitialized = true;
 }
