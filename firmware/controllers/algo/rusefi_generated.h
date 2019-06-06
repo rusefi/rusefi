@@ -1760,6 +1760,7 @@
 #define ts_show_egt true
 #define ts_show_etb true
 #define ts_show_full_pinout true
+#define ts_show_gps true
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true

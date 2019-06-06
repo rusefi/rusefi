@@ -1684,8 +1684,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "FSIO ADC #2",							fsioAdc2
 		field = "FSIO ADC #3",							fsioAdc3
 		field = "FSIO ADC #4",							fsioAdc4
-		field = "GPS RX", 								gps_rx_pin
-		field = "GPS TX", 								gps_tx_pin
+		field = "GPS RX", 								gps_rx_pin @@if_ts_show_gps
+		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
 		field = "CAN RX pin",							canRxPin
 		field = "CAN TX pin",							canTxPin
 		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
@@ -2140,7 +2140,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "log format",							logFormat
 		field = "Mass Storage",							storageMode
 	
-	dialog = gpsReceiver, "GPS Receiver"
+	dialog = gpsReceiver, "GPS Receiver" 
 		field = "gps RX", 								gps_rx_pin
 		field = "gps TX", 								gps_tx_pin
 		
@@ -2164,7 +2164,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = tsPort
 		panel = canBus
 		panel = sdCard
-		panel = gpsReceiver
+		panel = gpsReceiver                       @@if_ts_show_gps
 		panel = tle8888
 
 	dialog = joystickPanel, "Joystick"
