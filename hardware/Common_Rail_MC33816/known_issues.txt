@@ -1,1 +1,2 @@
- 1)                  TBD
+ 1)                  Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
+ 2)                  Add via for battery wire to be attached. 

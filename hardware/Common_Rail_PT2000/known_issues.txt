@@ -1,3 +1,6 @@
  1) RESOLVED IN R0.1.1 Schematic zone G4 and G5, blue text claims INJ5 as INJ3, and INJ6 as INJ4
  2) RESOLVED IN R0.1.1 Schematic inj1 and 2 are flipped, nets are flipped. Change net names and correct blue silk screen note. 
  3)                    Add silk screen to designate injector # and similar. 
+ 4)                  Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
+ 5)                  Add via for battery wire to be attached. 
+ 6)                  check for flipped pins. 
