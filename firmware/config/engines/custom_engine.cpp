@@ -336,6 +336,10 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
+	boardConfiguration->spi1mosiPin = GPIOB_5;
+	boardConfiguration->spi1misoPin = GPIOB_4;
+	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
+
 	engineConfiguration->tle8888_cs = GPIOD_5;
 	engineConfiguration->directSelfStimulation = true;
 

@@ -40,7 +40,7 @@
 #include "pin_repository.h"
 #include "rfiutil.h"
 
-/* to be rmeoved  */
+/* to be removed  */
 #if EFI_TUNER_STUDIO
 #include "engine_configuration.h"
 EXTERN_CONFIG;
@@ -102,6 +102,7 @@ SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
 static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
 
 static int tle8888SpiCounter = 0;
+static int initResponses = 0;
 
 /* Driver private data */
 struct tle8888_priv {
@@ -171,6 +172,7 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 		tsOutputChannels.debugIntField1 = tle8888SpiCounter++;
 		tsOutputChannels.debugIntField2 = tx;
 		tsOutputChannels.debugIntField3 = rxb;
+		tsOutputChannels.debugIntField4 = initResponses;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -345,8 +347,12 @@ int tle8888_chip_init(void * data)
 	}
 
 	/* Software reset */
-	// first packet: 0x335
-	tle8888_spi_rw(chip, CMD_SR, NULL);
+	// first packet: 0x335=821 > 0xFD=253
+	uint16_t response;
+	tle8888_spi_rw(chip, CMD_SR, &response);
+	if (response == 253) {
+		initResponses++;
+	}
 
 	/**
 	 * Table 8. Reset Times. All reset times not more than 20uS
@@ -355,7 +361,11 @@ int tle8888_chip_init(void * data)
 	chThdSleepMilliseconds(3);
 
 	/* Set LOCK bit to 0 */
-	tle8888_spi_rw(chip, CMD_UNLOCK, NULL);
+	// second 0x13D=317 => 0x35=53
+	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
+	if (response == 53) {
+		initResponses++;
+	}
 
 	chip->o_direct_mask = 0;
 	chip->o_oe_mask		= 0;
