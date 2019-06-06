@@ -480,7 +480,7 @@ void initHardware(Logging *l) {
 
 #if HAL_USE_SPI
 	initSpiModules(boardConfiguration);
-#endif
+#endif /* HAL_USE_SPI */
 	// initSmartGpio depends on 'initSpiModules'
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 
