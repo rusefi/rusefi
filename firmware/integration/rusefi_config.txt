@@ -1212,4 +1212,5 @@ end_struct
 #define ts_show_lcd true
 #define ts_show_joystick true
 #define ts_show_egt true
+#define ts_show_gps true
 
