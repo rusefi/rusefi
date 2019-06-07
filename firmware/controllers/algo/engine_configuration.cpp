@@ -1158,6 +1158,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	if (engineType != MINIMAL_PINS
 			/* this is a bit nasty */
 			 && engineType != ETB_BENCH_ENGINE
+			 && engineType != MICRO_RUS_EFI
 			 && engineType != TLE8888_BENCH_ENGINE) {
 		setDefaultBoardConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -1230,6 +1231,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MICRO_RUS_EFI:
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
