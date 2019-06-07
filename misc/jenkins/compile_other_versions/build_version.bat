@@ -1,5 +1,5 @@
-set script_name=build_version.bat
-echo Entering %script_name%
+bundle_nameset script_name=build_version.bat
+echo Entering %script_name% with %bundle_name%
 
 
 rm -rf temp
@@ -9,7 +9,7 @@ set folder=temp\%folder%
 rem this replaces spaces with 0s - that's needed before 10am
 set folder=%folder: =0%
 
-echo Building file
+echo Packaging temp\rusefi_bundle.zip file
 call misc\jenkins\build_working_folder.bat
 
 rem TODO: extract FTP duplication with 407 build
