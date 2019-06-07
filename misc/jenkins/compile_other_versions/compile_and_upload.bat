@@ -20,7 +20,7 @@ cd firmware
 call clean.bat
 cd ..
 
-cd firmware\config
+cd firmware\config\boards
 pwd
 cd %COMPILE_FOLDER%
 pwd
