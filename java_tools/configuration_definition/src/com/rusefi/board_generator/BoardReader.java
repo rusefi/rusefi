@@ -52,11 +52,16 @@ public class BoardReader {
         bw.write(processSection(data, "brain_pin_e", "output_pin_e", "outputs", "GPIO_UNASSIGNED"));
         bw.write(processSection(data, "adc_channel_e", "adc_channel_e", "analog_inputs", "EFI_ADC_NONE"));
 
+        bw.write(processSection(data, "brain_pin_e", "brain_input_pin_e", "event_inputs", "GPIO_UNASSIGNED"));
+        bw.write(processSection(data, "brain_pin_e", "switch_input_pin_e", "switch_inputs", "GPIO_UNASSIGNED"));
+
         bw.close();
     }
 
-    private static String processSection(Map<String, Object> data, String headerEnumName, String oututEnumName, String sectionName, String NOTHING_NAME) {
+    private static String processSection(Map<String, Object> data, String headerEnumName, String outputEnumName, String sectionName, String NOTHING_NAME) {
         Map<String, Object> outputs = (Map<String, Object>) data.get(sectionName);
+        if (outputs == null)
+            return "";
 
         Map<String, Value> enumMap = EnumsReader.enums.get(headerEnumName);
         Objects.requireNonNull(enumMap, "enum for " + headerEnumName);
@@ -86,7 +91,7 @@ public class BoardReader {
             sb.append("\"" + code + "\"");
         }
 
-        return " #define " + oututEnumName + "_enum " + sb + "\r\n";
+        return " #define " + outputEnumName + "_enum " + sb + "\r\n";
     }
 
     private static int getMaxValue(Collection<Value> values) {

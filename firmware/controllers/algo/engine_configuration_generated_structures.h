@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 02 14:03:15 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jun 07 17:34:20 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -543,7 +543,7 @@ struct board_configuration_s {
 	 * some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 64
 	 */
-	brain_pin_e clutchDownPin;
+	switch_input_pin_e clutchDownPin;
 	/**
 	 * offset 65
 	 */
@@ -989,7 +989,7 @@ struct board_configuration_s {
 	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
 	 * offset 369
 	 */
-	brain_pin_e clutchUpPin;
+	switch_input_pin_e clutchUpPin;
 	/**
 	 * offset 370
 	 */
@@ -2263,7 +2263,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2632
 	 */
-	brain_pin_e brakePedalPin;
+	switch_input_pin_e brakePedalPin;
 	/**
 	 * lambda input
 	 * offset 2633
@@ -2788,4 +2788,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 02 14:03:15 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jun 07 17:34:20 EDT 2019
