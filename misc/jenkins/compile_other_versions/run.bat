@@ -9,13 +9,9 @@ call misc\jenkins\build_java_console.bat
 if not exist java_console_binary/rusefi_console.jar exit -1
 
 
-
-cd firmware
-call clean.bat
-cd ..
+call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 !compile-nucleo_f746.bat
+pwd
 echo %script_name%: Compiling F746
-cd firmware\config\boards\nucleo_f746
-call !compile-nucleo_f746.bat
 if not exist build/rusefi.hex echo Just to confirm - FAILED to compile nucleo_f746
 if not exist build/rusefi.hex exit -1
 cd ..
@@ -25,12 +21,9 @@ call misc\jenkins\compile_other_versions\build_version.bat
 echo %script_name%: Done with F746-nucleo
 
 
-cd firmware
-call clean.bat
-cd ..
+call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 !compile-nucleo_f767.bat
+pwd
 echo %script_name%: Compiling F767
-cd firmware\config\boards\nucleo_f767
-call !compile-nucleo_f767.bat
 if not exist build/rusefi.hex echo Just to confirm - FAILED to compile nucleo_f767
 if not exist build/rusefi.hex exit -1
 cd ..

@@ -2,6 +2,9 @@ rem
 rem STM32F767 version of the firmware for Nucleo-F746ZG board
 rem
 
+bundle_nameset script_name=!compile-nucleo_f746.bat
+echo Entering %script_name%
+
 cd ../../..
 set PROJECT_BOARD=nucleo_F746
 set PROJECT_CPU=ARCH_STM32F7
