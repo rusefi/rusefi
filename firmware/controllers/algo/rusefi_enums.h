@@ -187,6 +187,8 @@ typedef enum {
 
 	TLE8888_BENCH_ENGINE = 59,
 
+	MICRO_RUS_EFI = 60,
+
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
