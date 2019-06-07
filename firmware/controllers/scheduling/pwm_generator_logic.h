@@ -130,7 +130,7 @@ private:
 void startSimplePwm(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		OutputPin *output,
-		float dutyCycle, float frequency, pwm_gen_callback *stateChangeCallback);
+		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
 
 /**
  * initialize GPIO pin and start a one-channel software PWM driver.
