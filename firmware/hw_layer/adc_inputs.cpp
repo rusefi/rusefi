@@ -55,7 +55,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	hwConfig->sqr2 = 0;
 	hwConfig->sqr3 = 0;
 	memset(hardwareIndexByIndernalAdcIndex, 0, sizeof(hardwareIndexByIndernalAdcIndex));
-	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
+	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
 #if !defined(PWM_FREQ_SLOW) || !defined(PWM_PERIOD_SLOW)
@@ -256,10 +256,10 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 float getMCUInternalTemperature(void) {
 #if defined(ADC_CHANNEL_SENSOR)
 	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
-	TemperatureValue -= 0.760; // Subtract the reference voltage at 25°C
+	TemperatureValue -= 0.760; // Subtract the reference voltage at 25ï¿½C
 	TemperatureValue /= .0025; // Divide by slope 2.5mV
 
-	TemperatureValue += 25.0; // Add the 25°C
+	TemperatureValue += 25.0; // Add the 25ï¿½C
 	return TemperatureValue;
 #else
 	return 0;

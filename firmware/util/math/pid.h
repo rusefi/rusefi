@@ -32,9 +32,9 @@ class Pid {
 
 public:
 	Pid();
-	Pid(pid_s *pid);
+	explicit Pid(pid_s *pid);
 	void initPidClass(pid_s *pid);
-	bool isSame(pid_s *pid);
+	bool isSame(pid_s *pid) const;
 
 	/**
 	 * This version of the methor takes dTime from pid_s
@@ -48,12 +48,12 @@ public:
 	float getUnclampedOutput(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
 	virtual void reset(void);
-	float getP(void);
-	float getI(void);
-	float getD(void);
-	float getOffset(void);
-	float getIntegration(void);
-	float getPrevError(void);
+	float getP(void) const;
+	float getI(void) const;
+	float getD(void) const;
+	float getOffset(void) const;
+	float getIntegration(void) const;
+	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
 #if EFI_TUNER_STUDIO
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
@@ -94,11 +94,11 @@ class PidCic : public Pid {
 
 public:
 	PidCic();
-	PidCic(pid_s *pid);
+	explicit PidCic(pid_s *pid);
 
-	virtual void reset(void);
+	void reset(void) override;
 	using Pid::getOutput;
-	virtual float getOutput(float target, float input, float dTime);
+	float getOutput(float target, float input, float dTime) override;
 	
 private:
 	// Circular running-average buffer for I-term, used by CIC-like filter
@@ -109,7 +109,7 @@ private:
 	int totalItermCnt;
 
 private:
-	virtual void updateITerm(float value);
+	void updateITerm(float value) override;
 };
 
 #endif /* PID_H_ */

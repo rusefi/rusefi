@@ -519,7 +519,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
 				actualSynchGap = gap;
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
-					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
+					gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					print("%d: cur %.2f expected from %.2f to %.2f error=%d\r\n",
 							i,
 							gap,
@@ -697,10 +697,6 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
-}
-
-efitime_t TriggerState::getStartOfRevolutionIndex() const {
-	return totalEventCountBase;
 }
 
 void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {

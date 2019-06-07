@@ -227,10 +227,6 @@ void setMap(fuel_table_t table, float value) {
 	}
 }
 
-static void setWholeVEMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setMap(config->veTable, value);
-}
-
 void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->fuelTable, value);
 }
@@ -619,11 +615,11 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingAdvance[0] = 0;
 	engineConfiguration->crankingAdvanceBins[0] = 0;
 	engineConfiguration->crankingAdvance[1] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 200;
+	engineConfiguration->crankingAdvanceBins[1] = 200;
 	engineConfiguration->crankingAdvance[2] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 400;
+	engineConfiguration->crankingAdvanceBins[2] = 400;
 	engineConfiguration->crankingAdvance[3] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 1000;
+	engineConfiguration->crankingAdvanceBins[3] = 1000;
 
 }
 
@@ -834,7 +830,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->step1RpmWindow = 500;
 	engineConfiguration->step1fuelCutEnable = false;
 	engineConfiguration->step1SparkCutEnable = false;
-	engineConfiguration->step1RpmWindow = 500;
 
 	engineConfiguration->slowAdcAlpha = 0.33333;
 	engineConfiguration->engineSnifferRpmThreshold = 2500;

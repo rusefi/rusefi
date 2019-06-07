@@ -57,7 +57,7 @@ public:
 
 class HIP9011 {
 public:
-	HIP9011(Hip9011HardwareInterface *hardware);
+	explicit HIP9011(Hip9011HardwareInterface *hardware);
 	void prepareHip9011RpmLookup(float angleWindowWidth);
 	int getIntegrationIndexByRpm(float rpm);
 	void setStateAndCommand(unsigned char cmd);

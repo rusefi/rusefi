@@ -161,22 +161,6 @@ static const char* idleModeStr[] = { "I:A", "I:M" };
 //	}
 //}
 
-static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
-	char *ptr = buffer;
-
-	ptr = appendStr(ptr, " ");
-	ptr = appendStr(ptr, ignitionModeStr[engineConfiguration->ignitionMode]);
-
-	ptr = appendStr(ptr, " ");
-	ptr = appendStr(ptr, injectionModeStr[engineConfiguration->injectionMode]);
-
-	ptr = appendStr(ptr, " ");
-	ptr = appendStr(ptr, idleModeStr[engineConfiguration->idleMode]);
-
-	ptr = appendStr(ptr, " ");
-	return ptr;
-}
-
 //static char * prepareStatusLine(char *buffer) {
 //	char *ptr = buffer;
 //

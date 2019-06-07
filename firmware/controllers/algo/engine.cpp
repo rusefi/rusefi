@@ -221,9 +221,9 @@ void Engine::printKnockState(void) {
 	scheduleMsg(&engineLogger, "knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
 }
 
-void Engine::knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	this->knockVolts = knockVolts;
-    knockNow = knockVolts > engineConfiguration->knockVThreshold;
+void Engine::knockLogic(float knockVoltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	this->knockVolts = knockVoltage;
+    knockNow = knockVoltage > engineConfiguration->knockVThreshold;
     /**
      * KnockCount is directly proportional to the degrees of ignition
      * advance removed

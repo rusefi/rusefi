@@ -74,7 +74,7 @@ private:
 class NamedOutputPin : public OutputPin {
 public:
 	NamedOutputPin();
-	NamedOutputPin(const char *name);
+	explicit NamedOutputPin(const char *name);
 	void setHigh();
 	void setLow();
 	const char *getName();

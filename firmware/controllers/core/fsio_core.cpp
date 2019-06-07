@@ -371,9 +371,9 @@ bool isNumeric(const char* line) {
  * @return pointer at the position after the consumed token, null if no token consumed
  */
 const char *getNextToken(const char *line, char *buffer, const int bufferSize) {
-	while (line[0] != 0 && line[0] == ' ') {
-		line++;
-	}
+	// Find the first non-space
+	while (*line++ == ' ') ;
+	
 	if (line[0] == 0) {
 		return NULL;
 	}

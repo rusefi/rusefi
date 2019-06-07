@@ -26,7 +26,7 @@ void Pid::initPidClass(pid_s *pid) {
 	reset();
 }
 
-bool Pid::isSame(pid_s *pid) {
+bool Pid::isSame(pid_s *pid) const {
 	return this->pid->pFactor == pid->pFactor
 			&& this->pid->iFactor == pid->iFactor
 			&& this->pid->dFactor == pid->dFactor
@@ -86,27 +86,27 @@ void Pid::reset(void) {
 	resetCounter++;
 }
 
-float Pid::getP(void) {
+float Pid::getP(void) const {
 	return pid->pFactor;
 }
 
-float Pid::getI(void) {
+float Pid::getI(void) const {
 	return pid->iFactor;
 }
 
-float Pid::getPrevError(void) {
+float Pid::getPrevError(void) const {
 	return previousError;
 }
 
-float Pid::getIntegration(void) {
+float Pid::getIntegration(void) const {
 	return iTerm;
 }
 
-float Pid::getD(void) {
+float Pid::getD(void) const {
 	return pid->dFactor;
 }
 
-float Pid::getOffset(void) {
+float Pid::getOffset(void) const {
 	return pid->offset;
 }
 

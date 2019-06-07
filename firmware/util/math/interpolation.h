@@ -171,7 +171,7 @@ public:
 	FastInterpolation();
 	FastInterpolation(float x1, float y1, float x2, float y2);
 	void init(float x1, float y1, float x2, float y2);
-	float getValue(float x);
+	float getValue(float x) const;
 private:
 	float a, b;
 };

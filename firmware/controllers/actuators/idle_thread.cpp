@@ -300,17 +300,19 @@ private:
 #else
 		bool isRunning = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
 		// cltCorrection is used only for cranking or running in manual mode
-		float cltCorrection;
-		if (cisnan(clt))
-			cltCorrection = 1.0f;
-		// Use separate CLT correction table for cranking
-		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
-			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE) / PERCENT_MULT;
-		} else {
-			// this value would be ignored if running in AUTO mode
-			// but we need it while cranking in AUTO mode
-			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
+		float cltCorrection = 1.0f;
+		if (!cisnan(clt))
+		{
+			// Use separate CLT correction table for cranking
+			if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
+				cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE) / PERCENT_MULT;
+			} else {
+				// this value would be ignored if running in AUTO mode
+				// but we need it while cranking in AUTO mode
+				cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE) / PERCENT_MULT;
+			}
 		}
 
 		percent_t iacPosition;

@@ -236,9 +236,10 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 	float result = 0;
 	int distance = 0;
 	float taper = 0;
-	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
 
-		int distance = cb.currentIndex - index;
+	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
+		distance = cb.currentIndex - index;
+
 		if (distance <= 0) // checking if indexes are out of order due to circular buffer nature
 			distance += minI(cb.getCount(), cb.getSize());
 

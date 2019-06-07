@@ -226,7 +226,6 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 #if EFI_PROD_CODE
 		scheduleMsg(logger, "Negative spark delay=%.2f", chargeDelayUs);
 #endif /* EFI_PROD_CODE */
-		chargeDelayUs = 0;
 		return;
 	}
 

@@ -84,13 +84,13 @@ static void writePad(const char *msg, brain_pin_e pin, int bit) {
 static void lcd_HD44780_write(uint8_t data) {
 	if (engineConfiguration->displayMode == DM_HD44780) {
 		writePad("lcd", CONFIGB(HD44780_db7),
-				data & 0x80 ? 1 : 0);
+				(data & 0x80) ? 1 : 0);
 		writePad("lcd", CONFIGB(HD44780_db6),
-				data & 0x40 ? 1 : 0);
+				(data & 0x40) ? 1 : 0);
 				writePad("lcd", CONFIGB(HD44780_db5),
-				data & 0x20 ? 1 : 0);
+				(data & 0x20) ? 1 : 0);
 				writePad("lcd", CONFIGB(HD44780_db4),
-				data & 0x10 ? 1 : 0);
+				(data & 0x10) ? 1 : 0);
 
 		writePad("lcd", CONFIGB(HD44780_e), 1); // En high
 		lcdSleep(10); // enable pulse must be >450ns
