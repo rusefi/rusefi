@@ -98,6 +98,7 @@ typedef float fsio_setting_t;
 typedef float cfg_float_t_1f;
 
 typedef brain_pin_e brain_input_pin_e;
+typedef brain_pin_e switch_input_pin_e;
 
 typedef fuel_table_t ve_table_t;
 

@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 03 10:01:41 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jun 07 17:34:20 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1421,7 +1421,8 @@ public class Fields {
 	public static final Field MALFUNCTIONINDICATORPINMODE = Field.create("MALFUNCTIONINDICATORPINMODE", 661, FieldType.INT8, pin_output_mode_e);
 	public static final Field FANPINMODE = Field.create("FANPINMODE", 662, FieldType.INT8, pin_output_mode_e);
 	public static final Field FANPIN = Field.create("FANPIN", 663, FieldType.INT8, output_pin_e);
-	public static final Field CLUTCHDOWNPIN = Field.create("CLUTCHDOWNPIN", 664, FieldType.INT8, brain_pin_e);
+	public static final String[] switch_input_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6","PE7","PE8","PE9","PE10","PE11","PE12","PE13","PE14","PE15", "PF0","PF1","PF2","PF3","PF4","PF5","PF6","PF7","PF8","PF9","PF10","PF11","PF12","PF13","PF14","PF15", "PG0","PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9","PG10","PG11","PG12","PG13","PG14","PG15", "PH0","PH1","PH2","PH3","PH4","PH5","PH6","PH7","PH8","PH9","PH10","PH11","PH12","PH13","PH14","PH15","INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
+	public static final Field CLUTCHDOWNPIN = Field.create("CLUTCHDOWNPIN", 664, FieldType.INT8, switch_input_pin_e);
 	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 665, FieldType.INT8, output_pin_e);
 	public static final Field ALTERNATORCONTROLPINMODE = Field.create("ALTERNATORCONTROLPINMODE", 666, FieldType.INT8, pin_output_mode_e);
 	public static final Field CLUTCHDOWNPINMODE = Field.create("CLUTCHDOWNPINMODE", 667, FieldType.INT8);
@@ -1635,7 +1636,7 @@ public class Fields {
 	public static final Field FSIODIGITALINPUTS15 = Field.create("FSIODIGITALINPUTS15", 966, FieldType.INT8, brain_pin_e);
 	public static final Field FSIODIGITALINPUTS16 = Field.create("FSIODIGITALINPUTS16", 967, FieldType.INT8, brain_pin_e);
 	public static final Field VEHICLESPEEDSENSORINPUTPIN = Field.create("VEHICLESPEEDSENSORINPUTPIN", 968, FieldType.INT8, brain_input_pin_e);
-	public static final Field CLUTCHUPPIN = Field.create("CLUTCHUPPIN", 969, FieldType.INT8, brain_pin_e);
+	public static final Field CLUTCHUPPIN = Field.create("CLUTCHUPPIN", 969, FieldType.INT8, switch_input_pin_e);
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 970, FieldType.INT8, brain_input_pin_e);
 	public static final Field CLUTCHUPPINMODE = Field.create("CLUTCHUPPINMODE", 971, FieldType.INT8);
 	public static final Field ETBIDLERANGE = Field.create("ETBIDLERANGE", 972, FieldType.FLOAT);
@@ -1898,7 +1899,7 @@ public class Fields {
 	public static final Field STEPPERENABLEPINMODE = Field.create("STEPPERENABLEPINMODE", 2629, FieldType.INT8, pin_output_mode_e);
 	public static final Field MC33816_RSTB = Field.create("MC33816_RSTB", 2630, FieldType.INT8, brain_pin_e);
 	public static final Field MC33816_DRIVEN = Field.create("MC33816_DRIVEN", 2631, FieldType.INT8, brain_pin_e);
-	public static final Field BRAKEPEDALPIN = Field.create("BRAKEPEDALPIN", 2632, FieldType.INT8, brain_pin_e);
+	public static final Field BRAKEPEDALPIN = Field.create("BRAKEPEDALPIN", 2632, FieldType.INT8, switch_input_pin_e);
 	public static final Field CJ125UA = Field.create("CJ125UA", 2633, FieldType.INT8, adc_channel_e);
 	public static final Field CJ125UR = Field.create("CJ125UR", 2634, FieldType.INT8, adc_channel_e);
 	public static final Field BRAKEPEDALPINMODE = Field.create("BRAKEPEDALPINMODE", 2635, FieldType.INT8);

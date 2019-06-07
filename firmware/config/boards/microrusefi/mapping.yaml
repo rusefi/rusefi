@@ -10,6 +10,15 @@ outputs:
   TLE8888_PIN_20: "Extra Low #5"
   TLE8888_PIN_21: "Extra Low #6"
   
+event_inputs:
+  GPIOA_5: "haha2"  
+  GPIOC_6: "hoho1"
+
+switch_inputs:
+  GPIOE_10: "Brake Switch"
+  GPIOG_1: "Clutch Switch"
+  
+    
 analog_inputs:
   EFI_ADC_0: "AN-TEMP-1"
   EFI_ADC_1: "AN-TEMP-2"
