@@ -1,7 +1,7 @@
 set COMPILE_FOLDER=%1
 set COMPILE_SCRIPT=%2
 
-bundle_nameset script_name=combile_and_upload.bat
+set script_name=combile_and_upload.bat
 echo Entering %script_name% with %COMPILE_FOLDER% %COMPILE_SCRIPT%
 
 
@@ -20,9 +20,11 @@ cd firmware
 call clean.bat
 cd ..
 
-
 cd firmware\config
+pwd
 cd %COMPILE_FOLDER%
+pwd
+echo Invoking %COMPILE_SCRIPT%
 
 call %COMPILE_SCRIPT%
 

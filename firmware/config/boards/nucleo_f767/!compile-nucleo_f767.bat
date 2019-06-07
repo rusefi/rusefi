@@ -2,7 +2,7 @@ rem
 rem STM32F767 version of the firmware for Nucleo-F767ZI board
 rem
 
-bundle_nameset script_name=!compile-nucleo_f767.bat
+set script_name=!compile-nucleo_f767.bat
 echo Entering %script_name%
 
 cd ../../..

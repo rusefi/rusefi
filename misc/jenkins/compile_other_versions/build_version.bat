@@ -1,4 +1,4 @@
-bundle_nameset script_name=build_version.bat
+set script_name=build_version.bat
 echo Entering %script_name% with %bundle_name%
 
 
