@@ -60,6 +60,13 @@ git remote -v
 See also git_scripts/git_add_upstream.bat
 
 =========================================
+Cherry-pick from fork
+git remote add mck1117 https://github.com/mck1117/rusefi
+git fetch mck1117
+git cherry-pick 0b004bb2af9c16a79225bd875f0046392993d957
+git push
+
+=========================================
 https://help.github.com/articles/syncing-a-fork/
 git fetch upstream
 git merge upstream/stable_18.2.x
