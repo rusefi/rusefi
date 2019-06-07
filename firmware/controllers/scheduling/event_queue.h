@@ -56,13 +56,13 @@ public:
 
 	int executeAll(efitime_t now);
 
-	efitime_t getNextEventTime(efitime_t nowUs);
+	efitime_t getNextEventTime(efitime_t nowUs) const;
 	void clear(void);
-	int size(void);
+	int size(void) const;
 	scheduling_s *getForUnitText(int index);
 	void setLateDelay(int value);
 	scheduling_s * getHead();
-	void assertListIsSorted();
+	void assertListIsSorted() const;
 private:
 	bool checkIfPending(scheduling_s *scheduling);
 	/**

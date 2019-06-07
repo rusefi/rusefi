@@ -131,7 +131,7 @@ void init_adc_mcp3208(McpAdcState *state, SPIDriver *driver) {
 
 	hack = state;
 
-	todo: convert to new API, todo: array of CS
+	// todo: convert to new API, todo: array of CS
 	mySetPadMod("ext adc chip select", MCP3208_CS_PORT, MCP3208_CS_PIN, PAL_STM32_MODE_OUTPUT);
 
 

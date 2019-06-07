@@ -86,7 +86,7 @@ void PID_AutoTune::SetLookbackSec(int value)
 
 double inline PID_AutoTune::fastArcTan(double x)
 {
-  // source: “Efficient approximations for the arctangent function”, Rajan, S. Sichun Wang Inkol, R. Joyal, A., May 2006
+  // source: ï¿½Efficient approximations for the arctangent functionï¿½, Rajan, S. Sichun Wang Inkol, R. Joyal, A., May 2006
   //return CONST_PI / 4.0 * x - x * (abs(x) - 1.0) * (0.2447 + 0.0663 * abs(x));
 
   // source: "Understanding Digital Signal Processing", 2nd Ed, Richard G. Lyons, eq. 13-107
@@ -614,7 +614,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #endif
 
     // source for AMIGOf PI auto tuning method:
-    // "Revisiting the Ziegler-Nichols tuning rules for PI control —
+    // "Revisiting the Ziegler-Nichols tuning rules for PI control ï¿½
     //  Part II. The frequency response method."
     // T. Hagglund and K. J. Astrom
     // Asian Journal of Control, Vol. 6, No. 4, pp. 469-482, December 2004
@@ -628,14 +628,14 @@ bool PID_AutoTune::Runtime(Logging *logger)
       Serial.println(phaseLag / CONST_PI * 180.0);
 #endif
 
-      // check that phase lag is within acceptable bounds, ideally between 120° and 140°
-      // but 115° to 145° will just about do, and might converge quicker
+      // check that phase lag is within acceptable bounds, ideally between 120ï¿½ and 140ï¿½
+      // but 115ï¿½ to 145ï¿½ will just about do, and might converge quicker
       if (abs(phaseLag - CONST_PI * 130.0 / 180.0) > (CONST_PI * 15.0 / 180.0))
       {
         // phase lag outside the desired range
         // set noiseBand to new estimate
-        // aiming for 135° = 0.75 * pi (radians)
-        // sin(135°) = sqrt(2)/2
+        // aiming for 135ï¿½ = 0.75 * pi (radians)
+        // sin(135ï¿½) = sqrt(2)/2
         // NB noiseBand = 0.5 * hysteresis
         newWorkingNoiseBand = 0.5 * inducedAmplitude * CONST_SQRT2_DIV_2;
 
@@ -784,17 +784,17 @@ bool PID_AutoTune::Runtime(Logging *logger)
   return true;
 }
 
-float PID_AutoTune::GetKp()
+float PID_AutoTune::GetKp() const
 {
   return Kp;
 }
 
-float PID_AutoTune::GetKi()
+float PID_AutoTune::GetKi() const
 {
   return Kp / Ti;
 }
 
-float PID_AutoTune::GetKd()
+float PID_AutoTune::GetKd() const
 {
   return Kp * Td;
 }
@@ -814,7 +814,7 @@ void PID_AutoTune::SetOutputStep(double Step)
   oStep = Step;
 }
 
-double PID_AutoTune::GetOutputStep()
+double PID_AutoTune::GetOutputStep() const
 {
   return oStep;
 }
@@ -824,7 +824,7 @@ void PID_AutoTune::SetControlType(byte type)
   controlType = type;
 }
 
-byte PID_AutoTune::GetControlType()
+byte PID_AutoTune::GetControlType() const
 {
   return controlType;
 }

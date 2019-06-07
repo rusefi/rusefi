@@ -302,7 +302,7 @@ float LECalculator::getValue2(float selfValue, LEElement *fistElementInList DECL
 	return getValue(selfValue PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-bool LECalculator::isEmpty() {
+bool LECalculator::isEmpty() const {
 	return first == NULL;
 }
 
@@ -348,7 +348,7 @@ void LEElementPool::reset() {
 	index = 0;
 }
 
-int LEElementPool::getSize() {
+int LEElementPool::getSize() const {
 	return index;
 }
 

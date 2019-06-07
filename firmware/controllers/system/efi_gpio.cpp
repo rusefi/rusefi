@@ -218,11 +218,11 @@ NamedOutputPin::NamedOutputPin() : OutputPin() {
 	name = NULL;
 }
 
-const char *NamedOutputPin::getName() {
+const char *NamedOutputPin::getName() const {
 	return name;
 }
 
-const char *NamedOutputPin::getShortName() {
+const char *NamedOutputPin::getShortName() const {
 	return shortName == NULL ? name : shortName;
 }
 
@@ -347,7 +347,7 @@ void OutputPin::setValue(int logicValue) {
 #endif /* EFI_PROD_CODE */
 }
 
-bool OutputPin::getLogicValue() {
+bool OutputPin::getLogicValue() const {
 	return currentLogicValue;
 }
 

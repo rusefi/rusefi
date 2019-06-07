@@ -93,13 +93,13 @@ public:
 	volatile cj125_error_e errorCode = CJ125_ERROR_NONE;
 
 	void setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX);
-	bool isWorkingState(void);
+	bool isWorkingState(void) const;
 	void SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void cjIdentify(void);
 	void cjSetMode(cj125_mode_e m);
-	bool isValidState();
+	bool isValidState() const;
 	void cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 };
 

@@ -38,7 +38,7 @@ extern WaveChart waveChart;
 #define NO_RPM_EVENTS_TIMEOUT_SECS 2
 #endif /* NO_RPM_EVENTS_TIMEOUT_SECS */
 
-float RpmCalculator::getRpmAcceleration() {
+float RpmCalculator::getRpmAcceleration() const {
 	return 1.0 * previousRpmValue / rpmValue;
 }
 
@@ -56,7 +56,7 @@ bool RpmCalculator::isSpinningUp(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	return state == SPINNING_UP;
 }
 
-uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
+uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) const {
 	return revolutionCounterSinceStart;
 }
 
@@ -181,7 +181,7 @@ void RpmCalculator::onNewEngineCycle() {
 #endif /* EFI_UNIT_TEST */
 }
 
-uint32_t RpmCalculator::getRevolutionCounter(void) {
+uint32_t RpmCalculator::getRevolutionCounter(void) const {
 	return revolutionCounterSinceBoot;
 }
 

@@ -26,8 +26,8 @@ public:
 	void startDataCollection();
 	void publishIfFull();
 	void publish();
-	bool isFull();
-	bool isStartedTooLongAgo();
+	bool isFull() const;
+	bool isStartedTooLongAgo() const;
 private:
 	Logging logging;
 	char timeBuffer[10];

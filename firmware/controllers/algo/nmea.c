@@ -74,7 +74,7 @@ int str_till_comma(char *a, char *dStr) {
 	if (sLen > GPS_MAX_STRING)
 		sLen = GPS_MAX_STRING;
 
-	while (a[i] != 44 && i < sLen) {	// while not comma or end
+	while (i < sLen && a[i] != ',') {	// while not comma or end
 		dStr[i] = a[i];
 		i++;
 	}
