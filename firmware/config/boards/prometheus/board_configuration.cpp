@@ -174,7 +174,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->fatalErrorPin = GPIOA_13;
 	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->triggerInputPins[0] = is469 ? GPIOA_5 : GPIOA_5;
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInput = is469 ? GPIOE_9 : GPIOA_6;
