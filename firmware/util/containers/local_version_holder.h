@@ -22,7 +22,7 @@ public:
 	 * @return true if 'globalVersion' has changed since last time we've invoked this method
 	 */
 	bool isOld(int globalVersion);
-	int getVersion();
+	int getVersion() const;
 
 private:
 	/**

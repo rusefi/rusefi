@@ -7,7 +7,7 @@
 
 #include "local_version_holder.h"
 
-int LocalVersionHolder::getVersion() {
+int LocalVersionHolder::getVersion() const {
 	return localVersion;
 }
 
