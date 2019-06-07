@@ -351,7 +351,7 @@ int tle8888_chip_init(void * data)
 	uint16_t response;
 	tle8888_spi_rw(chip, CMD_SR, &response);
 	if (response == 253) {
-		initResponses++;
+		initResponses += 4;
 	}
 
 	/**
@@ -364,7 +364,7 @@ int tle8888_chip_init(void * data)
 	// second 0x13D=317 => 0x35=53
 	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
 	if (response == 53) {
-		initResponses++;
+		initResponses += 8;
 	}
 
 	chip->o_direct_mask = 0;
