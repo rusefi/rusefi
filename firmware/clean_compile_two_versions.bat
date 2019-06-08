@@ -12,8 +12,8 @@ rem mv build\rusefi.hex deliver\rusefi_no_asserts.hex
 echo Release compilation results 1/2
 echo "TIMESTAMP %date% %time%"
 ls -l build
-if not exist deliver/rusefi_no_asserts.hex echo FAILED to compile NO ASSERTS version
-if not exist deliver/rusefi_no_asserts.hex exit -1
+if not exist deliver/rusefi_no_asserts.bin echo FAILED to compile NO ASSERTS version
+if not exist deliver/rusefi_no_asserts.bin exit -1
 
 call clean.bat
 echo "TIMESTAMP %date% %time%"
