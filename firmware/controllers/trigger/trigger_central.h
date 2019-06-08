@@ -29,7 +29,7 @@ public:
 	TriggerCentral();
 	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 	void handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
-	int getHwEventCounter(int index);
+	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void resetAccumSignalData();
 	bool noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);

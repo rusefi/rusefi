@@ -39,7 +39,7 @@ void TriggerCentral::resetAccumSignalData() {
 	memset(accumSignalPrevPeriods, 0, sizeof(accumSignalPrevPeriods));
 }
 
-int TriggerCentral::getHwEventCounter(int index) {
+int TriggerCentral::getHwEventCounter(int index) const {
 	return hwEventCounters[index];
 }
 

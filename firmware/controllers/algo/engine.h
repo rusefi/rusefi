@@ -112,7 +112,7 @@ public:
 #endif /* EFI_ENGINE_CONTROL */
 
 	WallFuel wallFuel;
-	bool needToStopEngine(efitick_t nowNt);
+	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
 	 * That's the list of pending spark firing events
@@ -308,7 +308,7 @@ public:
 	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
 	   Returns true if some operations are in progress on background.
 	 */
-	bool isInShutdownMode();
+	bool isInShutdownMode() const;
 
 	monitoring_timestamps_s m;
 

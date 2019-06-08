@@ -88,7 +88,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
  * This method is always invoked under a lock
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
-efitime_t EventQueue::getNextEventTime(efitime_t nowX) {
+efitime_t EventQueue::getNextEventTime(efitime_t nowX) const {
 	
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
@@ -185,7 +185,7 @@ int EventQueue::executeAll(efitime_t now) {
 	return executionCounter;
 }
 
-int EventQueue::size(void) {
+int EventQueue::size(void) const {
 	scheduling_s *tmp;
 	int result;
 	LL_COUNT(head, tmp, result);
@@ -193,7 +193,7 @@ int EventQueue::size(void) {
 }
 
 #if EFI_UNIT_TEST
-void EventQueue::assertListIsSorted() {
+void EventQueue::assertListIsSorted() const {
 	scheduling_s *current = head;
 	while (current != NULL && current->next != NULL) {
 		efiAssertVoid(CUSTOM_ERR_6623, current->momentX <= current->next->momentX, "list order");

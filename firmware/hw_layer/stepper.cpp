@@ -128,7 +128,7 @@ StepperMotor::StepperMotor() {
 	totalSteps = 0;
 }
 
-int StepperMotor::getTargetPosition() {
+int StepperMotor::getTargetPosition() const {
 	return targetPosition;
 }
 

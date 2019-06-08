@@ -105,7 +105,7 @@ void WaveChart::startDataCollection() {
 	collectingData = true;
 }
 
-bool WaveChart::isStartedTooLongAgo() {
+bool WaveChart::isStartedTooLongAgo() const {
 	/**
 	 * Say at 300rpm we should get at least four events per revolution.
 	 * That's 300/60*4=20 events per second
@@ -116,7 +116,7 @@ bool WaveChart::isStartedTooLongAgo() {
 	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->engineChartSize * 1000000 / 20;
 }
 
-bool WaveChart::isFull() {
+bool WaveChart::isFull() const {
 	return counter >= CONFIG(engineChartSize);
 }
 

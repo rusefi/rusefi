@@ -14,18 +14,18 @@ public:
 	explicit AdcDevice(ADCConversionGroup* hwConfig);
 	void enableChannel(adc_channel_e hwChannelIndex);
 	void enableChannelAndPin(adc_channel_e hwChannelIndex);
-	adc_channel_e getAdcHardwareIndexByInternalIndex(int index);
+	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
 	int internalAdcIndexByHardwareIndex[20];
-	bool isHwUsed(adc_channel_e hwChannel);
-	int size();
+	bool isHwUsed(adc_channel_e hwChannel) const;
+	int size() const;
 	void init(void);
 	int conversionCount;
 	int errorsCount;
-	int getAdcValueByIndex(int internalIndex);
+	int getAdcValueByIndex(int internalIndex) const;
 
 	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
 
-	int getAdcValueByHwChannel(int hwChannel);
+	int getAdcValueByHwChannel(int hwChannel) const;
 
 	adc_state values;
 	int channelCount;

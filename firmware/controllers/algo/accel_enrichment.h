@@ -65,7 +65,7 @@ public:
 	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
 	 */
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
-	floatms_t getWallFuel(int injectorIndex);
+	floatms_t getWallFuel(int injectorIndex) const;
 	void reset();
 private:
 	/**

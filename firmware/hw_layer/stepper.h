@@ -18,7 +18,7 @@ public:
 			brain_pin_e enablePin, pin_output_mode_e enablePinMode, Logging *sharedLogger);
 	void pulse();
 	void setTargetPosition(int targetPosition);
-	int getTargetPosition();
+	int getTargetPosition() const;
 	void setDirection(bool isIncrementing);
 
 	OutputPin directionPin;

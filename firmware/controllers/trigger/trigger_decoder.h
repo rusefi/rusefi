@@ -68,7 +68,7 @@ public:
 	 */
 	void onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback triggerCycleCallback;
 
