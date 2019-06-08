@@ -133,7 +133,7 @@ custom tps_tps_table_t	256 array,   F32,   @OFFSET@, [8x8],"value",      1,     
 
 
 ! todo support table size multiplocation
-custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@],"%", 1, 0, 0, 999.0, 2
+custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@],"ratio", 1, 0, 0, 2.0, 2
 
 
 ! please note that 1024 here is 4 * IGN_LOAD_COUNT * IGN_RPM_COUNT  
@@ -1066,19 +1066,19 @@ le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingAdditive;
 
 float[CLT_CURVE_SIZE] cltFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,  2
-float[CLT_CURVE_SIZE] cltFuelCorr;;"Ratio",      1,     0,      0.0,    500.0,   2
+float[CLT_CURVE_SIZE] cltFuelCorr;;"ratio",      1,     0,      0.0,    5.0,   2
 
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,   2
-float[IAT_CURVE_SIZE] iatFuelCorr;;"Ratio",      1,     0,      0.0,    10.0,   2
+float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio",      1,     0,      0.0,    5.0,   2
 
-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"Ratio",      1,     0,      0.0,    300.0,   2
+	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio",      1,     0,      0.0,    5.0,   2
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C",        1,     0,    -80.0,    170.0,  2
 
-	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"%",      1,     0,      0.0,    500.0,   2
+	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"ratio",      1,     0,      0.0,    5.0,   2
 	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter",        1,     0,    -80.0,    170.0,  0
 
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
-float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"%",      1,     0,      0.0,    1000.0,   2
+float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"ratio",      1,     0,      0.0,    10.0,   2
 
 float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500.0, 4000.0, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;; "V", 1, 0, -5.0, 150.0, 2
