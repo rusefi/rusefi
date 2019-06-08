@@ -44,14 +44,14 @@ git submodule update --init
 call update_version.bat
 
 call clean_compile_two_versions.bat
-if not exist deliver/rusefi_release.hex echo Just to confirm - FAILED to compile RELEASE
-if not exist deliver/rusefi_release.hex exit -1
+if not exist deliver/rusefi_no_asserts.hex echo Just to confirm - FAILED to compile no_asserts
+if not exist deliver/rusefi_no_asserts.hex exit -1
 
-if not exist deliver/rusefi_debug.hex echo Just to confirm - FAILED to compile DEBUG
-if not exist deliver/rusefi_debug.hex exit -1
+if not exist deliver/rusefi.hex echo Just to confirm - FAILED to compile default DEBUG
+if not exist deliver/rusefi.hex exit -1
 
-..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_release.hex -out deliver/rusefi_release.dfu
-..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_debug.hex   -out deliver/rusefi_debug.dfu
+..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_no_asserts.hex -out deliver/rusefi_no_asserts.dfu
+..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi.hex            -out deliver/rusefi.dfu
 cd ..
 
 call misc\jenkins\build_java_console.bat

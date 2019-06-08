@@ -1,6 +1,6 @@
 
 rem on linux that would be
-rem dfu-util -a 0 -D rusefi_release.dfu -R
+rem dfu-util -a 0 -D rusefi_no_asserts.dfu -R
 
 rem ..\misc\hex2dfu\HEX2DFU.exe build/rusefi.hex   -out build/rusefi.dfu
 DfuSeCommand.exe -c -d --fn build/rusefi.dfu
