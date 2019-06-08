@@ -351,6 +351,7 @@ int tle8888_chip_init(void * data)
 		goto err_gpios;
 	}
 
+	chThdSleepMilliseconds(3);
 	/* Software reset */
 	// first packet: 0x335=821 > 0xFD=253
 	uint16_t response;
