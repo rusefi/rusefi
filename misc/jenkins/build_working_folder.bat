@@ -15,7 +15,8 @@ cp firmware/svnversion.h %folder%
 cp -r misc/install/openocd %folder% 
 cp java_console/rusefi.xml %folder%
 rem 407 has additional version of firmware
-cp firmware/deliver/rusefi_no_asserts.* %folder%
+cp firmware/deliver/rusefi_no_asserts.bin %folder%
+cp firmware/deliver/rusefi_no_asserts.dfu %folder%
 rem 746 builds one version at the moment
 rem probably not needed cp firmware/build/rusefi.hex %folder%
 cp firmware/build/rusefi.bin %folder%
