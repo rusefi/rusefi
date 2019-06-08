@@ -1,21 +1,21 @@
 set COMPILE_FOLDER=%1
-set BOARD_NAME=%2
+set bundle_name=%2
 
 
 set script_name=combile_and_upload.bat
-echo Entering %script_name% with %COMPILE_FOLDER% %BOARD_NAME%
+echo Entering %script_name% with %COMPILE_FOLDER% %bundle_name%
 
 if %COMPILE_FOLDER%.==. (
     echo COMPILE_FOLDER parameter expected
     exit -1
 )
 
-if %BOARD_NAME%.==. (
-    echo BOARD_NAME parameter expected
+if %bundle_name%.==. (
+    echo bundle_name parameter expected
     exit -1
 )
 
-set COMPILE_SCRIPT=!compile-%BOARD_NAME%.bat
+set COMPILE_SCRIPT=!compile-%bundle_name%.bat
 
 cd firmware
 call clean.bat
@@ -34,4 +34,7 @@ if not exist build/rusefi.hex exit -1
 cd ..
 rem We are back at root rusEfi folder
 pwd
+
+call misc\jenkins\compile_other_versions\build_version.bat
+
 echo "exiting %script_name%"
