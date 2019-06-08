@@ -21,7 +21,7 @@
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 class Map3D {
 public:
-	Map3D(const char*name);
+	explicit Map3D(const char*name);
 	Map3D(const char*name, float multiplier);
 	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const float loadBins[LOAD_BIN_SIZE], const float rpmBins[RPM_BIN_SIZE]);
 	float getValue(float xRpm, float y);

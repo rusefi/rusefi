@@ -59,12 +59,12 @@ struct Tuning
 {
   byte _divisor[3];
 
-  bool PI_controller()
+  bool PI_controller() const
   {
     return _divisor[2] == 0;
   }
 
-  double divisor(byte index)
+  double divisor(byte index) const
   {
     return (double)(_divisor[index] * 0.05);
   }
@@ -113,21 +113,21 @@ public:
 
   void SetOutputStep(double);           // * how far above and below the starting value will
                                         //   the output step?
-  double GetOutputStep();               //
+  double GetOutputStep() const;         //
 
   void SetControlType(byte);            // * Determines tuning algorithm
-  byte GetControlType();                // * Returns tuning algorithm
+  byte GetControlType() const;          // * Returns tuning algorithm
 
   void SetLookbackSec(int);             // * how far back are we looking to identify peaks
-  int GetLookbackSec();                 //
+  int GetLookbackSec() const;           //
 
   void SetNoiseBand(double);            // * the autotune will ignore signal chatter smaller
                                         //   than this value
   double GetNoiseBand();                //   this should be accurately set
 
-  float GetKp();                       // * once autotune is complete, these functions contain the
-  float GetKi();                       //   computed tuning parameters.
-  float GetKd();                       //
+  float GetKp() const;                  // * once autotune is complete, these functions contain the
+  float GetKi() const;                  //   computed tuning parameters.
+  float GetKd() const;                  //
 
   Logging *logger;
   byte peakCount;

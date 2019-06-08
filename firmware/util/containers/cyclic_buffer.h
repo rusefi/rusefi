@@ -25,7 +25,7 @@ class cyclic_buffer
 {
   public:
 	cyclic_buffer();
-    cyclic_buffer(int size);
+    explicit cyclic_buffer(int size);
   //cpctor
     cyclic_buffer(const cyclic_buffer& cb);
   //dtor

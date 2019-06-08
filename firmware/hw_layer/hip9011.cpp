@@ -59,9 +59,9 @@ extern EnginePins enginePins;
 uint32_t hipLastExecutionCount;
 
 
-class Hip9011Hardware: public Hip9011HardwareInterface {
-	void sendSyncCommand(unsigned char command);
-	void sendCommand(unsigned char command);
+class Hip9011Hardware : public Hip9011HardwareInterface {
+	void sendSyncCommand(unsigned char command) override;
+	void sendCommand(unsigned char command) override;
 };
 
 static Hip9011Hardware hardware;

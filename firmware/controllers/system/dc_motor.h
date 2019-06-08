@@ -60,8 +60,8 @@ public:
     TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2);
 
     virtual bool Set(float duty) override;
-    float Get();
-    bool isOpenDirection();
+    float Get() const;
+    bool isOpenDirection() const;
 
     void SetType(ControlType type) { m_type = type; }
 };

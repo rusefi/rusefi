@@ -42,13 +42,13 @@ typedef trigger_value_e pin_state_t;
 class SingleWave {
 public:
 	SingleWave();
-	SingleWave(pin_state_t *pinStates);
+	explicit SingleWave(pin_state_t *pinStates);
 	void init(pin_state_t *pinStates);
 	/**
 	 * todo: confirm that we only deal with two states here, no magic '-1'?
 	 * @return HIGH or LOW state at given index
 	 */
-	pin_state_t getState(int switchIndex);
+	pin_state_t getState(int switchIndex) const;
 	void setState(int switchIndex, pin_state_t state);
 
 	// todo: make this private by using 'getState' and 'setState' methods
