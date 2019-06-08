@@ -6,9 +6,9 @@ call clean.bat
 echo "TIMESTAMP %date% %time%"
 make -j4 DEBUG_LEVEL_OPT='-O2'  EXTRA_PARAMS='-DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE'
 
-mv build\rusefi.elf deliver\rusefi_no_asserts.elf
+rem mv build\rusefi.elf deliver\rusefi_no_asserts.elf
 mv build\rusefi.bin deliver\rusefi_no_asserts.bin
-mv build\rusefi.hex deliver\rusefi_no_asserts.hex
+rem mv build\rusefi.hex deliver\rusefi_no_asserts.hex
 echo Release compilation results 1/2
 echo "TIMESTAMP %date% %time%"
 ls -l build
