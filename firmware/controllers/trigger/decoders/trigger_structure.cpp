@@ -98,7 +98,7 @@ int TriggerShape::getSize() const {
 	return privateTriggerDefinitionSize;
 }
 
-int TriggerShape::getTriggerShapeSynchPointIndex() {
+int TriggerShape::getTriggerShapeSynchPointIndex() const {
 	return triggerShapeSynchPointIndex;
 }
 
@@ -154,7 +154,7 @@ void TriggerShape::addEventClamped(angle_t angle, trigger_wheel_e const channelI
 		addEvent(angle / getEngineCycle(operationMode), channelIndex, stateParam);
 }
 
-operation_mode_e TriggerShape::getOperationMode() {
+operation_mode_e TriggerShape::getOperationMode() const {
 	return operationMode;
 }
 
@@ -311,7 +311,7 @@ void TriggerShape::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFr
 /**
  * this method is only used on initialization
  */
-int TriggerShape::findAngleIndex(float target) {
+int TriggerShape::findAngleIndex(float target) const {
 	int engineCycleEventCount = getLength();
 
 	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);

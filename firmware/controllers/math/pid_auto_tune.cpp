@@ -784,17 +784,17 @@ bool PID_AutoTune::Runtime(Logging *logger)
   return true;
 }
 
-float PID_AutoTune::GetKp()
+float PID_AutoTune::GetKp() const
 {
   return Kp;
 }
 
-float PID_AutoTune::GetKi()
+float PID_AutoTune::GetKi() const
 {
   return Kp / Ti;
 }
 
-float PID_AutoTune::GetKd()
+float PID_AutoTune::GetKd() const
 {
   return Kp * Td;
 }
@@ -814,7 +814,7 @@ void PID_AutoTune::SetOutputStep(double Step)
   oStep = Step;
 }
 
-double PID_AutoTune::GetOutputStep()
+double PID_AutoTune::GetOutputStep() const
 {
   return oStep;
 }
@@ -824,7 +824,7 @@ void PID_AutoTune::SetControlType(byte type)
   controlType = type;
 }
 
-byte PID_AutoTune::GetControlType()
+byte PID_AutoTune::GetControlType() const
 {
   return controlType;
 }

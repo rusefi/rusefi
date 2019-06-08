@@ -329,16 +329,16 @@ static void initAdcHwChannel(adc_channel_e hwChannel) {
 	initAdcPin(pin, "hw");
 }
 
-int AdcDevice::size() {
+int AdcDevice::size() const {
 	return channelCount;
 }
 
-int AdcDevice::getAdcValueByHwChannel(int hwChannel) {
+int AdcDevice::getAdcValueByHwChannel(int hwChannel) const {
 	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
 	return values.adc_data[internalIndex];
 }
 
-int AdcDevice::getAdcValueByIndex(int internalIndex) {
+int AdcDevice::getAdcValueByIndex(int internalIndex) const {
 	return values.adc_data[internalIndex];
 }
 
@@ -347,7 +347,7 @@ void AdcDevice::init(void) {
 	hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 }
 
-bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) {
+bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
 	for (int i = 0; i < channelCount; i++) {
 		if (hardwareIndexByIndernalAdcIndex[i] == hwChannelIndex) {
 			return true;
@@ -383,7 +383,7 @@ static void printAdcValue(int channel) {
 	scheduleMsg(&logger, "adc voltage : %.2f", volts);
 }
 
-adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) {
+adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
 

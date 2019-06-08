@@ -59,7 +59,6 @@ public:
 	void validateCamVvtCounters();
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
-	efitime_t getStartOfRevolutionIndex() const;
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
 	bool validateEventCounters(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	void handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -69,7 +68,7 @@ public:
 	 */
 	void onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback triggerCycleCallback;
 
@@ -151,7 +150,7 @@ public:
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) override;
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization

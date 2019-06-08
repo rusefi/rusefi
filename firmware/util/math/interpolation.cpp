@@ -86,7 +86,7 @@ void FastInterpolation::init(float x1, float y1, float x2, float y2) {
 	b = y1 - a * x1;
 }
 
-float FastInterpolation::getValue(float x) {
+float FastInterpolation::getValue(float x) const {
 	return a * x + b;
 }
 

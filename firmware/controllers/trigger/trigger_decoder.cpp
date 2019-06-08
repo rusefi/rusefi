@@ -248,7 +248,7 @@ void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLAR
 	}
 }
 
-bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool TriggerState::isValidIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	return currentCycle.current_index < getTriggerSize();
 }
 
@@ -697,10 +697,6 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape,
 
 void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
-}
-
-efitime_t TriggerState::getStartOfRevolutionIndex() const {
-	return totalEventCountBase;
 }
 
 void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
