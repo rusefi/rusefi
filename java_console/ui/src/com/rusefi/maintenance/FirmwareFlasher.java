@@ -11,8 +11,7 @@ import java.io.File;
  */
 public class FirmwareFlasher extends ProcessStatusWindow {
     public static final String IMAGE_FILE = "rusefi.bin";
-    public static final String IMAGE_DEBUG_FILE = "rusefi_debug.bin";
-    public static final String IMAGE_RELEASE_FILE = "rusefi_release.bin";
+    public static final String IMAGE_NO_ASSERTS_FILE = "rusefi_no_asserts.bin";
     static final String OPENOCD_EXE = "openocd/openocd.exe";
     static final String BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";

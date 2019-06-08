@@ -12,11 +12,13 @@ cp firmware/tunerstudio/rusefi.ini %folder%
 cp firmware/svnversion.h %folder%
 cp -r misc/install/openocd %folder% 
 cp java_console/rusefi.xml %folder%
-rem 407 has two versions
-cp firmware/deliver/rusefi_release.* %folder%
-cp firmware/deliver/rusefi_debug.* %folder%
+rem 407 has additional version of firmware
+cp firmware/deliver/rusefi_no_asserts.* %folder%
 rem 746 builds one version at the moment
-cp firmware/build/rusefi.* %folder%
+cp firmware/build/rusefi.hex %folder%
+cp firmware/build/rusefi.bin %folder%
+cp firmware/build/rusefi.elf %folder%
+cp firmware/build/rusefi.dfu %folder%
 cp misc/console_launcher/rusefi_console.exe %folder%
 
 
