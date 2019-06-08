@@ -18,6 +18,10 @@ if not exist deliver/rusefi_no_asserts.hex exit -1
 call clean.bat
 echo "TIMESTAMP %date% %time%"
 make -j4 
+
+mv build\rusefi.elf deliver\rusefi.elf
+mv build\rusefi.bin deliver\rusefi.bin
+mv build\rusefi.hex deliver\rusefi.hex
 echo Debug compilation results 2/2
 echo "TIMESTAMP %date% %time%"
 ls -l build
