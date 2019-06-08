@@ -27,19 +27,12 @@ call misc\jenkins\compile_other_versions\build_version.bat
 echo %script_name%: Done with F767-nucleo
 
 
-
-cd firmware
-call clean.bat
-cd ..
-echo %script_name%: Compiling F767
-cd firmware\config\boards\nucleo_f767
-call !compile-osc_f767.bat
-if not exist build/rusefi.hex echo Just to confirm - FAILED to compile osc_f767
-if not exist build/rusefi.hex exit -1
-
-cd ..
-pwd
 set bundle_name=stm32f767_osc
+call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 stm32f767_osc
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+pwd
 call misc\jenkins\compile_other_versions\build_version.bat
 echo %script_name%: Done with F767-osc
 
