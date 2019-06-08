@@ -11,7 +11,7 @@
 
 class AdcDevice {
 public:
-	AdcDevice(ADCConversionGroup* hwConfig);
+	explicit AdcDevice(ADCConversionGroup* hwConfig);
 	void enableChannel(adc_channel_e hwChannelIndex);
 	void enableChannelAndPin(adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index);

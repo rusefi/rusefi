@@ -68,7 +68,7 @@ class RpmCalculator;
 
 class Engine {
 public:
-	Engine(persistent_config_s *config);
+	explicit Engine(persistent_config_s *config);
 	Engine();
 	void setConfig(persistent_config_s *config);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);

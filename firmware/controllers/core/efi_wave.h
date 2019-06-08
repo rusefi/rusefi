@@ -42,7 +42,7 @@ typedef trigger_value_e pin_state_t;
 class SingleWave {
 public:
 	SingleWave();
-	SingleWave(pin_state_t *pinStates);
+	explicit SingleWave(pin_state_t *pinStates);
 	void init(pin_state_t *pinStates);
 	/**
 	 * todo: confirm that we only deal with two states here, no magic '-1'?

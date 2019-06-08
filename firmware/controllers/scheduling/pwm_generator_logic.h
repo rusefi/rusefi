@@ -113,7 +113,7 @@ private:
 class SimplePwm : public PwmConfig {
 public:
 	SimplePwm();
-	SimplePwm(const char *name);
+	explicit SimplePwm(const char *name);
 	void setSimplePwmDutyCycle(float dutyCycle);
 	pin_state_t pinStates[2];
 	SingleWave sr[1];

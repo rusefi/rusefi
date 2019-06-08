@@ -44,7 +44,7 @@ public:
 
 class LoggingWithStorage : public Logging {
 public:
-	LoggingWithStorage(const char *name);
+	explicit LoggingWithStorage(const char *name);
 	char DEFAULT_BUFFER[200];
 };
 
