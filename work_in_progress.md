@@ -12,6 +12,7 @@ June, 07 2019 status:
 * Ion Sense https://rusefi.com/forum/viewtopic.php?f=4&t=963
 * HIP9011 - still need to improve unit tests and give this functionality another test now that we can reproduce detonation
 * CJ125 - still need to improve unit tests and give this functionality another test
+**
 
 May, 31 2019 status:
 * https://github.com/rusefi/rusefi/issues/796 should be addressed
