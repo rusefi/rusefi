@@ -699,10 +699,6 @@ void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
 }
 
-efitime_t TriggerState::getStartOfRevolutionIndex() const {
-	return totalEventCountBase;
-}
-
 void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	UNUSED(nowNt);
 	// empty base implementation
