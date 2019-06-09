@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>console\rusefi_console.jar</jar>
+  <jar>rusefi_console.jar</jar>
   <outfile>c:\stuff\rusefi\misc\console_launcher\rusefi_console.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
