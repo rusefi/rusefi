@@ -17,11 +17,12 @@ set RUSEFI_GIT_PATH=../git/rusefi
 
 rem windows version of 'mkdir' just created '-p' folder
 rem todo: copy mkdir to mkdir_cygwin and invoke it using that name?
-mkdir -p %RUSEFI_SVN_PATH%"
-echo "Going to %RUSEFI_SVN_PATH%" 
+mkdir %RUSEFI_SVN_PATH%
+echo "Going to %RUSEFI_SVN_PATH%"
+pwd
 cd %RUSEFI_SVN_PATH%
 echo Updating from SVN
-svn up
+svn co https://svn.code.sf.net/p/rusefi/code/trunk/ .
 cd %RUSEFI_GIT_PATH%
 
 
