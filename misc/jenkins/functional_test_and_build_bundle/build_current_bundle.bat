@@ -4,7 +4,9 @@ rem This script depends on Cygwin tools: zip
 rem
 
 set script_name=build_current_bundle
-echo Entering %script_name%
+set "root_folder=%cd%"
+echo Entering %script_name root_folder=%root_folder%
+
 
 set FTP_SERVER=home451478433.1and1-data.host
 
@@ -20,6 +22,7 @@ if not exist bootloader_generated.hxx echo FAILED TO COMPILE BOOTLOADER
 if not exist bootloader_generated.hxx exit -1
 pwd
 cd ../..
+rem At root folder here
 
 cd firmware
 echo %date% %time%
@@ -30,7 +33,7 @@ if not exist flash_erase407.bat echo NOT FOUND flash_erase.bat
 if not exist flash_erase407.bat exit -1
 echo build_current_bundle.bat: Erasing chip
 pwd
-rem Using magic 'cd' system variable here
+rem Using magic 'cd' system variable to save current location here
 set "cur_folder=%cd%"
 call flash_erase407.bat
 cd %cur_folder%
@@ -55,6 +58,8 @@ if not exist deliver/rusefi.hex exit -1
 ..\misc\encedo_hex2dfu\hex2dfu.exe -i deliver/rusefi.hex            -o deliver/rusefi.dfu
 cd ..
 
+rem At root folder here
+
 call misc\jenkins\build_java_console.bat
 if not exist java_console_binary/rusefi_console.jar exit -1
 
@@ -76,22 +81,20 @@ pwd
 call misc\jenkins\build_working_folder.bat
 
 echo "Building only console"
-cd %folder%
 pwd
 dir
-zip ../rusefi_console.zip rusefi_console.jar rusefi.xml
+zip %root_folder%/temp/rusefi_console.zip %root_folder%/java_console_binary/rusefi_console.jar %root_folder%/java_console/rusefi.xml
 
-if not exist ../rusefi_console.zip echo CONSOLE ZIP FAILED
-if not exist ../rusefi_console.zip exit -1
+if not exist %root_folder%/temp/rusefi_console.zip echo CONSOLE ZIP FAILED
+if not exist %root_folder%/temp/rusefi_console.zip exit -1
 
-echo "only console ready"
+echo "%script_name%: only console ready"
 
-echo "Going back to root folder"
-cd ..
-cd ..                                                             
+echo "%script_name%: Going back to root folder"
+cd %root_folder%
 pwd
 
-echo "Making rusefi_simulator.zip"
+echo "%script_name%: Making rusefi_simulator.zip"
 pwd
 zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
