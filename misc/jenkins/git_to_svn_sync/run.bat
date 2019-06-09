@@ -1,5 +1,6 @@
-rm -rf C:\stuff\rusefi.git2svn\git\rusefi
-mkdir -p C:\stuff\rusefi.git2svn\git\rusefi
+rm -rf C:\stuff\rusefi.git2svn
+mkdir C:\stuff\rusefi.git2svn
+mkdir C:\stuff\rusefi.git2svn\git
 cd C:\stuff\rusefi.git2svn\git
 git clone https://github.com/rusefi/rusefi
 cd C:\stuff\rusefi.git2svn\git\rusefi
