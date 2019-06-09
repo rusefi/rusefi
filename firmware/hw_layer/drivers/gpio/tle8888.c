@@ -249,17 +249,17 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 {
 	(void)chip;
 
-//	if (isIsrContext()) {
+	if (isIsrContext()) {
 		// this is for normal runtime
 		int wasLocked = lockAnyContext();
 		chSemSignalI(&tle8888_wake);
 		if (!wasLocked) {
 			unlockAnyContext();
 		}
-//	} else {
-//		// this is for start-up to not hang up
-//		chSemSignal(&tle8888_wake);
-//	}
+	} else {
+		// this is for start-up to not hang up
+		chSemSignal(&tle8888_wake);
+	}
 
 	return 0;
 }
