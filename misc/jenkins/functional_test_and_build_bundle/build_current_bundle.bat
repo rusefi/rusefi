@@ -50,8 +50,9 @@ if not exist deliver/rusefi_no_asserts.hex exit -1
 if not exist deliver/rusefi.hex echo Just to confirm - FAILED to compile default DEBUG
 if not exist deliver/rusefi.hex exit -1
 
-..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi_no_asserts.hex -out deliver/rusefi_no_asserts.dfu
-..\misc\hex2dfu\HEX2DFU.exe deliver/rusefi.hex            -out deliver/rusefi.dfu
+
+..\misc\encedo_hex2dfu\hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
+..\misc\encedo_hex2dfu\hex2dfu.exe -i deliver/rusefi.hex            -o deliver/rusefi.dfu
 cd ..
 
 call misc\jenkins\build_java_console.bat
