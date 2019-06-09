@@ -4,16 +4,22 @@ echo Entering %script_name%
 pwd
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
+set console_folder=%folder%/console
+mkdir %console_folder%
 
-cp java_console_binary/rusefi_console.jar %folder%
-cp simulator/build/rusefi_simulator.exe %folder%
-cp firmware/tunerstudio/rusefi.ini %folder%
+cp java_console_binary/rusefi_console.jar %console_folder%
+cp simulator/build/rusefi_simulator.exe %console_folder%
+cp misc/console_launcher/rusefi_console.exe %console_folder%
+cp java_console/rusefi.xml %console_folder%
 
 cp misc/console_launcher/readme.html %folder%
 
-cp firmware/svnversion.h %folder%
-cp -r misc/install/openocd %folder% 
-cp java_console/rusefi.xml %folder%
+cp firmware/tunerstudio/rusefi.ini %folder%
+
+rem users probably do not really care for this file
+rem cp firmware/svnversion.h %folder%
+
+cp -r misc/install/openocd %console_folder%
 rem 407 has additional version of firmware
 cp firmware/deliver/rusefi_no_asserts.bin %folder%
 cp firmware/deliver/rusefi_no_asserts.dfu %folder%
@@ -22,7 +28,6 @@ rem probably not needed cp firmware/build/rusefi.hex %folder%
 cp firmware/build/rusefi.bin %folder%
 rem probably not needed cp firmware/build/rusefi.elf %folder%
 cp firmware/build/rusefi.dfu %folder%
-cp misc/console_launcher/rusefi_console.exe %folder%
 
 
 cd temp
