@@ -14,7 +14,6 @@ set EXTRA_PARAMS=-DDUMMY -DSTM32F746xx ^
  -DEFI_FATAL_ERROR_PIN=GPIOB_14 ^
  -DRAM_UNUSED_SIZE=10 -DCCM_UNUSED_SIZE=10
 set DEBUG_LEVEL_OPT="-O2"
-make -j4
-..\misc\hex2dfu\HEX2DFU.exe build/rusefi.hex -out build/rusefi.dfu
+call config/boards/common_make.bat
 
 call config/boards/clean_env_variables.bat
