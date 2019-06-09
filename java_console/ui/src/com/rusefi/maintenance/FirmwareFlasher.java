@@ -5,13 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import static com.rusefi.Launcher.INPUT_FILES_PATH;
+
 /**
  * (c) Andrey Belomutskiy 2013-2018
  * 2/4/15
  */
 public class FirmwareFlasher extends ProcessStatusWindow {
-    public static final String IMAGE_FILE = "rusefi.bin";
-    public static final String IMAGE_NO_ASSERTS_FILE = "rusefi_no_asserts.bin";
+    public static final String IMAGE_FILE = INPUT_FILES_PATH + File.separator + "rusefi.bin";
+    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + File.separator + "rusefi_no_asserts.bin";
     static final String OPENOCD_EXE = "openocd/openocd.exe";
     static final String BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
