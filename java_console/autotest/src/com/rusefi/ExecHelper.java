@@ -11,6 +11,7 @@ import java.util.function.Consumer;
  * (c) Andrey Belomutskiy
  */
 public class ExecHelper {
+    // see also SimulatorHelper
     private static final String SIMULATOR_BINARY = "../simulator/build/rusefi_simulator.exe";
     static Process simulatorProcess;
 

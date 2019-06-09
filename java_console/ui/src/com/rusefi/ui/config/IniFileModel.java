@@ -6,13 +6,15 @@ import com.opensr5.io.RawIniFile;
 import java.io.*;
 import java.util.*;
 
+import static com.rusefi.Launcher.INPUT_FILES_PATH;
+
 /**
  * (c) Andrey Belomutskiy
  * 12/23/2015.
  */
 public class IniFileModel {
     // todo: https://sourceforge.net/p/rusefi/tickets/243/
-    private static final String FILENAME = "rusefi.ini";
+    private static final String FILENAME = INPUT_FILES_PATH + File.separator + "rusefi.ini";
 
     private final static IniFileModel INSTANCE = new IniFileModel();
     private String dialogId;
