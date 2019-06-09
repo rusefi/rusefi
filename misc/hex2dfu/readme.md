@@ -1,1 +1,0 @@
-This files comes from https://community.st.com/s/question/0D50X00009XkeovSAB/dfu-fail-verify-8-byte-align-magic
