@@ -4,8 +4,9 @@ echo Entering %script_name%
 pwd
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
-set console_folder=%folder%/console
+set console_folder=%folder%\console
 mkdir %console_folder%
+ls -l %folder%
 
 cp java_console_binary/rusefi_console.jar %console_folder%
 cp simulator/build/rusefi_simulator.exe %console_folder%
