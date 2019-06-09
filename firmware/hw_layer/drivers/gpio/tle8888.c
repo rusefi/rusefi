@@ -357,7 +357,11 @@ int tle8888_chip_init(void * data)
 	uint16_t response;
 	tle8888_spi_rw(chip, CMD_SR, &response);
 	if (response == 253) {
+		// I've seen this response on red board
 		initResponses += 4;
+	} else if (response == 2408){
+		// and I've seen this response on red board
+		initResponses += 100;
 	}
 	initResponse0 = response;
 
