@@ -36,6 +36,7 @@ private:
 	float multiplier;
 };
 
+/*
 template<int SIZE>
 class Table2D {
 public:
@@ -45,7 +46,6 @@ public:
 	float bTable[SIZE];
 	float *bin;
 };
-
 template<int SIZE>
 Table2D<SIZE>::Table2D() {
 	bin = NULL;
@@ -69,7 +69,7 @@ void Table2D<SIZE>::preCalc(float *bin, float *values) {
 		bTable[i] = y1 - aTable[i] * x1;
 	}
 }
-
+*/
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],

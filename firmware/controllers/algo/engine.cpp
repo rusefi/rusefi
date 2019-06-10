@@ -190,9 +190,6 @@ void Engine::reset() {
  * so that we can prepare some helper structures
  */
 void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	sparkTable.preCalc(engineConfiguration->sparkDwellRpmBins,
-			engineConfiguration->sparkDwellValues);
-
 #if HAL_USE_ADC
 	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
 #else
