@@ -61,14 +61,33 @@ public class ReaderState {
 
         String tunerStudioLine = line.substring(index).trim();
         tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
-        int size;
+        int size = parseSize(customSize, line);
+        state.tsCustomSize.put(name, size);
+        state.tsCustomLine.put(name, tunerStudioLine);
+    }
+
+    public static int parseSize(String customSize, String line) {
+        customSize = VariableRegistry.INSTANCE.applyVariables(customSize);
+        customSize = customSize.replaceAll("x", "*");
+        line = VariableRegistry.INSTANCE.applyVariables(line);
+
+        int multPosition = customSize.indexOf('*');
+        if (multPosition != -1) {
+            String firstPart = customSize.substring(0, multPosition);
+            int first;
+            try {
+                first = Integer.parseInt(firstPart);
+            } catch (NumberFormatException e) {
+                throw new IllegalStateException("Size in " + line);
+            }
+            return first * parseSize(customSize.substring(multPosition + 1), line);
+        }
+
         try {
-            size = Integer.parseInt(customSize);
+            return Integer.parseInt(customSize);
         } catch (NumberFormatException e) {
             throw new IllegalStateException("Size in " + line);
         }
-        state.tsCustomSize.put(name, size);
-        state.tsCustomLine.put(name, tunerStudioLine);
     }
 
     void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
