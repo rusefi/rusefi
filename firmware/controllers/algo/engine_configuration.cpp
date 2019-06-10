@@ -451,16 +451,25 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #ifdef EFI_FATAL_ERROR_PIN
 	engineConfiguration->fatalErrorPin = EFI_FATAL_ERROR_PIN;
 #else
-	engineConfiguration->fatalErrorPin = GPIOD_14;
+	engineConfiguration->fatalErrorPin = GPIOD_14; // red LED on discovery
 #endif /* EFI_FATAL_ERROR_PIN */
-	engineConfiguration->warningLedPin = GPIOD_13;
+#ifdef EFI_WARNING_PIN
+	engineConfiguration->warningLedPin = EFI_WARNING_PIN;
+#else
+	engineConfiguration->warningLedPin = GPIOD_13; // orange LED on discovery
+#endif
+
 
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
 	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
 #endif
+#ifdef EFI_RUNNING_PIN
+	engineConfiguration->runningLedPin = EFI_RUNNING_PIN;
+#else
 	engineConfiguration->runningLedPin = GPIOD_12; // green LED on discovery
+#endif
 
 #if EFI_PROD_CODE
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
