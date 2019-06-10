@@ -12,31 +12,34 @@
 #include "interpolation.h"
 #include "efilib.h"
 
-// popular left edge of CLT-based correction curvers
+// popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
 
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
 class Map3D {
 public:
 	explicit Map3D(const char*name);
 	Map3D(const char*name, float multiplier);
-	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const float loadBins[LOAD_BIN_SIZE], const float rpmBins[RPM_BIN_SIZE]);
+	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE], const kType loadBins[LOAD_BIN_SIZE], const kType rpmBins[RPM_BIN_SIZE]);
 	float getValue(float xRpm, float y);
 	void setAll(vType value);
 	vType *pointers[LOAD_BIN_SIZE];
 private:
 	void create(const char*name, float multiplier);
-	const float *loadBins = NULL;
-	const float *rpmBins = NULL;
+	const kType *loadBins = NULL;
+	const kType *rpmBins = NULL;
 	bool initialized =  false;
 	const char *name;
 	float multiplier;
 };
 
 /*
+ * this dead code is a questionable performance optimization idea: instead of division every time
+ * we want interpolation for a curve we can pre-calculate A and B and save the division at the cost of more RAM usage
+ * Realistically we probably value RAM over CPU at this time and the costs are not justified.
 template<int SIZE>
 class Table2D {
 public:
@@ -71,10 +74,10 @@ void Table2D<SIZE>::preCalc(float *bin, float *values) {
 }
 */
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
-		const float loadBins[LOAD_BIN_SIZE],
-		const float rpmBins[RPM_BIN_SIZE]) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
+		const kType loadBins[LOAD_BIN_SIZE],
+		const kType rpmBins[RPM_BIN_SIZE]) {
 	// this method cannot use logger because it's invoked before everything
 	// that's because this method needs to be invoked before initial configuration processing
 	// and initial configuration load is done prior to logging initialization
@@ -87,36 +90,36 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::init(vType table[RPM_BIN_SIZE][L
 	this->rpmBins = rpmBins;
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
-float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::getValue(float xRpm, float y) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
+float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::getValue(float xRpm, float y) {
 	efiAssert(CUSTOM_ERR_ASSERT, initialized, "map not initialized", NAN);
 	if (cisnan(y)) {
 		warning(CUSTOM_PARAM_RANGE, "%s: y is NaN", name);
 		return NAN;
 	}
 	// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-	return multiplier * interpolate3d<vType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
+	return multiplier * interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers);
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
-Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::Map3D(const char *name) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
+Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::Map3D(const char *name) {
 	create(name, 1);
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
-Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::Map3D(const char *name, float multiplier) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
+Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::Map3D(const char *name, float multiplier) {
 	create(name, multiplier);
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::create(const char *name, float multiplier) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::create(const char *name, float multiplier) {
 	this->name = name;
 	this->multiplier = multiplier;
 	memset(&pointers, 0, sizeof(pointers));
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
-void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::setAll(vType value) {
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
+void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType, kType>::setAll(vType value) {
 	efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
 	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
 		for (int r = 0; r < RPM_BIN_SIZE; r++) {
@@ -125,7 +128,7 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE, vType>::setAll(vType value) {
 	}
 }
 
-template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType>
+template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
 void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destination[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
 	for (int k = 0; k < LOAD_BIN_SIZE; k++) {
 		for (int rpmIndex = 0; rpmIndex < RPM_BIN_SIZE; rpmIndex++) {
@@ -143,11 +146,11 @@ void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destinat
  */
 #define ADVANCE_TPS_STORAGE_MULT 100
 
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t> afr_Map3D_t;
-typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float> ign_Map3D_t;
-typedef Map3D<IGN_RPM_COUNT, IGN_TPS_COUNT, int16_t> ign_tps_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float> fuel_Map3D_t;
-typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float> baroCorr_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float> afr_Map3D_t;
+typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float, float> ign_Map3D_t;
+typedef Map3D<IGN_RPM_COUNT, IGN_TPS_COUNT, int16_t, float> ign_tps_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float> fuel_Map3D_t;
+typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float> baroCorr_Map3D_t;
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 

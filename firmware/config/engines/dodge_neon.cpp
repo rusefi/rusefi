@@ -293,7 +293,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
 	copyTimingTable(fromODB, config->ignitionTable);
 
-	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float>(vBattTarget, config->fsioTable1);
+	copy2DTable<FSIO_TABLE_8, FSIO_TABLE_8, float, float>(vBattTarget, config->fsioTable1);
 
 	copyFuelTable(veDodgeNeon2003Table, config->veTable);
 	//setMap(config->veTable, 50);
