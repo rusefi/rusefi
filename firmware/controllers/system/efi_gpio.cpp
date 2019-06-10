@@ -33,34 +33,37 @@ extern LoggingWithStorage sharedLogger;
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
-static const char *sparkNames[IGNITION_PIN_COUNT] = { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8",
+static const char *sparkNames[] = { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8",
 		"coil9", "coil10", "coil11", "coil12"};
 
 // these short names are part of engine sniffer protocol
-static const char *sparkShortNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
+static const char *sparkShortNames[] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[INJECTION_PIN_COUNT] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
+static const char *injectorNames[] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
 		"injector7", "injector8", "jnjector9", "injector10", "injector11", "injector12"};
 
-static const char *injectorShortNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
+static const char *injectorShortNames[] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
-static const char *auxValveShortNames[INJECTION_PIN_COUNT] = { "a1", "a2"};
+static const char *auxValveShortNames[] = { "a1", "a2"};
 
 EnginePins::EnginePins() {
 	dizzyOutput.name = DIZZY_NAME;
 	tachOut.name = TACH_NAME;
 
+	efiAssertVoid(CUSTOM_ERR_PIN_COUNT_TOO_LARGE, (sizeof(sparkNames) / sizeof(char*)) >= IGNITION_PIN_COUNT, "spark pin count");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
 	}
+	efiAssertVoid(CUSTOM_ERR_PIN_COUNT_TOO_LARGE, (sizeof(injectorNames) / sizeof(char*)) >= INJECTION_PIN_COUNT, "inj pin count");
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
 	}
+	efiAssertVoid(CUSTOM_ERR_PIN_COUNT_TOO_LARGE, (sizeof(auxValveShortNames) / sizeof(char*)) >= AUX_DIGITAL_VALVE_COUNT, "aux pin count");
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		enginePins.auxValve[i].name = auxValveShortNames[i];
 	}
