@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 12:49:03 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 13:04:10 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2552,7 +2552,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6400
 	 */
-	pedal_to_tps_t pedalToTps;
+	pedal_to_tps_t pedalToTpsTable;
 	/**
 	 * offset 6464
 	 */
@@ -2800,4 +2800,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 12:49:03 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 13:04:10 EDT 2019
