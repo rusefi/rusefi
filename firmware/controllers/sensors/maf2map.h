@@ -12,7 +12,7 @@
 
 #define ASIZE 16
 
-typedef Map3D<ASIZE, ASIZE, float> maf2map_Map3D_t;
+typedef Map3D<ASIZE, ASIZE, float, float> maf2map_Map3D_t;
 
 void initMaf2Map();
 float estimateMapByRpmAndMaf(int rpm, float maf);
