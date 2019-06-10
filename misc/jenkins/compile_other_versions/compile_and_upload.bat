@@ -1,6 +1,6 @@
 set COMPILE_FOLDER=%1
 set bundle_name=%2
-
+set ini_file_override=%3
 
 set script_name=combile_and_upload.bat
 echo Entering %script_name% with %COMPILE_FOLDER% %bundle_name%

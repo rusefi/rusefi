@@ -8,6 +8,12 @@ set console_folder=%folder%\console
 mkdir %console_folder%
 ls -l %folder%
 
+if %ini_file_override%.==. (
+    set ini_file_override=rusefi.ini
+    echo %script_name%: No ini_file_override specified
+)
+echo %script_name%: Will use %ini_file_override%
+
 cp java_console_binary/rusefi_console.jar %console_folder%
 cp simulator/build/rusefi_simulator.exe %console_folder%
 cp misc/console_launcher/rusefi_console.exe %console_folder%
@@ -15,7 +21,9 @@ cp java_console/rusefi.xml %console_folder%
 
 cp misc/console_launcher/readme.html %folder%
 
-cp firmware/tunerstudio/rusefi.ini %folder%
+cp firmware/tunerstudio/%ini_file_override% %folder%
+rem Unsetting since would not be used anywhere else
+set ini_file_override=
 
 rem users probably do not really care for this file
 rem cp firmware/svnversion.h %folder%
