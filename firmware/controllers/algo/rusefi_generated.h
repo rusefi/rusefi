@@ -1476,10 +1476,12 @@
 #define pauseEtbControl_offset 744
 #define pauseEtbControl_offset_hex 2e8
 #define PEDAL_TO_TPS_SIZE 8
-#define pedalToTps_offset 6400
-#define pedalToTps_offset_hex 1900
+#define pedalToTps_offset 6472
+#define pedalToTps_offset_hex 1948
 #define pedalToTpsBins_offset 6464
 #define pedalToTpsBins_offset_hex 1940
+#define pedalToTpsTable_offset 6400
+#define pedalToTpsTable_offset_hex 1900
 #define pidExtraForLowRpm_offset 3180
 #define pidExtraForLowRpm_offset_hex c6c
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"

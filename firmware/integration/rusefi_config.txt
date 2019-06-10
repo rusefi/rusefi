@@ -125,13 +125,13 @@ struct_no_prefix engine_configuration_s
 #define MAF_DECODING_COUNT 256
 
 ! please note that 1024 here is 4 * FUEL_RPM_COUNT * FUEL_LOAD_COUNT  
-custom fuel_table_t	1024 array,   F32,   @OFFSET@, [16x16],"ms",      1,     0,      0.0,   500.0,   2
-custom ve_table_t 1024 array,   F32,   @OFFSET@, [16x16],"%", 1, 0, 0, 999.0, 2
-custom afr_table_t 256 array,   U08,   @OFFSET@, [16x16],"deg",	   0.1,     0,        0,  25.0,     1 
+custom fuel_table_t	1024 array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"ms",      1,     0,      0.0,   500.0,   2
+custom ve_table_t 1024 array,   F32,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"%", 1, 0, 0, 999.0, 2
+custom afr_table_t 256 array,   U08,   @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@],"deg",	   0.1,     0,        0,  25.0,     1 
 
-custom fsio_table_8x8_u8t	64 array,   U08,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   255.0,   0
-custom fsio_table_8x8_f32t	256 array,   F32,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   30000.0,   2
-custom tps_tps_table_t	256 array,   F32,   @OFFSET@, [8x8],"value",      1,     0,      0.0,   30000.0,   2
+custom fsio_table_8x8_u8t	64 array,   U08,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   255.0,   0
+custom fsio_table_8x8_f32t	256 array,   F32,   @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@],"value",      1,     0,      0.0,   30000.0,   2
+custom tps_tps_table_t	256 array,   F32,   @OFFSET@, [@@TPS_TPS_ACCEL_TABLE@@x@@TPS_TPS_ACCEL_TABLE@@],"value",      1,     0,      0.0,   30000.0,   2
 
 
 ! todo support table size multiplocation
@@ -139,10 +139,10 @@ custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO
 
 
 ! please note that 1024 here is 4 * IGN_LOAD_COUNT * IGN_RPM_COUNT  
-custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -20, 90,    2
-custom ignition_tps_table_t	512 array,   S16,   @OFFSET@, [16x16],"deg",	   0.01,     0,     -20, 90,    2
+custom ignition_table_t	1024 array,   F32,   @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@],"deg",	   1,     0,     -20, 90,    2
+custom ignition_tps_table_t	512 array,   S16,   @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_TPS_COUNT@@],"deg",	   0.01,     0,     -20, 90,    2
 
-custom angle_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -720,  720,    2
+custom angle_table_t	1024 array,   F32,   @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@],"deg",	   1,     0,     -720,  720,    2
 custom pedal_to_tps_t	64 array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
@@ -1062,7 +1062,7 @@ end_struct
 
 engine_configuration_s engineConfiguration;
 
-pedal_to_tps_t pedalToTps;
+pedal_to_tps_t pedalToTpsTable;
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsBins;;"%",        1,     0,      0.0,    120.0,   0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTps;;"%",        1,     0,      0.0,    120.0,   0
 
