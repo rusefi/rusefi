@@ -20,6 +20,8 @@
 
 #if EFI_SUPPORT_FORD_ASPIRE
 
+#if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
+
 /**
  * This is just the default map which is stored into flash memory in case flash is empty
  * The convenient way to override these default would be to tune this map using TunerStudio software
@@ -44,7 +46,9 @@ static const fuel_table_t default_aspire_fuel_table = {
 /* Load 4.186667 */{	16.961868,	15.368391,	15.210348,	15.290641,	15.263707,	15.485778,	15.827333,	15.802435,	15.677885,	15.827120,	15.997155,	16.027468,	15.478480,	15.190000,	15.190000,	15.190000},
 /* Load 4.400000 */{	17.010000,	15.250000,	15.680000,	15.440000,	15.270000,	15.470000,	15.800000,	15.730000,	15.600000,	15.790000,	16.120001,	16.110001,	15.630000,	15.150000,	15.150000,	15.150000}
 };
+#endif
 
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const ignition_table_t default_aspire_timing_table = {
 /* RPM					800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
 /* Load 1.200000 */{	-0.662000,	+7.730000,	+16.722000,	+23.139999,	+29.398001,	+31.268000,	+32.108002,	+30.436001,	+30.896000,	+26.656000,	+24.704000,	+25.108000,	+25.132000,	+25.459999,	+25.459999,	+25.459999},
@@ -64,6 +68,7 @@ static const ignition_table_t default_aspire_timing_table = {
 /* Load 4.186667 */{	-9.750000,	-5.518000,	-2.604000,	-0.000000,	+2.880000,	+3.654000,	+6.050000,	+6.888000,	+8.372000,	+9.364000,	+11.764000,	+11.732000,	+11.864000,	+12.376000,	+12.376000,	+12.376000},
 /* Load 4.400000 */{	-0.350000,	-5.590000,	-0.502000,	-0.910000,	-0.864000,	-0.954000,	-1.324000,	+7.436000,	-1.170000,	-1.054000,	-2.058000,	-2.098000,	-2.636000,	+12.352000,	+12.352000,	+12.352000}
 };
+#endif
 
 EXTERN_CONFIG;
 
@@ -74,8 +79,12 @@ static void setDefaultAspireMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
+#if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
 	copyFuelTable(default_aspire_fuel_table, config->fuelTable);
+#endif
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(default_aspire_timing_table, config->ignitionTable);
+#endif
 }
 
 void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

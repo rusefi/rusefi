@@ -23,6 +23,7 @@
 #include "allsensors.h"
 #include "custom_engine.h"
 
+#if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
 static const fuel_table_t miataNA8_maf_fuel_table = { {/*0 engineLoad=1.2*//*0 800.0*/1.53, /*1 1213.0*/0.92, /*2 1626.0*/
 		0.74, /*3 2040.0*/0.69, /*4 2453.0*/0.69, /*5 2866.0*/0.67, /*6 3280.0*/0.67, /*7 3693.0*/0.67, /*8 4106.0*/
 		0.67, /*9 4520.0*/1.02, /*10 4933.0*/0.98, /*11 5346.0*/0.98, /*12 5760.0*/0.92, /*13 6173.0*/0.89, /*14 6586.0*/
@@ -68,7 +69,9 @@ static const fuel_table_t miataNA8_maf_fuel_table = { {/*0 engineLoad=1.2*//*0 8
 		12.34, /*3 2040.0*/12.43, /*4 2453.0*/12.74, /*5 2866.0*/12.91, /*6 3280.0*/12.71, /*7 3693.0*/12.54, /*8 4106.0*/
 		12.97, /*9 4520.0*/13.53, /*10 4933.0*/14.87, /*11 5346.0*/15.48, /*12 5760.0*/16.1, /*13 6173.0*/16.18, /*14 6586.0*/
 		15.93, /*15 7000.0*/0.0 } };
+#endif
 
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const ignition_table_t miataNA8_maf_advance_table = { {/*0  engineLoad=1.200*//*0 800.0*/+4.498, /*1 1213.0*/+11.905, /*2 1626.0*/
 		+23.418, /*3 2040.0*/+25.357, /*4 2453.0*/+25.441, /*5 2866.0*/+25.468, /*6 3280.0*/+29.425, /*7 3693.0*/
 		+32.713, /*8 4106.0*/+35.556, /*9 4520.0*/+37.594, /*10 4933.0*/+36.165, /*11 5346.0*/+30.578, /*12 5760.0*/
@@ -118,6 +121,7 @@ static const ignition_table_t miataNA8_maf_advance_table = { {/*0  engineLoad=1.
 		+4.85, /*1 1213.0*/+12.24, /*2 1626.0*/+24.091, /*3 2040.0*/+25.394, /*4 2453.0*/+25.323, /*5 2866.0*/+25.544, /*6 3280.0*/
 		+29.915, /*7 3693.0*/+33.104, /*8 4106.0*/+36.016, /*9 4520.0*/+37.933, /*10 4933.0*/+36.254, /*11 5346.0*/
 		+29.712, /*12 5760.0*/+28.651, /*13 6173.0*/+28.045, /*14 6586.0*/+27.228, /*15 7000.0*/+27.784 } };
+#endif
 
 static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) {
 	// todo: set cranking parameters method based on injectors and displacement?
@@ -241,9 +245,13 @@ static void setMiata1994_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->crankingChargeAngle = 70;
 
+#if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
 	copyFuelTable(miataNA8_maf_fuel_table, config->fuelTable);
+#endif
 
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(miataNA8_maf_advance_table, config->ignitionTable);
+#endif
 
 //	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
 //	boardConfiguration->triggerSimulatorPins[1] = GPIOB_3; // 2E - WHT - four times
@@ -369,8 +377,12 @@ void setMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.displacement = 1.839;
 
+#if DEFAULT_FUEL_LOAD_COUNT == FUEL_LOAD_COUNT
 	copyFuelTable(miataNA8_maf_fuel_table, config->fuelTable);
+#endif
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(miataNA8_maf_advance_table, config->ignitionTable);
+#endif
 
 	// upside down
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
