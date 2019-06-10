@@ -284,12 +284,6 @@ public:
 	uint32_t engineCycleEventCount = 0;
 
 	/**
-	 * fast spark dwell time interpolation helper
-	 * todo: finish the implementation and
-	 */
-	Table2D<DWELL_CURVE_SIZE> sparkTable;
-
-	/**
 	 * fast kg/hour MAF decoding lookup table with ~0.2 volt step
 	 * This table is build based on MAF decoding curve
 	 */
