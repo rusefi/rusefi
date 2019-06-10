@@ -46,6 +46,7 @@ static bool shouldResetTimingPid = false;
 
 static int minCrankingRpm = 0;
 
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
 
 //880	1260	1640	2020	2400	2780	3000	3380	3760	4140	4520	5000	5700	6500	7200	8000
@@ -67,6 +68,8 @@ static const ignition_table_t defaultIatTiming = {
 		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
 		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
 };
+
+#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 
 bool isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return  CONFIGB(enabledStep1Limiter) && rpm >= engineConfiguration->step1rpm;
@@ -226,8 +229,12 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
 	copyTimingTable(defaultIatTiming, config->ignitionIatCorrTable);
+#else
+	setLinearCurve(config->ignitionIatCorrLoadBins, IGN_RPM_COUNT, /*from*/0, 6000, 1);
+#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 }
 
 void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

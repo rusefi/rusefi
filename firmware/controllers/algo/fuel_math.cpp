@@ -232,7 +232,9 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);
+#if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
+#endif /* (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT) */
 }
 
 /**

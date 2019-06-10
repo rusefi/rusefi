@@ -219,6 +219,7 @@ void setAfrMap(afr_table_t table, float value) {
 	}
 }
 
+// todo: make this a template
 void setMap(fuel_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
@@ -236,7 +237,10 @@ void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
+#if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
+	// todo: make setMap a template
 	setMap(config->ignitionIatCorrTable, value);
+#endif
 }
 
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
@@ -794,7 +798,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+#if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
+	// todo: make setMap a template
 	setMap(config->injectionPhase, -180);
+#endif
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setFuelTablesLoadBin(10, 160 PASS_CONFIG_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
