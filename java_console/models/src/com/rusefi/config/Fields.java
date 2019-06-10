@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jun 07 17:34:20 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 12:49:03 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -959,6 +959,11 @@ public class Fields {
 	public static final int overrideCrankingIgnition_offset = 516;
 	public static final int overrideCrankingIgnition_offset_hex = 204;
 	public static final int pauseEtbControl_offset = 744;
+	public static final int PEDAL_TO_TPS_SIZE = 8;
+	public static final int pedalToTps_offset = 6400;
+	public static final int pedalToTps_offset_hex = 1900;
+	public static final int pedalToTpsBins_offset = 6464;
+	public static final int pedalToTpsBins_offset_hex = 1940;
 	public static final int pidExtraForLowRpm_offset = 3180;
 	public static final int postCrankingDurationSec_offset = 2464;
 	public static final int postCrankingFactor_offset = 2460;
@@ -1991,6 +1996,7 @@ public class Fields {
 	public static final Field MC33816SPIDEVICE = Field.create("MC33816SPIDEVICE", 4025, FieldType.INT8);
 	public static final Field TLE6240SPIDEVICE = Field.create("TLE6240SPIDEVICE", 4028, FieldType.INT8);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4032, FieldType.INT8);
+	public static final Field PEDALTOTPS = Field.create("PEDALTOTPS", 6400, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, FieldType.INT);
