@@ -158,7 +158,21 @@ void setTableBin(float array[], int size, float from, float to);
 
 #define setArrayValues(array, size, value) setTableBin(array, size, value, value)
 
-void setLinearCurve(float array[], int size, float from, float to, float precision);
+/**
+ * @param precision for example '0.1' for one digit fractional part
+ */
+template<typename vType>
+void setLinearCurveAny(vType array[], int size, float from, float to, float precision) {
+	for (int i = 0; i < size; i++) {
+		float value = interpolateMsg("setLinearCurve", 0, from, size - 1, to, i);
+		/**
+		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
+		 */
+		array[i] = efiRound(value, precision);
+	}
+}
+
+#define setLinearCurve setLinearCurveAny<float>
 void setRpmTableBin(float array[], int size);
 
 #endif /* TABLE_HELPER_H_ */
