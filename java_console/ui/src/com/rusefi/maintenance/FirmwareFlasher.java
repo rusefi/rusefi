@@ -12,8 +12,9 @@ import static com.rusefi.Launcher.INPUT_FILES_PATH;
  * 2/4/15
  */
 public class FirmwareFlasher extends ProcessStatusWindow {
-    public static final String IMAGE_FILE = INPUT_FILES_PATH + File.separator + "rusefi.bin";
-    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + File.separator + "rusefi_no_asserts.bin";
+    // Even on Windows openOCD insists on "/" for path separator
+    public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
+    public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + "/" + "rusefi_no_asserts.bin";
     static final String OPENOCD_EXE = "openocd/openocd.exe";
     static final String BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
