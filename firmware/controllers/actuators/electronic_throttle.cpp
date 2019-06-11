@@ -332,8 +332,15 @@ void setEtbOffset(int value) {
 }
 
 void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurveAny<int8_t>(config->pedalToTpsTpsBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/100, 1);
+	setLinearCurveAny<int8_t>(config->pedalToTpsPedalBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/100, 1);
 	setLinearCurveAny<uint8_t>(config->pedalToTpsRpmBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/8000 / 50, 1);
+
+	for (int pedalIndex = 0;pedalIndex<PEDAL_TO_TPS_SIZE;pedalIndex++) {
+		for (int rpmIndex = 0;rpmIndex<PEDAL_TO_TPS_SIZE;rpmIndex++) {
+			config->pedalToTpsTable[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
+		}
+	}
+
 
 	engineConfiguration->throttlePedalUpVoltage = 0; // that's voltage, not ADC like with TPS
 	engineConfiguration->throttlePedalWOTVoltage = 6; // that's voltage, not ADC like with TPS
