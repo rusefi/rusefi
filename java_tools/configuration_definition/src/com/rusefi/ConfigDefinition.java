@@ -40,6 +40,16 @@ public class ConfigDefinition {
     public static String definitionInputFile = null;
 
     public static void main(String[] args) throws IOException {
+        try {
+            doJob(args);
+        } catch (Throwable e) {
+            System.out.println(e);
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    private static void doJob(String[] args) throws IOException {
         if (args.length < 2) {
             System.out.println("Please specify\r\n"
                     + KEY_DEFINITION + " x\r\n"
