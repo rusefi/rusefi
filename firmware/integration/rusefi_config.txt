@@ -1061,7 +1061,7 @@ end_struct
 engine_configuration_s engineConfiguration;
 
 pedal_to_tps_t pedalToTpsTable;
-int8_t[PEDAL_TO_TPS_SIZE] pedalToTpsTpsBins;;"%",           1,     0,      0.0,   120.0,   0
+int8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%",           1,     0,      0.0,   120.0,   0
 ! it's not serious to use one byte for RPM but let me try that just to try it
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM",        50,     0,      0.0,   12000.0,   0
 

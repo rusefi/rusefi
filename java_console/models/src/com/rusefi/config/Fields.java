@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 23:08:07 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 23:50:00 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -960,12 +960,12 @@ public class Fields {
 	public static final int overrideCrankingIgnition_offset_hex = 204;
 	public static final int pauseEtbControl_offset = 744;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
+	public static final int pedalToTpsPedalBins_offset = 6464;
+	public static final int pedalToTpsPedalBins_offset_hex = 1940;
 	public static final int pedalToTpsRpmBins_offset = 6472;
 	public static final int pedalToTpsRpmBins_offset_hex = 1948;
 	public static final int pedalToTpsTable_offset = 6400;
 	public static final int pedalToTpsTable_offset_hex = 1900;
-	public static final int pedalToTpsTpsBins_offset = 6464;
-	public static final int pedalToTpsTpsBins_offset_hex = 1940;
 	public static final int pidExtraForLowRpm_offset = 3180;
 	public static final int postCrankingDurationSec_offset = 2464;
 	public static final int postCrankingFactor_offset = 2460;

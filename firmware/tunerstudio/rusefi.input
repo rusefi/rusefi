@@ -719,7 +719,7 @@ fileVersion = { 20171101 }
    table = pedalToTpsTbl,  pedalToTpsMap,  "ETB Pedal to TPS",   1
       ;       constant, variable
       xBins       = pedalToTpsRpmBins,  RPMValue
-      yBins       = pedalToTpsTpsBins,  TPSValue
+      yBins       = pedalToTpsPedalBins,  pedalPosition
       zBins       = pedalToTpsTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
