@@ -6,6 +6,7 @@ import java.util.Objects;
  * 1/22/15
  */
 public class TypesHelper {
+    private static final String INT8_T = "int8_t";
     public static final String UINT8_T = "uint8_t";
     public static final String UINT_16_T = "uint16_t";
     public static final String INT_16_T = "int16_t";
@@ -21,7 +22,7 @@ public class TypesHelper {
             return state.structures.get(type).totalSize;
         if (state != null && state.tsCustomSize.containsKey(type))
             return state.tsCustomSize.get(type);
-        if (type.equals(UINT8_T))
+        if (type.equals(INT8_T) || type.equals(UINT8_T))
             return 1;
         if (type.equals(INT_16_T) || type.equals(UINT_16_T)) {
             return 2;
@@ -44,6 +45,8 @@ public class TypesHelper {
             return "S16";
         if (UINT_16_T.equals(type))
             return "U16";
+        if (INT8_T.equals(type))
+            return "S08";
         if (UINT8_T.equals(type))
             return "U08";
         System.out.println("No TS type convesion for " + type);
