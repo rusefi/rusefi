@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 13:04:10 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 23:09:10 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2556,11 +2556,11 @@ struct persistent_config_s {
 	/**
 	 * offset 6464
 	 */
-	uint8_t pedalToTpsBins[PEDAL_TO_TPS_SIZE];
+	int8_t pedalToTpsTpsBins[PEDAL_TO_TPS_SIZE];
 	/**
 	 * offset 6472
 	 */
-	uint8_t pedalToTps[PEDAL_TO_TPS_SIZE];
+	uint8_t pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
 	 * offset 6480
@@ -2800,4 +2800,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 13:04:10 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 23:09:10 EDT 2019
