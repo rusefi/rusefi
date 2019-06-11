@@ -1061,8 +1061,9 @@ end_struct
 engine_configuration_s engineConfiguration;
 
 pedal_to_tps_t pedalToTpsTable;
-uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsBins;;"%",        1,     0,      0.0,    120.0,   0
-uint8_t[PEDAL_TO_TPS_SIZE] pedalToTps;;"%",        1,     0,      0.0,    120.0,   0
+int8_t[PEDAL_TO_TPS_SIZE] pedalToTpsTpsBins;;"%",           1,     0,      0.0,   120.0,   0
+! it's not serious to use one byte for RPM but let me try that just to try it
+uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM",        50,     0,      0.0,   12000.0,   0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%",      1,     0,      0.0,    500.0,   2
