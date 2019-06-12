@@ -111,6 +111,7 @@ struct_no_prefix engine_configuration_s
 #define FUEL_LOAD_COUNT 16
 
 #define PEDAL_TO_TPS_SIZE 8
+#define RPM_1_BYTE_PACKING_MULT 50
 
 #define FSIO_TABLE_8 8
 
@@ -1063,7 +1064,7 @@ engine_configuration_s engineConfiguration;
 pedal_to_tps_t pedalToTpsTable;
 int8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%",           1,     0,      0.0,   120.0,   0
 ! it's not serious to use one byte for RPM but let me try that just to try it
-uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM",        50,     0,      0.0,   12000.0,   0
+uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM",        @@RPM_1_BYTE_PACKING_MULT@@,     0,      0.0,   12000.0,   0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%",      1,     0,      0.0,    500.0,   2
