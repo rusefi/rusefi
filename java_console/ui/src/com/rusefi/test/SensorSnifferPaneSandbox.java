@@ -9,9 +9,9 @@ import com.rusefi.ui.util.FrameHelper;
  * (c) Andrey Belomutskiy
  */
 
-public class SensorSnifferPaneSandbox extends FrameHelper {
+public class SensorSnifferPaneSandbox {
     public static void main(String[] args) {
         Node config = null;//getConfig().getRoot().getChild("sensor_sniffer");
-        new EcuStimulatorSandbox().showFrame(new SensorSnifferPane(config).getPanel());
+        new FrameHelper().showFrame(new SensorSnifferPane(config).getPanel());
     }
 }

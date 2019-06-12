@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
  * 7/25/13
  * (c) Andrey Belomutskiy
  */
-public class WavePanelSandbox extends FrameHelper {
+public class WavePanelSandbox {
 
     public WavePanelSandbox() {
         EngineSnifferPanel wp = new EngineSnifferPanel(PersistentConfiguration.getConfig().getRoot());
@@ -25,7 +25,7 @@ public class WavePanelSandbox extends FrameHelper {
 
         wp.displayChart(report);
 
-        showFrame(wp.getPanel());
+        new FrameHelper().showFrame(wp.getPanel());
     }
 
     private void printAngles(String value, int from, int to) {
@@ -57,11 +57,6 @@ public class WavePanelSandbox extends FrameHelper {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                new WavePanelSandbox();
-            }
-        });
+        SwingUtilities.invokeAndWait(() -> new WavePanelSandbox());
     }
 }
