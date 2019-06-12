@@ -10,7 +10,7 @@ import javax.swing.*;
  * 7/18/13
  * (c) Andrey Belomutskiy
  */
-public class ShowMap extends FrameHelper {
+public class ShowMap {
     public static void main(String[] args) {
 //        XYData data = BaseMap.loadData("a.csv", "maf", "af");
 //        XYData data2 = BaseMap.loadData("a.csv", "maf", "table_fuel");
@@ -20,6 +20,6 @@ public class ShowMap extends FrameHelper {
 
         JPanel jsp = ChartHelper.create3DControl(data, ChartHelper.createDefaultSurfaceModel(data, data2), "MAF<>Fuel Map");
 
-        new ShowMap().showFrame(jsp);
+        new FrameHelper().showFrame(jsp);
     }
 }
