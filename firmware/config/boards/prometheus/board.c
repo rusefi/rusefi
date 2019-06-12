@@ -264,28 +264,3 @@ bool mmc_lld_is_write_protected(MMCDriver *mmcp) {
 void boardInit(void) {
 }
 
-/**
- * @brief   Board-specific ADC channel configuration code overrides.
- * @todo    Add your board-specific code, if any.
- */
-void setAdcChannelOverrides(void) {
-}
-
-
-#define PROMETHEUS_LED 13
-
-// BLIIINK!!!!!!!!!!
-void BLIIINK(int t) {
-	int i, j;
-	palSetPadMode(GPIOA, PROMETHEUS_LED, PAL_MODE_OUTPUT_PUSHPULL);
-	//while (true) {
-	for (j = 0; j < 2; j++) {
-		palClearPad(GPIOA, PROMETHEUS_LED);
-    	for (i = 0; i < 2*t; i++) {
-	    	palTogglePad(GPIOA, PROMETHEUS_LED);
-    		chThdSleepMilliseconds(250);
-    	}
-    	chThdSleepMilliseconds(1000);
-    }
-}
-
