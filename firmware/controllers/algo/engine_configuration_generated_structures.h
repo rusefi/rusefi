@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 23:50:00 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 20:29:08 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -184,6 +184,7 @@ struct thermistor_conf_s {
 	 */
 	float resistance_3;
 	/**
+	 * Pull-up resistor value on your board
 	 * offset 24
 	 */
 	float bias_resistor;
@@ -2800,4 +2801,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 23:50:00 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 20:29:08 EDT 2019

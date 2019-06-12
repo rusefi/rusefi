@@ -237,7 +237,7 @@ float resistance_1;;"Ohm",      1,     0,    0, 200000,     1
 float resistance_2;;"Ohm",      1,     0,    0, 200000,     1
 float resistance_3;;"Ohm",      1,     0,    0, 200000,     1
 
-	float bias_resistor;;"Ohm",      1,     0,    0, 200000,     1
+	float bias_resistor;+Pull-up resistor value on your board;"Ohm",      1,     0,    0, 200000,     1
 end_struct
 
 struct oil_pressure_config_s @brief Oil pressure sensor interpolation
