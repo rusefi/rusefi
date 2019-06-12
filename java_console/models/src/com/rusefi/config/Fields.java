@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 10 23:50:00 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 21:30:38 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -974,6 +974,7 @@ public class Fields {
 	public static final int primeInjFalloffTemperature_offset = 1486;
 	public static final int primingSquirtDurationMs_offset = 96;
 	public static final int primingSquirtDurationMs_offset_hex = 60;
+	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1833;
 	public static final int runningLedPin_offset_hex = 729;

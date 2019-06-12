@@ -333,7 +333,7 @@ void setEtbOffset(int value) {
 
 void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurveAny<int8_t>(config->pedalToTpsPedalBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/100, 1);
-	setLinearCurveAny<uint8_t>(config->pedalToTpsRpmBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/8000 / 50, 1);
+	setLinearCurveAny<uint8_t>(config->pedalToTpsRpmBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/8000 / RPM_1_BYTE_PACKING_MULT, 1);
 
 	for (int pedalIndex = 0;pedalIndex<PEDAL_TO_TPS_SIZE;pedalIndex++) {
 		for (int rpmIndex = 0;rpmIndex<PEDAL_TO_TPS_SIZE;rpmIndex++) {
