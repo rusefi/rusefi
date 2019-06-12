@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 20:29:08 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 22:00:41 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -159,7 +159,7 @@ typedef struct MAP_sensor_config_s MAP_sensor_config_s;
 // start of thermistor_conf_s
 struct thermistor_conf_s {
 	/**
-	 * these values are in Celcuus
+	 * these values are in Celcius
 	 * offset 0
 	 */
 	float tempC_1;
@@ -2801,4 +2801,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 20:29:08 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 22:00:41 EDT 2019

@@ -231,7 +231,7 @@ air_pressure_sensor_config_s sensor
 end_struct
 
 struct_no_prefix thermistor_conf_s @brief Thermistor known values
-float tempC_1;these values are in Celcuus;"*C",       1,     0,    -40, 200,     1
+float tempC_1;these values are in Celcius;"*C",       1,     0,    -40, 200,     1
 float tempC_2;;"*C",       1,     0,    -40, 200,     1
 float tempC_3;;"*C",       1,     0,    -40, 200,     1
 float resistance_1;;"Ohm",      1,     0,    0, 200000,     1
