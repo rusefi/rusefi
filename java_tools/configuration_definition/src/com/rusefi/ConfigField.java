@@ -59,7 +59,7 @@ public class ConfigField {
         this.type = type;
         this.arraySizeVariableName = arraySizeAsText;
         this.arraySize = arraySize;
-        this.tsInfo = tsInfo;
+        this.tsInfo = VariableRegistry.INSTANCE.applyVariables(tsInfo);
         this.isIterate = isIterate;
     }
 

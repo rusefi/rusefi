@@ -32,6 +32,8 @@ public class VariableRegistry extends TreeMap<String, String> {
      * @return string with variable values inlined
      */
     public String applyVariables(String line) {
+        if (line == null)
+            return null;
         Matcher m;
         while ((m = VAR.matcher(line)).find()) {
             String key = m.group(2);
