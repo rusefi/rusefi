@@ -1,7 +1,7 @@
 
 cd ../../..
 
-set PROJECT_BOARD=nucleo_f767
+set PROJECT_BOARD=microrusefi
 set PROJECT_CPU=ARCH_STM32F7
 set EXTRA_PARAMS=-DDUMMY ^
  -DSTM32F767xx ^
