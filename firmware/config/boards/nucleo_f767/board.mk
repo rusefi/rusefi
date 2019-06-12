@@ -1,5 +1,5 @@
 # List of all the board related files.
-BOARDSRC = $(PROJECT_DIR)/config/boards/NUCLEO_F767/board.c
+BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
 BOARDSRC_CPP = $(PROJECT_DIR)/config/boards/NUCLEO_F767/board_configuration.cpp
 
 # Required include directories
