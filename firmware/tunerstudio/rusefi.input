@@ -4,7 +4,7 @@
 ; inputs are rusefi.input template and rusefi_config.txt file
 ;
 ;
-; Some fields have little question mark on the left of the name for additional field tips.
+; In TunerStudio some fields have little question mark on the left of the name for additional field tips.
 ; Those tips are defined in ../integraion/rusefi_config.txt file for example
 ;
 ;     float bias_resistor;+Pull-up resistor value on your board;"Ohm"
