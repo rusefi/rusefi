@@ -1621,19 +1621,5 @@
                                      PIN_AFIO_AF(GPIOK_PIN14, 0) |          \
                                      PIN_AFIO_AF(GPIOK_PIN15, 0))
 
-#if !defined(_FROM_ASM_)
-#ifdef __cplusplus
-extern "C" {
-#endif
-  void boardInit(void);
-  void setBoardConfigurationOverrides(void);
-  void setPinConfigurationOverrides(void);
-  void setSerialConfigurationOverrides(void);
-  void setSdCardConfigurationOverrides(void);
-  void setAdcChannelOverrides(void);
-#ifdef __cplusplus
-}
-#endif
-#endif /* _FROM_ASM_ */
 
 #endif /* BOARD_H */

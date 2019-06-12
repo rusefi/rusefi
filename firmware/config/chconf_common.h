@@ -49,5 +49,20 @@ extern "C"
   #define ON_UNLOCK_HOOK
 #endif /* EFI_CLOCK_LOCKS */
 
+#if !defined(_FROM_ASM_)
+#ifdef __cplusplus
+extern "C" {
+#endif
+  void boardInit(void);
+  void setBoardConfigurationOverrides(void);
+  void setPinConfigurationOverrides(void);
+  void setSerialConfigurationOverrides(void);
+  void setSdCardConfigurationOverrides(void);
+  void setAdcChannelOverrides(void);
+#ifdef __cplusplus
+}
+#endif
+#endif /* _FROM_ASM_ */
+
 
 #endif /* CONFIG_CHCONF_COMMON_H_ */
