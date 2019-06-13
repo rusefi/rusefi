@@ -14,7 +14,7 @@
 #include "cyclic_buffer.h"
 #include "table_helper.h"
 
-typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float> tps_tps_Map3D_t;
+typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float> tps_tps_Map3D_t;
 
 /**
  * this object is used for MAP rate-of-change and TPS rate-of-change corrections
@@ -65,7 +65,7 @@ public:
 	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
 	 */
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
-	floatms_t getWallFuel(int injectorIndex);
+	floatms_t getWallFuel(int injectorIndex) const;
 	void reset();
 private:
 	/**

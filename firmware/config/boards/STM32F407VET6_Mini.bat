@@ -12,7 +12,5 @@ set EXTRA_PARAMS=-DDUMMY -DEFI_COMMUNICATION_PIN=GPIOB_9 -DSTM32_HSECLK=25000000
  -DFLASH_ADDR=0x08075000
 
 make -j8 clean
-make -j8
-rem rm -f build/rusefi.dfu
-rem dir build
-rem ..\misc\hex2dfu\HEX2DFU.exe build/rusefi.hex   -out build/rusefi.dfu
+
+call config/boards/common_make.bat

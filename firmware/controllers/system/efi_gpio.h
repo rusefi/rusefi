@@ -45,7 +45,7 @@ public:
 
 	void setValue(int logicValue);
 	void toggle();
-	bool getLogicValue();
+	bool getLogicValue() const;
 
 
 #if EFI_GPIO_HARDWARE
@@ -74,11 +74,11 @@ private:
 class NamedOutputPin : public OutputPin {
 public:
 	NamedOutputPin();
-	NamedOutputPin(const char *name);
+	explicit NamedOutputPin(const char *name);
 	void setHigh();
 	void setLow();
-	const char *getName();
-	const char *getShortName();
+	const char *getName() const;
+	const char *getShortName() const;
 	/**
 	 * @return true if pin was stopped
 	 */

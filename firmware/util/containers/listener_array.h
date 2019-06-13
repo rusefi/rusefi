@@ -27,7 +27,7 @@ public:
 	void clear();
 	void registerCallback(VoidInt handler, void *arg);
 	void registerCallback(Void listener);
-	void invokeJustArgCallbacks();
+	void invokeJustArgCallbacks() const;
 	int currentListenersCount;
 	VoidInt callbacks[MAX_INT_LISTENER_COUNT];
 	void * args[MAX_INT_LISTENER_COUNT];
@@ -83,7 +83,7 @@ void invokeCallbacks(IntListenerArray<MAX_INT_LISTENER_COUNT> *array, int value)
 }
 
 template<int MAX_INT_LISTENER_COUNT>
-void IntListenerArray<MAX_INT_LISTENER_COUNT>::invokeJustArgCallbacks() {
+void IntListenerArray<MAX_INT_LISTENER_COUNT>::invokeJustArgCallbacks() const {
 	for (int i = 0; i < currentListenersCount; i++) {
 		VoidPtr listener = (VoidPtr)(void*)callbacks[i];
 		void *arg = args[i];

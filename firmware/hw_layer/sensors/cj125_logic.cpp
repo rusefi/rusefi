@@ -34,7 +34,7 @@ void CJ125::SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	SetHeater(CJ125_HEATER_IDLE_RATE PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-bool CJ125::isWorkingState(void) {
+bool CJ125::isWorkingState(void) const {
 	return state != CJ125_ERROR && state != CJ125_INIT && state != CJ125_IDLE;
 }
 
@@ -95,7 +95,7 @@ void CJ125::cjSetMode(cj125_mode_e m) {
 	mode = m;
 }
 
-bool CJ125::isValidState() {
+bool CJ125::isValidState() const {
 	// check if controller is functioning
 	if (!isWorkingState())
 		return false;

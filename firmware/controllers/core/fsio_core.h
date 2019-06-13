@@ -84,7 +84,7 @@ public:
 	LEElement *next();
 	void reset();
 	LEElement * parseExpression(const char * line);
-	int getSize();
+	int getSize() const;
 private:
 	int index;
 	int size;
@@ -103,7 +103,7 @@ public:
 	float getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX);
 	float getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void add(LEElement *element);
-	bool isEmpty();
+	bool isEmpty() const;
 	void reset();
 	void reset(LEElement *element);
 	le_action_e calcLogAction[MAX_CALC_LOG];

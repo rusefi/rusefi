@@ -4,20 +4,39 @@ echo Entering %script_name%
 pwd
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
+set console_folder=%folder%\console
+mkdir %console_folder%
+ls -l %folder%
 
-cp java_console_binary/rusefi_console.jar %folder%
-cp simulator/build/rusefi_simulator.exe %folder%
-cp firmware/tunerstudio/rusefi.ini %folder%
+if %ini_file_override%.==. (
+    set ini_file_override=rusefi.ini
+    echo %script_name%: No ini_file_override specified
+)
+echo %script_name%: Will use %ini_file_override%
 
-cp firmware/svnversion.h %folder%
-cp -r misc/install/openocd %folder% 
-cp java_console/rusefi.xml %folder%
-rem 407 has two versions
-cp firmware/deliver/rusefi_release.* %folder%
-cp firmware/deliver/rusefi_debug.* %folder%
+cp java_console_binary/rusefi_console.jar %console_folder%
+cp simulator/build/rusefi_simulator.exe %console_folder%
+cp misc/console_launcher/rusefi_console.exe %console_folder%
+cp java_console/rusefi.xml %console_folder%
+
+cp misc/console_launcher/readme.html %folder%
+
+cp firmware/tunerstudio/%ini_file_override% %folder%
+rem Unsetting since would not be used anywhere else
+set ini_file_override=
+
+rem users probably do not really care for this file
+rem cp firmware/svnversion.h %folder%
+
+cp -r misc/install/openocd %console_folder%
+rem 407 has additional version of firmware
+cp firmware/deliver/rusefi_no_asserts.bin %folder%
+cp firmware/deliver/rusefi_no_asserts.dfu %folder%
 rem 746 builds one version at the moment
-cp firmware/build/rusefi.* %folder%
-cp misc/console_launcher/rusefi_console.exe %folder%
+rem probably not needed cp firmware/build/rusefi.hex %folder%
+cp firmware/build/rusefi.bin %folder%
+rem probably not needed cp firmware/build/rusefi.elf %folder%
+cp firmware/build/rusefi.dfu %folder%
 
 
 cd temp

@@ -1,5 +1,7 @@
 # List of all the board related files.
-BOARDSRC = $(PROJECT_DIR)/config/boards/prometheus/board.c
+BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_STM32F469I_DISCOVERY/board.c \
+    $(PROJECT_DIR)/config/boards/prometheus/board_extra.c
+
 BOARDSRC_CPP = $(PROJECT_DIR)/config/boards/Prometheus/board_configuration.cpp
 
 # Required include directories

@@ -15,11 +15,11 @@ TwoPinDcMotor::TwoPinDcMotor(SimplePwm* enable, SimplePwm* dir1, SimplePwm* dir2
 {
 }
 
-bool TwoPinDcMotor::isOpenDirection() {
+bool TwoPinDcMotor::isOpenDirection() const {
 	return m_value >= 0;
 }
 
-float TwoPinDcMotor::Get() {
+float TwoPinDcMotor::Get() const {
 	return m_value;
 }
 

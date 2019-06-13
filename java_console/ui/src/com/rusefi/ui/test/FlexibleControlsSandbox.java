@@ -7,8 +7,8 @@ import com.rusefi.ui.util.FrameHelper;
  * (c) Andrey Belomutskiy
  * 12/4/14
  */
-public class FlexibleControlsSandbox extends FrameHelper {
+public class FlexibleControlsSandbox {
     public static void main(String[] args) {
-        new FlexibleControlsSandbox().showFrame(new FlexibleControls().getPanel());
+        new FrameHelper().showFrame(new FlexibleControls().getPanel());
     }
 }

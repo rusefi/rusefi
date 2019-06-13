@@ -217,7 +217,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		 */
 		if (CONFIGB(useTPSBasedVeTable)) {
 			// todo: should we have 'veTpsMap' fuel_Map3D_t variable here?
-			currentRawVE = interpolate3d<float>(tps, CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
+			currentRawVE = interpolate3d<float, float>(tps, CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
 		} else {
 			currentRawVE = veMap.getValue(rpm, map);
 		}

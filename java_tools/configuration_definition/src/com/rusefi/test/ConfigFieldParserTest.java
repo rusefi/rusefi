@@ -2,6 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import com.rusefi.VariableRegistry;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -70,5 +71,19 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getType(), "MAP_sensor_config_s");
             assertEquals(cf.getComment(), "@see hasMapSensor\\n@see isMapAveragingEnabled");
         }
+    }
+
+    @Test
+    public void testParseSize() {
+        assertEquals(4, ReaderState.parseSize("4", ""));
+
+        assertEquals(12, ReaderState.parseSize("4*3", ""));
+
+        VariableRegistry.INSTANCE.clear();
+
+        VariableRegistry.INSTANCE.register("var", 256);
+
+        assertEquals(512, ReaderState.parseSize("2*@@var@@", ""));
+        assertEquals(512, ReaderState.parseSize("2x@@var@@", ""));
     }
 }

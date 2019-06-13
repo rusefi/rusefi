@@ -102,19 +102,19 @@ public:
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
 	void onNewEngineCycle();
-	uint32_t getRevolutionCounter(void);
+	uint32_t getRevolutionCounter(void) const;
 	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * The same as setRpmValue() but without state change.
 	 * We need this to be public because of calling rpmState->assignRpmValue() from rpmShaftPositionCallback()
 	 */
 	void assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
-	uint32_t getRevolutionCounterSinceStart(void);
+	uint32_t getRevolutionCounterSinceStart(void) const;
 	/**
 	 * RPM rate of change between current RPM and RPM measured during previous engine cycle
 	 * see also SC_RPM_ACCEL
 	 */
-	float getRpmAcceleration();
+	float getRpmAcceleration() const;
 	/**
 	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
 	 * Zero if engine is not running

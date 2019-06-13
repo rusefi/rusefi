@@ -33,8 +33,8 @@ int needInterpolationLogging(void);
 /**
  * @brief	Two-dimensional table lookup with linear interpolation
  */
-template<typename vType>
-float interpolate3d(float x, const float xBin[], int xBinSize, float y, const float yBin[], int yBinSize, vType* map[]) {
+template<typename vType, typename kType>
+float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kType yBin[], int yBinSize, vType* map[]) {
 	if (cisnan(x)) {
 		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;
@@ -65,10 +65,10 @@ float interpolate3d(float x, const float xBin[], int xBinSize, float y, const fl
 #endif /* DEBUG_INTERPOLATION */
 		if (yIndex == yBinSize - 1)
 			return map[0][yIndex];
-		float keyMin = yBin[yIndex];
-		float keyMax = yBin[yIndex + 1];
-		float rpmMinValue = map[0][yIndex];
-		float rpmMaxValue = map[0][yIndex + 1];
+		kType keyMin = yBin[yIndex];
+		kType keyMax = yBin[yIndex + 1];
+		vType rpmMinValue = map[0][yIndex];
+		vType rpmMaxValue = map[0][yIndex + 1];
 
 		return interpolateMsg("3d", keyMin, rpmMinValue, keyMax, rpmMaxValue, y);
 	}
@@ -80,10 +80,10 @@ float interpolate3d(float x, const float xBin[], int xBinSize, float y, const fl
 #endif /* DEBUG_INTERPOLATION */
 		if (xIndex == xBinSize - 1)
 			return map[xIndex][0];
-		float key1 = xBin[xIndex];
-		float key2 = xBin[xIndex + 1];
-		float value1 = map[xIndex][0];
-		float value2 = map[xIndex + 1][0];
+		kType key1 = xBin[xIndex];
+		kType key2 = xBin[xIndex + 1];
+		vType value1 = map[xIndex][0];
+		vType value2 = map[xIndex + 1][0];
 
 		return interpolateMsg("out3d", key1, value1, key2, value2, x);
 	}
@@ -103,10 +103,10 @@ float interpolate3d(float x, const float xBin[], int xBinSize, float y, const fl
 #endif /* DEBUG_INTERPOLATION */
 		// here yIndex is less than yBinSize - 1, we've checked that condition already
 
-		float key1 = yBin[yIndex];
-		float key2 = yBin[yIndex + 1];
-		float value1 = map[xIndex][yIndex];
-		float value2 = map[xIndex][yIndex + 1];
+		kType key1 = yBin[yIndex];
+		kType key2 = yBin[yIndex + 1];
+		vType value1 = map[xIndex][yIndex];
+		vType value2 = map[xIndex][yIndex + 1];
 
 		return interpolateMsg("out3d", key1, value1, key2, value2, y);
 	}
@@ -118,10 +118,10 @@ float interpolate3d(float x, const float xBin[], int xBinSize, float y, const fl
 #endif /* DEBUG_INTERPOLATION */
 		// here xIndex is less than xBinSize - 1, we've checked that condition already
 
-		float key1 = xBin[xIndex];
-		float key2 = xBin[xIndex + 1];
-		float value1 = map[xIndex][yIndex];
-		float value2 = map[xIndex + 1][yIndex];
+		kType key1 = xBin[xIndex];
+		kType key2 = xBin[xIndex + 1];
+		vType value1 = map[xIndex][yIndex];
+		vType value2 = map[xIndex + 1][yIndex];
 
 		return interpolateMsg("out3d", key1, value1, key2, value2, x);
 	}
@@ -131,12 +131,12 @@ float interpolate3d(float x, const float xBin[], int xBinSize, float y, const fl
 	 */
 	int rpmMaxIndex = xIndex + 1;
 
-	float xMin = xBin[xIndex];
-	float xMax = xBin[xIndex + 1];
-	float rpmMinKeyMinValue = map[xIndex][yIndex];
-	float rpmMaxKeyMinValue = map[xIndex + 1][yIndex];
+	kType xMin = xBin[xIndex];
+	kType xMax = xBin[xIndex + 1];
+	vType rpmMinKeyMinValue = map[xIndex][yIndex];
+	vType rpmMaxKeyMinValue = map[xIndex + 1][yIndex];
 
-	float keyMinValue = interpolateMsg("", xMin, rpmMinKeyMinValue, xMax, rpmMaxKeyMinValue, x);
+	vType keyMinValue = interpolateMsg("", xMin, rpmMinKeyMinValue, xMax, rpmMaxKeyMinValue, x);
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {
@@ -146,12 +146,12 @@ float interpolate3d(float x, const float xBin[], int xBinSize, float y, const fl
 #endif /* DEBUG_INTERPOLATION */
 
 	int keyMaxIndex = yIndex + 1;
-	float keyMin = yBin[yIndex];
-	float keyMax = yBin[keyMaxIndex];
-	float rpmMinKeyMaxValue = map[xIndex][keyMaxIndex];
-	float rpmMaxKeyMaxValue = map[rpmMaxIndex][keyMaxIndex];
+	kType keyMin = yBin[yIndex];
+	kType keyMax = yBin[keyMaxIndex];
+	vType rpmMinKeyMaxValue = map[xIndex][keyMaxIndex];
+	vType rpmMaxKeyMaxValue = map[rpmMaxIndex][keyMaxIndex];
 
-	float keyMaxValue = interpolateMsg("3d", xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
+	vType keyMaxValue = interpolateMsg("3d", xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {
@@ -171,7 +171,7 @@ public:
 	FastInterpolation();
 	FastInterpolation(float x1, float y1, float x2, float y2);
 	void init(float x1, float y1, float x2, float y2);
-	float getValue(float x);
+	float getValue(float x) const;
 private:
 	float a, b;
 };

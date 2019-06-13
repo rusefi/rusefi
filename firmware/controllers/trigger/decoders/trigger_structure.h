@@ -221,7 +221,7 @@ public:
 	 * Deprecated?
 	 */
 	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
-	operation_mode_e getOperationMode();
+	operation_mode_e getOperationMode() const;
 
 	void initialize(operation_mode_e operationMode, bool needSecondTriggerInput);
 	void setTriggerSynchronizationGap(float syncRatio);
@@ -236,7 +236,7 @@ public:
 	uint32_t getLength() const;
 	int getSize() const;
 
-	int getTriggerShapeSynchPointIndex();
+	int getTriggerShapeSynchPointIndex() const;
 	void prepareShape();
 
 	/**
@@ -253,7 +253,7 @@ public:
 private:
 	trigger_shape_helper h;
 
-	int findAngleIndex(float angle);
+	int findAngleIndex(float angle) const;
 
 	/**
 	 * Working buffer for 'wave' instance

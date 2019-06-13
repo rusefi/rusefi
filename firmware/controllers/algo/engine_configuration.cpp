@@ -219,6 +219,7 @@ void setAfrMap(afr_table_t table, float value) {
 	}
 }
 
+// todo: make this a template
 void setMap(fuel_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
@@ -236,7 +237,10 @@ void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
+#if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
+	// todo: make setMap a template
 	setMap(config->ignitionIatCorrTable, value);
+#endif
 }
 
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
@@ -447,16 +451,25 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #ifdef EFI_FATAL_ERROR_PIN
 	engineConfiguration->fatalErrorPin = EFI_FATAL_ERROR_PIN;
 #else
-	engineConfiguration->fatalErrorPin = GPIOD_14;
+	engineConfiguration->fatalErrorPin = GPIOD_14; // red LED on discovery
 #endif /* EFI_FATAL_ERROR_PIN */
-	engineConfiguration->warningLedPin = GPIOD_13;
+#ifdef EFI_WARNING_PIN
+	engineConfiguration->warningLedPin = EFI_WARNING_PIN;
+#else
+	engineConfiguration->warningLedPin = GPIOD_13; // orange LED on discovery
+#endif
+
 
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
 	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
 #endif
+#ifdef EFI_RUNNING_PIN
+	engineConfiguration->runningLedPin = EFI_RUNNING_PIN;
+#else
 	engineConfiguration->runningLedPin = GPIOD_12; // green LED on discovery
+#endif
 
 #if EFI_PROD_CODE
 	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
@@ -794,7 +807,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+#if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
+	// todo: make setMap a template
 	setMap(config->injectionPhase, -180);
+#endif
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setFuelTablesLoadBin(10, 160 PASS_CONFIG_PARAMETER_SUFFIX);
 	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -1158,6 +1174,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	if (engineType != MINIMAL_PINS
 			/* this is a bit nasty */
 			 && engineType != ETB_BENCH_ENGINE
+			 && engineType != MICRO_RUS_EFI
 			 && engineType != TLE8888_BENCH_ENGINE) {
 		setDefaultBoardConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
@@ -1230,6 +1247,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MICRO_RUS_EFI:
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

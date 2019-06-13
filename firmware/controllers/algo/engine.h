@@ -68,7 +68,7 @@ class RpmCalculator;
 
 class Engine {
 public:
-	Engine(persistent_config_s *config);
+	explicit Engine(persistent_config_s *config);
 	Engine();
 	void setConfig(persistent_config_s *config);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -112,7 +112,7 @@ public:
 #endif /* EFI_ENGINE_CONTROL */
 
 	WallFuel wallFuel;
-	bool needToStopEngine(efitick_t nowNt);
+	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
 	 * That's the list of pending spark firing events
@@ -284,12 +284,6 @@ public:
 	uint32_t engineCycleEventCount = 0;
 
 	/**
-	 * fast spark dwell time interpolation helper
-	 * todo: finish the implementation and
-	 */
-	Table2D<DWELL_CURVE_SIZE> sparkTable;
-
-	/**
 	 * fast kg/hour MAF decoding lookup table with ~0.2 volt step
 	 * This table is build based on MAF decoding curve
 	 */
@@ -308,7 +302,7 @@ public:
 	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
 	   Returns true if some operations are in progress on background.
 	 */
-	bool isInShutdownMode();
+	bool isInShutdownMode() const;
 
 	monitoring_timestamps_s m;
 

@@ -10,19 +10,6 @@
 #include "efilib.h"
 #include "interpolation.h"
 
-/**
- * @param precision for example '0.1' for one digit fractional part
- */
-void setLinearCurve(float array[], int size, float from, float to, float precision) {
-	for (int i = 0; i < size; i++) {
-		float value = interpolateMsg("setLinearCurve", 0, from, size - 1, to, i);
-		/**
-		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
-		 */
-		array[i] = efiRound(value, precision);
-	}
-}
-
 void setRpmBin(float array[], int size, float idleRpm, float topRpm) {
 	array[0] = idleRpm - 150;
 	int rpmStep = (int)(efiRound((topRpm - idleRpm) / (size - 2), 50) - 150);

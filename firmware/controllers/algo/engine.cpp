@@ -165,7 +165,7 @@ Engine::Engine(persistent_config_s *config) {
  * @see scheduleStopEngine()
  * @return true if there is a reason to stop engine
  */
-bool Engine::needToStopEngine(efitick_t nowNt) {
+bool Engine::needToStopEngine(efitick_t nowNt) const {
 	return stopEngineRequestTimeNt != 0 &&
 			nowNt - stopEngineRequestTimeNt	< 3 * US2NT(US_PER_SECOND_LL);
 }
@@ -190,9 +190,6 @@ void Engine::reset() {
  * so that we can prepare some helper structures
  */
 void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	sparkTable.preCalc(engineConfiguration->sparkDwellRpmBins,
-			engineConfiguration->sparkDwellValues);
-
 #if HAL_USE_ADC
 	adcToVoltageInputDividerCoefficient = adcToVolts(1) * engineConfiguration->analogInputDividerCoefficient;
 #else
@@ -307,7 +304,7 @@ void Engine::checkShutdown() {
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
-bool Engine::isInShutdownMode() {
+bool Engine::isInShutdownMode() const {
 #if EFI_MAIN_RELAY_CONTROL
 	if (stopEngineRequestTimeNt == 0)	// the shutdown procedure is not started
 		return false;

@@ -1,3 +1,6 @@
+rem
+rem Looks like this script is not really needed?
+rem
 set GIT2SVN_ROOT=c:\stuff\rusefi.git2svn
 
 set RUSEFI_SVN_PATH=%GIT2SVN_ROOT%\svn

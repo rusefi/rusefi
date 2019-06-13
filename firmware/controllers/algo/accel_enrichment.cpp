@@ -137,7 +137,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 	return M_cmd;
 }
 
-floatms_t WallFuel::getWallFuel(int injectorIndex) {
+floatms_t WallFuel::getWallFuel(int injectorIndex) const {
 	return wallFuel[injectorIndex];
 }
 

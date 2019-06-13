@@ -616,7 +616,9 @@ static void setWholeTimingMap(float value) {
 
 static void setWholePhaseMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole injection phase map to %.2f", value);
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	setMap(config->injectionPhase, value);
+#endif
 }
 
 static void setWholeTimingMapCmd(float value) {

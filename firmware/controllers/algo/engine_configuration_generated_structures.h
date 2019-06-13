@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 02 14:03:15 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 22:00:41 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -159,7 +159,7 @@ typedef struct MAP_sensor_config_s MAP_sensor_config_s;
 // start of thermistor_conf_s
 struct thermistor_conf_s {
 	/**
-	 * these values are in Celcuus
+	 * these values are in Celcius
 	 * offset 0
 	 */
 	float tempC_1;
@@ -184,6 +184,7 @@ struct thermistor_conf_s {
 	 */
 	float resistance_3;
 	/**
+	 * Pull-up resistor value on your board
 	 * offset 24
 	 */
 	float bias_resistor;
@@ -543,7 +544,7 @@ struct board_configuration_s {
 	 * some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 64
 	 */
-	brain_pin_e clutchDownPin;
+	switch_input_pin_e clutchDownPin;
 	/**
 	 * offset 65
 	 */
@@ -989,7 +990,7 @@ struct board_configuration_s {
 	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
 	 * offset 369
 	 */
-	brain_pin_e clutchUpPin;
+	switch_input_pin_e clutchUpPin;
 	/**
 	 * offset 370
 	 */
@@ -2263,7 +2264,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2632
 	 */
-	brain_pin_e brakePedalPin;
+	switch_input_pin_e brakePedalPin;
 	/**
 	 * lambda input
 	 * offset 2633
@@ -2537,8 +2538,8 @@ struct engine_configuration_s {
 	/**
 	 * offset 4036
 	 */
-	int mainUnusedEnd[611];
-	/** total size 6480*/
+	int mainUnusedEnd[591];
+	/** total size 6400*/
 };
 
 typedef struct engine_configuration_s engine_configuration_s;
@@ -2549,6 +2550,18 @@ struct persistent_config_s {
 	 * offset 0
 	 */
 	engine_configuration_s engineConfiguration;
+	/**
+	 * offset 6400
+	 */
+	pedal_to_tps_t pedalToTpsTable;
+	/**
+	 * offset 6464
+	 */
+	int8_t pedalToTpsPedalBins[PEDAL_TO_TPS_SIZE];
+	/**
+	 * offset 6472
+	 */
+	uint8_t pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
 	 * offset 6480
@@ -2788,4 +2801,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 02 14:03:15 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 22:00:41 EDT 2019

@@ -103,6 +103,9 @@ static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
 
 static int tle8888SpiCounter = 0;
 static int initResponses = 0;
+static int initResponse0 = 0;
+static int initResponse1 = 0;
+
 
 /* Driver private data */
 struct tle8888_priv {
@@ -173,6 +176,8 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 		tsOutputChannels.debugIntField2 = tx;
 		tsOutputChannels.debugIntField3 = rxb;
 		tsOutputChannels.debugIntField4 = initResponses;
+		tsOutputChannels.debugFloatField1 = initResponse0;
+		tsOutputChannels.debugFloatField2 = initResponse1;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -346,13 +351,19 @@ int tle8888_chip_init(void * data)
 		goto err_gpios;
 	}
 
+	chThdSleepMilliseconds(3);
 	/* Software reset */
 	// first packet: 0x335=821 > 0xFD=253
 	uint16_t response;
 	tle8888_spi_rw(chip, CMD_SR, &response);
 	if (response == 253) {
-		initResponses++;
+		// I've seen this response on red board
+		initResponses += 4;
+	} else if (response == 2408){
+		// and I've seen this response on red board
+		initResponses += 100;
 	}
+	initResponse0 = response;
 
 	/**
 	 * Table 8. Reset Times. All reset times not more than 20uS
@@ -364,8 +375,9 @@ int tle8888_chip_init(void * data)
 	// second 0x13D=317 => 0x35=53
 	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
 	if (response == 53) {
-		initResponses++;
+		initResponses += 8;
 	}
+	initResponse1 = response;
 
 	chip->o_direct_mask = 0;
 	chip->o_oe_mask		= 0;

@@ -13,8 +13,3 @@ set BOOTLOADER_CODE_DESTINATION_PATH="../Prometheus/469"
 set DEBUG_LEVEL_OPT="-O2"
 
 call !compile_bootloader.bat -r
-
-rem Clean up so that no one inherits this value
-set PROJECT_BOARD=
-set EXTRA_PARAMS=
-set DEBUG_LEVEL_OPT=

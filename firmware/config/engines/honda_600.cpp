@@ -30,6 +30,7 @@ static const fuel_table_t default_custom_fuel_table = {
   {3,    3,    3,    3,    3,    3,    3,    3,     3,     3,    3,    3,    3}
 };
 
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const ignition_table_t default_custom_timing_table = {
   /* RPM			   0   500   1000   1500   2000   2500   3000   3500   4000    4500   5000    5500   6000   6500   7000	 */
   /* Load  0% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
@@ -44,6 +45,7 @@ static const ignition_table_t default_custom_timing_table = {
   /* Load 90% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
  /* Load 100% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
 };
+#endif
 
 EXTERN_CONFIG;
 
@@ -55,8 +57,10 @@ static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	copyFuelTable(default_custom_fuel_table, config->fuelTable);
-  copyFuelTable(default_custom_fuel_table, config->veTable);
+	copyFuelTable(default_custom_fuel_table, config->veTable);
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(default_custom_timing_table, config->ignitionTable);
+#endif
 }
 
 void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -88,7 +92,9 @@ void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(boardConfiguration);
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	setMap(config->injectionPhase, 320);
+#endif
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
 	 * Frankenso analog #2 PC1 ADC11 IAT

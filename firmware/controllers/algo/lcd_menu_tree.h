@@ -62,7 +62,7 @@ public:
 
 class MenuTree {
 public:
-	MenuTree(MenuItem *root);
+	explicit MenuTree(MenuItem *root);
 	void nextItem(void);
 	void back(void);
 	void enterSubMenu(void);

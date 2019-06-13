@@ -5,3 +5,4 @@
 #define ts_show_joystick false
 #define ts_show_egt false
 #define ts_show_gps false
+#define ts_show_etb_pins false

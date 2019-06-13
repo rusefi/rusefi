@@ -3,7 +3,7 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar>rusefi_console.jar</jar>
-  <outfile>F:\stuff\rusefi_sourceforge\misc\console_launcher\rusefi_console.exe</outfile>
+  <outfile>c:\stuff\rusefi\misc\console_launcher\rusefi_console.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>F:\stuff\rusefi_sourceforge\misc\console_launcher\favicon.ico</icon>
+  <icon>c:\stuff\rusefi\misc\console_launcher\favicon.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>

@@ -1,7 +1,7 @@
 
 https://git-scm.com/downloads
 
-https://sliksvn.com/download/ used to produce numeric revision number
+https://sliksvn.com/download/ used to produce numeric revision number needs to be added to System PATH manually
 
 https://cygwin.com/install.html needs to be added to System PATH manually
 
@@ -61,3 +61,7 @@ Jobs:
 3) documentation
 
 4) build_extra_bundles
+
+5) git2svn_sync
+
+RUSEFI_SVN_PASSWORD needs to be added to System PATH manually
