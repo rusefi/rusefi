@@ -382,7 +382,7 @@ angle_t ignitionOffset;+this value could be used to offset the whole ignition ti
 custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
 
-angle_t fixedModeTiming;+This value is the ignition timing used when in &#39;fixed timing&#39; mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
+angle_t fixedModeTiming;+This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
 
 angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg",    1,      0,       -720,  720, 0
 
