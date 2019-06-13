@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 22:00:41 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jun 13 14:55:38 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -45,13 +45,12 @@ typedef struct pid_s pid_s;
 // start of cranking_parameters_s
 struct cranking_parameters_s {
 	/**
-	 * Fuel squirt duration while cranking
-	 * A number of curves adjust this value according to CLT/IAT/TPS etc
+	 * Base duration of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.
 	 * offset 0
 	 */
 	float baseFuel;
 	/**
-	 * Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold
+	 * This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. 
 	 * set cranking_rpm X
 	 * offset 4
 	 */
@@ -255,7 +254,7 @@ typedef struct ThermistorConf ThermistorConf;
 // start of injector_s
 struct injector_s {
 	/**
-	 * cc/min, cubic centimeter per minute
+	 * This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimeter per minute
 	 * By the way, g/s = 0.125997881 * (lb/hr)
 	 * g/s = 0.125997881 * (cc/min)/10.5
 	 * g/s = 0.0119997981 * cc/min
@@ -766,6 +765,7 @@ struct board_configuration_s {
 	offset 144 bit 20 */
 	bool isFasterEngineSpinUpEnabled : 1;
 	/**
+	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
 	offset 144 bit 21 */
 	bool coastingFuelCutEnabled : 1;
 	/**
@@ -1244,11 +1244,12 @@ struct engine_configuration_s {
 	 */
 	engine_load_mode_e fuelAlgorithm;
 	/**
+	 * This is the type of injection stratergy (See Fuel/Injection settings for more detail) it is sugested to use "Simultanious" for easiest starting.
 	 * offset 424
 	 */
 	injection_mode_e crankingInjectionMode;
 	/**
-	 * 'batched' means two injectors are wired together
+	 * This is where the fuel injection type is defined: "Simultanious" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". 
 	 * set injection_mode X
 	 * See also twoWireBatchInjection
 	 * offset 428
@@ -1262,13 +1263,13 @@ struct engine_configuration_s {
 	 */
 	angle_t extraInjectionOffset;
 	/**
-	 * Timing advance while engine cranking
+	 * Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.
 	 * set cranking_timing_angle X
 	 * offset 436
 	 */
 	angle_t crankingTimingAngle;
 	/**
-	 * 'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle
+	 * "One Coil" is for use on distroobuted ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle
 	 * set ignition_mode X
 	 * offset 440
 	 */
@@ -1279,12 +1280,13 @@ struct engine_configuration_s {
 	 */
 	angle_t ignitionOffset;
 	/**
+	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
 	 * offset 448
 	 */
 	timing_mode_e timingMode;
 	/**
-	 * This value is used in 'fixed timing' mode, i.e. constant timing
-	 * This mode is useful for instance while adjusting distributor location
+	 * This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing
+	 * This mode is useful when adjusting distributor location.
 	 * offset 452
 	 */
 	angle_t fixedModeTiming;
@@ -1301,7 +1303,7 @@ struct engine_configuration_s {
 	 */
 	float analogInputDividerCoefficient;
 	/**
-	 * Battery Voltage input resistor divider coefficient
+	 * This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.
 	 * offset 464
 	 */
 	float vbattDividerCoeff;
@@ -1504,6 +1506,7 @@ struct engine_configuration_s {
 	offset 1464 bit 12 */
 	bool tachPulseDurationAsDutyCycle : 1;
 	/**
+	 * This enables smart alternator control and activates the extra alternator settings
 	offset 1464 bit 13 */
 	bool isAlternatorControlEnabled : 1;
 	/**
@@ -1573,16 +1576,15 @@ struct engine_configuration_s {
 	 */
 	idle_mode_e idleMode;
 	/**
-	 * enable injection
+	 * Enable fuel injection - This is default off on new projects as a safty feature, set to "true" to enable fuel injection and futher injector settings.
 	offset 1476 bit 0 */
 	bool isInjectionEnabled : 1;
 	/**
-	 * enable ignition
+	 * Enable ignition - This is default off on new projects as a safty feature, set to "true" to enable ignition and futher ignition settings.
 	offset 1476 bit 1 */
 	bool isIgnitionEnabled : 1;
 	/**
-	 * If TPS above 95% no fuel would be injected during cranking
-	 * enable cylinder_cleanup
+	 * When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
 	offset 1476 bit 2 */
 	bool isCylinderCleanupEnabled : 1;
 	/**
@@ -1620,7 +1622,7 @@ struct engine_configuration_s {
 	offset 1476 bit 12 */
 	bool isManualSpinningMode : 1;
 	/**
-	 * This is needed if batched injection and individual injector wiring
+	 * This is needed if your coils are individually wired and you wish to use batch injection.
 	 * enable two_wire_batch_injection
 	offset 1476 bit 13 */
 	bool twoWireBatchInjection : 1;
@@ -1630,7 +1632,7 @@ struct engine_configuration_s {
 	offset 1476 bit 14 */
 	bool useOnlyRisingEdgeForTrigger : 1;
 	/**
-	 * This is needed if batched igniton (waster spark) and individual coil wiring
+	 * This is needed if your coils are individually wired (COP) and you wish to use batch igniton (wasted spark).
 	offset 1476 bit 15 */
 	bool twoWireBatchIgnition : 1;
 	/**
@@ -2375,20 +2377,22 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e servoOutputPins[SERVO_COUNT];
 	/**
+	 * This sets the RPM limit above which the fuel cut is deactivated, activating this maintains fuel flow at high RPM to help cool pistons
 	 * offset 3172
 	 */
 	int16_t coastingFuelCutRpmHigh;
 	/**
+	 * This sets the RPM limit below which the fuel cut is deactivated, this prevents jerking or issues transitioning to idle
 	 * offset 3174
 	 */
 	int16_t coastingFuelCutRpmLow;
 	/**
-	 * percent between 0 and 100
+	 * percent between 0 and 100 below which the fuel cut is deactivated, this helps low speed drivability.
 	 * offset 3176
 	 */
 	int16_t coastingFuelCutTps;
 	/**
-	 * Fuel cutoff is deactivated if CLT<threshold
+	 * Fuel cutoff is deactivated below this coolant threashold.
 	 * offset 3178
 	 */
 	int16_t coastingFuelCutClt;
@@ -2398,7 +2402,7 @@ struct engine_configuration_s {
 	 */
 	int16_t pidExtraForLowRpm;
 	/**
-	 *  maximum manifold pressure for fuel cut
+	 * MAP value above which coasting fuel cut is dissabled to aid piston cooling
 	 * offset 3182
 	 */
 	int16_t coastingFuelCutMap;
@@ -2801,4 +2805,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 11 22:00:41 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jun 13 14:55:38 EDT 2019
