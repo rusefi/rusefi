@@ -80,7 +80,7 @@ TEST(misc, testFuelMap) {
 	printf("*************************************************** setting CLT table\r\n");
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
 		eth.engine.config->cltFuelCorrBins[i] = i;
-		eth.engine.config->cltFuelCorr[i] = 100;
+		eth.engine.config->cltFuelCorr[i] = 1;
 	}
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -110,10 +110,10 @@ TEST(misc, testFuelMap) {
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor
 	ASSERT_EQ( 6.0,  getCrankingFuel3(NAN, 0 PASS_ENGINE_PARAMETER_SUFFIX)) << "getStartingFuel nan";
-	assertEqualsM("getStartingFuel#1", 116, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEqualsM("getStartingFuel#2", 58.2120, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEqualsM("getStartingFuel#3", 60.00, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER_SUFFIX));
-	assertEqualsM("getStartingFuel#4", 24.1379, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#1", 11.6, getCrankingFuel3(0, 4 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#2", 5.82120, getCrankingFuel3(8, 15 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#3", 6.000, getCrankingFuel3(70, 0 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("getStartingFuel#4", 2.41379, getCrankingFuel3(70, 50 PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
 
