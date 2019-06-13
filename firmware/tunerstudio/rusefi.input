@@ -516,7 +516,7 @@ fileVersion = { 20171101 }
 #else
       xAxis       =  -40, 250, 10
 #endif
-      yAxis       =  0,  300, 10
+      yAxis       =  0,  3, 10
       xBins       = cltCrankingCorrBins, coolant
       yBins       = cltCrankingCorr
       gauge       = CLTGauge

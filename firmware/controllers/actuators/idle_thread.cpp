@@ -306,7 +306,7 @@ private:
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
-			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE) / PERCENT_MULT;
+			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE);
 		} else {
 			// this value would be ignored if running in AUTO mode
 			// but we need it while cranking in AUTO mode
