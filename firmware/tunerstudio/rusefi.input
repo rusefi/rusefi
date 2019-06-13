@@ -168,14 +168,14 @@ fileVersion = { 20171101 }
 ;
       RPMValue        = scalar,  U32,      0,             "RPM",            1,   0.00000
 #if CELSIUS
-      coolant         = scalar,  F32,      4,              "ï¿½C",            1,       0.0
+      coolant         = scalar,  F32,      4,              "°C",            1,       0.0
 #else
-      coolant         = scalar,  F32,      4,              "ï¿½F",         {9/5},  17.77777
+      coolant         = scalar,  F32,      4,              "°F",         {9/5},  17.77777
 #endif
 #if CELSIUS
-      intake          = scalar,  F32,      8,              "ï¿½C",            1,       0.0
+      intake          = scalar,  F32,      8,              "°C",            1,       0.0
 #else
-      intake          = scalar,  F32,      8,              "ï¿½F",         {9/5},  17.77777
+      intake          = scalar,  F32,      8,              "°F",         {9/5},  17.77777
 #endif
       TPSValue        = scalar,  F32,     12,               "%",            1,         0
       MAFValue        = scalar,  F32,     16,               "V",            1,         0
@@ -225,14 +225,14 @@ fileVersion = { 20171101 }
       ind_hasFatalError=bits,    U32,     80, [6:6], "true", "false";
       ind_isWarnNow    =bits,    U32,     80, [7:7], "true", "false";
       firmwareTsVersion = scalar,U32,     84, "version_p",           1,         0
-      egt1            = scalar,  S16,     88, "ï¿½C",           1,         0
-      egt2            = scalar,  S16,     90, "ï¿½C",           1,         0
-      egt3            = scalar,  S16,     92, "ï¿½C",           1,         0
-      egt4            = scalar,  S16,     94, "ï¿½C",           1,         0
-      egt5            = scalar,  S16,     96, "ï¿½C",           1,         0
-      egt6            = scalar,  S16,     98, "ï¿½C",           1,         0
-      egt7            = scalar,  S16,    100, "ï¿½C",           1,         0
-      egt8            = scalar,  S16,    102, "ï¿½C",           1,         0
+      egt1            = scalar,  S16,     88, "°C",           1,         0
+      egt2            = scalar,  S16,     90, "°C",           1,         0
+      egt3            = scalar,  S16,     92, "°C",           1,         0
+      egt4            = scalar,  S16,     94, "°C",           1,         0
+      egt5            = scalar,  S16,     96, "°C",           1,         0
+      egt6            = scalar,  S16,     98, "°C",           1,         0
+      egt7            = scalar,  S16,    100, "°C",           1,         0
+      egt8            = scalar,  S16,    102, "°C",           1,         0
       rpmAcceleration = scalar,  F32,    104, "dRpm",         1,         0
       massAirFlowValue= scalar,  F32,    108, "Kg/h",         1,         0
       veValue         = scalar,  F32,    112, "ratio",        1,         0
@@ -800,14 +800,14 @@ gaugeCategory = Debug
 gaugeCategory = Sensors  
    RPMGauge        = RPMValue,           "Engine Speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
 #if CELSIUS
-   CLTGauge          = coolant,       "Coolant Temp",        "ï¿½C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   CLTGauge          = coolant,       "Coolant Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   CLTGauge          = coolant,       "Coolant Temp",        "ï¿½F",      -40,    285,       5,     35,     205,   230,   1,   1
+   CLTGauge          = coolant,       "Coolant Temp",        "°F",      -40,    285,       5,     35,     205,   230,   1,   1
 #endif
 #if CELSIUS
-   IATGauge          = intake,     "Intake Air Temp",        "ï¿½C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   IATGauge          = intake,     "Intake Air Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   IATGauge          = intake,     "Intake Air Temp",        "ï¿½F",      -40,    285,       5,     35,     205,   230,  1,   1
+   IATGauge          = intake,     "Intake Air Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
    TPSGauge			 = TPSValue,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
    afr1Gauge         = AFRValue, "Air:Fuel Ratio 1",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
@@ -845,9 +845,9 @@ gaugeCategory = Accel Data
 gaugeCategory = Fuel Data
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
 #if CELSIUS
-   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "ï¿½C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "ï¿½F",      -40,    285,       5,     35,     205,   230,  1,   1
+   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
    baroCorrectionGauge  = baroCorrection,"BaroCorr",           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
    crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
@@ -1512,7 +1512,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != 16}
 		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != 16}
@@ -1529,7 +1529,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != 16}
 		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != 16}
@@ -1756,7 +1756,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
 		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
@@ -1779,7 +1779,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40ï¿½C, 0ï¿½C and 100ï¿½C"
+		field = "#Typical temperatures is -40°C, 0°C and 100°C"
 		field = ""
 		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
 		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
