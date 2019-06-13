@@ -632,11 +632,11 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingAdvance[0] = 0;
 	engineConfiguration->crankingAdvanceBins[0] = 0;
 	engineConfiguration->crankingAdvance[1] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 200;
+	engineConfiguration->crankingAdvanceBins[1] = 200;
 	engineConfiguration->crankingAdvance[2] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 400;
+	engineConfiguration->crankingAdvanceBins[2] = 400;
 	engineConfiguration->crankingAdvance[3] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 1000;
+	engineConfiguration->crankingAdvanceBins[3] = 1000;
 
 }
 
