@@ -155,8 +155,8 @@ struct pid_s
 end_struct
 
 struct cranking_parameters_s
-float baseFuel;+Fuel squirt duration while cranking\nA number of curves adjust this value according to CLT/IAT/TPS etc;"ms",       1,     0,    0, 200,     1
-int16_t rpm;+Cranking mode threshold. Special cranking logic controls fuel and spark while RPM is below this threshold\nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
+float baseFuel;+Base duration of the fuel injection during cranking, this is modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.;"ms",       1,     0,    0, 200,     1
+int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "Warmup PID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "mode35"
@@ -260,7 +260,7 @@ engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Ty
 int engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM",      1,     0,    0,30000,      0
 
 struct injector_s
-	float flow;+cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,  99999,   2
+	float flow;+This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimeter per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min",  1,     0,      0,  99999,   2
 
 float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;set_flat_injector_lag LAG\nset_injector_lag VOLTAGE LAG;"volts",        1,     0,      0.0,    20.0,   2
 float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;ms delay between injector open and close dead times;"ms",     1,     0,      0.0,    50.0,   2
@@ -369,27 +369,27 @@ engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity cont
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
-injection_mode_e crankingInjectionMode;
-injection_mode_e injectionMode;+'batched' means two injectors are wired together\nset injection_mode X\nSee also twoWireBatchInjection
+injection_mode_e crankingInjectionMode;+This is the type of injection stratergy (See Fuel/Injection settings for more detail) it is sugested to use "Simultanious" for easiest starting.
+injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultanious" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
-angle_t crankingTimingAngle;+Timing advance while engine cranking\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
+angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
-ignition_mode_e ignitionMode;+'wasted' means one coil is driving two spark plugs in two cylinders, with one of the aparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
+ignition_mode_e ignitionMode;+"One Coil" is for use on distroobuted ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
-timing_mode_e timingMode;
+timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
 
-angle_t fixedModeTiming;+This value is used in 'fixed timing' mode, i.e. constant timing\nThis mode is useful for instance while adjusting distributor location;"RPM",    1,      0,       0,  3000.0,      0
+angle_t fixedModeTiming;+This value is the ignition timing used when in &#39;fixed timing&#39; mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
 
 angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg",    1,      0,       -720,  720, 0
 
 
 
 float analogInputDividerCoefficient;+Coefficient of input voltage dividers on your PCB;"coef",    1,      0,    0.01,  10.0,   2
-float vbattDividerCoeff;+Battery Voltage input resistor divider coefficient;"coef",    1,      0,    0.01,  99.0,        2
+float vbattDividerCoeff;+This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef",    1,      0,    0.01,  99.0,        2
 
 float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
 float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        0
@@ -605,7 +605,7 @@ bit is_enabled_spi_2
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled;+Smarter cranking logic.\nSee also startOfCrankingPrimingPulse
-	bit coastingFuelCutEnabled
+	bit coastingFuelCutEnabled;+This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
 	bit useIacTableForCoasting
 	bit useNoiselessTriggerDecoder
 	bit useIdleTimingPidControl
@@ -710,7 +710,7 @@ bit vvtDisplayInverted
 	bit isVerboseIAC;+Print details into rusEfi console
 	bit isVerboseETB;enable verbose_etb
 	bit useConstantDwellDuringCranking;+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
-	bit isEngineChartEnabled;This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
+	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
 	bit silentTriggerError
 	bit useLinearCltSensor
 	bit canReadEnabled
@@ -718,7 +718,7 @@ bit vvtDisplayInverted
 	bit useLinearIatSensor
 	bit useFSIO16ForTimingAdjustment;See fsioTimingAdjustment
 	bit tachPulseDurationAsDutyCycle
-	bit isAlternatorControlEnabled
+	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings
 	bit invertPrimaryTriggerSignal
 	bit invertSecondaryTriggerSignal
 	
@@ -744,9 +744,9 @@ uint8_t[3] unusedh;
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	idle_mode_e idleMode;See also idleRpmPid;
 
-	bit isInjectionEnabled;+enable injection
-	bit isIgnitionEnabled;+enable ignition
-	bit isCylinderCleanupEnabled;+If TPS above 95% no fuel would be injected during cranking\nenable cylinder_cleanup 
+	bit isInjectionEnabled;+Enable fuel injection - This is default off on new projects as a safty feature, set to "true" to enable fuel injection and futher injector settings. 
+	bit isIgnitionEnabled;+Enable ignition - This is default off on new projects as a safty feature, set to "true" to enable ignition and futher ignition settings.
+	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders. 
 	bit secondTriggerChannelEnabled
 	bit needSecondTriggerInputDeprecated
 	bit isMapAveragingEnabled
@@ -757,9 +757,9 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit useSeparateVeForIdle
 	bit isPrintTriggerSynchDetails;+enable trigger_details
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
-	bit twoWireBatchInjection;+This is needed if batched injection and individual injector wiring\nenable two_wire_batch_injection
+	bit twoWireBatchInjection;+This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
-	bit twoWireBatchIgnition;+This is needed if batched igniton (waster spark) and individual coil wiring
+	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch igniton (wasted spark).
 bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking
 bit useAdvanceCorrectionsForCranking
@@ -1001,13 +1001,13 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance t
 
 	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
 
-	int16_t coastingFuelCutRpmHigh;;"rpm",        1,     0,  0,    5000,  0
-	int16_t coastingFuelCutRpmLow;;"rpm",        1,     0,  0,    5000,  0
-	int16_t coastingFuelCutTps;percent between 0 and 100;"%",        1,     0,  0,    100,  1
-	int16_t coastingFuelCutClt;Fuel cutoff is deactivated if CLT<threshold;"C",        1,     0,  -100,    100,  0
+	int16_t coastingFuelCutRpmHigh;+This sets the RPM limit above which the fuel cut is deactivated, activating this maintains fuel flow at high RPM to help cool pistons;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutRpmLow;+This sets the RPM limit below which the fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm",        1,     0,  0,    5000,  0
+	int16_t coastingFuelCutTps;+percent between 0 and 100 below which the fuel cut is deactivated, this helps low speed drivability.;"%",        1,     0,  0,    100,  1
+	int16_t coastingFuelCutClt;+Fuel cutoff is deactivated below this coolant threashold.;"C",        1,     0,  -100,    100,  0
 	
 	int16_t pidExtraForLowRpm;+Increases PID reaction for RPM<target by adding extra percent to PID-error;"%",        1,     0,  0,    100,  0
-	int16_t coastingFuelCutMap; maximum manifold pressure for fuel cut;"kPa", 1, 0, 0, 250, 0
+	int16_t coastingFuelCutMap;+MAP value above which coasting fuel cut is dissabled to aid piston cooling;"kPa", 1, 0, 0, 250, 0
 	
 float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%",      1,     0,      0.0,    100.0,   2
