@@ -112,26 +112,44 @@ static void sayHello(void) {
 	chThdSleepMilliseconds(5);
 }
 
+static uintptr_t CountFreeStackSpace(const void* wabase)
+{
+	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase);
+	const uint8_t* stackUsage = stackBase;
+
+	// thread stacks are filled with 0x55
+	// find out where that ends - that's the last thing we needed on the stack
+	while(*stackUsage == 0x55) {
+		stackUsage++;
+	}
+
+	return stackUsage - stackBase;
+}
+
 /**
- * This methods prints all threads and their total times
+ * This methods prints all threads, their stack usage, and their total times
  */
 static void cmd_threads(void) {
-#if CH_DBG_THREADS_PROFILING
-	 /* todo: fix this code to work with fresh chibios
-  static const char *states[] = { CH_STATE_NAMES };
-  thread_t *tp;
-  
-  scheduleMsg(&logger, "    addr    stack prio refs     state time");
-  tp = chRegFirstThread();
-  while (tp != NULL) {    
-    scheduleMsg(&logger, "%.8lx [%.8lx] %4lu %4lu %9s %lu %s", (uint32_t) tp, 0, (uint32_t) tp->p_prio,
-		(uint32_t) (0), states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
-    tp = chRegNextThread(tp);
-  } 
-*/
-  
-#else
-  scheduleMsg(&logger, "CH_DBG_THREADS_PROFILING is not enabled");
+#if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
+
+	thread_t* tp = chRegFirstThread();
+
+	scheduleMsg(&logger, "name\twabase\ttime\tfree stack");
+
+	while(tp) {
+		uintptr_t freeBytes = CountFreeStackSpace(tp->wabase);
+		scheduleMsg(&logger, "%s\t%08x\t%lu\t%lu", tp->name, tp->wabase, tp->time, freeBytes);
+
+		tp = chRegNextThread(tp);
+	}
+
+	uintptr_t isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
+	scheduleMsg(&logger, "isr\t0\t0\t%lu", isrSpace);
+
+#else // CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
+
+  scheduleMsg(&logger, "CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS is not enabled");
+
 #endif
 }
 
