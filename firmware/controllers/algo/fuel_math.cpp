@@ -243,7 +243,7 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (cisnan(engine->sensors.clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("cltf", engine->sensors.clt, WARMUP_CLT_EXTRA_FUEL_CURVE) / PERCENT_MULT;
+	return interpolate2d("cltf", engine->sensors.clt, WARMUP_CLT_EXTRA_FUEL_CURVE);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

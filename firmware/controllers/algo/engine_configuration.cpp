@@ -539,39 +539,39 @@ static void setBosch02880155868(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultWarmupIdleCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, PERCENT_MULT);
+	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, 1.0);
 
 	float baseIdle = 30;
 
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -40, 150);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -30, 150);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -20, 40.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -10, 40.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,   0, 40.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  10, 40.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  20, 40.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  30, 40.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  40, 40.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  50, 37.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  60, 35.0 / baseIdle * 100);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle * 100);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -40, 1.5);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -30, 1.5);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -20, 40.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -10, 40.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,   0, 40.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  10, 40.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  20, 40.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  30, 40.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  40, 40.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  50, 37.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  60, 35.0 / baseIdle);
+	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle);
 }
 
 static void setDefaultWarmupFuelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	initTemperatureCurve(WARMUP_CLT_EXTRA_FUEL_CURVE, PERCENT_MULT);
+	initTemperatureCurve(WARMUP_CLT_EXTRA_FUEL_CURVE, 1.0);
 
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -40, 150);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -30, 150);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -20, 142);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -10, 136);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 0, 128);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 10, 119);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 20, 112);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 30, 110);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 40, 106);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 50, 106);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 60, 103);
-	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 70, 101);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -40, 1.50);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -30, 1.50);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -20, 1.42);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, -10, 1.36);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 0, 1.28);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 10, 1.19);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 20, 1.12);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 30, 1.10);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 40, 1.06);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 50, 1.06);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 60, 1.03);
+	setCurveValue(WARMUP_CLT_EXTRA_FUEL_CURVE, 70, 1.01);
 }
 
 static void setDefaultFuelCutParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -588,24 +588,24 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->crankingTpsBins, CRANKING_CURVE_SIZE, 0, 100, 1);
 
 	setLinearCurve(config->cltCrankingCorrBins, CLT_CRANKING_CURVE_SIZE, CLT_CURVE_RANGE_FROM, 100, 1);
-	setLinearCurve(config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE, 100, 100, 1);
+	setLinearCurve(config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE, 1.0, 1.0, 1);
 
-	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient
+	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
-	config->crankingFuelCoef[1] = 22;
+	config->crankingFuelCoef[1] = 2.2;
 	config->crankingFuelBins[1] = -10;
-	config->crankingFuelCoef[2] = 18;
+	config->crankingFuelCoef[2] = 1.8;
 	config->crankingFuelBins[2] = 5;
-	config->crankingFuelCoef[3] = 15;
+	config->crankingFuelCoef[3] = 1.5;
 	config->crankingFuelBins[3] = 30;
 
-	config->crankingFuelCoef[4] = 10;
+	config->crankingFuelCoef[4] = 1.0;
 	config->crankingFuelBins[4] = 35;
-	config->crankingFuelCoef[5] = 10;
+	config->crankingFuelCoef[5] = 1.0;
 	config->crankingFuelBins[5] = 50;
-	config->crankingFuelCoef[6] = 10;
+	config->crankingFuelCoef[6] = 1.0;
 	config->crankingFuelBins[6] = 65;
-	config->crankingFuelCoef[7] = 10;
+	config->crankingFuelCoef[7] = 1.0;
 	config->crankingFuelBins[7] = 90;
 
 	config->crankingCycleCoef[0] = 1.5;
@@ -632,11 +632,11 @@ static void setDefaultCrankingSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingAdvance[0] = 0;
 	engineConfiguration->crankingAdvanceBins[0] = 0;
 	engineConfiguration->crankingAdvance[1] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 200;
+	engineConfiguration->crankingAdvanceBins[1] = 200;
 	engineConfiguration->crankingAdvance[2] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 400;
+	engineConfiguration->crankingAdvanceBins[2] = 400;
 	engineConfiguration->crankingAdvance[3] = 0;
-	engineConfiguration->crankingAdvanceBins[0] = 1000;
+	engineConfiguration->crankingAdvanceBins[3] = 1000;
 
 }
 
