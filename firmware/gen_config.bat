@@ -15,7 +15,9 @@ java -Drusefi.generator.lazyfile.enabled=true ^
  -ts_destination tunerstudio ^
  -c_defines controllers\algo\rusefi_generated.h ^
  -c_destination controllers\algo\engine_configuration_generated_structures.h ^
- -java_destination ../java_console -skip build/config.gen
+ -java_destination ../java_console/models/src/com/rusefi/config/Fields.java ^
+ -romraider_destination ../java_console/rusefi.xml ^
+ -skip build/config.gen
 IF NOT ERRORLEVEL 0 echo ERROR generating
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
