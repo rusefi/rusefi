@@ -126,13 +126,6 @@ public class ConfigField {
     }
 
 
-    public void writeJavaFieldName(Writer javaFieldsWriter, String nameWithPrefix, int tsPosition) throws IOException {
-        javaFieldsWriter.write("\tpublic static final Field ");
-        javaFieldsWriter.write(nameWithPrefix.toUpperCase());
-        javaFieldsWriter.write(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "
-                + tsPosition + ", ");
-    }
-
     public String getCommentContent() {
         if (comment == null || comment.isEmpty())
             return comment;

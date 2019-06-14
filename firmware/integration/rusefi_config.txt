@@ -134,8 +134,7 @@ custom fsio_table_8x8_f32t	4*@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array,   F32,   @
 custom tps_tps_table_t	4*@@TPS_TPS_ACCEL_TABLE@@x@@TPS_TPS_ACCEL_TABLE@@ array,   F32,   @OFFSET@, [@@TPS_TPS_ACCEL_TABLE@@x@@TPS_TPS_ACCEL_TABLE@@],"value",      1,     0,      0.0,   30000.0,   2
 
 
-! todo support table size multiplocation
-custom baro_corr_table_t 4*@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@ array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@],"%", 1, 0, 0, 999.0, 2
+custom baro_corr_table_t 4*@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@ array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@],"ratio", 1, 0, 0, 2.0, 2
 
 
 custom ignition_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@],"deg",	   1,     0,     -20, 90,    2
@@ -370,20 +369,33 @@ engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity cont
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
+<<<<<<< HEAD
 injection_mode_e crankingInjectionMode;+This is the type of injection stratergy (See Fuel/Injection settings for more detail) it is sugested to use "Simultaneous" for easiest starting.
 injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
+=======
+injection_mode_e crankingInjectionMode;+This is the type of injection stratergy (See Fuel/Injection settings for more detail) it is sugested to use "Simultanious" for easiest starting.
+injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultanious" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
+>>>>>>> ff39a7263338c337357e825c2b235b60c54dea0c
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
+<<<<<<< HEAD
 ignition_mode_e ignitionMode;+"One Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
+=======
+ignition_mode_e ignitionMode;+"One Coil" is for use on distroobuted ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
+>>>>>>> ff39a7263338c337357e825c2b235b60c54dea0c
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
 
 custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;+Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing).
 
+<<<<<<< HEAD
 angle_t fixedModeTiming;+This value is the ignition timing used when in &#39;fixed timing&#39; mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
+=======
+angle_t fixedModeTiming;+This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM",    1,      0,       0,  3000.0,      0
+>>>>>>> ff39a7263338c337357e825c2b235b60c54dea0c
 
 angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X;"deg",    1,      0,       -720,  720, 0
 
@@ -720,8 +732,13 @@ bit vvtDisplayInverted
 	bit useFSIO16ForTimingAdjustment;See fsioTimingAdjustment
 	bit tachPulseDurationAsDutyCycle
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings
+<<<<<<< HEAD
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
 	bit invertSecondaryTriggerSignal;+This setting flips the signal from the secondry engine speed sensor.
+=======
+	bit invertPrimaryTriggerSignal
+	bit invertSecondaryTriggerSignal
+>>>>>>> ff39a7263338c337357e825c2b235b60c54dea0c
 	
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
@@ -745,8 +762,13 @@ uint8_t[3] unusedh;
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	idle_mode_e idleMode;See also idleRpmPid;
 
+<<<<<<< HEAD
 	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and futher injector settings. 
 	bit isIgnitionEnabled;+Enable ignition - This is default off for new projects as a safty feature, set to "true" to enable ignition and futher ignition settings.
+=======
+	bit isInjectionEnabled;+Enable fuel injection - This is default off on new projects as a safty feature, set to "true" to enable fuel injection and futher injector settings. 
+	bit isIgnitionEnabled;+Enable ignition - This is default off on new projects as a safty feature, set to "true" to enable ignition and futher ignition settings.
+>>>>>>> ff39a7263338c337357e825c2b235b60c54dea0c
 	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders. 
 	bit secondTriggerChannelEnabled
 	bit needSecondTriggerInputDeprecated
@@ -1008,7 +1030,11 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance t
 	int16_t coastingFuelCutClt;+Fuel cutoff is deactivated below this coolant threashold.;"C",        1,     0,  -100,    100,  0
 	
 	int16_t pidExtraForLowRpm;+Increases PID reaction for RPM<target by adding extra percent to PID-error;"%",        1,     0,  0,    100,  0
+<<<<<<< HEAD
 	int16_t coastingFuelCutMap;+MAP value above which coasting fuel cut is disabled to aid piston cooling;"kPa", 1, 0, 0, 250, 0
+=======
+	int16_t coastingFuelCutMap;+MAP value above which coasting fuel cut is dissabled to aid piston cooling;"kPa", 1, 0, 0, 250, 0
+>>>>>>> ff39a7263338c337357e825c2b235b60c54dea0c
 	
 float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C",        1,     0,   -100.0,    250.0,  2
 float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%",      1,     0,      0.0,    100.0,   2
@@ -1079,19 +1105,19 @@ le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingAdditive;
 
 float[CLT_CURVE_SIZE] cltFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,  2
-float[CLT_CURVE_SIZE] cltFuelCorr;;"Ratio",      1,     0,      0.0,    500.0,   2
+float[CLT_CURVE_SIZE] cltFuelCorr;;"ratio",      1,     0,      0.0,    5.0,   2
 
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,   2
-float[IAT_CURVE_SIZE] iatFuelCorr;;"Ratio",      1,     0,      0.0,    10.0,   2
+float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio",      1,     0,      0.0,    5.0,   2
 
-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"Ratio",      1,     0,      0.0,    300.0,   2
+	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio",      1,     0,      0.0,    5.0,   2
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C",        1,     0,    -80.0,    170.0,  2
 
-	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"%",      1,     0,      0.0,    500.0,   2
+	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"ratio",      1,     0,      0.0,    5.0,   2
 	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter",        1,     0,    -80.0,    170.0,  0
 
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
-float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"%",      1,     0,      0.0,    1000.0,   2
+float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"ratio",      1,     0,      0.0,    10.0,   2
 
 float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500.0, 4000.0, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;; "V", 1, 0, -5.0, 150.0, 2

@@ -1,4 +1,4 @@
-out/
+logs/
 rusefi_console_properties.xml
 output.c
 currenttune.msq

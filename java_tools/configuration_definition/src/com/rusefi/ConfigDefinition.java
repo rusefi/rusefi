@@ -28,13 +28,13 @@ public class ConfigDefinition {
     public static String MESSAGE;
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
-    private static final String ROM_RAIDER_XML_OUTPUT = "rusefi.xml";
     public static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROM_INPUT = "-romraider";
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
-    private static final String KEY_CONSOLE_DESTINATION = "-java_destination";
+    private static final String KEY_JAVA_DESTINATION = "-java_destination";
+    private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SKIP = "-skip";
     public static String definitionInputFile = null;
@@ -55,7 +55,7 @@ public class ConfigDefinition {
                     + KEY_DEFINITION + " x\r\n"
                     + KEY_TS_DESTINATION + " x\r\n"
                     + KEY_C_DESTINATION + " x\r\n"
-                    + KEY_CONSOLE_DESTINATION + " x\r\n"
+                    + KEY_JAVA_DESTINATION + " x\r\n"
             );
             return;
         }
@@ -63,7 +63,8 @@ public class ConfigDefinition {
         String tsPath = null;
         String destCHeader = null;
         String destCDefines = null;
-        String javaConsolePath = null;
+        String javaDestination = null;
+        String romRaiderDestination = null;
         List<String> prependFiles = new ArrayList<>();
         String skipRebuildFile = null;
         String romRaiderInputFile = null;
@@ -78,8 +79,10 @@ public class ConfigDefinition {
                 destCHeader = args[i + 1];
             } else if (key.equals(KEY_C_DEFINES)) {
                 destCDefines = args[i + 1];
-            } else if (key.equals(KEY_CONSOLE_DESTINATION)) {
-                javaConsolePath = args[i + 1];
+            } else if (key.equals(KEY_JAVA_DESTINATION)) {
+                javaDestination = args[i + 1];
+            } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
+                romRaiderDestination = args[i + 1];
             } else if (key.equals(KEY_PREPEND)) {
                 prependFiles.add(args[i + 1]);
             } else if (key.equals(KEY_SKIP)) {
@@ -119,9 +122,8 @@ public class ConfigDefinition {
             CharArrayWriter tsWriter = new CharArrayWriter();
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
         }
-        if (javaConsolePath != null) {
-            CharArrayWriter javaFieldsWriter = new CharArrayWriter();
-            destinations.add(new JavaFieldsConsumer(javaFieldsWriter, state, javaConsolePath));
+        if (javaDestination != null) {
+            destinations.add(new JavaFieldsConsumer(state, javaDestination));
         }
 
         if (destinations.isEmpty())
@@ -134,10 +136,9 @@ public class ConfigDefinition {
         if (destCDefines != null)
             VariableRegistry.INSTANCE.writeNumericsToFile(destCDefines);
 
-        if (javaConsolePath != null && romRaiderInputFile != null) {
+        if (romRaiderDestination != null && romRaiderInputFile != null) {
             String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
-            String outputFileName = javaConsolePath + File.separator + ROM_RAIDER_XML_OUTPUT;
-            processTextTemplate(inputFileName, outputFileName);
+            processTextTemplate(inputFileName, romRaiderDestination);
         }
         if (skipRebuildFile != null) {
             System.out.println("Writing " + currentMD5 + " to " + skipRebuildFile);
