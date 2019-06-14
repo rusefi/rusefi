@@ -2,9 +2,6 @@ package com.rusefi.config;
 
 import com.rusefi.core.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.rusefi.config.FieldType.*;
 
 /**
@@ -16,8 +13,6 @@ public class Field {
     private static final String INT_VALUE_PREFIX = INT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
     private static final String FLOAT_VALUE_PREFIX = FLOAT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
     public static final int NO_BIT_OFFSET = -1;
-
-    public final static Map<String, Field> VALUES = new HashMap<>();
 
     private final String name;
     private final int offset;
@@ -129,25 +124,18 @@ public class Field {
                 '}';
     }
 
-    private static void register(Field field) {
-        VALUES.put(field.name, field);
-    }
-
     public static Field create(String name, int offset, FieldType type, int bitOffset) {
         Field field = new Field(name, offset, type, bitOffset);
-        register(field);
         return field;
     }
 
     public static Field create(String name, int offset, FieldType type, String... options) {
         Field field = new Field(name, offset, type, options);
-        register(field);
         return field;
     }
 
     public static Field create(String name, int offset, FieldType type) {
         Field field = new Field(name, offset, type);
-        register(field);
         return field;
     }
 }

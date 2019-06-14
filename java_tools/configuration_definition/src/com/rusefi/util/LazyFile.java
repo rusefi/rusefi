@@ -45,7 +45,7 @@ public class LazyFile {
         for (int i = 0; i < Math.min(fileContent.length(), newContent.length()); i++) {
             if (fileContent.charAt(i) != newContent.charAt(i)) {
                 System.out.println(getClass().getSimpleName() + " " + filename + ": Not same at " + i);
-                if (i > 15) {
+                if (i > 15 && i < fileContent.length() - 6 && i < newContent.length() - 6) {
                     System.out.println("file       " + fileContent.substring(i - 15, i + 5));
                     System.out.println("newContent " + newContent.substring(i - 15, i + 5));
                 }

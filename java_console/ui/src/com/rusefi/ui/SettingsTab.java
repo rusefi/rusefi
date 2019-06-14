@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
+import com.rusefi.config.FieldsMap;
 import com.rusefi.ui.config.*;
 import com.rusefi.ui.util.UiUtils;
 
@@ -130,7 +131,7 @@ public class SettingsTab {
             if (f.getKey() == null)
                 continue;
 
-            Field field = Field.VALUES.get(f.getKey().toUpperCase());
+            Field field = FieldsMap.VALUES.get(f.getKey().toUpperCase());
             if (field == null)
                 throw new NullPointerException("No field for " + f.getKey());
 //            System.out.println("Located " + field);
