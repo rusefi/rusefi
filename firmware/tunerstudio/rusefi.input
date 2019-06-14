@@ -41,7 +41,7 @@ enable2ndByteCanID = false
 [TunerStudio]
    queryCommand   = "S"
    versionInfo    = "V"  ; firmwave version for title bar.
-   signature    = "rusEFI v1.05" ; signature is expected to be 7 or more characters.
+   signature    = @@TS_SIGNATURE@@ ; signature is expected to be 7 or more characters.
 
 [Constants]
 ; new packet serial format with CRC
