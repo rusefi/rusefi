@@ -150,6 +150,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 line = removeToken(line);
             }
 
+            line = VariableRegistry.INSTANCE.applyVariables(line);
+
             if (isBeforeStartTag)
                 prefix.append(line + ConfigDefinition.EOL);
 

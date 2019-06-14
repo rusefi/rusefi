@@ -1774,6 +1774,7 @@
 #define ts_show_hip9011 true
 #define ts_show_joystick true
 #define ts_show_lcd true
+#define TS_SIGNATURE "rusEFI v1.06"
 #define tunerStudioSerialSpeed_offset 728
 #define tunerStudioSerialSpeed_offset_hex 2d8
 #define twoWireBatchIgnition_offset 1476

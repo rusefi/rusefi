@@ -23,6 +23,9 @@
 ! type name;comment
 
 
+#define TS_SIGNATURE "rusEFI v1.06"
+
+
 ! all the sub-structures are going to be nested withint the primary structure, that's
 ! needed to get a proper TunerStudio file
 

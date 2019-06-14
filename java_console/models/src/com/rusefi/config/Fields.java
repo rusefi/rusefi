@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jun 14 00:38:21 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jun 14 13:02:44 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -1138,6 +1138,7 @@ public class Fields {
 	public static final int triggerSimulatorPins3_offset = 738;
 	public static final int TS_FILE_VERSION = 20171101;
 	public static final int TS_OUTPUT_SIZE = 356;
+	public static final String TS_SIGNATURE = "rusEFI v1.06";
 	public static final int tunerStudioSerialSpeed_offset = 728;
 	public static final int twoWireBatchIgnition_offset = 1476;
 	public static final int twoWireBatchInjection_offset = 1476;
