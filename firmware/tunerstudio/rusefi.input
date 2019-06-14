@@ -1998,6 +1998,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Engine->cj125 Settings
 	dialog = cj125Function, "CJ125 Settings (wbo decoder)"
 		field = "Enabled",								isCJ125Enabled
+		field = "Using 4.9 sensor?",					cj125isLsu49
 		field = "!ECU reboot needed to apply these settings"
 		field = "ChipSelect pin",						cj125CsPin, {isCJ125Enabled == 1}
 		field = "ChipSelect mode",						cj125CsPinMode, {isCJ125Enabled == 1}
