@@ -1055,8 +1055,9 @@ tChargeMode_e tChargeMode;
 	uint8_t[3] unusedSpiPadding8;
 
 
+	float etbIdleThrottleRange
 
-	int[591] mainUnusedEnd;
+	int[590] mainUnusedEnd;
 	
 
 end_struct

@@ -1,4 +1,4 @@
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jun 13 14:55:38 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 15 11:58:46 EDT 2019
 // begin
 #ifndef CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_ALGO_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2542,7 +2542,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 4036
 	 */
-	int mainUnusedEnd[591];
+	float etbIdleThrottleRange;
+	/**
+	 * offset 4040
+	 */
+	int mainUnusedEnd[590];
 	/** total size 6400*/
 };
 
@@ -2805,4 +2809,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jun 13 14:55:38 EDT 2019
+// this section was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 15 11:58:46 EDT 2019

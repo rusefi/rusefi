@@ -1,6 +1,6 @@
 package com.rusefi.config;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jun 14 13:02:44 EDT 2019
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 15 11:58:46 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -326,6 +326,7 @@ public class Fields {
 	public static final int etbDeadband_offset = 3984;
 	public static final int etbFreq_offset = 2538;
 	public static final int etbIdleRange_offset = 972;
+	public static final int etbIdleThrottleRange_offset = 4036;
 	public static final int externalKnockSenseAdc_offset = 3127;
 	public static final int extraInjectionOffset_offset = 432;
 	public static final int fanOffTemperature_offset = 472;
@@ -870,7 +871,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4036;
+	public static final int mainUnusedEnd_offset = 4040;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPin_offset_hex = 294;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
@@ -2000,6 +2001,7 @@ public class Fields {
 	public static final Field MC33816SPIDEVICE = Field.create("MC33816SPIDEVICE", 4025, FieldType.INT8);
 	public static final Field TLE6240SPIDEVICE = Field.create("TLE6240SPIDEVICE", 4028, FieldType.INT8);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4032, FieldType.INT8);
+	public static final Field ETBIDLETHROTTLERANGE = Field.create("ETBIDLETHROTTLERANGE", 4036, FieldType.FLOAT);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
@@ -2768,6 +2770,7 @@ public class Fields {
 	MC33816SPIDEVICE,
 	TLE6240SPIDEVICE,
 	MC33972SPIDEVICE,
+	ETBIDLETHROTTLERANGE,
 	PEDALTOTPSTABLE,
 	FSIOFORMULAS1,
 	FSIOFORMULAS2,
