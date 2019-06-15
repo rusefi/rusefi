@@ -90,6 +90,7 @@ include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include test.mk
+include tests/tests.mk
 
 # Define linker script file here
 #LDSCRIPT= config/system/STM32F407xG.ld
@@ -118,7 +119,8 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(TEST_SRC_CPP) \
+	$(FRAMEWORK_SRC_CPP) \
+	$(TESTS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
