@@ -95,6 +95,7 @@ static Pid tuneWorkingPid(&tuneWorkingPidSettings);
 static PID_AutoTune autoTune;
 
 static LoggingWithStorage logger("ETB");
+static pedal2tps_t pedal2tpsMap("Pedal2Tps", 1);
 
 EXTERN_ENGINE;
 
@@ -226,7 +227,18 @@ private:
 		}
 
 
-		percent_t targetPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineState.etbIdleAddition;
+		percent_t pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+		int rpm = GET_RPM();
+		float targetFromTable = pedal2tpsMap.getValue(0/*rpm / RPM_1_BYTE_PACKING_MULT*/, 0/*pedalPosition*/);
+		percent_t targetPosition = targetFromTable + engine->engineState.etbIdleAddition;
+
+		if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
+#if EFI_TUNER_STUDIO
+			tsOutputChannels.debugFloatField1 = targetFromTable;
+			tsOutputChannels.debugFloatField2 = engine->engineState.etbIdleAddition;
+#endif /* EFI_TUNER_STUDIO */
+		}
 
 		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues, ETB_BIAS_CURVE_LENGTH);
 
@@ -334,7 +346,7 @@ void setEtbOffset(int value) {
 void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(etbIdleThrottleRange) = 5;
 
-	setLinearCurveAny<int8_t>(config->pedalToTpsPedalBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/100, 1);
+	setLinearCurveAny<uint8_t>(config->pedalToTpsPedalBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/100, 1);
 	setLinearCurveAny<uint8_t>(config->pedalToTpsRpmBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/8000 / RPM_1_BYTE_PACKING_MULT, 1);
 
 	for (int pedalIndex = 0;pedalIndex<PEDAL_TO_TPS_SIZE;pedalIndex++) {
@@ -452,6 +464,7 @@ void unregisterEtbPins() {
 void initElectronicThrottle(void) {
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
+	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 	if (!hasPedalPositionSensor()) {
 		return;
 	}

@@ -173,64 +173,6 @@ void ensureArrayIsAscending(const char *msg, const float array[], int size) {
 	}
 }
 
-/** @brief	Binary search
- * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
- * @note If the parameter is smaller than the first element of the array, -1 is returned.
- *
- * See also ensureArrayIsAscending
- */
-int findIndexMsg(const char *msg, const float array[], int size, float value) {
-	if (cisnan(value)) {
-		firmwareError(ERROR_NAN_FIND_INDEX, "NaN in findIndex%s", msg);
-		return 0;
-	}
-
-	if (value < array[0])
-		return -1;
-	int middle;
-
-	int left = 0;
-	int right = size;
-
-	// todo: extract binary search as template method?
-	while (true) {
-#if 0
-		// that's an assertion to make sure we do not loop here
-		size--;
-		efiAssert(CUSTOM_ERR_ASSERT, size > 0, "Unexpected state in binary search", 0);
-#endif
-
-		// todo: compare current implementation with
-		// http://eigenjoy.com/2011/01/21/worlds-fastest-binary-search/
-		// ?
-		middle = (left + right) / 2;
-
-//		print("left=%d middle=%d right=%d: %.2f\r\n", left, middle, right, array[middle]);
-
-		if (middle == left)
-			break;
-
-		if (middle != 0 && array[middle - 1] > array[middle]) {
-#if EFI_UNIT_TEST
-			firmwareError(CUSTOM_ERR_6610, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
-#else
-			warning(CUSTOM_ERR_OUT_OF_ORDER, "%s: out of order %.2f %.2f", msg, array[middle - 1], array[middle]);
-
-#endif /* EFI_UNIT_TEST */
-		}
-
-		if (value < array[middle]) {
-			right = middle;
-		} else if (value > array[middle]) {
-			left = middle;
-		} else {
-			break;
-		}
-	}
-
-	return middle;
-}
-
 int findIndex(const float array[], int size, float value) {
 	return findIndexMsg("", array, size, value);
 }
