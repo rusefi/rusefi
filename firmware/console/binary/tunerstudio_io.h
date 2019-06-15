@@ -14,9 +14,6 @@
 #include "pin_repository.h"
 #endif
 
-// that's hex for "~\n", see
-#define BINARY_SWITCH_TAG 0x7e0a
-
 #define PROTOCOL  "001"
 
 #define TS_RESPONSE_OK 0x00

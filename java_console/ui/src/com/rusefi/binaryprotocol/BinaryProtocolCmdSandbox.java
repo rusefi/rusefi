@@ -36,7 +36,6 @@ public class BinaryProtocolCmdSandbox {
 
         SerialIoStreamJSSC.setupPort(serialPort, 38400);
         logger.info("Binary looks good!");
-        bp.switchToBinaryProtocol();
 
         bp.readImage(Fields.TOTAL_CONFIG_SIZE);
         //
