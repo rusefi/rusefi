@@ -114,8 +114,6 @@ static efitimems_t previousWriteReportMs = 0;
 
 static ts_channel_s tsChannel;
 
-static uint16_t BINARY_RESPONSE = (uint16_t) SWAP_UINT16(BINARY_SWITCH_TAG);
-
 // this thread wants a bit extra stack
 static THD_WORKING_AREA(tsThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 
@@ -509,12 +507,6 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 //		scheduleMsg(logger, "Got secondByte=%x=[%c]", secondByte, secondByte);
 
 		uint16_t incomingPacketSize = firstByte << 8 | secondByte;
-
-		if (incomingPacketSize == BINARY_SWITCH_TAG) {
-			// we are here if we get a binary switch request while already in binary mode. We will just ignore it.
-			sr5WriteData(tsChannel, (const uint8_t *) &BINARY_RESPONSE, 2);
-			continue;
-		}
 
 		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->crcReadBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(&tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);

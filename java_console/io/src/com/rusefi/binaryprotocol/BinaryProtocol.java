@@ -159,52 +159,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         return logger;
     }
 
-    /**
-     * the whole dynamic 'switch to binary protocol' still does not work great
-     */
-    public void switchToBinaryProtocol() {
-        // we do not have reliable implementation yet :(
-        for (int i = 0; i < 15; i++)
-            doSwitchToBinary();
-    }
-
-    private void doSwitchToBinary() {
-        long start = System.currentTimeMillis();
-
-        while (true) {
-            try {
-                if (stream.isClosed())
-                    return;
-                dropPending();
-
-                stream.write((SWITCH_TO_BINARY_COMMAND + "\n").getBytes());
-                // todo: document why is ioLock needed here?
-                synchronized (ioLock) {
-                    boolean isTimeout = incomingData.waitForBytes("switch to binary", start, 2);
-                    if (isTimeout) {
-                        logger.info(new Date() + ": Timeout waiting for switch response");
-                        close();
-                        return;
-                    }
-                    int response = incomingData.getShort();
-                    if (response != swap16(SWITCH_TO_BINARY_RESPONSE)) {
-                        logger.error(String.format("Unexpected response [%x], re-trying", response));
-                        continue;
-                    }
-                    logger.info(String.format("Got %x - switched to binary protocol", response));
-                }
-            } catch (IOException e) {
-                close();
-                FileLog.MAIN.logLine("exception: " + e);
-                return;
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-        }
-    }
-
-    private void dropPending() throws IOException {
+    private void dropPending() {
         synchronized (ioLock) {
             if (isClosed)
                 return;
