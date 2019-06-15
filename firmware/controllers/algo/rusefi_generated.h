@@ -527,6 +527,8 @@
 #define etbFreq_offset_hex 9ea
 #define etbIdleRange_offset 972
 #define etbIdleRange_offset_hex 3cc
+#define etbIdleThrottleRange_offset 4036
+#define etbIdleThrottleRange_offset_hex fc4
 #define externalKnockSenseAdc_offset 3127
 #define externalKnockSenseAdc_offset_hex c37
 #define extraInjectionOffset_offset 432
@@ -1340,8 +1342,8 @@
 #define mainRelayPin_offset_hex 2c2
 #define mainRelayPinMode_offset 752
 #define mainRelayPinMode_offset_hex 2f0
-#define mainUnusedEnd_offset 4036
-#define mainUnusedEnd_offset_hex fc4
+#define mainUnusedEnd_offset 4040
+#define mainUnusedEnd_offset_hex fc8
 #define malfunctionIndicatorPin_offset 660
 #define malfunctionIndicatorPin_offset_hex 294
 #define malfunctionIndicatorPinMode_offset 661

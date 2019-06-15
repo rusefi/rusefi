@@ -22,6 +22,11 @@ public:
 
 	FuelConsumptionState fuelConsumption;
 
+	/**
+	 * ETB position adjustment related to idle RPM control
+	 */
+	float etbIdleAddition = 0;
+
 	efitick_t crankingTime = 0;
 	efitick_t timeSinceCranking = 0;
 

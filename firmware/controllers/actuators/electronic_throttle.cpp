@@ -226,7 +226,7 @@ private:
 		}
 
 
-		percent_t targetPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
+		percent_t targetPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineState.etbIdleAddition;
 
 		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues, ETB_BIAS_CURVE_LENGTH);
 
@@ -332,6 +332,8 @@ void setEtbOffset(int value) {
 }
 
 void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	CONFIG(etbIdleThrottleRange) = 5;
+
 	setLinearCurveAny<int8_t>(config->pedalToTpsPedalBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/100, 1);
 	setLinearCurveAny<uint8_t>(config->pedalToTpsRpmBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/8000 / RPM_1_BYTE_PACKING_MULT, 1);
 

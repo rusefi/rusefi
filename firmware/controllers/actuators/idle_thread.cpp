@@ -113,7 +113,9 @@ void setIdleMode(idle_mode_e value) {
 }
 
 static void applyIACposition(percent_t position) {
-	if (CONFIGB(useStepperIdle)) {
+	if (CONFIGB(useETBforIdleControl)) {
+		engine->engineState.etbIdleAddition = position / 100 * CONFIG(etbIdleThrottleRange);
+	} if (CONFIGB(useStepperIdle)) {
 		iacMotor.setTargetPosition(position / 100 * engineConfiguration->idleStepperTotalSteps);
 	} else {
 		/**
