@@ -17,8 +17,10 @@
 
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / (engineConfiguration->adcVcc)))
 
+// voltage in MCU universe, from zero to VDD
 #define getVoltage(msg, hwChannel) (adcToVolts(getAdcValue(msg, hwChannel)))
 
+// Board voltage, with divider coefficient accounted for
 #define getVoltageDivided(msg, hwChannel) (getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient)
 
 #endif /* ADC_MATH_H_ */
