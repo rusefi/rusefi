@@ -3,10 +3,9 @@ package com.rusefi.output;
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ConfigField;
 import com.rusefi.ConfigStructure;
+import com.rusefi.TypesHelper;
 import com.rusefi.util.LazyFile;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import static com.rusefi.ConfigDefinition.EOL;
@@ -18,7 +17,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
     public static final String BOOLEAN_TYPE = "bool";
     private final LazyFile cHeader;
 
-    public CHeaderConsumer(String destCHeader) throws IOException {
+    public CHeaderConsumer(String destCHeader) {
         System.out.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
@@ -39,7 +38,11 @@ public class CHeaderConsumer implements ConfigurationConsumer {
 
         if (configField.getArraySize() == 1) {
             // not an array
-            cEntry += "\t" + configField.getType() + " " + configField.getName() + ";" + EOL;
+            cEntry += "\t" + configField.getType() + " " + configField.getName();
+            if (ConfigDefinition.needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
+                cEntry += " = 0";
+            }
+            cEntry += ";" + EOL;
         } else {
             cEntry += "\t" + configField.getType() + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
         }

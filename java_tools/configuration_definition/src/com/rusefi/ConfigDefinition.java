@@ -37,6 +37,8 @@ public class ConfigDefinition {
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SKIP = "-skip";
+    private static final String KEY_ZERO_INIT = "-initialize_to_zero";
+    public static boolean needZeroInit; // ugly quick implementation
     public static String definitionInputFile = null;
 
     public static void main(String[] args) throws IOException {
@@ -77,6 +79,8 @@ public class ConfigDefinition {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
                 destCHeader = args[i + 1];
+            } else if (key.equals(KEY_ZERO_INIT)) {
+                needZeroInit = true;
             } else if (key.equals(KEY_C_DEFINES)) {
                 destCDefines = args[i + 1];
             } else if (key.equals(KEY_JAVA_DESTINATION)) {

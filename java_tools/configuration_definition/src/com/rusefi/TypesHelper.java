@@ -22,16 +22,31 @@ public class TypesHelper {
             return state.structures.get(type).totalSize;
         if (state != null && state.tsCustomSize.containsKey(type))
             return state.tsCustomSize.get(type);
-        if (type.equals(INT8_T) || type.equals(UINT8_T))
+        if (isPrimitive1byte(type))
             return 1;
-        if (type.equals(INT_16_T) || type.equals(UINT_16_T)) {
+        if (isPrimitive2byte(type)) {
             return 2;
         }
-        if (type.equals(FLOAT_T) || type.equals(INT_32_T) || type.equals(UINT_32_T) ||
-        type.equals("angle_t")) {
+        if (isPrimitive4byte(type)) {
             return 4;
         }
         throw new IllegalArgumentException("Unknown type " + type);
+    }
+
+    public static boolean isPrimitive(String type) {
+        return isPrimitive1byte(type) || isPrimitive2byte(type) || isPrimitive4byte(type);
+    }
+
+    private static boolean isPrimitive1byte(String type) {
+        return type.equals(INT8_T) || type.equals(UINT8_T);
+    }
+
+    private static boolean isPrimitive2byte(String type) {
+        return type.equals(INT_16_T) || type.equals(UINT_16_T);
+    }
+
+    private static boolean isPrimitive4byte(String type) {
+        return type.equals(INT_32_T) || isFloat(type);
     }
 
     public static String convertToTs(String type) {
@@ -54,6 +69,8 @@ public class TypesHelper {
     }
 
     public static boolean isFloat(String type) {
-        return "float".equals(type) || type.equalsIgnoreCase("angle_t");
+        return FLOAT_T.equals(type) ||
+                type.equalsIgnoreCase("floatms_t") ||
+                type.equalsIgnoreCase("angle_t");
     }
 }
