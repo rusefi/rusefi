@@ -230,7 +230,7 @@ private:
 		percent_t pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		int rpm = GET_RPM();
-		float targetFromTable = pedal2tpsMap.getValue(0/*rpm / RPM_1_BYTE_PACKING_MULT*/, 0/*pedalPosition*/);
+		float targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
 		percent_t targetPosition = targetFromTable + engine->engineState.etbIdleAddition;
 
 		if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
