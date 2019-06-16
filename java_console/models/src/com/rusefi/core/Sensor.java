@@ -54,7 +54,7 @@ public enum Sensor {
 
     TABLE_SPARK("table spark", SensorCategory.OPERATIONS, "ms", -40, 40),
     VREF("VRef", SensorCategory.SENSOR_INPUTS, "Volts", 6),
-    VBATT("VBatt", SensorCategory.SENSOR_INPUTS, "Volts", 18),
+    VBATT("VBatt", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 28, BackgroundColor.BEIGE, 4, 18, "Volts"),
     VREF_WIDTH("VRef w", SensorCategory.OTHERS, "", 1),
     DWELL0("Input dwl #1", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
     DWELL1("Input dwl #2", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
