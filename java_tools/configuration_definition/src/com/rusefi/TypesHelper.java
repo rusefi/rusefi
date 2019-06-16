@@ -46,7 +46,7 @@ public class TypesHelper {
     }
 
     private static boolean isPrimitive4byte(String type) {
-        return type.equals(INT_32_T) || isFloat(type);
+        return type.equals(INT_32_T) || type.equals(UINT_32_T) || isFloat(type);
     }
 
     public static String convertToTs(String type) {
