@@ -13,8 +13,8 @@ java -Drusefi.generator.lazyfile.enabled=true ^
  -definition integration\rusefi_config.txt ^
  -romraider integration ^
  -ts_destination tunerstudio ^
- -c_defines controllers\algo\rusefi_generated.h ^
- -c_destination controllers\algo\engine_configuration_generated_structures.h ^
+ -c_defines     controllers\generated\rusefi_generated.h ^
+ -c_destination controllers\generated\engine_configuration_generated_structures.h ^
  -java_destination ../java_console/models/src/com/rusefi/config/Fields.java ^
  -romraider_destination ../java_console/rusefi.xml ^
  -skip build/config.gen
