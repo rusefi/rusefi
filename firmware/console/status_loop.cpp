@@ -122,8 +122,10 @@ static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
 static int logFileLineIndex = 0;
 #define TAB "\t"
 
-static void reportSensorF(Logging *log, bool isLogFileFormatting, const char *caption, const char *units, float value,
+static void reportSensorF(Logging *log, bool unused_isLogFileFormatting, const char *caption, const char *units, float value,
 		int precision) {
+	bool isLogFileFormatting = true;
+
 	if (!isLogFileFormatting) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 		debugFloat(log, caption, value, precision);
@@ -181,7 +183,8 @@ static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engineConfiguration->ignitionMode;
 }
 
-static void printSensors(Logging *log, bool fileFormat) {
+static void printSensors(Logging *log) {
+	bool fileFormat = true; // todo:remove this unused variable
 	// current time, in milliseconds
 	int nowMs = currentTimeMillis();
 	float sec = ((float) nowMs) / 1000;
@@ -353,7 +356,7 @@ void writeLogLine(void) {
 	if (!main_loop_started)
 		return;
 	resetLogging(&fileLogger);
-	printSensors(&fileLogger, true);
+	printSensors(&fileLogger);
 
 	if (isSdCardAlive()) {
 		appendPrintf(&fileLogger, "\r\n");
@@ -445,11 +448,6 @@ void updateDevConsoleState(void) {
 		return;
 	}
 
-	/**
-	 * this should go before the firmware error so that console can detect connection
-	 */
-	printSensors(&logger, false);
-
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
@@ -458,11 +456,11 @@ void updateDevConsoleState(void) {
 		scheduleLogging(&logger);
 		return;
 	}
-#endif
+#endif /* EFI_PROD_CODE */
 
-#if EFI_PROD_CODE && HAL_USE_ADC
+#if HAL_USE_ADC
 	printFullAdcReportIfNeeded(&logger);
-#endif
+#endif /* HAL_USE_ADC */
 
 	if (!fullLog) {
 		return;
@@ -484,7 +482,7 @@ void updateDevConsoleState(void) {
 
 #if EFI_WAVE_ANALYZER
 	printWave(&logger);
-#endif
+#endif /* EFI_WAVE_ANALYZER */
 
 	scheduleLogging(&logger);
 }
