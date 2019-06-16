@@ -33,22 +33,19 @@ public class GaugesPanel {
             Sensor.CLT,
             Sensor.IAT,
             Sensor.TPS,
+
             Sensor.MAP,
-            Sensor.MAP_RAW,
             Sensor.tCharge,
-            Sensor.DWELL1,
-            Sensor.DWELL0,
-            Sensor.DUTY0,
-            Sensor.ADVANCE0,
-            Sensor.BARO,
             Sensor.baseFuel,
             Sensor.cltCorrection,
             Sensor.iatCorrection,
+
             Sensor.injectorLagMs,
             Sensor.lastErrorCode,
             Sensor.AFR,
-            Sensor.TIMING,
-            Sensor.VREF
+            Sensor.VBATT,
+            Sensor.VSS,
+
     };
     private static final String GAUGES_ROWS = "gauges_rows";
     private static final String GAUGES_COLUMNS = "gauges_cols";
@@ -68,8 +65,8 @@ public class GaugesPanel {
     private final GaugesGrid gauges;
     private final Node config;
 
-    private boolean showRpmPanel = true;
-    private boolean showMessagesPanel = true;
+    private boolean showRpmPanel;
+    private boolean showMessagesPanel;
     private final JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     /**
      * this panel is displayed on the right

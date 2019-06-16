@@ -18,10 +18,6 @@ import static com.rusefi.config.Fields.*;
  */
 public enum Sensor {
     MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 40, BackgroundColor.MUD, 20, 300),
-    MAP_RAW("MAP_RAW", SensorCategory.SENSOR_INPUTS),
-    BARO("Baro", SensorCategory.SENSOR_INPUTS),
-    // todo: unify with ignitionAdvance
-    TIMING("Timing Advance", SensorCategory.OPERATIONS, "deg", -180, 180),
 
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
@@ -29,66 +25,23 @@ public enum Sensor {
     CLT("Coolant", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 4, BackgroundColor.MUD, -40, 300),
     AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 20, BackgroundColor.MUD, 0, 20),
     MAF("MAF", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 16, BackgroundColor.MUD, 0, 5),
-    MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
 
-    knockCount("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
-    KnockValue("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
+//    knockCount("Knock", SensorCategory.SENSOR_INPUTS, "count", 30),
+//    KnockValue("Knock level", SensorCategory.SENSOR_INPUTS, "v", 6),
 
-    ENGINE_LOAD("Engine Load", SensorCategory.SENSOR_INPUTS, "x", 300),
+//    ENGINE_LOAD("Engine Load", SensorCategory.SENSOR_INPUTS, "x", 300),
 
 
-    MAFR_CFM("MAFR_CFM", SensorCategory.SENSOR_INPUTS, "cub f/m", 800),
-    CLT_F("Coolant F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 500),
-    IAT_F("Intake Air F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 350),
+//    MAFR_CFM("MAFR_CFM", SensorCategory.SENSOR_INPUTS, "cub f/m", 800),
 
-    ADC0("adc0", SensorCategory.SENSOR_INPUTS, "%", 100),
-    ADC1("adc1", SensorCategory.SENSOR_INPUTS, "%", 100),
-    ADC2("adc2", SensorCategory.SENSOR_INPUTS, "%", 100),
-    ADC3("adc3", SensorCategory.SENSOR_INPUTS, "%", 100),
-
-    TRG_0_DUTY("trg0 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
-    TRG_1_DUTY("trg1 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
 
 //    COOLANT_WIDTH("c w", "", 30),
 //    INTAKE_AIR_WIDTH("air w", "", 30),
 
-    TABLE_SPARK("table spark", SensorCategory.OPERATIONS, "ms", -40, 40),
-    VREF("VRef", SensorCategory.SENSOR_INPUTS, "Volts", 6),
+//    VREF("VRef", SensorCategory.SENSOR_INPUTS, "Volts", 6),
     VBATT("VBatt", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 28, BackgroundColor.BEIGE, 4, 18, "Volts"),
-    VREF_WIDTH("VRef w", SensorCategory.OTHERS, "", 1),
-    DWELL0("Input dwl #1", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL1("Input dwl #2", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL2("Input dwl #3", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL3("Input dwl #4", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL0_SD("Input d #1", SensorCategory.SNIFFING, "std dev", 100),
 
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
-
-
-    TOTAL_DWELL0("Input tdwl #1", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    TOTAL_DWELL1("Input tdwl #2", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    TOTAL_DWELL2("Input tdwl #3", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    TOTAL_DWELL3("Input tdwl #4", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
-    ADVANCE0("Input Adv #1", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
-    ADVANCE1("Input Adv #2", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
-    ADVANCE2("Input Adv #3", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
-    ADVANCE3("Input Adv #4", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
-    PERIOD0("Period", SensorCategory.SNIFFING, "dg", 0, 400),
-    DUTY0("Duty0", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
-    DUTY1("Duty1", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
-
-    IDLE_SWITCH("idle switch", SensorCategory.OTHERS),
-
-    CHARTSIZE("CHARTSIZE", SensorCategory.OTHERS),
-    CHART_STATUS("CHART_STATUS", SensorCategory.OTHERS),
-    ADC_STATUS("ADC_STATUS", SensorCategory.OTHERS),
-
-    ADC_FAST("ADC_FAST", SensorCategory.OTHERS, "b", 4000),
-    ADC_FAST_AVG("ADC_FAST_AVG", SensorCategory.OTHERS, "b", 4000),
-    INJECTOR_1_DWELL("inj #1", SensorCategory.SNIFFING),
-    INJECTOR_2_DWELL("inj #2", SensorCategory.SNIFFING),
-    INJECTOR_3_DWELL("inj #3", SensorCategory.SNIFFING),
-    INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
     IAT(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 8, BackgroundColor.WHITE, -40, 150, "C"),
     TPS(SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 12, BackgroundColor.MUD, 0, 100, "%"), // throttle position sensor
@@ -146,8 +99,6 @@ public enum Sensor {
     debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 292, BackgroundColor.MUD, 0, 5),
     debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 294, BackgroundColor.MUD, 0, 5),
 
-    INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
-    INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
     ;
 
     private final String name;
@@ -192,23 +143,22 @@ public enum Sensor {
     }
 
     /**
-     * Text-based protocol is not very alive
+     * This constructor is used for virtual sensors which do not directly come from ECU
      */
-    @Deprecated
-    Sensor(String name, SensorCategory category) {
-        this(name, category, "", 255);
-    }
-
-    @Deprecated
     Sensor(String name, SensorCategory category, String units, double maxValue) {
         this(name, category, units, 0, maxValue);
     }
 
-    @Deprecated
+    /**
+     * This constructor is used for virtual sensors which do not directly come from ECU
+     */
     Sensor(String name, SensorCategory category, String units, double minValue, double maxValue) {
         this(name, category, units, minValue, maxValue, BackgroundColor.LIGHT_GRAY);
     }
 
+    /**
+     * This constructor is used for virtual sensors which do not directly come from ECU
+     */
     Sensor(String name, SensorCategory category, String units, double minValue, double maxValue, BackgroundColor color) {
         this.name = name;
         this.category = category;
@@ -279,15 +229,6 @@ public enum Sensor {
     }
 
     public double translateValue(double value) {
-        switch (this) {
-            case ADVANCE0:
-            case ADVANCE1:
-            case ADVANCE2:
-            case ADVANCE3:
-            case TIMING:
-                return processAdvance(value);
-            default:
-                return value;
-        }
+        return value;
     }
 }

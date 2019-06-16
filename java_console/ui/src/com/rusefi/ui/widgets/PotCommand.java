@@ -32,6 +32,7 @@ public class PotCommand {
         };
         ((SpinnerNumberModel) voltageSpinner.getModel()).setStepSize(0.1);
         voltageSpinner.setValue(1.0);
+/*
         voltageSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -40,7 +41,7 @@ public class PotCommand {
                 potSpinner.setValue(d);
             }
         });
-
+*/
 
         potSpinner = new JSpinner() {
             @Override
