@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SizeSelectorPanel extends JPanel {
-    public static final int WIDTH = 7;
+    public static final int WIDTH = 5;
     public static final int HEIGHT = 3;
 
     private List<Element> elements = new ArrayList<>();

@@ -5,8 +5,6 @@ package com.rusefi.core;
  * (c) Andrey Belomutskiy
  */
 public interface ISensorCentral {
-    void initialize(EngineState es);
-
     double getValue(Sensor sensor);
 
     void setValue(double value, Sensor sensor);

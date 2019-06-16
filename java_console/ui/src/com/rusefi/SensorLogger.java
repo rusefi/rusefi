@@ -40,10 +40,8 @@ public class SensorLogger {
             Sensor.TARGET_AFR,
             Sensor.tCharge,
             Sensor.veValue,
-            Sensor.ENGINE_LOAD,
 
             Sensor.DWELL,
-            Sensor.TIMING,
 
             Sensor.baseFuel,
             Sensor.actualLastInjection,
