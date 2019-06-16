@@ -29,5 +29,6 @@ CONTROLLERS_SRC_CPP = \
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \
 	$(CONTROLLERS_DIR)/scheduling \
+	$(CONTROLLERS_DIR)/generated \
 	$(CONTROLLERS_DIR)/actuators \
 
