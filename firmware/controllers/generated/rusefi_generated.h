@@ -1312,6 +1312,9 @@
 #define knockVThreshold_offset_hex 5f0
 #define lcdThreadPeriodMs_offset 720
 #define lcdThreadPeriodMs_offset_hex 2d0
+#define LDS_CLT_INDEX 0
+#define LDS_IAT_INDEX 1
+#define LDS_SPEED_DENSITY_INDEX 2
 #define LE_COMMAND_LENGTH 200
 #define LIS302DLCsPin_offset 2063
 #define LIS302DLCsPin_offset_hex 80f

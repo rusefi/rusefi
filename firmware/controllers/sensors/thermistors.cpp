@@ -80,20 +80,28 @@ float getResistance(ThermistorConf *config, float voltage) {
 float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
 	tm->setConfig(&config->config); // implementation checks if configuration has changed or not
 
-	float voltage = getVoltageDivided("term", config->adcChannel);
-	if (useLinear) {
+	DISPLAY_TEXT(Analog_MCU_reads);
+	tm->DISPLAY_FIELD(voltageMCU) = DISPLAY_TEXT(from_pin) getVoltage("term", config->DISPLAY_CONFIG(adcChannel));
+	DISPLAY_TEXT(EOL);
+
+	DISPLAY_TEXT(Analog_ECU_read);
+	tm->DISPLAY_FIELD(voltageBoard) = DISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
+	DISPLAY_TEXT(EOL);
+
+	if ((tm->isLinear = useLinear) == true) {
 			// todo: fix this horrible code!
 			// should work as a short term fix.
-			// todo: move 'useLinearXXXSensor' into termistor configuration record
+			// todo: move 'useLinearXXXSensor' into thermistor configuration record
 		// yes, we use 'resistance' setting for 'voltage' here
 		return interpolateMsg("temp", config->config.resistance_1, config->config.tempC_1,
 				config->config.resistance_2, config->config.tempC_2,
-						voltage);
+				tm->voltageBoard);
 
 	}
-	float resistance = getResistance(config, voltage);
+	DISPLAY_TEXT(Measured_resistance);
+	tm->DISPLAY_FIELD(resistance) = getResistance(config, tm->voltageBoard);
 
-	float kelvinTemperature = tm->getKelvinTemperatureByResistance(resistance);
+	float kelvinTemperature = tm->getKelvinTemperatureByResistance(tm->resistance);
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 

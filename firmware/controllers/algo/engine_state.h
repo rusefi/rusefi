@@ -12,8 +12,9 @@
 #include "global.h"
 #include "engine_parts.h"
 #include "pid.h"
+#include "engine_state_generated.h"
 
-class EngineState {
+class EngineState : public engine_state2_s {
 public:
 	EngineState();
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -32,10 +33,6 @@ public:
 
 	WarningCodeState warnings;
 
-	/**
-	 * speed-density logic, calculated air mass in grams
-	 */
-	float airMass = 0;
 	/**
 	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
 	 */

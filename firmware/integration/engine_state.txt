@@ -1,0 +1,20 @@
+
+
+struct_no_prefix engine_state2_s
+
+
+
+bit isTChargeAirModel
+
+float airMass;speed-density logic, calculated air mass in grams
+
+float engineCycleDurationMs;
+
+float Tcharge_coff
+
+floatms_t airFlow
+
+float minRpmKcurrentTPS
+
+
+end_struct

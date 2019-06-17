@@ -32,4 +32,11 @@
 #include "loggingcentral.h"
 #endif /* __cplusplus */
 
+#define DISPLAY_CONFIG(x) x
+#define DISPLAY_FIELD(x) x
+
+#define DISPLAY_TEXT(x)
+#define DISPLAY_SENSOR(x) {}
+#define DISPLAY_IF(x) {}
+
 #endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */

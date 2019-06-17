@@ -1151,6 +1151,11 @@ end_struct
 
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
 
+! Live Documentation Structure
+#define LDS_CLT_INDEX 0
+#define LDS_IAT_INDEX 1
+#define LDS_SPEED_DENSITY_INDEX 2
+
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVT "VVT postion"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
