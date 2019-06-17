@@ -57,8 +57,9 @@ typedef struct {
 // These commands are used exclusively by the rusEfi console
 #define TS_TEST_COMMAND 't' // 0x74
 #define TS_GET_TEXT 'G' // 0x47
-#define TS_GET_FILE_RANGE '2'
+#define TS_GET_FILE_RANGE '2' // 0x32
 #define TS_EXECUTE 'E' // 0x45
+#define TS_GET_STRUCT '9' // 0x39
 
 // These commands are used by TunerStudio and the rusEfi console
 #define TS_HELLO_COMMAND 'S' // 0x53 queryCommand
