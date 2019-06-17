@@ -70,7 +70,13 @@ TEST(misc, cppVirtualStructMemoryLayout) {
 	memcpy(&destimationInt, &c, 4);
 	ASSERT_NE(540, destimationInt);
 
+	// static_cast is smart to skip the vtable, we like static_cast
+	TestParent *parent = static_cast<TestParent*>(&c);
+	ASSERT_EQ(0, (int)&c.field0 - (int)parent);
+
 	ASSERT_EQ(MAGIC_VTABLE_SIZE, (int)&c.field0 - (int)&c);
+
+
 }
 
 TEST(misc, cppPlainExtraFieldsStructMemoryLayout) {
