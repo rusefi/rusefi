@@ -85,10 +85,14 @@ float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear
 	DISPLAY_TEXT(EOL);
 
 	DISPLAY_TEXT(Analog_ECU_read);
+#if EFI_UNIT_TEST
+	tm->voltageBoard = getVoltageDivided("term", config->adcChannel);
+#else
 	tm->DISPLAY_FIELD(voltageBoard) = DISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
+#endif /* EFI_UNIT_TEST */
 	DISPLAY_TEXT(EOL);
 
-	if ((tm->isLinear = useLinear) == true) {
+	if ((tm->isLinear = useLinear)) {
 			// todo: fix this horrible code!
 			// should work as a short term fix.
 			// todo: move 'useLinearXXXSensor' into thermistor configuration record

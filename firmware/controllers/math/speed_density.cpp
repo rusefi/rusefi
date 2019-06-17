@@ -37,7 +37,7 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 	}
 
 
-	if ((engine->engineState./*DISPLAY_IF*/isTChargeAirModel = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP)) == true) {
+	if ((engine->engineState./*DISPLAY_IF*/isTChargeAirModel = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
 		const floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
 		// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
 		floatms_t airMassForEngine = engine->engineState./***display*/airMass * CONFIG(specs.cylindersCount);
