@@ -3,8 +3,8 @@ package com.rusefi.autotune;
 import java.util.Collection;
 
 import static com.rusefi.autotune.MathUtil.square;
-import static com.rusefi.config.Fields.FUEL_LOAD_COUNT;
-import static com.rusefi.config.Fields.FUEL_RPM_COUNT;
+import static com.rusefi.config.generated.Fields.FUEL_LOAD_COUNT;
+import static com.rusefi.config.generated.Fields.FUEL_RPM_COUNT;
 
 /**
  * 1/5/2016

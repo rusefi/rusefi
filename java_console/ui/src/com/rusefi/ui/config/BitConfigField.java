@@ -2,7 +2,7 @@ package com.rusefi.ui.config;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 
 import javax.swing.*;

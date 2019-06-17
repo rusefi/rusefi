@@ -1,6 +1,6 @@
 package com.rusefi.autotune;
 
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 
 /**
  * Air/Fuel ratio data point

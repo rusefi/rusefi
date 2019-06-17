@@ -5,7 +5,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolCommands;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.binaryprotocol.IoHelper;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 
 import java.io.*;
 import java.net.ServerSocket;

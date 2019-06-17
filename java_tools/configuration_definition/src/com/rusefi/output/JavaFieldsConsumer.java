@@ -15,7 +15,7 @@ import static com.rusefi.ConfigDefinition.EOL;
  */
 public class JavaFieldsConsumer implements ConfigurationConsumer {
     private static final Set<String> javaEnums = new HashSet<>();
-    private static final String JAVA_PACKAGE = "com.rusefi.config";
+    private static final String JAVA_PACKAGE = "com.rusefi.config.generated";
 
     private final CharArrayWriter javaFieldsWriter;
     private final ReaderState state;
