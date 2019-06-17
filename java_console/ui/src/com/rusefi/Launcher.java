@@ -3,7 +3,7 @@ package com.rusefi;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;

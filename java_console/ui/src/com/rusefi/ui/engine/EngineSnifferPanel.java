@@ -1,7 +1,7 @@
 package com.rusefi.ui.engine;
 
 import com.rusefi.FileLog;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;

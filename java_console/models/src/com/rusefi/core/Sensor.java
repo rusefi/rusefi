@@ -1,7 +1,7 @@
 package com.rusefi.core;
 
 import com.rusefi.config.FieldType;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import eu.hansolo.steelseries.tools.BackgroundColor;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.rusefi.config.Fields.*;
+import static com.rusefi.config.generated.Fields.*;
 
 /**
  * @author Andrey Belomutskiy

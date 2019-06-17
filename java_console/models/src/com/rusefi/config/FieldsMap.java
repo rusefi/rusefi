@@ -1,5 +1,7 @@
 package com.rusefi.config;
 
+import com.rusefi.config.generated.Fields;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,5 +1,6 @@
 package com.rusefi.config;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 
 import static com.rusefi.config.FieldType.*;
