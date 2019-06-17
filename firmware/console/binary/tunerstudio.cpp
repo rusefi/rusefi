@@ -287,12 +287,12 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 
 	const void *addr = NULL;
 	if (structId == LDS_CLT_INDEX) {
-		addr = &engine->engineState.cltCurve;
+		addr = static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
 	} else if (structId == LDS_IAT_INDEX) {
-		addr = &engine->engineState.iatCurve;
+		addr = static_cast<thermistor_state_s*>(&engine->engineState.iatCurve);
 	}
 	if (addr == NULL) {
-		// todo: add warning code - unexected structId
+		// todo: add warning code - unexpected structId
 		return;
 	}
 	sr5SendResponse(tsChannel, TS_CRC, (const uint8_t *)addr, size);
