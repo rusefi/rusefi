@@ -1,8 +1,9 @@
 package com.rusefi.config.generated;
 
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 16 22:17:51 EDT 2019
+
 import com.rusefi.config.*;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 16 22:00:08 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -857,6 +858,9 @@ public class Fields {
 	public static final int knockNoiseRpmBins_offset_hex = 750;
 	public static final int knockVThreshold_offset = 1520;
 	public static final int lcdThreadPeriodMs_offset = 720;
+	public static final int LDS_CLT_INDEX = 0;
+	public static final int LDS_IAT_INDEX = 1;
+	public static final int LDS_SPEED_DENSITY_INDEX = 2;
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int LIS302DLCsPin_offset = 2063;
 	public static final int logFormat_offset = 496;

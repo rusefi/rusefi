@@ -20,5 +20,6 @@
     <orderEntry type="module" module-name="autotest" />
     <orderEntry type="module" module-name="romraider" />
     <orderEntry type="library" name="jlatexmath" level="project" />
+    <orderEntry type="module" module-name="configuration_definition" />
   </component>
 </module>
