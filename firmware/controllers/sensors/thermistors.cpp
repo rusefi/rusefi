@@ -77,23 +77,38 @@ float getResistance(ThermistorConf *config, float voltage) {
 	return resistance;
 }
 
-float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
-	tm->setConfig(&config->config); // implementation checks if configuration has changed or not
+float getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	tm->setConfig(&cfg->config); // implementation checks if configuration has changed or not
 
-	float voltage = getVoltageDivided("term", config->adcChannel);
-	if (useLinear) {
+	DISPLAY_TEXT(Analog_MCU_reads);
+	tm->DISPLAY_FIELD(voltageMCU) = DISPLAY_TEXT(from_pin) getVoltage("term", cfg->DISPLAY_CONFIG(adcChannel));
+	DISPLAY_TEXT(EOL);
+
+	DISPLAY_TEXT(Analog_ECU_read);
+#if EFI_UNIT_TEST
+// todo: get rid of this branch, unify unit test with real firmware. maybe analogInputDividerCoefficient needs to be set?
+		tm->voltageBoard = getVoltageDivided("term", cfg->adcChannel);
+//	CONFIG(analogInputDividerCoefficient) = 1;
+//		tm->DISPLAY_FIELD(voltageBoard) = DISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
+#else
+		tm->DISPLAY_FIELD(voltageBoard) = DISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
+#endif /* EFI_UNIT_TEST */
+	DISPLAY_TEXT(EOL);
+
+	if ((tm->isLinear = useLinear)) {
 			// todo: fix this horrible code!
 			// should work as a short term fix.
-			// todo: move 'useLinearXXXSensor' into termistor configuration record
+			// todo: move 'useLinearXXXSensor' into thermistor configuration record
 		// yes, we use 'resistance' setting for 'voltage' here
-		return interpolateMsg("temp", config->config.resistance_1, config->config.tempC_1,
-				config->config.resistance_2, config->config.tempC_2,
-						voltage);
+		return interpolateMsg("temp", cfg->config.resistance_1, cfg->config.tempC_1,
+				cfg->config.resistance_2, cfg->config.tempC_2,
+				tm->voltageBoard);
 
 	}
-	float resistance = getResistance(config, voltage);
+	DISPLAY_TEXT(Measured_resistance);
+	tm->DISPLAY_FIELD(resistance) = getResistance(cfg, tm->voltageBoard);
 
-	float kelvinTemperature = tm->getKelvinTemperatureByResistance(resistance);
+	float kelvinTemperature = tm->getKelvinTemperatureByResistance(tm->resistance);
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 
@@ -120,7 +135,7 @@ float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return NO_CLT_SENSOR_TEMPERATURE;
 	}
  	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve,
- 			engineConfiguration->useLinearCltSensor);
+ 			engineConfiguration->useLinearCltSensor PASS_ENGINE_PARAMETER_SUFFIX);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT %.2f", temperature);
@@ -201,7 +216,7 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return NO_IAT_SENSOR_TEMPERATURE;
 	}
 	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve,
-			engineConfiguration->useLinearIatSensor);
+			engineConfiguration->useLinearIatSensor PASS_ENGINE_PARAMETER_SUFFIX);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 #if EFI_PROD_CODE || EFI_UNIT_TEST

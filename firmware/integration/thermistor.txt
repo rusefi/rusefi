@@ -1,0 +1,8 @@
+
+struct thermistor_state_s
+
+float resistance
+float voltageMCU
+float voltageBoard
+
+end_struct
