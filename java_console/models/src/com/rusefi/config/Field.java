@@ -1,7 +1,12 @@
 package com.rusefi.config;
 
+import com.opensr5.ConfigurationImage;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
+import org.jetbrains.annotations.NotNull;
+
+import java.nio.ByteBuffer;
+import java.util.Objects;
 
 import static com.rusefi.config.FieldType.*;
 
@@ -123,6 +128,24 @@ public class Field {
                 ", o=" + offset +
                 ", type=" + type +
                 '}';
+    }
+
+    @NotNull
+    public Number getValue(ConfigurationImage ci) {
+        Objects.requireNonNull(ci);
+        Number value;
+        ByteBuffer wrapped = getByteBuffer(ci);
+        if (getType() == INT) {
+            value = wrapped.getInt();
+        } else {
+            value = wrapped.getFloat();
+        }
+        return value;
+    }
+
+    @NotNull
+    public ByteBuffer getByteBuffer(ConfigurationImage ci) {
+        return ci.getByteBuffer(getOffset(), 4);
     }
 
     public static Field create(String name, int offset, FieldType type, int bitOffset) {

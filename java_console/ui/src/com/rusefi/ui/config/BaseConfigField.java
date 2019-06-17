@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public abstract class BaseConfigField {
     protected final JLabel status = new JLabel("P");
@@ -77,19 +76,7 @@ public abstract class BaseConfigField {
 
     @NotNull
     protected ByteBuffer getByteBuffer(ConfigurationImage ci) {
-        return getByteBuffer(ci, field);
+        return field.getByteBuffer(ci);
     }
 
-    @NotNull
-    public static ByteBuffer getByteBuffer(ConfigurationImage ci, Field field) {
-        return getByteBuffer(ci, field.getOffset());
-    }
-
-    @NotNull
-    public static ByteBuffer getByteBuffer(ConfigurationImage ci, int offset) {
-        byte data[] = ci.getRange(offset, 4);
-        ByteBuffer wrapped = ByteBuffer.wrap(data);
-        wrapped.order(ByteOrder.LITTLE_ENDIAN);
-        return wrapped;
-    }
 }

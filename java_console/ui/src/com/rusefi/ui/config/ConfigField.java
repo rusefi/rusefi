@@ -2,19 +2,15 @@ package com.rusefi.ui.config;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
-import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.ui.util.JTextFieldWithWidth;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.Objects;
 
 public class ConfigField extends BaseConfigField {
     private final JTextField view = new JTextFieldWithWidth(200);
@@ -56,25 +52,12 @@ public class ConfigField extends BaseConfigField {
 
     @Override
     protected void loadValue(ConfigurationImage ci) {
-        Number value = getValue(ci, field);
+        Number value = field.getValue(ci);
         setValue(value);
     }
 
-    @NotNull
-    public static Number getValue(ConfigurationImage ci, Field field) {
-        Objects.requireNonNull(ci);
-        Number value;
-        ByteBuffer wrapped = getByteBuffer(ci, field);
-        if (field.getType() == FieldType.INT) {
-            value = wrapped.getInt();
-        } else {
-            value = wrapped.getFloat();
-        }
-        return value;
-    }
-
     public static double getFloatValue(ConfigurationImage ci, Field field) {
-        float value = getValue(ci, field).floatValue();
+        float value = field.getValue(ci).floatValue();
         // this hack is trying to restore lost precision. It's a lame hack
         String str = df.format(value);
         try {
@@ -85,6 +68,6 @@ public class ConfigField extends BaseConfigField {
     }
 
     public static int getIntValue(ConfigurationImage ci, Field field) {
-        return getValue(ci, field).intValue();
+        return field.getValue(ci).intValue();
     }
 }
