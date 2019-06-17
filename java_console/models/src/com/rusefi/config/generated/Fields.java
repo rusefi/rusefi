@@ -1,5 +1,7 @@
 package com.rusefi.config.generated;
 
+import com.rusefi.config.*;
+
 // this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 16 22:00:08 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
