@@ -39,9 +39,6 @@ public class EcuStimulator {
 
     public boolean isDisplayingFuel = true;
 
-    private static final Sensor DWELL_SENSOR = Sensor.DWELL0;
-    public static final Sensor ADVANCE_SENSOR = Sensor.ADVANCE0;
-
     private static final int MEASURES = 7;
     //    private static final String C_FILE_NAME = "advance_map.c";
 //    private static final String C_PREFIX = "ad_";
@@ -115,7 +112,7 @@ public class EcuStimulator {
 
         ChartHelper.setYRange(new Range(inputs.getEngineLoadMin(), inputs.getEngineLoadMax()), model);
 
-        buildTable(listener, DWELL_SENSOR);
+        //buildTable(listener, DWELL_SENSOR);
 
         try {
             csv.close();
@@ -150,7 +147,7 @@ public class EcuStimulator {
         /**
          * We are making a number of measurements and then we take the middle one
          */
-        MultipleMeasurements r = waitForMultipleResults(dwellSensor, ADVANCE_SENSOR);
+        MultipleMeasurements r = waitForMultipleResults(dwellSensor, null);
         List<Double> dwells = r.getDwells();
         List<Double> advances = r.getAdvances();
 

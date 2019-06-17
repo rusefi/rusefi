@@ -14,11 +14,10 @@ import com.rusefi.autotune.Result;
 import com.rusefi.autotune.AfrDataPoint;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.ui.config.BaseConfigField;
 import com.rusefi.ui.storage.Node;
 
 import javax.swing.*;
@@ -336,7 +335,7 @@ public class FuelTunePane {
             return;
         }
         for (int i = 0; i < array.length; i++)
-            array[i] = BaseConfigField.getByteBuffer(bp.getController(), offset + 4 * i).getFloat();
+            array[i] = bp.getController().getByteBuffer(offset + 4 * i, 4).getFloat();
         System.out.println("FuelTunePane: Loaded " + Arrays.toString(array));
     }
 

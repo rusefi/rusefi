@@ -3,7 +3,7 @@ package com.rusefi;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatus;
@@ -40,10 +40,8 @@ public class SensorLogger {
             Sensor.TARGET_AFR,
             Sensor.tCharge,
             Sensor.veValue,
-            Sensor.ENGINE_LOAD,
 
             Sensor.DWELL,
-            Sensor.TIMING,
 
             Sensor.baseFuel,
             Sensor.actualLastInjection,

@@ -1,6 +1,8 @@
-package com.rusefi.config;
+package com.rusefi.config.generated;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jun 15 14:03:05 EDT 2019
+import com.rusefi.config.*;
+
+// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 16 22:00:08 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;

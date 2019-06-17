@@ -1,5 +1,10 @@
 package com.opensr5;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 /**
  * (c) Andrey Belomutskiy
  * 3/6/2015
@@ -19,6 +24,14 @@ public class ConfigurationImage {
 
     public ConfigurationImage(byte[] content) {
         this.content = content;
+    }
+
+    @NotNull
+    public ByteBuffer getByteBuffer(int offset, int size) {
+        byte data[] = getRange(offset, size);
+        ByteBuffer wrapped = ByteBuffer.wrap(data);
+        wrapped.order(ByteOrder.LITTLE_ENDIAN);
+        return wrapped;
     }
 
     public int getSize() {

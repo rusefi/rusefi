@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.config.ConfigField;

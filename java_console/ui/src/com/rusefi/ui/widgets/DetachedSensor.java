@@ -1,6 +1,6 @@
 package com.rusefi.ui.widgets;
 
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;

@@ -6,7 +6,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.romraider.editor.ecu.ECUEditor;
 import com.rusefi.RomRaiderWrapper;
 import com.rusefi.UploadChanges;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.serial.SerialIoStreamJSSC;
 import jssc.SerialPort;
 

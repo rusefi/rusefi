@@ -4,7 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.config.ConfigField;
@@ -195,7 +195,7 @@ public class FormulasPane {
         double displacement = ConfigField.getFloatValue(ci, Fields.DISPLACEMENT);
         int cylinderCount = ConfigField.getIntValue(ci, Fields.CYLINDERSCOUNT);
         String cylinderDisplacement = oneDecimal(displacement / cylinderCount);
-        String injectorFlow = oneDecimal((float) ConfigField.getValue(ci, Fields.INJECTOR_FLOW));
+        String injectorFlow = oneDecimal((float) Fields.INJECTOR_FLOW.getValue(ci));
 
         String tCharge = "$Tcharge=f(CLT=" + oneDecimal(Sensor.CLT) + "C,IAT=" + IAT
                 + "C,TPS=" + tpsStr + "\\%, RPM = " + RPM + ")=" + T_CHARGE + "C$";

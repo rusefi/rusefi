@@ -1,7 +1,7 @@
 package com.rusefi.autotune.test;
 
 import com.rusefi.autotune.*;
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.rusefi.binaryprotocol;
 
-import com.rusefi.config.Fields;
+import com.rusefi.config.generated.Fields;
 
 /**
  * (c) Andrey Belomutskiy

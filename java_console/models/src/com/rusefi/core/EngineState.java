@@ -17,11 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class EngineState {
     public static final String SEPARATOR = ",";
-    public static final ValueCallback<String> NOTHING = new ValueCallback<String>() {
-        @Override
-        public void onUpdate(String value) {
-        }
-    };
     public static final String PACKING_DELIMITER = ":";
     // see RUS_EFI_VERSION_TAG in firmware code
     public static final String RUS_EFI_VERSION_TAG = "rusEfiVersion";
@@ -77,67 +72,12 @@ public class EngineState {
         }
         );
 
-        SensorCentral.getInstance().initialize(this);
-
-//        SensorStats.startRangeMeasurement(Sensor.CLT, Sensor.COOLANT_WIDTH);
-//        SensorStats.startRangeMeasurement(Sensor.IAT, Sensor.INTAKE_AIR_WIDTH);
-        SensorStats.startRangeMeasurement(Sensor.VREF, Sensor.VREF_WIDTH);
-
-        SensorStats.startStandardDeviation(Sensor.DWELL0, Sensor.DWELL0_SD);
-        SensorStats.startDelta(Sensor.INJECTOR_1_DWELL, Sensor.INJECTOR_2_DWELL, Sensor.INJ_1_2_DELTA);
-        SensorStats.startDelta(Sensor.INJECTOR_3_DWELL, Sensor.INJECTOR_4_DWELL, Sensor.INJ_3_4_DELTA);
-
-        SensorStats.startConversion(Sensor.CLT, Sensor.CLT_F, SensorConversion.celsius_to_fahrenheit);
-        SensorStats.startConversion(Sensor.IAT, Sensor.IAT_F, SensorConversion.celsius_to_fahrenheit);
-        SensorStats.startConversion(Sensor.MAFR, Sensor.MAFR_CFM, new SensorConversion() {
-                    @Override
-                    public double convertValue(double value) {
-                        return value / 2.081989116;
-                    }
-                });
-
-        registerStringValueAction("IAT", NOTHING);
-        registerStringValueAction("int_temp", NOTHING);
-        registerStringValueAction("mode", NOTHING);
-        registerStringValueAction("TPS", NOTHING);
-
-        registerStringValueAction("adcfast_co", NOTHING);
-        registerStringValueAction("adcfast_max", NOTHING);
-        registerStringValueAction("adcfast_min", NOTHING);
-        registerStringValueAction("key", NOTHING);
-        registerStringValueAction("value", NOTHING);
-
         registerStringValueAction("msg", new ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 MessagesCentral.getInstance().postMessage(EngineState.class, value);
             }
         });
-
-        registerStringValueAction("advance", NOTHING);
-        registerStringValueAction("dwell", NOTHING);
-
-        registerStringValueAction("offset0", NOTHING);
-        registerStringValueAction("offset1", NOTHING);
-        registerStringValueAction("crank_period", NOTHING);
-        registerStringValueAction("ckp_c", NOTHING);
-        registerStringValueAction("ev0", NOTHING);
-        registerStringValueAction("ev1", NOTHING);
-        registerStringValueAction("adc10", NOTHING);
-
-        registerStringValueAction("isC", NOTHING);
-        registerStringValueAction("p_d", NOTHING);
-        registerStringValueAction("s_d", NOTHING);
-        registerStringValueAction("pEC", NOTHING);
-        registerStringValueAction("sEC", NOTHING);
-        registerStringValueAction("wEC", NOTHING);
-        registerStringValueAction("wWi", NOTHING);
-        registerStringValueAction("wWi2", NOTHING);
-
-        registerStringValueAction("cid", NOTHING);
-        registerStringValueAction("i_d", NOTHING);
-        registerStringValueAction("i_p", NOTHING);
-        registerStringValueAction("a_time", NOTHING);
 
         registerStringValueAction("time", new ValueCallback<String>() {
             public void onUpdate(String value) {

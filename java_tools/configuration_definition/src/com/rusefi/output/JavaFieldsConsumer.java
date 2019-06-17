@@ -15,7 +15,7 @@ import static com.rusefi.ConfigDefinition.EOL;
  */
 public class JavaFieldsConsumer implements ConfigurationConsumer {
     private static final Set<String> javaEnums = new HashSet<>();
-    private static final String JAVA_PACKAGE = "com.rusefi.config";
+    private static final String JAVA_PACKAGE = "com.rusefi.config.generated";
 
     private final CharArrayWriter javaFieldsWriter;
     private final ReaderState state;
@@ -103,10 +103,10 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
     @Override
     public void startFile() {
         javaFields.write("package " + JAVA_PACKAGE + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        javaFields.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL);
+        javaFields.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
+        javaFields.write("import com.rusefi.config.*;" + EOL + EOL);
         javaFields.write("public class " + className + " {" + ConfigDefinition.EOL);
     }
-
 
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
