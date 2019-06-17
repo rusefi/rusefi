@@ -20,4 +20,5 @@ public interface BinaryProtocolCommands {
     char COMMAND_READ = 'R'; // 082 decimal
     char COMMAND_CHUNK_WRITE = 'C'; // pageChunkWrite
     char COMMAND_BURN = 'B'; // burnCommand
+    char COMMAND_GET_STRUCT = '9'; // TS_GET_STRUCT
 }

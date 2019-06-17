@@ -5,12 +5,15 @@ import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.ThermistorState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
+import org.putgemin.VerticalFlowLayout;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
@@ -21,6 +24,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+import static com.rusefi.config.generated.Fields.LDS_CLT_INDEX;
+import static com.rusefi.config.generated.Fields.LDS_IAT_INDEX;
+
+
 /**
  * (c) Andrey Belomutskiy 2013-2018
  */
@@ -29,12 +36,20 @@ public class FormulasPane {
     private static final String NL2 = NL + "\\  " + NL; // two new lines
     private static final String NL3 = NL2 + "\\  " + NL; // two new lines
 
+    /**
+     * this is the panel we expose to the outside world
+     */
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel centerProxy = new JPanel(new BorderLayout());
     private boolean isPaused;
 
+    private JPanel liveDocs = new JPanel(new VerticalFlowLayout());
+
     public FormulasPane() {
         content.add(centerProxy, BorderLayout.CENTER);
+
+        liveDocs.add(LiveDocPanel.getThermistorPanel("Coolant Sensor", "CLT", LDS_CLT_INDEX, ThermistorState.VALUES));
+        liveDocs.add(LiveDocPanel.getThermistorPanel("Intake Air Sensor", "IAT", LDS_IAT_INDEX, ThermistorState.VALUES));
 
         centerProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
 
@@ -147,6 +162,8 @@ public class FormulasPane {
         warning.setForeground(Color.red);
         centerProxy.add(warning, BorderLayout.NORTH);
         centerProxy.add(formulaLabel, BorderLayout.CENTER);
+
+        centerProxy.add(liveDocs, BorderLayout.SOUTH);
     }
 
     @NotNull

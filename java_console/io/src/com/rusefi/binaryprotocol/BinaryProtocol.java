@@ -12,6 +12,7 @@ import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import jssc.SerialPortException;
 
 import java.io.EOFException;
@@ -141,6 +142,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                                 String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
+                                LiveDocsRegistry.INSTANCE.refresh(BinaryProtocol.this);
                             }
                         });
                     }
@@ -271,7 +273,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      *
      * @return null in case of IO issues
      */
-    private byte[] executeCommand(byte[] packet, String msg, boolean allowLongResponse) {
+    public byte[] executeCommand(byte[] packet, String msg, boolean allowLongResponse) {
         if (isClosed)
             return null;
         try {
