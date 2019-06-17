@@ -928,7 +928,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;
 
+#if !EFI_UNIT_TEST
 	engineConfiguration->analogInputDividerCoefficient = 2;
+#endif
 
 	// performance optimization
 	boardConfiguration->sensorChartMode = SC_OFF;
