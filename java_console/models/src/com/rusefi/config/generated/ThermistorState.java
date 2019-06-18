@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration/thermistor.txt Sun Jun 16 22:18:54 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/thermistor.txt Mon Jun 17 20:32:33 EDT 2019
 
 import com.rusefi.config.*;
 

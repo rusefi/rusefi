@@ -8,7 +8,7 @@ import com.rusefi.ldmp.ConfigRequest;
 import com.rusefi.ldmp.FieldRequest;
 import com.rusefi.ldmp.Request;
 import com.rusefi.ldmp.TextRequest;
-import com.rusefi.ldmp.generated.ThermistorMeta;
+import com.rusefi.ldmp.generated.ThermistorsMeta;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ public class LiveDocPanel {
         JPanel panel = new JPanel(new MigLayout());
         panel.setBorder(BorderFactory.createTitledBorder(title));
 
-        List<RefreshActions> actions = createComponents(panel, ThermistorMeta.CONTENT, values, instancePrefix);
+        List<RefreshActions> actions = createComponents(panel, ThermistorsMeta.CONTENT, values, instancePrefix);
 
         LiveDocHolder holder = new LiveDocHolder(id, actions, values) {
             @Override
