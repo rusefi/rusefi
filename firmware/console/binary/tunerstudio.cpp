@@ -290,6 +290,8 @@ static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int si
 		addr = static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
 	} else if (structId == LDS_IAT_INDEX) {
 		addr = static_cast<thermistor_state_s*>(&engine->engineState.iatCurve);
+	} else if (structId == LDS_ENGINE_STATE_INDEX) {
+		addr = static_cast<engine_state2_s*>(&engine->engineState);
 	}
 	if (addr == NULL) {
 		// todo: add warning code - unexpected structId

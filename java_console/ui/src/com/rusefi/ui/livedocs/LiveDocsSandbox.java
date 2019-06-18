@@ -1,6 +1,7 @@
 package com.rusefi.ui.livedocs;
 
 import com.rusefi.config.generated.ThermistorState;
+import com.rusefi.ldmp.generated.ThermistorsMeta;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.util.FrameHelper;
 import net.miginfocom.swing.MigLayout;
@@ -19,8 +20,8 @@ public class LiveDocsSandbox {
         comment.setForeground(Color.blue);
 
         JPanel panels = new JPanel(new MigLayout("gap 0, insets 0"));
-        panels.add(LiveDocPanel.getThermistorPanel("Coolant Sensor", "CLT", LDS_CLT_INDEX, ThermistorState.VALUES), "wrap");
-        panels.add(LiveDocPanel.getThermistorPanel("Intake Air Sensor", "CLT", LDS_CLT_INDEX, ThermistorState.VALUES), "wrap");
+        panels.add(LiveDocPanel.getPanel("Coolant Sensor", "CLT", LDS_CLT_INDEX, ThermistorState.VALUES, ThermistorsMeta.CONTENT), "wrap");
+        panels.add(LiveDocPanel.getPanel("Intake Air Sensor", "CLT", LDS_CLT_INDEX, ThermistorState.VALUES, ThermistorsMeta.CONTENT), "wrap");
 
         panels.add(getTChargePanel(), "wrap");
 

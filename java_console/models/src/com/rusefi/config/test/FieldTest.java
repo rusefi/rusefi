@@ -4,8 +4,6 @@ import com.rusefi.config.Field;
 import com.rusefi.core.Pair;
 import org.junit.Test;
 
-import java.util.Iterator;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -29,5 +27,16 @@ public class FieldTest {
             assertEquals(1.0, p.second);
         }
     }
+
+    @Test
+    public void testPrecisionDependingOnScale() {
+        assertEquals("1234567.1",  Field.niceToString(1234567.123));
+        assertEquals("10000.0",  Field.niceToString(10000.00002));
+        assertEquals("0.12302",  Field.niceToString(0.12302));
+        assertEquals("0.002",  Field.niceToString(0.002));
+        assertEquals("12.302",  Field.niceToString(12.302));
+        assertEquals("123.02",  Field.niceToString(123.02));
+    }
+
 }
 

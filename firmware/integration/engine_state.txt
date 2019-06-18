@@ -16,5 +16,8 @@ floatms_t airFlow
 
 float minRpmKcurrentTPS
 
+int currentTpsAdc
+float tpsVoltageMCU
+float tpsVoltageBoard
 
 end_struct

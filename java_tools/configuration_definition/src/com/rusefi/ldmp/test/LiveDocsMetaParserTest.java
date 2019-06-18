@@ -9,6 +9,11 @@ import static org.junit.Assert.assertEquals;
 
 public class LiveDocsMetaParserTest {
     @Test
+    public void getClassName() {
+        assertEquals("TpsMeta", LiveDocsMetaParser.getClassName("controllers/sensors/tps.cpp"));
+    }
+
+    @Test
     public void parseConfigElements() {
         List<Request> r = LiveDocsMetaParser.parse("\t\t// TCHARGE_MODE_RPM_TPS\n" +
                 "\t\tfloat minRpmKcurrentTPS = interpolateMsg(\"minRpm\", tpMin, DISPLAY_CONFIG(tChargeMinRpmMinTps), tpMax,\n" +
@@ -19,6 +24,14 @@ public class LiveDocsMetaParserTest {
                 "\t\tengine->engineState.Tcharge_coff = interpolateMsg(\"Kcurr\", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);\n");
         assertEquals(3, r.size());
         assertEquals(new ConfigRequest("tChargeMinRpmMinTps"), r.get(0));
+    }
+
+    @Test
+    public void parseField() {
+        List<Request> r = LiveDocsMetaParser.parse("\tDISPLAY_TEXT(Analog_MCU_reads);\n" +
+                "\tengine->engineState.DISPLAY_FIELD(currentTpsAdc) = adc;\n" +
+                "\tDISPLAY_TEXT(ADC_which_equals);\n");
+        assertEquals(3, r.size());
     }
 
     @Test
