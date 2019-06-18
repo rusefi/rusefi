@@ -1,10 +1,10 @@
 #include "global.h"
 #include "rusefi_enums.h"
 #include "rusefi_hw_enums.h"
-// auto-generated from rusefi_hw_enums.h
-// auto-generated from rusefi_enums.h
+// was generated automatically by rusEfi tool  from rusefi_hw_enums.h
+// was generated automatically by rusEfi tool  from rusefi_enums.h
 // by enum2string.jar tool
-// on Tue Jun 04 12:17:32 EDT 2019
+// on Mon Jun 17 19:49:25 EDT 2019
 // see also gen_config_and_enums.bat
 
 
@@ -533,8 +533,6 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_ETB_LOGIC:
-  return "DBG_ETB_LOGIC";
 case DBG_36:
   return "DBG_36";
 case DBG_37:
@@ -567,6 +565,8 @@ case DBG_ELECTRONIC_THROTTLE_PID:
   return "DBG_ELECTRONIC_THROTTLE_PID";
 case DBG_EL_ACCEL:
   return "DBG_EL_ACCEL";
+case DBG_ETB_LOGIC:
+  return "DBG_ETB_LOGIC";
 case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
 case DBG_FSIO_ADC:
@@ -751,6 +751,8 @@ case MIATA_NA6_MAP:
   return "MIATA_NA6_MAP";
 case MIATA_NA6_VAF:
   return "MIATA_NA6_VAF";
+case MICRO_RUS_EFI:
+  return "MICRO_RUS_EFI";
 case MINIMAL_PINS:
   return "MINIMAL_PINS";
 case MINI_COOPER_R50:
@@ -785,8 +787,6 @@ case TEST_ISSUE_366_BOTH:
   return "TEST_ISSUE_366_BOTH";
 case TEST_ISSUE_366_RISE:
   return "TEST_ISSUE_366_RISE";
-case  MICRO_RUS_EFI:
-  return "MICRO_RUS_EFI";
 case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
