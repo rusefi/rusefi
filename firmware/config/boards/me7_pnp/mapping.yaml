@@ -1,0 +1,57 @@
+outputs:
+  GPIOE_4: "Injector 1"
+  GPIOE_2: "Injector 2"
+  GPIOE_3: "Injector 3"
+  GPIOE_1: "Injector 4"
+  GPIOE_6: "Injector 5"
+  GPIOE_5: "Injector 6"
+  GPIOB_9: "Injector 7"
+  GPIOD_1: "Coil 1"
+  GPIOD_6: "Coil 2"
+  GPIOD_3: "Coil 3"
+  GPIOD_4: "Coil 4"
+  GPIOD_0: "Coil 5"
+  GPIOD_2: "Coil 6"
+  GPIOC_12: "Coil 7"
+  GPIOA_8: "Coil 8"
+  GPIOG_3: "Coolant Fan"
+  GPIOG_6: "Boost Valve"
+  GPIOG_4: "Fuel Pump"
+  GPIOC_8: "Rpm Output"
+  GPIOC_9: "Alternator Control"
+  GPIOG_5: "Brake Relay"
+  GPIOD_12: "Thermostat Control"
+  GPIOD_11: "VVT Intake"
+  GPIOD_10: "VVt Exhaust"
+  
+analog_inputs:
+  EFI_ADC_0: "Vbat"
+  EFI_ADC_1: "UR Wideband Sensor"
+  EFI_ADC_2: "UA Wideband Sensor"
+  EFI_ADC_3: "Throttle Pedal"
+  EFI_ADC_4: "Throttle Pedal Sub"
+  EFI_ADC_6: "Maf Sensor"
+  EFI_ADC_7: "AN Volt 4"
+  EFI_ADC_8: "TPS"
+  EFI_ADC_9: "TPS Sub"
+  EFI_ADC_10: "AN Volt 3"
+  EFI_ADC_11: "AN Volt 1"
+  EFI_ADC_12: "Map Sensor"
+  EFI_ADC_13: "Coolant Temp"
+  EFI_ADC_14: "AN Volt 2"
+  EFI_ADC_15: "Intake Air Temp"
+  
+event_inputs:
+  GPIOC_6: "Crank Sensor"
+  GPIOC_7: "Cam Sensor"
+  GPIOA_15: "Cam Sensor 2"
+
+switch_inputs:
+  GPIOE_10: "Brake Switch"
+  GPIOG_1: "Clutch Switch"
+  GPIOF_14: "Speed Signal"
+  
+  GPIOD_7: "Throttle Motor+"
+  GPIOG_10: "Throttle Motor-"
+ 
+  
