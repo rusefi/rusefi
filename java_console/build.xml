@@ -13,8 +13,10 @@
     <target name="compile">
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
-               classpath="lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
+               classpath="../java_tools/configuration_definition/lib/snakeyaml.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
             <src path="autotest/src"/>
+            <src path="../java_tools/configuration_definition/src"/>
+            <src path="../java_tools/enum_to_string/src"/>
             <src path="io/src"/>
             <src path="models/src"/>
             <src path="ui/src"/>
