@@ -417,7 +417,7 @@ void printTPSInfo(void) {
 	static char pinNameBuffer[16];
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tpsADC, pinNameBuffer));
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
 			getTpsRateOfChange());
@@ -791,7 +791,7 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		engineConfiguration->iat.adcChannel = channel;
 		scheduleMsg(&logger, "setting IAT to %s/%d", pinName, channel);
 	} else if (strEqual("tps", sensorStr)) {
-		engineConfiguration->tps1_1AdcChannel = channel;
+		engineConfiguration->tpsADC = channel;
 		scheduleMsg(&logger, "setting TPS to %s/%d", pinName, channel);
 	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);

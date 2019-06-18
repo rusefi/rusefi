@@ -1542,10 +1542,10 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	
 	dialog = tpsSensor, "TPS"
 		field = "!See Tools>Calibrate TPS"
-		field = "Throttle1 position sensor",			tps1_1AdcChannel
+		field = "Throttle1 position sensor",			tpsADC
 		field = "Throttle2 position sensor",			tps2_1AdcChannel
-		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
-		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
+		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tpsADC != 16}
+		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tpsADC != 16}
 
 	dialog = pedalSensor, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
@@ -1572,7 +1572,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "CLT ADC input", 						clt_adcChannel
 		field = "IAT ADC input", 						iat_adcChannel
 		field = "vBatt ADC input", 						vbattAdcChannel
-		field = "TPS1 ADC input", 						tps1_1AdcChannel
+		field = "TPS1 ADC input", 						tpsADC
 		field = "TPS2 ADC input", 						tps2_1AdcChannel
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "AFR ADC input", 						afr_hwChannel
@@ -2457,7 +2457,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = etbDialogRight
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
-		field = "TPS1",									tps1_1AdcChannel
+		field = "TPS1",									tpsADC
 		field = "Pedal",								throttlePedalPositionAdcChannel
 		field = "use ETB for idle",						useETBforIdleControl
 		field = "ETB idle maximum angle",				etbIdleRange
