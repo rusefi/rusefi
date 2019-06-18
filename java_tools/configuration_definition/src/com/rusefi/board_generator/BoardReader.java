@@ -2,6 +2,7 @@ package com.rusefi.board_generator;
 
 import com.rusefi.EnumsReader;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.util.SystemOut;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -18,7 +19,7 @@ public class BoardReader {
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
-            System.out.println("Please specify\r\n"
+            SystemOut.println("Please specify\r\n"
                     + KEY_BOARD_NAME + " x\r\n"
                     + KEY_FIRMWARE_PATH + " x\r\n"
             );
@@ -44,7 +45,7 @@ public class BoardReader {
 
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(new FileReader(firmwarePath + "/config/boards/" + boardName + "/mapping.yaml"));
-        System.out.println(data);
+        SystemOut.println(data);
 
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(outputPath + File.separator + boardName + "_prefix.txt"));
@@ -65,7 +66,7 @@ public class BoardReader {
 
         Map<String, Value> enumMap = EnumsReader.enums.get(headerEnumName);
         Objects.requireNonNull(enumMap, "enum for " + headerEnumName);
-        System.out.println(enumMap.size());
+        SystemOut.println(enumMap.size());
 
         StringBuffer sb = new StringBuffer();
 

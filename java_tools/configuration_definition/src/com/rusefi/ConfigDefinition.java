@@ -4,12 +4,12 @@ import com.rusefi.output.CHeaderConsumer;
 import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
+import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.SystemOut;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -23,8 +23,7 @@ import java.util.List;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     public static final String EOL = "\n";
-    public static final Charset CHARSET = StandardCharsets.ISO_8859_1;
-    public static final String GENERATED_AUTOMATICALLY_TAG = "was generated automatically by ConfigDefinition.jar based on ";
+    public static final String GENERATED_AUTOMATICALLY_TAG = LazyFile.LAZY_FILE_TAG + "ConfigDefinition.jar based on ";
     public static String MESSAGE;
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
@@ -45,7 +44,7 @@ public class ConfigDefinition {
         try {
             doJob(args);
         } catch (Throwable e) {
-            System.out.println(e);
+            SystemOut.println(e);
             e.printStackTrace();
             System.exit(-1);
         }
@@ -53,7 +52,7 @@ public class ConfigDefinition {
 
     private static void doJob(String[] args) throws IOException {
         if (args.length < 2) {
-            System.out.println("Please specify\r\n"
+            SystemOut.println("Please specify\r\n"
                     + KEY_DEFINITION + " x\r\n"
                     + KEY_TS_DESTINATION + " x\r\n"
                     + KEY_C_DESTINATION + " x\r\n"
@@ -100,14 +99,14 @@ public class ConfigDefinition {
 
         MESSAGE = GENERATED_AUTOMATICALLY_TAG + definitionInputFile + " " + new Date();
 
-        System.out.println("Reading from " + definitionInputFile);
+        SystemOut.println("Reading from " + definitionInputFile);
 
         String currentMD5 = getDefinitionMD5(definitionInputFile);
 
         if (skipRebuildFile != null) {
             boolean nothingToDoHere = needToSkipRebuild(skipRebuildFile, currentMD5);
             if (nothingToDoHere) {
-                System.out.println("Nothing to do here according to " + skipRebuildFile + " hash " + currentMD5);
+                SystemOut.println("Nothing to do here according to " + skipRebuildFile + " hash " + currentMD5);
                 return;
             }
         }
@@ -115,7 +114,7 @@ public class ConfigDefinition {
         for (String prependFile : prependFiles)
             readPrependValues(prependFile);
 
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), CHARSET.name()));
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
@@ -145,7 +144,7 @@ public class ConfigDefinition {
             processTextTemplate(inputFileName, romRaiderDestination);
         }
         if (skipRebuildFile != null) {
-            System.out.println("Writing " + currentMD5 + " to " + skipRebuildFile);
+            SystemOut.println("Writing " + currentMD5 + " to " + skipRebuildFile);
             PrintWriter writer = new PrintWriter(new FileWriter(skipRebuildFile));
             writer.write(currentMD5);
             writer.close();
@@ -186,8 +185,8 @@ public class ConfigDefinition {
     }
 
     private static void processTextTemplate(String inputFileName, String outputFileName) throws IOException {
-        System.out.println("Reading from " + inputFileName);
-        System.out.println("Writing to " + outputFileName);
+        SystemOut.println("Reading from " + inputFileName);
+        SystemOut.println("Writing to " + outputFileName);
 
         VariableRegistry.INSTANCE.put("generator_message", ConfigDefinition.GENERATED_AUTOMATICALLY_TAG + new Date());
 

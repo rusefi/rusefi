@@ -5,6 +5,7 @@ import com.rusefi.ConfigField;
 import com.rusefi.ConfigStructure;
 import com.rusefi.TypesHelper;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
     private final LazyFile cHeader;
 
     public CHeaderConsumer(String destCHeader) {
-        System.out.println("Writing C header to " + destCHeader);
+        SystemOut.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
         cHeader.write("// begin" + EOL);

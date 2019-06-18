@@ -1,5 +1,7 @@
 package com.rusefi.ldmp;
 
+import com.rusefi.util.SystemOut;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,12 +35,12 @@ public class LiveDocsMetaParser {
     public static void main(String[] args) throws IOException {
         String fileName = args[0];
         String destinationPath = args[1];
-        System.out.println(fileName);
+        SystemOut.println(fileName);
         if (!new File(fileName).exists())
             throw new IllegalStateException("Not found " + fileName);
         String content = readLineByLine(fileName);
         List<Request> r = parse(content);
-        System.out.println(r);
+        SystemOut.println(r);
 
 
         String className = "ThermistorMeta";
@@ -53,27 +55,27 @@ public class LiveDocsMetaParser {
 
         List<Request> result = new ArrayList<>();
         string = string.replaceAll("[()>]", " ");
-        System.out.println(string);
+        SystemOut.println(string);
         Scanner s = new Scanner(string);
         while (s.hasNext()) {
             String token = s.next();
-            //System.out.println(token);
+            //SystemOut.println(token);
             if (DISPLAY_CONFIG.equals(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
-                    System.out.println("REQ CONF " + config);
+                    SystemOut.println("REQ CONF " + config);
                     result.add(new ConfigRequest(config));
                 }
             } else if (DISPLAY_TEXT.equals(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
-                    System.out.println("REQ TEXT " + config);
+                    SystemOut.println("REQ TEXT " + config);
                     result.add(new TextRequest(config));
                 }
             } else if (DISPLAY_FIELD.equals(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
-                    System.out.println("REQ FIELD " + config);
+                    SystemOut.println("REQ FIELD " + config);
                     result.add(new FieldRequest(config));
                 }
             } else if (DISPLAY_IF.equals(token)) {
@@ -84,7 +86,7 @@ public class LiveDocsMetaParser {
 
 
                     String config = s.next();
-                    System.out.println("REQ TEXT " + config);
+                    SystemOut.println("REQ TEXT " + config);
                     IfRequest ifRequest = new IfRequest(variable);
                     result.add(ifRequest);
 
@@ -110,7 +112,7 @@ public class LiveDocsMetaParser {
             } else if (DISPLAY_SENSOR.equals(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
-                    System.out.println("REQ SENSOR " + config);
+                    SystemOut.println("REQ SENSOR " + config);
                     result.add(new SensorRequest(config));
                 }
             }

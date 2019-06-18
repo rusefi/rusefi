@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
 import java.util.*;
@@ -51,10 +52,10 @@ public class VariableRegistry extends TreeMap<String, String> {
 
     public void register(String var, String value) {
         if (containsKey(var)) {
-            System.out.println("Not redefining " + var);
+            SystemOut.println("Not redefining " + var);
             return;
         }
-        System.out.println("Registering " + var + " as " + value);
+        SystemOut.println("Registering " + var + " as " + value);
         put(var, value);
 
         cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
@@ -65,11 +66,11 @@ public class VariableRegistry extends TreeMap<String, String> {
     private void tryToRegisterAsInteger(String var, String value) {
         try {
             int intValue = Integer.parseInt(value);
-            System.out.println("key [" + var + "] value: " + intValue);
+            SystemOut.println("key [" + var + "] value: " + intValue);
             intValues.put(var, intValue);
             javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
         } catch (NumberFormatException e) {
-            System.out.println("Not an integer: " + value);
+            SystemOut.println("Not an integer: " + value);
 
             if (isQuoted(value) && !var.trim().endsWith(ConfigField.ENUM_SUFFIX)) {
                 // quoted and not with enum suffix means plain string define statement
@@ -96,7 +97,7 @@ public class VariableRegistry extends TreeMap<String, String> {
     }
 
     public void writeNumericsToFile(String fileName) throws IOException {
-        System.out.println("Writing to " + fileName);
+        SystemOut.println("Writing to " + fileName);
         LazyFile cHeader = new LazyFile(fileName);
 
         cHeader.write("//\n// " + ConfigDefinition.GENERATED_AUTOMATICALLY_TAG + ConfigDefinition.definitionInputFile + "\n//\n\n");

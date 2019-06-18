@@ -1,10 +1,6 @@
 package com.rusefi.util;
 
-import com.rusefi.ConfigDefinition;
-
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -13,11 +9,12 @@ import java.util.regex.Pattern;
  * This file would override file content only of content has changed, disregarding the magic tag line.
  */
 public class LazyFile {
+    public static final String LAZY_FILE_TAG = "was generated automatically by rusEfi tool ";
     private static final String PROPERTY_NAME = "rusefi.generator.lazyfile.enabled";
     private static boolean ENABLED = Boolean.getBoolean(PROPERTY_NAME);
 
     static {
-        System.out.println(PROPERTY_NAME + "=" + ENABLED);
+        SystemOut.println(PROPERTY_NAME + "=" + ENABLED);
     }
 
     private String filename;
@@ -31,7 +28,7 @@ public class LazyFile {
 
     public void write(String line) {
         content.append(line);
-        if (!line.contains(ConfigDefinition.GENERATED_AUTOMATICALLY_TAG))
+        if (!line.contains(LAZY_FILE_TAG))
             contentWithoutTag.append(line);
     }
 
@@ -39,20 +36,20 @@ public class LazyFile {
         String fileContent = unifySpaces(readCurrentContent(filename));
         String newContent = unifySpaces(contentWithoutTag.toString().trim());
         if (fileContent.equals(newContent)) {
-            System.out.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content");
+            SystemOut.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content");
             return;
         }
         for (int i = 0; i < Math.min(fileContent.length(), newContent.length()); i++) {
             if (fileContent.charAt(i) != newContent.charAt(i)) {
-                System.out.println(getClass().getSimpleName() + " " + filename + ": Not same at " + i);
+                SystemOut.println(getClass().getSimpleName() + " " + filename + ": Not same at " + i);
                 if (i > 15 && i < fileContent.length() - 6 && i < newContent.length() - 6) {
-                    System.out.println("file       " + fileContent.substring(i - 15, i + 5));
-                    System.out.println("newContent " + newContent.substring(i - 15, i + 5));
+                    SystemOut.println("file       " + fileContent.substring(i - 15, i + 5));
+                    SystemOut.println("newContent " + newContent.substring(i - 15, i + 5));
                 }
                 break;
             }
         }
-        Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), ConfigDefinition.CHARSET));
+        Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), IoUtils.CHARSET));
         fw.write(content.toString());
         fw.close();
     }
@@ -64,12 +61,12 @@ public class LazyFile {
     private String readCurrentContent(String filename) throws IOException {
         if (!new File(filename).exists())
             return "";
-        Scanner in = new Scanner(Paths.get(filename), ConfigDefinition.CHARSET.name());
+        Scanner in = new Scanner(Paths.get(filename), IoUtils.CHARSET.name());
         Pattern pat = Pattern.compile(".*\\R|.+\\z");
         String line;
         StringBuffer sb = new StringBuffer();
         while ((line = in.findWithinHorizon(pat, 0)) != null) {
-            if (!line.contains(ConfigDefinition.GENERATED_AUTOMATICALLY_TAG))
+            if (!line.contains(LAZY_FILE_TAG))
                 sb.append(line);
         }
         return sb.toString();

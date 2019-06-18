@@ -1,9 +1,8 @@
 package com.rusefi;
 
+import com.rusefi.util.SystemOut;
 import com.rusefi.test.ConfigFieldParserTest;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,9 +100,9 @@ public class ConfigField {
         boolean isIterate = "iterate".equalsIgnoreCase(matcher.group(5));
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySize,
                 tsInfo, isIterate);
-        System.out.println("type " + type);
-        System.out.println("name " + name);
-        System.out.println("comment " + comment);
+        SystemOut.println("type " + type);
+        SystemOut.println("name " + name);
+        SystemOut.println("comment " + comment);
 
         return field;
     }

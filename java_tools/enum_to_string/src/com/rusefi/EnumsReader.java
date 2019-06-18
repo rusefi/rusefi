@@ -1,14 +1,13 @@
 package com.rusefi;
 
 import com.rusefi.enum_reader.Value;
+import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class EnumsReader {
     private final static Map<String, Value> currentValues = new TreeMap<>();
@@ -23,13 +22,13 @@ public class EnumsReader {
             line = removeSpaces(line);
 
             if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
-                System.out.println("Entering enum");
+                SystemOut.println("Entering enum");
                 currentValues.clear();
                 isInsideEnum = true;
             } else if (line.startsWith("}") && line.endsWith(";")) {
                 isInsideEnum = false;
                 line = line.substring(1, line.length() - 1);
-                System.out.println("Ending enum " + line);
+                SystemOut.println("Ending enum " + line);
                 enums.put(line, new TreeMap<>(currentValues));
             } else {
                 line = line.replaceAll("//.+", "");
@@ -42,7 +41,7 @@ public class EnumsReader {
                             value = line.substring(index + 1);
                             line = line.substring(0, index);
                         }
-                        System.out.println("Line " + line);
+                        SystemOut.println("Line " + line);
                         currentValues.put(line, new Value(line, value));
                     }
                 }
