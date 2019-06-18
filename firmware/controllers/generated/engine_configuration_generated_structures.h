@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 17 21:47:45 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 18 19:18:08 EDT 2019
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -254,7 +254,7 @@ typedef struct ThermistorConf ThermistorConf;
 // start of injector_s
 struct injector_s {
 	/**
-	 * This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimeter per minute
+	 * This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute
 	 * By the way, g/s = 0.125997881 * (lb/hr)
 	 * g/s = 0.125997881 * (cc/min)/10.5
 	 * g/s = 0.0119997981 * cc/min
@@ -307,7 +307,7 @@ typedef struct bi_quard_s bi_quard_s;
 // start of specs_s
 struct specs_s {
 	/**
-	 * Engine displacement, in liters
+	 * Engine displacement, in litres
 	 * see also cylindersCount
 	 * offset 0
 	 */
@@ -769,6 +769,7 @@ struct board_configuration_s {
 	offset 144 bit 21 */
 	bool coastingFuelCutEnabled : 1;
 	/**
+	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars.
 	offset 144 bit 22 */
 	bool useIacTableForCoasting : 1;
 	/**
@@ -790,6 +791,7 @@ struct board_configuration_s {
 	offset 144 bit 28 */
 	bool alignEngineSnifferAtTDC : 1;
 	/**
+	 * This setting allows the ETB to act as the idle air control valve. The ETB will act as though it was the IAC and regulate the airflow at idle.
 	offset 144 bit 29 */
 	bool useETBforIdleControl : 1;
 	/**
@@ -977,7 +979,7 @@ struct board_configuration_s {
 	 */
 	maf_sensor_type_e mafSensorType;
 	/**
-	 * todo:not finshed
+	 * todo:not finished
 	 * These input pins allow us to pull toggle buttons state
 	 * offset 352
 	 */
@@ -1135,7 +1137,7 @@ struct engine_configuration_s {
 	 */
 	int16_t tpsMin;
 	/**
-	 * Full throtle. tpsMax value as 10 bit ADC value. Not Voltage!
+	 * Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!
 	 * See also tpsADC
 	 * set tps_max X
 	 * offset 82
@@ -1244,12 +1246,12 @@ struct engine_configuration_s {
 	 */
 	engine_load_mode_e fuelAlgorithm;
 	/**
-	 * This is the type of injection stratergy (See Fuel/Injection settings for more detail) it is sugested to use "Simultanious" for easiest starting.
+	 * This is the type of injection strategy (See Fuel/Injection settings for more detail) it is suggested to use "Simultaneous" for easiest starting.
 	 * offset 424
 	 */
 	injection_mode_e crankingInjectionMode;
 	/**
-	 * This is where the fuel injection type is defined: "Simultanious" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". 
+	 * This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". 
 	 * set injection_mode X
 	 * See also twoWireBatchInjection
 	 * offset 428
@@ -1269,7 +1271,7 @@ struct engine_configuration_s {
 	 */
 	angle_t crankingTimingAngle;
 	/**
-	 * "One Coil" is for use on distroobuted ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle
+	 * "One Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle
 	 * set ignition_mode X
 	 * offset 440
 	 */
@@ -1308,12 +1310,12 @@ struct engine_configuration_s {
 	 */
 	float vbattDividerCoeff;
 	/**
-	 * Cooling fan turn-on temperature threshold, in Celsuis
+	 * Cooling fan turn-on temperature threshold, in Celsius
 	 * offset 468
 	 */
 	float fanOnTemperature;
 	/**
-	 * Cooling fan turn-off temperature threshold, in Celsuis
+	 * Cooling fan turn-off temperature threshold, in Celsius
 	 * offset 472
 	 */
 	float fanOffTemperature;
@@ -1465,6 +1467,7 @@ struct engine_configuration_s {
 	offset 1464 bit 0 */
 	bool vvtDisplayInverted : 1;
 	/**
+	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
 	bool fuelClosedLoopCorrectionEnabled : 1;
 	/**
@@ -1472,7 +1475,7 @@ struct engine_configuration_s {
 	offset 1464 bit 2 */
 	bool isVerboseIAC : 1;
 	/**
-	 * enable verbose_etb
+	 * Prints ETB details to rusEFI console
 	offset 1464 bit 3 */
 	bool isVerboseETB : 1;
 	/**
@@ -1506,13 +1509,15 @@ struct engine_configuration_s {
 	offset 1464 bit 12 */
 	bool tachPulseDurationAsDutyCycle : 1;
 	/**
-	 * This enables smart alternator control and activates the extra alternator settings
+	 * This enables smart alternator control and activates the extra alternator settings.
 	offset 1464 bit 13 */
 	bool isAlternatorControlEnabled : 1;
 	/**
+	 * This setting flips the signal from the primary engine speed sensor.
 	offset 1464 bit 14 */
 	bool invertPrimaryTriggerSignal : 1;
 	/**
+	 * This setting flips the signal from the secondary engine speed sensor.
 	offset 1464 bit 15 */
 	bool invertSecondaryTriggerSignal : 1;
 	/**
@@ -1576,11 +1581,11 @@ struct engine_configuration_s {
 	 */
 	idle_mode_e idleMode;
 	/**
-	 * Enable fuel injection - This is default off on new projects as a safty feature, set to "true" to enable fuel injection and futher injector settings.
+	 * Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	offset 1476 bit 0 */
 	bool isInjectionEnabled : 1;
 	/**
-	 * Enable ignition - This is default off on new projects as a safty feature, set to "true" to enable ignition and futher ignition settings.
+	 * Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	offset 1476 bit 1 */
 	bool isIgnitionEnabled : 1;
 	/**
@@ -1597,9 +1602,11 @@ struct engine_configuration_s {
 	offset 1476 bit 5 */
 	bool isMapAveragingEnabled : 1;
 	/**
+	 * This setting overrides the normal multiplication values that have been set for the idle air control valve during cranking. If this setting is enabled the "IAC multiplier" table in the Cranking settings tab needs to be adjusted appropriately or potentially no IAC opening will occur.
 	offset 1476 bit 6 */
 	bool overrideCrankingIacSetting : 1;
 	/**
+	 * This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
 	offset 1476 bit 7 */
 	bool useSeparateAdvanceForIdle : 1;
 	/**
@@ -1609,6 +1616,7 @@ struct engine_configuration_s {
 	offset 1476 bit 9 */
 	bool isWaveAnalyzerEnabled : 1;
 	/**
+	 * This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
 	offset 1476 bit 10 */
 	bool useSeparateVeForIdle : 1;
 	/**
@@ -1632,16 +1640,18 @@ struct engine_configuration_s {
 	offset 1476 bit 14 */
 	bool useOnlyRisingEdgeForTrigger : 1;
 	/**
-	 * This is needed if your coils are individually wired (COP) and you wish to use batch igniton (wasted spark).
+	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (wasted spark).
 	offset 1476 bit 15 */
 	bool twoWireBatchIgnition : 1;
 	/**
 	offset 1476 bit 16 */
 	bool useFixedBaroCorrFromMap : 1;
 	/**
+	 * This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 	offset 1476 bit 17 */
 	bool useSeparateAdvanceForCranking : 1;
 	/**
+	 * This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 	offset 1476 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1;
 	/**
@@ -1664,12 +1674,12 @@ struct engine_configuration_s {
 	 */
 	int16_t idlePidRpmUpperLimit;
 	/**
-	 * Prime injection pulse falloff temperature threshold, in Celsuis
+	 * This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.
 	 * offset 1486
 	 */
 	int16_t primeInjFalloffTemperature;
 	/**
-	 * A/C button input handled as analog input
+	 * A/C button input handled as analogue input
 	 * offset 1488
 	 */
 	adc_channel_e acSwitchAdc;
@@ -1892,7 +1902,7 @@ struct engine_configuration_s {
 	 */
 	float targetVBatt;
 	/**
-	 * Turn off alternator output above specified TPS
+	 * Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.
 	 * offset 2048
 	 */
 	float alternatorOffAboveTps;
@@ -1906,6 +1916,7 @@ struct engine_configuration_s {
 	 */
 	float startOfCrankingPrimingPulse;
 	/**
+	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	 * offset 2056
 	 */
 	int16_t afterCrankingIACtaperDuration;
@@ -1942,7 +1953,7 @@ struct engine_configuration_s {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
-	 * angle between cam sensor and VVT zero position
+	 * Angle between cam sensor and VVT zero position
 	 * set vvt_offset X
 	 * offset 2072
 	 */
@@ -2066,7 +2077,7 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e dizzySparkOutputPinMode;
 	/**
-	 * IAC position during cranking
+	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	 * offset 2248
 	 */
 	int crankingIACposition;
@@ -2392,7 +2403,7 @@ struct engine_configuration_s {
 	 */
 	int16_t coastingFuelCutTps;
 	/**
-	 * Fuel cutoff is deactivated below this coolant threashold.
+	 * Fuel cutoff is deactivated below this coolant threshold.
 	 * offset 3178
 	 */
 	int16_t coastingFuelCutClt;
@@ -2402,7 +2413,7 @@ struct engine_configuration_s {
 	 */
 	int16_t pidExtraForLowRpm;
 	/**
-	 * MAP value above which coasting fuel cut is dissabled to aid piston cooling
+	 * MAP value above which fuel injection is re-enabled.
 	 * offset 3182
 	 */
 	int16_t coastingFuelCutMap;
@@ -2809,4 +2820,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 17 21:47:45 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 18 19:18:08 EDT 2019

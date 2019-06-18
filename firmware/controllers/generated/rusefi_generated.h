@@ -892,7 +892,7 @@
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVS "Vehicle Speed"
-#define GAUGE_NAME_VVT "VVT postion"
+#define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define generalPeriodicThreadPeriodMs_offset 724

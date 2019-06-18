@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jun 17 21:43:24 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 18 19:18:08 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -585,7 +585,7 @@ public class Fields {
 	public static final String GAUGE_NAME_VBAT = "VBatt";
 	public static final String GAUGE_NAME_VERSION = "firmware";
 	public static final String GAUGE_NAME_VVS = "Vehicle Speed";
-	public static final String GAUGE_NAME_VVT = "VVT postion";
+	public static final String GAUGE_NAME_VVT = "VVT position";
 	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
 	public static final int generalPeriodicThreadPeriodMs_offset = 724;
