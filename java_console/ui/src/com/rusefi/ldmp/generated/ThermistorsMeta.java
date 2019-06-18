@@ -9,7 +9,7 @@ public class ThermistorsMeta {
 			new TextRequest("from_pin"),
 			new ConfigRequest("adcChannel"),
 			new TextRequest("EOL"),
-			new TextRequest("Analog_ECU_read"),
+			new TextRequest("Analog_ECU_reads"),
 			new FieldRequest("voltageBoard"),
 			new TextRequest("Rdivider"),
 			new ConfigRequest("analogInputDividerCoefficient"),

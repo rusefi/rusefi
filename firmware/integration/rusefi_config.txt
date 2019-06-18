@@ -1155,6 +1155,7 @@ end_struct
 #define LDS_CLT_INDEX 0
 #define LDS_IAT_INDEX 1
 #define LDS_SPEED_DENSITY_INDEX 2
+#define LDS_ENGINE_STATE_INDEX 3
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVT "VVT postion"

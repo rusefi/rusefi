@@ -8,7 +8,6 @@ import com.rusefi.ldmp.ConfigRequest;
 import com.rusefi.ldmp.FieldRequest;
 import com.rusefi.ldmp.Request;
 import com.rusefi.ldmp.TextRequest;
-import com.rusefi.ldmp.generated.ThermistorsMeta;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +18,11 @@ import java.util.List;
 
 public class LiveDocPanel {
     @NotNull
-    public static JPanel getThermistorPanel(String title, String instancePrefix, final int id, Field[] values) {
+    public static JPanel getPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
         JPanel panel = new JPanel(new MigLayout());
         panel.setBorder(BorderFactory.createTitledBorder(title));
 
-        List<RefreshActions> actions = createComponents(panel, ThermistorsMeta.CONTENT, values, instancePrefix);
+        List<RefreshActions> actions = createComponents(panel, content, values, instancePrefix);
 
         LiveDocHolder holder = new LiveDocHolder(id, actions, values) {
             @Override
@@ -60,7 +59,8 @@ public class LiveDocPanel {
                 actionsList.add(new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
-                        String value = field.getValue(new ConfigurationImage(response)).toString();
+                        Number fieldValue = field.getValue(new ConfigurationImage(response));
+                        String value = Field.niceToString(fieldValue);
                         label.setText(value);
                     }
                 });

@@ -4,10 +4,13 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
+import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.ThermistorState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.ldmp.generated.ThermistorsMeta;
+import com.rusefi.ldmp.generated.TpsMeta;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
@@ -23,9 +26,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-
-import static com.rusefi.config.generated.Fields.LDS_CLT_INDEX;
-import static com.rusefi.config.generated.Fields.LDS_IAT_INDEX;
 
 
 /**
@@ -48,8 +48,14 @@ public class FormulasPane {
     public FormulasPane() {
         content.add(centerProxy, BorderLayout.CENTER);
 
-        liveDocs.add(LiveDocPanel.getThermistorPanel("Coolant Sensor", "CLT", LDS_CLT_INDEX, ThermistorState.VALUES));
-        liveDocs.add(LiveDocPanel.getThermistorPanel("Intake Air Sensor", "IAT", LDS_IAT_INDEX, ThermistorState.VALUES));
+        liveDocs.add(LiveDocPanel.getPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_INDEX,
+                ThermistorState.VALUES, ThermistorsMeta.CONTENT));
+
+        liveDocs.add(LiveDocPanel.getPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_INDEX,
+                ThermistorState.VALUES, ThermistorsMeta.CONTENT));
+
+        liveDocs.add(LiveDocPanel.getPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
+                EngineState.VALUES, TpsMeta.CONTENT));
 
         centerProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
 
@@ -138,7 +144,7 @@ public class FormulasPane {
                     baseFuelStr + "ms";
 
             String actualLastInjection = twoDecimals(Sensor.actualLastInjection);
-            String injTime =  "$Fuel (ms) = " + baseFuel + getInjecctorLag() +
+            String injTime = "$Fuel (ms) = " + baseFuel + getInjecctorLag() +
                     " = " + actualLastInjection + "ms_per_injection$";
 
             page = acceleration + injTime;
@@ -175,7 +181,7 @@ public class FormulasPane {
         int elEnrichLength = ConfigField.getIntValue(ci, Fields.ENGINELOADACCELLENGTH);
 
         String tpsEnrichDelta = "$deltaTps = max(currentTps - previousTps, length = " + tpsEnrichLength +
-                ") = " + tpsDelta +"$";
+                ") = " + tpsDelta + "$";
 
         double tpsAccelThreshold = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTTHRESHOLD);
         String tpsAccelMult = "fixme";//ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTMULTIPLIER);
@@ -185,8 +191,8 @@ public class FormulasPane {
         double tpsDecelMult = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTMULTIPLIER);
 
         String tpsEnrich = "$tpsAccelEnrich = if (" +
-                "(tpsDelta = " + tpsDelta + ") > (tpsThreshold = " + tpsAccelThreshold +"), tpsDelta, 0) * " +
-                "(tpsAccelMultiplier = " + tpsAccelMult +  ") = " + tpsAccelValue +  "$";
+                "(tpsDelta = " + tpsDelta + ") > (tpsThreshold = " + tpsAccelThreshold + "), tpsDelta, 0) * " +
+                "(tpsAccelMultiplier = " + tpsAccelMult + ") = " + tpsAccelValue + "$";
 
         String loadEnrichDelta = "$deltaLoad = max(currentLoad - previousLoad, length = " + elEnrichLength +
                 ") = " + elDelta + "$";

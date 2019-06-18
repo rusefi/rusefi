@@ -78,11 +78,33 @@ float getTpsRateOfChange(void) {
  *
  * */
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
+	DISPLAY_TEXT(Analog_MCU_reads);
+	engine->engineState.currentTpsAdc = adc;
+#if !EFI_UNIT_TEST
+	engine->engineState.DISPLAY_FIELD(tpsVoltageMCU) = adcToVolts(adc);
+#endif
+	DISPLAY_TEXT(Volts);inte
+	DISPLAY_TEXT(from_pin) DISPLAY(DISPLAY_CONFIG(tps1_1AdcChannel))
+	DISPLAY_TEXT(EOL);
+
+	DISPLAY_TEXT(Analog_ECU_reads);
+	engine->engineState.DISPLAY_FIELD(tpsVoltageBoard) =
+	DISPLAY_TEXT(Rdivider) engine->engineState.tpsVoltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
+	DISPLAY_TEXT(EOL);
+
+
 	if (engineConfiguration->tpsMin == engineConfiguration->tpsMax) {
 		warning(CUSTOM_INVALID_TPS_SETTING, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
 		return NAN;
 	}
-	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, adc);
+
+	DISPLAY_TEXT(Current_ADC)
+	DISPLAY(DISPLAY_FIELD(currentTpsAdc))
+	DISPLAY_TEXT(interpolate_between)
+	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * CONFIG(DISPLAY_CONFIG(tpsMax)), 100,
+			DISPLAY_TEXT(and)
+			TPS_TS_CONVERSION * CONFIG(DISPLAY_CONFIG(tpsMin)), 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE
 		// too much noise with simulator

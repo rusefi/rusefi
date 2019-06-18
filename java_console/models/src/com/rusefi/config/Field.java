@@ -8,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import java.util.Objects;
-
 import static com.rusefi.config.FieldType.*;
 
 /**
@@ -73,6 +71,21 @@ public class Field {
         // todo: at the moment we do not support arrays and
         // todo: a lot of information is missing for example for Bit type, but this implementation is good enough for now
         return last.offset + 4;
+    }
+
+    public static String niceToString(Number value) {
+        // not enum field
+        Number number = value;
+        if (number instanceof Float)
+            return niceToString(number.floatValue());
+        return number.toString();
+    }
+
+    public static String niceToString(double value) {
+        int scale = (int) Math.log10(value);
+        int places = 1 + Math.max(0, 4 - scale);
+        double toScale = Math.pow(10, places);
+        return Double.toString(Math.round(value * toScale) / toScale);
     }
 
     public String getName() {
@@ -161,8 +174,7 @@ public class Field {
 
     public Object getAnyValue(ConfigurationImage ci) {
         if (options == null) {
-            // not enum field
-            return getValue(ci);
+            return niceToString(getValue(ci));
         }
         if (type != INT8)
             throw new IllegalStateException("Unsupported enum " + type);
@@ -175,9 +187,11 @@ public class Field {
     public Number getValue(ConfigurationImage ci) {
         Objects.requireNonNull(ci);
         Number value;
-        ByteBuffer wrapped = getByteBuffer(ci);
-        if (getType() == INT) {
+        ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
+        if (type == INT) {
             value = wrapped.getInt();
+        } else if (type == INT16) {
+            value = wrapped.getShort();
         } else {
             value = wrapped.getFloat();
         }

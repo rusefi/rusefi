@@ -42,8 +42,7 @@ public class LiveDocsMetaParser {
         List<Request> r = parse(content);
         SystemOut.println(r);
 
-
-        String className = "ThermistorMeta";
+        String className = getClassName(fileName);
         String javaCode = generateJavaCode(r, className);
         FileWriter fw = new FileWriter(destinationPath + "java_console/ui/src/com/rusefi/ldmp/generated/" + className + ".java");
         fw.write(javaCode);
@@ -54,7 +53,7 @@ public class LiveDocsMetaParser {
         Stack<List<Request>> stack = new Stack<>();
 
         List<Request> result = new ArrayList<>();
-        string = string.replaceAll("[()>]", " ");
+        string = string.replaceAll("[()>.]", " ");
         SystemOut.println(string);
         Scanner s = new Scanner(string);
         while (s.hasNext()) {
@@ -137,5 +136,17 @@ public class LiveDocsMetaParser {
                 "}");
 
         return java.toString();
+    }
+
+    public static String getClassName(String cppSourceName) {
+        int lastDotIndex = cppSourceName.lastIndexOf('.');
+        if (lastDotIndex != -1)
+            cppSourceName = cppSourceName.substring(0, lastDotIndex);
+        int lastSlashIndex = cppSourceName.lastIndexOf('/');
+        if (lastDotIndex != -1)
+            cppSourceName = cppSourceName.substring(lastSlashIndex + 1);
+
+
+        return Character.toUpperCase(cppSourceName.charAt(0)) + cppSourceName.substring(1) + "Meta";
     }
 }

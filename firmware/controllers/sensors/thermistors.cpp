@@ -84,12 +84,12 @@ float getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DE
 	tm->DISPLAY_FIELD(voltageMCU) = DISPLAY_TEXT(from_pin) getVoltage("term", cfg->DISPLAY_CONFIG(adcChannel));
 	DISPLAY_TEXT(EOL);
 
-	DISPLAY_TEXT(Analog_ECU_read);
+	DISPLAY_TEXT(Analog_ECU_reads);
 #if EFI_UNIT_TEST
 // todo: get rid of this branch, unify unit test with real firmware. maybe analogInputDividerCoefficient needs to be set?
 		tm->voltageBoard = getVoltageDivided("term", cfg->adcChannel);
 //	CONFIG(analogInputDividerCoefficient) = 1;
-//		tm->DISPLAY_FIELD(voltageBoard) = DISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
+//		tm-> ISPLAY_FIELD(voltageBoard) =  ISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG( ISPLAY_CONFIG(analogInputDividerCoefficient));
 #else
 		tm->DISPLAY_FIELD(voltageBoard) = DISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
 #endif /* EFI_UNIT_TEST */

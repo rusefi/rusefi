@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration/engine_state.txt Sun Jun 16 22:18:54 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Mon Jun 17 20:32:33 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -11,6 +11,9 @@ public class EngineState {
 	public static final Field TCHARGE_COFF = Field.create("TCHARGE_COFF", 12, FieldType.FLOAT);
 	public static final Field AIRFLOW = Field.create("AIRFLOW", 16, FieldType.FLOAT);
 	public static final Field MINRPMKCURRENTTPS = Field.create("MINRPMKCURRENTTPS", 20, FieldType.FLOAT);
+	public static final Field CURRENTTPSADC = Field.create("CURRENTTPSADC", 24, FieldType.INT);
+	public static final Field TPSVOLTAGEMCU = Field.create("TPSVOLTAGEMCU", 28, FieldType.FLOAT);
+	public static final Field TPSVOLTAGEBOARD = Field.create("TPSVOLTAGEBOARD", 32, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ISTCHARGEAIRMODEL,
 	AIRMASS,
@@ -18,5 +21,8 @@ public class EngineState {
 	TCHARGE_COFF,
 	AIRFLOW,
 	MINRPMKCURRENTTPS,
+	CURRENTTPSADC,
+	TPSVOLTAGEMCU,
+	TPSVOLTAGEBOARD,
 	};
 }
