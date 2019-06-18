@@ -8,7 +8,7 @@ public class TpsMeta {
 			new FieldRequest("tpsVoltageMCU"),
 			new TextRequest("Volts"),
 			new TextRequest("from_pin"),
-			new ConfigRequest("tps1_1AdcChannel"),
+			new ConfigRequest("tpsADC"),
 			new TextRequest("EOL"),
 			new TextRequest("Analog_ECU_reads"),
 			new FieldRequest("tpsVoltageBoard"),

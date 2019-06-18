@@ -106,7 +106,7 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     setCommonNTCSensor(&engineConfiguration->iat);
     engineConfiguration->iat.config.bias_resistor = 2700;
 
-    engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; //Frankenstein: inp2
+    engineConfiguration->tpsADC = EFI_ADC_3; //Frankenstein: inp2
     engineConfiguration->vbattAdcChannel = EFI_ADC_0; //Frankenstein: inp5
     engineConfiguration->clt.adcChannel = EFI_ADC_11;
     engineConfiguration->iat.adcChannel = EFI_ADC_13;

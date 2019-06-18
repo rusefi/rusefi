@@ -401,13 +401,13 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	rev 0.1 green board
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_6; // PA6
-//	engineConfiguration->tps1_1AdcChannel = EFI_ADC_15; // PC5
+//	engineConfiguration->tpsADC = EFI_ADC_15; // PC5
 
 
 	/**
 	 * TPS
 	 */
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
+	engineConfiguration->tpsADC = EFI_ADC_2;
 	engineConfiguration->tpsMax = 625; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMin = 125; // convert 12to10 bit (ADC/4)
 
