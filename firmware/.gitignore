@@ -1,5 +1,3 @@
 openocd
 benchmark.txt
-gen_config.log
-gen_config_board.log
-gen_enum_to_string.log
+gen_*.log

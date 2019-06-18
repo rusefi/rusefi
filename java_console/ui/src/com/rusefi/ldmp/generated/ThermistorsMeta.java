@@ -2,7 +2,7 @@ package com.rusefi.ldmp.generated;
 
 import com.rusefi.ldmp.*;
 
-public class ThermistorMeta {
+public class ThermistorsMeta {
 	public static final Request[] CONTENT = new Request[]{
 			new TextRequest("Analog_MCU_reads"),
 			new FieldRequest("voltageMCU"),
