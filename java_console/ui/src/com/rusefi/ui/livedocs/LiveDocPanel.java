@@ -6,11 +6,14 @@ import com.rusefi.config.Field;
 import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.ThermistorState;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.ldmp.*;
 import com.rusefi.ldmp.generated.SpeedDensityMeta;
 import com.rusefi.ldmp.generated.ThermistorsMeta;
 import com.rusefi.ldmp.generated.TpsMeta;
 import com.rusefi.ui.livedocs.controls.Toolbox;
+import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
@@ -18,6 +21,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.rusefi.config.Field.niceToString;
 
 public class LiveDocPanel {
     @NotNull
@@ -58,12 +63,14 @@ public class LiveDocPanel {
                 FieldRequest request = (FieldRequest) r;
                 Field field = Field.findField(values, "", request.getField());
                 JLabel label = new JLabel("*");
+                label.setIcon(UiUtils.loadIcon("livedocs/variable.png"));
+                label.setToolTipText("Variable " + field.getName());
                 result.addControl(label);
                 result.actionsList.add(new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
                         Number fieldValue = field.getValue(new ConfigurationImage(response));
-                        String value = Field.niceToString(fieldValue);
+                        String value = niceToString(fieldValue);
                         label.setText(value);
                     }
                 });
@@ -72,6 +79,8 @@ public class LiveDocPanel {
                 Field field = Field.findField(Fields.VALUES, instancePrefix, request.getField());
 
                 JLabel label = new JLabel("*");
+                label.setIcon(UiUtils.loadIcon("livedocs/setting.png"));
+                label.setToolTipText("Configuration " + field.getName());
                 result.actionsList.add(new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
@@ -82,7 +91,18 @@ public class LiveDocPanel {
                 result.addControl(label);
             } else if (r instanceof SensorRequest) {
                 SensorRequest request = (SensorRequest) r;
-                result.addControl(new JLabel("*"));
+                Sensor sensor = Sensor.find(request.getValue());
+                JLabel label = new JLabel("*");
+                result.addControl(label);
+                label.setIcon(UiUtils.loadIcon("livedocs/gauge.png"));
+                label.setToolTipText("Sensor " + request.getValue());
+                result.actionsList.add(new RefreshActions() {
+                    @Override
+                    public void refresh(BinaryProtocol bp, byte[] response) {
+                        double value = SensorCentral.getInstance().getValue(sensor);
+                        label.setText(niceToString(value));
+                    }
+                });
             } else if (r instanceof IfRequest) {
                 IfRequest request = (IfRequest) r;
 
@@ -104,7 +124,8 @@ public class LiveDocPanel {
 
         JPanel result = new JPanel(new VerticalFlowLayout());
 
-        result.add(new JLabel(request.getVariable()));
+        JLabel conditionLabel = new JLabel(request.getVariable());
+        result.add(conditionLabel);
 
 
         ActionPanel trueAP = createComponents("", request.trueBlock.toArray(new Request[0]), values, "");
@@ -120,6 +141,7 @@ public class LiveDocPanel {
             @Override
             public void refresh(BinaryProtocol bp, byte[] response) {
                 int value = (int) conditionField.getValue(new ConfigurationImage(response));
+                conditionLabel.setText(request.getVariable() + " is " + (value == 1 ? "TRUE" : "FALSE"));
                 JPanel active;
                 JPanel passive;
                 if (value == 1) {

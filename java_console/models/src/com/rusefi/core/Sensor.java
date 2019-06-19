@@ -14,7 +14,7 @@ import static com.rusefi.config.generated.Fields.*;
 
 /**
  * @author Andrey Belomutskiy
- *         2/11/13
+ * 2/11/13
  */
 public enum Sensor {
     MAP("MAP", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, /*offset */ 40, BackgroundColor.MUD, 20, 300),
@@ -38,7 +38,7 @@ public enum Sensor {
 //    COOLANT_WIDTH("c w", "", 30),
 //    INTAKE_AIR_WIDTH("air w", "", 30),
 
-//    VREF("VRef", SensorCategory.SENSOR_INPUTS, "Volts", 6),
+    //    VREF("VRef", SensorCategory.SENSOR_INPUTS, "Volts", 6),
     VBATT("VBatt", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, 28, BackgroundColor.BEIGE, 4, 18, "Volts"),
 
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
@@ -194,6 +194,13 @@ public enum Sensor {
             sensor = defaultValue;
         }
         return sensor;
+    }
+
+    public static Sensor find(String value) {
+        for (Sensor s : values())
+            if (s.name.equals(value))
+                return s;
+        throw new IllegalStateException("Sensor not found: " + value);
     }
 
     public String getName() {
