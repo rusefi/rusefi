@@ -2,13 +2,15 @@ package com.rusefi.ldmp;
 
 import java.util.Objects;
 
-import static com.rusefi.ConfigDefinition.EOL;
-
 public class SensorRequest extends Request {
     private final String value;
 
     public SensorRequest(String value) {
         this.value = value;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -33,6 +35,6 @@ public class SensorRequest extends Request {
 
     @Override
     public String getJavaCode() {
-        return "/*sens*/" + EOL;
+        return withSimpleParameter(quoteString(value));
     }
 }

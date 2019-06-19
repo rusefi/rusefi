@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.rusefi.ConfigDefinition.EOL;
@@ -33,6 +30,8 @@ public class LiveDocsMetaParser {
     }
 
     public static void main(String[] args) throws IOException {
+        if (args.length != 2)
+            throw new IllegalArgumentException("Two arguments expected but " + Arrays.toString(args));
         String fileName = args[0];
         String destinationPath = args[1];
         SystemOut.println(fileName);
@@ -128,14 +127,15 @@ public class LiveDocsMetaParser {
                 "public class " + className + " {" + EOL +
                 "\tpublic static final Request[] CONTENT = new Request[]{" + EOL);
 
-        for (Request request : r) {
-            java.append(request.getJavaCode());
-        }
-
+        java.append(Request.printList(r));
         java.append("\t};" + EOL +
                 "}");
 
         return java.toString();
+    }
+
+    private static String toProperCase(String s) {
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
     public static String getClassName(String cppSourceName) {
@@ -146,7 +146,11 @@ public class LiveDocsMetaParser {
         if (lastDotIndex != -1)
             cppSourceName = cppSourceName.substring(lastSlashIndex + 1);
 
-
-        return Character.toUpperCase(cppSourceName.charAt(0)) + cppSourceName.substring(1) + "Meta";
+        String[] parts = cppSourceName.split("_");
+        String camelCaseString = "";
+        for (String part : parts) {
+            camelCaseString = camelCaseString + toProperCase(part);
+        }
+        return camelCaseString + "Meta";
     }
 }

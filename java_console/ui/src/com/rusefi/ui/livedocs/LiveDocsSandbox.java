@@ -66,9 +66,9 @@ public class LiveDocsSandbox {
     }
 
     @NotNull
-    private static JPanel wrapWithOffset(JPanel panel) {
+    public static JPanel wrapWithOffset(JPanel panel) {
         JPanel topWrapped = new JPanel(new FlowLayout());
-        topWrapped.add(new JLabel("x"));
+        topWrapped.add(new JLabel(" "));
         topWrapped.add(panel);
         return topWrapped;
     }

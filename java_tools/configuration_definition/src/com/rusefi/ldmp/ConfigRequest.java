@@ -40,6 +40,6 @@ public class ConfigRequest extends Request {
 
     @Override
     public String getJavaCode() {
-        return withSimpleParameter("\"" + field + "\"");
+        return withSimpleParameter(quoteString(field));
     }
 }

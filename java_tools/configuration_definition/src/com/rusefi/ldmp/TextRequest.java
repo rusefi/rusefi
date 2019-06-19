@@ -41,6 +41,6 @@ public class TextRequest extends Request {
 
     @Override
     public String getJavaCode() {
-        return withSimpleParameter("\"" + value + "\"");
+        return withSimpleParameter(quoteString(value));
     }
 }

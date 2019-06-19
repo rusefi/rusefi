@@ -4,19 +4,14 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
-import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.config.generated.ThermistorState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.ldmp.generated.ThermistorsMeta;
-import com.rusefi.ldmp.generated.TpsMeta;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
-import org.putgemin.VerticalFlowLayout;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
@@ -43,19 +38,10 @@ public class FormulasPane {
     private final JPanel centerProxy = new JPanel(new BorderLayout());
     private boolean isPaused;
 
-    private JPanel liveDocs = new JPanel(new VerticalFlowLayout());
+    private JPanel liveDocs = LiveDocPanel.createLiveDocumentationPanel();
 
     public FormulasPane() {
         content.add(centerProxy, BorderLayout.CENTER);
-
-        liveDocs.add(LiveDocPanel.getPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_INDEX,
-                ThermistorState.VALUES, ThermistorsMeta.CONTENT));
-
-        liveDocs.add(LiveDocPanel.getPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_INDEX,
-                ThermistorState.VALUES, ThermistorsMeta.CONTENT));
-
-        liveDocs.add(LiveDocPanel.getPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, TpsMeta.CONTENT));
 
         centerProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
 

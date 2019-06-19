@@ -35,6 +35,7 @@ public class FieldRequest extends Request {
 
     @Override
     public String getJavaCode() {
-        return withSimpleParameter("\"" + field + "\"");
+        return withSimpleParameter(quoteString(field));
     }
+
 }

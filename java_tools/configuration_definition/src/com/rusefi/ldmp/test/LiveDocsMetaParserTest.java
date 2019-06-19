@@ -11,6 +11,7 @@ public class LiveDocsMetaParserTest {
     @Test
     public void getClassName() {
         assertEquals("TpsMeta", LiveDocsMetaParser.getClassName("controllers/sensors/tps.cpp"));
+        assertEquals("SpeedDensityMeta", LiveDocsMetaParser.getClassName("speed_density.cpp"));
     }
 
     @Test
@@ -52,7 +53,7 @@ public class LiveDocsMetaParserTest {
                 "public class xx {\n" +
                 "\tpublic static final Request[] CONTENT = new Request[]{\n" +
                 "\t\t\tnew TextRequest(\"interpolate\"),\n" +
-                "/*sens*/\n" +
+                "\t\t\tnew SensorRequest(\"RPM\"),\n" +
                 "\t\t\tnew TextRequest(\"TCHARGE_MODE_RPM_TPS\"),\n" +
                 "\t\t\tnew ConfigRequest(\"tChargeMinRpmMinTps\"),\n" +
                 "\t};\n" +

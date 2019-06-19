@@ -188,7 +188,10 @@ public class Field {
         Objects.requireNonNull(ci);
         Number value;
         ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
-        if (type == INT) {
+        if (bitOffset != NO_BIT_OFFSET) {
+            int packed = wrapped.getInt();
+            value = (packed >> bitOffset) & 1;
+        } else if (type == INT) {
             value = wrapped.getInt();
         } else if (type == INT16) {
             value = wrapped.getShort();

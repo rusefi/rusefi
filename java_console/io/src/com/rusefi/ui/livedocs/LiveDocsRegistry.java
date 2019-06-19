@@ -3,7 +3,9 @@ package com.rusefi.ui.livedocs;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.rusefi.binaryprotocol.BinaryProtocolCommands.COMMAND_GET_STRUCT;
@@ -17,14 +19,14 @@ import static com.rusefi.binaryprotocol.IoHelper.swap16;
 public enum LiveDocsRegistry {
     INSTANCE;
 
-    private final Map<Integer, LiveDocHolder> liveDocs = new HashMap<>();
+    private final List<LiveDocHolder> liveDocs = new ArrayList<>();
 
     public void register(LiveDocHolder holder) {
-        liveDocs.put(holder.getId(), holder);
+        liveDocs.add(holder);
     }
 
     public void refresh(BinaryProtocol binaryProtocol) {
-        for (LiveDocHolder h : liveDocs.values()) {
+        for (LiveDocHolder h : liveDocs) {
             boolean visible = h.isVisible();
             System.out.println(h + ": " + visible);
             if (visible) {
