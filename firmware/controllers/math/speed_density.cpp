@@ -49,25 +49,25 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_EN
 		engine->engineState.DISPLAY_FIELD(airFlow) = airFlow;
 		DISPLAY_TEXT(Between)
 		engine->engineState.Tcharge_coff = interpolateClamped(0.0,
-				DISPLAY_TEXT(tChargeAirCoefMin) CONFIG(DISPLAY_CONFIG(tChargeAirCoefMin)),
-				DISPLAY_TEXT(tChargeAirFlowMax) CONFIG(DISPLAY_CONFIG(tChargeAirFlowMax)),
-				DISPLAY_TEXT(tChargeAirCoefMax) CONFIG(DISPLAY_CONFIG(tChargeAirCoefMax)), airFlow);
+				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMin)),
+				CONFIG(DISPLAY_CONFIG(tChargeAirFlowMax)),
+				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMax)), airFlow);
 		// save it for console output (instead of MAF massAirFlow)
 	} else/* DISPLAY_ELSE */ {
 		// TCHARGE_MODE_RPM_TPS
-		DISPLAY_TEXT(interpolate_RPM)
+		DISPLAY_TEXT(interpolate_3D)
 		DISPLAY_SENSOR(RPM)
-		DISPLAY_TEXT(and_TPS)
+		DISPLAY_TEXT(and)
 		DISPLAY_SENSOR(TPS)
 		DISPLAY_TEXT(EOL)
 		DISPLAY_TEXT(Between)
 		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,
-				DISPLAY_TEXT(tChargeMinRpmMinTps) CONFIG(DISPLAY_CONFIG(tChargeMinRpmMinTps)), tpMax, DISPLAY_TEXT(EOL)
-				DISPLAY_TEXT(tChargeMinRpmMaxTps) CONFIG(DISPLAY_CONFIG(tChargeMinRpmMaxTps)), tps);
-		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin, CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMinTps)), tpMax,
+				CONFIG(DISPLAY_CONFIG(tChargeMinRpmMinTps)), tpMax,
+				CONFIG(DISPLAY_CONFIG(tChargeMinRpmMaxTps)), tps);
+		DISPLAY_TEXT(EOL)
+		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin,
+				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMinTps)), tpMax,
 				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMaxTps)), tps);
-
-		//ISPLAY_TEXT()
 
 		engine->engineState.Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
 	/* DISPLAY_ENDIF */
