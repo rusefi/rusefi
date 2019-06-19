@@ -27,3 +27,9 @@ java -DSystemOut.name=gen_config2 ^
  com.rusefi.ldmp.LiveDocsMetaParser ^
  controllers/sensors/tps.cpp ^
  "../"
+
+java -DSystemOut.name=gen_config2 ^
+ -cp ../java_tools/ConfigDefinition.jar ^
+ com.rusefi.ldmp.LiveDocsMetaParser ^
+ controllers/math/speed_density.cpp ^
+ "../"

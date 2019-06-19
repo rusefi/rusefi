@@ -2,7 +2,7 @@
   <configuration default="false" name="LiveDocsMetaParser" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.ldmp.LiveDocsMetaParser" />
     <module name="configuration_definition" />
-    <option name="PROGRAM_PARAMETERS" value="&quot;../../firmware/controllers/sensors/thermistors.cpp&quot;" />
+    <option name="PROGRAM_PARAMETERS" value="&quot;../../firmware/controllers/math/speed_density.cpp&quot; &quot;../../&quot;" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ldmp.*" />

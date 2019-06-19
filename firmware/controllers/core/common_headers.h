@@ -39,6 +39,6 @@
 
 #define DISPLAY_TEXT(x)
 #define DISPLAY_SENSOR(x) {}
-#define DISPLAY_IF(x) {}
+#define DISPLAY_IF(x) x
 
 #endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */
