@@ -30,7 +30,7 @@ baroCorr_Map3D_t baroCorrMap("baro");
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
-float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(coolantTemp) || cisnan(airTemp)) {
 		warning(CUSTOM_ERR_NAN_TCHARGE, "t-getTCharge NaN");
 		return coolantTemp;
