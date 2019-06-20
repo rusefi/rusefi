@@ -276,7 +276,7 @@ static void printSensors(Logging *log) {
 		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I5, "v", tsOutputChannels.debugIntField5);
 #endif /* EFI_TUNER_STUDIO */
 
-		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
+		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.sd.tChargeK, 2); // log column #8
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VE, "%", engine->engineState.currentBaroCorrectedVE * PERCENT_MULT, 2);
 		}
@@ -947,12 +947,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->acSwitchState = engine->acSwitchState;
 
 	// tCharge depends on the previous state, so we should use the stored value.
-	tsOutputChannels->tCharge = ENGINE(engineState.tCharge);
+	tsOutputChannels->tCharge = ENGINE(engineState.sd.tCharge);
 	float timing = engine->engineState.timingAdvance;
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
 	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
-	tsOutputChannels->chargeAirMass = engine->engineState.airMass;
+	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;
