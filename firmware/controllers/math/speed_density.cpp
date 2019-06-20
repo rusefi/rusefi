@@ -154,7 +154,7 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 	}
 #if EFI_PRINTF_FUEL_DETAILS
 	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
-			map, adjustedMap, engine->engineState.airMass);
+			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	engine->engineState.sd.airMassInOneCylinder = airMass;
