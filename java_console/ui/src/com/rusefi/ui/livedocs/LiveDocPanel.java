@@ -154,7 +154,7 @@ public class LiveDocPanel {
                 active.setBorder(BorderFactory.createLineBorder(Color.green));
                 passive.setBorder(BorderFactory.createLineBorder(Color.red));
                 Toolbox.setEnabledRecursive(active, true);
-                Toolbox.setEnabledRecursive(passive, true);
+                Toolbox.setEnabledRecursive(passive, false);
             }
         });
 
