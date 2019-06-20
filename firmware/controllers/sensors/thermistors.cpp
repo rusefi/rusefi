@@ -56,11 +56,12 @@ float ThermistorMath::getKelvinTemperatureByResistance(float resistance) const {
 	return 1 / (s_h_a + s_h_b * logR + s_h_c * logR * logR * logR);
 }
 
-float convertCelsiustoF(float tempC) {
+/*
+float convertCelsiustoF(temperature_t tempC) {
 	return tempC * 9 / 5 + 32;
 }
 
-float convertFtoCelsius(float tempF) {
+temperature_t convertFtoCelsius(float tempF) {
 	return (tempF - 32) / 9 * 5;
 }
 
@@ -68,6 +69,7 @@ float convertKelvinToFahrenheit(float kelvin) {
 	float tempC = convertKelvinToCelcius(kelvin);
 	return convertCelsiustoF(tempC);
 }
+*/
 
 float getResistance(ThermistorConf *config, float voltage) {
 	efiAssert(CUSTOM_ERR_ASSERT, config != NULL, "thermistor config is null", NAN);
@@ -77,7 +79,7 @@ float getResistance(ThermistorConf *config, float voltage) {
 	return resistance;
 }
 
-float getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DECLARE_ENGINE_PARAMETER_SUFFIX) {
+temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	tm->setConfig(&cfg->config); // implementation checks if configuration has changed or not
 
 	DISPLAY_TEXT(Analog_MCU_reads);
@@ -112,12 +114,12 @@ float getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DE
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 
-bool isValidCoolantTemperature(float temperature) {
+bool isValidCoolantTemperature(temperature_t temperature) {
 	// I hope magic constants are appropriate here
 	return !cisnan(temperature) && temperature > -50 && temperature < 250;
 }
 
-bool isValidIntakeAirTemperature(float temperature) {
+bool isValidIntakeAirTemperature(temperature_t temperature) {
 	// I hope magic constants are appropriate here
 	return !cisnan(temperature) && temperature > -50 && temperature < 100;
 }
@@ -129,7 +131,7 @@ bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return coolant temperature, in Celsius
  */
-float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!hasCltSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		engine->isCltBroken = false;
 		return NO_CLT_SENSOR_TEMPERATURE;
@@ -211,7 +213,7 @@ bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return Celsius value
  */
-float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!hasIatSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		return NO_IAT_SENSOR_TEMPERATURE;
 	}
