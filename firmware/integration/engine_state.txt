@@ -2,17 +2,34 @@
 
 struct_no_prefix engine_state2_s
 
-
+struct_no_prefix speed_density_s
 
 bit isTChargeAirModel
 
-float airMass;speed-density logic, calculated air mass in grams
+float airMassInOneCylinder;Speed-density logic: calculated air mass in one cylinder, in grams
 
-float engineCycleDurationMs;
+	float tCharge;speed density\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;
+	float tChargeK
 
 float Tcharge_coff
 
 floatms_t airFlow
+
+
+float manifoldAirPressureAccelerationAdjustment;
+float adjustedManifoldAirPressure;
+
+
+! speed_density_s
+end_struct
+
+speed_density_s sd;
+
+	float targetAFR
+
+
+float engineCycleDurationMs;
+
 
 float minRpmKcurrentTPS
 
@@ -20,4 +37,7 @@ int currentTpsAdc
 float tpsVoltageMCU
 float tpsVoltageBoard
 
+	float currentBaroCorrectedVE;
+
+! engine_state2_s
 end_struct

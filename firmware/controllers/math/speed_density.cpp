@@ -37,10 +37,10 @@ temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DE
 	}
 
 
-	if ((engine->engineState.DISPLAY_IF(isTChargeAirModel) = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
+	if ((engine->engineState.sd.DISPLAY_IF(isTChargeAirModel) = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
 		const floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
 		// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
-		floatms_t airMassForEngine = engine->engineState./***display*/airMass * CONFIG(specs.cylindersCount);
+		floatms_t airMassForEngine = engine->engineState.sd./***display*/airMassInOneCylinder * CONFIG(specs.cylindersCount);
 		// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
 		// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
 		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
@@ -48,7 +48,7 @@ temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DE
 		DISPLAY_TEXT(interpolate_Air_Flow)
 		engine->engineState.DISPLAY_FIELD(airFlow) = airFlow;
 		DISPLAY_TEXT(Between)
-		engine->engineState.Tcharge_coff = interpolateClamped(0.0,
+		engine->engineState.sd.Tcharge_coff = interpolateClamped(0.0,
 				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMin)),
 				CONFIG(DISPLAY_CONFIG(tChargeAirFlowMax)),
 				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMax)), airFlow);
@@ -69,17 +69,17 @@ temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DE
 				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMinTps)), tpMax,
 				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMaxTps)), tps);
 
-		engine->engineState.Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
+		engine->engineState.sd.Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
 	/* DISPLAY_ENDIF */
 	}
 
-	if (cisnan(engine->engineState.Tcharge_coff)) {
+	if (cisnan(engine->engineState.sd.Tcharge_coff)) {
 		warning(CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
 		return coolantTemp;
 	}
 
 	// We use a robust interp. function for proper tcharge_coff clamping.
-	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, engine->engineState.Tcharge_coff);
+	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, engine->engineState.sd.Tcharge_coff);
 
 	if (cisnan(Tcharge)) {
 		// we can probably end up here while resetting engine state - interpolation would fail
@@ -135,14 +135,16 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
-	float tChargeK = ENGINE(engineState.tChargeK);
+	float tChargeK = ENGINE(engineState.sd.tChargeK);
 	if (cisnan(tChargeK)) {
 		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
 		return 0;
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", 0);
 
-	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_GLOBAL_SIGNATURE);
+	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_GLOBAL_SIGNATURE);
+
+	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", 0);
 
 	float airMass = getCylinderAirMass(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_GLOBAL_SUFFIX);
@@ -155,7 +157,7 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 			map, adjustedMap, engine->engineState.airMass);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	engine->engineState.airMass = airMass;
+	engine->engineState.sd.airMassInOneCylinder = airMass;
 	return sdMath(airMass, ENGINE(engineState.targetAFR) PASS_GLOBAL_SUFFIX) * 1000;
 }
 

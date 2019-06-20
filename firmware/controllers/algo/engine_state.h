@@ -93,15 +93,9 @@ public:
 
 	float baroCorrection = 0;
 
-	// speed density
-	// Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
-	float tCharge = 0;
-	float tChargeK = 0;
 	efitick_t timeSinceLastTChargeK;
 
 	float currentRawVE = 0;
-	float currentBaroCorrectedVE = 0;
-	float targetAFR = 0;
 
 	int vssEventCounter = 0;
 	int totalLoggedBytes = 0;

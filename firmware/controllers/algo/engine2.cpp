@@ -245,8 +245,8 @@ void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUF
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;
 	if (!cisnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
-		tCharge = (tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
-		tChargeK = convertCelsiusToKelvin(tCharge);
+		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
+		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
 		timeSinceLastTChargeK = curTime;
 	}
 #endif
