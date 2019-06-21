@@ -1,24 +1,38 @@
 outputs:
+  # TLE8888 injector channels
   GPIOE_14: "Injector #1"
   GPIOE_13: "Injector #2"
   GPIOE_12: "Injector #3"
   GPIOE_11: "Injector #4"
-  GPIOE_10: "Extra Low #1"
-  GPIOE_9: "Extra Low #2"
-  GPIOE_8: "Extra Low #3"
-  GPIOE_7: "Extra Low #4"
-  TLE8888_PIN_20: "Extra Low #5"
-  TLE8888_PIN_21: "Extra Low #6"
-  
+  # TC4427 ignition outputs (5v)
+  GPIOD_4: "Ignition #1"
+  GPIOD_3: "Ignition #2"
+  GPIOD_2: "Ignition #3"
+  GPIOD_1: "Ignition #4"
+  # TC4427 general purpose output (selectable 5v/12v)
+  GPIOD_7: "GP Out 5"
+  GPIOD_6: "GP Out 6"
+
+  # TLE8888 high current low side
+  GPIOE_9:  "Lowside 1"
+  GPIOE_10: "Lowside 2"
+
+  # TLE8888 half bridges (pushpull, lowside, or high-low)
+  GPIOE_8: "GP Out 1"
+  GPIOE_7: "GP Out 2"
+  TLE8888_PIN_20: "GP Out 3"
+  TLE8888_PIN_21: "GP Out 4"
+
 event_inputs:
-  GPIOA_5: "haha2"  
-  GPIOC_6: "hoho1"
+  # RC filter input for hall
+  GPIOA_5: "Hall Cam"
+  # TLE8888 VR/hall conditioner
+  GPIOC_6: "VR/Hall Crank"
 
 switch_inputs:
   GPIOE_10: "Brake Switch"
   GPIOG_1: "Clutch Switch"
-  
-    
+
 analog_inputs:
   EFI_ADC_0: "AN-TEMP-1"
   EFI_ADC_1: "AN-TEMP-2"
