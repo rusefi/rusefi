@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
  * (c) Andrey Belomutskiy
  */
 public class PortHolder {
-    public static final String OS_VERSION = "os.version";
     public static int BAUD_RATE = 115200;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
@@ -71,8 +70,8 @@ public class PortHolder {
     }
 
     private static boolean isWindows10() {
-        // numeric winnt version for "Windows 10" is 7
-        return System.getProperty(OS_VERSION).startsWith("7");
+        // todo: this code is fragile! What about Windows 11, 12 etc!? this is a problem for the later day :(
+        return System.getProperty(FileLog.OS_VERSION).startsWith("10");
     }
 
     public void close() {
