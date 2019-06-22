@@ -34,13 +34,13 @@
 #include "board_test.h"
 #include "engine_controller.h"
 #include "maf.h"
-#include "biquad.h"
+//#include "biquad.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      8
 #define ADC_BUF_DEPTH_FAST      4
 
-Biquad biq[ADC_MAX_CHANNELS_COUNT];
+//static Biquad biq[ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
