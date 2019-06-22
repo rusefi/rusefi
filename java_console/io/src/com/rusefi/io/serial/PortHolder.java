@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * (c) Andrey Belomutskiy
  */
 public class PortHolder {
+    public static final String OS_VERSION = "os.version";
     public static int BAUD_RATE = 115200;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
@@ -47,9 +48,15 @@ public class PortHolder {
      * @return true if everything fine
      */
     private boolean open(String port, final DataListener listener) {
-        IoStream stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
-        // this implementation is way simpler but seems to kind of work, keeping just in case
-        //IoStream stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
+        IoStream stream;
+        boolean windows10 = isWindows10();
+        FileLog.MAIN.logLine("Is windows10: " + windows10);
+        if (windows10) {
+            // this implementation is way simpler but seems to kind of work, keeping just in case
+            stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
+        } else {
+            stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
+        }
         if (stream == null)
             return false;
 
@@ -61,6 +68,11 @@ public class PortHolder {
         bp = BinaryProtocolHolder.create(FileLog.LOGGER, stream);
 
         return bp.connectAndReadConfiguration(listener);
+    }
+
+    private static boolean isWindows10() {
+        // numeric winnt version for "Windows 10" is 7
+        return System.getProperty(OS_VERSION).startsWith("7");
     }
 
     public void close() {
