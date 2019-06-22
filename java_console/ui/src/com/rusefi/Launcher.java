@@ -317,8 +317,6 @@ public class Launcher {
         System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
 
         FileLog.MAIN.start();
-        FileLog.MAIN.logLine("OS name: " + System.getProperty("os.name"));
-        FileLog.MAIN.logLine("OS version: " + System.getProperty(PortHolder.OS_VERSION));
         getConfig().load();
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
