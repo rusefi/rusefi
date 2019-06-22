@@ -46,7 +46,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190617;
+    public static final int CONSOLE_VERSION = 20190622;
     public static final boolean SHOW_STIMULATOR = false;
     public static final String INPUT_FILES_PATH = "..";
     private static final String TAB_INDEX = "main_tab";
@@ -317,6 +317,8 @@ public class Launcher {
         System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
 
         FileLog.MAIN.start();
+        FileLog.MAIN.logLine("OS name: " + System.getProperty("os.name"));
+        FileLog.MAIN.logLine("OS version: " + System.getProperty(PortHolder.OS_VERSION));
         getConfig().load();
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
