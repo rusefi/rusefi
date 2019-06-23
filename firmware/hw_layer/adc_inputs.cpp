@@ -256,10 +256,10 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 float getMCUInternalTemperature(void) {
 #if defined(ADC_CHANNEL_SENSOR)
 	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
-	TemperatureValue -= 0.760; // Subtract the reference voltage at 25�C
+	TemperatureValue -= 0.760; // Subtract the reference voltage at 25 deg C
 	TemperatureValue /= .0025; // Divide by slope 2.5mV
 
-	TemperatureValue += 25.0; // Add the 25�C
+	TemperatureValue += 25.0; // Add the 25 deg C
 	return TemperatureValue;
 #else
 	return 0;
