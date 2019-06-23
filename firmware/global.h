@@ -80,13 +80,13 @@ typedef unsigned int time_t;
 /**
  * rusEfi is placing some of data structures into CCM memory simply
  * in order to use that memory - no magic about which RAM is faster etc.
+ * That said, CCM/TCM could be faster as there will be less bus contention
+ * with DMA.
  *
  * Please note that DMA does not work with CCM memory
  */
 #if defined(STM32F7XX)
-#undef EFI_USE_CCM
-// todo: DTCM == CCM on STM32F7?
-//#define CCM_RAM ".ram3"
+#define CCM_RAM ".ram3"
 #else /* defined(STM32F4XX) */
 #define CCM_RAM ".ram4"
 #endif /* defined(STM32F4XX) */
