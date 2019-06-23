@@ -298,7 +298,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	} else if (subsystem == 0x79) {
 		scheduleStopEngine();
 	} else if (subsystem == 0xbb) {
+#if EFI_PROD_CODE
 		NVIC_SystemReset();
+#endif
 	}
 }
 
