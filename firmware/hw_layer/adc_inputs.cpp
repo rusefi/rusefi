@@ -148,7 +148,7 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 		0  // Conversion group sequence 1...6
 		};
 
-__ALIGNED(32) AdcDevice slowAdc(&adcgrpcfgSlow);
+AdcDevice slowAdc(&adcgrpcfgSlow);
 
 static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
 /* HW dependent part.*/
@@ -189,7 +189,7 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 // Conversion group sequence 1...6
 		};
 
-__ALIGNED(32) AdcDevice fastAdc(&adcgrpcfg_fast);
+AdcDevice fastAdc(&adcgrpcfg_fast);
 
 void doSlowAdc(void) {
 
