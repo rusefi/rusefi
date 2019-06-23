@@ -22,8 +22,9 @@ public:
 	int conversionCount;
 	int errorsCount;
 	int getAdcValueByIndex(int internalIndex) const;
+	void invalidateSamplesCache();
 
-	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
+	__ALIGNED(32) adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
 
 	int getAdcValueByHwChannel(int hwChannel) const;
 
