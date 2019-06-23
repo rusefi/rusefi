@@ -343,7 +343,7 @@ int AdcDevice::getAdcValueByIndex(int internalIndex) const {
 }
 
 void AdcDevice::invalidateSamplesCache() {
-#if PROJECT_CPU == ARCH_STM32F7
+#if defined(STM32F7XX)
 	// The STM32F7xx has a data cache
 	// DMA operations DO NOT invalidate cache lines, since the ARM m7 doesn't have 
 	// anything like a CCI that maintains coherency across multiple bus masters.
