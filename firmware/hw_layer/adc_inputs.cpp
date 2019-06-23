@@ -344,6 +344,11 @@ int AdcDevice::getAdcValueByIndex(int internalIndex) const {
 
 void AdcDevice::invalidateSamplesCache() {
 #if PROJECT_CPU == ARCH_STM32F7
+	// The STM32F7xx has a data cache
+	// DMA operations DO NOT invalidate cache lines, since the ARM m7 doesn't have 
+	// anything like a CCI that maintains coherency across multiple bus masters.
+	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
+	// would like to read something that somebody else wrote (ADC via DMA, in this case)
 	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
 #endif
 }
