@@ -17,9 +17,8 @@
 
 // Warning! This is a test config!
 
-// todo: reconfigure RAM sections for STM32F7
 #undef EFI_USE_CCM
-#define EFI_USE_CCM FALSE
+#define EFI_USE_CCM TRUE
 
 #undef EFI_POTENTIOMETER
 #define EFI_POTENTIOMETER FALSE
