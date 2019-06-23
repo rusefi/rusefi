@@ -803,8 +803,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	} else if (command == 't' || command == 'T') {
 		handleTestCommand(tsChannel);
 	} else if (command == TS_IO_TEST_COMMAND) {
-		uint16_t subsystem = SWAP_UINT16(*(short*)&data[0]);
-		uint16_t index = SWAP_UINT16(*(short*)&data[2]);
+		uint16_t subsystem = SWAP_UINT16(*(uint16_t*)&data[0]);
+		uint16_t index = SWAP_UINT16(*(uint16_t*)&data[2]);
 
 		if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
 			tsOutputChannels.debugIntField1++;
