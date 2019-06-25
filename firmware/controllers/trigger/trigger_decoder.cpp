@@ -181,6 +181,9 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	 */
 	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[current_index]);
 	// todo: make this '90' depend on cylinder count or trigger shape?
+	if (cisnan(currentAngle)) {
+		return NOISY_RPM;
+	}
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_6560);
 	// todo: prevIndex should be pre-calculated
