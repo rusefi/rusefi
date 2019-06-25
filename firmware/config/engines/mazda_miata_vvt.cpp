@@ -302,7 +302,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	// enable trigger_details
-	engineConfiguration->isPrintTriggerSynchDetails = false;
+	engineConfiguration->verboseTriggerSynchDetails = false;
 
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;

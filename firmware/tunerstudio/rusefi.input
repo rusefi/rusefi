@@ -1451,7 +1451,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "NB2 from temp",						nb2ratioFrom
 	    field = "NB2 to temp",							nb2ratioTo
 	    field = "nbVvtIndex",							nbVvtIndex
-	    field = "print sync details to console",		isPrintTriggerSynchDetails
+	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8}
 	dialog = triggerConfiguration
 		panel = triggerConfiguration_settings,	North

@@ -763,7 +763,7 @@ custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	bit isTunerStudioEnabled
 	bit isWaveAnalyzerEnabled
 	bit useSeparateVeForIdle;+This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
-	bit isPrintTriggerSynchDetails;+enable trigger_details
+	bit verboseTriggerSynchDetails;+enable trigger_details
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;+This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
