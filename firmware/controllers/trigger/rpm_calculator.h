@@ -26,6 +26,7 @@
 
 #define VVT_NAME "VVT"
 
+// we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
 #define UNREALISTIC_RPM 30000
 
