@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatus;
+import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class RpmLabel {
     private static final String NO_CONNECTION = "N/C";
     private final JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-    private final JLabel rpmValue = new JLabel(NO_CONNECTION);
+    private final JLabel rpmValue = new JLabel();
     private final JLabel rpmCaption = new JLabel("RPM:");
 
     public RpmLabel() {
@@ -25,6 +26,8 @@ public class RpmLabel {
     }
 
     public RpmLabel(int size) {
+        String initialLabel = LinkManager.isLogViewer() ? "LOG" : NO_CONNECTION;
+        rpmValue.setText(initialLabel);
         rpmValue.setForeground(Color.red);
 
         content.setBorder(BorderFactory.createLineBorder(Color.white));
