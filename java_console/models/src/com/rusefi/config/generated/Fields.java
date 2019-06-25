@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 18 19:18:08 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 25 02:03:09 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -816,7 +816,6 @@ public class Fields {
 	public static final int isInjectionEnabled_offset = 1476;
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
-	public static final int isPrintTriggerSynchDetails_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
 	public static final int issue_294_15_offset = 76;
 	public static final int issue_294_16_offset = 76;
@@ -1220,6 +1219,7 @@ public class Fields {
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
 	public static final int veLoadBins_offset_hex = 4820;
+	public static final int verboseTriggerSynchDetails_offset = 1476;
 	public static final int veRpmBins_offset = 18528;
 	public static final int veRpmBins_offset_hex = 4860;
 	public static final int veTable_offset = 17440;
@@ -1701,7 +1701,7 @@ public class Fields {
 	public static final Field ISTUNERSTUDIOENABLED = Field.create("ISTUNERSTUDIOENABLED", 1476, FieldType.BIT, 8);
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1476, FieldType.BIT, 9);
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1476, FieldType.BIT, 10);
-	public static final Field ISPRINTTRIGGERSYNCHDETAILS = Field.create("ISPRINTTRIGGERSYNCHDETAILS", 1476, FieldType.BIT, 11);
+	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1476, FieldType.BIT, 11);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1476, FieldType.BIT, 12);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1476, FieldType.BIT, 13);
 	public static final Field USEONLYRISINGEDGEFORTRIGGER = Field.create("USEONLYRISINGEDGEFORTRIGGER", 1476, FieldType.BIT, 14);
@@ -2475,7 +2475,7 @@ public class Fields {
 	ISTUNERSTUDIOENABLED,
 	ISWAVEANALYZERENABLED,
 	USESEPARATEVEFORIDLE,
-	ISPRINTTRIGGERSYNCHDETAILS,
+	VERBOSETRIGGERSYNCHDETAILS,
 	ISMANUALSPINNINGMODE,
 	TWOWIREBATCHINJECTION,
 	USEONLYRISINGEDGEFORTRIGGER,

@@ -355,7 +355,7 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	someSortOfTriggerError = true;
 
 	totalTriggerErrorCounter++;
-	if (CONFIG(isPrintTriggerSynchDetails) || someSortOfTriggerError) {
+	if (CONFIG(verboseTriggerSynchDetails) || someSortOfTriggerError) {
 #if EFI_PROD_CODE
 		scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
@@ -497,7 +497,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 
 #if EFI_PROD_CODE
-			if (CONFIG(isPrintTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
+			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */

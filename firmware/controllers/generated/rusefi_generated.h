@@ -1234,8 +1234,6 @@
 #define isManualSpinningMode_offset_hex 5c4
 #define isMapAveragingEnabled_offset 1476
 #define isMapAveragingEnabled_offset_hex 5c4
-#define isPrintTriggerSynchDetails_offset 1476
-#define isPrintTriggerSynchDetails_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
 #define issue_294_15_offset 76
@@ -1914,6 +1912,8 @@
 #define vehicleSpeedSensorInputPin_offset_hex 3c8
 #define veLoadBins_offset 18464
 #define veLoadBins_offset_hex 4820
+#define verboseTriggerSynchDetails_offset 1476
+#define verboseTriggerSynchDetails_offset_hex 5c4
 #define veRpmBins_offset 18528
 #define veRpmBins_offset_hex 4860
 #define veTable_offset 17440
