@@ -17,3 +17,4 @@
 17)                  and the GND ring around pin 22 CF for better RF rejection. 
 18) RESOLVED IN R0.4.1 change label from sf.net/projects/rusefi/ to rusefi.com
 18) RESOLVED IN R0.4.2 Added LSU 4.2 and 4.9 notes about installing W1 and W2, etc. 
+19)                  D2 is reported to not turn off. It is believed the leakage of DIAHD pin is keeping it on even when the MOSFET is off. Unfortunately there is no solid math, or data to back this up. We need to look at what is required to make the LED blink, as well we need to look at the potential this parallel path is causing the heater measurement to measure wrong. 
