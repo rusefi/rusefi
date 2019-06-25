@@ -232,6 +232,7 @@ private:
 		int rpm = GET_RPM();
 		float targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
 		percent_t targetPosition = targetFromTable + engine->engineState.etbIdleAddition;
+		tsOutputChannels.etbTarget = targetPosition;
 
 		if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 #if EFI_TUNER_STUDIO
@@ -245,8 +246,13 @@ private:
 		pid.iTermMin = engineConfiguration->etb_iTermMin;
 		pid.iTermMax = engineConfiguration->etb_iTermMax;
 
+		// Error is positive if the throttle needs to open further
+		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
+
 		currentEtbDuty = feedForward +
 				pid.getOutput(targetPosition, actualThrottlePosition);
+
+		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
 
 		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
 
