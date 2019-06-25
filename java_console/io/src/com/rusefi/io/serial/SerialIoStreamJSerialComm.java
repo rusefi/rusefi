@@ -33,7 +33,10 @@ public class SerialIoStreamJSerialComm implements IoStream {
             {
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
-                byte[] newData = new byte[sp.bytesAvailable()];
+                int bytesAvailable = sp.bytesAvailable();
+                if (bytesAvailable <= 0)
+                    return; // sometimes negative value is returned at least on Mac
+                byte[] newData = new byte[bytesAvailable];
                 int numRead = sp.readBytes(newData, newData.length);
                 byte[] data = new byte[numRead];
                 System.arraycopy(newData, 0, data, 0, numRead);
