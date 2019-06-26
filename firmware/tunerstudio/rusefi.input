@@ -1078,99 +1078,143 @@ gaugeCategory = Fuel Data
 
 menuDialog = main
 	menu = "&Base &Engine"
-		subMenu = engineChars,				"Base engine"
+		subMenu = engineChars,				"Base Engine"
 		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = std_separator
-		subMenu = energySystems,			"Battery and alternator"
+		subMenu = energySystems,			"Battery and Alternator"
 		subMenu = std_separator
 		
 		# Digital outputs
-		subMenu = mainRelay,				"Main relay"
-		subMenu = fuelPump,					"Fuel pump"
+		subMenu = mainRelay,				"Main Relay"
+		subMenu = fuelPump,					"Fuel Pump"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
-		subMenu = malfunction,				"Check engine light"
+		subMenu = malfunction,				"Check Engine Light"
 		subMenu = statusLeds,				"Status LEDs"
 
 	menu = "Fuel"
 		# basic
-		subMenu = injectionSettings,		"Injection settings"
-		subMenu = injectionDeadTime,		"Injector dead time", 0, {isInjectionEnabled == 1}
+		subMenu = injectionSettings,		"Injection Settings"
+		subMenu = injectionDeadTime,		"Injector Dead Time", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Targets & closed loop
 		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = fuelClosedLoopDialog, 	"Closed loop correction", 0, {isInjectionEnabled == 1}
-		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
+		subMenu = fuelClosedLoopDialog, 	"Closed Loop Correction", 0, {isInjectionEnabled == 1}
+		subMenu = coastingFuelCutControl, 	"Deceleration Fuel Cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Fuel table/VE
-		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
+		subMenu = fuelTableDialog,			"Fuel Table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
 		subMenu = veTableDialog,			"Fuel Table", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
+		subMenu = injPhaseTableTbl,         "Injection Phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Corrections
-		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1 && useWarmupPidAfr == 0}
+		subMenu = cltFuelCorrCurve,			"ECT multiplier", 0, {isInjectionEnabled == 1 && useWarmupPidAfr == 0}
 		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = baroCorrTbl,				"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = tChargeSettings,			"tCharge settings", 0, {isInjectionEnabled == 1}
+		subMenu = tChargeSettings,			"Charge Temp settings", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Accel enrichment
 		subMenu = AccelEnrich,				"Accel/decel enrichment/enleanment", 0, {isInjectionEnabled == 1}
 		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
-		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
+		subMenu = mapAccelTaper,			"Accel Enrichment Table", 0, {isInjectionEnabled == 1}
 
 
 	menu = "Ignition"
-		subMenu = ignitionSettings,			"Ignition settings"
+		subMenu = ignitionSettings,			"Ignition Settings"
         subMenu = std_separator
 
 		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
-		subMenu = ignitionCylExtra,			"Ignition cylinder trim", 0, {isIgnitionEnabled == 1}
+		subMenu = ignitionCylExtra,			"Ignition Cylinder Trim", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
-		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
-		subMenu = ignitionTpsTableTbl,		"Ignition advance (TPS)", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 1}
+		subMenu = ignitionTableTbl,			"Ignition Advance", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
+		subMenu = ignitionTpsTableTbl,		"Ignition Advance (TPS)", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 1}
 		subMenu = std_separator
 
 		# corrections
-		subMenu = cltTimingCorrCurve,		"CLT correction", 0, {isIgnitionEnabled == 1}
-		subMenu = ignitionIatCorrTableTbl,	"IAT correction", 0, {isIgnitionEnabled == 1}
+		subMenu = cltTimingCorrCurve,		"ECT Correction", 0, {isIgnitionEnabled == 1}
+		subMenu = ignitionIatCorrTableTbl,	"IAT Correction", 0, {isIgnitionEnabled == 1}
 		
 
 		
-	menu = "&Idle and Cranking"
+	menu = "&Cranking / Idle"
 
-        subMenu = crankingDialog,			"Cranking settings"
+        subMenu = crankingDialog,			"Cranking Settings"
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Crank Enrichment"
 		subMenu = crankingDurationCurve,	"Crank Hold Time"	
 		subMenu = std_separator
 
-		subMenu = crankingAdvanceCurve,		"Ignition advance", 0, {useSeparateAdvanceForCranking == 1}
+		subMenu = crankingAdvanceCurve,		"Ignition Advance", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = std_separator
 
-		subMenu = cltCrankingCurve,			"IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
+		subMenu = cltCrankingCurve,			"ECT Multiplier", 0, {overrideCrankingIacSetting == 1}	
 
 
-		subMenu = idleSettings,				"Idle settings"
-		subMenu = idlehw,					"Idle hardware"
+		subMenu = idleSettings,				"Idle Settings"
+		subMenu = idlehw,					"Idle Hardware"
 		subMenu = std_separator	
 		subMenu = cltIdleRPMCurve,			"Target RPM", 0, {idleMode == 0}
-		subMenu = idleVeCurve,              "VE", 0, {useSeparateVeForIdle == 1}
-		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
+		subMenu = idleVeCurve,              "Idle Fuel Table", 0, {useSeparateVeForIdle == 1}
+		subMenu = idleAdvanceCurve,			"Ignition Advance", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = std_separator
-		subMenu = idleTimingPidCorrDialog,	"Closed-loop idle timing"
-		subMenu = cltIdleCurve,				"CLT multiplier"
+		subMenu = idleTimingPidCorrDialog,	"Closed-loop Idle Timing"
+		subMenu = cltIdleCurve,				"ECT multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	menu = "&FSIO" 
-		subMenu = fsioInputsDialog,        	"FSIO inputs"
+	
+	menu = "&Inputs"
+		
+		subMenu = triggerInputs,			"Trigger Inputs"
+		subMenu = DigitalInputs,		    "Digital Inputs"
+
+		subMenu = std_separator
+		subMenu = analogInputSettings,		"Analog Input Settings"
+
+		subMenu = std_separator
+
+		
+		# TPS/Pedal
+		subMenu = tpsSensor,				"TPS"
+		subMenu = pedalSensor,				"Accelerator Pedal"
+		subMenu = std_separator
+# Thermistors
+		subMenu = cltSensor,				"ECT Sensor"
+		subMenu = iatSensor,				"IAT Sensor"
+		subMenu = auxTempSensor1Sensor,		"AuxTemp1 Sensor"
+		subMenu = auxTempSensor2Sensor,		"AuxTemp2 Sensor"
+		subMenu = std_separator
+
+		# MAP/Baro
+		subMenu = mapSettings,				"MAP Sensor"
+		subMenu = mapCurves,				"MAP Sampling"
+		subMenu = baroSettings,				"Baro Sensor"
+		subMenu = std_separator
+
+		# MAF
+		subMenu = mafSettings,				"MAF Sensor"
+		subMenu = mafDecodingCurve,			"MAF Transfer Function", 0, {mafAdcChannel != 16}
+		subMenu = std_separator
+
+		# O2 sensor(s)
+		subMenu = egoSettings,				"EGO Sensor"
+		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
+		subMenu = cj125Function,			"CJ125 settings (wbo decoder)" @@if_ts_show_cj125
+		subMenu = std_separator
+
+		
+		subMenu = fsioInputsDialog,        	"FSIO Inputs"
+		
+		menu = "&Outputs" 
+
+		
 		subMenu = auxPidDialog,				"Aux PID"
-		subMenu = fsioOutputsDialog,        "FSIO outputs"
+		subMenu = fsioOutputsDialog,        "FSIO Outputs"
 		subMenu = fsioTable1Tbl,			"FSIO Table #1"
 		subMenu = fsioTable2Tbl,			"FSIO Table #2"
 		subMenu = fsioTable3Tbl,			"FSIO Table #3"
@@ -1181,50 +1225,10 @@ menuDialog = main
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
 
-	menu = "&Inputs"
-		# Base analog input settings
-		subMenu = triggerInputs,			"Trigger inputs"
-		subMenu = otherSensorInputs,		"Misc sensors"
-		subMenu = analogInputSettings,		"Analog input settings"
-		subMenu = std_separator
 
-		# Thermistors
-		subMenu = cltSensor,				"CLT sensor"
-		subMenu = iatSensor,				"IAT sensor"
-		subMenu = auxTempSensor1Sensor,		"AuxTemp1 sensor"
-		subMenu = auxTempSensor2Sensor,		"AuxTemp2 sensor"
-		subMenu = std_separator
+menu = "&Electronic Throttle"
 
-		# TPS/pedal
-		subMenu = tpsSensor,				"TPS"
-		subMenu = pedalSensor,				"Accelerator pedal"
-		subMenu = std_separator
-
-		# MAP/Baro
-		subMenu = mapSettings,				"MAP sensor"
-		subMenu = mapCurves,				"MAP sampling"
-		subMenu = baroSettings,				"Baro sensor"
-		subMenu = std_separator
-
-		# MAF
-		subMenu = mafSettings,				"MAF sensor"
-		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != 16}
-		subMenu = std_separator
-
-		# O2 sensor(s)
-		subMenu = egoSettings,				"EGO sensor"
-		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
-		subMenu = cj125Function,			"CJ125 settings (wbo decoder)" @@if_ts_show_cj125
-		subMenu = std_separator
-
-		# Misc sensors
-		subMenu = speedSensor,				"Vehicle speed sensor"
-		subMenu = oilPressureSensor,		"Oil pressure"
-		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
-
-menu = "&E-Throttle"
-
-        subMenu = etbDialog,				"E-Throttle Settings" @@if_ts_show_etb
+        subMenu = etbDialog,				"Electronic Throttle Settings" @@if_ts_show_etb
 		subMenu = std_separator
 		subMenu = etbTpsBiasCurve,			"FeedForward Map" @@if_ts_show_etb
 		subMenu = std_separator
@@ -1564,13 +1568,16 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
 
 ;			Sensor Inputs
-	dialog = otherSensorInputs,					"Other Sensor Inputs"
-		field = "Fuel level", 						fuelLevelSensor
-		field = "Flex fuel",							flexFuelSensor
-		field = "Clutch down pin",						clutchDownPin
-		field = "Clutch up pin",							clutchUpPin
-		field = "Brake pedal pin",						brakePedalPin
-		field = "A/C switch",							acSwitchAdc
+	dialog =    DigitalInputs,					   "Digital Inputs"
+		field = "Fuel level", 					  	fuelLevelSensor
+		field = "Flex Fuel",							flexFuelSensor
+		field = "Clutch Down",						clutchDownPin
+		field = "Clutch Up",							clutchUpPin
+		field = "Brake Pedal",						brakePedalPin
+		field = "A/C Switch",							acSwitchAdc
+	    field = "Vehicle Speed Sensor",                  vehicleSpeedSensorInputPin				
+		field = "Oil Pressure",                         oilPressureSensor		
+				
 
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "!ECU reboot needed to apply these settings"
