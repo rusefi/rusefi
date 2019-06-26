@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:24:48 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -218,8 +218,10 @@ public class Fields {
 	public static final int cltTimingExtra_offset_hex = 968;
 	public static final int clutchDownPin_offset = 664;
 	public static final int clutchDownPin_offset_hex = 298;
+	public static final int clutchDownPinInverted_offset = 976;
 	public static final int clutchDownPinMode_offset = 667;
 	public static final int clutchUpPin_offset = 969;
+	public static final int clutchUpPinInverted_offset = 976;
 	public static final int clutchUpPinMode_offset = 971;
 	public static final int coastingFuelCutClt_offset = 3178;
 	public static final int coastingFuelCutEnabled_offset = 744;
@@ -1160,7 +1162,7 @@ public class Fields {
 	public static final int unused_board_984_31_offset = 744;
 	public static final int unusedAlignMaf_offset = 557;
 	public static final int unusedAnotherOne_offset = 744;
-	public static final int unusedAtBoardConfigurationEnd_offset = 976;
+	public static final int unusedAtBoardConfigurationEnd_offset = 980;
 	public static final int unusedEtbM_offset = 675;
 	public static final int unusedh_offset = 1469;
 	public static final int unusedjoy_offset = 943;
@@ -1657,6 +1659,8 @@ public class Fields {
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 970, FieldType.INT8, brain_input_pin_e);
 	public static final Field CLUTCHUPPINMODE = Field.create("CLUTCHUPPINMODE", 971, FieldType.INT8);
 	public static final Field ETBIDLERANGE = Field.create("ETBIDLERANGE", 972, FieldType.FLOAT);
+	public static final Field CLUTCHUPPININVERTED = Field.create("CLUTCHUPPININVERTED", 976, FieldType.BIT, 0);
+	public static final Field CLUTCHDOWNPININVERTED = Field.create("CLUTCHDOWNPININVERTED", 976, FieldType.BIT, 1);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -2431,6 +2435,8 @@ public class Fields {
 	FREQUENCYREPORTINGMAPINPUTPIN,
 	CLUTCHUPPINMODE,
 	ETBIDLERANGE,
+	CLUTCHUPPININVERTED,
+	CLUTCHDOWNPININVERTED,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
