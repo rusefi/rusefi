@@ -253,6 +253,11 @@ private:
 		if (engineConfiguration->isVerboseETB) {
 			pid.showPidStatus(&logger, "ETB");
 		}
+
+		tsOutputChannels.etbTarget = targetPosition;
+		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
+		// Error is positive if the throttle needs to open further
+		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
 	}
 };
 
