@@ -1060,7 +1060,7 @@ tChargeMode_e tChargeMode;
 	uint8_t[3] unusedSpiPadding8;
 
 
-	float etbIdleThrottleRange
+	float etbIdleThrottleRange; ETB idle authority; "%", 1, 0, 0, 15, 0
 
 	int[590] mainUnusedEnd;
 	
