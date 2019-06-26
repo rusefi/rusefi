@@ -1106,7 +1106,7 @@ menuDialog = main
 
 		# Fuel table/VE
 		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
-		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = veTableDialog,			"Fuel Table", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
@@ -1139,21 +1139,23 @@ menuDialog = main
 		subMenu = cltTimingCorrCurve,		"CLT correction", 0, {isIgnitionEnabled == 1}
 		subMenu = ignitionIatCorrTableTbl,	"IAT correction", 0, {isIgnitionEnabled == 1}
 		
-	menu = "&Cranking"
-		subMenu = crankingDialog,			"Cranking settings"
+
+		
+	menu = "&Idle and Cranking"
+
+        subMenu = crankingDialog,			"Cranking settings"
 		subMenu = std_separator
 
-		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
-		subMenu = crankingDurationCurve,	"Fuel duration multiplier"	
-		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
+		subMenu = crankingCltCurve,			"Crank Enrichment"
+		subMenu = crankingDurationCurve,	"Crank Hold Time"	
 		subMenu = std_separator
 
 		subMenu = crankingAdvanceCurve,		"Ignition advance", 0, {useSeparateAdvanceForCranking == 1}
 		subMenu = std_separator
 
 		subMenu = cltCrankingCurve,			"IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
-		
-	menu = "&Idle"
+
+
 		subMenu = idleSettings,				"Idle settings"
 		subMenu = idlehw,					"Idle hardware"
 		subMenu = std_separator	
@@ -1179,7 +1181,7 @@ menuDialog = main
 		subMenu = fsioCurve3,			    "FSIO Curve #3"
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
 
-	menu = "&Sensors"
+	menu = "&Inputs"
 		# Base analog input settings
 		subMenu = triggerInputs,			"Trigger inputs"
 		subMenu = otherSensorInputs,		"Misc sensors"
@@ -1219,6 +1221,15 @@ menuDialog = main
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
+
+menu = "&E-Throttle"
+
+        subMenu = etbDialog,				"E-Throttle Settings" @@if_ts_show_etb
+		subMenu = std_separator
+		subMenu = etbTpsBiasCurve,			"FeedForward Map" @@if_ts_show_etb
+		subMenu = std_separator
+		subMenu = pedalToTpsTbl,			"Throttle Target Map" @@if_ts_show_etb
+
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
