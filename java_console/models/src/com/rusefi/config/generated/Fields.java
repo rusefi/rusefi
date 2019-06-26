@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Jun 25 02:03:09 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:24:48 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -561,14 +561,14 @@ public class Fields {
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
-	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: charge T";
+	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CRANKING = "fuel: cranking";
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
-	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: last injection";
-	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: short correction";
+	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
+	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: Short-term closed loop correction";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "fuel: TPS change";
