@@ -708,7 +708,9 @@ maf_sensor_type_e mafSensorType;
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
 	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
-	int[122] unusedAtBoardConfigurationEnd;
+	bit clutchUpPinInverted
+	bit clutchDownPinInverted
+	int[121] unusedAtBoardConfigurationEnd;
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	

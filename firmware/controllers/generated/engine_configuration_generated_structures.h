@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:24:48 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1006,9 +1006,15 @@ struct board_configuration_s {
 	 */
 	float etbIdleRange;
 	/**
-	 * offset 376
+	offset 376 bit 0 */
+	bool clutchUpPinInverted : 1;
+	/**
+	offset 376 bit 1 */
+	bool clutchDownPinInverted : 1;
+	/**
+	 * offset 380
 	 */
-	int unusedAtBoardConfigurationEnd[122];
+	int unusedAtBoardConfigurationEnd[121];
 	/** total size 864*/
 };
 
@@ -2821,4 +2827,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:24:48 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019

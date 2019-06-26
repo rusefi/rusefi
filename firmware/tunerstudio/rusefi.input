@@ -1563,7 +1563,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Fuel level", 						fuelLevelSensor
 		field = "Flex fuel",							flexFuelSensor
 		field = "Clutch down pin",						clutchDownPin
-		field = "Clutch up pin",							clutchUpPin
+		fiedl = "Clutch down inverted",					clutchDownPinInverted
+		field = "Clutch up pin",						clutchUpPin
+		fiedl = "Clutch up inverted",					clutchUpPinInverted
 		field = "Brake pedal pin",						brakePedalPin
 		field = "A/C switch",							acSwitchAdc
 

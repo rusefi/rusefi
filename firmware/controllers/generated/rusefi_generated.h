@@ -347,10 +347,14 @@
 #define cltTimingExtra_offset_hex 968
 #define clutchDownPin_offset 664
 #define clutchDownPin_offset_hex 298
+#define clutchDownPinInverted_offset 976
+#define clutchDownPinInverted_offset_hex 3d0
 #define clutchDownPinMode_offset 667
 #define clutchDownPinMode_offset_hex 29b
 #define clutchUpPin_offset 969
 #define clutchUpPin_offset_hex 3c9
+#define clutchUpPinInverted_offset 976
+#define clutchUpPinInverted_offset_hex 3d0
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
 #define coastingFuelCutClt_offset 3178
@@ -1805,8 +1809,8 @@
 #define unusedAlignMaf_offset_hex 22d
 #define unusedAnotherOne_offset 744
 #define unusedAnotherOne_offset_hex 2e8
-#define unusedAtBoardConfigurationEnd_offset 976
-#define unusedAtBoardConfigurationEnd_offset_hex 3d0
+#define unusedAtBoardConfigurationEnd_offset 980
+#define unusedAtBoardConfigurationEnd_offset_hex 3d4
 #define unusedEtbM_offset 675
 #define unusedEtbM_offset_hex 2a3
 #define unusedh_offset 1469
