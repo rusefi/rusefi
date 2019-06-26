@@ -245,11 +245,8 @@ private:
 		pid.iTermMin = engineConfiguration->etb_iTermMin;
 		pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-		// Error is positive if the throttle needs to open further
-
 		currentEtbDuty = feedForward +
 				pid.getOutput(targetPosition, actualThrottlePosition);
-
 
 		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
 
@@ -259,6 +256,7 @@ private:
 
 		tsOutputChannels.etbTarget = targetPosition;
 		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
+		// Error is positive if the throttle needs to open further
 		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
 	}
 };
