@@ -173,9 +173,9 @@ typedef struct {
 	int16_t debugIntField4; // 292
 	int16_t debugIntField5; // 294
 	int16_t recentErrorCodes[8]; // 298
-	float etbTarget;
-	float etb1DutyCycle;
-	float etb1Error;
+	float etbTarget;		// 312
+	float etb1DutyCycle;	// 316
+	float etb1Error;		// 320
 	int unused3[8];
 	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
