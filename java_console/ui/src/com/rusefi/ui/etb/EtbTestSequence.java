@@ -28,6 +28,9 @@ import static com.rusefi.Timeouts.SECOND;
  */
 public class EtbTestSequence {
     protected static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    public static final int durationSeconds = 300;
+    public static final int frequencyHz = 100;
+    public static final int PAST_DEPTH = 200 / (1000 / frequencyHz);
 
     private static final String BUTTON_TEXT = "Measure Control Quality";
 
@@ -38,7 +41,8 @@ public class EtbTestSequence {
         button.addActionListener(e -> {
             button.setEnabled(false);
             // 3000 data points at 10Hz should be 300 seconds worth of data
-            StandardTestSequence.metric.start(/* buffer size: */3000, /*period, ms: */ 100);
+            StandardTestSequence.metric.start(/* buffer size: */durationSeconds * frequencyHz,
+                    /*period, ms: */ 1000 / frequencyHz);
 
             AtomicInteger stepCounter = new AtomicInteger();
             AtomicInteger totalSteps = new AtomicInteger();

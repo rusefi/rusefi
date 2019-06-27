@@ -26,14 +26,14 @@ import static com.rusefi.ui.etb.EtbTestSequence.*;
  * (c) Andrey Belomutskiy
  */
 public class EtbMonteCarloSequence {
-    private static final int TOTAL_CYCLES_COUNT = 300;
+    private static final int TOTAL_CYCLES_COUNT = 15;
     private static final double DEFAULT_POSITION = 7;
     private static final int CLT_THRESHOLD = 75;
     private final JButton button = new JButton("ETB I feel lucky!");
     private final static Random r = new Random();
     private int counter;
 
-    private double bestResultSoFar = 75;
+    private double bestResultSoFar = 750;
 
     public EtbMonteCarloSequence() {
         button.addActionListener(e -> {
@@ -44,8 +44,6 @@ public class EtbMonteCarloSequence {
                 public void run() {
                     CommandQueue.getInstance().write(CANCEL_DIRECT_DRIVE_COMMAND);
                     sleep(3 * SECOND);
-                    int durationSeconds = 300;
-                    int frequencyHz = 100;
                     // 30000 data points at 100Hz should be 300 seconds worth of data
                     StandardTestSequence.metric.start(/* buffer size: */durationSeconds * frequencyHz, /*period, ms: */ 1000 / frequencyHz);
 
@@ -58,9 +56,9 @@ public class EtbMonteCarloSequence {
 
     private void runRandomCycle() {
         final int offset = 0;//r.nextInt(100);
-        final double pFactor = 1 + (r.nextInt(300) / 100.0);
-        final double iFactor = r.nextInt(30) / 100.0;
-        final double dFactor = r.nextInt(30) / 100.0;
+        final double pFactor = 6 + counter * 2;// + (r.nextInt(300) / 100.0);
+        final double iFactor = 0;//r.nextInt(30) / 100.0;
+        final double dFactor = 0;//r.nextInt(30) / 100.0;
         String stats = "mcstats:offset:" + offset +
                 ":pFactor:" + pFactor +
                 ":iFactor:" + iFactor +

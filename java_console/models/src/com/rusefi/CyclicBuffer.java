@@ -30,6 +30,10 @@ public class CyclicBuffer implements DataBuffer {
             pointer = 0;
     }
 
+    public int getPointer() {
+        return pointer;
+    }
+
     public int getSize() {
         return size;
     }
@@ -44,6 +48,10 @@ public class CyclicBuffer implements DataBuffer {
     }
 
     public double get(int i) {
-        return values[i];
+        if (size < 1)
+            throw new IllegalStateException("Size " + size);
+        while (i < 0)
+            i += size;
+        return values[i % size];
     }
 }
