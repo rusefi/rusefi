@@ -16,34 +16,34 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseConfigElements() {
-        List<Request> r = LiveDocsMetaParser.parse("\t\t// TCHARGE_MODE_RPM_TPS\n" +
+        MetaInfo r = LiveDocsMetaParser.parse("\t\t// TCHARGE_MODE_RPM_TPS\n" +
                 "\t\tfloat minRpmKcurrentTPS = interpolateMsg(\"minRpm\", tpMin, DISPLAY_CONFIG(tChargeMinRpmMinTps), tpMax,\n" +
                 "\t\t\t\t/***display*/CONFIG(tChargeMinRpmMaxTps), tps);\n" +
                 "\t\tfloat maxRpmKcurrentTPS = interpolateMsg(\"maxRpm\", tpMin, DISPLAY_CONFIG(tChargeMaxRpmMinTps), tpMax,\n" +
                 "\t\t\t\tDISPLAY_CONFIG(tChargeMaxRpmMaxTps), tps);\n" +
                 "\n" +
                 "\t\tengine->engineState.Tcharge_coff = interpolateMsg(\"Kcurr\", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);\n");
-        assertEquals(3, r.size());
-        assertEquals(new ConfigRequest("tChargeMinRpmMinTps"), r.get(0));
+        assertEquals(3, r.first().size());
+        assertEquals(new ConfigRequest("tChargeMinRpmMinTps"), r.first().get(0));
     }
 
     @Test
     public void parseField() {
-        List<Request> r = LiveDocsMetaParser.parse("\tDISPLAY_TEXT(Analog_MCU_reads);\n" +
+        MetaInfo r = LiveDocsMetaParser.parse("\tDISPLAY_TEXT(Analog_MCU_reads);\n" +
                 "\tengine->engineState.DISPLAY_FIELD(currentTpsAdc) = adc;\n" +
                 "\tDISPLAY_TEXT(ADC_which_equals);\n");
-        assertEquals(3, r.size());
+        assertEquals(3, r.first().size());
     }
 
     @Test
     public void parseDisplayConfig() {
-        List<Request> r = LiveDocsMetaParser.parse("\t\t// DISPLAY_TEXT(interpolate(\")\n" +
+        MetaInfo r = LiveDocsMetaParser.parse("\t\t// DISPLAY_TEXT(interpolate(\")\n" +
                 "+\t\tDISPLAY_SENSOR(RPM) DISPLAY_TEXT(TCHARGE_MODE_RPM_TPS)\n" +
                 "\t\tfloat minRpmKcurrentTPS = interpolateMsg(\"minRpm\", tpMin, DISPLAY_CONFIG(tChargeMinRpmMinTps), tpMax,\n");
-        assertEquals(4, r.size());
+        assertEquals(4, r.first().size());
         // implementation has eaten the bracket :(
-        assertEquals(new TextRequest("interpolate"), r.get(0));
-        assertEquals(new SensorRequest("RPM"), r.get(1));
+        assertEquals(new TextRequest("interpolate"), r.first().get(0));
+        assertEquals(new SensorRequest("RPM"), r.first().get(1));
 
         String javaCode = LiveDocsMetaParser.generateJavaCode(r, "xx");
         assertEquals("package com.rusefi.ldmp.generated;\n" +
@@ -63,21 +63,24 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void testField() {
-        List<Request> r = LiveDocsMetaParser.parse("tm->DISPLAY_FIELD(voltageMCU) = getVoltage(\"term\", config->adcChannel);");
-        assertEquals(1, r.size());
-        assertEquals(new FieldRequest("voltageMCU"), r.get(0));
+        MetaInfo r = LiveDocsMetaParser.parse("tm->DISPLAY_FIELD(voltageMCU) = getVoltage(\"term\", config->adcChannel);\n" +
+                "DISPLAY_tag(tag) DISPLAY_FIELD(voltageMCU2)");
+        assertEquals(1, r.first().size());
+        assertEquals(new FieldRequest("voltageMCU"), r.first().get(0));
+
+        assertEquals(2, r.map.size());
     }
 
     @Test
     public void parseIf() {
-        List<Request> r = LiveDocsMetaParser.parse("\tDISPLAY_IF(cond)\t// DISPLAY_TEXT(\"interpolate(\")\n" +
+        MetaInfo r = LiveDocsMetaParser.parse("\tDisPLAY_IF(cond)\t// DISPLAY_TEXT(\"interpolate(\")\n" +
                 "+\t\tDISPLAY_SENSOR(RPM)" +
-                "/* DISPLAY_ELSE */ DISPLAY_TEXT(\"TCHARGE_MODE_RPM_TPS\")\n" +
+                "/* DISPLAY_ElsE */ DISPLAY_TEXT(\"TCHARGE_MODE_RPM_TPS\")\n" +
                 "\t\tfloat minRpmKcurrentTPS = interpolateMsg(\"minRpm\", tpMin, DISPLAY_CONFIG(tChargeMinRpmMinTps), tpMax,\n" +
                 "/* DISPLAY_ENDIF */");
 
-        assertEquals(1, r.size());
-        IfRequest ifRequest = (IfRequest) r.get(0);
+        assertEquals(1, r.first().size());
+        IfRequest ifRequest = (IfRequest) r.first().get(0);
         List<Request> trueBlock = ifRequest.trueBlock;
         assertEquals(2, trueBlock.size());
         assertEquals(new SensorRequest("RPM"), trueBlock.get(1));

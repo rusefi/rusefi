@@ -37,6 +37,7 @@
 // we use this 'DISPLAY' macro if value is not used by C++ in current context
 #define DISPLAY(x)
 
+#define DISPLAY_TAG(x)
 #define DISPLAY_TEXT(x)
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x

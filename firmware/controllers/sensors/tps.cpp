@@ -79,6 +79,8 @@ float getTpsRateOfChange(void) {
  * */
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
+	DISPLAY_TAG(TPS_SECTION);
+
 	DISPLAY_TEXT(Analog_MCU_reads);
 	engine->engineState.currentTpsAdc = adc;
 #if !EFI_UNIT_TEST
@@ -197,7 +199,10 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
 	}
-	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
+	DISPLAY_TAG(PEGAL_SECTION);
+	DISPLAY_TEXT(Analog_MCU_reads);
+
+	float voltage = getVoltageDivided("pPS", CONFIG(DISPLAY_CONFIG(throttlePedalPositionAdcChannel)));
 	float result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 
 	// this would put the value into the 0-100 range

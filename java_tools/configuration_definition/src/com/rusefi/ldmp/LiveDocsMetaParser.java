@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import static com.rusefi.ConfigDefinition.EOL;
 
 public class LiveDocsMetaParser {
+    private static final String DISPLAY_TAG = "DISPLAY_TAG";
     private static final String DISPLAY_CONFIG = "DISPLAY_CONFIG";
     private static final String DISPLAY_FIELD = "DISPLAY_FIELD";
     private static final String DISPLAY_TEXT = "DISPLAY_TEXT";
@@ -34,49 +35,62 @@ public class LiveDocsMetaParser {
             throw new IllegalArgumentException("Two arguments expected but " + Arrays.toString(args));
         String fileName = args[0];
         String destinationPath = args[1];
-        SystemOut.println(fileName);
-        if (!new File(fileName).exists())
-            throw new IllegalStateException("Not found " + fileName);
-        String content = readLineByLine(fileName);
-        List<Request> r = parse(content);
-        SystemOut.println(r);
+        MetaInfo metaInfo = getMetaFromFile(fileName);
+        SystemOut.println(metaInfo);
 
         String className = getClassName(fileName);
-        String javaCode = generateJavaCode(r, className);
+        String javaCode = generateJavaCode(metaInfo, className);
         FileWriter fw = new FileWriter(destinationPath + "java_console/ui/src/com/rusefi/ldmp/generated/" + className + ".java");
         fw.write(javaCode);
         fw.close();
     }
 
-    public static List<Request> parse(String string) {
+    private static MetaInfo getMetaFromFile(String fileName) throws IOException {
+        SystemOut.println(fileName);
+        if (!new File(fileName).exists())
+            throw new IllegalStateException("Not found " + fileName);
+        String content = readLineByLine(fileName);
+        return parse(content);
+    }
+
+    public static MetaInfo parse(String string) {
         Stack<List<Request>> stack = new Stack<>();
 
-        List<Request> result = new ArrayList<>();
+
+        MetaInfo meta = new MetaInfo();
+
+        List<Request> result = meta.start("CONTENT");
         string = string.replaceAll("[()>.]", " ");
         SystemOut.println(string);
         Scanner s = new Scanner(string);
         while (s.hasNext()) {
             String token = s.next();
             //SystemOut.println(token);
-            if (DISPLAY_CONFIG.equals(token)) {
+            if (DISPLAY_CONFIG.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
                     SystemOut.println("REQ CONF " + config);
                     result.add(new ConfigRequest(config));
                 }
-            } else if (DISPLAY_TEXT.equals(token)) {
+            } else if (DISPLAY_TEXT.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
                     SystemOut.println("REQ TEXT " + config);
                     result.add(new TextRequest(config));
                 }
-            } else if (DISPLAY_FIELD.equals(token)) {
+            } else if (DISPLAY_TAG.equalsIgnoreCase(token)) {
+                if (s.hasNext()) {
+                    String tag = s.next();
+                    SystemOut.println("REQ TAG " + tag);
+                    result = meta.start(tag);
+                }
+            } else if (DISPLAY_FIELD.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
                     SystemOut.println("REQ FIELD " + config);
                     result.add(new FieldRequest(config));
                 }
-            } else if (DISPLAY_IF.equals(token)) {
+            } else if (DISPLAY_IF.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     stack.push(result);
 
@@ -90,7 +104,7 @@ public class LiveDocsMetaParser {
 
                     result = ifRequest.trueBlock;
                 }
-            } else if (DISPLAY_ELSE.equals(token)) {
+            } else if (DISPLAY_ELSE.equalsIgnoreCase(token)) {
                 if (stack.isEmpty())
                     throw new IllegalStateException("No IF statement on stack");
                 List<Request> onStack = stack.peek();
@@ -102,12 +116,12 @@ public class LiveDocsMetaParser {
                 IfRequest ifRequest = (IfRequest) request;
 
                 result = ifRequest.falseBlock;
-            } else if (DISPLAY_ENDIF.equals(token)) {
+            } else if (DISPLAY_ENDIF.equalsIgnoreCase(token)) {
                 if (stack.isEmpty())
                     throw new IllegalStateException("No IF statement on stack");
                 result = stack.pop();
 
-            } else if (DISPLAY_SENSOR.equals(token)) {
+            } else if (DISPLAY_SENSOR.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
                     SystemOut.println("REQ SENSOR " + config);
@@ -118,19 +132,28 @@ public class LiveDocsMetaParser {
 
         if (!stack.isEmpty())
             throw new IllegalStateException("Unfinished");
-        return result;
+        return meta;
     }
 
-    public static String generateJavaCode(List<Request> r, String className) {
+    public static String generateJavaCode(MetaInfo r, String className) {
         StringBuilder java = new StringBuilder("package com.rusefi.ldmp.generated;" + EOL + EOL +
                 "import com.rusefi.ldmp.*;" + EOL + EOL +
-                "public class " + className + " {" + EOL +
-                "\tpublic static final Request[] CONTENT = new Request[]{" + EOL);
+                "public class " + className + " {" + EOL
+        );
 
-        java.append(Request.printList(r));
-        java.append("\t};" + EOL +
-                "}");
+        for (Map.Entry<String, List<Request>> e : r.map.entrySet()) {
+            List<Request> list = e.getValue();
+            if (list.isEmpty())
+                continue;
 
+            java.append("\tpublic static final Request[] " +
+                    e.getKey() +
+                    " = new Request[]{" + EOL);
+            java.append(Request.printList(list));
+            java.append("\t};" + EOL);
+        }
+
+        java.append("}");
         return java.toString();
     }
 
