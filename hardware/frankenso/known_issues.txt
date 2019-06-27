@@ -189,6 +189,7 @@
 182) RESOLVED IN R0.5.6 W27 was connected to 2E which was a no connect. It is now connected to AN3-HARN for an optional external MAP. 
 183) RESOLVED IN R0.5.6 W31 was connected to 2I which was a no connect. It is now connected to AN4-HARN for an optional external W02. 
 184)                    both sot23 and BAS70-04FILM pinouts are wrong ending up with correct PCB
+185)                    comma is a challenging symbol for field names. We are hacking/cheating when we use a comma in field name like "MFG,MFG#" and field value "microchip,MCP6004-E/SL" and this breaks IBOM tool. The fair way is to have two separate fields.
 
 
 For honda add-on / rewiring board
