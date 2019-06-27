@@ -172,7 +172,7 @@ public class LiveDocPanel {
                 ThermistorState.VALUES, ThermistorsMeta.CONTENT));
 
         liveDocs.add(getPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, TpsMeta.CONTENT));
+                EngineState.VALUES, TpsMeta.TPS_SECTION));
 
         liveDocs.add(getPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, SpeedDensityMeta.CONTENT));
