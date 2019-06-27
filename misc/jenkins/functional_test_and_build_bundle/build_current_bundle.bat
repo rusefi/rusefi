@@ -5,7 +5,9 @@ rem
 
 set script_name=build_current_bundle
 set "root_folder=%cd%"
-echo Entering %script_name root_folder=%root_folder%
+echo %script_name Entering root_folder=%root_folder%
+FOR %%i IN ("%root%") DO (set root=%%~si)
+echo %script_name Short name %root%"
 
 
 set FTP_SERVER=home451478433.1and1-data.host
@@ -80,7 +82,7 @@ echo "folder variable=%folder%"
 pwd
 call misc\jenkins\build_working_folder.bat
 
-echo "Building only console"
+echo "%script_name%: Building only console"
 pwd
 dir
 zip %root_folder%/temp/rusefi_console.zip %root_folder%/java_console_binary/rusefi_console.jar %root_folder%/java_console/rusefi.xml

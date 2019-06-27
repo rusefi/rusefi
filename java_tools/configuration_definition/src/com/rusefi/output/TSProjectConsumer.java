@@ -2,10 +2,11 @@ package com.rusefi.output;
 
 import com.rusefi.*;
 import com.rusefi.util.LazyFile;
+import com.rusefi.util.SystemOut;
 
 import java.io.*;
 
-import static com.rusefi.ConfigDefinition.CHARSET;
+import static com.rusefi.util.IoUtils.CHARSET;
 import static com.rusefi.ConfigDefinition.EOL;
 
 public class TSProjectConsumer implements ConfigurationConsumer {
@@ -100,7 +101,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     private void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
         TsFileContent tsContent = readTsFile(tsPath);
-        System.out.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
+        SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
         // File.getPath() would eliminate potential separator at the end of the path
         String fileName = new File(tsPath).getPath() + File.separator + TS_FILE_OUTPUT_NAME;

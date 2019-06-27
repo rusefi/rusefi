@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+
 /**
  * (c) Andrey Belomutskiy 2013-2018
  */
@@ -29,9 +31,14 @@ public class FormulasPane {
     private static final String NL2 = NL + "\\  " + NL; // two new lines
     private static final String NL3 = NL2 + "\\  " + NL; // two new lines
 
+    /**
+     * this is the panel we expose to the outside world
+     */
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel centerProxy = new JPanel(new BorderLayout());
     private boolean isPaused;
+
+    private JPanel liveDocs = LiveDocPanel.createLiveDocumentationPanel();
 
     public FormulasPane() {
         content.add(centerProxy, BorderLayout.CENTER);
@@ -123,7 +130,7 @@ public class FormulasPane {
                     baseFuelStr + "ms";
 
             String actualLastInjection = twoDecimals(Sensor.actualLastInjection);
-            String injTime =  "$Fuel (ms) = " + baseFuel + getInjecctorLag() +
+            String injTime = "$Fuel (ms) = " + baseFuel + getInjecctorLag() +
                     " = " + actualLastInjection + "ms_per_injection$";
 
             page = acceleration + injTime;
@@ -147,6 +154,8 @@ public class FormulasPane {
         warning.setForeground(Color.red);
         centerProxy.add(warning, BorderLayout.NORTH);
         centerProxy.add(formulaLabel, BorderLayout.CENTER);
+
+        centerProxy.add(liveDocs, BorderLayout.SOUTH);
     }
 
     @NotNull
@@ -158,7 +167,7 @@ public class FormulasPane {
         int elEnrichLength = ConfigField.getIntValue(ci, Fields.ENGINELOADACCELLENGTH);
 
         String tpsEnrichDelta = "$deltaTps = max(currentTps - previousTps, length = " + tpsEnrichLength +
-                ") = " + tpsDelta +"$";
+                ") = " + tpsDelta + "$";
 
         double tpsAccelThreshold = ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTTHRESHOLD);
         String tpsAccelMult = "fixme";//ConfigField.getFloatValue(ci, Fields.TPSACCELENRICHMENTMULTIPLIER);
@@ -168,8 +177,8 @@ public class FormulasPane {
         double tpsDecelMult = ConfigField.getFloatValue(ci, Fields.TPSDECELENLEANMENTMULTIPLIER);
 
         String tpsEnrich = "$tpsAccelEnrich = if (" +
-                "(tpsDelta = " + tpsDelta + ") > (tpsThreshold = " + tpsAccelThreshold +"), tpsDelta, 0) * " +
-                "(tpsAccelMultiplier = " + tpsAccelMult +  ") = " + tpsAccelValue +  "$";
+                "(tpsDelta = " + tpsDelta + ") > (tpsThreshold = " + tpsAccelThreshold + "), tpsDelta, 0) * " +
+                "(tpsAccelMultiplier = " + tpsAccelMult + ") = " + tpsAccelValue + "$";
 
         String loadEnrichDelta = "$deltaLoad = max(currentLoad - previousLoad, length = " + elEnrichLength +
                 ") = " + elDelta + "$";

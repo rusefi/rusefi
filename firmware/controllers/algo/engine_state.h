@@ -12,8 +12,9 @@
 #include "global.h"
 #include "engine_parts.h"
 #include "pid.h"
+#include "engine_state_generated.h"
 
-class EngineState {
+class EngineState : public engine_state2_s {
 public:
 	EngineState();
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -32,10 +33,6 @@ public:
 
 	WarningCodeState warnings;
 
-	/**
-	 * speed-density logic, calculated air mass in grams
-	 */
-	float airMass = 0;
 	/**
 	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
 	 */
@@ -96,15 +93,9 @@ public:
 
 	float baroCorrection = 0;
 
-	// speed density
-	// Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
-	float tCharge = 0;
-	float tChargeK = 0;
 	efitick_t timeSinceLastTChargeK;
 
 	float currentRawVE = 0;
-	float currentBaroCorrectedVE = 0;
-	float targetAFR = 0;
 
 	int vssEventCounter = 0;
 	int totalLoggedBytes = 0;

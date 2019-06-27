@@ -29,42 +29,57 @@ baroCorr_Map3D_t baroCorrMap("baro");
 #define tpMin 0
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
-float getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+/***panel:Charge Temperature*/
+temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(coolantTemp) || cisnan(airTemp)) {
 		warning(CUSTOM_ERR_NAN_TCHARGE, "t-getTCharge NaN");
 		return coolantTemp;
 	}
 
-	float Tcharge_coff;
 
-	if (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP) {
+	if ((engine->engineState.sd.DISPLAY_IF(isTChargeAirModel) = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
 		const floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
 		// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
-		floatms_t airMassForEngine = engine->engineState.airMass * CONFIG(specs.cylindersCount);
+		floatms_t airMassForEngine = engine->engineState.sd./***display*/airMassInOneCylinder * CONFIG(specs.cylindersCount);
 		// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
 		// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
 		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		// just interpolate between user-specified min and max coefs, based on the max airFlow value
-		Tcharge_coff = interpolateClamped(0.0, CONFIG(tChargeAirCoefMin), CONFIG(tChargeAirFlowMax), CONFIG(tChargeAirCoefMax), airFlow);
+		DISPLAY_TEXT(interpolate_Air_Flow)
+		engine->engineState.DISPLAY_FIELD(airFlow) = airFlow;
+		DISPLAY_TEXT(Between)
+		engine->engineState.sd.Tcharge_coff = interpolateClamped(0.0,
+				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMin)),
+				CONFIG(DISPLAY_CONFIG(tChargeAirFlowMax)),
+				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMax)), airFlow);
 		// save it for console output (instead of MAF massAirFlow)
-		engine->engineState.airFlow = airFlow;
-	} else {
+	} else/* DISPLAY_ELSE */ {
 		// TCHARGE_MODE_RPM_TPS
-		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin, CONFIG(tChargeMinRpmMinTps), tpMax,
-				CONFIG(tChargeMinRpmMaxTps), tps);
-		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin, CONFIG(tChargeMaxRpmMinTps), tpMax,
-				CONFIG(tChargeMaxRpmMaxTps), tps);
+		DISPLAY_TEXT(interpolate_3D)
+		DISPLAY_SENSOR(RPM)
+		DISPLAY_TEXT(and)
+		DISPLAY_SENSOR(TPS)
+		DISPLAY_TEXT(EOL)
+		DISPLAY_TEXT(Between)
+		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,
+				CONFIG(DISPLAY_CONFIG(tChargeMinRpmMinTps)), tpMax,
+				CONFIG(DISPLAY_CONFIG(tChargeMinRpmMaxTps)), tps);
+		DISPLAY_TEXT(EOL)
+		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin,
+				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMinTps)), tpMax,
+				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMaxTps)), tps);
 
-		Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
+		engine->engineState.sd.Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
+	/* DISPLAY_ENDIF */
 	}
 
-	if (cisnan(Tcharge_coff)) {
+	if (cisnan(engine->engineState.sd.Tcharge_coff)) {
 		warning(CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
 		return coolantTemp;
 	}
 
 	// We use a robust interp. function for proper tcharge_coff clamping.
-	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, Tcharge_coff);
+	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, engine->engineState.sd.Tcharge_coff);
 
 	if (cisnan(Tcharge)) {
 		// we can probably end up here while resetting engine state - interpolation would fail
@@ -120,14 +135,16 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
-	float tChargeK = ENGINE(engineState.tChargeK);
+	float tChargeK = ENGINE(engineState.sd.tChargeK);
 	if (cisnan(tChargeK)) {
 		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
 		return 0;
 	}
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(map), "NaN map", 0);
 
-	float adjustedMap = map + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_GLOBAL_SIGNATURE);
+	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_GLOBAL_SIGNATURE);
+
+	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", 0);
 
 	float airMass = getCylinderAirMass(ENGINE(engineState.currentBaroCorrectedVE), adjustedMap, tChargeK PASS_GLOBAL_SUFFIX);
@@ -137,10 +154,10 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 	}
 #if EFI_PRINTF_FUEL_DETAILS
 	printf("map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
-			map, adjustedMap, engine->engineState.airMass);
+			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	engine->engineState.airMass = airMass;
+	engine->engineState.sd.airMassInOneCylinder = airMass;
 	return sdMath(airMass, ENGINE(engineState.targetAFR) PASS_GLOBAL_SUFFIX) * 1000;
 }
 

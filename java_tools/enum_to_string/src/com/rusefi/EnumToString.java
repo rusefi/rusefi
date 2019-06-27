@@ -1,6 +1,8 @@
 package com.rusefi;
 
 import com.rusefi.enum_reader.Value;
+import com.rusefi.util.LazyFile;
+import com.rusefi.util.SystemOut;
 
 import java.io.*;
 import java.util.*;
@@ -30,7 +32,7 @@ public class EnumToString {
 
     public static void main(String[] args) throws IOException {
         if (args.length < 4) {
-            System.out.println("Please specify at least\n\n" +
+            SystemOut.println("Please specify at least\n\n" +
                             KEY_INPUT_PATH + "XXX\r\n" +
 //                            KEY_INPUT_FILE + "XXX" +
                             KEY_OUTPUT + "XXX\r\n"
@@ -63,7 +65,7 @@ public class EnumToString {
         cppFileContent.insert(0, includesSection);
         headerFileContent.insert(0, includesSection);
 
-        System.out.println("includesSection:\r\n" + includesSection + "end of includesSection\r\n");
+        SystemOut.println("includesSection:\r\n" + includesSection + "end of includesSection\r\n");
 
         cppFileContent.insert(0, "#include \"global.h\"\r\n");
         headerFileContent.insert(0, bothFilesHeader.toString());
@@ -75,21 +77,22 @@ public class EnumToString {
     }
 
     private static void writeCppAndHeaderFiles(String outFileName) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(outFileName + ".cpp"));
+        LazyFile bw = new LazyFile(outFileName + ".cpp");
         bw.write(cppFileContent.toString());
         bw.close();
 
-        bw = new BufferedWriter(new FileWriter(outFileName + ".h"));
+        bw = new LazyFile(outFileName + ".h");
         bw.write(headerFileContent.toString());
         bw.close();
     }
 
     private static void consumeFile(String inputPath, String inFileName) throws IOException {
         File f = new File(inputPath + File.separator + inFileName);
-        System.out.println("Reading from " + inFileName);
+        SystemOut.println("Reading from " + inFileName);
         String simpleFileName = f.getName();
 
-        bothFilesHeader.insert(0, "// auto-generated from " + simpleFileName + "\r\n");
+        bothFilesHeader.insert(0, "// " +
+                LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + "\r\n");
 
         includesSection.append("#include \"" + simpleFileName + "\"\r\n");
         EnumsReader.process(new FileReader(inFileName));

@@ -1,8 +1,9 @@
 package com.rusefi.config.generated;
 
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
+
 import com.rusefi.config.*;
 
-// this file was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 16 22:00:08 EDT 2019
 public class Fields {
 	public static final int accelerometerSpiDevice_offset = 2736;
 	public static final int acCutoffHighRpm_offset = 1498;
@@ -217,8 +218,10 @@ public class Fields {
 	public static final int cltTimingExtra_offset_hex = 968;
 	public static final int clutchDownPin_offset = 664;
 	public static final int clutchDownPin_offset_hex = 298;
+	public static final int clutchDownPinInverted_offset = 976;
 	public static final int clutchDownPinMode_offset = 667;
 	public static final int clutchUpPin_offset = 969;
+	public static final int clutchUpPinInverted_offset = 976;
 	public static final int clutchUpPinMode_offset = 971;
 	public static final int coastingFuelCutClt_offset = 3178;
 	public static final int coastingFuelCutEnabled_offset = 744;
@@ -560,14 +563,14 @@ public class Fields {
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
-	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: charge T";
+	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CRANKING = "fuel: cranking";
 	public static final String GAUGE_NAME_FUEL_EL_EXTRA = "fuel: engine load acceleration extra fuel";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "fuel: IAT correction";
 	public static final String GAUGE_NAME_FUEL_INJ_DUTY = "fuel: injector duty cycle";
-	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: last injection";
-	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: short correction";
+	public static final String GAUGE_NAME_FUEL_LAST_INJECTION = "fuel: Last injection";
+	public static final String GAUGE_NAME_FUEL_PID_CORR = "fuel: Short-term closed loop correction";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "fuel: TPS change";
@@ -584,7 +587,7 @@ public class Fields {
 	public static final String GAUGE_NAME_VBAT = "VBatt";
 	public static final String GAUGE_NAME_VERSION = "firmware";
 	public static final String GAUGE_NAME_VVS = "Vehicle Speed";
-	public static final String GAUGE_NAME_VVT = "VVT postion";
+	public static final String GAUGE_NAME_VVT = "VVT position";
 	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
 	public static final int generalPeriodicThreadPeriodMs_offset = 724;
@@ -815,7 +818,6 @@ public class Fields {
 	public static final int isInjectionEnabled_offset = 1476;
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
-	public static final int isPrintTriggerSynchDetails_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
 	public static final int issue_294_15_offset = 76;
 	public static final int issue_294_16_offset = 76;
@@ -857,6 +859,10 @@ public class Fields {
 	public static final int knockNoiseRpmBins_offset_hex = 750;
 	public static final int knockVThreshold_offset = 1520;
 	public static final int lcdThreadPeriodMs_offset = 720;
+	public static final int LDS_CLT_INDEX = 0;
+	public static final int LDS_ENGINE_STATE_INDEX = 3;
+	public static final int LDS_IAT_INDEX = 1;
+	public static final int LDS_SPEED_DENSITY_INDEX = 2;
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int LIS302DLCsPin_offset = 2063;
 	public static final int logFormat_offset = 496;
@@ -1087,8 +1093,6 @@ public class Fields {
 	public static final int tle8888_csPinMode_offset = 3130;
 	public static final int tle8888spiDevice_offset = 4024;
 	public static final int TOTAL_CONFIG_SIZE = 20000;
-	public static final int tps1_1AdcChannel_offset = 512;
-	public static final int tps1_1AdcChannel_offset_hex = 200;
 	public static final int tps2_1AdcChannel_offset = 515;
 	public static final int tps2_1AdcChannel_offset_hex = 203;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
@@ -1098,6 +1102,8 @@ public class Fields {
 	public static final int tpsAccelFractionPeriod_offset = 4018;
 	public static final int tpsAccelLength_offset = 2064;
 	public static final int tpsAccelLength_offset_hex = 810;
+	public static final int tpsADC_offset = 512;
+	public static final int tpsADC_offset_hex = 200;
 	public static final int tpsDecelEnleanmentMultiplier_offset = 2104;
 	public static final int tpsDecelEnleanmentMultiplier_offset_hex = 838;
 	public static final int tpsDecelEnleanmentThreshold_offset = 2100;
@@ -1156,7 +1162,7 @@ public class Fields {
 	public static final int unused_board_984_31_offset = 744;
 	public static final int unusedAlignMaf_offset = 557;
 	public static final int unusedAnotherOne_offset = 744;
-	public static final int unusedAtBoardConfigurationEnd_offset = 976;
+	public static final int unusedAtBoardConfigurationEnd_offset = 980;
 	public static final int unusedEtbM_offset = 675;
 	public static final int unusedh_offset = 1469;
 	public static final int unusedjoy_offset = 943;
@@ -1215,6 +1221,7 @@ public class Fields {
 	public static final int vehicleSpeedSensorInputPin_offset = 968;
 	public static final int veLoadBins_offset = 18464;
 	public static final int veLoadBins_offset_hex = 4820;
+	public static final int verboseTriggerSynchDetails_offset = 1476;
 	public static final int veRpmBins_offset = 18528;
 	public static final int veRpmBins_offset_hex = 4860;
 	public static final int veTable_offset = 17440;
@@ -1347,7 +1354,7 @@ public class Fields {
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 500, FieldType.INT);
 	public static final Field HD44780WIDTH = Field.create("HD44780WIDTH", 504, FieldType.INT);
 	public static final Field HD44780HEIGHT = Field.create("HD44780HEIGHT", 508, FieldType.INT);
-	public static final Field TPS1_1ADCCHANNEL = Field.create("TPS1_1ADCCHANNEL", 512, FieldType.INT8, adc_channel_e);
+	public static final Field TPSADC = Field.create("TPSADC", 512, FieldType.INT8, adc_channel_e);
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 513, FieldType.INT8, adc_channel_e);
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
@@ -1652,6 +1659,8 @@ public class Fields {
 	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 970, FieldType.INT8, brain_input_pin_e);
 	public static final Field CLUTCHUPPINMODE = Field.create("CLUTCHUPPINMODE", 971, FieldType.INT8);
 	public static final Field ETBIDLERANGE = Field.create("ETBIDLERANGE", 972, FieldType.FLOAT);
+	public static final Field CLUTCHUPPININVERTED = Field.create("CLUTCHUPPININVERTED", 976, FieldType.BIT, 0);
+	public static final Field CLUTCHDOWNPININVERTED = Field.create("CLUTCHDOWNPININVERTED", 976, FieldType.BIT, 1);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -1696,7 +1705,7 @@ public class Fields {
 	public static final Field ISTUNERSTUDIOENABLED = Field.create("ISTUNERSTUDIOENABLED", 1476, FieldType.BIT, 8);
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1476, FieldType.BIT, 9);
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1476, FieldType.BIT, 10);
-	public static final Field ISPRINTTRIGGERSYNCHDETAILS = Field.create("ISPRINTTRIGGERSYNCHDETAILS", 1476, FieldType.BIT, 11);
+	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1476, FieldType.BIT, 11);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1476, FieldType.BIT, 12);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1476, FieldType.BIT, 13);
 	public static final Field USEONLYRISINGEDGEFORTRIGGER = Field.create("USEONLYRISINGEDGEFORTRIGGER", 1476, FieldType.BIT, 14);
@@ -2131,7 +2140,7 @@ public class Fields {
 	BYFIRMWAREVERSION,
 	HD44780WIDTH,
 	HD44780HEIGHT,
-	TPS1_1ADCCHANNEL,
+	TPSADC,
 	VBATTADCCHANNEL,
 	FUELLEVELSENSOR,
 	TPS2_1ADCCHANNEL,
@@ -2426,6 +2435,8 @@ public class Fields {
 	FREQUENCYREPORTINGMAPINPUTPIN,
 	CLUTCHUPPINMODE,
 	ETBIDLERANGE,
+	CLUTCHUPPININVERTED,
+	CLUTCHDOWNPININVERTED,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
@@ -2470,7 +2481,7 @@ public class Fields {
 	ISTUNERSTUDIOENABLED,
 	ISWAVEANALYZERENABLED,
 	USESEPARATEVEFORIDLE,
-	ISPRINTTRIGGERSYNCHDETAILS,
+	VERBOSETRIGGERSYNCHDETAILS,
 	ISMANUALSPINNINGMODE,
 	TWOWIREBATCHINJECTION,
 	USEONLYRISINGEDGEFORTRIGGER,

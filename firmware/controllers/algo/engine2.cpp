@@ -118,12 +118,12 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (engineConfiguration->auxTempSensor1.adcChannel != EFI_ADC_NONE) {
 		engine->sensors.auxTemp1 = getTemperatureC(&engineConfiguration->auxTempSensor1,
 				&engine->engineState.auxTemp1Curve,
-				false);
+				false PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	if (engineConfiguration->auxTempSensor2.adcChannel != EFI_ADC_NONE) {
 		engine->sensors.auxTemp2 = getTemperatureC(&engineConfiguration->auxTempSensor2,
 				&engine->engineState.auxTemp2Curve,
-				false);
+				false PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 #if EFI_UNIT_TEST
@@ -245,8 +245,8 @@ void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUF
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;
 	if (!cisnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
-		tCharge = (tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
-		tChargeK = convertCelsiusToKelvin(tCharge);
+		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
+		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
 		timeSinceLastTChargeK = curTime;
 	}
 #endif

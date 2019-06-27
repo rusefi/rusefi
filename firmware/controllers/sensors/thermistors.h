@@ -31,12 +31,12 @@ float convertCelciustoF(float tempC);
 float convertFtoCelcius(float tempF);
 
 float getKelvinTemperature(float resistance, ThermistorMath *tm);
-float getResistance(ThermistorConf *config, float voltage);
-float getTemperatureC(ThermistorConf *config, ThermistorMath *tm, bool useLinear);
-float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool isValidCoolantTemperature(float temperature);
-float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool isValidIntakeAirTemperature(float temperature);
+float getResistance(ThermistorConf *cfg, float voltage);
+temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DECLARE_ENGINE_PARAMETER_SUFFIX);
+temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool isValidCoolantTemperature(temperature_t temperature);
+temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool isValidIntakeAirTemperature(temperature_t temperature);
 bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

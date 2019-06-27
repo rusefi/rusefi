@@ -1,2 +1,7 @@
  1) RESOLVED IN R0.2 Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
  2) RESOLVED IN R0.2 Add via for battery wire to be attached. 
+ 3) RESOLVED IN R0.2 L1 wire leads interfere with C14 and C15. 
+ 4) RESOLVED IN R0.2 Jumpers are not needed. Connect VccIO->VccIO_Ext and Clk->Y1-3
+ 5) RESOLVED IN R0.2 D9 had wrong footprint blah. Wrong pin numbers to wrong pins. 
+ 6) RESOLVED IN R0.2 D10 --> D10_2, and D11 --> D11_2 should be the same package, they were 2 different / wrong footprints. 
+

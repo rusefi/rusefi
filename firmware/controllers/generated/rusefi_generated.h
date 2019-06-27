@@ -1,5 +1,5 @@
 //
-// was generated automatically by ConfigDefinition.jar based on integration\rusefi_config.txt
+// was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt
 //
 
 #define accelerometerSpiDevice_offset 2736
@@ -347,10 +347,14 @@
 #define cltTimingExtra_offset_hex 968
 #define clutchDownPin_offset 664
 #define clutchDownPin_offset_hex 298
+#define clutchDownPinInverted_offset 976
+#define clutchDownPinInverted_offset_hex 3d0
 #define clutchDownPinMode_offset 667
 #define clutchDownPinMode_offset_hex 29b
 #define clutchUpPin_offset 969
 #define clutchUpPin_offset_hex 3c9
+#define clutchUpPinInverted_offset 976
+#define clutchUpPinInverted_offset_hex 3d0
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
 #define coastingFuelCutClt_offset 3178
@@ -868,14 +872,14 @@
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_FUEL_BASE "fuel: base"
-#define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: charge T"
+#define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
 #define GAUGE_NAME_FUEL_IAT_CORR "fuel: IAT correction"
 #define GAUGE_NAME_FUEL_INJ_DUTY "fuel: injector duty cycle"
-#define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: last injection"
-#define GAUGE_NAME_FUEL_PID_CORR "fuel: short correction"
+#define GAUGE_NAME_FUEL_LAST_INJECTION "fuel: Last injection"
+#define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term closed loop correction"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
@@ -892,7 +896,7 @@
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVS "Vehicle Speed"
-#define GAUGE_NAME_VVT "VVT postion"
+#define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define generalPeriodicThreadPeriodMs_offset 724
@@ -1234,8 +1238,6 @@
 #define isManualSpinningMode_offset_hex 5c4
 #define isMapAveragingEnabled_offset 1476
 #define isMapAveragingEnabled_offset_hex 5c4
-#define isPrintTriggerSynchDetails_offset 1476
-#define isPrintTriggerSynchDetails_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
 #define issue_294_15_offset 76
@@ -1312,6 +1314,10 @@
 #define knockVThreshold_offset_hex 5f0
 #define lcdThreadPeriodMs_offset 720
 #define lcdThreadPeriodMs_offset_hex 2d0
+#define LDS_CLT_INDEX 0
+#define LDS_ENGINE_STATE_INDEX 3
+#define LDS_IAT_INDEX 1
+#define LDS_SPEED_DENSITY_INDEX 2
 #define LE_COMMAND_LENGTH 200
 #define LIS302DLCsPin_offset 2063
 #define LIS302DLCsPin_offset_hex 80f
@@ -1693,8 +1699,6 @@
 #define tle8888spiDevice_offset_hex fb8
 #define TOTAL_CONFIG_SIZE 20000
 #define TOTAL_CONFIG_SIZE_hex 4e20
-#define tps1_1AdcChannel_offset 512
-#define tps1_1AdcChannel_offset_hex 200
 #define tps2_1AdcChannel_offset 515
 #define tps2_1AdcChannel_offset_hex 203
 #define TPS_TPS_ACCEL_TABLE 8
@@ -1706,6 +1710,8 @@
 #define tpsAccelFractionPeriod_offset_hex fb2
 #define tpsAccelLength_offset 2064
 #define tpsAccelLength_offset_hex 810
+#define tpsADC_offset 512
+#define tpsADC_offset_hex 200
 #define tpsDecelEnleanmentMultiplier_offset 2104
 #define tpsDecelEnleanmentMultiplier_offset_hex 838
 #define tpsDecelEnleanmentThreshold_offset 2100
@@ -1803,8 +1809,8 @@
 #define unusedAlignMaf_offset_hex 22d
 #define unusedAnotherOne_offset 744
 #define unusedAnotherOne_offset_hex 2e8
-#define unusedAtBoardConfigurationEnd_offset 976
-#define unusedAtBoardConfigurationEnd_offset_hex 3d0
+#define unusedAtBoardConfigurationEnd_offset 980
+#define unusedAtBoardConfigurationEnd_offset_hex 3d4
 #define unusedEtbM_offset 675
 #define unusedEtbM_offset_hex 2a3
 #define unusedh_offset 1469
@@ -1910,6 +1916,8 @@
 #define vehicleSpeedSensorInputPin_offset_hex 3c8
 #define veLoadBins_offset 18464
 #define veLoadBins_offset_hex 4820
+#define verboseTriggerSynchDetails_offset 1476
+#define verboseTriggerSynchDetails_offset_hex 5c4
 #define veRpmBins_offset 18528
 #define veRpmBins_offset_hex 4860
 #define veTable_offset 17440

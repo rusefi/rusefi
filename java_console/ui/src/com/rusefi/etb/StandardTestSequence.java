@@ -5,6 +5,7 @@ import com.rusefi.core.SensorCentral;
 import org.jetbrains.annotations.NotNull;
 
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.ui.etb.EtbTestSequence.PAST_DEPTH;
 
 public class StandardTestSequence {
     public final static ClosedLoopControlQualityMetric metric = createMetric();
@@ -14,7 +15,8 @@ public class StandardTestSequence {
         return new ClosedLoopControlQualityMetric(
                 SensorCentral.getInstance().getValueSource(Sensor.PPS),
                 SensorCentral.getInstance().getValueSource(Sensor.TPS),
-                Sensor.ETB_CONTROL_QUALITY
+                Sensor.ETB_CONTROL_QUALITY,
+                PAST_DEPTH
         );
     }
 

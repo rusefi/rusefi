@@ -1,0 +1,34 @@
+<html>
+<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-43478022-1', 'rusefi.com');
+  ga('send', 'pageview');
+
+</script>
+<meta http-equiv="refresh" content="0; url=https://rusefi.com/wiki/index.php?title=Main_Page" />
+</head>
+<body>
+<center>
+
+<br><br><br><br><br>
+
+<a href="https://rusefi.com/wiki/index.php?title=Main_Page">http://rusefi.com/wiki/index.php?title=Main_Page</a>
+
+<br><br><br><br><br>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="7FKTGYCPARFAY">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+</center>
+
+</body>
+</html>

@@ -111,13 +111,13 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 		tc->previousVvtCamDuration = currentDuration;
 		tc->previousVvtCamTime = nowNt;
 
-		if (engineConfiguration->isPrintTriggerSynchDetails) {
+		if (engineConfiguration->verboseTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
 		if (ratio < CONFIGB(nb2ratioFrom) || ratio > CONFIGB(nb2ratioTo)) {
 			return;
 		}
-		if (engineConfiguration->isPrintTriggerSynchDetails) {
+		if (engineConfiguration->verboseTriggerSynchDetails) {
 			scheduleMsg(logger, "looks good: vvt ratio %.2f", ratio);
 		}
 		if (engineConfiguration->debugMode == DBG_VVT) {

@@ -297,6 +297,10 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		setEngineType(DEFAULT_ENGINE_TYPE);
 	} else if (subsystem == 0x79) {
 		scheduleStopEngine();
+	} else if (subsystem == 0xbb) {
+#if EFI_PROD_CODE
+		NVIC_SystemReset();
+#endif
 	}
 }
 

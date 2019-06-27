@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.util.SystemOut;
+
 import java.util.Objects;
 
 /**
@@ -64,7 +66,7 @@ public class TypesHelper {
             return "S08";
         if (UINT8_T.equals(type))
             return "U08";
-        System.out.println("No TS type convesion for " + type);
+        SystemOut.println("No TS type conversion for " + type);
         return type;
     }
 

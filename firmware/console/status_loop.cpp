@@ -276,7 +276,7 @@ static void printSensors(Logging *log) {
 		reportSensorI(log, fileFormat, GAUGE_NAME_DEBUG_I5, "v", tsOutputChannels.debugIntField5);
 #endif /* EFI_TUNER_STUDIO */
 
-		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.tChargeK, 2); // log column #8
+		reportSensorF(log, fileFormat, GAUGE_NAME_TCHARGE, "K", engine->engineState.sd.tChargeK, 2); // log column #8
 		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_VE, "%", engine->engineState.currentBaroCorrectedVE * PERCENT_MULT, 2);
 		}
@@ -841,7 +841,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_CAN_SUPPORT */
 	case DBG_ANALOG_INPUTS:
 		tsOutputChannels->debugFloatField1 = (engineConfiguration->vbattAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel) : 0.0f;
-		tsOutputChannels->debugFloatField2 = (engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE) ? getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel) : 0.0f;
+		tsOutputChannels->debugFloatField2 = (engineConfiguration->tpsADC != EFI_ADC_NONE) ? getVoltageDivided("tps", engineConfiguration->tpsADC) : 0.0f;
 		tsOutputChannels->debugFloatField3 = (engineConfiguration->mafAdcChannel != EFI_ADC_NONE) ? getVoltageDivided("maf", engineConfiguration->mafAdcChannel) : 0.0f;
 		tsOutputChannels->debugFloatField4 = (engineConfiguration->map.sensor.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel) : 0.0f;
 		tsOutputChannels->debugFloatField5 = (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) ? getVoltageDivided("clt", engineConfiguration->clt.adcChannel) : 0.0f;
@@ -947,12 +947,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->acSwitchState = engine->acSwitchState;
 
 	// tCharge depends on the previous state, so we should use the stored value.
-	tsOutputChannels->tCharge = ENGINE(engineState.tCharge);
+	tsOutputChannels->tCharge = ENGINE(engineState.sd.tCharge);
 	float timing = engine->engineState.timingAdvance;
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
 	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
-	tsOutputChannels->chargeAirMass = engine->engineState.airMass;
+	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;

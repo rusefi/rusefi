@@ -34,13 +34,13 @@
 #include "board_test.h"
 #include "engine_controller.h"
 #include "maf.h"
-#include "biquad.h"
+//#include "biquad.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      8
 #define ADC_BUF_DEPTH_FAST      4
 
-Biquad biq[ADC_MAX_CHANNELS_COUNT];
+//static Biquad biq[ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
@@ -256,10 +256,10 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 float getMCUInternalTemperature(void) {
 #if defined(ADC_CHANNEL_SENSOR)
 	float TemperatureValue = adcToVolts(slowAdc.getAdcValueByHwChannel(ADC_CHANNEL_SENSOR));
-	TemperatureValue -= 0.760; // Subtract the reference voltage at 25°C
+	TemperatureValue -= 0.760; // Subtract the reference voltage at 25 deg C
 	TemperatureValue /= .0025; // Divide by slope 2.5mV
 
-	TemperatureValue += 25.0; // Add the 25°C
+	TemperatureValue += 25.0; // Add the 25 deg C
 	return TemperatureValue;
 #else
 	return 0;
@@ -340,6 +340,17 @@ int AdcDevice::getAdcValueByHwChannel(int hwChannel) const {
 
 int AdcDevice::getAdcValueByIndex(int internalIndex) const {
 	return values.adc_data[internalIndex];
+}
+
+void AdcDevice::invalidateSamplesCache() {
+#if defined(STM32F7XX)
+	// The STM32F7xx has a data cache
+	// DMA operations DO NOT invalidate cache lines, since the ARM m7 doesn't have 
+	// anything like a CCI that maintains coherency across multiple bus masters.
+	// As a result, we have to manually invalidate the D-cache any time we (the CPU)
+	// would like to read something that somebody else wrote (ADC via DMA, in this case)
+	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
+#endif
 }
 
 void AdcDevice::init(void) {
@@ -432,6 +443,9 @@ int getSlowAdcCounter() {
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
+
+	slowAdc.invalidateSamplesCache();
+
 	efiAssertVoid(CUSTOM_ERR_6671, getCurrentRemainingStack() > 128, "lowstck#9c");
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
@@ -487,7 +501,7 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_FAST);
+	addChannel("TPS", engineConfiguration->tpsADC, ADC_FAST);
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
 	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);

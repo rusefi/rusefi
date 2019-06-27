@@ -168,14 +168,14 @@ fileVersion = { 20171101 }
 ;
       RPMValue        = scalar,  U32,      0,             "RPM",            1,   0.00000
 #if CELSIUS
-      coolant         = scalar,  F32,      4,              "°C",            1,       0.0
+      coolant         = scalar,  F32,      4,              "deg C",            1,       0.0
 #else
-      coolant         = scalar,  F32,      4,              "°F",         {9/5},  17.77777
+      coolant         = scalar,  F32,      4,              "deg F",         {9/5},  17.77777
 #endif
 #if CELSIUS
-      intake          = scalar,  F32,      8,              "°C",            1,       0.0
+      intake          = scalar,  F32,      8,              "deg C",            1,       0.0
 #else
-      intake          = scalar,  F32,      8,              "°F",         {9/5},  17.77777
+      intake          = scalar,  F32,      8,              "deg F",         {9/5},  17.77777
 #endif
       TPSValue        = scalar,  F32,     12,               "%",            1,         0
       MAFValue        = scalar,  F32,     16,               "V",            1,         0
@@ -225,14 +225,14 @@ fileVersion = { 20171101 }
       ind_hasFatalError=bits,    U32,     80, [6:6], "true", "false";
       ind_isWarnNow    =bits,    U32,     80, [7:7], "true", "false";
       firmwareTsVersion = scalar,U32,     84, "version_p",           1,         0
-      egt1            = scalar,  S16,     88, "°C",           1,         0
-      egt2            = scalar,  S16,     90, "°C",           1,         0
-      egt3            = scalar,  S16,     92, "°C",           1,         0
-      egt4            = scalar,  S16,     94, "°C",           1,         0
-      egt5            = scalar,  S16,     96, "°C",           1,         0
-      egt6            = scalar,  S16,     98, "°C",           1,         0
-      egt7            = scalar,  S16,    100, "°C",           1,         0
-      egt8            = scalar,  S16,    102, "°C",           1,         0
+      egt1            = scalar,  S16,     88, "deg C",           1,         0
+      egt2            = scalar,  S16,     90, "deg C",           1,         0
+      egt3            = scalar,  S16,     92, "deg C",           1,         0
+      egt4            = scalar,  S16,     94, "deg C",           1,         0
+      egt5            = scalar,  S16,     96, "deg C",           1,         0
+      egt6            = scalar,  S16,     98, "deg C",           1,         0
+      egt7            = scalar,  S16,    100, "deg C",           1,         0
+      egt8            = scalar,  S16,    102, "deg C",           1,         0
       rpmAcceleration = scalar,  F32,    104, "dRpm",         1,         0
       massAirFlowValue= scalar,  F32,    108, "Kg/h",         1,         0
       veValue         = scalar,  F32,    112, "ratio",        1,         0
@@ -279,20 +279,23 @@ fileVersion = { 20171101 }
       fuelPidCorrection        = scalar,  F32,     268,              "ms",           1,         0
       coilDutyCycle        = scalar,  F32,     272,              "perc",           1,         0
       accelerationX        = scalar,  S16,     276,              "G",           0.01,         0
-      accelerationY        = scalar,  S16,     276,              "G",           0.01,         0
+      accelerationY        = scalar,  S16,     278,              "G",           0.01,         0
       oilPressure	   = scalar,  F32,     280,		 "kPa",			1, 0.0
       fuelConsumptionPerHour=scalar,  F32,     284,		 "kPa",			1, 0.0
       injectionOffset       = scalar, F32,     288,              "deg",                 1,     0;
       debugIntField4    = scalar,  S16,  292, "val",          1,       0.0;
       debugIntField5    = scalar,  S16,  294, "val",          1,       0.0;
-      recentErrorCode0 = scalar,U16, 298, "error",            1,         0
-      recentErrorCode1 = scalar,U16, 300, "error",            1,         0
-      recentErrorCode2 = scalar,U16, 302, "error",            1,         0
-      recentErrorCode3 = scalar,U16, 304, "error",            1,         0
-      recentErrorCode4 = scalar,U16, 306, "error",            1,         0
-      recentErrorCode5 = scalar,U16, 308, "error",            1,         0
-      recentErrorCode6 = scalar,U16, 310, "error",            1,         0
-      recentErrorCode7 = scalar,U16, 312, "error",            1,         0
+	  recentErrorCode0 = scalar,U16, 296, "error",            1,         0
+      recentErrorCode1 = scalar,U16, 298, "error",            1,         0
+      recentErrorCode2 = scalar,U16, 300, "error",            1,         0
+      recentErrorCode3 = scalar,U16, 302, "error",            1,         0
+      recentErrorCode4 = scalar,U16, 304, "error",            1,         0
+      recentErrorCode5 = scalar,U16, 306, "error",            1,         0
+      recentErrorCode6 = scalar,U16, 308, "error",            1,         0
+      recentErrorCode7 = scalar,U16, 310, "error",            1,         0
+      etbTarget        = scalar,F32, 312, "%", 1, 0
+      etb1DutyCycle    = scalar,F32, 316, "%", 1, 0
+      etb1Error        = scalar,F32, 320, "%", 1, 0
 
 
 ;
@@ -747,9 +750,7 @@ fileVersion = { 20171101 }
 
 [GaugeConfigurations]
 
-
-;   warmupEnrichGauge = warmupEnrich, "Warmup Enrichment",    "%",      100,    150,      -1,     -1,     101,   105,   0, 0
-;   accelEnrichGauge  = accDecEnrich, "Accel Enrich",         "%",       50,    150,      -1,     -1,     999,   999,   0, 0
+gaugeCategory = Sensors - Extra 2
    egt1Gauge         = egt1, "EGT#1", "C", 0, 2000
    egt2Gauge         = egt2, "EGT#2", "C", 0, 2000
    egt3Gauge         = egt3, "EGT#3", "C", 0, 2000
@@ -759,19 +760,15 @@ fileVersion = { 20171101 }
    egt7Gauge         = egt7, "EGT#7", "C", 0, 2000
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
    rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "dRpm",        0,      3,       0,      1,       3,     4,   1,   1
-   massAirFlowValueGa = massAirFlowValue,"Air Flow",       "kg/hr",        0,     50,    -999,   -999,     999,   999,   1,   1
    knockCountGauge   = knockCount,"Knock count",           "count",        0,    120,      10,     10,     100,   100,   1,   1
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
-   fuelTankLevelGauge   = fuelTankLevel,"Fuel",           "x",        0,      7,      10,     10,     100,   100,   1,   2
-   
-     
-
+   fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "x",        0,      7,      10,     10,     100,   100,   1,   2
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
 
-gaugeCategory = Status
-   warningCounterGauge = warningCounter, "Counter", "",     0,   100,     0,    0,    100,  100,   0,   0
-   lastErrorCodeGauge = lastErrorCode, "Latest Error", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   triggerErrorsCounterGauge = triggerErrorsCounter, "trg err", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
+gaugeCategory = ECU Status
+   warningCounterGauge = warningCounter, "Warning count", "",     0,   100,     0,    0,    100,  100,   0,   0
+   lastErrorCodeGauge = lastErrorCode, "Last error", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   triggerErrorsCounterGauge = triggerErrorsCounter, "Trigger error count", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
    recentErrorCode0Gauge = recentErrorCode0, "Error#1", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode1Gauge = recentErrorCode1, "Error#2", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode2Gauge = recentErrorCode2, "Error#3", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
@@ -780,8 +777,9 @@ gaugeCategory = Status
    recentErrorCode5Gauge = recentErrorCode5, "Error#6", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode6Gauge = recentErrorCode6, "Error#7", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode7Gauge = recentErrorCode7, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   firmwareVersionGauge  = firmwareVersion , "version", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   
+   firmwareVersionGauge  = firmwareVersion , "ECU Software Version", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   timeSecondsGauge     =   timeSeconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
+
 gaugeCategory = Debug  
    debugFloatField1Gauge = debugFloatField1, @@GAUGE_NAME_DEBUG_F1@@, "%",     0,   100,     0,    0,    100,  100,   4,   4
    debugFloatField2Gauge = debugFloatField2, @@GAUGE_NAME_DEBUG_F2@@, "%",     -100,   100,     0,    0,    100,  100,   4,   4
@@ -795,61 +793,58 @@ gaugeCategory = Debug
    debugIntField3Gauge = debugIntField3, "debug i3", "%",     0,   100,     0,    0,    100,  100,   0,   0
    debugIntField4Gauge = debugIntField4, "debug i4", "%",     0,   100,     0,    0,    100,  100,   0,   0
    debugIntField5Gauge = debugIntField5, "debug i5", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   timeSecondsGauge     =   timeSeconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
+   
 
-gaugeCategory = Sensors  
-   RPMGauge        = RPMValue,           "Engine Speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
+gaugeCategory = Sensors - Basic
+   RPMGauge        = RPMValue,           "RPM - engine speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
 #if CELSIUS
-   CLTGauge          = coolant,       "Coolant Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   CLTGauge          = coolant,       "Coolant temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   CLTGauge          = coolant,       "Coolant Temp",        "°F",      -40,    285,       5,     35,     205,   230,   1,   1
+   CLTGauge          = coolant,       "Coolant temp",        "deg F",      -40,    285,       5,     35,     205,   230,   1,   1
 #endif
 #if CELSIUS
-   IATGauge          = intake,     "Intake Air Temp",        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   IATGauge          = intake,     "Intake air temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   IATGauge          = intake,     "Intake Air Temp",        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
+   IATGauge          = intake,     "Intake air temp",        "deg F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
-   TPSGauge			 = TPSValue,      "Throttle Position",         "%",        0,    100,       0,      0,     100,   100,   2,   2
-   afr1Gauge         = AFRValue, "Air:Fuel Ratio 1",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
-   MAFGauge			 = MAFValue,          "Mass Air Flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
-   VBattGauge        = VBatt,      "Battery Voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
+   afr1Gauge         = AFRValue, "Air fuel ratio",          "",       10,   19.4,      12,     13,      15,    16,   2,   2
+   MAFGauge			 = MAFValue,          "Mass air flow",         "v",        0,      5,       0,      1,       3,     4,   1,   1
+   VBattGauge        = VBatt,      "Battery voltage",         "V",        8,     21,       9,     10,      17,    19,   1,   1
    MAPGauge     	 = MAPValue,               "MAP",       "kPa",        0,    300,      10,     10,     200,   200,   0,   0	
-   tpsADCGauge       = tpsADC1,           "tps1 ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
+   massAirFlowValueGa = massAirFlowValue,"Mass air flow",       "kg/hr",        0,     50,    -999,   -999,     999,   999,   1,   1
+   
 
-gaugeCategory = Sensors2
-   VSSGauge          = vehicleSpeedKph,     "Speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
-   pedalPositionGauge = pedalPosition,"Throttle Pedal Position",        "%",        0,    120,      10,     10,     100,   100,   1,   1
+gaugeCategory = Sensors - Extra 1
+   VSSGauge          = vehicleSpeedKph,     "Vehicle speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
    accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
-   atmPresCGauge     = baroPressure,          "Baro",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
+   atmPresCGauge     = baroPressure,          "Barometric pressure",       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0	
    vvtPositionGauge = vvtPosition, "VVT position", "deg",     0,   100,     0,    0,    720,  720,   0,   0
-   internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    100,  100,   0,   0
+   internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   "Oil Pressure",       "kPa",        0,    750,      35,     75,     550,   700,   0,   0	
-   fuelConsumptionPerHourGauge=fuelConsumptionPerHour,  "f","kPa",        0,    750,      35,     75,     550,   700,   0,   0	
-   idleAirValvePositionGauge = idleAirValvePosition, "idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
+   idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
 
-gaugeCategory = Spark Data  
-   ignadvGauge = ignitionAdvance,       "Ignition Advance 1",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
+gaugeCategory = Ignition
+   ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
    dwellGauge        = sparkDwellValue,           "Dwell",      "mSec",        0,     10,     0.5,    1.0,     6.0,   8.0,   1, 1
    coilDutyCycleGauge = coilDutyCycle,       @@GAUGE_NAME_DWELL_DUTY@@,      "perc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
 
-gaugeCategory = Accel Data
-   engineLoadDeltaGauge = engineLoadDelta,"fuel: load change","value",      0,    120,      10,     10,     100,   100,   1,   1
-   engineLoadAccelExtraGauge = engineLoadAccelExtra,"fuel: load extra","value",      0,    120,      10,     10,     100,   100,   1,   1
-   deltaTpsGauge     = deltaTps,                "fuel: TPS change",            "",        0,    120,      10,     10,     100,   100,   1,   1
-   tpsAccelFuelGauge = tpsAccelFuel,"fuel: TPS enrich",             "ms",        0,    120,      10,     10,     100,   100,   1,   1
-   wallFuelAmountGauge = wallFuelAmount, "fuel: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
-   wallFuelCorrectionGauge = wallFuelCorrection, "fuel: wall correction extra", "ms",     0,   100,     0,    0,    100,  100,   0,   0
+gaugeCategory = Acceleration Enrichment
+   engineLoadDeltaGauge = engineLoadDelta,"AE: load change","value",      0,    120,      10,     10,     100,   100,   1,   1
+   engineLoadAccelExtraGauge = engineLoadAccelExtra,"AE: load extra","value",      0,    120,      10,     10,     100,   100,   1,   1
+   deltaTpsGauge     = deltaTps,                "AE: TPS change",            "",        0,    120,      10,     10,     100,   100,   1,   1
+   tpsAccelFuelGauge = tpsAccelFuel,"AE: TPS enrich",             "ms",        0,    120,      10,     10,     100,   100,   1,   1
+   wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
+   wallFuelCorrectionGauge = wallFuelCorrection, "AE: wall correction extra", "ms",     0,   100,     0,    0,    100,  100,   0,   0
 
-
-gaugeCategory = Fuel Data
+gaugeCategory = Fueling
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
 #if CELSIUS
-   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "°C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
 #else
-   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "°F",      -40,    285,       5,     35,     205,   230,  1,   1
+   tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
-   baroCorrectionGauge  = baroCorrection,"BaroCorr",           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
+   baroCorrectionGauge  = baroCorrection,"Fuel: Barometric pressure correction",           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
    crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    cltCorrectionGauge = cltCorrection, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
@@ -861,7 +856,16 @@ gaugeCategory = Fuel Data
    fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
-   
+
+gaugeCategory = Throttle Body (incl. ETB)
+   pedalPositionGauge = pedalPosition, "Throttle pedal position",        "%",    0,    120,      0,     0,     100,   100,   1,   1
+   tpsADCGauge       = tpsADC1,           "tps1 ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0	
+   TPSGauge			 = TPSValue,      "Throttle position",         "%",        0,    100,       0,      0,     100,   100,   1,   1
+
+   etbTargetGauge     = etbTarget,     "ETB position target", "%",    0,    100,    0,     0,     100,   100,   1,   1
+   etbErrorGauge      = etb1Error,     "ETB position error",  "%",    -20,  20,    -10,   -5,    5,    10,  2, 0
+   etbDutyCycleGauge  = etb1DutyCycle, "ETB duty cycle",                 "%",    -100, 100,   -75,   -50,   50,   75,  0, 0
+
 
 [WueAnalyze]
     
@@ -1314,7 +1318,9 @@ cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
 cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 cmd_call_from_pit            = "w\x00\x20\x34\x56"
 cmd_stop_engine              = "w\x00\x79\x00\x00"
-		
+
+cmd_reset_controller         = "w\x00\xbb\x00\x00"
+
 ; See 'executeTSCommand' in firmware source code
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Miata_NA6_MAP			= "w\x00\x30\x00\x29"
@@ -1449,7 +1455,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "NB2 from temp",						nb2ratioFrom
 	    field = "NB2 to temp",							nb2ratioTo
 	    field = "nbVvtIndex",							nbVvtIndex
-	    field = "print sync details to console",		isPrintTriggerSynchDetails
+	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8}
 	dialog = triggerConfiguration
 		panel = triggerConfiguration_settings,	North
@@ -1512,7 +1518,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != 16}
 		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != 16}
@@ -1529,7 +1535,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != 16}
 		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != 16}
@@ -1542,20 +1548,24 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	
 	dialog = tpsSensor, "TPS"
 		field = "!See Tools>Calibrate TPS"
-		field = "Throttle1 position sensor",			tps1_1AdcChannel
+		field = "Throttle1 position sensor",			tpsADC
 		field = "Throttle2 position sensor",			tps2_1AdcChannel
-		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
-		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
+		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tpsADC != 16}
+		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tpsADC != 16}
 
 	dialog = pedalSensor, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
+		field = "Up voltage",					throttlePedalUpVoltage
+		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
 
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
 		field = "Flex fuel",							flexFuelSensor
 		field = "Clutch down pin",						clutchDownPin
-		field = "Clutch up pin",							clutchUpPin
+		fiedl = "Clutch down inverted",					clutchDownPinInverted
+		field = "Clutch up pin",						clutchUpPin
+		fiedl = "Clutch up inverted",					clutchUpPinInverted
 		field = "Brake pedal pin",						brakePedalPin
 		field = "A/C switch",							acSwitchAdc
 
@@ -1572,7 +1582,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "CLT ADC input", 						clt_adcChannel
 		field = "IAT ADC input", 						iat_adcChannel
 		field = "vBatt ADC input", 						vbattAdcChannel
-		field = "TPS1 ADC input", 						tps1_1AdcChannel
+		field = "TPS1 ADC input", 						tpsADC
 		field = "TPS2 ADC input", 						tps2_1AdcChannel
 		field = "MAF ADC input", 						mafAdcChannel
 		field = "AFR ADC input", 						afr_hwChannel
@@ -1756,7 +1766,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
 		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
@@ -1779,7 +1789,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
 
 		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40°C, 0°C and 100°C"
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
 		field = ""
 		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
 		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
@@ -2451,14 +2461,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "No2 Direction #2",						etb2_directionPin2, {throttlePedalPositionAdcChannel != 16}
 		field = "Two-wire mode",						etb2_use_two_wires, {throttlePedalPositionAdcChannel != 16}
 		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb2_use_two_wires == 0}
-		field = "etbDeadband",							etbDeadband, {throttlePedalPositionAdcChannel != 16}
 		panel = etbPidDialog
 
 	dialog = etbDialogRight
 		field = "!https://rusefi.com/s/debugmode"
 		field = "Debug mode",							debugMode
-		field = "TPS1",									tps1_1AdcChannel
-		field = "Pedal",								throttlePedalPositionAdcChannel
 		field = "use ETB for idle",						useETBforIdleControl
 		field = "ETB idle maximum angle",				etbIdleRange
 		field = "Press buttons to calibrate sensors"
@@ -2504,6 +2511,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Check Engine", cmd_test_check_engine_light
 		commandButton = "Idle Air Valve", cmd_test_idle_valve          
 		commandButton = "Stop Engine", cmd_stop_engine          
+		commandButton = "Reset ECU", cmd_reset_controller
 		
 	; bench test	
 	dialog = ioTest, "Bench Test & Commands", border

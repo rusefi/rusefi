@@ -181,6 +181,9 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	 */
 	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[current_index]);
 	// todo: make this '90' depend on cylinder count or trigger shape?
+	if (cisnan(currentAngle)) {
+		return NOISY_RPM;
+	}
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_6560);
 	// todo: prevIndex should be pre-calculated
@@ -355,7 +358,7 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	someSortOfTriggerError = true;
 
 	totalTriggerErrorCounter++;
-	if (CONFIG(isPrintTriggerSynchDetails) || someSortOfTriggerError) {
+	if (CONFIG(verboseTriggerSynchDetails) || someSortOfTriggerError) {
 #if EFI_PROD_CODE
 		scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				currentCycle.current_index, TRIGGER_SHAPE(expectedEventCount[0]),
@@ -497,7 +500,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 
 #if EFI_PROD_CODE
-			if (CONFIG(isPrintTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
+			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
@@ -506,13 +509,18 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					scheduleMsg(logger, "%d %d: cur %.2f expected from %.2f to %.2f error=%d",
+					if (cisnan(gap)) {
+						scheduleMsg(logger, "%d NaN cur gap, you have noise issues?",
+								i);
+					} else {
+						scheduleMsg(logger, "%d %d: cur %.2f expected from %.2f to %.2f error=%d",
 							getTimeNowSeconds(),
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
 							TRIGGER_SHAPE(syncronizationRatioTo[i]),
 							someSortOfTriggerError);
+					}
 				}
 
 #else

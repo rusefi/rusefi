@@ -17,6 +17,7 @@ public enum FileLog {
 
     public static final String DIR = "logs/";
     public static final String LOG_INFO_TEXT = "Writing logs to '" + DIR + "'";
+    public static final String OS_VERSION = "os.version";
     public static String currentLogName;
     public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
@@ -50,6 +51,13 @@ public enum FileLog {
         } catch (FileNotFoundException e) {
             throw new IllegalStateException(e);
         }
+        // a bit strange spot for this invocation for sure
+        printOsInfo();
+    }
+
+    private static void printOsInfo() {
+        MAIN.logLine("OS name: " + System.getProperty("os.name"));
+        MAIN.logLine("OS version: " + System.getProperty(OS_VERSION));
     }
 
     private FileOutputStream openLog() throws FileNotFoundException {

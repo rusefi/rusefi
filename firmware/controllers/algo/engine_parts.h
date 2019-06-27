@@ -11,6 +11,7 @@
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
 #include "cyclic_buffer.h"
+#include "thermistor.h"
 
 #define MOCK_ADC_SIZE 16
 
@@ -24,7 +25,7 @@ public:
 	int getMockAdcValue(int hwChannel) const;
 };
 
-class ThermistorMath {
+class ThermistorMath : public thermistor_state_s {
 public:
 	void setConfig(thermistor_conf_s *config);
 	void prepareThermistorCurve(thermistor_conf_s *tc);
@@ -32,6 +33,7 @@ public:
 	float s_h_a = 0;
 	float s_h_b = 0;
 	float s_h_c = 0;
+	bool isLinear;
 private:
 	thermistor_conf_s currentConfig = {};
 };

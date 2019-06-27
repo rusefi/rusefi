@@ -46,6 +46,48 @@ public class Field {
         this.options = options;
     }
 
+    /**
+     * Finds field by name, ignoring case
+     */
+    public static Field findField(Field[] values, String instancePrefix, String fieldName) {
+        Objects.requireNonNull(fieldName);
+        for (Field f : values) {
+            if (fieldName.equalsIgnoreCase(f.getName()))
+                return f;
+        }
+        // 2nd pass - let's try to find field with prefix if it was not found without prefix
+        if (!instancePrefix.isEmpty()) {
+            fieldName = instancePrefix + "_" + fieldName;
+            for (Field f : values) {
+                if (fieldName.equalsIgnoreCase(f.getName()))
+                    return f;
+            }
+        }
+        throw new IllegalStateException("No field " + fieldName);
+    }
+
+    public static int getStructureSize(Field[] values) {
+        Field last = values[values.length - 1];
+        // todo: at the moment we do not support arrays and
+        // todo: a lot of information is missing for example for Bit type, but this implementation is good enough for now
+        return last.offset + 4;
+    }
+
+    public static String niceToString(Number value) {
+        // not enum field
+        Number number = value;
+        if (number instanceof Float)
+            return niceToString(number.floatValue());
+        return number.toString();
+    }
+
+    public static String niceToString(double value) {
+        int scale = (int) Math.log10(value);
+        int places = 1 + Math.max(0, 4 - scale);
+        double toScale = Math.pow(10, places);
+        return Double.toString(Math.round(value * toScale) / toScale);
+    }
+
     public String getName() {
         return name;
     }
@@ -130,13 +172,29 @@ public class Field {
                 '}';
     }
 
+    public Object getAnyValue(ConfigurationImage ci) {
+        if (options == null) {
+            return niceToString(getValue(ci));
+        }
+        if (type != INT8)
+            throw new IllegalStateException("Unsupported enum " + type);
+        int ordinal = ci.getByteBuffer(offset, type.getStorageSize()).get();
+        return options[ordinal];
+    }
+
+    // todo: rename to getNumberValue?
     @NotNull
     public Number getValue(ConfigurationImage ci) {
         Objects.requireNonNull(ci);
         Number value;
-        ByteBuffer wrapped = getByteBuffer(ci);
-        if (getType() == INT) {
+        ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
+        if (bitOffset != NO_BIT_OFFSET) {
+            int packed = wrapped.getInt();
+            value = (packed >> bitOffset) & 1;
+        } else if (type == INT) {
             value = wrapped.getInt();
+        } else if (type == INT16) {
+            value = wrapped.getShort();
         } else {
             value = wrapped.getFloat();
         }

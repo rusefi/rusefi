@@ -135,6 +135,7 @@ public class EngineSnifferPanel {
         if (!LinkManager.isLogViewer()) {
             JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
             lowerButtons.add(new ConfigField(Fields.GLOBALTRIGGERANGLEOFFSET, "Triger Offset").getContent());
+            lowerButtons.add(new BitConfigField(Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
             lowerButtons.add(new BitConfigField(Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
             lowerButtons.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Frequency").getContent());
             lowerButtons.add(new ConfigField(Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());

@@ -315,8 +315,8 @@ bit issue_294_30;
 bit issue_294_31;
 
 
-int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
-int16_t tpsMax;+Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tpsADC\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMax;Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tpsADC\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
 int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
 int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
@@ -417,8 +417,13 @@ log_format_e logFormat;
 	int byFirmwareVersion;;"index",      1,      0,       0, 300,      0
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
-	
-	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See aslo pedalPositionAdcChannel
+
+!
+! TunerStudio has that nice 'Calibrate TPS' standart dialog which users LOVE!
+! So, we have to use 'tpsADC' magic field name for first TPS first channel
+! https://github.com/rusefi/rusefi/issues/805
+!
+	adc_channel_e tpsADC;First TPS, single channel so far. See aslo pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;
 adc_channel_e fuelLevelSensor;
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
@@ -471,7 +476,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tps1_1AdcChannel
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tpsADC
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 
@@ -609,14 +614,14 @@ bit is_enabled_spi_2
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled;+Smarter cranking logic.\nSee also startOfCrankingPrimingPulse
 	bit coastingFuelCutEnabled;+This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	bit useIacTableForCoasting;+This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. 
+	bit useIacTableForCoasting;+This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars.
 	bit useNoiselessTriggerDecoder
 	bit useIdleTimingPidControl
 	bit useTPSBasedVeTable
 	bit is_enabled_spi_4
 	bit pauseEtbControl
 	bit alignEngineSnifferAtTDC
-	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve. The ETB will act as though it was the IAC and regulate the airflow at idle. 
+	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve. The ETB will act as though it was the IAC and regulate the airflow at idle.
 	bit idleIncrementalPidCic
 	bit unused_board_984_31
 
@@ -703,7 +708,9 @@ maf_sensor_type_e mafSensorType;
 	brain_input_pin_e frequencyReportingMapInputPin;
 	pin_input_mode_e clutchUpPinMode;
 	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
-	int[122] unusedAtBoardConfigurationEnd;
+	bit clutchUpPinInverted
+	bit clutchDownPinInverted
+	int[121] unusedAtBoardConfigurationEnd;
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
@@ -747,25 +754,25 @@ uint8_t[3] unusedh;
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	idle_mode_e idleMode;See also idleRpmPid;
 
-	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings. 
+	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	bit isIgnitionEnabled;+Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders. 
 	bit secondTriggerChannelEnabled
 	bit needSecondTriggerInputDeprecated
 	bit isMapAveragingEnabled
 	bit overrideCrankingIacSetting;+This setting overrides the normal multiplication values that have been set for the idle air control valve during cranking. If this setting is enabled the "IAC multiplier" table in the Cranking settings tab needs to be adjusted appropriately or potentially no IAC opening will occur.
-	bit useSeparateAdvanceForIdle;+This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed. 
+	bit useSeparateAdvanceForIdle;+This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
 	bit isTunerStudioEnabled
 	bit isWaveAnalyzerEnabled
-	bit useSeparateVeForIdle;+This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling. 
-	bit isPrintTriggerSynchDetails;+enable trigger_details
+	bit useSeparateVeForIdle;+This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
+	bit verboseTriggerSynchDetails;+enable trigger_details
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
 	bit twoWireBatchInjection;+This is needed if your coils are individually wired and you wish to use batch injection.\nenable two_wire_batch_injection
 	bit useOnlyRisingEdgeForTrigger;+VR sensors are only precise on rising front\nenable trigger_only_front
 	bit twoWireBatchIgnition;+This is needed if your coils are individually wired (COP) and you wish to use batch ignition (wasted spark).
 bit useFixedBaroCorrFromMap
-bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant. 
-bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle). 
+bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
+bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
 bit unused_1484_bit_20
 bit unused_1484_bit_21
@@ -1055,7 +1062,7 @@ tChargeMode_e tChargeMode;
 	uint8_t[3] unusedSpiPadding8;
 
 
-	float etbIdleThrottleRange
+	float etbIdleThrottleRange; ETB idle authority; "%", 1, 0, 0, 15, 0
 
 	int[590] mainUnusedEnd;
 	
@@ -1151,6 +1158,12 @@ end_struct
 
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
 
+! Live Documentation Structure
+#define LDS_CLT_INDEX 0
+#define LDS_IAT_INDEX 1
+#define LDS_SPEED_DENSITY_INDEX 2
+#define LDS_ENGINE_STATE_INDEX 3
+
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVT "VVT position"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
@@ -1181,7 +1194,7 @@ end_struct
 
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
-#define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: charge T"
+#define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
 #define GAUGE_NAME_FUEL_EL_EXTRA "fuel: engine load acceleration extra fuel"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
@@ -1189,9 +1202,9 @@ end_struct
 #define GAUGE_NAME_FUEL_VE "fuel: VE"
 #define GAUGE_NAME_FUEL_CRANKING "fuel: cranking"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
-#define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: last injection"
+#define GAUGE_NAME_FUEL_LAST_INJECTION  "fuel: Last injection"
 #define GAUGE_NAME_FUEL_BASE "fuel: base"
-#define GAUGE_NAME_FUEL_PID_CORR "fuel: short correction"
+#define GAUGE_NAME_FUEL_PID_CORR "fuel: Short-term closed loop correction"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
 

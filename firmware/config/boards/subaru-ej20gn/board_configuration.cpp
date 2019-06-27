@@ -89,7 +89,7 @@ void setBoardConfigurationOverrides(void) {
 	setSerialConfigurationOverrides();
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_6;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+	engineConfiguration->tpsADC = EFI_ADC_13;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_14;
 	engineConfiguration->clt.adcChannel = EFI_ADC_8;
 	/* not yet */

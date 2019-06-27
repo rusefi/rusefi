@@ -61,6 +61,8 @@ typedef efitime_t efitick_t;
 
 typedef float angle_t;
 
+// temperature, in Celsius
+typedef float temperature_t;
 typedef float floatms_t;
 typedef float floatus_t;
 

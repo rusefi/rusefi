@@ -32,4 +32,14 @@
 #include "loggingcentral.h"
 #endif /* __cplusplus */
 
+#define DISPLAY_CONFIG(x) x
+#define DISPLAY_FIELD(x) x
+// we use this 'DISPLAY' macro if value is not used by C++ in current context
+#define DISPLAY(x)
+
+#define DISPLAY_TAG(x)
+#define DISPLAY_TEXT(x)
+#define DISPLAY_SENSOR(x) {}
+#define DISPLAY_IF(x) x
+
 #endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */

@@ -3,4 +3,6 @@
  3)                    Add silk screen to designate injector # and similar. 
  4)                  Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
  5)                  Add via for battery wire to be attached. 
- 6)                  check for flipped pins. 
+ 6)                  check for flipped pins. pins 39 and 50 are wrong.  
+ 7)                  ?D2?, D11_1, D10, D10_1, D11 and D11_2 are likely botched. Check them against MC33816 R0.2 layout. dual package into one package
+ 8)                  D9 is likely botched, wrong footprint pins, verify against MC33816 R0.2 layout. 

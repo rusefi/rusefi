@@ -22,8 +22,15 @@ public:
 	int conversionCount;
 	int errorsCount;
 	int getAdcValueByIndex(int internalIndex) const;
+	void invalidateSamplesCache();
 
-	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
+	// on F7 this must be aligned on a 32-byte boundary, and be a multiple of 32 bytes long.
+	// When we invalidate the cache line(s) for ADC samples, we don't want to nuke any
+	// adjacent data.
+	// F4 does not care
+	__ALIGNED(32) adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
+	// Assert multiple of 32 bytes long so we don't stomp on the data after the buffer
+	static_assert(sizeof(samples) % 32 == 0);
 
 	int getAdcValueByHwChannel(int hwChannel) const;
 

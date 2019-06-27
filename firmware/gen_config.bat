@@ -2,13 +2,16 @@
 rem This batch files reads rusefi_config.txt and produses firmware persistent configuration headers
 rem the storage section of rusefi.ini is updated as well
 
+rm gen_config.log
+rm gen_config_board.log
 
 rem lazy is broken - TS input is not considered a change
 rm build/config.gen
 
 mkdir build
 
-java -Drusefi.generator.lazyfile.enabled=true ^
+java -DSystemOut.name=gen_config ^
+ -Drusefi.generator.lazyfile.enabled=true ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration\rusefi_config.txt ^
  -romraider integration ^

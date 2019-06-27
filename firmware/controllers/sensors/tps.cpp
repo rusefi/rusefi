@@ -78,11 +78,35 @@ float getTpsRateOfChange(void) {
  *
  * */
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
+	DISPLAY_TAG(TPS_SECTION);
+
+	DISPLAY_TEXT(Analog_MCU_reads);
+	engine->engineState.currentTpsAdc = adc;
+#if !EFI_UNIT_TEST
+	engine->engineState.DISPLAY_FIELD(tpsVoltageMCU) = adcToVolts(adc);
+#endif
+	DISPLAY_TEXT(Volts);
+	DISPLAY_TEXT(from_pin) DISPLAY(DISPLAY_CONFIG(tpsADC))
+	DISPLAY_TEXT(EOL);
+
+	DISPLAY_TEXT(Analog_ECU_reads);
+	engine->engineState.DISPLAY_FIELD(tpsVoltageBoard) =
+	DISPLAY_TEXT(Rdivider) engine->engineState.tpsVoltageMCU * CONFIG(DISPLAY_CONFIG(analogInputDividerCoefficient));
+	DISPLAY_TEXT(EOL);
+
+
 	if (engineConfiguration->tpsMin == engineConfiguration->tpsMax) {
 		warning(CUSTOM_INVALID_TPS_SETTING, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
 		return NAN;
 	}
-	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * engineConfiguration->tpsMax, 100, TPS_TS_CONVERSION * engineConfiguration->tpsMin, 0, adc);
+
+	DISPLAY_TEXT(Current_ADC)
+	DISPLAY(DISPLAY_FIELD(currentTpsAdc))
+	DISPLAY_TEXT(interpolate_between)
+	float result = interpolateMsg("TPS", TPS_TS_CONVERSION * CONFIG(DISPLAY_CONFIG(tpsMax)), 100,
+			DISPLAY_TEXT(and)
+			TPS_TS_CONVERSION * CONFIG(DISPLAY_CONFIG(tpsMin)), 0, adc);
 	if (result < engineConfiguration->tpsErrorDetectionTooLow) {
 #if EFI_PROD_CODE
 		// too much noise with simulator
@@ -104,7 +128,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * Return voltage on TPS AND channel
  * */
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel);
+	return getVoltageDivided("tps", engineConfiguration->tpsADC);
 }
 
 /*
@@ -118,11 +142,11 @@ int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return engine->mockTpsAdcValue;
 	}
 #endif
-	if (engineConfiguration->tps1_1AdcChannel == EFI_ADC_NONE)
+	if (engineConfiguration->tpsADC == EFI_ADC_NONE)
 		return -1;
 #if EFI_PROD_CODE
 
-	return getAdcValue("tps10", engineConfiguration->tps1_1AdcChannel);
+	return getAdcValue("tps10", engineConfiguration->tpsADC);
 	//	return tpsFastAdc / 4;
 #else
 	return 0;
@@ -175,7 +199,10 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
 	}
-	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
+	DISPLAY_TAG(PEGAL_SECTION);
+	DISPLAY_TEXT(Analog_MCU_reads);
+
+	float voltage = getVoltageDivided("pPS", CONFIG(DISPLAY_CONFIG(throttlePedalPositionAdcChannel)));
 	float result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 
 	// this would put the value into the 0-100 range
@@ -183,7 +210,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE;
+	return engineConfiguration->tpsADC != EFI_ADC_NONE;
 }
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

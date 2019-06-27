@@ -132,7 +132,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	/**
 	 * TPS D11/W11 blue wire
 	 */
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_1;
+	engineConfiguration->tpsADC = EFI_ADC_1;
 
 
 	/**

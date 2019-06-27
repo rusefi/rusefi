@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -147,14 +148,14 @@ public class ReaderState {
         }
         ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         state.stack.push(structure);
-        System.out.println("Starting structure " + structure.getName());
+        SystemOut.println("Starting structure " + structure.getName());
     }
 
     private static void handleEndStruct(ReaderState state, List<ConfigurationConsumer> consumers) throws IOException {
         if (state.stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = state.stack.pop();
-        System.out.println("Ending structure " + structure.getName());
+        SystemOut.println("Ending structure " + structure.getName());
         structure.addAlignmentFill(state);
 
         state.structures.put(structure.getName(), structure);

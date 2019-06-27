@@ -186,7 +186,7 @@ static void bluetoothSPP(const char *baudRate, const char *name, const char *pin
 void tunerStudioDebug(const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "%s", msg);
-#endif
+#endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
 char *getWorkingPageAddr(int pageIndex) {
@@ -276,6 +276,30 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 	}
 }
+
+/**
+ * Read internal structure for Live Doc
+ * This is somewhat similar to read page and somewhat similar to read outputs
+ * We can later consider combining this functionality
+ */
+static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int size) {
+	tsState.readPageCommandsCounter++;
+
+	const void *addr = NULL;
+	if (structId == LDS_CLT_INDEX) {
+		addr = static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
+	} else if (structId == LDS_IAT_INDEX) {
+		addr = static_cast<thermistor_state_s*>(&engine->engineState.iatCurve);
+	} else if (structId == LDS_ENGINE_STATE_INDEX) {
+		addr = static_cast<engine_state2_s*>(&engine->engineState);
+	}
+	if (addr == NULL) {
+		// todo: add warning code - unexpected structId
+		return;
+	}
+	sr5SendResponse(tsChannel, TS_CRC, (const uint8_t *)addr, size);
+}
+
 
 /**
  * read log file content for rusEfi console
@@ -452,6 +476,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
+			|| command == TS_GET_STRUCT
 			|| command == TS_GET_FILE_RANGE
 			|| command == TS_TOOTH_COMMAND
 			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND
@@ -743,6 +768,10 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	} else if (command == TS_PAGE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		handlePageSelectCommand(tsChannel, TS_CRC, page);
+	} else if (command == TS_GET_STRUCT) {
+		short structId = *(uint16_t *) data;
+		uint16_t length = *(uint16_t *) (data + 2);
+		handleGetStructContent(tsChannel, structId, length);
 	} else if (command == TS_GET_FILE_RANGE) {
 		short fileId = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
@@ -774,8 +803,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	} else if (command == 't' || command == 'T') {
 		handleTestCommand(tsChannel);
 	} else if (command == TS_IO_TEST_COMMAND) {
-		uint16_t subsystem = SWAP_UINT16(*(short*)&data[0]);
-		uint16_t index = SWAP_UINT16(*(short*)&data[2]);
+		uint16_t subsystem = SWAP_UINT16(*(uint16_t*)&data[0]);
+		uint16_t index = SWAP_UINT16(*(uint16_t*)&data[2]);
 
 		if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
 			tsOutputChannels.debugIntField1++;
