@@ -280,6 +280,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
 
 		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
+		assertAngleRange(samplingDuration, "samplingDuration", CUSTOM_ERR_6563);
 		if (samplingDuration <= 0) {
 			warning(CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
 			return;
