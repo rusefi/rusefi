@@ -1563,9 +1563,9 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Fuel level", 						fuelLevelSensor
 		field = "Flex fuel",							flexFuelSensor
 		field = "Clutch down pin",						clutchDownPin
-		fiedl = "Clutch down inverted",					clutchDownPinInverted
+		field = "Clutch down inverted",					clutchDownPinInverted
 		field = "Clutch up pin",						clutchUpPin
-		fiedl = "Clutch up inverted",					clutchUpPinInverted
+		field = "Clutch up inverted",					clutchUpPinInverted
 		field = "Brake pedal pin",						brakePedalPin
 		field = "A/C switch",							acSwitchAdc
 
@@ -1931,7 +1931,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = idleSettings, "", yAxis
 		field = "Idle IAC control mode",					idleMode
 		field = "use ETB for idle",						useETBforIdleControl
-		fiedl = "ETB Idle range",						etbIdleThrottleRange, {useETBforIdleControl == 1}
+		field = "ETB Idle range",						etbIdleThrottleRange, {useETBforIdleControl == 1}
 		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
 		field = "Use separate VE Table for idle",		useSeparateVeForIdle
 		field = "Use separate IAC Table For Coasting",	useIacTableForCoasting, {idleMode == 0}
