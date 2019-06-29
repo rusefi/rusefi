@@ -9,5 +9,6 @@
 #define RUSEFI_H_
 
 void runRusEfi(void);
+void rebootNow(void);
 
 #endif /* RUSEFI_H_ */
