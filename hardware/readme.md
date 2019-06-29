@@ -34,6 +34,8 @@ todo: move Connectors wiki page content into git
 
 New modules are being added to https://github.com/rusefi/hw_modular
 
+Some stuff we have given up on completely is located at https://github.com/rusefi/hw_legacy
+
 Above mentioned modules are known to work unless stated otherwise
 
 ### Frankenstein
