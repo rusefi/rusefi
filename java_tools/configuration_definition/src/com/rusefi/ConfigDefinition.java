@@ -32,6 +32,7 @@ public class ConfigDefinition {
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
+    private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     public static final String KEY_PREPEND = "-prepend";
@@ -80,6 +81,8 @@ public class ConfigDefinition {
                 destCHeader = args[i + 1];
             } else if (key.equals(KEY_ZERO_INIT)) {
                 needZeroInit = true;
+            } else if (key.equals(KEY_WITH_C_DEFINES)) {
+                CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_C_DEFINES)) {
                 destCDefines = args[i + 1];
             } else if (key.equals(KEY_JAVA_DESTINATION)) {
@@ -137,7 +140,7 @@ public class ConfigDefinition {
 
 
         if (destCDefines != null)
-            VariableRegistry.INSTANCE.writeNumericsToFile(destCDefines);
+            VariableRegistry.INSTANCE.writeDefinesToFile(destCDefines);
 
         if (romRaiderDestination != null && romRaiderInputFile != null) {
             String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;

@@ -96,14 +96,21 @@ public class VariableRegistry extends TreeMap<String, String> {
         register(name + "_hex", Integer.toString(value, 16));
     }
 
-    public void writeNumericsToFile(String fileName) throws IOException {
+    public void writeDefinesToFile(String fileName) throws IOException {
+
         SystemOut.println("Writing to " + fileName);
         LazyFile cHeader = new LazyFile(fileName);
 
         cHeader.write("//\n// " + ConfigDefinition.GENERATED_AUTOMATICALLY_TAG + ConfigDefinition.definitionInputFile + "\n//\n\n");
-        for (String value : cAllDefinitions.values())
-            cHeader.write(value);
+        cHeader.write(getDefinesSection());
         cHeader.close();
+    }
+
+    public String getDefinesSection() {
+        StringBuilder sb = new StringBuilder();
+        for (String value : cAllDefinitions.values())
+            sb.append(value);
+        return sb.toString();
     }
 
     public String getJavaConstants() {
