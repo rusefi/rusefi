@@ -17,6 +17,14 @@ java -DSystemOut.name=gen_config2 ^
  -c_destination controllers/generated/thermistor.h
 
 java -DSystemOut.name=gen_config2 ^
+ -jar ../java_tools/ConfigDefinition.jar ^
+ -definition integration/trigger.txt ^
+ -initialize_to_zero yes ^
+ -with_c_defines true ^
+ -java_destination ../java_console/models/src/com/rusefi/config/generated/TriggerState.java ^
+ -c_destination controllers/generated/trigger_structs.h
+
+java -DSystemOut.name=gen_config2 ^
  -cp ../java_tools/ConfigDefinition.jar ^
  com.rusefi.ldmp.LiveDocsMetaParser ^
  controllers/sensors/thermistors.cpp ^
