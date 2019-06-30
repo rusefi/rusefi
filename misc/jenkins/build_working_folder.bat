@@ -5,8 +5,12 @@ pwd
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
 set console_folder=%folder%\console
+set drivers_folder=%folder%\drivers
 mkdir %console_folder%
+mkdir %drivers_folder%
 ls -l %folder%
+
+wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe drivers -P %drivers_folder%
 
 if %ini_file_override%.==. (
     set ini_file_override=rusefi.ini
