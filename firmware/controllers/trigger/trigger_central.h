@@ -11,20 +11,19 @@
 #include "rusefi_enums.h"
 #include "listener_array.h"
 #include "trigger_decoder.h"
+#include "trigger_structs.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define HAVE_CAM_INPUT() engineConfiguration->camInput != GPIO_UNASSIGNED
 
-#define HW_EVENT_TYPES 6
-
 /**
  * Maybe merge TriggerCentral and TriggerState classes into one class?
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
  * also composition probably better than inheritance here
  */
-class TriggerCentral {
+class TriggerCentral : public trigger_central_s {
 public:
 	TriggerCentral();
 	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
@@ -49,7 +48,6 @@ public:
 	volatile efitime_t previousShaftEventTimeNt;
 private:
 	IntListenerArray<15> triggerListeneres;
-	int hwEventCounters[HW_EVENT_TYPES];
 	
 	// Used by 'useNoiselessTriggerDecoder', see handleShaftSignal()
 	efitick_t lastSignalTimes[HW_EVENT_TYPES];

@@ -24,7 +24,11 @@
 
 #include "rpm_calculator.h"
 
-TriggerCentral::TriggerCentral() : hwEventCounters() {
+trigger_central_s::trigger_central_s() : hwEventCounters() {
+
+}
+
+TriggerCentral::TriggerCentral() : trigger_central_s() {
 	// we need this initial to have not_running at first invocation
 	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 
