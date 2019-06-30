@@ -81,6 +81,10 @@ echo "folder variable=%folder%"
 
 pwd
 call misc\jenkins\build_working_folder.bat
+IF NOT ERRORLEVEL 0 (
+ echo %script_name%: ERROR invoking build_working_folder.bat
+ EXIT /B 1
+)
 
 echo "%script_name%: Building only console"
 pwd
