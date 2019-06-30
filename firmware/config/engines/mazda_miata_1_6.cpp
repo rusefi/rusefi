@@ -272,6 +272,6 @@ void setMiataNA6_VAF_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * Stage 0 we only have OEM TPS switch
 	 */
-	engineConfiguration->tpsADC = EFI_ADC_NONE;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 	// todo: MAF-based ignition table?
 }

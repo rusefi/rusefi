@@ -315,8 +315,8 @@ bit issue_294_30;
 bit issue_294_31;
 
 
-int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tpsADC\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
-int16_t tpsMax;Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tpsADC\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMin;Closed throttle. todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors\nSee also tps1_1AdcChannel\nset tps_min X;"ADC",      1,     0,    0, 1023,      0
+int16_t tpsMax;Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps_max X;"ADC",      1,     0,    0, 1023,      0
 
 int16_t tpsErrorDetectionTooLow;+TPS error detection, what TPS % value is unrealistically low;"%",       1,     0,    -40, 200,     0
 int16_t tpsErrorDetectionTooHigh;+TPS error detection, what TPS % value is unrealistically high;"%",       1,     0,    -40, 200,     0
@@ -418,12 +418,7 @@ log_format_e logFormat;
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 
-!
-! TunerStudio has that nice 'Calibrate TPS' standart dialog which users LOVE!
-! So, we have to use 'tpsADC' magic field name for first TPS first channel
-! https://github.com/rusefi/rusefi/issues/805
-!
-	adc_channel_e tpsADC;First TPS, single channel so far. See aslo pedalPositionAdcChannel
+	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See aslo pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;
 adc_channel_e fuelLevelSensor;
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
@@ -476,7 +471,7 @@ end_struct
 	
 afr_sensor_s afr
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tpsADC
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position input\nSingle channel so far\nSee also tps1_1AdcChannel
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 

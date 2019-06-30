@@ -246,7 +246,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf(getIgnition_mode_e(engineConfiguration->ignitionMode));
 		return;
 	case LL_TPS:
-		getPinNameByAdcChannel("tps", engineConfiguration->tpsADC, buffer);
+		getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, buffer);
 
 		lcdPrintf("Throttle %s %.2f%%", buffer, getTPS());
 		return;
