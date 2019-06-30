@@ -386,7 +386,7 @@ static void printAnalogInfo(void) {
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
-	printAnalogChannelInfo("TPS", engineConfiguration->tpsADC);
+	printAnalogChannelInfo("TPS", engineConfiguration->tps1_1AdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	if (engineConfiguration->clt.adcChannel != EFI_ADC_NONE) {
 		printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
@@ -589,7 +589,7 @@ void setMockAfrVoltage(float voltage) {
 }
 
 void setMockTpsVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->tpsADC, voltage);
+	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage);
 }
 
 void setMockMapVoltage(float voltage) {
@@ -810,6 +810,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190625;
+	return 20190630;
 }
 #endif /* EFI_UNIT_TEST */

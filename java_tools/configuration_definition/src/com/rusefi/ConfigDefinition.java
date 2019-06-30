@@ -47,8 +47,10 @@ public class ConfigDefinition {
         } catch (Throwable e) {
             SystemOut.println(e);
             e.printStackTrace();
+            SystemOut.close();
             System.exit(-1);
         }
+        SystemOut.close();
     }
 
     private static void doJob(String[] args) throws IOException {

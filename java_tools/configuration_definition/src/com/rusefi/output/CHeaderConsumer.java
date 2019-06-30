@@ -81,7 +81,8 @@ public class CHeaderConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        cHeader.write(VariableRegistry.INSTANCE.getDefinesSection());
+        if (withC_Defines)
+            cHeader.write(VariableRegistry.INSTANCE.getDefinesSection());
         cHeader.write(content.toString());
         cHeader.write("#endif" + EOL);
         cHeader.write("// end" + EOL);
