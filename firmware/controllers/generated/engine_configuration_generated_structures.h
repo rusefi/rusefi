@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 30 14:06:54 EDT 2019
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1137,14 +1137,14 @@ struct engine_configuration_s {
 	/**
 	 * Closed throttle. todo: extract these two fields into a structure
 	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
-	 * See also tpsADC
+	 * See also tps1_1AdcChannel
 	 * set tps_min X
 	 * offset 80
 	 */
 	int16_t tpsMin;
 	/**
 	 * Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!
-	 * See also tpsADC
+	 * See also tps1_1AdcChannel
 	 * set tps_max X
 	 * offset 82
 	 */
@@ -1371,7 +1371,7 @@ struct engine_configuration_s {
 	 * First TPS, single channel so far. See aslo pedalPositionAdcChannel
 	 * offset 512
 	 */
-	adc_channel_e tpsADC;
+	adc_channel_e tps1_1AdcChannel;
 	/**
 	 * offset 513
 	 */
@@ -1444,7 +1444,7 @@ struct engine_configuration_s {
 	/**
 	 * Electronic throttle pedal position input
 	 * Single channel so far
-	 * See also tpsADC
+	 * See also tps1_1AdcChannel
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -2827,4 +2827,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 30 14:06:54 EDT 2019

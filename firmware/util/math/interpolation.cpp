@@ -101,6 +101,14 @@ float FastInterpolation::getValue(float x) const {
  * @note	For example, "interpolateMsg("", engineConfiguration.tpsMin, 0, engineConfiguration.tpsMax, 100, adc);"
  */
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x) {
+	if (cisnan(x1) || cisnan(x2) || cisnan(y1) || cisnan(y2)) {
+		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why param", msg);
+		return NAN;
+	}
+	if (cisnan(x)) {
+		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why X", msg);
+		return NAN;
+	}
 	// todo: double comparison using EPS
 	if (x1 == x2) {
 		/**
@@ -114,6 +122,10 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 	// a*x2 + b = y2
 //	efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, x1 != x2, "no way we can interpolate");
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
+	if (cisnan(a)) {
+		warning(CUSTOM_INTEPOLATE_ERROR, "interpolate%s: why a", msg);
+		return NAN;
+	}
 	float b = y1 - a * x1;
 	float result = a * x + b;
 #if	DEBUG_FUEL

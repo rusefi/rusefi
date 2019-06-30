@@ -1,9 +1,6 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigDefinition;
-import com.rusefi.ConfigField;
-import com.rusefi.ConfigStructure;
-import com.rusefi.TypesHelper;
+import com.rusefi.*;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 
@@ -16,7 +13,9 @@ import static com.rusefi.ConfigDefinition.EOL;
  */
 public class CHeaderConsumer implements ConfigurationConsumer {
     public static final String BOOLEAN_TYPE = "bool";
+    public static boolean withC_Defines;
     private final LazyFile cHeader;
+    private final StringBuilder content = new StringBuilder();
 
     public CHeaderConsumer(String destCHeader) {
         SystemOut.println("Writing C header to " + destCHeader);
@@ -57,31 +56,34 @@ public class CHeaderConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         if (structure.comment != null) {
-            cHeader.write("/**" + EOL + ConfigDefinition.packComment(structure.comment, "")  + EOL + "*/" + EOL);
+            content.append("/**" + EOL + ConfigDefinition.packComment(structure.comment, "")  + EOL + "*/" + EOL);
         }
 
-        cHeader.write("// start of " + structure.name + EOL);
-        cHeader.write("struct " + structure.name + " {" + EOL);
+        content.append("// start of " + structure.name + EOL);
+        content.append("struct " + structure.name + " {" + EOL);
 
         structure.bitState.reset();
         for (int i = 0; i < structure.cFields.size(); i++) {
             ConfigField cf = structure.cFields.get(i);
-            cHeader.write(getHeaderText(cf, structure.currentOffset, structure.bitState.get()));
+            content.append(getHeaderText(cf, structure.currentOffset, structure.bitState.get()));
             ConfigField next = i == structure.cFields.size() - 1 ? ConfigField.VOID : structure.cFields.get(i + 1);
 
             structure.bitState.incrementBitIndex(cf, next);
             structure.currentOffset += cf.getSize(next);
         }
 
-        cHeader.write("\t/** total size " + structure.currentOffset + "*/" + EOL);
-        cHeader.write("};" + EOL + EOL);
+        content.append("\t/** total size " + structure.currentOffset + "*/" + EOL);
+        content.append("};" + EOL + EOL);
 
         // https://stackoverflow.com/questions/1675351/typedef-struct-vs-struct-definitions
-        cHeader.write("typedef struct " + structure.name + " " + structure.name + ";" + EOL + EOL);
+        content.append("typedef struct " + structure.name + " " + structure.name + ";" + EOL + EOL);
     }
 
     @Override
     public void endFile() throws IOException {
+        if (withC_Defines)
+            cHeader.write(VariableRegistry.INSTANCE.getDefinesSection());
+        cHeader.write(content.toString());
         cHeader.write("#endif" + EOL);
         cHeader.write("// end" + EOL);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);

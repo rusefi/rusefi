@@ -145,7 +145,7 @@ EXTERN_ENGINE
 ;
 
 // todo: move this into a hw-specific file
-static void rebootNow(void) {
+void rebootNow(void) {
 	NVIC_SystemReset();
 }
 

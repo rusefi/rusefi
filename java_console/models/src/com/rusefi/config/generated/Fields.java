@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 30 14:05:19 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -1093,6 +1093,8 @@ public class Fields {
 	public static final int tle8888_csPinMode_offset = 3130;
 	public static final int tle8888spiDevice_offset = 4024;
 	public static final int TOTAL_CONFIG_SIZE = 20000;
+	public static final int tps1_1AdcChannel_offset = 512;
+	public static final int tps1_1AdcChannel_offset_hex = 200;
 	public static final int tps2_1AdcChannel_offset = 515;
 	public static final int tps2_1AdcChannel_offset_hex = 203;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
@@ -1102,8 +1104,6 @@ public class Fields {
 	public static final int tpsAccelFractionPeriod_offset = 4018;
 	public static final int tpsAccelLength_offset = 2064;
 	public static final int tpsAccelLength_offset_hex = 810;
-	public static final int tpsADC_offset = 512;
-	public static final int tpsADC_offset_hex = 200;
 	public static final int tpsDecelEnleanmentMultiplier_offset = 2104;
 	public static final int tpsDecelEnleanmentMultiplier_offset_hex = 838;
 	public static final int tpsDecelEnleanmentThreshold_offset = 2100;
@@ -1354,7 +1354,7 @@ public class Fields {
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 500, FieldType.INT);
 	public static final Field HD44780WIDTH = Field.create("HD44780WIDTH", 504, FieldType.INT);
 	public static final Field HD44780HEIGHT = Field.create("HD44780HEIGHT", 508, FieldType.INT);
-	public static final Field TPSADC = Field.create("TPSADC", 512, FieldType.INT8, adc_channel_e);
+	public static final Field TPS1_1ADCCHANNEL = Field.create("TPS1_1ADCCHANNEL", 512, FieldType.INT8, adc_channel_e);
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 513, FieldType.INT8, adc_channel_e);
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
@@ -2140,7 +2140,7 @@ public class Fields {
 	BYFIRMWAREVERSION,
 	HD44780WIDTH,
 	HD44780HEIGHT,
-	TPSADC,
+	TPS1_1ADCCHANNEL,
 	VBATTADCCHANNEL,
 	FUELLEVELSENSOR,
 	TPS2_1ADCCHANNEL,

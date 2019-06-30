@@ -9,7 +9,7 @@ import java.awt.*;
 import static com.rusefi.CommandControl.TEST;
 
 public class BenchTestPane {
-    private final JPanel content = new JPanel(new GridLayout(2, 4));
+    private final JPanel content = new JPanel(new GridLayout(2, 5));
 
     public BenchTestPane() {
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -21,6 +21,12 @@ public class BenchTestPane {
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createDizzyTest());
+        content.add(new CommandControl("Reboot", "", "Reboot") {
+            @Override
+            protected String getCommand() {
+                return "reboot";
+            }
+        }.getContent());
         content.add(new MessagesView().messagesScroll);
     }
 

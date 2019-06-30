@@ -1,1 +1,0 @@
-see http://rusefi.com/forum/viewforum.php?f=12

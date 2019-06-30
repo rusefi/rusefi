@@ -80,6 +80,9 @@ float getTpsRateOfChange(void) {
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	DISPLAY_TAG(TPS_SECTION);
+	DISPLAY_SENSOR(TPS)
+	DISPLAY_TEXT(EOL)
+
 
 	DISPLAY_TEXT(Analog_MCU_reads);
 	engine->engineState.currentTpsAdc = adc;
@@ -87,7 +90,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engine->engineState.DISPLAY_FIELD(tpsVoltageMCU) = adcToVolts(adc);
 #endif
 	DISPLAY_TEXT(Volts);
-	DISPLAY_TEXT(from_pin) DISPLAY(DISPLAY_CONFIG(tpsADC))
+	DISPLAY_TEXT(from_pin) DISPLAY(DISPLAY_CONFIG(tps1_1AdcChannel))
 	DISPLAY_TEXT(EOL);
 
 	DISPLAY_TEXT(Analog_ECU_reads);
@@ -128,7 +131,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * Return voltage on TPS AND channel
  * */
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("tps", engineConfiguration->tpsADC);
+	return getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel);
 }
 
 /*
@@ -142,11 +145,11 @@ int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return engine->mockTpsAdcValue;
 	}
 #endif
-	if (engineConfiguration->tpsADC == EFI_ADC_NONE)
+	if (engineConfiguration->tps1_1AdcChannel == EFI_ADC_NONE)
 		return -1;
 #if EFI_PROD_CODE
 
-	return getAdcValue("tps10", engineConfiguration->tpsADC);
+	return getAdcValue("tps10", engineConfiguration->tps1_1AdcChannel);
 	//	return tpsFastAdc / 4;
 #else
 	return 0;
@@ -210,7 +213,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool hasTpsSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->tpsADC != EFI_ADC_NONE;
+	return engineConfiguration->tps1_1AdcChannel != EFI_ADC_NONE;
 }
 
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

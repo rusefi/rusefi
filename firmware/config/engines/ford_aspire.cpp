@@ -147,7 +147,7 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Frankenstein analog input #12: adc
 
 
-	engineConfiguration->tpsADC = EFI_ADC_3;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;

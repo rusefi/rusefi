@@ -8,11 +8,13 @@ public class TpsMeta {
 			new ConfigRequest("throttlePedalPositionAdcChannel"),
 	};
 	public static final Request[] TPS_SECTION = new Request[]{
+			new SensorRequest("TPS"),
+			new TextRequest("EOL"),
 			new TextRequest("Analog_MCU_reads"),
 			new FieldRequest("tpsVoltageMCU"),
 			new TextRequest("Volts"),
 			new TextRequest("from_pin"),
-			new ConfigRequest("tpsADC"),
+			new ConfigRequest("tps1_1AdcChannel"),
 			new TextRequest("EOL"),
 			new TextRequest("Analog_ECU_reads"),
 			new FieldRequest("tpsVoltageBoard"),
