@@ -80,6 +80,9 @@ float getTpsRateOfChange(void) {
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	DISPLAY_TAG(TPS_SECTION);
+	DISPLAY_SENSOR(TPS)
+	DISPLAY_TEXT(EOL)
+
 
 	DISPLAY_TEXT(Analog_MCU_reads);
 	engine->engineState.currentTpsAdc = adc;
