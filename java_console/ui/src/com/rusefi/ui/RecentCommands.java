@@ -32,6 +32,7 @@ public class RecentCommands {
     private static final String SHOWCONFIG = "showconfig";
     private static final String HELP = "help";
     private static final String ANALOGINFO = "analoginfo";
+    private static final String PINS = "pins";
     private static final String TRIGGERINFO = "triggerinfo";
     private static final String IDLEINFO = "idleinfo";
     private static final String ALTINFO = "altinfo";
@@ -118,6 +119,7 @@ public class RecentCommands {
         add(SHOWCONFIG);
         add(STOPENGINE);
         add(ANALOGINFO);
+        add(PINS);
         add(TRIGGERINFO);
         add(TSINFO);
         add(SPEEDINFO);
