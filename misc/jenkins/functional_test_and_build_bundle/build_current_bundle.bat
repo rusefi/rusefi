@@ -73,11 +73,12 @@ mkdir temp
 
 set stm_arch=stm32f407
 set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_%stm_arch%_rusefi
+echo "%script_name%: folder variable1=%folder%"
 set folder=temp\%folder%
 
 rem this replaces spaces with 0s - that's needed before 10am
 set folder=%folder: =0%
-echo "folder variable=%folder%"
+echo "%script_name%: folder variable3=%folder%"
 
 pwd
 call misc\jenkins\build_working_folder.bat
@@ -104,7 +105,7 @@ echo "%script_name%: Making rusefi_simulator.zip"
 pwd
 zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
-cd temp
+cd temps
 if not exist rusefi_bundle.zip (
  echo %script_name%: not found rusefi_bundle.zip
  EXIT /B 1
