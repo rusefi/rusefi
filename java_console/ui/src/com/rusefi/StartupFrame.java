@@ -127,7 +127,7 @@ public class StartupFrame {
         installMessage(noPortsMessage, "Check you cables. Check your drivers. Do you want to start simulator maybe?");
         realHardwarePanel.add(new URLLabel(VCP_DRIVER_TEXT, VCP_DRIVER_URI));
 
-        if (ProcessStatusWindow.isWindows()) {
+        if (FileLog.isWindows()) {
             realHardwarePanel.add(new HorizontalLine());
             // for F7 builds we just build one file at the moment
             realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "Program Firmware").getButton());

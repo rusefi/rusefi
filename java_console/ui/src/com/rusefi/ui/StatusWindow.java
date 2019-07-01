@@ -12,7 +12,7 @@ import java.awt.*;
  * (c) Andrey Belomutskiy 2013-2018
  * 3/7/2015
  */
-public class StatusWindow {
+public class StatusWindow implements StatusConsumer {
     // todo: extract driver from console bundle? find a separate driver bundle?
     private static final String CONSOLE_DRIVER_URI = "http://www.st.com/st-web-ui/static/active/en/st_prod_software_internet/resource/technical/software/utility/stsw-link004.zip";
     private final JTextArea log = new JTextArea();
@@ -53,6 +53,7 @@ public class StatusWindow {
         log.setText(""); // let's remove stuff from previous invocation
     }
 
+    @Override
     public void appendMsg(final String s) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override

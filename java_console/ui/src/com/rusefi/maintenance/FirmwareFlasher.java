@@ -38,14 +38,14 @@ public class FirmwareFlasher extends ProcessStatusWindow {
 
                 wnd.showFrame("rusEfi Firmware Flasher");
 
-                submitAction(() -> doFlashFirmware());
+                ExecHelper.submitAction(() -> doFlashFirmware(), getClass() + " extProcessThread");
             }
         });
     }
 
     public static String getOpenocdCommad() {
         String cfg = "stm32f4discovery.cfg";
-        return BINARY_LOCATION + File.separator +  OPENOCD_EXE + " -f openocd/" + cfg;
+        return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
     private void doFlashFirmware() {

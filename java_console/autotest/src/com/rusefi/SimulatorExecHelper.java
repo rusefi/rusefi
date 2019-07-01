@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * 3/18/14
  * (c) Andrey Belomutskiy
  */
-public class ExecHelper {
+public class SimulatorExecHelper {
     // see also SimulatorHelper
     private static final String SIMULATOR_BINARY = "../simulator/build/rusefi_simulator.exe";
     static Process simulatorProcess;
@@ -26,10 +26,10 @@ public class ExecHelper {
             FileLog.MAIN.logLine("Binary size: " + new File(SIMULATOR_BINARY).length());
 
             FileLog.MAIN.logLine("Executing " + SIMULATOR_BINARY);
-            ExecHelper.simulatorProcess = Runtime.getRuntime().exec(SIMULATOR_BINARY);
-            FileLog.MAIN.logLine("simulatorProcess: " + ExecHelper.simulatorProcess);
+            SimulatorExecHelper.simulatorProcess = Runtime.getRuntime().exec(SIMULATOR_BINARY);
+            FileLog.MAIN.logLine("simulatorProcess: " + SimulatorExecHelper.simulatorProcess);
 
-            dumpProcessOutput(ExecHelper.simulatorProcess);
+            dumpProcessOutput(SimulatorExecHelper.simulatorProcess);
 
             FileLog.MAIN.logLine("exitValue: " + simulatorProcess.exitValue());
 

@@ -34,7 +34,7 @@ public class SimulatorHelper {
                     FileLog.SIMULATOR_CONSOLE.start();
                     process = Runtime.getRuntime().exec(BINARY);
                     FileLog.MAIN.logLine("Executing " + BINARY + "=" + process);
-                    ExecHelper.dumpProcessOutput(process);
+                    SimulatorExecHelper.dumpProcessOutput(process);
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }

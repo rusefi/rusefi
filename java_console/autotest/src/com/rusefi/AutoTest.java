@@ -486,7 +486,7 @@ public class AutoTest {
             e.printStackTrace();
             failed = true;
         } finally {
-            ExecHelper.destroy();
+            SimulatorExecHelper.destroy();
         }
         if (failed)
             System.exit(-1);
