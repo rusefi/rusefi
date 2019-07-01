@@ -118,7 +118,7 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 		if (engineConfiguration->verboseTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
-		if (ratio < CONFIGB(nb2ratioFrom) || ratio > CONFIGB(nb2ratioTo)) {
+		if (ratio < CONFIGB(miataNb2VVTRatioFrom) || ratio > CONFIGB(miataNb2VVTRatioTo)) {
 			return;
 		}
 		if (engineConfiguration->verboseTriggerSynchDetails) {
@@ -654,8 +654,8 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
 		COMPARE_CONFIG_PARAMS(vvtOffset) ||
 		COMPARE_CONFIG_PARAMS(vvtDisplayInverted) ||
-		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
-		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
+		COMPARE_CONFIG_PARAMS(bc.miataNb2VVTRatioFrom) ||
+		COMPARE_CONFIG_PARAMS(bc.miataNb2VVTRatioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
 	if (changed) {
 		assertEngineReference();

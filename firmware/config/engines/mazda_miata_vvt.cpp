@@ -360,8 +360,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	0.1375
 //	6.375
 //	10.625
-	boardConfiguration->nb2ratioFrom = 8.50 * 0.75;
-	boardConfiguration->nb2ratioTo = 14;
+	boardConfiguration->miataNb2VVTRatioFrom = 8.50 * 0.75;
+	boardConfiguration->miataNb2VVTRatioTo = 14;
 	engineConfiguration->nbVvtIndex = 0;
 
 
