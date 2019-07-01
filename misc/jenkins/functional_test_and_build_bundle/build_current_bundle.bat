@@ -72,6 +72,8 @@ rm -rf temp
 mkdir temp
 
 set stm_arch=stm32f407
+echo Year %date:~10%
+echo Month %date:~4,2%
 set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_%stm_arch%_rusefi
 echo "%script_name%: folder variable1=%folder%"
 set folder=temp\%folder%
