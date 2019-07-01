@@ -3,11 +3,13 @@ echo Entering %script_name% with %bundle_name%
 
 
 rm -rf temp
-set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_%bundle_name%_rusefi
-set folder=temp\%folder%
+rem This depends on Cygwin date copied under 'datecyg' name to avoid conflict with Windows date
+rem By the way, '%%' is the way to escape % in batch files
+rem this is copy-pasted at build_current_bundle.bat
+for /f %%i in ('datecyg +%%Y%%m%%d_%%H%%M%%S') do set TIMESTAMP=%%i
 
-rem this replaces spaces with 0s - that's needed before 10am
-set folder=%folder: =0%
+set folder=snapshot_%TIMESTAMP%_%bundle_name%_rusefi
+set folder=temp\%folder%
 
 echo Packaging temp\rusefi_bundle.zip file
 call misc\jenkins\build_working_folder.bat

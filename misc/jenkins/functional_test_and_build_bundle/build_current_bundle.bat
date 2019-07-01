@@ -74,6 +74,7 @@ mkdir temp
 set stm_arch=stm32f407
 rem This depends on Cygwin date copied under 'datecyg' name to avoid conflict with Windows date
 rem By the way, '%%' is the way to escape % in batch files
+rem this is copy-pasted at build_version.bat
 for /f %%i in ('datecyg +%%Y%%m%%d_%%H%%M%%S') do set TIMESTAMP=%%i
 
 set folder=snapshot_%TIMESTAMP%_%stm_arch%_rusefi
