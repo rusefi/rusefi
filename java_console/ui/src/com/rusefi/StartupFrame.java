@@ -3,9 +3,9 @@ package com.rusefi;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.maintenance.DriverInstall;
 import com.rusefi.maintenance.EraseChip;
 import com.rusefi.maintenance.FirmwareFlasher;
-import com.rusefi.maintenance.ProcessStatusWindow;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -43,8 +43,6 @@ public class StartupFrame {
     private static final String LOGO = "logo.gif";
     public static final String LINK_TEXT = "rusEfi (c) 2012-2019";
     private static final String URI = "http://rusefi.com/?java_console";
-    private static final String VCP_DRIVER_TEXT = "vcp driver";
-    private static final String VCP_DRIVER_URI = "http://www.st.com/st-web-ui/static/active/en/st_prod_software_internet/resource/technical/software/driver/stsw-stm32102.zip";
 
     private final JFrame frame;
     private final Timer scanPortsTimes = new Timer(1000, new ActionListener() {
@@ -122,10 +120,11 @@ public class StartupFrame {
         leftPanel.add(realHardwarePanel);
         leftPanel.add(miscPanel);
 
+        if (FileLog.isWindows())
+            realHardwarePanel.add(DriverInstall.createButton());
         realHardwarePanel.add(connectPanel);
         realHardwarePanel.add(noPortsMessage);
         installMessage(noPortsMessage, "Check you cables. Check your drivers. Do you want to start simulator maybe?");
-        realHardwarePanel.add(new URLLabel(VCP_DRIVER_TEXT, VCP_DRIVER_URI));
 
         if (FileLog.isWindows()) {
             realHardwarePanel.add(new HorizontalLine());
