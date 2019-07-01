@@ -109,7 +109,7 @@ public class IoUtil {
         if (startProcess) {
             if (!TcpConnector.getAvailablePorts().isEmpty())
                 throw new IllegalStateException("Port already binded on startup?");
-            ExecHelper.startSimulator();
+            SimulatorExecHelper.startSimulator();
         }
 
 

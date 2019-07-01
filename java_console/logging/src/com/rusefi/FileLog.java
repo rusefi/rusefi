@@ -56,8 +56,16 @@ public enum FileLog {
     }
 
     private static void printOsInfo() {
-        MAIN.logLine("OS name: " + System.getProperty("os.name"));
+        MAIN.logLine("OS name: " + getOsName());
         MAIN.logLine("OS version: " + System.getProperty(OS_VERSION));
+    }
+
+    private static String getOsName() {
+        return System.getProperty("os.name");
+    }
+
+    public static boolean isWindows() {
+        return getOsName().contains("Windows");
     }
 
     private FileOutputStream openLog() throws FileNotFoundException {
