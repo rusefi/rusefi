@@ -48,6 +48,7 @@ public class PortHolder {
      */
     private boolean open(String port, final DataListener listener) {
         IoStream stream;
+        // todo: BUG: Mac version 10 also 'is windows10 == true' at the moment :)
         boolean windows10 = isWindows10();
         FileLog.MAIN.logLine("Is windows10: " + windows10);
         if (windows10) {

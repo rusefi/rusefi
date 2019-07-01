@@ -1,7 +1,6 @@
 package com.rusefi.ui;
 
 import com.rusefi.ui.util.FrameHelper;
-import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +13,6 @@ import java.awt.*;
  */
 public class StatusWindow implements StatusConsumer {
     // todo: extract driver from console bundle? find a separate driver bundle?
-    private static final String CONSOLE_DRIVER_URI = "http://www.st.com/st-web-ui/static/active/en/st_prod_software_internet/resource/technical/software/utility/stsw-link004.zip";
     private final JTextArea log = new JTextArea();
     private final JPanel content = new JPanel(new BorderLayout());
     private final JScrollPane messagesScroll = new JScrollPane(log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
@@ -28,8 +26,6 @@ public class StatusWindow implements StatusConsumer {
 
     public StatusWindow() {
         log.setLineWrap(true);
-        // todo: move this somewhere else. table editor use-case does not need stm32 driver
-        content.add(new URLLabel("stm32 driver", CONSOLE_DRIVER_URI), BorderLayout.NORTH);
         content.add(messagesScroll, BorderLayout.CENTER);
     }
 

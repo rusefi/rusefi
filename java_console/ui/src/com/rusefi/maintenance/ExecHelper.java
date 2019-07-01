@@ -51,7 +51,6 @@ public class ExecHelper {
             return error;
         }
 
-        command = workingDirPath + File.separator + command;
         wnd.appendMsg("Executing " + command);
         StringBuffer output = new StringBuffer();
         try {

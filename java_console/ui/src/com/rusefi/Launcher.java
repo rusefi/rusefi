@@ -46,7 +46,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190630;
+    public static final int CONSOLE_VERSION = 20190701;
     public static final boolean SHOW_STIMULATOR = false;
     public static final String INPUT_FILES_PATH = "..";
     private static final String TAB_INDEX = "main_tab";
