@@ -646,8 +646,8 @@ custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UA
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
 	int16_t stepperParkingExtraSteps;;"%",        1,     0,  0,    3000.0,  0
-	float nb2ratioFrom;;"value",      1,      0,       0, 1000,      5
-	float nb2ratioTo;;"value",      1,      0,       0, 1000,      5
+	float miataNb2VVTRatioFrom;This magic property is specific to Mazda Miata NB2;"value",      1,      0,       0, 1000,      5
+	float miataNb2VVTRatioTo;This magic property is specific to Mazda Miata NB2;"value",      1,      0,       0, 1000,      5
 
 	brain_pin_e triggerErrorPin;+This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	pin_output_mode_e triggerErrorPinMode;

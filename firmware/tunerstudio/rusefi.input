@@ -1452,8 +1452,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
 	    field = "VVT display inverted",					vvtDisplayInverted
-	    field = "NB2 from temp",						nb2ratioFrom
-	    field = "NB2 to temp",							nb2ratioTo
+	    field = "Miata NB2 from (temporary)",			miataNb2VVTRatioFrom
+	    field = "Miata NB2 to (temporary)",				miataNb2VVTRatioTo
 	    field = "nbVvtIndex",							nbVvtIndex
 	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8}
