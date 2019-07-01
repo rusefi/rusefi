@@ -72,15 +72,13 @@ rm -rf temp
 mkdir temp
 
 set stm_arch=stm32f407
-echo Date %date%
-echo Year %date:~10%
-echo Month %date:~4,2%
-set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_%stm_arch%_rusefi
+rem This depends on Cygwin date copied under 'datecyg' name to avoid conflict with Windows date
+rem By the way, '%%' is the way to escape % in batch files
+for /f %%i in ('datecyg +%%Y%%m%%d_%%H%%M%%S') do set TIMESTAMP=%%i
+
+set folder=snapshot_%TIMESTAMP%_%stm_arch%_rusefi
 echo "%script_name%: folder variable1=%folder%"
 set folder=temp\%folder%
-
-rem this replaces spaces with 0s - that's needed before 10am
-set folder=%folder: =0%
 echo "%script_name%: folder variable3=%folder%"
 
 pwd
