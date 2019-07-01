@@ -85,7 +85,7 @@ echo "%script_name%: folder variable3=%folder%"
 pwd
 call misc\jenkins\build_working_folder.bat
 IF NOT ERRORLEVEL 0 (
- echo %script_name%: ERROR invoking build_working_folder.bat
+ echo %script_name%: ERROR: invoking build_working_folder.bat
  EXIT /B 1
 )
 
@@ -107,11 +107,9 @@ echo "%script_name%: Making rusefi_simulator.zip"
 pwd
 zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
-cd temps
-if not exist rusefi_bundle.zip (
- echo %script_name%: not found rusefi_bundle.zip
- EXIT /B 1
-)
+cd temp
+if not exist rusefi_bundle.zip echo %script_name%: ERROR not found rusefi_bundle.zip
+if not exist rusefi_bundle.zip EXIT /B 1
 
 echo "%script_name%: Uploading stuff"
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% . rusefi_bundle.zip
