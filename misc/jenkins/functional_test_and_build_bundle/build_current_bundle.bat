@@ -6,8 +6,8 @@ rem
 set script_name=build_current_bundle
 set "root_folder=%cd%"
 echo %script_name Entering root_folder=%root_folder%
-FOR %%i IN ("%root%") DO (set root=%%~si)
-echo %script_name Short name %root%"
+FOR %%i IN ("%root_folder%") DO (set root_folder=%%~si)
+echo %script_name Short name %root_folder%"
 
 
 set FTP_SERVER=home451478433.1and1-data.host
@@ -105,6 +105,11 @@ pwd
 zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 cd temp
+if not exist rusefi_bundle.zip (
+ echo %script_name%: not found rusefi_bundle.zip
+ EXIT /B 1
+)
+
 echo "%script_name%: Uploading stuff"
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% . rusefi_bundle.zip
 ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files rusefi_simulator.zip
