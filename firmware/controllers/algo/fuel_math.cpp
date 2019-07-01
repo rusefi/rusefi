@@ -52,7 +52,7 @@ extern baroCorr_Map3D_t baroCorrMap;
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
-float (float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (rpm == 0)
 		return 0;
 	// duration of engine cycle, in hours
@@ -87,7 +87,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN sd baseFuel", 0);
 	} else if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) + engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
-		baseFuel = (maf, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		baseFuel = getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseFuel), "NaN rm baseFuel", 0);
 	} else {
 		baseFuel = engine->engineState.baseTableFuel;
