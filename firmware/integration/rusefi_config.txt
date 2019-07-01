@@ -419,7 +419,7 @@ log_format_e logFormat;
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 
 	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See aslo pedalPositionAdcChannel
-adc_channel_e vbattAdcChannel;
+adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
 adc_channel_e fuelLevelSensor;
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
 
@@ -602,7 +602,7 @@ bit is_enabled_spi_2
 	bit useLcdScreen;
 	bit unusedAnotherOne;
 	bit useWarmupPidAfr;
-	bit onOffAlternatorLogic;
+	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
@@ -823,7 +823,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float tachPulseDuractionMs;;"ms",        1,     0,    0.0,    100.0,  2
 	int tachPulseTriggerIndex;+Trigger cycle index at which we start tach pulse (performance consideration);"index",     1,     0,    0.0,    360.0,  0
 	
-	float wwaeTau;;"%",        1,     0,    0.0,    3.0,  2
+	float wwaeTau;;"Seconds",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
 	pid_s etb;
 	pid_s warmupAfrPid;
@@ -833,7 +833,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;See cltIdleRpmBins
-	float wwaeBeta;Wall wetting/evaporation factor/Tau factor/fuel film;"%",        1,     0,    0.0,    1.0,  2
+	float wwaeBeta;Wall wetting/evaporation factor/Tau factor/fuel film;+0=No fuel settling on port walls, 1=All the fuel settling on port walls, setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
 	brain_pin_e communicationLedPin;blue LED on discovery by default	
 	brain_pin_e runningLedPin;green LED on discovery by default
@@ -858,7 +858,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
 	float[CLT_CURVE_SIZE] cltIdleRpm;See idleRpmPid;"",      1,     0,      0.0,    8000.0,   0
 	
-	float targetVBatt;set targetvbatt VOLTS;"Volts",      1,      0,       0,30,      1
+	float targetVBatt;+This it the target battery voltage the alternator PID control will attempt to maintain;set targetvbatt VOLTS;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;+Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.;"%",  1,      0,       0, 200,      2
 	float startOfCrankingPrimingPulse;+Prime pulse for cold engine, duration in ms\nLinear interpolation between -40F/-40C and fallout temperature\n\nSee also isFasterEngineSpinUpEnabled\nset cranking_priming_pulse X;"ms",        1,     0,    0, 200,     1
 	int16_t afterCrankingIACtaperDuration;+This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.;"cycles",        1,     0,  0,    5000,  0
@@ -871,8 +871,8 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	brain_pin_e LIS302DLCsPin;
 
 
-	int tpsAccelLength;+How many engine cycles to consider?;"cycles",        1,     0,    1, 200,     0
-	float tpsAccelEnrichmentThreshold;+Maximum delta in TPS percentage over the 'length'. Actual TPS change has to be above this value in order to TPS/TPS acceleration to kick in.;"roc",        1,     0,    0, 200,     3
+	int tpsAccelLength;+This is the number of engine cycles that the TPS position chance can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. ;"cycles",        1,     0,    1, 200,     0
+	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc",        1,     0,    0, 200,     3
 	float vvtOffset;+Angle between cam sensor and VVT zero position\nset vvt_offset X;"value",      1,      0,       -720, 1000,      1
 	
 	int engineLoadAccelLength;;"cycles",        1,     0,    1, 200,     0
