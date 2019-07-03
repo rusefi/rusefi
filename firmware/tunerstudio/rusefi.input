@@ -1068,6 +1068,11 @@ gaugeCategory = Throttle Body (incl. ETB)
    entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
    entry = acSwitchIndicator,   "AC switch",int,"%d"
    entry = ind_fan, "radiator fan",int,"%d"
+
+; Electronic throttle body
+   entry = etb1Error,      "ETB Error", float, "%.3f"
+   entry = etb1DutyCycle,  "ETB Duty", float, "%.3f"
+   entry = etbTarget,      "ETB Target", float, "%.3f"
    
    
 ;     tpsADC          = U16,    "ADC",
