@@ -23,9 +23,7 @@ extern "C"
 // todo: remove these two from here and rely on os_access.h
 #include <ch.h>
 #include <hal.h>
-#include "chprintf.h"
 #include "common_headers.h"
-#include "io_pins.h"
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__

@@ -55,13 +55,12 @@
 EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
 EXTERNC void efiSetPadUnused(brain_pin_e brainPin);
 
-bool efiReadPin(brain_pin_e pin);
+EXTERNC bool efiReadPin(brain_pin_e pin);
 
-iomode_t getInputMode(pin_input_mode_e mode);
+EXTERNC iomode_t getInputMode(pin_input_mode_e mode);
 #if HAL_USE_ICU
-void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config);
+EXTERNC void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config);
 #endif /* HAL_USE_ICU */
 #endif /* EFI_GPIO_HARDWARE */
-
 
 #endif /* IO_PINS_H_ */
