@@ -12,6 +12,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "event_queue.h"
 #include "efitime.h"
 #include "rfiutil.h"

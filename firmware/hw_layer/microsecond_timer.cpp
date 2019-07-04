@@ -12,6 +12,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "microsecond_timer.h"
 #include "scheduler.h"
 #include "rfiutil.h"

@@ -22,6 +22,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif

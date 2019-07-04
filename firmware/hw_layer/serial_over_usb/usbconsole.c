@@ -13,8 +13,6 @@
 
 #include "usbconsole.h"
 #include "usbcfg.h"
-#include "efifeatures.h"
-
 
 static bool isUsbSerialInitialized = false;
 

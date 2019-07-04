@@ -17,6 +17,14 @@ extern "C"
 
 #include <ch.h>
 #include <hal.h>
+#include "chprintf.h"
+#include "io_pins.h"
+
+/*
+ * Stack debugging
+ * See also getMaxUsedStack()
+ */
+int getRemainingStack(thread_t *otp);
 
 #ifdef __cplusplus
 }

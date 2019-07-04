@@ -9,6 +9,7 @@
 #define PID_H_
 
 #include "global.h"
+#include "os_access.h"
 #include "engine_configuration_generated_structures.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
