@@ -2,12 +2,11 @@
  * @file error_handling.cpp
  *
  * @date Apr 1, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "engine.h"
-#include "io_pins.h"
-
+#include "os_access.h"
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global

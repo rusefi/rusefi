@@ -25,6 +25,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "engine_sniffer.h"
 #include "adc_inputs.h"
 

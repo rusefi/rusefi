@@ -60,6 +60,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 
 #include "allsensors.h"
 #include "tunerstudio.h"

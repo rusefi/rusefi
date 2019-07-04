@@ -23,6 +23,7 @@
 #include "global.h"
 
 #if HAL_USE_ADC
+#include "os_access.h"
 
 #include "engine.h"
 #include "adc_inputs.h"

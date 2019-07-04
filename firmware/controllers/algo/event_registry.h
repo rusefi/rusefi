@@ -9,7 +9,6 @@
 #define EVENT_REGISTRY_H_
 
 #include "global.h"
-#include "os_access.h"
 #include "signal_executor.h"
 #include "fl_stack.h"
 #include "trigger_structure.h"

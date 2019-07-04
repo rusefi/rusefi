@@ -16,9 +16,9 @@
 #include "maf2map.h"
 #include "config_engine_specs.h"
 
-//todo#if defined(HAS_OS_ACCESS)
-//todo#error "Unexpected OS ACCESS HERE"
-//todo#endif
+#if defined(HAS_OS_ACCESS)
+#error "Unexpected OS ACCESS HERE"
+#endif
 
 #define rpmMin 500
 #define rpmMax 8000

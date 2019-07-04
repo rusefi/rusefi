@@ -19,6 +19,7 @@
 #include "global.h"
 
 #if EFI_HD44780_LCD
+#include "os_access.h"
 
 #include "lcd_controller.h"
 #include "lcd_HD44780.h"
