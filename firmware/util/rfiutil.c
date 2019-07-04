@@ -21,7 +21,6 @@
 
 #include <string.h>
 #include "global.h"
-#include "rfiutil.h"
 
 /*
  not used, not sure if we still need it. I guess we will remove it in 2015
@@ -57,6 +56,7 @@
 
 #if !EFI_UNIT_TEST
 #include "os_access.h"
+#include "rfiutil.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
 	bool wasLocked = lockAnyContext();

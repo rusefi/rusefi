@@ -6,6 +6,8 @@
  */
 
 #include "engine_math.h"
+#include "os_access.h"
+
 #include "utlist.h"
 #include "event_queue.h"
 #include "rfiutil.h"

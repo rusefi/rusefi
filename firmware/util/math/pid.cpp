@@ -9,6 +9,7 @@
  */
 
 #include "pid.h"
+#include "os_access.h"
 #include "math.h"
 
 Pid::Pid() {

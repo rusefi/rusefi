@@ -33,7 +33,7 @@
 #include "global.h"
 
 #if ! EFI_UNIT_TEST
-#include "chprintf.h"
+#include "os_access.h"
 #include "chmtx.h"
 #include "memstreams.h"
 #include "console_io.h"

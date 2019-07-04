@@ -12,6 +12,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "wave_analyzer.h"
 #include "eficonsole.h"
 #include "data_buffer.h"

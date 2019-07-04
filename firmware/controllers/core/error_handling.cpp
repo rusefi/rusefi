@@ -12,7 +12,6 @@
 #if EFI_SIMULATOR || EFI_PROD_CODE
 //todo: move into simulator global
 #include "memstreams.h"
-#include <chprintf.h>
 static MemoryStream warningStream;
 static MemoryStream firmwareErrorMessageStream;
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
