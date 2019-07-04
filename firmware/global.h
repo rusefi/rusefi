@@ -20,6 +20,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+// todo: remove these two from here and rely on os_access.h
 #include <ch.h>
 #include <hal.h>
 

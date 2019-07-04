@@ -13,6 +13,10 @@
 #include "histogram.h"
 #include "global.h"
 
+#if defined(HAS_OS_ACCESS)
+#error "Unexpected OS ACCESS HERE"
+#endif
+
 #if EFI_HISTOGRAMS || EFI_UNIT_TEST
 
 #define H_ACCURACY 0.05
