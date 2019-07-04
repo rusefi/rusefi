@@ -25,6 +25,8 @@
 
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+#include "os_access.h"
+
 #include "microsecond_timer.h"
 #include "tunerstudio_configuration.h"
 #include "rfiutil.h"

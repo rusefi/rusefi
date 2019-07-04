@@ -26,6 +26,7 @@
 #include "map.h"
 
 #if EFI_MAP_AVERAGING
+#include "os_access.h"
 
 #include "map_averaging.h"
 #include "trigger_central.h"

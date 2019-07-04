@@ -21,6 +21,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "engine_configuration.h"
 #include "fsio_impl.h"
 #include "allsensors.h"

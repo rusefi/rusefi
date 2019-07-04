@@ -18,17 +18,18 @@ extern "C"
 #include <ch.h>
 #include <hal.h>
 #include "chprintf.h"
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #include "io_pins.h"
 
 /*
  * Stack debugging
  * See also getMaxUsedStack()
  */
-int getRemainingStack(thread_t *otp);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+EXTERNC int getRemainingStack(thread_t *otp);
 
 #define HAS_OS_ACCESS
 

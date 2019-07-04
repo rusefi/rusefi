@@ -22,6 +22,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #if EFI_PROD_CODE
 #include <nvic.h>
 #endif
