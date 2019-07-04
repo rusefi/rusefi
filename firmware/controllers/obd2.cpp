@@ -27,8 +27,7 @@
 #include "global.h"
 
 #if EFI_CAN_SUPPORT
-
-
+#include "os_access.h"
 #include "engine.h"
 #include "obd2.h"
 #include "can_hw.h"
@@ -38,7 +37,6 @@
 #include "tps.h"
 #include "engine_math.h"
 #include "fuel_math.h"
-
 
 extern CANTxFrame txmsg;
 
