@@ -78,13 +78,17 @@
 #include "pid.h"
 #include "engine_controller.h"
 #include "periodic_controller.h"
-
-#define ETB_MAX_COUNT 2
-
 #include "pin_repository.h"
 #include "pwm_generator.h"
 #include "dc_motor.h"
 #include "pid_auto_tune.h"
+
+#if defined(HAS_OS_ACCESS)
+#error "Unexpected OS ACCESS HERE"
+#endif
+
+#define ETB_MAX_COUNT 2
+
 #if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
