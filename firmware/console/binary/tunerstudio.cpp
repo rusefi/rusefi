@@ -193,49 +193,18 @@ void tunerStudioDebug(const char *msg) {
 char *getWorkingPageAddr(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
+#ifndef EFI_NO_CONFIG_WORKING_COPY
 		return (char*) &configWorkingCopy.engineConfiguration;
 #else
 		return (char*) engineConfiguration;
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
-//	case 1:
-//		return (char*) &configWorkingCopy.ve2Table;
-//	case 2:
-//		return (char*) &configWorkingCopy.fuelTable;
-//	case 3:
-//		return (char*) &configWorkingCopy.ignitionTable;
-//	case 4:
-//		return (char*) &configWorkingCopy.veTable;
-//	case 5:
-//		return (char*) &configWorkingCopy.afrTable;
-//	case 6:
-//		return (char*) &configWorkingCopy.injectionPhase;
-//	case 2: // fuelTable
-//	case 3: // ignitionTable
-//	case 4: // veTable
-//	case 5: // afrTable
-//		return (char*) &configWorkingCopy.engineConfiguration + PAGE_0_SIZE + (pageIndex - 2) * 1024;
+	default:
+		return nullptr;
 	}
-	return NULL;
 }
 
 int getTunerStudioPageSize(int pageIndex) {
-	switch (pageIndex) {
-	case 0:
-		return TOTAL_CONFIG_SIZE;
-//	case 1:
-//	case 2:
-//	case 3:
-//	case 4:
-//	case 5:
-//	case 6:
-//		return PAGE_1_SIZE;
-//	case 2:
-//	case 3:
-//	case 4:
-//		return 1024;
-	}
-	return 0;
+	return pageIndex ? 0 : TOTAL_CONFIG_SIZE;
 }
 
 static void sendOkResponse(ts_channel_s *tsChannel, ts_response_format_e mode) {
@@ -264,7 +233,7 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
  */
 static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int count) {
 	UNUSED(currentPageId);
-	if (offset > sizeof(engine_configuration_s)) {
+	if (offset >= sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
 			warning(CUSTOM_TS_OVERFLOW, "TS overflow %d %d", offset, count);
@@ -752,85 +721,88 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	char command = data[0];
 	data++;
 
-	// Output command first since it's popular
-	if (command == TS_OUTPUT_COMMAND) {
-		uint16_t offset = *(uint16_t *) (data);
-		uint16_t count = *(uint16_t *) (data + 2);
-		handleOutputChannelsCommand(tsChannel, TS_CRC, offset, count);
-	} else if (command == TS_HELLO_COMMAND) {
+	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
+
+	switch(command)
+	{
+	case TS_OUTPUT_COMMAND:
+		handleOutputChannelsCommand(tsChannel, TS_CRC, data16[0], data16[1]);
+		break;
+	case TS_HELLO_COMMAND:
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
-	} else if (command == TS_GET_FIRMWARE_VERSION) {
+		break;
+	case TS_GET_FIRMWARE_VERSION:
 		handleGetVersion(tsChannel, TS_CRC);
-	} else if (command == TS_GET_TEXT) {
+		break;
+	case TS_GET_TEXT:
 		handleGetText(tsChannel);
-	} else if (command == TS_EXECUTE) {
+		break;
+	case TS_EXECUTE:
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
-	} else if (command == TS_PAGE_COMMAND) {
-		uint16_t page = *(uint16_t *) data;
-		handlePageSelectCommand(tsChannel, TS_CRC, page);
-	} else if (command == TS_GET_STRUCT) {
-		short structId = *(uint16_t *) data;
-		uint16_t length = *(uint16_t *) (data + 2);
-		handleGetStructContent(tsChannel, structId, length);
-	} else if (command == TS_GET_FILE_RANGE) {
-		short fileId = *(uint16_t *) data;
-		uint16_t offset = *(uint16_t *) (data + 2);
-		uint16_t length = *(uint16_t *) (data + 4);
-		handleReadFileContent(tsChannel, fileId, offset, length);
-	} else if (command == TS_CHUNK_WRITE_COMMAND) {
-		currentPageId = *(uint16_t *) data;
-		uint16_t offset = *(uint16_t *) (data + 2);
-		uint16_t count = *(uint16_t *) (data + 4);
-		handleWriteChunkCommand(tsChannel, TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
-	} else if (command == TS_SINGLE_WRITE_COMMAND) {
-		uint16_t page = *(uint16_t *) data;
-		uint16_t offset = *(uint16_t *) (data + 2);
-		uint8_t value = data[4];
-		handleWriteValueCommand(tsChannel, TS_CRC, page, offset, value);
-	} else if (command == TS_CRC_CHECK_COMMAND) {
-		uint16_t page = *(uint16_t *) data;
-		uint16_t offset = *(uint16_t *) (data + 2);
-		uint16_t count = *(uint16_t *) (data + 4);
-		handleCrc32Check(tsChannel, TS_CRC, page, offset, count);
-	} else if (command == TS_BURN_COMMAND) {
-		uint16_t page = *(uint16_t *) data;
-		handleBurnCommand(tsChannel, TS_CRC, page);
-	} else if (command == TS_READ_COMMAND) {
-		uint16_t page = *(uint16_t *) data;
-		uint16_t offset = *(uint16_t *) (data + 2);
-		uint16_t count = *(uint16_t *) (data + 4);
-		handlePageReadCommand(tsChannel, TS_CRC, page, offset, count);
-	} else if (command == 't' || command == 'T') {
-		handleTestCommand(tsChannel);
-	} else if (command == TS_IO_TEST_COMMAND) {
-		uint16_t subsystem = SWAP_UINT16(*(uint16_t*)&data[0]);
-		uint16_t index = SWAP_UINT16(*(uint16_t*)&data[2]);
-
-		if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
-			tsOutputChannels.debugIntField1++;
-			tsOutputChannels.debugIntField2 = subsystem;
-			tsOutputChannels.debugIntField3 = index;
-
+		break;
+	case TS_PAGE_COMMAND:
+		handlePageSelectCommand(tsChannel, TS_CRC, data16[0]);
+		break;
+	case TS_GET_STRUCT:
+		handleGetStructContent(tsChannel, data16[0], data16[1]);
+		break;
+	case TS_GET_FILE_RANGE:
+		handleReadFileContent(tsChannel, data16[0], data16[1], data16[2]);
+		break;
+	case TS_CHUNK_WRITE_COMMAND:
+		currentPageId = data16[0];
+		handleWriteChunkCommand(tsChannel, TS_CRC, data16[1], data16[2], data + sizeof(TunerStudioWriteChunkRequest));
+		break;
+	case TS_SINGLE_WRITE_COMMAND:
+		{
+			uint8_t value = data[4];
+			handleWriteValueCommand(tsChannel, TS_CRC, data16[0], data16[1], value);
 		}
+		break;
+	case TS_CRC_CHECK_COMMAND:
+		handleCrc32Check(tsChannel, TS_CRC, data16[0], data16[1], data16[2]);
+		break;
+	case TS_BURN_COMMAND:
+		handleBurnCommand(tsChannel, TS_CRC, data16[0]);
+		break;
+	case TS_READ_COMMAND:
+		handlePageReadCommand(tsChannel, TS_CRC, data16[0], data16[1], data16[2]);
+		break;
+	case TS_TEST_COMMAND:
+		[[fallthrough]];
+	case 'T':
+		handleTestCommand(tsChannel);
+		break;
+	case TS_IO_TEST_COMMAND:
+		{
+			uint16_t subsystem = SWAP_UINT16(data16[0]);
+			uint16_t index = SWAP_UINT16(data16[1]);
+
+			if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
+				tsOutputChannels.debugIntField1++;
+				tsOutputChannels.debugIntField2 = subsystem;
+				tsOutputChannels.debugIntField3 = index;
+			}
 
 #if EFI_PROD_CODE
-		executeTSCommand(subsystem, index);
+			executeTSCommand(subsystem, index);
 #endif /* EFI_PROD_CODE */
-		sendOkResponse(tsChannel, TS_CRC);
-	} else {
+			sendOkResponse(tsChannel, TS_CRC);
+		}
+		break;
+	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;
 	}
+
 	return true;
 }
 
 void startTunerStudioConnectivity(void) {
-	if (sizeof(persistent_config_s) != getTunerStudioPageSize(0))
-		firmwareError(CUSTOM_OBD_TS_PAGE_MISMATCH, "TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
-
-	if (sizeof(TunerStudioOutputChannels) != TS_OUTPUT_SIZE)
-		firmwareError(CUSTOM_OBD_TS_OUTPUT_MISMATCH, "TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
+	// Assert tune & output channel struct sizes
+	static_assert(sizeof(persistent_config_s) == TOTAL_CONFIG_SIZE, "TS datapage size mismatch");
+	static_assert(sizeof(TunerStudioOutputChannels) == TS_OUTPUT_SIZE, "TS output channels size mismatch");
 
 	memset(&tsState, 0, sizeof(tsState));
 	syncTunerStudioCopy();
