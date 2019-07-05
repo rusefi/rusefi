@@ -21,6 +21,10 @@
 #include "pin_repository.h"
 #include "tunerstudio_configuration.h"
 
+#if defined(HAS_OS_ACCESS)
+#error "Unexpected OS ACCESS HERE"
+#endif
+
 EXTERN_ENGINE
 ;
 

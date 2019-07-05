@@ -9,8 +9,8 @@
 #ifndef efi_gpio_H_
 #define efi_gpio_H_
 
-#include "io_pins.h"
 #include "global.h"
+#include "io_pins.h"
 
 void initPrimaryPins(void);
 void initOutputPins(void);

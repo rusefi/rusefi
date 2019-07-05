@@ -19,6 +19,10 @@
 #include "pin_repository.h"
 #include "periodic_controller.h"
 
+#if defined(HAS_OS_ACCESS)
+#error "Unexpected OS ACCESS HERE"
+#endif
+
 EXTERN_ENGINE
 ;
 
