@@ -99,7 +99,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
-	appendPrintf(&logging, "wave_chart%s", DELIMETER);
+	appendPrintf(&logging, "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
 }
 
 void WaveChart::startDataCollection() {

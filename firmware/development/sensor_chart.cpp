@@ -62,7 +62,7 @@ void scAddData(float angle, float value) {
 		pendingData = true;
 		resetLogging(&scLogging);
 		// message header
-		appendPrintf(&scLogging, "analog_chart%s", DELIMETER);
+		appendPrintf(&scLogging, "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
 	}
 
 	if (remainingSize(&scLogging) > 100) {

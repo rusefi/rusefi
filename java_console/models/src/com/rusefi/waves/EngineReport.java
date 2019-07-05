@@ -1,5 +1,6 @@
 package com.rusefi.waves;
 
+import com.rusefi.config.generated.Fields;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
  * @see SensorSnifferPane
  */
 public class EngineReport implements TimeAxisTranslator {
-    public static final String ENGINE_CHART = "wave_chart";
+    public static final String ENGINE_CHART = Fields.PROTOCOL_ENGINE_SNIFFER;
     public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1)));
     /**
      * number of ChibiOS systicks per ms
