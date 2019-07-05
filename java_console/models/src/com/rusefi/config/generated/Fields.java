@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 01 12:45:02 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jul 05 19:36:12 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -983,6 +983,8 @@ public class Fields {
 	public static final int primeInjFalloffTemperature_offset = 1486;
 	public static final int primingSquirtDurationMs_offset = 96;
 	public static final int primingSquirtDurationMs_offset_hex = 60;
+	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
+	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1833;
