@@ -132,7 +132,7 @@ void setSdCardConfigurationOverrides(void) {
 void setBoardConfigurationOverrides(void) {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
 	// TODO: remove it when the bootloader is ready
-	Delay(2000);
+	chThdSleepMilliseconds(2000);
 
 	setSerialConfigurationOverrides();
 

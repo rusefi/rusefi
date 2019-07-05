@@ -125,7 +125,6 @@ typedef unsigned int time_t;
  */
 #define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
 
-#define Delay(ms) chThdSleepMilliseconds(ms)
 #ifdef __cplusplus
 extern "C"
 {
