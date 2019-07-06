@@ -129,10 +129,10 @@ public class StartupFrame {
         if (FileLog.isWindows()) {
             realHardwarePanel.add(new HorizontalLine());
             // for F7 builds we just build one file at the moment
-            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "Program Firmware").getButton());
+            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "Program Firmware", "Default firmware version for most users").getButton());
             if (new File(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE).exists()) {
                 // 407 build
-                realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "Program Firmware/NoAsserts").getButton());
+                realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "Program Firmware/NoAsserts", "Please only use this version if you know that you need this version").getButton());
             }
             realHardwarePanel.add(new EraseChip().getButton());
         }

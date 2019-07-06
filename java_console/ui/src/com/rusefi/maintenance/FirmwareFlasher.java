@@ -24,9 +24,10 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     private final JButton button;
     private String fileName;
 
-    public FirmwareFlasher(String fileName, String buttonTest) {
+    public FirmwareFlasher(String fileName, String buttonTest, String tooltip) {
         this.fileName = fileName;
         button = new JButton(buttonTest);
+        button.setToolTipText(tooltip);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
