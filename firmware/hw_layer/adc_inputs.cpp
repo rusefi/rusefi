@@ -151,6 +151,8 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 
 AdcDevice slowAdc(&adcgrpcfgSlow);
 
+void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
+
 static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
 /* HW dependent part.*/
 ADC_TwoSamplingDelay_5Cycles,   // cr1

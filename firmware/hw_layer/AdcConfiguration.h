@@ -9,6 +9,13 @@
 
 #if HAL_USE_ADC
 
+#define ADC_MAX_CHANNELS_COUNT 16
+
+// this structure contains one multi-channel ADC state snapshot
+typedef struct {
+	volatile adcsample_t adc_data[ADC_MAX_CHANNELS_COUNT];
+} adc_state;
+
 class AdcDevice {
 public:
 	explicit AdcDevice(ADCConversionGroup* hwConfig);

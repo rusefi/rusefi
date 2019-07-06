@@ -3,7 +3,7 @@
  * @brief	Low level internal ADC code
  *
  * @date Jan 14, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef ADC_INPUTS_H_
@@ -16,7 +16,6 @@
 
 const char * getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs(bool boardTestMode);
-void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
 // deprecated - migrate to 'getAdcChannelBrainPin'
 int getAdcChannelPin(adc_channel_e hwChannel);
@@ -43,16 +42,6 @@ void removeChannel(const char *name, adc_channel_e setting);
 
 // max(ADC_BUF_DEPTH_SLOW, ADC_BUF_DEPTH_FAST)
 #define MAX_ADC_GRP_BUF_DEPTH 8
-
-#define ADC_MAX_CHANNELS_COUNT 16
-
-//typedef struct
-
-// this structure contains one multi-channel ADC state snapshot
-typedef struct {
-	volatile adcsample_t adc_data[ADC_MAX_CHANNELS_COUNT];
-//	time_t time;
-} adc_state;
 
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
