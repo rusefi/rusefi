@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildProperties="" description="" id="0.114656749" name="Default" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="0.114656749" name="Default" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.prefbase.cfg">
 					<folderInfo id="0.114656749." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1182750861" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1182750861.169007201" name=""/>
@@ -32,7 +32,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="ChibiOS3/os/hal/ports/STM32/STM32F3xx|ChibiOS3/os/hal/ports/STM32/STM32F37x|ChibiOS3/os/hal/ports/STM32/STM32F1xx|ChibiOS3/os/hal/ports/STM32/STM32F0xx|ChibiOS3/os/hal/ports/STM32/STM32L1xx|ChibiOS3/os/hal/ports/STM32/STM32L0xx|ChibiOS3/os/hal/ports/STM32/STM32L4xx|ChibiOS3/os/hal/ports/STM32/LLD/GPIOv2|ChibiOS3/os/hal/ports/STM32/LLD/GPIOv1|ChibiOS3/os/hal/ports/STM32/LLD/DMAv2|ChibiOS3/os/hal/templates|ChibiOS3/os/rt/templates|ChibiOS3/demos|ChibiOS-Contrib/testhal|ChibiOS-Contrib/demos|ChibiOS3/os/hal/ports/STM32/STM32F7xx|ChibiOS3/os/hal/ports/LPC|ChibiOS3/os/hal/ports/KINETIS|ChibiOS3/os/hal/ports/AVR" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="ChibiOS/os/hal/ports/SPC5|ChibiOS/os/hal/ports/AVR|ChibiOS/os/hal/ports/LPC|ChibiOS-Contrib/os/hal/ports/TIVA|ChibiOS-Contrib/os/hal/ports/MSP430X|ChibiOS-Contrib/os/hal/ports/NRF5|ChibiOS/testhal|ChibiOS/testex|ChibiOS/demos|ChibiOS-Contrib/testhal|ChibiOS-Contrib/demos" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
