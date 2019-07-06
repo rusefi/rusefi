@@ -41,6 +41,11 @@
 #define PAL_USE_WAIT                FALSE
 #endif
 
+// rusEfi uses callback for PAL input capture
+#if !defined(PAL_USE_CALLBACKS) || defined(__DOXYGEN__)
+#define PAL_USE_CALLBACKS                TRUE
+#endif
+
 /**
  * @brief   Enables the ADC subsystem.
  */
