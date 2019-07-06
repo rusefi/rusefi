@@ -21,7 +21,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdarg.h>
 #include "global.h"
 #include "os_access.h"
 #include "eficonsole.h"

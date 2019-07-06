@@ -11,9 +11,6 @@
 extern "C"
 {
 #endif /* __cplusplus */
-
-#include <ch.h>
-#include <hal.h>
     
 #ifdef __cplusplus
 }
