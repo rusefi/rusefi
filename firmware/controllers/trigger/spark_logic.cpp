@@ -5,8 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "engine_math.h"
+#include "global.h"
 #include "os_access.h"
+#include "engine_math.h"
 
 #include "utlist.h"
 #include "event_queue.h"

@@ -10,9 +10,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "global.h"
+#include "os_access.h"
 #include "engine.h"
 #include "rpm_calculator.h"
-#include "os_access.h"
 
 #include "trigger_central.h"
 #include "engine_configuration.h"

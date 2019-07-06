@@ -8,8 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "pid.h"
+#include "global.h"
 #include "os_access.h"
+#include "pid.h"
 #include "math.h"
 
 Pid::Pid() {
