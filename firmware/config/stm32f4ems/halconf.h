@@ -37,6 +37,10 @@
 #define HAL_USE_PAL                 TRUE
 #endif
 
+#if !defined(PAL_USE_WAIT) || defined(__DOXYGEN__)
+#define PAL_USE_WAIT                FALSE
+#endif
+
 /**
  * @brief   Enables the ADC subsystem.
  */
