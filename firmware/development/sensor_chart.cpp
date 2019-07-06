@@ -5,9 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "sensor_chart.h"
 #include "global.h"
 #include "os_access.h"
+#include "sensor_chart.h"
 #include "engine.h"
 #include "rpm_calculator.h"
 

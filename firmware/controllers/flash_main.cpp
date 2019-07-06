@@ -9,9 +9,9 @@
 
 #include "global.h"
 #if EFI_INTERNAL_FLASH
+#include "os_access.h"
 #include "flash_main.h"
 #include "eficonsole.h"
-#include "os_access.h"
 
 #include "flash.h"
 #include "engine_math.h"
