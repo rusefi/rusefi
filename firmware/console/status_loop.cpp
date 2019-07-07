@@ -51,7 +51,7 @@
 #include "spark_logic.h"
 #include "idle_thread.h"
 #include "engine_configuration.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "svnversion.h"
 #include "engine.h"
 #include "lcd_controller.h"

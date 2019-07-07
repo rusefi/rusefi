@@ -21,7 +21,7 @@
 #include "signal_executor.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "engine_math.h"
 #include "engine.h"
 #include "rpm_calculator.h"

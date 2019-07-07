@@ -48,7 +48,7 @@
 #include "engine_controller.h"
 #include "efi_gpio.h"
 #if EFI_PROD_CODE
-#include "rfiutil.h"
+#include "os_util.h"
 #endif /* EFI_HISTOGRAMS */
 #include "local_version_holder.h"
 #include "event_queue.h"

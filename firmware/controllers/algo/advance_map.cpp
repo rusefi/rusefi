@@ -2,7 +2,7 @@
  * @file	advance_map.cpp
  *
  * @date Mar 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -23,7 +23,6 @@
 #include "engine.h"
 #include "advance_map.h"
 #include "interpolation.h"
-#include "rfiutil.h"
 #include "engine_math.h"
 #include "tps.h"
 #include "idle_thread.h"

@@ -41,7 +41,7 @@
 #include "tunerstudio.h"
 #endif
 #include "injector_central.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "engine_math.h"
 #if EFI_WAVE_ANALYZER
 #include "wave_analyzer.h"

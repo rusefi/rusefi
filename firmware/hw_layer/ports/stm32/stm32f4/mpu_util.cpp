@@ -15,7 +15,7 @@
 #include "engine.h"
 #include "pin_repository.h"
 #include "stm32f4xx_hal_flash.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 EXTERN_ENGINE;
 
