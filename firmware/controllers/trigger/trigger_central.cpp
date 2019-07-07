@@ -17,6 +17,7 @@
 #include "data_buffer.h"
 #include "histogram.h"
 #include "pwm_generator_logic.h"
+#include "tooth_logger.h"
 
 #include "settings.h"
 #include "engine_math.h"
@@ -192,6 +193,11 @@ static bool isInsideTriggerHandler = false;
 
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+	// Log to the Tunerstudio tooth logger
+	// We want to do this before anything else as we
+	// actually want to capture any noise/jitter that may be occuring
+	LogTriggerTooth(signal);
+
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIGB(useNoiselessTriggerDecoder)) {
@@ -223,7 +229,7 @@ static char shaft_signal_msg_index[15];
 static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { CRANK1, CRANK1, CRANK2, CRANK2, CRANK3, CRANK3 };
 
-static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {	
 	if (!ENGINE(isEngineChartEnabled)) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
 		return; // engineSnifferRpmThreshold is accounted for inside ENGINE(isEngineChartEnabled)
 	}
