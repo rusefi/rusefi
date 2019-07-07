@@ -230,9 +230,8 @@ static void periodicSlowCallback(Engine *engine);
 
 static void scheduleNextSlowInvocation(void) {
 	// schedule next invocation
-	int periodMs = CONFIGB(generalPeriodicThreadPeriodMs);
-	if (periodMs == 0)
-		periodMs = 50; // this might happen while resetting configuration
+	// we need at least protection from zero value while resetting configuration
+	int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
 	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
 }
 
