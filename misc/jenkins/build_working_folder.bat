@@ -42,9 +42,9 @@ cp firmware/deliver/rusefi_no_asserts.bin %folder%
 cp firmware/deliver/rusefi_no_asserts.dfu %folder%
 rem 746 builds one version at the moment
 rem probably not needed cp firmware/build/rusefi.hex %folder%
-cp firmware/build/rusefi.bin %folder%
+cp firmware/deliver/rusefi.bin %folder%
 rem probably not needed cp firmware/build/rusefi.elf %folder%
-cp firmware/build/rusefi.dfu %folder%
+cp firmware/deliver/rusefi.dfu %folder%
 
 
 cd temp
