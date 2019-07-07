@@ -57,6 +57,6 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 echo "TIMESTAMP %date% %time% Now uploading only firmware
 
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files firmware/build/rusefi_firmware.zip
 IF NOT ERRORLEVEL 0 echo ERROR: Invoking ncftpput has failed
 IF NOT ERRORLEVEL 0 EXIT /B 1
