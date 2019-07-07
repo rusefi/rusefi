@@ -1,8 +1,6 @@
 set script_name=run.bat
 echo Entering %script_name%
 
-set FTP_SERVER=home451478433.1and1-data.host
-
 pwd
 
 call misc\jenkins\build_java_console.bat

@@ -9,13 +9,8 @@ echo %script_name Entering root_folder=%root_folder%
 FOR %%i IN ("%root_folder%") DO (set root_folder=%%~si)
 echo %script_name Short name %root_folder%"
 
-
-set FTP_SERVER=home451478433.1and1-data.host
-
 echo build_current_bundle.bat: Hello rusEfi build full bundle
-
 echo %date% %time%
-
 
 cd firmware/bootloader
 call !clean_bootloader.bat
