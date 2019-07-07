@@ -38,7 +38,7 @@
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
 #include "pin_repository.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 /* to be removed  */
 #if EFI_TUNER_STUDIO

@@ -38,7 +38,7 @@
 #define CHART_DELIMETER	'!'
 
 #if EFI_HISTOGRAMS
-#include "rfiutil.h"
+#include "os_util.h"
 #include "histogram.h"
 static histogram_s engineSnifferHisto;
 #endif /* EFI_HISTOGRAMS */

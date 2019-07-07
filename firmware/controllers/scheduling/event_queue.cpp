@@ -15,7 +15,7 @@
 #include "os_access.h"
 #include "event_queue.h"
 #include "efitime.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 uint32_t maxSchedulingPrecisionLoss = 0;
 

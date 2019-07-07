@@ -3,7 +3,7 @@ UTIL_DIR=$(PROJECT_DIR)/util
 UTILSRC = \
 	$(UTIL_DIR)/containers/data_buffer.c \
 	$(UTIL_DIR)/math/crc.c \
-	$(UTIL_DIR)/rfiutil.c \
+	$(UTIL_DIR)/os_util.c \
 	$(UTIL_DIR)/histogram.c
 
 UTILSRC_CPP = \

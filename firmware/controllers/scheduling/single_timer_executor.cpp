@@ -30,7 +30,7 @@
 
 #include "microsecond_timer.h"
 #include "tunerstudio_configuration.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 #include "engine.h"
 EXTERN_ENGINE;

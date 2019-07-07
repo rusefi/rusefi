@@ -17,7 +17,7 @@
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "injector_central.h"
 #include "vehicle_speed.h"
 #include "yaw_rate_sensor.h"

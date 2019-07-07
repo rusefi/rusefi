@@ -37,7 +37,7 @@
 #include "chmtx.h"
 #include "memstreams.h"
 #include "console_io.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;

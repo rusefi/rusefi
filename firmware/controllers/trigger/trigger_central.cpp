@@ -3,7 +3,7 @@
  * Here we have a bunch of higher-level methods which are not directly related to actual signal decoding
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "global.h"
@@ -24,6 +24,20 @@
 #include "trigger_simulator.h"
 
 #include "rpm_calculator.h"
+
+#if EFI_PROD_CODE
+#include "pin_repository.h"
+#endif /* EFI_PROD_CODE */
+
+#if EFI_TUNER_STUDIO
+#include "tunerstudio.h"
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
+
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
 
 trigger_central_s::trigger_central_s() : hwEventCounters() {
 
@@ -49,22 +63,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 }
 
 #if EFI_SHAFT_POSITION_INPUT
-
-
-#if EFI_PROD_CODE
-#include "rfiutil.h"
-#include "pin_repository.h"
-#endif /* EFI_PROD_CODE */
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
 
 EXTERN_ENGINE;
 

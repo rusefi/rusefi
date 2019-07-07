@@ -1,9 +1,9 @@
 /**
- * @file    rfiutil.c
- * @brief   Number to string conversion code
+ * @file    os_util.c
+ * @brief   Utility methods related to operating system usage
  *
  * @date Nov 15, 2012
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -19,44 +19,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string.h>
 #include "global.h"
-
-/*
- not used, not sure if we still need it. I guess we will remove it in 2015
- int mylog10(int param) {
- if (param < 10)
- return 0;
- if (param < 100)
- return 1;
- if (param < 1000)
- return 2;
- if (param < 10000)
- return 3;
- if (param < 100000)
- return 4;
- if (param < 1000000)
- return 5;
- if (param < 10000000)
- return 6;
- if (param < 100000000)
- return 7;
- #warning This would be better without recursion
- return mylog10(param / 10) + 1;
- }
- */
-/*
- char hexChar(int v) {
- v = v & 0xF;
- if (v < 10)
- return (char)('0' + v);
- return 'A' - 10 + v;
- }
- */
 
 #if !EFI_UNIT_TEST
 #include "os_access.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
 	bool wasLocked = lockAnyContext();
