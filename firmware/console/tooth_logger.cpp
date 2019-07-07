@@ -15,6 +15,7 @@ static volatile bool ToothLoggerEnabled = false;
 static uint32_t lastEdgeTimestamp = 0;
 
 void SetNextEntry(uint16_t entry) {
+	// TS uses big endian, grumble
 	buffer[NextIdx] = SWAP_UINT16(entry);
 	NextIdx++;
 
