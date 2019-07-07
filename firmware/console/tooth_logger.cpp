@@ -34,9 +34,7 @@ void LogTriggerTooth(trigger_event_e tooth) {
 	// Since VR senors are the most useful case here, this is okay for now.
 	if (tooth != SHAFT_PRIMARY_FALLING) return;
 
-	efitick_t timestamp = getTimeNowNt();
-
-	uint32_t nowUs = NT2US(timestamp);
+	uint32_t nowUs = NT2US(getTimeNowNt());
 	// 10us per LSB - this gives plenty of accuracy, yet fits 655.35 ms in to a uint16
 	uint16_t delta = static_cast<uint16_t>((nowUs - lastEdgeTimestamp) / 10);
 	lastEdgeTimestamp = nowUs;
