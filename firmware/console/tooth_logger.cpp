@@ -1,8 +1,18 @@
+/*
+ * @file tooth_logger.cpp
+ *
+ * @date Jul 7, 2019
+ * @author Matthew Kennedy
+ */
+
 #include "tooth_logger.h"
+
+#include "global.h"
+
+#if EFI_TOOTH_LOGGER
 
 #include <cstddef>
 #include "efitime.h"
-#include "global.h"
 #include "efilib.h"
 #include "tunerstudio_configuration.h"
 
@@ -70,3 +80,5 @@ void DisableToothLogger() {
 ToothLoggerBuffer GetToothLoggerBuffer() {
 	return { reinterpret_cast<uint8_t*>(buffer), sizeof(buffer) };
 }
+
+#endif /* EFI_TOOTH_LOGGER */

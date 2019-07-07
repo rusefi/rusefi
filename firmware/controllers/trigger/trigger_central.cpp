@@ -191,10 +191,12 @@ static bool isInsideTriggerHandler = false;
 
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+#if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we
-	// actually want to capture any noise/jitter that may be occuring
+	// actually want to capture any noise/jitter that may be occurring
 	LogTriggerTooth(signal);
+#endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test

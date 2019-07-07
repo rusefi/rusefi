@@ -42,6 +42,10 @@
 
 #define EFI_MEMS FALSE
 
+#ifndef EFI_TOOTH_LOGGER
+#define EFI_TOOTH_LOGGER TRUE
+#endif
+
 #define CONSOLE_MAX_ACTIONS 256
 
 #define EFI_SIMULATOR TRUE

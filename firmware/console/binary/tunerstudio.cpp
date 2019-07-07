@@ -794,7 +794,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 			sendOkResponse(tsChannel, TS_CRC);
 		}
 		break;
-	case TS_SET_LOGGER_MODE:
+#if EFI_TOOTH_LOGGER
+		case TS_SET_LOGGER_MODE:
 		switch(data[0]) {
 		case 0x01:
 			EnableToothLogger();
@@ -817,6 +818,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 
 		break;
+#endif /* EFI_TOOTH_LOGGER */
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");
 		return false;

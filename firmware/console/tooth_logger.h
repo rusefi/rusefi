@@ -1,3 +1,10 @@
+/*
+ * @file tooth_logger.h
+ *
+ * @date Jul 7, 2019
+ * @author Matthew Kennedy
+ */
+
 #pragma once
 
 #include <cstdint>
