@@ -75,6 +75,7 @@
 #include "crc.h"
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
+#include "tooth_logger.h"
 
 #include <string.h>
 #include "engine_configuration.h"
@@ -448,8 +449,10 @@ static bool isKnownCommand(char command) {
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_STRUCT
 			|| command == TS_GET_FILE_RANGE
-			|| command == TS_TOOTH_COMMAND
-			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND
+			|| command == TS_SET_LOGGER_MODE
+			|| command == TS_GET_LOGGER_BUFFER
+			|| command == TS_GET_TEXT
+			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION;
 }
 
@@ -790,6 +793,29 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 #endif /* EFI_PROD_CODE */
 			sendOkResponse(tsChannel, TS_CRC);
 		}
+		break;
+	case TS_SET_LOGGER_MODE:
+		switch(data[0]) {
+		case 0x01:
+			EnableToothLogger();
+			break;
+		case 0x02:
+			DisableToothLogger();
+			break;
+		default:
+			// dunno what that was, send NAK
+			return false;
+		}
+
+		sendOkResponse(tsChannel, TS_CRC);
+
+		break;
+	case TS_GET_LOGGER_BUFFER:
+		{
+			auto toothBuffer = GetToothLoggerBuffer();
+			sr5SendResponse(tsChannel, TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
+		}
+
 		break;
 	default:
 		tunerStudioError("ERROR: ignoring unexpected command");

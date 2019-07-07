@@ -17,6 +17,7 @@
 #include "data_buffer.h"
 #include "histogram.h"
 #include "pwm_generator_logic.h"
+#include "tooth_logger.h"
 
 #include "settings.h"
 #include "engine_math.h"
@@ -190,6 +191,11 @@ static bool isInsideTriggerHandler = false;
 
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+	// Log to the Tunerstudio tooth logger
+	// We want to do this before anything else as we
+	// actually want to capture any noise/jitter that may be occuring
+	LogTriggerTooth(signal);
+
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIGB(useNoiselessTriggerDecoder)) {
