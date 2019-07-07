@@ -109,9 +109,9 @@ if not exist rusefi_bundle.zip echo %script_name%: ERROR not found rusefi_bundle
 if not exist rusefi_bundle.zip EXIT /B 1
 
 echo "%script_name%: Uploading stuff"
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% . rusefi_bundle.zip
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files rusefi_simulator.zip
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files rusefi_console.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . rusefi_bundle.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files rusefi_simulator.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files rusefi_console.zip
 
 cd ..
 echo "TIMESTAMP %date% %time%"
