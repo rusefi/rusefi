@@ -1,3 +1,6 @@
+rem This script could be invoked from any folder - it would clone hardware projects into current folder
+rem All outputs go into same "ibom" local directory
+
 
 git clone https://github.com/rusefi/hw_modular.git
 cd hw_modular
@@ -24,3 +27,5 @@ echo "ibom_cmd=%ibom_cmd%"
 %ibom_cmd% hw_modular/highside_module/hi-lo.kicad_pcb
 
 
+echo Uploading IBOMs
+ncftpput -R -v -u %RUSEFI_DOXYGEN_FTP_USER% -p %RUSEFI_DOXYGEN_FTP_PASS% %RUSEFI_FTP_SERVER% /ibom ibom/*
