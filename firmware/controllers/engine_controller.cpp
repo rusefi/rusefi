@@ -226,13 +226,13 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static void periodicSlowCallback(Engine *engine);
+static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 static void scheduleNextSlowInvocation(void) {
 	// schedule next invocation
 	// we need at least protection from zero value while resetting configuration
 	int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
-	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
+	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, NULL);
 }
 
 static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -241,7 +241,7 @@ static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * not many reasons why we use ChibiOS timer and not say a dedicated thread here
 	 * the only down-side of a dedicated thread is the cost of thread stack
 	 */
-	chVTSetAny(&periodicFastTimer, TIME_MS2I(FAST_CALLBACK_PERIOD_MS), (vtfunc_t) &periodicFastCallback, engine);
+	chVTSetAny(&periodicFastTimer, TIME_MS2I(FAST_CALLBACK_PERIOD_MS), (vtfunc_t) &periodicFastCallback, NULL);
 }
 
 static void resetAccel(void) {
@@ -285,7 +285,7 @@ static void invokePerSecond(void) {
 #endif /* EFI_CLOCK_LOCKS */
 }
 
-static void periodicSlowCallback(Engine *engine) {
+static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -333,7 +333,7 @@ static void periodicSlowCallback(Engine *engine) {
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	periodicSlowCallback(engine);
+	periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
