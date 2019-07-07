@@ -226,15 +226,6 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-static void scheduleNextSlowInvocation(void) {
-	// schedule next invocation
-	// we need at least protection from zero value while resetting configuration
-	int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
-	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, NULL);
-}
-
 static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->periodicFastCallback();
 	/**
@@ -285,7 +276,7 @@ static void invokePerSecond(void) {
 #endif /* EFI_CLOCK_LOCKS */
 }
 
-static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -327,9 +318,15 @@ static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	scheduleNextSlowInvocation();
 #endif
+}
+
+static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	doPeriodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// schedule next invocation
+	// we need at least protection from zero value while resetting configuration
+	int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
+	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, NULL);
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
