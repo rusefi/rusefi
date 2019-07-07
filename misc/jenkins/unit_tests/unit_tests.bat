@@ -1,7 +1,6 @@
 echo "TIMESTAMP %date% %time% I am unit_tests.bat"
 
-set FTP_SERVER=home451478433.1and1-data.host
-rem 'RUSEFI_BUILD_FTP_PASS' environment variable 
+rem 'RUSEFI_BUILD_FTP_PASS' environment variable
 
 echo We should be in root folder
 pwd

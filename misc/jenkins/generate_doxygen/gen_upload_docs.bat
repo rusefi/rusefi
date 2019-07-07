@@ -1,6 +1,3 @@
-set RUSEFI_FTP_SERVER=home451478433.1and1-data.host
-set RUSEFI_DOXYGEN_FTP_USER=u71977750-docs
-
 
 echo Should be executed from project root folder. Will try to upload to %RUSEFI_FTP_SERVER%
 
