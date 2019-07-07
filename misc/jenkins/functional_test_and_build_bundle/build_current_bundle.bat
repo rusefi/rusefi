@@ -56,8 +56,10 @@ if not exist deliver/rusefi.hex echo Just to confirm - FAILED to compile default
 if not exist deliver/rusefi.hex exit -1
 
 
+echo "%script_name%: Building DFU"
 ..\misc\encedo_hex2dfu\hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
 ..\misc\encedo_hex2dfu\hex2dfu.exe -i deliver/rusefi.hex            -o deliver/rusefi.dfu
+ls -l deliver
 cd ..
 
 rem At root folder here

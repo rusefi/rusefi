@@ -10,7 +10,7 @@ mkdir %console_folder%
 mkdir %drivers_folder%
 ls -l %folder%
 
-wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe drivers -P %drivers_folder%
+wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe -P %drivers_folder%
 if not exist %drivers_folder%/silent_st_drivers.exe (
  echo %script_name%: ERROR DOWNLOADING silent_st_drivers.exe
  EXIT /B 1
