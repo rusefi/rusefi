@@ -350,7 +350,12 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 	float tpsCoef = cisnan(tps) ? 1 : interpolate2d("crankTps", tps, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE);
 
-	return baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
+	floatms_t result = baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
+
+	if (result <= 0) {
+		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", result);
+	}
+	return result;
 }
 
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {
