@@ -795,7 +795,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		}
 		break;
 #if EFI_TOOTH_LOGGER
-		case TS_SET_LOGGER_MODE:
+	case TS_SET_LOGGER_MODE:
 		switch(data[0]) {
 		case 0x01:
 			EnableToothLogger();
