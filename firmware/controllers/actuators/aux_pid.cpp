@@ -17,7 +17,7 @@
 #include "fsio_impl.h"
 #include "engine_math.h"
 #include "pin_repository.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
