@@ -15,7 +15,7 @@
 #include "voltage.h"
 #include "pid.h"
 #include "local_version_holder.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 
 #include "pwm_generator.h"
 #include "pin_repository.h"

@@ -35,7 +35,7 @@
 #include "efi_gpio.h"
 #include "settings.h"
 #include "idle_thread.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 #include "tps.h"
 #if EFI_PROD_CODE
 #include "rusefi.h"

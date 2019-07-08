@@ -77,7 +77,7 @@
 #include "pwm_generator_logic.h"
 #include "pid.h"
 #include "engine_controller.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 #include "pin_repository.h"
 #include "pwm_generator.h"
 #include "dc_motor.h"

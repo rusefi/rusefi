@@ -57,7 +57,7 @@
 #include "lcd_controller.h"
 #include "settings.h"
 #include "can_hw.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
 
 extern afr_Map3D_t afrMap;

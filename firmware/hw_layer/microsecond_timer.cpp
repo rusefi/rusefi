@@ -21,7 +21,7 @@
 
 #if EFI_PROD_CODE && HAL_USE_GPT
 
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 
 /**
  * Maximum duration of complete timer callback, all pending events together

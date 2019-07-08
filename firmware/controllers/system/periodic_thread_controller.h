@@ -1,5 +1,5 @@
 /**
- *  @file periodic_controller.h
+ *  @file periodic_thread_controller.h
  * 
  *  @date Jan 5, 2019
  *  @author Matthew Kennedy, (c) 2019
@@ -18,7 +18,8 @@
  * inherit this class, and perform your period update in PeriodicTask.  Any one-time
  * setup work can be performed in OnStarted().
  * 
- * This class effectively implements this funtionality:
+ * Each instance has one underlying thread meaning that task could be blocking/synchronous.
+ * This class effectively implements this functionality:
  * 
  * void thread()
  * {

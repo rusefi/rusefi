@@ -33,7 +33,7 @@
 #include "idle_thread.h"
 #include "pin_repository.h"
 #include "engine.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 #include "stepper.h"
 #include "allsensors.h"
 
