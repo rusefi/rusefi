@@ -5,7 +5,7 @@
  *
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -65,6 +65,14 @@
 #include "AdcConfiguration.h"
 #endif /* HAL_USE_ADC */
 
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
+#include "bootloader/bootloader.h"
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#include "periodic_timer_controller.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
@@ -78,7 +86,7 @@
 
 #if EFI_CJ125
 #include "cj125.h"
-#endif
+#endif /* EFI_CJ125 */
 
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -91,10 +99,6 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 
 #if !EFI_UNIT_TEST
 
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
-#include "bootloader/bootloader.h"
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
@@ -106,6 +110,21 @@ EXTERN_ENGINE;
 
 static virtual_timer_t periodicSlowTimer; // 20Hz
 static virtual_timer_t periodicFastTimer; // 50Hz
+
+class PeriodicFastController : public PeriodicTimerController {
+	void PeriodicTask() override {
+
+	}
+};
+
+class PeriodicSlowController : public PeriodicTimerController {
+	void PeriodicTask() override {
+
+	}
+};
+
+static PeriodicFastController fastController;
+static PeriodicSlowController slowController;
 
 static LoggingWithStorage logger("Engine Controller");
 
