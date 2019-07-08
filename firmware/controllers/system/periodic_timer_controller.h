@@ -9,19 +9,19 @@
 
 #include "global.h"
 
-class PeriodicTimerController {
-private:
-	virtual_timer_t timer;
-	int periodMs;
-	void runAndScheduleNext() {
-		PeriodicTask();
-		chVTSetAny(&timer, TIME_MS2I(periodMs), (vtfunc_t) &runAndScheduleNext, NULL);
-	}
-protected:
-	virtual void PeriodicTask() = 0;
+class PeriodicTimerController;
 
+void runAndScheduleNext(PeriodicTimerController *controller);
+
+class PeriodicTimerController {
 
 public:
+	virtual_timer_t timer;
+	int periodMs;
+
+
+	virtual void PeriodicTask() = 0;
+
     /**
      * sets milliseconds period
      */
@@ -30,7 +30,7 @@ public:
     }
 
     void start() {
-    	runAndScheduleNext();
+    	runAndScheduleNext(this);
     }
 };
 
