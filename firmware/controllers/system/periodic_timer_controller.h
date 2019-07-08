@@ -13,12 +13,18 @@ class PeriodicTimerController;
 
 void runAndScheduleNext(PeriodicTimerController *controller);
 
+/**
+ * this is an intermediate implementation - we should probably move from using virtual_timer_t which works on interrupts
+ * into sharing one thread with potentially lower priority instead
+ */
+
 class PeriodicTimerController {
 
 public:
+#if !EFI_UNIT_TEST
 	virtual_timer_t timer;
+#endif /* EFI_UNIT_TEST */
 	int periodMs;
-
 
 	virtual void PeriodicTask() = 0;
 

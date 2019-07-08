@@ -104,22 +104,22 @@ extern EnginePins enginePins;
 
 EXTERN_ENGINE;
 
-/**
- * CH_FREQUENCY is the number of system ticks in a second
- */
-
-static virtual_timer_t periodicSlowTimer; // 20Hz
-static virtual_timer_t periodicFastTimer; // 50Hz
+static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 class PeriodicFastController : public PeriodicTimerController {
 	void PeriodicTask() override {
-
+		engine->periodicFastCallback();
+		setPeriod(FAST_CALLBACK_PERIOD_MS);
 	}
 };
 
 class PeriodicSlowController : public PeriodicTimerController {
 	void PeriodicTask() override {
+		doPeriodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+		// we need at least protection from zero value while resetting configuration
+		int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
+		setPeriod(periodMs);
 	}
 };
 
@@ -245,15 +245,6 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engine->periodicFastCallback();
-	/**
-	 * not many reasons why we use ChibiOS timer and not say a dedicated thread here
-	 * the only down-side of a dedicated thread is the cost of thread stack
-	 */
-	chVTSetAny(&periodicFastTimer, TIME_MS2I(FAST_CALLBACK_PERIOD_MS), (vtfunc_t) &periodicFastCallback, NULL);
-}
-
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.reset();
 	engine->tpsAccelEnrichment.reset();
@@ -340,17 +331,9 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	doPeriodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// schedule next invocation
-	// we need at least protection from zero value while resetting configuration
-	int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
-	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, NULL);
-}
-
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowController.start();
+	fastController.start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {

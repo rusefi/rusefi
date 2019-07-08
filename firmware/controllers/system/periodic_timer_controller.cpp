@@ -9,8 +9,10 @@
 #include "os_util.h"
 
 void runAndScheduleNext(PeriodicTimerController *controller) {
+#if !EFI_UNIT_TEST
 	controller->PeriodicTask();
 	chVTSetAny(&controller->timer, TIME_MS2I(controller->periodMs), (vtfunc_t) &runAndScheduleNext, controller);
+#endif /* EFI_UNIT_TEST */
 }
 
 
