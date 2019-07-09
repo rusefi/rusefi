@@ -343,7 +343,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tle8888_cs = GPIOD_5;
 	engineConfiguration->directSelfStimulation = true;
 
-#if STM32_HAS_GPIOG	
+#if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
 	boardConfiguration->ignitionPins[0] = GPIOG_3;
 	boardConfiguration->ignitionPins[1] = GPIOG_4;
 	boardConfiguration->ignitionPins[2] = GPIOG_5;
@@ -370,7 +370,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// IN1 PF15
 	// IN2 PF14
 	// SF  PF11
-#if STM32_HAS_GPIOF
+#if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 #if EFI_FSIO
 	setFsio(12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);

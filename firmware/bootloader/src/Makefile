@@ -137,6 +137,7 @@ include $(PROJECT_DIR)/util/util.mk
 
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
+include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 
 # Define linker script file here
 ifeq ($(LDSCRIPT),)
@@ -159,6 +160,7 @@ CSRC = $(STARTUPSRC) \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
+	$(HW_LAYER_DRIVERS_CORE) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
@@ -253,7 +255,8 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/hw_layer/lcd \
 	$(PROJECT_DIR)/hw_layer/sensors \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(PROJECT_DIR)/hw_layer/stm32f4 \
+	$(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER) \
+	$(HW_LAYER_DRIVERS_INC) \
 	$(PROJECT_DIR)/development \
 	$(PROJECT_DIR)/development/hw_layer \
 	$(PROJECT_DIR)/development/test \
