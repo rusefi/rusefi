@@ -110,8 +110,12 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->clutchDownPin = GPIOD_11;
 	engineConfiguration->brakePedalPin = GPIOE_10;
 	engineConfiguration->camInput = GPIOA_2;
+#if STM32_HAS_GPIOG
 	boardConfiguration->triggerInputPins[0] = GPIOG_7;
+#endif /* STM32_HAS_GPIOF */
+#if STM32_HAS_GPIOF
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
+#endif /* STM32_HAS_GPIOF */
 	boardConfiguration->tachOutputPin = TLE8888_PIN_16;
 
 
@@ -128,14 +132,18 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//ETB Settings
 
 #if EFI_FSIO
+#if STM32_HAS_GPIOF
 	setFsio (12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio (14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+#endif /* STM32_HAS_GPIOF */
 	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	engineConfiguration->auxPidFrequency[3] = 25;
 	CONFIG(etb1_use_two_wires) = true;
+#if STM32_HAS_GPIOF
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
 	CONFIGB(etb1.directionPin2) = GPIOF_14;
+#endif /* STM32_HAS_GPIOF */
 	boardConfiguration->isHip9011Enabled = false;
 
 #if EFI_FSIO
