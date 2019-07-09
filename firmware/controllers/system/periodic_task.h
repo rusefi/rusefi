@@ -28,7 +28,7 @@ public:
 
 	virtual void PeriodicTask() = 0;
 
-    void start() {
+    void Start() {
     	runAndScheduleNext(this);
     }
 };

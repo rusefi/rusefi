@@ -33,7 +33,7 @@
 #include "idle_thread.h"
 #include "pin_repository.h"
 #include "engine.h"
-#include "periodic_thread_controller.h"
+#include "periodic_task.h"
 #include "stepper.h"
 #include "allsensors.h"
 
@@ -249,14 +249,12 @@ static percent_t automaticIdleController() {
 	return newValue;
 }
 
-class IdleController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	IdleController() : PeriodicController("IdleValve") { }
-private:
-	void PeriodicTask(efitime_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid));
+class IdleController : public PeriodicTimerController {
+	int getPeriodMs() override {
+		return GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid);
+	}
 
+	void PeriodicTask() override	{
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,
