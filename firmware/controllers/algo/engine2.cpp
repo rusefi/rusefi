@@ -133,8 +133,10 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 	engine->sensors.oilPressure = getOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	// todo: should this feature get removed?
+	// it does the same thing as the warmup CLT multiplier
 	warmupTargetAfr = interpolate2d("warm", engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
-			engineConfiguration->warmupTargetAfr, WARMUP_TARGET_AFR_SIZE);
+			engineConfiguration->warmupTargetAfr);
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -199,7 +201,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
-					engineConfiguration->knockNoise, ENGINE_NOISE_CURVE_SIZE);
+					engineConfiguration->knockNoise);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -223,7 +225,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 		// get VE from the separate table for Idle
 		if (CONFIG(useSeparateVeForIdle)) {
-			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe, IDLE_VE_CURVE_SIZE);
+			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe);
 			// interpolate between idle table and normal (running) table using TPS threshold
 			currentRawVE = interpolateClamped(0.0f, idleVe, CONFIGB(idlePidDeactivationTpsThreshold), currentRawVE, tps);
 		}

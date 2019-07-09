@@ -101,11 +101,11 @@ void updateAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	engine->engineState.auxValveStart = interpolate2d("aux", x,
 			engineConfiguration->fsioCurve1Bins,
-			engineConfiguration->fsioCurve1, FSIO_CURVE_16);
+			engineConfiguration->fsioCurve1);
 
 	engine->engineState.auxValveEnd = interpolate2d("aux", x,
 			engineConfiguration->fsioCurve2Bins,
-			engineConfiguration->fsioCurve2, FSIO_CURVE_16);
+			engineConfiguration->fsioCurve2);
 
 	if (engine->engineState.auxValveStart >= engine->engineState.auxValveEnd) {
 		// this is a fatal error to make this really visible

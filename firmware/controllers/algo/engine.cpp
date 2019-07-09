@@ -202,7 +202,7 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < MAF_DECODING_CACHE_SIZE; i++) {
 		float volts = i / MAF_DECODING_CACHE_MULT;
 		float maf = interpolate2d("maf", volts, config->mafDecodingBins,
-				config->mafDecoding, MAF_DECODING_COUNT);
+				config->mafDecoding);
 		mafDecodingLookup[i] = maf;
 	}
 }
