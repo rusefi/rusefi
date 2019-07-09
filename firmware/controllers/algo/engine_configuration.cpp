@@ -877,15 +877,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setDefaultCrankingSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineConfiguration->warmupTargetAfrBins[0] = -12;
-	engineConfiguration->warmupTargetAfr[0] = 12.3;
-	engineConfiguration->warmupTargetAfrBins[1] = 0;
-	engineConfiguration->warmupTargetAfr[1] = 13;
-	engineConfiguration->warmupTargetAfrBins[2] = 30;
-	engineConfiguration->warmupTargetAfr[2] = 13.8;
-	engineConfiguration->warmupTargetAfrBins[3] = 60;
-	engineConfiguration->warmupTargetAfr[3] = 14.5;
-
 	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
 	engineConfiguration->fuelClosedLoopCltThreshold = 70;
 	engineConfiguration->fuelClosedLoopRpmThreshold = 900;
@@ -1066,9 +1057,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->isEngineControlEnabled = true;
 
 	boardConfiguration->isVerboseAlternator = false;
-
-	engineConfiguration->warmupAfrPid.offset = 1;
-	engineConfiguration->warmupAfrThreshold = 60;
 
 	engineConfiguration->engineLoadAccelLength = 6;
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa

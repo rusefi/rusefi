@@ -211,7 +211,6 @@ void Engine::setConfig(persistent_config_s *config) {
 	this->config = config;
 	engineConfigurationPtr = &config->engineConfiguration;
 	memset(config, 0, sizeof(persistent_config_s));
-	engineState.warmupAfrPid.initPidClass(&config->engineConfiguration.warmupAfrPid);
 }
 
 void Engine::printKnockState(void) {

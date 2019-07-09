@@ -274,13 +274,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyTimingTable(racingFestivaIgnitionTable, config->ignitionTable);
 #endif
 
-	//	boardConfiguration->useWarmupPidAfr = true;
-		engineConfiguration->warmupAfrPid.pFactor = -0.2;
-		engineConfiguration->warmupAfrPid.iFactor = -0.0005;
-	//	engineConfiguration->warmupAfrPid.dFactor = -0.02;
-		engineConfiguration->debugMode = DBG_WARMUP_ENRICH;
-
-
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
 
 	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
