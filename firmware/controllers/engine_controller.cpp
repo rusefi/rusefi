@@ -70,7 +70,7 @@
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#include "periodic_timer_controller.h"
+#include "periodic_task.h"
 #endif
 
 #if EFI_PROD_CODE

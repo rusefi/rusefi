@@ -1,11 +1,11 @@
 /*
- * periodic_timer_controller.cpp
+ * @file periodic_task.cpp
  *
- *  Created on: Jul 8, 2019
+ * @date: Jul 8, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#include "periodic_timer_controller.h"
+#include "periodic_task.h"
 #include "os_util.h"
 
 void runAndScheduleNext(PeriodicTimerController *controller) {
