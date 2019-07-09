@@ -462,10 +462,6 @@ void updateDevConsoleState(void) {
 	printFullAdcReportIfNeeded(&logger);
 #endif /* HAL_USE_ADC */
 
-	if (!fullLog) {
-		return;
-	}
-
 	systime_t nowSeconds = getTimeNowSeconds();
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
