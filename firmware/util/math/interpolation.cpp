@@ -196,7 +196,7 @@ namespace priv
  *
  * @see setLinearCurve()
  */
-float interpolate2d(const char *msg, float value, const float bin[], const float values[], int size) { 
+float interpolate2d(const char *msg, float value, const float bin[], const float values[], int size) {
 	if (isnan(value)) {
 		firmwareError(CUSTOM_INTERPOLATE_NAN, "NaN in interpolate2d %s", msg);
 		return NAN;
