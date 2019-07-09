@@ -26,7 +26,16 @@ void ensureArrayIsAscending(const char *msg, const float array[], int size);
 int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
+
+namespace priv {
 float interpolate2d(const char *msg, float value, const float bin[], const float values[], int size);
+}
+
+template <int TSize>
+float interpolate2d(const char *msg, const float value, const float (&bin)[TSize], const float (&values)[TSize])
+{
+	return priv::interpolate2d(msg, value, bin, values, TSize);
+}
 
 int needInterpolationLogging(void);
 

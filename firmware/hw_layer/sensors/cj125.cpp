@@ -51,24 +51,27 @@ static volatile int lastSlowAdcCounter = 0;
 // LSU conversion tables. See cj125_sensor_type_e
 // For LSU4.2, See http://www.bosch-motorsport.com/media/catalog_resources/Lambda_Sensor_LSU_42_Datasheet_51_en_2779111435pdf.pdf
 // See LSU4.9, See http://www.bosch-motorsport.com/media/catalog_resources/Lambda_Sensor_LSU_49_Datasheet_51_en_2779147659pdf.pdf
-static const int CJ125_LSU_CURVE_SIZE = 25;
-// This is a number of bins for each sensor type (should be < CJ125_LSU_CURVE_SIZE)
-static const float cjLSUTableSize[2] = {
-	9, 24,
-};
+
 // Pump current, mA
-static const float cjLSUBins[2][CJ125_LSU_CURVE_SIZE] = {	{ 
+static constexpr float pumpCurrentLsu42[] = {
 	// LSU 4.2
-	-1.85f, -1.08f, -0.76f, -0.47f, 0.0f, 0.34f, 0.68f, 0.95f, 1.4f }, { 
-	// LSU 4.9
-	-2.0f, -1.602f, -1.243f, -0.927f, -0.8f, -0.652f, -0.405f, -0.183f, -0.106f, -0.04f, 0, 0.015f, 0.097f, 0.193f, 0.250f, 0.329f, 0.671f, 0.938f, 1.150f, 1.385f, 1.700f, 2.000f, 2.150f, 2.250f },
+	-1.85f, -1.08f, -0.76f, -0.47f, 0.0f, 0.34f, 0.68f, 0.95f, 1.4f 
 };
-// Lambda value
-static const float cjLSULambda[2][CJ125_LSU_CURVE_SIZE] = { {
-	// LSU 4.2
-	0.7f, 0.8f, 0.85f, 0.9f, 1.009f, 1.18f, 1.43f, 1.7f, 2.42f }, {
+
+static constexpr float pumpCurrentLsu49[] = {
 	// LSU 4.9
-	0.65f, 0.7f, 0.75f, 0.8f, 0.822f, 0.85f, 0.9f, 0.95f, 0.97f, 0.99f, 1.003f, 1.01f, 1.05f, 1.1f, 1.132f, 1.179f, 1.429f, 1.701f, 1.990f, 2.434f, 3.413f, 5.391f, 7.506f, 10.119f },
+	-2.0f, -1.602f, -1.243f, -0.927f, -0.8f, -0.652f, -0.405f, -0.183f, -0.106f, -0.04f, 0, 0.015f, 0.097f, 0.193f, 0.250f, 0.329f, 0.671f, 0.938f, 1.150f, 1.385f, 1.700f, 2.000f, 2.150f, 2.250f
+};
+
+// Corresponding lambda values for the above pump current
+static constexpr float lambdaLsu42[] = {
+	// LSU 4.2
+	0.7f, 0.8f, 0.85f, 0.9f, 1.009f, 1.18f, 1.43f, 1.7f, 2.42f
+};
+
+static constexpr float lambdaLsu49[] = {
+	// LSU 4.9
+	0.65f, 0.7f, 0.75f, 0.8f, 0.822f, 0.85f, 0.9f, 0.95f, 0.97f, 0.99f, 1.003f, 1.01f, 1.05f, 1.1f, 1.132f, 1.179f, 1.429f, 1.701f, 1.990f, 2.434f, 3.413f, 5.391f, 7.506f, 10.119f
 };
 
 
@@ -502,16 +505,15 @@ static void cjSetInit2(int v) {
 #endif /* CJ125_DEBUG */
 
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	cj125_sensor_type_e sensorType;
-	if (engineConfiguration->cj125isLsu49) {
-		sensorType = CJ125_LSU_49;
-	} else {
-		sensorType = CJ125_LSU_42;
-	}
-	
 	// See CJ125 datasheet, page 6
 	float pumpCurrent = (globalInstance.vUa - globalInstance.vUaCal) * globalInstance.amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
-	globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, (float *)cjLSUBins[sensorType], (float *)cjLSULambda[sensorType], cjLSUTableSize[sensorType]);
+	
+	if (engineConfiguration->cj125isLsu49) {
+		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu49, lambdaLsu49);
+	} else {
+		globalInstance.lambda = interpolate2d("cj125Lsu", pumpCurrent, pumpCurrentLsu42, lambdaLsu42);
+	}
+
 	// todo: make configurable stoich ratio
 	return globalInstance.lambda * CJ125_STOICH_RATIO;
 }
