@@ -337,8 +337,8 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	slowController.start();
-	fastController.start();
+	slowController.Start();
+	fastController.Start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
@@ -793,7 +793,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 7400
+#define RAM_UNUSED_SIZE 11000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 4600
@@ -814,6 +814,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190706;
+	return 20190709;
 }
 #endif /* EFI_UNIT_TEST */
