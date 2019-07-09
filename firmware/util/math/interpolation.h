@@ -32,8 +32,7 @@ float interpolate2d(const char *msg, float value, const float bin[], const float
 }
 
 template <int TSize>
-float interpolate2d(const char *msg, const float value, const float (&bin)[TSize], const float (&values)[TSize])
-{
+float interpolate2d(const char *msg, const float value, const float (&bin)[TSize], const float (&values)[TSize]) {
 	return priv::interpolate2d(msg, value, bin, values, TSize);
 }
 
