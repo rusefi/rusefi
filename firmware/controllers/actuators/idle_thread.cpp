@@ -238,7 +238,7 @@ static percent_t automaticIdleController() {
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		idleState = PID_UPPER;
 		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
@@ -308,11 +308,11 @@ private:
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
-			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE);
+			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 		} else {
 			// this value would be ignored if running in AUTO mode
 			// but we need it while cranking in AUTO mode
-			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE);
+			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr);
 		}
 
 		percent_t iacPosition;

@@ -244,7 +244,7 @@ private:
 #endif /* EFI_TUNER_STUDIO */
 		}
 
-		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues, ETB_BIAS_CURVE_LENGTH);
+		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
 		pid.iTermMin = engineConfiguration->etb_iTermMin;
 		pid.iTermMax = engineConfiguration->etb_iTermMax;

@@ -189,6 +189,8 @@ int findIndex(const float array[], int size, float value) {
 	return findIndexMsg("", array, size, value);
 }
 
+namespace priv
+{
 /**
  * @brief	One-dimensional table lookup with linear interpolation
  *
@@ -207,6 +209,7 @@ float interpolate2d(const char *msg, float value, const float bin[], const float
 		return values[size - 1];
 
 	return interpolateMsg("2d", bin[index], values[index], bin[index + 1], values[index + 1], value);
+}
 }
 
 /**
