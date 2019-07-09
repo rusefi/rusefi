@@ -17,7 +17,9 @@
 #include "fsio_impl.h"
 #include "engine_math.h"
 #include "pin_repository.h"
-#include "periodic_thread_controller.h"
+#include "periodic_task.h"
+
+#define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -60,14 +62,15 @@ static void pidReset(void) {
 	auxPid.reset();
 }
 
-class AuxPidController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+class AuxPidController : public PeriodicTimerController {
 public:
-	AuxPidController()	: PeriodicController("AuxPidController") { }
-private:
-	void PeriodicTask(efitime_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->auxPid[0]));
+	int index = 0;
 
+	int getPeriodMs() override {
+		return engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED ? NO_PIN_PERIOD : GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]);
+	}
+
+	void PeriodicTask() override {
 			if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
 				pidReset();
 			}
@@ -101,13 +104,13 @@ private:
 #endif /* EFI_TUNER_STUDIO */
 			}
 
-			auxPidPwm[0].setSimplePwmDutyCycle(pwm / 100);
+			auxPidPwm[index].setSimplePwmDutyCycle(pwm / 100);
 
 
 		}
 };
 
-static AuxPidController instance;
+static AuxPidController instances[AUX_PID_COUNT];
 
 static void turnAuxPidOn(int index) {
 	if (!isEnabled(index)) {
@@ -141,7 +144,10 @@ void initAuxPid(Logging *sharedLogger) {
 	logger = sharedLogger;
 
 	startAuxPins();
-	instance.Start();
+	for (int i = 0;i < AUX_PID_COUNT;i++) {
+		instances[i].index = i;
+		instances[i].Start();
+	}
 }
 
 #endif
