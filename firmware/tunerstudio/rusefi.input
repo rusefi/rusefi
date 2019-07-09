@@ -558,18 +558,6 @@ fileVersion = { 20171101 }
       yBins       = crankingAdvance
       gauge       = RPMGauge
 
-	curve = warmupTargetAfrCurve, "CLT-based target AFR"
-      columnLabel = "Coolant", "Correction"
-#if CELSIUS
-      xAxis       = -40, 120, 10
-#else
-      xAxis       =  -40, 250, 10
-#endif
-      yAxis       =  0,  50, 10
-      xBins       = warmupTargetAfrBins, coolant
-      yBins       = warmupTargetAfr
-      gauge       = CLTGauge
-
     curve = wueAfrTargetOffsetCurve, "AFR Target Temperature Adjustment"
       columnLabel = "Coolant", "AFR Offset"
 #if CELSIUS
@@ -1247,7 +1235,6 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
 		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = warmupTargetAfrCurve,		"Warmup fuel auto correction AFR target"
 		subMenu = smLaunchControl,			"Launch control"
 		subMenu = std_separator
 		
