@@ -2110,16 +2110,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
 
-	dialog = warmupFuelDialog, "Warmup fuel closed-loop",	yAxis
-		field = "use automatic Pid Afr control",			useWarmupPidAfr
-		field = "warmup temperature Threshold",				warmupAfrThreshold
-		field = "wa offset",								warmupAfrPid_offset
-		field = "wa P factor",								warmupAfrPid_pFactor
-		field = "wa I factor",								warmupAfrPid_iFactor
-		field = "wa D factor",								warmupAfrPid_dFactor
-		field = "#correction = Pterm + Iterm + Dterm + offset"
-		
-		
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog
 		panel = alternator
@@ -2584,8 +2574,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 
 		field = "Target temperature", 			postCrankingTargetClt
-		
-		panel = warmupFuelDialog
 
 [Tools]
  ;addTool = toolName, PanelName

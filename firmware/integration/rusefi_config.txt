@@ -68,8 +68,6 @@ struct_no_prefix engine_configuration_s
 ! so not forget to change fileVersion in rusefi.ini
 #define TS_FILE_VERSION 20171101
 
-#define WARMUP_TARGET_AFR_SIZE 4
-
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
 
@@ -162,7 +160,7 @@ float baseFuel;+Base duration of the fuel injection during cranking, this is mod
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM",      1,     0,    0, 3000,      0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "Warmup PID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"
 custom debug_mode_e 4 bits,    U32,   @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define vvt_mode_e_enum "First half", "Second half", "2GZ", "Miata NB2", "mode4", "mode5", "mode6", "mode7"
@@ -601,7 +599,7 @@ bit is_enabled_spi_2
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
 	bit unusedAnotherOne;
-	bit useWarmupPidAfr;
+	bit unusedOldWarmupAfr;
 	bit onOffAlternatorLogic;
 	bit isCJ125Enabled
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
@@ -826,7 +824,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float wwaeTau;;"%",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
 	pid_s etb;
-	pid_s warmupAfrPid;
+	uint8_t[20] unusedFormerWarmupAfrPid;
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2
@@ -890,9 +888,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff",        1,     0,    0, 200,     3
 	debug_mode_e debugMode;+See http://rusefi.com/s/debugmode\n\nset debug_mode X
 
-	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfrBins;CLT-based target AFR for PID-based control;"C",        1,     0,   -100.0,    250.0,  2
-	float[WARMUP_TARGET_AFR_SIZE] warmupTargetAfr;;"AFR",      1,     0,      0.0,    20.0,   2
-	float warmupAfrThreshold;;"temperature",        1,     0,    0, 200,     3
+	uint32_t[9] unused_former_warmup_target_afr;
 
 	float boostCutPressure;kPa value at which we need to cut fuel and spark, 0 if not enabled;"kPa",        1,     0,    0, 500,     0
 
