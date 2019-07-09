@@ -5,7 +5,7 @@
  *
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -65,6 +65,14 @@
 #include "AdcConfiguration.h"
 #endif /* HAL_USE_ADC */
 
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
+#include "bootloader/bootloader.h"
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#include "periodic_task.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
@@ -78,7 +86,7 @@
 
 #if EFI_CJ125
 #include "cj125.h"
-#endif
+#endif /* EFI_CJ125 */
 
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -91,21 +99,37 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 
 #if !EFI_UNIT_TEST
 
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
-#include "bootloader/bootloader.h"
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
 EXTERN_ENGINE;
 
-/**
- * CH_FREQUENCY is the number of system ticks in a second
- */
+static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-static virtual_timer_t periodicSlowTimer; // 20Hz
-static virtual_timer_t periodicFastTimer; // 50Hz
+class PeriodicFastController : public PeriodicTimerController {
+	void PeriodicTask() override {
+		engine->periodicFastCallback();
+	}
+
+	int getPeriodMs() override {
+		return FAST_CALLBACK_PERIOD_MS;
+	}
+};
+
+class PeriodicSlowController : public PeriodicTimerController {
+	void PeriodicTask() override {
+		doPeriodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+	int getPeriodMs() override {
+		// we need at least protection from zero value while resetting configuration
+		int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
+		return periodMs;
+	}
+};
+
+static PeriodicFastController fastController;
+static PeriodicSlowController slowController;
 
 static LoggingWithStorage logger("Engine Controller");
 
@@ -226,15 +250,6 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engine->periodicFastCallback();
-	/**
-	 * not many reasons why we use ChibiOS timer and not say a dedicated thread here
-	 * the only down-side of a dedicated thread is the cost of thread stack
-	 */
-	chVTSetAny(&periodicFastTimer, TIME_MS2I(FAST_CALLBACK_PERIOD_MS), (vtfunc_t) &periodicFastCallback, NULL);
-}
-
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.reset();
 	engine->tpsAccelEnrichment.reset();
@@ -321,17 +336,9 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-static void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	doPeriodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	// schedule next invocation
-	// we need at least protection from zero value while resetting configuration
-	int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
-	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, NULL);
-}
-
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowController.start();
+	fastController.start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
