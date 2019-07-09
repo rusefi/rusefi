@@ -51,9 +51,7 @@ void scAddData(float angle, float value) {
 			// message terminator
 			appendPrintf(&scLogging, DELIMETER);
 			// output pending data
-			if (getFullLog()) {
-				scheduleLogging(&scLogging);
-			}
+			scheduleLogging(&scLogging);
 			pendingData = false;
 		}
 		return;
