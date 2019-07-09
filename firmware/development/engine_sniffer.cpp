@@ -156,8 +156,7 @@ void WaveChart::publish() {
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
 #endif
-	bool isFullLog = getFullLog();
-	if (ENGINE(isEngineChartEnabled) && isFullLog) {
+	if (ENGINE(isEngineChartEnabled)) {
 		scheduleLogging(&logging);
 	}
 }
