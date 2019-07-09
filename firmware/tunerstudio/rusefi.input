@@ -1856,6 +1856,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
 
 	dialog = mapCurves, "MAP sampling", yAxis
+		field = "isMapAveragingEnabled",				isMapAveragingEnabled
 		panel = map_samplingAngleCurve
 		panel = map_samplingWindowCurve
 
