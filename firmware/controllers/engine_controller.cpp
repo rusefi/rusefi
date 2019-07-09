@@ -109,17 +109,22 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 class PeriodicFastController : public PeriodicTimerController {
 	void PeriodicTask() override {
 		engine->periodicFastCallback();
-		setPeriod(FAST_CALLBACK_PERIOD_MS);
+	}
+
+	int getPeriodMs() override {
+		return FAST_CALLBACK_PERIOD_MS;
 	}
 };
 
 class PeriodicSlowController : public PeriodicTimerController {
 	void PeriodicTask() override {
 		doPeriodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
 
+	int getPeriodMs() override {
 		// we need at least protection from zero value while resetting configuration
 		int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
-		setPeriod(periodMs);
+		return periodMs;
 	}
 };
 

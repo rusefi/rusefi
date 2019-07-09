@@ -24,16 +24,9 @@ public:
 #if !EFI_UNIT_TEST
 	virtual_timer_t timer;
 #endif /* EFI_UNIT_TEST */
-	int periodMs;
+	virtual int getPeriodMs() = 0;
 
 	virtual void PeriodicTask() = 0;
-
-    /**
-     * sets milliseconds period
-     */
-    void setPeriod(int periodMs) {
-    	this->periodMs = periodMs;
-    }
 
     void start() {
     	runAndScheduleNext(this);

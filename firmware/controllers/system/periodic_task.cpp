@@ -11,8 +11,6 @@
 void runAndScheduleNext(PeriodicTimerController *controller) {
 #if !EFI_UNIT_TEST
 	controller->PeriodicTask();
-	chVTSetAny(&controller->timer, TIME_MS2I(controller->periodMs), (vtfunc_t) &runAndScheduleNext, controller);
+	chVTSetAny(&controller->timer, TIME_MS2I(controller->getPeriodMs()), (vtfunc_t) &runAndScheduleNext, controller);
 #endif /* EFI_UNIT_TEST */
 }
-
-
