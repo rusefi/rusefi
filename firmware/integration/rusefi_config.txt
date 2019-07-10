@@ -418,9 +418,9 @@ log_format_e logFormat;
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 
-	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See aslo pedalPositionAdcChannel
+	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See also pedalPositionAdcChannel
 adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
-adc_channel_e fuelLevelSensor;
+adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
 
 	int overrideCrankingIgnition;
@@ -505,7 +505,7 @@ float mapFrequency0Kpa;;"Hz",      1,      0,       0, 100000,      2
 float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 
 ! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;See also triggerSimulatorPins\nSee also directSelfStimulation\nrpm X;"Rpm",     1,      0,       0,30000,      0
+	int triggerSimulatorFrequency;+See also triggerSimulatorPins\nSee also directSelfStimulation\nrpm X;"Rpm",     1,      0,       0,30000,      0
 
 	output_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
 	output_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
@@ -595,7 +595,7 @@ bit is_enabled_spi_2
 	bit isHip9011Enabled
 	bit isVerboseAlternator
 	bit useSerialPort
-	bit useStepperIdle
+	bit useStepperIdle;+This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
@@ -721,7 +721,7 @@ bit vvtDisplayInverted
 	bit canReadEnabled
 	bit canWriteEnabled
 	bit useLinearIatSensor
-	bit useFSIO16ForTimingAdjustment;See fsioTimingAdjustment
+	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
 	bit tachPulseDurationAsDutyCycle
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
@@ -992,7 +992,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 
-	brain_input_pin_e flexFuelSensor;
+	brain_input_pin_e flexFuelSensor;+This is the processor pin your Flex-fuel sensor is connected to, this is a non standard item so the pin will always be user defined. 
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
