@@ -35,8 +35,11 @@
 #include "efi_gpio.h"
 #include "settings.h"
 #include "idle_thread.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 #include "tps.h"
+#if EFI_PROD_CODE
+#include "rusefi.h"
+#endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE
 ;
@@ -299,8 +302,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		scheduleStopEngine();
 	} else if (subsystem == 0xbb) {
 #if EFI_PROD_CODE
-		NVIC_SystemReset();
-#endif
+		rebootNow();
+#endif /* EFI_PROD_CODE */
 	}
 }
 

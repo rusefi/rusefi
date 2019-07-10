@@ -23,7 +23,7 @@ public class EraseChip extends ProcessStatusWindow {
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
                 wnd.showFrame("rusEfi Firmware Flasher");
-                submitAction(() -> executeCommand(getEraseCommand()));
+                ExecHelper.submitAction(() -> executeCommand(getEraseCommand()),  EraseChip.this.getClass() + " extProcessThread");
             }
         });
     }

@@ -18,6 +18,10 @@
 #define EFI_CDM_INTEGRATION TRUE
 #endif
 
+#ifndef EFI_TOOTH_LOGGER
+#define EFI_TOOTH_LOGGER TRUE
+#endif
+
 #define EFI_TEXT_LOGGING TRUE
 
 #define EFI_PWM_TESTER FALSE

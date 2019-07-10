@@ -177,7 +177,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * TPS <MAGNETI MARELLI>
 	 */
-	engineConfiguration->tpsADC = EFI_ADC_3;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 	engineConfiguration->tpsMax = 102; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMin = 825; // convert 12to10 bit (ADC/4)
 	/**

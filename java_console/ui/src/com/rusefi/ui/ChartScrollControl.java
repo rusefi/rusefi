@@ -22,6 +22,7 @@ public class ChartScrollControl {
     public ChartScrollControl(final ChartRepository.ChartRepositoryListener listener) {
 
         this.listener = listener;
+        info.setToolTipText("Current page index / total pages count");
 
         content.setBorder(BorderFactory.createLineBorder(Color.red));
 
@@ -104,7 +105,8 @@ public class ChartScrollControl {
     }
 
     private void setInfoText(AtomicInteger index) {
-        info.setText(index.get() + "/" + ChartRepository.getInstance().getSize());
+        int humanIndex = index.get() + 1;
+        info.setText(humanIndex + "/" + ChartRepository.getInstance().getSize());
     }
 
     public void reset() {

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jul 05 19:36:12 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -939,15 +939,15 @@ public class Fields {
 	public static final int mc33972_csPinMode_offset = 679;
 	public static final int mc33972spiDevice_offset = 4032;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
+	public static final int miataNb2VVTRatioFrom_offset = 820;
+	public static final int miataNb2VVTRatioFrom_offset_hex = 334;
+	public static final int miataNb2VVTRatioTo_offset = 824;
+	public static final int miataNb2VVTRatioTo_offset_hex = 338;
 	public static final String MOCK_IAT_COMMAND = "mock_iat_voltage";
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int narrowToWideOxygen_offset = 2320;
 	public static final int narrowToWideOxygen_offset_hex = 910;
 	public static final int narrowToWideOxygenBins_offset = 2288;
-	public static final int nb2ratioFrom_offset = 820;
-	public static final int nb2ratioFrom_offset_hex = 334;
-	public static final int nb2ratioTo_offset = 824;
-	public static final int nb2ratioTo_offset_hex = 338;
 	public static final int nbVvtIndex_offset = 2440;
 	public static final int nbVvtIndex_offset_hex = 988;
 	public static final int needSecondTriggerInputDeprecated_offset = 1476;
@@ -983,6 +983,8 @@ public class Fields {
 	public static final int primeInjFalloffTemperature_offset = 1486;
 	public static final int primingSquirtDurationMs_offset = 96;
 	public static final int primingSquirtDurationMs_offset_hex = 60;
+	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
+	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1833;
@@ -1093,6 +1095,8 @@ public class Fields {
 	public static final int tle8888_csPinMode_offset = 3130;
 	public static final int tle8888spiDevice_offset = 4024;
 	public static final int TOTAL_CONFIG_SIZE = 20000;
+	public static final int tps1_1AdcChannel_offset = 512;
+	public static final int tps1_1AdcChannel_offset_hex = 200;
 	public static final int tps2_1AdcChannel_offset = 515;
 	public static final int tps2_1AdcChannel_offset_hex = 203;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
@@ -1102,8 +1106,6 @@ public class Fields {
 	public static final int tpsAccelFractionPeriod_offset = 4018;
 	public static final int tpsAccelLength_offset = 2064;
 	public static final int tpsAccelLength_offset_hex = 810;
-	public static final int tpsADC_offset = 512;
-	public static final int tpsADC_offset_hex = 200;
 	public static final int tpsDecelEnleanmentMultiplier_offset = 2104;
 	public static final int tpsDecelEnleanmentMultiplier_offset_hex = 838;
 	public static final int tpsDecelEnleanmentThreshold_offset = 2100;
@@ -1354,7 +1356,7 @@ public class Fields {
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 500, FieldType.INT);
 	public static final Field HD44780WIDTH = Field.create("HD44780WIDTH", 504, FieldType.INT);
 	public static final Field HD44780HEIGHT = Field.create("HD44780HEIGHT", 508, FieldType.INT);
-	public static final Field TPSADC = Field.create("TPSADC", 512, FieldType.INT8, adc_channel_e);
+	public static final Field TPS1_1ADCCHANNEL = Field.create("TPS1_1ADCCHANNEL", 512, FieldType.INT8, adc_channel_e);
 	public static final Field VBATTADCCHANNEL = Field.create("VBATTADCCHANNEL", 513, FieldType.INT8, adc_channel_e);
 	public static final Field FUELLEVELSENSOR = Field.create("FUELLEVELSENSOR", 514, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 515, FieldType.INT8, adc_channel_e);
@@ -1580,8 +1582,8 @@ public class Fields {
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
-	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 820, FieldType.FLOAT);
-	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 824, FieldType.FLOAT);
+	public static final Field MIATANB2VVTRATIOFROM = Field.create("MIATANB2VVTRATIOFROM", 820, FieldType.FLOAT);
+	public static final Field MIATANB2VVTRATIOTO = Field.create("MIATANB2VVTRATIOTO", 824, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 828, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 829, FieldType.INT8, pin_output_mode_e);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, output_pin_e);
@@ -2140,7 +2142,7 @@ public class Fields {
 	BYFIRMWAREVERSION,
 	HD44780WIDTH,
 	HD44780HEIGHT,
-	TPSADC,
+	TPS1_1ADCCHANNEL,
 	VBATTADCCHANNEL,
 	FUELLEVELSENSOR,
 	TPS2_1ADCCHANNEL,
@@ -2358,8 +2360,8 @@ public class Fields {
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
-	NB2RATIOFROM,
-	NB2RATIOTO,
+	MIATANB2VVTRATIOFROM,
+	MIATANB2VVTRATIOTO,
 	TRIGGERERRORPIN,
 	TRIGGERERRORPINMODE,
 	ACRELAYPIN,

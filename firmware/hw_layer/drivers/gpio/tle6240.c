@@ -24,7 +24,7 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
 #include "pin_repository.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 

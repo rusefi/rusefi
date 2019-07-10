@@ -2,13 +2,15 @@
  * @file spark_logic.cpp
  *
  * @date Sep 15, 2016
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
+#include "global.h"
+#include "os_access.h"
 #include "engine_math.h"
+
 #include "utlist.h"
 #include "event_queue.h"
-#include "rfiutil.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"

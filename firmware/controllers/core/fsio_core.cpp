@@ -16,6 +16,7 @@
 #include "global.h"
 
 #if EFI_FSIO
+#include "os_access.h"
 
 #include "fsio_core.h"
 #include "fsio_impl.h"

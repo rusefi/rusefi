@@ -27,8 +27,7 @@
 #include "global.h"
 
 #if EFI_CAN_SUPPORT
-
-
+#include "os_access.h"
 #include "engine.h"
 #include "obd2.h"
 #include "can_hw.h"
@@ -38,7 +37,6 @@
 #include "tps.h"
 #include "engine_math.h"
 #include "fuel_math.h"
-
 
 extern CANTxFrame txmsg;
 
@@ -169,7 +167,7 @@ static void handleGetDataRequest(CANRxFrame *rx) {
 		break;
 	case PID_INTAKE_MAF:
 		scheduleMsg(&logger, "Got MAF request");
-		obdSendValue(1, pid, 2, getMaf(PASS_ENGINE_PARAMETER_SIGNATURE) * 100.0f);	// grams/sec	(A*256+B)/100
+		obdSendValue(1, pid, 2, getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) * 100.0f);	// grams/sec	(A*256+B)/100
 		break;
 	case PID_THROTTLE:
 		scheduleMsg(&logger, "Got throttle request");

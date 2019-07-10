@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 01 12:45:02 EDT 2019
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -871,13 +871,15 @@ struct board_configuration_s {
 	 */
 	int16_t stepperParkingExtraSteps;
 	/**
+	 * This magic property is specific to Mazda Miata NB2
 	 * offset 220
 	 */
-	float nb2ratioFrom;
+	float miataNb2VVTRatioFrom;
 	/**
+	 * This magic property is specific to Mazda Miata NB2
 	 * offset 224
 	 */
-	float nb2ratioTo;
+	float miataNb2VVTRatioTo;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 228
@@ -1137,14 +1139,14 @@ struct engine_configuration_s {
 	/**
 	 * Closed throttle. todo: extract these two fields into a structure
 	 * todo: we need two sets of TPS parameters - modern ETBs have two sensors
-	 * See also tpsADC
+	 * See also tps1_1AdcChannel
 	 * set tps_min X
 	 * offset 80
 	 */
 	int16_t tpsMin;
 	/**
 	 * Full throttle. tpsMax value as 10 bit ADC value. Not Voltage!
-	 * See also tpsADC
+	 * See also tps1_1AdcChannel
 	 * set tps_max X
 	 * offset 82
 	 */
@@ -1371,7 +1373,7 @@ struct engine_configuration_s {
 	 * First TPS, single channel so far. See aslo pedalPositionAdcChannel
 	 * offset 512
 	 */
-	adc_channel_e tpsADC;
+	adc_channel_e tps1_1AdcChannel;
 	/**
 	 * offset 513
 	 */
@@ -1444,7 +1446,7 @@ struct engine_configuration_s {
 	/**
 	 * Electronic throttle pedal position input
 	 * Single channel so far
-	 * See also tpsADC
+	 * See also tps1_1AdcChannel
 	 * offset 580
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
@@ -2827,4 +2829,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Jun 26 19:39:50 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 01 12:45:02 EDT 2019

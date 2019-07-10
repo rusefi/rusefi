@@ -44,3 +44,7 @@ endif
 ifeq ($(CPU_PLATFORM_DIR),)
 CPU_PLATFORM_DIR = $(CHIBIOS)/os/hal/ports/STM32/$(CPU_PLATFORM)
 endif
+
+ifeq ($(GENERATED_ENUMS_DIR),)
+GENERATED_ENUMS_DIR = $(PROJECT_DIR)/controllers/algo
+endif

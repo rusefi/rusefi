@@ -47,8 +47,7 @@ int vvtEventFallCounter = 0;
 /* static vars for PAL implementation */
 static ioline_t primary_line;
 
-static void shaft_callback(void *arg)
-{
+static void shaft_callback(void *arg) {
 	bool rise;
 	bool isPrimary;
 	ioline_t pal_line;
@@ -81,8 +80,7 @@ static void shaft_callback(void *arg)
 
 }
 
-static void cam_callback(void *arg)
-{
+static void cam_callback(void *arg) {
 	bool rise;
 	ioline_t pal_line = (ioline_t)arg;
 
@@ -95,11 +93,9 @@ static void cam_callback(void *arg)
 		vvtEventFallCounter++;
 		hwHandleVvtCamSignal(TV_FALL);
 	}
-
 }
 
-static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft)
-{
+static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft) {
 	ioline_t pal_line;
 
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
@@ -111,13 +107,11 @@ static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_
 	return efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, is_shaft ? shaft_callback : cam_callback, (void *)pal_line);
 }
 
-static void turnOffTriggerInputPin(brain_pin_e brainPin)
-{
+static void turnOffTriggerInputPin(brain_pin_e brainPin) {
 	efiExtiDisablePin(brainPin);
 }
 
-static void setPrimaryChannel(brain_pin_e brainPin)
-{
+static void setPrimaryChannel(brain_pin_e brainPin) {
 	primary_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 }
 

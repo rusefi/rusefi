@@ -2,7 +2,7 @@
  * @file	trigger_decoder.cpp
  *
  * @date Dec 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -19,6 +19,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
@@ -28,7 +29,6 @@
 #include "engine_math.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"
-#include "rfiutil.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"

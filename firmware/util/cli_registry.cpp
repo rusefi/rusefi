@@ -14,7 +14,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include <stdarg.h>
 #include "global.h"
 #include "cli_registry.h"
 #include "efilib.h"

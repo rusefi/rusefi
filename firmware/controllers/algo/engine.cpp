@@ -19,7 +19,7 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "settings.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
@@ -195,16 +195,6 @@ void Engine::preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else
 	adcToVoltageInputDividerCoefficient = engineConfigurationPtr->analogInputDividerCoefficient;
 #endif
-
-	/**
-	 * Here we prepare a fast, index-based MAF lookup from a slower curve description
-	 */
-	for (int i = 0; i < MAF_DECODING_CACHE_SIZE; i++) {
-		float volts = i / MAF_DECODING_CACHE_MULT;
-		float maf = interpolate2d("maf", volts, config->mafDecodingBins,
-				config->mafDecoding, MAF_DECODING_COUNT);
-		mafDecodingLookup[i] = maf;
-	}
 }
 
 void Engine::setConfig(persistent_config_s *config) {

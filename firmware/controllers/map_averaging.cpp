@@ -22,6 +22,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 
 #include "map.h"
 
@@ -227,11 +228,11 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int rpm = GET_RPM_VALUE;
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
-		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
+		angle_t start = interpolate2d("mapa", rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(CUSTOM_ERR_6690, !cisnan(start), "start");
 
 		angle_t offsetAngle = TRIGGER_SHAPE(eventAngles[CONFIG(mapAveragingSchedulingAtIndex)]);
-		efiAssertVoid(CUSTOM_ERR_6691, !cisnan(offsetAngle), "offsetAngle");
+		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(engineConfiguration->operationMode) * i / engineConfiguration->specs.cylindersCount;
@@ -240,7 +241,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			fixAngle(cylinderStart, "cylinderStart", CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
-		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
+		engine->engineState.mapAveragingDuration = interpolate2d("samp", rpm, c->samplingWindowBins, c->samplingWindow);
 	} else {
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			engine->engineState.mapAveragingStart[i] = NAN;
@@ -280,6 +281,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
 
 		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
+		assertAngleRange(samplingDuration, "samplingDuration", CUSTOM_ERR_6563);
 		if (samplingDuration <= 0) {
 			warning(CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
 			return;

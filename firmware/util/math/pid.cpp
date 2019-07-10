@@ -8,6 +8,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "global.h"
+#include "os_access.h"
 #include "pid.h"
 #include "math.h"
 

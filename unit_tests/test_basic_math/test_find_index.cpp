@@ -71,24 +71,23 @@ TEST(misc, testInterpolate2d) {
 
 	float bins4[] = { 1, 2, 3, 4 };
 	float values4[] = { 1, 20, 30, 400 };
-	int size = 4;
 
 	int result;
 
 	printf("Left size\r\n");
-	result = interpolate2d("t", 0, bins4, values4, size);
+	result = interpolate2d("t", 0, bins4, values4);
 	ASSERT_EQ(1, result);
 
 	printf("Right size\r\n");
-	result = interpolate2d("t", 10, bins4, values4, size);
+	result = interpolate2d("t", 10, bins4, values4);
 	ASSERT_EQ(400, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d("t", 3, bins4, values4, size);
+	result = interpolate2d("t", 3, bins4, values4);
 	ASSERT_EQ(30, result);
 
 	printf("Middle1\r\n");
-	result = interpolate2d("t", 3.5, bins4, values4, size);
+	result = interpolate2d("t", 3.5, bins4, values4);
 	ASSERT_EQ(215, result);
 }
 

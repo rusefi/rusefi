@@ -156,6 +156,7 @@ INCDIR = . \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
 	$(CONTROLLERS_INC) \
+	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/controllers/algo \
 	$(PROJECT_DIR)/controllers/core \

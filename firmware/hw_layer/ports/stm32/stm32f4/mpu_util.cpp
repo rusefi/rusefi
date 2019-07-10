@@ -15,7 +15,7 @@
 #include "engine.h"
 #include "pin_repository.h"
 #include "stm32f4xx_hal_flash.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 EXTERN_ENGINE;
 
@@ -32,7 +32,7 @@ extern uint32_t __main_stack_base__;
 
 typedef struct port_intctx intctx_t;
 
-int getRemainingStack(thread_t *otp) {
+EXTERNC int getRemainingStack(thread_t *otp) {
 
 #if CH_DBG_ENABLE_STACK_CHECK
 	// this would dismiss coverity warning - see http://rusefi.com/forum/viewtopic.php?f=5&t=655
@@ -59,7 +59,7 @@ int getRemainingStack(thread_t *otp) {
 extern uint32_t CSTACK$$Base; /* symbol created by the IAR linker */
 extern uint32_t IRQSTACK$$Base; /* symbol created by the IAR linker */
 
-int getRemainingStack(thread_t *otp) {
+EXTERNC int getRemainingStack(thread_t *otp) {
 #if CH_DBG_ENABLE_STACK_CHECK
 	int remainingStack;
 	if (ch.dbg.isr_cnt > 0) {

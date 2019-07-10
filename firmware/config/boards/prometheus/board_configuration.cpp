@@ -132,12 +132,12 @@ void setSdCardConfigurationOverrides(void) {
 void setBoardConfigurationOverrides(void) {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
 	// TODO: remove it when the bootloader is ready
-	Delay(2000);
+	chThdSleepMilliseconds(2000);
 
 	setSerialConfigurationOverrides();
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_13;
-	engineConfiguration->tpsADC = is469 ? EFI_ADC_7 : EFI_ADC_14;
+	engineConfiguration->tps1_1AdcChannel = is469 ? EFI_ADC_7 : EFI_ADC_14;
 	engineConfiguration->map.sensor.hwChannel = is469 ? EFI_ADC_8 : EFI_ADC_15;
 	engineConfiguration->clt.adcChannel = EFI_ADC_3;
 	engineConfiguration->iat.adcChannel = EFI_ADC_4;

@@ -44,4 +44,9 @@ public class SystemOut {
     public static void println(Object object) {
         println(object == null ? "(null)" : object.toString());
     }
+
+    public static void close() {
+        logFile.close();
+        logFile = null;
+    }
 }

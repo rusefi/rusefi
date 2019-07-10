@@ -23,6 +23,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 
 #if EFI_PERF_METRICS
 

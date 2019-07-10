@@ -33,7 +33,7 @@
 #include "idle_thread.h"
 #include "pin_repository.h"
 #include "engine.h"
-#include "periodic_controller.h"
+#include "periodic_task.h"
 #include "stepper.h"
 #include "allsensors.h"
 
@@ -238,7 +238,7 @@ static percent_t automaticIdleController() {
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		idleState = PID_UPPER;
 		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting), CLT_CURVE_SIZE);
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
@@ -249,14 +249,12 @@ static percent_t automaticIdleController() {
 	return newValue;
 }
 
-class IdleController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	IdleController() : PeriodicController("IdleValve") { }
-private:
-	void PeriodicTask(efitime_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid));
+class IdleController : public PeriodicTimerController {
+	int getPeriodMs() override {
+		return GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid);
+	}
 
+	void PeriodicTask() override	{
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,
@@ -308,11 +306,11 @@ private:
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
-			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr, CLT_CRANKING_CURVE_SIZE);
+			cltCorrection = interpolate2d("cltCrankingT", clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 		} else {
 			// this value would be ignored if running in AUTO mode
 			// but we need it while cranking in AUTO mode
-			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE);
+			cltCorrection = interpolate2d("cltT", clt, config->cltIdleCorrBins, config->cltIdleCorr);
 		}
 
 		percent_t iacPosition;

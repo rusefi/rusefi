@@ -26,3 +26,4 @@ goto END
 :X64
 start "" dpinst_amd64.exe /sw
 :END
+exit

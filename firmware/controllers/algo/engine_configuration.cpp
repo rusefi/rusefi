@@ -21,6 +21,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "engine_configuration.h"
 #include "fsio_impl.h"
 #include "allsensors.h"
@@ -698,7 +699,7 @@ int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// error is already reported, let's take first value from the table should be good enough error handing solution
 		targetRpm = CONFIG(cltIdleRpm)[0];
 	} else {
-		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm), CLT_CURVE_SIZE);
+		targetRpm = interpolate2d("cltRpm", clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
 	}
 	return targetRpm + engine->fsioState.fsioIdleTargetRPMAdjustment;
 }

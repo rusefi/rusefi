@@ -7,13 +7,12 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 
 #if EFI_USB_SERIAL
 
 #include "usbconsole.h"
 #include "usbcfg.h"
-#include "efifeatures.h"
-
 
 static bool isUsbSerialInitialized = false;
 

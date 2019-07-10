@@ -6,16 +6,11 @@ rem
 set script_name=build_current_bundle
 set "root_folder=%cd%"
 echo %script_name Entering root_folder=%root_folder%
-FOR %%i IN ("%root%") DO (set root=%%~si)
-echo %script_name Short name %root%"
-
-
-set FTP_SERVER=home451478433.1and1-data.host
+FOR %%i IN ("%root_folder%") DO (set root_folder=%%~si)
+echo %script_name Short name %root_folder%"
 
 echo build_current_bundle.bat: Hello rusEfi build full bundle
-
 echo %date% %time%
-
 
 cd firmware/bootloader
 call !clean_bootloader.bat
@@ -56,8 +51,10 @@ if not exist deliver/rusefi.hex echo Just to confirm - FAILED to compile default
 if not exist deliver/rusefi.hex exit -1
 
 
+echo "%script_name%: Building DFU"
 ..\misc\encedo_hex2dfu\hex2dfu.exe -i deliver/rusefi_no_asserts.hex -o deliver/rusefi_no_asserts.dfu
 ..\misc\encedo_hex2dfu\hex2dfu.exe -i deliver/rusefi.hex            -o deliver/rusefi.dfu
+ls -l deliver
 cd ..
 
 rem At root folder here
@@ -72,15 +69,22 @@ rm -rf temp
 mkdir temp
 
 set stm_arch=stm32f407
-set folder=snapshot_%date:~10%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%_%stm_arch%_rusefi
-set folder=temp\%folder%
+rem This depends on Cygwin date copied under 'datecyg' name to avoid conflict with Windows date
+rem By the way, '%%' is the way to escape % in batch files
+rem this is copy-pasted at build_version.bat
+for /f %%i in ('datecyg +%%Y%%m%%d_%%H%%M%%S') do set TIMESTAMP=%%i
 
-rem this replaces spaces with 0s - that's needed before 10am
-set folder=%folder: =0%
-echo "folder variable=%folder%"
+set folder=snapshot_%TIMESTAMP%_%stm_arch%_rusefi
+echo "%script_name%: folder variable1=%folder%"
+set folder=temp\%folder%
+echo "%script_name%: folder variable3=%folder%"
 
 pwd
 call misc\jenkins\build_working_folder.bat
+IF NOT ERRORLEVEL 0 (
+ echo %script_name%: ERROR: invoking build_working_folder.bat
+ EXIT /B 1
+)
 
 echo "%script_name%: Building only console"
 pwd
@@ -101,10 +105,13 @@ pwd
 zip -j temp/rusefi_simulator.zip simulator/build/rusefi_simulator.exe firmware/tunerstudio/rusefi.ini java_console_binary/rusefi_console.jar
 
 cd temp
+if not exist rusefi_bundle.zip echo %script_name%: ERROR not found rusefi_bundle.zip
+if not exist rusefi_bundle.zip EXIT /B 1
+
 echo "%script_name%: Uploading stuff"
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% . rusefi_bundle.zip
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files rusefi_simulator.zip
-ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %FTP_SERVER% separate_files rusefi_console.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% . rusefi_bundle.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files rusefi_simulator.zip
+ncftpput -u %RUSEFI_BUILD_FTP_USER% -p %RUSEFI_BUILD_FTP_PASS% %RUSEFI_FTP_SERVER% separate_files rusefi_console.zip
 
 cd ..
 echo "TIMESTAMP %date% %time%"

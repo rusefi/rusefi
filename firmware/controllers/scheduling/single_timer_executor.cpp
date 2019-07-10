@@ -20,14 +20,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "global.h"
+#include "os_access.h"
 #include "single_timer_executor.h"
 #include "efitime.h"
 
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+
 #include "microsecond_timer.h"
 #include "tunerstudio_configuration.h"
-#include "rfiutil.h"
+#include "os_util.h"
 
 #include "engine.h"
 EXTERN_ENGINE;

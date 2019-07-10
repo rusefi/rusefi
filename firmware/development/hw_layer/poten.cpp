@@ -7,6 +7,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "poten.h"
 #include "eficonsole.h"
 #include "pin_repository.h"

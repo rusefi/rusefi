@@ -105,6 +105,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "trigger_structure.h"
 #include "hardware.h"
 #include "engine_controller.h"
@@ -145,7 +146,7 @@ EXTERN_ENGINE
 ;
 
 // todo: move this into a hw-specific file
-static void rebootNow(void) {
+void rebootNow(void) {
 	NVIC_SystemReset();
 }
 

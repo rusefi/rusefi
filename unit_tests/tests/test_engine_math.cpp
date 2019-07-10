@@ -92,21 +92,6 @@ TEST(misc, testIgnitionMapGenerator) {
     assertEqualsM2("20@800", 14.2, getInitialAdvance(800, 20, 36), 0.2);
 }
 
-TEST(misc, testMafLookup) {
-	printf("*************************************************** testMafLookup\r\n");
-
-	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
-
-	setBosch0280218037(config);
-	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	assertEqualsM("@0", -34.5000, engine->mafDecodingLookup[0]);
-	assertEqualsM("@1", -33.7875, engine->mafDecodingLookup[1]);
-	assertEqualsM("@2", -33.0750, engine->mafDecodingLookup[2]);
-	assertEqualsM("@200", 313.8826, engine->mafDecodingLookup[200]);
-	ASSERT_EQ( 738,  engine->mafDecodingLookup[255]) << "@255";
-}
-
 float getMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->mockMapValue;
 }

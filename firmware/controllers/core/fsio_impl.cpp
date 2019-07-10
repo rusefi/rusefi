@@ -6,13 +6,14 @@
  * https://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
  *
  * @date Oct 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "global.h"
 
 #if EFI_FSIO
 
+#include "os_access.h"
 #include "fsio_impl.h"
 #include "settings.h"
 #include "allsensors.h"
@@ -123,7 +124,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.getRpm();
 	case LE_METHOD_MAF:
-		return getMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_MAP:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_INTAKE_VVT:

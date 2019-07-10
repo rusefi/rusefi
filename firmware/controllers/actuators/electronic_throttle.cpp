@@ -77,14 +77,18 @@
 #include "pwm_generator_logic.h"
 #include "pid.h"
 #include "engine_controller.h"
-#include "periodic_controller.h"
-
-#define ETB_MAX_COUNT 2
-
+#include "periodic_task.h"
 #include "pin_repository.h"
 #include "pwm_generator.h"
 #include "dc_motor.h"
 #include "pid_auto_tune.h"
+
+#if defined(HAS_OS_ACCESS)
+#error "Unexpected OS ACCESS HERE"
+#endif
+
+#define ETB_MAX_COUNT 2
+
 #if EFI_TUNER_STUDIO
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
@@ -165,17 +169,15 @@ static percent_t currentEtbDuty;
 #define ETB_DUTY_LIMIT 0.9
 #define PERCENT_TO_DUTY(X) (maxF(minF((X / 100.0), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-class EtbController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	EtbController()	: PeriodicController("ETB") { }
-private:
+class EtbController : public PeriodicTimerController {
+
 	float feedForward = 0;
 
-	void PeriodicTask(efitime_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->etb));
+	int getPeriodMs() override {
+		return GET_PERIOD_LIMITED(&engineConfiguration->etb);
+	}
 
-
+	void PeriodicTask() override {
 		// set debug_mode 17
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO
@@ -240,7 +242,7 @@ private:
 #endif /* EFI_TUNER_STUDIO */
 		}
 
-		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues, ETB_BIAS_CURVE_LENGTH);
+		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
 		pid.iTermMin = engineConfiguration->etb_iTermMin;
 		pid.iTermMax = engineConfiguration->etb_iTermMax;

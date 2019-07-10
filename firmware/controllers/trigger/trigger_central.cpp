@@ -3,10 +3,11 @@
  * Here we have a bunch of higher-level methods which are not directly related to actual signal decoding
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "global.h"
+#include "os_access.h"
 
 #include "trigger_central.h"
 #include "trigger_decoder.h"
@@ -16,6 +17,7 @@
 #include "data_buffer.h"
 #include "histogram.h"
 #include "pwm_generator_logic.h"
+#include "tooth_logger.h"
 
 #include "settings.h"
 #include "engine_math.h"
@@ -24,7 +26,25 @@
 
 #include "rpm_calculator.h"
 
-TriggerCentral::TriggerCentral() : hwEventCounters() {
+#if EFI_PROD_CODE
+#include "pin_repository.h"
+#endif /* EFI_PROD_CODE */
+
+#if EFI_TUNER_STUDIO
+#include "tunerstudio.h"
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif /* EFI_TUNER_STUDIO */
+
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
+
+trigger_central_s::trigger_central_s() : hwEventCounters() {
+
+}
+
+TriggerCentral::TriggerCentral() : trigger_central_s() {
 	// we need this initial to have not_running at first invocation
 	previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 
@@ -44,22 +64,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 }
 
 #if EFI_SHAFT_POSITION_INPUT
-
-
-#if EFI_PROD_CODE
-#include "rfiutil.h"
-#include "pin_repository.h"
-#endif /* EFI_PROD_CODE */
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
 
 EXTERN_ENGINE;
 
@@ -114,7 +118,7 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 		if (engineConfiguration->verboseTriggerSynchDetails) {
 			scheduleMsg(logger, "vvt ratio %.2f", ratio);
 		}
-		if (ratio < CONFIGB(nb2ratioFrom) || ratio > CONFIGB(nb2ratioTo)) {
+		if (ratio < CONFIGB(miataNb2VVTRatioFrom) || ratio > CONFIGB(miataNb2VVTRatioTo)) {
 			return;
 		}
 		if (engineConfiguration->verboseTriggerSynchDetails) {
@@ -187,6 +191,13 @@ static bool isInsideTriggerHandler = false;
 
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+#if EFI_TOOTH_LOGGER
+	// Log to the Tunerstudio tooth logger
+	// We want to do this before anything else as we
+	// actually want to capture any noise/jitter that may be occurring
+	LogTriggerTooth(signal);
+#endif /* EFI_TOOTH_LOGGER */
+
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIGB(useNoiselessTriggerDecoder)) {
@@ -650,8 +661,8 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
 		COMPARE_CONFIG_PARAMS(vvtOffset) ||
 		COMPARE_CONFIG_PARAMS(vvtDisplayInverted) ||
-		COMPARE_CONFIG_PARAMS(bc.nb2ratioFrom) ||
-		COMPARE_CONFIG_PARAMS(bc.nb2ratioTo) ||
+		COMPARE_CONFIG_PARAMS(bc.miataNb2VVTRatioFrom) ||
+		COMPARE_CONFIG_PARAMS(bc.miataNb2VVTRatioTo) ||
 		COMPARE_CONFIG_PARAMS(nbVvtIndex);
 	if (changed) {
 		assertEngineReference();
