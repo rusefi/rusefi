@@ -2,7 +2,7 @@
  * @file    maf.h
  * @brief
  *
- * by the way 2.081989116 kg/h = 1 ft�/m
+ * by the way 2.081989116 kg/h = 1 ft^3/min
  *
  *
  * @date Nov 15, 2013
