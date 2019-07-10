@@ -60,9 +60,10 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			warning(CUSTOM_MAF_NEEDED, "MAF sensor needed for current fuel algorithm");
 			return NAN;
 		}
-		return getMafT(engineConfiguration);
+		return getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_SPEED_DENSITY:
 		// SD engine load is used for timing lookup but not for fuel calculation
+		[[fallthrough]]
 	case LM_MAP:
 		return getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LM_ALPHA_N:

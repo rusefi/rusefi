@@ -293,7 +293,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		return;
 	case LL_MAF_V:
 		if (hasMafSensor()) {
-			lcdPrintf("MAF: %.2fv", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
+			lcdPrintf("MAF: %.2fv", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
 		} else {
 			lcdPrintf("MAF: none");
 		}
