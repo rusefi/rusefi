@@ -245,7 +245,7 @@ static void printSensors(Logging *log) {
 	reportSensorF(log, fileFormat, GAUGE_NAME_ACCEL_Y, "G", engine->sensors.accelerometer.y, 3);
 
 	if (hasMafSensor()) {
-		reportSensorF(log, fileFormat, "maf", "V", getMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
+		reportSensorF(log, fileFormat, "maf", "V", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
 	}
 
@@ -689,7 +689,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->coolantTemperature = coolant;
 	tsOutputChannels->intakeAirTemperature = intake;
 	tsOutputChannels->throttlePositon = tps;
-	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
+	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
     tsOutputChannels->oilPressure = engine->sensors.oilPressure;

@@ -674,7 +674,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	ASSERT_EQ( 0,  engine->engineState.injectorLag) << "lag";
 
 	testMafValue = 0;
-	ASSERT_EQ( 0,  getMaf(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
+	ASSERT_EQ( 0,  getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
 
 	ASSERT_EQ( 3000,  GET_RPM()) << "setTestBug299: RPM";
 
@@ -682,7 +682,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 	testMafValue = 3;
-	ASSERT_EQ( 3,  getMaf(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
+	ASSERT_EQ( 3,  getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maf";
 }
 
 static void assertInjectors(const char *msg, int value0, int value1) {
