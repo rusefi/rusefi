@@ -37,9 +37,6 @@ extern fsio8_Map3D_f32t fsioTable1;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-static SimplePwm auxPidPwm[AUX_PID_COUNT];
-static OutputPin auxPidPin[AUX_PID_COUNT];
-
 static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[0];
 static Pid auxPid(auxPidS);
 static Logging *logger;
@@ -65,6 +62,10 @@ static void pidReset(void) {
 class AuxPidController : public PeriodicTimerController {
 public:
 	int index = 0;
+
+	SimplePwm auxPidPwm;
+	OutputPin auxOutputPin;
+
 
 	int getPeriodMs() override {
 		return engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED ? NO_PIN_PERIOD : GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]);
@@ -104,7 +105,7 @@ public:
 #endif /* EFI_TUNER_STUDIO */
 			}
 
-			auxPidPwm[index].setSimplePwmDutyCycle(pwm / 100);
+			auxPidPwm.setSimplePwmDutyCycle(pwm / 100);
 
 
 		}
@@ -121,10 +122,10 @@ static void turnAuxPidOn(int index) {
 		return;
 	}
 
-	startSimplePwmExt(&auxPidPwm[index], "Aux PID",
+	startSimplePwmExt(&instances[index].auxPidPwm, "Aux PID",
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
-			&auxPidPin[0],
+			&instances[index].auxOutputPin,
 			engineConfiguration->auxPidFrequency[index], 0.1, (pwm_gen_callback*)applyPinState);
 }
 
