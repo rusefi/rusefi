@@ -2,7 +2,7 @@
  * @file    maf.h
  * @brief
  *
- * by the way 2.081989116 kg/h = 1 ft³/m
+ * by the way 2.081989116 kg/h = 1 ft^3/min
  *
  *
  * @date Nov 15, 2013
@@ -14,8 +14,7 @@
 
 #include "global.h"
 
-#define getMafT(ec) (getVoltageDivided("maf", ec->mafAdcChannel))
-float getMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getMafVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
