@@ -24,7 +24,7 @@ EXTERN_ENGINE;
 #if EFI_MEMS
 #include "mpu_util.h"
 #include "lis302dl.h"
-#include "periodic_controller.h"
+#include "periodic_thread_controller.h"
 
 static SPIDriver *driver;
 

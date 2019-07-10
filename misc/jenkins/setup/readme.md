@@ -5,7 +5,7 @@ https://sliksvn.com/download/ used to produce numeric revision number needs to b
 
 https://cygwin.com/install.html needs to be added to System PATH manually
 
-cygwin: make, gcc, zip
+cygwin: make, gcc, zip, wget
 
 cp c:\cygwin\bin\find.exe c:\cygwin\bin\findcyg.exe
 

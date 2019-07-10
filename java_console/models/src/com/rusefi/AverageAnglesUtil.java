@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.opensr5.Logger;
+import com.rusefi.config.generated.Fields;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +15,7 @@ import java.io.IOException;
  */
 public class AverageAnglesUtil {
 
-    public static final String KEY = "analog_chart";
+    public static final String KEY = Fields.PROTOCOL_ANALOG_CHART;
     public static final String ANALOG_CHART = KEY + ",";
 
     private static int currentRpm = -1;

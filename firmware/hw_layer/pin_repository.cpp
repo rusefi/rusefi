@@ -11,10 +11,10 @@
 
 #include "global.h"
 #if EFI_PROD_CODE
+#include "os_access.h"
 #include "pin_repository.h"
 #include "eficonsole.h"
 #include "memstreams.h"
-#include "chprintf.h"
 #include "drivers/gpio/gpio_ext.h"
 
 #ifndef BOARD_EXT_PINREPOPINS

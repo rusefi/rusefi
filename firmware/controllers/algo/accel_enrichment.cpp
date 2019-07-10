@@ -242,7 +242,7 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 		if (distance <= 0) // checking if indexes are out of order due to circular buffer nature
 			distance += minI(cb.getCount(), cb.getSize());
 
-		taper = interpolate2d("accel", distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult, MAP_ACCEL_TAPER);
+		taper = interpolate2d("accel", distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult);
 
 		result = taper * d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	} else if (d < -engineConfiguration->engineLoadDecelEnleanmentThreshold) {

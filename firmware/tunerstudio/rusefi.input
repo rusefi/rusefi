@@ -104,22 +104,20 @@ enable2ndByteCanID = false
 
 
 [LoggerDefinition]
-
   ; valid logger types: composite, tooth, trigger, csv
-  loggerDef = tooth, "Tooth Logger", tooth
-         dataReadCommand = "L"
-         dataReadTimeout = 15000 ; time in ms
-         dataReadyCondition = { toothLogReady }
-         dataLength = 256 ; in bytes, including headers, footers and data
+  loggerDef = compositeLogger, "Primary Trigger Logger", tooth
+        startCommand = "l\x01"
+        stopCommand  = "l\x02"
+        dataReadCommand = "L"
+        dataReadTimeout = 10000 ; time in ms
+        dataReadyCondition = { toothLogReady }
 
        ; recordDef = headerLen, footerLen, recordLen
-       recordDef =   0,   0,   4; in bytes, the recordLen is for each record, currently limited to 4 bytes
+       recordDef =   0,   0,   2; in bytes, the recordLen is for each record, currently limited to 4 bytes
 
+       ; uint16 that stores 1/100 second
+       recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
 
-       recordField = PA3,               "Inj D",         3,  1, 1,   ""
-       recordField = PA2,               "Inj C",         2,  1, 1,   ""
-       recordField = PA1,               "Inj B",         1,  1, 1,   ""
-       recordField = PA0,               "Inj A",         0,  1, 1,   ""
 
 [VeAnalyze]
 
@@ -1068,6 +1066,11 @@ gaugeCategory = Throttle Body (incl. ETB)
    entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
    entry = acSwitchIndicator,   "AC switch",int,"%d"
    entry = ind_fan, "radiator fan",int,"%d"
+
+; Electronic throttle body
+   entry = etb1Error,      "ETB Error", float, "%.3f"
+   entry = etb1DutyCycle,  "ETB Duty", float, "%.3f"
+   entry = etbTarget,      "ETB Target", float, "%.3f"
    
    
 ;     tpsADC          = U16,    "ADC",
@@ -1452,8 +1455,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
 	    field = "VVT position display offset",			vvtOffset
 	    field = "VVT display inverted",					vvtDisplayInverted
-	    field = "NB2 from temp",						nb2ratioFrom
-	    field = "NB2 to temp",							nb2ratioTo
+	    field = "Miata NB2 from (temporary)",			miataNb2VVTRatioFrom
+	    field = "Miata NB2 to (temporary)",				miataNb2VVTRatioTo
 	    field = "nbVvtIndex",							nbVvtIndex
 	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8}
@@ -1853,6 +1856,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
 
 	dialog = mapCurves, "MAP sampling", yAxis
+		field = "isMapAveragingEnabled",				isMapAveragingEnabled
 		panel = map_samplingAngleCurve
 		panel = map_samplingWindowCurve
 

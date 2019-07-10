@@ -8,16 +8,16 @@
 
 #include "global.h"
 
-#include "trigger_input.h"
-#include "servo.h"
 
 #if EFI_PROD_CODE
+#include "os_access.h"
+#include "trigger_input.h"
+#include "servo.h"
 #include "adc_inputs.h"
 #include "can_hw.h"
 #include "hardware.h"
-#include "io_pins.h"
 #include "rtc_helper.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "injector_central.h"
 #include "vehicle_speed.h"
 #include "yaw_rate_sensor.h"

@@ -2,7 +2,7 @@
  * @file	advance_map.cpp
  *
  * @date Mar 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -23,7 +23,6 @@
 #include "engine.h"
 #include "advance_map.h"
 #include "interpolation.h"
-#include "rfiutil.h"
 #include "engine_math.h"
 #include "tps.h"
 #include "idle_thread.h"
@@ -105,7 +104,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	
 	// get advance from the separate table for Idle
 	if (CONFIG(useSeparateAdvanceForIdle)) {
-		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance, IDLE_ADVANCE_CURVE_SIZE);
+		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 		advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIGB(idlePidDeactivationTpsThreshold), advanceAngle, tps);
@@ -176,7 +175,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// get advance from the separate table for Cranking
 	if (CONFIG(useSeparateAdvanceForCranking)) {
-		return interpolate2d("crankingAdvance", rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance), CRANKING_ADVANCE_CURVE_SIZE);
+		return interpolate2d("crankingAdvance", rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start

@@ -23,6 +23,7 @@
 #include "global.h"
 
 #if HAL_USE_ADC
+#include "os_access.h"
 
 #include "engine.h"
 #include "adc_inputs.h"
@@ -149,6 +150,8 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 		};
 
 AdcDevice slowAdc(&adcgrpcfgSlow);
+
+void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
 static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
 /* HW dependent part.*/

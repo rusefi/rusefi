@@ -9,8 +9,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef CONTROLLERS_MATH_PID_AUTO_TUNE_H_
-#define CONTROLLERS_MATH_PID_AUTO_TUNE_H_
+#pragma once
+
 
 #include "global.h"
 
@@ -186,7 +186,3 @@ private:
 #endif
 
 };
-
-
-
-#endif /* CONTROLLERS_MATH_PID_AUTO_TUNE_H_ */

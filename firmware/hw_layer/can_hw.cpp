@@ -32,37 +32,44 @@ static bool isCanEnabled = false;
 static LoggingWithStorage logger("CAN driver");
 static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
+// Values below calculated with http://www.bittiming.can-wiki.info/
+// Pick ST micro bxCAN
+// Clock rate of 42mhz for f4, 54mhz for f7
+#ifdef STM32F4XX
+// These have an 85.7% sample point
+#define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
+#define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
+#define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(10) | CAN_BTR_TS2(1))
+#elif defined(STM32F7XX)
+// These have an 88.9% sample point
+#define CAN_BTR_250 (CAN_BTR_SJW(0) | CAN_BTR_BRP(11) | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
+#define CAN_BTR_500 (CAN_BTR_SJW(0) | CAN_BTR_BRP(5)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
+#define CAN_BTR_1k0 (CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(14) | CAN_BTR_TS2(1))
+#else
+#error Please define CAN BTR settings for your MCU!
+#endif
+
 /*
  * 500KBaud
  * automatic wakeup
  * automatic recover from abort mode
  * See section 22.7.7 on the STM32 reference manual.
- *
- * speed = 42000000 / (BRP + 1) / (1 + TS1 + 1 + TS2 + 1)
- * 42000000 / 7 / 12 = 500000
- *
+ * 
  * 29 bit would be CAN_TI0R_EXID (?) but we do not mention it here
  * CAN_TI0R_STID "Standard Identifier or Extended Identifier"? not mentioned as well
  */
-static const CANConfig canConfig500 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(6) };
 
-/*
- * speed = 42000000 / (BRP + 1) / (1 + TS1 + 1 + TS2 + 1)
- * 42000000 / 7 / 6 = 1000000
- *
- */
-static const CANConfig canConfig1000 = {
-CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(2) | CAN_BTR_BRP(6) };
-
-// 42000000 / 14 / 12 = 250000
-
-// todo: validate this
 static const CANConfig canConfig250 = {
 CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
-CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(13) };
+CAN_BTR_250 };
+
+static const CANConfig canConfig500 = {
+CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+CAN_BTR_500 };
+
+static const CANConfig canConfig1000 = {
+CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
+CAN_BTR_1k0 };
 
 
 static CANRxFrame rxBuffer;

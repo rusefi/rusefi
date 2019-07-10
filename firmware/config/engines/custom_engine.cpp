@@ -343,12 +343,14 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tle8888_cs = GPIOD_5;
 	engineConfiguration->directSelfStimulation = true;
 
+#if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
 	boardConfiguration->ignitionPins[0] = GPIOG_3;
 	boardConfiguration->ignitionPins[1] = GPIOG_4;
 	boardConfiguration->ignitionPins[2] = GPIOG_5;
 	boardConfiguration->ignitionPins[3] = GPIOG_6;
 	boardConfiguration->ignitionPins[4] = GPIOG_7;
 	boardConfiguration->ignitionPins[5] = GPIOG_8;
+#endif /* STM32_HAS_GPIOG */
 	boardConfiguration->ignitionPins[6] = GPIOC_6;
 	boardConfiguration->ignitionPins[7] = GPIOC_7;
 
@@ -368,13 +370,15 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// IN1 PF15
 	// IN2 PF14
 	// SF  PF11
+#if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 #if EFI_FSIO
 	setFsio(12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
-	CONFIG(etb1_use_two_wires) = true;
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
 	CONFIGB(etb1.directionPin2) = GPIOF_14;
+#endif /* STM32_HAS_GPIOF */
+	CONFIG(etb1_use_two_wires) = true;
 	boardConfiguration->isHip9011Enabled = false;
 
 	// ETB #2

@@ -21,9 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdarg.h>
 #include "global.h"
-#include <chprintf.h>
+#include "os_access.h"
 #include "eficonsole.h"
 #include "console_io.h"
 #include "svnversion.h"

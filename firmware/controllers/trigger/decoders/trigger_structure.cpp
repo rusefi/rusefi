@@ -20,6 +20,7 @@
 
 
 #include "global.h"
+#include "os_access.h"
 #include "engine.h"
 #include "trigger_bmw.h"
 #include "trigger_chrysler.h"

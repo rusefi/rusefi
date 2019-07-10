@@ -6,6 +6,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "tunerstudio_io.h"
 #include "console_io.h"
 #include "engine.h"

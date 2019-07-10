@@ -24,9 +24,10 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     private final JButton button;
     private String fileName;
 
-    public FirmwareFlasher(String fileName, String buttonTest) {
+    public FirmwareFlasher(String fileName, String buttonTest, String tooltip) {
         this.fileName = fileName;
         button = new JButton(buttonTest);
+        button.setToolTipText(tooltip);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -38,14 +39,14 @@ public class FirmwareFlasher extends ProcessStatusWindow {
 
                 wnd.showFrame("rusEfi Firmware Flasher");
 
-                submitAction(() -> doFlashFirmware());
+                ExecHelper.submitAction(() -> doFlashFirmware(), getClass() + " extProcessThread");
             }
         });
     }
 
     public static String getOpenocdCommad() {
         String cfg = "stm32f4discovery.cfg";
-        return BINARY_LOCATION + File.separator +  OPENOCD_EXE + " -f openocd/" + cfg;
+        return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
     private void doFlashFirmware() {

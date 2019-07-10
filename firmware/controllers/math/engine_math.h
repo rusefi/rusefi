@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef ENGINE_MATH_H_
-#define ENGINE_MATH_H_
+#pragma once
 
 #include "engine_configuration.h"
 
@@ -69,5 +68,3 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 // while for toothed wheels user would have to provide a value
 #define tdcPosition() \
 		(ENGINE(triggerCentral.triggerShape.tdcPosition) + CONFIG(globalTriggerAngleOffset))
-
-#endif /* ENGINE_MATH_H_ */

@@ -5,8 +5,16 @@ pwd
 echo %script_name%: Working folder: %folder%
 mkdir %folder%
 set console_folder=%folder%\console
+set drivers_folder=%folder%\drivers
 mkdir %console_folder%
+mkdir %drivers_folder%
 ls -l %folder%
+
+wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe -P %drivers_folder%
+if not exist %drivers_folder%/silent_st_drivers.exe (
+ echo %script_name%: ERROR DOWNLOADING silent_st_drivers.exe
+ EXIT /B 1
+)
 
 if %ini_file_override%.==. (
     set ini_file_override=rusefi.ini
@@ -34,9 +42,9 @@ cp firmware/deliver/rusefi_no_asserts.bin %folder%
 cp firmware/deliver/rusefi_no_asserts.dfu %folder%
 rem 746 builds one version at the moment
 rem probably not needed cp firmware/build/rusefi.hex %folder%
-cp firmware/build/rusefi.bin %folder%
+cp firmware/deliver/rusefi.bin %folder%
 rem probably not needed cp firmware/build/rusefi.elf %folder%
-cp firmware/build/rusefi.dfu %folder%
+cp firmware/deliver/rusefi.dfu %folder%
 
 
 cd temp

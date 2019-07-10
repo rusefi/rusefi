@@ -20,8 +20,9 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#include <ch.h>
+// todo: remove this from here and rely on os_access.h. unfortunately hal.h includes ch.h :(
 #include <hal.h>
+#include "common_headers.h"
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
@@ -35,17 +36,12 @@ typedef unsigned int time_t;
 #define ALWAYS_INLINE INLINE
 #endif
 
-#include "common_headers.h"
-
-#include "io_pins.h"
-
 #ifdef __cplusplus
 #include "cli_registry.h"
 
 #include "eficonsole.h"
 #endif /* __cplusplus */
 
-#include "chprintf.h"
 
 /* definition to expand macro then apply to pragma message */
 #define VALUE_TO_STRING(x) #x
@@ -111,12 +107,6 @@ typedef unsigned int time_t;
 
 #define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
 
-/*
- * Stack debugging
- * See also getMaxUsedStack()
- */
-int getRemainingStack(thread_t *otp);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -135,7 +125,6 @@ int getRemainingStack(thread_t *otp);
  */
 #define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
 
-#define Delay(ms) chThdSleepMilliseconds(ms)
 #ifdef __cplusplus
 extern "C"
 {

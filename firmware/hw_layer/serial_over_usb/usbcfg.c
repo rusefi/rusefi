@@ -15,6 +15,7 @@
 */
 
 #include "global.h"
+#include "os_access.h"
 
 #if HAL_USE_SERIAL_USB
 

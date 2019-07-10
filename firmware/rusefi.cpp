@@ -105,6 +105,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "trigger_structure.h"
 #include "hardware.h"
 #include "engine_controller.h"

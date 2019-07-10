@@ -10,6 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
+#include "global.h"
+#include "os_access.h"
 #include "engine.h"
 #include "rpm_calculator.h"
 
@@ -18,7 +20,7 @@
 #include "engine_math.h"
 
 #if EFI_PROD_CODE
-#include "rfiutil.h"
+#include "os_util.h"
 #include "engine.h"
 #endif
 

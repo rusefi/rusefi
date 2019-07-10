@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jun 30 14:05:19 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jul 05 19:36:12 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -939,15 +939,15 @@ public class Fields {
 	public static final int mc33972_csPinMode_offset = 679;
 	public static final int mc33972spiDevice_offset = 4032;
 	public static final int measureMapOnlyInOneCylinder_offset = 744;
+	public static final int miataNb2VVTRatioFrom_offset = 820;
+	public static final int miataNb2VVTRatioFrom_offset_hex = 334;
+	public static final int miataNb2VVTRatioTo_offset = 824;
+	public static final int miataNb2VVTRatioTo_offset_hex = 338;
 	public static final String MOCK_IAT_COMMAND = "mock_iat_voltage";
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int narrowToWideOxygen_offset = 2320;
 	public static final int narrowToWideOxygen_offset_hex = 910;
 	public static final int narrowToWideOxygenBins_offset = 2288;
-	public static final int nb2ratioFrom_offset = 820;
-	public static final int nb2ratioFrom_offset_hex = 334;
-	public static final int nb2ratioTo_offset = 824;
-	public static final int nb2ratioTo_offset_hex = 338;
 	public static final int nbVvtIndex_offset = 2440;
 	public static final int nbVvtIndex_offset_hex = 988;
 	public static final int needSecondTriggerInputDeprecated_offset = 1476;
@@ -983,6 +983,8 @@ public class Fields {
 	public static final int primeInjFalloffTemperature_offset = 1486;
 	public static final int primingSquirtDurationMs_offset = 96;
 	public static final int primingSquirtDurationMs_offset_hex = 60;
+	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
+	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1833;
@@ -1580,8 +1582,8 @@ public class Fields {
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
-	public static final Field NB2RATIOFROM = Field.create("NB2RATIOFROM", 820, FieldType.FLOAT);
-	public static final Field NB2RATIOTO = Field.create("NB2RATIOTO", 824, FieldType.FLOAT);
+	public static final Field MIATANB2VVTRATIOFROM = Field.create("MIATANB2VVTRATIOFROM", 820, FieldType.FLOAT);
+	public static final Field MIATANB2VVTRATIOTO = Field.create("MIATANB2VVTRATIOTO", 824, FieldType.FLOAT);
 	public static final Field TRIGGERERRORPIN = Field.create("TRIGGERERRORPIN", 828, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERERRORPINMODE = Field.create("TRIGGERERRORPINMODE", 829, FieldType.INT8, pin_output_mode_e);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 830, FieldType.INT8, output_pin_e);
@@ -2358,8 +2360,8 @@ public class Fields {
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
-	NB2RATIOFROM,
-	NB2RATIOTO,
+	MIATANB2VVTRATIOFROM,
+	MIATANB2VVTRATIOTO,
 	TRIGGERERRORPIN,
 	TRIGGERERRORPINMODE,
 	ACRELAYPIN,

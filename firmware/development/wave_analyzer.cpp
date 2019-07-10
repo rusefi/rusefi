@@ -12,6 +12,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "wave_analyzer.h"
 #include "eficonsole.h"
 #include "data_buffer.h"
@@ -20,7 +21,7 @@
 #include "signal_executor.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "engine_math.h"
 #include "engine.h"
 #include "rpm_calculator.h"

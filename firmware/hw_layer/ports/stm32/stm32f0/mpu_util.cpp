@@ -7,7 +7,7 @@
 
 #include "global.h"
 
-int getRemainingStack(Thread *otp) {
+EXTERNC int getRemainingStack(Thread *otp) {
 	return 9999;
 }
 

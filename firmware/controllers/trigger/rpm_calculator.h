@@ -9,7 +9,7 @@
 #ifndef RPM_REPORTER_H_
 #define RPM_REPORTER_H_
 
-#include <global.h>
+#include "global.h"
 #include "scheduler.h"
 
 // see TOP_DEAD_CENTER_MESSAGE in rusEfi console source code

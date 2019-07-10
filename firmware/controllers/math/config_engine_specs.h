@@ -5,8 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef CONTROLLERS_MATH_CONFIG_ENGINE_SPECS_H_
-#define CONTROLLERS_MATH_CONFIG_ENGINE_SPECS_H_
+#pragma once
+
 
 #include "global.h"
 
@@ -39,4 +39,3 @@
 #define get_specs_cylindersCount CONFIG_ACCESS_FOR_CONFIG_HEADER_ONLY(specs.cylindersCount)
 #define get_injector_flow CONFIG_ACCESS_FOR_CONFIG_HEADER_ONLY(injector.flow)
 
-#endif /* CONTROLLERS_MATH_CONFIG_ENGINE_SPECS_H_ */

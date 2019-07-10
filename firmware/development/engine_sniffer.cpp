@@ -25,6 +25,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #include "engine_sniffer.h"
 #include "adc_inputs.h"
 
@@ -37,7 +38,7 @@
 #define CHART_DELIMETER	'!'
 
 #if EFI_HISTOGRAMS
-#include "rfiutil.h"
+#include "os_util.h"
 #include "histogram.h"
 static histogram_s engineSnifferHisto;
 #endif /* EFI_HISTOGRAMS */
@@ -98,7 +99,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
-	appendPrintf(&logging, "wave_chart%s", DELIMETER);
+	appendPrintf(&logging, "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
 }
 
 void WaveChart::startDataCollection() {
@@ -155,8 +156,7 @@ void WaveChart::publish() {
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
 #endif
-	bool isFullLog = getFullLog();
-	if (ENGINE(isEngineChartEnabled) && isFullLog) {
+	if (ENGINE(isEngineChartEnabled)) {
 		scheduleLogging(&logging);
 	}
 }

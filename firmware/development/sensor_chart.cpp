@@ -5,8 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "sensor_chart.h"
 #include "global.h"
+#include "os_access.h"
+#include "sensor_chart.h"
 #include "engine.h"
 #include "rpm_calculator.h"
 
@@ -50,9 +51,7 @@ void scAddData(float angle, float value) {
 			// message terminator
 			appendPrintf(&scLogging, DELIMETER);
 			// output pending data
-			if (getFullLog()) {
-				scheduleLogging(&scLogging);
-			}
+			scheduleLogging(&scLogging);
 			pendingData = false;
 		}
 		return;
@@ -61,7 +60,7 @@ void scAddData(float angle, float value) {
 		pendingData = true;
 		resetLogging(&scLogging);
 		// message header
-		appendPrintf(&scLogging, "analog_chart%s", DELIMETER);
+		appendPrintf(&scLogging, "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
 	}
 
 	if (remainingSize(&scLogging) > 100) {

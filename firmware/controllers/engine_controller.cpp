@@ -5,7 +5,7 @@
  *
  *
  * @date Feb 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
@@ -22,6 +22,7 @@
  */
 
 #include "global.h"
+#include "os_access.h"
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif
@@ -40,7 +41,7 @@
 #include "tunerstudio.h"
 #endif
 #include "injector_central.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "engine_math.h"
 #if EFI_WAVE_ANALYZER
 #include "wave_analyzer.h"
@@ -64,6 +65,14 @@
 #include "AdcConfiguration.h"
 #endif /* HAL_USE_ADC */
 
+#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
+#include "bootloader/bootloader.h"
+#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#include "periodic_task.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
@@ -77,7 +86,7 @@
 
 #if EFI_CJ125
 #include "cj125.h"
-#endif
+#endif /* EFI_CJ125 */
 
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -90,21 +99,37 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 
 #if !EFI_UNIT_TEST
 
-#if defined(EFI_BOOTLOADER_INCLUDE_CODE)
-#include "bootloader/bootloader.h"
-#endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
 EXTERN_ENGINE;
 
-/**
- * CH_FREQUENCY is the number of system ticks in a second
- */
+static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-static virtual_timer_t periodicSlowTimer; // 20Hz
-static virtual_timer_t periodicFastTimer; // 50Hz
+class PeriodicFastController : public PeriodicTimerController {
+	void PeriodicTask() override {
+		engine->periodicFastCallback();
+	}
+
+	int getPeriodMs() override {
+		return FAST_CALLBACK_PERIOD_MS;
+	}
+};
+
+class PeriodicSlowController : public PeriodicTimerController {
+	void PeriodicTask() override {
+		doPeriodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+	int getPeriodMs() override {
+		// we need at least protection from zero value while resetting configuration
+		int periodMs = maxI(50, CONFIGB(generalPeriodicThreadPeriodMs));
+		return periodMs;
+	}
+};
+
+static PeriodicFastController fastController;
+static PeriodicSlowController slowController;
 
 static LoggingWithStorage logger("Engine Controller");
 
@@ -225,25 +250,6 @@ efitimesec_t getTimeNowSeconds(void) {
 
 #endif /* EFI_PROD_CODE */
 
-static void periodicSlowCallback(Engine *engine);
-
-static void scheduleNextSlowInvocation(void) {
-	// schedule next invocation
-	int periodMs = CONFIGB(generalPeriodicThreadPeriodMs);
-	if (periodMs == 0)
-		periodMs = 50; // this might happen while resetting configuration
-	chVTSetAny(&periodicSlowTimer, TIME_MS2I(periodMs), (vtfunc_t) &periodicSlowCallback, engine);
-}
-
-static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engine->periodicFastCallback();
-	/**
-	 * not many reasons why we use ChibiOS timer and not say a dedicated thread here
-	 * the only down-side of a dedicated thread is the cost of thread stack
-	 */
-	chVTSetAny(&periodicFastTimer, TIME_MS2I(FAST_CALLBACK_PERIOD_MS), (vtfunc_t) &periodicFastCallback, engine);
-}
-
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.reset();
 	engine->tpsAccelEnrichment.reset();
@@ -285,7 +291,7 @@ static void invokePerSecond(void) {
 #endif /* EFI_CLOCK_LOCKS */
 }
 
-static void periodicSlowCallback(Engine *engine) {
+static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -327,14 +333,12 @@ static void periodicSlowCallback(Engine *engine) {
 	}
 
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	scheduleNextSlowInvocation();
 #endif
 }
 
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	periodicSlowCallback(engine);
-	periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowController.Start();
+	fastController.Start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
@@ -789,10 +793,10 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 7400
+#define RAM_UNUSED_SIZE 13000
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 6600
+#define CCM_UNUSED_SIZE 4600
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
@@ -810,6 +814,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190630;
+	return 20190709;
 }
 #endif /* EFI_UNIT_TEST */

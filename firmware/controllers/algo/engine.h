@@ -283,12 +283,6 @@ public:
 	 */
 	uint32_t engineCycleEventCount = 0;
 
-	/**
-	 * fast kg/hour MAF decoding lookup table with ~0.2 volt step
-	 * This table is build based on MAF decoding curve
-	 */
-	float mafDecodingLookup[MAF_DECODING_CACHE_SIZE];
-
 	void preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	void watchdog();

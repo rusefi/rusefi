@@ -221,8 +221,8 @@ floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%.2f", vBatt);
 		return 0;
 	}
-	float vBattCorrection = interpolate2d("lag", vBatt, INJECTOR_LAG_CURVE);
-	return vBattCorrection;
+	
+	return interpolate2d("lag", vBatt, engineConfiguration->injector.battLagCorrBins, engineConfiguration->injector.battLagCorr);
 }
 
 /**
@@ -243,19 +243,19 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (cisnan(engine->sensors.clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("cltf", engine->sensors.clt, WARMUP_CLT_EXTRA_FUEL_CURVE);
+	return interpolate2d("cltf", engine->sensors.clt, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (cisnan(engine->sensors.clt))
 		return 0; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("timc", engine->sensors.clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra, CLT_TIMING_CURVE_SIZE);
+	return interpolate2d("timc", engine->sensors.clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
 float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("iatc", iat, IAT_FUEL_CORRECTION_CURVE);
+	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
 /**
@@ -340,17 +340,22 @@ floatms_t getCrankingFuel3(float coolantTemperature,
 	// these magic constants are in Celsius
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
 	float durationCoef = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
-			config->crankingCycleCoef, CRANKING_CURVE_SIZE);
+			config->crankingCycleCoef);
 
 	float coolantTempCoef = cisnan(coolantTemperature) ? 1 : interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
-			config->crankingFuelCoef, CRANKING_CURVE_SIZE);
+			config->crankingFuelCoef);
 
 	percent_t tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float tpsCoef = cisnan(tps) ? 1 : interpolate2d("crankTps", tps, engineConfiguration->crankingTpsBins,
-			engineConfiguration->crankingTpsCoef, CRANKING_CURVE_SIZE);
+			engineConfiguration->crankingTpsCoef);
 
-	return baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
+	floatms_t result = baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
+
+	if (result <= 0) {
+		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", result);
+	}
+	return result;
 }
 
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {

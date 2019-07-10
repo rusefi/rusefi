@@ -21,7 +21,7 @@
 #include "global.h"
 #include "engine.h"
 #include "console_io.h"
-#include "rfiutil.h"
+#include "os_util.h"
 #include "tunerstudio.h"
 
 #if EFI_SIMULATOR
