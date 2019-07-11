@@ -833,7 +833,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;See cltIdleRpmBins
-	float wwaeBeta;Wall wetting/evaporation factor/Tau factor/fuel film;+0=No fuel settling on port walls, 1=All the fuel settling on port walls, setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
+	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
 	brain_pin_e communicationLedPin;blue LED on discovery by default	
 	brain_pin_e runningLedPin;green LED on discovery by default
@@ -858,7 +858,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
 	float[CLT_CURVE_SIZE] cltIdleRpm;See idleRpmPid;"",      1,     0,      0.0,    8000.0,   0
 	
-	float targetVBatt;+This is the target battery voltage the alternator PID control will attempt to maintain;set targetvbatt VOLTS;"Volts",      1,      0,       0,30,      1
+	float targetVBatt;+This is the target battery voltage the alternator PID control will attempt to maintain;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;+Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.;"%",  1,      0,       0, 200,      2
 	float startOfCrankingPrimingPulse;+Prime pulse for cold engine, duration in ms\nLinear interpolation between -40F/-40C and fallout temperature\n\nSee also isFasterEngineSpinUpEnabled\nset cranking_priming_pulse X;"ms",        1,     0,    0, 200,     1
 	int16_t afterCrankingIACtaperDuration;+This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.;"cycles",        1,     0,  0,    5000,  0
