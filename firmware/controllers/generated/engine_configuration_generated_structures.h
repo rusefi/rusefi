@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 01 12:45:02 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jul 11 21:12:39 EDT 2019
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -725,6 +725,7 @@ struct board_configuration_s {
 	offset 144 bit 8 */
 	bool useSerialPort : 1;
 	/**
+	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	offset 144 bit 9 */
 	bool useStepperIdle : 1;
 	/**
@@ -743,6 +744,7 @@ struct board_configuration_s {
 	offset 144 bit 14 */
 	bool useWarmupPidAfr : 1;
 	/**
+	 *  +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	offset 144 bit 15 */
 	bool onOffAlternatorLogic : 1;
 	/**
@@ -791,7 +793,7 @@ struct board_configuration_s {
 	offset 144 bit 28 */
 	bool alignEngineSnifferAtTDC : 1;
 	/**
-	 * This setting allows the ETB to act as the idle air control valve. The ETB will act as though it was the IAC and regulate the airflow at idle.
+	 * This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	offset 144 bit 29 */
 	bool useETBforIdleControl : 1;
 	/**
@@ -1370,15 +1372,17 @@ struct engine_configuration_s {
 	 */
 	int HD44780height;
 	/**
-	 * First TPS, single channel so far. See aslo pedalPositionAdcChannel
+	 * First TPS, single channel so far. See also pedalPositionAdcChannel
 	 * offset 512
 	 */
 	adc_channel_e tps1_1AdcChannel;
 	/**
+	 * This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB.
 	 * offset 513
 	 */
 	adc_channel_e vbattAdcChannel;
 	/**
+	 * This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined.
 	 * offset 514
 	 */
 	adc_channel_e fuelLevelSensor;
@@ -1794,6 +1798,7 @@ struct engine_configuration_s {
 	 */
 	int tachPulseTriggerIndex;
 	/**
+	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration. 
 	 * offset 1732
 	 */
 	float wwaeTau;
@@ -1830,7 +1835,7 @@ struct engine_configuration_s {
 	 */
 	pid_s idleRpmPid;
 	/**
-	 * Wall wetting/evaporation factor/Tau factor/fuel film
+	 * 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. 
 	 * offset 1828
 	 */
 	float wwaeBeta;
@@ -1905,7 +1910,7 @@ struct engine_configuration_s {
 	 */
 	float cltIdleRpm[CLT_CURVE_SIZE];
 	/**
-	 * set targetvbatt VOLTS
+	 * This is the target battery voltage the alternator PID control will attempt to maintain
 	 * offset 2044
 	 */
 	float targetVBatt;
@@ -1951,12 +1956,12 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e LIS302DLCsPin;
 	/**
-	 * How many engine cycles to consider?
+	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. 
 	 * offset 2064
 	 */
 	int tpsAccelLength;
 	/**
-	 * Maximum delta in TPS percentage over the 'length'. Actual TPS change has to be above this value in order to TPS/TPS acceleration to kick in.
+	 * Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
 	 * offset 2068
 	 */
 	float tpsAccelEnrichmentThreshold;
@@ -2349,6 +2354,7 @@ struct engine_configuration_s {
 	 */
 	float fsioCurve4[FSIO_CURVE_8];
 	/**
+	 * This is the processor pin your Flex-fuel sensor is connected to, this is a non standard item so the pin will always be user defined.
 	 * offset 3124
 	 */
 	brain_input_pin_e flexFuelSensor;
@@ -2829,4 +2835,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 01 12:45:02 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jul 11 21:12:39 EDT 2019
