@@ -103,7 +103,7 @@ class AlternatorController : public PeriodicTimerController {
 		}
 
 
-		alternatorControl.setSimplePwmDutyCycle(currentAltDuty / 100);
+		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
 	}
 };
 

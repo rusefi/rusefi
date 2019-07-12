@@ -122,7 +122,7 @@ static void applyIACposition(percent_t position) {
 		 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 		 * todo: unify?
 		 */
-		idleSolenoid.setSimplePwmDutyCycle(position / 100.0);
+		idleSolenoid.setSimplePwmDutyCycle(PERCENT_TO_DUTY(position));
 	}
 }
 

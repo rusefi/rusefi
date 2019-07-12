@@ -37,8 +37,6 @@ extern fsio8_Map3D_f32t fsioTable1;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[0];
-static Pid auxPid(auxPidS);
 static Logging *logger;
 
 static bool isEnabled(int index) {
@@ -55,17 +53,17 @@ static bool isEnabled(int index) {
 	}
 }
 
-static void pidReset(void) {
-	auxPid.reset();
-}
-
 class AuxPidController : public PeriodicTimerController {
 public:
-	int index = 0;
 
 	SimplePwm auxPidPwm;
 	OutputPin auxOutputPin;
 
+	void init(int index) {
+		this->index = index;
+		pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[index];
+		auxPid.initPidClass(auxPidS);
+	}
 
 	int getPeriodMs() override {
 		return engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED ? NO_PIN_PERIOD : GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]);
@@ -73,7 +71,8 @@ public:
 
 	void PeriodicTask() override {
 			if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
-				pidReset();
+				auxPid.reset();
+
 			}
 
 			float rpm = GET_RPM_VALUE;
@@ -83,7 +82,7 @@ public:
 
 			if (!enabledAtCurrentRpm) {
 				// we need to avoid accumulating iTerm while engine is not running
-				pidReset();
+				auxPid.reset();
 				return;
 			}
 
@@ -105,10 +104,11 @@ public:
 #endif /* EFI_TUNER_STUDIO */
 			}
 
-			auxPidPwm.setSimplePwmDutyCycle(pwm / 100);
-
-
+			auxPidPwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(pwm));
 		}
+private:
+	Pid auxPid;
+	int index = 0;
 };
 
 static AuxPidController instances[AUX_PID_COUNT];
@@ -144,9 +144,12 @@ void stopAuxPins(void) {
 void initAuxPid(Logging *sharedLogger) {
 	logger = sharedLogger;
 
+	for (int i = 0;i < AUX_PID_COUNT;i++) {
+		instances[i].init(i);
+	}
+
 	startAuxPins();
 	for (int i = 0;i < AUX_PID_COUNT;i++) {
-		instances[i].index = i;
 		instances[i].Start();
 	}
 }
