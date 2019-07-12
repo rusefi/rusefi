@@ -636,6 +636,19 @@ static void rpnEval(char *line) {
 #endif
 }
 
+ValueProvider3D *getFSIOTable(int index) {
+	switch (index) {
+	default:
+		return &fsioTable1;
+	case 1:
+		return &fsioTable2;
+	case 2:
+		return &fsioTable3;
+	case 3:
+		return &fsioTable4;
+	}
+}
+
 void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	logger = sharedLogger;

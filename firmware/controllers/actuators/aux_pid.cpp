@@ -63,6 +63,7 @@ public:
 		this->index = index;
 		pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[index];
 		auxPid.initPidClass(auxPidS);
+		table = getFSIOTable(index);
 	}
 
 	int getPeriodMs() override {
@@ -87,8 +88,8 @@ public:
 			}
 
 
-			float value = engine->triggerCentral.vvtPosition; // getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE); // that's temporary
-			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+			float value = engine->triggerCentral.vvtPosition;
+			float targetValue = table->getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 			percent_t pwm = auxPid.getOutput(targetValue, value);
 			if (engineConfiguration->isVerboseAuxPid1) {
@@ -109,6 +110,7 @@ public:
 private:
 	Pid auxPid;
 	int index = 0;
+	ValueProvider3D *table = NULL;
 };
 
 static AuxPidController instances[AUX_PID_COUNT];
