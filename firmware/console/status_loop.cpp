@@ -406,7 +406,7 @@ void printOverallStatus(systime_t nowSeconds) {
 #if EFI_PROD_CODE
 	printOutPin(CRANK1, CONFIGB(triggerInputPins)[0]);
 	printOutPin(CRANK2, CONFIGB(triggerInputPins)[1]);
-	printOutPin(VVT_NAME, engineConfiguration->camInput);
+	printOutPin(VVT_NAME, engineConfiguration->camInputs[0]);
 	printOutPin(HIP_NAME, CONFIGB(hip9011IntHoldPin));
 	printOutPin(TACH_NAME, CONFIGB(tachOutputPin));
 	printOutPin(DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);

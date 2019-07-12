@@ -64,7 +64,7 @@ void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInput = GPIOA_5;
+	engineConfiguration->camInputs[0] = GPIOA_5;
 
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;

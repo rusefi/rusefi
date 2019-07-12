@@ -570,7 +570,7 @@ void triggerInfo(void) {
 
 #if EFI_PROD_CODE
 	if (HAVE_CAM_INPUT()) {
-		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInput),
+		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
 				getVvt_mode_e(engineConfiguration->vvtMode));
 		scheduleMsg(logger, "VVT event counters: %d/%d", vvtEventRiseCounter, vvtEventFallCounter);
 
@@ -656,7 +656,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[0]) ||
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[1]) ||
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[2]) ||
-		COMPARE_CONFIG_PARAMS(camInput) ||
+		COMPARE_CONFIG_PARAMS(camInputs[0]) ||
 		COMPARE_CONFIG_PARAMS(vvtMode) ||
 		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
 		COMPARE_CONFIG_PARAMS(vvtOffset) ||

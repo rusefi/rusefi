@@ -154,7 +154,7 @@ enable2ndByteCanID = false
 [OutputChannels]
 
 ; see TS_FILE_VERSION in firmware code
-fileVersion = { 20171101 }
+fileVersion = { 20190701 }
 
    ochGetCommand    = "O%2o%2c"
 
@@ -1579,7 +1579,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Invert Primary",						invertPrimaryTriggerSignal
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Cam Sync/VVT input",					camInput
+		field = "Cam Sync/VVT input",					camInputs1
 		
 	dialog = allPinsSensors, "Sensors"
 		field = "CLT ADC input", 						clt_adcChannel
@@ -1618,7 +1618,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
 		field = "Primary input channel", 				triggerInputPins1
 		field = "Secondary channel", 					triggerInputPins2
-		field = "Cam Sync/VVT input",					camInput
+		field = "Cam Sync/VVT input",					camInputs1
 
 	dialog = allPins1_2
 		field = "Tachometer output Pin",					tachOutputPin

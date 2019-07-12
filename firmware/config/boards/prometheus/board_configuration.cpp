@@ -177,7 +177,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInput = is469 ? GPIOE_9 : GPIOA_6;
+	engineConfiguration->camInputs[0] = is469 ? GPIOE_9 : GPIOA_6;
 	
 	boardConfiguration->tachOutputPin = GPIOC_8;
 	boardConfiguration->tachOutputPinMode = OM_DEFAULT;
