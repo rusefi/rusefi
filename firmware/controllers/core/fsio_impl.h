@@ -30,4 +30,6 @@ float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+ValueProvider3D *getFSIOTable(int index);
+
 #endif /* LE_FUNCTIONS_H_ */

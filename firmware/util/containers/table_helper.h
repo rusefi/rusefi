@@ -15,11 +15,17 @@
 // popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
 
+class ValueProvider3D {
+public:
+	virtual float getValue(float xRpm, float y) = 0;
+};
+
+
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-class Map3D {
+class Map3D : public ValueProvider3D {
 public:
 	explicit Map3D(const char*name);
 	Map3D(const char*name, float multiplier);
