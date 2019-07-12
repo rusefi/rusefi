@@ -84,7 +84,7 @@ TEST(sensors, testCamInput) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
-	engineConfiguration->camInput = GPIOA_10; // we just need to indicate that we have CAM
+	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testCamInput RPM";
 

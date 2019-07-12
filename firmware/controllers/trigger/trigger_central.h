@@ -16,7 +16,7 @@
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-#define HAVE_CAM_INPUT() engineConfiguration->camInput != GPIO_UNASSIGNED
+#define HAVE_CAM_INPUT() engineConfiguration->camInputs[0] != GPIO_UNASSIGNED
 
 /**
  * Maybe merge TriggerCentral and TriggerState classes into one class?

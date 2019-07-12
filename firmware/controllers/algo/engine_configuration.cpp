@@ -303,7 +303,9 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 
 	disableLCD(boardConfiguration);
 
-	engineConfiguration->camInput = GPIO_UNASSIGNED;
+	for (int i = 0;i<CAM_INPUTS_COUNT;i++) {
+		engineConfiguration->camInputs[i] = GPIO_UNASSIGNED;
+	}
 	for (int i = 0;i<TRIGGER_INPUT_PIN_COUNT;i++) {
 		CONFIGB(triggerInputPins)[i] = GPIO_UNASSIGNED;
 	}

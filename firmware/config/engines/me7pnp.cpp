@@ -109,7 +109,7 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchDownPin = GPIOD_11;
 	engineConfiguration->brakePedalPin = GPIOE_10;
-	engineConfiguration->camInput = GPIOA_2;
+	engineConfiguration->camInputs[0] = GPIOA_2;
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
 	boardConfiguration->triggerInputPins[0] = GPIOG_7;
 #endif /* STM32_HAS_GPIOF */

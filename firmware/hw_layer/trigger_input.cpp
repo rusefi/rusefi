@@ -266,8 +266,8 @@ void stopTriggerInputPins(void) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}
-	if (engineConfiguration->camInput != activeConfiguration.camInput) {
-		turnOffTriggerInputPin(activeConfiguration.camInput);
+	if (engineConfiguration->camInputs[0] != activeConfiguration.camInputs[0]) {
+		turnOffTriggerInputPin(activeConfiguration.camInputs[0]);
 	}
 #endif /* EFI_PROD_CODE */
 }
@@ -282,8 +282,8 @@ void startTriggerInputPins(void) {
 		}
 	}
 
-	if (engineConfiguration->camInput != activeConfiguration.camInput) {
-		turnOnTriggerInputPin("cam", engineConfiguration->camInput, false);
+	if (engineConfiguration->camInputs[0] != activeConfiguration.camInputs[0]) {
+		turnOnTriggerInputPin("cam", engineConfiguration->camInputs[0], false);
 	}
 
 	setPrimaryChannel(CONFIGB(triggerInputPins)[0]);
