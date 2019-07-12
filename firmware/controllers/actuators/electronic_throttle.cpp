@@ -158,20 +158,20 @@ public:
 
 static EtbControl etb1;
 
-static float directPwmValue = NAN;
-
 extern percent_t mockPedalPosition;
 
 static Pid pid(&engineConfiguration->etb);
 
+static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
-#define PERCENT_TO_DUTY(X) (maxF(minF((X / 100.0), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
+// this macro clamps both positive and negative percentages from about -100% to 100%
+#define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
 class EtbController : public PeriodicTimerController {
 
-	float feedForward = 0;
+	percent_t feedForward = 0;
 
 	int getPeriodMs() override {
 		return GET_PERIOD_LIMITED(&engineConfiguration->etb);
@@ -219,7 +219,7 @@ class EtbController : public PeriodicTimerController {
 					autoTune.output,
 					value);
 			scheduleMsg(&logger, "AT PID=%f", value);
-			etb1.dcMotor.Set(PERCENT_TO_DUTY(value));
+			etb1.dcMotor.Set(ETB_PERCENT_TO_DUTY(value));
 
 			if (result) {
 				scheduleMsg(&logger, "GREAT NEWS! %f/%f/%f", autoTune.GetKp(), autoTune.GetKi(), autoTune.GetKd());
@@ -232,7 +232,7 @@ class EtbController : public PeriodicTimerController {
 		percent_t pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		int rpm = GET_RPM();
-		float targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
+		percent_t targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
 		percent_t targetPosition = targetFromTable + engine->engineState.etbIdleAddition;
 
 		if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
@@ -250,7 +250,7 @@ class EtbController : public PeriodicTimerController {
 		currentEtbDuty = feedForward +
 				pid.getOutput(targetPosition, actualThrottlePosition);
 
-		etb1.dcMotor.Set(PERCENT_TO_DUTY(currentEtbDuty));
+		etb1.dcMotor.Set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
 		if (engineConfiguration->isVerboseETB) {
 			pid.showPidStatus(&logger, "ETB");
@@ -269,14 +269,14 @@ static EtbController etbController;
  * set_etb X
  * manual duty cycle control without PID. Percent value from 0 to 100
  */
-void setThrottleDutyCycle(float level) {
+void setThrottleDutyCycle(percent_t level) {
 	scheduleMsg(&logger, "setting ETB duty=%f%%", level);
 	if (cisnan(level)) {
 		directPwmValue = NAN;
 		return;
 	}
 
-	float dc = PERCENT_TO_DUTY(level);
+	float dc = ETB_PERCENT_TO_DUTY(level);
 	directPwmValue = dc;
 	etb1.dcMotor.Set(dc);
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
