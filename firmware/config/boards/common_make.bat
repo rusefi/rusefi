@@ -12,6 +12,7 @@ mkdir deliver
 rm -f deliver/rusefi.dfu
 echo %script_name%: invoking hex2dfu.exe
 ..\misc\encedo_hex2dfu\hex2dfu.exe -i build/rusefi.hex -o deliver/rusefi.dfu
-cp rusefi.bin deliver/
+cp build/rusefi.bin deliver/
 
+echo %script_name%: deliver folder
 ls -l deliver
