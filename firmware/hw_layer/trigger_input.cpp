@@ -44,27 +44,23 @@ int vvtEventFallCounter = 0;
 /* PAL based implementation */
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 
-/* static vars for PAL implementation */
+/* static variables for PAL implementation */
 static ioline_t primary_line;
 
 static void shaft_callback(void *arg) {
-	bool rise;
-	bool isPrimary;
-	ioline_t pal_line;
-	trigger_event_e signal;
-
-	pal_line = (ioline_t)arg;
+	ioline_t pal_line = (ioline_t)arg;
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
 		return;
 
-	isPrimary = pal_line == primary_line;
+	bool isPrimary = pal_line == primary_line;
 	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
 		return;
 	}
 
-	rise = (palReadLine(pal_line) == PAL_HIGH);
+	bool rise = (palReadLine(pal_line) == PAL_HIGH);
+	trigger_event_e signal;
 	// todo: add support for 3rd channel
 	if (rise) {
 		signal = isPrimary ?
@@ -77,14 +73,12 @@ static void shaft_callback(void *arg) {
 	}
 
 	hwHandleShaftSignal(signal);
-
 }
 
 static void cam_callback(void *arg) {
-	bool rise;
 	ioline_t pal_line = (ioline_t)arg;
 
-	rise = (palReadLine(pal_line) == PAL_HIGH);
+	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	if (rise) {
 		vvtEventRiseCounter++;
@@ -96,14 +90,12 @@ static void cam_callback(void *arg) {
 }
 
 static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft) {
-	ioline_t pal_line;
-
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
 
 	/* TODO:
 	 * * do not set to both edges if we need only one
 	 * * simplify callback in case of one edge */
-	pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
+	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 	return efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, is_shaft ? shaft_callback : cam_callback, (void *)pal_line);
 }
 
@@ -266,8 +258,10 @@ void stopTriggerInputPins(void) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}
-	if (engineConfiguration->camInputs[0] != activeConfiguration.camInputs[0]) {
-		turnOffTriggerInputPin(activeConfiguration.camInputs[0]);
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (engineConfiguration->camInputs[i] != activeConfiguration.camInputs[i]) {
+			turnOffTriggerInputPin(activeConfiguration.camInputs[i]);
+		}
 	}
 #endif /* EFI_PROD_CODE */
 }
@@ -282,8 +276,10 @@ void startTriggerInputPins(void) {
 		}
 	}
 
-	if (engineConfiguration->camInputs[0] != activeConfiguration.camInputs[0]) {
-		turnOnTriggerInputPin("cam", engineConfiguration->camInputs[0], false);
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (engineConfiguration->camInputs[i] != activeConfiguration.camInputs[i]) {
+			turnOnTriggerInputPin("cam", engineConfiguration->camInputs[i], false);
+		}
 	}
 
 	setPrimaryChannel(CONFIGB(triggerInputPins)[0]);

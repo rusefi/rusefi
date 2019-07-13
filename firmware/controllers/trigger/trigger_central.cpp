@@ -647,7 +647,13 @@ static void resetRunningTriggerCounters() {
 #define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	bool changed = COMPARE_CONFIG_PARAMS(trigger.type) ||
+	bool changed = false;
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		changed |= COMPARE_CONFIG_PARAMS(camInputs[i]);
+	}
+
+	changed |=
+		COMPARE_CONFIG_PARAMS(trigger.type) ||
 		COMPARE_CONFIG_PARAMS(operationMode) ||
 		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
 		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
@@ -656,7 +662,6 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[0]) ||
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[1]) ||
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[2]) ||
-		COMPARE_CONFIG_PARAMS(camInputs[0]) ||
 		COMPARE_CONFIG_PARAMS(vvtMode) ||
 		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
 		COMPARE_CONFIG_PARAMS(vvtOffset) ||
