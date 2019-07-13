@@ -46,6 +46,8 @@ cp firmware/deliver/rusefi.bin %folder%
 rem probably not needed cp firmware/build/rusefi.elf %folder%
 cp firmware/deliver/rusefi.dfu %folder%
 
+if not exist firmware/deliver/rusefi.bin echo %script_name%: rusefi.bin not found
+if not exist firmware/deliver/rusefi.bin exit -1
 
 cd temp
 echo "Please copy find.exe to findcyg.exe in cygwin folder"
