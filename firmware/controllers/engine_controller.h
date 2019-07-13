@@ -28,6 +28,6 @@ void setMockMafVoltage(float voltage);
 void setMockIatVoltage(float voltage);
 void setMockCltVoltage(float voltage);
 
-void printCurrentState(Logging *logging, int seconds, const char *name);
+void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
 
 #endif /* ENGINE_STATUS_H_ */
