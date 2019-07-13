@@ -138,7 +138,7 @@ floatms_t WallFuel::getWallFuel(int injectorIndex) const {
 	return wallFuel/*[injectorIndex]*/;
 }
 
-int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	int len = minI(cb.getSize(), cb.getCount());
 	if (len < 2)
@@ -161,14 +161,14 @@ int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return resultIndex;
 }
 
-float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float AccelEnrichment::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	return (cb.get(index) - (cb.get(index - 1)));
 }
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
-floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int maxDeltaIndex = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 //	FuelSchedule *fs = engineConfiguration->injectionEvents;
@@ -225,7 +225,7 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	return extraFuel;
 }
 
-float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float LoadAccelEnrichment::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float d = (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
@@ -256,13 +256,17 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 	return result;
 }
 
-void AccelEnrichmemnt::reset() {
+void AccelEnrichment::resetAE() {
 	cb.clear();
 	previousValue = NAN;
+}
+
+void TpsAccelEnrichment::resetAE() {
+	AccelEnrichment::resetAE();
 	resetFractionValues();
 }
 
-void AccelEnrichmemnt::resetFractionValues() {
+void TpsAccelEnrichment::resetFractionValues() {
 	accumulatedValue = 0;
 	maxExtraPerCycle = 0;
 	maxExtraPerPeriod = 0;
@@ -270,15 +274,15 @@ void AccelEnrichmemnt::resetFractionValues() {
 	cycleCnt = 0;
 }
 
-void AccelEnrichmemnt::setLength(int length) {
+void AccelEnrichment::setLength(int length) {
 	cb.setSize(length);
 }
 
-void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void AccelEnrichment::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cb.add(currentValue);
 }
 
-void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// we update values in handleFuel() directly
 	//onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -307,12 +311,12 @@ void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void LoadAccelEnrichment::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onNewValue(getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-AccelEnrichmemnt::AccelEnrichmemnt() {
-	reset();
+AccelEnrichment::AccelEnrichment() {
+	resetAE();
 	cb.setSize(4);
 }
 

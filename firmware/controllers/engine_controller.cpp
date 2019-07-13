@@ -251,8 +251,8 @@ efitimesec_t getTimeNowSeconds(void) {
 #endif /* EFI_PROD_CODE */
 
 static void resetAccel(void) {
-	engine->engineLoadAccelEnrichment.reset();
-	engine->tpsAccelEnrichment.reset();
+	engine->engineLoadAccelEnrichment.resetAE();
+	engine->tpsAccelEnrichment.resetAE();
 	engine->wallFuel.resetWF();
 }
 
