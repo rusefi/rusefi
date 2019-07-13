@@ -20,30 +20,40 @@ typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float> tps_tps_Ma
 /**
  * this object is used for MAP rate-of-change and TPS rate-of-change corrections
  */
-class AccelEnrichmemnt {
+class AccelEnrichment {
 public:
-	AccelEnrichmemnt();
-	/**
-	 * @return Extra engine load value for fuel logic calculation
-	 */
-	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	/**
-	 * @return Extra fuel squirt duration for TPS acceleration
-	 */
-	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	AccelEnrichment();
 	int getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	float getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void reset();
-	void resetFractionValues();
+	void resetAE();
 	void setLength(int length);
 	cyclic_buffer<float> cb;
 	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 private:
 	float previousValue;
+};
+
+class LoadAccelEnrichment : public AccelEnrichment {
+public:
+	/**
+	 * @return Extra engine load value for fuel logic calculation
+	 */
+	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+};
+
+class TpsAccelEnrichment : public AccelEnrichment {
+public:
+	/**
+	 * @return Extra fuel squirt duration for TPS acceleration
+	 */
+	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void resetFractionValues();
+	void resetAE();
+private:
 	/**
 	 * Used for Fractional TPS enrichment. 
 	 */
