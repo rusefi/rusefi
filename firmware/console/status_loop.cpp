@@ -88,6 +88,11 @@ extern bool main_loop_started;
 #include "fsio_impl.h"
 #endif /* EFI_FSIO */
 
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+extern WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
+
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
 int warningEnabled = true;
@@ -386,6 +391,10 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 #endif /* EFI_PROD_CODE */
 
 void printOverallStatus(systime_t nowSeconds) {
+#if EFI_ENGINE_SNIFFER
+	waveChart.publishIfFull();
+#endif /* EFI_ENGINE_SNIFFER */
+
 	/**
 	 * we report the version every 4 seconds - this way the console does not need to
 	 * request it and we will display it pretty soon

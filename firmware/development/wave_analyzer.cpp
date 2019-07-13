@@ -48,7 +48,6 @@ static volatile efitime_t previousEngineCycleTimeUs = 0;
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
 
-static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
@@ -169,18 +168,6 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 	previousEngineCycleTimeUs = nowUs;
 }
 
-static THD_FUNCTION(waThread, arg) {
-	(void)arg;
-	chRegSetThreadName("Wave Analyzer");
-#if EFI_ENGINE_SNIFFER
-	while (true) {
-		chThdSleepSeconds(CHART_RESET_DELAY);
-
-		waveChart.publishIfFull();
-	}
-#endif /* EFI_ENGINE_SNIFFER */
-}
-
 /*
 static uint32_t getWaveLowWidth(int index) {
 	WaveReader *reader = &readers[index];
@@ -286,9 +273,6 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 	addConsoleAction("waveinfo", showWaveInfo);
 
 	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
-
-	chThdCreateStatic(waThreadStack, sizeof(waThreadStack), NORMALPRIO, (tfunc_t)waThread, NULL);
-
 #else
 	print("wave disabled\r\n");
 #endif
