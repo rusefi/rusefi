@@ -13,6 +13,7 @@
 #include "global.h"
 #include "cyclic_buffer.h"
 #include "table_helper.h"
+#include "wall_fuel.h"
 
 typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float> tps_tps_Map3D_t;
 
@@ -57,7 +58,7 @@ private:
  * Wall wetting, also known as fuel film
  * See https://github.com/rusefi/rusefi/issues/151 for the theory
  */
-class WallFuel {
+class WallFuel : public wall_fuel_state {
 public:
 	WallFuel();
 	/**
@@ -67,15 +68,7 @@ public:
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
 	floatms_t getWallFuel(int injectorIndex) const;
 	void resetWF();
-	/**
-	 * fuel injection time correction to account for wall wetting effect, for current cycle
-	 */
-	floatms_t wallFuelCorrection = 0;
 private:
-	/**
-	 * Amount of fuel on the wall, in ms of injector open time, for each injector.
-	 */
-	floatms_t wallFuel/*[INJECTION_PIN_COUNT]*/;
 };
 
 void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
