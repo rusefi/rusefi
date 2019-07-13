@@ -41,3 +41,11 @@ java -DSystemOut.name=gen_config2 ^
  com.rusefi.ldmp.LiveDocsMetaParser ^
  controllers/math/speed_density.cpp ^
  "../"
+
+java -DSystemOut.name=gen_config2 ^
+ -jar ../java_tools/ConfigDefinition.jar ^
+ -definition integration/wall_fuel.txt ^
+ -initialize_to_zero yes ^
+ -java_destination ../java_console/models/src/com/rusefi/config/generated/WallFuelState.java ^
+ -c_destination controllers/generated/wall_fuel.h
+
