@@ -390,6 +390,10 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 }
 #endif /* EFI_PROD_CODE */
 
+#ifndef FIRMWARE_ID
+#define FIRMWARE_ID "source"
+#endif
+
 void printOverallStatus(systime_t nowSeconds) {
 #if EFI_ENGINE_SNIFFER
 	waveChart.publishIfFull();
@@ -404,7 +408,7 @@ void printOverallStatus(systime_t nowSeconds) {
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
 	int seconds = getTimeNowSeconds();
-	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType));
+	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
 	printOutPin(CRANK1, CONFIGB(triggerInputPins)[0]);
 	printOutPin(CRANK2, CONFIGB(triggerInputPins)[1]);
@@ -570,7 +574,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 	void setAllLeds(int value) {
 		// make sure we do not turn the fatal LED off if already have
 		// fatal error by now
-		for (int i = 0; !hasFirmwareError() && i < sizeof(leds) / sizeof(leds[0]); i++) {
+		for (uint32_t i = 0; !hasFirmwareError() && i < sizeof(leds) / sizeof(leds[0]); i++) {
 			leds[i]->setValue(value);
 		}
 	}
