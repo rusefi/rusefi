@@ -44,7 +44,7 @@ static void doFractionalTpsIteration(int period, int divisor, int numCycles, std
 	// split into 2 portions
 	engineConfiguration->tpsAccelFractionDivisor = divisor;
 
-	engine->tpsAccelEnrichment.reset();
+	engine->tpsAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.onNewValue(0 PASS_ENGINE_PARAMETER_SUFFIX);
 	for (int i = 0; i < numCycles; i++) {
 		engine->tpsAccelEnrichment.onNewValue(10 PASS_ENGINE_PARAMETER_SUFFIX);
