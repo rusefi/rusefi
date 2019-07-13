@@ -253,7 +253,7 @@ efitimesec_t getTimeNowSeconds(void) {
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.reset();
 	engine->tpsAccelEnrichment.reset();
-	engine->wallFuel.reset();
+	engine->wallFuel.resetWF();
 }
 
 static int previousSecond;
