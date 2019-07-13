@@ -66,12 +66,16 @@ public:
 	 */
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
 	floatms_t getWallFuel(int injectorIndex) const;
-	void reset();
+	void resetWF();
+	/**
+	 * fuel injection time correction to account for wall wetting effect, for current cycle
+	 */
+	floatms_t wallFuelCorrection = 0;
 private:
 	/**
-	 * Amount of fuel on the wall, in ms of injector open time, for specific injector.
+	 * Amount of fuel on the wall, in ms of injector open time, for each injector.
 	 */
-	floatms_t wallFuel[INJECTION_PIN_COUNT];
+	floatms_t wallFuel/*[INJECTION_PIN_COUNT]*/;
 };
 
 void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);

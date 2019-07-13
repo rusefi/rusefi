@@ -298,7 +298,7 @@ static void printSensors(Logging *log) {
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.fuelPidCorrection), 2);
 
 		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel).getWallFuel(0), 2);
-		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuelCorrection), 2);
+		reportSensorF(log, fileFormat, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel).wallFuelCorrection, 2);
 
 		reportSensorI(log, fileFormat, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 
@@ -864,7 +864,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 
 	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
-	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuelCorrection);
+	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel).wallFuelCorrection;
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
