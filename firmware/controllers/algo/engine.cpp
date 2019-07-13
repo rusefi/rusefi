@@ -35,9 +35,6 @@ static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
 
-extern int globalConfigurationVersion;
-
-
 EXTERN_ENGINE
 ;
 
