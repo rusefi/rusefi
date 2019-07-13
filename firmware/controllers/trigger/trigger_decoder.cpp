@@ -485,16 +485,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif /* EFI_TUNER_STUDIO */
 			}
 
-			bool isGapCondition[GAP_TRACKING_LENGTH];
-
+			bool isSync = true;
 			for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
-				isGapCondition[i] = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
+				bool isGapCondition = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
 					&& toothDurations[i] < toothDurations[i + 1] * triggerShape->syncronizationRatioTo[i]);
-			}
 
-			bool isSync = isGapCondition[0];
-			for (int index = 1; index < GAP_TRACKING_LENGTH ; index++) {
-				isSync = isSync && isGapCondition[index];
+				isSync &= isGapCondition;
+
 			}
 			isSynchronizationPoint = isSync;
 
