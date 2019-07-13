@@ -189,10 +189,6 @@ public:
 	 * @see getInjectionDuration()
 	 */
 	floatms_t injectionDuration = 0;
-	/**
-	 * fuel injection time correction to account for wall wetting effect, for current cycle
-	 */
-	floatms_t wallFuelCorrection = 0;
 
 	/**
 	 * This one with wall wetting accounted for, used for logging.

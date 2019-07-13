@@ -41,14 +41,15 @@ tps_tps_Map3D_t tpsTpsMap("tpsTps");
 static Logging *logger = NULL;
 
 WallFuel::WallFuel() {
-	reset();
+	resetWF();
 }
 
-void WallFuel::reset() {
-	memset(wallFuel, 0, sizeof(wallFuel));
+void WallFuel::resetWF() {
+	wallFuel = 0;
 }
 
-floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PARAMETER_SUFFIX) {	
+//
+floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (cisnan(M_des)) {
 		return M_des;
 	}
@@ -94,15 +95,13 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
 	float tau = CONFIG(wwaeTau);
-	if(tau < 0.01f)
-	{
+	if (tau < 0.01f) {
 		return M_des;
 	}
 
 	// Ignore really slow RPM
 	int rpm = GET_RPM();
-	if(rpm < 100)
-	{
+	if (rpm < 100) {
 		return M_des;
 	}
 
@@ -113,32 +112,30 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 	// For reasonable values {tau, beta}, this should only be possible
 	// at extremely low engine speeds (<300rpm ish)
 	// Clamp beta to less than alpha.
-	if(beta > alpha)
-	{
+	if (beta > alpha) {
 		beta = alpha;
 	}
 
-	float M_f = wallFuel[injectorIndex];
+	float M_f = wallFuel/*[injectorIndex]*/;
 	float M_cmd = (M_des - (1 - alpha) * M_f) / (1 - beta);
 	
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
 	// but that's ok.
-	if(M_cmd <= 0)
-	{
+	if (M_cmd <= 0) {
 		M_cmd = 0;
 	}
 
 	// remainder on walls from last time + new from this time
 	float M_f_next = alpha * M_f + beta * M_cmd;
 
-	wallFuel[injectorIndex] = M_f_next;
-	engine->wallFuelCorrection = M_cmd - M_des;
+	wallFuel/*[injectorIndex]*/ = M_f_next;
+	wallFuelCorrection = M_cmd - M_des;
 	return M_cmd;
 }
 
 floatms_t WallFuel::getWallFuel(int injectorIndex) const {
-	return wallFuel[injectorIndex];
+	return wallFuel/*[injectorIndex]*/;
 }
 
 int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
