@@ -49,13 +49,13 @@ void WallFuel::resetWF() {
 }
 
 //
-floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(M_des)) {
-		return M_des;
+floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (cisnan(desiredFuel)) {
+		return desiredFuel;
 	}
 	// disable this correction for cranking
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		return M_des;
+		return desiredFuel;
 	}
 
 	/*
@@ -64,8 +64,8 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 				SAE 1999-01-0553 by Peter J Maloney
 
 		M_cmd = commanded fuel mass (output of this function)
-		M_des = desired fuel mass (input to this function)
-		M_f = fuel film mass (how much is currently on the wall)
+		desiredFuel = desired fuel mass (input to this function)
+		fuelFilmMass = fuel film mass (how much is currently on the wall)
 
 		First we compute how much fuel to command, by accounting for
 		a) how much fuel will evaporate from the walls, entering the air
@@ -73,7 +73,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 
 		Next, we compute how much fuel will be deposited on the walls.  The net
 		effect of these two steps is computed (some leaves walls, some is deposited)
-		and stored back in M_f.
+		and stored back in fuelFilmMass.
 
 		alpha describes the amount of fuel that REMAINS on the wall per cycle.
 		It is computed as a function of the evaporation time constant (tau) and
@@ -96,13 +96,13 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 	// you probably meant to disable wwae.
 	float tau = CONFIG(wwaeTau);
 	if (tau < 0.01f) {
-		return M_des;
+		return desiredFuel;
 	}
 
 	// Ignore really slow RPM
 	int rpm = GET_RPM();
 	if (rpm < 100) {
-		return M_des;
+		return desiredFuel;
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
@@ -116,8 +116,8 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 		beta = alpha;
 	}
 
-	float M_f = wallFuel/*[injectorIndex]*/;
-	float M_cmd = (M_des - (1 - alpha) * M_f) / (1 - beta);
+	float fuelFilmMass = wallFuel/*[injectorIndex]*/;
+	float M_cmd = (desiredFuel - (1 - alpha) * fuelFilmMass) / (1 - beta);
 	
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
@@ -127,10 +127,10 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 	}
 
 	// remainder on walls from last time + new from this time
-	float M_f_next = alpha * M_f + beta * M_cmd;
+	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
 
-	wallFuel/*[injectorIndex]*/ = M_f_next;
-	wallFuelCorrection = M_cmd - M_des;
+	wallFuel/*[injectorIndex]*/ = fuelFilmMassNext;
+	wallFuelCorrection = M_cmd - desiredFuel;
 	return M_cmd;
 }
 
