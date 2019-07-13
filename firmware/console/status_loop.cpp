@@ -561,7 +561,7 @@ static bool isTriggerErrorNow() {
 
 extern bool consoleByteArrived;
 
-class BlinkingTask : public PeriodicTimerController {
+class CommunicationBlinkingTask : public PeriodicTimerController {
 
 	int getPeriodMs() override {
 		return counter % 2 == 0 ? onTimeMs : offTimeMs;
@@ -619,7 +619,7 @@ private:
 	int offTimeMs = 100;
 };
 
-static BlinkingTask blinkingTask;
+static CommunicationBlinkingTask communicationsBlinkingTask;
 
 #endif /* EFI_PROD_CODE */
 
@@ -964,7 +964,7 @@ void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
-	blinkingTask.Start();
+	communicationsBlinkingTask.Start();
 #endif /* EFI_PROD_CODE */
 
 #if EFI_LCD

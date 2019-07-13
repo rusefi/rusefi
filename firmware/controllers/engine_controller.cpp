@@ -142,27 +142,28 @@ Engine ___engine CCM_OPTIONAL;
 Engine * engine = &___engine;
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
-static msg_t csThread(void) {
-	chRegSetThreadName("status");
-#if EFI_SHAFT_POSITION_INPUT
-	while (true) {
-		int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
+class EngineStateBlinkingTask : public PeriodicTimerController {
+	int getPeriodMs() override {
+		return 50;
+	}
+
+	void PeriodicTask() override {
+		counter++;
 		bool is_running = ENGINE(rpmCalculator).isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 		if (is_running) {
-			// blinking while running
-			enginePins.runningLedPin.setValue(0);
-			chThdSleepMilliseconds(50);
-			enginePins.runningLedPin.setValue(1);
-			chThdSleepMilliseconds(50);
+			// blink in running mode
+			enginePins.runningLedPin.setValue(counter % 2);
 		} else {
-			// constant on while cranking and off if engine is stopped
+			int is_cranking = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 			enginePins.runningLedPin.setValue(is_cranking);
-			chThdSleepMilliseconds(100);
 		}
 	}
-#endif /* EFI_SHAFT_POSITION_INPUT */
-	return -1;
-}
+private:
+	int counter = 0;
+};
+
+static EngineStateBlinkingTask engineStateBlinkingTask;
 
 #if EFI_PROD_CODE
 static Overflow64Counter halTime;
@@ -426,8 +427,6 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVoltage("vbatt", engineConfiguration->vbattAdcChannel),
 			engineConfiguration->vbattDividerCoeff);
 }
-
-static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
 #define isOutOfBounds(offset) ((offset<0) || (offset) >= (int) sizeof(engine_configuration_s))
 
@@ -719,7 +718,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 		return;
 	}
 
-	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t)(void*) csThread, NULL);
+	engineStateBlinkingTask.Start();
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
 	/**
@@ -793,7 +792,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 16000
+#define RAM_UNUSED_SIZE 17500
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 4600
