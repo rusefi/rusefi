@@ -12,7 +12,7 @@ public class ProcessStatusWindow {
 
     protected StringBuffer executeCommand(String command) {
         return ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
-                FirmwareFlasher.BINARY_LOCATION + File.pathSeparator + command,
+                FirmwareFlasher.BINARY_LOCATION + File.separator + command,
                 FirmwareFlasher.OPENOCD_EXE, wnd);
     }
 }
