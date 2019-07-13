@@ -4,7 +4,9 @@ mkdir deliver
 
 call clean.bat
 echo "TIMESTAMP %date% %time%"
-make -j4 DEBUG_LEVEL_OPT='-O2'  EXTRA_PARAMS='-DFIRMWARE_ID="default_no_assert" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE'
+set EXTRA_PARAMS=-DDUMMY -DFIRMWARE_ID=\"default_no_assert\" -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_TRACE=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
+make -j4 DEBUG_LEVEL_OPT='-O2'
+set EXTRA_PARAMS=
 
 rem mv build\rusefi.elf deliver\rusefi_no_asserts.elf
 mv build\rusefi.bin deliver\rusefi_no_asserts.bin
@@ -18,7 +20,9 @@ if not exist deliver/rusefi_no_asserts.hex exit -1
 
 call clean.bat
 echo "TIMESTAMP %date% %time%"
-make -j4 EXTRA_PARAMS='-DFIRMWARE_ID="default"'
+set EXTRA_PARAMS=-DDUMMY -DFIRMWARE_ID=\"default\"
+make -j4
+set EXTRA_PARAMS=
 
 mv build\rusefi.elf deliver\rusefi.elf
 rem this file is needed for DFU generation
