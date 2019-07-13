@@ -73,6 +73,7 @@ extern bool main_loop_started;
 #include "max31855.h"
 #include "vehicle_speed.h"
 #include "single_timer_executor.h"
+#include "periodic_task.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -343,7 +344,6 @@ static void printSensors(Logging *log) {
 
 }
 
-
 void writeLogLine(void) {
 #if EFI_FILE_LOGGING
 	if (!main_loop_started)
@@ -525,12 +525,6 @@ static void showFuelInfo(void) {
 }
 #endif
 
-/**
- * blinking thread to show that we are alive
- * that's a trivial task - a smaller stack should work
- */
-static THD_WORKING_AREA(blinkingStack, 128);
-
 static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin, &enginePins.checkEnginePin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
@@ -541,26 +535,6 @@ static void initStatusLeds(void) {
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
-}
-
-/**
- * This method would blink all the LEDs just to test them
- */
-static void initialLedsBlink(void) {
-	if (hasFirmwareError()) {
-		// make sure we do not turn the fatal LED off if already have
-		// fatal error by now
-		return;
-	}
-	int size = sizeof(leds) / sizeof(leds[0]);
-	for (int i = 0; i < size && !hasFirmwareError(); i++)
-		leds[i]->setValue(1);
-
-	chThdSleepMilliseconds(100);
-
-	// re-checking in case the error has happened while we were sleeping
-	for (int i = 0; i < size && !hasFirmwareError(); i++)
-		leds[i]->setValue(0);
 }
 
 #define BLINKING_PERIOD_MS 33
@@ -578,48 +552,65 @@ static bool isTriggerErrorNow() {
 
 extern bool consoleByteArrived;
 
-/**
- * this thread has a lower-then-usual stack size so we cannot afford *print* methods here
- */
-static void blinkingThread(void *arg) {
-	(void) arg;
-	chRegSetThreadName("communication blinking");
+class BlinkingTask : public PeriodicTimerController {
 
-	initialLedsBlink();
-
-	while (true) {
-		int onTimeMs = is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS : BLINKING_PERIOD_MS;
-
-#if EFI_INTERNAL_FLASH
-		if (getNeedToWriteConfiguration()) {
-			onTimeMs = 2 * onTimeMs;
-		}
-#endif
-		int offTimeMs = onTimeMs;
-
-		if (hasFirmwareError()) {
-			// special behavior in case of fatal error - not equal on/off time
-			// this special behaviour helps to notice that something is not right, also
-			// differentiates software firmware error from fatal interrupt error with CPU halt.
-			offTimeMs = 50;
-			onTimeMs = 450;
-		}
-
-		enginePins.communicationLedPin.setValue(0);
-		enginePins.warningLedPin.setValue(0);
-		chThdSleepMilliseconds(offTimeMs);
-
-		enginePins.communicationLedPin.setValue(1);
-#if EFI_ENGINE_CONTROL
-		if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
-			consoleByteArrived = false;
-			enginePins.warningLedPin.setValue(1);
-		}
-#endif /* EFI_ENGINE_CONTROL */
-		chThdSleepMilliseconds(onTimeMs);
-
+	int getPeriodMs() override {
+		return counter % 2 == 0 ? onTimeMs : offTimeMs;
 	}
-}
+
+	void setAllLeds(int value) {
+		// make sure we do not turn the fatal LED off if already have
+		// fatal error by now
+		for (int i = 0; !hasFirmwareError() && i < sizeof(leds) / sizeof(leds[0]); i++) {
+			leds[i]->setValue(value);
+		}
+	}
+
+	void PeriodicTask() override {
+		counter++;
+		if (counter == 1) {
+			// first invocation of BlinkingTask
+			setAllLeds(1);
+		} else if (counter == 2) {
+			// second invocation of BlinkingTask
+			setAllLeds(0);
+		} else if (counter % 2 == 0) {
+			enginePins.communicationLedPin.setValue(0);
+			enginePins.warningLedPin.setValue(0);
+		} else {
+			if (hasFirmwareError()) {
+				// special behavior in case of fatal error - not equal on/off time
+				// this special behaviour helps to notice that something is not right, also
+				// differentiates software firmware error from fatal interrupt error with CPU halt.
+				offTimeMs = 50;
+				onTimeMs = 450;
+			} else {
+				onTimeMs = is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS : BLINKING_PERIOD_MS;
+#if EFI_INTERNAL_FLASH
+				if (getNeedToWriteConfiguration()) {
+					onTimeMs = 2 * onTimeMs;
+				}
+#endif
+				offTimeMs = onTimeMs;
+			}
+
+			enginePins.communicationLedPin.setValue(1);
+	#if EFI_ENGINE_CONTROL
+			if (isTriggerErrorNow() || isIgnitionTimingError() || consoleByteArrived) {
+				consoleByteArrived = false;
+				enginePins.warningLedPin.setValue(1);
+			}
+	#endif /* EFI_ENGINE_CONTROL */
+		}
+	}
+
+private:
+	int counter = 0;
+	int onTimeMs = 100;
+	int offTimeMs = 100;
+};
+
+static BlinkingTask blinkingTask;
 
 #endif /* EFI_PROD_CODE */
 
@@ -964,8 +955,9 @@ void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
-	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
+	blinkingTask.Start();
 #endif /* EFI_PROD_CODE */
+
 #if EFI_LCD
 	lcdInstance.Start();
 #endif /* EFI_LCD */
