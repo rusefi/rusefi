@@ -30,9 +30,6 @@ public:
 	void setLength(int length);
 	cyclic_buffer<float> cb;
 	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-private:
-	float previousValue;
 };
 
 class LoadAccelEnrichment : public AccelEnrichment {

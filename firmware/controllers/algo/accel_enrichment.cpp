@@ -258,7 +258,6 @@ float LoadAccelEnrichment::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGN
 
 void AccelEnrichment::resetAE() {
 	cb.clear();
-	previousValue = NAN;
 }
 
 void TpsAccelEnrichment::resetAE() {
