@@ -1323,8 +1323,11 @@
 #define lcdThreadPeriodMs_offset_hex 2d0
 #define LDS_CLT_INDEX 0
 #define LDS_ENGINE_STATE_INDEX 3
+#define LDS_FUEL_TRIM_INDEX 4
 #define LDS_IAT_INDEX 1
 #define LDS_SPEED_DENSITY_INDEX 2
+#define LDS_TPS_TPS_ENEICHMENT_INDEX 5
+#define LDS_TRIGGER_INDEX 6
 #define LE_COMMAND_LENGTH 200
 #define LIS302DLCsPin_offset 2043
 #define LIS302DLCsPin_offset_hex 7fb

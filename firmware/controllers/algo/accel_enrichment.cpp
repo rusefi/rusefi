@@ -94,7 +94,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGI
 
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
-	float tau = CONFIG(wwaeTau);
+	float tau = CONFIG(DISPLAY_CONFIG(wwaeTau));
 	if (tau < 0.01f) {
 		return desiredFuel;
 	}
@@ -106,7 +106,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGI
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
-	float beta = CONFIG(wwaeBeta);
+	float beta = CONFIG(DISPLAY_CONFIG(wwaeBeta));
 
 	// If beta is larger than alpha, the system is underdamped.
 	// For reasonable values {tau, beta}, this should only be possible
@@ -129,8 +129,11 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGI
 	// remainder on walls from last time + new from this time
 	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
 
-	wallFuel/*[injectorIndex]*/ = fuelFilmMassNext;
-	wallFuelCorrection = M_cmd - desiredFuel;
+	DISPLAY_TEXT(Current_Wall_Fuel_Film);
+	DISPLAY_FIELD(wallFuel)/*[injectorIndex]*/ = fuelFilmMassNext;
+	DISPLAY_TEXT(Fuel correction);
+	DISPLAY_FIELD(wallFuelCorrection) = M_cmd - desiredFuel;
+	DISPLAY_TEXT(ms);
 	return M_cmd;
 }
 
