@@ -248,7 +248,7 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
-static const void *addr getStructAddr(int structId) {
+static const void * getStructAddr(int structId) {
 	switch (structId) {
 	case LDS_CLT_INDEX:
 		return static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
