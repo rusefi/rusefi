@@ -21,7 +21,7 @@
 
 #if EFI_PROD_CODE && HAL_USE_GPT
 
-#include "periodic_thread_controller.h"
+#include "periodic_task.h"
 
 /**
  * Maximum duration of complete timer callback, all pending events together
@@ -110,17 +110,9 @@ static void hwTimerCallback(GPTDriver *gptp) {
 	}
 }
 
-class MicrosecondTimerWatchdogController : public PeriodicController<UTILITY_THREAD_STACK_SIZE>
-{
-public:
-	MicrosecondTimerWatchdogController()
-		: PeriodicController("timer watchdog", NORMALPRIO, 1.0f)
-	{
-	}
-
-private:
-	void PeriodicTask(efitime_t nowNt) override
-	{
+class MicrosecondTimerWatchdogController : public PeriodicTimerController {
+	void PeriodicTask() override {
+		efitime_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 			strcpy(buff, "no_event");
 			itoa10(&buff[8], lastSetTimerValue);
@@ -131,6 +123,10 @@ private:
 		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 		// 2 seconds of inactivity would not look right
 		efiAssertVoid(CUSTOM_ERR_6682, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
+	}
+
+	int getPeriodMs() override {
+		return 500;
 	}
 };
 
@@ -149,7 +145,7 @@ void initMicrosecondTimer(void) {
 	lastSetTimerTimeNt = getTimeNowNt();
 #if EFI_EMULATE_POSITION_SENSORS
 	watchdogControllerInstance.Start();
-#endif /* EFI_ENGINE_EMULATOR */
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 }
 
 #endif /* EFI_PROD_CODE */
