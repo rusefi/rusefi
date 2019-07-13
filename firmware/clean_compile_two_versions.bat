@@ -34,3 +34,5 @@ echo "TIMESTAMP %date% %time%"
 ls -l build
 if not exist deliver/rusefi.hex echo FAILED to compile DEFAULT with DEBUG
 if not exist deliver/rusefi.hex exit -1
+
+echo clean_compile_two_versions: Looks good!
