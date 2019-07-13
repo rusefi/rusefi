@@ -4,7 +4,7 @@ $(info Invoking "git submodule update --init")
 $(shell git submodule update --init)
 $(info Invoked "git submodule update --init")
 # make is not happy about newly checked out module for some reason but next invocation would work
-$(error Please run 'make' again)
+$(error Please run 'make' again. Please make sure you have 'git' command in PATH)
 endif
 
 ifeq ($(PROJECT_BOARD),)
