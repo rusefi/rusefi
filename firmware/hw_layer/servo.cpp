@@ -20,7 +20,7 @@
 
 EXTERN_ENGINE;
 
-THD_WORKING_AREA(seThreadStack, UTILITY_THREAD_STACK_SIZE);
+THD_WORKING_AREA(servoThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static OutputPin pins[SERVO_COUNT];
 
@@ -72,7 +72,7 @@ void initServo(void) {
 		pins[i].initPin("servo", p);
 	}
 
-	chThdCreateStatic(seThreadStack, sizeof(seThreadStack), NORMALPRIO, (tfunc_t)(void*) seThread, NULL);
+	chThdCreateStatic(servoThreadStack, sizeof(servoThreadStack), NORMALPRIO, (tfunc_t)(void*) seThread, NULL);
 }
 #endif /* EFI_SERVO */
 
