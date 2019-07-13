@@ -6,6 +6,9 @@ pwd
 call misc\jenkins\build_java_console.bat
 if not exist java_console_binary/rusefi_console.jar exit -1
 
+call misc\jenkins\build_simulator.bat
+if not exist simulator/build/rusefi_simulator.exe exit -1
+
 call misc\jenkins\compile_other_versions\compile_and_upload.bat frankenso frankenso_na6
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
