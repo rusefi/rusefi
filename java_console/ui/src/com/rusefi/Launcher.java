@@ -47,7 +47,6 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  */
 public class Launcher {
     public static final int CONSOLE_VERSION = 20190714;
-    public static final boolean SHOW_STIMULATOR = false;
     public static final String INPUT_FILES_PATH = "..";
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -98,6 +97,7 @@ public class Launcher {
     private final SettingsTab settingsTab = new SettingsTab();
     private final LogDownloader logsManager = new LogDownloader();
     private final FuelTunePane fuelTunePane;
+    private final PaneSettings paneSettings;
 
     /**
      * @see StartupFrame
@@ -141,6 +141,8 @@ public class Launcher {
             }
         });
 
+        paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
+
         engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(LinkManager.engineState);
@@ -154,7 +156,7 @@ public class Launcher {
         GaugesPanel.DetachedRepository.INSTANCE.init(getConfig().getRoot().getChild("detached"));
         GaugesPanel.DetachedRepository.INSTANCE.load();
         if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
+            tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges"), paneSettings).getContent());
 
         if (!LinkManager.isLogViewer()) {
             MessagesPane messagesPane = new MessagesPane(getConfig().getRoot().getChild("messages"));
@@ -162,7 +164,8 @@ public class Launcher {
         }
         if (!LinkManager.isLogViewer()) {
             tabbedPane.add("Bench Test", new BenchTestPane().getContent());
-            tabbedPane.add("ETB", new ETBPane().getContent());
+            if (paneSettings.showEtbPane)
+                tabbedPane.add("ETB", new ETBPane().getContent());
             tabbedPane.add("Presets", new PresetsPane().getContent());
         }
 
@@ -176,7 +179,7 @@ public class Launcher {
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (SHOW_STIMULATOR && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
+        if (paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
             // todo: rethink this UI? special command line key to enable it?
             EcuStimulator stimulator = EcuStimulator.getInstance();
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
@@ -193,12 +196,14 @@ public class Launcher {
         if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.add("Logs Manager", logsManager.getContent());
         fuelTunePane = new FuelTunePane(getConfig().getRoot().getChild("fueltune"));
-        if (true)
+        if (paneSettings.showFuelTunePane)
             tabbedPane.add("Fuel Tune", fuelTunePane.getContent());
 
 
-        if (!LinkManager.isLogViewer())
-            tabbedPane.add("Trigger Shape", new AverageAnglePanel().getPanel());
+        if (!LinkManager.isLogViewer()) {
+            if (paneSettings.showTriggerShapePane)
+                tabbedPane.add("Trigger Shape", new AverageAnglePanel().getPanel());
+        }
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);

@@ -39,8 +39,7 @@ public class StimulationInputs {
         content.add(UiUtils.wrap(elResistance2));
 
         JButton button = ecuStimulator.createButton();
-        if (Launcher.SHOW_STIMULATOR)
-            content.add(UiUtils.wrap(button));
+        content.add(UiUtils.wrap(button));
     }
 
     public double getEngineLoadMin() {
