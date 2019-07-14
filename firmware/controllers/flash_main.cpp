@@ -192,7 +192,7 @@ void initFlash(Logging *sharedLogger) {
 	/**
 	 * This would write NOW (you should not be doing this while connected to real engine)
 	 */
-	addConsoleAction("writeconfig", writeConfigCommand);
+	addConsoleAction(CMD_WRITECONFIG, writeConfigCommand);
 #if EFI_TUNER_STUDIO
 	/**
 	 * This would schedule write to flash once the engine is stopped
