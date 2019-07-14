@@ -507,16 +507,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
-						scheduleMsg(logger, "%d NaN cur gap, you have noise issues?",
+						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "%d %d: cur %.2f expected from %.2f to %.2f error=%d",
+						scheduleMsg(logger, "time=%d index=%d: gap=%.2f expected from %.2f to %.2f error=%s",
 							getTimeNowSeconds(),
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
 							TRIGGER_SHAPE(syncronizationRatioTo[i]),
-							someSortOfTriggerError);
+							boolToString(someSortOfTriggerError));
 					}
 				}
 
