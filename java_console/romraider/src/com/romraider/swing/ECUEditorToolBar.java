@@ -37,6 +37,7 @@ import com.romraider.maps.Rom;
 import com.romraider.util.SettingsManager;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.UploadChanges;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.SettingsTab;
 
@@ -98,7 +99,7 @@ public class ECUEditorToolBar extends JToolBar {
         burnImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommandQueue.getInstance().write(SettingsTab.WRITECONFIG);
+                CommandQueue.getInstance().write(Fields.CMD_WRITECONFIG);
             }
         });
     }

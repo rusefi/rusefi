@@ -1225,6 +1225,9 @@ end_struct
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
 
+#define CMD_TRIGGERINFO "triggerinfo"
+#define CMD_WRITECONFIG "writeconfig"
+
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 

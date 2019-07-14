@@ -5,6 +5,7 @@ import com.opensr5.Logger;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.SerialIoStreamJSSC;
 import com.rusefi.ui.RecentCommands;
@@ -33,7 +34,7 @@ public class UploadChanges {
         wnd.getFrameHelper().initFrame(wnd.getContent(), false);
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.add(RecentCommands.createButton(new AtomicBoolean(), SettingsTab.WRITECONFIG));
+        bottomPanel.add(RecentCommands.createButton(new AtomicBoolean(), Fields.CMD_WRITECONFIG));
         wnd.getContent().add(bottomPanel, BorderLayout.SOUTH);
     }
     

@@ -364,6 +364,8 @@
 #define clutchUpPinInverted_offset_hex 3d0
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
+#define CMD_TRIGGERINFO "triggerinfo"
+#define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 3154
 #define coastingFuelCutClt_offset_hex c52
 #define coastingFuelCutEnabled_offset 744

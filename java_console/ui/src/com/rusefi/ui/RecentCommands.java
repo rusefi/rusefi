@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.AverageAngles;
 import com.rusefi.AverageAnglesUtil;
 import com.rusefi.FileLog;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -18,6 +19,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.rusefi.config.generated.Fields.CMD_TRIGGERINFO;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
@@ -32,7 +34,6 @@ public class RecentCommands {
     private static final String SHOWCONFIG = "showconfig";
     private static final String HELP = "help";
     private static final String ANALOGINFO = "analoginfo";
-    private static final String TRIGGERINFO = "triggerinfo";
     private static final String IDLEINFO = "idleinfo";
     private static final String ALTINFO = "altinfo";
     private static final String TPSINFO = "tpsinfo";
@@ -57,7 +58,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(SHOWCONFIG, infoIcon);
         COMMAND_ICONS.put(HELP, UiUtils.loadIcon("help.jpg"));
         COMMAND_ICONS.put(ANALOGINFO, infoIcon);
-        COMMAND_ICONS.put(TRIGGERINFO, UiUtils.loadIcon("trigger.jpg"));
+        COMMAND_ICONS.put(CMD_TRIGGERINFO, UiUtils.loadIcon("trigger.jpg"));
         COMMAND_ICONS.put(IDLEINFO, infoIcon);
         COMMAND_ICONS.put(ALTINFO, UiUtils.loadIcon("alternator.jpg"));
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
@@ -72,7 +73,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(SDINFO, UiUtils.loadIcon("sdinfo.jpg"));
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
         COMMAND_ICONS.put(PINS, infoIcon);
-        COMMAND_ICONS.put(SettingsTab.WRITECONFIG, UiUtils.loadIcon("writeconfig.jpg"));
+        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, UiUtils.loadIcon("writeconfig.jpg"));
         COMMAND_ICONS.put(SPEEDINFO, UiUtils.loadIcon("speedinfo.jpg"));
     }
 
@@ -118,12 +119,12 @@ public class RecentCommands {
         add(SHOWCONFIG);
         add(STOPENGINE);
         add(ANALOGINFO);
-        add(TRIGGERINFO);
+        add(CMD_TRIGGERINFO);
         add(TSINFO);
         add(SPEEDINFO);
         add(joystickINFO);
         add(CANINFO);
-        add(SettingsTab.WRITECONFIG);
+        add(Fields.CMD_WRITECONFIG);
         add("rewriteconfig");
         add("enable injection");
         add("disable injection");
