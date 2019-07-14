@@ -18,6 +18,7 @@ public enum FileLog {
     public static final String DIR = "logs/";
     public static final String LOG_INFO_TEXT = "Writing logs to '" + DIR + "'";
     public static final String OS_VERSION = "os.version";
+    public static final String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
     public static String currentLogName;
     public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
@@ -87,7 +88,7 @@ public enum FileLog {
     }
 
     public static String getDate() {
-        return new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(new Date());
+        return new SimpleDateFormat(DATE_PATTERN).format(new Date());
     }
 
     public synchronized void logLine(String fullLine) {
