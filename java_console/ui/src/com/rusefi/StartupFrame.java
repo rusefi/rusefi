@@ -5,6 +5,7 @@ import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.DriverInstall;
 import com.rusefi.maintenance.EraseChip;
+import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
@@ -21,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,8 +34,8 @@ import static com.rusefi.ui.util.UiUtils.setToolTip;
  * This frame is used on startup to select the port we would be using
  *
  * @author Andrey Belomutskiy
- *         <p/>
- *         2/14/14
+ * <p/>
+ * 2/14/14
  * @see SimulatorHelper
  * @see FirmwareFlasher
  */
@@ -106,6 +108,7 @@ public class StartupFrame {
         connectPanel.add(comboSpeeds);
 
         final JButton connect = new JButton("Connect");
+        connect.setBackground(new Color(0xff7d03)); // custom orange
         setToolTip(connect, "Connect to real hardware");
         connectPanel.add(connect);
         connect.addActionListener(new ActionListener() {
@@ -120,8 +123,12 @@ public class StartupFrame {
         leftPanel.add(realHardwarePanel);
         leftPanel.add(miscPanel);
 
-        if (FileLog.isWindows())
-            realHardwarePanel.add(DriverInstall.createButton());
+        if (FileLog.isWindows()) {
+            JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+            topButtons.add(createShowDeviceManagerButton());
+            topButtons.add(DriverInstall.createButton());
+            realHardwarePanel.add(topButtons);
+        }
         realHardwarePanel.add(connectPanel);
         realHardwarePanel.add(noPortsMessage);
         installMessage(noPortsMessage, "Check you cables. Check your drivers. Do you want to start simulator maybe?");
@@ -175,6 +182,20 @@ public class StartupFrame {
         frame.pack();
         frame.setVisible(true);
         UiUtils.centerWindow(frame);
+    }
+
+    private Component createShowDeviceManagerButton() {
+        JButton showDeviceManager = new JButton(UiUtils.loadIcon("DeviceManager.png"));
+        showDeviceManager.setMargin(new Insets(0, 0, 0, 0));
+        showDeviceManager.setToolTipText("Show Device Manager");
+        showDeviceManager.addActionListener(event -> {
+            try {
+                Runtime.getRuntime().exec(ExecHelper.getBatchCommand("devmgmt.msc"));
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
+        return showDeviceManager;
     }
 
     private void installMessage(JComponent component, String s) {
