@@ -525,12 +525,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				actualSynchGap = gap;
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					print("%d: cur %.2f expected from %.2f to %.2f error=%d\r\n",
+					print("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
 							TRIGGER_SHAPE(syncronizationRatioTo[i]),
-							someSortOfTriggerError);
+							boolToString(someSortOfTriggerError));
 				}
 
 
