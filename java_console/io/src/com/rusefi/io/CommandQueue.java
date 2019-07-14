@@ -1,6 +1,7 @@
 package com.rusefi.io;
 
 import com.rusefi.FileLog;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import org.jetbrains.annotations.NotNull;
 
@@ -208,5 +209,9 @@ public class CommandQueue {
 
     public interface CommandQueueListener {
         void onCommand(String command);
+    }
+
+    public static String disableCommand(String command) {
+        return Fields.CMD_DISABLE + " " + command;
     }
 }
