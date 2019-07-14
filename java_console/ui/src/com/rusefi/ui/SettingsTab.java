@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.config.FieldsMap;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.config.*;
 import com.rusefi.ui.util.UiUtils;
 
@@ -18,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @see EnumConfigField
  */
 public class SettingsTab {
-    public static final String WRITECONFIG = "writeconfig";
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel panel = new JPanel(new GridLayout(1, 3));
     private final JButton dialog = new JButton();
@@ -110,7 +110,7 @@ public class SettingsTab {
 
         panel.add(dialogBody);
 
-        panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), WRITECONFIG)));
+        panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), Fields.CMD_WRITECONFIG)));
 
         JLabel unusable = new JLabel("This is painfully unusable, TunerStudio works way better for settings!");
         unusable.setForeground(Color.red);
