@@ -1,3 +1,4 @@
+echo java version
 java -version
 
 echo Building java console
