@@ -92,7 +92,7 @@ public enum FileLog {
     }
 
     public synchronized void logLine(String fullLine) {
-        String withDate = new Date() + END_OF_TIMESTAND_TAG + fullLine;
+        String withDate = getDate() + END_OF_TIMESTAND_TAG + fullLine;
         System.out.println(withDate);
         if (suspendLogging)
             return;
