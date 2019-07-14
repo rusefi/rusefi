@@ -58,7 +58,7 @@ public class DriverInstall {
                 wnd);
 
         String batch = isWindows7orBelow() ? WINDOWS7_BATCH : WINDOWS8_BATCH;
-        ExecHelper.executeCommand(UNPACKED_FOLDER, "cmd /c start " + batch, batch, wnd);
+        ExecHelper.executeCommand(UNPACKED_FOLDER, ExecHelper.getBatchCommand(batch), batch, wnd);
     }
 
     private static boolean isWindows7orBelow() {
