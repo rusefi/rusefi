@@ -526,10 +526,19 @@ void resetMaxValues() {
 #endif /* EFI_PROD_CODE  */
 }
 
+#if HAL_USE_ICU == TRUE
+extern int icuWidthCallbackCounter;
+extern int icuWidthPeriodCounter;
+#endif /* HAL_USE_ICU */
+
 void triggerInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 	TriggerShape *ts = &engine->triggerCentral.triggerShape;
+
+#if HAL_USE_ICU == TRUE
+	scheduleMsg(logger, "trigger ICU hw: %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter);
+#endif /* HAL_USE_ICU */
 
 	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
@@ -707,7 +716,7 @@ void initTriggerCentral(Logging *sharedLogger) {
 #endif /* EFI_ENGINE_SNIFFER */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleAction("triggerinfo", triggerInfo);
+	addConsoleAction(CMD_TRIGGERINFO, triggerInfo);
 	addConsoleAction("trigger_shape_info", triggerShapeInfo);
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif

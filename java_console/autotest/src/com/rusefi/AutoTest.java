@@ -1,6 +1,7 @@
 package com.rusefi;
 
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -135,6 +136,7 @@ public class AutoTest {
         setEngineType(28);
         String msg = "mazda 626 default cranking";
         IoUtil.changeRpm(200);
+        sendCommand(Fields.CMD_TRIGGERINFO);
         EngineChart chart;
         chart = nextChart();
 

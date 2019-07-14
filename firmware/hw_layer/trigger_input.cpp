@@ -18,6 +18,8 @@
 #define HAL_TRIGGER_USE_PAL FALSE
 #endif /* HAL_TRIGGER_USE_PAL */
 
+volatile int icuWidthCallbackCounter = 0;
+volatile int icuWidthPeriodCounter = 0;
 
 #if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
 
@@ -130,6 +132,7 @@ static void cam_icu_period_callback(ICUDriver *icup) {
  * 'width' events happens before the 'period' event
  */
 static void shaft_icu_width_callback(ICUDriver *icup) {
+	icuWidthCallbackCounter++;
 // todo: support for 3rd trigger input channel
 // todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
@@ -146,6 +149,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 }
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
+	icuWidthPeriodCounter++;
 	if (hasFirmwareErrorFlag)
 		return;
 	int isPrimary = icup == primaryCrankDriver;
