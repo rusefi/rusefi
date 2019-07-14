@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import com.rusefi.AverageAngles;
 import com.rusefi.AverageAnglesUtil;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.rusefi.config.generated.Fields.CMD_TRIGGERINFO;
+import static com.rusefi.io.CommandQueue.disableCommand;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
@@ -127,9 +127,9 @@ public class RecentCommands {
         add(Fields.CMD_WRITECONFIG);
         add("rewriteconfig");
         add("enable injection");
-        add("disable injection");
+        add(disableCommand("injection"));
         add("enable ignition");
-        add("disable ignition");
+        add(disableCommand("ignition"));
 
         add("enable self_stimulation");
         add("disable self_stimulation");

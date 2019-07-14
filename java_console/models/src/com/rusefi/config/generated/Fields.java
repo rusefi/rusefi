@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 14 15:12:56 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 14 15:33:42 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -233,6 +233,9 @@ public class Fields {
 	public static final int clutchUpPin_offset = 969;
 	public static final int clutchUpPinInverted_offset = 976;
 	public static final int clutchUpPinMode_offset = 971;
+	public static final String CMD_DISABLE = "disable";
+	public static final String CMD_ENABLE = "enable";
+	public static final String CMD_TRIGGER_HW_INPUT = "trigger_hw_input";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int coastingFuelCutClt_offset = 3154;

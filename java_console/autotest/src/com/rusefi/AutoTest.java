@@ -13,6 +13,7 @@ import com.rusefi.waves.EngineReport;
 import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.io.CommandQueue.disableCommand;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -38,6 +39,7 @@ public class AutoTest {
         });
 
         sendCommand("fl 1"); // just in case it was disabled
+        sendCommand(disableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         testCustomEngine();
         testMazdaMiata2003();
         test2003DodgeNeon();
