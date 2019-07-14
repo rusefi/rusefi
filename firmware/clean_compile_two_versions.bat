@@ -1,4 +1,7 @@
 
+echo Compiler gcc version
+arm-none-eabi-gcc -v
+
 rd /s /q deliver
 mkdir deliver
 
