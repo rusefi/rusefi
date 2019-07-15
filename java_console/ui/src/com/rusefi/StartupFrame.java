@@ -103,8 +103,16 @@ public class StartupFrame {
         realHardwarePanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Real stm32"));
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
+        if (FileLog.isWindows()) {
+            setToolTip(comboPorts, "Use 'Device Manager' icon above to launch Device Manager",
+                    "In 'Ports' section look for ",
+                    "'STMicroelectronics Virtual COM Port' for USB port",
+                    "'USB Serial Port' for TTL port");
+        }
+
         connectPanel.add(comboPorts);
         final JComboBox<String> comboSpeeds = createSpeedCombo();
+        comboSpeeds.setToolTipText("For 'STMicroelectronics Virtual COM Port' device any speed setting would work the same");
         connectPanel.add(comboSpeeds);
 
         final JButton connect = new JButton("Connect");
