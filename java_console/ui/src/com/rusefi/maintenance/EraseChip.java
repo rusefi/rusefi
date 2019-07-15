@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static com.rusefi.maintenance.FirmwareFlasher.TITLE;
+
 /**
  * (c) Andrey Belomutskiy 2013-2018
  */
@@ -22,8 +24,13 @@ public class EraseChip extends ProcessStatusWindow {
                         "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
-                wnd.showFrame("rusEfi Firmware Flasher");
-                ExecHelper.submitAction(() -> executeCommand(getEraseCommand()),  EraseChip.this.getClass() + " extProcessThread");
+                wnd.showFrame(TITLE);
+                StatusAnimation sa = new StatusAnimation(wnd);
+                ExecHelper.submitAction(() -> {
+                    executeCommand(getEraseCommand());
+                    sa.stop();
+                    wnd.setStatus(FirmwareFlasher.DONE);
+                },  EraseChip.this.getClass() + " extProcessThread");
             }
         });
     }
