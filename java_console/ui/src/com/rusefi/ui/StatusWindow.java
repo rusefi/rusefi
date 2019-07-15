@@ -15,6 +15,7 @@ public class StatusWindow implements StatusConsumer {
     // todo: extract driver from console bundle? find a separate driver bundle?
     private final JTextArea log = new JTextArea();
     private final JPanel content = new JPanel(new BorderLayout());
+    private final JLabel bottomStatusLabel = new JLabel();
     private final JScrollPane messagesScroll = new JScrollPane(log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
         @Override
         public Dimension getPreferredSize() {
@@ -27,6 +28,7 @@ public class StatusWindow implements StatusConsumer {
     public StatusWindow() {
         log.setLineWrap(true);
         content.add(messagesScroll, BorderLayout.CENTER);
+        content.add(bottomStatusLabel, BorderLayout.SOUTH);
     }
 
     @NotNull
@@ -58,5 +60,9 @@ public class StatusWindow implements StatusConsumer {
                 UiUtils.trueLayout(log);
             }
         });
+    }
+
+    public void setStatus(String status) {
+        bottomStatusLabel.setText(status);
     }
 }
