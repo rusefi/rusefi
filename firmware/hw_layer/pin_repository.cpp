@@ -97,15 +97,17 @@ const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
 	}
+	if (brainPin == GPIO_UNASSIGNED) {
+		return "NONE";
+	}
 	portNameStream.eos = 0; // reset
 	if (brain_pin_is_onchip(brainPin)) {
-		int hwPin;
 
 		ioportid_t hwPort = getHwPort("hostname", brainPin);
 		if (hwPort == GPIO_NULL) {
 			return "NONE";
 		}
-		hwPin = getHwPin("hostname", brainPin);
+		int hwPin = getHwPin("hostname", brainPin);
 		chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
