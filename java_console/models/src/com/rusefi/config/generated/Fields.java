@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 14 15:33:42 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jul 18 18:26:35 EDT 2019
 
 import com.rusefi.config.*;
 
@@ -1171,10 +1171,14 @@ public class Fields {
 	public static final int unused_bit_1472_29_offset = 1464;
 	public static final int unused_bit_1472_30_offset = 1464;
 	public static final int unused_board_984_31_offset = 744;
+	public static final int unused_former_warmup_target_afr_offset = 2096;
+	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtBoardConfigurationEnd_offset = 980;
+	public static final int unusedFormerWarmupAfrPid_offset = 1756;
 	public static final int unusedh_offset = 1471;
 	public static final int unusedMa2_offset = 710;
+	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSpiPadding2_offset = 804;
 	public static final int unusedSpiPadding2_offset_hex = 324;
 	public static final int unusedSpiPadding3_offset = 4036;
@@ -1218,7 +1222,6 @@ public class Fields {
 	public static final int useTpicAdvancedMode_offset = 744;
 	public static final int useTPSAdvanceTable_offset = 1476;
 	public static final int useTPSBasedVeTable_offset = 744;
-	public static final int useWarmupPidAfr_offset = 744;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int vbattAdcChannel_offset = 513;
 	public static final int vbattAdcChannel_offset_hex = 201;
@@ -1239,21 +1242,6 @@ public class Fields {
 	public static final int vvtMode_offset_hex = 918;
 	public static final int vvtOffset_offset = 2052;
 	public static final int vvtOffset_offset_hex = 804;
-	public static final int WARMUP_TARGET_AFR_SIZE = 4;
-	public static final int warmupAfrPid_dFactor_offset = 1764;
-	public static final int warmupAfrPid_iFactor_offset = 1760;
-	public static final int warmupAfrPid_maxValue_offset = 1774;
-	public static final int warmupAfrPid_minValue_offset = 1772;
-	public static final int warmupAfrPid_offset = 1756;
-	public static final int warmupAfrPid_offset_offset = 1768;
-	public static final int warmupAfrPid_periodMs_offset = 1770;
-	public static final int warmupAfrPid_pFactor_offset = 1756;
-	public static final int warmupAfrThreshold_offset = 2128;
-	public static final int warmupAfrThreshold_offset_hex = 850;
-	public static final int warmupTargetAfr_offset = 2112;
-	public static final int warmupTargetAfr_offset_hex = 840;
-	public static final int warmupTargetAfrBins_offset = 2096;
-	public static final int warmupTargetAfrBins_offset_hex = 830;
 	public static final int warningLedPin_offset = 2041;
 	public static final int warningPeriod_offset = 1498;
 	public static final int wboHeaterPin_offset = 673;
@@ -1513,7 +1501,7 @@ public class Fields {
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 744, FieldType.BIT, 11);
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 744, FieldType.BIT, 12);
 	public static final Field UNUSEDANOTHERONE = Field.create("UNUSEDANOTHERONE", 744, FieldType.BIT, 13);
-	public static final Field USEWARMUPPIDAFR = Field.create("USEWARMUPPIDAFR", 744, FieldType.BIT, 14);
+	public static final Field UNUSEDOLDWARMUPAFR = Field.create("UNUSEDOLDWARMUPAFR", 744, FieldType.BIT, 14);
 	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 744, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 744, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 744, FieldType.BIT, 17);
@@ -1771,13 +1759,6 @@ public class Fields {
 	public static final Field ETB_PERIODMS = Field.create("ETB_PERIODMS", 1750, FieldType.INT16);
 	public static final Field ETB_MINVALUE = Field.create("ETB_MINVALUE", 1752, FieldType.INT16);
 	public static final Field ETB_MAXVALUE = Field.create("ETB_MAXVALUE", 1754, FieldType.INT16);
-	public static final Field WARMUPAFRPID_PFACTOR = Field.create("WARMUPAFRPID_PFACTOR", 1756, FieldType.FLOAT);
-	public static final Field WARMUPAFRPID_IFACTOR = Field.create("WARMUPAFRPID_IFACTOR", 1760, FieldType.FLOAT);
-	public static final Field WARMUPAFRPID_DFACTOR = Field.create("WARMUPAFRPID_DFACTOR", 1764, FieldType.FLOAT);
-	public static final Field WARMUPAFRPID_OFFSET = Field.create("WARMUPAFRPID_OFFSET", 1768, FieldType.INT16);
-	public static final Field WARMUPAFRPID_PERIODMS = Field.create("WARMUPAFRPID_PERIODMS", 1770, FieldType.INT16);
-	public static final Field WARMUPAFRPID_MINVALUE = Field.create("WARMUPAFRPID_MINVALUE", 1772, FieldType.INT16);
-	public static final Field WARMUPAFRPID_MAXVALUE = Field.create("WARMUPAFRPID_MAXVALUE", 1774, FieldType.INT16);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1776, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1780, FieldType.FLOAT);
 	public static final Field STEP1RPMWINDOW = Field.create("STEP1RPMWINDOW", 1784, FieldType.INT);
@@ -1822,9 +1803,8 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 2080, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 2084, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 2088, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "Warmup PID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"};
+	public static final String[] debug_mode_e = {"Alternator PID", "TPS acceleration enrichment", "INVALID", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "AUX_PID_1", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Trigger Sync", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "Aux Temperature", "ETB Logic"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 2092, FieldType.INT, debug_mode_e);
-	public static final Field WARMUPAFRTHRESHOLD = Field.create("WARMUPAFRTHRESHOLD", 2128, FieldType.FLOAT);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
 	public static final Field FSIOADC1 = Field.create("FSIOADC1", 2200, FieldType.INT8, adc_channel_e);
 	public static final Field FSIOADC2 = Field.create("FSIOADC2", 2201, FieldType.INT8, adc_channel_e);
@@ -2290,7 +2270,7 @@ public class Fields {
 	USETPICADVANCEDMODE,
 	USELCDSCREEN,
 	UNUSEDANOTHERONE,
-	USEWARMUPPIDAFR,
+	UNUSEDOLDWARMUPAFR,
 	ONOFFALTERNATORLOGIC,
 	ISCJ125ENABLED,
 	VVTCAMSENSORUSERISE,
@@ -2546,13 +2526,6 @@ public class Fields {
 	ETB_PERIODMS,
 	ETB_MINVALUE,
 	ETB_MAXVALUE,
-	WARMUPAFRPID_PFACTOR,
-	WARMUPAFRPID_IFACTOR,
-	WARMUPAFRPID_DFACTOR,
-	WARMUPAFRPID_OFFSET,
-	WARMUPAFRPID_PERIODMS,
-	WARMUPAFRPID_MINVALUE,
-	WARMUPAFRPID_MAXVALUE,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,
 	STEP1RPMWINDOW,
@@ -2598,7 +2571,6 @@ public class Fields {
 	TPSDECELENLEANMENTMULTIPLIER,
 	SLOWADCALPHA,
 	DEBUGMODE,
-	WARMUPAFRTHRESHOLD,
 	BOOSTCUTPRESSURE,
 	FSIOADC1,
 	FSIOADC2,
