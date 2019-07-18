@@ -9,8 +9,8 @@ EXTERN_ENGINE
 /**
  * @return MAF sensor voltage
  */
-float getMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getMafT(engineConfiguration);
+float getMafVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return getVoltageDivided("maf", engineConfiguration->mafAdcChannel);
 }
 
 bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -21,11 +21,9 @@ bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return kg/hour value
  */
 float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int mafAdc = getAdcValue("maf", engineConfiguration->mafAdcChannel);
-	/**
-	 * here we drop from 12 bit ADC to 8 bit index
-	 */
-	return engine->mafDecodingLookup[mafAdc >> 4];
+	float volts = getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	return interpolate2d("maf", volts, config->mafDecodingBins, config->mafDecoding);
 }
 
 static void fillTheRest(persistent_config_s *e, int i) {

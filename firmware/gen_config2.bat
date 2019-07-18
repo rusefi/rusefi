@@ -2,6 +2,11 @@ rem TODO better place for this stuff, more automation so that each file does not
 
 rm gen_config2.log
 
+set LIVE_DOCS_COMMAND=java -DSystemOut.name=gen_config2 ^
+ -cp ../java_tools/ConfigDefinition.jar ^
+ com.rusefi.ldmp.LiveDocsMetaParser ^
+ "../"
+
 java -DSystemOut.name=gen_config2 ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/engine_state.txt ^
@@ -24,20 +29,15 @@ java -DSystemOut.name=gen_config2 ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/TriggerState.java ^
  -c_destination controllers/generated/trigger_structs.h
 
-java -DSystemOut.name=gen_config2 ^
- -cp ../java_tools/ConfigDefinition.jar ^
- com.rusefi.ldmp.LiveDocsMetaParser ^
- controllers/sensors/thermistors.cpp ^
- "../"
+%LIVE_DOCS_COMMAND% controllers/sensors/thermistors.cpp
+%LIVE_DOCS_COMMAND% controllers/sensors/tps.cpp
+%LIVE_DOCS_COMMAND% controllers/math/speed_density.cpp
 
 java -DSystemOut.name=gen_config2 ^
- -cp ../java_tools/ConfigDefinition.jar ^
- com.rusefi.ldmp.LiveDocsMetaParser ^
- controllers/sensors/tps.cpp ^
- "../"
+ -jar ../java_tools/ConfigDefinition.jar ^
+ -definition integration/wall_fuel.txt ^
+ -initialize_to_zero yes ^
+ -java_destination ../java_console/models/src/com/rusefi/config/generated/WallFuelState.java ^
+ -c_destination controllers/generated/wall_fuel.h
 
-java -DSystemOut.name=gen_config2 ^
- -cp ../java_tools/ConfigDefinition.jar ^
- com.rusefi.ldmp.LiveDocsMetaParser ^
- controllers/math/speed_density.cpp ^
- "../"
+%LIVE_DOCS_COMMAND% controllers/algo/accel_enrichment.cpp

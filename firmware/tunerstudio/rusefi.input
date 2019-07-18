@@ -154,7 +154,7 @@ enable2ndByteCanID = false
 [OutputChannels]
 
 ; see TS_FILE_VERSION in firmware code
-fileVersion = { 20171101 }
+fileVersion = { 20190701 }
 
    ochGetCommand    = "O%2o%2c"
 
@@ -1566,7 +1566,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Invert Primary",						invertPrimaryTriggerSignal
 		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
 		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Cam Sync/VVT input",					camInput
+		field = "Cam Sync/VVT input",					camInputs1
 		
 	dialog = allPinsSensors, "Sensors"
 		field = "CLT ADC input", 						clt_adcChannel
@@ -1605,7 +1605,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
 		field = "Primary input channel", 				triggerInputPins1
 		field = "Secondary channel", 					triggerInputPins2
-		field = "Cam Sync/VVT input",					camInput
+		field = "Cam Sync/VVT input",					camInputs1
 
 	dialog = allPins1_2
 		field = "Tachometer output Pin",					tachOutputPin
@@ -1843,6 +1843,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
 
 	dialog = mapCurves, "MAP sampling", yAxis
+		field = "isMapAveragingEnabled",				isMapAveragingEnabled
 		panel = map_samplingAngleCurve
 		panel = map_samplingWindowCurve
 
@@ -2357,7 +2358,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "#1",									fsioFormulas1
 		field = "#2",									fsioFormulas2
 		field = "#3",									fsioFormulas3
-		field = "use FSIO #4 for serious eninge warning",useFSIO4ForSeriousEngineWarning
+		field = "use FSIO #4 for serious engine warning",useFSIO4ForSeriousEngineWarning
 		field = "#4",									fsioFormulas4
 		field = "use FSIO #5 for critical engine stop", useFSIO5ForCriticalIssueEngineStop
 		field = "#5",									fsioFormulas5

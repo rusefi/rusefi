@@ -866,9 +866,13 @@ static void setSpiMode(int index, bool mode) {
 	printSpiState(&logger, boardConfiguration);
 }
 
+extern bool hwTriggerInputEnabled;
+
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
+		hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
@@ -1373,8 +1377,8 @@ void initSettings(void) {
 	addConsoleActionI("enable_spi", enableSpi);
 	addConsoleActionI("disable_spi", disableSpi);
 
-	addConsoleActionS("enable", enable);
-	addConsoleActionS("disable", disable);
+	addConsoleActionS(CMD_ENABLE, enable);
+	addConsoleActionS(CMD_DISABLE, disable);
 
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 

@@ -41,20 +41,21 @@ tps_tps_Map3D_t tpsTpsMap("tpsTps");
 static Logging *logger = NULL;
 
 WallFuel::WallFuel() {
-	reset();
+	resetWF();
 }
 
-void WallFuel::reset() {
-	memset(wallFuel, 0, sizeof(wallFuel));
+void WallFuel::resetWF() {
+	wallFuel = 0;
 }
 
-floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PARAMETER_SUFFIX) {	
-	if (cisnan(M_des)) {
-		return M_des;
+//
+floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (cisnan(desiredFuel)) {
+		return desiredFuel;
 	}
 	// disable this correction for cranking
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		return M_des;
+		return desiredFuel;
 	}
 
 	/*
@@ -63,8 +64,8 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 				SAE 1999-01-0553 by Peter J Maloney
 
 		M_cmd = commanded fuel mass (output of this function)
-		M_des = desired fuel mass (input to this function)
-		M_f = fuel film mass (how much is currently on the wall)
+		desiredFuel = desired fuel mass (input to this function)
+		fuelFilmMass = fuel film mass (how much is currently on the wall)
 
 		First we compute how much fuel to command, by accounting for
 		a) how much fuel will evaporate from the walls, entering the air
@@ -72,7 +73,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 
 		Next, we compute how much fuel will be deposited on the walls.  The net
 		effect of these two steps is computed (some leaves walls, some is deposited)
-		and stored back in M_f.
+		and stored back in fuelFilmMass.
 
 		alpha describes the amount of fuel that REMAINS on the wall per cycle.
 		It is computed as a function of the evaporation time constant (tau) and
@@ -93,55 +94,54 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t M_des DECLARE_ENGINE_PAR
 
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
-	float tau = CONFIG(wwaeTau);
-	if(tau < 0.01f)
-	{
-		return M_des;
+	float tau = CONFIG(DISPLAY_CONFIG(wwaeTau));
+	if (tau < 0.01f) {
+		return desiredFuel;
 	}
 
 	// Ignore really slow RPM
 	int rpm = GET_RPM();
-	if(rpm < 100)
-	{
-		return M_des;
+	if (rpm < 100) {
+		return desiredFuel;
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
-	float beta = CONFIG(wwaeBeta);
+	float beta = CONFIG(DISPLAY_CONFIG(wwaeBeta));
 
 	// If beta is larger than alpha, the system is underdamped.
 	// For reasonable values {tau, beta}, this should only be possible
 	// at extremely low engine speeds (<300rpm ish)
 	// Clamp beta to less than alpha.
-	if(beta > alpha)
-	{
+	if (beta > alpha) {
 		beta = alpha;
 	}
 
-	float M_f = wallFuel[injectorIndex];
-	float M_cmd = (M_des - (1 - alpha) * M_f) / (1 - beta);
+	float fuelFilmMass = wallFuel/*[injectorIndex]*/;
+	float M_cmd = (desiredFuel - (1 - alpha) * fuelFilmMass) / (1 - beta);
 	
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
 	// but that's ok.
-	if(M_cmd <= 0)
-	{
+	if (M_cmd <= 0) {
 		M_cmd = 0;
 	}
 
 	// remainder on walls from last time + new from this time
-	float M_f_next = alpha * M_f + beta * M_cmd;
+	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
 
-	wallFuel[injectorIndex] = M_f_next;
-	engine->wallFuelCorrection = M_cmd - M_des;
+	DISPLAY_TEXT(Current_Wall_Fuel_Film);
+	DISPLAY_FIELD(wallFuel)/*[injectorIndex]*/ = fuelFilmMassNext;
+	DISPLAY_TEXT(Fuel correction);
+	DISPLAY_FIELD(wallFuelCorrection) = M_cmd - desiredFuel;
+	DISPLAY_TEXT(ms);
 	return M_cmd;
 }
 
 floatms_t WallFuel::getWallFuel(int injectorIndex) const {
-	return wallFuel[injectorIndex];
+	return wallFuel/*[injectorIndex]*/;
 }
 
-int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	int len = minI(cb.getSize(), cb.getCount());
 	if (len < 2)
@@ -164,14 +164,14 @@ int AccelEnrichmemnt::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return resultIndex;
 }
 
-float AccelEnrichmemnt::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float AccelEnrichment::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	return (cb.get(index) - (cb.get(index - 1)));
 }
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
-floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int maxDeltaIndex = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 //	FuelSchedule *fs = engineConfiguration->injectionEvents;
@@ -228,7 +228,7 @@ floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	return extraFuel;
 }
 
-float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float LoadAccelEnrichment::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	float d = (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
@@ -259,13 +259,16 @@ float AccelEnrichmemnt::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATU
 	return result;
 }
 
-void AccelEnrichmemnt::reset() {
+void AccelEnrichment::resetAE() {
 	cb.clear();
-	previousValue = NAN;
+}
+
+void TpsAccelEnrichment::resetAE() {
+	AccelEnrichment::resetAE();
 	resetFractionValues();
 }
 
-void AccelEnrichmemnt::resetFractionValues() {
+void TpsAccelEnrichment::resetFractionValues() {
 	accumulatedValue = 0;
 	maxExtraPerCycle = 0;
 	maxExtraPerPeriod = 0;
@@ -273,15 +276,15 @@ void AccelEnrichmemnt::resetFractionValues() {
 	cycleCnt = 0;
 }
 
-void AccelEnrichmemnt::setLength(int length) {
+void AccelEnrichment::setLength(int length) {
 	cb.setSize(length);
 }
 
-void AccelEnrichmemnt::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void AccelEnrichment::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cb.add(currentValue);
 }
 
-void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// we update values in handleFuel() directly
 	//onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -310,12 +313,12 @@ void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void LoadAccelEnrichment::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onNewValue(getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-AccelEnrichmemnt::AccelEnrichmemnt() {
-	reset();
+AccelEnrichment::AccelEnrichment() {
+	resetAE();
 	cb.setSize(4);
 }
 

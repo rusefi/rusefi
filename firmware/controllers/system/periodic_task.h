@@ -24,11 +24,18 @@ public:
 #if !EFI_UNIT_TEST
 	virtual_timer_t timer;
 #endif /* EFI_UNIT_TEST */
-	virtual int getPeriodMs() = 0;
 
 	virtual void PeriodicTask() = 0;
 
-    void start() {
+	/**
+	 * This method is invoked after corresponding PeriodicTask() invocation
+	 */
+	virtual int getPeriodMs() = 0;
+
+	/**
+	 * This invokes PeriodicTask() immediately and starts the cycle of invocations and sleeps
+	 */
+    void Start() {
     	runAndScheduleNext(this);
     }
 };

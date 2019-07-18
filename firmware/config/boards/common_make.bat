@@ -7,6 +7,12 @@ make -j4 -r
 if not exist build/rusefi.hex echo FAILED to compile by %script_name% with %PROJECT_BOARD% %DEBUG_LEVEL_OPT% and %EXTRA_PARAMS%
 if not exist build/rusefi.hex exit -1
 
-rm -f build/rusefi.dfu
+mkdir deliver
+
+rm -f deliver/rusefi.dfu
 echo %script_name%: invoking hex2dfu.exe
-..\misc\encedo_hex2dfu\hex2dfu.exe -i build/rusefi.hex -o build/rusefi.dfu
+..\misc\encedo_hex2dfu\hex2dfu.exe -i build/rusefi.hex -o deliver/rusefi.dfu
+cp build/rusefi.bin deliver/
+
+echo %script_name%: deliver folder
+ls -l deliver

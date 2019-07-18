@@ -20,6 +20,8 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
     private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
+    public static final String TITLE = "rusEfi Firmware Flasher";
+    public static final String DONE = "DONE!";
 
     private final JButton button;
     private String fileName;
@@ -37,7 +39,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
                     return;
 
 
-                wnd.showFrame("rusEfi Firmware Flasher");
+                wnd.showFrame(TITLE);
 
                 ExecHelper.submitAction(() -> doFlashFirmware(), getClass() + " extProcessThread");
             }
@@ -52,8 +54,10 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     private void doFlashFirmware() {
         if (!new File(fileName).exists()) {
             wnd.appendMsg(fileName + " not found, cannot proceed !!!");
+            wnd.setStatus("ERROR");
             return;
         }
+        StatusAnimation sa = new StatusAnimation(wnd);
         StringBuffer error = executeCommand(getOpenocdCommad() + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"");
@@ -61,6 +65,8 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             wnd.appendMsg(" !!! ERROR: looks like stm32 driver is not installed? The link is above !!!");
         } else if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().toLowerCase().contains(FAILED_MESSAGE_TAG)) {
             wnd.appendMsg("Flashing looks good!");
+            sa.stop();
+            wnd.setStatus(DONE);
         } else {
             wnd.appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }

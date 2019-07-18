@@ -34,7 +34,7 @@ static unsigned char rx_buff[1];
 
 static CJ125 globalInstance;
 
-static THD_WORKING_AREA(cjThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(cj125ThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static SPIDriver *driver;
 
@@ -578,7 +578,7 @@ void initCJ125(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("cj125", cjStartTest);
 	addConsoleAction("cj125_calibrate", cjStartCalibration);
 
-	chThdCreateStatic(cjThreadStack, sizeof(cjThreadStack), LOWPRIO, (tfunc_t)(void*) cjThread, NULL);
+	chThdCreateStatic(cj125ThreadStack, sizeof(cj125ThreadStack), LOWPRIO, (tfunc_t)(void*) cjThread, NULL);
 }
 
 #endif /* EFI_CJ125 && HAL_USE_SPI */

@@ -247,7 +247,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	boardConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
 	boardConfiguration->triggerInputPins[0] = GPIOA_5; // board still not modified
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInput = GPIOC_6;
+	engineConfiguration->camInputs[0] = GPIOC_6;
 
 //	boardConfiguration->is_enabled_spi_1 = true;
 

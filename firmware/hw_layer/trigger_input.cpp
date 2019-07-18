@@ -18,6 +18,9 @@
 #define HAL_TRIGGER_USE_PAL FALSE
 #endif /* HAL_TRIGGER_USE_PAL */
 
+volatile int icuWidthCallbackCounter = 0;
+volatile int icuWidthPeriodCounter = 0;
+bool hwTriggerInputEnabled = true; // this is useful at least for real hardware integration testing
 
 #if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
 
@@ -44,27 +47,23 @@ int vvtEventFallCounter = 0;
 /* PAL based implementation */
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 
-/* static vars for PAL implementation */
+/* static variables for PAL implementation */
 static ioline_t primary_line;
 
 static void shaft_callback(void *arg) {
-	bool rise;
-	bool isPrimary;
-	ioline_t pal_line;
-	trigger_event_e signal;
-
-	pal_line = (ioline_t)arg;
+	ioline_t pal_line = (ioline_t)arg;
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
 		return;
 
-	isPrimary = pal_line == primary_line;
+	bool isPrimary = pal_line == primary_line;
 	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
 		return;
 	}
 
-	rise = (palReadLine(pal_line) == PAL_HIGH);
+	bool rise = (palReadLine(pal_line) == PAL_HIGH);
+	trigger_event_e signal;
 	// todo: add support for 3rd channel
 	if (rise) {
 		signal = isPrimary ?
@@ -77,14 +76,12 @@ static void shaft_callback(void *arg) {
 	}
 
 	hwHandleShaftSignal(signal);
-
 }
 
 static void cam_callback(void *arg) {
-	bool rise;
 	ioline_t pal_line = (ioline_t)arg;
 
-	rise = (palReadLine(pal_line) == PAL_HIGH);
+	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	if (rise) {
 		vvtEventRiseCounter++;
@@ -96,14 +93,12 @@ static void cam_callback(void *arg) {
 }
 
 static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft) {
-	ioline_t pal_line;
-
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
 
 	/* TODO:
 	 * * do not set to both edges if we need only one
 	 * * simplify callback in case of one edge */
-	pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
+	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 	return efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, is_shaft ? shaft_callback : cam_callback, (void *)pal_line);
 }
 
@@ -138,6 +133,10 @@ static void cam_icu_period_callback(ICUDriver *icup) {
  * 'width' events happens before the 'period' event
  */
 static void shaft_icu_width_callback(ICUDriver *icup) {
+	if (!hwTriggerInputEnabled) {
+		return;
+	}
+	icuWidthCallbackCounter++;
 // todo: support for 3rd trigger input channel
 // todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
@@ -154,6 +153,10 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 }
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
+	if (!hwTriggerInputEnabled) {
+		return;
+	}
+	icuWidthPeriodCounter++;
 	if (hasFirmwareErrorFlag)
 		return;
 	int isPrimary = icup == primaryCrankDriver;
@@ -266,8 +269,10 @@ void stopTriggerInputPins(void) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}
-	if (engineConfiguration->camInput != activeConfiguration.camInput) {
-		turnOffTriggerInputPin(activeConfiguration.camInput);
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (engineConfiguration->camInputs[i] != activeConfiguration.camInputs[i]) {
+			turnOffTriggerInputPin(activeConfiguration.camInputs[i]);
+		}
 	}
 #endif /* EFI_PROD_CODE */
 }
@@ -282,8 +287,10 @@ void startTriggerInputPins(void) {
 		}
 	}
 
-	if (engineConfiguration->camInput != activeConfiguration.camInput) {
-		turnOnTriggerInputPin("cam", engineConfiguration->camInput, false);
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (engineConfiguration->camInputs[i] != activeConfiguration.camInputs[i]) {
+			turnOnTriggerInputPin("cam", engineConfiguration->camInputs[i], false);
+		}
 	}
 
 	setPrimaryChannel(CONFIGB(triggerInputPins)[0]);

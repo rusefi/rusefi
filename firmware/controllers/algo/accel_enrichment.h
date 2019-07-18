@@ -13,36 +13,44 @@
 #include "global.h"
 #include "cyclic_buffer.h"
 #include "table_helper.h"
+#include "wall_fuel.h"
 
 typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float> tps_tps_Map3D_t;
 
 /**
  * this object is used for MAP rate-of-change and TPS rate-of-change corrections
  */
-class AccelEnrichmemnt {
+class AccelEnrichment {
 public:
-	AccelEnrichmemnt();
+	AccelEnrichment();
+	int getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	float getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+	void resetAE();
+	void setLength(int length);
+	cyclic_buffer<float> cb;
+	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+};
+
+class LoadAccelEnrichment : public AccelEnrichment {
+public:
 	/**
 	 * @return Extra engine load value for fuel logic calculation
 	 */
 	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+};
+
+class TpsAccelEnrichment : public AccelEnrichment {
+public:
 	/**
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
 	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	int getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	float getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void reset();
 	void resetFractionValues();
-	void setLength(int length);
-	cyclic_buffer<float> cb;
-	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
-
+	void resetAE();
 private:
-	float previousValue;
 	/**
 	 * Used for Fractional TPS enrichment. 
 	 */
@@ -57,7 +65,7 @@ private:
  * Wall wetting, also known as fuel film
  * See https://github.com/rusefi/rusefi/issues/151 for the theory
  */
-class WallFuel {
+class WallFuel : public wall_fuel_state {
 public:
 	WallFuel();
 	/**
@@ -66,12 +74,8 @@ public:
 	 */
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
 	floatms_t getWallFuel(int injectorIndex) const;
-	void reset();
+	void resetWF();
 private:
-	/**
-	 * Amount of fuel on the wall, in ms of injector open time, for specific injector.
-	 */
-	floatms_t wallFuel[INJECTION_PIN_COUNT];
 };
 
 void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);

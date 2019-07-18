@@ -485,16 +485,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 #endif /* EFI_TUNER_STUDIO */
 			}
 
-			bool isGapCondition[GAP_TRACKING_LENGTH];
-
+			bool isSync = true;
 			for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
-				isGapCondition[i] = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
+				bool isGapCondition = cisnan(triggerShape->syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * TRIGGER_SHAPE(syncronizationRatioFrom[i])
 					&& toothDurations[i] < toothDurations[i + 1] * triggerShape->syncronizationRatioTo[i]);
-			}
 
-			bool isSync = isGapCondition[0];
-			for (int index = 1; index < GAP_TRACKING_LENGTH ; index++) {
-				isSync = isSync && isGapCondition[index];
+				isSync &= isGapCondition;
+
 			}
 			isSynchronizationPoint = isSync;
 
@@ -510,16 +507,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
-						scheduleMsg(logger, "%d NaN cur gap, you have noise issues?",
+						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "%d %d: cur %.2f expected from %.2f to %.2f error=%d",
+						scheduleMsg(logger, "time=%d index=%d: gap=%.2f expected from %.2f to %.2f error=%s",
 							getTimeNowSeconds(),
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
 							TRIGGER_SHAPE(syncronizationRatioTo[i]),
-							someSortOfTriggerError);
+							boolToString(someSortOfTriggerError));
 					}
 				}
 
@@ -528,12 +525,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 				actualSynchGap = gap;
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					print("%d: cur %.2f expected from %.2f to %.2f error=%d\r\n",
+					print("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
 							TRIGGER_SHAPE(syncronizationRatioTo[i]),
-							someSortOfTriggerError);
+							boolToString(someSortOfTriggerError));
 				}
 
 

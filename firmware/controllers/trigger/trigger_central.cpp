@@ -526,10 +526,19 @@ void resetMaxValues() {
 #endif /* EFI_PROD_CODE  */
 }
 
+#if HAL_USE_ICU == TRUE
+extern int icuWidthCallbackCounter;
+extern int icuWidthPeriodCounter;
+#endif /* HAL_USE_ICU */
+
 void triggerInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 	TriggerShape *ts = &engine->triggerCentral.triggerShape;
+
+#if HAL_USE_ICU == TRUE
+	scheduleMsg(logger, "trigger ICU hw: %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter);
+#endif /* HAL_USE_ICU */
 
 	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",
 			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
@@ -570,7 +579,7 @@ void triggerInfo(void) {
 
 #if EFI_PROD_CODE
 	if (HAVE_CAM_INPUT()) {
-		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInput),
+		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
 				getVvt_mode_e(engineConfiguration->vvtMode));
 		scheduleMsg(logger, "VVT event counters: %d/%d", vvtEventRiseCounter, vvtEventFallCounter);
 
@@ -647,7 +656,13 @@ static void resetRunningTriggerCounters() {
 #define COMPARE_CONFIG_PARAMS(param) (engineConfiguration->param != previousConfiguration->param)
 
 void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	bool changed = COMPARE_CONFIG_PARAMS(trigger.type) ||
+	bool changed = false;
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		changed |= COMPARE_CONFIG_PARAMS(camInputs[i]);
+	}
+
+	changed |=
+		COMPARE_CONFIG_PARAMS(trigger.type) ||
 		COMPARE_CONFIG_PARAMS(operationMode) ||
 		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
 		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
@@ -656,7 +671,6 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[0]) ||
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[1]) ||
 		COMPARE_CONFIG_PARAMS(bc.triggerInputPins[2]) ||
-		COMPARE_CONFIG_PARAMS(camInput) ||
 		COMPARE_CONFIG_PARAMS(vvtMode) ||
 		COMPARE_CONFIG_PARAMS(bc.vvtCamSensorUseRise) ||
 		COMPARE_CONFIG_PARAMS(vvtOffset) ||
@@ -702,7 +716,7 @@ void initTriggerCentral(Logging *sharedLogger) {
 #endif /* EFI_ENGINE_SNIFFER */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleAction("triggerinfo", triggerInfo);
+	addConsoleAction(CMD_TRIGGERINFO, triggerInfo);
 	addConsoleAction("trigger_shape_info", triggerShapeInfo);
 	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif

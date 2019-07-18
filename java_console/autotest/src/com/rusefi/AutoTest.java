@@ -1,6 +1,7 @@
 package com.rusefi;
 
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -12,6 +13,7 @@ import com.rusefi.waves.EngineReport;
 import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.io.CommandQueue.disableCommand;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -37,6 +39,7 @@ public class AutoTest {
         });
 
         sendCommand("fl 1"); // just in case it was disabled
+        sendCommand(disableCommand(Fields.CMD_TRIGGER_HW_INPUT));
         testCustomEngine();
         testMazdaMiata2003();
         test2003DodgeNeon();
@@ -135,6 +138,7 @@ public class AutoTest {
         setEngineType(28);
         String msg = "mazda 626 default cranking";
         IoUtil.changeRpm(200);
+        sendCommand(Fields.CMD_TRIGGERINFO);
         EngineChart chart;
         chart = nextChart();
 

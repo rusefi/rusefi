@@ -23,7 +23,12 @@
 ! type name;comment
 
 
-#define TS_SIGNATURE "rusEFI v1.06"
+#define TS_SIGNATURE "rusEFI v1.07"
+!
+! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
+! so not forget to change fileVersion in rusefi.ini
+! todo: is this not needed in light of TS_SIGNATURE?
+#define TS_FILE_VERSION 20190701
 
 
 ! all the sub-structures are going to be nested within the primary structure, that's
@@ -54,6 +59,8 @@ struct_no_prefix engine_configuration_s
 
 #define FSIO_ANALOG_INPUT_COUNT 4
 
+#define CAM_INPUTS_COUNT 4
+
 #define SERVO_COUNT 8
 
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
@@ -62,11 +69,6 @@ struct_no_prefix engine_configuration_s
 
 ! this is here so that rusEfi console can access it, too
 #define TS_OUTPUT_SIZE 356
-
-!
-! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
-! so not forget to change fileVersion in rusefi.ini
-#define TS_FILE_VERSION 20171101
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
@@ -416,9 +418,9 @@ log_format_e logFormat;
 	int HD44780width;;"index",      1,      0,       0, 300,      0
 	int HD44780height;;"index",      1,      0,       0, 300,      0
 
-	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See aslo pedalPositionAdcChannel
-adc_channel_e vbattAdcChannel;
-adc_channel_e fuelLevelSensor;
+	adc_channel_e tps1_1AdcChannel;First TPS, single channel so far. See also pedalPositionAdcChannel
+adc_channel_e vbattAdcChannel;+This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB. 
+adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined. 
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
 
 	int overrideCrankingIgnition;
@@ -448,15 +450,14 @@ custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3"
 	spi_device_e hip9011SpiDevice;
 	adc_channel_e high_fuel_pressure_sensor_1;
 	adc_channel_e high_fuel_pressure_sensor_2;
-	uint8_t[1] unusedSpiPadding1;
+	adc_channel_e mafAdcChannel;See hasMafSensor
 	
 	
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
 
 	float adcVcc;;         "volts",    1,    0.0,       0,    4.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
-	adc_channel_e mafAdcChannel;See hasMafSensor
-	uint8_t[3] unusedAlignMaf;
+	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
@@ -503,7 +504,7 @@ float mapFrequency0Kpa;;"Hz",      1,      0,       0, 100000,      2
 float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 
 ! todo: rename to triggerSimulatorRpm
-	int triggerSimulatorFrequency;See also triggerSimulatorPins\nSee also directSelfStimulation\nrpm X;"Rpm",     1,      0,       0,30000,      0
+	int triggerSimulatorFrequency;+See also triggerSimulatorPins\nSee also directSelfStimulation\nrpm X;"Rpm",     1,      0,       0,30000,      0
 
 	output_pin_e[INJECTION_PIN_COUNT iterate] injectionPins;
 	output_pin_e[IGNITION_PIN_COUNT iterate] ignitionPins;
@@ -537,8 +538,8 @@ switch_input_pin_e clutchDownPin;some cars have a switch to indicate that clutch
 	pin_output_mode_e electronicThrottlePin1Mode;
 	brain_pin_e wboHeaterPin;
 	brain_pin_e cj125CsPin;
-	uint8_t[1] unusedEtbM;
-	uint8_t[1] unusedSpiPadding9;
+	spi_device_e max31855spiDevice;
+	brain_pin_e boardTestModeJumperPin;
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	brain_pin_e mc33972_cs;
@@ -565,8 +566,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e canTxPin;
 	brain_pin_e canRxPin;
 
-	brain_pin_e boardTestModeJumperPin;
-	uint8_t[1] unusedMa2;
+	uint8_t[2] unusedMa2;
 
 	int idleThreadPeriodMs;
 	int consoleLoopPeriodMs;
@@ -593,14 +593,14 @@ bit is_enabled_spi_2
 	bit isHip9011Enabled
 	bit isVerboseAlternator
 	bit useSerialPort
-	bit useStepperIdle
+	bit useStepperIdle;+This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
 	bit useLcdScreen;
 	bit unusedAnotherOne;
 	bit unusedOldWarmupAfr;
-	bit onOffAlternatorLogic;
+	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	bit isCJ125Enabled
 	bit vvtCamSensorUseRise;+Use rise or fall signal front
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
@@ -614,7 +614,7 @@ bit is_enabled_spi_2
 	bit is_enabled_spi_4
 	bit pauseEtbControl
 	bit alignEngineSnifferAtTDC
-	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve. The ETB will act as though it was the IAC and regulate the airflow at idle.
+	bit useETBforIdleControl;+This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	bit idleIncrementalPidCic
 	bit unused_board_984_31
 
@@ -633,13 +633,11 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
 
-	spi_device_e max31855spiDevice;
-	uint8_t[3] unusedSpiPadding2;
 
 
 custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
-	uart_device_e consoleUartDevice;
-		uint8_t[3] unuseduartPadding1;
+	uint8_t[4] unusedSpiPadding2;
+		uint8_t[4] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0
@@ -679,7 +677,7 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e joystickBPin;
 	brain_pin_e joystickCPin;
 	brain_pin_e joystickDPin;
-	uint8_t[1] unusedjoy;
+	uart_device_e consoleUartDevice;
 
 
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "INVALID"
@@ -719,7 +717,7 @@ bit vvtDisplayInverted
 	bit canReadEnabled
 	bit canWriteEnabled
 	bit useLinearIatSensor
-	bit useFSIO16ForTimingAdjustment;See fsioTimingAdjustment
+	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
 	bit tachPulseDurationAsDutyCycle
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
@@ -742,7 +740,9 @@ bit unused_bit_1472_29;
 bit unused_bit_1472_30;
 
 	adc_channel_e hipOutputChannel;
-uint8_t[3] unusedh;
+	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
+	adc_channel_e vRefAdcChannel;
+uint8_t[1] unusedh;
 
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	idle_mode_e idleMode;See also idleRpmPid;
@@ -776,8 +776,6 @@ bit unused_1484_bit_21
 	int16_t idlePidRpmUpperLimit;+Relative to the target idle RPM;"RPM",      1,      0,       0, 9000,      0
     int16_t primeInjFalloffTemperature;+This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.;"*C",    1,      0,       0,  1000.0,        0
 
-	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
-uint8_t[3] unusuedsw;
 
 	int ignMathCalculateAtIndex;+At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index",      1,      0,       0, 7000,      0
 
@@ -787,8 +785,6 @@ uint8_t[3] unusuedsw;
 	int16_t acIdleRpmBump;
 	int16_t warningPeriod;set warningPeriod X;"seconds",      1,      0,       0, 60,      0
 
-	adc_channel_e vRefAdcChannel;
-uint8_t[3] unusuedvref;
 
 	float knockDetectionWindowStart;;"angle",      1,      0,       -1000, 1000,      2
 	float knockDetectionWindowEnd;;"angle",      1,      0,       -1000, 1000,      2
@@ -798,7 +794,6 @@ float idleStepperReactionTime;;"ms",      1,      0,       1, 300,      0
 	float knockVThreshold;;"V",      1,      0,       1, 5,      2
 
 	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
-	int[3] alFIn;
 	
 	int idleStepperTotalSteps;;"count",      1,      0,       5, 3000,      0
 
@@ -821,7 +816,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float tachPulseDuractionMs;;"ms",        1,     0,    0.0,    100.0,  2
 	int tachPulseTriggerIndex;+Trigger cycle index at which we start tach pulse (performance consideration);"index",     1,     0,    0.0,    360.0,  0
 	
-	float wwaeTau;;"%",        1,     0,    0.0,    3.0,  2
+	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
 	pid_s etb;
 	uint8_t[20] unusedFormerWarmupAfrPid;
@@ -831,7 +826,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa",        1,     0,    -100.0,    800.0,  2
 	int step1RpmWindow;RPMs prior to step1rpm point where ignition advance is retarded;"rpm",    1,      0,       0, 3000.0,        2
 	pid_s idleRpmPid;See cltIdleRpmBins
-	float wwaeBeta;Wall wetting/evaporation factor/Tau factor/fuel film;"%",        1,     0,    0.0,    1.0,  2
+	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
 	brain_pin_e communicationLedPin;blue LED on discovery by default	
 	brain_pin_e runningLedPin;green LED on discovery by default
@@ -856,7 +851,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C",        1,     0,   -100.0,    250.0,  2
 	float[CLT_CURVE_SIZE] cltIdleRpm;See idleRpmPid;"",      1,     0,      0.0,    8000.0,   0
 	
-	float targetVBatt;set targetvbatt VOLTS;"Volts",      1,      0,       0,30,      1
+	float targetVBatt;+This is the target battery voltage the alternator PID control will attempt to maintain;"Volts",      1,      0,       0,30,      1
 	float alternatorOffAboveTps;+Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.;"%",  1,      0,       0, 200,      2
 	float startOfCrankingPrimingPulse;+Prime pulse for cold engine, duration in ms\nLinear interpolation between -40F/-40C and fallout temperature\n\nSee also isFasterEngineSpinUpEnabled\nset cranking_priming_pulse X;"ms",        1,     0,    0, 200,     1
 	int16_t afterCrankingIACtaperDuration;+This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.;"cycles",        1,     0,  0,    5000,  0
@@ -869,8 +864,8 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	brain_pin_e LIS302DLCsPin;
 
 
-	int tpsAccelLength;+How many engine cycles to consider?;"cycles",        1,     0,    1, 200,     0
-	float tpsAccelEnrichmentThreshold;+Maximum delta in TPS percentage over the 'length'. Actual TPS change has to be above this value in order to TPS/TPS acceleration to kick in.;"roc",        1,     0,    0, 200,     3
+	int tpsAccelLength;+This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. ;"cycles",        1,     0,    1, 200,     0
+	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc",        1,     0,    0, 200,     3
 	float vvtOffset;+Angle between cam sensor and VVT zero position\nset vvt_offset X;"value",      1,      0,       -720, 1000,      1
 	
 	int engineLoadAccelLength;;"cycles",        1,     0,    1, 200,     0
@@ -903,7 +898,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 
 	output_pin_e[AUX_PID_COUNT iterate] auxPidPins;
 
-	brain_input_pin_e camInput;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
+	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
 	brain_pin_e dizzySparkOutputPin;+This implementation makes a pulse every time one of the coils is charged, using coil dwell for pulse width. See also tachOutputPin
 	pin_output_mode_e dizzySparkOutputPinMode;
@@ -917,8 +912,6 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	fsio_pwm_freq_t[AUX_PID_COUNT iterate] auxPidFrequency;
 	int alternatorPwmFrequency;;"Hz",        1,     0,  0,    3000.0,  0
 	mass_storage_e storageMode;
-	spi_device_e cj125SpiDevice;
-	uint8_t[3] unusedSpiPadding3;
 
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V",        1,     0,   -10.0,    10.0,  3
 	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio",      1,     0,      -40.0,    40.0,   2
@@ -988,7 +981,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 
-	brain_input_pin_e flexFuelSensor;
+	brain_input_pin_e flexFuelSensor;+This is the processor pin your Flex-fuel sensor is connected to, this is a non standard item so the pin will always be user defined. 
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
@@ -997,8 +990,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	pin_output_mode_e tle8888_csPinMode;
 	brain_pin_e mc33816_cs;
 
-float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
-float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
+float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM",      1,     0,   0.0,    18000,   2
+float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg",      1,     0,     -20, 90,    2
 
 	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
 
@@ -1055,6 +1048,10 @@ tChargeMode_e tChargeMode;
 
 	float etbIdleThrottleRange; ETB idle authority; "%", 1, 0, 0, 15, 0
 
+uint8_t[4] unusuedvref;
+uint8_t[4] unusuedsw;
+	int[3] alFIn;
+	uint8_t[4] unusedSpiPadding3;
 	int[590] mainUnusedEnd;
 	
 
@@ -1154,6 +1151,10 @@ end_struct
 #define LDS_IAT_INDEX 1
 #define LDS_SPEED_DENSITY_INDEX 2
 #define LDS_ENGINE_STATE_INDEX 3
+#define LDS_FUEL_TRIM_INDEX 4
+#define LDS_TPS_TPS_ENEICHMENT_INDEX 5
+#define LDS_TRIGGER_INDEX 6
+
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_VVT "VVT position"
@@ -1219,6 +1220,12 @@ end_struct
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
+
+#define CMD_TRIGGERINFO "triggerinfo"
+#define CMD_WRITECONFIG "writeconfig"
+#define CMD_ENABLE "enable"
+#define CMD_DISABLE "disable"
+#define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"

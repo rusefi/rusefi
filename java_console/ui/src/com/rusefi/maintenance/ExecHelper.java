@@ -73,4 +73,9 @@ public class ExecHelper {
         thread.setDaemon(true);
         thread.start();
     }
+
+    @NotNull
+    public static String getBatchCommand(String batch) {
+        return "cmd /c start " + batch;
+    }
 }

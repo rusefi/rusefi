@@ -33,7 +33,7 @@
 #include "idle_thread.h"
 #include "pin_repository.h"
 #include "engine.h"
-#include "periodic_thread_controller.h"
+#include "periodic_task.h"
 #include "stepper.h"
 #include "allsensors.h"
 
@@ -122,7 +122,7 @@ static void applyIACposition(percent_t position) {
 		 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 		 * todo: unify?
 		 */
-		idleSolenoid.setSimplePwmDutyCycle(position / 100.0);
+		idleSolenoid.setSimplePwmDutyCycle(PERCENT_TO_DUTY(position));
 	}
 }
 
@@ -249,14 +249,12 @@ static percent_t automaticIdleController() {
 	return newValue;
 }
 
-class IdleController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	IdleController() : PeriodicController("IdleValve") { }
-private:
-	void PeriodicTask(efitime_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid));
+class IdleController : public PeriodicTimerController {
+	int getPeriodMs() override {
+		return GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid);
+	}
 
+	void PeriodicTask() override	{
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,

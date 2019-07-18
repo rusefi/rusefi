@@ -105,5 +105,5 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;
 
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInput = GPIOA_5;
+	engineConfiguration->camInputs[0] = GPIOA_5;
 }

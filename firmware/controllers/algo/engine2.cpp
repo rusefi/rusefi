@@ -280,10 +280,11 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #define VCS_VERSION "123"
 #endif
 
-void printCurrentState(Logging *logging, int seconds, const char *name) {
-	logging->appendPrintf("%s%s%d@%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
+void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
+	logging->appendPrintf("%s%s%d@%s%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
 			getRusEfiVersion(), VCS_VERSION,
-			name,
+			firmwareBuildId,
+			engineTypeName,
 			seconds,
 			DELIMETER);
 }

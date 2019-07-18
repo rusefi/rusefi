@@ -17,7 +17,7 @@ rem cd ../firmware
 
 echo Looking at size
 arm-none-eabi-size  --format=berkeley "build\rusefi.elf"
-echo Compiler version
+echo Compiler gcc version
 arm-none-eabi-gcc -v
 
 echo Have the file, let's program the board right away

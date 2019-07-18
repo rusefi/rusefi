@@ -17,7 +17,9 @@
 #include "fsio_impl.h"
 #include "engine_math.h"
 #include "pin_repository.h"
-#include "periodic_thread_controller.h"
+#include "periodic_task.h"
+
+#define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -35,11 +37,6 @@ extern fsio8_Map3D_f32t fsioTable1;
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-static SimplePwm auxPidPwm[AUX_PID_COUNT];
-static OutputPin auxPidPin[AUX_PID_COUNT];
-
-static pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[0];
-static Pid auxPid(auxPidS);
 static Logging *logger;
 
 static bool isEnabled(int index) {
@@ -56,20 +53,27 @@ static bool isEnabled(int index) {
 	}
 }
 
-static void pidReset(void) {
-	auxPid.reset();
-}
-
-class AuxPidController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
+class AuxPidController : public PeriodicTimerController {
 public:
-	AuxPidController()	: PeriodicController("AuxPidController") { }
-private:
-	void PeriodicTask(efitime_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->auxPid[0]));
 
+	SimplePwm auxPidPwm;
+	OutputPin auxOutputPin;
+
+	void init(int index) {
+		this->index = index;
+		pid_s *auxPidS = &persistentState.persistentConfiguration.engineConfiguration.auxPid[index];
+		auxPid.initPidClass(auxPidS);
+		table = getFSIOTable(index);
+	}
+
+	int getPeriodMs() override {
+		return engineConfiguration->auxPidPins[index] == GPIO_UNASSIGNED ? NO_PIN_PERIOD : GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]);
+	}
+
+	void PeriodicTask() override {
 			if (engine->auxParametersVersion.isOld(engine->getGlobalConfigurationVersion())) {
-				pidReset();
+				auxPid.reset();
+
 			}
 
 			float rpm = GET_RPM_VALUE;
@@ -79,13 +83,13 @@ private:
 
 			if (!enabledAtCurrentRpm) {
 				// we need to avoid accumulating iTerm while engine is not running
-				pidReset();
+				auxPid.reset();
 				return;
 			}
 
 
-			float value = engine->triggerCentral.vvtPosition; // getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE); // that's temporary
-			float targetValue = fsioTable1.getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
+			float value = engine->triggerCentral.vvtPosition;
+			float targetValue = table->getValue(rpm, getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 			percent_t pwm = auxPid.getOutput(targetValue, value);
 			if (engineConfiguration->isVerboseAuxPid1) {
@@ -101,13 +105,15 @@ private:
 #endif /* EFI_TUNER_STUDIO */
 			}
 
-			auxPidPwm[0].setSimplePwmDutyCycle(pwm / 100);
-
-
+			auxPidPwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(pwm));
 		}
+private:
+	Pid auxPid;
+	int index = 0;
+	ValueProvider3D *table = NULL;
 };
 
-static AuxPidController instance;
+static AuxPidController instances[AUX_PID_COUNT];
 
 static void turnAuxPidOn(int index) {
 	if (!isEnabled(index)) {
@@ -118,10 +124,10 @@ static void turnAuxPidOn(int index) {
 		return;
 	}
 
-	startSimplePwmExt(&auxPidPwm[index], "Aux PID",
+	startSimplePwmExt(&instances[index].auxPidPwm, "Aux PID",
 			&engine->executor,
 			engineConfiguration->auxPidPins[index],
-			&auxPidPin[0],
+			&instances[index].auxOutputPin,
 			engineConfiguration->auxPidFrequency[index], 0.1, (pwm_gen_callback*)applyPinState);
 }
 
@@ -140,8 +146,14 @@ void stopAuxPins(void) {
 void initAuxPid(Logging *sharedLogger) {
 	logger = sharedLogger;
 
+	for (int i = 0;i < AUX_PID_COUNT;i++) {
+		instances[i].init(i);
+	}
+
 	startAuxPins();
-	instance.Start();
+	for (int i = 0;i < AUX_PID_COUNT;i++) {
+		instances[i].Start();
+	}
 }
 
 #endif

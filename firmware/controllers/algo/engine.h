@@ -178,8 +178,8 @@ public:
 	 */
 	angle_t engineCycle;
 
-	AccelEnrichmemnt engineLoadAccelEnrichment;
-	AccelEnrichmemnt tpsAccelEnrichment;
+	LoadAccelEnrichment engineLoadAccelEnrichment;
+	TpsAccelEnrichment tpsAccelEnrichment;
 
 	TriggerCentral triggerCentral;
 
@@ -189,10 +189,6 @@ public:
 	 * @see getInjectionDuration()
 	 */
 	floatms_t injectionDuration = 0;
-	/**
-	 * fuel injection time correction to account for wall wetting effect, for current cycle
-	 */
-	floatms_t wallFuelCorrection = 0;
 
 	/**
 	 * This one with wall wetting accounted for, used for logging.
@@ -282,12 +278,6 @@ public:
 	 * pre-calculating this value is a performance optimization
 	 */
 	uint32_t engineCycleEventCount = 0;
-
-	/**
-	 * fast kg/hour MAF decoding lookup table with ~0.2 volt step
-	 * This table is build based on MAF decoding curve
-	 */
-	float mafDecodingLookup[MAF_DECODING_CACHE_SIZE];
 
 	void preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

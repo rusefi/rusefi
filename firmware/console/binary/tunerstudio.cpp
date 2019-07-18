@@ -117,7 +117,7 @@ static efitimems_t previousWriteReportMs = 0;
 static ts_channel_s tsChannel;
 
 // this thread wants a bit extra stack
-static THD_WORKING_AREA(tsThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(tunerstudioThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 
 extern TunerStudioOutputChannels tsOutputChannels;
 
@@ -248,6 +248,21 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
+static const void * getStructAddr(int structId) {
+	switch (structId) {
+	case LDS_CLT_INDEX:
+		return static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
+	case LDS_IAT_INDEX:
+		return static_cast<thermistor_state_s*>(&engine->engineState.iatCurve);
+	case LDS_ENGINE_STATE_INDEX:
+		return static_cast<engine_state2_s*>(&engine->engineState);
+	case LDS_FUEL_TRIM_INDEX:
+		return static_cast<wall_fuel_state*>(&engine->wallFuel);
+	default:
+		return NULL;
+	}
+}
+
 /**
  * Read internal structure for Live Doc
  * This is somewhat similar to read page and somewhat similar to read outputs
@@ -256,14 +271,7 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 static void handleGetStructContent(ts_channel_s *tsChannel, int structId, int size) {
 	tsState.readPageCommandsCounter++;
 
-	const void *addr = NULL;
-	if (structId == LDS_CLT_INDEX) {
-		addr = static_cast<thermistor_state_s*>(&engine->engineState.cltCurve);
-	} else if (structId == LDS_IAT_INDEX) {
-		addr = static_cast<thermistor_state_s*>(&engine->engineState.iatCurve);
-	} else if (structId == LDS_ENGINE_STATE_INDEX) {
-		addr = static_cast<engine_state2_s*>(&engine->engineState);
-	}
+	const void *addr = getStructAddr(structId);
 	if (addr == NULL) {
 		// todo: add warning code - unexpected structId
 		return;
@@ -848,7 +856,7 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 
-	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
+	chThdCreateStatic(tunerstudioThreadStack, sizeof(tunerstudioThreadStack), NORMALPRIO, (tfunc_t)tsThreadEntryPoint, NULL);
 }
 
 #endif

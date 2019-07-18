@@ -139,7 +139,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->triggerInputPins[0] = GPIOC_8;
 	boardConfiguration->triggerInputPins[1] = GPIOC_9;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInput = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	/* spi driven - TLE6240 - OUT8, also direct driven by GPIOG_2 */
 	boardConfiguration->tachOutputPin = TLE6240_PIN(0);

@@ -100,6 +100,9 @@ public class UiUtils {
         component.repaint();
     }
 
+    /**
+     * Utility method for multi-line tooltips
+     */
     public static void setToolTip(JComponent component, String... lines) {
         StringBuilder sb = new StringBuilder();
         for (String line : lines) {

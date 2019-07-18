@@ -15,7 +15,7 @@
 #include "voltage.h"
 #include "pid.h"
 #include "local_version_holder.h"
-#include "periodic_thread_controller.h"
+#include "periodic_task.h"
 
 #include "pwm_generator.h"
 #include "pin_repository.h"
@@ -47,14 +47,12 @@ static void pidReset(void) {
 	altPid.reset();
 }
 
-class AlternatorController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	AlternatorController() : PeriodicController("AlternatorController") { }
-private:
-	void PeriodicTask(efitime_t nowNt) override	{
-		UNUSED(nowNt);
-		setPeriod(GET_PERIOD_LIMITED(&engineConfiguration->alternatorControl));
+class AlternatorController : public PeriodicTimerController {
+	int getPeriodMs() override {
+		return GET_PERIOD_LIMITED(&engineConfiguration->alternatorControl);
+	}
 
+	void PeriodicTask() override {
 #if ! EFI_UNIT_TEST
 		if (shouldResetPid) {
 			pidReset();
@@ -105,7 +103,7 @@ private:
 		}
 
 
-		alternatorControl.setSimplePwmDutyCycle(currentAltDuty / 100);
+		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
 	}
 };
 

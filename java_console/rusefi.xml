@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEfi tool ConfigDefinition.jar based on Mon Jun 17 19:57:05 EDT 2019 -->
+<!-- was generated automatically by rusEfi tool ConfigDefinition.jar based on Fri Jul 12 14:02:51 EDT 2019 -->
 
     <rom>
         <romid>
@@ -166,13 +166,13 @@
 
         <table type="3D" name="Baro Correction"
         category="Fuel"
-        storageaddress="63c" sizex="4"
+        storageaddress="628" sizex="4"
                sizey="4" storagetype="float" endian="big">
             <scaling units="Pressure" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
-            <table type="X Axis" storageaddress="61c" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="608" storagetype="float" endian="big">
                 <scaling units="kPa" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="62c" storagetype="float" endian="big">
+            <table type="Y Axis" storageaddress="618" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
@@ -188,22 +188,22 @@
             </table>
         </table>
 
-        <table type="2D" name="FSIO Curve #1" storageaddress="af4"
+        <table type="2D" name="FSIO Curve #1" storageaddress="adc"
         category="FSIO"
                sizex="16" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="ab4" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="a9c" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="2D" name="FSIO Curve #2" storageaddress="b74"
+        <table type="2D" name="FSIO Curve #2" storageaddress="b5c"
         category="FSIO"
                sizex="16" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="b34" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="b1c" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
@@ -218,11 +218,11 @@
         </table>
 
 
-        <table type="2D" name="Engine Noise" storageaddress="730"
+        <table type="2D" name="Engine Noise" storageaddress="71c"
                sizex="8" storagetype="float" endian="big">
             <scaling units="Volts" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="750" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="73c" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>

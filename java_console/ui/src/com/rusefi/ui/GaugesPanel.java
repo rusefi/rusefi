@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.FileLog;
+import com.rusefi.PaneSettings;
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -74,7 +75,7 @@ public class GaugesPanel {
     private final JPanel messagesPanel = new JPanel(new BorderLayout());
     private final JSplitPane middleSplitPanel;
 
-    public GaugesPanel(final Node config) {
+    public GaugesPanel(final Node config, PaneSettings paneSettings) {
         gauges = new GaugesGrid(3, 5);
         this.config = config;
         showRpmPanel = config.getBoolProperty(SHOW_RPM, true);

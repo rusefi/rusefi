@@ -105,11 +105,6 @@ static msg_t stThread(StepperMotor *motor) {
 #endif
 	}
 
-	// let's part the motor in a known position to begin with
-//	for (int i = 0; i < ST_COUNT / 2; i++) {
-//		motor->pulse();
-//	}
-
 	return 0;
 }
 
@@ -148,10 +143,10 @@ void StepperMotor::setDirection(bool isIncrementing) {
 
 void StepperMotor::pulse() {
 #if EFI_PROD_CODE
-	palWritePad(enablePort, enablePin, false); // ebable stepper
-
+	palWritePad(enablePort, enablePin, false); // enable stepper
 	palWritePad(stepPort, stepPin, true);
 	chThdSleepMilliseconds(reactionTime);
+
 	palWritePad(stepPort, stepPin, false);
 	chThdSleepMilliseconds(reactionTime);
 
