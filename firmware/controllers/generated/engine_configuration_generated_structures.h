@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jul 12 14:02:49 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jul 18 18:26:35 EDT 2019
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
 #define CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -738,7 +738,7 @@ struct board_configuration_s {
 	bool unusedAnotherOne : 1;
 	/**
 	offset 144 bit 14 */
-	bool useWarmupPidAfr : 1;
+	bool unusedOldWarmupAfr : 1;
 	/**
 	 *  +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	offset 144 bit 15 */
@@ -1787,7 +1787,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1756
 	 */
-	pid_s warmupAfrPid;
+	uint8_t unusedFormerWarmupAfrPid[20];
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -1990,18 +1990,9 @@ struct engine_configuration_s {
 	 */
 	debug_mode_e debugMode;
 	/**
-	 * CLT-based target AFR for PID-based control
 	 * offset 2096
 	 */
-	float warmupTargetAfrBins[WARMUP_TARGET_AFR_SIZE];
-	/**
-	 * offset 2112
-	 */
-	float warmupTargetAfr[WARMUP_TARGET_AFR_SIZE];
-	/**
-	 * offset 2128
-	 */
-	float warmupAfrThreshold;
+	uint32_t unused_former_warmup_target_afr[9];
 	/**
 	 * kPa value at which we need to cut fuel and spark, 0 if not enabled
 	 * offset 2132
@@ -2815,4 +2806,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Jul 12 14:02:49 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jul 18 18:26:35 EDT 2019
