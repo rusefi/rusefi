@@ -85,12 +85,6 @@ public:
 	 */
 	floatms_t injectorLag = 0;
 
-	/**
-	 * See useWarmupPidAfr
-	 */
-	Pid warmupAfrPid;
-	float warmupTargetAfr = 0;
-
 	float baroCorrection = 0;
 
 	efitick_t timeSinceLastTChargeK;
