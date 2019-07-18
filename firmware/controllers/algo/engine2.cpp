@@ -132,11 +132,6 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 	engine->sensors.oilPressure = getOilPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// todo: should this feature get removed?
-	// it does the same thing as the warmup CLT multiplier
-	warmupTargetAfr = interpolate2d("warm", engine->sensors.clt, engineConfiguration->warmupTargetAfrBins,
-			engineConfiguration->warmupTargetAfr);
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -163,22 +158,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	iatFuelCorrection = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SUFFIX);
 	// todo: move this into slow callback, no reason for CLT corr to be here
-	if (CONFIGB(useWarmupPidAfr) && engine->sensors.clt < engineConfiguration->warmupAfrThreshold) {
-		if (rpm < 200) {
-			cltFuelCorrection = 1;
-			warmupAfrPid.reset();
-		} else {
-			cltFuelCorrection = warmupAfrPid.getOutput(warmupTargetAfr, engine->sensors.currentAfr, MS2SEC(FAST_CALLBACK_PERIOD_MS));
-		}
-		if (engineConfiguration->debugMode == DBG_WARMUP_ENRICH) {
-#if EFI_TUNER_STUDIO
-			tsOutputChannels.debugFloatField1 = warmupTargetAfr;
-			warmupAfrPid.postState(&tsOutputChannels);
-#endif /* EFI_TUNER_STUDIO */
-		}
-	} else {
-		cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
+	cltFuelCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// update fuel consumption states
 	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);

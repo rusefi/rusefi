@@ -607,8 +607,8 @@ case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
   return "DBG_VVT";
-case DBG_WARMUP_ENRICH:
-  return "DBG_WARMUP_ENRICH";
+case DBG_2:
+  return "DBG_2";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
   }
