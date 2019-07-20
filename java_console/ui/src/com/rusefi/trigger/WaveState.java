@@ -43,10 +43,4 @@ public class WaveState {
             list.add(0, new EngineReport.UpDown(TriggerImage.angleToTime(prevUp), 0, TriggerImage.angleToTime(unusedDown + 720 * (3 + TriggerImage.EXTRA_COUNT)), 0));
         }
     }
-
-    public int getMaxTime() {
-        if (list.isEmpty())
-            return 0;
-        return list.get(list.size() - 1).downTime;
-    }
 }
