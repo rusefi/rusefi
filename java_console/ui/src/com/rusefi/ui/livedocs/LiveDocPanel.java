@@ -16,6 +16,7 @@ import com.rusefi.ldmp.generated.TpsMeta;
 import com.rusefi.ldmp.generated.TriggerDecoderMeta;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.util.UiUtils;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
@@ -27,8 +28,11 @@ import java.util.List;
 import static com.rusefi.config.Field.niceToString;
 
 public class LiveDocPanel {
+
+    private static final String CONSTRAINTS = "wrap, grow";
+
     @NotNull
-    public static JPanel getPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
+    static JPanel getPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
 
         ActionPanel ap = createComponents(title, content, values, instancePrefix);
         JPanel panel = ap.getPanel();
@@ -165,22 +169,22 @@ public class LiveDocPanel {
 
     @NotNull
     public static JPanel createLiveDocumentationPanel() {
-        JPanel liveDocs = new JPanel(new VerticalFlowLayout());
+        JPanel liveDocs = new JPanel(new MigLayout("gap 0, insets 0"));
 
         liveDocs.add(getPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_INDEX,
-                ThermistorState.VALUES, ThermistorsMeta.CONTENT));
+                ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
 
         liveDocs.add(getPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_INDEX,
-                ThermistorState.VALUES, ThermistorsMeta.CONTENT));
+                ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
 
         liveDocs.add(getPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, TpsMeta.TPS_SECTION));
+                EngineState.VALUES, TpsMeta.TPS_SECTION), CONSTRAINTS);
 
         liveDocs.add(getPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, SpeedDensityMeta.CONTENT));
+                EngineState.VALUES, SpeedDensityMeta.CONTENT), CONSTRAINTS);
 
         liveDocs.add(getPanel("Trigger", "", Fields.LDS_TRIGGER_INDEX,
-                TriggerState.VALUES, TriggerDecoderMeta.CONTENT));
+                TriggerState.VALUES, TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
