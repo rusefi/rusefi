@@ -32,7 +32,7 @@ public class LiveDocPanel {
     private static final String CONSTRAINTS = "wrap, grow";
 
     @NotNull
-    static JPanel getPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
+    static JPanel createPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
 
         ActionPanel ap = createComponents(title, content, values, instancePrefix);
         JPanel panel = ap.getPanel();
@@ -171,19 +171,19 @@ public class LiveDocPanel {
     public static JPanel createLiveDocumentationPanel() {
         JPanel liveDocs = new JPanel(new MigLayout("gap 0, insets 0"));
 
-        liveDocs.add(getPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_INDEX,
+        liveDocs.add(createPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_INDEX,
                 ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(getPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_INDEX,
+        liveDocs.add(createPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_INDEX,
                 ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(getPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
+        liveDocs.add(createPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, TpsMeta.TPS_SECTION), CONSTRAINTS);
 
-        liveDocs.add(getPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
+        liveDocs.add(createPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, SpeedDensityMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(getPanel("Trigger", "", Fields.LDS_TRIGGER_INDEX,
+        liveDocs.add(createPanel("Trigger", "", Fields.LDS_TRIGGER_INDEX,
                 TriggerState.VALUES, TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;

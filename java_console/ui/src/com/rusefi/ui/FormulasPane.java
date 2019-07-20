@@ -12,6 +12,7 @@ import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
+import org.putgemin.VerticalFlowLayout;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
@@ -35,15 +36,23 @@ public class FormulasPane {
      * this is the panel we expose to the outside world
      */
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JPanel centerProxy = new JPanel(new BorderLayout());
+    private final JPanel formulaProxy = new JPanel(new BorderLayout());
     private boolean isPaused;
 
     private JPanel liveDocs = LiveDocPanel.createLiveDocumentationPanel();
 
     public FormulasPane() {
-        content.add(centerProxy, BorderLayout.CENTER);
 
-        centerProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
+        JPanel vertical = new JPanel(new VerticalFlowLayout());
+        vertical.add(formulaProxy);
+        vertical.add(liveDocs);
+
+        JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        content.add(scroll, BorderLayout.CENTER);
+
+
+
+        formulaProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
 
         JButton saveImage = UiUtils.createSaveImageButton();
         saveImage.addActionListener(new ActionListener() {
@@ -51,7 +60,7 @@ public class FormulasPane {
             public void actionPerformed(ActionEvent e) {
                 String fileName = FileLog.getDate() + "_formulas.png";
 
-                UiUtils.saveImageWithPrompt(fileName, centerProxy, centerProxy);
+                UiUtils.saveImageWithPrompt(fileName, formulaProxy, formulaProxy);
             }
         });
 
@@ -148,14 +157,12 @@ public class FormulasPane {
         g2.fillRect(0, 0, formulasTeX.getIconWidth(), formulasTeX.getIconHeight());
         JLabel formulaLabel = new JLabel(formulasTeX);
 
-        centerProxy.removeAll();
+        formulaProxy.removeAll();
 
         JLabel warning = new JLabel("These values are for reference only and do not always reflect ECU logic completely. During cranking different logic is applied.");
         warning.setForeground(Color.red);
-        centerProxy.add(warning, BorderLayout.NORTH);
-        centerProxy.add(formulaLabel, BorderLayout.CENTER);
-
-        centerProxy.add(liveDocs, BorderLayout.SOUTH);
+        formulaProxy.add(warning, BorderLayout.NORTH);
+        formulaProxy.add(formulaLabel, BorderLayout.CENTER);
     }
 
     @NotNull
