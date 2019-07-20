@@ -2,6 +2,7 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.opensr5.io.DataListener;
+import com.rusefi.io.IoStream;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -12,12 +13,12 @@ import org.jetbrains.annotations.Nullable;
  * Date: 12/25/12
  * (c) Andrey Belomutskiy
  */
-public class SerialPortReader {
+public class JSSCPortReader {
     private static final int[] SLEEP_DURATIONS = {2, 20, 50, 100};
     private final SerialPort serialPort;
     private DataListener listener;
 
-    public SerialPortReader(final SerialPort serialPort, final DataListener listener) {
+    public JSSCPortReader(final SerialPort serialPort, final DataListener listener, IoStream serialIoStreamJSSC) {
         this.serialPort = serialPort;
         this.listener = listener;
         new Thread(new Runnable() {
@@ -30,7 +31,9 @@ public class SerialPortReader {
                             listener.onDataArrived(data);
                     }
                 } catch (SerialPortException e) {
-                    e.printStackTrace();
+                    if (!serialIoStreamJSSC.isClosed()) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }, "Reader_" + serialPort).start();
@@ -74,7 +77,7 @@ public class SerialPortReader {
 //                e.printStackTrace(System.err);
 //            }
         } else if (spe.getEventType() != SerialPortEvent.TXEMPTY) {
-            FileLog.MAIN.logLine("less expected SerialPortReader serialEvent " + spe.getEventType());
+            FileLog.MAIN.logLine("less expected JSSCPortReader serialEvent " + spe.getEventType());
         }
     }
     };
