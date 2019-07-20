@@ -474,6 +474,19 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		bool isSynchronizationPoint;
 		bool wasSynchronized = shaft_is_synchronized;
 
+		DISPLAY(DISPLAY_CONFIG(TRIGGERINPUTPINS1));
+		DISPLAY_TEXT(Trigger_1_Fall);
+		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS1));
+		DISPLAY_TEXT(Rise);
+		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS2));
+		DISPLAY_TEXT(EOL);
+
+		DISPLAY(DISPLAY_CONFIG(TRIGGERINPUTPINS2));
+		DISPLAY_TEXT(Trigger_2_Fall);
+		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS3));
+		DISPLAY_TEXT(Rise);
+		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS4));
+
 		if (triggerShape->isSynchronizationNeeded) {
 			// this is getting a little out of hand, any ideas?
 

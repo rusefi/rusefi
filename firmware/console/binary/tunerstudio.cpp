@@ -258,6 +258,8 @@ static const void * getStructAddr(int structId) {
 		return static_cast<engine_state2_s*>(&engine->engineState);
 	case LDS_FUEL_TRIM_INDEX:
 		return static_cast<wall_fuel_state*>(&engine->wallFuel);
+	case LDS_TRIGGER_INDEX:
+		return static_cast<trigger_central_s*>(&engine->triggerCentral);
 	default:
 		return NULL;
 	}

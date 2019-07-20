@@ -1,7 +1,8 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Jul 18 18:26:35 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Jul 20 12:06:16 EDT 2019
 
+// class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class Fields {

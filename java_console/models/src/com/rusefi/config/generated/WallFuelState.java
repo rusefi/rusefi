@@ -1,7 +1,8 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Fri Jul 12 22:41:50 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Sat Jul 20 12:28:05 EDT 2019
 
+// by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class WallFuelState {

@@ -1,8 +1,8 @@
 #define HW_EVENT_TYPES 6
 
-struct_no_prefix trigger_central_s
+struct_no_prefix define_contructor trigger_central_s
 
-	int[HW_EVENT_TYPES] hwEventCounters;
+	int[HW_EVENT_TYPES iterate] hwEventCounters;
 
 
 end_struct

@@ -21,6 +21,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
         SystemOut.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
+        cHeader.write("// by " + getClass() + EOL);
         cHeader.write("// begin" + EOL);
         String id = destCHeader.replaceAll("[\\\\\\.\\/]", "_").toUpperCase();
         cHeader.write("#ifndef " + id + EOL);
@@ -50,7 +51,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void startFile() throws IOException {
+    public void startFile() {
     }
 
     @Override
@@ -61,6 +62,9 @@ public class CHeaderConsumer implements ConfigurationConsumer {
 
         content.append("// start of " + structure.name + EOL);
         content.append("struct " + structure.name + " {" + EOL);
+        if (structure.isWithContructor()) {
+            content.append("\t" + structure.name + "();" + EOL);
+        }
 
         structure.bitState.reset();
         for (int i = 0; i < structure.cFields.size(); i++) {

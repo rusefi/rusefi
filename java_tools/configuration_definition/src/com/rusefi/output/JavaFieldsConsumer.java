@@ -104,6 +104,7 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
     public void startFile() {
         javaFields.write("package " + JAVA_PACKAGE + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
         javaFields.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
+        javaFields.write("// by " + getClass() + EOL);
         javaFields.write("import com.rusefi.config.*;" + EOL + EOL);
         javaFields.write("public class " + className + " {" + ConfigDefinition.EOL);
     }
