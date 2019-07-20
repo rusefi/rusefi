@@ -6,12 +6,14 @@ import com.rusefi.config.Field;
 import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.ThermistorState;
+import com.rusefi.config.generated.TriggerState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ldmp.*;
 import com.rusefi.ldmp.generated.SpeedDensityMeta;
 import com.rusefi.ldmp.generated.ThermistorsMeta;
 import com.rusefi.ldmp.generated.TpsMeta;
+import com.rusefi.ldmp.generated.TriggerDecoderMeta;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -176,6 +178,9 @@ public class LiveDocPanel {
 
         liveDocs.add(getPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, SpeedDensityMeta.CONTENT));
+
+        liveDocs.add(getPanel("Trigger", "", Fields.LDS_TRIGGER_INDEX,
+                TriggerState.VALUES, TriggerDecoderMeta.CONTENT));
 
         return liveDocs;
     }

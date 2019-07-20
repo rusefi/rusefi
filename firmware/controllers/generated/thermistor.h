@@ -1,4 +1,5 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/thermistor.txt Mon Jun 17 20:32:33 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/thermistor.txt Sat Jul 20 12:28:04 EDT 2019
+// by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_THERMISTOR_H
 #define CONTROLLERS_GENERATED_THERMISTOR_H
@@ -24,4 +25,4 @@ typedef struct thermistor_state_s thermistor_state_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/thermistor.txt Mon Jun 17 20:32:33 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/thermistor.txt Sat Jul 20 12:28:04 EDT 2019

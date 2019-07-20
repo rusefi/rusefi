@@ -18,6 +18,7 @@ public class ConfigStructure {
     public final String name;
     public final String comment;
     public final boolean withPrefix;
+    private final boolean withContructor;
     /**
      * We have two different collections because if 'array iterate' feature which is handled differently
      * in C and TS
@@ -29,10 +30,15 @@ public class ConfigStructure {
     public int totalSize;
     public BitState bitState = new BitState();
 
-    public ConfigStructure(String name, String comment, boolean withPrefix) {
+    public ConfigStructure(String name, String comment, boolean withPrefix, boolean withContructor) {
         this.name = name;
         this.comment = comment;
         this.withPrefix = withPrefix;
+        this.withContructor = withContructor;
+    }
+
+    public boolean isWithContructor() {
+        return withContructor;
     }
 
     public String getName() {
