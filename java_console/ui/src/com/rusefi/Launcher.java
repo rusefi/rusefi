@@ -257,6 +257,7 @@ public class Launcher {
 
             @Override
             public void onConnectionEstablished() {
+                FileLog.MAIN.logLine("onConnectionEstablished");
                 tableEditor.showContent();
                 settingsTab.showContent();
                 logsManager.showContent();
