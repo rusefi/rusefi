@@ -13,8 +13,9 @@ import static com.rusefi.Launcher.INPUT_FILES_PATH;
  * 12/23/2015.
  */
 public class IniFileModel {
+    public static final String RUSEFI_INI = "rusefi.ini";
     // todo: https://sourceforge.net/p/rusefi/tickets/243/
-    private static final String FILENAME = INPUT_FILES_PATH + File.separator + "rusefi.ini";
+    private static final String FILENAME = INPUT_FILES_PATH + File.separator + RUSEFI_INI;
 
     private final static IniFileModel INSTANCE = new IniFileModel();
     private String dialogId;

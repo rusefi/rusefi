@@ -35,7 +35,9 @@ public class SettingsTab {
     public void showContent() {
         final Map<String, DialogModel> dialogs = IniFileModel.getInstance().getDialogs();
         if (dialogs.isEmpty()) {
-            // todo: show error label
+            content.removeAll();
+            content.add(new JLabel("Meta data not found: " + IniFileModel.RUSEFI_INI));
+            UiUtils.trueLayout(content);
             return;
         }
 
