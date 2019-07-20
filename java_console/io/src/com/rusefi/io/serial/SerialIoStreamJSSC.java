@@ -9,8 +9,6 @@ import jssc.SerialPortException;
 
 import java.io.IOException;
 
-import static com.rusefi.io.serial.PortHolder.BAUD_RATE;
-
 /**
  * (c) Andrey Belomutskiy
  * 5/11/2015.
@@ -97,7 +95,7 @@ public class SerialIoStreamJSSC implements IoStream {
     @Override
     public void setInputListener(DataListener listener) {
         try {
-            SerialPortReader reader = new SerialPortReader(serialPort, listener);
+            JSSCPortReader reader = new JSSCPortReader(serialPort, listener, this);
             serialPort.addEventListener(reader.getSerialPortEventListener());
             reader.readInitial();
         } catch (SerialPortException e) {
