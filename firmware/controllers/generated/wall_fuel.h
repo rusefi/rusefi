@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Sat Jul 20 12:28:05 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Sun Jul 21 16:36:58 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_WALL_FUEL_H
@@ -10,12 +10,12 @@ struct wall_fuel_state {
 	 * * fuel injection time correction to account for wall wetting effect, for current cycle
 	 * offset 0
 	 */
-	float wallFuelCorrection = 0;
+	float wallFuelCorrection = (float)0;
 	/**
 	 * Amount of fuel on the wall, in ms of injector open time, for each injector.
 	 * offset 4
 	 */
-	floatms_t wallFuel = 0;
+	floatms_t wallFuel = (floatms_t)0;
 	/** total size 8*/
 };
 
@@ -23,4 +23,4 @@ typedef struct wall_fuel_state wall_fuel_state;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Sat Jul 20 12:28:05 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/wall_fuel.txt Sun Jul 21 16:36:58 EDT 2019
