@@ -216,6 +216,10 @@ static void canDashboardVAG(void) {
 	commonTxInit(CAN_VAG_CLT_V2);
 		setShortValue(&txmsg, (int) ((engine->sensors.clt + 48.373) / 0.75), 4); //Coolant Temp
 		sendCanMessage();
+
+	commonTxInit(CAN_VAG_IMMO);
+		setShortValue(&txmsg, 0x80, 1);
+		sendCanMessage();
 }
 
 static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
