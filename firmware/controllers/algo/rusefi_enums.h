@@ -830,11 +830,11 @@ typedef enum {
 	INIT = 0,
 	TPS_THRESHOLD = 1,
 	RPM_DEAD_ZONE = 2,
-	PID_VALUE = 3,
-	PWM_PRETTY_CLOSE = 4,
-	PID_UPPER = 5,
-	ADJUSTING = 8,
-	BLIP = 16,
+	PID_VALUE = 4,
+	PWM_PRETTY_CLOSE = 8,
+	PID_UPPER = 16,
+	ADJUSTING = 32,
+	BLIP = 64,
 
 } idle_state_e;
 
