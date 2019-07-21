@@ -1,9 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.output.TSProjectConsumer;
-
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +14,7 @@ public class ConfigStructure {
     public final String name;
     public final String comment;
     public final boolean withPrefix;
-    private final boolean withContructor;
+    private final boolean withConstructor;
     /**
      * We have two different collections because if 'array iterate' feature which is handled differently
      * in C and TS
@@ -30,15 +26,15 @@ public class ConfigStructure {
     public int totalSize;
     public BitState bitState = new BitState();
 
-    public ConfigStructure(String name, String comment, boolean withPrefix, boolean withContructor) {
+    public ConfigStructure(String name, String comment, boolean withPrefix, boolean withConstructor) {
         this.name = name;
         this.comment = comment;
         this.withPrefix = withPrefix;
-        this.withContructor = withContructor;
+        this.withConstructor = withConstructor;
     }
 
-    public boolean isWithContructor() {
-        return withContructor;
+    public boolean isWithConstructor() {
+        return withConstructor;
     }
 
     public String getName() {

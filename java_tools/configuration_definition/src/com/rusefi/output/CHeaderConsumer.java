@@ -62,7 +62,7 @@ public class CHeaderConsumer implements ConfigurationConsumer {
 
         content.append("// start of " + structure.name + EOL);
         content.append("struct " + structure.name + " {" + EOL);
-        if (structure.isWithContructor()) {
+        if (structure.isWithConstructor()) {
             content.append("\t" + structure.name + "();" + EOL);
         }
 
