@@ -41,7 +41,8 @@ public class CHeaderConsumer implements ConfigurationConsumer {
             // not an array
             cEntry += "\t" + configField.getType() + " " + configField.getName();
             if (ConfigDefinition.needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
-                cEntry += " = 0";
+                // we need this cast in case of enums
+                cEntry += " = (" + configField.getType() + ")0";
             }
             cEntry += ";" + EOL;
         } else {

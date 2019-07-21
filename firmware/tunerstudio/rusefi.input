@@ -1552,11 +1552,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
 		field = "Flex fuel",							flexFuelSensor
-		field = "Clutch down pin",						clutchDownPin
+		field = "Clutch down switch",					clutchDownPin
 		field = "Clutch down inverted",					clutchDownPinInverted
-		field = "Clutch up pin",						clutchUpPin
+		field = "Clutch up switch",						clutchUpPin
 		field = "Clutch up inverted",					clutchUpPinInverted
-		field = "Brake pedal pin",						brakePedalPin
+		field = "Throttle Up switch",					throttlePedalUpPin
+		field = "Brake pedal switch",					brakePedalPin
 		field = "A/C switch",							acSwitchAdc
 
 	dialog = triggerInputs,					"Trigger Inputs"

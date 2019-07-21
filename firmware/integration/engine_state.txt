@@ -1,4 +1,22 @@
 
+struct_no_prefix pid_state_s
+	float iTerm;
+	float dTerm;we are remembering this only for debugging purposes
+	float target;only used for logging
+	float input;only used for logging
+	float output;only used for logging
+	
+
+
+end_struct
+
+struct_no_prefix idle_state_s
+	idle_state_e idleState
+	percent_t currentIdlePosition;that's current position with CLT and IAT corrections
+	percent_t baseIdlePosition;current position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
+	int throttleUpState	
+
+end_struct
 
 struct_no_prefix engine_state2_s
 
@@ -24,6 +42,9 @@ float adjustedManifoldAirPressure;
 end_struct
 
 speed_density_s sd;
+
+
+idle_state_s idle;
 
 	float targetAFR
 

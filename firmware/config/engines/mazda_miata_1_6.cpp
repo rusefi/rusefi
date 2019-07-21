@@ -1,6 +1,10 @@
 /*
  * @file mazda_miata_1_6.cpp
  *
+ *
+ * https://github.com/rusefi/rusefi_documentation/wiki/Frankenso_MazdaMiataNA6_pnp
+ *
+ *
  * Frankenso board
  * set engine_type 41
  *

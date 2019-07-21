@@ -474,7 +474,7 @@ adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position
 	brain_pin_e tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 
-uint8_t[1] unusedt;
+switch_input_pin_e throttlePedalUpPin;+Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
 
 
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
@@ -566,7 +566,8 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e canTxPin;
 	brain_pin_e canRxPin;
 
-	uint8_t[2] unusedMa2;
+pin_input_mode_e throttlePedalUpPinMode;
+	uint8_t[1] unusedMa2;
 
 	int idleThreadPeriodMs;
 	int consoleLoopPeriodMs;
@@ -960,7 +961,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	brain_pin_e mc33816_rstb;ResetB
 	brain_pin_e mc33816_driven
 
-	switch_input_pin_e brakePedalPin
+	switch_input_pin_e brakePedalPin;Brake pedal switch
 	adc_channel_e cj125ua;lambda input
 	adc_channel_e cj125ur;heater input
 	pin_input_mode_e brakePedalPinMode;

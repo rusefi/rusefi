@@ -1668,6 +1668,10 @@
 #define test557pin_offset_hex c1d
 #define throttlePedalPositionAdcChannel_offset 580
 #define throttlePedalPositionAdcChannel_offset_hex 244
+#define throttlePedalUpPin_offset 583
+#define throttlePedalUpPin_offset_hex 247
+#define throttlePedalUpPinMode_offset 710
+#define throttlePedalUpPinMode_offset_hex 2c6
 #define throttlePedalUpVoltage_offset 1884
 #define throttlePedalUpVoltage_offset_hex 75c
 #define throttlePedalWOTVoltage_offset 1888
@@ -1832,8 +1836,8 @@
 #define unusedFormerWarmupAfrPid_offset_hex 6dc
 #define unusedh_offset 1471
 #define unusedh_offset_hex 5bf
-#define unusedMa2_offset 710
-#define unusedMa2_offset_hex 2c6
+#define unusedMa2_offset 711
+#define unusedMa2_offset_hex 2c7
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
 #define unusedSpiPadding2_offset 804
@@ -1850,8 +1854,6 @@
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009
 #define unusedSpiPadding8_offset_hex fa9
-#define unusedt_offset 583
-#define unusedt_offset_hex 247
 #define unuseduartPadding1_offset 808
 #define unuseduartPadding1_offset_hex 328
 #define unusuedsw_offset 4020

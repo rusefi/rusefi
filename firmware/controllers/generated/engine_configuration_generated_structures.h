@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 21 12:15:43 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 21 16:54:25 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -651,7 +651,11 @@ struct board_configuration_s {
 	/**
 	 * offset 110
 	 */
-	uint8_t unusedMa2[2];
+	pin_input_mode_e throttlePedalUpPinMode;
+	/**
+	 * offset 111
+	 */
+	uint8_t unusedMa2;
 	/**
 	 * offset 112
 	 */
@@ -1450,9 +1454,10 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e tle6240_csPinMode;
 	/**
+	 * Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
 	 * offset 583
 	 */
-	uint8_t unusedt;
+	switch_input_pin_e throttlePedalUpPin;
 	/**
 	 * @see hasBaroSensor
 	 * offset 584
@@ -2244,6 +2249,7 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e mc33816_driven;
 	/**
+	 * Brake pedal switch
 	 * offset 2608
 	 */
 	switch_input_pin_e brakePedalPin;
@@ -2807,4 +2813,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 21 12:15:43 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 21 16:54:25 EDT 2019

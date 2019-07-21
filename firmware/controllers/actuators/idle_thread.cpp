@@ -66,14 +66,6 @@ static float lastCrankingIacPosition;
 static idle_state_e idleState = INIT;
 
 /**
- * that's current position with CLT and IAT corrections
- */
-static percent_t currentIdlePosition = -100.0f;
-/**
- * the same as currentIdlePosition, but without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
- */
-static percent_t baseIdlePosition = currentIdlePosition;
-/**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
  * todo: why do we have this logic? is this ever useful?
  * See
@@ -173,7 +165,7 @@ static void undoIdleBlipIfNeeded() {
 }
 
 percent_t getIdlePosition(void) {
-	return currentIdlePosition;
+	return engine->engineState.idle.currentIdlePosition;
 }
 
 /**
@@ -191,7 +183,7 @@ static percent_t automaticIdleController() {
 
 		idleState = TPS_THRESHOLD;
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
-		return baseIdlePosition;
+		return engine->engineState.idle.baseIdlePosition;
 	}
 
 	// get Target RPM for Auto-PID from a separate table
@@ -202,7 +194,7 @@ static percent_t automaticIdleController() {
 	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
 		idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
-		return baseIdlePosition;
+		return engine->engineState.idle.baseIdlePosition;
 	}
 
 	// When rpm < targetRpm, there's a risk of dropping RPM too low - and the engine dies out.
@@ -222,7 +214,7 @@ static percent_t automaticIdleController() {
 #if EFI_IDLE_INCREMENTAL_PID_CIC
 	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
 	// So we add this delta to the base IAC position, with a smooth taper for TPS transients.
-	newValue = baseIdlePosition + interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tpsPos);
+	newValue = engine->engineState.idle.baseIdlePosition + interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tpsPos);
 
 	// apply the PID limits
 	newValue = maxF(newValue, CONFIG(idleRpmPid.minValue));
@@ -242,7 +234,7 @@ static percent_t automaticIdleController() {
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
-			newValue = baseIdlePosition;
+			newValue = engine->engineState.idle.baseIdlePosition;
 		}
 	}
 
@@ -285,6 +277,9 @@ class IdleController : public PeriodicTimerController {
 		if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
 			engine->clutchUpState = efiReadPin(CONFIGB(clutchUpPin));
 		}
+		if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
+			engine->engineState.idle.throttleUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+		}
 
 		if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
 			engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
@@ -317,7 +312,7 @@ class IdleController : public PeriodicTimerController {
 
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
-			baseIdlePosition = iacPosition;
+			engine->engineState.idle.baseIdlePosition = iacPosition;
 			idleState = BLIP;
 		} else if (!isRunning) {
 			// during cranking it's always manual mode, PID would make no sense during cranking
@@ -325,7 +320,7 @@ class IdleController : public PeriodicTimerController {
 			// save cranking position & cycles counter for taper transition
 			lastCrankingIacPosition = iacPosition;
 			lastCrankingCyclesCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
-			baseIdlePosition = iacPosition;
+			engine->engineState.idle.baseIdlePosition = iacPosition;
 		} else {
 			if (engineConfiguration->idleMode == IM_MANUAL) {
 				// let's re-apply CLT correction
@@ -335,7 +330,7 @@ class IdleController : public PeriodicTimerController {
 			}
 			
 			// store 'base' iacPosition without adjustments
-			baseIdlePosition = iacPosition;
+			engine->engineState.idle.baseIdlePosition = iacPosition;
 			
 			percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 			float additionalAir = (float)engineConfiguration->iacByTpsTaper;
@@ -365,14 +360,14 @@ class IdleController : public PeriodicTimerController {
 		}
 
 		// The threshold is dependent on IAC type (see initIdleHardware())
-		if (absF(iacPosition - currentIdlePosition) < idlePositionSensitivityThreshold) {
+		if (absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold) {
 			idleState = (idle_state_e)(idleState | PWM_PRETTY_CLOSE);
 			return; // value is pretty close, let's leave the poor valve alone
 		}
 
-		currentIdlePosition = iacPosition;
+		engine->engineState.idle.currentIdlePosition = iacPosition;
 		idleState = (idle_state_e)(idleState | ADJUSTING);
-		applyIACposition(currentIdlePosition);
+		applyIACposition(engine->engineState.idle.currentIdlePosition);
 	}
 };
 
@@ -480,6 +475,10 @@ void startIdleThread(Logging*sharedLogger) {
 	// todo: re-initialize idle pins on the fly
 	initIdleHardware();
 
+	engine->engineState.idle.currentIdlePosition = -100.0f;
+	engine->engineState.idle.baseIdlePosition = -100.0f;
+
+
 	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
 	instance.Start();
@@ -494,6 +493,11 @@ void startIdleThread(Logging*sharedLogger) {
 	if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
 		efiSetPadMode("clutch up switch", CONFIGB(clutchUpPin),
 				getInputMode(CONFIGB(clutchUpPinMode)));
+	}
+
+	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
+		efiSetPadMode("clutch up switch", CONFIG(throttlePedalUpPin),
+				getInputMode(CONFIGB(throttlePedalUpPinMode)));
 	}
 
 	if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {

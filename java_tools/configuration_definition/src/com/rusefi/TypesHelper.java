@@ -48,7 +48,10 @@ public class TypesHelper {
     }
 
     private static boolean isPrimitive4byte(String type) {
-        return type.equals(INT_32_T) || type.equals(UINT_32_T) || isFloat(type);
+        return type.equals(INT_32_T) || type.equals(UINT_32_T)
+                // todo: something smarter with dynamic type definition?
+                || type.equals("idle_state_e")
+                || isFloat(type);
     }
 
     public static String convertToTs(String type) {
@@ -72,7 +75,9 @@ public class TypesHelper {
 
     public static boolean isFloat(String type) {
         return FLOAT_T.equals(type) ||
+                // todo: something smarter with dynamic type definition?
                 type.equalsIgnoreCase("floatms_t") ||
+                type.equalsIgnoreCase("percent_t") ||
                 type.equalsIgnoreCase("angle_t");
     }
 }
