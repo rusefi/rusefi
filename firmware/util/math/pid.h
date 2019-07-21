@@ -37,7 +37,7 @@ public:
 	bool isSame(pid_s *pid) const;
 
 	/**
-	 * This version of the methor takes dTime from pid_s
+	 * This version of the method takes dTime from pid_s
 	 *
 	 * @param Controller input / process output
 	 * @returns Output from the PID controller / the input to the process
