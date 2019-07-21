@@ -99,7 +99,7 @@
 
     </target>
 
-    <!--todo: rename this task to something more specific like RunRealHardwareTestSuite & sync Jenkin instances-->
+    <!--todo: rename this task to something more specific like RunRealHardwareTestSuite & sync Jenkins instances-->
     <target name="realtest" depends="jar">
         <java classpath="${jar_file}" classname="com.rusefi.RealHwTest" failonerror="true">
         </java>
