@@ -218,7 +218,7 @@ static void canDashboardVAG(void) {
 		sendCanMessage();
 
 	commonTxInit(CAN_VAG_IMMO);
-		setShortValue(&txmsg, 0x80, 1); //RPM
+		setShortValue(&txmsg, 0x80, 1);
 		sendCanMessage();
 }
 
