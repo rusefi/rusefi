@@ -29,6 +29,7 @@ java -DSystemOut.name=gen_config2 ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/TriggerState.java ^
  -c_destination controllers/generated/trigger_structs.h
 
+%LIVE_DOCS_COMMAND% controllers/actuators/idle_thread.cpp
 %LIVE_DOCS_COMMAND% controllers/trigger/trigger_decoder.cpp
 %LIVE_DOCS_COMMAND% controllers/sensors/thermistors.cpp
 %LIVE_DOCS_COMMAND% controllers/sensors/tps.cpp

@@ -63,8 +63,6 @@ static StepperMotor iacMotor;
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
-static idle_state_e idleState = INIT;
-
 /**
  * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
  * todo: why do we have this logic? is this ever useful?
@@ -181,7 +179,7 @@ static percent_t automaticIdleController() {
 			shouldResetPid = true;
 		}
 
-		idleState = TPS_THRESHOLD;
+		engine->engineState.idle.idleState = TPS_THRESHOLD;
 		// just leave IAC position as is (but don't return currentIdlePosition - it may already contain additionalAir)
 		return engine->engineState.idle.baseIdlePosition;
 	}
@@ -192,7 +190,7 @@ static percent_t automaticIdleController() {
 	// check if within the dead zone
 	int rpm = GET_RPM();
 	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
-		idleState = RPM_DEAD_ZONE;
+		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return engine->engineState.idle.baseIdlePosition;
 	}
@@ -206,7 +204,7 @@ static percent_t automaticIdleController() {
 	idlePid.setErrorAmplification(errorAmpCoef);
 
 	percent_t newValue = idlePid.getOutput(targetRpm, rpm);
-	idleState = PID_VALUE;
+	engine->engineState.idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
@@ -228,7 +226,7 @@ static percent_t automaticIdleController() {
 	// Currently it's user-defined. But eventually we'll use a real calculated and stored IAC position instead.
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
-		idleState = PID_UPPER;
+		engine->engineState.idle.idleState = PID_UPPER;
 		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
 			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
@@ -255,7 +253,7 @@ class IdleController : public PeriodicTimerController {
 
 		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
 			// todo: print each bit using 'getIdle_state_e' method
-			scheduleMsg(logger, "state %d", idleState);
+			scheduleMsg(logger, "state %d", engine->engineState.idle.idleState);
 			idlePid.showPidStatus(logger, "idle");
 		}
 
@@ -313,7 +311,7 @@ class IdleController : public PeriodicTimerController {
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
 			engine->engineState.idle.baseIdlePosition = iacPosition;
-			idleState = BLIP;
+			engine->engineState.idle.idleState = BLIP;
 		} else if (!isRunning) {
 			// during cranking it's always manual mode, PID would make no sense during cranking
 			iacPosition = cltCorrection * engineConfiguration->crankingIACposition;
@@ -349,7 +347,7 @@ class IdleController : public PeriodicTimerController {
 #if EFI_TUNER_STUDIO
 				// see also tsOutputChannels->idlePosition
 				idlePid.postState(&tsOutputChannels, 1000000);
-				tsOutputChannels.debugIntField4 = idleState;
+				tsOutputChannels.debugIntField4 = engine->engineState.idle.idleState;
 #endif /* EFI_TUNER_STUDIO */
 			} else {
 #if EFI_TUNER_STUDIO
@@ -361,12 +359,12 @@ class IdleController : public PeriodicTimerController {
 
 		// The threshold is dependent on IAC type (see initIdleHardware())
 		if (absF(iacPosition - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold) {
-			idleState = (idle_state_e)(idleState | PWM_PRETTY_CLOSE);
+			engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState | PWM_PRETTY_CLOSE);
 			return; // value is pretty close, let's leave the poor valve alone
 		}
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
-		idleState = (idle_state_e)(idleState | ADJUSTING);
+		engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState | ADJUSTING);
 		applyIACposition(engine->engineState.idle.currentIdlePosition);
 	}
 };
@@ -475,8 +473,17 @@ void startIdleThread(Logging*sharedLogger) {
 	// todo: re-initialize idle pins on the fly
 	initIdleHardware();
 
-	engine->engineState.idle.currentIdlePosition = -100.0f;
-	engine->engineState.idle.baseIdlePosition = -100.0f;
+	DISPLAY_TEXT(Idle_State);
+	engine->engineState.idle.DISPLAY_FIELD(idleState) = INIT;
+	DISPLAY_TEXT(EOL);
+	DISPLAY_TEXT(Base_Position);
+	engine->engineState.idle.DISPLAY_FIELD(baseIdlePosition) = -100.0f;
+	DISPLAY_TEXT(Position_with_Adjustments);
+	engine->engineState.idle.DISPLAY_FIELD(currentIdlePosition) = -100.0f;
+	DISPLAY_TEXT(EOL);
+	DISPLAY_TEXT(Throttle_Up_State);
+	DISPLAY(DISPLAY_FIELD(throttleUpState));
+	DISPLAY(DISPLAY_CONFIG(throttlePedalUpPin));
 
 
 	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
