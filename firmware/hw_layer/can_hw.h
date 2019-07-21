@@ -36,7 +36,7 @@
 #define CAN_VAG_RPM 0x280
 #define CAN_VAG_CLT 0x288
 #define CAN_VAG_CLT_V2 0x420
-
+#define CAN_VAG_IMMO 0x3D0
 
 void initCan(void);
 void commonTxInit(int eid);
