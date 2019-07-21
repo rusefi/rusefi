@@ -73,7 +73,7 @@ public class EnumToString {
         headerFileContent.append("#endif /*_A_H_HEADER_ */\r\n");
 
         writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_enums");
-
+        SystemOut.close();
     }
 
     private static void writeCppAndHeaderFiles(String outFileName) throws IOException {
