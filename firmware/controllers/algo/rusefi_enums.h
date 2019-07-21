@@ -835,7 +835,10 @@ typedef enum {
 	PID_UPPER = 16,
 	ADJUSTING = 32,
 	BLIP = 64,
-
+	/**
+	 * Live Docs reads 4 byte value so we want 4 byte enum
+	 */
+	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
 
 #endif /* RUSEFI_ENUMS_H_ */

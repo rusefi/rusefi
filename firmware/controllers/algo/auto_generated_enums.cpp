@@ -847,6 +847,8 @@ case IM_MANUAL:
 }
 const char *getIdle_state_e(idle_state_e value){
 switch(value) {
+case Force_4bytes_size_idle_state_e:
+  return "Force_4bytes_size_idle_state_e";
 case ADJUSTING:
   return "ADJUSTING";
 case BLIP:

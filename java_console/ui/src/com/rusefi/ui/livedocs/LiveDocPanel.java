@@ -10,10 +10,7 @@ import com.rusefi.config.generated.TriggerState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ldmp.*;
-import com.rusefi.ldmp.generated.SpeedDensityMeta;
-import com.rusefi.ldmp.generated.ThermistorsMeta;
-import com.rusefi.ldmp.generated.TpsMeta;
-import com.rusefi.ldmp.generated.TriggerDecoderMeta;
+import com.rusefi.ldmp.generated.*;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.util.UiUtils;
 import net.miginfocom.swing.MigLayout;
@@ -185,6 +182,9 @@ public class LiveDocPanel {
 
         liveDocs.add(createPanel("Trigger", "", Fields.LDS_TRIGGER_INDEX,
                 TriggerState.VALUES, TriggerDecoderMeta.CONTENT), CONSTRAINTS);
+
+        liveDocs.add(createPanel("Idle", "", Fields.LDS_ENGINE_STATE_INDEX,
+                EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
