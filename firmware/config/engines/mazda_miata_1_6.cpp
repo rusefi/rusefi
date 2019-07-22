@@ -262,6 +262,10 @@ void setMiataNA6_MAP_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->clutchDownPin = GPIOA_3;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
 
+
+	// 110mm red wire from 1N/W14 to bottom of W45
+	engineConfiguration->throttlePedalUpPin = GPIOA_7;
+
 	// green wire from 1Q/W17 to bottom of W46
 	engineConfiguration->acSwitchAdc = EFI_ADC_6; // PA6
 
