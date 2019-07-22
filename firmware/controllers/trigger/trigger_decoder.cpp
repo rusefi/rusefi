@@ -509,8 +509,15 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			isSynchronizationPoint = isSync;
 
 
+			/**
+			 * todo: technically we can afford detailed logging even with 60/2 as long as low RPM
+			 * todo: figure out exact threshold as a function of RPM and tooth count?
+			 * Open question what is 'triggerShape->getSize()' for 60/2 is it 58 or 58*2 or 58*4?
+			 */
+			bool silentTriggerError = triggerShape->getSize() > 40 && CONFIG(silentTriggerError);
+
 #if EFI_PROD_CODE
-			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !CONFIG(silentTriggerError))) {
+			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
 #else
 				if (printTriggerDebug) {
 #endif /* EFI_PROD_CODE */
