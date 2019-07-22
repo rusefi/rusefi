@@ -503,7 +503,7 @@ void startIdleThread(Logging*sharedLogger) {
 	}
 
 	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("clutch up switch", CONFIG(throttlePedalUpPin),
+		efiSetPadMode("throttle pedal up switch", CONFIG(throttlePedalUpPin),
 				getInputMode(CONFIGB(throttlePedalUpPinMode)));
 	}
 
