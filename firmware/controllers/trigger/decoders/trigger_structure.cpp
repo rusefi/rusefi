@@ -151,8 +151,12 @@ angle_t TriggerShape::getAngle(int index) const {
 }
 
 void TriggerShape::addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
-	if (angle > filterLeft && angle < filterRight)
+	if (angle > filterLeft && angle < filterRight) {
+#if EFI_UNIT_TEST
+//		printf("addEventClamped %f %s\r\n", angle, getTrigger_value_e(stateParam));
+#endif /* EFI_UNIT_TEST */
 		addEvent(angle / getEngineCycle(operationMode), channelIndex, stateParam);
+	}
 }
 
 operation_mode_e TriggerShape::getOperationMode() const {
