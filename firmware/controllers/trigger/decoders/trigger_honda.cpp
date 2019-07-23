@@ -167,13 +167,58 @@ void configureHonda_1_4_24(TriggerShape *s, bool withOneEventSignal, bool withFo
 }
 
 void configureHondaCbr600(TriggerShape *s) {
-	// todo: finish this
-	setToothedWheelConfiguration(s, 24, 0, FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
+	s->useOnlyPrimaryForSync = true;
+	s->isSynchronizationNeeded = true;
 
+	s->setTriggerSynchronizationGap(6);
+
+	// w = 15
+	float w = 720 / 2 / 24;
+
+	int totalTeethCount = 24;
+	int skippedCount = 0;
+
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
+	0, 349);
+
+
+	//s->addEvent720(360 -w, T_SECONDARY, TV_RISE);
+
+	//s->addEvent720(350 - 0.1, T_SECONDARY, TV_RISE);
+
+	s->addEvent720(350.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(360.0f, T_PRIMARY, TV_RISE);
+
+	s->addEvent720(360 + 0.2, T_SECONDARY, TV_FALL);
+
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
+	361, 649);
+
+
+
+	s->addEvent720(650.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(660.0f, T_PRIMARY, TV_RISE);
+
+	s->addEvent720(660 + 0.2, T_SECONDARY, TV_FALL);
+
+
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
+	661, 709);
+
+
+//	exit(-1);
+
+	s->addEvent720(710.0f, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(720.0f - 1, T_SECONDARY, TV_FALL);
+
+	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }
 
 void configureHondaCbr600custom(TriggerShape *s) {
 
+	// w = 15
 	float w = 720 / 2 / 24;
 //	s->initialize(FOUR_STROKE_CAM_SENSOR, false);
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
