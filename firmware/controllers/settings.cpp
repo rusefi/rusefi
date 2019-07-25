@@ -123,8 +123,8 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
  */
 const char* getConfigurationName(engine_type_e engineType) {
 	switch (engineType) {
-	case CUSTOM_ENGINE:
-		return "CUSTOM";
+	case DEFAULT_FRANKENSO:
+		return "DEFAULT_FRANKENSO";
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
 		return "Neon95";

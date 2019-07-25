@@ -679,8 +679,8 @@ case CHEVY_C20_1973:
   return "CHEVY_C20_1973";
 case CITROEN_TU3JP:
   return "CITROEN_TU3JP";
-case CUSTOM_ENGINE:
-  return "CUSTOM_ENGINE";
+case DEFAULT_FRANKENSO:
+  return "DEFAULT_FRANKENSO";
 case DAIHATSU:
   return "DAIHATSU";
 case DODGE_NEON_1995:

@@ -15,7 +15,7 @@
 #include "globalaccess.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
-#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+#define DEFAULT_ENGINE_TYPE DEFAULT_FRANKENSO
 #endif
 
 #define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE

@@ -42,7 +42,7 @@
  * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
  */
 typedef enum {
-	CUSTOM_ENGINE = 0,
+	DEFAULT_FRANKENSO = 0,
 	AUDI_AAN = 1,
 	/**
 	 * 1995 Dodge Neon
