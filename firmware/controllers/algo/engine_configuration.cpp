@@ -49,7 +49,6 @@
 #include "ford_fiesta.h"
 #include "ford_1995_inline_6.h"
 
-#include "snow_blower.h"
 #include "nissan_primera.h"
 #include "honda_accord.h"
 #include "GY6_139QMB.h"
@@ -1065,12 +1064,15 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CAM:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CRANK:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case LADA_KALINA:
@@ -1080,6 +1082,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
