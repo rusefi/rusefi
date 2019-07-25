@@ -276,66 +276,16 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 	}
 }
 
-static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	for (int i = 0; i < AUX_PID_COUNT; i++) {
-		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
-	}
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		boardConfiguration->fsioOutputPins[i] = GPIO_UNASSIGNED;
-		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
-		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
-	}
-	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
-		engineConfiguration->fsioAdc[i] = EFI_ADC_NONE;
-	}
-}
-
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	// Now that GPIO_UNASSIGNED == 0 we do not really need explicit zero assignments since memset above does that
-	boardConfiguration->canTxPin = GPIO_UNASSIGNED;
-	boardConfiguration->canRxPin = GPIO_UNASSIGNED;
-	setDefaultFsioParameters(engineConfiguration);
-
-	disableLCD(boardConfiguration);
-
-	for (int i = 0;i<CAM_INPUTS_COUNT;i++) {
-		engineConfiguration->camInputs[i] = GPIO_UNASSIGNED;
+	// todo: migrate 'EFI_ADC_NONE' to '0' and eliminate the need in this method altogether
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
+		engineConfiguration->fsioAdc[i] = EFI_ADC_NONE;
 	}
-	for (int i = 0;i<TRIGGER_INPUT_PIN_COUNT;i++) {
-		CONFIGB(triggerInputPins)[i] = GPIO_UNASSIGNED;
-	}
-
-	for (int i = 0; i < SERVO_COUNT; i++) {
-		engineConfiguration->servoOutputPins[i] = GPIO_UNASSIGNED;
-	}
-
-	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
-		engineConfiguration->auxValves[i] = GPIO_UNASSIGNED;
-	}
-	engineConfiguration->LIS302DLCsPin = GPIO_UNASSIGNED;
-	engineConfiguration->flexFuelSensor = GPIO_UNASSIGNED;
-	engineConfiguration->test557pin = GPIO_UNASSIGNED;
-
-	boardConfiguration->cdmInputPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickDPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->frequencyReportingMapInputPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->sdCardSpiDevice = SPI_NONE;
-	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
-	engineConfiguration->accelerometerSpiDevice = SPI_NONE;
-	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	boardConfiguration->max31855spiDevice = SPI_NONE;
 
 	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
@@ -359,95 +309,13 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
 	
-	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperDirectionPinMode = OM_DEFAULT;
-	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
-
-	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->acRelayPinMode = OM_DEFAULT;
-
-#if EFI_ALTERNATOR_CONTROL
-	setDefaultAlternatorParameters();
-#endif /* EFI_ALTERNATOR_CONTROL */
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-	setDefaultEtbBiasCurve(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters();
 #endif /* EFI_IDLE_CONTROL */
-	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
-	boardConfiguration->cj125CsPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->hip9011CsPin = GPIO_UNASSIGNED;
-	boardConfiguration->hip9011IntHoldPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->etb1.controlPin1 = GPIO_UNASSIGNED;
-	boardConfiguration->etb1.controlPin2 = GPIO_UNASSIGNED;
-	boardConfiguration->etb1.directionPin1 = GPIO_UNASSIGNED;
-	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
-	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->tachOutputPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
-	boardConfiguration->fanPinMode = OM_DEFAULT;
-
-	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-	boardConfiguration->clutchUpPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchUpPinMode = PI_PULLUP;
-	engineConfiguration->brakePedalPin = GPIO_UNASSIGNED;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
-
-	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
-	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
-
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
-	
-	for (int i = 0;i < INJECTION_PIN_COUNT;i++) {
-		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
-	}
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
-
-	for (int i = 0;i < IGNITION_PIN_COUNT;i++) {
-		boardConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
-	}
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
-
-	for (int i = 0; i < TRIGGER_SIMULATOR_PIN_COUNT; i++) {
-		boardConfiguration->triggerSimulatorPins[i] = GPIO_UNASSIGNED;
-		boardConfiguration->triggerSimulatorPinModes[i] = OM_DEFAULT;
-	}
-
-	for (int i = 0; i < LOGIC_ANALYZER_CHANNEL_COUNT; i++) {
-		boardConfiguration->logicAnalyzerPins[i] = GPIO_UNASSIGNED;
-	}
-	
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
-	}
-
-	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		boardConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
-	}
-
-	boardConfiguration->is_enabled_spi_1 = boardConfiguration->is_enabled_spi_2 = false;
-	boardConfiguration->is_enabled_spi_3 = boardConfiguration->is_enabled_spi_4 = false;
 }
 
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -719,12 +587,23 @@ int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  *
  * This method should only change the state of the configuration data structure but should NOT change the state of
  * anything else.
+ *
+ * This method should NOT be setting any default pinout
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (! EFI_UNIT_TEST)
 	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
 #endif
 	prepareVoidConfiguration(engineConfiguration);
+
+#if EFI_ALTERNATOR_CONTROL
+	setDefaultAlternatorParameters();
+#endif /* EFI_ALTERNATOR_CONTROL */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultEtbBiasCurve(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 	CONFIGB(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);

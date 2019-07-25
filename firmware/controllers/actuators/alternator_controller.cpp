@@ -141,8 +141,6 @@ static void applyAlternatorPinState(int stateIndex, PwmConfig *state) /* pwm_gen
 void setDefaultAlternatorParameters(void) {
 	engineConfiguration->alternatorOffAboveTps = 120;
 
-	CONFIGB(alternatorControlPin) = GPIO_UNASSIGNED;
-	CONFIGB(alternatorControlPinMode) = OM_DEFAULT;
 	engineConfiguration->targetVBatt = 14;
 
 	engineConfiguration->alternatorControl.offset = 0;
