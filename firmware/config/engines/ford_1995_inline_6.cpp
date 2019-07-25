@@ -4,8 +4,6 @@
  *
  * http://rusefi.com/forum/viewtopic.php?f=3&t=469
  *
- * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
- *
  * FORD_INLINE_6_1995 = 7
  * set engine_type 7
  *

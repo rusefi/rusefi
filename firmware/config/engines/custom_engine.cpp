@@ -273,7 +273,6 @@ void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // ETB_BENCH_ENGINE
 // set engine_type 58
 void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	// VAG test ETB
 	// set tps_min 54
 	engineConfiguration->tpsMin = 54;
@@ -326,7 +325,6 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 // TLE8888_BENCH_ENGINE
 // set engine_type 59
 void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
