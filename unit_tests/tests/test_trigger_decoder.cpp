@@ -223,8 +223,8 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
 
-	assertEqualsM5(msg, " channel1duty", channel1duty, t->expectedDutyCycle[0], 0.0001);
-	assertEqualsM5(msg, " channel2duty", channel2duty, t->expectedDutyCycle[1], 0.0001);
+	ASSERT_NEAR(channel1duty, t->expectedDutyCycle[0], 0.0001) << msg << " channel1duty";
+	ASSERT_NEAR(channel2duty, t->expectedDutyCycle[1], 0.0001) << msg << " channel2duty";
 }
 
 static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {

@@ -7,38 +7,18 @@
 
 #include <stdlib.h>
 #include "global.h"
-
-void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS) {
-	char msg[100];
-	strcpy(msg, prefix);
-	strcat(msg, message);
-	if (cisnan(actual) && !cisnan(expected)) {
-		printf("Assert failed: %s %.4f while expected %.4f\r\n", msg, actual, expected);
-		exit(-1);
-	}
-
-	float delta = absF(actual - expected);
-	if (delta > EPS) {
-		printf("delta: %.7f\r\n", delta);
-		printf("Unexpected: %s %.4f while expected %.4f\r\n", msg, actual, expected);
-		exit(-1);
-	}
-	printf("Validated %s: %f\r\n", msg, expected);
-}
+#include "unit_test_framework.h"
 
 void assertEqualsM2(const char *msg, float expected, float actual, float eps) {
-	assertEqualsM5("", msg, expected, actual, eps);
+	ASSERT_NEAR(expected, actual, eps) << msg;
 }
 
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual) {
-	assertEqualsM5(prefix, msg, expected, actual, 0.00001);
+	ASSERT_NEAR(expected, actual, 0.00001) << prefix << msg;
 }
 
 void assertEqualsLM(const char *msg, long expected, long actual) {
-	if (expected != actual) {
-		printf("Assert failed: %s %d while expected %d\r\n", msg, actual, expected);
-		exit(-1);
-	}
+	ASSERT_EQ(expected, actual) << msg;
 }
 
 void assertEqualsM(const char *msg, float expected, float actual) {
