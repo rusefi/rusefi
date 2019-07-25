@@ -489,7 +489,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("NISSAN_PRIMERA", NISSAN_PRIMERA, 2, 0.9611, 0.0);
 
-	testTriggerDecoder2("test1+1", CUSTOM_ENGINE, 0, 0.7500, 0.2500);
+	testTriggerDecoder2("test1+1", DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
 	testTriggerDecoder2("testAccordCd 3w", HONDA_ACCORD_CD, 12, 0.8146, 0.5000);

@@ -965,7 +965,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
-void setDefaultBoardConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setCanFrankensoDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -1039,17 +1039,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	// set initial pin groups
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	/**
-	 * Let's apply global board defaults too, for most of the boards
-	 */
-	if (engineType != MINIMAL_PINS
-			/* this is a bit nasty */
-			 && engineType != ETB_BENCH_ENGINE
-			 && engineType != MICRO_RUS_EFI
-			 && engineType != TLE8888_BENCH_ENGINE) {
-		setDefaultBoardConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardConfigurationOverrides();
@@ -1064,7 +1053,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case CUSTOM_ENGINE:
+	case DEFAULT_FRANKENSO:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MINIMAL_PINS:
@@ -1110,12 +1100,15 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setZil130(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_MAP:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiataNA6_MAP_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_VAF:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiataNA6_VAF_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ETB_BENCH_ENGINE:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MICRO_RUS_EFI:
@@ -1123,6 +1116,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NA8:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_CIVIC_4_0_BOTH:
@@ -1138,6 +1132,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setHondaAccordConfiguration1_24_shifted(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FRANKENSO_QA_ENGINE:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_CD_DIP:
@@ -1155,9 +1150,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setGy6139qmbDefaultEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_600:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NB1:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_323:
@@ -1176,18 +1173,23 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setMiniCooperR50(engineConfiguration);
 		break;
 	case FORD_ESCORT_GT:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1990:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_DEVIATOR:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1994_d(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_SPAGS:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1994_s(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1996:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:
@@ -1212,6 +1214,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setDodgeStratus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case VW_ABA:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
@@ -1227,15 +1230,19 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif
 
 	case TEST_ENGINE:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_NA_RAIL:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfigurationNaFuelRail(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_BOARD_TEST:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfigurationBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROMETHEUS_DEFAULTS:
@@ -1245,6 +1252,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setSubaruEJ20GDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE_VVT:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setTestVVTEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SACHS:
