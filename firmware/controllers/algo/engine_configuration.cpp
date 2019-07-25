@@ -347,10 +347,9 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// needed also by bootloader code
 	setPinConfigurationOverrides();
 #endif /* EFI_PROD_CODE */
-}
 
+	// set UART pads configuration based on the board
 // needed also by bootloader code
-void setDefaultSerialParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;
@@ -547,11 +546,6 @@ static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
-
-	engineConfiguration->canSleepPeriodMs = 50;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }
 
 /**
@@ -609,6 +603,11 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setBosch0280218037(config);
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	engineConfiguration->canSleepPeriodMs = 50;
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		config->fsioFormulas[i][0] = 0;
@@ -969,8 +968,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void setDefaultBoardConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// set initial pin groups
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	setDefaultSerialParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setCanDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 
