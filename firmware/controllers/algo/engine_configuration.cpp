@@ -1139,10 +1139,12 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MITSU_4G93:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6
 	case FORD_INLINE_6_1995:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFordInline6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
@@ -1193,15 +1195,18 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ROVER_V8:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_E34:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case GM_2_2:
@@ -1256,12 +1261,14 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setTestVVTEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SACHS:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setSachs(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DAIHATSU:
 		setDaihatsu(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CAMARO_4:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCamaro4(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CHEVY_C20_1973:
