@@ -1309,7 +1309,10 @@ cmd_test_idle_valve          = "w\x00\x17\x00\x01"
 cmd_call_from_pit            = "w\x00\x20\x34\x56"
 cmd_stop_engine              = "w\x00\x79\x00\x00"
 
+; reboot ECU
 cmd_reset_controller         = "w\x00\xbb\x00\x00"
+; jump to DFU mode
+cmd_dfu         			 = "w\x00\xba\x00\x00"
 
 ; See 'executeTSCommand' in firmware source code
 ; MIATA_NA6_MAP = 41
@@ -2495,6 +2498,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Idle Air Valve", cmd_test_idle_valve          
 		commandButton = "Stop Engine", cmd_stop_engine          
 		commandButton = "Reset ECU", cmd_reset_controller
+		commandButton = "Reset to DFU", cmd_dfu
 
 	; bench test	
 	dialog = ioTest, "Bench Test & Commands", border
