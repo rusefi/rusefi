@@ -542,7 +542,7 @@ static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
-static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setCanFrankensoDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
@@ -584,7 +584,7 @@ int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  *
  * This method should NOT be setting any default pinout
  */
-void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (! EFI_UNIT_TEST)
 	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
 #endif
@@ -966,10 +966,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
 void setDefaultBoardConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// set initial pin groups
-	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	setCanDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setCanFrankensoDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->clt.adcChannel = EFI_ADC_6;
@@ -1036,7 +1034,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	/**
 	 * Let's apply global defaults first
 	 */
-	setDefaultConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// set initial pin groups
+	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	/**
 	 * Let's apply global board defaults too, for most of the boards
 	 */

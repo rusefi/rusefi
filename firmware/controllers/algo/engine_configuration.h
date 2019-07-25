@@ -49,7 +49,6 @@ typedef struct {
 } persistent_config_container_s;
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
-void setDefaultConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setAfrMap(afr_table_t table, float value);

@@ -38,8 +38,4 @@ static void configureShaftPositionEmulatorShapeWhat(PwmConfig *state) {
 	weComplexInit("distributor", state, 0, 2, switchTimes, 1, pinStates);
 }
 
-void setDefaultEngineConfiguration(EngineConfiguration *engineConfiguration) {
-	engineConfiguration2.shaftPositionEventCount = 2;
-}
-
 #endif /* EFI_ENGINE_AUDI_AAN */

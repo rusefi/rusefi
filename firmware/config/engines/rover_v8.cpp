@@ -3,8 +3,6 @@
  *
  * V8, firing order 18436572
  *
- * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
- *
  * set engine_type 10
  *
  * ROVER_V8 = 10

@@ -8,8 +8,6 @@
  * set engine_type 23
  * http://rusefi.com/wiki/index.php?title=Vehicle:Dodge_Neon_2003
  *
- * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
- *
  * @date Dec 16, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
