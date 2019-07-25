@@ -37,8 +37,6 @@
 
 #include "custom_engine.h"
 #include "engine_template.h"
-#include "acura_rsx.h"
-#include "audi_aan.h"
 #include "bmw_e34.h"
 
 #include "dodge_neon.h"
@@ -61,8 +59,6 @@
 #include "mazda_323.h"
 #include "mazda_626.h"
 
-#include "saturn_ion.h"
-#include "MiniCooperR50.h"
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"
@@ -70,7 +66,6 @@
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
-#include "gm_2_2.h"
 #include "vw.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
@@ -1056,11 +1051,12 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case SATURN_ION_2004:
+	case ACURA_RSX:
+	case MINI_COOPER_R50:
+	case GM_2_2:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
-		break;
-	case ACURA_RSX:
-		setAcuraRSX(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
@@ -1168,14 +1164,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MAZDA_626:
 		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case SATURN_ION_2004:
-		setSaturnIonEngineConfiguration(engineConfiguration);
-		break;
 	case SUZUKI_VITARA:
 		setSuzukiVitara(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MINI_COOPER_R50:
-		setMiniCooperR50(engineConfiguration);
 		break;
 	case FORD_ESCORT_GT:
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -1211,9 +1201,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case BMW_E34:
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case GM_2_2:
-		setGm2_2(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
