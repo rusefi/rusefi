@@ -965,7 +965,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
-void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setCanFrankensoDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 
