@@ -1051,7 +1051,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case SATURN_ION_2004:
+	case MRE_MIATA_NA6:
 	case ACURA_RSX:
 	case MINI_COOPER_R50:
 	case GM_2_2:
