@@ -75,7 +75,7 @@ typedef enum {
 
 	MAZDA_323 = 11,
 
-	SATURN_ION_2004 = 12,
+	MRE_MIATA_NA6 = 12,
 
 	MINI_COOPER_R50 = 13,
 
