@@ -1,8 +1,7 @@
 .svn*
 .dep*
-*.o.d
-*.o
 build/
+build_kinetis/
 out/
 blbuild/
 Debug_EMS/
