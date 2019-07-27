@@ -97,13 +97,18 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->is_enabled_spi_1 = true;
 	boardConfiguration->is_enabled_spi_2 = true;
 	boardConfiguration->is_enabled_spi_3 = false;
-	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 	boardConfiguration->cj125CsPin = GPIOB_11;
 
 	//Digital Inputs/Outputs
-
+#if (BOARD_TLE8888_COUNT > 0)
+	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
 	boardConfiguration->fuelPumpPin = TLE8888_PIN_22;
+	boardConfiguration->tachOutputPin = TLE8888_PIN_16;
+	boardConfiguration->alternatorControlPin = TLE8888_PIN_17;
+	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
+#endif /* BOARD_TLE8888_COUNT */
+
 	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
@@ -116,11 +121,9 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
-	boardConfiguration->tachOutputPin = TLE8888_PIN_16;
 
 
 //Alternator Settings
-	boardConfiguration->alternatorControlPin = TLE8888_PIN_17;
 	boardConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 	engineConfiguration->targetVBatt = 13.8;
 	engineConfiguration->alternatorControl.offset = 40;
@@ -163,7 +166,6 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// VVT Settings
 
-	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
 	engineConfiguration->activateAuxPid1 = true;
 	engineConfiguration->auxPidFrequency[0] = 300;
 	boardConfiguration->fsio_setting[0] = 0.0;
