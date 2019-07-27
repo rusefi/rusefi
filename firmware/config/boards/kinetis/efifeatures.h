@@ -106,6 +106,13 @@
 
 #define EFI_INTERNAL_FLASH TRUE
 
+/**
+ * Flex Non Volatile Memory is faster than flash
+ * It also has smaller pages so it takes less time to erase
+ *
+ * There is no remote access to FlexNVM meaning that we cannot erase settings externally
+ * /
+
 #define FLASH_ADDR 0x10000000	// FlexNVM
 #define FLASH_ADDR_SECOND_COPY 0x10008000
 
@@ -295,22 +302,6 @@
 #define EFI_CUSTOM_PANIC_METHOD FALSE
 
 #define ADC_CHANNEL_VREF ADC_CHANNEL_IN14
-
-/**
- * currently ChibiOS uses only first and second channels of each timer for input capture
- *
- * So, our options are:
- *
- * TIM2_CH1
- *  PA5
- *
- * TIM4_CH1
- *  PB6
- * 	PD12
- *
- * TIM9_CH1
- *  PE5
- */
 
 /**
  * Use 'HAL_USE_UART' DMA-mode driver instead of 'HAL_USE_SERIAL'

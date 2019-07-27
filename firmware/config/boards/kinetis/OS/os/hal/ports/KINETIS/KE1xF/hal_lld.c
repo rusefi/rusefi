@@ -40,6 +40,7 @@
 /*===========================================================================*/
 
 // Bootloader config peripheral enable flags
+// Bootloader on LPUART & LPSPI, not on CAN
 #ifndef BCA_PERIPH
 #define BCA_PERIPH ((1<<0) | (1<<2))  /* LPUART | LPSPI */
 #endif /* BCA_PERIPH */
@@ -66,7 +67,8 @@ const uint8_t _cfm[0x10] = {
   0xFF,  /* NV_FPROT2: PROT=0xFF */
   0xFF,  /* NV_FPROT1: PROT=0xFF */
   0xFF,  /* NV_FPROT0: PROT=0xFF */
-  /* [andreika]: Warning! These two bytes are extremely important! Don't change them until 100% sure! */
+  /* [andreika][rusefi]: Warning! These two bytes are extremely important! Don't change them until 100% sure! */
+  /* there is an opinion that wrong values would brick your Kinetis chip for good */
   0x7E,  /* NV_FSEC: KEYEN=1,MEEN=3,FSLACC=3,SEC=2 */
   0xFB,  /* NV_FOPT: BOOTSRC_SEL=1,res=111,RESET_PIN_CFG=1,NMI_DIS=0,BOOTPIN_OPT=1,LPBOOT=1 */
 

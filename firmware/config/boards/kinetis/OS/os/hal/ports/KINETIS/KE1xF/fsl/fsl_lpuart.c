@@ -1352,7 +1352,7 @@ void LPUART_TransferHandleIRQ(LPUART_Type *base, lpuart_handle_t *handle)
     uint32_t enabledInterrupts = LPUART_GetEnabledInterrupts(base);
 
 	/////////////////////////////////////////////////////////////////////////////////////////
-	// [andreika]: we use this 'fake' unused status to trigger the callback via IRQ in software
+	// [andreika][rusefi]: we use this 'fake' unused status to trigger the callback via IRQ in software
 	if (LPUART_STAT_RXINV_MASK & status)
     {
     	base->STAT &= ~LPUART_STAT_RXINV_MASK;

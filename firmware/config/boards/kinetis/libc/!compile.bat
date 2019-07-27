@@ -1,5 +1,4 @@
 @echo off
-set PATH=C:\Program Files\Java\jre\bin;G:\VStudio\Subversion\bin;G:\VStudio\arm-elf-gcc\bin;G:\VStudio\MinGW\msys\1.0\bin;G:\VStudio\Git\bin
 
 rm -f libtinyc.a
 arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard libc_stub.c 
