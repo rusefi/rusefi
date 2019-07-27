@@ -271,6 +271,8 @@ static void handleCommandX14(uint16_t index) {
 
 }
 
+void jump_to_bootloader();
+
 // todo: this is probably a wrong place for this method now
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	scheduleMsg(logger, "IO test subsystem=%d index=%d", subsystem, index);
@@ -301,8 +303,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	} else if (subsystem == 0x79) {
 		scheduleStopEngine();
 	} else if (subsystem == 0xba) {
-// todo: this does not work yet
-		// DFU mode
+#if EFI_PROD_CODE
+		jump_to_bootloader();
+#endif /* EFI_PROD_CODE */
 	} else if (subsystem == 0xbb) {
 #if EFI_PROD_CODE
 		rebootNow();

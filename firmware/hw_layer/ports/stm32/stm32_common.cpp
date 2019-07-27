@@ -134,4 +134,25 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	return getHwPin("get_pin", brainPin);
 }
 
+void jump_to_bootloader() {
+	// todo: this does not work yet
+
+	RCC->CR &= RCC_CR_HSITRIM | RCC_CR_HSION; /* CR Reset value.              */
+	RCC->CFGR = 0; /* CFGR reset value.            */
+	sdStop (&SD2);
+//	sduStop (&SDU1);
+	usbStop (&USBD1);
+	__disable_irq();
+	chSysDisable();
+	SysTick->CTRL = SysTick->LOAD = SysTick->VAL = 0;
+	SYSCFG->MEMRMP = 0x01;
+	SCB->VTOR = 0;
+	SCB->ICSR = (0x1U << 27); //ICSR_PENDSVCLR;
+	const uint32_t p = (*((uint32_t *) 0x1FFF0000));
+	__set_MSP(p);
+	void (*SysMemBootJump)(void);
+	SysMemBootJump = (void (*)(void)) (*((uint32_t *) 0x1FFF0004));
+	SysMemBootJump();
+}
+
 #endif /* HAL_USE_ADC */
