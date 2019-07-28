@@ -14,7 +14,7 @@
 #endif /* EFI_PIN_ADC9 */
 
 #if EFI_PROD_CODE
-#include "usbconsole.h"
+#include "backup_ram.h"
 extern ioportid_t PORTS[];
 #if defined(STM32F4XX) || defined(STM32F7XX)
 ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
@@ -134,44 +134,14 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	return getHwPin("get_pin", brainPin);
 }
 
-#if HAL_USE_SERIAL_USB
-extern SerialUSBDriver SDU1;
-#endif /* HAL_USE_SERIAL_USB */
-
-void jump_to_bootloader() {
-	// AN2606 Application note
-	// STM32 microcontroller system memory boot mode
-
-	// todo: this does not work yet
-
-	// Switch to the HSI clock source - no PLL
-	RCC->CR &= RCC_CR_HSITRIM | RCC_CR_HSION; /* CR Reset value.              */
-	RCC->CFGR = 0; /* CFGR reset value.            */
-
-#if HAL_USE_SERIAL_USB
-	usbDisconnectBus(&USBD1);
-	chThdSleepMilliseconds(1500);
-
-	sdStop (&USB_SERIAL_DRIVER);
-	sduStop (&SDU1);
-	usbStop (&USBD1);
-#endif /* HAL_USE_SERIAL_USB */
-	__disable_irq();
-	chSysDisable();
-	// reset the Systick Timer
-	SysTick->CTRL = SysTick->LOAD = SysTick->VAL = 0;
-	SYSCFG->MEMRMP = 0x01;
-	SCB->VTOR = 0;
-	SCB->ICSR = (0x1U << 27); //ICSR_PENDSVCLR;
-
-
-	// set the main stack pointer to its default value
-	__set_MSP(0x20001000);
-
-	void (*SysMemBootJump)(void);
-	SysMemBootJump = (void (*)(void)) (*((uint32_t *) 0x1FFF0004));
-
-	SysMemBootJump();
-}
-
 #endif /* HAL_USE_ADC */
+
+
+#if EFI_PROD_CODE
+void jump_to_bootloader() {
+	// leave DFU breadcrumb which assmebly startup code would check, see [rusefi][DFU] section in assembly code
+	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
+	// and now reboot
+	NVIC_SystemReset();
+}
+#endif /* EFI_PROD_CODE */
