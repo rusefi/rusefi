@@ -46,7 +46,7 @@ void usb_serial_start(void) {
 	/*
 	 * Activates the serial driver 2 using the driver default configuration.
 	 */
-	sdStart(&SD2, NULL);
+	sdStart(&USB_SERIAL_DRIVER, NULL);
 #endif /* HAL_USE_SERIAL */
 
 	isUsbSerialInitialized = true;
