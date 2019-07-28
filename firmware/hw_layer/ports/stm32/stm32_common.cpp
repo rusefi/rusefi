@@ -143,6 +143,7 @@ void jump_to_bootloader() {
 
 	// todo: this does not work yet
 
+	// Switch to the HSI clock source - no PLL
 	RCC->CR &= RCC_CR_HSITRIM | RCC_CR_HSION; /* CR Reset value.              */
 	RCC->CFGR = 0; /* CFGR reset value.            */
 
