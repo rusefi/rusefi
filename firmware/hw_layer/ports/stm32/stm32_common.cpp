@@ -8,6 +8,7 @@
 
 #include "global.h"
 #include "efi_gpio.h"
+#include "usbconsole.h"
 
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
@@ -134,24 +135,38 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	return getHwPin("get_pin", brainPin);
 }
 
+extern SerialUSBDriver SDU1;
+
 void jump_to_bootloader() {
+	// AN2606 Application note
+	// STM32 microcontroller system memory boot mode
+
 	// todo: this does not work yet
 
 	RCC->CR &= RCC_CR_HSITRIM | RCC_CR_HSION; /* CR Reset value.              */
 	RCC->CFGR = 0; /* CFGR reset value.            */
-	sdStop (&SD2);
-//	sduStop (&SDU1);
+
+	usbDisconnectBus(&USBD1);
+	chThdSleepMilliseconds(1500);
+
+	sdStop (&USB_SERIAL_DRIVER);
+	sduStop (&SDU1);
 	usbStop (&USBD1);
 	__disable_irq();
 	chSysDisable();
+	// reset the Systick Timer
 	SysTick->CTRL = SysTick->LOAD = SysTick->VAL = 0;
 	SYSCFG->MEMRMP = 0x01;
 	SCB->VTOR = 0;
 	SCB->ICSR = (0x1U << 27); //ICSR_PENDSVCLR;
-	const uint32_t p = (*((uint32_t *) 0x1FFF0000));
-	__set_MSP(p);
+
+
+	// set the main stack pointer to its default value
+	__set_MSP(0x20001000);
+
 	void (*SysMemBootJump)(void);
 	SysMemBootJump = (void (*)(void)) (*((uint32_t *) 0x1FFF0004));
+
 	SysMemBootJump();
 }
 
