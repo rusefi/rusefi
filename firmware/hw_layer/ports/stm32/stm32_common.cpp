@@ -134,7 +134,9 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	return getHwPin("get_pin", brainPin);
 }
 
+#if HAL_USE_SERIAL_USB
 extern SerialUSBDriver SDU1;
+#endif /* HAL_USE_SERIAL_USB */
 
 void jump_to_bootloader() {
 	// AN2606 Application note
@@ -146,12 +148,14 @@ void jump_to_bootloader() {
 	RCC->CR &= RCC_CR_HSITRIM | RCC_CR_HSION; /* CR Reset value.              */
 	RCC->CFGR = 0; /* CFGR reset value.            */
 
+#if HAL_USE_SERIAL_USB
 	usbDisconnectBus(&USBD1);
 	chThdSleepMilliseconds(1500);
 
 	sdStop (&USB_SERIAL_DRIVER);
 	sduStop (&SDU1);
 	usbStop (&USBD1);
+#endif /* HAL_USE_SERIAL_USB */
 	__disable_irq();
 	chSysDisable();
 	// reset the Systick Timer
