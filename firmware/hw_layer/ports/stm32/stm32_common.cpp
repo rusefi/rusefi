@@ -8,14 +8,13 @@
 
 #include "global.h"
 #include "efi_gpio.h"
-#include "usbconsole.h"
 
 #ifndef EFI_PIN_ADC9
 #define EFI_PIN_ADC9 GPIOB_1
 #endif /* EFI_PIN_ADC9 */
 
-
 #if EFI_PROD_CODE
+#include "usbconsole.h"
 extern ioportid_t PORTS[];
 #if defined(STM32F4XX) || defined(STM32F7XX)
 ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
