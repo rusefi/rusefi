@@ -22,6 +22,8 @@
 #if EFI_PROD_CODE && HAL_USE_GPT
 
 #include "periodic_task.h"
+#include "engine.h"
+EXTERN_ENGINE;
 
 /**
  * Maximum duration of complete timer callback, all pending events together
@@ -136,6 +138,18 @@ static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 		hwTimerCallback, /* Timer callback.*/
 0, 0 };
 
+static scheduling_s watchDogBuddy;
+
+static void watchDogBuddyCallback(void *arg) {
+	(void)arg;
+	/**
+	 * the purpose of this periodic activity is to make watchdogControllerInstance
+	 * watchdog happy by ensuring that we have scheduler activity even in case of very broken configuration
+	 * without any PWM or input pins
+	 */
+	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(1000), watchDogBuddyCallback, NULL);
+}
+
 void initMicrosecondTimer(void) {
 
 	gptStart(&GPTDEVICE, &gpt5cfg);
@@ -143,6 +157,8 @@ void initMicrosecondTimer(void) {
 	hwStarted = true;
 
 	lastSetTimerTimeNt = getTimeNowNt();
+
+	watchDogBuddyCallback(NULL);
 #if EFI_EMULATE_POSITION_SENSORS
 	watchdogControllerInstance.Start();
 #endif /* EFI_EMULATE_POSITION_SENSORS */
