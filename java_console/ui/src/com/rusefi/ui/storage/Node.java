@@ -1,6 +1,7 @@
 package com.rusefi.ui.storage;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +80,8 @@ public class Node {
         setProperty(key, "" + b);
     }
 
-    public String getProperty(String key, String defaultValue) {
+    @Nullable
+    public String getProperty(String key, @Nullable String defaultValue) {
         String value = (String) config.get(key);
         return value == null ? defaultValue : value;
     }
