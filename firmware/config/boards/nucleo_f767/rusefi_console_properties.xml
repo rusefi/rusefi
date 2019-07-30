@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_202" class="java.beans.XMLDecoder">
+ <object class="java.util.HashMap">
+  <void method="put">
+   <string>root</string>
+   <object class="com.rusefi.ui.storage.Node" id="Node0">
+    <void property="config">
+     <void method="put">
+      <string>hardware</string>
+      <string>F7</string>
+     </void>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

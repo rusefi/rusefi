@@ -1,11 +1,14 @@
 package com.rusefi.maintenance;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import static com.rusefi.Launcher.INPUT_FILES_PATH;
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
  * (c) Andrey Belomutskiy 2013-2018
@@ -46,8 +49,8 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         });
     }
 
-    public static String getOpenocdCommad() {
-        String cfg = "stm32f4discovery.cfg";
+    public static String getOpenocdCommand() {
+        String cfg = getHardwareKind().getOpenOcdName();
         return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
@@ -58,7 +61,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             return;
         }
         StatusAnimation sa = new StatusAnimation(wnd);
-        StringBuffer error = executeCommand(getOpenocdCommad() + " -c \"program " +
+        StringBuffer error = executeCommand(getOpenocdCommand() + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"");
         if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {
@@ -74,6 +77,12 @@ public class FirmwareFlasher extends ProcessStatusWindow {
 
     public JButton getButton() {
         return button;
+    }
+
+    @NotNull
+    public static HwPlatform getHardwareKind() {
+        String value = getConfig().getRoot().getProperty("hardware", HwPlatform.F4.name());
+        return HwPlatform.resolve(value);
     }
 
 }

@@ -11,6 +11,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -127,6 +128,8 @@ public class Launcher {
         this.port = port;
         staticFrame = mainFrame.getFrame();
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
+
+        FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, PortHolder.BAUD_RATE);

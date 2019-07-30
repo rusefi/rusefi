@@ -37,7 +37,7 @@ public class EraseChip extends ProcessStatusWindow {
 
     @NotNull
     private String getEraseCommand() {
-        return FirmwareFlasher.getOpenocdCommad() + ERASE_COMMAND_SUFFIX;
+        return FirmwareFlasher.getOpenocdCommand() + ERASE_COMMAND_SUFFIX;
     }
 
     public JButton getButton() {
