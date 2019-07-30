@@ -138,7 +138,6 @@ bool main_loop_started = false;
 static char panicMessage[200];
 
 extern bool hasFirmwareErrorFlag;
-extern fatal_msg_t errorMessageBuffer;
 
 static virtual_timer_t resetTimer;
 
