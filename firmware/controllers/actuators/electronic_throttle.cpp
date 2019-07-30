@@ -373,8 +373,6 @@ void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 	engineConfiguration->etb_iTermMin = -300;
 	engineConfiguration->etb_iTermMax = 300;
-
-//	CONFIGB(etbControlPin1) = GPIOE_4; // test board, matched default fuel pump relay
 }
 
 static bool isSamePins(etb_io *current, etb_io *active) {

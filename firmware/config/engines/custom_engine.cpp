@@ -273,9 +273,6 @@ void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // ETB_BENCH_ENGINE
 // set engine_type 58
 void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
-	setDefaultSerialParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	// VAG test ETB
 	// set tps_min 54
 	engineConfiguration->tpsMin = 54;
@@ -328,19 +325,11 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 // TLE8888_BENCH_ENGINE
 // set engine_type 59
 void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	// TODO: HOW?! IS THIS HELPING USB SERIAL?!
-	setDefaultSerialParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
-	boardConfiguration->spi1mosiPin = GPIOB_5;
-	boardConfiguration->spi1misoPin = GPIOB_4;
-	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
-
-	engineConfiguration->tle8888_cs = GPIOD_5;
 	engineConfiguration->directSelfStimulation = true;
 
 #if defined(STM32_HAS_GPIOG) && STM32_HAS_GPIOG
@@ -354,14 +343,19 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[6] = GPIOC_6;
 	boardConfiguration->ignitionPins[7] = GPIOC_7;
 
-	// sckPin  = GPIOB_3
-	// misoPin = GPIOB_4
-	// mosiPin = GPIOB_5
+#if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
+	engineConfiguration->tle8888_cs = GPIOD_5;
 
 	// PB3 is nicely both SWO and SPI1 SCK so logic analyzer could be used on SWO header
+	boardConfiguration->spi1mosiPin = GPIOB_5;
+	boardConfiguration->spi1misoPin = GPIOB_4;
+	boardConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
 	boardConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->debugMode = DBG_TLE8888;
+
+	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
+#endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1 // just any non-empty value for now
 	// ETB #1 top one - closer to 121 connector
@@ -395,7 +389,6 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(etb2.directionPin1) = GPIOE_2;
 	CONFIG(etb2.directionPin2) = GPIOE_4;
 
-	boardConfiguration->fuelPumpPin = TLE8888_PIN_20;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7; // PA7

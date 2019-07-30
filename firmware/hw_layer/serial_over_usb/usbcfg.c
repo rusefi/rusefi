@@ -338,10 +338,10 @@ const USBConfig usbcfg = {
  * Serial over USB driver configuration.
  */
 const SerialUSBConfig serusbcfg = {
-  &USBD1,
-  USBD1_DATA_REQUEST_EP,
-  USBD1_DATA_AVAILABLE_EP,
-  USBD1_INTERRUPT_REQUEST_EP
+  .usbp = &USBD1,
+  .bulk_in = USBD1_DATA_REQUEST_EP,
+  .bulk_out = USBD1_DATA_AVAILABLE_EP,
+  .int_in = USBD1_INTERRUPT_REQUEST_EP
 };
 
 #endif /* EFI_USB_SERIAL */

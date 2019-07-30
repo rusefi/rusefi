@@ -37,8 +37,6 @@
 
 #include "custom_engine.h"
 #include "engine_template.h"
-#include "acura_rsx.h"
-#include "audi_aan.h"
 #include "bmw_e34.h"
 
 #include "dodge_neon.h"
@@ -49,7 +47,6 @@
 #include "ford_fiesta.h"
 #include "ford_1995_inline_6.h"
 
-#include "snow_blower.h"
 #include "nissan_primera.h"
 #include "honda_accord.h"
 #include "GY6_139QMB.h"
@@ -62,8 +59,6 @@
 #include "mazda_323.h"
 #include "mazda_626.h"
 
-#include "saturn_ion.h"
-#include "MiniCooperR50.h"
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"
@@ -71,7 +66,6 @@
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
-#include "gm_2_2.h"
 #include "vw.h"
 #include "daihatsu.h"
 #include "chevrolet_camaro_4.h"
@@ -276,66 +270,16 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 	}
 }
 
-static void setDefaultFsioParameters(engine_configuration_s *engineConfiguration) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	for (int i = 0; i < AUX_PID_COUNT; i++) {
-		engineConfiguration->auxPidPins[i] = GPIO_UNASSIGNED;
-	}
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		boardConfiguration->fsioOutputPins[i] = GPIO_UNASSIGNED;
-		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
-		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
-	}
-	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
-		engineConfiguration->fsioAdc[i] = EFI_ADC_NONE;
-	}
-}
-
 void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != NULL, "ec NULL");
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	// Now that GPIO_UNASSIGNED == 0 we do not really need explicit zero assignments since memset above does that
-	boardConfiguration->canTxPin = GPIO_UNASSIGNED;
-	boardConfiguration->canRxPin = GPIO_UNASSIGNED;
-	setDefaultFsioParameters(engineConfiguration);
-
-	disableLCD(boardConfiguration);
-
-	for (int i = 0;i<CAM_INPUTS_COUNT;i++) {
-		engineConfiguration->camInputs[i] = GPIO_UNASSIGNED;
+	// todo: migrate 'EFI_ADC_NONE' to '0' and eliminate the need in this method altogether
+	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
+		engineConfiguration->fsioAdc[i] = EFI_ADC_NONE;
 	}
-	for (int i = 0;i<TRIGGER_INPUT_PIN_COUNT;i++) {
-		CONFIGB(triggerInputPins)[i] = GPIO_UNASSIGNED;
-	}
-
-	for (int i = 0; i < SERVO_COUNT; i++) {
-		engineConfiguration->servoOutputPins[i] = GPIO_UNASSIGNED;
-	}
-
-	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
-		engineConfiguration->auxValves[i] = GPIO_UNASSIGNED;
-	}
-	engineConfiguration->LIS302DLCsPin = GPIO_UNASSIGNED;
-	engineConfiguration->flexFuelSensor = GPIO_UNASSIGNED;
-	engineConfiguration->test557pin = GPIO_UNASSIGNED;
-
-	boardConfiguration->cdmInputPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->joystickCenterPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickAPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickDPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->frequencyReportingMapInputPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->sdCardSpiDevice = SPI_NONE;
-	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
-	engineConfiguration->accelerometerSpiDevice = SPI_NONE;
-	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	boardConfiguration->max31855spiDevice = SPI_NONE;
 
 	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
@@ -359,95 +303,13 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
 	
-	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperDirectionPinMode = OM_DEFAULT;
-	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperEnablePinMode = OM_DEFAULT;
-
-	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->acRelayPinMode = OM_DEFAULT;
-
-#if EFI_ALTERNATOR_CONTROL
-	setDefaultAlternatorParameters();
-#endif /* EFI_ALTERNATOR_CONTROL */
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-	setDefaultEtbBiasCurve(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters();
 #endif /* EFI_IDLE_CONTROL */
-	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
-	boardConfiguration->cj125CsPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->hip9011CsPin = GPIO_UNASSIGNED;
-	boardConfiguration->hip9011IntHoldPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->etb1.controlPin1 = GPIO_UNASSIGNED;
-	boardConfiguration->etb1.controlPin2 = GPIO_UNASSIGNED;
-	boardConfiguration->etb1.directionPin1 = GPIO_UNASSIGNED;
-	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
-	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->tachOutputPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
-	boardConfiguration->fanPinMode = OM_DEFAULT;
-
-	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-	boardConfiguration->clutchUpPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchUpPinMode = PI_PULLUP;
-	engineConfiguration->brakePedalPin = GPIO_UNASSIGNED;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
-
-	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
-	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
-
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
-	
-	for (int i = 0;i < INJECTION_PIN_COUNT;i++) {
-		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
-	}
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
-
-	for (int i = 0;i < IGNITION_PIN_COUNT;i++) {
-		boardConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
-	}
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
-
-	for (int i = 0; i < TRIGGER_SIMULATOR_PIN_COUNT; i++) {
-		boardConfiguration->triggerSimulatorPins[i] = GPIO_UNASSIGNED;
-		boardConfiguration->triggerSimulatorPinModes[i] = OM_DEFAULT;
-	}
-
-	for (int i = 0; i < LOGIC_ANALYZER_CHANNEL_COUNT; i++) {
-		boardConfiguration->logicAnalyzerPins[i] = GPIO_UNASSIGNED;
-	}
-	
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
-	}
-
-	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		boardConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
-	}
-
-	boardConfiguration->is_enabled_spi_1 = boardConfiguration->is_enabled_spi_2 = false;
-	boardConfiguration->is_enabled_spi_3 = boardConfiguration->is_enabled_spi_4 = false;
 }
 
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -479,10 +341,9 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// needed also by bootloader code
 	setPinConfigurationOverrides();
 #endif /* EFI_PROD_CODE */
-}
 
+	// set UART pads configuration based on the board
 // needed also by bootloader code
-void setDefaultSerialParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_10;
 	engineConfiguration->binarySerialRxPin = GPIOC_11;
@@ -675,15 +536,10 @@ static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
-static void setCanDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setCanFrankensoDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
-
-	engineConfiguration->canSleepPeriodMs = 50;
-	engineConfiguration->canReadEnabled = true;
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }
 
 /**
@@ -719,17 +575,33 @@ int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  *
  * This method should only change the state of the configuration data structure but should NOT change the state of
  * anything else.
+ *
+ * This method should NOT be setting any default pinout
  */
-void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if (! EFI_UNIT_TEST)
 	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
 #endif
 	prepareVoidConfiguration(engineConfiguration);
 
+#if EFI_ALTERNATOR_CONTROL
+	setDefaultAlternatorParameters();
+#endif /* EFI_ALTERNATOR_CONTROL */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultEtbBiasCurve(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
 	CONFIGB(mafSensorType) = Bosch0280218037;
 	setBosch0280218037(config);
 
 	setBosch02880155868(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	engineConfiguration->canSleepPeriodMs = 50;
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		config->fsioFormulas[i][0] = 0;
@@ -1087,13 +959,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
-void setDefaultBoardConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// set initial pin groups
-	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
+static void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
-	setDefaultSerialParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	setCanDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setCanFrankensoDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->clt.adcChannel = EFI_ADC_6;
@@ -1160,17 +1028,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	/**
 	 * Let's apply global defaults first
 	 */
-	setDefaultConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	/**
-	 * Let's apply global board defaults too, for most of the boards
-	 */
-	if (engineType != MINIMAL_PINS
-			/* this is a bit nasty */
-			 && engineType != ETB_BENCH_ENGINE
-			 && engineType != MICRO_RUS_EFI
-			 && engineType != TLE8888_BENCH_ENGINE) {
-		setDefaultBoardConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
+	setDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// set initial pin groups
+	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
@@ -1186,23 +1047,28 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case CUSTOM_ENGINE:
+	case DEFAULT_FRANKENSO:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case MRE_MIATA_NA6:
+	case ACURA_RSX:
+	case MINI_COOPER_R50:
+	case GM_2_2:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		break;
-	case ACURA_RSX:
-		setAcuraRSX(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CAM:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CRANK:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case LADA_KALINA:
@@ -1212,6 +1078,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
@@ -1232,12 +1099,15 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setZil130(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_MAP:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiataNA6_MAP_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_VAF:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiataNA6_VAF_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ETB_BENCH_ENGINE:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MICRO_RUS_EFI:
@@ -1245,6 +1115,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NA8:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_CIVIC_4_0_BOTH:
@@ -1260,16 +1131,19 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setHondaAccordConfiguration1_24_shifted(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FRANKENSO_QA_ENGINE:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_CD_DIP:
 		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MITSU_4G93:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6
 	case FORD_INLINE_6_1995:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFordInline6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
@@ -1277,9 +1151,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setGy6139qmbDefaultEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_600:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NB1:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_323:
@@ -1288,44 +1164,43 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MAZDA_626:
 		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case SATURN_ION_2004:
-		setSaturnIonEngineConfiguration(engineConfiguration);
-		break;
 	case SUZUKI_VITARA:
 		setSuzukiVitara(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MINI_COOPER_R50:
-		setMiniCooperR50(engineConfiguration);
-		break;
 	case FORD_ESCORT_GT:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1990:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_DEVIATOR:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1994_d(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_SPAGS:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1994_s(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1996:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ROVER_V8:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_E34:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case GM_2_2:
-		setGm2_2(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1334,6 +1209,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setDodgeStratus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case VW_ABA:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
@@ -1349,15 +1225,19 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif
 
 	case TEST_ENGINE:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_NA_RAIL:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfigurationNaFuelRail(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_BOARD_TEST:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfigurationBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROMETHEUS_DEFAULTS:
@@ -1367,15 +1247,18 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setSubaruEJ20GDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE_VVT:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setTestVVTEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SACHS:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setSachs(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DAIHATSU:
 		setDaihatsu(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CAMARO_4:
+		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setCamaro4(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CHEVY_C20_1973:

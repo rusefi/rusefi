@@ -679,8 +679,8 @@ case CHEVY_C20_1973:
   return "CHEVY_C20_1973";
 case CITROEN_TU3JP:
   return "CITROEN_TU3JP";
-case CUSTOM_ENGINE:
-  return "CUSTOM_ENGINE";
+case DEFAULT_FRANKENSO:
+  return "DEFAULT_FRANKENSO";
 case DAIHATSU:
   return "DAIHATSU";
 case DODGE_NEON_1995:
@@ -767,8 +767,8 @@ case ROVER_V8:
   return "ROVER_V8";
 case SACHS:
   return "SACHS";
-case SATURN_ION_2004:
-  return "SATURN_ION_2004";
+case MRE_MIATA_NA6:
+  return "MRE_MIATA_NA6";
 case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:

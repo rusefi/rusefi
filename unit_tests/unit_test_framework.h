@@ -23,6 +23,5 @@ void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
-void assertEqualsM5(const char *prefix, const char *message, float expected, float actual, float EPS);
 
 #endif /* UNIT_TEST_FRAMEWORK_H_ */

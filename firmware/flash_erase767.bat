@@ -19,5 +19,3 @@ openocd\openocd.exe -f openocd/st_nucleo_f7.cfg -c init -c targets -c "halt" -c 
 echo Just invoked openocd to erase chip!
 
 
-rem older disocovery boards or cheap eBay ST-Link
-rem openocd\openocd.exe -f openocd/stm32f4discovery.cfg -c init -c targets -c "halt" -c "flash erase_address 0x08000000 0x0100000" -c shutdown

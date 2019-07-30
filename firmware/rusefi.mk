@@ -48,3 +48,6 @@ endif
 ifeq ($(GENERATED_ENUMS_DIR),)
 GENERATED_ENUMS_DIR = $(PROJECT_DIR)/controllers/algo
 endif
+
+DDEFS += -DEFI_SOFTWARE_DFU_JUMP=TRUE
+

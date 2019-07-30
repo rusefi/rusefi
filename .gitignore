@@ -1,15 +1,14 @@
 .svn*
 .dep*
-*.o.d
-*.o
 build/
+build_kinetis/
 out/
 blbuild/
 Debug_EMS/
 Release_EMS/
 Debug/
 .settings/
-firmware/rusefi_ram_report.txt
+*_ram_report.txt
 doxygen/
 /.idea
 workspace.xml

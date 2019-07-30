@@ -42,7 +42,7 @@
  * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
  */
 typedef enum {
-	CUSTOM_ENGINE = 0,
+	DEFAULT_FRANKENSO = 0,
 	AUDI_AAN = 1,
 	/**
 	 * 1995 Dodge Neon
@@ -75,7 +75,7 @@ typedef enum {
 
 	MAZDA_323 = 11,
 
-	SATURN_ION_2004 = 12,
+	MRE_MIATA_NA6 = 12,
 
 	MINI_COOPER_R50 = 13,
 

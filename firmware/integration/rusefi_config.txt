@@ -713,7 +713,7 @@ bit vvtDisplayInverted
 	bit isVerboseETB;+Prints ETB details to rusEFI console
 	bit useConstantDwellDuringCranking;+If set to true, will use the specified duration for cranking dwell. If set to false, will use the specified dwell angle.  Unless you have a really good reason to, leave this set to true to use duration mode.
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price 
-	bit silentTriggerError
+	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
 	bit canReadEnabled
 	bit canWriteEnabled

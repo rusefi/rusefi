@@ -13,8 +13,8 @@
 #define EFI_PIN_ADC9 GPIOB_1
 #endif /* EFI_PIN_ADC9 */
 
-
 #if EFI_PROD_CODE
+#include "backup_ram.h"
 extern ioportid_t PORTS[];
 #if defined(STM32F4XX) || defined(STM32F7XX)
 ioportid_t PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
@@ -135,3 +135,13 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 }
 
 #endif /* HAL_USE_ADC */
+
+
+#if EFI_PROD_CODE
+void jump_to_bootloader() {
+	// leave DFU breadcrumb which assmebly startup code would check, see [rusefi][DFU] section in assembly code
+	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
+	// and now reboot
+	NVIC_SystemReset();
+}
+#endif /* EFI_PROD_CODE */

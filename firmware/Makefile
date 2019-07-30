@@ -254,7 +254,8 @@ TCPPSRC =
 
 # List ASM source files here
 # List ASM source files here
-ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
+ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
+	$(RUSEFIASM)
 
 ifeq ($(CONFIGPATH),)
   CONFIGPATH=config/stm32f4ems

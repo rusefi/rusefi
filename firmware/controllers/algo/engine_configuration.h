@@ -15,7 +15,7 @@
 #include "globalaccess.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
-#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+#define DEFAULT_ENGINE_TYPE DEFAULT_FRANKENSO
 #endif
 
 #define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
@@ -49,7 +49,6 @@ typedef struct {
 } persistent_config_container_s;
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
-void setDefaultConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setAfrMap(afr_table_t table, float value);
@@ -68,7 +67,7 @@ void printFloatArray(const char *prefix, float array[], int size);
 
 // needed by bootloader
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setDefaultSerialParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
 void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);

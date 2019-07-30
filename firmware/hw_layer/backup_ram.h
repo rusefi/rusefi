@@ -33,6 +33,8 @@ typedef enum {
 	 * CJ125 Calibration data (16bit)
 	 */
 	BACKUP_CJ125_CALIBRATION_HEATER,
+
+	DFU_JUMP_REQUESTED,
 } backup_ram_e;
 
 

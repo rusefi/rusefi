@@ -8,6 +8,8 @@
 #ifndef USBCONSOLE_H_
 #define USBCONSOLE_H_
 
+#define USB_SERIAL_DRIVER SD2
+
 #ifdef __cplusplus
 extern "C"
 {

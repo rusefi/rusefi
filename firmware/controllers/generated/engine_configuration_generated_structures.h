@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 21 16:54:25 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 22 17:38:10 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1491,6 +1491,7 @@ struct engine_configuration_s {
 	offset 1464 bit 5 */
 	bool isEngineChartEnabled : 1;
 	/**
+	 * Sometimes we have a performance issue while printing error
 	offset 1464 bit 6 */
 	bool silentTriggerError : 1;
 	/**
@@ -2813,4 +2814,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 21 16:54:25 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 22 17:38:10 EDT 2019

@@ -123,8 +123,8 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
  */
 const char* getConfigurationName(engine_type_e engineType) {
 	switch (engineType) {
-	case CUSTOM_ENGINE:
-		return "CUSTOM";
+	case DEFAULT_FRANKENSO:
+		return "DEFAULT_FRANKENSO";
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
 		return "Neon95";
@@ -157,8 +157,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MiataNB1";
 	case MAZDA_323:
 		return "M323";
-	case SATURN_ION_2004:
-		return "Saturn Ion";
+	case MRE_MIATA_NA6:
+		return "MRE Miata 1.6";
 	case MINI_COOPER_R50:
 		return "CoopR50";
 	case FORD_ESCORT_GT:
@@ -649,6 +649,12 @@ static void setPotSpi(int spi) {
 	boardConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
 }
 
+/**
+ * For example:
+ *   set_ignition_pin 1 PD7
+ * todo: this method counts index from 1 while at least 'set_trigger_input_pin' counts from 0.
+ * todo: make things consistent
+ */
 static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
 	if (index < 0 || index >= IGNITION_PIN_COUNT)
@@ -711,6 +717,12 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
+/**
+ * For example:
+ *   set_trigger_input_pin 0 PA5
+ * todo: this method counts index from 0 while at least 'set_ignition_pin' counts from 1.
+ * todo: make things consistent
+ */
 static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index > 2)
