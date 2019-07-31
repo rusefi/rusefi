@@ -61,7 +61,7 @@ static void setupVbatt()
 	// 1k high side/1.5k low side = 1.6667 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.5f / 1.5f;
 
-	engineConfiguration->adcVcc = 3.3f;
+	engineConfiguration->adcVcc = 3.29f;
 }
 
 static void setupTle8888()
@@ -104,39 +104,46 @@ static void setupEtb()
 	engineConfiguration->etbFreq = 800;
 }
 
+static void setupDefaultSensorInputs()
+{
+	// trigger inputs
+	// tle8888 VR conditioner
+	boardConfiguration->triggerInputPins[0] = GPIOC_6;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	// Direct hall-only cam input
+	engineConfiguration->camInputs[0] = GPIOA_5;
 
-#undef SERIAL_SPEED
-#define SERIAL_SPEED 115200
+	// tps
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+
+	// clt = AN temp 1
+	engineConfiguration->clt.adcChannel = EFI_ADC_0;
+	engineConfiguration->clt.config.bias_resistor = 2700;
+
+	// iat = AN temp 2
+	engineConfiguration->iat.adcChannel = EFI_ADC_1;
+	engineConfiguration->iat.config.bias_resistor = 2700;
+}
 
 void setPinConfigurationOverrides(void) {
 }
 
 void setSerialConfigurationOverrides(void) {
-	boardConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = GPIOD_8;
-	engineConfiguration->binarySerialRxPin = GPIOD_9;
-	engineConfiguration->consoleSerialTxPin = GPIOD_8;
-	engineConfiguration->consoleSerialRxPin = GPIOD_9;
-	boardConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
-	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
+	boardConfiguration->useSerialPort = false;
+	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
+	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
+	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
+	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
 }
 
-void setSdCardConfigurationOverrides(void) {
-}
 
 /**
  * @brief   Board-specific configuration code overrides.
  * @todo    Add your board-specific code, if any.
  */
 void setBoardConfigurationOverrides(void) {
-	setSerialConfigurationOverrides();
-
-	engineConfiguration->runningLedPin = GPIOB_0; //green LED
-	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
-#if 0
-	engineConfiguration->vbattAdcChannel = EFI_ADC_13;
-	engineConfiguration->adcVcc = ADC_VCC;
-#endif
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
@@ -175,9 +182,21 @@ void setBoardConfigurationOverrides(void) {
 	setupTle8888();
 	setupEtb();
 
-	engineConfiguration->tpsMin = 143;
-	engineConfiguration->tpsMin = 816;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
+	// "required" hardware is done - set some reasonable defaults
+	setupDefaultSensorInputs();
+
+	// Some sensible defaults for other options
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR/*FOUR_STROKE_CAM_SENSOR*/);
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	//engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 }
 
 void setAdcChannelOverrides(void) {
