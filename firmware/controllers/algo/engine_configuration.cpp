@@ -869,6 +869,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->isEngineChartEnabled = true;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
+	// Default this to on - if you want to diagnose, turn it off.
+	engineConfiguration->silentTriggerError = true;
 
 #if EFI_PROD_CODE
 	engineConfiguration->engineChartSize = 300;
