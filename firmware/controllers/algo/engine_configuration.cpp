@@ -1113,7 +1113,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MICRO_RUS_EFI:
-		// nothing to do - we do it all in 
+		// nothing to do - we do it all in setBoardConfigurationOverrides
 		break;
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
