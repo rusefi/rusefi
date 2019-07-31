@@ -1,6 +1,3 @@
-
-
-
 # List of all the board related files.
 BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
 BOARDSRC_CPP = $(PROJECT_DIR)/config/boards/microrusefi/board_configuration.cpp

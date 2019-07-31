@@ -1,7 +1,7 @@
 /**
  * @file boards/microrusefi/board_configuration.cpp
  *
- * @brief In this file we can override engine_configuration.cpp.
+ * @brief Configuration defaults for the microRusefi board
  *
  * @author Matthew Kennedy, (c) 2019
  */
