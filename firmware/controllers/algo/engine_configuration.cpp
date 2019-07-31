@@ -909,7 +909,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->cj125isUaDivided = true;
 
-	engineConfiguration->isAlternatorControlEnabled = true;
+	engineConfiguration->isAlternatorControlEnabled = false;
 
 	engineConfiguration->vehicleSpeedCoef = 1.0f;
 
