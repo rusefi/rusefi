@@ -14,24 +14,26 @@ IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre rusefi_microrusefi.ini
+set f7_console_setting=firmware\config\boards\nucleo_f767\rusefi_console_properties.xml
+
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre rusefi_microrusefi.ini %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 stm32f746_nucleo
+call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 stm32f746_nucleo no %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 stm32f767_nucleo
+call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 stm32f767_nucleo no %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
 
-call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 stm32f767_osc
+call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f767 stm32f767_osc no %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd

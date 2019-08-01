@@ -1,9 +1,10 @@
 set COMPILE_FOLDER=%1
 set bundle_name=%2
 set ini_file_override=%3
+set rusefi_console_settings=%4
 
 set script_name=combile_and_upload.bat
-echo Entering %script_name% with %COMPILE_FOLDER% %bundle_name%
+echo Entering %script_name% with 1=%COMPILE_FOLDER% 2=%bundle_name% 3=%ini_file_override% 4=%rusefi_console_settings%
 
 if %COMPILE_FOLDER%.==. (
     echo COMPILE_FOLDER parameter expected

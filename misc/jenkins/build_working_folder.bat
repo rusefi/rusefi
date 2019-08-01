@@ -16,11 +16,22 @@ if not exist %drivers_folder%/silent_st_drivers.exe (
  EXIT /B 1
 )
 
+if %ini_file_override%x==nox (
+    set ini_file_override=rusefi.ini
+    echo %script_name%: N/a ini_file_override specified
+)
 if %ini_file_override%.==. (
     set ini_file_override=rusefi.ini
     echo %script_name%: No ini_file_override specified
 )
 echo %script_name%: Will use %ini_file_override%
+
+if %rusefi_console_settings%.==. (
+  echo %script_name%: No rusefi_console_settings
+) else (
+  echo Using rusefi_console_settings %rusefi_console_settings%
+  cp %rusefi_console_settings% %console_folder%
+)
 
 cp java_console_binary/rusefi_console.jar %console_folder%
 cp simulator/build/rusefi_simulator.exe %console_folder%
@@ -32,6 +43,7 @@ cp misc/console_launcher/readme.html %folder%
 cp firmware/tunerstudio/%ini_file_override% %folder%
 rem Unsetting since would not be used anywhere else
 set ini_file_override=
+set rusefi_console_settings=
 
 rem users probably do not really care for this file
 rem cp firmware/svnversion.h %folder%
