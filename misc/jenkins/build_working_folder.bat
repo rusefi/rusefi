@@ -29,7 +29,7 @@ echo %script_name%: Will use %ini_file_override%
 if %rusefi_console_settings%.==. (
   echo %script_name%: No rusefi_console_settings
 ) else (
-  echo Using rusefi_console_settings %rusefi_console_settings%
+  echo Using rusefi_console_settings [%rusefi_console_settings%]
   cp %rusefi_console_settings% %console_folder%
 )
 
