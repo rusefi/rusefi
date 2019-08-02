@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Jul 21 16:54:25 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Aug 02 01:26:57 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -163,7 +163,6 @@ public class Fields {
 	public static final int biQuad_b2_offset = 2348;
 	public static final int biQuad_offset = 2332;
 	public static final int BLOCKING_FACTOR = 400;
-	public static final int boardTestModeJumperPin_offset = 676;
 	public static final int boostCutPressure_offset = 2132;
 	public static final int boostCutPressure_offset_hex = 854;
 	public static final int brakePedalPin_offset = 2608;
@@ -1169,6 +1168,7 @@ public class Fields {
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unrealisticRpmThreashold_offset = 760;
+	public static final int unused1133_offset = 676;
 	public static final int unused1234234_offset = 2042;
 	public static final int unused_1484_bit_20_offset = 1476;
 	public static final int unused_1484_bit_21_offset = 1476;
@@ -1451,7 +1451,7 @@ public class Fields {
 	public static final Field WBOHEATERPIN = Field.create("WBOHEATERPIN", 673, FieldType.INT8, brain_pin_e);
 	public static final Field CJ125CSPIN = Field.create("CJ125CSPIN", 674, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855SPIDEVICE = Field.create("MAX31855SPIDEVICE", 675, FieldType.INT8);
-	public static final Field BOARDTESTMODEJUMPERPIN = Field.create("BOARDTESTMODEJUMPERPIN", 676, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSED1133 = Field.create("UNUSED1133", 676, FieldType.INT8, brain_pin_e);
 	public static final Field DIGITALPOTENTIOMETERSPIDEVICE = Field.create("DIGITALPOTENTIOMETERSPIDEVICE", 677, FieldType.INT8);
 	public static final Field MC33972_CS = Field.create("MC33972_CS", 678, FieldType.INT8, brain_pin_e);
 	public static final Field MC33972_CSPINMODE = Field.create("MC33972_CSPINMODE", 679, FieldType.INT8, pin_output_mode_e);
@@ -2224,7 +2224,7 @@ public class Fields {
 	WBOHEATERPIN,
 	CJ125CSPIN,
 	MAX31855SPIDEVICE,
-	BOARDTESTMODEJUMPERPIN,
+	UNUSED1133,
 	DIGITALPOTENTIOMETERSPIDEVICE,
 	MC33972_CS,
 	MC33972_CSPINMODE,

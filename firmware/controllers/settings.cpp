@@ -282,8 +282,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin),
 			boolToString(engine->clutchDownState));
 
-	scheduleMsg(&logger, "boardTestModeJumperPin: %s/nesting=%d",
-			hwPortname(boardConfiguration->boardTestModeJumperPin), maxNesting);
+	scheduleMsg(&logger, "nesting=%d", maxNesting);
 
 	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", boardConfiguration->digitalPotentiometerSpiDevice);
 

@@ -178,7 +178,7 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIO_UNASSIGNED;
 	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-	boardConfiguration->boardTestModeJumperPin = GPIO_UNASSIGNED;
+
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
 	boardConfiguration->max31855spiDevice = SPI_NONE;

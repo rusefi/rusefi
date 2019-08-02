@@ -18,10 +18,6 @@
 #include "cli_registry.h"
 #include "efilib.h"
 
-#if EFI_PROD_CODE
-#include "board_test.h"
-#endif
-
 #if ! EFI_UNIT_TEST
 #include "eficonsole.h"
 #endif /* ! EFI_UNIT_TEST */
@@ -167,12 +163,6 @@ static int getParameterCount(action_type_e parameterType) {
  * @brief This function prints out a list of all available commands
  */
 void helpCommand(void) {
-#if EFI_BOARD_TEST
-	if (isBoardTestMode()) {
-		printBoardTestState();
-		return;
-	}
-#endif /* EFI_BOARD_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(logging, "%d actions available", consoleActionCount);

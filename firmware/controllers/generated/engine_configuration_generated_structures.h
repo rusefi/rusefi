@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 22 17:38:10 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Aug 02 01:26:57 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -580,7 +580,7 @@ struct board_configuration_s {
 	/**
 	 * offset 76
 	 */
-	brain_pin_e boardTestModeJumperPin;
+	brain_pin_e unused1133;
 	/**
 	 * Digital Potentiometer is used by stock ECU stimulation code
 	 * offset 77
@@ -2814,4 +2814,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Jul 22 17:38:10 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Aug 02 01:26:57 EDT 2019
