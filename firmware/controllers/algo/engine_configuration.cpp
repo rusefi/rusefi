@@ -843,8 +843,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: start using this for custom MAP
 	engineConfiguration->mapHighValueVoltage = 5;
 
-	engineConfiguration->displayMode = DM_HD44780;
-
 	engineConfiguration->logFormat = LF_NATIVE;
 	engineConfiguration->directSelfStimulation = false;
 
@@ -869,6 +867,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->isEngineChartEnabled = true;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
+	// Default this to on - if you want to diagnose, turn it off.
+	engineConfiguration->silentTriggerError = true;
 
 #if EFI_PROD_CODE
 	engineConfiguration->engineChartSize = 300;
@@ -909,7 +909,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->cj125isUaDivided = true;
 
-	engineConfiguration->isAlternatorControlEnabled = true;
+	engineConfiguration->isAlternatorControlEnabled = false;
 
 	engineConfiguration->vehicleSpeedCoef = 1.0f;
 
@@ -1111,6 +1111,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MICRO_RUS_EFI:
+		// nothing to do - we do it all in setBoardConfigurationOverrides
+		break;
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
