@@ -144,37 +144,6 @@ void setSerialConfigurationOverrides(void) {
  * @todo    Add your board-specific code, if any.
  */
 void setBoardConfigurationOverrides(void) {
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
-
-	// not used
-	engineConfiguration->dizzySparkOutputPin = GPIO_UNASSIGNED;
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
-	engineConfiguration->displayMode = DM_NONE;
-	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
-	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
-		boardConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
-	}
-	boardConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
-	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
-	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-	boardConfiguration->boardTestModeJumperPin = GPIO_UNASSIGNED;
-	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	boardConfiguration->max31855spiDevice = SPI_NONE;
-
-	/////////////////////////////////////////////////////////
-	boardConfiguration->is_enabled_spi_1 = false;
-	boardConfiguration->is_enabled_spi_2 = false;
-	boardConfiguration->is_enabled_spi_3 = false;
-
 	setInjectorPins();
 	setIgnitionPins();
 	setLedPins();
@@ -186,9 +155,9 @@ void setBoardConfigurationOverrides(void) {
 	setupDefaultSensorInputs();
 
 	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR/*FOUR_STROKE_CAM_SENSOR*/);
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	//engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->specs.cylindersCount = 4;
