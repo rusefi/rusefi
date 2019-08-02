@@ -843,8 +843,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: start using this for custom MAP
 	engineConfiguration->mapHighValueVoltage = 5;
 
-	engineConfiguration->displayMode = DM_HD44780;
-
 	engineConfiguration->logFormat = LF_NATIVE;
 	engineConfiguration->directSelfStimulation = false;
 
