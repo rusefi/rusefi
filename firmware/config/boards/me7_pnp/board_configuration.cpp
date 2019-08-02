@@ -62,7 +62,6 @@ void setBoardConfigurationOverrides(void) {
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
-	boardConfiguration->boardTestModeJumperPin = GPIO_UNASSIGNED;
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
 	boardConfiguration->max31855spiDevice = SPI_NONE;
 	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;

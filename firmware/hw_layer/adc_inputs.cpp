@@ -32,7 +32,6 @@
 
 #include "pin_repository.h"
 #include "engine_math.h"
-#include "board_test.h"
 #include "engine_controller.h"
 #include "maf.h"
 //#include "biquad.h"
@@ -533,7 +532,7 @@ static void configureInputs(void) {
 	setAdcChannelOverrides();
 }
 
-void initAdcInputs(bool boardTestMode) {
+void initAdcInputs() {
 	printMsg(&logger, "initAdcInputs()");
 	if (ADC_BUF_DEPTH_FAST > MAX_ADC_GRP_BUF_DEPTH)
 		firmwareError(CUSTOM_ERR_ADC_DEPTH_FAST, "ADC_BUF_DEPTH_FAST too high");
@@ -559,7 +558,7 @@ void initAdcInputs(bool boardTestMode) {
 		/**
 		 * in board test mode all currently enabled ADC channels are running in slow mode
 		 */
-		if (mode == ADC_SLOW || (boardTestMode && mode == ADC_FAST)) {
+		if (mode == ADC_SLOW) {
 			slowAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
 		} else if (mode == ADC_FAST) {
 			fastAdc.enableChannelAndPin((adc_channel_e) (ADC_CHANNEL_IN0 + adc));

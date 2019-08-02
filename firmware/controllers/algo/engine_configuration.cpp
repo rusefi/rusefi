@@ -983,7 +983,6 @@ static void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 
 	//boardConfiguration->logicAnalyzerPins[1] = GPIOE_5; // GPIOE_5 is a popular option (if available)
 
-	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
 
 	// set this to SPI_DEVICE_3 to enable stimulation
 	//boardConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;

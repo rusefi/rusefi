@@ -33,7 +33,6 @@
 
 #include "AdcConfiguration.h"
 #include "electronic_throttle.h"
-#include "board_test.h"
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
@@ -452,30 +451,11 @@ void initHardware(Logging *l) {
 	initTriggerDecoder();
 #endif
 
-	bool isBoardTestMode_b;
-	if (CONFIGB(boardTestModeJumperPin) != GPIO_UNASSIGNED) {
-		efiSetPadMode("board test", CONFIGB(boardTestModeJumperPin),
-		PAL_MODE_INPUT_PULLUP);
-		isBoardTestMode_b = (!efiReadPin(CONFIGB(boardTestModeJumperPin)));
-
-		// we can now relese this pin, it is actually used as output sometimes
-		brain_pin_markUnused(CONFIGB(boardTestModeJumperPin));
-	} else {
-		isBoardTestMode_b = false;
-	}
-
 #if HAL_USE_ADC
-	initAdcInputs(isBoardTestMode_b);
+	initAdcInputs();
 	// wait for first set of ADC values so that we do not produce invalid sensor data
 	waitForSlowAdc(1);
 #endif /* HAL_USE_ADC */
-
-#if EFI_BOARD_TEST
-	if (isBoardTestMode_b) {
-		// this method never returns
-		initBoardTest();
-	}
-#endif /* EFI_BOARD_TEST */
 
 	initRtc();
 

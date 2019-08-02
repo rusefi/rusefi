@@ -539,7 +539,7 @@ switch_input_pin_e clutchDownPin;some cars have a switch to indicate that clutch
 	brain_pin_e wboHeaterPin;
 	brain_pin_e cj125CsPin;
 	spi_device_e max31855spiDevice;
-	brain_pin_e boardTestModeJumperPin;
+	brain_pin_e unused1133;
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	brain_pin_e mc33972_cs;

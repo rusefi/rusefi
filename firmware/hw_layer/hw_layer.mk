@@ -19,7 +19,6 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \
 	$(PROJECT_DIR)/hw_layer/lcd/lcd_HD44780.cpp \
  	$(PROJECT_DIR)/hw_layer/adc_inputs.cpp \
-	$(PROJECT_DIR)/hw_layer/board_test.cpp \
 	$(PROJECT_DIR)/hw_layer/pwm_generator.cpp \
 	$(PROJECT_DIR)/hw_layer/trigger_input.cpp \
 	$(PROJECT_DIR)/hw_layer/hip9011.cpp \
