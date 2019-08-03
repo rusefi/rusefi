@@ -1450,7 +1450,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	    field = "nbVvtIndex",							nbVvtIndex
 	    field = "print verbose sync details to console",verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
-	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8}
+	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8 || trigger_type == 9}
 	dialog = triggerConfiguration
 		panel = triggerConfiguration_settings,	North
 		panel = triggerConfiguration_IO,		South
