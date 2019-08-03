@@ -49,6 +49,7 @@ rem users probably do not really care for this file
 rem cp firmware/svnversion.h %folder%
 
 cp -r misc/install/openocd %console_folder%
+cp -r misc/install/DfuSe %console_folder%
 rem 407 has additional version of firmware
 cp firmware/deliver/rusefi_no_asserts.bin %folder%
 cp firmware/deliver/rusefi_no_asserts.dfu %folder%
