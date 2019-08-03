@@ -1,6 +1,8 @@
 HW_LAYER_EGT = $(PROJECT_DIR)/hw_layer/serial_over_usb/usbcfg.c \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb/usbconsole.c
 
+HW_INC = hw_layer/$(CPU_HWLAYER)
+
 HW_LAYER_EGT_CPP = $(PROJECT_DIR)/hw_layer/can_hw.cpp \
 	$(PROJECT_DIR)/hw_layer/max31855.cpp
 

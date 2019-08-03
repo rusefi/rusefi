@@ -39,6 +39,7 @@
 #include "tps.h"
 #if EFI_PROD_CODE
 #include "rusefi.h"
+#include "mpu_util.h"
 #endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE
@@ -270,8 +271,6 @@ static void handleCommandX14(uint16_t index) {
 	}
 
 }
-
-void jump_to_bootloader();
 
 // todo: this is probably a wrong place for this method now
 void executeTSCommand(uint16_t subsystem, uint16_t index) {

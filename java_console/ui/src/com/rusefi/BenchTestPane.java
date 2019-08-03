@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.MessagesView;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +25,13 @@ public class BenchTestPane {
         content.add(new CommandControl("Reboot", "", "Reboot") {
             @Override
             protected String getCommand() {
-                return "reboot";
+                return Fields.CMD_REBOOT;
+            }
+        }.getContent());
+        content.add(new CommandControl("Reboot to DFU", "", "Reboot to DFU") {
+            @Override
+            protected String getCommand() {
+                return Fields.CMD_REBOOT_DFU;
             }
         }.getContent());
         content.add(new MessagesView().messagesScroll);

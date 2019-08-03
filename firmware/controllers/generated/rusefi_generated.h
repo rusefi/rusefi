@@ -364,6 +364,8 @@
 #define clutchUpPinMode_offset_hex 3cb
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
+#define CMD_REBOOT "reboot"
+#define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"

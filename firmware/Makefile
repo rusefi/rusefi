@@ -294,7 +294,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	hw_layer/lcd \
 	$(HW_SENSORS_INC) \
 	hw_layer/mass_storage \
-	hw_layer/$(CPU_HWLAYER) \
+	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UTIL_INC) \
 	development \
