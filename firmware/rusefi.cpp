@@ -122,6 +122,7 @@
 #include "algo.h"
 #include "custom_engine.h"
 #include "engine_math.h"
+#include "mpu_util.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -166,7 +167,8 @@ void runRusEfi(void) {
 	engine->setConfig(config);
 	initIntermediateLoggingBuffer();
 	initErrorHandling();
-	addConsoleAction("reboot", scheduleReboot);
+	addConsoleAction(CMD_REBOOT, scheduleReboot);
+	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
 #if EFI_SHAFT_POSITION_INPUT
 	/**

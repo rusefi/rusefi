@@ -18,7 +18,12 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     // Even on Windows openOCD insists on "/" for path separator
     public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
     public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + "/" + "rusefi_no_asserts.bin";
+    /**
+     * SWD ST-LINK/V2 mode
+     */
     static final String OPENOCD_EXE = "openocd/openocd.exe";
+    // TODO: integration with DFU command line tool
+    static final String DFU_EXE = "DfuSeCommand.exe -c -d --v --fn rusefi.dfu";
     static final String BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";

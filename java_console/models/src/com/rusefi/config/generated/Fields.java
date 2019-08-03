@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Aug 02 01:26:57 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Aug 03 18:52:34 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -235,6 +235,8 @@ public class Fields {
 	public static final int clutchUpPinMode_offset = 971;
 	public static final String CMD_DISABLE = "disable";
 	public static final String CMD_ENABLE = "enable";
+	public static final String CMD_REBOOT = "reboot";
+	public static final String CMD_REBOOT_DFU = "reboot_dfu";
 	public static final String CMD_TRIGGER_HW_INPUT = "trigger_hw_input";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final String CMD_WRITECONFIG = "writeconfig";
