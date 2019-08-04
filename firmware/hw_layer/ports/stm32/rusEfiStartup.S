@@ -15,8 +15,9 @@
 	.thumb_func
 // end of 'I have no idea'
 
-	.global rusEfiAsboluteStartupMethod
-rusEfiAsboluteStartupMethod:
+	// ChibiOS defines it's Reset_Handler 'weak' - by defining out handler this becomes firmware entry point
+	.global Reset_Handler
+Reset_Handler:
 // [rusefi][DFU][start]
 // Clive Two.Zero is the God of ST community forum
 // Device specific, if in doubt RTFM
@@ -27,7 +28,7 @@ STR R0, [R0, #0] // Invalidate
 CMP R2, R1
 BEQ UseDFU
 	// DFU bootloader not needed, jump back to normal ChibiOS startup
-	bl	rusEfiAsboluteStartupMethodReturnPoint
+         bl          _crt0_entry
 UseDFU:
 	// AN2606 Application note
 	// STM32 microcontroller system memory boot mode
