@@ -9,6 +9,10 @@ import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.Objects;
+
 /**
  * This class holds the reference to the actual Serial port object
  * <p/>
@@ -92,8 +96,14 @@ public class PortHolder {
      * this method blocks till a connection is available
      */
     public void packAndSend(final String command, boolean fireEvent) throws InterruptedException {
-        if (bp == null)
-            throw new NullPointerException("bp");
+        if (bp == null) {
+            Window[] windows = JDialog.getWindows();
+            Window window = windows.length == 0 ? null : windows[0];
+            JOptionPane.showMessageDialog(window, "No connectivity",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
+
         bp.doSend(command, fireEvent);
     }
 
