@@ -22,7 +22,7 @@ typedef enum {
 BOR_Level_t BOR_Get(void);
 BOR_Result_t BOR_Set(BOR_Level_t BORValue);
 
-void baseHardwareInit(void);
+void baseMCUInit(void);
 void turnOnSpi(spi_device_e device);
 void jump_to_bootloader();
 

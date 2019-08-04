@@ -76,7 +76,7 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 
 #endif /* GNU / IAR */
 
-void baseHardwareInit(void) {
+void baseMCUInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
         DWT->CYCCNT = 0;
 

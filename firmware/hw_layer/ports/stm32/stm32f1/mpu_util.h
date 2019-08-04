@@ -10,7 +10,7 @@
 
 #include "global.h"
 
-#define baseHardwareInit() {}
+#define baseMCUInit() {}
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 

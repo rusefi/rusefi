@@ -19,7 +19,7 @@
 
 EXTERN_ENGINE;
 
-void baseHardwareInit(void) {
+void baseMCUInit(void) {
 }
 
 void _unhandled_exception(void) {

@@ -92,12 +92,12 @@ static void runChprintfTest() {
 
 void rusEfiFunctionalTest(void) {
 	printToConsole("Running rusEfi simulator version:");
+	initErrorHandlingDataStructures();
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
 	printToConsole(versionBuffer);
 
 	initIntermediateLoggingBuffer();
-	initErrorHandling();
 
 	engine->setConfig(config);
 

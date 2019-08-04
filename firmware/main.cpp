@@ -19,7 +19,10 @@ int main(void) {
 	halInit();
 	chSysInit();
 
-	baseHardwareInit();
+	/**
+	 * most basic MCU initialization - no configuration access, no external hardware access
+	 */
+	baseMCUInit();
 
 	runRusEfi();
 	return 0;
