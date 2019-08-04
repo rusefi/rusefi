@@ -255,7 +255,7 @@ INCDIR = .. $(CHIBIOS)/os/license \
 	$(PROJECT_DIR)/hw_layer/lcd \
 	$(PROJECT_DIR)/hw_layer/sensors \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER) \
+	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(PROJECT_DIR)/development \
 	$(PROJECT_DIR)/development/hw_layer \
