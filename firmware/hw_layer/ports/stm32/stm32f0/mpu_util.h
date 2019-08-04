@@ -11,6 +11,6 @@
 #define EFI_CAN_RX_AF 9
 #define EFI_CAN_TX_AF 9
 
-#define baseHardwareInit() {}
+#define baseMCUInit() {}
 
 #endif /* MPU_UTIL_H_ */

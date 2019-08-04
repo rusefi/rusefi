@@ -38,7 +38,7 @@ EXTERNC void firmwareError(obd_code_e code, const char *fmt, ...);
 // todo: rename to getFatalErrorMessage
 char *getFirmwareError(void);
 
-void initErrorHandling(void);
+void initErrorHandlingDataStructures(void);
 // todo: rename to getWarningMessage?
 char *getWarning(void);
 

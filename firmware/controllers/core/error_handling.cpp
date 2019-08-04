@@ -181,8 +181,13 @@ void onUnlockHook(void) {
 
 #endif /* EFI_CLOCK_LOCKS */
 
-
-void initErrorHandling(void) {
+/**
+ * This method should be invoked really early in firmware initialization cycle.
+ *
+ * Implementation can only do trivial things like changing memory state. No hardware or OS access allowed
+ * within this method.
+ */
+void initErrorHandlingDataStructures(void) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
