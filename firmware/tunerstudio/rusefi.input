@@ -1106,7 +1106,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Corrections
-		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1 && useWarmupPidAfr == 0}
+		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
 		subMenu = baroCorrTbl,				"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
 		subMenu = tChargeSettings,			"tCharge settings", 0, {isInjectionEnabled == 1}
@@ -1839,7 +1839,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		panel = mapCommon
 		panel = mapSensorAnalog, {hasFrequencyReportingMapSensor == 0}
 		panel = mapSensorFreq, {hasFrequencyReportingMapSensor == 1}
-		panel = mapErrorDetection
 
 	dialog = baroSettings, "Baro sensor"
 		field = "Baro ADC input",						baroSensor_hwChannel
