@@ -32,15 +32,7 @@ BEQ UseDFU
 UseDFU:
 	// AN2606 Application note
 	// STM32 microcontroller system memory boot mode
-LDR R0, =0x40023844 // RCC_APB2ENR
-LDR R1, =0x00004000 // ENABLE SYSCFG CLOCK
-STR R1, [R0, #0]
-LDR R0, =0x40013800 // SYSCFG_MEMRMP
-LDR R1, =0x00000001 // MAP ROM AT ZERO
-STR R1, [R0, #0]
-LDR R0, =0x1FFF0000 // ROM BASE
-LDR SP,[R0, #0] // SP @ +0
-LDR R0,[R0, #4] // PC @ +4
+#include "dfu_init.h"
 BX R0 // this jumps to DFU bootloader
 	// I believe we are never executing this line
 // [rusefi][DFU][end]
