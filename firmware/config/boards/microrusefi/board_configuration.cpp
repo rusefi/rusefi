@@ -1,7 +1,10 @@
 /**
  * @file boards/microrusefi/board_configuration.cpp
  *
+ *
  * @brief Configuration defaults for the microRusefi board
+ *
+ * See https://github.com/rusefi/rusefi_documentation/wiki/Hardware_microRusEfi_wiring
  *
  * @author Matthew Kennedy, (c) 2019
  */
@@ -15,8 +18,7 @@
 
 EXTERN_ENGINE;
 
-static void setInjectorPins()
-{
+static void setInjectorPins() {
 	boardConfiguration->injectionPins[0] = GPIOE_14;
 	boardConfiguration->injectionPins[1] = GPIOE_13;
 	boardConfiguration->injectionPins[2] = GPIOE_12;
@@ -30,8 +32,7 @@ static void setInjectorPins()
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
-static void setIgnitionPins()
-{
+static void setIgnitionPins() {
 	boardConfiguration->ignitionPins[0] = GPIOD_4;
 	boardConfiguration->ignitionPins[1] = GPIOD_3;
 	boardConfiguration->ignitionPins[2] = GPIOD_2;
@@ -45,16 +46,14 @@ static void setIgnitionPins()
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins()
-{
+static void setLedPins() {
 	engineConfiguration->fatalErrorPin = GPIOE_3;		// d21 = red
 	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
 	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
 	boardConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
 }
 
-static void setupVbatt()
-{
+static void setupVbatt() {
 	engineConfiguration->vbattDividerCoeff = 8.166666f;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
@@ -64,8 +63,7 @@ static void setupVbatt()
 	engineConfiguration->adcVcc = 3.29f;
 }
 
-static void setupTle8888()
-{
+static void setupTle8888() {
 	// Enable spi3
 	boardConfiguration->is_enabled_spi_3 = true;
 
@@ -81,8 +79,7 @@ static void setupTle8888()
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_3;
 }
 
-static void setupEtb()
-{
+static void setupEtb() {
 	// TLE9201 driver
 	// This chip has three control pins:
 	// DIR - sets direction of the motor
@@ -104,8 +101,7 @@ static void setupEtb()
 	engineConfiguration->etbFreq = 800;
 }
 
-static void setupDefaultSensorInputs()
-{
+static void setupDefaultSensorInputs() {
 	// trigger inputs
 	// tle8888 VR conditioner
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
@@ -141,6 +137,9 @@ void setSerialConfigurationOverrides(void) {
 
 /**
  * @brief   Board-specific configuration code overrides.
+ *
+ * See also setDefaultEngineConfiguration
+ *
  * @todo    Add your board-specific code, if any.
  */
 void setBoardConfigurationOverrides(void) {
