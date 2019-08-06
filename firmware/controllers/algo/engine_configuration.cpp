@@ -1057,7 +1057,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		break;
 	case MRE_BOARD_TEST:
-		mreBoardTest(PASS_ENGINE_PARAMETER_SIGNATURE);
+		mreBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
