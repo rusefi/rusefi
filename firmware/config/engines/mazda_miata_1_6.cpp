@@ -100,46 +100,39 @@ static const fuel_table_t miataNA6_maf_fuel_table = {
 		{/* 15 4.400	*//* 0 800.0*/7.000,	/* 1 1213.33*/7.000,	/* 2 1626.6699*/7.000,	/* 3 2040.0*/7.000,	/* 4 2453.3298*/7.000,	/* 5 2866.67*/7.000,	/* 6 3280.0*/7.000,	/* 7 3693.3298*/7.000,	/* 8 4106.67*/6.000,	/* 9 4520.0*/6.000,	/* 10 4933.33*/6.000,	/* 11 5346.67*/6.000,	/* 12 5760.0*/6.000,	/* 13 6173.33*/6.000,	/* 14 6586.67*/6.000,	/* 15 7000.0*/6.000,	},
 };
 
-void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
 	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
 	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
 #endif
 
 	boardConfiguration->idle.solenoidFrequency = 160;
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+}
+
+void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
+
 	boardConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-
-	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 }
 
-void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	boardConfiguration->isHip9011Enabled = false;
-	boardConfiguration->isSdCardEnabled = false;
-
+static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
-
-
-	// Frankenso middle plug 2J, W32 top <> W47 bottom "#5 Green" jumper, not OEM
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-
-	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-
-	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 
 	memcpy(config->veRpmBins, ve16RpmBins, sizeof(ve16RpmBins));
 	memcpy(config->veLoadBins, ve16LoadBins, sizeof(ve16LoadBins));
@@ -147,23 +140,7 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyFuelTable(mapBased16VeTable, config->veTable);
 #endif
 
-	// Wide band oxygen (from middle plug) to W52
-	engineConfiguration->afr.hwChannel = EFI_ADC_13; // PA3
-
 	setWholeFuelMap(6 PASS_CONFIG_PARAMETER_SUFFIX);
-
-	/**
-	 * http://miataturbo.wikidot.com/fuel-injectors
-	 * 90-93 (Blue) - #195500-1970
-	 */
-	engineConfiguration->injector.flow = 230;
-
-
-	// set cranking_timing_angle 10
-	engineConfiguration->crankingTimingAngle = 10;
-
-	// chartsize 200
-	engineConfiguration->engineChartSize = 200;
 
 	engineConfiguration->idleMode = IM_AUTO;
 	// below 20% this valve seems to be opening for fail-safe idle air
@@ -173,7 +150,19 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.dFactor = 0.0001;
 	engineConfiguration->idleRpmPid.periodMs = 100;
 
+	/**
+	 * http://miataturbo.wikidot.com/fuel-injectors
+	 * 90-93 (Blue) - #195500-1970
+	 */
+	engineConfiguration->injector.flow = 230;
 
+	// set cranking_timing_angle 10
+	engineConfiguration->crankingTimingAngle = 10;
+
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
+
+	// chartsize 200
+	engineConfiguration->engineChartSize = 200;
 
 	// maybe adjust CLT correction?
 	// set cranking_fuel 8
@@ -198,14 +187,33 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.displacement = 1.6;
 
-	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
-
-	boardConfiguration->isSdCardEnabled = true;
-
 	// my car was originally a manual so proper TPS
 	engineConfiguration->tpsMin = 93; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 656; // convert 12to10 bit (ADC/4)
 
+	engineConfiguration->injectionMode = IM_BATCH;
+	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
+}
+
+void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	boardConfiguration->isHip9011Enabled = false;
+	boardConfiguration->isSdCardEnabled = false;
+
+	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// Frankenso middle plug 2J, W32 top <> W47 bottom "#5 Green" jumper, not OEM
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+
+	// Wide band oxygen (from middle plug) to W52
+	engineConfiguration->afr.hwChannel = EFI_ADC_13; // PA3
+
+	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
+
+	boardConfiguration->isSdCardEnabled = true;
 
 //	/**
 //	 * oil pressure line
@@ -255,9 +263,6 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// white wire from 1E - TOP of W4 to BOTTOM W62
 	boardConfiguration->malfunctionIndicatorPin = GPIOD_5;
 
-	engineConfiguration->injectionMode = IM_BATCH;
-
-
 	// yellow wire from 1V/W22 to bottom of W48
 	boardConfiguration->clutchDownPin = GPIOA_3;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
@@ -270,7 +275,6 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->acSwitchAdc = EFI_ADC_6; // PA6
 
 	miataNAcommon(PASS_CONFIG_PARAMETER_SIGNATURE);
-	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
 }
 
 void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -285,5 +289,12 @@ void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+	boardConfiguration->isHip9011Enabled = false;
+	boardConfiguration->isSdCardEnabled = false;
+
+	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
+
 
 }
