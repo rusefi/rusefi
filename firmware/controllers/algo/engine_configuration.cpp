@@ -1053,9 +1053,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	case MRE_MIATA_NA6:
 	case ACURA_RSX:
 	case MINI_COOPER_R50:
-	case GM_2_2:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
+		break;
+	case MRE_BOARD_TEST:
+		mreBoardTest(PASS_ENGINE_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:

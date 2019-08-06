@@ -193,8 +193,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "CAMARO_4";
 	case CHEVY_C20_1973:
 		return "CHEVY C20";
-	case GM_2_2:
-	  return "GM_2_2";
+	case MRE_BOARD_TEST:
+	  return "MRE_TEST";
 	case DODGE_RAM:
 		return "DODGE_RAM";
 	default:
