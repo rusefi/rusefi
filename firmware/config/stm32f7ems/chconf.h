@@ -31,6 +31,8 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_5_1_
 
+#define CHPRINTF_USE_FLOAT          	TRUE
+
 #if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
  #define EFI_CLOCK_LOCKS FALSE
 #endif /* EFI_CLOCK_LOCKS */
