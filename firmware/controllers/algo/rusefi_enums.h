@@ -112,7 +112,7 @@ typedef enum {
 
 	SACHS = 29,
 
-	GM_2_2 = 30,
+	MRE_BOARD_TEST = 30,
 
 	DODGE_RAM = 31,
 

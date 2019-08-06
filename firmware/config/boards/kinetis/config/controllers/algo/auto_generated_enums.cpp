@@ -571,8 +571,8 @@ case Force_4_bytes_size_engine_type:
   return "Force_4_bytes_size_engine_type";
 case GEO_STORM:
   return "GEO_STORM";
-case GM_2_2:
-  return "GM_2_2";
+case MRE_BOARD_TEST:
+  return "MRE_BOARD_TEST";
 case GY6_139QMB:
   return "GY6_139QMB";
 case HONDA_600:

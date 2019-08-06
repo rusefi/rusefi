@@ -418,4 +418,50 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMax = 799;
 }
 
+/**
+ * set engine_type 30
+ */
+void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
+	// EFI_ADC_1: "23 - AN temp 2"
+	// test harness: Red/Green, 2K PD. expected 2.0v
+	// iat in microrusefi/board_configuration.cpp
+
+	// EFI_ADC_2: "24 - AN temp 3"
+	// test harness: Blue/White, 2K PD. expected 2.0v
+
+
+	// EFI_ADC_10: "27 - AN volt 1"
+	// test harness: Blue/Red, 3.84K PD / 5.3 PU. expected 1.6v
+	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+
+	// EFI_ADC_14: "32 - AN volt 6"
+	// test harness: Red/White 3.6K PD / 5.2 PU. expected 1.6v
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_14;
+
+
+	// EFI_ADC_4: "28 - AN volt 10"
+	// test harness: Red/Yellow
+	engineConfiguration->afr.hwChannel = EFI_ADC_4;
+
+
+	// EFI_ADC_7: "31 - AN volt 3"
+	// test harness: White/Red
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
+
+
+	//engineConfiguration->baroSensor.hwChannel
+	//engineConfiguration->oilPressure.hwChannel
+	//engineConfiguration->fuelLevelSensor
+
+	// TPS tps1_1AdcChannel EFI_ADC_13
+
+	engineConfiguration->specs.cylindersCount = 6;
+	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
+	// fix res boardConfiguration->ignitionPins[4] = GPIOD_6;
+	// fix res boardConfiguration->ignitionPins[5] = GPIOD_7;
+
+
+}
+
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
