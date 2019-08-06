@@ -238,7 +238,7 @@ void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
@@ -387,7 +387,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Frankenso analog #6 pin 3R, W56 (5th lower row pin from the end) top <> W45 bottom jumper, not OEM
 
 
-	// see setCustomEngineConfiguration
+	// see setFrankensoConfiguration
 	// map.sensor.hwChannel = EFI_ADC_0; W53
 
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;

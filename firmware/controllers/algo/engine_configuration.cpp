@@ -1048,7 +1048,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	switch (engineType) {
 	case DEFAULT_FRANKENSO:
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-		setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6:
 	case ACURA_RSX:
@@ -1101,11 +1101,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 	case MIATA_NA6_MAP:
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-		setMiataNA6_MAP_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_VAF:
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-		setMiataNA6_VAF_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setMiataNA6_VAF_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ETB_BENCH_ENGINE:
 		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);

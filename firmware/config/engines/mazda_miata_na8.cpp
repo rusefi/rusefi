@@ -19,7 +19,7 @@ EXTERN_CONFIG;
  * See also setMiataNA_1_6_Configuration
  */
 void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// blue jumper wire to W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;

@@ -24,7 +24,7 @@
 EXTERN_CONFIG;
 
 static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE); // default pinout
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE); // default pinout
 
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;

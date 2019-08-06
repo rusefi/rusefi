@@ -80,9 +80,8 @@ void disableLCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
 }
 
-// todo: should this be renamed to 'setFrankensoConfiguration'?
 // todo: should this be part of more default configurations?
-void setCustomEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	setFrankenso_01_LCD(boardConfiguration);
@@ -192,7 +191,7 @@ void setCustomEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
