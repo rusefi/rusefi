@@ -15,7 +15,7 @@
 EXTERN_CONFIG;
 
 void setZil130(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->specs.cylindersCount = 8;
 

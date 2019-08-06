@@ -9,7 +9,7 @@
 
 #include "engine_configuration.h"
 
-void setCustomEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
 void disableLCD(board_configuration_s *boardConfiguration);
 void runSchedulingPrecisionTestIfNeeded(void);

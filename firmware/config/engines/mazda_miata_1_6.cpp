@@ -125,8 +125,8 @@ void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 }
 
-void setMiataNA6_MAP_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	boardConfiguration->isHip9011Enabled = false;
 	boardConfiguration->isSdCardEnabled = false;
@@ -273,8 +273,8 @@ void setMiataNA6_MAP_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
 }
 
-void setMiataNA6_VAF_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiataNA6_MAP_Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 
 	/**
@@ -282,4 +282,8 @@ void setMiataNA6_VAF_Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 	// todo: MAF-based ignition table?
+}
+
+void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
 }

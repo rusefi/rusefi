@@ -11,6 +11,6 @@
 EXTERN_CONFIG;
 
 void setGeoStormConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 

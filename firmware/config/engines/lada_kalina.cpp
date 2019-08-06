@@ -14,7 +14,7 @@
 EXTERN_CONFIG;
 
 void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	disableLCD(boardConfiguration);
 
 	boardConfiguration->HD44780_rs = GPIO_UNASSIGNED;

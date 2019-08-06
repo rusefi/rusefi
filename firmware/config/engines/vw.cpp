@@ -16,7 +16,7 @@
 EXTERN_CONFIG;
 
 void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCustomEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setWholeTimingTable_d(20 PASS_CONFIG_PARAMETER_SUFFIX);
 	// set cranking_timing_angle 10
