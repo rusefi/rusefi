@@ -288,6 +288,9 @@ void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// todo: MAF-based ignition table?
 }
 
+/**
+ * set engine_type 12
+ */
 void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->isHip9011Enabled = false;
@@ -295,6 +298,5 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
-
 
 }

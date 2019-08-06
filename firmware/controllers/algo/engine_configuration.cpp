@@ -1051,6 +1051,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6:
+		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case ACURA_RSX:
 	case MINI_COOPER_R50:
 	case MINIMAL_PINS:
