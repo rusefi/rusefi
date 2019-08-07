@@ -74,6 +74,8 @@ extern bool main_loop_started;
 #include "vehicle_speed.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
+extern int vvtEventRiseCounter;
+extern int vvtEventFallCounter;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -768,6 +770,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
 		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
+#if EFI_PROD_CODE
+		tsOutputChannels->debugIntField4 = vvtEventRiseCounter;
+		tsOutputChannels->debugIntField5 = vvtEventFallCounter;
+#endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
