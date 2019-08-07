@@ -196,13 +196,15 @@ static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW,
 static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft) {
 	ICUConfig *icucfg;
 
-	if (brainPin == GPIO_UNASSIGNED)
+	if (brainPin == GPIO_UNASSIGNED) {
 		return -1;
+	}
 
-	if (is_shaft)
+	if (is_shaft) {
 		icucfg = &shaft_icucfg;
-	else
+	} else {
 		icucfg = &cam_icucfg;
+	}
 
 	// configure pin
 	turnOnCapturePin(msg, brainPin);

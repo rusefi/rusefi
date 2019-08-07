@@ -292,6 +292,19 @@ void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 12
  */
 void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// CLT: "18 - AN temp 1"
+	// IAT: "23 - AN temp 2"
+	// MAF/VAF: "19 - AN volt 4"
+	engineConfiguration->mafAdcChannel = EFI_ADC_12;
+
+	//boardConfiguration->triggerInputPins[0] = GPIOC_6;
+	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+
+	// MIL check engine:
+
+	// IAC: GPIOE_9:  "7 - Lowside 1"
+
 
 	boardConfiguration->isHip9011Enabled = false;
 	boardConfiguration->isSdCardEnabled = false;
