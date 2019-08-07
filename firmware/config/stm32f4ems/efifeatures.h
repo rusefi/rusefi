@@ -66,6 +66,10 @@
 #define EFI_ICU_INPUTS TRUE
 #endif
 
+#ifndef HAL_TRIGGER_USE_PAL
+#define HAL_TRIGGER_USE_PAL FALSE
+#endif /* HAL_TRIGGER_USE_PAL */
+
 /**
  * TunerStudio support.
  */

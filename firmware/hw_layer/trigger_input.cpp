@@ -14,10 +14,6 @@
 
 #include "global.h"
 
-#ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
-#endif /* HAL_TRIGGER_USE_PAL */
-
 volatile int icuWidthCallbackCounter = 0;
 volatile int icuWidthPeriodCounter = 0;
 bool hwTriggerInputEnabled = true; // this is useful at least for real hardware integration testing
