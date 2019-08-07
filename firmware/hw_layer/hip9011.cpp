@@ -191,7 +191,11 @@ void setHip9011FrankensoPinout(void) {
 	CONFIGB(is_enabled_spi_2) = true;
 	// todo: convert this to rusEfi, hardware-independent enum
 #if EFI_PROD_CODE
+#ifdef EFI_HIP_CS_PIN
+	CONFIGB(hip9011CsPin) = EFI_HIP_CS_PIN;
+#else
 	CONFIGB(hip9011CsPin) = GPIOB_0; // rev 0.4
+#endif
 	CONFIGB(hip9011CsPinMode) = OM_OPENDRAIN;
 
 	CONFIGB(hip9011IntHoldPin) = GPIOB_11;
