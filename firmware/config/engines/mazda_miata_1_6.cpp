@@ -105,6 +105,8 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
+	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
+
 	setCommonNTCSensor(&engineConfiguration->clt);
 	setCommonNTCSensor(&engineConfiguration->iat);
 
@@ -309,6 +311,7 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->isHip9011Enabled = false;
 	boardConfiguration->isSdCardEnabled = false;
 
+	setMiataNA6_settings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->fuelAlgorithm = LM_PLAIN_MAF;
 
