@@ -33,8 +33,8 @@
 EXTERN_ENGINE
 ;
 
-floatms_t getEngineCycleDuration(int rpm DECLARE_GLOBAL_SUFFIX) {
-	return getCrankshaftRevolutionTimeMs(rpm) * (get_operationMode == TWO_STROKE ? 1 : 2);
+floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE) == TWO_STROKE ? 1 : 2);
 }
 
 /**
@@ -472,7 +472,7 @@ ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	ENGINE(engineCycle) = getEngineCycle(CONFIG(operationMode));
+	ENGINE(engineCycle) = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	angle_t maxTimingCorrMap = -720.0f;
 	angle_t maxTimingMap = -720.0f;
