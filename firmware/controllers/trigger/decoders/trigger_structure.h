@@ -86,6 +86,7 @@ public:
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
 	void findTriggerPosition(event_trigger_position_s *position,
 			angle_t angleOffset DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
+	void setShapeDefinitionError(bool value);
 
 	/**
 	 * Simplest trigger shape does not require any synchronization - for example if there is only

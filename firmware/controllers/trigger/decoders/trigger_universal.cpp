@@ -32,7 +32,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 		operation_mode_e operationMode) {
 	if (totalTeethCount <= 0) {
 		warning(CUSTOM_OBD_TRIGGER_SHAPE, "totalTeethCount is zero or less: %d", totalTeethCount);
-		s->shapeDefinitionError = true;
+		s->setShapeDefinitionError(true);
 		return;
 	}
 	efiAssertVoid(CUSTOM_ERR_6588, s != NULL, "TriggerShape is NULL");
