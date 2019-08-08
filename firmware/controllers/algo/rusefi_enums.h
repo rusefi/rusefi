@@ -607,7 +607,7 @@ typedef enum {
 	DBG_2 = 2,
 	DBG_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
-	DBG_TRIGGER_INPUT = 5,
+	DBG_TRIGGER_COUNTERS = 5,
 	DBG_FSIO_ADC = 6,
 	/**
 	 * VVT valve control often uses AUX pid #1

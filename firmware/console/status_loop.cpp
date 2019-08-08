@@ -768,7 +768,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField1 = engine->engineState.auxValveStart;
 		tsOutputChannels->debugFloatField2 = engine->engineState.auxValveEnd;
 		break;
-	case DBG_TRIGGER_INPUT:
+	case DBG_TRIGGER_COUNTERS:
 		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
 		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
