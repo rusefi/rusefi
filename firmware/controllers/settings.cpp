@@ -379,7 +379,7 @@ static void setSensorChartMode(int value) {
 }
 
 static void setOperationMode(int value) {
-	engineConfiguration->operationMode = (operation_mode_e)value;
+	engineConfiguration->ambiguousOperationMode = (operation_mode_e)value;
 	doPrintConfiguration();
 }
 
@@ -560,7 +560,7 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFF
 	engineConfiguration->trigger.customSkippedToothCount = skipped;
 
 	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
-	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->operationMode);
+	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->ambiguousOperationMode);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
@@ -1336,7 +1336,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
 		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
-		engineConfiguration->operationMode = (operation_mode_e)valueI;
+		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
