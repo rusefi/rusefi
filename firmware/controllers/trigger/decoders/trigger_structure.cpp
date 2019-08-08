@@ -215,7 +215,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 	if (privateTriggerDefinitionSize > 0) {
 		if (angle <= previousAngle) {
 			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order: new=%.2f and prev=%.2f, size=%d", angle, previousAngle, privateTriggerDefinitionSize);
-			shapeDefinitionError = true;
+			setShapeDefinitionError(true);
 			return;
 		}
 	}
@@ -227,7 +227,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 
 			if (wave->pinStates == NULL) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
-				shapeDefinitionError = true;
+				setShapeDefinitionError(true);
 				return;
 			}
 			wave->setState(/* switchIndex */ 0, /* value */ initialState[i]);
@@ -242,7 +242,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 	int exactMatch = wave.findAngleMatch(angle, privateTriggerDefinitionSize);
 	if (exactMatch != EFI_ERROR_CODE) {
 		warning(CUSTOM_ERR_SAME_ANGLE, "same angle: not supported");
-		shapeDefinitionError = true;
+		setShapeDefinitionError(true);
 		return;
 	}
 
@@ -342,6 +342,10 @@ int TriggerShape::findAngleIndex(float target) const {
         }
     }
     return left - 1;
+}
+
+void TriggerShape::setShapeDefinitionError(bool value) {
+	shapeDefinitionError = value;
 }
 
 void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
@@ -594,7 +598,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		break;
 
 	default:
-		shapeDefinitionError = true;
+		setShapeDefinitionError(true);
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerShape() not implemented: %d", triggerConfig->type);
 	}
 	/**

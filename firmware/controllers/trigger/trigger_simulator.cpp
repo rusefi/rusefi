@@ -96,7 +96,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(const uint32_t s
 	int revolutionCounter = state->getTotalRevolutionCounter();
 	if (revolutionCounter != GAP_TRACKING_LENGTH + 1) {
 		warning(CUSTOM_OBD_TRIGGER_SHAPE, "sync failed/wrong gap parameters trigger=%s rc=%d", getTrigger_type_e(engineConfiguration->trigger.type), revolutionCounter);
-		shape->shapeDefinitionError = true;
+		shape->setShapeDefinitionError(true);
 		return;
 	}
 	shape->shapeDefinitionError = false;
@@ -117,7 +117,7 @@ uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(TriggerShape * shape,
 		if (state->shaft_is_synchronized)
 			return i;
 	}
-	engine->triggerCentral.triggerShape.shapeDefinitionError = 1;
+	engine->triggerCentral.triggerShape.setShapeDefinitionError(true);
 	warning(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
 	return EFI_ERROR_CODE;
 }
