@@ -308,6 +308,17 @@ injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNAT
 	return rpmCalculator.isCranking(PASS_ENGINE_PARAMETER_SIGNATURE) ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
 }
 
+// see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
+static bool doesTriggerImplyOperationMode(trigger_type_e type) {
+	return type != TT_TOOTHED_WHEEL && type != TT_TOOTHED_WHEEL_60_2 && type != TT_TOOTHED_WHEEL_36_1;
+}
+
+operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	//return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
+	return engineConfiguration->operationMode;
+}
+
+
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
  * so that trigger event handler/IO scheduler tasks are faster.

@@ -236,7 +236,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 //	printFloatArray("vBatt bins: ", engineConfiguration->injector.battLagCorrBins, VBAT_INJECTOR_CURVE_SIZE);
 
 	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
-			engineConfiguration->operationMode);
+			engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	scheduleMsg(&logger, "globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 

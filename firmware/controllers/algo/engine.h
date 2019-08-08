@@ -77,6 +77,8 @@ public:
 	IgnitionEventList ignitionEvents;
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
+	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 
 	int globalSparkIdCoutner = 0;
 

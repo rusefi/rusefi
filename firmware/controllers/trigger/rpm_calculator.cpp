@@ -253,7 +253,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 			if (diffNt == 0) {
 				rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
-				int mult = (int)getEngineCycle(engineConfiguration->operationMode) / 360;
+				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
 				int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
 			}
