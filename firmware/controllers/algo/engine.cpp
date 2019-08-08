@@ -59,7 +59,7 @@ void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUF
 #endif /* EFI_UNIT_TEST */
 
 	TRIGGER_SHAPE(initializeTriggerShape(logger,
-			engineConfiguration->operationMode,
+			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
@@ -315,7 +315,7 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 
 operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
-	return engineConfiguration->operationMode;
+	return engineConfiguration->ambiguousOperationMode;
 }
 
 

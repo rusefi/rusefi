@@ -38,7 +38,7 @@ TEST(misc, testEngineMath) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
-	engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
+	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 
 	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";
 	ASSERT_EQ( 5,  getOneDegreeTimeMs(6000) * 180) << "6000 RPM";

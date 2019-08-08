@@ -1283,12 +1283,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		warning(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER_SUFFIX);
-	// todo: eliminate triggerShape.operationMode?
-	if (engineConfiguration->operationMode != TRIGGER_SHAPE(getOperationMode())) {
-		warning(CUSTOM_ERR_OP_MODE, "operationMode %d/trigger mismatch %d",
-				engineConfiguration->operationMode,
-				TRIGGER_SHAPE(getOperationMode()));
-	}
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -1339,11 +1333,7 @@ float getRpmMultiplier(operation_mode_e mode) {
 }
 
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
-	engineConfiguration->operationMode = mode;
-}
-
-operation_mode_e getOperationMode(engine_configuration_s const *engineConfiguration) {
-	return engineConfiguration->operationMode;
+	engineConfiguration->ambiguousOperationMode = mode;
 }
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {

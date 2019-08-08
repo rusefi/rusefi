@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Aug 02 01:26:57 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Aug 08 00:19:31 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1338,12 +1338,12 @@ struct engine_configuration_s {
 	 */
 	int canSleepPeriodMs;
 	/**
-	 * '4 stroke with symmetrical crank' is a pretty special case for example on Miata NB2
+	 * 'Some triggers could be mounted differently. Most well-known triggers imply specific sensor setup. 4 stroke with symmetrical crank' is a pretty special case for example on Miata NB2
 	 * See engineCycle
 	 * set operation_mode X
 	 * offset 488
 	 */
-	operation_mode_e operationMode;
+	operation_mode_e ambiguousOperationMode;
 	/**
 	 * offset 492
 	 */
@@ -2814,4 +2814,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Aug 02 01:26:57 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Aug 08 00:19:31 EDT 2019
