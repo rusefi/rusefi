@@ -28,7 +28,7 @@ public enum LiveDocsRegistry {
     public void refresh(BinaryProtocol binaryProtocol) {
         for (LiveDocHolder h : liveDocs) {
             boolean visible = h.isVisible();
-            System.out.println(h + ": " + visible);
+            System.out.println(h + ": is_visible=" + visible);
             if (visible) {
                 int liveDocRequestId = h.getId();
                 int size = h.getStructSize();
