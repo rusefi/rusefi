@@ -76,6 +76,8 @@ extern bool main_loop_started;
 #include "periodic_task.h"
 extern int vvtEventRiseCounter;
 extern int vvtEventFallCounter;
+extern int icuWidthCallbackCounter;
+extern int icuWidthPeriodCounter;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -773,6 +775,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_PROD_CODE
 		tsOutputChannels->debugIntField4 = vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = vvtEventFallCounter;
+		tsOutputChannels->debugFloatField5 = icuWidthCallbackCounter + icuWidthPeriodCounter;
 #endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
