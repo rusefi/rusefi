@@ -30,4 +30,11 @@ public abstract class LiveDocHolder {
     public int getStructSize() {
         return Field.getStructureSize(values);
     }
+
+    @Override
+    public String toString() {
+        return "LiveDocHolder{" +
+                "id=" + id +
+                '}';
+    }
 }
