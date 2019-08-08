@@ -361,12 +361,13 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	 * cycle into a four stroke, 720 degrees cycle.
 	 */
 	int triggerIndexForListeners;
-	if (engineConfiguration->operationMode == FOUR_STROKE_CAM_SENSOR ||
-			engineConfiguration->operationMode == TWO_STROKE) {
+	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (operationMode == FOUR_STROKE_CAM_SENSOR ||
+			operationMode == TWO_STROKE) {
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		int crankDivider = engineConfiguration->operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : 4;
+		int crankDivider = operationMode == FOUR_STROKE_CRANK_SENSOR ? 2 : 4;
 
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 
@@ -459,7 +460,7 @@ void printAllTriggers() {
 		board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 		engineConfiguration->trigger.type = tt;
-		engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
+		engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
 		engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
@@ -673,7 +674,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 
 	changed |=
 		COMPARE_CONFIG_PARAMS(trigger.type) ||
-		COMPARE_CONFIG_PARAMS(operationMode) ||
+		COMPARE_CONFIG_PARAMS(ambiguousOperationMode) ||
 		COMPARE_CONFIG_PARAMS(useOnlyRisingEdgeForTrigger) ||
 		COMPARE_CONFIG_PARAMS(globalTriggerAngleOffset) ||
 		COMPARE_CONFIG_PARAMS(trigger.customTotalToothCount) ||
