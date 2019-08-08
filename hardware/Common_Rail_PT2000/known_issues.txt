@@ -1,8 +1,8 @@
- 1) RESOLVED IN R0.1.1 Schematic zone G4 and G5, blue text claims INJ5 as INJ3, and INJ6 as INJ4
- 2) RESOLVED IN R0.1.1 Schematic inj1 and 2 are flipped, nets are flipped. Change net names and correct blue silk screen note. 
- 3)                    Add silk screen to designate injector # and similar. 
- 4)                  Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
- 5)                  Add via for battery wire to be attached. 
- 6)                  check for flipped pins. pins 39 and 50 are wrong.  
- 7)                  ?D2?, D11_1, D10, D10_1, D11 and D11_2 are likely botched. Check them against MC33816 R0.2 layout. dual package into one package
- 8)                  D9 is likely botched, wrong footprint pins, verify against MC33816 R0.2 layout. 
+ 1) RESOLVED IN R0.1 Schematic zone G4 and G5, blue text claims INJ5 as INJ3, and INJ6 as INJ4
+ 2) RESOLVED IN R0.1 Schematic inj1 and 2 are flipped, nets are flipped. Change net names and correct blue silk screen note. 
+ 3) RESOLVED IN R0.1 Add silk screen to designate injector # and similar. 
+ 4) RESOLVED IN R0.1 Move C26, it's currently under an inductor. 2 parts can not sit in the same physical space
+ 5) RESOLVED IN R0.1 Add via for battery wire to be attached. 
+ 6) RESOLVED IN R0.1 check for flipped pins. pins 39 and 50 are wrong.  
+ 7) RESOLVED IN R0.1 ?D2?, D11_1, D10, D10_1, D11 and D11_2 are likely botched. Check them against MC33816 R0.2 layout. dual package into one package
+ 8) RESOLVED IN R0.1 D9 is likely botched, wrong footprint pins, verify against MC33816 R0.2 layout. 
