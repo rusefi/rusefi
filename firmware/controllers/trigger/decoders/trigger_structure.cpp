@@ -410,7 +410,7 @@ void TriggerShape::setSecondTriggerSynchronizationGap(float syncRatio) {
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e operationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
+void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e ambiguousOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > 256, "init t");
@@ -425,7 +425,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 
 	case TT_TOOTHED_WHEEL:
 		initializeSkippedToothTriggerShapeExt(this, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, operationMode);
+				triggerConfig->customSkippedToothCount, ambiguousOperationMode);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -482,19 +482,19 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		break;
 
 	case TT_ONE_PLUS_ONE:
-		configureOnePlusOne(this, operationMode);
+		configureOnePlusOne(this, ambiguousOperationMode);
 		break;
 
 	case TT_3_1_CAM:
-		configure3_1_cam(this, operationMode);
+		configure3_1_cam(this, ambiguousOperationMode);
 		break;
 
 	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
-		configureOnePlus60_2(this, operationMode);
+		configureOnePlus60_2(this, ambiguousOperationMode);
 		break;
 
 	case TT_ONE:
-		setToothedWheelConfiguration(this, 1, 0, operationMode);
+		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);
 		break;
 
 	case TT_MAZDA_SOHC_4:
@@ -506,7 +506,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(this, 60, 2, operationMode);
+		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
 		break;
 
 	case TT_60_2_VW:
@@ -514,7 +514,7 @@ void TriggerShape::initializeTriggerShape(Logging *logger, operation_mode_e oper
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(this, 36, 1, operationMode);
+		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
 		break;
 
 	case TT_HONDA_4_24_1:
