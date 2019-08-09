@@ -7,9 +7,7 @@
 
 #include "engine_test_helper.h"
 
-static void boardConfigurationForIssue898(Engine * engine) {
-	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
-
+static void boardConfigurationForIssue898(engine_configuration_s *engineConfiguration) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
