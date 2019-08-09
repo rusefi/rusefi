@@ -102,6 +102,7 @@ static const fuel_table_t miataNA6_maf_fuel_table = {
 
 static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
