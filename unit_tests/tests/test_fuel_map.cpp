@@ -167,7 +167,7 @@ TEST(misc, testAngleResolver) {
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
 	TriggerShape * ts = &engine->triggerCentral.triggerShape;
-	engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 	assertEqualsM("index 2", 52.76, ts->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));

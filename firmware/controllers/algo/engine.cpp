@@ -51,7 +51,7 @@ FsioState::FsioState() {
 #endif
 }
 
-void Engine::initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 #if !EFI_UNIT_TEST
 	// we have a confusing threading model so some synchronization would not hurt
@@ -310,14 +310,18 @@ injection_mode_e Engine::getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNAT
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	return type != TT_TOOTHED_WHEEL && type != TT_TOOTHED_WHEEL_60_2 && type != TT_TOOTHED_WHEEL_36_1;
+	return type != TT_TOOTHED_WHEEL
+			&& type != TT_ONE
+			&& type != TT_ONE_PLUS_ONE
+			&& type != TT_3_1_CAM
+			&& type != TT_TOOTHED_WHEEL_60_2
+			&& type != TT_TOOTHED_WHEEL_36_1;
 }
 
 operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	//return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
 	return engineConfiguration->ambiguousOperationMode;
 }
-
 
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,

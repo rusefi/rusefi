@@ -74,7 +74,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
 	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -184,7 +184,7 @@ void EngineTestHelper::applyTriggerShape() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine
 
-	ENGINE(initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX));
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
