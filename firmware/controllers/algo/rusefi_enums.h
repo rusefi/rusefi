@@ -106,7 +106,10 @@ typedef enum {
 
 	TEST_ENGINE = 26,
 
-	ACURA_RSX = 27,
+	// used by unit test
+	// see https://github.com/rusefi/rusefi/issues/898
+	// see TriggerShape::bothFrontsRequired
+	ISSUE_898 = 27,
 
 	MAZDA_626 = 28,
 

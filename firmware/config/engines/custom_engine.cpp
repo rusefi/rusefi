@@ -321,6 +321,10 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// see also setDefaultEtbBiasCurve
 }
 
+void setIssue898(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
+}
+
 // TLE8888_BENCH_ENGINE
 // set engine_type 59
 void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

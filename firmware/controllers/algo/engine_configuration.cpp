@@ -1055,7 +1055,9 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case MRE_MIATA_NA6:
 		setMiataNA6_VAF_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case ACURA_RSX:
+	case ISSUE_898:
+		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case MINI_COOPER_R50:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
