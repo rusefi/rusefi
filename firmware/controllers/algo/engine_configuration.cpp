@@ -3,7 +3,7 @@
  * @brief	Utility method related to the engine configuration data structure.
  *
  * @date Nov 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  *
  * This file is part of rusEfi - see http://rusefi.com
  *
