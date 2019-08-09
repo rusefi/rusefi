@@ -25,6 +25,8 @@ void initializeMazdaMiataNaShape(TriggerShape *s) {
 	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
 	s->useRiseEdge = false;
 
+	s->bothFrontsRequired = true;
+
 	s->tdcPosition = 294;
 
 	s->isSynchronizationNeeded = true;
@@ -104,6 +106,8 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset
 	s->setTriggerSynchronizationGap(0.11f);
 	s->useRiseEdge = false;
 
+	s->bothFrontsRequired = true;
+
 	s->invertOnAdd = true;
 	s->tdcPosition = 276;
 
@@ -157,6 +161,8 @@ void configureMazdaProtegeSOHC(TriggerShape *s) {
 
 //	float w = 720 / 4 * 0.215;
 	float a = 5;
+
+	s->bothFrontsRequired = true;
 
 	float z = 0.093;
 	a = 180;
