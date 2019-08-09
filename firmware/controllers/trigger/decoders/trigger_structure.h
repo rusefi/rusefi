@@ -104,6 +104,16 @@ public:
 	bool shapeDefinitionError;
 
 	/**
+	 * https://github.com/rusefi/rusefi/issues/898
+	 * User can choose for example Miata trigger which is not compatible with useOnlyRisingEdgeForTrigger option
+	 * Such contradictory configuration causes a very hard to identify issue and for the sake of usability it's better to
+	 * just crash with a very visible fatal error
+	 *
+	 * One day a nicer implementation could be simply ignoring 'useOnlyRisingEdgeForTrigger' in case of 'bothFrontsRequired'
+	 */
+	bool bothFrontsRequired;
+
+	/**
 	 * this variable is incremented after each trigger shape redefinition
 	 * See also
 	 */

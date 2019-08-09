@@ -62,6 +62,15 @@ void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SU
 			engineConfiguration->ambiguousOperationMode,
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
+	if (TRIGGER_SHAPE(bothFrontsRequired) && engineConfiguration->useOnlyRisingEdgeForTrigger) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "Inconsistent trigger setup");
+#else
+		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "Inconsistent trigger setup");
+#endif
+	}
+
+
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
 		/**
 	 	 * this instance is used only to initialize 'this' TriggerShape instance

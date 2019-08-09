@@ -62,6 +62,7 @@ TriggerShape::TriggerShape() :
 
 void TriggerShape::initialize(operation_mode_e operationMode, bool needSecondTriggerInput) {
 	isSynchronizationNeeded = true; // that's default value
+	bothFrontsRequired = false;
 	this->needSecondTriggerInput = needSecondTriggerInput;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
 	memset(eventAngles, 0, sizeof(eventAngles));
