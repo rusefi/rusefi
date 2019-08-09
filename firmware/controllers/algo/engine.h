@@ -319,6 +319,4 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-typedef void (*configuration_callback_t)(Engine*);
-
 #endif /* H_ENGINE_H_ */

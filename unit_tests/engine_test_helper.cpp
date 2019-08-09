@@ -29,7 +29,7 @@ EngineTestHelperBase::EngineTestHelperBase() {
 	timeNowUs = 0; 
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType, std::function<void(Engine *)> boardCallback) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback) {
 	unitTestWarningCodeState.clear();
 
 	testMafValue = 0;
@@ -79,7 +79,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, std::function<void(
 	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithEngine) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
 }
 
 /**
