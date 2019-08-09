@@ -425,6 +425,11 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 30
  */
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
+
+	boardConfiguration->triggerSimulatorFrequency = 300;
+	engineConfiguration->cranking.rpm = 100;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	// EFI_ADC_1: "23 - AN temp 2"
 	// test harness: Red/Green, 2K PD. expected 2.0v
@@ -459,10 +464,15 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// TPS tps1_1AdcChannel EFI_ADC_13
 
-	engineConfiguration->specs.cylindersCount = 6;
-	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
+	engineConfiguration->specs.cylindersCount = 10;
+	engineConfiguration->specs.firingOrder = FO_1_10_9_4_3_6_5_8_7_2;
 	// fix res boardConfiguration->ignitionPins[4] = GPIOD_6;
 	// fix res boardConfiguration->ignitionPins[5] = GPIOD_7;
+
+	// TLE8888_PIN_20: "33 - GP Out 3"
+	boardConfiguration->injectionPins[4] = TLE8888_PIN_20;
+	// GPIOE_7: "34 - GP Out 2"
+	boardConfiguration->injectionPins[5] = GPIOE_7;
 
 
 }
