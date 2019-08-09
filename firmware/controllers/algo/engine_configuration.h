@@ -13,6 +13,7 @@
 #include "crc.h"
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
+#include <functional>
 
 #ifndef DEFAULT_ENGINE_TYPE
 #define DEFAULT_ENGINE_TYPE DEFAULT_FRANKENSO
@@ -79,5 +80,9 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
 void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination);
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination);
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination);
+
+void resetConfigurationExt(Logging * logger, std::function<void(Engine *)>, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void emptyCallbackWithEngine(Engine * engine);
 
 #endif /* ENGINE_CONFIGURATION_H_ */

@@ -29,7 +29,7 @@ EngineTestHelperBase::EngineTestHelperBase() {
 	timeNowUs = 0; 
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, std::function<void(Engine *)> boardCallback) {
 	unitTestWarningCodeState.clear();
 
 	testMafValue = 0;
@@ -60,7 +60,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 
 	mostCommonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
-	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
 	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
@@ -77,6 +77,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initRpmCalculator(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 	initMainEventListener(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(engineType, &emptyCallbackWithEngine) {
 }
 
 /**
