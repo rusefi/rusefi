@@ -1313,7 +1313,7 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL
-	ENGINE(initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(eInitializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
 #endif
 
 #if EFI_FSIO

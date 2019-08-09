@@ -463,7 +463,7 @@ void printAllTriggers() {
 		engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 
 		TriggerShape *s = &engine->triggerCentral.triggerShape;
-		engine->initializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->eInitializeTriggerShape(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 
 		if (s->shapeDefinitionError) {
 			printf("Trigger error %d\r\n", triggerId);
@@ -693,7 +693,7 @@ void onConfigurationChangeTriggerCallback(engine_configuration_s *previousConfig
 		assertEngineReference();
 
 	#if EFI_ENGINE_CONTROL
-		ENGINE(initializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
+		ENGINE(eInitializeTriggerShape(logger PASS_ENGINE_PARAMETER_SUFFIX));
 		engine->triggerCentral.resetAccumSignalData();
 	#endif
 	}
