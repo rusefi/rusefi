@@ -313,7 +313,6 @@ private:
 };
 
 void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
 void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

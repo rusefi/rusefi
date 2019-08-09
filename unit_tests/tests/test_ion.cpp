@@ -2,7 +2,7 @@
  * test_ion.cpp
  *
  *  Created on: Jan 4, 2019
- *      Author: user
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef TEST_ION_CPP_

@@ -12,6 +12,7 @@
 #include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
+#include <functional>
 
 class EngineTestHelperBase
 {
@@ -27,6 +28,7 @@ public:
 class EngineTestHelper : public EngineTestHelperBase {
 public:
 	EngineTestHelper(engine_type_e engineType);
+	EngineTestHelper(engine_type_e engineType, std::function<void(Engine *)>);
 	void applyTriggerShape();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void fireRise(int delayMs);

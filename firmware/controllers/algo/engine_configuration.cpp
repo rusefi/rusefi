@@ -1022,7 +1022,7 @@ static void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	boardConfiguration->is_enabled_spi_3 = true;
 }
 
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void resetConfigurationExt(Logging * logger, std::function<void(Engine *)> boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	enginePins.reset(); // that's mostly important for functional tests
 	/**
 	 * Let's apply global defaults first
@@ -1031,6 +1031,8 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 
 	// set initial pin groups
 	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	boardCallback(engine);
 
 #if EFI_PROD_CODE
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
@@ -1287,6 +1289,14 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
 #endif /* EFI_TUNER_STUDIO */
+}
+
+void emptyCallbackWithEngine(Engine * engine) {
+
+}
+
+void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	resetConfigurationExt(logger, &emptyCallbackWithEngine, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
