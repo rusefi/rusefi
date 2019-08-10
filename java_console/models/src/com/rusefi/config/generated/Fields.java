@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Aug 03 18:52:34 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Aug 10 16:23:55 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -52,6 +52,7 @@ public class Fields {
 	public static final int alternatorControlPinMode_offset = 666;
 	public static final int alternatorOffAboveTps_offset = 2028;
 	public static final int alternatorPwmFrequency_offset = 2256;
+	public static final int ambiguousOperationMode_offset = 488;
 	public static final int analogInputDividerCoefficient_offset = 460;
 	public static final int autoTuneCltThreshold_offset = 2420;
 	public static final int autoTuneCltThreshold_offset_hex = 974;
@@ -975,7 +976,6 @@ public class Fields {
 	public static final int oilPressure_value1_offset = 2700;
 	public static final int oilPressure_value2_offset = 2708;
 	public static final int onOffAlternatorLogic_offset = 744;
-	public static final int operationMode_offset = 488;
 	public static final int overrideCrankingIacSetting_offset = 1476;
 	public static final int overrideCrankingIgnition_offset = 516;
 	public static final int overrideCrankingIgnition_offset_hex = 204;
@@ -1344,7 +1344,7 @@ public class Fields {
 	public static final Field VEHICLESPEEDCOEF = Field.create("VEHICLESPEEDCOEF", 476, FieldType.FLOAT);
 	public static final Field CANNBCTYPE = Field.create("CANNBCTYPE", 480, FieldType.INT);
 	public static final Field CANSLEEPPERIODMS = Field.create("CANSLEEPPERIODMS", 484, FieldType.INT);
-	public static final Field OPERATIONMODE = Field.create("OPERATIONMODE", 488, FieldType.INT);
+	public static final Field AMBIGUOUSOPERATIONMODE = Field.create("AMBIGUOUSOPERATIONMODE", 488, FieldType.INT);
 	public static final Field DISPLAYMODE = Field.create("DISPLAYMODE", 492, FieldType.INT);
 	public static final Field LOGFORMAT = Field.create("LOGFORMAT", 496, FieldType.INT);
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 500, FieldType.INT);
@@ -2123,7 +2123,7 @@ public class Fields {
 	VEHICLESPEEDCOEF,
 	CANNBCTYPE,
 	CANSLEEPPERIODMS,
-	OPERATIONMODE,
+	AMBIGUOUSOPERATIONMODE,
 	DISPLAYMODE,
 	LOGFORMAT,
 	BYFIRMWAREVERSION,
