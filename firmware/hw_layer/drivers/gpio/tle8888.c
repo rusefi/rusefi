@@ -240,6 +240,20 @@ static int tle8888_update_direct_output(struct tle8888_priv *chip, int pin, int 
 	return -1;
 }
 
+// ChibiOS does not offer this function so that's a copy-paste of 'chSemSignal' without locking
+void chSemSignalS(semaphore_t *sp) {
+
+  chDbgCheck(sp != NULL);
+
+  chDbgAssert(((sp->cnt >= (cnt_t)0) && queue_isempty(&sp->queue)) ||
+              ((sp->cnt < (cnt_t)0) && queue_notempty(&sp->queue)),
+              "inconsistent semaphore");
+  if (++sp->cnt <= (cnt_t)0) {
+    chSchWakeupS(queue_fifo_remove(&sp->queue), MSG_OK);
+  }
+}
+
+
 /**
  * @brief TLE8888 chip driver wakeup.
  * @details Wake up driver. Will cause output register update
@@ -249,16 +263,16 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 {
 	(void)chip;
 
+	int wasLocked = lockAnyContext();
 	if (isIsrContext()) {
 		// this is for normal runtime
-		int wasLocked = lockAnyContext();
 		chSemSignalI(&tle8888_wake);
-		if (!wasLocked) {
-			unlockAnyContext();
-		}
 	} else {
 		// this is for start-up to not hang up
-		chSemSignal(&tle8888_wake);
+		chSemSignalS(&tle8888_wake);
+	}
+	if (!wasLocked) {
+		unlockAnyContext();
 	}
 
 	return 0;
