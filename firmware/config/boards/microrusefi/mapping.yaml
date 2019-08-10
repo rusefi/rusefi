@@ -13,9 +13,9 @@ outputs:
   GPIOD_7: "14 - GP Out 5"
   GPIOD_6: "13 - GP Out 6"
 
-  # TLE8888 high current low side: IN10
+  # TLE8888 high current low side: VVT1 IN10 / OUT6
   GPIOE_9:  "7 - Lowside 1"
-  # TLE8888 high current low side: IN9
+  # TLE8888 high current low side: VVT2 IN9 / OUT5
   GPIOE_10: "3 - Lowside 2"
 
   # TLE8888 half bridges (pushpull, lowside, or high-low)  IN11

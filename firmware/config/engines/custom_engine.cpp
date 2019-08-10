@@ -470,7 +470,7 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[5] = GPIOD_7;
 
 	// TLE8888_PIN_20: "33 - GP Out 3"
-	boardConfiguration->injectionPins[4] = TLE8888_PIN_20;
+	boardConfiguration->injectionPins[4] = TLE8888_PIN_22;
 	// GPIOE_7: "34 - GP Out 2"
 	boardConfiguration->injectionPins[5] = GPIOE_7;
 
