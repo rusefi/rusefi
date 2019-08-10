@@ -1430,7 +1430,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = triggerConfiguration_settings,	"Settings Trigger"
 		field = "!https://rusefi.com/s/trigger"
 		field = "Trigger type",							trigger_type
-		field = "Operation mode / speed",				operationMode
+		; see also in firmware '[doesTriggerImplyOperationMode]' tag
+		field = "Operation mode / speed",				ambiguousOperationMode
 		field = "With VR sensors only rising edge has reliable position"
 		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"

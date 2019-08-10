@@ -430,6 +430,8 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerSimulatorFrequency = 60;
 	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
+	// set cranking_dwell 200
+	engineConfiguration->ignitionDwellForCrankingMs = 200;
 	// set cranking_fuel 300
 	engineConfiguration->cranking.baseFuel = 190;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -470,12 +472,18 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.cylindersCount = 10;
 	engineConfiguration->specs.firingOrder = FO_1_10_9_4_3_6_5_8_7_2;
-	boardConfiguration->ignitionPins[4] = GPIOD_6;
-	boardConfiguration->ignitionPins[5] = GPIOD_7;
 
-
-
-
+	// red LED #1
+	boardConfiguration->ignitionPins[1 - 1] = GPIOD_4;
+	boardConfiguration->ignitionPins[10 - 1] = GPIOD_3;
+	boardConfiguration->ignitionPins[9 - 1] = GPIOD_6;
+	boardConfiguration->ignitionPins[4 - 1] = GPIOD_7;
+	boardConfiguration->ignitionPins[3 - 1] = GPIOD_1;
+	boardConfiguration->ignitionPins[6 - 1] = GPIOD_2;
+	boardConfiguration->ignitionPins[1] =  GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[6] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[7] = GPIO_UNASSIGNED;
 
 
 	// LED #1

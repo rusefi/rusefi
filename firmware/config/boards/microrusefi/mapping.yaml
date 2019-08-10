@@ -21,7 +21,8 @@ outputs:
   # TLE8888 half bridges (pushpull, lowside, or high-low)  IN? / OUT21
   GPIOE_8: "35 - GP Out 1"
   # TLE8888 half bridges (pushpull, lowside, or high-low)  IN? / OUT22
-  GPIOE_7: "34 - GP Out 2"
+  # this should work but it does not GPIOE_7: "34 - GP Out 2"
+  TLE8888_PIN_22: "34 - GP Out 2"
   TLE8888_PIN_23: "33 - GP Out 3"
   TLE8888_PIN_24: "43 - GP Out 4"
 
