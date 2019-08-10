@@ -688,6 +688,7 @@
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
   /* System halt code here.*/                                               \
+  chDbgPanic3(reason, __FILE__, __LINE__);                                  \
 }
 
 /**
