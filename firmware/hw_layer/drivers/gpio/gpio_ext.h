@@ -26,19 +26,19 @@ extern "C"
 #endif /* __cplusplus */
 
 struct gpiochip_ops {
-	int (*setPadMode)(void *data, unsigned int pin, int mode);
-	int (*writePad)(void *data, unsigned int pin, int value);
-	int (*readPad)(void *data, unsigned int pin);
-	int (*getDiag)(void *data, unsigned int pin);
+	int (*setPadMode)(void *data, brain_pin_e pin, int mode);
+	int (*writePad)(void *data, brain_pin_e pin, int value);
+	int (*readPad)(void *data, brain_pin_e pin);
+	int (*getDiag)(void *data, brain_pin_e pin);
 	int (*init)(void *data);
 	int (*deinit)(void *data);
 };
 
-int gpiochips_getPinOffset(unsigned int pin);
-const char *gpiochips_getChipName(unsigned int pin);
-const char *gpiochips_getPinName(unsigned int pin);
+int gpiochips_getPinOffset(brain_pin_e pin);
+const char *gpiochips_getChipName(brain_pin_e pin);
+const char *gpiochips_getPinName(brain_pin_e pin);
 
-/* register gpio cgip */
+/* register GPIO chip */
 int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, void *priv);
 
 void gpiochip_use_gpio_base(int size);

@@ -49,11 +49,12 @@ static struct gpiochip chips[BOARD_EXT_GPIOCHIPS];
 /* Local functions.															*/
 /*==========================================================================*/
 
-static struct gpiochip *gpiochip_find(unsigned int pin)
+/**
+ * @return pointer to GPIO device for specified pin
+ */
+static struct gpiochip *gpiochip_find(brain_pin_e pin)
 {
-	int i;
-
-	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		struct gpiochip *chip = &chips[i];
 
 		if ((pin >= chip->base) && (pin < (chip->base + chip->size)))
@@ -72,7 +73,7 @@ static struct gpiochip *gpiochip_find(unsigned int pin)
  * @details
  */
 
-int gpiochips_getPinOffset(unsigned int pin)
+int gpiochips_getPinOffset(brain_pin_e pin)
 {
 	struct gpiochip *chip = gpiochip_find(pin);
 
@@ -88,8 +89,7 @@ int gpiochips_getPinOffset(unsigned int pin)
  * @details return gpiochip name
  */
 
-const char *gpiochips_getChipName(unsigned int pin)
-{
+const char *gpiochips_getChipName(brain_pin_e pin) {
 	struct gpiochip *chip = gpiochip_find(pin);
 
 	if (chip)
@@ -103,7 +103,7 @@ const char *gpiochips_getChipName(unsigned int pin)
  * @details return pin name or gpiochip name (if no pins names provided)
  */
 
-const char *gpiochips_getPinName(unsigned int pin)
+const char *gpiochips_getPinName(brain_pin_e pin)
 {
 	int offset;
 	struct gpiochip *chip = gpiochip_find(pin);
@@ -140,6 +140,7 @@ int gpiochip_register(const char *name, struct gpiochip_ops *ops, size_t size, v
 	if ((!ops) || (!size))
 		return -1;
 
+	/* no 'writePad' and no 'readPad' implementation? return error code */
 	if ((!ops->writePad) && (!ops->readPad))
 		return -1;
 
@@ -283,7 +284,7 @@ int gpiochips_readPad(brain_pin_e pin)
 
 /**
  * @brief Get total pin count allocated for external gpio chips.
- * @details Will also include unused pins for chips that was registred
+ * @details Will also include unused pins for chips that was registered
  * but later fails to init.
  */
 
@@ -294,22 +295,19 @@ int gpiochips_get_total_pins(void)
 
 #else /* BOARD_EXT_GPIOCHIPS > 0 */
 
-int gpiochips_getPinOffset(unsigned int pin)
-{
+int gpiochips_getPinOffset(brain_pin_e pin) {
 	(void)pin;
 
 	return -1;
 }
 
-const char *gpiochips_getChipName(unsigned int pin)
-{
+const char *gpiochips_getChipName(brain_pin_e pin) {
 	(void)pin;
 
 	return NULL;
 }
 
-const char *gpiochips_getPinName(unsigned int pin)
-{
+const char *gpiochips_getPinName(brain_pin_e pin) {
 	(void)pin;
 
 	return NULL;

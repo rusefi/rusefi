@@ -203,7 +203,7 @@ err:
  * @details Wake up driver. Will cause input and diagnostic
  *  update
  */
-
+/* todo: why is this unused? dead code? bug?
 static int mc33972_wake_driver(struct mc33972_priv *chip)
 {
 	(void)chip;
@@ -212,6 +212,7 @@ static int mc33972_wake_driver(struct mc33972_priv *chip)
 
 	return 0;
 }
+*/
 
 /*==========================================================================*/
 /* Driver thread.															*/
@@ -260,8 +261,7 @@ static THD_FUNCTION(mc33972_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int mc33972_readPad(void *data, unsigned int pin)
-{
+int mc33972_readPad(void *data, brain_pin_e pin) {
 	struct mc33972_priv *chip;
 
 	if ((pin >= MC33972_INPUTS) || (data == NULL))
@@ -273,8 +273,7 @@ int mc33972_readPad(void *data, unsigned int pin)
 	return !!(chip->i_state & FLAG_PIN(pin));
 }
 
-int mc33972_getDiag(void *data, unsigned int pin)
-{
+int mc33972_getDiag(void *data, brain_pin_e pin) {
 	int diag;
 	struct mc33972_priv *chip;
 

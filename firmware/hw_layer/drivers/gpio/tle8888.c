@@ -321,20 +321,19 @@ static THD_FUNCTION(tle8888_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int tle8888_writePad(void *data, unsigned int pin, int value)
-{
-	struct tle8888_priv *chip;
+int tle8888_writePad(void *data, brain_pin_e pin, int value) {
 
 	if ((pin >= TLE8888_OUTPUTS) || (data == NULL))
 		return -1;
 
-	chip = (struct tle8888_priv *)data;
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 
 	/* TODO: lock */
-	if (value)
+	if (value) {
 		chip->o_state |=  (1 << pin);
-	else
+	} else {
 		chip->o_state &= ~(1 << pin);
+	}
 	/* TODO: unlock */
 	/* direct driven? */
 	if (chip->o_direct_mask & (1 << pin)) {
@@ -514,9 +513,7 @@ struct gpiochip_ops tle8888_ops = {
  * @return return gpio chip base
  */
 
-int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
-{
-	int ret;
+int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
 	struct tle8888_priv *chip;
 
 	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
@@ -543,7 +540,7 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg)
 	chip->drv_state = TLE8888_WAIT_INIT;
 
 	/* register, return gpio chip base */
-	ret = gpiochip_register(DRIVER_NAME, &tle8888_ops, TLE8888_OUTPUTS, chip);
+	int ret = gpiochip_register(DRIVER_NAME, &tle8888_ops, TLE8888_OUTPUTS, chip);
 
 	/* set default pin names, board init code can rewrite */
 	gpiochips_setPinNames(ret, tle8888_pin_names);

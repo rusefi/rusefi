@@ -10,7 +10,7 @@
 
 using ::testing::_;
 
-static int testchip_readPad(void *data, unsigned int pin)
+static int testchip_readPad(void *data, brain_pin_e pin)
 {
 	if (pin & 0x01)
 		return 1;
@@ -19,7 +19,7 @@ static int testchip_readPad(void *data, unsigned int pin)
 
 static int io_state = 0;
 
-static int testchip_writePad(void *data, unsigned int pin, int value)
+static int testchip_writePad(void *data, brain_pin_e pin, int value)
 {
 	if (value)
 		io_state |=  (1 << value);
@@ -39,7 +39,7 @@ static int testchip_init(void *data)
 }
 
 static int calls_to_failed_chip = 0;
-static int testchip_failed_writePad(void *data, unsigned int pin, int value)
+static int testchip_failed_writePad(void *data, brain_pin_e pin, int value)
 {
 	calls_to_failed_chip++;
 }
