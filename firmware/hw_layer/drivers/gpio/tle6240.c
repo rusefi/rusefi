@@ -376,7 +376,7 @@ static THD_FUNCTION(tle6240_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int tle6240_writePad(void *data, unsigned int pin, int value)
+int tle6240_writePad(void *data, brain_pin_e pin, int value)
 {
 	struct tle6240_priv *chip;
 
@@ -409,7 +409,7 @@ int tle6240_writePad(void *data, unsigned int pin, int value)
 	return 0;
 }
 
-int tle6240_getDiag(void *data, unsigned int pin)
+int tle6240_getDiag(void *data, brain_pin_e pin)
 {
 	int diag;
 	struct tle6240_priv *chip;
