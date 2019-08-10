@@ -427,7 +427,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
-	boardConfiguration->triggerSimulatorFrequency = 70;
+	boardConfiguration->triggerSimulatorFrequency = 60;
 	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
 	// set cranking_fuel 300
@@ -479,12 +479,12 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	// LED #1
-	// TLE8888_PIN_23: "33 - GP Out 3"
-	boardConfiguration->injectionPins[0] = TLE8888_PIN_23;
+    // GPIOE_7: "34 - GP Out 2"
+	boardConfiguration->injectionPins[1 - 1] = TLE8888_PIN_22;//GPIOE_7;
 
 	// LED #2
-    // GPIOE_7: "34 - GP Out 2"
-	boardConfiguration->injectionPins[10 - 1] = GPIOE_7;
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	boardConfiguration->injectionPins[10 - 1] = TLE8888_PIN_23;
 
 	// LED #3 - INJ#1
 	boardConfiguration->injectionPins[9 - 1] = GPIOE_13;
