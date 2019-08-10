@@ -473,10 +473,20 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[4] = TLE8888_PIN_20;
 	// GPIOE_7: "34 - GP Out 2"
 	boardConfiguration->injectionPins[5] = GPIOE_7;
+
+	// TLE8888 high current low side: IN10
 	// GPIOE_9:  "7 - Lowside 1"
 	boardConfiguration->injectionPins[6] = GPIOE_9;
+
+	// TLE8888 high current low side: IN9
 	// GPIOE_10: "3 - Lowside 2"
-	boardConfiguration->injectionPins[5] = GPIOE_10;
+	boardConfiguration->injectionPins[7] = GPIOE_10;
+
+	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
+	// GPIOE_8: "35 - GP Out 1"
+	boardConfiguration->injectionPins[8] = GPIOE_8;
+	// TLE8888_PIN_21: "43 - GP Out 4"
+	boardConfiguration->injectionPins[9] = TLE8888_PIN_21;
 
 
 
