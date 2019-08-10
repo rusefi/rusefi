@@ -466,13 +466,18 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->specs.cylindersCount = 10;
 	engineConfiguration->specs.firingOrder = FO_1_10_9_4_3_6_5_8_7_2;
-	// fix res boardConfiguration->ignitionPins[4] = GPIOD_6;
-	// fix res boardConfiguration->ignitionPins[5] = GPIOD_7;
+	boardConfiguration->ignitionPins[4] = GPIOD_6;
+	boardConfiguration->ignitionPins[5] = GPIOD_7;
 
 	// TLE8888_PIN_20: "33 - GP Out 3"
 	boardConfiguration->injectionPins[4] = TLE8888_PIN_20;
 	// GPIOE_7: "34 - GP Out 2"
 	boardConfiguration->injectionPins[5] = GPIOE_7;
+	// GPIOE_9:  "7 - Lowside 1"
+	boardConfiguration->injectionPins[6] = GPIOE_9;
+	// GPIOE_10: "3 - Lowside 2"
+	boardConfiguration->injectionPins[5] = GPIOE_10;
+
 
 
 }
