@@ -119,10 +119,17 @@ struct tle8888_config tle8888_cfg = {
 	},
 	.reset =  {.port = NULL,	.pad = 0},
 	.direct_io = {
+		[0] = {.port = GPIOE,	.pad = 10,	.output = 21},
+		[1] = {.port = GPIOE,	.pad = 9,	.output = 22},
+		[2] = {.port = GPIOE,	.pad = 8,	.output = 23},
+		[3] = {.port = GPIOE,	.pad = 7,	.output = 24},
+		[0] = {.port = NULL,	.pad = 0,	.output = 20},
+/*
 		[0] = {.port = NULL,	.pad = 0,	.output = 9},
 		[1] = {.port = NULL,	.pad = 0,	.output = 10},
 		[2] = {.port = NULL,	.pad = 0,	.output = 11},
 		[3] = {.port = NULL,	.pad = 0,	.output = 12},
+*/
 	},
 };
 #endif
