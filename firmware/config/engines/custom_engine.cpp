@@ -427,9 +427,13 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
-	boardConfiguration->triggerSimulatorFrequency = 300;
+	boardConfiguration->triggerSimulatorFrequency = 70;
+	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
+	// set cranking_fuel 300
+	engineConfiguration->cranking.baseFuel = 190;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
 	// EFI_ADC_1: "23 - AN temp 2"
 	// test harness: Red/Green, 2K PD. expected 2.0v
@@ -469,27 +473,49 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[4] = GPIOD_6;
 	boardConfiguration->ignitionPins[5] = GPIOD_7;
 
-	// TLE8888_PIN_20: "33 - GP Out 3"
-	boardConfiguration->injectionPins[4] = TLE8888_PIN_22;
-	// GPIOE_7: "34 - GP Out 2"
-	boardConfiguration->injectionPins[5] = GPIOE_7;
 
-	// TLE8888 high current low side: IN10
-	// GPIOE_9:  "7 - Lowside 1"
-	boardConfiguration->injectionPins[6] = GPIOE_9;
 
-	// TLE8888 high current low side: IN9
-	// GPIOE_10: "3 - Lowside 2"
-	boardConfiguration->injectionPins[7] = GPIOE_10;
 
+
+
+	// LED #1
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	boardConfiguration->injectionPins[0] = TLE8888_PIN_23;
+
+	// LED #2
+    // GPIOE_7: "34 - GP Out 2"
+	boardConfiguration->injectionPins[10 - 1] = GPIOE_7;
+
+	// LED #3 - INJ#1
+	boardConfiguration->injectionPins[9 - 1] = GPIOE_13;
+
+	// LED #4 - INJ#2
+	boardConfiguration->injectionPins[4 - 1] = GPIOE_14;
+
+	// LED #5 - INJ#3
+	boardConfiguration->injectionPins[3 - 1] = GPIOE_12;
+
+	// LED #6 - INJ#4
+	boardConfiguration->injectionPins[6 - 1] = GPIOE_11;
+
+	// LED #7
+	// TLE8888_PIN_24: "43 - GP Out 4"
+	boardConfiguration->injectionPins[5 - 1] = TLE8888_PIN_24;
+
+	// LED #8
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
 	// GPIOE_8: "35 - GP Out 1"
-	boardConfiguration->injectionPins[8] = GPIOE_8;
-	// TLE8888_PIN_21: "43 - GP Out 4"
-	boardConfiguration->injectionPins[9] = TLE8888_PIN_21;
+	boardConfiguration->injectionPins[8 - 1] = GPIOE_8;
 
+	// LED #9
+	// TLE8888 high current low side: IN10
+	// GPIOE_9:  "7 - Lowside 1"
+	boardConfiguration->injectionPins[7 - 1] = GPIOE_9;
 
-
+	// LED #10
+	// TLE8888 high current low side: VVT2 IN9 / OUT5
+	// GPIOE_10: "3 - Lowside 2"
+	boardConfiguration->injectionPins[2 - 1] = GPIOE_10;
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
