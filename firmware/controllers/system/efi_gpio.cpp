@@ -41,7 +41,7 @@ static const char *sparkShortNames[] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7
 		"c9", "cA", "cB", "cD"};
 
 static const char *injectorNames[] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
-		"injector7", "injector8", "jnjector9", "injector10", "injector11", "injector12"};
+		"injector7", "injector8", "injector9", "injector10", "injector11", "injector12"};
 
 static const char *injectorShortNames[] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
