@@ -179,7 +179,8 @@ efitimeus_t getTimeNowUs(void) {
 //todo: macro to save method invocation
 efitick_t getTimeNowNt(void) {
 #if EFI_PROD_CODE
-	bool alreadyLocked = lockAnyContext();
+    /* Entering a reentrant critical zone.*/
+    syssts_t sts = chSysGetStatusAndLockX();
 	efitime_t localH = halTime.state.highBits;
 	uint32_t localLow = halTime.state.lowBits;
 
@@ -192,9 +193,8 @@ efitick_t getTimeNowNt(void) {
 
 	efitime_t result = localH + value;
 
-	if (!alreadyLocked) {
-		unlockAnyContext();
-	}
+    /* Leaving the critical zone.*/
+    chSysRestoreStatusX(sts);
 	return result;
 #else /* EFI_PROD_CODE */
 // todo: why is this implementation not used?
@@ -299,11 +299,11 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
-	bool alreadyLocked = lockAnyContext();
+    /* Entering a reentrant critical zone.*/
+    syssts_t sts = chSysGetStatusAndLockX();
 	updateAndSet(&halTime.state, getTimeNowLowerNt());
-	if (!alreadyLocked) {
-		unlockAnyContext();
-	}
+    /* Leaving the critical zone.*/
+    chSysRestoreStatusX(sts);
 	int timeSeconds = getTimeNowSeconds();
 	if (previousSecond != timeSeconds) {
 		previousSecond = timeSeconds;
@@ -812,6 +812,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190809;
+	return 20190810;
 }
 #endif /* EFI_UNIT_TEST */
