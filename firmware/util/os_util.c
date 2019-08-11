@@ -44,6 +44,7 @@ void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par
 
 /**
  * @return TRUE if already in locked context
+ * TODO: refactor to new 'syssts_t sts = chSysGetStatusAndLockX();' pattern
  */
 bool lockAnyContext(void) {
 	int alreadyLocked = isLocked();
@@ -63,6 +64,9 @@ bool lockAnyContext(void) {
 	return false;
 }
 
+/**
+ * TODO: refactor to new 'chSysRestoreStatusX(sts);' pattern
+ */
 void unlockAnyContext(void) {
 #if USE_PORT_LOCK
 	port_unlock();
