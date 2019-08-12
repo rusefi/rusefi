@@ -15,15 +15,15 @@
   (page A)
   (title_block
     (title "Common Rail MC33816 board")
-    (date 2019-06-08)
+    (date 2019-08-12)
     (rev R0.2)
     (company http://rusefi.com/)
   )
 
   (layers
     (0 F.Cu signal)
-    (1 PWR_AN power hide)
-    (2 GND power hide)
+    (1 PWR_AN power)
+    (2 GND power)
     (31 B.Cu signal)
     (32 B.Adhes user)
     (33 F.Adhes user)
@@ -41,7 +41,7 @@
   )
 
   (setup
-    (last_trace_width 1.0668)
+    (last_trace_width 0.1524)
     (user_trace_width 0.1524)
     (user_trace_width 0.2159)
     (user_trace_width 0.3048)
@@ -79,8 +79,8 @@
     (visible_elements 7FFEF67F)
     (pcbplotparams
       (layerselection 0x010ff_80000007)
-      (usegerberextensions true)
-      (excludeedgelayer true)
+      (usegerberextensions false)
+      (excludeedgelayer false)
       (linewidth 0.100000)
       (plotframeref false)
       (viasonmask false)
