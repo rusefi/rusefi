@@ -63,6 +63,7 @@ void runSchedulingPrecisionTestIfNeeded(void) {
 #endif /* EFI_PROD_CODE */
 
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
+	engineConfiguration->displayMode = DM_HD44780;
 	boardConfiguration->HD44780_rs = GPIOE_7;
 	boardConfiguration->HD44780_e = GPIOE_9;
 	boardConfiguration->HD44780_db4 = GPIOE_11;
