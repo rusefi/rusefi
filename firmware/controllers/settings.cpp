@@ -159,8 +159,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "M323";
 	case MRE_MIATA_NA6:
 		return "MRE Miata 1.6";
-	case MINI_COOPER_R50:
-		return "CoopR50";
+	case MRE_MIATA_NB2:
+		return "MRE_MIATA_NB2";
 	case FORD_ESCORT_GT:
 		return "EscrtGT";
 	case CITROEN_TU3JP:

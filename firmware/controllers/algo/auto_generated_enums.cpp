@@ -755,8 +755,8 @@ case MICRO_RUS_EFI:
   return "MICRO_RUS_EFI";
 case MINIMAL_PINS:
   return "MINIMAL_PINS";
-case MINI_COOPER_R50:
-  return "MINI_COOPER_R50";
+case MRE_MIATA_NB2:
+  return "MRE_MIATA_NB2";
 case MITSU_4G93:
   return "MITSU_4G93";
 case NISSAN_PRIMERA:

@@ -77,7 +77,7 @@ typedef enum {
 
 	MRE_MIATA_NA6 = 12,
 
-	MINI_COOPER_R50 = 13,
+	MRE_MIATA_NB2 = 13,
 
 	FORD_ESCORT_GT = 14,
 
