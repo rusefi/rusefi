@@ -1058,7 +1058,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case ISSUE_898:
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MINI_COOPER_R50:
+	case MRE_MIATA_NB2:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		break;
