@@ -63,7 +63,6 @@ void runSchedulingPrecisionTestIfNeeded(void) {
 #endif /* EFI_PROD_CODE */
 
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
-	engineConfiguration->displayMode = DM_HD44780;
 	boardConfiguration->HD44780_rs = GPIOE_7;
 	boardConfiguration->HD44780_e = GPIOE_9;
 	boardConfiguration->HD44780_db4 = GPIOE_11;
@@ -86,6 +85,7 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	setFrankenso_01_LCD(boardConfiguration);
+	engineConfiguration->displayMode = DM_HD44780;
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
