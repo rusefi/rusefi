@@ -91,6 +91,20 @@ static void setupEtb() {
 	// DIR pin
 	boardConfiguration->etb1.directionPin1 = GPIOA_8;
 
+	// set_fsio_output_pin 7 PC8
+#if EFI_FSIO
+	// set_rpn_expression 7 "1"
+	// disable ETB by default
+	setFsio(7, GPIOC_8, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// enable ETB
+	// set_rpn_expression 7 "0"
+	//setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+#endif /* EFI_FSIO */
+
+
+	// EFI_ADC_7: "31 - AN volt 3"
+	// engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+
 	// Unused
 	boardConfiguration->etb1.controlPin2 = GPIO_UNASSIGNED;
 	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
@@ -110,15 +124,15 @@ static void setupDefaultSensorInputs() {
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_5;
 
-	// tps
+	// tps = "20 - AN volt 5"
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	// clt = AN temp 1
+	// clt = "18 - AN temp 1"
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
 	engineConfiguration->clt.config.bias_resistor = 2700;
 
-	// iat = AN temp 2
+	// iat = "23 - AN temp 2"
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 }
