@@ -119,15 +119,7 @@ public class PortHolder {
         }
 
         public EstablishConnection invoke() {
-            // todo: BUG: Mac version 10 also 'is windows10 == true' at the moment :)
-            boolean windows10 = isWindows10();
-            FileLog.MAIN.logLine("Is windows10: " + windows10);
-            if (windows10) {
-                // this implementation is way simpler but seems to kind of work, keeping just in case
-                stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
-            } else {
-                stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
-            }
+            stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
             if (stream == null) {
                 isConnected = false;
                 return this;

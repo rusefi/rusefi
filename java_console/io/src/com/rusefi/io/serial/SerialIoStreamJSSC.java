@@ -10,6 +10,8 @@ import jssc.SerialPortException;
 import java.io.IOException;
 
 /**
+ * JSSC connector does not seem to be supported and might have some issues like inability to close/re-open connection nicely
+ * <p>
  * (c) Andrey Belomutskiy
  * 5/11/2015.
  */
@@ -61,7 +63,7 @@ public class SerialIoStreamJSSC implements IoStream {
     public void close() {
         isClosed = true;
         try {
-            FileLog.MAIN.logLine("CLOSING PORT... "  + serialPort.getPortName());
+            FileLog.MAIN.logLine("CLOSING PORT... " + serialPort.getPortName());
             serialPort.removeEventListener();
             serialPort.closePort();
             FileLog.MAIN.logLine("PORT CLOSED: " + serialPort.getPortName());
