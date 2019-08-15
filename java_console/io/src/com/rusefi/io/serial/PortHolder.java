@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 /**
  * This class holds the reference to the actual Serial port object
@@ -51,23 +50,14 @@ public class PortHolder {
      * @return true if everything fine
      */
     private boolean open(String port, final DataListener listener) {
-        IoStream stream;
-        // todo: BUG: Mac version 10 also 'is windows10 == true' at the moment :)
-        boolean windows10 = isWindows10();
-        FileLog.MAIN.logLine("Is windows10: " + windows10);
-        if (windows10) {
-            // this implementation is way simpler but seems to kind of work, keeping just in case
-            stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
-        } else {
-            stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
-        }
-        if (stream == null)
+        EstablishConnection establishConnection = new EstablishConnection(port).invoke();
+        if (!establishConnection.isConnected())
             return false;
-
         synchronized (portLock) {
-            this.serialPort = stream;
+            PortHolder.this.serialPort = establishConnection.stream;
             portLock.notifyAll();
         }
+        IoStream stream = establishConnection.getStream();
 
         bp = BinaryProtocolHolder.create(FileLog.LOGGER, stream);
 
@@ -109,5 +99,42 @@ public class PortHolder {
 
     public static PortHolder getInstance() {
         return instance;
+    }
+
+    public static class EstablishConnection {
+        private boolean isConnected;
+        private String port;
+        private IoStream stream;
+
+        public EstablishConnection(String port) {
+            this.port = port;
+        }
+
+        public boolean isConnected() {
+            return isConnected;
+        }
+
+        public IoStream getStream() {
+            return stream;
+        }
+
+        public EstablishConnection invoke() {
+            // todo: BUG: Mac version 10 also 'is windows10 == true' at the moment :)
+            boolean windows10 = isWindows10();
+            FileLog.MAIN.logLine("Is windows10: " + windows10);
+            if (windows10) {
+                // this implementation is way simpler but seems to kind of work, keeping just in case
+                stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
+            } else {
+                stream = SerialIoStreamJSSC.open(port, BAUD_RATE, FileLog.LOGGER);
+            }
+            if (stream == null) {
+                isConnected = false;
+                return this;
+            }
+
+            isConnected = true;
+            return this;
+        }
     }
 }
