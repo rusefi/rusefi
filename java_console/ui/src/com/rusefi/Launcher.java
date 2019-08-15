@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
@@ -47,7 +48,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190809;
+    public static final int CONSOLE_VERSION = 20190814;
     public static final String INPUT_FILES_PATH = "..";
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -301,6 +302,10 @@ public class Launcher {
         System.exit(0);
     }
 
+    /**
+     * rusEfi console entry point
+     * @see StartupFrame if no parameters specified
+     */
     public static void main(final String[] args) throws Exception {
         String toolName = args.length == 0 ? null : args[0];
         if (TOOL_NAME_COMPILE_FSIO_FILE.equalsIgnoreCase(toolName)) {
@@ -364,8 +369,23 @@ public class Launcher {
             boolean isBaudRateDefined = args.length > 1;
             if (isBaudRateDefined)
                 PortHolder.BAUD_RATE = Integer.parseInt(args[1]);
+
+            String port = null;
+            if (isPortDefined)
+                port = args[0];
+
+
+            if (isPortDefined && port.toLowerCase().startsWith("auto")) {
+                String autoDetectedPort = PortDetector.autoDetectSerial();
+                if (autoDetectedPort == null) {
+                    isPortDefined = false;
+                } else {
+                    port = autoDetectedPort;
+                }
+            }
+
             if (isPortDefined) {
-                new Launcher(args[0]);
+                new Launcher(port);
             } else {
                 for (String p : SerialPortList.getPortNames())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);

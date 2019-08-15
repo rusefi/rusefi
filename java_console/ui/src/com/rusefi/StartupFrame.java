@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.TcpConnector;
@@ -45,6 +46,7 @@ public class StartupFrame {
     private static final String LOGO = "logo.gif";
     public static final String LINK_TEXT = "rusEfi (c) 2012-2019";
     private static final String URI = "http://rusefi.com/?java_console";
+    private static final String AUTO_SERIAL = "Auto Serial";
 
     private final JFrame frame;
     private final Timer scanPortsTimes = new Timer(1000, new ActionListener() {
@@ -122,9 +124,16 @@ public class StartupFrame {
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                disposeFrameAndProceed();
                 PortHolder.BAUD_RATE = Integer.parseInt((String) comboSpeeds.getSelectedItem());
-                new Launcher(comboPorts.getSelectedItem().toString());
+                String selectedPort = comboPorts.getSelectedItem().toString();
+                if (AUTO_SERIAL.equals(selectedPort)) {
+                    String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);
+                    if (autoDetectedPort == null)
+                        return;
+                    selectedPort = autoDetectedPort;
+                }
+                disposeFrameAndProceed();
+                new Launcher(selectedPort);
             }
         });
 
@@ -230,7 +239,10 @@ public class StartupFrame {
     @NotNull
     private List<String> findAllAvailablePorts() {
         List<String> ports = new ArrayList<>();
-        ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
+        String[] serialPorts = SerialPortList.getPortNames();
+        if (serialPorts.length > 0 || serialPorts.length < 15)
+            ports.add(AUTO_SERIAL);
+        ports.addAll(Arrays.asList(serialPorts));
         ports.addAll(TcpConnector.getAvailablePorts());
         return ports;
     }
