@@ -62,6 +62,7 @@ public class SerialIoStreamJSSC implements IoStream {
         isClosed = true;
         try {
             FileLog.MAIN.logLine("CLOSING PORT... "  + serialPort.getPortName());
+            serialPort.removeEventListener();
             serialPort.closePort();
             FileLog.MAIN.logLine("PORT CLOSED: " + serialPort.getPortName());
         } catch (SerialPortException e) {
