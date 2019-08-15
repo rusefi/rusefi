@@ -197,34 +197,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
-            boolean isTimeout = incomingData.waitForBytes(msg + " header", start, 2);
-            if (isTimeout)
-                return null;
-
-            int packetSize = swap16(incomingData.getShort());
-            logger.trace("Got packet size " + packetSize);
-            if (packetSize < 0)
-                return null;
-            if (!allowLongResponse && packetSize > Math.max(BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
-                return null;
-
-            isTimeout = incomingData.waitForBytes(msg + " body", start, packetSize + 4);
-            if (isTimeout)
-                return null;
-
-            byte[] packet = new byte[packetSize];
-                incomingData.getData(packet);
-            int packetCrc = swap32(incomingData.getInt());
-            int actualCrc = getCrc32(packet);
-
-            boolean isCrcOk = actualCrc == packetCrc;
-            if (!isCrcOk) {
-                logger.trace(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
-                return null;
-            }
-            logger.trace("packet " + Arrays.toString(packet) + ": crc OK");
-
-            return packet;
+            return incomingData.getPacket(logger, msg, allowLongResponse, start);
         }
     }
 
