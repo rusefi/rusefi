@@ -113,6 +113,7 @@ public class PortHolder {
             this.port = port;
         }
 
+        // todo: remove dead code - always true?
         public boolean isConnected() {
             return isConnected;
         }
@@ -123,10 +124,13 @@ public class PortHolder {
 
         public EstablishConnection invoke() {
             stream = SerialIoStreamJSerialComm.open(port, BAUD_RATE, FileLog.LOGGER);
+/*
+todo: remove dead code
             if (stream == null) {
                 isConnected = false;
                 return this;
             }
+             */
 
             isConnected = true;
             return this;

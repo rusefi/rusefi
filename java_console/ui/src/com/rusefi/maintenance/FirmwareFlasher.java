@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -11,28 +12,29 @@ import static com.rusefi.Launcher.INPUT_FILES_PATH;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
+ * @see DfuFlasher
+ * <p>
  * (c) Andrey Belomutskiy 2013-2018
  * 2/4/15
  */
-public class FirmwareFlasher extends ProcessStatusWindow {
+public class FirmwareFlasher {
     // Even on Windows openOCD insists on "/" for path separator
     public static final String IMAGE_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
     public static final String IMAGE_NO_ASSERTS_FILE = INPUT_FILES_PATH + "/" + "rusefi_no_asserts.bin";
     /**
      * SWD ST-LINK/V2 mode
      */
-    static final String OPENOCD_EXE = "openocd/openocd.exe";
-    // TODO: integration with DFU command line tool
-    static final String DFU_EXE = "DfuSeCommand.exe -c -d --v --fn rusefi.dfu";
+    private static final String OPENOCD_EXE = "openocd/openocd.exe";
     static final String BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
     private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
-    public static final String TITLE = "rusEfi Firmware Flasher";
+    public static final String TITLE = "rusEfi ST-LINK Firmware Flasher";
     public static final String DONE = "DONE!";
 
     private final JButton button;
     private String fileName;
+    private StatusWindow wnd = new StatusWindow();
 
     public FirmwareFlasher(String fileName, String buttonTest, String tooltip) {
         this.fileName = fileName;
@@ -59,6 +61,12 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
+    protected static StringBuffer executeOpenOCDCommand(String command, StatusWindow wnd) {
+        return ExecHelper.executeCommand(BINARY_LOCATION,
+                BINARY_LOCATION + File.separator + command,
+                OPENOCD_EXE, wnd);
+    }
+
     private void doFlashFirmware() {
         if (!new File(fileName).exists()) {
             wnd.appendMsg(fileName + " not found, cannot proceed !!!");
@@ -66,9 +74,9 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             return;
         }
         StatusAnimation sa = new StatusAnimation(wnd);
-        StringBuffer error = executeCommand(getOpenocdCommand() + " -c \"program " +
+        StringBuffer error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
                 fileName +
-                " verify reset exit 0x08000000\"");
+                " verify reset exit 0x08000000\"", wnd);
         if (error.toString().contains(NO_DRIVER_MESSAGE_TAG)) {
             wnd.appendMsg(" !!! ERROR: looks like stm32 driver is not installed? The link is above !!!");
         } else if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().toLowerCase().contains(FAILED_MESSAGE_TAG)) {

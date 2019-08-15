@@ -6,6 +6,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * https://github.com/Fazecast/jSerialComm looks to be alive as of 2019
@@ -66,6 +67,7 @@ public class SerialIoStreamJSerialComm implements IoStream {
         sp.writeBytes(bytes, bytes.length);
     }
 
+    @NotNull
     public static IoStream open(String port, int baudRate, Logger logger) {
         logger.info("[SerialIoStreamJSerialComm] " + port);
         SerialPort sp = SerialPort.getCommPort(port);

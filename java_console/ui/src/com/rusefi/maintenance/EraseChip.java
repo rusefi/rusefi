@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -10,11 +11,12 @@ import static com.rusefi.maintenance.FirmwareFlasher.TITLE;
 /**
  * (c) Andrey Belomutskiy 2013-2018
  */
-public class EraseChip extends ProcessStatusWindow {
+public class EraseChip {
     private static final String FLASH_SIZE = "0x0100000";
     private static final String ERASE_COMMAND_SUFFIX = " -c init -c targets -c \"halt\" -c \"flash erase_address 0x08000000 " + FLASH_SIZE + "\" -c shutdown";
 
-    private final JButton button = new JButton("Erase Chip");
+    private final JButton button = new JButton("ST-LINK Erase Chip");
+    private StatusWindow wnd = new StatusWindow();
 
     public EraseChip() {
         button.addActionListener(new AbstractAction() {
@@ -27,7 +29,7 @@ public class EraseChip extends ProcessStatusWindow {
                 wnd.showFrame(TITLE);
                 StatusAnimation sa = new StatusAnimation(wnd);
                 ExecHelper.submitAction(() -> {
-                    executeCommand(getEraseCommand());
+                    FirmwareFlasher.executeOpenOCDCommand(getEraseCommand(), wnd);
                     sa.stop();
                     wnd.setStatus(FirmwareFlasher.DONE);
                 },  EraseChip.this.getClass() + " extProcessThread");
