@@ -55,6 +55,7 @@ public class SerialIoStreamJSerialComm implements IoStream {
     @Override
     public void close() {
         isClosed = true;
+        sp.closePort();
     }
 
     @Override
