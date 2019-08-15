@@ -4,5 +4,6 @@ output.c
 currenttune.msq
 rusefi.ini
 openocd
+DfuSe
 rusefi_*.*
 triggers

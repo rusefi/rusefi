@@ -375,12 +375,10 @@ public class Launcher {
                 port = args[0];
 
 
-            if (isPortDefined && port.toLowerCase().startsWith("auto")) {
-                String autoDetectedPort = PortDetector.autoDetectSerial();
-                if (autoDetectedPort == null) {
+            if (isPortDefined) {
+                port = PortDetector.autoDetectSerialIfNeeded(port);
+                if (port == null) {
                     isPortDefined = false;
-                } else {
-                    port = autoDetectedPort;
                 }
             }
 

@@ -19,6 +19,9 @@ import java.awt.*;
  * (c) Andrey Belomutskiy
  */
 public class PortHolder {
+    /**
+     * Nasty code: this field is not final, we have UI which overrides this default!
+     */
     public static int BAUD_RATE = 115200;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
