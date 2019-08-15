@@ -62,7 +62,7 @@ public class IoHelper {
     /**
      * @return true if packet has the expected response code
      */
-    static boolean checkResponseCode(byte[] response, byte code) {
+    public static boolean checkResponseCode(byte[] response, byte code) {
         return response != null && response.length > 0 && response[0] == code;
     }
 }
