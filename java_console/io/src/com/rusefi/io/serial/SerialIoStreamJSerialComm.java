@@ -7,8 +7,6 @@ import com.opensr5.Logger;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 
-import java.io.IOException;
-
 /**
  * https://github.com/Fazecast/jSerialComm looks to be alive as of 2019
  * <p>
