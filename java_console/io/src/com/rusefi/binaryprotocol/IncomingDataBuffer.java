@@ -2,11 +2,14 @@ package com.rusefi.binaryprotocol;
 
 import com.opensr5.Logger;
 import com.rusefi.Timeouts;
+import com.rusefi.config.generated.Fields;
 import etch.util.CircularByteBuffer;
 import net.jcip.annotations.ThreadSafe;
 
 import java.io.EOFException;
 import java.util.Arrays;
+
+import static com.rusefi.binaryprotocol.IoHelper.*;
 
 /**
  * Thread-safe byte queue with blocking {@link #waitForBytes} method
@@ -26,6 +29,37 @@ public class IncomingDataBuffer {
     public IncomingDataBuffer(Logger logger) {
         this.cbb = new CircularByteBuffer(BUFFER_SIZE);
         this.logger = logger;
+    }
+
+    public byte[] getPacket(Logger logger, String msg, boolean allowLongResponse, long start) throws InterruptedException, EOFException {
+        boolean isTimeout = waitForBytes(msg + " header", start, 2);
+        if (isTimeout)
+            return null;
+
+        int packetSize = swap16(getShort());
+        logger.trace("Got packet size " + packetSize);
+        if (packetSize < 0)
+            return null;
+        if (!allowLongResponse && packetSize > Math.max(BinaryProtocolCommands.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
+            return null;
+
+        isTimeout = waitForBytes(msg + " body", start, packetSize + 4);
+        if (isTimeout)
+            return null;
+
+        byte[] packet = new byte[packetSize];
+        getData(packet);
+        int packetCrc = swap32(getInt());
+        int actualCrc = getCrc32(packet);
+
+        boolean isCrcOk = actualCrc == packetCrc;
+        if (!isCrcOk) {
+            logger.trace(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
+            return null;
+        }
+        logger.trace("packet " + Arrays.toString(packet) + ": crc OK");
+
+        return packet;
     }
 
     public void addData(byte[] freshData) {
