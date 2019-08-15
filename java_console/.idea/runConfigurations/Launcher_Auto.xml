@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Launcher Auto" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.Launcher" />
+    <module name="ui" />
+    <option name="PROGRAM_PARAMETERS" value="auto" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
