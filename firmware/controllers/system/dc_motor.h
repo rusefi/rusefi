@@ -40,7 +40,18 @@ class TwoPinDcMotor : public DcMotor
 public:
     enum class ControlType
     {
+    	/**
+    	 * For example TLE7209 - two control wires:
+    	 * PWM on both wires - one to open, another to close
+    	 */
         PwmDirectionPins,
+		/**
+		 * For example VNH2SP30 - three control wires:
+		 * PWM on 'enable' PIN, two binary pins for direction
+		 *
+		 * TLE9201 with two wire control also uses this mode
+		 * PWM on one pin, open/close using one binary direction pin, second direction pin unused
+		 */
         PwmEnablePin,
     };
 

@@ -372,7 +372,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if EFI_FSIO
 	setFsio(12, GPIOF_12, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-#endif
+#endif /* EFI_FSIO */
 	CONFIGB(etb1.directionPin1) = GPIOF_15;
 	CONFIGB(etb1.directionPin2) = GPIOF_14;
 #endif /* STM32_HAS_GPIOF */
