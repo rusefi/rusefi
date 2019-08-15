@@ -46,4 +46,10 @@ public class PortDetector {
         }
         return autoDetectedPort;
     }
+
+    public static String autoDetectSerialIfNeeded(String port) {
+        if (!port.toLowerCase().startsWith("auto"))
+            return port;
+        return autoDetectSerial();
+    }
 }
