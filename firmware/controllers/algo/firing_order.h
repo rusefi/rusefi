@@ -24,6 +24,7 @@ typedef enum {
 	FO_1_3_4_2 = 1, // typical inline 4
 	FO_1_2_4_3 = 2,
 	FO_1_3_2_4 = 3, // for example horizontally opposed engine
+	FO_1_4_3_2 = 17, // for example VW aircooled boxer engine
 
 	// 5 cylinder
 	FO_1_2_4_5_3 = 6,
@@ -46,7 +47,7 @@ typedef enum {
 	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 etc
 	FO_1_7_4_10_2_8_6_12_3_9_5_11 = 16, // lamborghini, typical rusEfi use-case
 
-	// max used = 15
+	// max used = 18
 
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
