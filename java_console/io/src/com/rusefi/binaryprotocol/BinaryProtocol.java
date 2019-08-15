@@ -39,7 +39,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
      */
-    private static boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
+    public static boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
     static {
         FileLog.MAIN.logLine(USE_PLAIN_PROTOCOL_PROPERTY + ": " + PLAIN_PROTOCOL);
     }
@@ -330,30 +330,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
     }
 
     private void sendPacket(byte[] command) throws IOException {
-        sendPacket(command, logger, stream);
-    }
-
-    public static void sendPacket(byte[] plainPacket, Logger logger, IoStream stream) throws IOException {
-        byte[] packet;
-        if (PLAIN_PROTOCOL) {
-            packet = plainPacket;
-        } else {
-            packet = IoHelper.makeCrc32Packet(plainPacket);
-        }
-        logger.info("Sending packet " + printHexBinary(plainPacket));
-        stream.write(packet);
-    }
-
-    private static final char[] hexCode = "0123456789ABCDEF".toCharArray();
-
-    private static String printHexBinary(byte[] data) {
-        StringBuilder r = new StringBuilder(data.length * 2);
-        for (byte b : data) {
-            r.append(hexCode[(b >> 4) & 0xF]);
-            r.append(hexCode[(b & 0xF)]);
-            r.append(' ');
-        }
-        return r.toString();
+        stream.sendPacket(command, logger);
     }
 
 
