@@ -4,10 +4,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.TcpConnector;
-import com.rusefi.maintenance.DriverInstall;
-import com.rusefi.maintenance.EraseChip;
-import com.rusefi.maintenance.ExecHelper;
-import com.rusefi.maintenance.FirmwareFlasher;
+import com.rusefi.maintenance.*;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -152,11 +149,12 @@ public class StartupFrame {
 
         if (FileLog.isWindows()) {
             realHardwarePanel.add(new HorizontalLine());
+            realHardwarePanel.add(new DfuFlasher(comboPorts).getButton());
             // for F7 builds we just build one file at the moment
-            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "Program Firmware", "Default firmware version for most users").getButton());
+            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
             if (new File(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE).exists()) {
                 // 407 build
-                realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "Program Firmware/NoAsserts", "Please only use this version if you know that you need this version").getButton());
+                realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "ST-LINK Program Firmware/NoAsserts", "Please only use this version if you know that you need this version").getButton());
             }
             realHardwarePanel.add(new EraseChip().getButton());
         }
