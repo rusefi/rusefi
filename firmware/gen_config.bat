@@ -26,9 +26,10 @@ IF NOT ERRORLEVEL 0 EXIT /B 1
 
 
 rem This would automatically copy latest file to 'dev' TS project
-set ts_path="%HOMEDRIVE%%HOMEPATH%\Documents\TunerStudioProjects\dev\projectCfg"
+set ts_path="%HOMEDRIVE%%HOMEPATH%\Documents\TunerStudioProjects"
 echo %ts_path%
-cp tunerstudio/rusefi.ini %ts_path%\mainController.ini
+cp tunerstudio/rusefi.ini %ts_path%\dev\projectCfg\mainController.ini
+cp tunerstudio/rusefi_microrusefi.ini %ts_path%\dev_mre\projectCfg\mainController.ini
 
 call gen_config_board microrusefi
 IF NOT ERRORLEVEL 0 echo ERROR generating
