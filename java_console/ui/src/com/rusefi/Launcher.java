@@ -49,7 +49,8 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  */
 public class Launcher {
     public static final int CONSOLE_VERSION = 20190815;
-    public static final String INPUT_FILES_PATH = "..";
+    public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
+    public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";

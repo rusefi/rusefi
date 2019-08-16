@@ -22,7 +22,7 @@ import java.io.IOException;
  * @see FirmwareFlasher
  */
 public class DfuFlasher {
-    public static final String DFU_BINARY = "DfuSe/DfuSeCommand.exe";
+    public static final String DFU_BINARY = Launcher.TOOLS_PATH + File.separator + "DfuSe/DfuSeCommand.exe";
     // TODO: integration with DFU command line tool
     static final String DFU_COMMAND = DFU_BINARY + " -c -d --v --fn " + Launcher.INPUT_FILES_PATH + File.separator +
             "rusefi.dfu";
