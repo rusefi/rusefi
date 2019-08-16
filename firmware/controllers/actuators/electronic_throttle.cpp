@@ -160,7 +160,7 @@ static EtbControl etb1;
 
 extern percent_t mockPedalPosition;
 
-static Pid pid(&engineConfiguration->etb);
+Pid etbPid(&engineConfiguration->etb);
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
@@ -181,7 +181,7 @@ class EtbController : public PeriodicTimerController {
 		// set debug_mode 17
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO
-			pid.postState(&tsOutputChannels);
+			etbPid.postState(&tsOutputChannels);
 			tsOutputChannels.debugIntField5 = feedForward;
 #endif /* EFI_TUNER_STUDIO */
 		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
@@ -192,7 +192,7 @@ class EtbController : public PeriodicTimerController {
 		}
 
 		if (shouldResetPid) {
-			pid.reset();
+			etbPid.reset();
 			shouldResetPid = false;
 		}
 
@@ -244,17 +244,37 @@ class EtbController : public PeriodicTimerController {
 
 		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
-		pid.iTermMin = engineConfiguration->etb_iTermMin;
-		pid.iTermMax = engineConfiguration->etb_iTermMax;
+		etbPid.iTermMin = engineConfiguration->etb_iTermMin;
+		etbPid.iTermMax = engineConfiguration->etb_iTermMax;
 
 		currentEtbDuty = feedForward +
-				pid.getOutput(targetPosition, actualThrottlePosition);
+				etbPid.getOutput(targetPosition, actualThrottlePosition);
 
 		etb1.dcMotor.Set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
 
 		if (engineConfiguration->isVerboseETB) {
-			pid.showPidStatus(&logger, "ETB");
+			etbPid.showPidStatus(&logger, "ETB");
 		}
+
+		DISPLAY_TEXT(Electrnoic_Throttle);
+		DISPLAY_SENSOR(TPS)
+		DISPLAY_TEXT(eol);
+
+		DISPLAY_TEXT(Pedal);
+		DISPLAY_SENSOR(PPS);
+		DISPLAY_TEXT(eol);
+
+		DISPLAY_TEXT(Output);
+		DISPLAY(DISPLAY_FIELD(output));
+		DISPLAY_TEXT(iTerm);
+		DISPLAY(DISPLAY_FIELD(iTerm));
+		DISPLAY_TEXT(eol);
+
+		DISPLAY_TEXT(Settings);
+		DISPLAY(DISPLAY_CONFIG(ETB_PFACTOR));
+		DISPLAY(DISPLAY_CONFIG(ETB_IFACTOR));
+		DISPLAY(DISPLAY_CONFIG(ETB_DFACTOR));
+
 
 		tsOutputChannels.etbTarget = targetPosition;
 		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
@@ -302,7 +322,7 @@ static void showEthInfo(void) {
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
 	scheduleMsg(&logger, "close dir=%s", hwPortname(CONFIGB(etb1.directionPin2)));
-	pid.showPidStatus(&logger, "ETB");
+	etbPid.showPidStatus(&logger, "ETB");
 }
 
 /**
@@ -310,7 +330,7 @@ static void showEthInfo(void) {
  */
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
-	pid.reset();
+	etbPid.reset();
 	showEthInfo();
 }
 
@@ -318,7 +338,7 @@ static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
 	etb1.dcMotor.Set(0);
-	pid.reset();
+	etbPid.reset();
 
 	mockPedalPosition = MOCK_UNDEFINED;
 }
@@ -328,7 +348,7 @@ static void etbReset() {
  */
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
-	pid.reset();
+	etbPid.reset();
 	showEthInfo();
 }
 
@@ -337,7 +357,7 @@ void setEtbIFactor(float value) {
  */
 void setEtbDFactor(float value) {
 	engineConfiguration->etb.dFactor = value;
-	pid.reset();
+	etbPid.reset();
 	showEthInfo();
 }
 
@@ -346,7 +366,7 @@ void setEtbDFactor(float value) {
  */
 void setEtbOffset(int value) {
 	engineConfiguration->etb.offset = value;
-	pid.reset();
+	etbPid.reset();
 	showEthInfo();
 }
 
@@ -397,7 +417,7 @@ void stopETBPins(void) {
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !pid.isSame(&previousConfiguration->etb);
+	shouldResetPid = !etbPid.isSame(&previousConfiguration->etb);
 }
 
 void startETBPins(void) {
@@ -496,7 +516,7 @@ void initElectronicThrottle(void) {
 	addConsoleActionI("set_etbat_period", setAutoPeriod);
 	addConsoleActionI("set_etbat_offset", setAutoOffset);
 
-	pid.reset();
+	etbPid.reset();
 
 	etbController.Start();
 }

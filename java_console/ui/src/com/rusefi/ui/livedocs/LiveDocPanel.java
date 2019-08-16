@@ -1,6 +1,7 @@
 package com.rusefi.ui.livedocs;
 
 import com.opensr5.ConfigurationImage;
+import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.EngineState;
@@ -185,6 +186,9 @@ public class LiveDocPanel {
 
         liveDocs.add(createPanel("Idle", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
+
+        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB,
+                EngineState.VALUES, ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
