@@ -1155,6 +1155,8 @@ end_struct
 #define LDS_FUEL_TRIM_INDEX 4
 #define LDS_TPS_TPS_ENEICHMENT_INDEX 5
 #define LDS_TRIGGER_INDEX 6
+#define LDS_ETB 7
+
 
 
 #define GAUGE_NAME_VERSION "firmware"
