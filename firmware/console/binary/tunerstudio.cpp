@@ -248,6 +248,8 @@ static void onlineApplyWorkingCopyBytes(int currentPageId, uint32_t offset, int 
 	}
 }
 
+extern Pid etbPid;
+
 static const void * getStructAddr(int structId) {
 	switch (structId) {
 	case LDS_CLT_INDEX:
@@ -260,6 +262,11 @@ static const void * getStructAddr(int structId) {
 		return static_cast<wall_fuel_state*>(&engine->wallFuel);
 	case LDS_TRIGGER_INDEX:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	case LDS_ETB:
+		return static_cast<pid_state_s*>(&etbPid);
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
 	default:
 		return NULL;
 	}

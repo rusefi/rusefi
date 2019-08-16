@@ -198,7 +198,7 @@ public enum Sensor {
 
     public static Sensor find(String value) {
         for (Sensor s : values())
-            if (s.name.equals(value))
+            if (s.name.equals(value) || s.name().equals(value))
                 return s;
         throw new IllegalStateException("Sensor not found: " + value);
     }

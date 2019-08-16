@@ -34,6 +34,7 @@ java -DSystemOut.name=gen_config2 ^
 %LIVE_DOCS_COMMAND% controllers/sensors/thermistors.cpp
 %LIVE_DOCS_COMMAND% controllers/sensors/tps.cpp
 %LIVE_DOCS_COMMAND% controllers/math/speed_density.cpp
+%LIVE_DOCS_COMMAND% controllers/actuators/electronic_throttle.cpp
 
 java -DSystemOut.name=gen_config2 ^
  -jar ../java_tools/ConfigDefinition.jar ^

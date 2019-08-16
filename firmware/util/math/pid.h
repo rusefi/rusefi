@@ -10,6 +10,7 @@
 
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
+#include "engine_state_generated.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "tunerstudio_configuration.h"
@@ -28,7 +29,7 @@
 
 #define MS2SEC(x) (x * 0.001)
 
-class Pid {
+class Pid : public pid_state_s {
 
 public:
 	Pid();
@@ -61,8 +62,6 @@ public:
 #endif /* EFI_TUNER_STUDIO */
 	float minResult;
 	float maxResult;
-	float iTerm;
-	float dTerm; // we are remembering this only for debugging purposes
 	void showPidStatus(Logging *logging, const char*msg);
 	void sleep();
 	int resetCounter;
@@ -73,10 +72,6 @@ private:
 	pid_s *pid;
 
 	float previousError;
-	// these are only used for logging
-	float target;
-	float input;
-	float output;
 	float errorAmplificationCoef;
 
 private:
