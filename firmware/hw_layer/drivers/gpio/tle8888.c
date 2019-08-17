@@ -276,16 +276,31 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 /* Driver thread.															*/
 /*==========================================================================*/
 
-static THD_FUNCTION(tle8888_driver_thread, p)
-{
-	msg_t msg;
+int tle8888SpiStartupExchange(void * data);
 
+static bool needInitialSpi = true;
+
+float vBattForTle8888 = 14;
+static void *poorPointerNeedToDoBetter = NULL;
+
+static THD_FUNCTION(tle8888_driver_thread, p) {
 	(void)p;
 
 	chRegSetThreadName(DRIVER_NAME);
 
 	while (1) {
-		msg = chSemWaitTimeout(&tle8888_wake, TIME_MS2I(TLE8888_POLL_INTERVAL_MS));
+		msg_t msg = chSemWaitTimeout(&tle8888_wake, TIME_MS2I(TLE8888_POLL_INTERVAL_MS));
+
+		if (vBattForTle8888 < 7) {
+			// we assume TLE8888 is down and we should not bother with SPI communication
+			needInitialSpi = true;
+		}
+
+		if (needInitialSpi) {
+			needInitialSpi = false;
+			tle8888SpiStartupExchange(poorPointerNeedToDoBetter);
+		}
+
 
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
@@ -341,7 +356,7 @@ int tle8888_writePad(void *data, brain_pin_e pin, int value) {
 /**
  * @return 0 for valid configuration, -1 for invalid configuration
  */
-static int tle8888SpiStartupExchange(void * data) {
+int tle8888SpiStartupExchange(void * data) {
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
 
@@ -435,7 +450,8 @@ static int tle8888SpiStartupExchange(void * data) {
 	return 0;
 }
 
-int tle8888_chip_init(void * data) {
+static int tle8888_chip_init(void * data) {
+	poorPointerNeedToDoBetter = data;
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
 
@@ -452,11 +468,6 @@ int tle8888_chip_init(void * data) {
 	if (ret) {
 		ret = -1;
 		goto err_gpios;
-	}
-
-	ret = tle8888SpiStartupExchange(data);
-	if (ret) {
-		return ret;
 	}
 
 
@@ -522,7 +533,6 @@ struct gpiochip_ops tle8888_ops = {
  */
 
 int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
-	struct tle8888_priv *chip;
 
 	efiAssert(OBD_PCM_Processor_Fault, cfg != NULL, "8888CFG", 0)
 
@@ -530,12 +540,12 @@ int tle8888_add(unsigned int index, const struct tle8888_config *cfg) {
 	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_TLE8888_COUNT))
 		return -1;
 
-	/* check for valid cs.
+	/* check for valid chip select.
 	 * TODO: remove this check? CS can be driven by SPI */
 	if (cfg->spi_config.ssport == NULL)
 		return -1;
 
-	chip = &chips[index];
+	struct tle8888_priv *chip = &chips[index];
 
 	/* already initted? */
 	if (chip->cfg != NULL)
