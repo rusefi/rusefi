@@ -265,13 +265,7 @@ static int tle8888_wake_driver(struct tle8888_priv *chip)
 
     /* Entering a reentrant critical zone.*/
     syssts_t sts = chSysGetStatusAndLockX();
-	if (isIsrContext()) {
-		// this is for normal runtime
-		chSemSignalI(&tle8888_wake);
-	} else {
-		// this is for start-up to not hang up
-		chSemSignalS(&tle8888_wake);
-	}
+	chSemSignalI(&tle8888_wake);
     /* Leaving the critical zone.*/
     chSysRestoreStatusX(sts);
 
