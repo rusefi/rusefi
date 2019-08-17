@@ -360,7 +360,11 @@ int tle8888SpiStartupExchange(void * data) {
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
 
-	chThdSleepMilliseconds(3);
+	/**
+	 * We need around 50ms to get reliable TLE8888 start if MCU is powered externally but +12 goes gown and then goes up
+	 * again
+	 */
+	chThdSleepMilliseconds(50);
 	/* Software reset */
 	// first packet: 0x335=821 > 0xFD=253
 	uint16_t response = 0;
