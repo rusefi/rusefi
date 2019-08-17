@@ -128,6 +128,10 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 
+#if (BOARD_TLE8888_COUNT > 0)
+extern float vBattForTle8888;
+#endif /* BOARD_TLE8888_COUNT */
+
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  * See also periodicFastCallback
@@ -148,6 +152,11 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				fuelLevelVoltage);
 	}
 	sensors.vBatt = hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) ? getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) : 12;
+
+#if (BOARD_TLE8888_COUNT > 0)
+	// nasty value injection into C driver which would not be able to access Engine class
+	vBattForTle8888 = sensors.vBatt;
+#endif /* BOARD_TLE8888_COUNT */
 
 	engineState.injectorLag = getInjectorLag(sensors.vBatt PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
