@@ -843,5 +843,14 @@ typedef enum {
 	 */
 	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
 } idle_state_e;
+typedef enum {
+	Duty = 0,
+	kPa = 1,
+} boostTableLabels_e;
+
+typedef enum {
+	Open_Loop = 0,
+	Closed_Loop = 1,
+} boostType_e;
 
 #endif /* RUSEFI_ENUMS_H_ */
