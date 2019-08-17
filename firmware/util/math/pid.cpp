@@ -148,7 +148,7 @@ void Pid::sleep() {
 }
 
 void Pid::showPidStatus(Logging *logging, const char*msg) {
-	scheduleMsg(logging, "%s settings: offset=%d P=%.5f I=%.5f D=%.5f dT=%d",
+	scheduleMsg(logging, "%s settings: offset=%d P=%.5f I=%.5f D=%.5f period=%dms",
 			msg,
 			pid->offset,
 			pid->pFactor,

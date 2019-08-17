@@ -102,7 +102,8 @@ static void setupEtb() {
 #endif /* EFI_FSIO */
 
 
-	// EFI_ADC_7: "31 - AN volt 3"
+	// set_analog_input_pin pps PA7
+	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	// engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	// Unused
