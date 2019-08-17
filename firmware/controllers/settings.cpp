@@ -778,6 +778,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 }
 
 #if HAL_USE_ADC
+// set_analog_input_pin pps
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -792,6 +793,9 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	if (strEqual("map", sensorStr)) {
 		engineConfiguration->map.sensor.hwChannel = channel;
 		scheduleMsg(&logger, "setting MAP to %s/%d", pinName, channel);
+	} else if (strEqual("pps", sensorStr)) {
+		engineConfiguration->throttlePedalPositionAdcChannel = channel;
+		scheduleMsg(&logger, "setting PPS to %s/%d", pinName, channel);
 	} else if (strEqual("clt", sensorStr)) {
 		engineConfiguration->clt.adcChannel = channel;
 		scheduleMsg(&logger, "setting CLT to %s/%d", pinName, channel);
