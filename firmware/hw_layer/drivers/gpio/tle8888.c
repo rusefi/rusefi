@@ -338,30 +338,17 @@ int tle8888_writePad(void *data, brain_pin_e pin, int value) {
 	return 0;
 }
 
-int tle8888_chip_init(void * data)
-{
+/**
+ * @return 0 for valid configuration, -1 for invalid configuration
+ */
+static int tle8888SpiStartupExchange(void * data) {
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
-
-	int ret = 0;
-	/* mark pins used */
-	// we do not initialize CS pin so we should not be marking it used - i'm sad
-	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
-	if (cfg->reset.port != NULL)
-		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
-	for (int i = 0; i < TLE8888_DIRECT_MISC; i++)
-		if (cfg->direct_io[i].port)
-			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
-
-	if (ret) {
-		ret = -1;
-		goto err_gpios;
-	}
 
 	chThdSleepMilliseconds(3);
 	/* Software reset */
 	// first packet: 0x335=821 > 0xFD=253
-	uint16_t response;
+	uint16_t response = 0;
 	tle8888_spi_rw(chip, CMD_SR, &response);
 	if (response == 253) {
 		// I've seen this response on red board
@@ -445,6 +432,33 @@ int tle8888_chip_init(void * data)
 
 	/* enable outputs */
 	tle8888_spi_rw(chip, CMD_OE_SET, NULL);
+	return 0;
+}
+
+int tle8888_chip_init(void * data) {
+	struct tle8888_priv *chip = (struct tle8888_priv *)data;
+	const struct tle8888_config	*cfg = chip->cfg;
+
+	int ret = 0;
+	/* mark pins used */
+	// we do not initialize CS pin so we should not be marking it used - i'm sad
+	//ret = gpio_pin_markUsed(cfg->spi_config.ssport, cfg->spi_config.sspad, DRIVER_NAME " CS");
+	if (cfg->reset.port != NULL)
+		ret |= gpio_pin_markUsed(cfg->reset.port, cfg->reset.pad, DRIVER_NAME " RST");
+	for (int i = 0; i < TLE8888_DIRECT_MISC; i++)
+		if (cfg->direct_io[i].port)
+			ret |= gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " DIRECT IO");
+
+	if (ret) {
+		ret = -1;
+		goto err_gpios;
+	}
+
+	ret = tle8888SpiStartupExchange(data);
+	if (ret) {
+		return ret;
+	}
+
 
 err_gpios:
 	/* unmark pins */
