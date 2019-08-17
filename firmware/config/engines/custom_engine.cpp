@@ -487,6 +487,10 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[7] = GPIO_UNASSIGNED;
 
 
+	// fuel pump is useful to test power on/off scenario
+//	boardConfiguration->fuelPumpPin = TLE8888_PIN_22;
+
+
 	// LED #1
     // GPIOE_7: "34 - GP Out 2"
 	boardConfiguration->injectionPins[1 - 1] = TLE8888_PIN_22;//GPIOE_7;
