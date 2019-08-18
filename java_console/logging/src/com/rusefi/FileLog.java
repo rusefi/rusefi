@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * what the hell is this anyway? todo: migrate to log4j2
  * 6/30/13
  * (c) Andrey Belomutskiy
  */
