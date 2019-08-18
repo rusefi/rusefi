@@ -12,20 +12,6 @@
 #include "global.h"
 #include "scheduler.h"
 
-// see TOP_DEAD_CENTER_MESSAGE in rusEfi console source code
-#define TOP_DEAD_CENTER_MESSAGE "r"
-
-#define WC_DOWN "d"
-#define WC_UP "u"
-/**
- * See also 'CRANK1' in java rusEfi console code
- */
-#define CRANK1 "t1"
-#define CRANK2 "t2"
-#define CRANK3 "t3"
-
-#define VVT_NAME "VVT"
-
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
 #define UNREALISTIC_RPM 30000

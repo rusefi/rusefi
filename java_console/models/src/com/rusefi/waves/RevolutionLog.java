@@ -9,7 +9,6 @@ import static com.rusefi.models.Utils.parseIntWithReason;
  * (c) Andrey Belomutskiy
  */
 public class RevolutionLog {
-    public static final String TOP_DEAD_CENTER_MESSAGE = "r";
     private final TreeMap<Integer, Integer> time2rpm;
 
     public RevolutionLog(TreeMap<Integer, Integer> time2rpm) {

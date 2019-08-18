@@ -414,15 +414,15 @@ void printOverallStatus(systime_t nowSeconds) {
 	int seconds = getTimeNowSeconds();
 	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
-	printOutPin(CRANK1, CONFIGB(triggerInputPins)[0]);
-	printOutPin(CRANK2, CONFIGB(triggerInputPins)[1]);
-	printOutPin(VVT_NAME, engineConfiguration->camInputs[0]);
-	printOutPin(HIP_NAME, CONFIGB(hip9011IntHoldPin));
-	printOutPin(TACH_NAME, CONFIGB(tachOutputPin));
-	printOutPin(DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
+	printOutPin(PROTOCOL_CRANK1, CONFIGB(triggerInputPins)[0]);
+	printOutPin(PROTOCOL_CRANK2, CONFIGB(triggerInputPins)[1]);
+	printOutPin(PROTOCOL_VVT_NAME, engineConfiguration->camInputs[0]);
+	printOutPin(PROTOCOL_HIP_NAME, CONFIGB(hip9011IntHoldPin));
+	printOutPin(PROTOCOL_TACH_NAME, CONFIGB(tachOutputPin));
+	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
 #if EFI_WAVE_ANALYZER
-	printOutPin(WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
-	printOutPin(WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
+	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
+	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
 #endif /* EFI_WAVE_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {

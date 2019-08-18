@@ -1238,6 +1238,31 @@ end_struct
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 
+! Engine Sniffer Protocol
+#define PROTOCOL_ES_DOWN "d"
+#define PROTOCOL_ES_UP "u"
+#define TOP_DEAD_CENTER_MESSAGE "r"
+
+! Engine Sniffer channel names
+#define PROTOCOL_CRANK1 "t1"
+#define PROTOCOL_CRANK2 "t2"
+#define PROTOCOL_CRANK3 "t3"
+
+#define PROTOCOL_VVT_NAME "VVT"
+#define PROTOCOL_HIP_NAME "HIP"
+#define PROTOCOL_TACH_NAME "tach"
+#define PROTOCOL_DIZZY_NAME "dizzy"
+
+#define PROTOCOL_WA_CHANNEL_1 "input1"
+#define PROTOCOL_WA_CHANNEL_2 "input2"
+#define PROTOCOL_WA_CHANNEL_3 "input3"
+#define PROTOCOL_WA_CHANNEL_4 "input4"
+
+
+
+#define PROTOCOL_COIL1_SHORT_NAME "c1"
+#define PROTOCOL_INJ1_SHORT_NAME "i1"
+
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"

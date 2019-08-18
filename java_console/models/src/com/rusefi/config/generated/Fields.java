@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Aug 18 12:24:07 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Aug 18 14:59:42 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -999,10 +999,25 @@ public class Fields {
 	public static final int primingSquirtDurationMs_offset = 96;
 	public static final int primingSquirtDurationMs_offset_hex = 60;
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
+	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
+	public static final String PROTOCOL_CRANK1 = "t1";
+	public static final String PROTOCOL_CRANK2 = "t2";
+	public static final String PROTOCOL_CRANK3 = "t3";
+	public static final String PROTOCOL_DIZZY_NAME = "dizzy";
 	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
+	public static final String PROTOCOL_ES_DOWN = "d";
+	public static final String PROTOCOL_ES_UP = "u";
+	public static final String PROTOCOL_HIP_NAME = "HIP";
+	public static final String PROTOCOL_INJ1_SHORT_NAME = "i1";
 	public static final String PROTOCOL_OUTPIN = "outpin";
+	public static final String PROTOCOL_TACH_NAME = "tach";
 	public static final String PROTOCOL_TEST_RESPONSE_TAG = "ts_p_alive";
 	public static final String PROTOCOL_VERSION_TAG = "rusEfiVersion";
+	public static final String PROTOCOL_VVT_NAME = "VVT";
+	public static final String PROTOCOL_WA_CHANNEL_1 = "input1";
+	public static final String PROTOCOL_WA_CHANNEL_2 = "input2";
+	public static final String PROTOCOL_WA_CHANNEL_3 = "input3";
+	public static final String PROTOCOL_WA_CHANNEL_4 = "input4";
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;
@@ -1114,6 +1129,7 @@ public class Fields {
 	public static final int tle8888_cs_offset = 3105;
 	public static final int tle8888_csPinMode_offset = 3106;
 	public static final int tle8888spiDevice_offset = 4000;
+	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TOTAL_CONFIG_SIZE = 20000;
 	public static final int tps1_1AdcChannel_offset = 512;
 	public static final int tps1_1AdcChannel_offset_hex = 200;

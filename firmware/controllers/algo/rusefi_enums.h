@@ -17,10 +17,6 @@
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
 
-#define HIP_NAME "HIP"
-#define TACH_NAME "tach"
-#define DIZZY_NAME "dizzy"
-
 #define ENUM_16_BITS 20000
 
 #define DIGIPOT_COUNT 4

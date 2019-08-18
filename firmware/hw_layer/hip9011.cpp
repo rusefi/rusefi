@@ -51,7 +51,7 @@
 
 #if EFI_HIP_9011
 
-static NamedOutputPin intHold(HIP_NAME);
+static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
 
 extern uint32_t lastExecutionCount;
 extern EnginePins enginePins;
