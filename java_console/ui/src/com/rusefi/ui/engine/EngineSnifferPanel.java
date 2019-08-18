@@ -185,7 +185,7 @@ public class EngineSnifferPanel {
     }
 
     public void setOutpinListener(EngineState engineState) {
-        engineState.registerStringValueAction(EngineState.OUTPIN_TAG, new EngineState.ValueCallback<String>() {
+        engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 String pinInfo[] = value.split("@");

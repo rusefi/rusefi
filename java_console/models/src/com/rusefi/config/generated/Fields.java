@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Aug 15 20:04:48 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Aug 18 12:09:19 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1000,6 +1000,8 @@ public class Fields {
 	public static final int primingSquirtDurationMs_offset_hex = 60;
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
+	public static final String PROTOCOL_OUTPIN = "outpin";
+	public static final String PROTOCOL_VERSION_TAG = "rusEfiVersion";
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;

@@ -1522,6 +1522,8 @@
 #define primingSquirtDurationMs_offset_hex 60
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
+#define PROTOCOL_OUTPIN "outpin"
+#define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define RPM_1_BYTE_PACKING_MULT 50
 #define rpmHardLimit_offset 416
 #define rpmHardLimit_offset_hex 1a0
