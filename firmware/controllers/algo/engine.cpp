@@ -337,8 +337,11 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 }
 
 operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	//return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
-	return engineConfiguration->ambiguousOperationMode;
+	/**
+	 * here we ignore user-provided setting for well known triggers.
+	 * For instance for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
+	 */
+	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
 }
 
 /**
