@@ -65,7 +65,7 @@ struct_no_prefix engine_configuration_s
 
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 
-#define ETB_BIAS_CURVE_LENGTH 6
+#define ETB_BIAS_CURVE_LENGTH 8
 
 ! this is here so that rusEfi console can access it, too
 #define TS_OUTPUT_SIZE 356
@@ -158,9 +158,9 @@ custom vvt_table_t @@VVT_RPM_COUNT@@x@@VVT_LOAD_COUNT@@ array,   U08,   @OFFSET@
 
 struct pid_s
 ! explicitly document which use-cases need 10e-7 parameters 
-	float pFactor;;"",      1,      0,       -10000, 10000,      2
-	float iFactor;;"",      1,      0,       -10000, 10000,      2
-	float dFactor;;"",      1,      0,       -10000, 10000,      2
+	float pFactor;;"",      1,      0,       -10000, 10000,      7
+	float iFactor;;"",      1,      0,       -10000, 10000,      7
+	float dFactor;;"",      1,      0,       -10000, 10000,      7
 	int16_t offset;Linear addition to PID logic;"",      1,      0,       -1000, 1000,      0
 	int16_t periodMs;PID dTime;"ms",      1,      0,       0, 3000,      0
 	int16_t minValue;Output min value;"",        1,     0,  -30000,    30000.0,  0
@@ -458,16 +458,17 @@ trigger_config_s trigger;
 
 custom spi_device_e 1 bits,U32,   @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
 	spi_device_e hip9011SpiDevice;
-	uint8_t[2] alignA;
+	adc_channel_e high_fuel_pressure_sensor_1;
+	adc_channel_e high_fuel_pressure_sensor_2;
 	adc_channel_e mafAdcChannel;See hasMafSensor
 	
-		
+	
 float globalFuelCorrection;set global_fuel_correction X;"coef",    1,      0.0,       0,  1000.0,        2
 
 	float adcVcc;;         "volts",    1,    0.0,       0,    4.0,        3
 	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.\nTODO #660
-
+	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
 uint8_t[3] alignAf;
@@ -520,7 +521,16 @@ float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 
 	pin_output_mode_e injectionPinMode;
 	pin_output_mode_e ignitionPinMode;
-	uint8_t[8] unusedlcdp;
+	brain_pin_e HD44780_rs;
+	brain_pin_e HD44780_e;
+
+	brain_pin_e HD44780_db4;
+	brain_pin_e HD44780_db5;
+	brain_pin_e HD44780_db6;
+	brain_pin_e HD44780_db7;
+
+	brain_pin_e gps_rx_pin;
+	brain_pin_e gps_tx_pin;
 	output_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
 
@@ -591,14 +601,14 @@ bit is_enabled_spi_2
 	bit isSdCardEnabled
 	bit isFastAdcEnabled
 	bit isEngineControlEnabled
-	bit unusedhip
+	bit isHip9011Enabled
 	bit isVerboseAlternator
 	bit useSerialPort
 	bit useStepperIdle;+This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
 	bit enabledStep1Limiter;
 	bit useTpicAdvancedMode;
-	bit unusedlcd;
+	bit useLcdScreen;
 	bit unusedAnotherOne;
 	bit unusedOldWarmupAfr;
 	bit onOffAlternatorLogic; +This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
@@ -671,8 +681,13 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e spi3misoPin;
 
 	brain_pin_e spi3sckPin;
-	
-	uint8_t[6] unusedpins;
+	brain_pin_e cdmInputPin;+Saab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module
+	brain_pin_e joystickCenterPin;
+	brain_pin_e joystickAPin;
+
+	brain_pin_e joystickBPin;
+	brain_pin_e joystickCPin;
+	brain_pin_e joystickDPin;
 	uart_device_e consoleUartDevice;
 
 
@@ -742,7 +757,7 @@ uint8_t[1] unusedh;
 
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	idle_mode_e idleMode;See also idleRpmPid;
-    
+
 	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	bit isIgnitionEnabled;+Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders. 
@@ -824,14 +839,15 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s idleRpmPid;See cltIdleRpmBins
 	float wwaeBeta;+0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction",        1,     0,    0.0,    1.0,  2
 	
-	uint8_t[2] unusedledpins;
+	brain_pin_e communicationLedPin;blue LED on discovery by default	
+	brain_pin_e runningLedPin;green LED on discovery by default
 	brain_pin_e binarySerialTxPin;	
 	brain_pin_e binarySerialRxPin;	
 	
 	brain_pin_e[AUX_DIGITAL_VALVE_COUNT iterate] auxValves
 	brain_pin_e consoleSerialTxPin;	todo: finish pin migration from hard-coded to configurable?
 	brain_pin_e consoleSerialRxPin;todo: finish pin migration from hard-coded to configurable?
-
+    
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v",      1,     0,   0.0,    10,   2
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM",      1,     0,   0.0,    18000,   2
@@ -853,8 +869,10 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent",        1,     0,  0,    500,  0
 
-	custom boostTableLabels_e 4 bits,  U08, @OFFSET@,  [0:1],  "Duty Cycle %", "kPa"
-    boostTableLabels_e boostTableLabels;
+	brain_pin_e fatalErrorPin;RED led on Discovery by default.
+	brain_pin_e warningLedPin;
+	brain_pin_e unused1234234;
+	brain_pin_e LIS302DLCsPin;
 
 
 	int tpsAccelLength;+This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. ;"cycles",        1,     0,    1, 200,     0
@@ -977,7 +995,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	brain_input_pin_e flexFuelSensor;+This is the processor pin your Flex-fuel sensor is connected to, this is a non standard item so the pin will always be user defined. 
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
-	uint8_t[1] unusedpin;
+	adc_channel_e externalKnockSenseAdc;
 	brain_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
@@ -1012,11 +1030,10 @@ float tChargeAirDecrLimit;;"tChange Decrement Limit, deg/sec",        1,     0, 
 custom tChargeMode_e 4 bits,    U32,   @OFFSET@, [0:0], @@tChargeMode_e_enum@@
 tChargeMode_e tChargeMode;
 	
-
+	
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position",   1,   0.0,        0,  100.0,   0
-			uint8_t[8] alignme;
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias",   1,   0.0,        -100,  100.0,   2
-		uint8_t[8] alignmentxx;
+	
 	float hip9011Gain;
 	int16_t etb_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
 	int16_t etb_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
@@ -1041,10 +1058,10 @@ tChargeMode_e tChargeMode;
 
 
 	float etbIdleThrottleRange; ETB idle authority; "%", 1, 0, 0, 15, 0
-
-custom boostType_e 4 bits,   U08, @OFFSET@, [0:0],  "Open Loop",  "Closed Loop"
+custom boostTableLabels_e 4 bits,  U08, @OFFSET@,  [0:1],  "Duty Cycle %", "kPa"
+    boostTableLabels_e boostTableLabels;
+	custom boostType_e 4 bits,   U08, @OFFSET@, [0:0],  "Open Loop",  "Closed Loop"
 boostType_e boostType
-uint8_t[4] unusuedsw;
 	int[3] alFIn;
 	uint8_t[4] unusedSpiPadding3;
 	int[526] mainUnusedEnd;
@@ -1081,27 +1098,27 @@ le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
 	le_formula_t timingMultiplier;
 	le_formula_t timingAdditive;
 
-float[CLT_CURVE_SIZE] cltFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,  0
-float[CLT_CURVE_SIZE] cltFuelCorr;;"percent",      100,     0,      0.0,    400,   0
+float[CLT_CURVE_SIZE] cltFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,  2
+float[CLT_CURVE_SIZE] cltFuelCorr;;"ratio",      1,     0,      0.0,    5.0,   2
 
-float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,   0
-float[IAT_CURVE_SIZE] iatFuelCorr;;"percent",      100,     0,      0.0,    400,   0
+float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C",        1,     0,   -100.0,    250.0,   2
+float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio",      1,     0,      0.0,    5.0,   2
 
-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"percent",      100,     0,      0.1,    400,   0
-	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C",        1,     0,    -80.0,    170.0,  0
+	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio",      1,     0,      0.1,    5.0,   2
+	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C",        1,     0,    -80.0,    170.0,  2
 
-	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"percent",      100,     0,      0.0,    400,   0
+	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"ratio",      1,     0,      0.0,    5.0,   2
 	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter",        1,     0,    -80.0,    170.0,  0
 
-float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  1
-float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"percent",      100,     0,      0.0,   400,   0
+float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C",        1,     0,   -100.0,    250.0,  2
+float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"ratio",      1,     0,      0.0,    10.0,   2
 
 float[MAF_DECODING_COUNT] mafDecoding;kg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500.0, 4000.0, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;; "V", 1, 0, -5.0, 150.0, 2
 
 angle_table_t ignitionIatCorrTable;
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature",   1,   0.0,        0,  500.0,   1
-float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 1
+float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature",   1,   0.0,        0,  500.0,   2
+float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
 
 angle_table_t injectionPhase;
 float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load",   1,   0.0,        0,  500.0,   2
@@ -1147,7 +1164,6 @@ fsio_table_8x8_u8t fsioTable4;
 float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	   1,      0,      0.0,  255,   0
 float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	   1,      0,      0.0,  25500.0,   2
 
-
 end_struct
 
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
@@ -1160,8 +1176,6 @@ end_struct
 #define LDS_FUEL_TRIM_INDEX 4
 #define LDS_TPS_TPS_ENEICHMENT_INDEX 5
 #define LDS_TRIGGER_INDEX 6
-#define LDS_ETB 7
-
 
 
 #define GAUGE_NAME_VERSION "firmware"
