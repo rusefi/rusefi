@@ -43,7 +43,7 @@ static const char *sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", 
 static const char *injectorNames[] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
 		"injector7", "injector8", "injector9", "injector10", "injector11", "injector12"};
 
-static const char *injectorShortNames[] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
+static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
 static const char *auxValveShortNames[] = { "a1", "a2"};
@@ -242,7 +242,6 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-
 	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
 #endif /* EFI_ENGINE_SNIFFER */
 }

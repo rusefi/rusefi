@@ -85,6 +85,9 @@ public:
 	bool stop();
 	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
 	const char *name;
+	/**
+	 * rusEfi Engine Sniffer protocol uses these short names to reduce bytes usage
+	 */
 	const char *shortName = NULL;
 };
 
