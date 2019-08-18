@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Aug 08 00:19:31 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Aug 18 13:58:14 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -525,6 +525,7 @@ struct board_configuration_s {
 	 */
 	pin_output_mode_e fuelPumpPinMode;
 	/**
+	 * Check engine light, also malfunction indicator light. Always blinks once on boot.
 	 * offset 60
 	 */
 	output_pin_e malfunctionIndicatorPin;
@@ -2814,4 +2815,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Thu Aug 08 00:19:31 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Aug 18 13:58:14 EDT 2019
