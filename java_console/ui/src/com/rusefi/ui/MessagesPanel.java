@@ -6,8 +6,6 @@ import com.rusefi.ui.widgets.AnyCommand;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This panel displays plain-text 'msg' plain-text debug messages
@@ -32,20 +30,12 @@ public class MessagesPanel {
 //        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 
         final JButton pauseButton = UiUtils.createPauseButton();
-        pauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setPaused(pauseButton, !messagesView.isPaused);
-            }
-        });
+        pauseButton.addActionListener(event -> setPaused(pauseButton, !messagesView.isPaused()));
 
         JButton clearButton = UiUtils.createClearButton();
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                messagesView.clear();
-                setPaused(pauseButton, false);
-            }
+        clearButton.addActionListener(event -> {
+            messagesView.clear();
+            setPaused(pauseButton, false);
         });
 
         buttonPanel.add(clearButton);
@@ -55,8 +45,8 @@ public class MessagesPanel {
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {
-        messagesView.isPaused = isPaused;
-        UiUtils.setPauseButtonText(pauseButton, messagesView.isPaused);
+        messagesView.setPaused(isPaused);
+        UiUtils.setPauseButtonText(pauseButton, messagesView.isPaused());
     }
 
     public JPanel getButtonPanel() {
@@ -81,6 +71,6 @@ public class MessagesPanel {
         Font f = getFont();
         int size = config.getIntProperty(FONT_SIZE, f.getSize());
         String name = config.getProperty(FONT_NAME, f.getName());
-        setFont(new Font(f.getName(), f.getStyle(), size), config);
+        setFont(new Font(name, f.getStyle(), size), config);
     }
 }
