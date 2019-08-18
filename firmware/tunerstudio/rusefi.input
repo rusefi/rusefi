@@ -330,8 +330,7 @@ fileVersion = { 20190701 }
       yAxis       =  0,  8, 10
       xBins       = knockNoiseRpmBins, RPMValue
       yBins       = knockNoise
-	  suppressGraph = true
-      showTextValues = true
+      gauge       = RPMGauge
 
 	curve = narrowToWideOxygenCurve, "Narrow to Wideband approximation"
       columnLabel = "Voltage", "AFR"
@@ -339,53 +338,42 @@ fileVersion = { 20190701 }
       yAxis       =  0,  28, 10
       xBins       = narrowToWideOxygenBins
       yBins       = narrowToWideOxygen
-      suppressGraph = true
-      showTextValues = true
+      gauge       = afr1Gauge
 
-   curve = fsioCurve1, "Boost"
+   curve = fsioCurve1, "FSIO Curve #1"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -155,  150, 10
       xBins       = fsioCurve1Bins
       yBins       = fsioCurve1
-	   suppressGraph = true
-      showTextValues = true
       
-   curve = fsioCurve2, "GP-PWM 1"
+   curve = fsioCurve2, "FSIO Curve #2"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -150,  150, 10
       xBins       = fsioCurve2Bins
       yBins       = fsioCurve2
-	   suppressGraph = true
-      showTextValues = true
 
-   curve = fsioCurve3, "GP-PWM 2"
+   curve = fsioCurve3, "FSIO Curve #3"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -5,  5, 10
       xBins       = fsioCurve3Bins
       yBins       = fsioCurve3
-	   suppressGraph = true
-      showTextValues = true
 
-   curve = fsioCurve4, "VVT"
+   curve = fsioCurve4, "FSIO Curve #4"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -5,  5, 10
       xBins       = fsioCurve4Bins
       yBins       = fsioCurve4
-	   suppressGraph = true
-      showTextValues = true
 
    curve = mapAccelTaper, "Engine Load Acceleration Enrichment Taper"
-      columnLabel = "Distance", "%"
+      columnLabel = "Distance", "Multiplier"
       xAxis       =  0, 128, 10
       yAxis       = -5,  5, 10
       xBins       = mapAccelTaperBins
       yBins       = mapAccelTaperMult
-      suppressGraph = true
-      showTextValues = true
 
 	curve = dwellCorrection, "Dwell time RPM based"
       columnLabel = "RPM", "Dwell"
@@ -393,8 +381,7 @@ fileVersion = { 20190701 }
       yAxis       =  0,  30, 10
       xBins       = sparkDwellRpmBins, RPMValue
       yBins       = sparkDwellValues
-       suppressGraph = true
-      showTextValues = true
+      gauge       = RPMGauge
     
    curve = map_samplingAngleCurve, "MAP Sampling Start Angle"
       columnLabel = "RPM", "Angle"
@@ -402,8 +389,7 @@ fileVersion = { 20190701 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingAngleBins, RPMValue
       yBins       = map_samplingAngle
-	   gauge       = MAPGauge
-	  
+	  gauge       = MAPGauge
    
    curve = map_samplingWindowCurve, "MAP Sampling Duration"
       columnLabel = "RPM", "Window"
@@ -411,17 +397,15 @@ fileVersion = { 20190701 }
       yAxis       =  0,  180, 10
       xBins       = map_samplingWindowBins, RPMValue
       yBins       = map_samplingWindow
-	    gauge       = MAPGauge
-	
-   curve = injectorsDeadTime, "Injector Dead Time"
+	  gauge       = MAPGauge
+
+   curve = injectorsDeadTime, "Injector Dead Time by VBatt"
       columnLabel = "Voltage", "Dead Time"
       xAxis       =  8, 21, 10
       yAxis       = -3,  3, 10
       xBins       = injector_battLagCorrBins, VBatt
       yBins       = injector_battLagCorr
-      suppressGraph = true
-      showTextValues = true
-	  	  
+      gauge       = VBattGauge
       
    curve = mafDecodingCurve, "MAF sensor"
       columnLabel = "Voltage", "kg/hour"
@@ -429,12 +413,10 @@ fileVersion = { 20190701 }
       yAxis       = -30,  1300, 10
       xBins       = mafDecodingBins, MAFValue
       yBins       = mafDecoding
-	 gauge       = MAFGauge
+      gauge       = MAFGauge
 
-
-
-   curve = iatFuelCorrCurve, "IAT Warmup Correction     % Of Normal Fueling"
-      columnLabel = "Intake Air Temp", "%"
+   curve = iatFuelCorrCurve, "Intake air temperature fuel Multiplier"
+      columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
       xAxis       =  -40, 120, 10
 #else
@@ -443,11 +425,10 @@ fileVersion = { 20190701 }
       yAxis       =  0,  2, 11
       xBins       = iatFuelCorrBins, intake
       yBins       = iatFuelCorr
-	   suppressGraph = true
-      showTextValues = true
+      gauge       = IATGauge
 	
-	curve = cltTimingCorrCurve, "Warmup Timing Correction"
-      columnLabel = "Coolant", "Degrees"
+	curve = cltTimingCorrCurve, "Warmup timing correction"
+      columnLabel = "Coolant", "Extra"
 #if CELSIUS
       xAxis       =  -40, 120, 10
 #else
@@ -456,12 +437,11 @@ fileVersion = { 20190701 }
       yAxis       =  0,  50, 10
       xBins       = cltTimingBins, coolant
       yBins       = cltTimingExtra
-	   suppressGraph = true
-      showTextValues = true
+      gauge       = CLTGauge
 
-	curve = cltFuelCorrCurve, "Warmup Enrichment     % Of Normal Fueling"
-      columnLabel = "Coolant", "%"
-	  #if CELSIUS
+	curve = cltFuelCorrCurve, "Warmup fuel manual Multiplier"
+      columnLabel = "Coolant", "Multiplier"
+#if CELSIUS
       xAxis       =  -40, 100, 10
 #else
       xAxis       =  -40, 210, 10
@@ -469,11 +449,10 @@ fileVersion = { 20190701 }
       yAxis       =  0,  3, 10
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
-	   showTextValues = true
-      suppressGraph = true
+      gauge       = CLTGauge
 
-	curve = crankingCltCurve, "Cranking Enrichment    % Of Normal Fueling"
-      columnLabel = "Coolant", "%"
+	curve = crankingCltCurve, "Cranking Coolant Temperature Multiplier"
+      columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
       xAxis       =  -40, 100, 10
 #else
@@ -482,38 +461,34 @@ fileVersion = { 20190701 }
       yAxis       =  0,  3, 10
       xBins       = crankingFuelBins, coolant
       yBins       = crankingFuelCoef
-	   showTextValues = true
-       suppressGraph = true
+      gauge       = CLTGauge
 
-	curve = etbTpsBiasCurve, "Feed Forward"
-      columnLabel = "TPS Position", "Duty Cycle"
+	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
+      columnLabel = "TPS", "duty bias"
       xAxis       =  0, 100, 10
       yAxis       =  0,  100, 10
       xBins       = etbBiasBins, TPSValue
       yBins       = etbBiasValues
-	   showTextValues = true
-      suppressGraph = true
+      gauge       = TPSGauge
 
-	curve = crankingTpsCurve, "Cranking TPS Correction"
-      columnLabel = "TPS", "%"
+	curve = crankingTpsCurve, "Cranking TPS Multiplier"
+      columnLabel = "TPS", "Multiplier"
       xAxis       =  0, 100, 10
       yAxis       =  0,  3, 10
       xBins       = crankingTpsBins, TPSValue
       yBins       = crankingTpsCoef
-	   suppressGraph = true
-      showTextValues = true
+      gauge       = TPSGauge
 
-	curve = crankingDurationCurve, "First Crank Enrichment     % Of Normal Fueling"
-      columnLabel = "Engine Cycle", "%"
+	curve = crankingDurationCurve, "Cranking Duration Multiplier"
+      columnLabel = "Engine Cycle", "Multiplier"
       xAxis       =  0, 1000, 10
       yAxis       =  0,  3, 10
       xBins       = crankingCycleBins
       yBins       = crankingCycleCoef
-	   showTextValues = true
-      suppressGraph = true
 
-	curve = cltIdleCurve, "Warmup Idle Correction   % Of Normal Opening"
-      columnLabel = "Coolant", "%"
+
+	curve = cltIdleCurve, "Warmup Idle multiplier"
+      columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
       xAxis       = -40, 120, 10
 #else
@@ -522,11 +497,10 @@ fileVersion = { 20190701 }
       yAxis       =  0,  3, 10
       xBins       = cltIdleCorrBins, coolant
       yBins       = cltIdleCorr
-	   suppressGraph = true
-      showTextValues = true
+      gauge       = CLTGauge
 
 	curve = iacCoastingCurve, "Coasting IAC Position for Auto-Idle"
-      columnLabel = "Coolant", "%"
+      columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
       xAxis       = -40, 120, 10
 #else
@@ -538,7 +512,7 @@ fileVersion = { 20190701 }
       gauge       = idleAirValvePositionGauge
 
 	curve = cltCrankingCurve, "Cranking Idle Air multiplier"
-      columnLabel = "Coolant", "%"
+      columnLabel = "Coolant", "Multiplier"
 #if CELSIUS
       xAxis       = -40, 120, 10
 #else
@@ -547,8 +521,7 @@ fileVersion = { 20190701 }
       yAxis       =  0,  3, 10
       xBins       = cltCrankingCorrBins, coolant
       yBins       = cltCrankingCorr
-	   suppressGraph = true
-      showTextValues = true
+      gauge       = CLTGauge
 
 	curve = cltIdleRPMCurve, "Idle Target RPM"
       columnLabel = "Coolant", "RPM"
@@ -560,8 +533,7 @@ fileVersion = { 20190701 }
       yAxis       =  0, 8000, 10
       xBins       = cltIdleRpmBins, coolant
       yBins       = cltIdleRpm, RPMValue
-	   suppressGraph = true
-      showTextValues = true
+      gauge       = CLTGauge
 
 	curve = idleAdvanceCurve, "Idle Advance Angle"
       columnLabel = "RPM", "degrees"
@@ -569,28 +541,23 @@ fileVersion = { 20190701 }
       yAxis       = -100, 100, 10
       xBins       = idleAdvanceBins, RPMValue
       yBins       = idleAdvance
-	   suppressGraph = true
-      showTextValues = true
+      gauge       = RPMGauge
 
-	curve = idleVeCurve, "Idle Fuel Table"
+	curve = idleVeCurve, "Idle VE"
       columnLabel = "RPM", "%"
       xAxis       = 0, 8000, 10
       yAxis       = 0, 250, 10
       xBins       = idleVeBins, RPMValue
       yBins       = idleVe
-      suppressGraph = true
-      showTextValues = true
+      gauge       = afr1Gauge
     
 	curve = crankingAdvanceCurve, "Cranking Advance Angle"
-      columnLabel = "RPM", "Degrees"
+      columnLabel = "RPM", "degrees"
       xAxis       = 0, 8000, 10
       yAxis       = -100, 100, 10
       xBins       = crankingAdvanceBins, RPMValue
       yBins       = crankingAdvance
-       suppressGraph = true
-      showTextValues = true
-
-
+      gauge       = RPMGauge
 
     curve = wueAfrTargetOffsetCurve, "AFR Target Temperature Adjustment"
       columnLabel = "Coolant", "AFR Offset"
@@ -602,8 +569,7 @@ fileVersion = { 20190701 }
       yAxis       =   -3,  1, 5
       xBins       = cltFuelCorrBins, coolant
       yBins       = wueAfrTargetOffset
-       suppressGraph = true
-      showTextValues = true
+      gauge      = cltGauge
 
     curve = wueAnalyzer_warmup_curve, "Warmup Enrichment"
       columnLabel = "Coolant", "Current WUE", "Coolant", "Corrected"
@@ -616,8 +582,7 @@ fileVersion = { 20190701 }
       xBins       = cltFuelCorrBins, coolant
       yBins       = cltFuelCorr
       yBins       = wueAnalRecommend
-      suppressGraph = true
-      showTextValues = true
+      ;gauge       = cltGauge
           
       lineLabel   = "Warmup Correction"
       lineLabel   = "Recommended WUE"
@@ -655,32 +620,30 @@ fileVersion = { 20190701 }
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
-
-   table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Enrichment(ms)",   1
+; move table into a panel? or find a way to add a link to https://rusefi.com//wiki/index.php?title=Manual:Software:TPSTPS
+   table = tpsTpsAccelTbl,  tpsTpsAccelMap,  "TPS/TPS Acceleration Extra Fuel(ms)",   1
    	topicHelp = "tpstpsHelp"
       xBins       = tpsTpsAccelFromRpmBins,  TPSValue
       yBins       = tpsTpsAccelToRpmBins,  TPSValue
       zBins       = tpsTpsAccelTable
-
-       
     
-
-   table = fsioTable1Tbl,  fsioTable1Map,  "",   1
+      
+   table = fsioTable1Tbl,  fsioTable1Map,  "FSIO Table #1",   1
       xBins       = fsioTable1RpmBins,  RPMValue
       yBins       = fsioTable1LoadBins,  engineLoad
       zBins       = fsioTable1
 
-   table = fsioTable2Tbl,  fsioTable2Map,  "",   1
+   table = fsioTable2Tbl,  fsioTable2Map,  "FSIO Table #2",   1
       xBins       = fsioTable2RpmBins,  RPMValue
-      yBins       = fsioTable2LoadBins,  coolant
+      yBins       = fsioTable2LoadBins,  engineLoad
       zBins       = fsioTable2
 
    table = fsioTable3Tbl,  fsioTable3Map,  "FSIO Table #3",   1
       xBins       = fsioTable3RpmBins,  RPMValue
-      yBins       = fsioTable3LoadBins,  coolant
+      yBins       = fsioTable3LoadBins,  engineLoad
       zBins       = fsioTable3
 
-   table = fsioTable4Tbl,  fsioTable4Map,  "Cam Target Position",   1
+   table = fsioTable4Tbl,  fsioTable4Map,  "FSIO Table #4",   1
       xBins       = fsioTable4RpmBins,  RPMValue
       yBins       = fsioTable4LoadBins,  engineLoad
       zBins       = fsioTable4
@@ -726,7 +689,7 @@ fileVersion = { 20190701 }
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 	
-   table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp Correction",   1
+   table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",   1
       ;       constant, variable
       xBins       = ignitionIatCorrRpmBins,  RPMValue
       yBins       = ignitionIatCorrLoadBins,  intake
@@ -735,7 +698,7 @@ fileVersion = { 20190701 }
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
-   table = veTableTbl,  veTableMap,  "Fuel Table",   1
+   table = veTableTbl,  veTableMap,  "VE Table",   1
       ;       constant, variable
       xBins       = veRpmBins,  RPMValue
 #if tuneByTPS
@@ -759,7 +722,7 @@ fileVersion = { 20190701 }
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(Later)", "(Sooner)"
 
-   table = pedalToTpsTbl,  pedalToTpsMap,  "Throttle Target Position",   1
+   table = pedalToTpsTbl,  pedalToTpsMap,  "ETB Pedal to TPS",   1
       ;       constant, variable
       xBins       = pedalToTpsRpmBins,  RPMValue
       yBins       = pedalToTpsPedalBins,  pedalPosition
@@ -1103,7 +1066,6 @@ gaugeCategory = Throttle Body (incl. ETB)
    entry = etb1Error,      "ETB Error", float, "%.3f"
    entry = etb1DutyCycle,  "ETB Duty", float, "%.3f"
    entry = etbTarget,      "ETB Target", float, "%.3f"
- 
    
    
 ;     tpsADC          = U16,    "ADC",
@@ -1114,202 +1076,185 @@ gaugeCategory = Throttle Body (incl. ETB)
 ;     sparkDwell      = F32,    "MAP",
 ;     warmUpEnrich    = F32,    "%",
 
-    defaultValue = trigger_type, 9
-    defaultValue = sparkMode,   0
-    defaultValue = injectionPinMode,   2
-    defaultValue = fuelAlgorithm,     4
-    defaultValue = ignitionMode,     2
-    defaultValue = ignitionPinMode,     2
-    
-
-    ;Default pins
-    
-
-
 [Menu]
 
 menuDialog = main
 	menu = "&Base &Engine"
-		subMenu = engineChars,				"Base Engine Settings"
-		subMenu = triggerConfiguration,		"Trigger Setup"
+		subMenu = engineChars,				"Base engine"
+		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = std_separator
 		subMenu = energySystems,			"Battery and alternator"
+		subMenu = std_separator
 		
-			
+		# Digital outputs
+		subMenu = mainRelay,				"Main relay"
+		subMenu = fuelPump,					"Fuel pump"
+		subMenu = fanSetting,				"Fan"
+		subMenu = tachSettings,				"Tachometer"
+		subMenu = malfunction,				"Check engine light"
+		subMenu = statusLeds,				"Status LEDs"
+
 	menu = "Fuel"
 		# basic
-		subMenu = injectionSettings,	  "Fuel Main"
-		subMenu = testInjectors,          "Injector Test"
+		subMenu = injectionSettings,		"Injection settings"
+		subMenu = injectionDeadTime,		"Injector dead time", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
-		groupMenu = "Injector Settings"
-		groupChildMenu = injectionDeadTime,		"Injector Dead Time", 0, {isInjectionEnabled == 1}
-		groupChildMenu = injPhaseTableTbl,         "Injection Phase", 0, {isInjectionEnabled == 1}
-		subMenu = std_separator
+
+		# Targets & closed loop
 		subMenu = afrTableTbl,				"Target AFR", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-	;	subMenu = fuelClosedLoopDialog, 	"Closed Loop", 0, {isInjectionEnabled == 1}
+		subMenu = fuelClosedLoopDialog, 	"Closed loop correction", 0, {isInjectionEnabled == 1}
+		subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
-		# Fuel table/VE Table
-		subMenu = veTableDialog,			"Fuel Table", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		subMenu = fuelTableDialog,			"Fuel Table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
+		# Fuel table/VE
+		subMenu = fuelTableDialog,			"Fuel table", 0, {isInjectionEnabled == 1 && fuelAlgorithm != LM_SPEED_DENSITY}
+		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = injPhaseTableTbl,         "Injection phase", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
-
 
 		# Corrections
-	groupMenu = "Cold Start"
-	    groupChildMenu = crankingDurationCurve,	   "First Crank Enrichment"
-		groupChildMenu = crankingCltCurve,			"Cranking Enrichment"
-		groupChildMenu = cltFuelCorrCurve,			"Warmup Enrichment", 0, {isInjectionEnabled == 1 && useWarmupPidAfr == 0}
-		groupChildMenu = iatFuelCorrCurve,			"Intake Air Temp Enrichment", 0, {isInjectionEnabled == 1}
-		groupChildMenu = baroCorrTbl,				"Baro Trim", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-		
-		# Accel enrichment
-
-		groupMenu = "Accel Enrichments"
-		groupChildMenu = EngineLoadAccelPanel,        "Engine Load Based", 0, {isInjectionEnabled == 1}
-		groupChildMenu = TpsAccelPanel,               "TPS Based", 0, {isInjectionEnabled == 1}
-		groupChildMenu = tpsTpsAccelTbl, 		"Tps/Tps Based", 0, {isInjectionEnabled == 1}
-		groupChildMenu = mapAccelTaper,			"Engine Load AE Taper", 0, {isInjectionEnabled == 1}
-        subMenu = std_separator
-        subMenu = tChargeSettings,			"Charge Temp Correction", 0, {isInjectionEnabled == 1}
+		subMenu = cltFuelCorrCurve,			"CLT multiplier", 0, {isInjectionEnabled == 1}
+		subMenu = iatFuelCorrCurve,			"IAT multiplier", 0, {isInjectionEnabled == 1}
+		subMenu = baroCorrTbl,				"Baro multiplier", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = tChargeSettings,			"tCharge settings", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
-        subMenu = coastingFuelCutControl, 	"Deceleration fuel cutoff (DFCO)", 0, {isInjectionEnabled == 1}
-        subMenu = std_separator
-	    submenu = WallWettingAccelPanel, "Wall Wetting", 0, {isInjectionEnabled == 1}
+
+		# Accel enrichment
+		subMenu = AccelEnrich,				"Accel/decel enrichment/enleanment", 0, {isInjectionEnabled == 1}
+		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
+		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
+
 
 	menu = "Ignition"
-		subMenu = ignitionSettings,			"Ignition Main"
+		subMenu = ignitionSettings,			"Ignition settings"
         subMenu = std_separator
-		subMenu = testSpark,                "Test Ignition Outputs"
+
+		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
+		subMenu = ignitionCylExtra,			"Ignition cylinder trim", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
-		subMenu = dwellSettings,			"Coil Dwell Time", 0, {isIgnitionEnabled == 1}
+
+		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
+		subMenu = ignitionTpsTableTbl,		"Ignition advance (TPS)", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 1}
 		subMenu = std_separator
-		subMenu = ignitionTableTbl,			"Ignition Table", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 0}
-		subMenu = ignitionTpsTableTbl,		"Ignition Table (TPS)", 0, {isIgnitionEnabled == 1 && useTPSAdvanceTable == 1}
-		subMenu = std_separator
-	groupMenu = "Corrections"
-		groupChildMenu = cltTimingCorrCurve,		"Coolant Correction", 0, {isIgnitionEnabled == 1}
-		groupChildMenu = ignitionIatCorrTableTbl,	"Intake Air Temp Correction", 0, {isIgnitionEnabled == 1}
-		groupChildMenu = ignitionCylExtra,			"Ignition Cylinder Trim", 0, {isIgnitionEnabled == 1}
-   
+
+		# corrections
+		subMenu = cltTimingCorrCurve,		"CLT correction", 0, {isIgnitionEnabled == 1}
+		subMenu = ignitionIatCorrTableTbl,	"IAT correction", 0, {isIgnitionEnabled == 1}
 		
+	menu = "&Cranking"
+		subMenu = crankingDialog,			"Cranking settings"
+		subMenu = std_separator
+
+		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
+		subMenu = crankingDurationCurve,	"Fuel duration multiplier"	
+		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
+		subMenu = std_separator
+
+		subMenu = crankingAdvanceCurve,		"Ignition advance", 0, {useSeparateAdvanceForCranking == 1}
+		subMenu = std_separator
+
+		subMenu = cltCrankingCurve,			"IAC multiplier", 0, {overrideCrankingIacSetting == 1}	
 		
-	menu = "&Idle / Cranking"
-		subMenu = idleSettingsDialog,			"Idle Settings"
+	menu = "&Idle"
+		subMenu = idleSettings,				"Idle settings"
+		subMenu = idlehw,					"Idle hardware"
 		subMenu = std_separator	
-		groupMenu = "Idle Corrections"
-		groupChildMenu = cltIdleRPMCurve,			"Idle Target RPM"
-		groupChildMenu = idleVeCurve,              "Idle VE Table", 0, {useSeparateVeForIdle == 1}
-		groupChildMenu = idleAdvanceCurve,			"Idle Ignition Table", 0, {useSeparateAdvanceForIdle == 1}
-		groupChildMenu = idleTimingPidCorrDialog,	"Closed-loop Idle Timing", {useIdleTimingPidControl == 1}
-		groupChildMenu = cltIdleCurve,				"Idle Valve Correction"
-		groupChildMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
-        subMenu = std_separator
-		subMenu = crankingDialog,			"Cranking Settings"
+		subMenu = cltIdleRPMCurve,			"Target RPM", 0, {idleMode == 0}
+		subMenu = idleVeCurve,              "VE", 0, {useSeparateVeForIdle == 1}
+		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 		subMenu = std_separator
-		groupMenu = "Cranking Corrections"
-		groupChildMenu = crankingTpsCurve,			"TPS Correction"
-        groupChildMenu = crankingAdvanceCurve,		"Cranking Ignition Table", 0, {useSeparateAdvanceForCranking == 1}
-		
-	
+		subMenu = idleTimingPidCorrDialog,	"Closed-loop idle timing"
+		subMenu = cltIdleCurve,				"CLT multiplier"
+		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	
-	menu = "&Inputs"
-		
-		subMenu = triggerInputs,			"Trigger Inputs"
-		subMenu = DigitalInputs,		    "Digital Inputs"
-		subMenu = std_separator
+	menu = "&FSIO" 
+		subMenu = fsioInputsDialog,        	"FSIO inputs"
+		subMenu = auxPidDialog,				"Aux PID"
+		subMenu = fsioOutputsDialog,        "FSIO outputs"
+		subMenu = fsioTable1Tbl,			"FSIO Table #1"
+		subMenu = fsioTable2Tbl,			"FSIO Table #2"
+		subMenu = fsioTable3Tbl,			"FSIO Table #3"
+		subMenu = fsioTable4Tbl,			"FSIO Table #4"
+		subMenu = fsioFormulas,				"FSIO Formulas"
+		subMenu = fsioCurve1,			    "FSIO Curve #1"
+		subMenu = fsioCurve2,			    "FSIO Curve #2"
+		subMenu = fsioCurve3,			    "FSIO Curve #3"
+		subMenu = fsioCurve4,			    "FSIO Curve #4"
+
+	menu = "&Sensors"
+		# Base analog input settings
+		subMenu = triggerInputs,			"Trigger inputs"
+		subMenu = otherSensorInputs,		"Misc sensors"
+		subMenu = analogInputSettings,		"Analog input settings"
 		subMenu = std_separator
 
-		
-		# TPS/Pedal
+		# Thermistors
+		subMenu = cltSensor,				"CLT sensor"
+		subMenu = iatSensor,				"IAT sensor"
+		subMenu = auxTempSensor1Sensor,		"AuxTemp1 sensor"
+		subMenu = auxTempSensor2Sensor,		"AuxTemp2 sensor"
+		subMenu = std_separator
+
+		# TPS/pedal
 		subMenu = tpsSensor,				"TPS"
-		subMenu = pedalSensor,				"Accelerator Pedal"
-		subMenu = std_separator
-
-  
-		subMenu = cltSensor,				"Coolant Temp Sensor"
-		subMenu = iatSensor,				"Intake Air Temp Sensor"
-		 subMenu = auxTempSensor1Sensor,	"GP-Temp Sensor 1"
-		subMenu = auxTempSensor2Sensor,		"GP-Temp Sensor 2"
+		subMenu = pedalSensor,				"Accelerator pedal"
 		subMenu = std_separator
 
 		# MAP/Baro
-		subMenu = mapSensor,				"MAP Sensor"
-		subMenu = mapCurves,				"MAP Sampling"
-		subMenu = baroSettings,				"Baro Sensor"
+		subMenu = mapSettings,				"MAP sensor"
+		subMenu = mapCurves,				"MAP sampling"
+		subMenu = baroSettings,				"Baro sensor"
 		subMenu = std_separator
 
 		# MAF
-		subMenu = mafSettings,				"MAF Sensor"
-		subMenu = mafDecodingCurve,			"MAF Linearization", 0, {mafAdcChannel != 16}
+		subMenu = mafSettings,				"MAF sensor"
+		subMenu = mafDecodingCurve,			"MAF transfer function", 0, {mafAdcChannel != 16}
 		subMenu = std_separator
 
 		# O2 sensor(s)
-		subMenu = egoSettings,				"EGO Sensor"
+		subMenu = egoSettings,				"EGO sensor"
 		subMenu = narrowToWideOxygenCurve,	"Narrow to Wideband approximation"
-		subMenu = cj125,			"Wideband Sensor" @@if_ts_show_cj125
+		subMenu = cj125Function,			"CJ125 settings (wbo decoder)" @@if_ts_show_cj125
 		subMenu = std_separator
-	    subMenu = speedSensor,                "Speed Sensor"
-			subMenu = std_separator
-			subMenu = fsioInputsDialog,        	"FSIO Inputs"
-		
-		menu = "&Outputs" 
-                  
-		subMenu = std_separator
-		subMenu= canBus,                   "CAN-Bus Settings"
-		subMenu = std_separator
-        subMenu = boostDialog,				"Boost Control"
-		submenu = boostLoad,                "Boost Table"
-		subMenu = std_separator
-		subMenu = vvtDialog,			"VVT Settings"
-		subMenu = std_separator
-		subMenu = auxPidDialog2,			"GP-PWM 1"
-		subMenu = std_separator
-		subMenu = auxPidDialog3,			"GP-PWM 2"
-		subMenu = std_separator
-		subMenu = auxPidDialog4,			"GP-PWM 3"
-	    subMenu = std_separator
-		subMenu = smLaunchControl           "Launch Control"
-	    subMenu = std_separator
-		groupMenu = "Flex Logic"
-		groupChildMenu = fsioOutputsDialog,        "FSIO Outputs"
-		groupChildMenu = fsioFormulas,				"FSIO Formulas"
-		groupChildMenu = fsioCurve2,			    "FSIO Curve #2"
-		groupChildMenu = fsioCurve3,			    "FSIO Curve #3"
-		groupChildMenu = fsioCurve4,			    "FSIO Curve #4"
-        subMenu = fuelPump,					"Fuel Pump"
-		subMenu = fanSetting,				"Fan"
-		subMenu = tachSettings,				"Tachometer"
+    
 
-	# Digital outputs
-
-
-    menu = "&E-Throttle"
-
-        subMenu = etbDialog,				"Electronic Throttle Setup" 
-		subMenu = std_separator
-		subMenu = pedalToTpsTbl,			"Throttle Target Map"
+		# Misc sensors
+		subMenu = speedSensor,				"Vehicle speed sensor"
+		subMenu = oilPressureSensor,		"Oil pressure"
+		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 
 	menu = "&Controller"
-	    subMenu = connection,            	"Connection"
+	    subMenu = boostDialog,				"Boost Control"
 		subMenu = std_separator
-    	subMenu = ioTest,					"Firmware Update"
+		subMenu = ecuStimulator,			"ECU stimulator"
+		subMenu = ioTest,					"Bench test"
+		subMenu = engineTypeDialog,			"Popular vehicles"
 		subMenu = std_separator
-		subMenu = ecuStimulator,			"Trigger Simulator"
-		subMenu = std_separator
-		subMenu = debugging                 "Debug Mode"
-		subMenu = std_separator
+		
+		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
+		subMenu = joystickPanel,			"Joystick" @@if_ts_show_joystick
 		subMenu = spiFunction,				"SPI"
+		subMenu = monitoringSettings,		"rusEfi console"
 		subMenu = std_separator
-		subMenu = std_separator
-		submenu = updateFirmware,      "Firmware Update"
+		
+		subMenu = connection,            	"Connection"
 		subMenu = allPins1,					"Full pinout 1/2" @@if_ts_show_full_pinout
-		subMenu = allPins2,					"Full pinout 2/2" @@if_ts_show_full_pinout    
+		subMenu = allPins2,					"Full pinout 2/2" @@if_ts_show_full_pinout
 		subMenu = std_separator
 
 
-	
+		# EXPERIMENTAL FEATURES
+		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = smLaunchControl,			"Launch control"
+		subMenu = std_separator
+		
+		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
+		subMenu = std_separator
+
+		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
+		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
+		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
+
 
 [ControllerCommands]
 ; commandName    = command1, command2, commandn...
@@ -1393,121 +1338,6 @@ cmd_set_engine_type_8888_test				= "w\x00\x30\x00\x3B"
 cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		
 [UserDefined]
-dialog = limits, "Limits"
-		field = "RPM Hard Limit",         	    		rpmHardLimit
-		field = "Boost Cut Pressure",					boostCutPressure
-
-
-	dialog = baseEngineConfig, "Engine Configuration"
-;		field = "Engine Preset",						engineType
-		field = "Number of Cylinders",					cylindersCount
-		field = "Engine Displacement",         			displacement
-		field = "Firing Order",							firingOrder
-		 field = "Fuel Equation Mode",						fuelAlgorithm
-		 field = ""
-        commandButton = "Update Firmware",                         cmd_dfu
-		 commandButton = "Reset Controller",                         cmd_reset_controller 
-#if tuneByTPS
-		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
-#else
-		field = "#Enabled for TPS-Based 'VE Autotune Mode' in Project Settings"
-		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {0}
-#endif
-
-;			Engine->Base Engine Settings
-	dialog = engineChars, "Base Engine Settings"
-		panel = baseEngineConfig
-		panel = limits
-
-
-
-	dialog = triggerConfiguration,	"Settings Trigger"
-		field = "Trigger type",							trigger_type
-		field = "Operation mode / speed",				operationMode
-		field = "With VR sensors only rising edge has reliable position"
-		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
-	    field = "!Reminder that 4-stroke cycle is 720 degrees"
-	    field = "Trigger Angle Offset",         		globalTriggerAngleOffset
-		field = "#Custom Trigger"
-		field = "total Tooth Count",					trigger_customTotalToothCount, {trigger_type == 0}
-		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
-
-dialog = batteryDialog, "Battery Settings",	yAxis
-	    field = "#Use a Multimeter To Set Correction"
-		field = "Battery Voltage Correction",	vbattDividerCoeff
-
-	dialog = alternator, "Alternator Settings",	yAxis
-		field = "Enabled",								isAlternatorControlEnabled
-		field = "On/Off Mode",					onOffAlternatorLogic, {isAlternatorControlEnabled == 1}
-		field = "Target",								targetVBatt, {isAlternatorControlEnabled == 1}
-		field = "Output",									alternatorControlPin, {isAlternatorControlEnabled == 1}
-		field = "Output Mode",								alternatorControlPinMode, {isAlternatorControlEnabled == 1}
-		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
-		field = "#PID Settings"
-		field = "control period",						alternatorControl_periodMs, {isAlternatorControlEnabled == 1}
-		field = "#PID control"
-		field = "Offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "P Gain",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "I Gain",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "D Gain",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Min ??",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Max ??",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "#% duty = Pterm + Iterm + Dterm + offset%"
-
-dialog = energySystems, "Battery and Alternator Settings",	yAxis
-		panel = batteryDialog
-		panel = alternator
-	   
-		
-	
-
-			#Fuel Settings
-
-	dialog = injectionSettings, ""
-		field = "Enabled",						isInjectionEnabled
-		field = "Injector Flow",			injector_flow
-		field = "Mode",							injectionMode
-
-				
-	dialog = testInjectors, "Injector Test"
-	    field = ""
-		 field = "For Checking Outputs"
-		 field = ""
-		field = "These Buttons Will Generate Some Test Pulses"
-		field = ""
-		commandButton = "Injector 1", cmd_test_inj1
-		commandButton = "Injector 2", cmd_test_inj2
-		commandButton = "Injector 3", cmd_test_inj3
-		commandButton = "Injector 4", cmd_test_inj4
-		commandButton = "Injector 5", cmd_test_inj5
-		commandButton = "Injector 6", cmd_test_inj6
-		commandButton = "Injector 7", cmd_test_inj7
-		commandButton = "Injector 8", cmd_test_inj8
-    
-
-	dialog = injectionDeadTime,	"", yAxis
-		panel = injectorsDeadTime,		East
-
-
-	dialog = fuelClosedLoopDialog, "Fuel short-term closed-loop correction"
-		field = ""
-		field = "Enabled",								fuelClosedLoopCorrectionEnabled
-		field = "!No correction below these value"
-		field = "CLT - low threshod", 					fuelClosedLoopCltThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "RPM - low threshod", 					fuelClosedLoopRpmThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "EGO - low threshod", 					fuelClosedLoopAfrLowThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "!No correction above these value"
-		field = "TPS - high threshod", 					fuelClosedLoopTpsThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "EGO - high threshod", 					fuelClosedLoopAfrHighThreshold, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "!PID settings"
-		field = "P factor",								fuelClosedLoopPid_pFactor, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "I factor",								fuelClosedLoopPid_iFactor, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "D factor",								fuelClosedLoopPid_dFactor, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "min",									fuelClosedLoopPid_minValue, {fuelClosedLoopCorrectionEnabled == 1}
-		field = "max",									fuelClosedLoopPid_maxValue, {fuelClosedLoopCorrectionEnabled == 1}
-
-
 	dialog = fuelTableBottomDialog, "", card
 		panel = fuelTableMAFTbl, Center, {fuelAlgorithm==LM_PLAIN_MAF}
 		panel = fuelTableTPSTbl, Center, {fuelAlgorithm==LM_ALPHA_N}
@@ -1555,74 +1385,120 @@ dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = tChargeRpmTpsSettings, { tChargeMode == 0}
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
 
-	dialog = warmupFuelDialog, "Warmup fuel closed-loop",	yAxis
-		field = "use automatic Pid Afr control",			useWarmupPidAfr
-		field = "warmup temperature Threshold",				warmupAfrThreshold
-		field = "wa offset",								warmupAfrPid_offset
-		field = "wa P factor",								warmupAfrPid_pFactor
-		field = "wa I factor",								warmupAfrPid_iFactor
-		field = "wa D factor",								warmupAfrPid_dFactor
-		field = "#correction = Pterm + Iterm + Dterm + offset"
-		
-		dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
-		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled
-		field = "Cutoff Activation RPM High Limit",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
-		field = "Cutoff Deactivation RPM Low Limit",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
-		field = "TPS Deactivation Threshold",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
-		field = "CLT Activation Threshold",				coastingFuelCutClt, {coastingFuelCutEnabled == 1}
-		field = "MAP Deactivation Threshold",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
-	
-	dialog = EngineLoadAccelPanel, "Accel Enrichment"
-		field = "Accel Hold",						engineLoadAccelLength
-		field = "Accel Threshold", 				engineLoadAccelEnrichmentThreshold
-		field = "Accel Enrichment",	 			engineLoadAccelEnrichmentMultiplier
-		field = "Decel threshold", 				engineLoadDecelEnleanmentThreshold
-		field = "Decel multiplier",	 			engineLoadDecelEnleanmentMultiplier
+	dialog = baseInjection, "General"
+		field = "Enabled",						isInjectionEnabled
+		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
+		field = "#Batch injection with individual wiring"
+		field = "Two wire batch emulation",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == 2}
+#if tuneByTPS
+		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+#else
+		field = "#Enabled for TPS-Based 'VE Autotune Mode' in Project Settings"
+		field = "Use TPS instead of Load for VE table",	useTPSBasedVeTable, {0}
+#endif
 
-	dialog = TpsAccelPanel, "TPS"
-   		field = "Length",						tpsAccelLength
-		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
-		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
-		field = "Decel Multiplier",	 			tpsDecelEnleanmentMultiplier
-		field = "#Accelerator Pump model:"
-		field = "Fraction Period",				tpsAccelFractionPeriod
-		field = "Fraction Divisor",				tpsAccelFractionDivisor
-		
-	dialog = WallWettingAccelPanel, "Wall Wetting"
-		field = "evaporation time constant",          wwaeTau
-		field = "added to wall coef",                   wwaeBeta
-	
-		
-;			Tuning->AccelEnrichment
-	dialog = AccelEnrich,	"Accel/Decel Enrichment"
-		panel = TpsAccelPanel
-		panel = WallWettingAccelPanel
-		panel = EngineLoadAccelPanel
-		field = "Accel Enrichment RPM Max Treshold",		noAccelAfterHardLimitPeriodSecs
+	dialog = ignitionOutputs, "Ignition Outputs"
+		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
+		field = "Ignition Pin 1",                       ignitionPins1, {isIgnitionEnabled == 1}
+		field = "Ignition Pin 2",                       ignitionPins2, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 1) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 2) || (firingOrder == 7) || (firingOrder == 9) || (firingOrder == 11) || (firingOrder == 12)))}
+		field = "Ignition Pin 3",                       ignitionPins3, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 2) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 1) || (firingOrder == 3) || (firingOrder == 4) || (firingOrder == 5) || (firingOrder == 9)))}
+		field = "Ignition Pin 4",                       ignitionPins4, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 3) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 7) || (firingOrder == 12)))}
+		field = "Ignition Pin 5",                       ignitionPins5, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 4) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 4) || (firingOrder == 12)))}
+		field = "Ignition Pin 6",                       ignitionPins6, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 5) && (ignitionMode !=2 || twoWireBatchIgnition == 1 )}
+		field = "Ignition Pin 7",                       ignitionPins7, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 6) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 11)))}
+		field = "Ignition Pin 8",                       ignitionPins8, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 7) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
+		field = "Ignition Pin 9",                       ignitionPins9, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 8) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
+		field = "Ignition Pin 10",                      ignitionPins10, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 9) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
+		field = "Ignition Pin 11",                      ignitionPins11, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 10) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
+		field = "Ignition Pin 12",                      ignitionPins12, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 11) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
+		field = "This is useful to have tachometer working"
+		field = "   while converting from distributor"
+		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin, {isIgnitionEnabled == 1}
+		field = "Dizzy out Pin Mode",                   dizzySparkOutputPinMode, {isIgnitionEnabled == 1}
 
-				
-	dialog = veTableDialog
-		panel = veTableTbl, South
-				
-	dialog = veTableDialog3D, "VE Table"
-		panel = veTableMap, South
-
-	
-
-
-#Ignition
-	
-
-	dialog = ignitionSettings, ""
+	dialog = ignitionBasic, ""
 		field = "Enabled",						isIgnitionEnabled
 		field = "Mode",							ignitionMode, {isIgnitionEnabled == 1}
-		field = "Spark Edge",         	        ignitionPinMode, {isIgnitionEnabled == 1}
 		field = "#Wasted spark with individual coils"
 		field = "Two wire wasted",				twoWireBatchIgnition, {isIgnitionEnabled == 1 && ignitionMode == 2}
 		field = "Timing Mode",					timingMode, {isIgnitionEnabled == 1}
 		field = "Use TPS-based Advance Table",	useTPSAdvanceTable, {isIgnitionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
 		field = "#Use fixed timing while validating with a timing gun"
-		field = "Fixed Timing",				fixedTiming, {isIgnitionEnabled == 1 && timingMode == 1}
+		field = "Fixed Timinig",				fixedTiming, {isIgnitionEnabled == 1 && timingMode == 1}
+
+	dialog = ignitionSettings, "", xAxis
+		panel = ignitionBasic
+		panel = ignitionOutputs
+
+	dialog = baseEngineConfig, "Engine Configuration"
+;		field = "Engine Preset",						engineType
+		field = "Number of Cylinders",					cylindersCount
+		field = "Engine Displacement",         			displacement
+		field = "Firing Order",							firingOrder
+
+;			Engine->Trigger configuration
+	dialog = triggerConfiguration_settings,	"Settings Trigger"
+		field = "!https://rusefi.com/s/trigger"
+		field = "Trigger type",							trigger_type
+		; see also in firmware '[doesTriggerImplyOperationMode]' tag
+		field = "Operation mode / speed",				ambiguousOperationMode
+		field = "With VR sensors only rising edge has reliable position"
+		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
+	    field = "!Reminder that 4-stroke cycle is 720 degrees"
+	    field = "Trigger Angle Offset",         		globalTriggerAngleOffset
+		field = "#Custom Trigger"
+		field = "total Tooth Count",					trigger_customTotalToothCount, {trigger_type == 0}
+		field = "skipped Tooth Count",					trigger_customSkippedToothCount, {trigger_type == 0}
+
+	dialog = triggerConfiguration_IO,	"Settings I/O"
+	    field = "!https://rusefi.com/s/vvt"
+	    field = "VVT mode",								vvtMode, {trigger_type != 80}
+	    field = "VVT use rise front",					vvtCamSensorUseRise, {trigger_type != 80}
+	    field = "VVT position display offset",			vvtOffset
+	    field = "VVT display inverted",					vvtDisplayInverted
+	    field = "Miata NB2 from (temporary)",			miataNb2VVTRatioFrom
+	    field = "Miata NB2 to (temporary)",				miataNb2VVTRatioTo
+	    field = "nbVvtIndex",							nbVvtIndex
+	    field = "print verbose sync details to console",verboseTriggerSynchDetails
+	    field = "Do not print messages in case of sync error",  silentTriggerError
+	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == 8 || trigger_type == 9}
+	dialog = triggerConfiguration
+		panel = triggerConfiguration_settings,	North
+		panel = triggerConfiguration_IO,		South
+
+;			Engine->Injection Settings
+	dialog = injChars, "Injector Settings",	yAxis
+		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
+
+	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
+		field = "!ECU reboot needed to apply these settings"
+		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}
+		field = "With batched injection without 'Two wire batch emulation'"
+		field = "   fill only first count / 2 values"
+		field = "Injection Pin 1",						injectionPins1, {isInjectionEnabled == 1}
+		field = "Injection Pin 2",						injectionPins2, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 1}
+		field = "Injection Pin 3",						injectionPins3, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 2}
+		field = "Injection Pin 4",						injectionPins4, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 3}
+		field = "Injection Pin 5 ",						injectionPins5, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 4}
+		field = "Injection Pin 6 ",						injectionPins6, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 5}
+		field = "Injection Pin 7 ",						injectionPins7, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 6}
+		field = "Injection Pin 8 ",						injectionPins8, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 7}
+		field = "Injection Pin 9 ",						injectionPins9, {isInjectionEnabled == 1 && cylindersCount > 8}
+		field = "Injection Pin 10 ",	    			injectionPins10, {isInjectionEnabled == 1 && cylindersCount > 9}
+		field = "Injection Pin 11 ",					injectionPins11, {isInjectionEnabled == 1 && cylindersCount > 10}
+		field = "Injection Pin 12 ",					injectionPins12, {isInjectionEnabled == 1 && cylindersCount > 11}	
+	
+	dialog = injectionBasic, ""
+		topicHelp = "fuelHelp"
+		panel = baseInjection
+		panel = injChars
+
+	dialog = injectionSettings, "", xAxis
+        panel = injectionBasic
+        panel = injectorOutputSettings
+
+	dialog = injectionDeadTime,	"", yAxis
+		panel = injectorsDeadTime,		East
 
 	dialog = ignitionCylExtra, "Ignition Cylinder Extra Timing"
 		field = "Extra cyl #1",                       timing_offset_cylinder1
@@ -1640,44 +1516,411 @@ dialog = energySystems, "Battery and Alternator Settings",	yAxis
 	
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection,	Center
-
-		dialog = testSpark, "Ignition Coil Test"
-		field = ""
-		 field = "For Checking Outputs"
-		 field = ""
-		field = "These Buttons Will Generate Some Test Pulses"
-		field = ""
-		commandButton = "Spark #1", cmd_test_spk1
-		commandButton = "Spark #2", cmd_test_spk2
-		commandButton = "Spark #3", cmd_test_spk3
-		commandButton = "Spark #4", cmd_test_spk4
-		commandButton = "Spark #5", cmd_test_spk5
-		commandButton = "Spark #6", cmd_test_spk6
-		commandButton = "Spark #7", cmd_test_spk7
-		commandButton = "Spark #8", cmd_test_spk8
-
-#			Engine->idle Settings	
-
-    dialog = idleSettings,""	
-        field = "ETB Idle Control",						useETBforIdleControl
-		field = "Idle Solenoid Mode",   	  	    idle_solenoidPinMode, {useETBforIdleControl == 0}
-		field = "Idle Solenoid",					idle_solenoidPin, {useETBforIdleControl == 0}
-		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, {useETBforIdleControl == 0}
-		field = "ETB Idle Control Range",				etbIdleThrottleRange, {useETBforIdleControl == 1}
-		field = "Idle Ignition Table",	useSeparateAdvanceForIdle
-		field = "Idle Fuel Table",		useSeparateVeForIdle
-	;	field = "Use separate IAC Table For Coasting",	useIacTableForCoasting, {idleMode == 0}
-	;	field = idleIncrementalPidCic,					idleIncrementalPidCic
-		field = "TPS Deactivation Threshold",			idlePidDeactivationTpsThreshold
-	;	field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;
-	;	field = "#See Warmup idle multiplier"
-		slider = "Manual Idle Position",				manIdlePosition, horizontal
-		field = "For ETB Control Set To False"
-		field = "Closed Loop",					idleMode
 		
+;			Sensors->AUX1 Thermistor Sensor Setting
+	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
+		field = "Input channel",			auxTempSensor1_adcChannel
+		field = "Bias resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != 16}
+
+		field = "#Here is three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = ""
+		field = "Lowest temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != 16}
+		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != 16}
+		field = ""
+		field = "Middle temperature",					auxTempSensor1_tempC_2, {auxTempSensor1_adcChannel != 16}
+		field = "Resistance @ MT",						auxTempSensor1_resistance_2, {auxTempSensor1_adcChannel != 16}
+		field = ""
+		field = "Highest temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != 16}
+		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != 16}
+
+;			Sensors->AUX2 Thermistor Sensor Setting
+	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
+		field = "Input channel",						auxTempSensor2_adcChannel
+		field = "Bias resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != 16}
+
+		field = "#Here is three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = ""
+		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != 16}
+		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != 16}
+		field = ""
+		field = "Middle temperature",					auxTempSensor2_tempC_2, {auxTempSensor2_adcChannel != 16}
+		field = "Resistance @ MT",						auxTempSensor2_resistance_2, {auxTempSensor2_adcChannel != 16}
+		field = ""
+		field = "Highest temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != 16}
+		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != 16}
+	
+	dialog = tpsSensor, "TPS"
+		field = "!See Tools>Calibrate TPS"
+		field = "Throttle1 position sensor",			tps1_1AdcChannel
+		field = "Throttle2 position sensor",			tps2_1AdcChannel
+		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
+		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
+
+	dialog = pedalSensor, "Accelerator pedal"
+		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
+		field = "Up voltage",					throttlePedalUpVoltage
+		field = "Down (WOT) voltage",				throttlePedalWOTVoltage
+
+;			Sensor Inputs
+	dialog = otherSensorInputs,					"Other Sensor Inputs"
+		field = "Fuel level", 						fuelLevelSensor
+		field = "Flex fuel",							flexFuelSensor
+		field = "Clutch down switch",					clutchDownPin
+		field = "Clutch down inverted",					clutchDownPinInverted
+		field = "Clutch up switch",						clutchUpPin
+		field = "Clutch up inverted",					clutchUpPinInverted
+		field = "Throttle Up switch",					throttlePedalUpPin
+		field = "Brake pedal switch",					brakePedalPin
+		field = "A/C switch",							acSwitchAdc
+
+	dialog = triggerInputs,					"Trigger Inputs"
+		field = "!ECU reboot needed to apply these settings"
+		field = "#Cam is primary if you have cam sensor"
+		field = "Primary channel", 						triggerInputPins1
+		field = "Invert Primary",						invertPrimaryTriggerSignal
+		field = "Secondary channel", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
+		field = "Cam Sync/VVT input",					camInputs1
+		
+	dialog = allPinsSensors, "Sensors"
+		field = "CLT ADC input", 						clt_adcChannel
+		field = "IAT ADC input", 						iat_adcChannel
+		field = "vBatt ADC input", 						vbattAdcChannel
+		field = "TPS1 ADC input", 						tps1_1AdcChannel
+		field = "TPS2 ADC input", 						tps2_1AdcChannel
+		field = "MAF ADC input", 						mafAdcChannel
+		field = "AFR ADC input", 						afr_hwChannel
+		field = "Baro ADC input", 						baroSensor_hwChannel
+		field = "MAP ADC input", 						map_sensor_hwChannel
+		field = "FrequencyReportingMapInputPin",		frequencyReportingMapInputPin
+		field = "FuelLevelSensor", 						fuelLevelSensor
+		field = "Vehicle Speed Input pin",				vehicleSpeedSensorInputPin
+		field = "clutchDownPin",						clutchDownPin
+		field = "clutchUpPin",							clutchUpPin
+		field = "brakePedalPin",						brakePedalPin
+		field = "A/C Switch",							acSwitchAdc
+		field = "Aux Temperature #1",					auxTempSensor1_adcChannel
+		field = "Aux Temperature #2",					auxTempSensor2_adcChannel
+
+	dialog = allPins1_1
+		field = mc33816_cs,								mc33816_cs
+		field = mc33816_rstb,							mc33816_rstb
+		field = high_fuel_pressure_sensor_1,			high_fuel_pressure_sensor_1
+		field = high_fuel_pressure_sensor_2,			high_fuel_pressure_sensor_2
+		field = mc33816_driven,							mc33816_driven
+		field = mc33816spiDevice,						mc33816spiDevice
+		field = "Warning Led",							warningLedPin
+		field = "Fatal Error Led",						fatalErrorPin
+		field = "tle6240_cs",							tle6240_cs
+		field = "tle6240 SPI",							tle6240spiDevice
+		field = "mc33972_cs",							mc33972_cs
+		field = "mc33972 SPI",							mc33972spiDevice
+		panel = allPinsSensors
+		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
+		field = "Primary input channel", 				triggerInputPins1
+		field = "Secondary channel", 					triggerInputPins2
+		field = "Cam Sync/VVT input",					camInputs1
+
+	dialog = allPins1_2
+		field = "Tachometer output Pin",					tachOutputPin
+		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
+		field = "O2 heater pin",						o2heaterPin
+		field = "Idle Solenoid Pin",					idle_solenoidPin
+		field = "Idle Stepper Dir",						idle_stepperDirectionPin
+		field = "Idle Stepper Dir Mode",				stepperDirectionPinMode
+		field = "Idle Stepper Step",					idle_stepperStepPin
+		field = "Idle Stepper Enable",					stepperEnablePin
+		field = "Fuel Pump Pin",						fuelPumpPin
+		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
+		field = "ETB#1 Dir #1",							etb1_directionPin1  @@if_ts_show_etb_pins
+		field = "ETB#1 Dir #2",							etb1_directionPin2  @@if_ts_show_etb_pins
+		field = "ETB#1 Control #1",						etb1_controlPin1    @@if_ts_show_etb_pins	
+		field = "ETB#2 Dir #1",							etb2_directionPin1  @@if_ts_show_etb_pins
+		field = "ETB#2 Dir #2",							etb2_directionPin2  @@if_ts_show_etb_pins
+		field = "ETB#2 Control #1",						etb2_controlPin1    @@if_ts_show_etb_pins
+		field = "SD CS Pin",							sdCardCsPin
+		field = "Check Engine Pin",						malfunctionIndicatorPin
+		field = "Check Engine Pin Mode",				malfunctionIndicatorPinMode
+		field = "Aux Pin #1",							auxPidPins1
+		field = "Aux Pin #2",							auxPidPins2
+		field = "Aux Pin #3",							auxPidPins3
+		field = "Aux Pin #4",							auxPidPins4
+		field = "test557pin",							test557pin
+		field = "Fan Pin",								fanPin
+		field = "Fan Pin Mode",							fanPinMode
+		field = "Main Relay Pin",  						mainRelayPin
+		field = "Main Relay Mode",			         	mainRelayPinMode
+		field = "aux valve #1", 						auxValves1
+		field = "aux valve #2", 						auxValves2
+
+	dialog = allPins2_1
+		field = "Injection Pin 1",						injectionPins1
+		field = "Injection Pin 2",						injectionPins2
+		field = "Injection Pin 3",						injectionPins3
+		field = "Injection Pin 4",						injectionPins4
+		field = "Injection Pin 5 ",						injectionPins5
+		field = "Injection Pin 6 ",						injectionPins6
+		field = "Injection Pin 7 ",						injectionPins7
+		field = "Injection Pin 8 ",						injectionPins8
+		field = "Injection Pin 9 ",						injectionPins9
+		field = "Injection Pin 10 ",	    			injectionPins10
+		field = "Injection Pin 11 ",					injectionPins11
+		field = "Injection Pin 12 ",					injectionPins12
+		field = "FSIO dig inp #1",						fsioDigitalInputs1
+		field = "FSIO dig inp #2",						fsioDigitalInputs2
+		field = "FSIO dig inp #3",						fsioDigitalInputs3
+		field = "FSIO dig inp #4",						fsioDigitalInputs4
+		field = "FSIO dig inp #5",						fsioDigitalInputs5
+		field = "FSIO dig inp #6",						fsioDigitalInputs6
+		field = "FSIO dig inp #7",						fsioDigitalInputs7
+		field = "FSIO dig inp #8",						fsioDigitalInputs8
+		field = "FSIO dig inp #9",						fsioDigitalInputs9
+		field = "FSIO dig inp #10",						fsioDigitalInputs10
+		field = "FSIO dig inp #11",						fsioDigitalInputs11
+		field = "FSIO dig inp #12",						fsioDigitalInputs12
+		field = "FSIO dig inp #13",						fsioDigitalInputs13
+		field = "FSIO dig inp #14",						fsioDigitalInputs14
+		field = "FSIO dig inp #15",						fsioDigitalInputs15
+		field = "FSIO dig inp #16",						fsioDigitalInputs16
 
 
-	dialog = idlePidSettings, "Idle PID Control"	
+	dialog = allPins2_2
+		field = "Ignition Pin 1",                       ignitionPins1
+		field = "Ignition Pin 2",                       ignitionPins2
+		field = "Ignition Pin 3",                       ignitionPins3
+		field = "Ignition Pin 4",                       ignitionPins4
+		field = "Ignition Pin 5",                       ignitionPins5
+		field = "Ignition Pin 6",                       ignitionPins6
+		field = "Ignition Pin 7",                       ignitionPins7
+		field = "Ignition Pin 8",                       ignitionPins8
+		field = "Ignition Pin 9",                       ignitionPins9
+		field = "Ignition Pin 10",                      ignitionPins10
+		field = "Ignition Pin 11",                      ignitionPins11
+		field = "Ignition Pin 12",                      ignitionPins12
+		field = "output #1", 							fsioOutputPins1
+		field = "output #2", 							fsioOutputPins2
+		field = "output #3", 							fsioOutputPins3
+		field = "output #4", 							fsioOutputPins4
+		field = "output #5", 							fsioOutputPins5
+		field = "output #6", 							fsioOutputPins6
+		field = "output #7", 							fsioOutputPins7
+		field = "output #8", 							fsioOutputPins8
+		field = "output #9", 							fsioOutputPins9
+		field = "output #10", 							fsioOutputPins10
+		field = "output #11", 							fsioOutputPins11
+		field = "output #12", 							fsioOutputPins12
+		field = "output #13", 							fsioOutputPins13
+		field = "output #14", 							fsioOutputPins14
+		field = "output #15", 							fsioOutputPins15
+		field = "output #16", 							fsioOutputPins16
+
+	dialog = allPins1_3
+		field = "FSIO ADC #1",							fsioAdc1
+		field = "FSIO ADC #2",							fsioAdc2
+		field = "FSIO ADC #3",							fsioAdc3
+		field = "FSIO ADC #4",							fsioAdc4
+		field = "GPS RX", 								gps_rx_pin @@if_ts_show_gps
+		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
+		field = "CAN RX pin",							canRxPin
+		field = "CAN TX pin",							canTxPin
+		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
+		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
+		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
+		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
+		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
+		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
+		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
+		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
+		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
+		field = "hip9011CsPin",							hip9011CsPin
+		field = "LIS302DLCsPin",						LIS302DLCsPin
+		field = "Malfunction Indicator",				malfunctionIndicatorPin
+		field = "Saab CDM knock",						cdmInputPin
+		field = "comm status light",					communicationLedPin
+		field = "running status light",					runningLedPin
+		field = "TLE8888 Chip Select",                  tle8888_cs
+		field = "TLE8888 CS Mode",                      tle8888_csPinMode
+		field = "TLE 8888 spi",                         tle8888spiDevice
+		field = "servo#1",								servoOutputPins1
+		field = "servo#2",								servoOutputPins2
+		field = "servo#3",								servoOutputPins3
+		field = "servo#4",								servoOutputPins4
+		field = "servo#5",								servoOutputPins5
+
+
+	dialog = allPins1_1_and_2, "", xAxis
+		panel = allPins1_1
+		panel = allPins1_2
+
+	dialog = allPins1, "All Pins 1/2", xAxis
+		panel = allPins1_1_and_2
+		panel = allPins1_3
+
+	dialog = allPins2_1_and_2, "", xAxis
+		panel = allPins2_1
+		panel = allPins2_2
+
+	dialog = allPins2, "All Pins 2/2", xAxis
+		panel = allPins2_1_and_2
+
+
+;			Sensors->CLT sensor
+	dialog = clt_thermistor, "CLT sensor"
+		field = "Input channel",						clt_adcChannel
+		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != 16}
+
+		field = "#Here is three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = ""
+		field = "Lowest temperature",  					clt_tempC_1, {clt_adcChannel != 16}
+		field = "Resistance @ LT",         	   			clt_resistance_1, {clt_adcChannel != 16}
+		field = ""
+		field = "Middle temperature",    		  	    clt_tempC_2, {clt_adcChannel != 16}
+		field = "Resistance @ MT",         	    		clt_resistance_2, {clt_adcChannel != 16}
+		field = ""
+		field = "Highest temperature",				 	clt_tempC_3, {clt_adcChannel != 16}
+		field = "Resistance @ HT",         	    		clt_resistance_3, {clt_adcChannel != 16}
+		field = ""
+		field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != 16}
+
+	dialog = cltSensor, "", xAxis
+		panel = clt_thermistor
+		gauge = CLTGauge
+
+;			Sensors->IAT sensor
+	dialog = iat_thermistor, "IAT sensor"
+		field = "Input channel",						iat_adcChannel
+		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != 16}
+
+		field = "#Here is three pairs of thermistor temperature and resistance."
+		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
+		field = ""
+		field = "Lowest temperature",					iat_tempC_1, {iat_adcChannel != 16}
+		field = "Resistance @ LT",						iat_resistance_1, {iat_adcChannel != 16}
+		field = ""
+		field = "Middle temperature",					iat_tempC_2, {iat_adcChannel != 16}
+		field = "Resistance @ MT",						iat_resistance_2, {iat_adcChannel != 16}
+		field = ""
+		field = "Highest temperature",					iat_tempC_3, {iat_adcChannel != 16}
+		field = "Resistance @ HT",						iat_resistance_3, {iat_adcChannel != 16}
+		field = ""
+		field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != 16}
+
+	dialog = iatSensor, "", xAxis
+		panel = iat_thermistor
+		gauge = IATGauge
+		
+;			Sensors->Oil pressure sensor
+	dialog = oilp_settings, "Oil pressure sensor"
+		field = "Oil Pressure ADC input",				oilPressure_hwChannel
+		field = "low voltage",							oilPressure_v1, {oilPressure_hwChannel != 16}
+		field = "low pressure",							oilPressure_value1, {oilPressure_hwChannel != 16}
+		field = "high voltage",							oilPressure_v2, {oilPressure_hwChannel != 16}
+		field = "high pressure",						oilPressure_value2, {oilPressure_hwChannel != 16}
+
+	dialog = oilPressureSensor, "", xAxis
+		panel = oilp_settings
+		gauge = OilPressGauge
+
+;			Sensors->MAP sensor
+	dialog = mapSensorAnalog, "MAP sensor", yAxis		
+		field = "MAP ADC input", 						map_sensor_hwChannel
+		field = "MAP type",								map_sensor_type
+		field = "MAP value low point",  		        map_sensor_lowValue
+		field = "MAP voltage low point", 	 		    mapLowValueVoltage
+		field = "MAP value high point",               	map_sensor_highValue
+		field = "MAP voltage high value",               mapHighValueVoltage
+		
+	dialog = mapSensorFreq, "MAP frequency sensor", yAxis
+		field = "MAP Freq",								frequencyReportingMapInputPin
+		field = "0 kPa freq",							mapFrequency0Kpa
+		field = "100 kpa freq",							mapFrequency100Kpa
+
+	dialog = mapCommon, "MAP common settings"
+		field = "frequency-based MAP",					hasFrequencyReportingMapSensor
+		field = "Low value threshold",					mapErrorDetectionTooLow
+		field = "High value threshold",					mapErrorDetectionTooHigh
+		field = ""
+		field = "Measure Map Only In One Cylinder",		measureMapOnlyInOneCylinder
+		field = "Minimum MAP samples",					mapMinBufferLength
+
+	dialog = mapSettings, "", yAxis
+		panel = mapCommon
+		panel = mapSensorAnalog, {hasFrequencyReportingMapSensor == 0}
+		panel = mapSensorFreq, {hasFrequencyReportingMapSensor == 1}
+
+	dialog = baroSettings, "Baro sensor"
+		field = "Baro ADC input",						baroSensor_hwChannel
+		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != 16}
+		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != 16}
+		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
+
+	dialog = mapCurves, "MAP sampling", yAxis
+		field = "isMapAveragingEnabled",				isMapAveragingEnabled
+		panel = map_samplingAngleCurve
+		panel = map_samplingWindowCurve
+
+	dialog = mafSettings, "MAF sensor", yAxis
+		field = "MAF ADC input", 						mafAdcChannel
+
+;			Sensors->EGO sensor
+	dialog = egoSettings_sensor,	"EGO sensor"
+		field = "Type",									afr_type
+; todo: only use these values for custom!		
+		field = "low voltage", 							afr_v1
+		field = "low value", 							afr_value1
+		field = "high voltage", 						afr_v2
+		field = "high value", 							afr_value2
+		field = "Correction",							egoValueShift
+
+	dialog = egoSettings_IO,	"EGO Sensor I/O"
+		field = "Input channel", 						afr_hwChannel
+		field = "Heater pin",						o2heaterPin
+
+	dialog = egoSettings, "", yAxis
+		panel = egoSettings_IO
+		panel = egoSettings_sensor,	{afr_hwChannel != 16}
+
+;			Engine->EGT inputs
+	dialog = egtInputs, "EGT inputs"
+		field = "SPI", 									max31855spiDevice
+        field = "CS #1", 								max31855_cs1
+        field = "CS #2", 								max31855_cs2
+        field = "CS #3", 								max31855_cs3
+        field = "CS #4", 								max31855_cs4
+        field = "CS #5", 								max31855_cs5
+        field = "CS #6", 								max31855_cs6
+        field = "CS #7", 								max31855_cs7
+        field = "CS #8", 								max31855_cs8
+
+;			Engine->idle Settings	
+	dialog = idleSolenoid, "Solenoid"
+		field = "Idle Solenoid Pin Mode",   	  	    idle_solenoidPinMode, !useStepperIdle
+		field = "Idle Solenoid Pin",					idle_solenoidPin, !useStepperIdle
+		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
+	
+	dialog = idleStepper, "Stepper"
+		field = "Idle Stepper Step Pin",				idle_stepperStepPin, useStepperIdle
+		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin, useStepperIdle
+		field = "Idle Stepper Enable Pin",				stepperEnablePin, useStepperIdle
+		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode, useStepperIdle
+		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
+		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
+		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
+		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
+		
+	dialog = idleHwType, "Idle Valve Hardware",	border
+		panel = idleSolenoid,				West
+		panel = idleStepper,				East
+		
+	dialog = idlehw, "", yAxis
+	field = "!ECU reboot needed to apply these settings"
+		field = "Use Stepper",				useStepperIdle
+		panel = idleHwType
+		
+	dialog = idlePidSettings, "PID IAC Control"	
 		field = "#See Idle Target RPM Curve"
 		field = "P-factor",								idleRpmPid_pFactor
 		field = "I-factor",								idleRpmPid_iFactor
@@ -1691,13 +1934,22 @@ dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		field = "PID Extra for low RPM",				pidExtraForLowRpm
 		
 		
-	dialog = idleSettingsDialog, "", xAxis
-	    panel = idleSettings
-        panel = idlePidSettings, { idleMode == 0}
-		
-	
+	dialog = idleSettings, "", yAxis
+		field = "Idle IAC control mode",					idleMode
+		field = "use ETB for idle",						useETBforIdleControl
+		field = "ETB Idle range",						etbIdleThrottleRange, {useETBforIdleControl == 1}
+		field = "Use separate Ignition Table for idle",	useSeparateAdvanceForIdle
+		field = "Use separate VE Table for idle",		useSeparateVeForIdle
+		field = "Use separate IAC Table For Coasting",	useIacTableForCoasting, {idleMode == 0}
+		field = idleIncrementalPidCic,					idleIncrementalPidCic
+		field = "TPS deactivation threshold",			idlePidDeactivationTpsThreshold
+		panel = idlePidSettings, { idleMode == 0}
+		field = "Extra IAC if Throttle Pressed",						iacByTpsTaper;
+		field = "Detailed status in console",						isVerboseIAC
+		field = "#See Warmup idle multiplier"
+		slider = "Manual IAC Position",				manIdlePosition, horizontal
 
-	dialog = idleTimingPidCorrDialog, "", xAxis
+	dialog = idleTimingPidCorrDialog, "", yAxis
 		field = "!This timing correction mode is Alpha Version"
 		field = "Use Auto-PID ignition advance control",	useIdleTimingPidControl
 		field = "#See Idle Target RPM Curve"
@@ -1713,227 +1965,58 @@ dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		field = "RPM working zone falloff",					idlePidFalloffDeltaRpm, {useIdleTimingPidControl == 1}
 		field = "RPM dead zone to deactivate timing pid",	idleTimingPidDeadZone, {useIdleTimingPidControl == 1}
 
-#			Cranking->Cranking Settings
-	
+;			Engine->Fan Settings
+	dialog = fanSetting, "Fan Settings"
+		field = "Pin",								fanPin
+		field = "Pin mode",							fanPinMode
+		field = "On temperature",					fanOnTemperature
+		field = "Off temperature",					fanOffTemperature
 
-	dialog = crankingFuel, "Fuel"
-		field = "Injection Mode",						crankingInjectionMode
-		field = "Base fuel pulse width for Cranking", 				cranking_baseFuel
-		
-	dialog = crankingIAC, "Idle Valve"
-		field = "Cranking Idle Valve Position",					crankingIACposition
-		field = "After cranking Idle Valve taper duration",	afterCrankingIACtaperDuration
-		field = "Override Idle Valve multiplier for cranking",	overrideCrankingIacSetting
-		
-	dialog = crankingIgnition, "Ignition"
-		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
-		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
-		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
-        field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
-        field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
-		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
-	
-	dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment (NOT IMPLEMENTED #331)"
-		field = "Post-Cranking factor", 				postCrankingFactor
-		field = "Duration", 				postCrankingDurationSec
-		
-	dialog = primingFuelPulsePanel, "Priming fuel pulse"
-		field = "Duration at -40C degrees",	startOfCrankingPrimingPulse
-		field = "Falloff temperature", primeInjFalloffTemperature
+	dialog = fuelPump, "Fuel Pump"
+		field = "Pin",						fuelPumpPin
+		field = "Pin mode",         	        fuelPumpPinMode
+		field = "Prime duration",				startUpFuelPumpDuration
 
-dialog = crankingDialog, "Cranking Settings"
-		field = "Cranking RPM limit",                	cranking_rpm
-		field = "Enable cylinder cleanup",				isCylinderCleanupEnabled
-		field = ""
-		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
-		panel = primingFuelPulsePanel
-		panel = crankingFuel
-		panel = crankingIgnition
-		panel = crankingIAC
-		panel = postCrankingEnrichment
-#			Sensors->AUX2 Thermistor Sensor Setting		
+;			Controller->Actuator Outputs
+	dialog = mainRelay, "Main relay output"
+		field = "Pin",  						mainRelayPin
+		field = "Pin mode",			         	mainRelayPinMode
 
-	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
-		field = "Input",			auxTempSensor1_adcChannel
-		field = "Bias Resistor",       		auxTempSensor1_bias_resistor, {auxTempSensor1_adcChannel != 16}
+	dialog = statusLeds, "Status LEDs"
+		field = "Running status LED",					runningLedPin
+		field = "TS communication status LED",					communicationLedPin
+	    field = "Trigger error LED",					triggerErrorPin
+		field = "Fatal Error Led",						fatalErrorPin
 
-		field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical Temperatures is -40 deg C, 0 deg C and 100 deg C"
-		field = ""
-		field = "Lowest Temperature",					auxTempSensor1_tempC_1, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ LT",						auxTempSensor1_resistance_1, {auxTempSensor1_adcChannel != 16}
-		field = ""
-		field = "Middle Temperature",					auxTempSensor1_tempC_2, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ MT",						auxTempSensor1_resistance_2, {auxTempSensor1_adcChannel != 16}
-		field = ""
-		field = "Highest Temperature",					auxTempSensor1_tempC_3, {auxTempSensor1_adcChannel != 16}
-		field = "Resistance @ HT",						auxTempSensor1_resistance_3, {auxTempSensor1_adcChannel != 16}
+;			Engine->MIL Settings
+	dialog = malfunction,	"Check Engine Settings"
+		field = "Pin",         			malfunctionIndicatorPin
+		field = "Pin mode",				malfunctionIndicatorPinMode	
+		field = "Warning Period",									warningPeriod
 
-;			Sensors->AUX2 Thermistor Sensor Setting
-	dialog = auxTempSensor2Sensor, "aux2 Thermistor Settings"
-		field = "Input",						auxTempSensor2_adcChannel
-		field = "Bias Resistor",						auxTempSensor2_bias_resistor, {auxTempSensor2_adcChannel != 16}
-    	field = "#Here is three pairs of thermistor temperature and resistance."
-		field = "#Typical temperatures is -40 deg C, 0 deg C and 100 deg C"
-		field = ""
-		field = "Lowest temperature",					auxTempSensor2_tempC_1, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ LT",						auxTempSensor2_resistance_1, {auxTempSensor2_adcChannel != 16}
-		field = ""
-		field = "Middle Temperature",					auxTempSensor2_tempC_2, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ MT",						auxTempSensor2_resistance_2, {auxTempSensor2_adcChannel != 16}
-		field = ""
-		field = "Highest Temperature",					auxTempSensor2_tempC_3, {auxTempSensor2_adcChannel != 16}
-		field = "Resistance @ HT",						auxTempSensor2_resistance_3, {auxTempSensor2_adcChannel != 16}
-	
-#			Inputs
-
-	dialog = tpsSensor, "TPS"
-		field = "!See Tools>Calibrate TPS"
-		field = "Throttle1 Position Sensor",			tps1_1AdcChannel
-		field = "Throttle2 Position Sensor",			tps2_1AdcChannel
-		field = "TPS low value detection threshold",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != 16}
-		field = "TPS high value detection threshold",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != 16}
-
-	dialog = pedalSensor, "Accelerator pedal"
-		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
-		field = "Up Voltage",					throttlePedalUpVoltage
-		field = "Down (WOT) Voltage",				throttlePedalWOTVoltage
-
-
-	dialog = DigitalInputs,					"Digital Inputs"
-		field = "Clutch Down Input",						clutchDownPin
-		field = "Clutch Down Inverted",					clutchDownPinInverted
-		field = "Clutch Up Input",						clutchUpPin
-		field = "Clutch Up Inverted",					clutchUpPinInverted
-		field = "Brake Pedal Input",						brakePedalPin
-		field = "A/C Switch",							acSwitchAdc
-
-	dialog = triggerInputs,					"Trigger Inputs"
+;			Engine->hip9011 Settings
+	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
+		field = "Enabled",								isHip9011Enabled
+		field = "Threshold",							knockVThreshold, {isHip9011Enabled == 1}
 		field = "!ECU reboot needed to apply these settings"
-		field = "#Trigger 1 are Crank Sensor unless some rare cases"
-		field = "Trigger 1", 						triggerInputPins1
-		field = "Invert Signal",						invertPrimaryTriggerSignal
-		field = "Trigger 2", 					triggerInputPins2,            { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Invert Secondary",						invertSecondaryTriggerSignal, { trigger_type != 0 && trigger_type != 8 && trigger_type != 9 && trigger_type != 18 && trigger_type != 20}
-		field = "Cam Sync/VVT input",					camInputs1
-        field = "Second VVT input",					camInputs2
-
-
-#			Sensors->CLT sensor
-
-
- dialog = cltSensor, "Calibrate Coolant Sensor"
-      field = "Coolant Sensor Input", 						clt_adcChannel
-	  field = "Bias Resistor",						clt_bias_resistor, {clt_adcChannel != 16}
-      settingSelector = "Common Coolant Sensors"
-      settingOption = "Bosch NTC",  clt_tempC_1=-40, clt_resistance_1=45340,clt_tempC_2=30, clt_resistance_2=1707,clt_tempC_3=120, clt_resistance_3=113
-      settingOption = "Delphi M12",  clt_tempC_1=-40, clt_resistance_1=100865,clt_tempC_2=30, clt_resistance_2=2240,clt_tempC_3=120, clt_resistance_3=101
-	  settingOption = "DTM 1/8npt",  clt_tempC_1=-40, clt_resistance_1=45340,clt_tempC_2=30, clt_resistance_2=2501,clt_tempC_3=120, clt_resistance_3=113
-	  field = ""
-	  field = "Temperature ",  clt_tempC_1
-      field = "Resistance ", clt_resistance_1
-	 field = ""
-	  field = "Temperature ", clt_tempC_2
-      field = "Resistance ", clt_resistance_2
-	  field = ""
-	  field = "Temperature ", clt_tempC_3
-      field = "Resistance ", clt_resistance_3
-   ;   field = "Linear characteristic",				useLinearCltSensor, {clt_adcChannel != 16}
-
-#			Sensors->IAT sensor
+		field = "IntHold pin (hip9011 input)",      	hip9011IntHoldPin, {isHip9011Enabled == 1}
+		field = "IntHold pin (hip9011 input) mode",		hip9011IntHoldPinMode, {isHip9011Enabled == 1}
+		field = "ChipSelect pin",						hip9011CsPin, {isHip9011Enabled == 1}
+		field = "ChipSelect mode",						hip9011CsPinMode, {isHip9011Enabled == 1}
+		field = "hip Output/stm input",					hipOutputChannel, {isHip9011Enabled == 1}
+		field = "prescaler & SDO",						hip9011PrescalerAndSDO, {isHip9011Enabled == 1}
+		field = "knockDetectionWindowStart",			knockDetectionWindowStart, {isHip9011Enabled == 1}
+		field = "knockDetectionWindowEnd",				knockDetectionWindowEnd, {isHip9011Enabled == 1}
+		field = "cylinder bore (mm)",					cylinderBore, {isHip9011Enabled == 1}
+		field = "Band Freq override",					knockBandCustom, {isHip9011Enabled == 1}
+		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
+		panel = knockThresholdCurve
 		
-dialog = iatSensor, "Calibrate Intake Air Temp Sensor"
-      field = "IAT Sensor Input", 						iat_adcChannel
-	  field = "Bias Resistor",						iat_bias_resistor, {iat_adcChannel != 16}
-      settingSelector = "Common IAT Sensors"
-      settingOption = "Bosch NTC",  iat_tempC_1=-40, iat_resistance_1=45340,iat_tempC_2=30, iat_resistance_2=1707,iat_tempC_3=120, iat_resistance_3=113
-      settingOption = "Delphi M12",  iat_tempC_1=-40, iat_resistance_1=100865,iat_tempC_2=30, iat_resistance_2=2240,iat_tempC_3=120, iat_resistance_3=101
-	  settingOption = "DTM 1/8npt",  iat_tempC_1=-40, iat_resistance_1=45340,iat_tempC_2=30, iat_resistance_2=2501,iat_tempC_3=120, iat_resistance_3=113
-	  field = ""
-	  field = "Temperature ",  iat_tempC_1
-      field = "Resistance ", iat_resistance_1
-	  field = ""
-	  field = "Temperature ", iat_tempC_2
-      field = "Resistance ", iat_resistance_2
-	  field = ""
-	  field = "Temperature ", iat_tempC_3
-      field = "Resistance ", iat_resistance_3
-      ;field = "Linear characteristic",				useLinearIatSensor, {iat_adcChannel != 16}
-
-#			Sensors->Oil pressure sensor
-
-	dialog = oilp_settings, "Oil Pressure Sensor"
-		field = "Oil Pressure ADC Input",				oilPressure_hwChannel
-		field = "Low Voltage",							oilPressure_v1, {oilPressure_hwChannel != 16}
-		field = "Low Pressure",							oilPressure_value1, {oilPressure_hwChannel != 16}
-		field = "High Voltage",							oilPressure_v2, {oilPressure_hwChannel != 16}
-		field = "High Pressure",						oilPressure_value2, {oilPressure_hwChannel != 16}
-
-	dialog = oilPressureSensor, "", xAxis
-		panel = oilp_settings
-		gauge = OilPressGauge
-
-#			Sensors->MAP sensor
-
-	dialog = baroSettings, "Baro sensor"
-		field = "Baro ADC input",						baroSensor_hwChannel
-		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != 16}
-		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != 16}
-
-	dialog = mapCurves, "MAP sampling", yAxis
-		panel = map_samplingAngleCurve
-		panel = map_samplingWindowCurve
-
-
-	dialog = mafSettings, "MAF Sensor", yAxis
-		field = "Input", 						mafAdcChannel
-
-   dialog = mapSensor, "Calibrate MAP/Baro"
-      field = "#MAP Sensor"
-      field = "MAP Sensor Input", 						map_sensor_hwChannel
-      settingSelector = "Common MAP Sensors"
-      settingOption = "MPX4115",  map_sensor_lowValue=10.6, map_sensor_highValue=121.7
-      settingOption = "MPX4250",  map_sensor_lowValue=10, map_sensor_highValue=260
-      settingOption = "GM 1-BAR",  map_sensor_lowValue=10, map_sensor_highValue=105
-      settingOption = "GM 2-BAR",  map_sensor_lowValue=8.8, map_sensor_highValue=208
-      settingOption = "GM 3-BAR / MPXH6300",  map_sensor_lowValue=1.1, map_sensor_highValue=315.5
-      settingOption = "MPXH6400",  map_sensor_lowValue=3.5, map_sensor_highValue=416.5
-      settingOption = "AEM 3.5 BAR",  map_sensor_lowValue=-42.3, map_sensor_highValue=386.3
-      settingOption = "AEM 5.0 BAR",  map_sensor_lowValue=-64.6, map_sensor_highValue=581.7
-      field = "Value At 0.0 Volts",  map_sensor_lowValue
-      field = "Value At 5.0 Volts", map_sensor_highValue
-
-#			Sensors->EGO sensor
-
- dialog = egoSettings_sensor, "Calibrate EGO Sensor"
-      settingSelector = "EGO Sensors"
-      settingOption = "BPSX",  afr_v1=0, afr_value1=9, afr_v2=5, afr_value2=19
-	  settingOption = "INNOVATE",  afr_v1=0, afr_value1=7.35, afr_v2=5, afr_value2=22.39
-	  settingOption = "14Point7",  afr_v1=0, afr_value1=9.996, afr_v2=5, afr_value2=19.992
-	  settingOption = "PLX",  afr_v1=0, afr_value1=10, afr_v2=5, afr_value2=20
-	    field = ""
-      	field = "Low Voltage", 							afr_v1
-        field = "Low Value", 							afr_value1
-        field = ""
-		field = "High Voltage", 						afr_v2
-		field = "High Value", 							afr_value2
-        field = ""
-		field = "Correction",							egoValueShift
-		
-		
-   dialog = egoSettings_IO,	"EGO Sensor I/O"
-		field = "Input", 						afr_hwChannel
-		field = "Output",						o2heaterPin
-
-	dialog = egoSettings, "", yAxis
-		panel = egoSettings_IO
-		panel = egoSettings_sensor,	{afr_hwChannel != 16}
-
-	dialog = cj125, "Wideband Sensor"
+;			Engine->cj125 Settings
+	dialog = cj125Function, "CJ125 Settings (wbo decoder)"
 		field = "Enabled",								isCJ125Enabled
 		field = "Using 4.9 sensor?",					cj125isLsu49
-    	field = "!ECU reboot needed to apply these settings"
+		field = "!ECU reboot needed to apply these settings"
 		field = "ChipSelect pin",						cj125CsPin, {isCJ125Enabled == 1}
 		field = "ChipSelect mode",						cj125CsPinMode, {isCJ125Enabled == 1}
 		field = "!See also 'Controller-SPI setting'"
@@ -1942,40 +2025,141 @@ dialog = iatSensor, "Calibrate Intake Air Temp Sensor"
 		field = "UA input",								cj125ua, {isCJ125Enabled == 1}
 		field = "UR input",								cj125ur, {isCJ125Enabled == 1}
 		field = "Is UA input divided?"					cj125isUaDivided, {isCJ125Enabled == 1}
+		
+	dialog = spiFunction, "SPI settings"
+		field = "!ECU reboot needed to apply these settings"
+		field = "SPI1 enable",							is_enabled_spi_1
+		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
+		field = "SPI1mosi mode",						spi1MosiMode, {is_enabled_spi_1 == 1}
+		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
+		field = "SPI1miso mode",						spi1MisoMode, {is_enabled_spi_1 == 1}
+		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
+		field = "SPI1sck mode",							spi1SckMode, {is_enabled_spi_1 == 1}
+
+		field = "SPI2 enable",							is_enabled_spi_2
+		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
+		field = "SPI2mosi mode",						spi2MosiMode, {is_enabled_spi_2 == 1}
+		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
+		field = "SPI2miso mode",						spi2MisoMode, {is_enabled_spi_2 == 1}
+		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
+		field = "SPI2sck mode",							spi2SckMode, {is_enabled_spi_2 == 1}
+
+		field = "SPI3 enable",							is_enabled_spi_3
+		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
+		field = "SPI3mosi mode",						spi3MosiMode, {is_enabled_spi_3 == 1}
+		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
+		field = "SPI3miso mode",						spi3MisoMode, {is_enabled_spi_3 == 1}
+		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
+		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}
+		field = "LIS302DLCsPin",						LIS302DLCsPin
+
+	dialog = fuelClosedLoopDialog, "Fuel short-term closed-loop correction"
+		field = "#This is just the cherry on the cake once you have good VE table"
+		field = "Enabled",								fuelClosedLoopCorrectionEnabled
+		field = "!No correction below these value"
+		field = "CLT - low threshod", 					fuelClosedLoopCltThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "RPM - low threshod", 					fuelClosedLoopRpmThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "EGO - low threshod", 					fuelClosedLoopAfrLowThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "!No correction above these value"
+		field = "TPS - high threshod", 					fuelClosedLoopTpsThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "EGO - high threshod", 					fuelClosedLoopAfrHighThreshold, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "!PID settings"
+		field = "P factor",								fuelClosedLoopPid_pFactor, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "I factor",								fuelClosedLoopPid_iFactor, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "D factor",								fuelClosedLoopPid_dFactor, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "min",									fuelClosedLoopPid_minValue, {fuelClosedLoopCorrectionEnabled == 1}
+		field = "max",									fuelClosedLoopPid_maxValue, {fuelClosedLoopCorrectionEnabled == 1}
 
 
-#Outputs		
+	dialog = auxPidDialog, "Aux PID"
+		field = "Enabled",								activateAuxPid1
+		field = "FSIO pin #1",							auxPidPins1
+		field = "PWM Frequency",						auxPidFrequency1
+		field = "Detailed status in console",			isVerboseAuxPid1
+		field = "#target based on FSIO map#1"
+		field = "control period",						auxPid1_periodMs, {activateAuxPid1 == 1}
+		field = "#PID control"
+		field = "offset",								auxPid1_offset, {activateAuxPid1 == 1}
+		field = "P factor",								auxPid1_pFactor, {activateAuxPid1 == 1}
+		field = "I factor",								auxPid1_iFactor, {activateAuxPid1 == 1}
+		field = "D factor",								auxPid1_dFactor, {activateAuxPid1 == 1}
+		field = "Min",									auxPid1_minValue, {activateAuxPid1 == 1}
+		field = "Max",									auxPid1_maxValue, {activateAuxPid1 == 1}
+		field = "FSIO pin #2",							auxPidPins2
+		field = "FSIO pin #3",							auxPidPins3
+		field = "FSIO pin #4",							auxPidPins4
 
-	dialog = fuelPump, "Fuel Pump"
-		field = "Output",						fuelPumpPin
-		field = "Output Mode",         	        fuelPumpPinMode
-		field = "Prime duration",				startUpFuelPumpDuration
-		field = "Test Fuel Pump"
-		commandButton = "Fuel Pump", cmd_test_fuel_pump
+;			Engine->Battery & Alternator
+	dialog = batteryDialog, "Battery Settings",	yAxis
+		field = "vBatt ADC input", 						vbattAdcChannel
+		field = "Battery Input Divider Coefficient",	vbattDividerCoeff
+	dialog = alternator, "Alternator Settings",	yAxis
+		field = "Enabled",								isAlternatorControlEnabled
+		field = "simple on/off mode",					onOffAlternatorLogic, {isAlternatorControlEnabled == 1}
+		field = "Target",								targetVBatt, {isAlternatorControlEnabled == 1}
+		field = "Pin",									alternatorControlPin, {isAlternatorControlEnabled == 1}
+		field = "Pin Mode",								alternatorControlPinMode, {isAlternatorControlEnabled == 1}
+		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
+		field = "Detailed status in console",			isVerboseAlternator, {isAlternatorControlEnabled == 1}
+		field = "control period",						alternatorControl_periodMs, {isAlternatorControlEnabled == 1}
+		field = "#PID control"
+		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
-	dialog = mainRelay, "Main relay output"
-		field = "Output",  						mainRelayPin
-		field = "Output Mode",			         	mainRelayPinMode
 
-    dialog = speedSensorLeft
-		field = "Input",					vehicleSpeedSensorInputPin
-		field = "Multiplier",				vehicleSpeedCoef
+	dialog = energySystems, "Battery and Alternator Settings",	yAxis
+		panel = batteryDialog
+		panel = alternator
 
-	dialog = speedSensor, "Speed Sensor", xAxis
+	dialog = speedSensorLeft
+		field = "Input pin",					vehicleSpeedSensorInputPin
+		field = "revolution to speed mult",				vehicleSpeedCoef
+
+	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
 		gauge = VSSGauge
 
-     dialog = fanSetting, "Fan Settings"
-		field = "Output",								fanPin
-		field = "Output Mode",							fanPinMode
-		field = "On temperature",					fanOnTemperature
-		field = "Off temperature",					fanOffTemperature
-		field = "Use This Button To Test Fan Output"
-		commandButton = "Fan Test", cmd_test_radiator_fan
+;			Engine->Other inputs	
+	dialog = analogInputSettings, "Analog Input Settings"
+		field = "!ECU reboot needed to apply these settings"
+		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
+		field = "Analog divider",						analogInputDividerCoefficient
+		field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
+		field = "Smoothing factor",						slowAdcAlpha, {useBiQuadAnalogFiltering == 0}
+		field = "Bi_Q a0",								biQuad_a0, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q a1",								biQuad_a1, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q a2",								biQuad_a2, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q b1",								biQuad_b1, {useBiQuadAnalogFiltering == 1}
+		field = "Bi_Q b2",								biQuad_b2, {useBiQuadAnalogFiltering == 1}
 
-#Boost
- 
+	dialog = tachSettings, "Tachometer output"
+		field = "!See also dizzySparkOutputPin"
+		field = "Pin",									tachOutputPin
+		field = "Pin mode",								tachOutputPinMode
+		field = "Rise at trigger index",				tachPulseTriggerIndex
+		field = "Pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
+		field = "Pulse duration",						tachPulseDuractionMs
 
+
+;			Board->Connection
+	dialog = tsPort, "TunerStudio Port"
+		field = "tunerStudioSerialSpeed",				tunerStudioSerialSpeed
+		field = "Use PC10/PC11 serial?",				useSerialPort
+		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
+		
+	dialog = canBus, "CAN Bus"
+		field = "Can Read Enabled",						canReadEnabled
+		field = "Can Write Enabled",					canWriteEnabled
+		field = "Can Nbc Type",							canNbcType
+		field = "Can Sleep Period",						canSleepPeriodMs
+		field = "RX pin",								canRxPin
+		field = "TX pin",								canTxPin
 	
 	 dialog = boost_left, ""
         field = "Boost Control Enabled",    isBoostControlEnabled
@@ -1992,95 +2176,129 @@ dialog = iatSensor, "Calibrate Intake Air Temp Sensor"
 		field = "Derivative Gain",									boostControl_dFactor, {isBoostControlEnabled == 1}
         field = "Offset",                                     boostControl_offset	
 		
+	dialog = lcdScreen, "LCD screen"
+		field = "display Mode",							displayMode
+		field = "height", 								HD44780height
+		field = "width", 								HD44780width
+		field = "RS pin", 								HD44780_rs
+		field = "E pin", 								HD44780_e
+		field = "D4 pin", 								HD44780_db4
+		field = "D5 pin", 								HD44780_db5
+		field = "D6 pin", 								HD44780_db6
+		field = "D7 pin", 								HD44780_db7
+		
+	dialog = tle8888, "TLE8888", yAxis
+		field = "TLE8888 Chip Select", 					tle8888_cs
+		field = "TLE8888 SPI", 							tle8888spiDevice
 
    dialog = boostDialog, "Boost Control", border
         panel = boost_left, West
         panel = boostTbl, Center
 
-
-	dialog = vvt_left, ""
-		field = "Closed Loop",								activateAuxPid1
-		field = "Output",							fsioOutputPins1
-		field = "Mode",								vvtMode, {trigger_type != 80}
-	    field = "Rising Edge",					    vvtCamSensorUseRise, {trigger_type != 80}
-		field = "Avance/Retard"
-	    field = "Offset",		                  	vvtOffset
-	    field = "Output Inverted",		         			vvtDisplayInverted
-		field = "Frequency",						  fsioFrequency1
-		field = "Control Interval",						auxPid1_periodMs, {activateAuxPid1 == 1}
-		field = "#PID Settings"
-		field = "Offset",								auxPid1_offset, {activateAuxPid1 == 1}
-		field = "P Gain",								auxPid1_pFactor, {activateAuxPid1 == 1}
-		field = "I Gain",								auxPid1_iFactor, {activateAuxPid1 == 1}
-		field = "D Gain",								auxPid1_dFactor, {activateAuxPid1 == 1}
-		field = "Min Duty",									auxPid1_minValue, {activateAuxPid1 == 1}
-		field = "Max Duty",									auxPid1_maxValue, {activateAuxPid1 == 1}
+	dialog = joystickPanel, "Joystick"
+		field = "joustick center button",				joystickCenterPin
+		field = "joustick button A",					joystickAPin
+		field = "joustick button B",					joystickBPin
+		field = "joustick button C",					joystickCPin
+		field = "joustick button D",					joystickDPin
+				
+	dialog = monitoringSettings, "rusEfi Console Settings"			
+		field = "Sensor Sniffer",         	    		sensorChartMode
+		field = "  Threshold",							sensorSnifferRpmThreshold
+		field = "  Each X cycle",						sensorChartFrequency
+		field = "Engine Sniffer", 						isEngineChartEnabled			
+		field = "  Threshold", 							engineSnifferRpmThreshold
 		
-dialog = vvtDialog, "", border
-        panel = vvt_left, West
-        panel = fsioTable1Tbl, Center
-
-
-		dialog = aux_pid_2_left, ""
-		field = "Closed Loop",								activateAuxPid2
-		field = "Output",							fsioOutputPins2
-		field = "Frequency",						fsioFrequency2
-		field = "Load Axis"                        
-        field = "Load is Y axis on table, X axis on curve"
-        field = "Control Interval",						auxPid2_periodMs, {activateAuxPid2 == 1}
-		field = "#PID Settings"
-		field = "Offset",								auxPid2_offset, {activateAuxPid2 == 1}
-		field = "P Gain",								auxPid2_pFactor, {activateAuxPid2 == 1}
-		field = "I Gain",								auxPid2_iFactor, {activateAuxPid2 == 1}
-		field = "D Gain",								auxPid2_dFactor, {activateAuxPid2 == 1}
-		field = "Min Duty",									auxPid2_minValue, {activateAuxPid2 == 1}
-		field = "Max Duty",									auxPid2_maxValue, {activateAuxPid2 == 1}
+	dialog = generalSettings, "General"
+		field = "!https://rusefi.com/s/fuel"
+		field = "Fuel strategy",						fuelAlgorithm
 		
-dialog = auxPidDialog2, "", border
-        panel = aux_pid_2_left, West
-        panel = fsioTable2Tbl, Center
+	dialog = debugging, "Debug"
+		field = "!https://rusefi.com/s/debugmode"
+		field = "Debug mode",							debugMode
 
+	
+	dialog = limits, "Limits"
+		field = "RPM hard limit",         	    		rpmHardLimit
+		field = "Boost cut pressure",					boostCutPressure
+	
+;			Engine->Base Engine Settings
+	dialog = engineChars, "Base Engine Settings"
+		topicHelp = "baseHelp"
+		panel = baseEngineConfig
+		panel = generalSettings
+		panel = limits
+		panel = debugging
+
+	dialog = crankingFuel, "Fuel"
+		field = "Injection mode",						crankingInjectionMode
+		field = "!Value '1' is currently recommended"
+		field = "Base fuel pulse width", 				cranking_baseFuel
 		
-		dialog = aux_pid_3_left, ""
-		field = "Closed Loop",								activateAuxPid3
-		field = "Output",							fsioOutputPins3
-		field = "Frequency",						fsioFrequency3
-		field = "Load Axis"                        
-        field = "Load is Y axis on table, X axis on curve"
-        field = "Control Interval",						auxPid3_periodMs, {activateAuxPid3 == 1}
-		field = "#PID Settings"
-		field = "Offset",								auxPid3_offset, {activateAuxPid3 == 1}
-		field = "P Gain",								auxPid3_pFactor, {activateAuxPid3 == 1}
-		field = "I Gain",								auxPid3_iFactor, {activateAuxPid3 == 1}
-		field = "D Gain",								auxPid3_dFactor, {activateAuxPid3 == 1}
-		field = "Min Duty",									auxPid3_minValue, {activateAuxPid3 == 1}
-		field = "Max Duty",									auxPid3_maxValue, {activateAuxPid3 == 1}
+	dialog = crankingIAC, "IAC"
+		field = "Cranking IAC position",					crankingIACposition
+		field = "After cranking IAC taper duration",	afterCrankingIACtaperDuration
+		field = "Override IAC multiplier for cranking",	overrideCrankingIacSetting
 		
-dialog = auxPidDialog3, "", border
-        panel = aux_pid_3_left, West
-        panel = fsioTable3Tbl, Center
-
-
-		dialog = aux_pid_4_left, ""
-		field = "Closed Loop",								activateAuxPid4
-		field = "Output",							fsioOutputPins4
-		field = "Frequency",						fsioFrequency4
-		field = "Load Axis"                        
-        field = "Load is Y axis on table, X axis on curve"
-        field = "Control Interval",						auxPid4_periodMs, {activateAuxPid4 == 1}
-		field = "#PID Settings"
-		field = "Offset",								auxPid4_offset, {activateAuxPid4 == 1}
-		field = "P Gain",								auxPid4_pFactor, {activateAuxPid4 == 1}
-		field = "I Gain",								auxPid4_iFactor, {activateAuxPid4 == 1}
-		field = "D Gain",								auxPid4_dFactor, {activateAuxPid4 == 1}
-		field = "Min Duty",									auxPid4_minValue, {activateAuxPid4 == 1}
-		field = "Max Duty",									auxPid4_maxValue, {activateAuxPid4 == 1}
+	dialog = crankingIgnition, "Ignition"
+		field = "Advance", 								crankingTimingAngle, {useSeparateAdvanceForCranking == 0}
+		field = "Use separate Advance Table for cranking",	useSeparateAdvanceForCranking
+		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
+        field = "Use fixed cranking dwell",         			useConstantDwellDuringCranking
+        field = "Fixed Cranking Dwell",           			ignitionDwellForCrankingMs, {useConstantDwellDuringCranking == 1}
+		field = "Cranking Dwell Angle", 						crankingChargeAngle, {useConstantDwellDuringCranking == 0}
+	
+	dialog = postCrankingEnrichment, "Post-cranking short-time fuel enrichment (NOT IMPLEMENTED #331)"
+		field = "Post-Cranking factor", 				postCrankingFactor
+		field = "Duration", 				postCrankingDurationSec
 		
-dialog = auxPidDialog4, "", border
-        panel = aux_pid_4_left, West
-        panel = fsioTable4Tbl, Center
-#
+	dialog = primingFuelPulsePanel, "Priming fuel pulse"
+		field = "Duration at -40C degrees",	startOfCrankingPrimingPulse
+		field = "Falloff temperature", primeInjFalloffTemperature
+		
+		
+;			Cranking->Cranking Settings
+	dialog = crankingDialog, "Cranking Settings"
+		field = "Cranking RPM limit",                	cranking_rpm
+		field = "Enable cylinder cleanup",				isCylinderCleanupEnabled
+		field = ""
+		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
+		panel = primingFuelPulsePanel
+		panel = crankingFuel
+		panel = crankingIgnition
+		panel = crankingIAC
+		panel = postCrankingEnrichment
 
+	dialog = EngineLoadAccelPanel, "Engine Load (alpha version)"
+		field = "Length",						engineLoadAccelLength
+		field = "Accel threshold", 				engineLoadAccelEnrichmentThreshold
+		field = "Accel multiplier",	 			engineLoadAccelEnrichmentMultiplier
+		field = "Decel threshold", 				engineLoadDecelEnleanmentThreshold
+		field = "Decel multiplier",	 			engineLoadDecelEnleanmentMultiplier
+
+	dialog = TpsAccelPanel, "TPS"
+		field = "Set 'Debug Mode' to see detailed 'TPS acceleration enrichment' diagnostics"
+   		field = "Length",						tpsAccelLength
+		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
+		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
+;		field = "Decel Multiplier",	 			tpsDecelEnleanmentMultiplier
+		field = "#Accelerator Pump model:"
+		field = "Fraction Period",				tpsAccelFractionPeriod
+		field = "Fraction Divisor",				tpsAccelFractionDivisor
+		
+	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
+		field = "evaporation time constant",          wwaeTau
+		field = "added to wall coef",                   wwaeBeta
+	
+		
+;			Tuning->AccelEnrichment
+	dialog = AccelEnrich,	"Accel/Decel Enrichment"
+		panel = TpsAccelPanel
+		panel = WallWettingAccelPanel
+		panel = EngineLoadAccelPanel
+		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
+		
+		
 ;			Flex Logic
 	dialog = fsioIO, "Outputs"
 		field = "output #1", 							fsioOutputPins1
@@ -2154,7 +2372,7 @@ dialog = auxPidDialog4, "", border
 		field = "#1",									fsioFormulas1
 		field = "#2",									fsioFormulas2
 		field = "#3",									fsioFormulas3
-		field = "use FSIO #4 for serious eninge warning",useFSIO4ForSeriousEngineWarning
+		field = "use FSIO #4 for serious engine warning",useFSIO4ForSeriousEngineWarning
 		field = "#4",									fsioFormulas4
 		field = "use FSIO #5 for critical engine stop", useFSIO5ForCriticalIssueEngineStop
 		field = "#5",									fsioFormulas5
@@ -2182,425 +2400,175 @@ dialog = auxPidDialog4, "", border
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
 		field = "ADC #4",								fsioAdc4
+				
+	help = veTableDialogHelp, "Volumetric Efficiency"
+        text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
+        webHelp = "https://rusefi.com/s/fuel"
+        
+    help = fuelHelp, "Fuel Control"    
+        text = "More about fuel control on the web"
+        webHelp = "https://rusefi.com/s/fuel"
+				
+    help = etbHelp, "ETB Control"
+        text = "More about electronic throttle body on the web"
+        webHelp = "https://rusefi.com/s/etb"
 
-#			Racing Features->Launch Control
+    help = tpsTpsHelp, "Acceleration Enrichment"
+        text = "More about Tps To Tps acceleration on the web"
+        webHelp = "https://rusefi.com/s/tpstps"
+
+    help = baseHelp, "Base Settings Control"    
+        text = "More about rusefi on the web"
+        webHelp = "https://rusefi.com/"
+
+	dialog = veTableDialog
+		topicHelp = "veTableDialogHelp"
+		panel = veTableTbl, South
+				
+	dialog = veTableDialog3D, "VE Table"
+		topicHelp = "veTableDialogHelp"
+		panel = veTableMap, South
+
+	dialog = etbPidDialog, "PID settings"
+		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "offset",								etb_offset, {throttlePedalPositionAdcChannel != 16}
+		field = "control period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
+		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
+		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
+		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
+		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
+
+
+	dialog = etbDialogLeft
+		field = "https://rusefi.com/s/etb"
+		field = "Detailed status in console",			isVerboseETB
+		field = "Pause ETB control",					pauseEtbControl
+		field = "Throttle Pedal Up",					throttlePedalUpVoltage
+		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
+		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
+		field = "No1 Direction #1",						etb1_directionPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "No1 Direction #2",						etb1_directionPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "Two-wire mode",						etb1_use_two_wires, {throttlePedalPositionAdcChannel != 16}
+		field = "No1 Control #1",						etb1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb1_use_two_wires == 0}
+		field = "No2 Direction #1",						etb2_directionPin1, {throttlePedalPositionAdcChannel != 16}
+		field = "No2 Direction #2",						etb2_directionPin2, {throttlePedalPositionAdcChannel != 16}
+		field = "Two-wire mode",						etb2_use_two_wires, {throttlePedalPositionAdcChannel != 16}
+		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb2_use_two_wires == 0}
+		panel = etbPidDialog
+
+	dialog = etbDialogRight
+		field = "!https://rusefi.com/s/debugmode"
+		field = "Debug mode",							debugMode
+		field = "use ETB for idle",						useETBforIdleControl
+		field = "ETB idle maximum angle",				etbIdleRange
+		field = "Press buttons to calibrate sensors"
+		field = "You would have to remove air filter to move throttle manually"
+	    commandButton = "TPS#1 closed position", cmd_calibrate_tps_1_closed
+	    commandButton = "TPS#1 wide open position", cmd_calibrate_tps_1_wot
+	    field = "Not many vehicles have two throttle bodies but some do"
+	    commandButton = "TPS#2 closed position", cmd_calibrate_tps_2_closed
+	    commandButton = "TPS#2 wide open position", cmd_calibrate_tps_2_wot
+	    commandButton = "Pedal Up", cmd_calibrate_pedal_up
+	    commandButton = "Pedal Down", cmd_calibrate_pedal_down
+
+	dialog = etbDialog, "Electronic Throttle Body (beta)", border
+		topicHelp = "etbHelp"
+		panel = etbDialogLeft, West
+		panel = etbDialogRight, East
+
+
+	dialog = testSpark, "Spark"
+		commandButton = "Spark #1", cmd_test_spk1
+		commandButton = "Spark #2", cmd_test_spk2
+		commandButton = "Spark #3", cmd_test_spk3
+		commandButton = "Spark #4", cmd_test_spk4
+		commandButton = "Spark #5", cmd_test_spk5
+		commandButton = "Spark #6", cmd_test_spk6
+		commandButton = "Spark #7", cmd_test_spk7
+		commandButton = "Spark #8", cmd_test_spk8
+		
+	dialog = testInjectors, "Fuel"
+		commandButton = "Injector #1", cmd_test_inj1
+		commandButton = "Injector #2", cmd_test_inj2
+		commandButton = "Injector #3", cmd_test_inj3
+		commandButton = "Injector #4", cmd_test_inj4
+		commandButton = "Injector #5", cmd_test_inj5
+		commandButton = "Injector #6", cmd_test_inj6
+		commandButton = "Injector #7", cmd_test_inj7
+		commandButton = "Injector #8", cmd_test_inj8
+		
+	dialog = testMisc, "Misc"
+		commandButton = "Come To Pit", cmd_call_from_pit
+		commandButton = "Fuel Pump", cmd_test_fuel_pump
+		commandButton = "Radiator Fan", cmd_test_radiator_fan
+		commandButton = "Check Engine", cmd_test_check_engine_light
+		commandButton = "Idle Air Valve", cmd_test_idle_valve          
+		commandButton = "Stop Engine", cmd_stop_engine          
+		commandButton = "Reset ECU", cmd_reset_controller
+		commandButton = "Reset to DFU", cmd_dfu
+
+	; bench test	
+	dialog = ioTest, "Bench Test & Commands", border
+		panel = testSpark,		West
+		panel = testInjectors,	Center
+		panel = testMisc,		East
+	
+	dialog = engineTypeDialog, "Popular vehicles"
+		field = "!These buttons send a command to rusEfi controller to apply preset values"
+		field = "!Once you send the command, please reconnect to rusEfi controller in order to read fresh values"			
+		commandButton = "Miata NA6 Stage 0", cmd_set_engine_type_Miata_NA6_VAF
+		commandButton = "Miata NA6 Stage 1", cmd_set_engine_type_Miata_NA6_MAP
+		commandButton = "Miata NB2 MAP", cmd_set_engine_type_Miata_NA2
+		commandButton = "ETB test bench", cmd_set_engine_type_etb_test
+		commandButton = "TLE8888B test bench", cmd_set_engine_type_8888_test
+		commandButton = "Reset firmware settings", cmd_set_engine_type_default
+
+
+;			Board->ECU stimulator
+	dialog = ecuStimulator, "ECU stimulator"
+		field = "Trigger Simulator",   					triggerSimulatorFrequency
+		field = "self-stimulation",						directSelfStimulation
+		field = ""
+		field = "digipot spi", 							digitalPotentiometerSpiDevice
+		field = "digipot CS #0", 						digitalPotentiometerChipSelect1
+		field = "digipot CS #1", 						digitalPotentiometerChipSelect2
+		field = "digipot CS #2", 						digitalPotentiometerChipSelect3
+		field = "digipot CS #3", 						digitalPotentiometerChipSelect4
+		field = ""
+		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
+		field = "trigger stimulator pin mode #1", 		triggerSimulatorPinModes1
+		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
+		field = "trigger stimulator pin mode #2", 		triggerSimulatorPinModes2
+		field = "trigger stimulator pin #3", 			triggerSimulatorPins3
+		field = "trigger stimulator pin mode #3", 		triggerSimulatorPinModes3
+		field = ""
+	    field = "Logic input channel 1", 				logicAnalyzerPins1
+	    field = "Logic input channel 2", 				logicAnalyzerPins2
+	    field = "Logic input channel 3", 				logicAnalyzerPins3
+	    field = "Logic input channel 4", 				logicAnalyzerPins4
+		field = ""
+	    field = "Engine chart size", 					engineChartSize
+
+				;			Racing Features->Launch Control
 	dialog = smLaunchControl, "Launch Control Settings NOT WORKING"
 		field = "RPM Step1 Limit",         	    		step1rpm
 		field = "Launch RPM Window"                     step1RpmWindow
 		field = "Step1 Ignition Advance",				step1timing
 		field = "Use Spark Cut",						step1SparkCutEnable
 		field = "Use Fuel Cut",							step1fuelCutEnable
-		field = "Clutch Down Input",						clutchDownPin
-		field = "clutch Up Input",							clutchUpPin
-		field = "Brake Pedal Input",						brakePedalPin
-
-
-
-# Electronic Throttle
-
-	dialog = etbPidDialog, "PID Settings"
-	field = "#Set FeedForward map before tuning PID"
-		field = "P Gain",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "I Gain",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "D Gain",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "Offset",								etb_offset, {throttlePedalPositionAdcChannel != 16}
-		field = "Control Period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
-		field = "Pid Min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
-		field = "Pid Max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
-		field = "I Min",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
-		field = "I Max",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
-
-
-	dialog = etbDialogLeft
-		field = "Throttle Pedal Up",					throttlePedalUpVoltage
-		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
-		field = "Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
-		panel = etbPidDialog
-		
-
-	dialog = etbDialogRight
-		
-		field = "ETB Idle Control",						useETBforIdleControl
-		field = "Cranking/Default TPS Angle",					crankingIACposition
-		field = "Maximum Idle Opening",				etbIdleRange
-		field = "Press buttons to calibrate sensors"
-		field = "Move throttle manually to calibrate TPS"
-	    commandButton = "TPS 1 closed position", cmd_calibrate_tps_1_closed
-	    commandButton = "TPS 1 wide open position", cmd_calibrate_tps_1_wot
-	    field = "Settings for second Throttle Body"
-	    commandButton = "TPS 2 closed position", cmd_calibrate_tps_2_closed
-	    commandButton = "TPS 2 wide open position", cmd_calibrate_tps_2_wot
-		field = "Accelerator Pedal"
-	    commandButton = "Pedal Up", cmd_calibrate_pedal_up
-	    commandButton = "Pedal Down", cmd_calibrate_pedal_down
-
-		dialog = etbDialogBottom
-		field = "Feed Forward Table"     
-		field = "#Set PID Gains to 0 and adjust Duty Cycle until TPS follows your pedal as good as possible "
-        panel = etbTpsBiasCurve
-
-	dialog = etbDialog, "Electronic Throttle", border
-	
-		panel = etbDialogLeft, West
-		panel = etbDialogRight, East
-		panel = etbDialogBottom, South
-
-
-	
-		
-	dialog = testMisc, ""
-	field = "Enter DFU Mode"
-     commandButton = "Update Firmware",                         cmd_dfu 
-     commandButton = "Reset Controller",                         cmd_reset_controller
-
-		dialog = debugging, "Debug"
-      	field = "Debug Mode",							debugMode
-
-	; bench test	
-	dialog = ioTest, ""
-		panel = testMisc
-	
-;			Board->ECU stimulator
-	dialog = ecuStimulator, "Trigger Simulator"
-		field = "Engine Speed",   					triggerSimulatorFrequency
-		field = "Direct Simulation",						directSelfStimulation
-		field = ""
-		field = "trigger simulator pin #1", 			triggerSimulatorPins1
-		field = "trigger simulator pin mode #1", 		triggerSimulatorPinModes1
-		
-
-	
-		dialog = monitoringSettings, "rusEfi Console Settings"			
-		field = "Sensor Sniffer",         	    		sensorChartMode
-		field = "  Threshold",							sensorSnifferRpmThreshold
-		field = "  Each X cycle",						sensorChartFrequency
-		field = "Engine Sniffer", 						isEngineChartEnabled			
-		field = "  Threshold", 							engineSnifferRpmThreshold
-
-		;			Engine->Other inputs	
-	dialog = analogInputSettings, "Analog Input Settings"
-		field = "!ECU reboot needed to apply these settings"
-		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
-		field = "Analog divider",						analogInputDividerCoefficient
-	;	field = "Use BiQuad averaging",					useBiQuadAnalogFiltering		
-	;	field = "Smoothing factor",						slowAdcAlpha, {useBiQuadAnalogFiltering == 0}
-	;	field = "Bi_Q a0",								biQuad_a0, {useBiQuadAnalogFiltering == 1}
-	;	field = "Bi_Q a1",								biQuad_a1, {useBiQuadAnalogFiltering == 1}
-	;	field = "Bi_Q a2",								biQuad_a2, {useBiQuadAnalogFiltering == 1}
-	;	field = "Bi_Q b1",								biQuad_b1, {useBiQuadAnalogFiltering == 1}
-	;	field = "Bi_Q b2",								biQuad_b2, {useBiQuadAnalogFiltering == 1}
-
-	dialog = tachSettings, "Tachometer Output"
-		field = "!See also dizzySparkOutputPin"
-		field = "Output",									tachOutputPin
-		field = "Output Mode",								tachOutputPinMode
-		field = "Rise at trigger index",				tachPulseTriggerIndex
-		field = "Pulse duration is duty cycle",			tachPulseDurationAsDutyCycle
-		field = "Pulse duration",						tachPulseDuractionMs
-
-
-;			Board->Connection
-	dialog = tsPort, "TunerStudio Port"
-		field = "tunerStudioSerialSpeed",				tunerStudioSerialSpeed
-		field = "Use PC10/PC11 serial?",				useSerialPort
-		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
-		
-	dialog = canBus, "CAN Bus"
-		field = "Can Read Enabled",						canReadEnabled
-		field = "Can Write Enabled",					canWriteEnabled
-		field = "Can Nbc Type",							canNbcType
-		field = "Can Sleep Period",						canSleepPeriodMs
-	
-	
-		
-	dialog = tle8888, "TLE8888", yAxis
-		field = "TLE8888 Chip Select", 					tle8888_cs
-		field = "TLE8888 SPI", 							tle8888spiDevice
-
-	dialog = connection, "", 	yAxis
-		field = "STM32 vRef voltage",					adcVcc
-		panel = tsPort
-		panel = canBus
-		panel = sdCard
-		panel = gpsReceiver                       @@if_ts_show_gps
-		panel = tle8888
-
-		
+		field = "clutchDownPin",						clutchDownPin
+		field = "clutchUpPin",							clutchUpPin
+		field = "brakePedalPin",						brakePedalPin
 	    
-	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
-		field = "Enabled",								isHip9011Enabled
-		field = "Threshold",							knockVThreshold, {isHip9011Enabled == 1}
-		field = "!ECU reboot needed to apply these settings"
-		field = "IntHold pin (hip9011 input)",      	hip9011IntHoldPin, {isHip9011Enabled == 1}
-		field = "IntHold pin (hip9011 input) mode",		hip9011IntHoldPinMode, {isHip9011Enabled == 1}
-		field = "ChipSelect pin",						hip9011CsPin, {isHip9011Enabled == 1}
-		field = "ChipSelect mode",						hip9011CsPinMode, {isHip9011Enabled == 1}
-		field = "hip Output/stm input",					hipOutputChannel, {isHip9011Enabled == 1}
-		field = "prescaler & SDO",						hip9011PrescalerAndSDO, {isHip9011Enabled == 1}
-		field = "knockDetectionWindowStart",			knockDetectionWindowStart, {isHip9011Enabled == 1}
-		field = "knockDetectionWindowEnd",				knockDetectionWindowEnd, {isHip9011Enabled == 1}
-		field = "cylinder bore (mm)",					cylinderBore, {isHip9011Enabled == 1}
-		field = "Band Freq override",					knockBandCustom, {isHip9011Enabled == 1}
-		field = "SPI device",							hip9011SpiDevice, {isHip9011Enabled == 1}
-		panel = knockThresholdCurve
-		
-
-
-		
-	dialog = spiFunction, "SPI settings"
-		field = "!ECU reboot needed to apply these settings"
-		field = "SPI1 enable",							is_enabled_spi_1
-		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
-		field = "SPI1mosi mode",						spi1MosiMode, {is_enabled_spi_1 == 1}
-		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
-		field = "SPI1miso mode",						spi1MisoMode, {is_enabled_spi_1 == 1}
-		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
-		field = "SPI1sck mode",							spi1SckMode, {is_enabled_spi_1 == 1}
-
-		field = "SPI2 enable",							is_enabled_spi_2
-		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
-		field = "SPI2mosi mode",						spi2MosiMode, {is_enabled_spi_2 == 1}
-		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
-		field = "SPI2miso mode",						spi2MisoMode, {is_enabled_spi_2 == 1}
-		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
-		field = "SPI2sck mode",							spi2SckMode, {is_enabled_spi_2 == 1}
-
-		field = "SPI3 enable",							is_enabled_spi_3
-		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
-		field = "SPI3mosi mode",						spi3MosiMode, {is_enabled_spi_3 == 1}
-		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
-		field = "SPI3miso mode",						spi3MisoMode, {is_enabled_spi_3 == 1}
-		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
-		field = "SPI3sck mode",							spi3SckMode, {is_enabled_spi_3 == 1}
-		field = "LIS302DLCsPin",						LIS302DLCsPin
-
-
-	dialog = allPinsSensors, "Sensors"
-		field = "Coolant Sensor Input", 						clt_adcChannel
-		field = "Intake Air Temperature Input", 						iat_adcChannel
-		field = "vBatt Input", 						vbattAdcChannel
-		field = "Throttle pedal Position Channel", 		throttlePedalPositionAdcChannel
-		field = "TPS1 Input", 						tps1_1AdcChannel
-		field = "TPS2 Input", 						tps2_1AdcChannel
-		field = "MAF Sensor Input", 						mafAdcChannel
-		field = "AFR Input", 						afr_hwChannel
-		field = "Baro Sensor Input", 						baroSensor_hwChannel
-		field = "MAP Sensor Input", 						map_sensor_hwChannel
-		field = "FrequencyReportingMapInputPin",		frequencyReportingMapInputPin
-		field = "Fuel Level Sensor", 						fuelLevelSensor
-		field = "Vehicle Speed Input",				vehicleSpeedSensorInputPin
-		field = "Clutch Down",						clutchDownPin
-		field = "clutch Up",							clutchUpPin
-		field = "brake Pedal",						brakePedalPin
-		field = "A/C Switch",							acSwitchAdc
-		field = "Aux Temperature #1",					auxTempSensor1_adcChannel
-		field = "Aux Temperature #2",					auxTempSensor2_adcChannel
-	
-
-	
-
- dialog = etbpins, "E-Throttle"
-	   field = "ETB#1 Dir #1",							etb1_directionPin1  @@if_ts_show_etb_pins
-		field = "ETB#1 Dir #2",							etb1_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#1 Control #1",						etb1_controlPin1    @@if_ts_show_etb_pins	
-		field = "ETB#2 Dir #1",							etb2_directionPin1  @@if_ts_show_etb_pins
-		field = "ETB#2 Dir #2",							etb2_directionPin2  @@if_ts_show_etb_pins
-		field = "ETB#2 Control #1",						etb2_controlPin1    @@if_ts_show_etb_pins
-
- dialog = spipins, "SPI"
-		field = "tle6240_cs",							tle6240_cs
-		field = "tle6240 SPI",							tle6240spiDevice
-		field = "mc33972_cs",							mc33972_cs
-		field = "mc33972 SPI",							mc33972spiDevice
-		field = "hip9011CsPin",							hip9011CsPin
-		field = "LIS302DLCsPin",						LIS302DLCsPin
-		field = "TLE8888 Chip Select",                  tle8888_cs
-		field = "TLE8888 CS Mode",                      tle8888_csPinMode
-		field = "TLE 8888 spi",                         tle8888spiDevice
-		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1}
-		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1}
-		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1}
-		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1}
-		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1}
-		field = "SPI2 SCK",								spi2sckPin, {is_enabled_spi_2 == 1}
-		field = "SPI3 MOSI",							spi3mosiPin, {is_enabled_spi_3 == 1}
-		field = "SPI3 MISO",							spi3misoPin, {is_enabled_spi_3 == 1}
-		field = "SPI3 SCK",								spi3sckPin, {is_enabled_spi_3 == 1}
-		
-
-	dialog = triggerpins, "Trigger Inputs"	
-        field = "Primary input channel", 				triggerInputPins1
-		field = "Secondary channel", 					triggerInputPins2
-		field = "Cam Sync/VVT input",					camInput
-
-
-
-	dialog = allPins1_1
-		panel = allPinsSensors
-		panel = triggerpins
-
-	dialog = idlepins, "Idle Solenoid"
-		field = "Idle Solenoid Pin",					idle_solenoidPin
-		field = "Idle Stepper Dir",						idle_stepperDirectionPin
-		field = "Idle Stepper Dir Mode",				stepperDirectionPinMode
-		field = "Idle Stepper Step",					idle_stepperStepPin
-		field = "Idle Stepper Enable",					stepperEnablePin
-
-	dialog = miscoutputs, "Misc Outputs"
-		field = "Fuel Pump Pin",						fuelPumpPin
-		field = "Fuel Pump Pin Mode",         	        fuelPumpPinMode
-        field = "Tachometer output Pin",					tachOutputPin
-		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin
-		field = "O2 heater pin",						o2heaterPin
-		field = "SD CS Pin",							sdCardCsPin
-		field = "Check Engine Pin",						malfunctionIndicatorPin
-		field = "Check Engine Pin Mode",				malfunctionIndicatorPinMode
-		field = "Aux Pin #1",							auxPidPins1
-		field = "Aux Pin #2",							auxPidPins2
-		field = "Aux Pin #3",							auxPidPins3
-		field = "Aux Pin #4",							auxPidPins4
-		field = "test557pin",							test557pin
-		field = "Fan Pin",								fanPin
-		field = "Fan Pin Mode",							fanPinMode
-		field = "Main Relay Pin",  						mainRelayPin
-		field = "Main Relay Mode",			         	mainRelayPinMode
-		field = "aux valve #1", 						auxValves1
-		field = "aux valve #2", 						auxValves2
-
-	dialog = allPins1_2
-	panel = etbpins
-	    panel = idlepins
-		panel = miscoutputs
-		
-
-	
-	dialog = allPins1_3
-	panel = spipins
-		field = "GPS RX", 								gps_rx_pin @@if_ts_show_gps
-		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
-		field = "CAN RX pin",							canRxPin
-		field = "CAN TX pin",							canTxPin
-		field = "Malfunction Indicator",				malfunctionIndicatorPin
-		field = "Saab CDM knock",						cdmInputPin
-		field = "servo#1",								servoOutputPins1
-		field = "servo#2",								servoOutputPins2
-		field = "servo#3",								servoOutputPins3
-		field = "servo#4",								servoOutputPins4
-		field = "servo#5",								servoOutputPins5
-		panel= ledpins
-
-dialog = fsioinpins	,"FSIO Inputs"
-        field = "FSIO ADC #1",							fsioAdc1
-		field = "FSIO ADC #2",							fsioAdc2
-		field = "FSIO ADC #3",							fsioAdc3
-		field = "FSIO ADC #4",							fsioAdc4
-	    field = "FSIO dig inp #1",						fsioDigitalInputs1
-		field = "FSIO dig inp #2",						fsioDigitalInputs2
-		field = "FSIO dig inp #3",						fsioDigitalInputs3
-		field = "FSIO dig inp #4",						fsioDigitalInputs4
-		field = "FSIO dig inp #5",						fsioDigitalInputs5
-		field = "FSIO dig inp #6",						fsioDigitalInputs6
-		field = "FSIO dig inp #7",						fsioDigitalInputs7
-		field = "FSIO dig inp #8",						fsioDigitalInputs8
-		field = "FSIO dig inp #9",						fsioDigitalInputs9
-		field = "FSIO dig inp #10",						fsioDigitalInputs10
-		field = "FSIO dig inp #11",						fsioDigitalInputs11
-		field = "FSIO dig inp #12",						fsioDigitalInputs12
-		field = "FSIO dig inp #13",						fsioDigitalInputs13
-		field = "FSIO dig inp #14",						fsioDigitalInputs14
-		field = "FSIO dig inp #15",						fsioDigitalInputs15
-		field = "FSIO dig inp #16",						fsioDigitalInputs16
-
-	dialog = fsiooutpins,"FSIO Outputs"
-       field = "output #1", 							fsioOutputPins1
-		field = "output #2", 							fsioOutputPins2
-		field = "output #3", 							fsioOutputPins3
-		field = "output #4", 							fsioOutputPins4
-		field = "output #5", 							fsioOutputPins5
-		field = "output #6", 							fsioOutputPins6
-		field = "output #7", 							fsioOutputPins7
-		field = "output #8", 							fsioOutputPins8
-		field = "output #9", 							fsioOutputPins9
-		field = "output #10", 							fsioOutputPins10
-		field = "output #11", 							fsioOutputPins11
-		field = "output #12", 							fsioOutputPins12
-		field = "output #13", 							fsioOutputPins13
-		field = "output #14", 							fsioOutputPins14
-		field = "output #15", 							fsioOutputPins15
-		field = "output #16", 							fsioOutputPins16
-
-		dialog = allPins2_1
-		field = "Injection Pin 1",						injectionPins1
-		field = "Injection Pin 2",						injectionPins2
-		field = "Injection Pin 3",						injectionPins3
-		field = "Injection Pin 4",						injectionPins4
-		field = "Injection Pin 5 ",						injectionPins5
-		field = "Injection Pin 6 ",						injectionPins6
-		field = "Injection Pin 7 ",						injectionPins7
-		field = "Injection Pin 8 ",						injectionPins8
-		field = "Injection Pin 9 ",						injectionPins9
-		field = "Injection Pin 10 ",	    			injectionPins10
-		field = "Injection Pin 11 ",					injectionPins11
-		field = "Injection Pin 12 ",					injectionPins12
-		
-
-
-	dialog = allPins2_2
-		field = "Ignition Pin 1",                       ignitionPins1
-		field = "Ignition Pin 2",                       ignitionPins2
-		field = "Ignition Pin 3",                       ignitionPins3
-		field = "Ignition Pin 4",                       ignitionPins4
-		field = "Ignition Pin 5",                       ignitionPins5
-		field = "Ignition Pin 6",                       ignitionPins6
-		field = "Ignition Pin 7",                       ignitionPins7
-		field = "Ignition Pin 8",                       ignitionPins8
-		field = "Ignition Pin 9",                       ignitionPins9
-		field = "Ignition Pin 10",                      ignitionPins10
-		field = "Ignition Pin 11",                      ignitionPins11
-		field = "Ignition Pin 12",                      ignitionPins12
-     
-
-
-
-
-	dialog = allPins1_1_and_2, "", xAxis
-		panel = allPins1_1
-		panel = allPins1_2
-
-	dialog = allPins1, "All Pins 1/2", xAxis
-		panel = allPins1_1_and_2
-		panel = allPins1_3
-
-	dialog = allPins2_1_and_2, "", xAxis
-		panel = allPins2_1
-		panel = allPins2_2
-		panel = fsioinpins
-        panel=	fsiooutpins
-	dialog = allPins2, "All Pins 2/2", xAxis
-		panel = allPins2_1_and_2
-
-
-		dialog = ignitionOutputs, "Ignition Outputs"
-		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
-		field = "Ignition Pin 1",                       ignitionPins1, {isIgnitionEnabled == 1}
-		field = "Ignition Pin 2",                       ignitionPins2, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 1) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 2) || (firingOrder == 7) || (firingOrder == 9) || (firingOrder == 11) || (firingOrder == 12)))}
-		field = "Ignition Pin 3",                       ignitionPins3, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 2) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 1) || (firingOrder == 3) || (firingOrder == 4) || (firingOrder == 5) || (firingOrder == 9)))}
-		field = "Ignition Pin 4",                       ignitionPins4, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 3) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 7) || (firingOrder == 12)))}
-		field = "Ignition Pin 5",                       ignitionPins5, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 4) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 4) || (firingOrder == 12)))}
-		field = "Ignition Pin 6",                       ignitionPins6, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 5) && (ignitionMode !=2 || twoWireBatchIgnition == 1 )}
-		field = "Ignition Pin 7",                       ignitionPins7, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 6) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 11)))}
-		field = "Ignition Pin 8",                       ignitionPins8, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 7) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
-		field = "Ignition Pin 9",                       ignitionPins9, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 8) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
-		field = "Ignition Pin 10",                      ignitionPins10, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 9) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
-		field = "Ignition Pin 11",                      ignitionPins11, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 10) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
-		field = "Ignition Pin 12",                      ignitionPins12, {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount > 11) && (ignitionMode !=2 || twoWireBatchIgnition == 1 || ((firingOrder == 5) || (firingOrder == 11)))}
-		field = "This is useful to have tachometer working"
-		field = "   while converting from distributor"
-		field = "Dizzy out Pin",         	    	    dizzySparkOutputPin, {isIgnitionEnabled == 1}
-		field = "Dizzy out Pin Mode",                   dizzySparkOutputPinMode, {isIgnitionEnabled == 1}
-
-
-
+	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
+		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled
+		field = "Cutoff Activation RPM High Limit",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
+		field = "Cutoff Deactivation RPM Low Limit",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
+		field = "TPS Deactivation Threshold",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
+		field = "CLT Activation Threshold",				coastingFuelCutClt, {coastingFuelCutEnabled == 1}
+		field = "MAP Deactivation Threshold",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
 
 	dialog = parkingLot, "Experimental/Broken"
 		field = "#System hacks"
@@ -2609,14 +2577,6 @@ dialog = fsioinpins	,"FSIO Inputs"
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 
 		field = "Target temperature", 			postCrankingTargetClt
-
- dialog = boostLoad, ""
-  field = "In open loop mode, the values in this table are duty cycle %"
-        field = "In closed loop mode, the values are boost targets in kPa"
-	 panel = boostTbl
-
-
-
 
 [Tools]
  ;addTool = toolName, PanelName
