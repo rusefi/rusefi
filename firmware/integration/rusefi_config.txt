@@ -524,7 +524,7 @@ float mapFrequency100Kpa;;"Hz",      1,      0,       0, 100000,      2
 	output_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
 
-	output_pin_e malfunctionIndicatorPin;
+	output_pin_e malfunctionIndicatorPin;+Check engine light, also malfunction indicator light. Always blinks once on boot.
 	pin_output_mode_e malfunctionIndicatorPinMode;
 	pin_output_mode_e fanPinMode;
 	output_pin_e fanPin;
