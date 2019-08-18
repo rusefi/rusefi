@@ -645,26 +645,24 @@ void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e m
 	sr5SendResponse(tsChannel, mode, ((const uint8_t *) &tsOutputChannels) + offset, count);
 }
 
-#define TEST_RESPONSE_TAG " ts_p_alive\r\n"
-
 void handleTestCommand(ts_channel_s *tsChannel) {
 	tsState.testCommandCounter++;
-	static char testOutputBuffer[12];
+	static char testOutputBuffer[24];
 	/**
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
 	sr5WriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
+
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
+
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds", getTimeNowSeconds());
 	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
-	/**
-	 * Please note that this response is a magic constant used by rusEfi console for protocol detection
-	 * @see EngineState#TS_PROTOCOL_TAG
-	 */
-	sr5WriteData(tsChannel, (const uint8_t *) TEST_RESPONSE_TAG, sizeof(TEST_RESPONSE_TAG));
+
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
+	sr5WriteData(tsChannel, (const uint8_t *) testOutputBuffer, strlen(testOutputBuffer));
 }
 
 extern CommandHandler console_line_callback;

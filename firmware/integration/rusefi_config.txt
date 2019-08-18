@@ -1236,6 +1236,7 @@ end_struct
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
+#define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 

@@ -1,6 +1,7 @@
 package com.rusefi.core;
 
 import com.rusefi.FileLog;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,10 +18,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class EngineState {
     public static final String SEPARATOR = ",";
     public static final String PACKING_DELIMITER = ":";
-    /**
-     * If we get this tag we have probably connected to the wrong port
-     */
-    private static final CharSequence TS_PROTOCOL_TAG = "ts_p_al";
     private final Object lock = new Object();
 
     public void replaceStringValueAction(String key, ValueCallback<String> callback) {
@@ -107,7 +104,11 @@ public class EngineState {
      */
     public static String unpackString(String message) {
         String prefix = "line" + PACKING_DELIMITER;
-        if (message.contains(TS_PROTOCOL_TAG)) {
+        /**
+         * If we get this tag we have probably connected to the wrong port
+         * todo: as of 2019 this logic maybe makes no sense any more since pure text protocol was reduce/removed?
+         */
+        if (message.contains(Fields.PROTOCOL_TEST_RESPONSE_TAG)) {
             JOptionPane.showMessageDialog(null, "Are you sure you are not connected to TS port?");
             return null;
         }
