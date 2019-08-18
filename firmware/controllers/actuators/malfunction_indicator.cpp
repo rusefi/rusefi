@@ -45,6 +45,7 @@ EXTERN_ENGINE;
 
 static void blink_digits(int digit, int duration) {
 	for (int iter = 0; iter < digit; iter++) {
+		// todo: why we set LOW and then HIGH? not the other way around?
 		enginePins.checkEnginePin.setValue(0);
 		chThdSleepMilliseconds(duration);
 		enginePins.checkEnginePin.setValue(1);
@@ -85,8 +86,15 @@ public:
 private:
 	void PeriodicTask(efitime_t nowNt) override	{
 		UNUSED(nowNt);
-		static error_codes_set_s localErrorCopy;
 
+		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < US2NT(MS2US(500))) {
+			enginePins.checkEnginePin.setValue(1);
+			chThdSleepMilliseconds(500);
+			enginePins.checkEnginePin.setValue(0);
+		}
+
+		static error_codes_set_s localErrorCopy;
+		// todo: why do I not see this on a real vehicle? is this whole blinking logic not used?
 		getErrorCodes(&localErrorCopy);
 		for (int p = 0; p < localErrorCopy.count; p++) {
 			// Calculate how many digits in this integer and display error code from start to end
@@ -113,7 +121,7 @@ void initMalfunctionIndicator(void) {
 	if (!isMilEnabled()) {
 		return;
 	}
-	instance.setPeriod(10);
+	instance.setPeriod(10 /*ms*/);
 	instance.Start();
 
 #if	TEST_MIL_CODE

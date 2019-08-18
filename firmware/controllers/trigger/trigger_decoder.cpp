@@ -38,9 +38,22 @@ TriggerState::TriggerState() {
 	resetTriggerState();
 }
 
+void TriggerState::setShaftSynchronized(bool value) {
+	if (value) {
+		if (!shaft_is_synchronized) {
+			// just got synchronized
+			mostRecentSyncTime = getTimeNowNt();
+		}
+	} else {
+		// sync loss
+		mostRecentSyncTime = 0;
+	}
+	shaft_is_synchronized = value;
+}
+
 void TriggerState::resetTriggerState() {
 	triggerCycleCallback = NULL;
-	shaft_is_synchronized = false;
+	setShaftSynchronized(false);
 	toothed_previous_time = 0;
 
 	memset(toothDurations, 0, sizeof(toothDurations));
@@ -316,7 +329,7 @@ bool TriggerState::isEvenRevolution() const {
 }
 
 void TriggerState::onSynchronizationLost(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	shaft_is_synchronized = false;
+	setShaftSynchronized(false);
 	// Needed for early instant-RPM detection
 	engine->rpmCalculator.setStopSpinning(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -369,7 +382,7 @@ void TriggerState::handleTriggerError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void TriggerState::onShaftSynchronization(efitime_t nowNt, trigger_wheel_e triggerWheel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	shaft_is_synchronized = true;
+	setShaftSynchronized(true);
 	// this call would update duty cycle values
 	nextTriggerEvent()
 	;

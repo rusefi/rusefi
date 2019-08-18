@@ -76,6 +76,7 @@ public:
 	 * TRUE if we know where we are
 	 */
 	bool shaft_is_synchronized;
+	efitime_t mostRecentSyncTime;
 
 	efitick_t lastDecodingErrorTime;
 	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
@@ -99,6 +100,7 @@ public:
 	uint32_t orderingErrorCounter;
 
 	void resetTriggerState();
+	void setShaftSynchronized(bool value);
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	virtual void runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
