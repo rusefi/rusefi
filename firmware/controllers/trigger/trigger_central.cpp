@@ -89,7 +89,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	addEngineSnifferEvent(VVT_NAME, front == TV_RISE ? WC_UP : WC_DOWN);
+	addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 	if (CONFIGB(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
 		return;
@@ -227,7 +227,7 @@ void TriggerCentral::resetCounters() {
 static char shaft_signal_msg_index[15];
 
 static const bool isUpEvent[6] = { false, true, false, true, false, true };
-static const char *eventId[6] = { CRANK1, CRANK1, CRANK2, CRANK2, CRANK3, CRANK3 };
+static const char *eventId[6] = { PROTOCOL_CRANK1, PROTOCOL_CRANK1, PROTOCOL_CRANK2, PROTOCOL_CRANK2, PROTOCOL_CRANK3, PROTOCOL_CRANK3 };
 
 static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!ENGINE(isEngineChartEnabled)) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible

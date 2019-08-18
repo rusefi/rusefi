@@ -1,5 +1,6 @@
 package com.rusefi.ui.test;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.engine.NameUtil;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -44,7 +45,7 @@ public class WavePanelSandbox {
 
             double angle = 720.0 * (time - from) / (to - from);
 
-            boolean isPrimary = NameUtil.CRANK1.equals(a);
+            boolean isPrimary = Fields.PROTOCOL_CRANK1.equals(a);
 //            if (!isPrimary)
 //                continue;
 

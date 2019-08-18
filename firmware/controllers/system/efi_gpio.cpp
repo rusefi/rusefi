@@ -37,7 +37,7 @@ static const char *sparkNames[] = { "coil1", "coil2", "coil3", "coil4", "coil5",
 		"coil9", "coil10", "coil11", "coil12"};
 
 // these short names are part of engine sniffer protocol
-static const char *sparkShortNames[] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
+static const char *sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
 static const char *injectorNames[] = { "injector1", "injector2", "injector3", "injector4", "injector5", "injector6",
@@ -49,8 +49,8 @@ static const char *injectorShortNames[] = { "i1", "i2", "i3", "i4", "i5", "i6", 
 static const char *auxValveShortNames[] = { "a1", "a2"};
 
 EnginePins::EnginePins() {
-	dizzyOutput.name = DIZZY_NAME;
-	tachOut.name = TACH_NAME;
+	dizzyOutput.name = PROTOCOL_DIZZY_NAME;
+	tachOut.name = PROTOCOL_TACH_NAME;
 
 	efiAssertVoid(CUSTOM_ERR_PIN_COUNT_TOO_LARGE, (sizeof(sparkNames) / sizeof(char*)) >= IGNITION_PIN_COUNT, "spark pin count");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
@@ -243,7 +243,7 @@ void NamedOutputPin::setHigh() {
 
 #if EFI_ENGINE_SNIFFER
 
-	addEngineSnifferEvent(getShortName(), WC_UP);
+	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -258,7 +258,7 @@ void NamedOutputPin::setLow() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(getShortName(), WC_DOWN);
+	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 

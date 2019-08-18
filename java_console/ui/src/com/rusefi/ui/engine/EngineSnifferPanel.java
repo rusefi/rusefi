@@ -68,7 +68,7 @@ public class EngineSnifferPanel {
 
     private final ZoomControl zoomControl = new ZoomControl();
     private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel(zoomControl.getZoomProvider());
-    private final UpDownImage crank = createImage(NameUtil.CRANK1);
+    private final UpDownImage crank = createImage(Fields.PROTOCOL_CRANK1);
     private final ChartScrollControl scrollControl;
     // todo: move it some sort of a singleton?
     public final HashMap<String, String> channelName2PhysicalPin = new HashMap<>();
@@ -204,13 +204,13 @@ public class EngineSnifferPanel {
     private void resetImagePanel() {
         imagePanel.removeAll();
         imagePanel.add(crank);
-        images.put(NameUtil.CRANK1, crank);
+        images.put(Fields.PROTOCOL_CRANK1, crank);
     }
 
     public void displayChart(String value) {
         EngineChart map = EngineChartParser.unpackToMap(value);
 
-        StringBuilder revolutions = map.get(RevolutionLog.TOP_DEAD_CENTER_MESSAGE);
+        StringBuilder revolutions = map.get(Fields.TOP_DEAD_CENTER_MESSAGE);
 
         statusPanel.setRevolutions(revolutions);
 
@@ -246,7 +246,7 @@ public class EngineSnifferPanel {
     }
 
     private void createSecondaryImage(String name) {
-        if (images.containsKey(name) || RevolutionLog.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name))
+        if (images.containsKey(name) || Fields.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name))
             return;
 
         int index = getInsertIndex(name, images.keySet());

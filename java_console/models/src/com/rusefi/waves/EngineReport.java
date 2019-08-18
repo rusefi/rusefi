@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.rusefi.config.generated.Fields.PROTOCOL_ES_DOWN;
+import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
+
 /**
  * A model of a digital signal represented as a sequence of {@link UpDown}
  *
@@ -25,8 +28,6 @@ public class EngineReport implements TimeAxisTranslator {
     public static final double SYS_TICKS_PER_MS = 100;
     public static final double RATIO = 0.05;
     public static final int mult = (int) (100 * SYS_TICKS_PER_MS); // 100ms
-    private static final String WC_DOWN = "d";
-    private static final String WC_UP = "u";
 
     private final List<UpDown> list;
     private int maxTime;
@@ -88,15 +89,15 @@ public class EngineReport implements TimeAxisTranslator {
         List<UpDown> times = new ArrayList<>();
 
         int index = 0;
-        if (array[0].equals(WC_DOWN))
+        if (array[0].equals(PROTOCOL_ES_DOWN))
             index += 2;
 
         while (index + 3 < array.length) {
-            if (!array[index].startsWith(WC_UP)) {
+            if (!array[index].startsWith(PROTOCOL_ES_UP)) {
                 index += 2;
                 continue;
             }
-            if (!array[index + 2].startsWith(WC_DOWN)) {
+            if (!array[index + 2].startsWith(PROTOCOL_ES_DOWN)) {
                 index += 2;
                 continue;
             }
