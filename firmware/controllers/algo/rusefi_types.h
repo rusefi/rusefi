@@ -45,6 +45,8 @@ typedef int pid_dt;
  * is actually after timeNow() due to interrupt context switches
  *
  * See getTimeNowNt()
+ * See US2NT
+ * See MS2US
  */
 typedef int64_t efitime_t;
 

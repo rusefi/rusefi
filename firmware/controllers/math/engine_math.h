@@ -67,4 +67,4 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 // expectation is that for well-known triggers CONFIG(globalTriggerAngleOffset) would usually be zero
 // while for toothed wheels user would have to provide a value
 #define tdcPosition() \
-		(ENGINE(triggerCentral.triggerShape.tdcPosition) + CONFIG(globalTriggerAngleOffset))
+		(TRIGGER_SHAPE(tdcPosition) + CONFIG(globalTriggerAngleOffset))
