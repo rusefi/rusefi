@@ -426,12 +426,12 @@ void printOverallStatus(systime_t nowSeconds) {
 #endif /* EFI_WAVE_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		printOutPin(enginePins.coils[i].name, CONFIGB(ignitionPins)[i]);
+		printOutPin(enginePins.coils[i].getShortName(), CONFIGB(ignitionPins)[i]);
 
-		printOutPin(enginePins.injectors[i].name, CONFIGB(injectionPins)[i]);
+		printOutPin(enginePins.injectors[i].getShortName(), CONFIGB(injectionPins)[i]);
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
-		printOutPin(enginePins.auxValve[i].name, engineConfiguration->auxValves[i]);
+		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
 	}
 
 #endif /* EFI_PROD_CODE */
