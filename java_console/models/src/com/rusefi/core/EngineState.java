@@ -18,6 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class EngineState {
     public static final String SEPARATOR = ",";
     public static final String PACKING_DELIMITER = ":";
+    public static final Class<EngineState> ENGINE_STATE_CLASS = EngineState.class;
     private final Object lock = new Object();
 
     public void replaceStringValueAction(String key, ValueCallback<String> callback) {
@@ -68,7 +69,7 @@ public class EngineState {
         registerStringValueAction("msg", new ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
-                MessagesCentral.getInstance().postMessage(EngineState.class, value);
+                MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value);
             }
         });
 

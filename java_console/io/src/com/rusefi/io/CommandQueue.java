@@ -22,6 +22,7 @@ public class CommandQueue {
     public static final int DEFAULT_TIMEOUT = 500;
     private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
     public static final int SLOW_CONFIRMATION_TIMEOUT = 5000;
+    public static final Class<CommandQueue> COMMAND_QUEUE_CLASS = CommandQueue.class;
     private final Object lock = new Object();
     /**
      * One complex use-case is when we send out a bunch of commands and then we need to handle all the configurations
@@ -38,7 +39,7 @@ public class CommandQueue {
         @SuppressWarnings("InfiniteLoopStatement")
         @Override
         public void run() {
-            MessagesCentral.getInstance().postMessage(CommandQueue.class, "SerialIO started");
+            MessagesCentral.getInstance().postMessage(COMMAND_QUEUE_CLASS, "SerialIO started");
             while (true) {
                 try {
                     sendPendingCommand();
