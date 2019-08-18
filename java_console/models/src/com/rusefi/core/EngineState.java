@@ -1,7 +1,6 @@
 package com.rusefi.core;
 
 import com.rusefi.FileLog;
-import com.rusefi.SensorConversion;
 import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,9 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class EngineState {
     public static final String SEPARATOR = ",";
     public static final String PACKING_DELIMITER = ":";
-    // see RUS_EFI_VERSION_TAG in firmware code
-    public static final String RUS_EFI_VERSION_TAG = "rusEfiVersion";
-    public static final String OUTPIN_TAG = "outpin";
     /**
      * If we get this tag we have probably connected to the wrong port
      */

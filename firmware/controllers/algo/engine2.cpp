@@ -281,7 +281,7 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
-	logging->appendPrintf("%s%s%d@%s%s %s %d%s", RUS_EFI_VERSION_TAG, DELIMETER,
+	logging->appendPrintf("%s%s%d@%s%s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
 			getRusEfiVersion(), VCS_VERSION,
 			firmwareBuildId,
 			engineTypeName,
