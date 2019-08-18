@@ -315,7 +315,9 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 
-	// MIL check engine:
+	// TLE8888_PIN_24: "43 - GP Out 4"
+	// MIL check engine
+	boardConfiguration->malfunctionIndicatorPin = TLE8888_PIN_24;
 
 	// IAC: GPIOE_9:  "7 - Lowside 1"
 

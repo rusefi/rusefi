@@ -100,7 +100,7 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(boardConfiguration->idle.solenoidPinMode),
 			hwPortname(boardConfiguration->idle.solenoidPin), boardConfiguration->idle.solenoidFrequency);
-	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s", hwPortname(boardConfiguration->malfunctionIndicatorPin),
+	scheduleMsg(&logger, "malfunctionIndicator: %s mode=%s", hwPortname(boardConfiguration->malfunctionIndicatorPin),
 			getPin_output_mode_e(boardConfiguration->malfunctionIndicatorPinMode));
 
 	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fuelPumpPinMode),
