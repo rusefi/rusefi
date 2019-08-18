@@ -304,6 +304,17 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
+	boardConfiguration->ignitionPins[0] = GPIOD_7;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOD_6;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+
+	// tps = "20 - AN volt 5"
+	//engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+
+
+
 	// MIL check engine:
 
 	// IAC: GPIOE_9:  "7 - Lowside 1"
