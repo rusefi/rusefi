@@ -55,11 +55,12 @@ static void setLedPins() {
 }
 
 static void setupVbatt() {
-	engineConfiguration->vbattDividerCoeff = 8.166666f;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
-
 	// 1k high side/1.5k low side = 1.6667 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.5f / 1.5f;
+
+	// 39k high side/10k low side multiplied by above analogInputDividerCoefficient = 8.166666f
+	engineConfiguration->vbattDividerCoeff = (49f / 10f) * engineConfiguration->analogInputDividerCoefficient;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
 	engineConfiguration->adcVcc = 3.29f;
 }
