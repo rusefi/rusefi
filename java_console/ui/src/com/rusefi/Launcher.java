@@ -48,13 +48,14 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190818;
+    public static final int CONSOLE_VERSION = 20190823;
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
     private static final String TOOL_NAME_COMPILE_FSIO_FILE = "compile_fsio_file";
+    private static final String TOOL_NAME_REBOOT_ECU = "reboot_ecu";
     // todo: rename to something more FSIO-specific? would need to update documentation somewhere
     private static final String TOOL_NAME_COMPILE = "compile";
     private final String port;
@@ -328,10 +329,28 @@ public class Launcher {
             System.out.println(DoubleEvaluator.process(input).getPosftfixExpression());
             System.exit(0);
         }
-        System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE, TOOL_NAME_COMPILE));
+        System.out.println("Optional tools: " + Arrays.asList(TOOL_NAME_COMPILE_FSIO_FILE, TOOL_NAME_COMPILE, TOOL_NAME_REBOOT_ECU));
         System.out.println("Starting rusEfi UI console " + CONSOLE_VERSION);
 
         FileLog.MAIN.start();
+
+        if (TOOL_NAME_REBOOT_ECU.equalsIgnoreCase(toolName)) {
+            String autoDetectedPort = PortDetector.autoDetectPort(null);
+            if (autoDetectedPort == null) {
+                System.err.println("rusEfi not detected");
+                return;
+            }
+            PortHolder.EstablishConnection establishConnection = new PortHolder.EstablishConnection(autoDetectedPort).invoke();
+            if (!establishConnection.isConnected())
+                return;
+            IoStream stream = establishConnection.getStream();
+            byte[] commandBytes = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT);
+            stream.sendPacket(commandBytes, FileLog.LOGGER);
+
+            return;
+        }
+
+
         getConfig().load();
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
