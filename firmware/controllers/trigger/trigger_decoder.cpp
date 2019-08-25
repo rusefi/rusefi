@@ -529,14 +529,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			 */
 			bool silentTriggerError = triggerShape->getSize() > 40 && CONFIG(silentTriggerError);
 
+#if EFI_UNIT_TEST
+			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];
+#endif /* EFI_UNIT_TEST */
+
 #if EFI_PROD_CODE
 			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
-#else
-				if (printTriggerDebug) {
-#endif /* EFI_PROD_CODE */
-
-#if EFI_PROD_CODE
-
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
@@ -552,10 +550,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 							boolToString(someSortOfTriggerError));
 					}
 				}
-
+			}
 #else
+			if (printTriggerDebug) {
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
-				actualSynchGap = gap;
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					print("index=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
@@ -565,10 +563,10 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 							TRIGGER_SHAPE(syncronizationRatioTo[i]),
 							boolToString(someSortOfTriggerError));
 				}
+			}
 
 
 #endif /* EFI_PROD_CODE */
-			}
 
 		} else {
 			/**
