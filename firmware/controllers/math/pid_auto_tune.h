@@ -14,7 +14,10 @@
 
 #include "global.h"
 
+// that's a weird piece of code for sure
+#ifndef byte
 #define byte uint8_t
+#endif
 
   // irrational constants
 #define CONST_PI           3.14159265358979323846
