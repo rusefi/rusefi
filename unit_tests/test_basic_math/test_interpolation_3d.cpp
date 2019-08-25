@@ -41,7 +41,7 @@ static void newTestToComfirmInterpolation() {
 
 	// let's start by testing corners
 	ASSERT_EQ(3, getValue(/*rpm*/200, 2));
-	ASSERT_EQ( 4,  getValue(/*rpm*/200, 3)) << "low rpm high load";
+	ASSERT_NEAR( 4,  getValue(/*rpm*/200, 3), EPS4D) << "low rpm high load";
 
 	ASSERT_EQ(10, getValue(/*rpm*/300, 2));
 	ASSERT_EQ(200, getValue(/*rpm*/300, 3));
@@ -51,7 +51,7 @@ static void newTestToComfirmInterpolation() {
 	ASSERT_EQ( 105,  getValue(/*rpm*/300, 2.5)) << "high rpm      ";
 
 	assertEqualsM("low load middle", 6.5, getValue(/*rpm*/250, 2));
-	ASSERT_EQ( 102,  getValue(/*rpm*/250, 3)) << "               ";
+	ASSERT_NEAR( 102,  getValue(/*rpm*/250, 3), EPS4D) << "               ";
 
 	// slowly go from middle side towards center
 	assertEqualsM("middle @ 2.1  ",16.05, getValue(/*rpm*/250, 2.1));
@@ -86,7 +86,7 @@ TEST(misc, testInterpolate3d) {
 	ASSERT_FLOAT_EQ(2, getValue(100, 2));
 
 	printf("*** no interpolation here 2\r\n");
-	ASSERT_FLOAT_EQ(5, getValue(200, 4));
+	ASSERT_NEAR(5, getValue(200, 4), EPS4D);
 
 	printf("*** rpm interpolated value expected1\r\n");
 	ASSERT_FLOAT_EQ(2.5, getValue(150, 2));
