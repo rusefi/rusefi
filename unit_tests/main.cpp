@@ -43,6 +43,8 @@ int getRevolutionCounter(void) {
 extern bool printTriggerDebug;
 bool verboseMode = false;
 
+extern "C" void __gcov_flush();
+
 GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
@@ -55,6 +57,7 @@ GTEST_API_ int main(int argc, char **argv) {
 	//::testing::GTEST_FLAG(filter) = "*testFasterEngineSpinningUp*";
 	int result = RUN_ALL_TESTS();
 	// windows ERRORLEVEL in Jenkins batch file seems to want negative value to detect failure
+	__gcov_flush();
 	return result == 0 ? 0 : -1;
 }
 
