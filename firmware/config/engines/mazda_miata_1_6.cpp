@@ -12,7 +12,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "engine_template.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"
 #include "thermistors.h"
@@ -286,6 +285,7 @@ void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	/**
 	 * Stage 0 we only have OEM TPS switch
+	 * See throttlePedalUpPin
 	 */
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 	// todo: MAF-based ignition table?
