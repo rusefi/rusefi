@@ -53,11 +53,19 @@ TEST(misc, cppPlainStructMemoryLayout) {
 	ASSERT_EQ(0, (int)&c.field0 - (int)&c);
 }
 
+static int valueWePointAt;
+
 TEST(misc, cppVirtualStructMemoryLayout) {
 	TestChildWithVirtual c;
 
+	int * valuePointer = &valueWePointAt;
+	int pointerSize = sizeof(valuePointer);
+
+
+	// '4' in case of 32 bit target
+	// '8' in case of 64 bit target
 	// this '8' is totally compiler and platform dependent
-#define MAGIC_VTABLE_SIZE 8
+	int MAGIC_VTABLE_SIZE = pointerSize;
 
 	// validate field initializers just for fun
 	ASSERT_EQ(540, c.field0);
