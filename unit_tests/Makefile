@@ -30,7 +30,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -fno-rtti -fpermissive -fexceptions -fno-use-cxa-atexit
+  USE_CPPOPT = -std=gnu++17 -fno-rtti -fpermissive -fexceptions -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -126,7 +126,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TRIGGER_SRC_CPP) \
-	main.cpp
+	$(PROJECT_DIR)/../unit_tests/main.cpp
 
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -174,8 +174,8 @@ INCDIR = . \
 	googletest/googlemock/include \
 	googletest/googletest \
 	googletest/googletest/include \
-	tests \
-	test_basic_math
+	$(PROJECT_DIR)/../unit_tests/tests \
+	$(PROJECT_DIR)/../unit_tests/test_basic_math
 	
 
 #
