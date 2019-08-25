@@ -446,7 +446,7 @@ void printAllTriggers() {
 	fprintf(fp, "# This file is used by TriggerImage tool\n");
 	fprintf(fp, "# See 'gen_trigger_images.bat'\n");
 
-	printTriggerDebug = true;
+	//printTriggerDebug = true;
 	for (int triggerId = 1; triggerId < TT_UNUSED; triggerId++) {
 		trigger_type_e tt = (trigger_type_e) triggerId;
 

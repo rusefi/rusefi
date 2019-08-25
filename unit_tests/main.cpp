@@ -41,12 +41,13 @@ int getRevolutionCounter(void) {
 }
 
 extern bool printTriggerDebug;
+bool verboseMode = false;
 
 GTEST_API_ int main(int argc, char **argv) {
 //	printTriggerDebug = true;
 
 	//	resizeMap();
-	printf("Success 20190808\r\n");
+	printf("Success 20190824\r\n");
 	printAllTriggers();
 //	printConvertedTable();
 	testing::InitGoogleTest(&argc, argv);
@@ -68,9 +69,11 @@ void initLogging(LoggingWithStorage *logging, const char *name) {
 }
 
 void scheduleMsg(Logging *logging, const char *format, ...) {
-	va_list ap;
-	va_start(ap, format);
-	vprintf(format, ap);
-	va_end(ap);
-	printf("\r\n");
+	if (verboseMode) {
+		va_list ap;
+		va_start(ap, format);
+		vprintf(format, ap);
+		va_end(ap);
+		printf("\r\n");
+	}
 }

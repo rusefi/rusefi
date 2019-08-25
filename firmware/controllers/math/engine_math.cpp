@@ -32,6 +32,9 @@
 
 EXTERN_ENGINE
 ;
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif /* EFI_UNIT_TEST */
 
 floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE) == TWO_STROKE ? 1 : 2);
@@ -488,8 +491,10 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 #if EFI_UNIT_TEST
-	printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
-			getIgnition_mode_e(engineConfiguration->ignitionMode));
+	if (verboseMode) {
+		printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
+				getIgnition_mode_e(engineConfiguration->ignitionMode));
+	}
 #endif /* EFI_UNIT_TEST */
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
