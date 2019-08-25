@@ -187,7 +187,11 @@ INCDIR = . \
 # Compiler settings
 #
 
-#MCU  = cortex-m4
+# It looks like cygwin build of mingwg-w64 has issues with gcov runtime :(
+# mingw-w64 is a project which forked from mingw in 2007 - be careful not to confuse these two.
+# In order to have coverage generated please download from https://mingw-w64.org/doku.php/download/mingw-builds
+# Install using mingw-w64-install.exe instead of similar thing packaged with cygwin
+# Both 32 bit and 64 bit versions of mingw-w64 are generating coverage data.
 
 ifeq ($(OS),Windows_NT)
 ifeq ($(USE_MINGW32_I686),)
