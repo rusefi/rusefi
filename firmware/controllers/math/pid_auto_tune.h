@@ -16,7 +16,7 @@
 
 // that's a weird piece of code for sure
 #ifndef byte
-#define byte uint8_t
+typedef unsigned char	byte;
 #endif
 
   // irrational constants
