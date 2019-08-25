@@ -13,6 +13,7 @@ ifeq ($(USE_OPT),)
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
   USE_OPT = -c -Wall -O0 -ggdb -g3
+  USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
 endif
 
@@ -186,7 +187,11 @@ INCDIR = . \
 # Compiler settings
 #
 
-#MCU  = cortex-m4
+# It looks like cygwin build of mingwg-w64 has issues with gcov runtime :(
+# mingw-w64 is a project which forked from mingw in 2007 - be careful not to confuse these two.
+# In order to have coverage generated please download from https://mingw-w64.org/doku.php/download/mingw-builds
+# Install using mingw-w64-install.exe instead of similar thing packaged with cygwin
+# Both 32 bit and 64 bit versions of mingw-w64 are generating coverage data.
 
 ifeq ($(OS),Windows_NT)
 ifeq ($(USE_MINGW32_I686),)
@@ -273,6 +278,7 @@ ULIBDIR =
 
 # List all user libraries here
 ULIBS = -lm
+ULIBS += -lgcov --coverage
 
 #
 # End of user defines
