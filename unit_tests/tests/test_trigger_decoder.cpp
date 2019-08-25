@@ -228,10 +228,8 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 }
 
 static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {
-	printTriggerDebug = true;
 	testTriggerDecoder2(msg, type, synchPointIndex, channel1duty, channel2duty);
 	assertEqualsM2("actual gap ratio", expectedGap, actualSynchGap, 0.001);
-	printTriggerDebug = false;
 }
 
 TEST(misc, testStartupFuelPumping) {
@@ -320,7 +318,7 @@ TEST(misc, testRpmCalculator) {
 
 	eth.clearQueue();
 
-	debugSignalExecutor = true;
+//	debugSignalExecutor = true;
 
 	ASSERT_EQ(engine->triggerCentral.triggerState.shaft_is_synchronized, 1);
 
@@ -536,8 +534,6 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
-		printTriggerDebug = true;
-
 		WITH_ENGINE_TEST_HELPER(DODGE_NEON_2003_CAM);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
@@ -545,13 +541,10 @@ TEST(misc, testTriggerDecoder) {
 
 		applyNonPersistentConfiguration(NULL PASS_ENGINE_PARAMETER_SUFFIX);
 		prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-		printTriggerDebug = false;
 	}
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
-	//printTriggerDebug = true;
 	testTriggerDecoder3("36+2+2+2", DAIHATSU,  28, 0.5000, 0.0, 0.5);
 	testTriggerDecoder3("stratus NGC6", DODGE_STRATUS, 0, 0.8833, 0.0, CHRYSLER_NGC6_GAP);
 
