@@ -17,6 +17,10 @@
 #include "efitime.h"
 #include "os_util.h"
 
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif /* EFI_UNIT_TEST */
+
 uint32_t maxSchedulingPrecisionLoss = 0;
 
 scheduling_s::scheduling_s() {
@@ -49,8 +53,10 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t
 
 	if (scheduling->isScheduled) {
 #if EFI_UNIT_TEST
-		printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
-		printf("Already scheduled now %d\r\n", (int)timeX);
+		if (verboseMode) {
+			printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
+			printf("Already scheduled now %d\r\n", (int)timeX);
+		}
 #endif /* EFI_UNIT_TEST */
 		return false;
 	}

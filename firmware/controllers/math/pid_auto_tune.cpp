@@ -27,6 +27,10 @@
 #include "efilib.h"
 #include "efitime.h"
 
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif /* EFI_UNIT_TEST */
+
 // see https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 // order must be match enumerated type for auto tune methods
 Tuning tuningRule[PID_AutoTune::NO_OVERSHOOT_PID + 1] =
@@ -113,6 +117,7 @@ void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
 	this->state = state;
 	scheduleMsg(logger, "setState %s", getPidAutoTune_AutoTunerState(state));
 #if EFI_UNIT_TEST
+	if (verboseMode)
 		printf("setState %s\r\n", getPidAutoTune_AutoTunerState(state));
 #endif /* EFI_UNIT_TEST */
 }
@@ -121,6 +126,7 @@ void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
 	this->peakType = peakType;
 	scheduleMsg(logger, "setPeakType %s", getPidAutoTune_Peak(peakType));
 #if EFI_UNIT_TEST
+	if (verboseMode)
 		printf("peakType %s\r\n", getPidAutoTune_Peak(peakType));
 #endif /* EFI_UNIT_TEST */
 }
@@ -171,7 +177,8 @@ bool PID_AutoTune::Runtime(Logging *logger)
   else if ((now - lastTime) < sampleTime)
   {
 #if EFI_UNIT_TEST
-		printf("too soon for new input %d %d %d\r\n", now, lastTime, sampleTime);
+	  if (verboseMode)
+		  printf("too soon for new input %d %d %d\r\n", now, lastTime, sampleTime);
 #endif /* EFI_UNIT_TEST */
 	scheduleMsg(logger, "AT skipping now=%d %d %d", now, lastTime, sampleTime);
 
@@ -225,7 +232,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #endif /* AUTOTUNE_DEBUG */
 
 #if EFI_UNIT_TEST
-		printf("asymmetry=%f\r\n", asymmetry);
+        if (verboseMode) {
+        	printf("asymmetry=%f\r\n", asymmetry);
+        }
 #endif /* EFI_UNIT_TEST */
 
         if (asymmetry > AUTOTUNE_STEP_ASYMMETRY_TOLERANCE)
@@ -273,7 +282,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #endif /* AUTOTUNE_DEBUG */
 
 #if EFI_UNIT_TEST
-		printf("deltaRelayBias=%f relayBias=%f\r\n", deltaRelayBias, relayBias);
+            if (verboseMode) {
+            printf("deltaRelayBias=%f relayBias=%f\r\n", deltaRelayBias, relayBias);
+            }
 #endif /* EFI_UNIT_TEST */
 
             // reset relay step counter
@@ -348,7 +359,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #endif
 
 #if EFI_UNIT_TEST
-		printf("setpoint=%f refVal=%f\r\n", setpoint, refVal);
+  if (verboseMode) {
+	  printf("setpoint=%f refVal=%f\r\n", setpoint, refVal);
+  }
 #endif /* EFI_UNIT_TEST */
 
   // store initial inputs
@@ -360,7 +373,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
     lastInputs[nLookBack - inputCount] = refVal;
 	  scheduleMsg(logger, "AT need more data %d %d", inputCount, nLookBack);
 #if EFI_UNIT_TEST
-		printf("need more data %d %d\r\n", inputCount, nLookBack);
+	  if (verboseMode) {
+		  printf("need more data %d %d\r\n", inputCount, nLookBack);
+	  }
 #endif /* EFI_UNIT_TEST */
 	return false;
   }
@@ -425,11 +440,10 @@ bool PID_AutoTune::Runtime(Logging *logger)
 
 
 #if EFI_UNIT_TEST
-		printf("iMax=%f iMin=%f\r\n", iMax, iMin);
-#endif /* EFI_UNIT_TEST */
-
-#if EFI_UNIT_TEST
-		printf("avgInput=%f stable=%d\r\n", avgInput, stable);
+  if (verboseMode) {
+	  printf("iMax=%f iMin=%f\r\n", iMax, iMin);
+	printf("avgInput=%f stable=%d\r\n", avgInput, stable);
+  }
 #endif /* EFI_UNIT_TEST */
 
 
@@ -447,7 +461,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
         lastPeaks[0] = avgInput;
         inputCount = 0;
 #if EFI_UNIT_TEST
+        if (verboseMode) {
 		printf(":( 3\r\n");
+        }
 #endif /* EFI_UNIT_TEST */
 		return false;
       }
@@ -461,7 +477,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #endif
 
 #if EFI_UNIT_TEST
-		printf("K_process=%f\r\n", K_process);
+      if (verboseMode) {
+    	  printf("K_process=%f\r\n", K_process);
+      }
 #endif /* EFI_UNIT_TEST */
 
       // bad estimate of process gain
@@ -694,7 +712,9 @@ bool PID_AutoTune::Runtime(Logging *logger)
   if (((byte) state & (CONVERGED | FAILED)) == 0)
   {
 #if EFI_UNIT_TEST
-		printf(":( 1 state=%s\r\n", getPidAutoTune_AutoTunerState(state));
+		if (verboseMode) {
+			printf(":( 1 state=%s\r\n", getPidAutoTune_AutoTunerState(state));
+		}
 #endif /* EFI_UNIT_TEST */
 	return false;
   }
@@ -805,7 +825,9 @@ void PID_AutoTune::setOutput(float output) {
 	scheduleMsg(logger, "setOutput %f %s", output, getPidAutoTune_AutoTunerState(state));
 
 #if EFI_UNIT_TEST
+	if (verboseMode) {
 		printf("output=%f\r\n", output);
+	}
 #endif /* EFI_UNIT_TEST */
 }
 

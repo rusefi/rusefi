@@ -9,6 +9,7 @@
 #include "global_execution_queue.h"
 
 bool_t debugSignalExecutor = false;
+extern bool verboseMode;
 
 void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	if (debugSignalExecutor) {

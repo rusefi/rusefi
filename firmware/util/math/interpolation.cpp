@@ -15,11 +15,13 @@
 
 #include "interpolation.h"
 
-bool needInterpolationLoggingValue = true;
+#if EFI_UNIT_TEST
+bool needInterpolationLoggingValue = false;
 
 int needInterpolationLogging(void) {
 	return needInterpolationLoggingValue;
 }
+#endif /* EFI_UNIT_TEST */
 
 #define BINARY_PERF true
 

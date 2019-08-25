@@ -18,6 +18,9 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 EXTERN_ENGINE;
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif /* EFI_UNIT_TEST */
 
 static cyclic_buffer<int> ignitionErrorDetection;
 static Logging *logger;
@@ -269,9 +272,11 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	TRIGGER_SHAPE(findTriggerPosition(&iEvent->sparkPosition, advance PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
 
 #if EFI_UNIT_TEST
-	printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.eventIndex, (int)iEvent->dwellPosition.angleOffset,
+	if (verboseMode) {
+		printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.eventIndex, (int)iEvent->dwellPosition.angleOffset,
 			iEvent->sparkPosition.eventIndex, (int)iEvent->sparkPosition.angleOffset,
 			iEvent->sparkId);
+	}
 #endif
 
 	/**
