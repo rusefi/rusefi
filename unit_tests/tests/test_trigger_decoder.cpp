@@ -551,7 +551,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
-	printTriggerDebug = true;
+	//printTriggerDebug = true;
 	testTriggerDecoder3("36+2+2+2", DAIHATSU,  28, 0.5000, 0.0, 0.5);
 	testTriggerDecoder3("stratus NGC6", DODGE_STRATUS, 0, 0.8833, 0.0, CHRYSLER_NGC6_GAP);
 
