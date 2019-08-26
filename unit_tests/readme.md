@@ -4,3 +4,5 @@ Unit tests are not aware of ChibiOS or ARM or else, they are just plain C/C++ wh
 
 1. Run 'make' to build desktop binary.
 1. Execute rusefi_test binary on your PC/Mac, it's expected to say SUCCESS and not fail :) Googletest will also print results summary.
+
+[Code Coverage Report](https://rusefi.com/docs/unit_tests_coverage/)
