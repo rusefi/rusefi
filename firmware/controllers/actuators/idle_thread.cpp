@@ -31,7 +31,11 @@
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
 #include "idle_thread.h"
+
+#if ! EFI_UNIT_TEST
 #include "pin_repository.h"
+#endif /* EFI_UNIT_TEST */
+
 #include "engine.h"
 #include "periodic_task.h"
 #include "stepper.h"
@@ -69,6 +73,8 @@ static float lastCrankingIacPosition;
  * See
  */
 static percent_t idlePositionSensitivityThreshold = 0.0f;
+
+#if ! EFI_UNIT_TEST
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "idle debug: %s%.2f", msg, value);
@@ -116,6 +122,12 @@ static void applyIACposition(percent_t position) {
 	}
 }
 
+percent_t getIdlePosition(void) {
+	return engine->engineState.idle.currentIdlePosition;
+}
+
+#endif /* EFI_UNIT_TEST */
+
 static percent_t manualIdleController(float cltCorrection) {
 
 	percent_t correctedPosition = cltCorrection * CONFIGB(manIdlePosition);
@@ -162,14 +174,10 @@ static void undoIdleBlipIfNeeded() {
 	}
 }
 
-percent_t getIdlePosition(void) {
-	return engine->engineState.idle.currentIdlePosition;
-}
-
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-static percent_t automaticIdleController() {
+static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (tpsPos > CONFIGB(idlePidDeactivationTpsThreshold)) {
 		// Don't store old I and D terms if PID doesn't work anymore.
@@ -324,7 +332,7 @@ class IdleController : public PeriodicTimerController {
 				// let's re-apply CLT correction
 				iacPosition = manualIdleController(cltCorrection);
 			} else {
-				iacPosition = automaticIdleController();
+				iacPosition = automaticIdleController(PASS_ENGINE_PARAMETER_SIGNATURE);
 			}
 			
 			// store 'base' iacPosition without adjustments
@@ -365,11 +373,20 @@ class IdleController : public PeriodicTimerController {
 
 		engine->engineState.idle.currentIdlePosition = iacPosition;
 		engine->engineState.idle.idleState = (idle_state_e)(engine->engineState.idle.idleState | ADJUSTING);
+#if ! EFI_UNIT_TEST
 		applyIACposition(engine->engineState.idle.currentIdlePosition);
+#endif /* EFI_UNIT_TEST */
 	}
 };
 
 static IdleController instance;
+
+void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
+	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
+	idleSolenoid.setFrequency(CONFIGB(idle).solenoidFrequency);
+}
+
+#if ! EFI_UNIT_TEST
 
 void setTargetIdleRpm(int value) {
 	setTargetRpmCurve(value PASS_ENGINE_PARAMETER_SUFFIX);
@@ -410,11 +427,6 @@ void setIdleDT(int value) {
 	showIdleInfo();
 }
 
-void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
-	idleSolenoid.setFrequency(CONFIGB(idle).solenoidFrequency);
-}
-
 /**
  * Idle test would activate the solenoid for three seconds
  */
@@ -430,6 +442,8 @@ void setDefaultIdleParameters(void) {
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
 	engineConfiguration->idleRpmPid.periodMs = 10;
 }
+
+#endif /* EFI_UNIT_TEST */
 
 static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6645, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
@@ -490,6 +504,7 @@ void startIdleThread(Logging*sharedLogger) {
 
 	instance.Start();
 
+#if ! EFI_UNIT_TEST
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
 	if (CONFIGB(clutchDownPin) != GPIO_UNASSIGNED) {
@@ -522,6 +537,7 @@ void startIdleThread(Logging*sharedLogger) {
 	// which would be dedicated to just auto-controller?
 
 	addConsoleAction("idlebench", startIdleBench);
+#endif /* EFI_UNIT_TEST */
 	apply();
 }
 
