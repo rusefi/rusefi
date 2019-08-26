@@ -20,6 +20,12 @@ cp ../build/obj/* .
 gcov *.c* > gcov.log 2>gcov.err
 
 
+lcov --capture --directory . --output-file coverage.info
+genhtml coverage.info --output-directory gcov 
 
-gcovr --html -o rusefi_unit_tests.html
-ls -l rusefi_unit_tests.html 
+# gcovr --html -o rusefi_unit_tests.html
+# ls -l rusefi_unit_tests.html
+
+
+ncftpput -m -R -v -u $RUSEFI_DOXYGEN_FTP_USER -p $RUSEFI_DOXYGEN_FTP_PASS $RUSEFI_FTP_SERVER /unit_tests_coverage gcov/*
+ 
