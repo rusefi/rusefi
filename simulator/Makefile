@@ -216,6 +216,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 #
 
 ifeq ($(OS),Windows_NT)
+  # ChibiOS seem to require 32 bit compiler at least on Windows
   # base 32-bit Cygwin is needed with mingw64 32-bit version 
   # Cygwin64 would not debug if used with mingw64 32-bit version
   # 32 bit GDB available at http://www.equation.com/servlet/equation.cmd?fa=gdb
