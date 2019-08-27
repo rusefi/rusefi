@@ -231,7 +231,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	}
 
 	// Store 'pure' injection duration (w/o injector lag) for fuel rate calc.
-	engine->engineState.fuelConsumption.addData(injectionDuration - ENGINE(engineState.injectorLag));
+	engine->engineState.fuelConsumption.addData(injectionDuration - ENGINE(engineState.running.injectorLag));
 	
 	ENGINE(actualLastInjection) = injectionDuration;
 	if (cisnan(injectionDuration)) {
@@ -350,15 +350,15 @@ static void fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) > CONFIG(fuelClosedLoopTpsThreshold) ||
 			ENGINE(sensors.currentAfr) < CONFIGB(fuelClosedLoopAfrLowThreshold) ||
 			ENGINE(sensors.currentAfr) > engineConfiguration->fuelClosedLoopAfrHighThreshold) {
-		engine->engineState.fuelPidCorrection = 0;
+		engine->engineState.running.pidCorrection = 0;
 		fuelPid.reset();
 		return;
 	}
 
-	engine->engineState.fuelPidCorrection = fuelPid.getOutput(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), NOT_TIME_BASED_PID);
+	engine->engineState.running.pidCorrection = fuelPid.getOutput(ENGINE(engineState.targetAFR), ENGINE(sensors.currentAfr), NOT_TIME_BASED_PID);
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugFloatField1 = engine->engineState.fuelPidCorrection;
+		tsOutputChannels.debugFloatField1 = engine->engineState.running.pidCorrection;
 		fuelPid.postState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 	}

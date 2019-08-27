@@ -2,14 +2,6 @@
  * @file	fuel_math.cpp
  * @brief	Fuel amount calculation logic
  *
- * While engine running, fuel amount is an interpolated value from the fuel map by getRpm() and getEngineLoad()
- * On top of the value from the fuel map we also apply
- * <BR>1) getInjectorLag() correction to account for fuel injector lag
- * <BR>2) getCltFuelCorrection() for warm-up
- * <BR>3) getIatCorrection() to account for cold weather
- *
- * getCrankingFuel() depents only on getCoolantTemperature()
- *
  *
  * @date May 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
@@ -48,6 +40,59 @@ extern afr_Map3D_t afrMap;
 extern baroCorr_Map3D_t baroCorrMap;
 
 #if EFI_ENGINE_CONTROL
+
+DISPLAY(DISPLAY_IF(isCranking)) floatms_t getCrankingFuel3(float coolantTemperature,
+		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// these magic constants are in Celsius
+	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
+	/**
+	 * Cranking fuel changes over time
+	 */
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
+			config->crankingCycleCoef);
+
+	/**
+	 * Cranking fuel is different depending on engine coolant temperature
+	 */
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(coolantTemperatureCoefficient) = cisnan(coolantTemperature) ? 1 : interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
+			config->crankingFuelCoef);
+
+	percent_t tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = cisnan(tps) ? 1 : interpolate2d("crankTps", tps, engineConfiguration->crankingTpsBins,
+			engineConfiguration->crankingTpsCoef);
+
+	floatms_t crankingFuel = engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = baseCrankingFuel
+			* engine->engineState.cranking.durationCoefficient
+			* engine->engineState.cranking.coolantTemperatureCoefficient
+			* engine->engineState.cranking.tpsCoefficient;
+
+	if (crankingFuel <= 0) {
+		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
+	}
+	return crankingFuel;
+}
+
+/* DISPLAY_ELSE */
+
+floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	float iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
+	float cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
+	float postCrankingFuelCorrection = ENGINE(engineState.running.postCrankingFuelCorrection);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
+
+	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection * postCrankingFuelCorrection + ENGINE(engineState.running.pidCorrection);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
+	ENGINE(engineState.running.fuel) = runningFuel;
+
+	return runningFuel;
+}
+
+
+
+/* DISPLAY_ENDIF */
 
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
@@ -185,7 +230,7 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 
 	floatms_t theoreticalInjectionLength = fuelPerCycle / numberOfInjections;
-	floatms_t injectorLag = ENGINE(engineState.injectorLag);
+	floatms_t injectorLag = ENGINE(engineState.running.injectorLag);
 	if (cisnan(injectorLag)) {
 		warning(CUSTOM_ERR_INJECTOR_LAG, "injectorLag not ready");
 		return 0; // we can end up here during configuration reset
@@ -194,21 +239,6 @@ floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #else
 	return 0;
 #endif
-}
-
-floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
-	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
-	float postCrankingFuelCorrection = ENGINE(engineState.postCrankingFuelCorrection);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
-
-	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection * postCrankingFuelCorrection + ENGINE(engineState.fuelPidCorrection);
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
-	ENGINE(engineState.runningFuel) = runningFuel;
-
-	return runningFuel;
 }
 
 /**
@@ -334,29 +364,6 @@ floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 #endif
-
-floatms_t getCrankingFuel3(float coolantTemperature,
-		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	// these magic constants are in Celsius
-	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
-	float durationCoef = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
-			config->crankingCycleCoef);
-
-	float coolantTempCoef = cisnan(coolantTemperature) ? 1 : interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
-			config->crankingFuelCoef);
-
-	percent_t tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	float tpsCoef = cisnan(tps) ? 1 : interpolate2d("crankTps", tps, engineConfiguration->crankingTpsBins,
-			engineConfiguration->crankingTpsCoef);
-
-	floatms_t result = baseCrankingFuel * durationCoef * coolantTempCoef * tpsCoef;
-
-	if (result <= 0) {
-		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", result);
-	}
-	return result;
-}
 
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (timePeriod <= 0.0f)

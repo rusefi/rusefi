@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Jul 21 18:03:23 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Mon Aug 26 23:28:23 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -30,6 +30,20 @@ public class EngineState {
 	public static final Field TPSVOLTAGEMCU = Field.create("TPSVOLTAGEMCU", 64, FieldType.FLOAT);
 	public static final Field TPSVOLTAGEBOARD = Field.create("TPSVOLTAGEBOARD", 68, FieldType.FLOAT);
 	public static final Field CURRENTBAROCORRECTEDVE = Field.create("CURRENTBAROCORRECTEDVE", 72, FieldType.FLOAT);
+	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 76, FieldType.FLOAT);
+	public static final Field ISCRANKING = Field.create("ISCRANKING", 80, FieldType.BIT, 0);
+	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 84, FieldType.FLOAT);
+	public static final Field CRANKING_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKING_COOLANTTEMPERATURECOEFFICIENT", 88, FieldType.FLOAT);
+	public static final Field CRANKING_TPSCOEFFICIENT = Field.create("CRANKING_TPSCOEFFICIENT", 92, FieldType.FLOAT);
+	public static final Field CRANKING_DURATIONCOEFFICIENT = Field.create("CRANKING_DURATIONCOEFFICIENT", 96, FieldType.FLOAT);
+	public static final Field CRANKING_FUEL = Field.create("CRANKING_FUEL", 100, FieldType.FLOAT);
+	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 104, FieldType.FLOAT);
+	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 108, FieldType.FLOAT);
+	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 112, FieldType.FLOAT);
+	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 116, FieldType.FLOAT);
+	public static final Field RUNNING_INJECTORLAG = Field.create("RUNNING_INJECTORLAG", 120, FieldType.FLOAT);
+	public static final Field RUNNING_PIDCORRECTION = Field.create("RUNNING_PIDCORRECTION", 124, FieldType.FLOAT);
+	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 128, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ITERM,
 	DTERM,
@@ -55,5 +69,19 @@ public class EngineState {
 	TPSVOLTAGEMCU,
 	TPSVOLTAGEBOARD,
 	CURRENTBAROCORRECTEDVE,
+	BAROCORRECTION,
+	ISCRANKING,
+	CRANKING_BASEFUEL,
+	CRANKING_COOLANTTEMPERATURECOEFFICIENT,
+	CRANKING_TPSCOEFFICIENT,
+	CRANKING_DURATIONCOEFFICIENT,
+	CRANKING_FUEL,
+	RUNNING_POSTCRANKINGFUELCORRECTION,
+	RUNNING_INTAKETEMPERATURECOEFFICIENT,
+	RUNNING_COOLANTTEMPERATURECOEFFICIENT,
+	RUNNING_TIMESINCECRANKINGINSECS,
+	RUNNING_INJECTORLAG,
+	RUNNING_PIDCORRECTION,
+	RUNNING_FUEL,
 	};
 }
