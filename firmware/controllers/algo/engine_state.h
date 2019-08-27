@@ -72,20 +72,8 @@ public:
 	angle_t cltTimingCorrection = 0;
 
 	// fuel-related;
-	float iatFuelCorrection = 0;
-	float cltFuelCorrection = 0;
-	float postCrankingFuelCorrection = 0;
 	float fuelCutoffCorrection = 0;
 	efitick_t coastingFuelCutStartTime = 0;
-	/**
-	 * injectorLag(VBatt)
-	 *
-	 * this value depends on a slow-changing VBatt value, so
-	 * we update it once in a while
-	 */
-	floatms_t injectorLag = 0;
-
-	float baroCorrection = 0;
 
 	efitick_t timeSinceLastTChargeK;
 
@@ -103,20 +91,6 @@ public:
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
 	floatms_t baseFuel = 0;
-
-	/**
-	 * closed-loop fuel correction
-	 */
-	floatms_t fuelPidCorrection = 0;
-
-	/**
-	 * Total fuel with CLT, IAT and TPS acceleration corrections per cycle,
-	 * as squirt duration.
-	 * Without injector lag.
-	 * @see baseFuel
-	 * @see actualLastInjection
-	 */
-	floatms_t runningFuel = 0;
 
 	/**
 	 * TPS acceleration: extra fuel amount

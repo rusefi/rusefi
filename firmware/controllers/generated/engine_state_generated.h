@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Jul 21 18:03:23 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Mon Aug 26 23:28:23 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -101,6 +101,80 @@ struct idle_state_s {
 
 typedef struct idle_state_s idle_state_s;
 
+// start of cranking_fuel_s
+struct cranking_fuel_s {
+	/**
+	 * Duration of injection, in ms. During cranking we do not account for injector flow, so if you change injectors you would need to change settings.
+	 * Deprecated. Please use '1'.
+	 * TODO: maybe account for injector flow?
+	 * offset 0
+	 */
+	floatms_t baseFuel = (floatms_t)0;
+	/**
+	 * offset 4
+	 */
+	float coolantTemperatureCoefficient = (float)0;
+	/**
+	 * offset 8
+	 */
+	float tpsCoefficient = (float)0;
+	/**
+	 * offset 12
+	 */
+	float durationCoefficient = (float)0;
+	/**
+	 * Actual injection duration based on all above coefficients.
+	 * offset 16
+	 */
+	floatms_t fuel = (floatms_t)0;
+	/** total size 20*/
+};
+
+typedef struct cranking_fuel_s cranking_fuel_s;
+
+// start of running_fuel_s
+struct running_fuel_s {
+	/**
+	 * offset 0
+	 */
+	float postCrankingFuelCorrection = (float)0;
+	/**
+	 * offset 4
+	 */
+	float intakeTemperatureCoefficient = (float)0;
+	/**
+	 * offset 8
+	 */
+	float coolantTemperatureCoefficient = (float)0;
+	/**
+	 * offset 12
+	 */
+	float timeSinceCrankingInSecs = (float)0;
+	/**
+	 * injectorLag(VBatt)
+	 * this value depends on a slow-changing VBatt value, so
+	 * we update it once in a while
+	 * offset 16
+	 */
+	floatms_t injectorLag = (floatms_t)0;
+	/**
+	 * closed-loop fuel correction
+	 * offset 20
+	 */
+	floatms_t pidCorrection = (floatms_t)0;
+	/**
+	 * Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.
+	 * Without injector lag.
+	 * @see baseFuel
+	 * @see actualLastInjection
+	 * offset 24
+	 */
+	floatms_t fuel = (floatms_t)0;
+	/** total size 28*/
+};
+
+typedef struct running_fuel_s running_fuel_s;
+
 // start of engine_state2_s
 struct engine_state2_s {
 	/**
@@ -139,11 +213,26 @@ struct engine_state2_s {
 	 * offset 72
 	 */
 	float currentBaroCorrectedVE = (float)0;
-	/** total size 76*/
+	/**
+	 * offset 76
+	 */
+	float baroCorrection = (float)0;
+	/**
+	offset 80 bit 0 */
+	bool isCranking : 1;
+	/**
+	 * offset 84
+	 */
+	cranking_fuel_s cranking;
+	/**
+	 * offset 104
+	 */
+	running_fuel_s running;
+	/** total size 132*/
 };
 
 typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Jul 21 18:03:23 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Mon Aug 26 23:28:23 EDT 2019

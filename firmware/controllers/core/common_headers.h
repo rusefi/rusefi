@@ -34,6 +34,7 @@
 
 // See also 'TS_GET_STRUCT'
 #define DISPLAY_CONFIG(x) x
+#define DISPLAY_PREFIX(x) x
 #define DISPLAY_FIELD(x) x
 // we use this 'DISPLAY' macro if value is not used by C++ in current context
 #define DISPLAY(x)

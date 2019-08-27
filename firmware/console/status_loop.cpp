@@ -296,9 +296,9 @@ static void printSensors(Logging *log) {
 		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		reportSensorF(log, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
 		reportSensorF(log, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
-		reportSensorF(log, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.injectorLag, 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.runningFuel), 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.fuelPidCorrection), 2);
+		reportSensorF(log, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.running.injectorLag, 2);
+		reportSensorF(log, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.running.fuel), 2);
+		reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.running.pidCorrection), 2);
 
 		reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel).getWallFuel(0), 2);
 		reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel).wallFuelCorrection, 2);
@@ -521,9 +521,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "cranking fuel: %.2f", getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	if (!engine->rpmCalculator.isStopped(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		float iatCorrection = engine->engineState.iatFuelCorrection;
-		float cltCorrection = engine->engineState.cltFuelCorrection;
-		floatms_t injectorLag = engine->engineState.injectorLag;
+		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
+		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
+		floatms_t injectorLag = engine->engineState.running.injectorLag;
 		scheduleMsg(&logger2, "rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
 		scheduleMsg(&logger2, "baseFuel=%.2f", baseFuelMs);
 
@@ -721,9 +721,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	tsOutputChannels->fuelRunning = ENGINE(engineState.runningFuel);
-	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.fuelPidCorrection);
-	tsOutputChannels->injectorLagMs = ENGINE(engineState.injectorLag);
+	tsOutputChannels->fuelRunning = ENGINE(engineState.running.fuel);
+	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
+	tsOutputChannels->injectorLagMs = ENGINE(engineState.running.injectorLag);
 	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
@@ -872,8 +872,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
 
 
-	tsOutputChannels->iatCorrection = ENGINE(engineState.iatFuelCorrection);
-	tsOutputChannels->cltCorrection = ENGINE(engineState.cltFuelCorrection);
+	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
+	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 

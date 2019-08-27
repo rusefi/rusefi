@@ -16,12 +16,14 @@ import static com.rusefi.ConfigDefinition.EOL;
 public class LiveDocsMetaParser {
     private static final String DISPLAY_TAG = "DISPLAY_TAG";
     private static final String DISPLAY_CONFIG = "DISPLAY_CONFIG";
+    private static final String DISPLAY_PREFIX = "DISPLAY_PREFIX";
     private static final String DISPLAY_FIELD = "DISPLAY_FIELD";
     private static final String DISPLAY_TEXT = "DISPLAY_TEXT";
     private static final String DISPLAY_SENSOR = "DISPLAY_SENSOR";
     private static final String DISPLAY_IF = "DISPLAY_IF";
     private static final String DISPLAY_ELSE = "DISPLAY_ELSE";
     private static final String DISPLAY_ENDIF = "DISPLAY_ENDIF";
+    private static StringBuilder prefix = new StringBuilder();
 
     private static String readLineByLine(String filePath) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
@@ -85,11 +87,17 @@ public class LiveDocsMetaParser {
                     SystemOut.println("REQ TAG " + tag);
                     result = meta.start(tag);
                 }
+            } else if (DISPLAY_PREFIX.equalsIgnoreCase(token)) {
+                if (s.hasNext()) {
+                    String current = s.next();
+                    prefix.append(current + "_");
+                }
             } else if (DISPLAY_FIELD.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
-                    String config = s.next();
+                    String config = prefix + s.next();
                     SystemOut.println("REQ FIELD " + config);
                     result.add(new FieldRequest(config));
+                    prefix.setLength(0);
                 }
             } else if (DISPLAY_IF.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
