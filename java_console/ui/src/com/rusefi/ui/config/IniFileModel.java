@@ -2,6 +2,7 @@ package com.rusefi.ui.config;
 
 import com.opensr5.io.IniFileReader;
 import com.opensr5.io.RawIniFile;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -20,8 +21,10 @@ public class IniFileModel {
     private final static IniFileModel INSTANCE = new IniFileModel();
     private String dialogId;
     private String dialogUiName;
-    private List<DialogModel.Field> fields = new ArrayList<>();
     private Map<String, DialogModel> dialogs = new TreeMap<>();
+    private Map<String, DialogModel.Field> allFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // this is only used while reading model - TODO extract reader
+    private List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
 
     public static void main(String[] args) {
         System.out.println(IniFileModel.INSTANCE.dialogs);
@@ -49,14 +52,14 @@ public class IniFileModel {
     }
 
     private void finishDialog() {
-        if (fields.isEmpty())
+        if (fieldsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
-        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fields));
+        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog));
 
         dialogId = null;
-        fields.clear();
+        fieldsOfCurrentDialog.clear();
     }
 
     private void handleLine(RawIniFile.Line line) {
@@ -83,12 +86,23 @@ public class IniFileModel {
     private void handleField(LinkedList<String> list) {
         list.removeFirst(); // "field"
 
-        String uiLabel = list.isEmpty() ? "" : list.removeFirst();
+        String uiFieldName = list.isEmpty() ? "" : list.removeFirst();
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
-        fields.add(new DialogModel.Field(key, uiLabel));
-        System.out.println("IniFileModel: Field label=[" + uiLabel + "] : key=[" + key + "]");
+        DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
+        if (key != null) {
+            // UI labels do not have 'key'
+            allFields.put(key, field);
+        }
+        fieldsOfCurrentDialog.add(field);
+        System.out.println("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
+    }
+
+    @Nullable
+    public DialogModel.Field getField(String key) {
+        DialogModel.Field field = allFields.get(key);
+        return field;
     }
 
     private void handleDialog(LinkedList<String> list) {
