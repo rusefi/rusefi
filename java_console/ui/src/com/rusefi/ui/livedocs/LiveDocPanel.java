@@ -1,7 +1,6 @@
 package com.rusefi.ui.livedocs;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.EngineState;
@@ -12,6 +11,8 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ldmp.*;
 import com.rusefi.ldmp.generated.*;
+import com.rusefi.ui.config.DialogModel;
+import com.rusefi.ui.config.IniFileModel;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.DetachedSensor;
@@ -90,7 +91,7 @@ public class LiveDocPanel {
 
                 JLabel label = new JLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/setting.png"));
-                label.setToolTipText("Configuration " + field.getName());
+                label.setToolTipText(getTooltipText(field.getName()));
                 result.actionsList.add(new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
@@ -135,6 +136,14 @@ public class LiveDocPanel {
             }
         }
         return result;
+    }
+
+    private static String getTooltipText(String configurationFieldName) {
+        DialogModel.Field dialogField = IniFileModel.getInstance().getField(configurationFieldName);
+        if (dialogField == null) {
+            return "Configuration " + configurationFieldName;
+        }
+        return "Configuration " + dialogField.getUiName() + " (" + configurationFieldName + ")";
     }
 
     private static ActionPanel createIfRequestPanel(IfRequest request, Field[] values) {
