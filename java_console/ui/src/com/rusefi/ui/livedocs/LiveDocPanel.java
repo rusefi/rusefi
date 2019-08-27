@@ -14,12 +14,15 @@ import com.rusefi.ldmp.*;
 import com.rusefi.ldmp.generated.*;
 import com.rusefi.ui.livedocs.controls.Toolbox;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.DetachedSensor;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,8 @@ public class LiveDocPanel {
 
     private static final String CONSTRAINTS = "wrap, grow";
     private static final String LAYOUT = "gap 0, insets 0";
+    // todo: replace magic hard-coded value with some relative number, maybe 1/3 of frame height or something?
+    private static final int MAGIC_DETACHED_GAUGE_SIZE = 200;
 
     @NotNull
     static JPanel createPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
@@ -101,6 +106,15 @@ public class LiveDocPanel {
                 result.addControl(label);
                 label.setIcon(UiUtils.loadIcon("livedocs/gauge.png"));
                 label.setToolTipText("Sensor " + request.getValue());
+                label.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (e.getClickCount() == 2 && !SwingUtilities.isRightMouseButton(e)) {
+                            final DetachedSensor ds = new DetachedSensor(sensor, MAGIC_DETACHED_GAUGE_SIZE);
+                            ds.show(e);
+                        }
+                    }
+                });
                 result.actionsList.add(new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
