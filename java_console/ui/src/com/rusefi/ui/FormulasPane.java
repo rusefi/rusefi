@@ -25,7 +25,7 @@ import java.awt.image.BufferedImage;
 
 
 /**
- * (c) Andrey Belomutskiy 2013-2018
+ * (c) Andrey Belomutskiy 2013-2019
  */
 public class FormulasPane {
     private static final String NL = "\r\n \\\\ ";
@@ -44,13 +44,11 @@ public class FormulasPane {
     public FormulasPane() {
 
         JPanel vertical = new JPanel(new VerticalFlowLayout());
-        vertical.add(formulaProxy);
         vertical.add(liveDocs);
+        vertical.add(formulaProxy);
 
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         content.add(scroll, BorderLayout.CENTER);
-
-
 
         formulaProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
 
