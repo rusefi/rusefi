@@ -28,6 +28,7 @@ import static com.rusefi.config.Field.niceToString;
 public class LiveDocPanel {
 
     private static final String CONSTRAINTS = "wrap, grow";
+    private static final String LAYOUT = "gap 0, insets 0";
 
     @NotNull
     static JPanel createPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
@@ -167,7 +168,21 @@ public class LiveDocPanel {
 
     @NotNull
     public static JPanel createLiveDocumentationPanel() {
-        JPanel liveDocs = new JPanel(new MigLayout("gap 0, insets 0"));
+        JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
+        liveDocs.add(createPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
+                EngineState.VALUES, SpeedDensityMeta.CONTENT), CONSTRAINTS);
+
+        liveDocs.add(createPanel("Idle", "", Fields.LDS_ENGINE_STATE_INDEX,
+                EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
+
+        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB,
+                EngineState.VALUES, ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
+
+        return liveDocs;
+    }
+
+    public static JPanel createSensorsLiveDataPanel() {
+        JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
         liveDocs.add(createPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_INDEX,
                 ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
@@ -178,17 +193,8 @@ public class LiveDocPanel {
         liveDocs.add(createPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, TpsMeta.TPS_SECTION), CONSTRAINTS);
 
-        liveDocs.add(createPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, SpeedDensityMeta.CONTENT), CONSTRAINTS);
-
         liveDocs.add(createPanel("Trigger", "", Fields.LDS_TRIGGER_INDEX,
                 TriggerState.VALUES, TriggerDecoderMeta.CONTENT), CONSTRAINTS);
-
-        liveDocs.add(createPanel("Idle", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
-
-        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB,
-                EngineState.VALUES, ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }

@@ -48,7 +48,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190823;
+    public static final int CONSOLE_VERSION = 20190825;
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
     private static final String TAB_INDEX = "main_tab";
@@ -197,8 +197,11 @@ public class Launcher {
 
         if (!LinkManager.isLogViewer())
             tabbedPane.add("Settings", settingsTab.createPane());
-        if (!LinkManager.isLogViewer())
-            tabbedPane.addTab("Formulas", new FormulasPane().getContent());
+        if (!LinkManager.isLogViewer()) {
+            tabbedPane.addTab("Formulas/Live Data", new FormulasPane().getContent());
+            tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane().getContent());
+        }
+
         if (!LinkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.add("Logs Manager", logsManager.getContent());
         fuelTunePane = new FuelTunePane(getConfig().getRoot().getChild("fueltune"));
