@@ -4,6 +4,9 @@ import java.util.Objects;
 
 import static com.rusefi.ConfigDefinition.EOL;
 
+/**
+ * Static text label
+ */
 public class TextRequest extends Request {
     private final String value;
 
