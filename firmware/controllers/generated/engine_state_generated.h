@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Mon Aug 26 23:28:23 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Wed Aug 28 00:23:00 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -163,14 +163,18 @@ struct running_fuel_s {
 	 */
 	floatms_t pidCorrection = (floatms_t)0;
 	/**
+	 * offset 24
+	 */
+	floatms_t baseFuel = (floatms_t)0;
+	/**
 	 * Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.
 	 * Without injector lag.
 	 * @see baseFuel
 	 * @see actualLastInjection
-	 * offset 24
+	 * offset 28
 	 */
 	floatms_t fuel = (floatms_t)0;
-	/** total size 28*/
+	/** total size 32*/
 };
 
 typedef struct running_fuel_s running_fuel_s;
@@ -228,11 +232,11 @@ struct engine_state2_s {
 	 * offset 104
 	 */
 	running_fuel_s running;
-	/** total size 132*/
+	/** total size 136*/
 };
 
 typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Mon Aug 26 23:28:23 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Wed Aug 28 00:23:00 EDT 2019

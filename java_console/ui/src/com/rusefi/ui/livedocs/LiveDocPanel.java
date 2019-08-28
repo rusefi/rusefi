@@ -120,7 +120,7 @@ public class LiveDocPanel {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
                         double value = SensorCentral.getInstance().getValue(sensor);
-                        label.setText(niceToString(value));
+                        label.setText(niceToString(value, 4));
                     }
                 });
             } else if (r instanceof IfRequest) {
@@ -192,6 +192,10 @@ public class LiveDocPanel {
     @NotNull
     public static JPanel createLiveDocumentationPanel() {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
+
+        liveDocs.add(createPanel("Fuel", "", Fields.LDS_ENGINE_STATE_INDEX,
+                EngineState.VALUES, FuelMathMeta.CONTENT), CONSTRAINTS);
+
         liveDocs.add(createPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, SpeedDensityMeta.CONTENT), CONSTRAINTS);
 

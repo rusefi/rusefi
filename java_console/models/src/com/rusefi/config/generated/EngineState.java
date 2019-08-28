@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Mon Aug 26 23:28:23 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Wed Aug 28 00:23:00 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -43,7 +43,8 @@ public class EngineState {
 	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 116, FieldType.FLOAT);
 	public static final Field RUNNING_INJECTORLAG = Field.create("RUNNING_INJECTORLAG", 120, FieldType.FLOAT);
 	public static final Field RUNNING_PIDCORRECTION = Field.create("RUNNING_PIDCORRECTION", 124, FieldType.FLOAT);
-	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 128, FieldType.FLOAT);
+	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 128, FieldType.FLOAT);
+	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 132, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ITERM,
 	DTERM,
@@ -82,6 +83,7 @@ public class EngineState {
 	RUNNING_TIMESINCECRANKINGINSECS,
 	RUNNING_INJECTORLAG,
 	RUNNING_PIDCORRECTION,
+	RUNNING_BASEFUEL,
 	RUNNING_FUEL,
 	};
 }
