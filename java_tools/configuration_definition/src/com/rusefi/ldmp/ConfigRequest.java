@@ -5,6 +5,10 @@ import java.util.Objects;
 
 import static com.rusefi.ConfigDefinition.EOL;
 
+/**
+ * Reference to a parameter from configuration
+ *
+ */
 public class ConfigRequest extends Request {
     //@NotNull
     private final String field;
