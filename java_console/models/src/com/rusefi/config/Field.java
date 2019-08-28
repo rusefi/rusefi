@@ -77,13 +77,13 @@ public class Field {
         // not enum field
         Number number = value;
         if (number instanceof Float)
-            return niceToString(number.floatValue());
+            return niceToString(number.floatValue(), 3);
         return number.toString();
     }
 
-    public static String niceToString(double value) {
+    public static String niceToString(double value, int i) {
         int scale = (int) Math.log10(value);
-        int places = 1 + Math.max(0, 4 - scale);
+        int places = 1 + Math.max(0, i - scale);
         double toScale = Math.pow(10, places);
         return Double.toString(Math.round(value * toScale) / toScale);
     }

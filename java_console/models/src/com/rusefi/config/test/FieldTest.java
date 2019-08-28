@@ -30,12 +30,14 @@ public class FieldTest {
 
     @Test
     public void testPrecisionDependingOnScale() {
-        assertEquals("1234567.1",  Field.niceToString(1234567.123));
-        assertEquals("10000.0",  Field.niceToString(10000.00002));
-        assertEquals("0.12302",  Field.niceToString(0.12302));
-        assertEquals("0.002",  Field.niceToString(0.002));
-        assertEquals("12.302",  Field.niceToString(12.302));
-        assertEquals("123.02",  Field.niceToString(123.02));
+        assertEquals("0.12302",  Field.niceToString(0.12302, 4));
+        assertEquals("0.1232",  Field.niceToString(0.12317, 3));
+
+        assertEquals("1234567.1",  Field.niceToString(1234567.123, 4));
+        assertEquals("10000.0",  Field.niceToString(10000.00002, 4));
+        assertEquals("0.002",  Field.niceToString(0.002, 4));
+        assertEquals("12.302",  Field.niceToString(12.302, 4));
+        assertEquals("123.02",  Field.niceToString(123.02, 4));
     }
 
 }

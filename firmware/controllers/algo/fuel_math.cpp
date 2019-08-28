@@ -48,20 +48,29 @@ DISPLAY(DISPLAY_IF(isCranking)) floatms_t getCrankingFuel3(float coolantTemperat
 	/**
 	 * Cranking fuel changes over time
 	 */
+	DISPLAY_TEXT(Duration_coef);
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d("crank", revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef);
+	DISPLAY_TEXT(eol);
 
 	/**
 	 * Cranking fuel is different depending on engine coolant temperature
 	 */
+	DISPLAY_TEXT(Coolant_coef);
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(coolantTemperatureCoefficient) = cisnan(coolantTemperature) ? 1 : interpolate2d("crank", coolantTemperature, config->crankingFuelBins,
 			config->crankingFuelCoef);
+	DISPLAY_SENSOR(CLT);
+	DISPLAY_TEXT(eol);
 
 	percent_t tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	DISPLAY_TEXT(TPS_coef);
 	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = cisnan(tps) ? 1 : interpolate2d("crankTps", tps, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
+	DISPLAY_SENSOR(TPS);
+	DISPLAY_TEXT(eol);
 
+	DISPLAY_TEXT(Cranking_fuel);
 	floatms_t crankingFuel = engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = baseCrankingFuel
 			* engine->engineState.cranking.durationCoefficient
 			* engine->engineState.cranking.coolantTemperatureCoefficient
@@ -76,17 +85,40 @@ DISPLAY(DISPLAY_IF(isCranking)) floatms_t getCrankingFuel3(float coolantTemperat
 /* DISPLAY_ELSE */
 
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
-	float cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
-	float postCrankingFuelCorrection = ENGINE(engineState.running.postCrankingFuelCorrection);
+	DISPLAY_TEXT(Base_fuel);
+	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(baseFuel)) = baseFuel;
+	DISPLAY_TEXT(eol);
+
+
+	DISPLAY_TEXT(Intake_coef);
+	float iatCorrection = ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(intakeTemperatureCoefficient));
+	DISPLAY_SENSOR(IAT);
+	DISPLAY_TEXT(eol);
+
+	DISPLAY_TEXT(Coolant_coef);
+	float cltCorrection = ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(coolantTemperatureCoefficient));
+	DISPLAY_SENSOR(CLT);
+	DISPLAY_TEXT(eol);
+
+	DISPLAY_TEXT(Post_cranking_coef);
+	float postCrankingFuelCorrection = ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(postCrankingFuelCorrection));
+	DISPLAY_TEXT(eol);
+
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
 	floatms_t runningFuel = baseFuel * iatCorrection * cltCorrection * postCrankingFuelCorrection + ENGINE(engineState.running.pidCorrection);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
-	ENGINE(engineState.running.fuel) = runningFuel;
+	DISPLAY_TEXT(eol);
 
+	DISPLAY_TEXT(Running_fuel);
+	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(fuel)) = runningFuel;
+	DISPLAY_TEXT(eol);
+
+	DISPLAY_TEXT(Injector_lag);
+	DISPLAY(DISPLAY_PREFIX(running).DISPLAY_FIELD(injectorLag));
+	DISPLAY_SENSOR(VBATT);
 	return runningFuel;
 }
 
