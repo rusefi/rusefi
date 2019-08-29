@@ -767,7 +767,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger);
+	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_IDLE_CONTROL */
 
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
