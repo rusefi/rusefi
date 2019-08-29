@@ -32,14 +32,16 @@
 #include "pwm_generator.h"
 #include "idle_thread.h"
 
-#if ! EFI_UNIT_TEST
-#include "pin_repository.h"
-#endif /* EFI_UNIT_TEST */
-
 #include "engine.h"
 #include "periodic_task.h"
-#include "stepper.h"
 #include "allsensors.h"
+
+#if ! EFI_UNIT_TEST
+#include "stepper.h"
+#include "pin_repository.h"
+static StepperMotor iacMotor;
+#endif /* EFI_UNIT_TEST */
+
 
 static Logging *logger;
 #if EFI_TUNER_STUDIO
@@ -54,15 +56,13 @@ static bool mightResetPid = false;
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC
 // Use new PID with CIC integrator
-static PidCic idlePid(&engineConfiguration->idleRpmPid);
+static PidCic idlePid;
 #else
-static Pid idlePid(&engineConfiguration->idleRpmPid);
+static Pid idlePid;
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
 static SimplePwm idleSolenoid("idle");
-
-static StepperMotor iacMotor;
 
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
@@ -111,8 +111,10 @@ void setIdleMode(idle_mode_e value) {
 static void applyIACposition(percent_t position) {
 	if (CONFIGB(useETBforIdleControl)) {
 		engine->engineState.etbIdleAddition = position / 100 * CONFIG(etbIdleThrottleRange);
-	} if (CONFIGB(useStepperIdle)) {
+#if ! EFI_UNIT_TEST
+		} if (CONFIGB(useStepperIdle)) {
 		iacMotor.setTargetPosition(position / 100 * engineConfiguration->idleStepperTotalSteps);
+#endif /* EFI_UNIT_TEST */
 	} else {
 		/**
 		 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
@@ -126,9 +128,20 @@ percent_t getIdlePosition(void) {
 	return engine->engineState.idle.currentIdlePosition;
 }
 
+void setIdleValvePosition(int positionPercent) {
+	if (positionPercent < 1 || positionPercent > 99)
+		return;
+	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
+#if ! EFI_UNIT_TEST
+	showIdleInfo();
+#endif /* EFI_UNIT_TEST */
+	// todo: this is not great that we have to write into configuration here
+	CONFIGB(manIdlePosition) = positionPercent;
+}
+
 #endif /* EFI_UNIT_TEST */
 
-static percent_t manualIdleController(float cltCorrection) {
+static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	percent_t correctedPosition = cltCorrection * CONFIGB(manIdlePosition);
 
@@ -137,15 +150,6 @@ static percent_t manualIdleController(float cltCorrection) {
 	correctedPosition = minF(correctedPosition, 99.9);
 
 	return correctedPosition;
-}
-
-void setIdleValvePosition(int positionPercent) {
-	if (positionPercent < 1 || positionPercent > 99)
-		return;
-	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
-	showIdleInfo();
-	// todo: this is not great that we have to write into configuration here
-	CONFIGB(manIdlePosition) = positionPercent;
 }
 
 static percent_t blipIdlePosition;
@@ -248,6 +252,12 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 class IdleController : public PeriodicTimerController {
+public:
+	Engine *engine = NULL;
+	engine_configuration_s *engineConfiguration = NULL;
+	persistent_config_s *config = NULL;
+	board_configuration_s *boardConfiguration = NULL;
+
 	int getPeriodMs() override {
 		return GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid);
 	}
@@ -330,7 +340,7 @@ class IdleController : public PeriodicTimerController {
 		} else {
 			if (engineConfiguration->idleMode == IM_MANUAL) {
 				// let's re-apply CLT correction
-				iacPosition = manualIdleController(cltCorrection);
+				iacPosition = manualIdleController(cltCorrection PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
 				iacPosition = automaticIdleController(PASS_ENGINE_PARAMETER_SIGNATURE);
 			}
@@ -379,23 +389,23 @@ class IdleController : public PeriodicTimerController {
 	}
 };
 
-static IdleController instance;
+static IdleController idleControllerInstance;
+
+static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+}
+
+#if ! EFI_UNIT_TEST
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !idlePid.isSame(&previousConfiguration->idleRpmPid);
 	idleSolenoid.setFrequency(CONFIGB(idle).solenoidFrequency);
 }
 
-#if ! EFI_UNIT_TEST
-
 void setTargetIdleRpm(int value) {
 	setTargetRpmCurve(value PASS_ENGINE_PARAMETER_SUFFIX);
 	scheduleMsg(logger, "target idle RPM %d", value);
 	showIdleInfo();
-}
-
-static void apply(void) {
-	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 }
 
 void setIdleOffset(float value)  {
@@ -405,25 +415,25 @@ void setIdleOffset(float value)  {
 
 void setIdlePFactor(float value) {
 	engineConfiguration->idleRpmPid.pFactor = value;
-	apply();
+	applyPidSettings();
 	showIdleInfo();
 }
 
 void setIdleIFactor(float value) {
 	engineConfiguration->idleRpmPid.iFactor = value;
-	apply();
+	applyPidSettings();
 	showIdleInfo();
 }
 
 void setIdleDFactor(float value) {
 	engineConfiguration->idleRpmPid.dFactor = value;
-	apply();
+	applyPidSettings();
 	showIdleInfo();
 }
 
 void setIdleDT(int value) {
 	engineConfiguration->idleRpmPid.periodMs = value;
-	apply();
+	applyPidSettings();
 	showIdleInfo();
 }
 
@@ -443,8 +453,6 @@ void setDefaultIdleParameters(void) {
 	engineConfiguration->idleRpmPid.periodMs = 10;
 }
 
-#endif /* EFI_UNIT_TEST */
-
 static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6645, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(CUSTOM_ERR_6646, state->multiWave.waveCount == 1, "invalid idle waveCount");
@@ -457,7 +465,7 @@ static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_g
 	}
 }
 
-static void initIdleHardware() {
+static void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIGB(useStepperIdle)) {
 		iacMotor.initialize(CONFIGB(idle).stepperStepPin,
 				CONFIGB(idle).stepperDirectionPin,
@@ -481,11 +489,22 @@ static void initIdleHardware() {
 	}
 }
 
-void startIdleThread(Logging*sharedLogger) {
-	logger = sharedLogger;
+#endif /* EFI_UNIT_TEST */
 
+void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	logger = sharedLogger;
+	idleControllerInstance.engine = engine;
+	idleControllerInstance.engineConfiguration = engineConfiguration;
+	idleControllerInstance.config = config;
+	idleControllerInstance.boardConfiguration = boardConfiguration;
+
+
+	idlePid.initPidClass(&engineConfiguration->idleRpmPid);
+
+#if ! EFI_UNIT_TEST
 	// todo: re-initialize idle pins on the fly
-	initIdleHardware();
+	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_UNIT_TEST */
 
 	DISPLAY_TEXT(Idle_State);
 	engine->engineState.idle.DISPLAY_FIELD(idleState) = INIT;
@@ -502,7 +521,7 @@ void startIdleThread(Logging*sharedLogger) {
 
 	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);
 
-	instance.Start();
+	idleControllerInstance.Start();
 
 #if ! EFI_UNIT_TEST
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
@@ -538,7 +557,7 @@ void startIdleThread(Logging*sharedLogger) {
 
 	addConsoleAction("idlebench", startIdleBench);
 #endif /* EFI_UNIT_TEST */
-	apply();
+	applyPidSettings(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 #endif /* EFI_IDLE_CONTROL */
