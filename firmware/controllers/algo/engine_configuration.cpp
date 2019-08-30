@@ -179,7 +179,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-#if EFI_IDLE_CONTROL
+#if EFI_IDLE_CONTROL && ! EFI_UNIT_TEST
 	onConfigurationChangeIdleCallback(&activeConfiguration);
 #endif /* EFI_IDLE_CONTROL */
 
@@ -303,10 +303,6 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->high_fuel_pressure_sensor_1 = EFI_ADC_NONE;
 	engineConfiguration->high_fuel_pressure_sensor_2 = EFI_ADC_NONE;
 	
-#if EFI_IDLE_CONTROL
-	setDefaultIdleParameters();
-#endif /* EFI_IDLE_CONTROL */
-
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
 	boardConfiguration->clutchUpPinMode = PI_PULLUP;
 	engineConfiguration->brakePedalPinMode = PI_PULLUP;
@@ -585,8 +581,13 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	prepareVoidConfiguration(engineConfiguration);
 
 #if EFI_ALTERNATOR_CONTROL
-	setDefaultAlternatorParameters();
+	setDefaultAlternatorParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_ALTERNATOR_CONTROL */
+
+#if EFI_IDLE_CONTROL
+	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+#endif /* EFI_IDLE_CONTROL */
+
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setDefaultEtbParameters(PASS_ENGINE_PARAMETER_SIGNATURE);

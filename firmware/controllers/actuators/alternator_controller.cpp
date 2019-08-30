@@ -138,7 +138,7 @@ static void applyAlternatorPinState(int stateIndex, PwmConfig *state) /* pwm_gen
 		output->setValue(value);
 }
 
-void setDefaultAlternatorParameters(void) {
+void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorOffAboveTps = 120;
 
 	engineConfiguration->targetVBatt = 14;

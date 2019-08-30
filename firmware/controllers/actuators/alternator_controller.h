@@ -16,7 +16,7 @@ void setAltPFactor(float p);
 void setAltIFactor(float p);
 void setAltDFactor(float p);
 void showAltInfo(void);
-void setDefaultAlternatorParameters(void);
+void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration);
 

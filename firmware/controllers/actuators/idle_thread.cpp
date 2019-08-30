@@ -395,6 +395,13 @@ static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 }
 
+void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->idleRpmPid.pFactor = 0.1f;
+	engineConfiguration->idleRpmPid.iFactor = 0.05f;
+	engineConfiguration->idleRpmPid.dFactor = 0.0f;
+	engineConfiguration->idleRpmPid.periodMs = 10;
+}
+
 #if ! EFI_UNIT_TEST
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
@@ -444,13 +451,6 @@ void startIdleBench(void) {
 	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
 	scheduleMsg(logger, "idle valve bench test");
 	showIdleInfo();
-}
-
-void setDefaultIdleParameters(void) {
-	engineConfiguration->idleRpmPid.pFactor = 0.1f;
-	engineConfiguration->idleRpmPid.iFactor = 0.05f;
-	engineConfiguration->idleRpmPid.dFactor = 0.0f;
-	engineConfiguration->idleRpmPid.periodMs = 10;
 }
 
 static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
