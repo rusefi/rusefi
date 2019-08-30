@@ -5,7 +5,7 @@ struct_no_prefix pid_state_s
 	float target;only used for logging
 	float input;only used for logging
 	float output;only used for logging
-	
+	float errorAmplificationCoef;
 
 
 end_struct

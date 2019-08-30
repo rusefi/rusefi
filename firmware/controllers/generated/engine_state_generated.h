@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Wed Aug 28 00:23:00 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Aug 30 17:08:45 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -30,7 +30,11 @@ struct pid_state_s {
 	 * offset 16
 	 */
 	float output = (float)0;
-	/** total size 20*/
+	/**
+	 * offset 20
+	 */
+	float errorAmplificationCoef = (float)0;
+	/** total size 24*/
 };
 
 typedef struct pid_state_s pid_state_s;
@@ -239,4 +243,4 @@ typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Wed Aug 28 00:23:00 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Aug 30 17:08:45 EDT 2019
