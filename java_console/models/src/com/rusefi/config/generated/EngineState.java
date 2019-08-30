@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Aug 30 17:08:45 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Aug 30 18:02:22 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -23,7 +23,7 @@ public class EngineState {
 	public static final Field IDLESTATE = Field.create("IDLESTATE", 32, FieldType.INT);
 	public static final Field CURRENTIDLEPOSITION = Field.create("CURRENTIDLEPOSITION", 36, FieldType.FLOAT);
 	public static final Field BASEIDLEPOSITION = Field.create("BASEIDLEPOSITION", 40, FieldType.FLOAT);
-	public static final Field THROTTLEUPSTATE = Field.create("THROTTLEUPSTATE", 44, FieldType.INT);
+	public static final Field THROTTLEPEDALUPSTATE = Field.create("THROTTLEPEDALUPSTATE", 44, FieldType.INT);
 	public static final Field TARGETAFR = Field.create("TARGETAFR", 48, FieldType.FLOAT);
 	public static final Field ENGINECYCLEDURATIONMS = Field.create("ENGINECYCLEDURATIONMS", 52, FieldType.FLOAT);
 	public static final Field MINRPMKCURRENTTPS = Field.create("MINRPMKCURRENTTPS", 56, FieldType.FLOAT);
@@ -64,7 +64,7 @@ public class EngineState {
 	IDLESTATE,
 	CURRENTIDLEPOSITION,
 	BASEIDLEPOSITION,
-	THROTTLEUPSTATE,
+	THROTTLEPEDALUPSTATE,
 	TARGETAFR,
 	ENGINECYCLEDURATIONMS,
 	MINRPMKCURRENTTPS,

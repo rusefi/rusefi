@@ -12,8 +12,10 @@ public class IdleThreadMeta {
 			new TextRequest("Position_with_Adjustments"),
 			new FieldRequest("currentIdlePosition"),
 			new TextRequest("EOL"),
+			new TextRequest("EOL"),
+			new SensorRequest("TPS"),
 			new TextRequest("Throttle_Up_State"),
-			new FieldRequest("throttleUpState"),
+			new FieldRequest("throttlePedalUpState"),
 			new ConfigRequest("throttlePedalUpPin"),
 	};
 }

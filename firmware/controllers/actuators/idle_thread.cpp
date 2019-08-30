@@ -178,12 +178,21 @@ static void undoIdleBlipIfNeeded() {
 	}
 }
 
+static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED)
+		return !engine->engineState.idle.throttlePedalUpState;
+
+	return tpsPos > CONFIGB(idlePidDeactivationTpsThreshold);
+
+}
+
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
 static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (tpsPos > CONFIGB(idlePidDeactivationTpsThreshold)) {
+	if (isOutOfAutomaticIdleCondition(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
 		if (mightResetPid) {
@@ -220,6 +229,8 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
+
+	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC
 	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
@@ -294,7 +305,7 @@ public:
 			engine->clutchUpState = efiReadPin(CONFIGB(clutchUpPin));
 		}
 		if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
-			engine->engineState.idle.throttleUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+			engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
 		}
 
 		if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
@@ -514,8 +525,10 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	DISPLAY_TEXT(Position_with_Adjustments);
 	engine->engineState.idle.DISPLAY_FIELD(currentIdlePosition) = -100.0f;
 	DISPLAY_TEXT(EOL);
+	DISPLAY_TEXT(EOL);
+	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(Throttle_Up_State);
-	DISPLAY(DISPLAY_FIELD(throttleUpState));
+	DISPLAY(DISPLAY_FIELD(throttlePedalUpState));
 	DISPLAY(DISPLAY_CONFIG(throttlePedalUpPin));
 
 
