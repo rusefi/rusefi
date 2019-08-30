@@ -72,7 +72,7 @@ private:
 	pid_s *pid;
 
 	float previousError;
-	float errorAmplificationCoef;
+
 
 private:
 	virtual void updateITerm(float value);
