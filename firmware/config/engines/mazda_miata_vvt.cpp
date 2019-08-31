@@ -484,7 +484,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 
 /**
  * red car setting with default 1991/1995 miata harness
- * board #70 - closer to default miata harness
+ * board #70 - closer to default miata NA6 harness
  *
  */
 void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -496,4 +496,11 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
+}
+
+/**
+ * Pretty OEM 2003 Miata with ETB
+ */
+void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+
 }

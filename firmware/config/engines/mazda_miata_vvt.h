@@ -19,4 +19,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
+void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
 #endif /* CONFIG_ENGINES_MAZDA_MIATA_VVT_H_ */
