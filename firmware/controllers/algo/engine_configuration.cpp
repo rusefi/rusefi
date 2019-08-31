@@ -1060,6 +1060,8 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setIssue898(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NB2:
+		setMiataNB2_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		break;

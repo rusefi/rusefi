@@ -287,7 +287,7 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * remember that some H-bridges require 5v control lines, not just 3v logic outputs we have on stm32
 	 */
-	CONFIGB(etb1.directionPin1) = GPIOC_7;
+	CONFIGB(etb1.directionPin1) = GPIOC_7; // Frankenso high-side in order to get 5v control
 	CONFIGB(etb1.directionPin2) = GPIOC_9;
 	CONFIGB(etb1.controlPin1) = GPIOE_14;
 
