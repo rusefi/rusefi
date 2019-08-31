@@ -41,7 +41,7 @@ extern baroCorr_Map3D_t baroCorrMap;
 
 #if EFI_ENGINE_CONTROL
 
-DISPLAY(DISPLAY_IF(isCranking)) floatms_t getCrankingFuel3(float coolantTemperature,
+DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
@@ -121,8 +121,6 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	DISPLAY_SENSOR(VBATT);
 	return runningFuel;
 }
-
-
 
 /* DISPLAY_ENDIF */
 

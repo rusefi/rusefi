@@ -37,6 +37,8 @@ public class FieldTest {
         assertEquals("10000.0",  Field.niceToString(10000.00002, 4));
         assertEquals("0.002",  Field.niceToString(0.002, 4));
         assertEquals("12.302",  Field.niceToString(12.302, 4));
+        assertEquals("12.302",  Field.niceToString(12.302, 3));
+        assertEquals("12.31",  Field.niceToString(12.312, 2));
         assertEquals("123.02",  Field.niceToString(123.02, 4));
     }
 

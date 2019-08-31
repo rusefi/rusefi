@@ -4,7 +4,7 @@ import com.rusefi.ldmp.*;
 
 public class FuelMathMeta {
 	public static final Request[] CONTENT = new Request[]{
-			new IfRequest("isCranking",
+			new IfRequest("isCrankingState",
 				new Request[]{
 				new TextRequest("Duration_coef"),
 				new FieldRequest("cranking_durationCoefficient"),

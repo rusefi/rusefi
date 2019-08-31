@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Aug 30 18:02:22 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sat Aug 31 11:02:25 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -32,7 +32,8 @@ public class EngineState {
 	public static final Field TPSVOLTAGEBOARD = Field.create("TPSVOLTAGEBOARD", 68, FieldType.FLOAT);
 	public static final Field CURRENTBAROCORRECTEDVE = Field.create("CURRENTBAROCORRECTEDVE", 72, FieldType.FLOAT);
 	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 76, FieldType.FLOAT);
-	public static final Field ISCRANKING = Field.create("ISCRANKING", 80, FieldType.BIT, 0);
+	public static final Field ISCRANKINGSTATE = Field.create("ISCRANKINGSTATE", 80, FieldType.BIT, 0);
+	public static final Field HASETBPEDALPOSITIONSENSOR = Field.create("HASETBPEDALPOSITIONSENSOR", 80, FieldType.BIT, 1);
 	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 84, FieldType.FLOAT);
 	public static final Field CRANKING_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKING_COOLANTTEMPERATURECOEFFICIENT", 88, FieldType.FLOAT);
 	public static final Field CRANKING_TPSCOEFFICIENT = Field.create("CRANKING_TPSCOEFFICIENT", 92, FieldType.FLOAT);
@@ -73,7 +74,8 @@ public class EngineState {
 	TPSVOLTAGEBOARD,
 	CURRENTBAROCORRECTEDVE,
 	BAROCORRECTION,
-	ISCRANKING,
+	ISCRANKINGSTATE,
+	HASETBPEDALPOSITIONSENSOR,
 	CRANKING_BASEFUEL,
 	CRANKING_COOLANTTEMPERATURECOEFFICIENT,
 	CRANKING_TPSCOEFFICIENT,
