@@ -2,7 +2,7 @@
   <configuration default="false" name="Launcher" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.Launcher" />
     <module name="ui" />
-    <option name="VM_PARAMETERS" value="-Dtools_path=../misc/install -Dinput_files_path=../firmware/deliver" />
+    <option name="VM_PARAMETERS" value="-Dtools_path=../misc/install -Dinput_files_path=../firmware/deliver -Dini_file_path=../firmware/tunerstudio -Dshow_etb_pane=true" />
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
