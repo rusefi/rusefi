@@ -2,6 +2,10 @@
 # Frankenso
 The most interesting folder here is [Frankenso](frankenso/) - that's rusEfi most useful board
 
+# microRusEfi
+
+microRusEfi is another official rusEfi board, it lives at https://github.com/rusefi/hw_microRusEfi
+
 # Connectors
 Some vehicle-specific connector boards are also pretty nice if you want to keep original harness intact
 
