@@ -309,6 +309,9 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOD_6;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
+	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+
 	// tps = "20 - AN volt 5"
 	//engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
@@ -320,6 +323,11 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->malfunctionIndicatorPin = TLE8888_PIN_24;
 
 	// IAC: GPIOE_9:  "7 - Lowside 1"
+
+
+	// 0.2#3 has wrong R139
+	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
+//	engineConfiguration->vbattDividerCoeff = (66f / 10f) * engineConfiguration->analogInputDividerCoefficient;
 
 
 	boardConfiguration->isHip9011Enabled = false;
