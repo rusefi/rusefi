@@ -323,7 +323,8 @@ static void showEthInfo(void) {
 			hwPortname(CONFIGB(etb1.controlPin1)),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
-	scheduleMsg(&logger, "close dir=%s", hwPortname(CONFIGB(etb1.directionPin2)));
+	scheduleMsg(&logger, "dir1=%s", hwPortname(CONFIGB(etb1.directionPin1)));
+	scheduleMsg(&logger, "dir2=%s", hwPortname(CONFIGB(etb1.directionPin2)));
 	etbPid.showPidStatus(&logger, "ETB");
 }
 
@@ -399,7 +400,6 @@ void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static bool isSamePins(etb_io *current, etb_io *active) {
 	return 	current->controlPin1 != active->controlPin1 ||
-			current->controlPin2 != active->controlPin2 ||
 			current->directionPin1 != active->directionPin1 ||
 			current->directionPin2 != active->directionPin2;
 }
@@ -413,7 +413,6 @@ bool isETBRestartNeeded(void) {
 
 void stopETBPins(void) {
 	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin1);
-	brain_pin_markUnused(activeConfiguration.bc.etb1.controlPin2);
 	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin1);
 	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin2);
 }
