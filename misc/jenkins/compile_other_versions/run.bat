@@ -21,6 +21,11 @@ IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
 pwd
 
+call misc\jenkins\compile_other_versions\compile_and_upload.bat microrusefi mre-test rusefi_microrusefi.ini %f7_console_setting%
+IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
+IF NOT ERRORLEVEL 0 EXIT /B 1
+pwd
+
 call misc\jenkins\compile_other_versions\compile_and_upload.bat nucleo_f746 stm32f746_nucleo no %f7_console_setting%
 IF NOT ERRORLEVEL 0 echo ERROR invoking compile_and_upload.bat
 IF NOT ERRORLEVEL 0 EXIT /B 1
