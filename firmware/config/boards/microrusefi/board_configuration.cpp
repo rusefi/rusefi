@@ -109,7 +109,6 @@ static void setupEtb() {
 	// engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	// Unused
-	boardConfiguration->etb1.controlPin2 = GPIO_UNASSIGNED;
 	boardConfiguration->etb1.directionPin2 = GPIO_UNASSIGNED;
 
 	// we only have pwm/dir, no dira/dirb
