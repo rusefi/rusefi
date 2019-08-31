@@ -320,6 +320,7 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// TLE8888_PIN_24: "43 - GP Out 4"
 	// MIL check engine
+	// NA6 check engine light is just a normal low side driver
 	boardConfiguration->malfunctionIndicatorPin = TLE8888_PIN_24;
 
 	// IAC: GPIOE_9:  "7 - Lowside 1"
