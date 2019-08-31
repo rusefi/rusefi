@@ -12,7 +12,7 @@ public class PaneSettings {
 
 
     public PaneSettings(Node config) {
-        showEtbPane = config.getBoolProperty(SHOW_ETB, false);
+        showEtbPane = Boolean.getBoolean(SHOW_ETB) ;//config.getBoolProperty(SHOW_ETB, false);
         showFuelTunePane = config.getBoolProperty(SHOW_FUEL_TUNE, false);
     }
 }

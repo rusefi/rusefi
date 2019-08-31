@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.util.*;
 
-import static com.rusefi.Launcher.INPUT_FILES_PATH;
+import static com.rusefi.Launcher.INI_FILE_PATH;
 
 /**
  * (c) Andrey Belomutskiy
@@ -16,7 +16,7 @@ import static com.rusefi.Launcher.INPUT_FILES_PATH;
 public class IniFileModel {
     public static final String RUSEFI_INI = "rusefi.ini";
     // todo: https://sourceforge.net/p/rusefi/tickets/243/
-    private static final String FILENAME = INPUT_FILES_PATH + File.separator + RUSEFI_INI;
+    private static final String FILENAME = INI_FILE_PATH + File.separator + RUSEFI_INI;
 
     private final static IniFileModel INSTANCE = new IniFileModel();
     private String dialogId;
