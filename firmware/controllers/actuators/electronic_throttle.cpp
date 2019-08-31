@@ -256,6 +256,7 @@ class EtbController : public PeriodicTimerController {
 			etbPid.showPidStatus(&logger, "ETB");
 		}
 
+DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		DISPLAY_TEXT(Electrnoic_Throttle);
 		DISPLAY_SENSOR(TPS)
 		DISPLAY_TEXT(eol);
@@ -274,8 +275,9 @@ class EtbController : public PeriodicTimerController {
 		DISPLAY(DISPLAY_CONFIG(ETB_PFACTOR));
 		DISPLAY(DISPLAY_CONFIG(ETB_IFACTOR));
 		DISPLAY(DISPLAY_CONFIG(ETB_DFACTOR));
-
-
+/* DISPLAY_ELSE */
+		DISPLAY_TEXT(No_Pedal_Sensor);
+/* DISPLAY_ENDIF */
 		tsOutputChannels.etbTarget = targetPosition;
 		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
 		// Error is positive if the throttle needs to open further
@@ -490,7 +492,9 @@ void initElectronicThrottle(void) {
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
-	if (!hasPedalPositionSensor()) {
+
+	engine->engineState.hasEtbPedalPositionSensor = hasPedalPositionSensor();
+	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}
 	autoTune.SetOutputStep(0.1);

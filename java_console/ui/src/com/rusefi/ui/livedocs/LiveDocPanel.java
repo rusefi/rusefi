@@ -35,6 +35,7 @@ public class LiveDocPanel {
     private static final String LAYOUT = "gap 0, insets 0";
     // todo: replace magic hard-coded value with some relative number, maybe 1/3 of frame height or something?
     private static final int MAGIC_DETACHED_GAUGE_SIZE = 200;
+    private static final int LIVE_DATA_PRECISION = 2;
 
     @NotNull
     static JPanel createPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
@@ -120,7 +121,7 @@ public class LiveDocPanel {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
                         double value = SensorCentral.getInstance().getValue(sensor);
-                        label.setText(niceToString(value, 4));
+                        label.setText(niceToString(value, LIVE_DATA_PRECISION));
                     }
                 });
             } else if (r instanceof IfRequest) {

@@ -62,7 +62,8 @@ float tpsVoltageBoard
 	float currentBaroCorrectedVE;
 float baroCorrection;
 
-bit isCranking
+bit isCrankingState
+bit hasEtbPedalPositionSensor;
 
 struct cranking_fuel_s
 

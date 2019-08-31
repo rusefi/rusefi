@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Aug 30 18:02:22 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sat Aug 31 11:02:25 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -229,7 +229,10 @@ struct engine_state2_s {
 	float baroCorrection = (float)0;
 	/**
 	offset 80 bit 0 */
-	bool isCranking : 1;
+	bool isCrankingState : 1;
+	/**
+	offset 80 bit 1 */
+	bool hasEtbPedalPositionSensor : 1;
 	/**
 	 * offset 84
 	 */
@@ -245,4 +248,4 @@ typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Fri Aug 30 18:02:22 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sat Aug 31 11:02:25 EDT 2019

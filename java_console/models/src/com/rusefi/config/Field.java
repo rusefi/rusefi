@@ -19,6 +19,7 @@ public class Field {
     private static final String INT_VALUE_PREFIX = INT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
     private static final String FLOAT_VALUE_PREFIX = FLOAT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
     public static final int NO_BIT_OFFSET = -1;
+    private static final int FIELD_PRECISION = 3;
 
     private final String name;
     private final int offset;
@@ -74,16 +75,20 @@ public class Field {
     }
 
     public static String niceToString(Number value) {
+        return niceToString(value, FIELD_PRECISION);
+    }
+
+    public static String niceToString(Number value, int precision) {
         // not enum field
         Number number = value;
         if (number instanceof Float)
-            return niceToString(number.floatValue(), 3);
+            return niceToString(number.floatValue(), precision);
         return number.toString();
     }
 
-    public static String niceToString(double value, int i) {
+    public static String niceToString(double value, int precision) {
         int scale = (int) Math.log10(value);
-        int places = 1 + Math.max(0, i - scale);
+        int places = 1 + Math.max(0, precision - scale);
         double toScale = Math.pow(10, places);
         return Double.toString(Math.round(value * toScale) / toScale);
     }

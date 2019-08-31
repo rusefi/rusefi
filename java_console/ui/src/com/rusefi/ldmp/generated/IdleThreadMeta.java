@@ -14,6 +14,7 @@ public class IdleThreadMeta {
 			new TextRequest("EOL"),
 			new TextRequest("EOL"),
 			new SensorRequest("TPS"),
+			new TextRequest("EOL"),
 			new TextRequest("Throttle_Up_State"),
 			new FieldRequest("throttlePedalUpState"),
 			new ConfigRequest("throttlePedalUpPin"),
