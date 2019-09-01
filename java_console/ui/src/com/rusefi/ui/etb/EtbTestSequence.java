@@ -44,7 +44,6 @@ public class EtbTestSequence {
     public EtbTestSequence() {
         cancelButton.setEnabled(false);
 
-
         button.addActionListener(e -> {
             isCancelled = false;
             button.setEnabled(false);
@@ -85,8 +84,6 @@ public class EtbTestSequence {
 
             firstStep.execute(executor);
         });
-
-
 
         cancelButton.addActionListener(new ActionListener() {
             @Override

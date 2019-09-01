@@ -1,17 +1,24 @@
 package com.rusefi.ui.etb;
 
 import com.rusefi.ETBPane;
+import com.rusefi.core.Sensor;
+import com.rusefi.ldmp.generated.ElectronicThrottleMeta;
+import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
+import com.rusefi.ui.widgets.DetachedSensor;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 
-public class CommandsPanel {
+/**
+ * Panel for ETB bench testing & research.
+ */
+public class EtbCommandsPanel {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 
-    public CommandsPanel() {
+    public EtbCommandsPanel() {
         content.add(new DirectDrivePanel().getContent());
 
         JPanel spotsPane = new JPanel(new VerticalFlowLayout());
@@ -41,9 +48,14 @@ public class CommandsPanel {
         content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
 
         content.add(AnyCommand.createArea(new Node(), ETBPane.SET_ETB + "10", false, false).getContent());
+
+
+        content.add(DetachedSensor.createMockVoltageSlider(Sensor.PPS));
+
+        content.add(LiveDocPanel.createPanel("ETB", ElectronicThrottleMeta.CONTENT));
     }
 
-    public JPanel getContent() {
-        return content;
+    public JComponent getContent() {
+        return new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
 }

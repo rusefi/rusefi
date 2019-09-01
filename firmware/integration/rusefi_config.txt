@@ -1146,6 +1146,15 @@ float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to u
 end_struct
 
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
+#define MOCK_CLT_COMMAND "mock_clt_voltage"
+#define MOCK_MAP_COMMAND "mock_map_voltage"
+#define MOCK_TPS_COMMAND "mock_tps_voltage"
+#define MOCK_AFR_COMMAND "mock_afr_voltage"
+#define MOCK_MAF_COMMAND "mock_maf_voltage"
+! Pedal Position Sensor
+#define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
+#define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
+
 
 ! Live Documentation Structure
 #define LDS_CLT_STATE_INDEX 0

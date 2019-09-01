@@ -22,7 +22,9 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 
 void setMockVBattVoltage(float voltage);
 void setMockMapVoltage(float voltage);
-void setMockTpsVoltage(float voltage);
+// throttle body sensor
+void setMockThrottlePositionSensorVoltage(float voltage);
+void setMockThrottlePedalSensorVoltage(float voltage);
 void setMockAfrVoltage(float voltage);
 void setMockMafVoltage(float voltage);
 void setMockIatVoltage(float voltage);

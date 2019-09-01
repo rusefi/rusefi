@@ -30,7 +30,8 @@ void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 #endif /* EFI_PROD_CODE */
 
-void setMockPedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+// see also setMockThrottlePedalSensorVoltage
+void setMockThrottlePedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	mockPedalPosition = value;
 }
 

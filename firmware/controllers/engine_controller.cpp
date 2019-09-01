@@ -590,7 +590,11 @@ void setMockAfrVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
 }
 
-void setMockTpsVoltage(float voltage) {
+void setMockThrottlePedalSensorVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->throttlePedalPositionAdcChannel, voltage);
+}
+
+void setMockThrottlePositionSensorVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage);
 }
 

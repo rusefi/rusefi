@@ -1461,7 +1461,14 @@
 #define miataNb2VVTRatioFrom_offset_hex 334
 #define miataNb2VVTRatioTo_offset 824
 #define miataNb2VVTRatioTo_offset_hex 338
+#define MOCK_AFR_COMMAND "mock_afr_voltage"
+#define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_IAT_COMMAND "mock_iat_voltage"
+#define MOCK_MAF_COMMAND "mock_maf_voltage"
+#define MOCK_MAP_COMMAND "mock_map_voltage"
+#define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
+#define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
+#define MOCK_TPS_COMMAND "mock_tps_voltage"
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 #define narrowToWideOxygen_offset 2296
 #define narrowToWideOxygen_offset_hex 8f8

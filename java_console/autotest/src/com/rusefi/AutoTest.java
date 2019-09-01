@@ -13,6 +13,7 @@ import com.rusefi.waves.EngineReport;
 import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
 import static com.rusefi.io.CommandQueue.disableCommand;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
@@ -380,7 +381,7 @@ public class AutoTest {
         sendCommand("set_fuel_map 2200 4.2 15.66");
         sendCommand("set_fuel_map 2000 4.2 15.66");
         // mock 2 means 4 on the gauge because of the divider. should we simplify this?
-        sendCommand("set mock_maf_voltage 2");
+        sendCommand("set " + MOCK_MAF_COMMAND + " 2");
         sendComplexCommand("set global_trigger_offset_angle 175");
         chart = nextChart();
 
