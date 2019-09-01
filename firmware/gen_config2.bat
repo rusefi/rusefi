@@ -2,11 +2,6 @@ rem TODO better place for this stuff, more automation so that each file does not
 
 rm gen_config2.log
 
-set LIVE_DOCS_COMMAND=java -DSystemOut.name=gen_config2 ^
- -cp ../java_tools/ConfigDefinition.jar ^
- com.rusefi.ldmp.LiveDocsMetaParser ^
- "../"
-
 java -DSystemOut.name=gen_config2 ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/engine_state.txt ^
@@ -29,14 +24,6 @@ java -DSystemOut.name=gen_config2 ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/TriggerState.java ^
  -c_destination controllers/generated/trigger_structs.h
 
-%LIVE_DOCS_COMMAND% controllers/actuators/idle_thread.cpp
-%LIVE_DOCS_COMMAND% controllers/trigger/trigger_decoder.cpp
-%LIVE_DOCS_COMMAND% controllers/sensors/thermistors.cpp
-%LIVE_DOCS_COMMAND% controllers/sensors/tps.cpp
-%LIVE_DOCS_COMMAND% controllers/math/speed_density.cpp
-%LIVE_DOCS_COMMAND% controllers/algo/fuel_math.cpp
-%LIVE_DOCS_COMMAND% controllers/actuators/electronic_throttle.cpp
-
 java -DSystemOut.name=gen_config2 ^
  -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/wall_fuel.txt ^
@@ -44,4 +31,6 @@ java -DSystemOut.name=gen_config2 ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/WallFuelState.java ^
  -c_destination controllers/generated/wall_fuel.h
 
-%LIVE_DOCS_COMMAND% controllers/algo/accel_enrichment.cpp
+java -DSystemOut.name=gen_config2 ^
+ -cp ../java_tools/ConfigDefinition.jar;../java_tools/configuration_definition/lib/snakeyaml.jar ^
+ com.rusefi.ldmp.UsagesReader integration/LiveData.yaml
