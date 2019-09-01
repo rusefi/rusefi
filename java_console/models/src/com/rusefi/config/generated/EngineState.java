@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 11:57:51 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 15:38:18 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -28,6 +28,7 @@ public class EngineState {
 	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 76, FieldType.FLOAT);
 	public static final Field ISCRANKINGSTATE = Field.create("ISCRANKINGSTATE", 80, FieldType.BIT, 0);
 	public static final Field HASETBPEDALPOSITIONSENSOR = Field.create("HASETBPEDALPOSITIONSENSOR", 80, FieldType.BIT, 1);
+	public static final Field ISAUTOMATICIDLE = Field.create("ISAUTOMATICIDLE", 80, FieldType.BIT, 2);
 	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 84, FieldType.FLOAT);
 	public static final Field CRANKING_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKING_COOLANTTEMPERATURECOEFFICIENT", 88, FieldType.FLOAT);
 	public static final Field CRANKING_TPSCOEFFICIENT = Field.create("CRANKING_TPSCOEFFICIENT", 92, FieldType.FLOAT);
@@ -41,6 +42,7 @@ public class EngineState {
 	public static final Field RUNNING_PIDCORRECTION = Field.create("RUNNING_PIDCORRECTION", 124, FieldType.FLOAT);
 	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 128, FieldType.FLOAT);
 	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 132, FieldType.FLOAT);
+	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 136, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ISTCHARGEAIRMODEL,
 	AIRMASSINONECYLINDER,
@@ -64,6 +66,7 @@ public class EngineState {
 	BAROCORRECTION,
 	ISCRANKINGSTATE,
 	HASETBPEDALPOSITIONSENSOR,
+	ISAUTOMATICIDLE,
 	CRANKING_BASEFUEL,
 	CRANKING_COOLANTTEMPERATURECOEFFICIENT,
 	CRANKING_TPSCOEFFICIENT,
@@ -77,5 +80,6 @@ public class EngineState {
 	RUNNING_PIDCORRECTION,
 	RUNNING_BASEFUEL,
 	RUNNING_FUEL,
+	ETBFEEDFORWARD,
 	};
 }

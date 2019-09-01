@@ -54,6 +54,7 @@ float baroCorrection;
 
 bit isCrankingState
 bit hasEtbPedalPositionSensor;
+bit isAutomaticIdle
 
 struct cranking_fuel_s
 
@@ -93,6 +94,8 @@ end_struct
 
 ! actually define a member of 'running_fuel_s' type
 running_fuel_s running
+
+percent_t etbFeedForward;
 
 ! engine_state2_s
 end_struct

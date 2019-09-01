@@ -18,5 +18,22 @@ public class IdleThreadMeta {
 			new TextRequest("Throttle_Up_State"),
 			new FieldRequest("Engine", "throttlePedalUpState"),
 			new ConfigRequest("throttlePedalUpPin"),
+			new TextRequest("eol"),
+			new IfRequest("Engine", "isAutomaticIdle",
+				new Request[]{
+				new TextRequest("Output"),
+				new FieldRequest("idle_pid", "output"),
+				new TextRequest("iTerm"),
+				new FieldRequest("idle_pid", "iTerm"),
+				new TextRequest("eol"),
+				new TextRequest("Settings"),
+				new ConfigRequest("IDLERPMPID_PFACTOR"),
+				new ConfigRequest("IDLERPMPID_IFACTOR"),
+				new ConfigRequest("IDLERPMPID_DFACTOR"),
+				new ConfigRequest("IDLERPMPID_OFFSET"),
+},
+				new Request[]{
+				new TextRequest("Manual_idle_control"),
+}),
 	};
 }
