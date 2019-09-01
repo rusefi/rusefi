@@ -35,7 +35,7 @@
             <jvmarg value="-ea"/>
             <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
             <formatter type="brief"/>
-            <classpath path="lib/jssc.jar:build/classes:lib/junit.jar:lib/SteelSeries-3.9.30.jar"/>
+            <classpath path="lib/jssc.jar:build/classes:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/miglayout-4.0.jar"/>
             <batchtest todir="build">
                 <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src" includes="**/test/**/*Test.java"/>
