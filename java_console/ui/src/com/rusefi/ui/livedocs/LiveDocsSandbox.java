@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.rusefi.config.generated.Fields.LDS_CLT_INDEX;
-import static com.rusefi.config.generated.Fields.LDS_IAT_INDEX;
+import static com.rusefi.config.generated.Fields.LDS_CLT_STATE_INDEX;
+import static com.rusefi.config.generated.Fields.LDS_IAT_STATE_INDEX;
 import static com.rusefi.ui.livedocs.controls.Toolbox.setTransparentLineBorder;
 
 public class LiveDocsSandbox {
@@ -21,8 +21,8 @@ public class LiveDocsSandbox {
         comment.setForeground(Color.blue);
 
         JPanel panels = new JPanel(new MigLayout("fillx, gap 0, insets 0"));
-        panels.add(LiveDocPanel.createPanel("Coolant Sensor", "CLT", LDS_CLT_INDEX, ThermistorState.VALUES, ThermistorsMeta.CONTENT), "wrap");
-        panels.add(LiveDocPanel.createPanel("Intake Air Sensor", "IAT", LDS_IAT_INDEX, ThermistorState.VALUES, ThermistorsMeta.CONTENT), "wrap");
+        panels.add(LiveDocPanel.createPanel("Coolant Sensor", "CLT", LDS_CLT_STATE_INDEX, ThermistorState.VALUES, ThermistorsMeta.CONTENT), "wrap");
+        panels.add(LiveDocPanel.createPanel("Intake Air Sensor", "IAT", LDS_IAT_STATE_INDEX, ThermistorState.VALUES, ThermistorsMeta.CONTENT), "wrap");
 
         panels.add(getTChargePanel(), "wrap, grow");
 
