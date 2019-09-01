@@ -509,7 +509,7 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
  */
 void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
-	engineConfiguration->etb.pFactor = 22;
+	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
 	engineConfiguration->etb.iFactor = 	0;
 	engineConfiguration->etb.dFactor = 0;
 	engineConfiguration->etb.offset = 0;
@@ -523,7 +523,7 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	// set tps_min 90
-	engineConfiguration->tpsMin = 870;
+	engineConfiguration->tpsMin = 90;
 
 	// set tps_max 540
 	engineConfiguration->tpsMax = 870;

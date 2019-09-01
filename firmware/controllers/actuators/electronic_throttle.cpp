@@ -270,10 +270,15 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		DISPLAY_TEXT(eol);
 
 		DISPLAY_STATE(ETB_pid)
+		DISPLAY_TEXT(input);
+		DISPLAY(DISPLAY_FIELD(input));
 		DISPLAY_TEXT(Output);
 		DISPLAY(DISPLAY_FIELD(output));
 		DISPLAY_TEXT(iTerm);
 		DISPLAY(DISPLAY_FIELD(iTerm));
+		DISPLAY_TEXT(eol);
+		DISPLAY(DISPLAY_FIELD(errorAmplificationCoef));
+		DISPLAY(DISPLAY_FIELD(previousError));
 		DISPLAY_TEXT(eol);
 
 		DISPLAY_TEXT(Settings);
@@ -283,6 +288,9 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		DISPLAY_TEXT(eol);
 		DISPLAY(DISPLAY_CONFIG(ETB_OFFSET));
 		DISPLAY(DISPLAY_CONFIG(ETB_PERIODMS));
+		DISPLAY_TEXT(eol);
+		DISPLAY(DISPLAY_CONFIG(ETB_MINVALUE));
+		DISPLAY(DISPLAY_CONFIG(ETB_MAXVALUE));
 /* DISPLAY_ELSE */
 		DISPLAY_TEXT(No_Pedal_Sensor);
 /* DISPLAY_ENDIF */
@@ -409,10 +417,6 @@ void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasValues[5] = 20;
 	engineConfiguration->etbBiasValues[6] = 26;
 	engineConfiguration->etbBiasValues[7] = 28;
-
-	// values are above 100% since we have feedforward part of the total summation
-	engineConfiguration->etb.minValue = -200;
-	engineConfiguration->etb.maxValue = 200;
 }
 
 void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -438,6 +442,10 @@ void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 	engineConfiguration->etb_iTermMin = -300;
 	engineConfiguration->etb_iTermMax = 300;
+
+	// values are above 100% since we have feedforward part of the total summation
+	engineConfiguration->etb.minValue = -200;
+	engineConfiguration->etb.maxValue = 200;
 }
 
 static bool isSamePins(etb_io *current, etb_io *active) {
