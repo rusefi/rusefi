@@ -32,16 +32,35 @@
 #include "loggingcentral.h"
 #endif /* __cplusplus */
 
-// See also 'TS_GET_STRUCT'
+/**
+ * reference to configuration parameter
+ */
 #define DISPLAY_CONFIG(x) x
-#define DISPLAY_PREFIX(x) x
+/**
+ * The main annotation of live data - reference to dynamic state variable
+ * See also 'TS_GET_STRUCT'
+ */
 #define DISPLAY_FIELD(x) x
-// we use this 'DISPLAY' macro if value is not used by C++ in current context
+/**
+ * Advanced tag to access fields within data structures
+ * "running.fuel" variable would be referenced as DISPLAY_PREFIX(running).DISPLAY_FIELD(fuel)
+ */
+#define DISPLAY_PREFIX(x) x
+
+/**
+ * we use this 'DISPLAY' macro if value is not used by C++ code in current context and we want to hide it from compiler
+ */
 #define DISPLAY(x)
 
 #define DISPLAY_TAG(x)
+/**
+ * Just a human-readable comment. '_' underscore symbols become spaces. EOL is handled as new line.
+ */
 #define DISPLAY_TEXT(x)
 #define DISPLAY_STATE(x)
+/**
+ * Reference to one of 'output' channels/standard gauges.
+ */
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 
