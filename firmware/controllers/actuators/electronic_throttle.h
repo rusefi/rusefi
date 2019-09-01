@@ -16,6 +16,7 @@
 void initElectronicThrottle(void);
 void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
 void setEtbDFactor(float value);

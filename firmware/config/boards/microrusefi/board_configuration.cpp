@@ -95,11 +95,11 @@ static void setupEtb() {
 
 	// set_fsio_output_pin 7 PC8
 #if EFI_FSIO
-	// set_rpn_expression 7 "1"
+	// set_rpn_expression 8 "1"
 	// disable ETB by default
 	setFsio(7, GPIOC_8, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 	// enable ETB
-	// set_rpn_expression 7 "0"
+	// set_rpn_expression 8 "0"
 	//setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 

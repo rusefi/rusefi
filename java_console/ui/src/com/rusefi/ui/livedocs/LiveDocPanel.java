@@ -203,6 +203,7 @@ public class LiveDocPanel {
         liveDocs.add(createPanel("Idle", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
 
+        // todo: fix the defect - we request ETB structure but decode it as EngineState
         liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB,
                 EngineState.VALUES, ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
