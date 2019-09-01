@@ -7,7 +7,7 @@ import static com.rusefi.ConfigDefinition.EOL;
 /**
  * (c) Andrey Belomutskiy 2013-2019
  */
-public class FieldRequest extends Request {
+public class FieldRequest extends Request implements FieldReference  {
     private final String stateContext;
     private final String field;
 
@@ -16,10 +16,12 @@ public class FieldRequest extends Request {
         this.field = field;
     }
 
+    @Override
     public String getStateContext() {
         return stateContext;
     }
 
+    @Override
     public String getField() {
         return field;
     }

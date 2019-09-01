@@ -1,6 +1,8 @@
 package com.rusefi.ui.livedocs;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.Field;
+import com.rusefi.ldmp.StateDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,8 @@ public enum LiveDocsRegistry {
 
     private void refresh(BinaryProtocol binaryProtocol, LiveDocHolder holder, LiveDataContext context) {
         int liveDocRequestId = context.getId();
-        int size = holder.getStructSize();
+        Field[] values = StateDictionary.INSTANCE.getFields("refresh", context);
+        int size = Field.getStructureSize(values);
 
         byte packet[] = new byte[5];
         packet[0] = COMMAND_GET_STRUCT;

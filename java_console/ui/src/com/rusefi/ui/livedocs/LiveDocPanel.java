@@ -3,10 +3,7 @@ package com.rusefi.ui.livedocs;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.config.generated.ThermistorState;
-import com.rusefi.config.generated.TriggerState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ldmp.*;
@@ -35,14 +32,20 @@ public class LiveDocPanel {
     private static final int MAGIC_DETACHED_GAUGE_SIZE = 200;
     private static final int LIVE_DATA_PRECISION = 2;
 
+
     @NotNull
-    static JPanel createPanel(String title, String settingsInstancePrefix, final int defaultContextId, Field[] values, Request[] content) {
+    static JPanel createPanel(String title, String settingsInstancePrefix, Request[] content) {
+        return createPanel(title, settingsInstancePrefix, content, StateDictionary.NONE);
+    }
+
+    @NotNull
+    static JPanel createPanel(String title, String settingsInstancePrefix, Request[] content, final int defaultContextId) {
         LiveDataContext defaultContext = new LiveDataContext(defaultContextId);
 
-        ActionPanel ap = createComponents(title, content, values, settingsInstancePrefix, defaultContext);
+        ActionPanel ap = createComponents(title, content, settingsInstancePrefix, defaultContext);
         JPanel panel = ap.getPanel();
 
-        LiveDocHolder holder = new LiveDocHolder(defaultContext, ap.getRefreshActions(), values) {
+        LiveDocHolder holder = new LiveDocHolder(defaultContext, ap.getRefreshActions()) {
             @Override
             public boolean isVisible() {
                 boolean isVisible = !panel.getVisibleRect().isEmpty();
@@ -59,7 +62,7 @@ public class LiveDocPanel {
         return c.isVisible() && (parent == null || isRecursivelyVisible(parent));
     }
 
-    private static ActionPanel createComponents(String title, Request[] content, Field[] values, String settingsInstancePrefix, LiveDataContext defaultContext) {
+    private static ActionPanel createComponents(String title, Request[] content, String settingsInstancePrefix, LiveDataContext defaultContext) {
         ActionPanel result = new ActionPanel(title);
 
         for (Request r : content) {
@@ -73,7 +76,7 @@ public class LiveDocPanel {
             } else if (r instanceof FieldRequest) {
                 FieldRequest request = (FieldRequest) r;
                 LiveDataContext context = getFieldContext(defaultContext, request.getStateContext());
-                Field field = getField(values, request);
+                Field field = getField(defaultContext, request);
                 JLabel label = new JLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/variable.png"));
                 label.setToolTipText("Variable " + field.getName());
@@ -127,7 +130,7 @@ public class LiveDocPanel {
             } else if (r instanceof IfRequest) {
                 IfRequest request = (IfRequest) r;
 
-                IfConditionPanel panel = createIfRequestPanel(request, values, defaultContext);
+                IfConditionPanel panel = createIfRequestPanel(request, defaultContext);
 
                 result.actionsListAddAll(panel.getActionsList());
 
@@ -148,10 +151,10 @@ public class LiveDocPanel {
         }
     }
 
-    private static Field getField(Field[] defaultContext, FieldRequest request) {
+    private static Field getField(LiveDataContext defaultContext, FieldReference request) {
         Field[] context;
         if (request.getStateContext().isEmpty()) {
-            context = defaultContext;
+            context = StateDictionary.INSTANCE.getFields("create", defaultContext);
         } else {
             context = StateDictionary.INSTANCE.getValue(request.getStateContext());
         }
@@ -166,17 +169,17 @@ public class LiveDocPanel {
         return "Configuration " + dialogField.getUiName() + " (" + configurationFieldName + ")";
     }
 
-    private static IfConditionPanel createIfRequestPanel(IfRequest request, Field[] values, LiveDataContext defaultContext) {
-        Field conditionField = Field.findField(values, "", request.getVariable());
+    private static IfConditionPanel createIfRequestPanel(IfRequest request, LiveDataContext defaultContext) {
+        Field conditionField = getField(defaultContext, request);
 
         JPanel result = new JPanel(new VerticalFlowLayout());
 
-        JLabel conditionLabel = new JLabel(request.getVariable());
+        JLabel conditionLabel = new JLabel(request.getField());
         result.add(conditionLabel);
 
 
-        ActionPanel trueAP = createComponents("", request.trueBlock.toArray(new Request[0]), values, "", defaultContext);
-        ActionPanel falseAP = createComponents("", request.falseBlock.toArray(new Request[0]), values, "", defaultContext);
+        ActionPanel trueAP = createComponents("", request.trueBlock.toArray(new Request[0]), "", defaultContext);
+        ActionPanel falseAP = createComponents("", request.falseBlock.toArray(new Request[0]), "", defaultContext);
 
         result.add(trueAP.getPanel());
         result.add(falseAP.getPanel());
@@ -190,7 +193,7 @@ public class LiveDocPanel {
             @Override
             public void refresh(BinaryProtocol bp, byte[] response) {
                 int value = (int) conditionField.getValue(new ConfigurationImage(response));
-                conditionLabel.setText(request.getVariable() + " is " + (value == 1 ? "TRUE" : "FALSE"));
+                conditionLabel.setText(request.getField() + " is " + (value == 1 ? "TRUE" : "FALSE"));
                 JPanel active;
                 JPanel passive;
                 if (value == 1) {
@@ -214,18 +217,13 @@ public class LiveDocPanel {
     public static JPanel createLiveDocumentationPanel() {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
-        liveDocs.add(createPanel("Fuel", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, FuelMathMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Fuel", "", FuelMathMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("tCharge", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, SpeedDensityMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("tCharge", "", SpeedDensityMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Idle", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Idle", "", IdleThreadMeta.CONTENT), CONSTRAINTS);
 
-        // todo: fix the defect - we request ETB structure but decode it as EngineState
-        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB_PID_STATE_INDEX,
-                EngineState.VALUES, ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("ETB", "", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
@@ -233,17 +231,15 @@ public class LiveDocPanel {
     public static JPanel createSensorsLiveDataPanel() {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
-        liveDocs.add(createPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_STATE_INDEX,
-                ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Coolant Sensor", "CLT", ThermistorsMeta.CONTENT, Fields.LDS_CLT_STATE_INDEX
+        ), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_STATE_INDEX,
-                ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Intake Air Sensor", "IAT", ThermistorsMeta.CONTENT, Fields.LDS_IAT_STATE_INDEX
+        ), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
-                EngineState.VALUES, TpsMeta.TPS_SECTION), CONSTRAINTS);
+        liveDocs.add(createPanel("Throttle Position Sensor", "", TpsMeta.TPS_SECTION), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Trigger", "", Fields.LDS_TRIGGER_STATE_INDEX,
-                TriggerState.VALUES, TriggerDecoderMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Trigger", "", TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }

@@ -1,17 +1,14 @@
 package com.rusefi.ui.livedocs;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.Field;
 
 public abstract class LiveDocHolder {
     private final LiveDataContext id;
     private final RefreshActionsMap actions;
-    private final Field[] values;
 
-    public LiveDocHolder(LiveDataContext id, com.rusefi.ui.livedocs.RefreshActionsMap actions, Field[] values) {
+    public LiveDocHolder(LiveDataContext id, RefreshActionsMap actions) {
         this.id = id;
         this.actions = actions;
-        this.values = values;
     }
 
     public RefreshActionsMap getActions() {
@@ -27,10 +24,6 @@ public abstract class LiveDocHolder {
 
     public LiveDataContext getId() {
         return id;
-    }
-
-    public int getStructSize() {
-        return Field.getStructureSize(values);
     }
 
     @Override

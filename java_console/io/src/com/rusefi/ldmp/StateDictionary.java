@@ -1,10 +1,7 @@
 package com.rusefi.ldmp;
 
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.EngineState;
-import com.rusefi.config.generated.Fields;
-import com.rusefi.config.generated.PidState;
-import com.rusefi.config.generated.TriggerState;
+import com.rusefi.config.generated.*;
 import com.rusefi.ui.livedocs.LiveDataContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,12 +12,19 @@ import java.util.Objects;
 public enum StateDictionary {
     INSTANCE;
 
+    public static final int NONE = -1;
     private Map<Integer, Field[]> map = new HashMap<>();
 
     StateDictionary() {
-        register(Fields.LDS_ETB_PID_STATE_INDEX, PidState.VALUES);
+        register(Fields.LDS_CLT_STATE_INDEX, ThermistorState.VALUES); // 0
+        register(Fields.LDS_IAT_STATE_INDEX, ThermistorState.VALUES);
+        register(Fields.LDS_SPEED_DENSITY_STATE_INDEX, EngineState.VALUES);
+        register(Fields.LDS_ENGINE_STATE_INDEX, EngineState.VALUES); // 3
+        register(Fields.LDS_FUEL_TRIM_STATE_INDEX, EngineState.VALUES);
+        register(Fields.LDS_TPS_TPS_ENEICHMENT_STATE_INDEX, EngineState.VALUES); // 5
         register(Fields.LDS_TRIGGER_STATE_INDEX, TriggerState.VALUES);
-        register(Fields.LDS_ENGINE_STATE_INDEX, EngineState.VALUES);
+        register(Fields.LDS_ETB_PID_STATE_INDEX, PidState.VALUES); // 7
+        register(Fields.LDS_IDLE_PID_STATE_INDEX, PidState.VALUES);
     }
 
     private void register(int ldsIndex, Field[] values) {
@@ -30,6 +34,11 @@ public enum StateDictionary {
     public Field[] getValue(String state) {
         String indexFieldName = getContextIndexFieldName(state);
         LiveDataContext indexValue = getStateContext(indexFieldName);
+        return getFields(indexFieldName, indexValue);
+    }
+
+    @NotNull
+    public Field[] getFields(String indexFieldName, LiveDataContext indexValue) {
         Field[] result = map.get(indexValue.getId());
         if (result == null) {
             throw new IllegalStateException("Nothing for " + indexFieldName + "/" + indexValue);

@@ -6,7 +6,7 @@ import java.util.List;
 
 import static com.rusefi.ConfigDefinition.EOL;
 
-public class IfRequest extends Request {
+public class IfRequest extends Request implements FieldReference {
     private final String stateContext;
     private final String variable;
     public List<Request> trueBlock = new ArrayList<>();
@@ -23,6 +23,7 @@ public class IfRequest extends Request {
         this.falseBlock.addAll(Arrays.asList(falseBlock));
     }
 
+    @Override
     public String getStateContext() {
         return stateContext;
     }
@@ -36,7 +37,8 @@ public class IfRequest extends Request {
                 '}';
     }
 
-    public String getVariable() {
+    @Override
+    public String getField() {
         return variable;
     }
 
