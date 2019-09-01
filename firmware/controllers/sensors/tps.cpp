@@ -202,7 +202,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (mockPedalPosition != MOCK_UNDEFINED) {
 		return mockPedalPosition;
 	}
-	DISPLAY_TAG(PEGAL_SECTION);
+	DISPLAY_TAG(PEDAL_SECTION);
 	DISPLAY_TEXT(Analog_MCU_reads);
 
 	float voltage = getVoltageDivided("pPS", CONFIG(DISPLAY_CONFIG(throttlePedalPositionAdcChannel)));
