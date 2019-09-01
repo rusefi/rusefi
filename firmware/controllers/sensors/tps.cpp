@@ -159,6 +159,7 @@ int getTPS12bitAdc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void grabTPSIsClosed() {
 #if EFI_PROD_CODE
+	printTPSInfo();
 	engineConfiguration->tpsMin = getTPS10bitAdc();
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
@@ -166,6 +167,7 @@ void grabTPSIsClosed() {
 
 void grabTPSIsWideOpen() {
 #if EFI_PROD_CODE
+	printTPSInfo();
 	engineConfiguration->tpsMax = getTPS10bitAdc();
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
