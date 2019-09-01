@@ -40,6 +40,7 @@ temperature_t getTCharge(int rpm, float tps, float coolantTemp, float airTemp DE
 		return coolantTemp;
 	}
 
+	DISPLAY_STATE(Engine)
 
 	if ((engine->engineState.sd.DISPLAY_IF(isTChargeAirModel) = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
 		const floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;

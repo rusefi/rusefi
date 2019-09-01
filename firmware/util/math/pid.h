@@ -11,6 +11,7 @@
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
 #include "engine_state_generated.h"
+#include "pid_state_generated.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "tunerstudio_configuration.h"

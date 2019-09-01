@@ -263,9 +263,13 @@ static const void * getStructAddr(int structId) {
 	case LDS_TRIGGER_STATE_INDEX:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
 #if EFI_ELECTRONIC_THROTTLE_BODY
-	case LDS_ETB_STATE_INDEX:
+	case LDS_ETB_PID_STATE_INDEX:
 		return static_cast<pid_state_s*>(&etbPid);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+#ifndef EFI_IDLE_CONTROL
+	// todo case LDS_IDLE_PID_STATE_INDEX:
+#endif /* EFI_IDLE_CONTROL */
 
 	default:
 		return NULL;

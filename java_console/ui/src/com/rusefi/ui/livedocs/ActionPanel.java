@@ -7,6 +7,12 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Multi-line horizontal flow panel.
+ *
+ *
+ * (c) Andrey Belomutskiy 2013-2019
+ */
 public class ActionPanel {
     List<RefreshActions> actionsList = new ArrayList<>();
     private final JPanel panel = new JPanel(new MigLayout());
@@ -14,11 +20,6 @@ public class ActionPanel {
 
     public ActionPanel(String title) {
         panel.setBorder(BorderFactory.createTitledBorder(title));
-    }
-
-    public ActionPanel(JPanel result, List<RefreshActions> combined) {
-        panel.add(result);
-        actionsList.addAll(combined);
     }
 
     public JPanel getPanel() {
@@ -30,15 +31,15 @@ public class ActionPanel {
         currentLinePanel = null;
     }
 
+    public void addControl(JComponent component) {
+        initIfNeeded();
+        currentLinePanel.add(component);
+    }
+
     private void initIfNeeded() {
         if (currentLinePanel == null) {
             currentLinePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             panel.add(currentLinePanel, "wrap");
         }
-    }
-
-    public void addControl(JComponent component) {
-        initIfNeeded();
-        currentLinePanel.add(component);
     }
 }

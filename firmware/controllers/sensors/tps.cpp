@@ -79,6 +79,7 @@ float getTpsRateOfChange(void) {
  * */
 percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
+	DISPLAY_STATE(Engine)
 	DISPLAY_TAG(TPS_SECTION);
 	DISPLAY_SENSOR(TPS)
 	DISPLAY_TEXT(EOL)

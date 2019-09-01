@@ -4,6 +4,9 @@ import java.util.List;
 
 import static com.rusefi.ConfigDefinition.EOL;
 
+/**
+ * (c) Andrey Belomutskiy 2013-2019
+ */
 public abstract class Request {
     static String GLOBAL_PREFIX = "\t\t\t";
 

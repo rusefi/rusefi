@@ -6,11 +6,11 @@ import com.rusefi.config.Field;
 import java.util.List;
 
 public abstract class LiveDocHolder {
-    private final int id;
+    private final StateId id;
     private final List<RefreshActions> actions;
     private final Field[] values;
 
-    public LiveDocHolder(int id, List<RefreshActions> actions, Field[] values) {
+    public LiveDocHolder(StateId id, List<RefreshActions> actions, Field[] values) {
         this.id = id;
         this.actions = actions;
         this.values = values;
@@ -23,7 +23,7 @@ public abstract class LiveDocHolder {
 
     public abstract boolean isVisible();
 
-    public Integer getId() {
+    public StateId getId() {
         return id;
     }
 

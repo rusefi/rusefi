@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Aug 31 23:31:57 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 01 12:45:18 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -873,9 +873,10 @@ public class Fields {
 	public static final int lcdThreadPeriodMs_offset = 720;
 	public static final int LDS_CLT_STATE_INDEX = 0;
 	public static final int LDS_ENGINE_STATE_INDEX = 3;
-	public static final int LDS_ETB_STATE_INDEX = 7;
+	public static final int LDS_ETB_PID_STATE_INDEX = 7;
 	public static final int LDS_FUEL_TRIM_STATE_INDEX = 4;
 	public static final int LDS_IAT_STATE_INDEX = 1;
+	public static final int LDS_IDLE_PID_STATE_INDEX = 8;
 	public static final int LDS_SPEED_DENSITY_STATE_INDEX = 2;
 	public static final int LDS_TPS_TPS_ENEICHMENT_STATE_INDEX = 5;
 	public static final int LDS_TRIGGER_STATE_INDEX = 6;

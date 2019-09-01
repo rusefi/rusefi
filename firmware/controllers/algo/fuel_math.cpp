@@ -41,6 +41,8 @@ extern baroCorr_Map3D_t baroCorrMap;
 
 #if EFI_ENGINE_CONTROL
 
+DISPLAY_STATE(Engine)
+
 DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius

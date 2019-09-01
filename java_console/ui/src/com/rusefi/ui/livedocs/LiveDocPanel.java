@@ -38,7 +38,8 @@ public class LiveDocPanel {
     private static final int LIVE_DATA_PRECISION = 2;
 
     @NotNull
-    static JPanel createPanel(String title, String settingsInstancePrefix, final int id, Field[] values, Request[] content) {
+    static JPanel createPanel(String title, String settingsInstancePrefix, final int integerId, Field[] values, Request[] content) {
+        StateId id = new StateId(integerId);
 
         ActionPanel ap = createComponents(title, content, values, settingsInstancePrefix);
         JPanel panel = ap.getPanel();
@@ -73,7 +74,7 @@ public class LiveDocPanel {
                 }
             } else if (r instanceof FieldRequest) {
                 FieldRequest request = (FieldRequest) r;
-                Field field = Field.findField(values, "", request.getField());
+                Field field = getField(values, request);
                 JLabel label = new JLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/variable.png"));
                 label.setToolTipText("Variable " + field.getName());
@@ -127,9 +128,9 @@ public class LiveDocPanel {
             } else if (r instanceof IfRequest) {
                 IfRequest request = (IfRequest) r;
 
-                ActionPanel panel = createIfRequestPanel(request, values);
+                IfConditionPanel panel = createIfRequestPanel(request, values);
 
-                result.actionsList.addAll(panel.actionsList);
+                result.actionsList.addAll(panel.getActionsList());
 
                 result.addControl(panel.getPanel());
             } else {
@@ -137,6 +138,16 @@ public class LiveDocPanel {
             }
         }
         return result;
+    }
+
+    private static Field getField(Field[] defaultContext, FieldRequest request) {
+        Field[] context;
+        if (request.getStateContext().isEmpty()) {
+            context = defaultContext;
+        } else {
+            context = StateDictionary.INSTANCE.getValue(request.getStateContext());
+        }
+        return Field.findField(context, "", request.getField());
     }
 
     private static String getTooltipText(String configurationFieldName) {
@@ -147,7 +158,7 @@ public class LiveDocPanel {
         return "Configuration " + dialogField.getUiName() + " (" + configurationFieldName + ")";
     }
 
-    private static ActionPanel createIfRequestPanel(IfRequest request, Field[] values) {
+    private static IfConditionPanel createIfRequestPanel(IfRequest request, Field[] values) {
 
         Field conditionField = Field.findField(values, "", request.getVariable());
 
@@ -187,7 +198,7 @@ public class LiveDocPanel {
             }
         });
 
-        return new ActionPanel(result, combined);
+        return new IfConditionPanel(result, combined);
     }
 
     @NotNull
@@ -204,7 +215,7 @@ public class LiveDocPanel {
                 EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
 
         // todo: fix the defect - we request ETB structure but decode it as EngineState
-        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB_STATE_INDEX,
+        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB_PID_STATE_INDEX,
                 EngineState.VALUES, ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;

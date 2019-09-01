@@ -4,6 +4,9 @@ import java.util.Objects;
 
 import static com.rusefi.ConfigDefinition.EOL;
 
+/**
+ * (c) Andrey Belomutskiy 2013-2019
+ */
 public class FieldRequest extends Request {
     private final String stateContext;
     private final String field;
@@ -11,6 +14,10 @@ public class FieldRequest extends Request {
     public FieldRequest(String stateContext, String field) {
         this.stateContext = stateContext;
         this.field = field;
+    }
+
+    public String getStateContext() {
+        return stateContext;
     }
 
     public String getField() {
@@ -43,7 +50,7 @@ public class FieldRequest extends Request {
     public String getGeneratedJavaCode() {
         return GLOBAL_PREFIX + "new " + getClass().getSimpleName() + "("
                 + quoteString(stateContext)
-                + ","
+                + ", "
                 + quoteString(field)
                 + ")," + EOL;
     }
