@@ -59,9 +59,9 @@ static bool mightResetPid = false;
 
 #if EFI_IDLE_INCREMENTAL_PID_CIC
 // Use new PID with CIC integrator
-static PidCic idlePid;
+PidCic idlePid;
 #else
-static Pid idlePid;
+Pid idlePid;
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
@@ -283,7 +283,9 @@ public:
 	 * @see stepper.cpp
 	 */
 
-		if (engineConfiguration->isVerboseIAC && engineConfiguration->idleMode == IM_AUTO) {
+		engine->engineState.isAutomaticIdle = engineConfiguration->idleMode == IM_AUTO;
+
+		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
 			// todo: print each bit using 'getIdle_state_e' method
 			scheduleMsg(logger, "state %d", engine->engineState.idle.idleState);
 			idlePid.showPidStatus(logger, "idle");
@@ -535,6 +537,26 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	DISPLAY_TEXT(Throttle_Up_State);
 	DISPLAY(DISPLAY_FIELD(throttlePedalUpState));
 	DISPLAY(DISPLAY_CONFIG(throttlePedalUpPin));
+
+	DISPLAY_TEXT(eol);
+	DISPLAY(DISPLAY_IF(isAutomaticIdle))
+
+		DISPLAY_STATE(idle_pid)
+		DISPLAY_TEXT(Output);
+		DISPLAY(DISPLAY_FIELD(output));
+		DISPLAY_TEXT(iTerm);
+		DISPLAY(DISPLAY_FIELD(iTerm));
+		DISPLAY_TEXT(eol);
+
+		DISPLAY_TEXT(Settings);
+		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_PFACTOR));
+		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_IFACTOR));
+		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_DFACTOR));
+		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_OFFSET));
+
+	/* DISPLAY_ELSE */
+			DISPLAY_TEXT(Manual_idle_control);
+	/* DISPLAY_ENDIF */
 
 
 	//scheduleMsg(logger, "initial idle %d", idlePositionController.value);

@@ -171,8 +171,6 @@ static percent_t currentEtbDuty;
 
 class EtbController : public PeriodicTimerController {
 
-	percent_t feedForward = 0;
-
 	int getPeriodMs() override {
 		return GET_PERIOD_LIMITED(&engineConfiguration->etb);
 	}
@@ -182,7 +180,7 @@ class EtbController : public PeriodicTimerController {
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO
 			etbPid.postState(&tsOutputChannels);
-			tsOutputChannels.debugIntField5 = feedForward;
+			tsOutputChannels.debugIntField5 = engine->engineState.etbFeedForward;
 #endif /* EFI_TUNER_STUDIO */
 		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
 #if EFI_TUNER_STUDIO
@@ -242,12 +240,12 @@ class EtbController : public PeriodicTimerController {
 #endif /* EFI_TUNER_STUDIO */
 		}
 
-		feedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
+		engine->engineState.etbFeedForward = interpolate2d("etbb", targetPosition, engineConfiguration->etbBiasBins, engineConfiguration->etbBiasValues);
 
 		etbPid.iTermMin = engineConfiguration->etb_iTermMin;
 		etbPid.iTermMax = engineConfiguration->etb_iTermMax;
 
-		currentEtbDuty = feedForward +
+		currentEtbDuty = engine->engineState.etbFeedForward +
 				etbPid.getOutput(targetPosition, actualThrottlePosition);
 
 		etb1.dcMotor.Set(ETB_PERCENT_TO_DUTY(currentEtbDuty));
@@ -265,6 +263,10 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		DISPLAY_TEXT(Pedal);
 		DISPLAY_SENSOR(PPS);
 		DISPLAY(DISPLAY_CONFIG(throttlePedalPositionAdcChannel));
+		DISPLAY_TEXT(eol);
+
+		DISPLAY_TEXT(Feed_forward);
+		DISPLAY(DISPLAY_FIELD(etbFeedForward));
 		DISPLAY_TEXT(eol);
 
 		DISPLAY_STATE(ETB_pid)

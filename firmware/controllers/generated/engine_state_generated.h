@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 11:57:51 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 15:38:18 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -199,6 +199,9 @@ struct engine_state2_s {
 	offset 80 bit 1 */
 	bool hasEtbPedalPositionSensor : 1;
 	/**
+	offset 80 bit 2 */
+	bool isAutomaticIdle : 1;
+	/**
 	 * offset 84
 	 */
 	cranking_fuel_s cranking;
@@ -206,11 +209,15 @@ struct engine_state2_s {
 	 * offset 104
 	 */
 	running_fuel_s running;
-	/** total size 136*/
+	/**
+	 * offset 136
+	 */
+	percent_t etbFeedForward = (percent_t)0;
+	/** total size 140*/
 };
 
 typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 11:57:51 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 15:38:18 EDT 2019
