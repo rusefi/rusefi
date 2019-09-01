@@ -257,7 +257,7 @@ class EtbController : public PeriodicTimerController {
 		}
 
 DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
-		DISPLAY_TEXT(Electrnoic_Throttle);
+		DISPLAY_TEXT(Electronic_Throttle);
 		DISPLAY_SENSOR(TPS)
 		DISPLAY_TEXT(eol);
 
