@@ -77,7 +77,7 @@ public class LiveDocPanel {
                 FieldRequest request = (FieldRequest) r;
                 LiveDataContext context = getFieldContext(defaultContext, request.getStateContext());
                 Field field = getField(defaultContext, request);
-                JLabel label = new JLabel("*");
+                JLabel label = new LessJumpyJLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/variable.png"));
                 label.setToolTipText("Variable " + field.getName());
                 result.addControl(label);
@@ -85,7 +85,7 @@ public class LiveDocPanel {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
                         Number fieldValue = field.getValue(new ConfigurationImage(response));
-                        String value = niceToString(fieldValue);
+                        String value = Field.niceToString(fieldValue, LIVE_DATA_PRECISION);
                         label.setText(value);
                     }
                 });
@@ -93,7 +93,7 @@ public class LiveDocPanel {
                 ConfigRequest request = (ConfigRequest) r;
                 Field field = Field.findField(Fields.VALUES, settingsInstancePrefix, request.getField());
 
-                JLabel label = new JLabel("*");
+                JLabel label = new LessJumpyJLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/setting.png"));
                 label.setToolTipText(getTooltipText(field.getName()));
                 result.addControl(label);
@@ -108,7 +108,7 @@ public class LiveDocPanel {
             } else if (r instanceof SensorRequest) {
                 SensorRequest request = (SensorRequest) r;
                 Sensor sensor = Sensor.find(request.getValue());
-                JLabel label = new JLabel("*");
+                JLabel label = new LessJumpyJLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/gauge.png"));
                 label.setToolTipText("Sensor " + request.getValue());
                 label.addMouseListener(new MouseAdapter() {
@@ -174,7 +174,7 @@ public class LiveDocPanel {
 
         JPanel result = new JPanel(new VerticalFlowLayout());
 
-        JLabel conditionLabel = new JLabel(request.getField());
+        JLabel conditionLabel = new LessJumpyJLabel(request.getField());
         result.add(conditionLabel);
 
 

@@ -5,6 +5,7 @@ struct_no_prefix pid_state_s
 	float input;only used for logging
 	float output;only used for logging
 	float errorAmplificationCoef;
+	float previousError
 
 
 end_struct

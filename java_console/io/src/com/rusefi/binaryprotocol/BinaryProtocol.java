@@ -35,6 +35,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 public class BinaryProtocol implements BinaryProtocolCommands {
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
+    private static final int TEXT_PULL_PERIOD = 100;
     /**
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
@@ -69,9 +70,9 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         stream.setInputListener(incomingData::addData);
     }
 
-    private static void sleep() {
+    private static void sleep(int millis) {
         try {
-            Thread.sleep(100);
+            Thread.sleep(millis);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -146,7 +147,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
                             }
                         });
                     }
-                    sleep();
+                    sleep(TEXT_PULL_PERIOD);
                 }
                 FileLog.MAIN.logLine("Stopping text pull");
             }

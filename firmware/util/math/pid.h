@@ -70,9 +70,6 @@ public:
 private:
 	pid_s *parameters;
 
-	float previousError;
-
-
 private:
 	virtual void updateITerm(float value);
 };

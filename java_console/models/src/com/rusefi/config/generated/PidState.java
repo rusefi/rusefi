@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/pid_state.txt Sun Sep 01 11:57:50 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/pid_state.txt Sun Sep 01 19:07:42 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -12,6 +12,7 @@ public class PidState {
 	public static final Field INPUT = Field.create("INPUT", 12, FieldType.FLOAT);
 	public static final Field OUTPUT = Field.create("OUTPUT", 16, FieldType.FLOAT);
 	public static final Field ERRORAMPLIFICATIONCOEF = Field.create("ERRORAMPLIFICATIONCOEF", 20, FieldType.FLOAT);
+	public static final Field PREVIOUSERROR = Field.create("PREVIOUSERROR", 24, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ITERM,
 	DTERM,
@@ -19,5 +20,6 @@ public class PidState {
 	INPUT,
 	OUTPUT,
 	ERRORAMPLIFICATIONCOEF,
+	PREVIOUSERROR,
 	};
 }

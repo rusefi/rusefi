@@ -2,6 +2,9 @@ package com.rusefi.ui.livedocs;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 
+/**
+ * (c) Andrey Belomutskiy 2013-2019
+ */
 public abstract class LiveDocHolder {
     private final LiveDataContext id;
     private final RefreshActionsMap actions;

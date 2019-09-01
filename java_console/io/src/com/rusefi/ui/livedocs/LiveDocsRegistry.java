@@ -14,6 +14,7 @@ import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
 /**
  * Singleton map of all live documentation entities. Using this registry we know all the entities to update periodically.
+ * (c) Andrey Belomutskiy 2013-2019
  */
 public enum LiveDocsRegistry {
     INSTANCE;
@@ -41,7 +42,7 @@ public enum LiveDocsRegistry {
         Field[] values = StateDictionary.INSTANCE.getFields("refresh", context);
         int size = Field.getStructureSize(values);
 
-        byte packet[] = new byte[5];
+        byte[] packet = new byte[5];
         packet[0] = COMMAND_GET_STRUCT;
         putShort(packet, 1, swap16(liveDocRequestId)); // offset
         putShort(packet, 3, swap16(size));
