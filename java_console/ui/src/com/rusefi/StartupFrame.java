@@ -149,7 +149,8 @@ public class StartupFrame {
 
         if (FileLog.isWindows()) {
             realHardwarePanel.add(new HorizontalLine());
-            realHardwarePanel.add(new DfuFlasher(comboPorts).getButton());
+            realHardwarePanel.add(new DfuFlasher(comboPorts).getAutoButton());
+            realHardwarePanel.add(new DfuFlasher(comboPorts).getManualButton());
             // for F7 builds we just build one file at the moment
             realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
             if (new File(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE).exists()) {
