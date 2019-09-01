@@ -27,7 +27,8 @@ public class DfuFlasher {
     static final String DFU_COMMAND = DFU_BINARY + " -c -d --v --fn " + Launcher.INPUT_FILES_PATH + File.separator +
             "rusefi.dfu";
 
-    private final JButton button = new JButton("Program via DFU");
+    private final JButton button = new JButton("Auto Program via DFU");
+    private final JButton manualButton = new JButton("Manual Program via DFU");
 
     public DfuFlasher(JComboBox<String> comboPorts) {
         button.addActionListener(new ActionListener() {
@@ -35,8 +36,10 @@ public class DfuFlasher {
             public void actionPerformed(ActionEvent event) {
                 String port = comboPorts.getSelectedItem().toString();
                 port = PortDetector.autoDetectSerialIfNeeded(port);
-                if (port == null)
+                if (port == null) {
+                    JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
                     return;
+                }
                 IoStream stream = SerialIoStreamJSerialComm.open(port, PortHolder.BAUD_RATE, FileLog.LOGGER);
                 byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
                 try {
@@ -46,11 +49,17 @@ public class DfuFlasher {
                     e.printStackTrace();
                 }
 
-                StatusWindow wnd = new StatusWindow();
-                wnd.showFrame("DFU status");
-                ExecHelper.submitAction(() -> executeDFU(wnd), getClass() + " thread");
+                runDfuProgramming();
             }
         });
+
+        manualButton.addActionListener(e -> runDfuProgramming());
+    }
+
+    private void runDfuProgramming() {
+        StatusWindow wnd = new StatusWindow();
+        wnd.showFrame("DFU status");
+        ExecHelper.submitAction(() -> executeDFU(wnd), getClass() + " thread");
     }
 
     private void executeDFU(StatusWindow wnd) {
@@ -66,7 +75,15 @@ public class DfuFlasher {
         wnd.appendMsg("Please power cycle device to exit DFU mode");
     }
 
-    public Component getButton() {
+    /**
+     * connect via serial + initiate software DFU jump + program
+     */
+    public Component getAutoButton() {
         return button;
+    }
+
+    // todo: maybe not couple these two different buttons in same class?
+    public Component getManualButton() {
+        return manualButton;
     }
 }
