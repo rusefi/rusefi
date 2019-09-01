@@ -3,7 +3,7 @@ package com.rusefi.ldmp.generated;
 import com.rusefi.ldmp.*;
 
 public class TpsMeta {
-	public static final Request[] PEGAL_SECTION = new Request[]{
+	public static final Request[] PEDAL_SECTION = new Request[]{
 			new TextRequest("Analog_MCU_reads"),
 			new ConfigRequest("throttlePedalPositionAdcChannel"),
 	};
