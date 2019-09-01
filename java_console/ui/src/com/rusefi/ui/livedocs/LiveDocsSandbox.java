@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.rusefi.config.generated.Fields.LDS_CLT_INDEX;
+import static com.rusefi.config.generated.Fields.LDS_IAT_INDEX;
 import static com.rusefi.ui.livedocs.controls.Toolbox.setTransparentLineBorder;
 
 public class LiveDocsSandbox {
