@@ -38,7 +38,7 @@ public class ConfigDefinition {
     public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SKIP = "-skip";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
-    public static boolean needZeroInit; // ugly quick implementation
+    public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
 
     public static void main(String[] args) throws IOException {
@@ -72,6 +72,7 @@ public class ConfigDefinition {
         List<String> prependFiles = new ArrayList<>();
         String skipRebuildFile = null;
         String romRaiderInputFile = null;
+        CHeaderConsumer.withC_Defines = true;
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
