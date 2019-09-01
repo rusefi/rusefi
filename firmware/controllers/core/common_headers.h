@@ -41,6 +41,7 @@
 
 #define DISPLAY_TAG(x)
 #define DISPLAY_TEXT(x)
+#define DISPLAY_STATE(x)
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 

@@ -34,7 +34,7 @@ public class SensorRequest extends Request {
     }
 
     @Override
-    public String getJavaCode() {
+    public String getGeneratedJavaCode() {
         return withSimpleParameter(quoteString(value));
     }
 }

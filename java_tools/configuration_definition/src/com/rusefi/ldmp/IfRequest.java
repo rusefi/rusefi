@@ -35,17 +35,17 @@ public class IfRequest extends Request {
     }
 
     @Override
-    public String getJavaCode() {
+    public String getGeneratedJavaCode() {
         String result = Request.GLOBAL_PREFIX;
 
         Request.GLOBAL_PREFIX = Request.GLOBAL_PREFIX + "\t";
 
         result += "new IfRequest(" + quoteString(variable) + "," + EOL +
                 Request.GLOBAL_PREFIX + "new Request[]{" + EOL +
-                Request.printList(trueBlock) +
+                Request.getGeneratedJavaCode(trueBlock) +
                 "}," + EOL +
                 Request.GLOBAL_PREFIX + "new Request[]{" + EOL +
-                Request.printList(falseBlock) +
+                Request.getGeneratedJavaCode(falseBlock) +
                 "})," + EOL;
 
         Request.GLOBAL_PREFIX = Request.GLOBAL_PREFIX.substring(1);

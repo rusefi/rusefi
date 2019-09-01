@@ -7,9 +7,9 @@ public class AccelEnrichmentMeta {
 			new ConfigRequest("wwaeTau"),
 			new ConfigRequest("wwaeBeta"),
 			new TextRequest("Current_Wall_Fuel_Film"),
-			new FieldRequest("wallFuel"),
+			new FieldRequest("","wallFuel"),
 			new TextRequest("Fuel"),
-			new FieldRequest("wallFuelCorrection"),
+			new FieldRequest("","wallFuelCorrection"),
 			new TextRequest("ms"),
 	};
 }

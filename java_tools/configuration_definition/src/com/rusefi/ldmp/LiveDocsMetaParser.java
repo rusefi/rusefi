@@ -18,6 +18,7 @@ public class LiveDocsMetaParser {
     private static final String DISPLAY_CONFIG = "DISPLAY_CONFIG";
     private static final String DISPLAY_PREFIX = "DISPLAY_PREFIX";
     private static final String DISPLAY_FIELD = "DISPLAY_FIELD";
+    private static final String DISPLAY_STATE = "DISPLAY_STATE";
     private static final String DISPLAY_TEXT = "DISPLAY_TEXT";
     private static final String DISPLAY_SENSOR = "DISPLAY_SENSOR";
     private static final String DISPLAY_IF = "DISPLAY_IF";
@@ -79,6 +80,10 @@ public class LiveDocsMetaParser {
                     SystemOut.println("REQ CONF " + config);
                     result.add(new ConfigRequest(config));
                 }
+            } else if (DISPLAY_STATE.equalsIgnoreCase(token)) {
+                if (s.hasNext()) {
+                    String state = s.next();
+                    meta.stateStack.push(state);                }
             } else if (DISPLAY_TEXT.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
@@ -100,7 +105,7 @@ public class LiveDocsMetaParser {
                 if (s.hasNext()) {
                     String config = prefix + s.next();
                     SystemOut.println("REQ FIELD " + config);
-                    result.add(new FieldRequest(config));
+                    result.add(new FieldRequest(meta.getStateContext(), config));
                     prefix.setLength(0);
                 }
             } else if (DISPLAY_IF.equalsIgnoreCase(token)) {
@@ -162,7 +167,7 @@ public class LiveDocsMetaParser {
             java.append("\tpublic static final Request[] " +
                     e.getKey() +
                     " = new Request[]{" + EOL);
-            java.append(Request.printList(list));
+            java.append(Request.getGeneratedJavaCode(list));
             java.append("\t};" + EOL);
         }
 

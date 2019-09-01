@@ -7,7 +7,7 @@ public class SpeedDensityMeta {
 			new IfRequest("isTChargeAirModel",
 				new Request[]{
 				new TextRequest("interpolate_Air_Flow"),
-				new FieldRequest("airFlow"),
+				new FieldRequest("","airFlow"),
 				new TextRequest("Between"),
 				new ConfigRequest("tChargeAirCoefMin"),
 				new ConfigRequest("tChargeAirFlowMax"),
