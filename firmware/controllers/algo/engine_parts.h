@@ -11,7 +11,7 @@
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
 #include "cyclic_buffer.h"
-#include "thermistor.h"
+#include "thermistor_generated.h"
 
 #define MOCK_ADC_SIZE 16
 
