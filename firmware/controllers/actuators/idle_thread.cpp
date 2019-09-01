@@ -520,6 +520,7 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_UNIT_TEST */
 
+	DISPLAY_STATE(Engine)
 	DISPLAY_TEXT(Idle_State);
 	engine->engineState.idle.DISPLAY_FIELD(idleState) = INIT;
 	DISPLAY_TEXT(EOL);

@@ -7,14 +7,14 @@ import static com.rusefi.ConfigDefinition.EOL;
 public abstract class Request {
     static String GLOBAL_PREFIX = "\t\t\t";
 
-    static String printList(List<Request> r) {
+    static String getGeneratedJavaCode(List<Request> r) {
         StringBuilder java = new StringBuilder();
         for (Request request : r)
-            java.append(request.getJavaCode());
+            java.append(request.getGeneratedJavaCode());
         return java.toString();
     }
 
-    public abstract String getJavaCode();
+    public abstract String getGeneratedJavaCode();
 
     protected String withSimpleParameter(String parameter) {
         return GLOBAL_PREFIX + "new " + getClass().getSimpleName() + "(" + parameter + ")," + EOL;

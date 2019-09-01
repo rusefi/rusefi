@@ -2,8 +2,6 @@ package com.rusefi.ldmp;
 
 import java.util.Objects;
 
-import static com.rusefi.ConfigDefinition.EOL;
-
 /**
  * Static text label
  */
@@ -43,7 +41,7 @@ public class TextRequest extends Request {
     }
 
     @Override
-    public String getJavaCode() {
+    public String getGeneratedJavaCode() {
         return withSimpleParameter(quoteString(value));
     }
 }

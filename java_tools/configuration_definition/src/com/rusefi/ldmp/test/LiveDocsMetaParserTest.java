@@ -29,7 +29,9 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void parseField() {
-        MetaInfo r = LiveDocsMetaParser.parse("\tDISPLAY_TEXT(Analog_MCU_reads);\n" +
+        MetaInfo r = LiveDocsMetaParser.parse(
+                "DISPLAY_STATE(tps)\n" +
+                        "\tDISPLAY_TEXT(Analog_MCU_reads);\n" +
                 "\tengine->engineState.DISPLAY_FIELD(currentTpsAdc) = adc;\n" +
                 "\tDISPLAY_TEXT(ADC_which_equals);\n");
         assertEquals(3, r.first().size());
@@ -63,10 +65,13 @@ public class LiveDocsMetaParserTest {
 
     @Test
     public void testField() {
-        MetaInfo r = LiveDocsMetaParser.parse("tm->DISPLAY_FIELD(voltageMCU) = getVoltage(\"term\", config->adcChannel);\n" +
-                "DISPLAY_tag(tag) DISPLAY_FIELD(voltageMCU2)");
+        MetaInfo r = LiveDocsMetaParser.parse(
+                "DISPLAY_STATE(tps)\n" +
+                        "tm->DISPLAY_FIELD(voltageMCU) = getVoltage(\"term\", config->adcChannel);\n" +
+
+                        "DISPLAY_tag(tag) DISPLAY_FIELD(voltageMCU2)");
         assertEquals(1, r.first().size());
-        assertEquals(new FieldRequest("voltageMCU"), r.first().get(0));
+        assertEquals(new FieldRequest("tps", "voltageMCU"), r.first().get(0));
 
         assertEquals(2, r.map.size());
     }

@@ -487,6 +487,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		bool isSynchronizationPoint;
 		bool wasSynchronized = shaft_is_synchronized;
 
+		DISPLAY_STATE(Trigger)
 		DISPLAY(DISPLAY_CONFIG(TRIGGERINPUTPINS1));
 		DISPLAY_TEXT(Trigger_1_Fall);
 		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS1));

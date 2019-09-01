@@ -3,8 +3,6 @@ package com.rusefi.ldmp;
 
 import java.util.Objects;
 
-import static com.rusefi.ConfigDefinition.EOL;
-
 /**
  * Reference to a parameter from configuration
  *
@@ -43,7 +41,7 @@ public class ConfigRequest extends Request {
     }
 
     @Override
-    public String getJavaCode() {
+    public String getGeneratedJavaCode() {
         return withSimpleParameter(quoteString(field));
     }
 }
