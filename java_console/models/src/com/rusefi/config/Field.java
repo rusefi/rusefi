@@ -64,7 +64,7 @@ public class Field {
                     return f;
             }
         }
-        throw new IllegalStateException("No field " + fieldName);
+        throw new IllegalStateException("No field: " + fieldName);
     }
 
     public static int getStructureSize(Field[] values) {

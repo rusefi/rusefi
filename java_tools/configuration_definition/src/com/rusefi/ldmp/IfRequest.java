@@ -7,16 +7,18 @@ import java.util.List;
 import static com.rusefi.ConfigDefinition.EOL;
 
 public class IfRequest extends Request {
+    private final String stateContext;
     private final String variable;
     public List<Request> trueBlock = new ArrayList<>();
     public List<Request> falseBlock = new ArrayList<>();
 
-    public IfRequest(String variable) {
+    public IfRequest(String stateContext, String variable) {
+        this.stateContext = stateContext;
         this.variable = variable;
     }
 
-    public IfRequest(String variable, Request[] trueBlock, Request[] falseBlock) {
-        this(variable);
+    public IfRequest(String stateContext, String variable, Request[] trueBlock, Request[] falseBlock) {
+        this(stateContext, variable);
         this.trueBlock.addAll(Arrays.asList(trueBlock));
         this.falseBlock.addAll(Arrays.asList(falseBlock));
     }
@@ -40,7 +42,11 @@ public class IfRequest extends Request {
 
         Request.GLOBAL_PREFIX = Request.GLOBAL_PREFIX + "\t";
 
-        result += "new IfRequest(" + quoteString(variable) + "," + EOL +
+        result += "new IfRequest("
+                + quoteString(stateContext)
+                + ", "
+                + quoteString(variable)
+                + "," + EOL +
                 Request.GLOBAL_PREFIX + "new Request[]{" + EOL +
                 Request.getGeneratedJavaCode(trueBlock) +
                 "}," + EOL +

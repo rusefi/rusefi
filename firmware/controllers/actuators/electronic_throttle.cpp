@@ -256,6 +256,7 @@ class EtbController : public PeriodicTimerController {
 			etbPid.showPidStatus(&logger, "ETB");
 		}
 
+		DISPLAY_STATE(Engine)
 DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		DISPLAY_TEXT(Electronic_Throttle);
 		DISPLAY_SENSOR(TPS)
@@ -265,6 +266,7 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		DISPLAY_SENSOR(PPS);
 		DISPLAY_TEXT(eol);
 
+		DISPLAY_STATE(ETB_pid)
 		DISPLAY_TEXT(Output);
 		DISPLAY(DISPLAY_FIELD(output));
 		DISPLAY_TEXT(iTerm);

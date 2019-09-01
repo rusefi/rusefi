@@ -94,6 +94,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGI
 
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
+	DISPLAY_STATE(wall_fuel)
 	float tau = CONFIG(DISPLAY_CONFIG(wwaeTau));
 	if (tau < 0.01f) {
 		return desiredFuel;

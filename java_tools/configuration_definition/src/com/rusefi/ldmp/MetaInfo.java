@@ -16,8 +16,11 @@ public class MetaInfo {
     }
 
     public String getStateContext() {
-        if (stateStack.isEmpty())
-            return ""; // state context not defined, java code would have to explicitly provide that information
+        if (stateStack.isEmpty()) {
+            // state context not defined, java code would have to explicitly provide that information
+            // this is used if code does not know context, for instance thermistor code does not know if CLT or IAT usage
+            return "";
+        }
         return stateStack.peek();
     }
 }

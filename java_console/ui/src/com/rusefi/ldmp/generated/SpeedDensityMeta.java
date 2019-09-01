@@ -4,10 +4,10 @@ import com.rusefi.ldmp.*;
 
 public class SpeedDensityMeta {
 	public static final Request[] CONTENT = new Request[]{
-			new IfRequest("isTChargeAirModel",
+			new IfRequest("Engine", "isTChargeAirModel",
 				new Request[]{
 				new TextRequest("interpolate_Air_Flow"),
-				new FieldRequest("","airFlow"),
+				new FieldRequest("Engine", "airFlow"),
 				new TextRequest("Between"),
 				new ConfigRequest("tChargeAirCoefMin"),
 				new ConfigRequest("tChargeAirFlowMax"),

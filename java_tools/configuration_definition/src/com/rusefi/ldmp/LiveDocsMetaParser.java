@@ -87,7 +87,7 @@ public class LiveDocsMetaParser {
             } else if (DISPLAY_TEXT.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     String config = s.next();
-                    SystemOut.println("REQ TEXT " + config);
+                    SystemOut.println("Display test " + config);
                     result.add(new TextRequest(config));
                 }
             } else if (DISPLAY_TAG.equalsIgnoreCase(token)) {
@@ -103,21 +103,19 @@ public class LiveDocsMetaParser {
                 }
             } else if (DISPLAY_FIELD.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
-                    String config = prefix + s.next();
-                    SystemOut.println("REQ FIELD " + config);
-                    result.add(new FieldRequest(meta.getStateContext(), config));
+                    String fieldName = prefix + s.next();
+                    SystemOut.println("REQ FIELD " + fieldName);
+                    result.add(new FieldRequest(meta.getStateContext(), fieldName));
                     prefix.setLength(0);
                 }
             } else if (DISPLAY_IF.equalsIgnoreCase(token)) {
                 if (s.hasNext()) {
                     stack.push(result);
 
-                    String variable = s.next();
+                    String conditionVariable = s.next();
 
-
-                    String config = s.next();
-                    SystemOut.println("REQ TEXT " + config);
-                    IfRequest ifRequest = new IfRequest(variable);
+                    SystemOut.println("if Condition " + conditionVariable);
+                    IfRequest ifRequest = new IfRequest(meta.getStateContext(), conditionVariable);
                     result.add(ifRequest);
 
                     result = ifRequest.trueBlock;
