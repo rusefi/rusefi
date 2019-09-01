@@ -14,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * <p/>
  * Date: 1/7/13
- * (c) Andrey Belomutskiy
+ * (c) Andrey Belomutskiy 2013-2019
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class CommandQueue {
@@ -32,7 +32,7 @@ public class CommandQueue {
     private Set<String> pendingConfirmations = Collections.synchronizedSet(new HashSet<String>());
 
     private static final CommandQueue instance = new CommandQueue();
-    private final BlockingQueue<MethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
+    private final BlockingQueue<IMethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
     private final List<CommandQueueListener> commandListeners = new ArrayList<>();
 
     private final Runnable runnable = new Runnable() {
@@ -74,7 +74,7 @@ public class CommandQueue {
          * here we block in case there is no command to send
          */
         @NotNull
-        final MethodInvocation command = pendingCommands.take();
+        final IMethodInvocation command = pendingCommands.take();
         // got a command? let's send it!
         sendCommand(command);
     }
@@ -82,14 +82,14 @@ public class CommandQueue {
     /**
      * this method keeps retrying till a confirmation is received
      */
-    private void sendCommand(final MethodInvocation commandRequest) throws InterruptedException {
+    private void sendCommand(final IMethodInvocation commandRequest) throws InterruptedException {
         int counter = 0;
         String command = commandRequest.getCommand();
 
         while (!pendingConfirmations.contains(command)) {
             counter++;
 //            FileLog.MAIN.logLine("templog sending " + command + " " + System.currentTimeMillis() + " " + new Date());
-            LinkManager.send(command, commandRequest.fireEvent);
+            LinkManager.send(command, commandRequest.isFireEvent());
             long now = System.currentTimeMillis();
             synchronized (lock) {
                 lock.wait(commandRequest.getTimeout());
@@ -106,7 +106,7 @@ public class CommandQueue {
             }
         }
         if (pendingConfirmations.contains(command)) {
-            commandRequest.listener.onCommandConfirmation();
+            commandRequest.getListener().onCommandConfirmation();
             pendingConfirmations.remove(command);
         }
 
@@ -178,7 +178,13 @@ public class CommandQueue {
         pendingCommands.add(new MethodInvocation(command, timeoutMs, listener, fireEvent));
     }
 
-    static class MethodInvocation {
+    public void addIfNotPresent(IMethodInvocation commandSender) {
+        // technically this should be a critical locked section but for our use-case we do not care
+        if (!pendingCommands.contains(commandSender))
+            pendingCommands.add(commandSender);
+    }
+
+    static class MethodInvocation implements IMethodInvocation {
         private final String command;
         private final int timeoutMs;
         private final InvocationConfirmationListener listener;
@@ -191,12 +197,24 @@ public class CommandQueue {
             this.fireEvent = fireEvent;
         }
 
+        @Override
         public String getCommand() {
             return command;
         }
 
+        @Override
         public int getTimeout() {
             return timeoutMs;
+        }
+
+        @Override
+        public InvocationConfirmationListener getListener() {
+            return listener;
+        }
+
+        @Override
+        public boolean isFireEvent() {
+            return fireEvent;
         }
 
         @Override

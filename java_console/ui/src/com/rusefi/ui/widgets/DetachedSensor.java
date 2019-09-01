@@ -3,14 +3,14 @@ package com.rusefi.ui.widgets;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.IMethodInvocation;
+import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -20,9 +20,10 @@ import java.text.Format;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * (c) Andrey Belomutskiy
+ * (c) Andrey Belomutskiy 2013-2019
  * 11/2/14
  */
 public class DetachedSensor {
@@ -82,12 +83,7 @@ public class DetachedSensor {
     }
 
     void create() {
-        SensorGauge.GaugeChangeListener listener = new SensorGauge.GaugeChangeListener() {
-            @Override
-            public void onSensorChange(Sensor sensor) {
-                onChange(sensor);
-            }
-        };
+        SensorGauge.GaugeChangeListener listener = this::onChange;
         content.add(SensorGauge.createGauge(sensor, listener, null), BorderLayout.CENTER);
         content.add(mockControlPanel, BorderLayout.SOUTH);
 
@@ -123,8 +119,6 @@ public class DetachedSensor {
     }
 
     public static Component createMockVoltageSlider(final Sensor sensor) {
-        /**
-         */
         final JSlider slider = new JSlider(0, _5_VOLTS_WITH_DECIMAL);
         slider.setLabelTable(SLIDER_LABELS);
         slider.setPaintLabels(true);
@@ -132,12 +126,41 @@ public class DetachedSensor {
         slider.setMajorTickSpacing(10);
         slider.setMinorTickSpacing(5);
 
-        slider.addChangeListener(new ChangeListener() {
+        AtomicReference<Double> pendingValue = new AtomicReference<>();
+
+        IMethodInvocation commandSender = new IMethodInvocation() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                double value = slider.getValue() / 10.0;
-                CommandQueue.getInstance().write("set mock_" + sensor.name().toLowerCase() + "_voltage " + value);
+            public String getCommand() {
+                return "set mock_" + sensor.name().toLowerCase() + "_voltage " + pendingValue.get();
             }
+
+            @Override
+            public int getTimeout() {
+                return CommandQueue.DEFAULT_TIMEOUT;
+            }
+
+            @Override
+            public InvocationConfirmationListener getListener() {
+                return InvocationConfirmationListener.VOID;
+            }
+
+            @Override
+            public boolean isFireEvent() {
+                return false;
+            }
+        };
+
+
+        slider.addChangeListener(e -> {
+            double value = slider.getValue() / 10.0;
+            CommandQueue commandQueue = CommandQueue.getInstance();
+            pendingValue.set(value);
+
+            /*
+             * User might be changing slider faster than commands are being send
+             * We only add commandSender into the queue only if not already pending in order to only send one command with latest requested value and not a sequence of commands.
+             */
+            commandQueue.addIfNotPresent(commandSender);
         });
 
         return slider;
