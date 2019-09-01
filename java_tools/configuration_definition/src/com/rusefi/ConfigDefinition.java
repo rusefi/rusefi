@@ -83,7 +83,7 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_C_DESTINATION)) {
                 destCHeader = args[i + 1];
             } else if (key.equals(KEY_ZERO_INIT)) {
-                needZeroInit = true;
+                needZeroInit = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_WITH_C_DEFINES)) {
                 CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_C_DEFINES)) {

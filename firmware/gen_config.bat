@@ -16,6 +16,8 @@ java -DSystemOut.name=gen_config ^
  -definition integration\rusefi_config.txt ^
  -romraider integration ^
  -ts_destination tunerstudio ^
+ -with_c_defines false ^
+ -initialize_to_zero false ^
  -c_defines     controllers\generated\rusefi_generated.h ^
  -c_destination controllers\generated\engine_configuration_generated_structures.h ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java ^
