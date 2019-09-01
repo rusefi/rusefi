@@ -25,6 +25,9 @@ public class ElectronicThrottleMeta {
 				new ConfigRequest("ETB_PFACTOR"),
 				new ConfigRequest("ETB_IFACTOR"),
 				new ConfigRequest("ETB_DFACTOR"),
+				new TextRequest("eol"),
+				new ConfigRequest("ETB_OFFSET"),
+				new ConfigRequest("ETB_PERIODMS"),
 },
 				new Request[]{
 				new TextRequest("No_Pedal_Sensor"),

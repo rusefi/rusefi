@@ -34,12 +34,12 @@ public class LiveDocPanel {
 
 
     @NotNull
-    static JPanel createPanel(String title, String settingsInstancePrefix, Request[] content) {
-        return createPanel(title, settingsInstancePrefix, content, StateDictionary.NONE);
+    public static JPanel createPanel(String title, Request[] content) {
+        return createPanel(title, content, "", StateDictionary.NONE);
     }
 
     @NotNull
-    static JPanel createPanel(String title, String settingsInstancePrefix, Request[] content, final int defaultContextId) {
+    static JPanel createPanel(String title, Request[] content, String settingsInstancePrefix, final int defaultContextId) {
         LiveDataContext defaultContext = new LiveDataContext(defaultContextId);
 
         ActionPanel ap = createComponents(title, content, settingsInstancePrefix, defaultContext);
@@ -217,13 +217,13 @@ public class LiveDocPanel {
     public static JPanel createLiveDocumentationPanel() {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
-        liveDocs.add(createPanel("Fuel", "", FuelMathMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Fuel", FuelMathMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("tCharge", "", SpeedDensityMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("tCharge", SpeedDensityMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Idle", "", IdleThreadMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Idle", IdleThreadMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("ETB", "", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("ETB", ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }
@@ -231,15 +231,15 @@ public class LiveDocPanel {
     public static JPanel createSensorsLiveDataPanel() {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
-        liveDocs.add(createPanel("Coolant Sensor", "CLT", ThermistorsMeta.CONTENT, Fields.LDS_CLT_STATE_INDEX
+        liveDocs.add(createPanel("Coolant Sensor", ThermistorsMeta.CONTENT, "CLT", Fields.LDS_CLT_STATE_INDEX
         ), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Intake Air Sensor", "IAT", ThermistorsMeta.CONTENT, Fields.LDS_IAT_STATE_INDEX
+        liveDocs.add(createPanel("Intake Air Sensor", ThermistorsMeta.CONTENT, "IAT", Fields.LDS_IAT_STATE_INDEX
         ), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Throttle Position Sensor", "", TpsMeta.TPS_SECTION), CONSTRAINTS);
+        liveDocs.add(createPanel("Throttle Position Sensor", TpsMeta.TPS_SECTION), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Trigger", "", TriggerDecoderMeta.CONTENT), CONSTRAINTS);
+        liveDocs.add(createPanel("Trigger", TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
     }

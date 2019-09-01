@@ -1,5 +1,6 @@
 package com.rusefi.etb;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
 
 public class EtbTarget extends TestSequenceStep {
@@ -16,7 +17,7 @@ public class EtbTarget extends TestSequenceStep {
     }
 
     protected void doJob() {
-        CommandQueue.getInstance().write("set mock_pedal_position " + position);
+        CommandQueue.getInstance().write("set " + Fields.MOCK_PPS_POSITION_COMMAND + " " + position);
         if (onEachStep != null)
             onEachStep.run();
     }

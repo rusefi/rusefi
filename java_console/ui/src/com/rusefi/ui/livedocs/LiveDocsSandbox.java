@@ -20,8 +20,8 @@ public class LiveDocsSandbox {
         comment.setForeground(Color.blue);
 
         JPanel panels = new JPanel(new MigLayout("fillx, gap 0, insets 0"));
-        panels.add(LiveDocPanel.createPanel("Coolant Sensor", "CLT", ThermistorsMeta.CONTENT, LDS_CLT_STATE_INDEX), "wrap");
-        panels.add(LiveDocPanel.createPanel("Intake Air Sensor", "IAT", ThermistorsMeta.CONTENT, LDS_IAT_STATE_INDEX), "wrap");
+        panels.add(LiveDocPanel.createPanel("Coolant Sensor", ThermistorsMeta.CONTENT, "CLT", LDS_CLT_STATE_INDEX), "wrap");
+        panels.add(LiveDocPanel.createPanel("Intake Air Sensor", ThermistorsMeta.CONTENT, "IAT", LDS_IAT_STATE_INDEX), "wrap");
 
         panels.add(getTChargePanel(), "wrap, grow");
 

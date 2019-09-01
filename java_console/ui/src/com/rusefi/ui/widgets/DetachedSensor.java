@@ -122,7 +122,7 @@ public class DetachedSensor {
         return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
 
-    private static Component createMockVoltageSlider(final Sensor sensor) {
+    public static Component createMockVoltageSlider(final Sensor sensor) {
         /**
          */
         final JSlider slider = new JSlider(0, _5_VOLTS_WITH_DECIMAL);

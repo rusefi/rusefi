@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 01 12:45:18 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 01 17:24:09 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -959,7 +959,14 @@ public class Fields {
 	public static final int miataNb2VVTRatioFrom_offset_hex = 334;
 	public static final int miataNb2VVTRatioTo_offset = 824;
 	public static final int miataNb2VVTRatioTo_offset_hex = 338;
+	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
+	public static final String MOCK_CLT_COMMAND = "mock_clt_voltage";
 	public static final String MOCK_IAT_COMMAND = "mock_iat_voltage";
+	public static final String MOCK_MAF_COMMAND = "mock_maf_voltage";
+	public static final String MOCK_MAP_COMMAND = "mock_map_voltage";
+	public static final String MOCK_PPS_POSITION_COMMAND = "mock_pps_position";
+	public static final String MOCK_PPS_VOLTAGE_COMMAND = "mock_pps_voltage";
+	public static final String MOCK_TPS_COMMAND = "mock_tps_voltage";
 	public static final int NARROW_BAND_WIDE_BAND_CONVERSION_SIZE = 8;
 	public static final int narrowToWideOxygen_offset = 2296;
 	public static final int narrowToWideOxygenBins_offset = 2264;

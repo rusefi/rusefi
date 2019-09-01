@@ -1160,13 +1160,14 @@ typedef struct {
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL && EFI_ENABLE_MOCK_ADC
 		{MOCK_IAT_COMMAND, setMockIatVoltage},
-		{"mock_pedal_position", setMockPedalPosition},
-		{"mock_maf_voltage", setMockMafVoltage},
-		{"mock_afr_voltage", setMockAfrVoltage},
-		{"mock_tps_voltage", setMockTpsVoltage},
-		{"mock_map_voltage", setMockMapVoltage},
+		{MOCK_PPS_POSITION_COMMAND, setMockThrottlePedalPosition},
+		{MOCK_PPS_VOLTAGE_COMMAND, setMockThrottlePedalSensorVoltage},
+		{MOCK_TPS_COMMAND, setMockMafVoltage},
+		{MOCK_AFR_COMMAND, setMockAfrVoltage},
+		{MOCK_TPS_COMMAND, setMockThrottlePositionSensorVoltage},
+		{MOCK_MAP_COMMAND, setMockMapVoltage},
 		{"mock_vbatt_voltage", setMockVBattVoltage},
-		{"mock_clt_voltage", setMockCltVoltage},
+		{MOCK_CLT_COMMAND, setMockCltVoltage},
 #endif /* EFI_ENGINE_CONTROL && EFI_ENABLE_MOCK_ADC */
 		{"fsio_curve_1_value", setFsioCurve1Value},
 		{"fsio_curve_2_value", setFsioCurve2Value},

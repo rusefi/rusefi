@@ -33,7 +33,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setBosch0280750009(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setMockTpsAdc(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockTpsValue(percent_t tpsPosition DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setMockPedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockThrottlePedalPosition(percent_t value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void grabTPSIsClosed();
 void grabTPSIsWideOpen();
 void grabPedalIsUp();
