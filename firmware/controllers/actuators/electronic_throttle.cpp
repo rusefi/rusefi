@@ -373,6 +373,40 @@ void setEtbOffset(int value) {
 	showEthInfo();
 }
 
+void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	engineConfiguration->etbBiasBins[0] = 0;
+	engineConfiguration->etbBiasBins[1] = 1;
+	engineConfiguration->etbBiasBins[2] = 5;
+	/**
+	 * This specific throttle has default position of about 7% open
+	 */
+	engineConfiguration->etbBiasBins[3] = 7;
+	engineConfiguration->etbBiasBins[4] = 14;
+	engineConfiguration->etbBiasBins[5] = 65;
+	engineConfiguration->etbBiasBins[6] = 66;
+	engineConfiguration->etbBiasBins[7] = 100;
+
+	/**
+	 * Some negative bias for below-default position
+	 */
+	engineConfiguration->etbBiasValues[0] = -15;
+	engineConfiguration->etbBiasValues[1] = -15;
+	engineConfiguration->etbBiasValues[2] = -10;
+	/**
+	 * Zero bias for index which corresponds to default throttle position, when no current is applied
+	 * This specific throttle has default position of about 7% open
+	 */
+	engineConfiguration->etbBiasValues[3] = 0;
+	engineConfiguration->etbBiasValues[4] = 19;
+	engineConfiguration->etbBiasValues[5] = 20;
+	engineConfiguration->etbBiasValues[6] = 26;
+	engineConfiguration->etbBiasValues[7] = 28;
+
+	// values are above 100% since we have feedforward part of the total summation
+	engineConfiguration->etb.minValue = -200;
+	engineConfiguration->etb.maxValue = 200;
+}
+
 void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	CONFIG(etbIdleThrottleRange) = 5;
 

@@ -23,7 +23,8 @@ public class CommandsPanel {
         JPanel testParameters = new JPanel(new VerticalFlowLayout());
         testParameters.setBorder(BorderFactory.createTitledBorder("Try PID settings"));
         EtbTestSequence etbTestSequence = new EtbTestSequence();
-        testParameters.add(UiUtils.wrap(etbTestSequence.getButton()));
+        testParameters.add(etbTestSequence.getButton());
+        testParameters.add(UiUtils.wrap(etbTestSequence.getCancelButton()));
         testParameters.add(etbTestSequence.getResult());
         testParameters.add(new JLabel("To change setting use following commands:"));
         testParameters.add(new JLabel("set etb_p X"));
