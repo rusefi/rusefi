@@ -204,7 +204,7 @@ public class LiveDocPanel {
                 EngineState.VALUES, IdleThreadMeta.CONTENT), CONSTRAINTS);
 
         // todo: fix the defect - we request ETB structure but decode it as EngineState
-        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB,
+        liveDocs.add(createPanel("ETB", "", Fields.LDS_ETB_STATE_INDEX,
                 EngineState.VALUES, ElectronicThrottleMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
@@ -213,16 +213,16 @@ public class LiveDocPanel {
     public static JPanel createSensorsLiveDataPanel() {
         JPanel liveDocs = new JPanel(new MigLayout(LAYOUT));
 
-        liveDocs.add(createPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_INDEX,
+        liveDocs.add(createPanel("Coolant Sensor", "CLT", Fields.LDS_CLT_STATE_INDEX,
                 ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_INDEX,
+        liveDocs.add(createPanel("Intake Air Sensor", "IAT", Fields.LDS_IAT_STATE_INDEX,
                 ThermistorState.VALUES, ThermistorsMeta.CONTENT), CONSTRAINTS);
 
         liveDocs.add(createPanel("Throttle Position Sensor", "", Fields.LDS_ENGINE_STATE_INDEX,
                 EngineState.VALUES, TpsMeta.TPS_SECTION), CONSTRAINTS);
 
-        liveDocs.add(createPanel("Trigger", "", Fields.LDS_TRIGGER_INDEX,
+        liveDocs.add(createPanel("Trigger", "", Fields.LDS_TRIGGER_STATE_INDEX,
                 TriggerState.VALUES, TriggerDecoderMeta.CONTENT), CONSTRAINTS);
 
         return liveDocs;
