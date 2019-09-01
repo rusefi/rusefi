@@ -5,6 +5,8 @@ import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.PidState;
 import com.rusefi.config.generated.TriggerState;
+import com.rusefi.ui.livedocs.LiveDataContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,25 +28,35 @@ public enum StateDictionary {
     }
 
     public Field[] getValue(String state) {
-        String indexFieldName = "LDS_" + state.toUpperCase() + "_STATE_INDEX";
-        java.lang.reflect.Field field = null;
+        String indexFieldName = getContextIndexFieldName(state);
+        LiveDataContext indexValue = getStateContext(indexFieldName);
+        Field[] result = map.get(indexValue.getId());
+        if (result == null) {
+            throw new IllegalStateException("Nothing for " + indexFieldName + "/" + indexValue);
+        }
+        return result;
+    }
+
+    @NotNull
+    public static String getContextIndexFieldName(String state) {
+        return "LDS_" + state.toUpperCase() + "_STATE_INDEX";
+    }
+
+    public static LiveDataContext getStateContext(String contextIndexFieldName) {
+        java.lang.reflect.Field field;
         try {
-            field = Fields.class.getField(indexFieldName);
+            field = Fields.class.getField(contextIndexFieldName);
         } catch (NoSuchFieldException e) {
             throw new IllegalStateException(e);
         }
-        Objects.requireNonNull(field, "Field " + indexFieldName);
+        Objects.requireNonNull(field, "Field " + contextIndexFieldName);
         int indexValue;
         try {
             indexValue = (int) field.get(null);
         } catch (IllegalAccessException e) {
             throw new IllegalStateException(e);
         }
-        Field[] result = map.get(indexValue);
-        if (result == null) {
-            throw new IllegalStateException("Nothing for " + indexFieldName + "/" + indexValue);
-        }
-        return result;
+        return new LiveDataContext(indexValue);
     }
 
 }

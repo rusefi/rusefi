@@ -11,6 +11,7 @@ public class ElectronicThrottleMeta {
 				new TextRequest("eol"),
 				new TextRequest("Pedal"),
 				new SensorRequest("PPS"),
+				new ConfigRequest("throttlePedalPositionAdcChannel"),
 				new TextRequest("eol"),
 				new TextRequest("Output"),
 				new FieldRequest("ETB_pid", "output"),

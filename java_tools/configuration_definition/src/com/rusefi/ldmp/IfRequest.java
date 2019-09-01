@@ -23,6 +23,10 @@ public class IfRequest extends Request {
         this.falseBlock.addAll(Arrays.asList(falseBlock));
     }
 
+    public String getStateContext() {
+        return stateContext;
+    }
+
     @Override
     public String toString() {
         return "IfRequest{" +
