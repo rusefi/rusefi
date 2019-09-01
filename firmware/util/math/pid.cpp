@@ -17,23 +17,23 @@ Pid::Pid() {
 	initPidClass(NULL);
 }
 
-Pid::Pid(pid_s *pid) {
-	initPidClass(pid);
+Pid::Pid(pid_s *parameters) {
+	initPidClass(parameters);
 }
 
-void Pid::initPidClass(pid_s *pid) {
-	this->pid = pid;
+void Pid::initPidClass(pid_s *parameters) {
+	this->parameters = parameters;
 	resetCounter = 0;
 
 	reset();
 }
 
-bool Pid::isSame(pid_s *pid) const {
-	return this->pid->pFactor == pid->pFactor
-			&& this->pid->iFactor == pid->iFactor
-			&& this->pid->dFactor == pid->dFactor
-			&& this->pid->offset == pid->offset
-			&& this->pid->periodMs == pid->periodMs;
+bool Pid::isSame(pid_s *parameters) const {
+	return this->parameters->pFactor == parameters->pFactor
+			&& this->parameters->iFactor == parameters->iFactor
+			&& this->parameters->dFactor == parameters->dFactor
+			&& this->parameters->offset == parameters->offset
+			&& this->parameters->periodMs == parameters->periodMs;
 }
 
 /**
@@ -41,7 +41,7 @@ bool Pid::isSame(pid_s *pid) const {
  * @returns Output from the PID controller / the input to the process
  */
 float Pid::getOutput(float target, float input) {
-	float dTime = MS2SEC(GET_PERIOD_LIMITED(pid));
+	float dTime = MS2SEC(GET_PERIOD_LIMITED(parameters));
 	return getOutput(target, input, dTime);
 }
 
@@ -50,13 +50,13 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	this->target = target;
 	this->input = input;
 
-	float pTerm = pid->pFactor * error;
-	updateITerm(pid->iFactor * dTime * error);
-	dTerm = pid->dFactor / dTime * (error - previousError);
+	float pTerm = parameters->pFactor * error;
+	updateITerm(parameters->iFactor * dTime * error);
+	dTerm = parameters->dFactor / dTime * (error - previousError);
 
 	previousError = error;
 
-	return pTerm + iTerm + dTerm + pid->offset;
+	return pTerm + iTerm + dTerm + parameters->offset;
 }
 
 /**
@@ -65,19 +65,19 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 float Pid::getOutput(float target, float input, float dTime) {
 	float output = getUnclampedOutput(target, input, dTime);
 
-	if (output > pid->maxValue) {
-		output = pid->maxValue;
-	} else if (output < pid->minValue) {
-		output = pid->minValue;
+	if (output > parameters->maxValue) {
+		output = parameters->maxValue;
+	} else if (output < parameters->minValue) {
+		output = parameters->minValue;
 	}
 	this->output = output;
 	return output;
 }
 
 void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
-	pid->pFactor = pFactor;
-	pid->iFactor = iFactor;
-	pid->dFactor = dFactor;
+	parameters->pFactor = pFactor;
+	parameters->iFactor = iFactor;
+	parameters->dFactor = dFactor;
 	reset();
 }
 
@@ -89,11 +89,11 @@ void Pid::reset(void) {
 }
 
 float Pid::getP(void) const {
-	return pid->pFactor;
+	return parameters->pFactor;
 }
 
 float Pid::getI(void) const {
-	return pid->iFactor;
+	return parameters->iFactor;
 }
 
 float Pid::getPrevError(void) const {
@@ -105,11 +105,11 @@ float Pid::getIntegration(void) const {
 }
 
 float Pid::getD(void) const {
-	return pid->dFactor;
+	return parameters->dFactor;
 }
 
 float Pid::getOffset(void) const {
-	return pid->offset;
+	return parameters->offset;
 }
 
 void Pid::setErrorAmplification(float coef) {
@@ -131,18 +131,18 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) {
 	tsOutputChannels->debugFloatField4 = getI();
 	tsOutputChannels->debugFloatField5 = getD();
 	tsOutputChannels->debugFloatField6 = dTerm;
-//	tsOutputChannels->debugFloatField6 = pid->minValue;
-	tsOutputChannels->debugFloatField7 = pid->maxValue;
+//	tsOutputChannels->debugFloatField6 = parameters->minValue;
+	tsOutputChannels->debugFloatField7 = parameters->maxValue;
 	tsOutputChannels->debugIntField1 = getP() * pMult;
 	tsOutputChannels->debugIntField2 = getOffset();
 	tsOutputChannels->debugIntField3 = resetCounter;
-	tsOutputChannels->debugIntField4 = pid->periodMs;
+	tsOutputChannels->debugIntField4 = parameters->periodMs;
 }
 #endif /* EFI_TUNER_STUDIO */
 
 void Pid::sleep() {
 #if !EFI_UNIT_TEST
-	int periodMs = maxI(10, pid->periodMs);
+	int periodMs = maxI(10, parameters->periodMs);
 	chThdSleepMilliseconds(periodMs);
 #endif /* EFI_UNIT_TEST */
 }
@@ -150,11 +150,11 @@ void Pid::sleep() {
 void Pid::showPidStatus(Logging *logging, const char*msg) {
 	scheduleMsg(logging, "%s settings: offset=%d P=%.5f I=%.5f D=%.5f period=%dms",
 			msg,
-			pid->offset,
-			pid->pFactor,
-			pid->iFactor,
-			pid->dFactor,
-			pid->periodMs);
+			parameters->offset,
+			parameters->pFactor,
+			parameters->iFactor,
+			parameters->dFactor,
+			parameters->periodMs);
 
 	scheduleMsg(logging, "%s status: value=%.2f input=%.2f/target=%.2f iTerm=%.5f dTerm=%.5f",
 			msg,
@@ -171,16 +171,16 @@ void Pid::updateITerm(float value) {
 	 * If we have exceeded the ability of the controlled device to hit target, the I factor will keep accumulating and approach infinity.
 	 * Here we limit the I-term #353
 	 */
-	if (iTerm > pid->maxValue * 100) {
-		iTerm = pid->maxValue * 100;
+	if (iTerm > parameters->maxValue * 100) {
+		iTerm = parameters->maxValue * 100;
 	}
 	if (iTerm > iTermMax) {
 		iTerm = iTermMax;
 	}
 
 	// this is kind of a hack. a proper fix would be having separate additional settings 'maxIValue' and 'minIValye'
-	if (iTerm < -pid->maxValue * 100)
-		iTerm = -pid->maxValue * 100;
+	if (iTerm < -parameters->maxValue * 100)
+		iTerm = -parameters->maxValue * 100;
 	if (iTerm < iTermMin) {
 		iTerm = iTermMin;
 	}
@@ -192,7 +192,7 @@ PidCic::PidCic() {
 	reset();
 }
 
-PidCic::PidCic(pid_s *pid) : Pid(pid) {
+PidCic::PidCic(pid_s *parameters) : Pid(parameters) {
 	// call our derived reset()
 	reset();
 }

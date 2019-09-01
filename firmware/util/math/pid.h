@@ -34,9 +34,9 @@ class Pid : public pid_state_s {
 
 public:
 	Pid();
-	explicit Pid(pid_s *pid);
-	void initPidClass(pid_s *pid);
-	bool isSame(pid_s *pid) const;
+	explicit Pid(pid_s *parameters);
+	void initPidClass(pid_s *parameters);
+	bool isSame(pid_s *parameters) const;
 
 	/**
 	 * This version of the method takes dTime from pid_s
@@ -61,8 +61,6 @@ public:
 	void postState(TunerStudioOutputChannels *tsOutputChannels);
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult);
 #endif /* EFI_TUNER_STUDIO */
-	float minResult;
-	float maxResult;
 	void showPidStatus(Logging *logging, const char*msg);
 	void sleep();
 	int resetCounter;
@@ -70,7 +68,7 @@ public:
 	float iTermMin = -1000000.0;
 	float iTermMax =  1000000.0;
 private:
-	pid_s *pid;
+	pid_s *parameters;
 
 	float previousError;
 
