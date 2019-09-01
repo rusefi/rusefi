@@ -1135,7 +1135,7 @@ static void getValue(const char *paramStr) {
 	}
 #endif
 	else {
-		scheduleMsg(&logger, "unexpcted here: %s", paramStr);
+		scheduleMsg(&logger, "Invalid Parameter: %s", paramStr);
 	}
 }
 
