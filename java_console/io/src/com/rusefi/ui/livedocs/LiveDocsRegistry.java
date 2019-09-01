@@ -27,13 +27,15 @@ public enum LiveDocsRegistry {
             boolean visible = holder.isVisible();
             System.out.println(holder + ": is_visible=" + visible);
             if (visible) {
-                refresh(binaryProtocol, holder);
+                for (LiveDataContext context : holder.getActions().getActions().keySet()) {
+                    refresh(binaryProtocol, holder, context);
+                }
             }
         }
     }
 
-    private void refresh(BinaryProtocol binaryProtocol, LiveDocHolder holder) {
-        int liveDocRequestId = holder.getId().getId();
+    private void refresh(BinaryProtocol binaryProtocol, LiveDocHolder holder, LiveDataContext context) {
+        int liveDocRequestId = context.getId();
         int size = holder.getStructSize();
 
         byte packet[] = new byte[5];
@@ -49,6 +51,6 @@ public enum LiveDocsRegistry {
 
         System.arraycopy(responseWithCode, 1, response, 0, size);
 
-        holder.update(binaryProtocol, response);
+        holder.update(binaryProtocol, context, response);
     }
 }

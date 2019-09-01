@@ -10,17 +10,16 @@ import java.util.List;
  * (c) Andrey Belomutskiy 2013-2019
  */
 public class IfConditionPanel {
-    private final List<RefreshActions> actionsList = new ArrayList<>();
+    private final RefreshActionsMap actionsList;
     private final JPanel panel = new JPanel(new MigLayout());
 
-    public IfConditionPanel(JPanel result, List<RefreshActions> combined) {
+    public IfConditionPanel(JPanel result, RefreshActionsMap actionsList) {
         // todo: do we really need this proxy panel or can we just use parameter value?
         panel.add(result);
-        // todo: do we really need this list or can we just use parameter value?
-        actionsList.addAll(combined);
+        this.actionsList = actionsList;
     }
 
-    public List<RefreshActions> getActionsList() {
+    public RefreshActionsMap getActionsList() {
         return actionsList;
     }
 

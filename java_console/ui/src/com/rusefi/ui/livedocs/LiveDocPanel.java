@@ -24,8 +24,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.rusefi.config.Field.niceToString;
 
@@ -38,13 +36,13 @@ public class LiveDocPanel {
     private static final int LIVE_DATA_PRECISION = 2;
 
     @NotNull
-    static JPanel createPanel(String title, String settingsInstancePrefix, final int integerId, Field[] values, Request[] content) {
-        StateId id = new StateId(integerId);
+    static JPanel createPanel(String title, String settingsInstancePrefix, final int defaultContextId, Field[] values, Request[] content) {
+        LiveDataContext defaultContext = new LiveDataContext(defaultContextId);
 
-        ActionPanel ap = createComponents(title, content, values, settingsInstancePrefix);
+        ActionPanel ap = createComponents(title, content, values, settingsInstancePrefix, defaultContext);
         JPanel panel = ap.getPanel();
 
-        LiveDocHolder holder = new LiveDocHolder(id, ap.actionsList, values) {
+        LiveDocHolder holder = new LiveDocHolder(defaultContext, ap.getRefreshActions(), values) {
             @Override
             public boolean isVisible() {
                 boolean isVisible = !panel.getVisibleRect().isEmpty();
@@ -61,7 +59,7 @@ public class LiveDocPanel {
         return c.isVisible() && (parent == null || isRecursivelyVisible(parent));
     }
 
-    private static ActionPanel createComponents(String title, Request[] content, Field[] values, String settingsInstancePrefix) {
+    private static ActionPanel createComponents(String title, Request[] content, Field[] values, String settingsInstancePrefix, LiveDataContext defaultContext) {
         ActionPanel result = new ActionPanel(title);
 
         for (Request r : content) {
@@ -74,12 +72,13 @@ public class LiveDocPanel {
                 }
             } else if (r instanceof FieldRequest) {
                 FieldRequest request = (FieldRequest) r;
+                LiveDataContext context = getFieldContext(defaultContext, request.getStateContext());
                 Field field = getField(values, request);
                 JLabel label = new JLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/variable.png"));
                 label.setToolTipText("Variable " + field.getName());
                 result.addControl(label);
-                result.actionsList.add(new RefreshActions() {
+                result.actionsListAdd(context, new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
                         Number fieldValue = field.getValue(new ConfigurationImage(response));
@@ -94,19 +93,19 @@ public class LiveDocPanel {
                 JLabel label = new JLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/setting.png"));
                 label.setToolTipText(getTooltipText(field.getName()));
-                result.actionsList.add(new RefreshActions() {
+                result.addControl(label);
+                // todo: use different notification flow altogether since configuration has nothing to do with live data structures
+                result.actionsListAdd(new LiveDataContext(Fields.LDS_ENGINE_STATE_INDEX), new RefreshActions() {
                     @Override
                     public void refresh(BinaryProtocol bp, byte[] response) {
                         String value = field.getAnyValue(bp.getController()).toString();
                         label.setText(value);
                     }
                 });
-                result.addControl(label);
             } else if (r instanceof SensorRequest) {
                 SensorRequest request = (SensorRequest) r;
                 Sensor sensor = Sensor.find(request.getValue());
                 JLabel label = new JLabel("*");
-                result.addControl(label);
                 label.setIcon(UiUtils.loadIcon("livedocs/gauge.png"));
                 label.setToolTipText("Sensor " + request.getValue());
                 label.addMouseListener(new MouseAdapter() {
@@ -118,19 +117,19 @@ public class LiveDocPanel {
                         }
                     }
                 });
-                result.actionsList.add(new RefreshActions() {
+                result.addControl(label);
+                SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
                     @Override
-                    public void refresh(BinaryProtocol bp, byte[] response) {
-                        double value = SensorCentral.getInstance().getValue(sensor);
+                    public void onSensorUpdate(double value) {
                         label.setText(niceToString(value, LIVE_DATA_PRECISION));
                     }
                 });
             } else if (r instanceof IfRequest) {
                 IfRequest request = (IfRequest) r;
 
-                IfConditionPanel panel = createIfRequestPanel(request, values);
+                IfConditionPanel panel = createIfRequestPanel(request, values, defaultContext);
 
-                result.actionsList.addAll(panel.getActionsList());
+                result.actionsListAddAll(panel.getActionsList());
 
                 result.addControl(panel.getPanel());
             } else {
@@ -138,6 +137,15 @@ public class LiveDocPanel {
             }
         }
         return result;
+    }
+
+    private static LiveDataContext getFieldContext(LiveDataContext defaultContext, String stateContext) {
+        if (stateContext.isEmpty()) {
+            return defaultContext;
+        } else {
+            String indexFieldName = StateDictionary.getContextIndexFieldName(stateContext);
+            return StateDictionary.getStateContext(indexFieldName);
+        }
     }
 
     private static Field getField(Field[] defaultContext, FieldRequest request) {
@@ -158,8 +166,7 @@ public class LiveDocPanel {
         return "Configuration " + dialogField.getUiName() + " (" + configurationFieldName + ")";
     }
 
-    private static IfConditionPanel createIfRequestPanel(IfRequest request, Field[] values) {
-
+    private static IfConditionPanel createIfRequestPanel(IfRequest request, Field[] values, LiveDataContext defaultContext) {
         Field conditionField = Field.findField(values, "", request.getVariable());
 
         JPanel result = new JPanel(new VerticalFlowLayout());
@@ -168,16 +175,18 @@ public class LiveDocPanel {
         result.add(conditionLabel);
 
 
-        ActionPanel trueAP = createComponents("", request.trueBlock.toArray(new Request[0]), values, "");
-        ActionPanel falseAP = createComponents("", request.falseBlock.toArray(new Request[0]), values, "");
+        ActionPanel trueAP = createComponents("", request.trueBlock.toArray(new Request[0]), values, "", defaultContext);
+        ActionPanel falseAP = createComponents("", request.falseBlock.toArray(new Request[0]), values, "", defaultContext);
 
         result.add(trueAP.getPanel());
         result.add(falseAP.getPanel());
 
-        List<RefreshActions> combined = new ArrayList<>(trueAP.actionsList);
-        combined.addAll(falseAP.actionsList);
+        RefreshActionsMap combined = trueAP.getRefreshActions();
+        combined.addAll(falseAP.getRefreshActions());
 
-        combined.add(new RefreshActions() {
+        LiveDataContext context = getFieldContext(defaultContext, request.getStateContext());
+
+        combined.put(context, new RefreshActions() {
             @Override
             public void refresh(BinaryProtocol bp, byte[] response) {
                 int value = (int) conditionField.getValue(new ConfigurationImage(response));

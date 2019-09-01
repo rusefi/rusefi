@@ -264,6 +264,7 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 
 		DISPLAY_TEXT(Pedal);
 		DISPLAY_SENSOR(PPS);
+		DISPLAY(DISPLAY_CONFIG(throttlePedalPositionAdcChannel));
 		DISPLAY_TEXT(eol);
 
 		DISPLAY_STATE(ETB_pid)

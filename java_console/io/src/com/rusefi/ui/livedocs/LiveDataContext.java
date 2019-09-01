@@ -7,10 +7,10 @@ import java.util.Objects;
  * <p>
  * (c) Andrey Belomutskiy 2013-2019
  */
-public class StateId {
+public class LiveDataContext {
     private final int id;
 
-    public StateId(int id) {
+    public LiveDataContext(int id) {
         this.id = id;
     }
 
@@ -20,7 +20,7 @@ public class StateId {
 
     @Override
     public String toString() {
-        return "StateId{" +
+        return "LiveDataContext{" +
                 "id=" + id +
                 '}';
     }
@@ -29,7 +29,7 @@ public class StateId {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StateId stateId = (StateId) o;
+        LiveDataContext stateId = (LiveDataContext) o;
         return id == stateId.id;
     }
 
