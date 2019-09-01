@@ -37,12 +37,16 @@ public class LiveDocsMetaParser {
             throw new IllegalArgumentException("Two arguments expected but " + Arrays.toString(args));
         String destinationPath = args[0];
         String fileName = args[1];
-        MetaInfo metaInfo = getMetaFromFile(fileName);
+        handleMetaData(destinationPath, fileName);
+    }
+
+    public static void handleMetaData(String destinationPath, String inputFileName) throws IOException {
+        MetaInfo metaInfo = getMetaFromFile(inputFileName);
         SystemOut.println(metaInfo);
 
-        String className = getClassName(fileName);
+        String className = getClassName(inputFileName);
         String javaCode = generateJavaCode(metaInfo, className);
-        FileWriter fw = new FileWriter(destinationPath + "java_console/ui/src/com/rusefi/ldmp/generated/" + className + ".java");
+        FileWriter fw = new FileWriter(destinationPath + "/ui/src/com/rusefi/ldmp/generated/" + className + ".java");
         fw.write(javaCode);
         fw.close();
         SystemOut.close();

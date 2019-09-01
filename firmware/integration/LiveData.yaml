@@ -1,0 +1,11 @@
+Destination: "../java_console"
+
+Usages:
+  - "controllers/actuators/idle_thread.cpp"
+  - "controllers/trigger/trigger_decoder.cpp"
+  - "controllers/sensors/thermistors.cpp"
+  - "controllers/sensors/tps.cpp"
+  - "controllers/math/speed_density.cpp"
+  - "controllers/algo/fuel_math.cpp"
+  - "controllers/actuators/electronic_throttle.cpp"
+  - "controllers/algo/accel_enrichment.cpp"
