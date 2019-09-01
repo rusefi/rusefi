@@ -38,9 +38,9 @@ public class LiveDocPanel {
     private static final int LIVE_DATA_PRECISION = 2;
 
     @NotNull
-    static JPanel createPanel(String title, String instancePrefix, final int id, Field[] values, Request[] content) {
+    static JPanel createPanel(String title, String settingsInstancePrefix, final int id, Field[] values, Request[] content) {
 
-        ActionPanel ap = createComponents(title, content, values, instancePrefix);
+        ActionPanel ap = createComponents(title, content, values, settingsInstancePrefix);
         JPanel panel = ap.getPanel();
 
         LiveDocHolder holder = new LiveDocHolder(id, ap.actionsList, values) {
@@ -60,7 +60,7 @@ public class LiveDocPanel {
         return c.isVisible() && (parent == null || isRecursivelyVisible(parent));
     }
 
-    private static ActionPanel createComponents(String title, Request[] content, Field[] values, String instancePrefix) {
+    private static ActionPanel createComponents(String title, Request[] content, Field[] values, String settingsInstancePrefix) {
         ActionPanel result = new ActionPanel(title);
 
         for (Request r : content) {
@@ -88,7 +88,7 @@ public class LiveDocPanel {
                 });
             } else if (r instanceof ConfigRequest) {
                 ConfigRequest request = (ConfigRequest) r;
-                Field field = Field.findField(Fields.VALUES, instancePrefix, request.getField());
+                Field field = Field.findField(Fields.VALUES, settingsInstancePrefix, request.getField());
 
                 JLabel label = new JLabel("*");
                 label.setIcon(UiUtils.loadIcon("livedocs/setting.png"));
