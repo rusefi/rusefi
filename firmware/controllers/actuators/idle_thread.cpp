@@ -283,8 +283,8 @@ public:
 	 * @see stepper.cpp
 	 */
 
-		idleRpmPid.iTermMin = engineConfiguration->idlerpmpid_iTermMin;
-		idleRpmPid.iTermMax = engineConfiguration->idlerpmpid_iTermMax;
+		idlePid.iTermMin = engineConfiguration->idlerpmpid_iTermMin;
+		idlePid.iTermMax = engineConfiguration->idlerpmpid_iTermMax;
 
 		engine->engineState.isAutomaticIdle = engineConfiguration->idleMode == IM_AUTO;
 
