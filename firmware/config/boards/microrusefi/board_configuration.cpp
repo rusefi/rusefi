@@ -133,6 +133,13 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
+
+	// EFI_ADC_10: "27 - AN volt 1"
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+
+	// EFI_ADC_2: "24 - AN temp 3"
+	engineConfiguration->afr.hwChannel = EFI_ADC_2;
+
 	// clt = "18 - AN temp 1"
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
 	engineConfiguration->clt.config.bias_resistor = 2700;
