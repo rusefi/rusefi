@@ -56,7 +56,6 @@ public:
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
 	bool isEvenRevolution() const;
-	void validateCamVvtCounters();
 	void incrementTotalEventCounter();
 	efitime_t getTotalEventCounter() const;
 	void decodeTriggerEvent(trigger_event_e const signal, efitime_t nowUs DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -111,7 +110,6 @@ public:
 	 * for virtual double trigger see timeAtVirtualZeroNt
 	 */
 	efitick_t startOfCycleNt;
-	int vvtCamCounter = 0;
 private:
 	void resetCurrentCycleState();
 
