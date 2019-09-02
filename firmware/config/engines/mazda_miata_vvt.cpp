@@ -504,10 +504,12 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
 }
 
 /**
- * Pretty OEM 2003 Miata with ETB
+ * Pretty much OEM 2003 Miata with ETB
  * set engine_type 13
  */
 void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
+	// fuelPumpPin is inherited from boards/microrusefi/board_configuration.cpp
 
 	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
 	engineConfiguration->etb.iFactor = 	0;
