@@ -1040,9 +1040,12 @@ tChargeMode_e tChargeMode;
 
 	spi_device_e tle8888spiDevice;
 	spi_device_e mc33816spiDevice;
-	uint8_t[2] unusedSpiPadding6;
+	int16_t idlerpmpid_iTermMin;iTerm min value;"",        1,     0,  -30000,    30000.0,  0
+
 	spi_device_e tle6240spiDevice;
-	uint8_t[3] unusedSpiPadding7;
+	uint8_t[1] unusedSpiPadding7;
+	int16_t idlerpmpid_iTermMax;iTerm max value;"",        1,     0,  -30000,    30000.0,  0
+
 	spi_device_e mc33972spiDevice;
 	uint8_t[3] unusedSpiPadding8;
 

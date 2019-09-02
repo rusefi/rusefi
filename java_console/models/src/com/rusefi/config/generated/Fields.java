@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 01 17:24:09 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 02 00:13:32 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -712,6 +712,8 @@ public class Fields {
 	public static final int idleRpmPid_dFactor_offset_hex = 704;
 	public static final int idleRpmPid_iFactor_offset = 1792;
 	public static final int idleRpmPid_iFactor_offset_hex = 700;
+	public static final int idlerpmpid_iTermMax_offset = 4006;
+	public static final int idlerpmpid_iTermMin_offset = 4002;
 	public static final int idleRpmPid_maxValue_offset = 1806;
 	public static final int idleRpmPid_minValue_offset = 1804;
 	public static final int idleRpmPid_offset = 1788;
@@ -1218,7 +1220,6 @@ public class Fields {
 	public static final int unusedSpiPadding3_offset = 4036;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
-	public static final int unusedSpiPadding6_offset = 4002;
 	public static final int unusedSpiPadding7_offset = 4005;
 	public static final int unusedSpiPadding8_offset = 4009;
 	public static final int unuseduartPadding1_offset = 808;
@@ -2027,7 +2028,10 @@ public class Fields {
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 3996, FieldType.FLOAT);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4000, FieldType.INT8);
 	public static final Field MC33816SPIDEVICE = Field.create("MC33816SPIDEVICE", 4001, FieldType.INT8);
+	public static final Field IDLERPMPID_ITERMMIN = Field.create("IDLERPMPID_ITERMMIN", 4002, FieldType.INT16);
 	public static final Field TLE6240SPIDEVICE = Field.create("TLE6240SPIDEVICE", 4004, FieldType.INT8);
+	public static final Field UNUSEDSPIPADDING7 = Field.create("UNUSEDSPIPADDING7", 4005, FieldType.INT8);
+	public static final Field IDLERPMPID_ITERMMAX = Field.create("IDLERPMPID_ITERMMAX", 4006, FieldType.INT16);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4008, FieldType.INT8);
 	public static final Field ETBIDLETHROTTLERANGE = Field.create("ETBIDLETHROTTLERANGE", 4012, FieldType.FLOAT);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
@@ -2791,7 +2795,10 @@ public class Fields {
 	TPSACCELFRACTIONDIVISOR,
 	TLE8888SPIDEVICE,
 	MC33816SPIDEVICE,
+	IDLERPMPID_ITERMMIN,
 	TLE6240SPIDEVICE,
+	UNUSEDSPIPADDING7,
+	IDLERPMPID_ITERMMAX,
 	MC33972SPIDEVICE,
 	ETBIDLETHROTTLERANGE,
 	PEDALTOTPSTABLE,
