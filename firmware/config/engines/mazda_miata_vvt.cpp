@@ -510,6 +510,11 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
 void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
 	// fuelPumpPin is inherited from boards/microrusefi/board_configuration.cpp
+	// crank trigger input is inherited from boards/microrusefi/board_configuration.cpp
+
+	engineConfiguration->camInputs[0] = GPIOA_5;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
+
 
 	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
 	engineConfiguration->etb.iFactor = 	0;
