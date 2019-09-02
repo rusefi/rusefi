@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger.txt Sat Aug 31 23:11:37 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_state.txt Mon Sep 02 13:51:51 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_TRIGGER_GENERATED_H
@@ -12,11 +12,15 @@ struct trigger_central_s {
 	 * offset 0
 	 */
 	int hwEventCounters[HW_EVENT_TYPES];
-	/** total size 24*/
+	/**
+	 * offset 24
+	 */
+	int vvtCamCounter = (int)0;
+	/** total size 28*/
 };
 
 typedef struct trigger_central_s trigger_central_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger.txt Sat Aug 31 23:11:37 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_state.txt Mon Sep 02 13:51:51 EDT 2019

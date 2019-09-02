@@ -15,5 +15,9 @@ public class TriggerDecoderMeta {
 			new FieldRequest("Trigger", "HWEVENTCOUNTERS3"),
 			new TextRequest("Rise"),
 			new FieldRequest("Trigger", "HWEVENTCOUNTERS4"),
+			new TextRequest("EOL"),
+			new TextRequest("VVT_1"),
+			new ConfigRequest("CAMINPUTS1"),
+			new FieldRequest("Trigger", "vvtCamCounter"),
 	};
 }
