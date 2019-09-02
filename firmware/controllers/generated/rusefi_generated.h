@@ -1063,6 +1063,10 @@
 #define idleRpmPid_dFactor_offset_hex 704
 #define idleRpmPid_iFactor_offset 1792
 #define idleRpmPid_iFactor_offset_hex 700
+#define idlerpmpid_iTermMax_offset 4006
+#define idlerpmpid_iTermMax_offset_hex fa6
+#define idlerpmpid_iTermMin_offset 4002
+#define idlerpmpid_iTermMin_offset_hex fa2
 #define idleRpmPid_maxValue_offset 1806
 #define idleRpmPid_maxValue_offset_hex 70e
 #define idleRpmPid_minValue_offset 1804
@@ -1878,8 +1882,6 @@
 #define unusedSpiPadding4_offset_hex a21
 #define unusedSpiPadding5_offset 2713
 #define unusedSpiPadding5_offset_hex a99
-#define unusedSpiPadding6_offset 4002
-#define unusedSpiPadding6_offset_hex fa2
 #define unusedSpiPadding7_offset 4005
 #define unusedSpiPadding7_offset_hex fa5
 #define unusedSpiPadding8_offset 4009

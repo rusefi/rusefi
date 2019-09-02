@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Aug 31 17:47:54 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 02 00:13:32 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2508,9 +2508,10 @@ struct engine_configuration_s {
 	 */
 	spi_device_e mc33816spiDevice;
 	/**
+	 * iTerm min value
 	 * offset 4002
 	 */
-	uint8_t unusedSpiPadding6[2];
+	int16_t idlerpmpid_iTermMin;
 	/**
 	 * offset 4004
 	 */
@@ -2518,7 +2519,12 @@ struct engine_configuration_s {
 	/**
 	 * offset 4005
 	 */
-	uint8_t unusedSpiPadding7[3];
+	uint8_t unusedSpiPadding7;
+	/**
+	 * iTerm max value
+	 * offset 4006
+	 */
+	int16_t idlerpmpid_iTermMax;
 	/**
 	 * offset 4008
 	 */
@@ -2814,4 +2820,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Aug 31 17:47:54 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 02 00:13:32 EDT 2019

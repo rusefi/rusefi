@@ -283,6 +283,9 @@ public:
 	 * @see stepper.cpp
 	 */
 
+		idleRpmPid.iTermMin = engineConfiguration->idlerpmpid_iTermMin;
+		idleRpmPid.iTermMax = engineConfiguration->idlerpmpid_iTermMax;
+
 		engine->engineState.isAutomaticIdle = engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
@@ -416,6 +419,9 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
 	engineConfiguration->idleRpmPid.periodMs = 10;
+
+	engineConfiguration->idlerpmpid_iTermMin = -200;
+	engineConfiguration->idlerpmpid_iTermMax =  200;
 }
 
 #if ! EFI_UNIT_TEST
