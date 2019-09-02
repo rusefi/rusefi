@@ -200,7 +200,9 @@
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
+#ifndef EFI_MAIN_RELAY_CONTROL
 #define EFI_MAIN_RELAY_CONTROL FALSE
+#endif
 
 #ifndef EFI_PWM
 #define EFI_PWM TRUE
