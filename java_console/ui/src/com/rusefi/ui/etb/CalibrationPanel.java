@@ -1,5 +1,6 @@
 package com.rusefi.ui.etb;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
@@ -18,8 +19,8 @@ public class CalibrationPanel {
         content.add(createCommandButton("Grab TPS#1 fully closed", "calibrate_tps_1_closed"));
         content.add(createCommandButton("Grab TPS#1 Wide Open", "calibrate_tps_1_wot"));
 
-        content.add(createCommandButton("Grab Pedal Up", "calibrate_pedal_up"));
-        content.add(createCommandButton("Grab Pedal Down", "calibrate_pedal_down"));
+        content.add(createCommandButton("Grab Pedal Up", Fields.CMD_CALIBRATE_PEDAL_UP));
+        content.add(createCommandButton("Grab Pedal Down", Fields.CMD_CALIBRATE_PEDAL_DOWN));
     }
 
     @NotNull

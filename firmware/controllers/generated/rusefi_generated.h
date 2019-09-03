@@ -364,6 +364,8 @@
 #define clutchUpPinInverted_offset_hex 3d0
 #define clutchUpPinMode_offset 971
 #define clutchUpPinMode_offset_hex 3cb
+#define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
+#define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
 #define CMD_REBOOT "reboot"
