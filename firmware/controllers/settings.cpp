@@ -417,6 +417,14 @@ void printTPSInfo(void) {
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
 			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+
+	if (hasPedalPositionSensor()) {
+		scheduleMsg(&logger, "pedal up %f / down %f",
+				engineConfiguration->throttlePedalUpVoltage,
+				engineConfiguration->throttlePedalWOTVoltage);
+	}
+
+
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
 			getTpsRateOfChange());

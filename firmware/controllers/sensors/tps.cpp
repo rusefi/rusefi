@@ -178,6 +178,7 @@ void grabPedalIsUp() {
 #if EFI_PROD_CODE
 	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	engineConfiguration->throttlePedalUpVoltage = voltage;
+	printTPSInfo();
 #endif /* EFI_PROD_CODE */
 }
 
@@ -185,6 +186,7 @@ void grabPedalIsWideOpen() {
 #if EFI_PROD_CODE
 	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
 	engineConfiguration->throttlePedalWOTVoltage = voltage;
+	printTPSInfo();
 #endif /* EFI_PROD_CODE */
 }
 
