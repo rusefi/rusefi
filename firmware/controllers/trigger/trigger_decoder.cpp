@@ -504,6 +504,8 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 		DISPLAY_TEXT(VVT_1);
 		DISPLAY(DISPLAY_CONFIG(CAMINPUTS1));
+		DISPLAY(DISPLAY_FIELD(vvtEventRiseCounter));
+		DISPLAY(DISPLAY_FIELD(vvtEventFallCounter));
 		DISPLAY(DISPLAY_FIELD(vvtCamCounter));
 
 		if (triggerShape->isSynchronizationNeeded) {
