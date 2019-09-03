@@ -1334,6 +1334,8 @@
 #define knockVThreshold_offset_hex 5e8
 #define lcdThreadPeriodMs_offset 720
 #define lcdThreadPeriodMs_offset_hex 2d0
+#define LDS_ALTERNATOR_PID_STATE_INDEX 9
+#define LDS_CJ125_PID_STATE_INDEX 10
 #define LDS_CLT_STATE_INDEX 0
 #define LDS_ENGINE_STATE_INDEX 3
 #define LDS_ETB_PID_STATE_INDEX 7
@@ -1342,7 +1344,8 @@
 #define LDS_IDLE_PID_STATE_INDEX 8
 #define LDS_SPEED_DENSITY_STATE_INDEX 2
 #define LDS_TPS_TPS_ENEICHMENT_STATE_INDEX 5
-#define LDS_TRIGGER_STATE_INDEX 6
+#define LDS_TRIGGER_CENTRAL_STATE_INDEX 6
+#define LDS_TRIGGER_STATE_STATE_INDEX 11
 #define LE_COMMAND_LENGTH 200
 #define LIS302DLCsPin_offset 2043
 #define LIS302DLCsPin_offset_hex 7fb

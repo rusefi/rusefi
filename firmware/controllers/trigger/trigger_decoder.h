@@ -11,6 +11,7 @@
 #include "global.h"
 #include "trigger_structure.h"
 #include "engine_configuration.h"
+#include "trigger_state_generated.h"
 
 class TriggerState;
 
@@ -44,7 +45,7 @@ typedef struct {
 /**
  * @see TriggerShape for trigger wheel shape definition
  */
-class TriggerState {
+class TriggerState : public trigger_state_s {
 public:
 	TriggerState();
 	/**

@@ -11,7 +11,7 @@
 #include "rusefi_enums.h"
 #include "listener_array.h"
 #include "trigger_decoder.h"
-#include "trigger_generated.h"
+#include "trigger_central_generated.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX);
