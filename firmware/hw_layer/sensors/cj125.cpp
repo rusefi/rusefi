@@ -13,9 +13,6 @@
 
 #if EFI_CJ125 && HAL_USE_SPI
 
-// looks like 3v range should be enough, divider not needed
-#define EFI_CJ125_DIRECTLY_CONNECTED_UR TRUE
-
 #include "adc_inputs.h"
 
 //#define CJ125_DEBUG
@@ -112,13 +109,13 @@ static float getUr() {
 #if ! EFI_UNIT_TEST
 	if (CONFIG(cj125ur) != EFI_ADC_NONE) {
 #if EFI_PROD_CODE
-#ifdef EFI_CJ125_DIRECTLY_CONNECTED_UR
+	if (!engineConfiguration->cj125isUrDivided) {
 		// in case of directly connected Ur signal from CJ125 to the ADC pin of MCU
 		return getVoltage("cj125ur", CONFIG(cj125ur));
-#else
+	} else {
 		// if a standard voltage division scheme with OpAmp is used
 		return getVoltageDivided("cj125ur", CONFIG(cj125ur));
-#endif /* EFI_CJ125_DIRECTLY_CONNECTED_UR */
+	}
 #endif /* EFI_PROD_CODE */
 	}
 	return 0.0f;
