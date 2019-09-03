@@ -6,4 +6,8 @@ struct_no_prefix define_constructor trigger_central_s
 
 int vvtCamCounter
 
+int vvtEventRiseCounter
+int vvtEventFallCounter
+
+
 end_struct

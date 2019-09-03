@@ -36,9 +36,6 @@ EXTERN_ENGINE
 ;
 static Logging *logger;
 
-int vvtEventRiseCounter = 0;
-int vvtEventFallCounter = 0;
-
 #if EFI_PROD_CODE
 /* PAL based implementation */
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
@@ -80,10 +77,8 @@ static void cam_callback(void *arg) {
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	if (rise) {
-		vvtEventRiseCounter++;
 		hwHandleVvtCamSignal(TV_RISE);
 	} else {
-		vvtEventFallCounter++;
 		hwHandleVvtCamSignal(TV_FALL);
 	}
 }
@@ -114,13 +109,11 @@ static ICUDriver *primaryCrankDriver;
 
 static void cam_icu_width_callback(ICUDriver *icup) {
     (void)icup;
-	vvtEventRiseCounter++;
 	hwHandleVvtCamSignal(TV_RISE);
 }
 
 static void cam_icu_period_callback(ICUDriver *icup) {
     (void)icup;
-	vvtEventFallCounter++;
 	hwHandleVvtCamSignal(TV_FALL);
 }
 

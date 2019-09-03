@@ -89,6 +89,14 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	TriggerCentral *tc = &engine->triggerCentral;
+	if (front == TV_RISE) {
+		tc->vvtEventRiseCounter++;
+	} else {
+		tc->vvtEventFallCounter++;
+	}
+
+
 	addEngineSnifferEvent(PROTOCOL_VVT_NAME, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 	if (CONFIGB(vvtCamSensorUseRise) ^ (front != TV_FALL)) {
@@ -102,7 +110,6 @@ void hwHandleVvtCamSignal(trigger_value_e front DECLARE_ENGINE_PARAMETER_SUFFIX)
 		return;
 	}
 
-	TriggerCentral *tc = &engine->triggerCentral;
 	tc->vvtCamCounter++;
 
 	efitick_t nowNt = getTimeNowNt();
@@ -511,9 +518,6 @@ extern bool hwTriggerInputEnabled;
 extern uint32_t maxSchedulingPrecisionLoss;
 extern uint32_t *cyccnt;
 
-extern int vvtEventRiseCounter;
-extern int vvtEventFallCounter;
-
 void resetMaxValues() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	maxEventCallbackDuration = triggerMaxDuration = 0;
@@ -592,7 +596,7 @@ void triggerInfo(void) {
 	if (HAVE_CAM_INPUT()) {
 		scheduleMsg(logger, "VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
 				getVvt_mode_e(engineConfiguration->vvtMode));
-		scheduleMsg(logger, "VVT event counters: %d/%d", vvtEventRiseCounter, vvtEventFallCounter);
+		scheduleMsg(logger, "VVT event counters: %d/%d", engine->triggerCentral.vvtEventRiseCounter, engine->triggerCentral.vvtEventFallCounter);
 
 	}
 
