@@ -1370,8 +1370,8 @@ void initSettings(void) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-	addConsoleAction("calibrate_pedal_up", grabPedalIsUp);
-	addConsoleAction("calibrate_pedal_down", grabPedalIsWideOpen);
+	addConsoleAction(CMD_CALIBRATE_PEDAL_UP, grabPedalIsUp);
+	addConsoleAction(CMD_CALIBRATE_PEDAL_DOWN, grabPedalIsWideOpen);
 	addConsoleAction("info", printAllInfo);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);

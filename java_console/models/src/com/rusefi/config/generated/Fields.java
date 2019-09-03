@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 02 00:13:32 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 02 22:52:53 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -234,6 +234,8 @@ public class Fields {
 	public static final int clutchUpPin_offset = 969;
 	public static final int clutchUpPinInverted_offset = 976;
 	public static final int clutchUpPinMode_offset = 971;
+	public static final String CMD_CALIBRATE_PEDAL_DOWN = "calibrate_pedal_down";
+	public static final String CMD_CALIBRATE_PEDAL_UP = "calibrate_pedal_up";
 	public static final String CMD_DISABLE = "disable";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_REBOOT = "reboot";
