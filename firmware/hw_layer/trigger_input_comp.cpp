@@ -28,9 +28,6 @@ EXTERN_ENGINE
 ;
 static Logging *logger;
 
-int vvtEventRiseCounter = 0;
-int vvtEventFallCounter = 0;
-
 static void comp_shaft_callback(COMPDriver *comp) {
 	bool isRising = (comp_lld_get_status(comp) & COMP_IRQ_RISING) != 0;
 	int isPrimary = (comp == EFI_COMP_PRIMARY_DEVICE);
@@ -56,10 +53,8 @@ static void comp_shaft_callback(COMPDriver *comp) {
 #if 0
 static void comp_cam_callback(COMPDriver *comp) {
 	if (isRising) {
-		vvtEventRiseCounter++;
 		hwHandleVvtCamSignal(TV_RISE);
 	} else {
-		vvtEventFallCounter++;
 		hwHandleVvtCamSignal(TV_FALL);
 	}
 }

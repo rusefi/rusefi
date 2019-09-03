@@ -498,7 +498,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex D
 
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
-			engine->triggerCentral.triggerState.validateCamVvtCounters();
+			engine->triggerCentral.validateCamVvtCounters();
 		}
 
 		if (checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {

@@ -1237,6 +1237,9 @@ end_struct
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
 
+#define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
+#define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
+
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
 #define CMD_REBOOT "reboot"
