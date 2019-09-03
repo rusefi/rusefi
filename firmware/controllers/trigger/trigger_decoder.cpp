@@ -487,7 +487,12 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		bool isSynchronizationPoint;
 		bool wasSynchronized = shaft_is_synchronized;
 
-		DISPLAY_STATE(Trigger)
+		DISPLAY_STATE(Trigger_State)
+		DISPLAY_TEXT(Current_Gap);
+		DISPLAY(DISPLAY_FIELD(currentGap));
+		DISPLAY_TEXT(EOL);
+
+		DISPLAY_STATE(Trigger_Central)
 		DISPLAY(DISPLAY_CONFIG(TRIGGERINPUTPINS1));
 		DISPLAY_TEXT(Trigger_1_Fall);
 		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS1));
@@ -511,8 +516,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		if (triggerShape->isSynchronizationNeeded) {
 			// this is getting a little out of hand, any ideas?
 
+			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
+
 			if (CONFIG(debugMode) == DBG_TRIGGER_SYNC) {
-				float currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 #if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField1 = currentGap;
 				tsOutputChannels.debugFloatField2 = currentCycle.current_index;

@@ -22,9 +22,12 @@ public enum StateDictionary {
         register(Fields.LDS_ENGINE_STATE_INDEX, EngineState.VALUES); // 3
         register(Fields.LDS_FUEL_TRIM_STATE_INDEX, EngineState.VALUES);
         register(Fields.LDS_TPS_TPS_ENEICHMENT_STATE_INDEX, EngineState.VALUES); // 5
-        register(Fields.LDS_TRIGGER_STATE_INDEX, TriggerState.VALUES);
+        register(Fields.LDS_TRIGGER_CENTRAL_STATE_INDEX, TriggerCentral.VALUES);
         register(Fields.LDS_ETB_PID_STATE_INDEX, PidState.VALUES); // 7
         register(Fields.LDS_IDLE_PID_STATE_INDEX, PidState.VALUES);
+        // LDS_ALTERNATOR_PID_STATE_INDEX
+        // LDS_CJ125_PID_STATE_INDEX
+        register(Fields.LDS_TRIGGER_STATE_STATE_INDEX, TriggerState.VALUES); // 11
     }
 
     private void register(int ldsIndex, Field[] values) {

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 18:55:21 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 19:18:06 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -875,6 +875,8 @@ public class Fields {
 	public static final int knockNoiseRpmBins_offset = 1852;
 	public static final int knockVThreshold_offset = 1512;
 	public static final int lcdThreadPeriodMs_offset = 720;
+	public static final int LDS_ALTERNATOR_PID_STATE_INDEX = 9;
+	public static final int LDS_CJ125_PID_STATE_INDEX = 10;
 	public static final int LDS_CLT_STATE_INDEX = 0;
 	public static final int LDS_ENGINE_STATE_INDEX = 3;
 	public static final int LDS_ETB_PID_STATE_INDEX = 7;
@@ -883,7 +885,8 @@ public class Fields {
 	public static final int LDS_IDLE_PID_STATE_INDEX = 8;
 	public static final int LDS_SPEED_DENSITY_STATE_INDEX = 2;
 	public static final int LDS_TPS_TPS_ENEICHMENT_STATE_INDEX = 5;
-	public static final int LDS_TRIGGER_STATE_INDEX = 6;
+	public static final int LDS_TRIGGER_CENTRAL_STATE_INDEX = 6;
+	public static final int LDS_TRIGGER_STATE_STATE_INDEX = 11;
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int LIS302DLCsPin_offset = 2043;
 	public static final int logFormat_offset = 496;

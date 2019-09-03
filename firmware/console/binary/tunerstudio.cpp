@@ -270,8 +270,10 @@ static const void * getStructAddr(int structId) {
 		return static_cast<engine_state2_s*>(&engine->engineState);
 	case LDS_FUEL_TRIM_STATE_INDEX:
 		return static_cast<wall_fuel_state*>(&engine->wallFuel);
-	case LDS_TRIGGER_STATE_INDEX:
+	case LDS_TRIGGER_CENTRAL_STATE_INDEX:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
+	case LDS_TRIGGER_STATE_STATE_INDEX:
+		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case LDS_ETB_PID_STATE_INDEX:
 		return static_cast<pid_state_s*>(&etbPid);

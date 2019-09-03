@@ -22,9 +22,15 @@ java -DSystemOut.name=gen_config2 ^
 
 java -DSystemOut.name=gen_config2 ^
  -jar ../java_tools/ConfigDefinition.jar ^
+ -definition integration/trigger_central.txt ^
+ -java_destination ../java_console/models/src/com/rusefi/config/generated/TriggerCentral.java ^
+ -c_destination controllers/generated/trigger_central_generated.h
+
+java -DSystemOut.name=gen_config2 ^
+ -jar ../java_tools/ConfigDefinition.jar ^
  -definition integration/trigger_state.txt ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/TriggerState.java ^
- -c_destination controllers/generated/trigger_generated.h
+ -c_destination controllers/generated/trigger_state_generated.h
 
 java -DSystemOut.name=gen_config2 ^
  -jar ../java_tools/ConfigDefinition.jar ^
