@@ -417,6 +417,14 @@ void printTPSInfo(void) {
 
 	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
 			getTPSVoltage(PASS_ENGINE_PARAMETER_SIGNATURE), getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, pinNameBuffer));
+
+	if (hasPedalPositionSensor()) {
+		scheduleMsg(&logger, "pedal up %f / down %f",
+				engineConfiguration->throttlePedalUpVoltage,
+				engineConfiguration->throttlePedalWOTVoltage);
+	}
+
+
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "current 10bit=%d value=%.2f rate=%.2f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_SIGNATURE),
 			getTpsRateOfChange());
@@ -1370,8 +1378,8 @@ void initSettings(void) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-	addConsoleAction("calibrate_pedal_up", grabPedalIsUp);
-	addConsoleAction("calibrate_pedal_down", grabPedalIsWideOpen);
+	addConsoleAction(CMD_CALIBRATE_PEDAL_UP, grabPedalIsUp);
+	addConsoleAction(CMD_CALIBRATE_PEDAL_DOWN, grabPedalIsWideOpen);
 	addConsoleAction("info", printAllInfo);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);

@@ -74,8 +74,6 @@ extern bool main_loop_started;
 #include "vehicle_speed.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
-extern int vvtEventRiseCounter;
-extern int vvtEventFallCounter;
 extern int icuWidthCallbackCounter;
 extern int icuWidthPeriodCounter;
 #endif /* EFI_PROD_CODE */
@@ -773,8 +771,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
 		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE
-		tsOutputChannels->debugIntField4 = vvtEventRiseCounter;
-		tsOutputChannels->debugIntField5 = vvtEventFallCounter;
+		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
+		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
 		tsOutputChannels->debugFloatField5 = icuWidthCallbackCounter + icuWidthPeriodCounter;
 #endif /* EFI_PROD_CODE */
 

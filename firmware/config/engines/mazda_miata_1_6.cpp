@@ -328,7 +328,7 @@ void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// 0.2#3 has wrong R139
 	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
-//	engineConfiguration->vbattDividerCoeff = (66f / 10f) * engineConfiguration->analogInputDividerCoefficient;
+//	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 
 
 	boardConfiguration->isHip9011Enabled = false;

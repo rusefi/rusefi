@@ -32,6 +32,7 @@ public:
 	void resetCounters();
 	void resetAccumSignalData();
 	bool noiseFilter(efitick_t nowNt, trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void validateCamVvtCounters();
 	TriggerStateWithRunningStatistics triggerState;
 	efitick_t nowNt = 0;
 	angle_t vvtPosition = 0;

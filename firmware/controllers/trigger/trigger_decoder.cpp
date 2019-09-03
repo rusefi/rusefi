@@ -309,9 +309,9 @@ int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
 
-void TriggerState::validateCamVvtCounters() {
+void TriggerCentral::validateCamVvtCounters() {
 	// micro-optimized 'totalRevolutionCounter % 256'
-	int camVvtValidationIndex = totalRevolutionCounter & 0xFF;
+	int camVvtValidationIndex = triggerState.getTotalRevolutionCounter() & 0xFF;
 	if (camVvtValidationIndex == 0) {
 		vvtCamCounter = 0;
 	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
@@ -500,6 +500,13 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS3));
 		DISPLAY_TEXT(Rise);
 		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS4));
+		DISPLAY_TEXT(EOL);
+
+		DISPLAY_TEXT(VVT_1);
+		DISPLAY(DISPLAY_CONFIG(CAMINPUTS1));
+		DISPLAY(DISPLAY_FIELD(vvtEventRiseCounter));
+		DISPLAY(DISPLAY_FIELD(vvtEventFallCounter));
+		DISPLAY(DISPLAY_FIELD(vvtCamCounter));
 
 		if (triggerShape->isSynchronizationNeeded) {
 			// this is getting a little out of hand, any ideas?

@@ -39,6 +39,7 @@
 #include "custom_engine.h"
 #include "fsio_impl.h"
 #include "ego.h"
+#include "thermistors.h"
 
 EXTERN_CONFIG;
 
@@ -242,6 +243,38 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
+	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+
+	setCommonNTCSensor(&engineConfiguration->clt);
+	setCommonNTCSensor(&engineConfiguration->iat);
+
+	//	0.0825
+	//	0.1375
+	//	6.375
+	//	10.625
+	boardConfiguration->miataNb2VVTRatioFrom = 8.50 * 0.75;
+	boardConfiguration->miataNb2VVTRatioTo = 14;
+	engineConfiguration->nbVvtIndex = 0;
+
+	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
+
+	// set idle_position 35
+	boardConfiguration->manIdlePosition = 35;
+
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	/**
+	 * http://miataturbo.wikidot.com/fuel-injectors
+	 * 01-05 (purple) - #195500-4060
+	 */
+	engineConfiguration->injector.flow = 265;
+
+
 	// enable altdebug
 	engineConfiguration->targetVBatt = 13.8;
 	engineConfiguration->alternatorControl.offset = 40;
@@ -286,6 +319,17 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isCylinderCleanupEnabled = true;
 
 	setMazdaMiataNbTpsTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// set_whole_ve_map 80
+	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+	//set idle_offset 30
+	engineConfiguration->idleRpmPid.offset = 30;
+	engineConfiguration->idleRpmPid.pFactor = 0.07;
+	engineConfiguration->idleRpmPid.iFactor = 0.0001;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.periodMs = 10;
 } // end of setMazdaMiataEngineNB2Defaults
 
 
@@ -301,7 +345,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	boardConfiguration->is_enabled_spi_1 = true;
 
-
 	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
 
 	boardConfiguration->alternatorControlPin = GPIOE_10;
@@ -309,14 +352,10 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
-	// set idle_position 35
-	boardConfiguration->manIdlePosition = 35;
-
 
 	boardConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->vvtDisplayInverted = true;
 
-	engineConfiguration->auxPidFrequency[0] = 300;
 	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 1 0.55
@@ -353,37 +392,14 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	// set_whole_ve_map 80
-
-	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 
-//	0.0825
-//	0.1375
-//	6.375
-//	10.625
-	boardConfiguration->miataNb2VVTRatioFrom = 8.50 * 0.75;
-	boardConfiguration->miataNb2VVTRatioTo = 14;
-	engineConfiguration->nbVvtIndex = 0;
 
-
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-
-	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOE_6; // just for a test
 
-	/**
-	 * http://miataturbo.wikidot.com/fuel-injectors
-	 * 01-05 (purple) - #195500-4060
-	 */
-	engineConfiguration->injector.flow = 265;
 
 //	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
 //	boardConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
@@ -395,17 +411,12 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// see setFrankensoConfiguration
 	// map.sensor.hwChannel = EFI_ADC_0; W53
 
-	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-
 	/**
 	 * PA4 Wideband O2 Sensor
 	 */
 	// todo: re-wire the board to use "Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM"
 	//engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
-
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
-
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
 	//
 	/**
@@ -432,13 +443,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set idle_rpm 1700
 	// see setDefaultIdleParameters
 
-	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
-	//set idle_offset 30
-	engineConfiguration->idleRpmPid.offset = 30;
-	engineConfiguration->idleRpmPid.pFactor = 0.07;
-	engineConfiguration->idleRpmPid.iFactor = 0.0001;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
 }
 
 void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -508,12 +512,25 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
  * set engine_type 13
  */
 void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
 	// fuelPumpPin is inherited from boards/microrusefi/board_configuration.cpp
 	// crank trigger input is inherited from boards/microrusefi/board_configuration.cpp
+	// map.sensor.hwChannel input is inherited from boards/microrusefi/board_configuration.cpp
+	// tps1_1AdcChannel input is inherited from boards/microrusefi/board_configuration.cpp
+	// afr.hwChannel input is inherited from boards/microrusefi/board_configuration.cpp
+
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->camInputs[0] = GPIOA_5;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
+
+	// GPIOD_6: "13 - GP Out 6" - selected to +12v
+	boardConfiguration->alternatorControlPin = GPIOD_6;
+	// GPIOD_7: "14 - GP Out 5" - selected to +12v
+	engineConfiguration->dizzySparkOutputPin = GPIOD_7; // tachometer
 
 
 	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
@@ -534,6 +551,14 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set tps_max 540
 	engineConfiguration->tpsMax = 870;
+
+
+
+
+	// set vbatt_divider 11
+	// 0.3#4 has wrong R139 as well?
+	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
+	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 
 
 
