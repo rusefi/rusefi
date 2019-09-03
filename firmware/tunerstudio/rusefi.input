@@ -2019,6 +2019,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "UA input",								cj125ua, {isCJ125Enabled == 1}
 		field = "UR input",								cj125ur, {isCJ125Enabled == 1}
 		field = "Is UA input divided?"					cj125isUaDivided, {isCJ125Enabled == 1}
+		field = "Is UR input divided?"					cj125isUrDivided, {isCJ125Enabled == 1}
 		
 	dialog = spiFunction, "SPI settings"
 		field = "!ECU reboot needed to apply these settings"

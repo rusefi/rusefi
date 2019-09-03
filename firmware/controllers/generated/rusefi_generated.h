@@ -301,6 +301,8 @@
 #define cj125isLsu49_offset_hex 4c
 #define cj125isUaDivided_offset 76
 #define cj125isUaDivided_offset_hex 4c
+#define cj125isUrDivided_offset 76
+#define cj125isUrDivided_offset_hex 4c
 #define cj125SpiDevice_offset 2224
 #define cj125SpiDevice_offset_hex 8b0
 #define cj125ua_offset 2609
@@ -1258,8 +1260,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_15_offset 76
-#define issue_294_15_offset_hex 4c
 #define issue_294_16_offset 76
 #define issue_294_16_offset_hex 4c
 #define issue_294_17_offset 76

@@ -297,7 +297,7 @@ bit cj125isLsu49;
 bit etb1_use_two_wires;
 bit etb2_use_two_wires;
 bit showSdCardWarning;
-bit issue_294_15;
+bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit issue_294_16;
 bit issue_294_17;
 bit issue_294_18;

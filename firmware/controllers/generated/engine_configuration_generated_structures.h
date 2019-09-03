@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 02 00:13:32 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 18:36:09 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1084,8 +1084,9 @@ struct engine_configuration_s {
 	offset 76 bit 14 */
 	bool showSdCardWarning : 1;
 	/**
+	 * looks like 3v range should be enough, divider not needed
 	offset 76 bit 15 */
-	bool issue_294_15 : 1;
+	bool cj125isUrDivided : 1;
 	/**
 	offset 76 bit 16 */
 	bool issue_294_16 : 1;
@@ -2820,4 +2821,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 02 00:13:32 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 18:36:09 EDT 2019

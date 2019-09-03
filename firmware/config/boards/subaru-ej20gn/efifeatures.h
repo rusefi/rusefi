@@ -110,9 +110,6 @@
 #undef EFI_IDLE_INCREMENTAL_PID_CIC
 #define EFI_IDLE_INCREMENTAL_PID_CIC TRUE
 
-#undef EFI_CJ125_DIRECTLY_CONNECTED_UR
-#define EFI_CJ125_DIRECTLY_CONNECTED_UR TRUE
-
 #define RPM_LOW_THRESHOLD 			8				// RPM=8 is an empirical lower sensitivity threshold of MAX9926 for 60-2
 #define NO_RPM_EVENTS_TIMEOUT_SECS	5	// (RPM < 12)
 
