@@ -32,7 +32,7 @@ static Logging *logger;
 
 static SimplePwm alternatorControl("alt");
 static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
-static Pid altPid(altPidS);
+Pid alternatorPid(altPidS);
 
 static percent_t currentAltDuty;
 
@@ -44,7 +44,7 @@ static bool currentPlainOnOffState = false;
 static bool shouldResetPid = false;
 
 static void pidReset(void) {
-	altPid.reset();
+	alternatorPid.reset();
 }
 
 class AlternatorController : public PeriodicTimerController {
@@ -64,7 +64,7 @@ class AlternatorController : public PeriodicTimerController {
 			// this block could be executed even in on/off alternator control mode
 			// but at least we would reflect latest state
 #if EFI_TUNER_STUDIO
-			altPid.postState(&tsOutputChannels);
+			alternatorPid.postState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 		}
 
@@ -96,10 +96,10 @@ class AlternatorController : public PeriodicTimerController {
 		}
 
 
-		currentAltDuty = altPid.getOutput(targetVoltage, vBatt);
+		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt);
 		if (CONFIGB(isVerboseAlternator)) {
 			scheduleMsg(logger, "alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt,
-					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
+					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
 		}
 
 
@@ -149,7 +149,7 @@ void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !altPid.isSame(&previousConfiguration->alternatorControl);
+	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
 void initAlternatorCtrl(Logging *sharedLogger) {
