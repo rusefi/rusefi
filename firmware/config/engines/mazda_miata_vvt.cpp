@@ -39,6 +39,7 @@
 #include "custom_engine.h"
 #include "fsio_impl.h"
 #include "ego.h"
+#include "thermistors.h"
 
 EXTERN_CONFIG;
 
@@ -242,6 +243,12 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.8;
 
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
+	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+
+	setCommonNTCSensor(&engineConfiguration->clt);
+	setCommonNTCSensor(&engineConfiguration->iat);
+
 	//	0.0825
 	//	0.1375
 	//	6.375
@@ -312,6 +319,17 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isCylinderCleanupEnabled = true;
 
 	setMazdaMiataNbTpsTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// set_whole_ve_map 80
+	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
+	//set idle_offset 30
+	engineConfiguration->idleRpmPid.offset = 30;
+	engineConfiguration->idleRpmPid.pFactor = 0.07;
+	engineConfiguration->idleRpmPid.iFactor = 0.0001;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.periodMs = 10;
 } // end of setMazdaMiataEngineNB2Defaults
 
 
@@ -374,10 +392,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	// set_whole_ve_map 80
-
-	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
@@ -397,17 +411,12 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// see setFrankensoConfiguration
 	// map.sensor.hwChannel = EFI_ADC_0; W53
 
-	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-
 	/**
 	 * PA4 Wideband O2 Sensor
 	 */
 	// todo: re-wire the board to use "Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM"
 	//engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
-
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
-
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
 	//
 	/**
@@ -434,13 +443,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set idle_rpm 1700
 	// see setDefaultIdleParameters
 
-	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
-	//set idle_offset 30
-	engineConfiguration->idleRpmPid.offset = 30;
-	engineConfiguration->idleRpmPid.pFactor = 0.07;
-	engineConfiguration->idleRpmPid.iFactor = 0.0001;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
 }
 
 void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
