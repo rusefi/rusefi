@@ -1,8 +1,8 @@
 /*
- * tle8888.h
+ * @file tle8888.h
  *
- *  Created on: Mar 25, 2019
- *      Author: garage
+ * Mar 25, 2019
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef HW_LAYER_DRIVERS_GPIO_TLE8888_H_
@@ -39,6 +39,7 @@ struct tle8888_config {
 		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
 		int 			output;
 	} direct_io[TLE8888_DIRECT_MISC];
+	bool hallMode;
 };
 
 #ifdef __cplusplus
