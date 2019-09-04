@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 18:36:09 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 23:55:35 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1089,7 +1089,7 @@ struct engine_configuration_s {
 	bool cj125isUrDivided : 1;
 	/**
 	offset 76 bit 16 */
-	bool issue_294_16 : 1;
+	bool useTLE888_hall_mode : 1;
 	/**
 	offset 76 bit 17 */
 	bool issue_294_17 : 1;
@@ -2821,4 +2821,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 18:36:09 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 23:55:35 EDT 2019

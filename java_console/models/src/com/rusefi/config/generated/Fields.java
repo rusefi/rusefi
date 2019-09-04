@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 19:18:06 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 03 23:55:35 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -838,7 +838,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_16_offset = 76;
 	public static final int issue_294_17_offset = 76;
 	public static final int issue_294_18_offset = 76;
 	public static final int issue_294_19_offset = 76;
@@ -1257,6 +1256,7 @@ public class Fields {
 	public static final int useSeparateVeForIdle_offset = 1476;
 	public static final int useSerialPort_offset = 744;
 	public static final int useStepperIdle_offset = 744;
+	public static final int useTLE888_hall_mode_offset = 76;
 	public static final int useTpicAdvancedMode_offset = 744;
 	public static final int useTPSAdvanceTable_offset = 1476;
 	public static final int useTPSBasedVeTable_offset = 744;
@@ -1305,7 +1305,7 @@ public class Fields {
 	public static final Field ETB2_USE_TWO_WIRES = Field.create("ETB2_USE_TWO_WIRES", 76, FieldType.BIT, 13);
 	public static final Field SHOWSDCARDWARNING = Field.create("SHOWSDCARDWARNING", 76, FieldType.BIT, 14);
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 76, FieldType.BIT, 15);
-	public static final Field ISSUE_294_16 = Field.create("ISSUE_294_16", 76, FieldType.BIT, 16);
+	public static final Field USETLE888_HALL_MODE = Field.create("USETLE888_HALL_MODE", 76, FieldType.BIT, 16);
 	public static final Field ISSUE_294_17 = Field.create("ISSUE_294_17", 76, FieldType.BIT, 17);
 	public static final Field ISSUE_294_18 = Field.create("ISSUE_294_18", 76, FieldType.BIT, 18);
 	public static final Field ISSUE_294_19 = Field.create("ISSUE_294_19", 76, FieldType.BIT, 19);
@@ -2089,7 +2089,7 @@ public class Fields {
 	ETB2_USE_TWO_WIRES,
 	SHOWSDCARDWARNING,
 	CJ125ISURDIVIDED,
-	ISSUE_294_16,
+	USETLE888_HALL_MODE,
 	ISSUE_294_17,
 	ISSUE_294_18,
 	ISSUE_294_19,
