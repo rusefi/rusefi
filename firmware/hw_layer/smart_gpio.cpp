@@ -133,6 +133,7 @@ struct tle8888_config tle8888_cfg = {
 		[3] = {.port = NULL,	.pad = 0,	.output = 12},
 */
 	},
+	.hallMode = false,
 };
 #endif
 

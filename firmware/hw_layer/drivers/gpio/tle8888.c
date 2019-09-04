@@ -85,7 +85,7 @@ typedef enum {
 #define CMD_LOCK			CMD_WR(0x1e, 0x02)
 */
 #define CMD_UNLOCK			CMD_WR(0x1e, 0x01)
-#define CMD_HALL_MODE		CMD_WR(0x4a, 0x3 << 2)
+#define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
 #define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + (n & 0x03), d)
 #define CMD_OECONFIG(n, d)	CMD_WR(0x5b + (n & 0x03), d)
@@ -458,7 +458,7 @@ int tle8888SpiStartupExchange(void * data) {
 		 * By default "auto detection mode for VR sensor signals" is used
 		 * We know that for short Hall signals like Miata NB2 crank sensor this does not work well above certain RPM.
 		 */
-		tle8888_spi_rw(chip, CMD_HALL_MODE, NULL);
+		tle8888_spi_rw(chip, CMD_VRSCONFIG1(0x03 << 2), NULL);
 	}
 
 	return 0;
