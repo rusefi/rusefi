@@ -552,14 +552,14 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set tps_max 540
 	engineConfiguration->tpsMax = 870;
 
-
-
+	CONFIGB(useETBforIdleControl) = true;
+	engineConfiguration->throttlePedalUpVoltage = 1;
+	// WAT? that's an interesting value, how come it's above 5v?
+	engineConfiguration->throttlePedalWOTVoltage = 5.47;
 
 	// set vbatt_divider 11
 	// 0.3#4 has wrong R139 as well?
 	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
 	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
-
-
 
 }

@@ -4,6 +4,12 @@
  * @date Dec 24, 2013
  * @author Andrey Belomutskiy, (c) 2012-2019
  *
+ *
+ *
+ * enable trigger_details
+ * DBG_TRIGGER_SYNC = 16
+ * set debug_mode 16
+ *
  * This file is part of rusEfi - see http://rusefi.com
  *
  * rusEfi is free software; you can redistribute it and/or modify it under the terms of
