@@ -182,13 +182,19 @@ static void undoIdleBlipIfNeeded() {
 }
 
 static bool isOutOfAutomaticIdleCondition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED)
+	if (CONFIG(throttlePedalUpPin) != GPIO_UNASSIGNED) {
 		return !engine->engineState.idle.throttlePedalUpState;
+	}
 
-	return tpsPos > CONFIGB(idlePidDeactivationTpsThreshold);
+	percent_t inputPosition;
 
+	if (hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		inputPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
+	} else {
+		inputPosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+
+	return inputPosition > CONFIGB(idlePidDeactivationTpsThreshold);
 }
 
 /**
