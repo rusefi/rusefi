@@ -526,6 +526,7 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->camInputs[0] = GPIOA_5;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
+	engineConfiguration->useTLE8888_hall_mode = true;
 
 	// GPIOD_6: "13 - GP Out 6" - selected to +12v
 	boardConfiguration->alternatorControlPin = GPIOD_6;
