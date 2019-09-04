@@ -37,12 +37,16 @@ void SetNextEntry(uint16_t entry) {
 
 void LogTriggerTooth(trigger_event_e tooth) {
 	// bail if we aren't enabled
-	if (!ToothLoggerEnabled) return;
+	if (!ToothLoggerEnabled) {
+		return;
+	}
 
 	// We currently only support the primary trigger falling edge
 	// (this is the edge that VR sensors are accurate on)
-	// Since VR senors are the most useful case here, this is okay for now.
-	if (tooth != SHAFT_PRIMARY_FALLING) return;
+	// Since VR sensors are the most useful case here, this is okay for now.
+	if (tooth != SHAFT_PRIMARY_FALLING) {
+		return;
+	}
 
 	uint32_t nowUs = NT2US(getTimeNowNt());
 	// 10us per LSB - this gives plenty of accuracy, yet fits 655.35 ms in to a uint16
