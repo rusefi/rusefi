@@ -2182,6 +2182,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 	dialog = tle8888, "TLE8888", yAxis
 		field = "TLE8888 Chip Select", 					tle8888_cs
 		field = "TLE8888 SPI", 							tle8888spiDevice
+		field = "useTLE888_hall_mode",					useTLE888_hall_mode
 
 	dialog = connection, "", 	yAxis
 		field = "STM32 vRef voltage",					adcVcc
