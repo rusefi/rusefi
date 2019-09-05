@@ -67,6 +67,9 @@ typedef enum {
 	TLE8888_FAILED
 } tle8888_drv_state;
 
+#define MODE_MANUAL 0x02
+#define MODE_HALL 0x03
+
 /* C0 */
 #define CMD_READ			(0 << 0)
 #define CMD_WRITE			(1 << 0)
@@ -109,8 +112,11 @@ typedef enum {
 SEMAPHORE_DECL(tle8888_wake, 10 /* or BOARD_TLE8888_COUNT ? */);
 static THD_WORKING_AREA(tle8888_thread_1_wa, 256);
 
+// set debug_mode 31
 static int tle8888SpiCounter = 0;
-static int initResponses = 0;
+static int reinitializationCounter = 0;
+// that's a strange variable for troubleshooting
+static int initResponsesAccumulator = 0;
 static int initResponse0 = 0;
 static int initResponse1 = 0;
 
@@ -186,7 +192,8 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 		tsOutputChannels.debugIntField1 = tle8888SpiCounter++;
 		tsOutputChannels.debugIntField2 = tx;
 		tsOutputChannels.debugIntField3 = rxb;
-		tsOutputChannels.debugIntField4 = initResponses;
+		tsOutputChannels.debugIntField4 = initResponsesAccumulator;
+		tsOutputChannels.debugIntField5 = reinitializationCounter;
 		tsOutputChannels.debugFloatField1 = initResponse0;
 		tsOutputChannels.debugFloatField2 = initResponse1;
 	}
@@ -242,7 +249,7 @@ static int tle8888_update_status(struct tle8888_priv *chip)
 
 	/* the address and content of the selected register is transmitted with the
 	 * next SPI transmission (for not existing addresses or wrong access mode
-	 * the data is always “0”) */
+	 * the data is always '0' */
 
 	ret = tle8888_spi_rw(chip, CMD_OPSTAT1, NULL);
 
@@ -412,6 +419,8 @@ int tle8888SpiStartupExchange(void * data) {
 	struct tle8888_priv *chip = (struct tle8888_priv *)data;
 	const struct tle8888_config	*cfg = chip->cfg;
 
+	reinitializationCounter++;
+
 	/**
 	 * We need around 50ms to get reliable TLE8888 start if MCU is powered externally but +12 goes gown and then goes up
 	 * again
@@ -423,10 +432,10 @@ int tle8888SpiStartupExchange(void * data) {
 	tle8888_spi_rw(chip, CMD_SR, &response);
 	if (response == 253) {
 		// I've seen this response on red board
-		initResponses += 4;
+		initResponsesAccumulator += 4;
 	} else if (response == 2408){
 		// and I've seen this response on red board
-		initResponses += 100;
+		initResponsesAccumulator += 100;
 	}
 	initResponse0 = response;
 
@@ -440,7 +449,7 @@ int tle8888SpiStartupExchange(void * data) {
 	// second 0x13D=317 => 0x35=53
 	tle8888_spi_rw(chip, CMD_UNLOCK, &response);
 	if (response == 53) {
-		initResponses += 8;
+		initResponsesAccumulator += 8;
 	}
 	initResponse1 = response;
 
@@ -509,7 +518,7 @@ int tle8888SpiStartupExchange(void * data) {
 		 * By default "auto detection mode for VR sensor signals" is used
 		 * We know that for short Hall signals like Miata NB2 crank sensor this does not work well above certain RPM.
 		 */
-		tle8888_spi_rw(chip, CMD_VRSCONFIG1(0x03 << 2), NULL);
+		tle8888_spi_rw(chip, CMD_VRSCONFIG1(MODE_MANUAL << 2), NULL);
 	}
 
 	return 0;
