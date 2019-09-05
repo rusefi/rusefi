@@ -373,12 +373,16 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 				/* set state to TLE8888_FAILED or force reinit? */
 			}
 
-			/* if bit OE is cleared - reset happend */
+			/* if bit OE is cleared - reset happened */
 			if (!(chip->OpStat[1] & (1 << 6))) {
 				needInitialSpi = true;
 			}
 		}
 	}
+}
+
+void requestTLE8888initialization(void) {
+	needInitialSpi = true;
 }
 
 /*==========================================================================*/

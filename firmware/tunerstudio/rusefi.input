@@ -1302,6 +1302,7 @@ cmd_calibrate_tps_2_closed   = "w\x00\x14\x00\x04"
 cmd_calibrate_tps_2_wot      = "w\x00\x14\x00\x05"
 cmd_calibrate_pedal_up       = "w\x00\x14\x00\x06"
 cmd_calibrate_pedal_down     = "w\x00\x14\x00\x07"
+cmd_tle8888_init     		 = "w\x00\x14\x00\x08"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -2183,6 +2184,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TLE8888 Chip Select", 					tle8888_cs
 		field = "TLE8888 SPI", 							tle8888spiDevice
 		field = "useTLE8888_hall_mode",					useTLE8888_hall_mode
+		commandButton = "Reinit",						cmd_tle8888_init
 
 	dialog = connection, "", 	yAxis
 		field = "STM32 vRef voltage",					adcVcc

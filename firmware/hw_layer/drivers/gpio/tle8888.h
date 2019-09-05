@@ -51,6 +51,7 @@ extern "C"
  * @return return gpio chip base
  */
 int tle8888_add(unsigned int index, const struct tle8888_config *cfg);
+void requestTLE8888initialization(void);
 
 #ifdef __cplusplus
 }
