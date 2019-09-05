@@ -85,6 +85,7 @@ typedef enum {
 #define CMD_LOCK			CMD_WR(0x1e, 0x02)
 */
 #define CMD_UNLOCK			CMD_WR(0x1e, 0x01)
+//#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
 #define CMD_DDCONFIG(n, d)	CMD_WR(0x57 + (n & 0x03), d)
