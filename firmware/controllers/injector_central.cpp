@@ -37,10 +37,17 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "tps.h"
+
 #if EFI_PROD_CODE
 #include "rusefi.h"
 #include "mpu_util.h"
 #endif /* EFI_PROD_CODE */
+
+#if (BOARD_TLE8888_COUNT > 0)
+#include "gpio/tle8888.h"
+#endif
+
+
 
 EXTERN_ENGINE
 ;
@@ -261,11 +268,18 @@ static void handleCommandX14(uint16_t index) {
 	case 3:
 		grabTPSIsWideOpen();
 		return;
-	case 4:
+	// case 4: tps2_closed
+	// case 5: tps2_wot
+	case 6:
 		grabPedalIsUp();
 		return;
-	case 5:
+	case 7:
 		grabPedalIsWideOpen();
+		return;
+	case 8:
+#if (BOARD_TLE8888_COUNT > 0)
+		requestTLE8888initialization();
+#endif
 		return;
 
 	}
