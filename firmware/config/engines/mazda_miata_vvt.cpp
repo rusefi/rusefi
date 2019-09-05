@@ -275,6 +275,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.flow = 265;
 
 
+	CONFIG(isAlternatorControlEnabled) = true;
 	// enable altdebug
 	engineConfiguration->targetVBatt = 13.8;
 	engineConfiguration->alternatorControl.offset = 40;
@@ -555,6 +556,7 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set tps_max 540
 	engineConfiguration->tpsMax = 870;
 
+	engineConfiguration->idleMode = IM_AUTO;
 	CONFIGB(useETBforIdleControl) = true;
 	engineConfiguration->throttlePedalUpVoltage = 1;
 	// WAT? that's an interesting value, how come it's above 5v?
