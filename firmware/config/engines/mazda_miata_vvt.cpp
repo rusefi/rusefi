@@ -534,6 +534,8 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->dizzySparkOutputPin = GPIOD_7; // tachometer
 
 
+	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+
 	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
 	engineConfiguration->etb.iFactor = 	0;
 	engineConfiguration->etb.dFactor = 0;
