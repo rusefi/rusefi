@@ -43,7 +43,8 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 | Release date  | Revision  | Details |
 | ------------  | --------- | ------- |
-| 07/28/2018    | r19612    | improvement #809: software jump to DFU |
+| 09/05/2019    | r19849    | Electronic Throttle Body including idle control seems to work |
+| 07/28/2019    | r19612    | improvement #809: software jump to DFU |
 | 04/25/2019    | r17317    | bugfix #775: electrical noise reboot during settings change causes with full tune loss |
 | 04/07/2019    | r17098    | improvement #714: TLE8888 Enable Outputs SPI integration |
 | 02/27/2019    | r16886    | bugfix #698: concurrency defect with single timer executor initialization |
