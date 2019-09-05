@@ -76,6 +76,7 @@ typedef enum {
 #define CMD_REG_DATA(d)		(((d) & 0xff) << 8)
 
 #define CMD_WR(a, d)		(CMD_WRITE | CMD_REG_ADDR(a) | CMD_REG_DATA(d))
+#define CMD_R(a)			(CMD_READ | CMD_REG_ADDR(a))
 
 #define CMD_SR				CMD_WR(0x1a, 0x03)
 // 0x238 = 568
@@ -85,6 +86,11 @@ typedef enum {
 #define CMD_LOCK			CMD_WR(0x1e, 0x02)
 */
 #define CMD_UNLOCK			CMD_WR(0x1e, 0x01)
+
+/* Status registers */
+#define CMD_OPSTAT0			CMD_R(0x34)
+#define CMD_OPSTAT1			CMD_R(0x35)
+
 //#define CMD_VRSCONFIG0(d)	CMD_WR(0x49, d)
 #define CMD_VRSCONFIG1(d)	CMD_WR(0x4a, d)
 #define CMD_INCONFIG(n, d)	CMD_WR(0x53 + (n & 0x03), d)
@@ -122,6 +128,9 @@ struct tle8888_priv {
 	uint32_t					o_oe_mask;
 
 	tle8888_drv_state			drv_state;
+
+	/* status registers */
+	uint16_t					OpStat[2];
 };
 
 static struct tle8888_priv chips[BOARD_TLE8888_COUNT];
@@ -192,7 +201,7 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 
 /**
  * @brief TLE8888 send output registers data.
- * @details Sends ORed data to register, also receive 2-bit diagnostic.
+ * @details Sends ORed data to register.
  */
 
 static int tle8888_update_output(struct tle8888_priv *chip)
@@ -214,6 +223,38 @@ static int tle8888_update_output(struct tle8888_priv *chip)
 		/* atomic */
 		chip->o_state_cached = out_data;
 	}
+
+	/* TODO: unlock? */
+
+	return ret;
+}
+
+/**
+ * @brief read TLE8888 OpStat1 registers data.
+ * @details Sends read command, then send same command and read reply
+ */
+static int tle8888_update_status(struct tle8888_priv *chip)
+{
+	int ret = 0;
+	uint16_t rx = 0;
+
+	/* TODO: lock? */
+
+	/* the address and content of the selected register is transmitted with the
+	 * next SPI transmission (for not existing addresses or wrong access mode
+	 * the data is always “0”) */
+
+	ret = tle8888_spi_rw(chip, CMD_OPSTAT1, NULL);
+
+	if (ret)
+		return ret;
+
+	ret = tle8888_spi_rw(chip, CMD_OPSTAT1, &rx);
+
+	if (ret)
+		return ret;
+
+	chip->OpStat[1] = rx;
 
 	/* TODO: unlock? */
 
@@ -293,6 +334,9 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 	while (1) {
 		msg_t msg = chSemWaitTimeout(&tle8888_wake, TIME_MS2I(TLE8888_POLL_INTERVAL_MS));
 
+		/* should we care about msg == MSG_TIMEOUT? */
+		(void)msg;
+
 		if (vBattForTle8888 < 7) {
 			// we assume TLE8888 is down and we should not bother with SPI communication
 			needInitialSpi = true;
@@ -302,10 +346,6 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			needInitialSpi = false;
 			tle8888SpiStartupExchange(poorPointerNeedToDoBetter);
 		}
-
-
-		/* should we care about msg == MSG_TIMEOUT? */
-		(void)msg;
 
 		for (int i = 0; i < BOARD_TLE8888_COUNT; i++) {
 			struct tle8888_priv *chip;
@@ -319,6 +359,16 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			int ret = tle8888_update_output(chip);
 			if (ret) {
 				/* set state to TLE8888_FAILED? */
+			}
+
+			ret = tle8888_update_status(chip);
+			if (ret) {
+				/* set state to TLE8888_FAILED or force reinit? */
+			}
+
+			/* if bit OE is cleared - reset happend */
+			if (!(chip->OpStat[1] & (1 << 6))) {
+				needInitialSpi = true;
 			}
 		}
 	}
