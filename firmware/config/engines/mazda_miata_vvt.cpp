@@ -537,6 +537,14 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// GPIOD_7: "14 - GP Out 5" - selected to +12v
 	engineConfiguration->dizzySparkOutputPin = GPIOD_7; // tachometer
 
+	// set cranking_fuel 9
+	engineConfiguration->cranking.baseFuel = 9; // higher value for return system NA conversion since lower fuel pressure
+
+	engineConfiguration->useConstantDwellDuringCranking = true;
+	engineConfiguration->ignitionDwellForCrankingMs = 8;
+
+	engineConfiguration->vvtOffset = 97;
+
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
 	// GPIOE_9:  "7 - Lowside 1"
