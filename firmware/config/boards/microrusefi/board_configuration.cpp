@@ -181,6 +181,9 @@ void setBoardConfigurationOverrides(void) {
 	// GPIOE_8: "35 - GP Out 1"
 	boardConfiguration->fuelPumpPin = GPIOE_8;
 
+	// TLE8888_PIN_22: "34 - GP Out 2"
+	boardConfiguration->fanPin = TLE8888_PIN_22;
+
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 

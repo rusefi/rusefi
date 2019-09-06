@@ -516,7 +516,10 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
-	// fuelPumpPin is inherited from boards/microrusefi/board_configuration.cpp
+	//
+	// fuelPumpPin output is inherited from boards/microrusefi/board_configuration.cpp
+	// fanPin output is inherited from boards/microrusefi/board_configuration.cpp
+	//
 	// crank trigger input is inherited from boards/microrusefi/board_configuration.cpp
 	// map.sensor.hwChannel input is inherited from boards/microrusefi/board_configuration.cpp
 	// tps1_1AdcChannel input is inherited from boards/microrusefi/board_configuration.cpp
@@ -533,6 +536,14 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->alternatorControlPin = GPIOD_6;
 	// GPIOD_7: "14 - GP Out 5" - selected to +12v
 	engineConfiguration->dizzySparkOutputPin = GPIOD_7; // tachometer
+
+
+	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
+	// GPIOE_9:  "7 - Lowside 1"
+	engineConfiguration->auxPidPins[0] = GPIOE_9; // VVT solenoid control
+
+	// TLE8888_PIN_23: "33 - GP Out 3"
+	boardConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 
 
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
