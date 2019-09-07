@@ -2184,6 +2184,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "TLE8888 Chip Select", 					tle8888_cs
 		field = "TLE8888 SPI", 							tle8888spiDevice
 		field = "useTLE8888_hall_mode",					useTLE8888_hall_mode
+		field = "useTLE8888 cranking reset hack",		useTLE8888_cranking_hack
 		commandButton = "Reinit",						cmd_tle8888_init
 
 	dialog = connection, "", 	yAxis

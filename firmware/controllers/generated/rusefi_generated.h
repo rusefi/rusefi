@@ -1262,8 +1262,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_17_offset 76
-#define issue_294_17_offset_hex 4c
 #define issue_294_18_offset 76
 #define issue_294_18_offset_hex 4c
 #define issue_294_19_offset 76
@@ -1947,6 +1945,8 @@
 #define useSerialPort_offset_hex 2e8
 #define useStepperIdle_offset 744
 #define useStepperIdle_offset_hex 2e8
+#define useTLE8888_cranking_hack_offset 76
+#define useTLE8888_cranking_hack_offset_hex 4c
 #define useTLE8888_hall_mode_offset 76
 #define useTLE8888_hall_mode_offset_hex 4c
 #define useTpicAdvancedMode_offset 744

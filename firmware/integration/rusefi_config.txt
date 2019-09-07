@@ -299,7 +299,7 @@ bit etb2_use_two_wires;
 bit showSdCardWarning;
 bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit useTLE8888_hall_mode;
-bit issue_294_17;
+bit useTLE8888_cranking_hack;
 bit issue_294_18;
 bit issue_294_19;
 bit issue_294_21;
