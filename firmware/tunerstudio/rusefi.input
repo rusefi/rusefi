@@ -18,15 +18,16 @@
 enable2ndByteCanID = false
 
 ;#unset tuneByMAF
-
+#unset EnableController
 [SettingGroups]
    ; the referenceName will over-ride previous, so if you are creating a 
    ; settingGroup with a reference name of lambdaSensor, it will replace the 
    ; setting group defined in the settingGroups.xml of the TunerStudio config
    ; folder. If is is an undefined referenceName, it will be added.
    ; keyword    =  referenceName,  DisplayName
-
-    settingGroup = tuneVeMode, "VE Autotune Mode"
+    settingGroup = EnableController, "Enable Internal Settings"
+    
+      settingGroup = tuneVeMode, "VE Autotune Mode"
       settingOption = tuneByTPS, "TPS-Based (See Injection -> Inj.Settings)"
       settingOption = tuneByMAF, "MAF-Based"
       settingOption = tuneByLoad, "Load-Based (Default)"
@@ -468,7 +469,8 @@ fileVersion = { 20190701 }
       yAxis       =  0,  100, 10
       xBins       = etbBiasBins, TPSValue
       yBins       = etbBiasValues
-      gauge       = TPSGauge
+      showTextValues = true
+      suppressGraph = true
 
 	curve = crankingTpsCurve, "Cranking TPS Multiplier"
       columnLabel = "TPS", "Multiplier"
@@ -627,7 +629,7 @@ fileVersion = { 20190701 }
       zBins       = tpsTpsAccelTable
     
       
-   table = fsioTable1Tbl,  fsioTable1Map,  "FSIO Table #1",   1
+   table = fsioTable1Tbl,  fsioTable1Map,  "",   1
       xBins       = fsioTable1RpmBins,  RPMValue
       yBins       = fsioTable1LoadBins,  engineLoad
       zBins       = fsioTable1
@@ -1160,19 +1162,24 @@ menuDialog = main
 		subMenu = cltIdleCurve,				"CLT multiplier"
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 
-	menu = "&FSIO" 
-		subMenu = fsioInputsDialog,        	"FSIO inputs"
-		subMenu = auxPidDialog,				"Aux PID"
-		subMenu = fsioOutputsDialog,        "FSIO outputs"
-		subMenu = fsioTable1Tbl,			"FSIO Table #1"
-		subMenu = fsioTable2Tbl,			"FSIO Table #2"
-		subMenu = fsioTable3Tbl,			"FSIO Table #3"
-		subMenu = fsioTable4Tbl,			"FSIO Table #4"
-		subMenu = fsioFormulas,				"FSIO Formulas"
-		subMenu = fsioCurve1,			    "FSIO Curve #1"
-		subMenu = fsioCurve2,			    "FSIO Curve #2"
-		subMenu = fsioCurve3,			    "FSIO Curve #3"
-		subMenu = fsioCurve4,			    "FSIO Curve #4"
+	menu = "&Advanced" 
+	    subMenu = vvtDialog,		    	"VVT Settings"
+		subMenu = std_separator
+		subMenu = etbDialog,				"Electronic Throttle" 
+		subMenu = std_separator
+		subMenu = pedalToTpsTbl,			"Throttle Target Map"
+		subMenu = std_separator
+		groupMenu = "Flex Logic"
+		groupChildMenu = fsioInputsDialog,        	"FSIO inputs"
+		groupChildMenu = fsioOutputsDialog,        "FSIO outputs"
+		groupChildMenu = fsioTable2Tbl,			"FSIO Table #2"
+		groupChildMenu = fsioTable3Tbl,			"FSIO Table #3"
+		groupChildMenu = fsioTable4Tbl,			"FSIO Table #4"
+		groupChildMenu = fsioFormulas,				"FSIO Formulas"
+		groupChildMenu = fsioCurve1,			    "FSIO Curve #1"
+		groupChildMenu = fsioCurve2,			    "FSIO Curve #2"
+		groupChildMenu = fsioCurve3,			    "FSIO Curve #3"
+		groupChildMenu = fsioCurve4,			    "FSIO Curve #4"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -1215,6 +1222,8 @@ menuDialog = main
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 
+#if EnableController
+   menuDialog = main
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = ioTest,					"Bench test"
@@ -1244,6 +1253,7 @@ menuDialog = main
 		subMenu = etbDialog,				"Electronic throttle body (beta version)" @@if_ts_show_etb
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
+#endif
 
 
 [ControllerCommands]
@@ -2067,23 +2077,28 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "max",									fuelClosedLoopPid_maxValue, {fuelClosedLoopCorrectionEnabled == 1}
 
 
-	dialog = auxPidDialog, "Aux PID"
-		field = "Enabled",								activateAuxPid1
-		field = "FSIO pin #1",							auxPidPins1
-		field = "PWM Frequency",						auxPidFrequency1
-		field = "Detailed status in console",			isVerboseAuxPid1
-		field = "#target based on FSIO map#1"
-		field = "control period",						auxPid1_periodMs, {activateAuxPid1 == 1}
-		field = "#PID control"
-		field = "offset",								auxPid1_offset, {activateAuxPid1 == 1}
-		field = "P factor",								auxPid1_pFactor, {activateAuxPid1 == 1}
-		field = "I factor",								auxPid1_iFactor, {activateAuxPid1 == 1}
-		field = "D factor",								auxPid1_dFactor, {activateAuxPid1 == 1}
-		field = "Min",									auxPid1_minValue, {activateAuxPid1 == 1}
-		field = "Max",									auxPid1_maxValue, {activateAuxPid1 == 1}
-		field = "FSIO pin #2",							auxPidPins2
-		field = "FSIO pin #3",							auxPidPins3
-		field = "FSIO pin #4",							auxPidPins4
+		dialog = vvt_left, ""
+			
+		field = "Enable",								activateAuxPid1
+		field = "Output",							auxPidPins1, {activateAuxPid1 == 1}
+		field = "Mode",								vvtMode, {trigger_type != 80}, {activateAuxPid1 == 1}
+	    field = "Rising Edge",					    vvtCamSensorUseRise, {trigger_type != 80}, {activateAuxPid1 == 1}
+		field = "Avance/Retard"
+	    field = "Offset",		                  	vvtOffset , {activateAuxPid1 == 1}
+	    field = "Output Inverted",		         			vvtDisplayInverted, {activateAuxPid1 == 1}
+		field = "Frequency",						  auxPidFrequency1, {activateAuxPid1 == 1}
+		field = "Control Interval",						auxPid1_periodMs, {activateAuxPid1 == 1}
+		field = "#PID Settings"
+		field = "Offset",								auxPid1_offset, {activateAuxPid1 == 1}
+		field = "P Gain",								auxPid1_pFactor, {activateAuxPid1 == 1}
+		field = "I Gain",								auxPid1_iFactor, {activateAuxPid1 == 1}
+		field = "D Gain",								auxPid1_dFactor, {activateAuxPid1 == 1}
+		field = "Min Duty",									auxPid1_minValue, {activateAuxPid1 == 1}
+		field = "Max Duty",									auxPid1_maxValue, {activateAuxPid1 == 1}
+		
+dialog = vvtDialog, "", border
+        panel = vvt_left, West
+        panel = fsioTable1Tbl, Center
 
 ;			Engine->Battery & Alternator
 	dialog = batteryDialog, "Battery Settings",	yAxis
@@ -2429,54 +2444,55 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		topicHelp = "veTableDialogHelp"
 		panel = veTableMap, South
 
-	dialog = etbPidDialog, "PID settings"
-		field = "pFactor",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "iFactor",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "dFactor",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
-		field = "offset",								etb_offset, {throttlePedalPositionAdcChannel != 16}
-		field = "control period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
-		field = "pid min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
-		field = "pid max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMin",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
-		field = "iTermMax",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
+	# Electronic Throttle
+
+	dialog = etbPidDialog, "PID Settings"
+	field = "#Set FeedForward map before tuning PID"
+		field = "P Gain",								etb_pFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "I Gain",								etb_iFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "D Gain",								etb_dFactor, {throttlePedalPositionAdcChannel != 16}
+		field = "Offset",								etb_offset, {throttlePedalPositionAdcChannel != 16}
+		field = "Control Period",						etb_periodMs, {throttlePedalPositionAdcChannel != 16}
+		field = "Pid Min",								etb_minValue, {throttlePedalPositionAdcChannel != 16}
+		field = "Pid Max",								etb_maxValue, {throttlePedalPositionAdcChannel != 16}
+		field = "I Min",								etb_iTermMin, {throttlePedalPositionAdcChannel != 16}
+		field = "I Max",								etb_iTermMax, {throttlePedalPositionAdcChannel != 16}
 
 
 	dialog = etbDialogLeft
-		field = "https://rusefi.com/s/etb"
-		field = "Detailed status in console",			isVerboseETB
-		field = "Pause ETB control",					pauseEtbControl
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
-		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Direction #1",						etb1_directionPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Direction #2",						etb1_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "Two-wire mode",						etb1_use_two_wires, {throttlePedalPositionAdcChannel != 16}
-		field = "No1 Control #1",						etb1_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb1_use_two_wires == 0}
-		field = "No2 Direction #1",						etb2_directionPin1, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Direction #2",						etb2_directionPin2, {throttlePedalPositionAdcChannel != 16}
-		field = "Two-wire mode",						etb2_use_two_wires, {throttlePedalPositionAdcChannel != 16}
-		field = "No2 Control #1",						etb2_controlPin1, {throttlePedalPositionAdcChannel != 16 && etb2_use_two_wires == 0}
+		field = "Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
 		panel = etbPidDialog
+		
 
 	dialog = etbDialogRight
-		field = "!https://rusefi.com/s/debugmode"
-		field = "Debug mode",							debugMode
-		field = "use ETB for idle",						useETBforIdleControl
-		field = "ETB idle maximum angle",				etbIdleRange
+		
+		field = "ETB Idle Control",						useETBforIdleControl
+		field = "Cranking/Default TPS Angle",					crankingIACposition
+		field = "Maximum Idle Opening",				etbIdleThrottleRange, {useETBforIdleControl == 1}
+		slider = "Idle Position",				manIdlePosition, horizontal, {useETBforIdleControl == 1}
+		field = ""	
 		field = "Press buttons to calibrate sensors"
-		field = "You would have to remove air filter to move throttle manually"
-	    commandButton = "TPS#1 closed position", cmd_calibrate_tps_1_closed
-	    commandButton = "TPS#1 wide open position", cmd_calibrate_tps_1_wot
-	    field = "Not many vehicles have two throttle bodies but some do"
-	    commandButton = "TPS#2 closed position", cmd_calibrate_tps_2_closed
-	    commandButton = "TPS#2 wide open position", cmd_calibrate_tps_2_wot
+		field = "Move throttle manually to calibrate TPS"
+	    commandButton = "TPS 1 closed position", cmd_calibrate_tps_1_closed
+	    commandButton = "TPS 1 wide open position", cmd_calibrate_tps_1_wot
+		field = ""
+		field = "Accelerator Pedal"
 	    commandButton = "Pedal Up", cmd_calibrate_pedal_up
 	    commandButton = "Pedal Down", cmd_calibrate_pedal_down
 
-	dialog = etbDialog, "Electronic Throttle Body (beta)", border
-		topicHelp = "etbHelp"
+		dialog = etbDialogBottom
+		field = "Feed Forward Table"     
+		field = "#Set PID Gains to 0 and adjust Duty Cycle until TPS follows your pedal as good as possible "
+        panel = etbTpsBiasCurve
+
+	dialog = etbDialog, "Electronic Throttle", border
+	
 		panel = etbDialogLeft, West
 		panel = etbDialogRight, East
+		panel = etbDialogBottom, South
+
 
 
 	dialog = testSpark, "Spark"
