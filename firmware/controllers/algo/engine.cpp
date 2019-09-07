@@ -31,6 +31,10 @@
 #define isRunningBenchTest() true
 #endif /* EFI_PROD_CODE */
 
+#if (BOARD_TLE8888_COUNT > 0)
+#include "gpio/tle8888.h"
+#endif
+
 static TriggerState initState CCM_OPTIONAL;
 
 LoggingWithStorage engineLogger("engine");
@@ -113,6 +117,8 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
+static efitick_t tle8888CrankingResetTime = 0;
+
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -123,6 +129,18 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE && EFI_FSIO */
 
 	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if (BOARD_TLE8888_COUNT > 0)
+	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		efitick_t nowNt = getTimeNowNt();
+		if (nowNt - tle8888CrankingResetTime > US2NT(MS2US(300))) {
+			requestTLE8888initialization();
+			// let's reset TLE8888 every 300ms while cranking since that's the best we can do to deal with undervoltage reset
+			// PS: oh yes, it's a horrible design! Please suggest something better!
+			tle8888CrankingResetTime = nowNt;
+		}
+	}
+#endif
 
 	slowCallBackWasInvoked = TRUE;
 }
