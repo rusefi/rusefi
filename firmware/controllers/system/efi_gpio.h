@@ -123,6 +123,7 @@ public:
 	void stopIgnitionPins();
 	OutputPin mainRelay;
 	OutputPin fanRelay;
+	// see acRelayPin
 	OutputPin acRelay;
 	OutputPin fuelPumpRelay;
 	OutputPin o2heater;
