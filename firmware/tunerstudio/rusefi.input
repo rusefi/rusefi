@@ -123,7 +123,7 @@ enable2ndByteCanID = false
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
 #if tuneByMAF
-       veAnalyzeMap = fuelTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
+       veAnalyzeMap = fuelTableMAFTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
 #else
        veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
 #endif
