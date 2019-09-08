@@ -17,7 +17,7 @@ ALTERNATOR_LOGIC=vbatt < 14.5
 
 TOO_HOT_LOGIC=coolant > 120
 
-AC_RELAY_LOGIC=ac_on_switch
+AC_RELAY_LOGIC=ac_on_switch & rpm > 850
 
 # Combined RPM, CLT and VBATT warning light
 COMBINED_WARNING_LIGHT=(rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))

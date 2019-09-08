@@ -276,6 +276,10 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// green wire from 1Q/W17 to bottom of W46
 	engineConfiguration->acSwitchAdc = EFI_ADC_6; // PA6
 
+	// W57 PE3 A/C compressor relay out
+	boardConfiguration->acRelayPin = GPIOE_3;
+	// W58 PE4 A/C fan relay out
+
 	miataNAcommon(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 

@@ -1,6 +1,6 @@
 // this https://en.wikipedia.org/wiki/Reverse_Polish_notation is generated automatically
 // from controllers/system_fsio.txt
-// on 2019-05-31_16_20_04
+// on 2019-09-08_16_41_20_788
 //
 //
 // in this file we define system FSIO expressions
@@ -25,8 +25,8 @@
 // Human-readable: coolant > 120
 #define TOO_HOT_LOGIC "coolant 120 >"
 
-// Human-readable: ac_on_switch
-#define AC_RELAY_LOGIC "ac_on_switch"
+// Human-readable: ac_on_switch & rpm > 850
+#define AC_RELAY_LOGIC "ac_on_switch rpm & 850 >"
 // Combined RPM, CLT and VBATT warning light
 
 // Human-readable: (rpm > fsio_setting(2)) | ((coolant > fsio_setting(3)) | (vbatt < fsio_setting(4)))
