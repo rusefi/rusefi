@@ -155,6 +155,9 @@ static percent_t manualIdleController(float cltCorrection DECLARE_ENGINE_PARAMET
 	return correctedPosition;
 }
 
+/**
+ * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
+ */
 static percent_t blipIdlePosition;
 static efitimeus_t timeToStopBlip = 0;
 static efitimeus_t timeToStopIdleTest = 0;
