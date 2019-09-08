@@ -295,8 +295,10 @@ void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 12
  */
 void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// idle.solenoidPin output is inherited from boards/microrusefi/board_configuration.cpp
 	// CLT: "18 - AN temp 1"
 	// IAT: "23 - AN temp 2"
+
 	// MAF/VAF: "19 - AN volt 4"
 	engineConfiguration->mafAdcChannel = EFI_ADC_12;
 
