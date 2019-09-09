@@ -3,7 +3,7 @@ package com.rusefi.test;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.VariableRegistry;
-import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.output.FsioSettingsConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Collections;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -69,7 +69,18 @@ public class ConfigFieldParserTest {
                 }
             };
 
-            state.readBufferedReader(reader, Collections.<ConfigurationConsumer>singletonList(javaFieldsConsumer));
+
+            FsioSettingsConsumer fsioSettingsConsumer = new FsioSettingsConsumer(state) {
+                @Override
+                public void startFile() {
+                }
+
+                @Override
+                public void endFile() {
+                }
+            };
+
+            state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer, fsioSettingsConsumer));
 
 
             assertEquals(javaFieldsConsumer.getJavaFieldsWriter(), "\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16);\n" +
@@ -82,10 +93,21 @@ public class ConfigFieldParserTest {
                     "\tpublic static final Field ETB_PERIODMS = Field.create(\"ETB_PERIODMS\", 10, FieldType.INT16);\n" +
                     "\tpublic static final Field ETB_MINVALUE = Field.create(\"ETB_MINVALUE\", 12, FieldType.INT16);\n");
 
+            assertEquals(fsioSettingsConsumer.getContent(), "offset\n" +
+                    "minValue\n" +
+                    "alternatorControl_offset\n" +
+                    "alternatorControl_minValue\n" +
+                    "etb_offset\n" +
+                    "etb_minValue\n");
 
-
+            assertEquals(fsioSettingsConsumer.getEnumDefinition(),
+                    "FSIO_SETTING_OFFSET = 1000,\n" +
+                            "FSIO_SETTING_MINVALUE = 1001,\n" +
+                            "FSIO_SETTING_ALTERNATORCONTROL_OFFSET = 1002,\n" +
+                            "FSIO_SETTING_ALTERNATORCONTROL_MINVALUE = 1003,\n" +
+                            "FSIO_SETTING_ETB_OFFSET = 1004,\n" +
+                            "FSIO_SETTING_ETB_MINVALUE = 1005,\n");
         }
-
     }
 
     @Test
