@@ -88,13 +88,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     private int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
-        FieldIterator fieldIterator = new FieldIterator();
+        BitState bitState = new BitState();
         for (int i = 0; i < configStructure.tsFields.size(); i++) {
             ConfigField next = i == configStructure.tsFields.size() - 1 ? ConfigField.VOID : configStructure.tsFields.get(i + 1);
             ConfigField cf = configStructure.tsFields.get(i);
-            tsPosition = writeTunerStudio(cf, prefix, tsHeader, tsPosition, next, fieldIterator.bitState.get());
+            tsPosition = writeTunerStudio(cf, prefix, tsHeader, tsPosition, next, bitState.get());
 
-            fieldIterator.bitState.incrementBitIndex(cf, next);
+            bitState.incrementBitIndex(cf, next);
         }
         return tsPosition;
     }
