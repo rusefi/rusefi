@@ -14,6 +14,7 @@
 #include "rusefi_types.h"
 
 #define US_PER_SECOND 1000000
+#define US_PER_SECOND_F 1000000.0
 #define US_PER_SECOND_LL 1000000LL
 
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)

@@ -80,6 +80,7 @@ public:
 	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 
+
 	int globalSparkIdCoutner = 0;
 
 #if !EFI_PROD_CODE
@@ -205,7 +206,10 @@ public:
 	bool clutchUpState = false;
 	bool clutchDownState = false;
 	bool brakePedalState = false;
+
+	// todo: extract some helper which would contain boolean state and most recent toggle time?
 	bool acSwitchState = false;
+	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
 
