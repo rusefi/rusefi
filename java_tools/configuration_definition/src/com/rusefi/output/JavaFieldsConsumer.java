@@ -39,14 +39,14 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
             ConfigField cf = tsFields.get(i);
-            tsPosition = writeJavaFields(cf, prefix, tsPosition, next, bitState.get());
+            tsPosition = writeOneField(cf, prefix, tsPosition, next, bitState.get());
 
             bitState.incrementBitIndex(cf, next);
         }
         return tsPosition;
     }
 
-    private int writeJavaFields(ConfigField configField, String prefix, int tsPosition, ConfigField next, int bitIndex) throws IOException {
+    private int writeOneField(ConfigField configField, String prefix, int tsPosition, ConfigField next, int bitIndex) throws IOException {
         ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
