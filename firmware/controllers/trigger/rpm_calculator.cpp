@@ -280,12 +280,12 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		// Replace 'normal' RPM with instant RPM for the initial spin-up period
 		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		int prevIndex;
-		int iRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		int instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 		// validate instant RPM - we shouldn't skip the cranking state
-		iRpm = minI(iRpm, CONFIG(cranking.rpm) - 1);
-		rpmState->assignRpmValue(iRpm PASS_ENGINE_PARAMETER_SUFFIX);
+		instantRpm = minI(instantRpm, CONFIG(cranking.rpm) - 1);
+		rpmState->assignRpmValue(instantRpm PASS_ENGINE_PARAMETER_SUFFIX);
 #if 0
-		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, iRpm);
+		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
 #endif
 	}
 }
