@@ -26,7 +26,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         return javaFieldsWriter.toString();
     }
 
-    protected void writeJavaFieldName(String nameWithPrefix, int tsPosition) throws IOException {
+    private void writeJavaFieldName(String nameWithPrefix, int tsPosition) throws IOException {
         javaFieldsWriter.write("\tpublic static final Field ");
         allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
         javaFieldsWriter.write(nameWithPrefix.toUpperCase());
@@ -34,14 +34,14 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 + tsPosition + ", ");
     }
 
-    protected int writeJavaFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
-        FieldIterator fieldIterator = new FieldIterator();
+    private int writeJavaFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
+        BitState bitState = new BitState();
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
             ConfigField cf = tsFields.get(i);
-            tsPosition = writeJavaFields(cf, prefix, tsPosition, next, fieldIterator.bitState.get());
+            tsPosition = writeJavaFields(cf, prefix, tsPosition, next, bitState.get());
 
-            fieldIterator.bitState.incrementBitIndex(cf, next);
+            bitState.incrementBitIndex(cf, next);
         }
         return tsPosition;
     }
