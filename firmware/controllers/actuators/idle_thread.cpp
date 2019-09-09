@@ -220,8 +220,9 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// get Target RPM for Auto-PID from a separate table
 	int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	efitick_t nowNt = getTimeNowNt();
 	// check if within the dead zone
-	int rpm = GET_RPM();
+	float rpm = engine->triggerCentral.triggerState.calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
 		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
