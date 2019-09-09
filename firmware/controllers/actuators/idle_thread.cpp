@@ -316,7 +316,12 @@ public:
 			engine->clutchDownState = efiReadPin(CONFIGB(clutchDownPin));
 		}
 		if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			engine->acSwitchState = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+			bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+			if (engine->acSwitchState != result) {
+				engine->acSwitchState = result;
+				engine->acSwitchLastChangeTime = getTimeNowUs();
+			}
+			engine->acSwitchState = result;
 		}
 		if (CONFIGB(clutchUpPin) != GPIO_UNASSIGNED) {
 			engine->clutchUpState = efiReadPin(CONFIGB(clutchUpPin));

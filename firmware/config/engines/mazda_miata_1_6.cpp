@@ -280,7 +280,7 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// W57 PE3 A/C compressor relay out
 	boardConfiguration->acRelayPin = GPIOE_3;
 	// W58 PE4 A/C fan relay out
-#endif
+#endif /* EFI_UNIT_TEST */
 
 	miataNAcommon(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
