@@ -45,7 +45,7 @@ public class ReaderState {
             comment = line.substring(index + 1);
         }
 
-        ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false);
+        ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false, false);
         state.stack.peek().addBoth(bitField);
     }
 
@@ -92,7 +92,7 @@ public class ReaderState {
         }
     }
 
-    void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
+    public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
 
@@ -129,6 +129,7 @@ public class ReaderState {
         }
         for (ConfigurationConsumer consumer : consumers)
             consumer.endFile();
+        ensureEmptyAfterProcessing();
     }
 
     public void ensureEmptyAfterProcessing() {
@@ -188,7 +189,7 @@ public class ReaderState {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySize(); i++) {
                 ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
-                        cf.getType(), 1, cf.getTsInfo(), false);
+                        cf.getType(), 1, cf.getTsInfo(), false, false);
                 structure.addTs(element);
             }
         } else {

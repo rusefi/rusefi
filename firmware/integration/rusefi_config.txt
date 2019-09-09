@@ -147,13 +147,13 @@ custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFF
 custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
-! explicitly document which use-cases need 10e-7 parameters 
+! todo: explicitly document which use-cases need 10e-7 parameters 
 	float pFactor;;"",      1,      0,       -10000, 10000,      7
 	float iFactor;;"",      1,      0,       -10000, 10000,      7
 	float dFactor;;"",      1,      0,       -10000, 10000,      7
-	int16_t offset;Linear addition to PID logic;"",      1,      0,       -1000, 1000,      0
+	int16_t fsio_visible offset;Linear addition to PID logic;"",      1,      0,       -1000, 1000,      0
 	int16_t periodMs;PID dTime;"ms",      1,      0,       0, 3000,      0
-	int16_t minValue;Output min value;"",        1,     0,  -30000,    30000.0,  0
+	int16_t fsio_visible minValue;Output min value;"",        1,     0,  -30000,    30000.0,  0
 	int16_t maxValue;Output max value;"",        1,     0,  -30000,    30000.0,  0
 end_struct
 
@@ -394,8 +394,8 @@ angle_t globalTriggerAngleOffset;+Angle between Top Dead Center (TDC) and the fi
 float analogInputDividerCoefficient;+Coefficient of input voltage dividers on your PCB;"coef",    1,      0,    0.01,  10.0,   2
 float vbattDividerCoeff;+This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef",    1,      0,    0.01,  99.0,        2
 
-float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
-float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
+float fsio_visible fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
+float fsio_visible fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"*C",    1,      0,       0,  1000.0,        0
 
 
 float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
@@ -845,7 +845,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float throttlePedalUpVoltage;;"voltage",      1,     0,    -6,   6,      2
 	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage",      1,     0,    -6,   6,      2
 	
-	int16_t startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds",        1,     0,  0,    6000,  0
+	int16_t fsio_visible startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds",        1,     0,  0,    6000,  0
 	int16_t idlePidRpmDeadZone;If RPM is close enough let's leave IAC alone, and maybe engage timing PID correction;"RPM",        1,     0,  0,    1000,  0
 	
 	
