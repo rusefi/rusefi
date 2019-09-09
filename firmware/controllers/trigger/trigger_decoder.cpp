@@ -192,7 +192,7 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	}
 }
 
-float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int current_index = currentCycle.current_index; // local copy so that noone changes the value on us
 	timeOfLastEvent[current_index] = nowNt;
 	/**
@@ -206,11 +206,15 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndex, efi
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_6560);
 	// todo: prevIndex should be pre-calculated
-	*prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)previousAngle]);
+	int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)previousAngle]);
+
+	if (prevIndexOut != NULL) {
+		*prevIndexOut = prevIndex;
+	}
 
 	// now let's get precise angle for that event
-	angle_t prevIndexAngle = TRIGGER_SHAPE(eventAngles[*prevIndex]);
-	efitick_t time90ago = timeOfLastEvent[*prevIndex];
+	angle_t prevIndexAngle = TRIGGER_SHAPE(eventAngles[prevIndex]);
+	efitick_t time90ago = timeOfLastEvent[prevIndex];
 	if (time90ago == 0) {
 		return prevInstantRpmValue;
 	}
@@ -252,8 +256,7 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitime_t 
 
 void TriggerStateWithRunningStatistics::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (engineConfiguration->debugMode == DBG_INSTANT_RPM) {
-		int prevIndex;
-		instantRpm = calculateInstantRpm(&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		instantRpm = calculateInstantRpm(NULL, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
 		int prevIndex;
