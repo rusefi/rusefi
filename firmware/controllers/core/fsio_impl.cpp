@@ -135,15 +135,16 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->triggerCentral.vvtPosition;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
+
 	case LE_METHOD_FAN_OFF_SETTING:
 		return engineConfiguration->fanOffTemperature;
 	case LE_METHOD_FAN_ON_SETTING:
 		return engineConfiguration->fanOnTemperature;
+	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
+		return engineConfiguration->startUpFuelPumpDuration;
+
 	case LE_METHOD_CRANKING_RPM:
 		return engineConfiguration->cranking.rpm;
-	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
-		// todo: remove default value check and finish migration to startUpFuelPumpDuration param.
-		return (engineConfiguration->startUpFuelPumpDuration == 0) ? 4 : engineConfiguration->startUpFuelPumpDuration;
 	case LE_METHOD_IN_SHUTDOWN:
 		return engine->isInShutdownMode();
 	case LE_METHOD_VBATT:
