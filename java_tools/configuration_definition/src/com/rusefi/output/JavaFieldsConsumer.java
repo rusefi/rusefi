@@ -1,38 +1,40 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
-import com.rusefi.util.LazyFile;
 
-import java.io.*;
+import java.io.CharArrayWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static com.rusefi.ConfigDefinition.EOL;
 
-/**
- * This class generates java representation of rusEfi data structures used by rusEfi console
- */
-public class JavaFieldsConsumer implements ConfigurationConsumer {
-    private static final Set<String> javaEnums = new HashSet<>();
-    private static final String JAVA_PACKAGE = "com.rusefi.config.generated";
+public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
+    // todo: why is this field 'static'?
+    protected static final Set<String> javaEnums = new HashSet<>();
 
-    private final CharArrayWriter javaFieldsWriter;
+    private final CharArrayWriter javaFieldsWriter = new CharArrayWriter();
+    protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
     private final ReaderState state;
-    private final LazyFile javaFields;
-    private final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
-    private final String className;
 
-    public JavaFieldsConsumer(ReaderState state, String javaDestination) {
-        this.javaFieldsWriter = new CharArrayWriter();
+    public JavaFieldsConsumer(ReaderState state) {
         this.state = state;
-
-        javaFields = new LazyFile(javaDestination);
-        String className = new File(javaDestination).getName();
-        this.className = className.substring(0, className.indexOf('.'));
     }
 
-    private int writeJavaFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
+    public String getJavaFieldsWriter() {
+        return javaFieldsWriter.toString();
+    }
+
+    protected void writeJavaFieldName(String nameWithPrefix, int tsPosition) throws IOException {
+        javaFieldsWriter.write("\tpublic static final Field ");
+        allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
+        javaFieldsWriter.write(nameWithPrefix.toUpperCase());
+        javaFieldsWriter.write(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "
+                + tsPosition + ", ");
+    }
+
+    protected int writeJavaFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
         FieldIterator fieldIterator = new FieldIterator();
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
@@ -92,39 +94,9 @@ public class JavaFieldsConsumer implements ConfigurationConsumer {
         return tsPosition;
     }
 
-    private void writeJavaFieldName(String nameWithPrefix, int tsPosition) throws IOException {
-        javaFieldsWriter.write("\tpublic static final Field ");
-        allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
-        javaFieldsWriter.write(nameWithPrefix.toUpperCase());
-        javaFieldsWriter.write(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "
-                + tsPosition + ", ");
-    }
-
-    @Override
-    public void startFile() {
-        javaFields.write("package " + JAVA_PACKAGE + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        javaFields.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
-        javaFields.write("// by " + getClass() + EOL);
-        javaFields.write("import com.rusefi.config.*;" + EOL + EOL);
-        javaFields.write("public class " + className + " {" + ConfigDefinition.EOL);
-    }
-
-    @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
             writeJavaFields(structure.tsFields, "", 0);
         }
-    }
-
-    @Override
-    public void endFile() throws IOException {
-        javaFields.write(VariableRegistry.INSTANCE.getJavaConstants());
-        javaFields.write(javaFieldsWriter.toString());
-
-        allFields.append("\t};" + EOL);
-        javaFields.write(allFields.toString());
-
-        javaFields.write("}" + ConfigDefinition.EOL);
-        javaFields.close();
     }
 }

@@ -59,7 +59,7 @@ public class ConfigStructure {
         if (fillSize != 0) {
             ConfigField fill = new ConfigField(state, "alignmentFill", "need 4 byte alignment",
                     "" + fillSize,
-                    TypesHelper.UINT8_T, fillSize, null, false);
+                    TypesHelper.UINT8_T, fillSize, null, false, false);
             addBoth(fill);
         }
         totalSize += fillSize;

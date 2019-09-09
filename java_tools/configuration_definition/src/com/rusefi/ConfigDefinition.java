@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.rusefi.output.CHeaderConsumer;
 import com.rusefi.output.ConfigurationConsumer;
-import com.rusefi.output.JavaFieldsConsumer;
+import com.rusefi.output.FileJavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
@@ -132,14 +132,13 @@ public class ConfigDefinition {
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
         }
         if (javaDestination != null) {
-            destinations.add(new JavaFieldsConsumer(state, javaDestination));
+            destinations.add(new FileJavaFieldsConsumer(state, javaDestination));
         }
 
         if (destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
         state.readBufferedReader(definitionReader, destinations);
 
-        state.ensureEmptyAfterProcessing();
 
 
         if (destCDefines != null)

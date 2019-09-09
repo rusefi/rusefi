@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false);
+    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\s([\\w\\d]+))?\\])?";
     private static final String namePattern = "[[\\w\\d\\s_]]+";
@@ -35,6 +35,7 @@ public class ConfigField {
     private final String tsInfo;
     private final boolean isIterate;
     private final ReaderState state;
+    private boolean fsioVisible;
 
     public ConfigField(ReaderState state,
                        String name,
@@ -43,7 +44,9 @@ public class ConfigField {
                        String type,
                        int arraySize,
                        String tsInfo,
-                       boolean isIterate) {
+                       boolean isIterate,
+                       boolean fsioVisible) {
+        this.fsioVisible = fsioVisible;
         Objects.requireNonNull(name, comment + " " + type);
         assertNoWhitespaces(name);
         this.name = name;
@@ -83,7 +86,13 @@ public class ConfigField {
         if (!matcher.matches())
             return null;
 
-        String name = matcher.group(6).trim();
+        String nameString = matcher.group(6).trim();
+        String[] nameTokens = nameString.split("\\s");
+        String name = nameTokens[nameTokens.length - 1];
+
+        boolean isFsioVisible = nameTokens[0].equalsIgnoreCase("fsio_visible");
+
+
         String comment = matcher.group(8);
         String type = matcher.group(1);
         int arraySize;
@@ -98,8 +107,10 @@ public class ConfigField {
         String tsInfo = matcher.group(10);
 
         boolean isIterate = "iterate".equalsIgnoreCase(matcher.group(5));
+
+
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySize,
-                tsInfo, isIterate);
+                tsInfo, isIterate, isFsioVisible);
         SystemOut.println("type " + type);
         SystemOut.println("name " + name);
         SystemOut.println("comment " + comment);
@@ -170,5 +181,10 @@ public class ConfigField {
     public String getTsInfo() {
         return tsInfo;
     }
+
+    public boolean isFsioVisible() {
+        return fsioVisible;
+    }
+
 }
 
