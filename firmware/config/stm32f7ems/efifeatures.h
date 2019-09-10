@@ -107,14 +107,6 @@
 #undef EFI_CONSOLE_RX_PIN
 #define EFI_CONSOLE_RX_PIN 9
 
-// LED_ERROR_BRAIN_PIN should match LED_ERROR_PORT/LED_ERROR_PIN
-#undef LED_ERROR_BRAIN_PIN
-#define LED_ERROR_BRAIN_PIN GPIOB_14
-#undef LED_ERROR_PORT
-#define LED_ERROR_PORT GPIOB
-#undef LED_ERROR_PIN
-#define LED_ERROR_PIN 14
-
 // todo: temporary ignore errors, this is a test config
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 

@@ -97,14 +97,6 @@ typedef unsigned int time_t;
 #define CCM_OPTIONAL
 #endif /* EFI_USE_CCM */
 
-/**
- * low-level function is used here to reduce stack usage
- */
-#define ON_FATAL_ERROR() \
-		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1); \
-		turnAllPinsOff(); \
-		enginePins.communicationLedPin.setValue(1);
-
 #define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
 
 #ifdef __cplusplus
