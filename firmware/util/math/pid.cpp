@@ -29,6 +29,8 @@ void Pid::initPidClass(pid_s *parameters) {
 }
 
 bool Pid::isSame(pid_s *parameters) const {
+	efiAssert(OBD_PCM_Processor_Fault, this->parameters != NULL, "PID::isSame invalid", false);
+	efiAssert(OBD_PCM_Processor_Fault, parameters != NULL, "PID::isSame NULL", false);
 	return this->parameters->pFactor == parameters->pFactor
 			&& this->parameters->iFactor == parameters->iFactor
 			&& this->parameters->dFactor == parameters->dFactor
