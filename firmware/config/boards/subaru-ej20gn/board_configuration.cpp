@@ -132,7 +132,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->communicationLedPin = GPIOG_6;	/* LD2 - green */
 	engineConfiguration->runningLedPin = GPIO_UNASSIGNED;
 	engineConfiguration->warninigLedPin = GPIOG_8; 	/* LD3 - yellow*/
-	engineConfiguration->fatalErrorPin = LED_ERROR_BRAIN_PIN;	/* LD1 - red */
+	//engineConfiguration->fatalErrorPin = LED_ERROR_BRAIN_PIN;	/* LD1 - red */
 
 	/* IF you have BOTH camshaft position sensor and crankshaft position sensor
 	 * camshaft is always trigger#1 input and then crankshaft is trigger#2. */

@@ -171,7 +171,7 @@ void setBoardConfigurationOverrides(void) {
 
 	engineConfiguration->communicationLedPin = GPIO_UNASSIGNED;// GPIOA_13; // yellow LED
 	engineConfiguration->runningLedPin = GPIOA_13; //GPIOA_13; // yellow LED
-	engineConfiguration->fatalErrorPin = GPIOA_13;
+	//engineConfiguration->fatalErrorPin = GPIOA_13;
 	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;

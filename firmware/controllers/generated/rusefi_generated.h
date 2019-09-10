@@ -563,8 +563,6 @@
 #define fanPin_offset_hex 297
 #define fanPinMode_offset 662
 #define fanPinMode_offset_hex 296
-#define fatalErrorPin_offset 2040
-#define fatalErrorPin_offset_hex 7f8
 #define firingOrder_offset 404
 #define firingOrder_offset_hex 194
 #define fixedModeTiming_offset 452
@@ -1867,6 +1865,8 @@
 #define unusedAnotherOne_offset_hex 2e8
 #define unusedAtBoardConfigurationEnd_offset 980
 #define unusedAtBoardConfigurationEnd_offset_hex 3d4
+#define unusedErrorPin_offset 2040
+#define unusedErrorPin_offset_hex 7f8
 #define unusedFormerWarmupAfrPid_offset 1756
 #define unusedFormerWarmupAfrPid_offset_hex 6dc
 #define unusedh_offset 1471

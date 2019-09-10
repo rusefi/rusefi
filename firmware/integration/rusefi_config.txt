@@ -859,7 +859,7 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent",        1,     0,  0,    500,  0
 
-	brain_pin_e fatalErrorPin;RED led on Discovery by default.
+	brain_pin_e unusedErrorPin;
 	brain_pin_e warningLedPin;
 	brain_pin_e unused1234234;
 	brain_pin_e LIS302DLCsPin;
