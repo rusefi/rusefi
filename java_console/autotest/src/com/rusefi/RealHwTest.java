@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.rusefi.io.LinkManager;
 
-import static com.rusefi.AutoTest.*;
+import static com.rusefi.AutoTest.mainTestBody;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
@@ -57,7 +57,7 @@ public class RealHwTest {
         return port;
     }
 
-    private static void runRealHardwareTest(String port) {
+    private static void runRealHardwareTest(String port) throws Exception {
         IoUtil.realHardwareConnect(port);
         mainTestBody();
     }

@@ -1,6 +1,9 @@
 package com.rusefi;
 
 
+import com.opensr5.Logger;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolHolder;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -10,7 +13,6 @@ import com.rusefi.io.ConnectionStatus;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 
-import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
 import static com.rusefi.config.generated.Fields.MOCK_MAF_COMMAND;
@@ -30,7 +32,7 @@ public class AutoTest {
     static int currentEngineType;
     private static String fatalError;
 
-    static void mainTestBody() {
+    static void mainTestBody() throws Exception {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
@@ -38,6 +40,10 @@ public class AutoTest {
                     fatalError = message;
             }
         });
+
+        BinaryProtocol bp = BinaryProtocolHolder.getInstance().get();
+        // let's make sure 'burn' command works since sometimes it does not
+        bp.burn(Logger.CONSOLE);
 
         sendCommand("fl 1"); // just in case it was disabled
         sendCommand(disableCommand(Fields.CMD_TRIGGER_HW_INPUT));

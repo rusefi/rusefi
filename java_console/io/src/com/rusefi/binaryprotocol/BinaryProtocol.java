@@ -298,7 +298,7 @@ public class BinaryProtocol implements BinaryProtocolCommands {
         }
     }
 
-    private void burn(Logger logger) throws InterruptedException, EOFException, SerialPortException {
+    public void burn(Logger logger) throws InterruptedException, EOFException, SerialPortException {
         if (!isBurnPending)
             return;
         logger.info("Need to burn");
