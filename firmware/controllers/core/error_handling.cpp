@@ -44,6 +44,20 @@ char *getFirmwareError(void) {
 	return (char*) errorMessageBuffer;
 }
 
+#if EFI_PROD_CODE
+
+extern ioportid_t errorLedPort;
+extern ioportmask_t errorLedPin;
+
+/**
+ * low-level function is used here to reduce stack usage
+ */
+#define ON_FATAL_ERROR() \
+		palWritePad(errorLedPort, errorLedPin, 1); \
+		turnAllPinsOff(); \
+		enginePins.communicationLedPin.setValue(1);
+#endif /* EFI_PROD_CODE */
+
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {

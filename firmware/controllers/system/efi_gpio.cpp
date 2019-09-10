@@ -478,8 +478,15 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 #if EFI_GPIO_HARDWARE
 
+// questionable trick: we avoid using 'getHwPort' and 'getHwPin' in case of errors in order to increase the changes of turning the LED
+// by reducing stack requirment
+ioportid_t errorLedPort;
+ioportmask_t errorLedPin;
+
 void initPrimaryPins(void) {
 	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN);
+	errorLedPort = getHwPort("primary", LED_ERROR_BRAIN_PIN);
+	errorLedPin = getHwPin("primary", LED_ERROR_BRAIN_PIN);
 }
 
 /**

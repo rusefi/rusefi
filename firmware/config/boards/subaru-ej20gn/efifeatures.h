@@ -80,10 +80,6 @@
 /* Red */
 #undef LED_ERROR_BRAIN_PIN
 #define LED_ERROR_BRAIN_PIN			GPIOG_7
-#undef LED_ERROR_PORT
-#define LED_ERROR_PORT				GPIOG
-#undef LED_ERROR_PIN
-#define LED_ERROR_PIN				7
 
 /* no console switch */
 #undef CONSOLE_MODE_SWITCH_PORT
