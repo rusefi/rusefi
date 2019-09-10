@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 06 19:09:15 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Mon Sep 09 21:25:07 EDT 2019
 
 // by class com.rusefi.output.JavaFieldsConsumer
 import com.rusefi.config.*;
@@ -362,7 +362,6 @@ public class Fields {
 	public static final int fanPin_offset_hex = 297;
 	public static final int fanPinMode_offset = 662;
 	public static final int fanPinMode_offset_hex = 296;
-	public static final int fatalErrorPin_offset = 2040;
 	public static final int firingOrder_offset = 404;
 	public static final int firingOrder_offset_hex = 194;
 	public static final int fixedModeTiming_offset = 452;
@@ -1214,6 +1213,7 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtBoardConfigurationEnd_offset = 980;
+	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFormerWarmupAfrPid_offset = 1756;
 	public static final int unusedh_offset = 1471;
 	public static final int unusedMa2_offset = 711;
@@ -1827,7 +1827,7 @@ public class Fields {
 	public static final Field STARTOFCRANKINGPRIMINGPULSE = Field.create("STARTOFCRANKINGPRIMINGPULSE", 2032, FieldType.FLOAT);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 2036, FieldType.INT16);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 2038, FieldType.INT16);
-	public static final Field FATALERRORPIN = Field.create("FATALERRORPIN", 2040, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSEDERRORPIN = Field.create("UNUSEDERRORPIN", 2040, FieldType.INT8, brain_pin_e);
 	public static final Field WARNINGLEDPIN = Field.create("WARNINGLEDPIN", 2041, FieldType.INT8, brain_pin_e);
 	public static final Field UNUSED1234234 = Field.create("UNUSED1234234", 2042, FieldType.INT8, brain_pin_e);
 	public static final Field LIS302DLCSPIN = Field.create("LIS302DLCSPIN", 2043, FieldType.INT8, brain_pin_e);
@@ -2599,7 +2599,7 @@ public class Fields {
 	STARTOFCRANKINGPRIMINGPULSE,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
-	FATALERRORPIN,
+	UNUSEDERRORPIN,
 	WARNINGLEDPIN,
 	UNUSED1234234,
 	LIS302DLCSPIN,

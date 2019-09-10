@@ -309,11 +309,6 @@ void prepareVoidConfiguration(engine_configuration_s *engineConfiguration) {
 }
 
 void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-#ifdef EFI_FATAL_ERROR_PIN
-	engineConfiguration->fatalErrorPin = EFI_FATAL_ERROR_PIN;
-#else
-	engineConfiguration->fatalErrorPin = GPIOD_14; // red LED on discovery
-#endif /* EFI_FATAL_ERROR_PIN */
 #ifdef EFI_WARNING_PIN
 	engineConfiguration->warningLedPin = EFI_WARNING_PIN;
 #else

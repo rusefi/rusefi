@@ -1605,7 +1605,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = mc33816_driven,							mc33816_driven
 		field = mc33816spiDevice,						mc33816spiDevice
 		field = "Warning Led",							warningLedPin
-		field = "Fatal Error Led",						fatalErrorPin
+		; field = "Fatal Error Led",						fatalErrorPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
 		field = "mc33972_cs",							mc33972_cs
@@ -1981,7 +1981,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Running status LED",					runningLedPin
 		field = "TS communication status LED",					communicationLedPin
 	    field = "Trigger error LED",					triggerErrorPin
-		field = "Fatal Error Led",						fatalErrorPin
+		; field = "Fatal Error Led",						fatalErrorPin
 
 ;			Engine->MIL Settings
 	dialog = malfunction,	"Check Engine Settings"

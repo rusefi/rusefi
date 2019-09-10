@@ -48,7 +48,7 @@ static void setIgnitionPins() {
 }
 
 static void setLedPins() {
-	engineConfiguration->fatalErrorPin = GPIOE_3;		// d21 = red
+	//engineConfiguration->atalErrorPin = GPIOE_3;		// d21 = red
 	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
 	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
 	boardConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
