@@ -59,6 +59,8 @@ typedef enum {
 	LE_METHOD_FSIO_DIGITAL_INPUT = 123,
 	LE_METHOD_FSIO_SETTING = 124,
 
+#include "fsio_enums_generated.def"
+
 	Force_4b_le_action = ENUM_32_BITS,
 
 } le_action_e;

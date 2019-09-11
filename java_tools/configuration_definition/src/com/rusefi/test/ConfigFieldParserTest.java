@@ -101,12 +101,12 @@ public class ConfigFieldParserTest {
                     "etb_minValue\n");
 
             assertEquals(fsioSettingsConsumer.getEnumDefinition(),
-                    "FSIO_SETTING_OFFSET = 1000,\n" +
-                            "FSIO_SETTING_MINVALUE = 1001,\n" +
-                            "FSIO_SETTING_ALTERNATORCONTROL_OFFSET = 1002,\n" +
-                            "FSIO_SETTING_ALTERNATORCONTROL_MINVALUE = 1003,\n" +
-                            "FSIO_SETTING_ETB_OFFSET = 1004,\n" +
-                            "FSIO_SETTING_ETB_MINVALUE = 1005,\n");
+                    "\tFSIO_SETTING_OFFSET = 1000,\n" +
+                            "\tFSIO_SETTING_MINVALUE = 1001,\n" +
+                            "\tFSIO_SETTING_ALTERNATORCONTROL_OFFSET = 1002,\n" +
+                            "\tFSIO_SETTING_ALTERNATORCONTROL_MINVALUE = 1003,\n" +
+                            "\tFSIO_SETTING_ETB_OFFSET = 1004,\n" +
+                            "\tFSIO_SETTING_ETB_MINVALUE = 1005,\n");
         }
     }
 

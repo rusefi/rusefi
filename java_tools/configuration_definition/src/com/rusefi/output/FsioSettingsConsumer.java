@@ -7,9 +7,14 @@ import com.rusefi.ReaderState;
 import java.io.CharArrayWriter;
 import java.util.List;
 
+/**
+ * Some configuration settings are exposed to FSIO
+ * Here we generate relevant FSIO constants and lookup code
+ */
+
 public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
     private final CharArrayWriter content = new CharArrayWriter();
-    private final CharArrayWriter enumDefinition = new CharArrayWriter();
+    protected final CharArrayWriter enumDefinition = new CharArrayWriter();
     private final ReaderState state;
 
     private int currentIndex = 1000;
@@ -38,7 +43,6 @@ public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField cf = tsFields.get(i);
             writeOneField(cf, prefix);
-
         }
     }
 
@@ -50,17 +54,14 @@ public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
             return;
         }
 
-
         if (configField.isFsioVisible()) {
 
             String nameWithPrefix = prefix + configField.getName();
 
-            enumDefinition.append("FSIO_SETTING_" + nameWithPrefix.toUpperCase() + " = " + currentIndex++ + ",\n");
+            enumDefinition.append("\tFSIO_SETTING_" + nameWithPrefix.toUpperCase() + " = " + currentIndex++ + ",\n");
 
 
             content.append(nameWithPrefix + "\n");
         }
-
-
     }
 }
