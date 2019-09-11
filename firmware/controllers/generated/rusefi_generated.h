@@ -1260,8 +1260,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_18_offset 76
-#define issue_294_18_offset_hex 4c
 #define issue_294_19_offset 76
 #define issue_294_19_offset_hex 4c
 #define issue_294_21_offset 76
@@ -1925,6 +1923,8 @@
 #define useIacTableForCoasting_offset_hex 2e8
 #define useIdleTimingPidControl_offset 744
 #define useIdleTimingPidControl_offset_hex 2e8
+#define useInstantRpmForIdle_offset 76
+#define useInstantRpmForIdle_offset_hex 4c
 #define useLcdScreen_offset 744
 #define useLcdScreen_offset_hex 2e8
 #define useLinearCltSensor_offset 1464

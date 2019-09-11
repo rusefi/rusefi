@@ -300,7 +300,7 @@ bit showSdCardWarning;
 bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit useTLE8888_hall_mode;
 bit useTLE8888_cranking_hack;
-bit issue_294_18;
+bit useInstantRpmForIdle;
 bit issue_294_19;
 bit issue_294_21;
 bit issue_294_22;
