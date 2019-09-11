@@ -7,7 +7,6 @@
 #define MAP_H_
 
 #include "engine_configuration.h"
-#include "sensor_types.h"
 
 void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
