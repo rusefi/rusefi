@@ -30,6 +30,8 @@ public class ConfigDefinition {
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_FSIO_CONSTANTS = "-c_fsio_constants";
     private static final String KEY_C_FSIO_GETTERS = "-c_fsio_getters";
+    private static final String KEY_C_FSIO_NAMES = "-c_fsio_names";
+    private static final String KEY_C_FSIO_STRING = "-c_fsio_strings";
     private static final String KEY_C_DEFINES = "-c_defines";
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
@@ -68,6 +70,8 @@ public class ConfigDefinition {
         String destCDefinesFileName = null;
         String destCFsioConstantsFileName = null;
         String destCFsioGettersFileName = null;
+        String namesCFileName = null;
+        String stringsCFileName = null;
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
         List<String> prependFiles = new ArrayList<>();
@@ -85,6 +89,10 @@ public class ConfigDefinition {
                 destCHeaderFileName = args[i + 1];
             } else if (key.equals(KEY_C_FSIO_GETTERS)) {
                 destCFsioGettersFileName = args[i + 1];
+            } else if (key.equals(KEY_C_FSIO_STRING)) {
+                stringsCFileName = args[i + 1];
+            } else if (key.equals(KEY_C_FSIO_NAMES)) {
+                namesCFileName = args[i + 1];
             } else if (key.equals(KEY_C_FSIO_CONSTANTS)) {
                 destCFsioConstantsFileName = args[i + 1];
             } else if (key.equals(KEY_ZERO_INIT)) {
@@ -141,7 +149,11 @@ public class ConfigDefinition {
         }
 
         if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
-            destinations.add(new FileFsioSettingsConsumer(state, destCFsioConstantsFileName, destCFsioGettersFileName));
+            destinations.add(new FileFsioSettingsConsumer(state,
+                    destCFsioConstantsFileName,
+                    destCFsioGettersFileName,
+                    namesCFileName,
+                    stringsCFileName));
         }
 
         if (destinations.isEmpty())

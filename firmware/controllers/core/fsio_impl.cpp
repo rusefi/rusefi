@@ -52,8 +52,6 @@ static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
-static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
-static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, "fsio_table");
@@ -65,6 +63,8 @@ static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
 static LENameOrdinalPair leStartupFuelPumpDuration(LE_METHOD_STARTUP_FUEL_PUMP_DURATION, "startup_fuel_pump_duration");
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
+
+#include "fsio_names.def"
 
 #define LE_EVAL_POOL_SIZE 32
 
@@ -136,10 +136,6 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 
-	case LE_METHOD_FAN_OFF_SETTING:
-		return engineConfiguration->fanOffTemperature;
-	case LE_METHOD_FAN_ON_SETTING:
-		return engineConfiguration->fanOnTemperature;
 	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
 		return engineConfiguration->startUpFuelPumpDuration;
 
@@ -364,16 +360,13 @@ static const char * action2String(le_action_e action) {
 			return "cranking_rpm";
 		case LE_METHOD_COOLANT:
 			return "CLT";
-		case LE_METHOD_FAN_ON_SETTING:
-			return "fan_on";
-		case LE_METHOD_FAN_OFF_SETTING:
-			return "fan_off";
 		case LE_METHOD_FAN:
 			return "fan";
 		case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
 			return "startup_fuel_pump_duration";
 		case LE_METHOD_IN_SHUTDOWN:
 			return "in_shutdown";
+#include "fsio_strings.def"
 
 		default: {
 			// this is here to make compiler happy

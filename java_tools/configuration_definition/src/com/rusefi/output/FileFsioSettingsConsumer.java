@@ -5,34 +5,49 @@ import com.rusefi.ReaderState;
 import com.rusefi.util.LazyFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.rusefi.ConfigDefinition.EOL;
 
 public class FileFsioSettingsConsumer extends FsioSettingsConsumer {
     private final LazyFile enumFile;
     private final LazyFile gettersFile;
+    private final LazyFile namesFile;
+    private final LazyFile stringsFile;
 
-    public FileFsioSettingsConsumer(ReaderState state, String destCFsioConstantsFileName, String destCFsioGettersFileName) {
+    public FileFsioSettingsConsumer(ReaderState state,
+                                    String destCFsioConstantsFileName,
+                                    String destCFsioGettersFileName,
+                                    String namesCFileName,
+                                    String stringsCFileName) {
         super(state);
         enumFile = new LazyFile(destCFsioConstantsFileName);
         gettersFile = new LazyFile(destCFsioGettersFileName);
+        namesFile = new LazyFile(namesCFileName);
+        stringsFile = new LazyFile(stringsCFileName);
     }
 
     @Override
     public void startFile() {
-        enumFile.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
-        enumFile.write("// by " + getClass() + EOL);
-
-        gettersFile.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
-        gettersFile.write("// by " + getClass() + EOL);
+        for (LazyFile file : Arrays.asList(enumFile, gettersFile, stringsFile, namesFile)) {
+            file.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
+            file.write("// by " + getClass() + EOL);
+        }
     }
 
     @Override
     public void endFile() throws IOException {
-        enumFile.write(enumDefinition.toString());
+        enumFile.write(getEnumDefinition());
         enumFile.close();
 
         gettersFile.write(getContent());
         gettersFile.close();
+
+        namesFile.write(getNames());
+        namesFile.close();
+
+        stringsFile.write(getStrings());
+        stringsFile.close();
     }
 }

@@ -14,7 +14,9 @@ import java.util.List;
 
 public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
     private final CharArrayWriter content = new CharArrayWriter();
-    protected final CharArrayWriter enumDefinition = new CharArrayWriter();
+    private final CharArrayWriter enumDefinition = new CharArrayWriter();
+    private final CharArrayWriter names = new CharArrayWriter();
+    private final CharArrayWriter strings = new CharArrayWriter();
     private final ReaderState state;
 
     private int currentIndex = 1000;
@@ -59,7 +61,8 @@ public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
 
             String nameWithPrefix = prefix + configField.getName();
 
-            String enumName = "FSIO_SETTING_" + nameWithPrefix.replaceAll("\\.", "_").toUpperCase();
+            String nameWithPrefixUnderscore = nameWithPrefix.replaceAll("\\.", "_");
+            String enumName = "FSIO_SETTING_" + nameWithPrefixUnderscore.toUpperCase();
             enumDefinition.append("\t" +
                     enumName + " = " + currentIndex++ + ",\n");
 
@@ -69,7 +72,23 @@ public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
 
             content.append("\tcase " + enumName + ":\n");
             content.append("\t\treturn engineConfiguration->" + cFieldName + ";\n");
+
+            String rusEfiName = "\"cfg_" + nameWithPrefixUnderscore + "\"";
+
+            strings.append("\tcase " + enumName + ":\n");
+            strings.append("\t\treturn " + rusEfiName + ";\n");
+
+            names.append("static LENameOrdinalPair le" + nameWithPrefixUnderscore + "(" + enumName + ", " + rusEfiName + ");\n");
         }
+    }
+
+    public String getNames() {
+        return names.toString();
+    }
+
+
+    public String getStrings() {
+        return strings.toString();
     }
 
 }

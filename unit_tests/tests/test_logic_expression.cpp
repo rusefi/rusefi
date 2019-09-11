@@ -31,9 +31,8 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return mockTimeSinceBoot;
-	case LE_METHOD_FAN_ON_SETTING:
-		return 0;
-	case LE_METHOD_FAN_OFF_SETTING:
+	case FSIO_SETTING_FANONTEMPERATURE:
+	case FSIO_SETTING_FANOFFTEMPERATURE:
 		return 0;
 	case LE_METHOD_VBATT:
 		return 12;
@@ -211,8 +210,8 @@ TEST(misc, testLogicExpressions) {
 		ASSERT_EQ(0, c.calcLogValue[0]);
 	}
 
-	testExpression("fan_off_setting", 0);
-	testExpression("coolant fan_off_setting >", 1);
+	testExpression("cfg_fanOffTemperature", 0);
+	testExpression("coolant cfg_fanOffTemperature >", 1);
 
 	testExpression("0 1 &", 0);
 	testExpression("0 1 |", 1);
@@ -228,9 +227,5 @@ TEST(misc, testLogicExpressions) {
 		testExpression("cranking_rpm", 200);
 		testExpression(STARTER_BLOCK, 0);
 		testExpression("rpm cranking_rpm > ", 1);
-
 	}
-	mockRpm = 900;
-	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
-
 }
