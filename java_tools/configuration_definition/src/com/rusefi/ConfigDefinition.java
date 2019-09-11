@@ -1,9 +1,6 @@
 package com.rusefi;
 
-import com.rusefi.output.CHeaderConsumer;
-import com.rusefi.output.ConfigurationConsumer;
-import com.rusefi.output.FileJavaFieldsConsumer;
-import com.rusefi.output.TSProjectConsumer;
+import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
@@ -31,6 +28,7 @@ public class ConfigDefinition {
     private static final String KEY_ROM_INPUT = "-romraider";
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
+    private static final String KEY_C_FSIO_CONSTANTS = "-c_fsio_constants";
     private static final String KEY_C_DEFINES = "-c_defines";
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
@@ -65,9 +63,10 @@ public class ConfigDefinition {
         }
 
         String tsPath = null;
-        String destCHeader = null;
-        String destCDefines = null;
-        String javaDestination = null;
+        String destCHeaderFileName = null;
+        String destCDefinesFileName = null;
+        String destCFsioConstantsFileName = null;
+        String javaDestinationFileName = null;
         String romRaiderDestination = null;
         List<String> prependFiles = new ArrayList<>();
         String skipRebuildFile = null;
@@ -81,15 +80,17 @@ public class ConfigDefinition {
             } else if (key.equals(KEY_TS_DESTINATION)) {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
-                destCHeader = args[i + 1];
+                destCHeaderFileName = args[i + 1];
+            } else if (key.equals(KEY_C_FSIO_CONSTANTS)) {
+                destCFsioConstantsFileName = args[i + 1];
             } else if (key.equals(KEY_ZERO_INIT)) {
                 needZeroInit = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_WITH_C_DEFINES)) {
                 CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
             } else if (key.equals(KEY_C_DEFINES)) {
-                destCDefines = args[i + 1];
+                destCDefinesFileName = args[i + 1];
             } else if (key.equals(KEY_JAVA_DESTINATION)) {
-                javaDestination = args[i + 1];
+                javaDestinationFileName = args[i + 1];
             } else if (key.equals(KEY_ROMRAIDER_DESTINATION)) {
                 romRaiderDestination = args[i + 1];
             } else if (key.equals(KEY_PREPEND)) {
@@ -124,15 +125,19 @@ public class ConfigDefinition {
         ReaderState state = new ReaderState();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (destCHeader != null) {
-            destinations.add(new CHeaderConsumer(destCHeader));
+        if (destCHeaderFileName != null) {
+            destinations.add(new CHeaderConsumer(destCHeaderFileName));
         }
         if (tsPath != null) {
             CharArrayWriter tsWriter = new CharArrayWriter();
             destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
         }
-        if (javaDestination != null) {
-            destinations.add(new FileJavaFieldsConsumer(state, javaDestination));
+        if (javaDestinationFileName != null) {
+            destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
+        }
+
+        if (destCFsioConstantsFileName != null) {
+            destinations.add(new FileFsioSettingsConsumer(state, destCFsioConstantsFileName));
         }
 
         if (destinations.isEmpty())
@@ -141,8 +146,8 @@ public class ConfigDefinition {
 
 
 
-        if (destCDefines != null)
-            VariableRegistry.INSTANCE.writeDefinesToFile(destCDefines);
+        if (destCDefinesFileName != null)
+            VariableRegistry.INSTANCE.writeDefinesToFile(destCDefinesFileName);
 
         if (romRaiderDestination != null && romRaiderInputFile != null) {
             String inputFileName = romRaiderInputFile + File.separator + ROM_RAIDER_XML_TEMPLATE;
