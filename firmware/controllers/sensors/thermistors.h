@@ -12,7 +12,6 @@
 
 #define KELV 273.15f
 
-#include "sensor_types.h"
 #include "engine.h"
 
 /**
