@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 22:45:42 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 22:56:58 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -837,7 +837,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_18_offset = 76;
 	public static final int issue_294_19_offset = 76;
 	public static final int issue_294_21_offset = 76;
 	public static final int issue_294_22_offset = 76;
@@ -1245,6 +1244,7 @@ public class Fields {
 	public static final int useFSIO9ForServo2_offset = 1464;
 	public static final int useIacTableForCoasting_offset = 744;
 	public static final int useIdleTimingPidControl_offset = 744;
+	public static final int useInstantRpmForIdle_offset = 76;
 	public static final int useLcdScreen_offset = 744;
 	public static final int useLinearCltSensor_offset = 1464;
 	public static final int useLinearIatSensor_offset = 1464;
@@ -1307,7 +1307,7 @@ public class Fields {
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 76, FieldType.BIT, 15);
 	public static final Field USETLE8888_HALL_MODE = Field.create("USETLE8888_HALL_MODE", 76, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 76, FieldType.BIT, 17);
-	public static final Field ISSUE_294_18 = Field.create("ISSUE_294_18", 76, FieldType.BIT, 18);
+	public static final Field USEINSTANTRPMFORIDLE = Field.create("USEINSTANTRPMFORIDLE", 76, FieldType.BIT, 18);
 	public static final Field ISSUE_294_19 = Field.create("ISSUE_294_19", 76, FieldType.BIT, 19);
 	public static final Field ISSUE_294_21 = Field.create("ISSUE_294_21", 76, FieldType.BIT, 20);
 	public static final Field ISSUE_294_22 = Field.create("ISSUE_294_22", 76, FieldType.BIT, 21);
@@ -2091,7 +2091,7 @@ public class Fields {
 	CJ125ISURDIVIDED,
 	USETLE8888_HALL_MODE,
 	USETLE8888_CRANKING_HACK,
-	ISSUE_294_18,
+	USEINSTANTRPMFORIDLE,
 	ISSUE_294_19,
 	ISSUE_294_21,
 	ISSUE_294_22,
