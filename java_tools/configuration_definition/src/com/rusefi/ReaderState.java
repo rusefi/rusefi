@@ -45,7 +45,7 @@ public class ReaderState {
             comment = line.substring(index + 1);
         }
 
-        ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false, false);
+        ConfigField bitField = new ConfigField(state, bitName, comment, null, BOOLEAN_T, 0, null, false, false, null, -1);
         state.stack.peek().addBoth(bitField);
     }
 
@@ -189,7 +189,7 @@ public class ReaderState {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySize(); i++) {
                 ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
-                        cf.getType(), 1, cf.getTsInfo(), false, false);
+                        cf.getType(), 1, cf.getTsInfo(), false, false, cf.getName(), i);
                 structure.addTs(element);
             }
         } else {

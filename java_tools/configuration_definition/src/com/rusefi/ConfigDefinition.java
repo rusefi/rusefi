@@ -29,6 +29,7 @@ public class ConfigDefinition {
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_FSIO_CONSTANTS = "-c_fsio_constants";
+    private static final String KEY_C_FSIO_GETTERS = "-c_fsio_getters";
     private static final String KEY_C_DEFINES = "-c_defines";
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
@@ -66,6 +67,7 @@ public class ConfigDefinition {
         String destCHeaderFileName = null;
         String destCDefinesFileName = null;
         String destCFsioConstantsFileName = null;
+        String destCFsioGettersFileName = null;
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
         List<String> prependFiles = new ArrayList<>();
@@ -81,6 +83,8 @@ public class ConfigDefinition {
                 tsPath = args[i + 1];
             } else if (key.equals(KEY_C_DESTINATION)) {
                 destCHeaderFileName = args[i + 1];
+            } else if (key.equals(KEY_C_FSIO_GETTERS)) {
+                destCFsioGettersFileName = args[i + 1];
             } else if (key.equals(KEY_C_FSIO_CONSTANTS)) {
                 destCFsioConstantsFileName = args[i + 1];
             } else if (key.equals(KEY_ZERO_INIT)) {
@@ -136,8 +140,8 @@ public class ConfigDefinition {
             destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
         }
 
-        if (destCFsioConstantsFileName != null) {
-            destinations.add(new FileFsioSettingsConsumer(state, destCFsioConstantsFileName));
+        if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
+            destinations.add(new FileFsioSettingsConsumer(state, destCFsioConstantsFileName, destCFsioGettersFileName));
         }
 
         if (destinations.isEmpty())

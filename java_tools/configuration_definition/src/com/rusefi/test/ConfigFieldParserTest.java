@@ -52,7 +52,8 @@ public class ConfigFieldParserTest {
                     "end_struct\n" +
                     "struct_no_prefix engine_configuration_s\n" +
                     "\tpid_s alternatorControl;\n" +
-                    "\tpid_s etb;\n" +
+                    "#define ETB_COUNT 2\n" +
+                    "\tpid_s[ETB_COUNT iterate] etb;\n" +
                     "end_struct\n" +
                     "" +
                     "";
@@ -83,30 +84,47 @@ public class ConfigFieldParserTest {
             state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer, fsioSettingsConsumer));
 
 
-            assertEquals(javaFieldsConsumer.getJavaFieldsWriter(), "\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16);\n" +
-                    "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 2, FieldType.INT16);\n" +
-                    "\tpublic static final Field MINVALUE = Field.create(\"MINVALUE\", 4, FieldType.INT16);\n" +
-                    "\tpublic static final Field ALTERNATORCONTROL_OFFSET = Field.create(\"ALTERNATORCONTROL_OFFSET\", 0, FieldType.INT16);\n" +
-                    "\tpublic static final Field ALTERNATORCONTROL_PERIODMS = Field.create(\"ALTERNATORCONTROL_PERIODMS\", 2, FieldType.INT16);\n" +
-                    "\tpublic static final Field ALTERNATORCONTROL_MINVALUE = Field.create(\"ALTERNATORCONTROL_MINVALUE\", 4, FieldType.INT16);\n" +
-                    "\tpublic static final Field ETB_OFFSET = Field.create(\"ETB_OFFSET\", 8, FieldType.INT16);\n" +
-                    "\tpublic static final Field ETB_PERIODMS = Field.create(\"ETB_PERIODMS\", 10, FieldType.INT16);\n" +
-                    "\tpublic static final Field ETB_MINVALUE = Field.create(\"ETB_MINVALUE\", 12, FieldType.INT16);\n");
+            assertEquals("\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16);\n" +
+                            "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 2, FieldType.INT16);\n" +
+                            "\tpublic static final Field MINVALUE = Field.create(\"MINVALUE\", 4, FieldType.INT16);\n" +
+                            "\tpublic static final Field ALTERNATORCONTROL_OFFSET = Field.create(\"ALTERNATORCONTROL_OFFSET\", 0, FieldType.INT16);\n" +
+                            "\tpublic static final Field ALTERNATORCONTROL_PERIODMS = Field.create(\"ALTERNATORCONTROL_PERIODMS\", 2, FieldType.INT16);\n" +
+                            "\tpublic static final Field ALTERNATORCONTROL_MINVALUE = Field.create(\"ALTERNATORCONTROL_MINVALUE\", 4, FieldType.INT16);\n" +
+                            "\tpublic static final Field ETB1_OFFSET = Field.create(\"ETB1_OFFSET\", 8, FieldType.INT16);\n" +
+                            "\tpublic static final Field ETB1_PERIODMS = Field.create(\"ETB1_PERIODMS\", 10, FieldType.INT16);\n" +
+                            "\tpublic static final Field ETB1_MINVALUE = Field.create(\"ETB1_MINVALUE\", 12, FieldType.INT16);\n" +
+                            "\tpublic static final Field ETB2_OFFSET = Field.create(\"ETB2_OFFSET\", 16, FieldType.INT16);\n" +
+                            "\tpublic static final Field ETB2_PERIODMS = Field.create(\"ETB2_PERIODMS\", 18, FieldType.INT16);\n" +
+                            "\tpublic static final Field ETB2_MINVALUE = Field.create(\"ETB2_MINVALUE\", 20, FieldType.INT16);\n",
+                    javaFieldsConsumer.getJavaFieldsWriter());
 
-            assertEquals(fsioSettingsConsumer.getContent(), "offset\n" +
-                    "minValue\n" +
-                    "alternatorControl_offset\n" +
-                    "alternatorControl_minValue\n" +
-                    "etb_offset\n" +
-                    "etb_minValue\n");
+            assertEquals("\tcase FSIO_SETTING_OFFSET:\n" +
+                            "\t\treturn engineConfiguration->offset;\n" +
+                            "\tcase FSIO_SETTING_MINVALUE:\n" +
+                            "\t\treturn engineConfiguration->minValue;\n" +
+                            "\tcase FSIO_SETTING_ALTERNATORCONTROL_OFFSET:\n" +
+                            "\t\treturn engineConfiguration->alternatorControl.offset;\n" +
+                            "\tcase FSIO_SETTING_ALTERNATORCONTROL_MINVALUE:\n" +
+                            "\t\treturn engineConfiguration->alternatorControl.minValue;\n" +
+                            "\tcase FSIO_SETTING_ETB1_OFFSET:\n" +
+                            "\t\treturn engineConfiguration->etb[0].offset;\n" +
+                            "\tcase FSIO_SETTING_ETB1_MINVALUE:\n" +
+                            "\t\treturn engineConfiguration->etb[0].minValue;\n" +
+                            "\tcase FSIO_SETTING_ETB2_OFFSET:\n" +
+                            "\t\treturn engineConfiguration->etb[1].offset;\n" +
+                            "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
+                            "\t\treturn engineConfiguration->etb[1].minValue;\n",
+                    fsioSettingsConsumer.getContent());
 
-            assertEquals(fsioSettingsConsumer.getEnumDefinition(),
-                    "\tFSIO_SETTING_OFFSET = 1000,\n" +
+            assertEquals("\tFSIO_SETTING_OFFSET = 1000,\n" +
                             "\tFSIO_SETTING_MINVALUE = 1001,\n" +
                             "\tFSIO_SETTING_ALTERNATORCONTROL_OFFSET = 1002,\n" +
                             "\tFSIO_SETTING_ALTERNATORCONTROL_MINVALUE = 1003,\n" +
-                            "\tFSIO_SETTING_ETB_OFFSET = 1004,\n" +
-                            "\tFSIO_SETTING_ETB_MINVALUE = 1005,\n");
+                            "\tFSIO_SETTING_ETB1_OFFSET = 1004,\n" +
+                            "\tFSIO_SETTING_ETB1_MINVALUE = 1005,\n" +
+                            "\tFSIO_SETTING_ETB2_OFFSET = 1006,\n" +
+                            "\tFSIO_SETTING_ETB2_MINVALUE = 1007,\n",
+                    fsioSettingsConsumer.getEnumDefinition());
         }
     }
 

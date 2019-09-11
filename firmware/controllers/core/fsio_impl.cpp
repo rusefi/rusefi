@@ -149,6 +149,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return engine->isInShutdownMode();
 	case LE_METHOD_VBATT:
 		return getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
+#include "fsio_getters.def"
 	default:
 		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO unexpected %d", action);
 		return NAN;

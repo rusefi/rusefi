@@ -1,0 +1,45 @@
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 23:40:30 EDT 2019
+
+// by class com.rusefi.output.FileFsioSettingsConsumer
+	case FSIO_SETTING_FANONTEMPERATURE:
+		return engineConfiguration->fanOnTemperature;
+	case FSIO_SETTING_FANOFFTEMPERATURE:
+		return engineConfiguration->fanOffTemperature;
+	case FSIO_SETTING_ALTERNATORCONTROL_OFFSET:
+		return engineConfiguration->alternatorControl.offset;
+	case FSIO_SETTING_ALTERNATORCONTROL_MINVALUE:
+		return engineConfiguration->alternatorControl.minValue;
+	case FSIO_SETTING_ETB_OFFSET:
+		return engineConfiguration->etb.offset;
+	case FSIO_SETTING_ETB_MINVALUE:
+		return engineConfiguration->etb.minValue;
+	case FSIO_SETTING_IDLERPMPID_OFFSET:
+		return engineConfiguration->idleRpmPid.offset;
+	case FSIO_SETTING_IDLERPMPID_MINVALUE:
+		return engineConfiguration->idleRpmPid.minValue;
+	case FSIO_SETTING_STARTUPFUELPUMPDURATION:
+		return engineConfiguration->startUpFuelPumpDuration;
+	case FSIO_SETTING_FUELCLOSEDLOOPPID_OFFSET:
+		return engineConfiguration->fuelClosedLoopPid.offset;
+	case FSIO_SETTING_FUELCLOSEDLOOPPID_MINVALUE:
+		return engineConfiguration->fuelClosedLoopPid.minValue;
+	case FSIO_SETTING_AUXPID1_OFFSET:
+		return engineConfiguration->auxPid[0].offset;
+	case FSIO_SETTING_AUXPID1_MINVALUE:
+		return engineConfiguration->auxPid[0].minValue;
+	case FSIO_SETTING_AUXPID2_OFFSET:
+		return engineConfiguration->auxPid[1].offset;
+	case FSIO_SETTING_AUXPID2_MINVALUE:
+		return engineConfiguration->auxPid[1].minValue;
+	case FSIO_SETTING_AUXPID3_OFFSET:
+		return engineConfiguration->auxPid[2].offset;
+	case FSIO_SETTING_AUXPID3_MINVALUE:
+		return engineConfiguration->auxPid[2].minValue;
+	case FSIO_SETTING_AUXPID4_OFFSET:
+		return engineConfiguration->auxPid[3].offset;
+	case FSIO_SETTING_AUXPID4_MINVALUE:
+		return engineConfiguration->auxPid[3].minValue;
+	case FSIO_SETTING_IDLETIMINGPID_OFFSET:
+		return engineConfiguration->idleTimingPid.offset;
+	case FSIO_SETTING_IDLETIMINGPID_MINVALUE:
+		return engineConfiguration->idleTimingPid.minValue;
