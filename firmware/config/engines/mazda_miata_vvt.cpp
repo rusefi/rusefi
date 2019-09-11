@@ -553,6 +553,12 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	boardConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 
+	//set idle_offset 0
+	engineConfiguration->idleRpmPid.offset = 0;
+	engineConfiguration->idleRpmPid.pFactor = 0.2;
+	engineConfiguration->idleRpmPid.iFactor = 0.0001;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.periodMs = 10;
 
 	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
 
