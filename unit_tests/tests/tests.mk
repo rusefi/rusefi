@@ -26,4 +26,10 @@ TESTS_SRC_CPP = \
 	tests/test_sensors.cpp \
 	tests/test_pid_auto.cpp \
 	tests/test_accel_enrichment.cpp \
-	tests/test_gpiochip.cpp
+	tests/test_gpiochip.cpp \
+\
+	tests/sensor/basic_sensor.cpp \
+	tests/sensor/converter_sensor.cpp \
+	tests/sensor/function_pointer_sensor.cpp \
+	tests/sensor/mock_sensor.cpp \
+	tests/sensor/sensor_reader.cpp
