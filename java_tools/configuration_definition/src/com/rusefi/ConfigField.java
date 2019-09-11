@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false);
+    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false, null, -1);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\s([\\w\\d]+))?\\])?";
     private static final String namePattern = "[[\\w\\d\\s_]]+";
@@ -36,6 +36,8 @@ public class ConfigField {
     private final boolean isIterate;
     private final ReaderState state;
     private boolean fsioVisible;
+    private final String individualName;
+    private final int indexWithinArray;
 
     public ConfigField(ReaderState state,
                        String name,
@@ -45,8 +47,10 @@ public class ConfigField {
                        int arraySize,
                        String tsInfo,
                        boolean isIterate,
-                       boolean fsioVisible) {
+                       boolean fsioVisible, String individualName, int indexWithinArray) {
         this.fsioVisible = fsioVisible;
+        this.individualName = individualName;
+        this.indexWithinArray = indexWithinArray;
         Objects.requireNonNull(name, comment + " " + type);
         assertNoWhitespaces(name);
         this.name = name;
@@ -63,6 +67,19 @@ public class ConfigField {
         this.arraySize = arraySize;
         this.tsInfo = VariableRegistry.INSTANCE.applyVariables(tsInfo);
         this.isIterate = isIterate;
+    }
+
+    public String getCFieldName() {
+        return getIndividualName() == null ? getName() : getIndividualName() + "["
+                + (getIndexWithinArray() - 1) + "]";
+    }
+
+    public String getIndividualName() {
+        return individualName;
+    }
+
+    public int getIndexWithinArray() {
+        return indexWithinArray;
     }
 
     public boolean isBit() {
@@ -110,7 +127,7 @@ public class ConfigField {
 
 
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySize,
-                tsInfo, isIterate, isFsioVisible);
+                tsInfo, isIterate, isFsioVisible, null, -1);
         SystemOut.println("type " + type);
         SystemOut.println("name " + name);
         SystemOut.println("comment " + comment);

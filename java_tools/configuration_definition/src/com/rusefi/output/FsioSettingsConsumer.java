@@ -34,23 +34,24 @@ public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ConfigStructure structure) {
         if (state.stack.isEmpty()) {
-            handleFields(structure.tsFields, "");
+            handleFields(structure.tsFields, "", "");
         }
     }
 
-    private void handleFields(List<ConfigField> tsFields, String prefix) {
+    private void handleFields(List<ConfigField> tsFields, String prefix, String cFieldPrefix) {
 
         for (int i = 0; i < tsFields.size(); i++) {
             ConfigField cf = tsFields.get(i);
-            writeOneField(cf, prefix);
+            writeOneField(cf, prefix, cFieldPrefix);
         }
     }
 
-    private void writeOneField(ConfigField configField, String prefix) {
+    private void writeOneField(ConfigField configField, String prefix, String cNamePrefix) {
         ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
-            String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            handleFields(cs.tsFields, prefix + extraPrefix);
+            String extraPrefix = cs.withPrefix ? configField.getName() + "." : "";
+            String cFieldPrefix = cs.withPrefix ? configField.getCFieldName() + "." : "";
+            handleFields(cs.tsFields, prefix + extraPrefix, prefix + cFieldPrefix);
             return;
         }
 
@@ -58,10 +59,17 @@ public abstract class FsioSettingsConsumer implements ConfigurationConsumer {
 
             String nameWithPrefix = prefix + configField.getName();
 
-            enumDefinition.append("\tFSIO_SETTING_" + nameWithPrefix.toUpperCase() + " = " + currentIndex++ + ",\n");
+            String enumName = "FSIO_SETTING_" + nameWithPrefix.replaceAll("\\.", "_").toUpperCase();
+            enumDefinition.append("\t" +
+                    enumName + " = " + currentIndex++ + ",\n");
 
 
-            content.append(nameWithPrefix + "\n");
+            String cFieldName = cNamePrefix + configField.getCFieldName();
+
+
+            content.append("\tcase " + enumName + ":\n");
+            content.append("\t\treturn engineConfiguration->" + cFieldName + ";\n");
         }
     }
+
 }

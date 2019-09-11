@@ -21,6 +21,7 @@ java -DSystemOut.name=gen_config ^
  -c_defines        controllers\generated\rusefi_generated.h ^
  -c_destination    controllers\generated\engine_configuration_generated_structures.h ^
  -c_fsio_constants controllers\generated\fsio_enums_generated.def ^
+ -c_fsio_getters   controllers\generated\fsio_getters.def ^
  -java_destination ../java_console/models/src/com/rusefi/config/generated/Fields.java ^
  -romraider_destination ../java_console/rusefi.xml ^
  -skip build/config.gen
