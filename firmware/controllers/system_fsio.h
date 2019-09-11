@@ -13,8 +13,8 @@
 // Andrey Belomutskiy, (c) 2012-2017
 //
 
-// Human-readable: (fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting) | is_clt_broken
-#define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > and coolant fan_on_setting > | is_clt_broken |"
+// Human-readable: (fan and (coolant > cfg_fanOffTemperature)) | (coolant > cfg_fanOnTemperature) | is_clt_broken
+#define FAN_CONTROL_LOGIC "fan coolant cfg_fanOffTemperature > and coolant cfg_fanOnTemperature > | is_clt_broken |"
 
 // Human-readable: (time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
 #define FUEL_PUMP_LOGIC "time_since_boot startup_fuel_pump_duration < rpm 0 > |"
