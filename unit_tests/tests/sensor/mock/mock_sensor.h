@@ -4,17 +4,17 @@
 
 struct MockSensor final : public StoredValueSensor
 {
-    MockSensor(SensorType type) : StoredValueSensor(type)
-    {
-    }
+	MockSensor(SensorType type) : StoredValueSensor(type)
+	{
+	}
 
-    void Set(float value)
-    {
-        SetValidValue(value);
-    }
+	void Set(float value)
+	{
+		SetValidValue(value);
+	}
 
-    void Invalidate()
-    {
-        StoredValueSensor::Invalidate();
-    }
+	void Invalidate()
+	{
+		StoredValueSensor::Invalidate();
+	}
 };
