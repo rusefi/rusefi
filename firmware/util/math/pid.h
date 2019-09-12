@@ -87,6 +87,7 @@ private:
 /**
  * A PID implementation with a modified cascaded integrator-comb (CIC) filtering.
  * Used for incremental auto-IAC control. See autoIdle() in idle_thread.cpp
+ * See pid_cic.md.
  *
  * https://rusefi.com/forum/viewtopic.php?f=9&t=1315
  */
