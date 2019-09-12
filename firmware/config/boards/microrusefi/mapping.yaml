@@ -13,14 +13,14 @@ outputs:
   GPIOD_7: "14 - GP Out 5"
   GPIOD_6: "13 - GP Out 6"
 
-  # TLE8888 high current low side: VVT1 IN10 / OUT6
+  # TLE8888 high current low side: VVT1 TLE8888_IN10 / TLE8888_OUT6
   GPIOE_9:  "7 - Lowside 1"
-  # TLE8888 high current low side: VVT2 IN9 / OUT5
+  # TLE8888 high current low side: VVT2 TLE8888_IN9 / TLE8888_OUT5
   GPIOE_10: "3 - Lowside 2"
 
-  # TLE8888 half bridges (pushpull, lowside, or high-low)  IN? / OUT21
+  # TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
   GPIOE_8: "35 - GP Out 1"
-  # TLE8888 half bridges (pushpull, lowside, or high-low)  IN? / OUT22
+  # TLE8888 half bridges (pushpull, lowside, or high-low)  IN? / TLE8888_OUT22
   # this should work but it does not GPIOE_7: "34 - GP Out 2"
   TLE8888_PIN_22: "34 - GP Out 2"
   TLE8888_PIN_23: "33 - GP Out 3"
