@@ -1031,9 +1031,9 @@ tChargeMode_e tChargeMode;
 	etb_io etb2
 
 	pid_s idleTimingPid;See useIdleTimingPidControl
-	int16_t idleTimingPidWorkZone;The timing correction works only if RPM is close enough, otherwise the IAC correction works;"RPM",        1,     0,  0,    1000,  0
-	int16_t idleTimingPidDeadZone;If RPM is too perfect, let's leave the advance angle alone to avoid oscillation;"RPM",        1,     0,  0,    1000,  0
-	int16_t idlePidFalloffDeltaRpm;Added to the work zone for smooth correction falloff;"RPM",        1,     0,  0,    1000,  0
+	int16_t idleTimingPidWorkZone;+When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.;"RPM",        1,     0,  0,    1000,  0
+	int16_t idleTimingPidDeadZone;+If the RPM closer to target than this value, disable timing correction to prevent oscillation;"RPM",        1,     0,  0,    1000,  0
+	int16_t idlePidFalloffDeltaRpm;+Taper out idle timing control over this range as the engine leaves idle conditions;"RPM",        1,     0,  0,    1000,  0
 
 	int16_t tpsAccelFractionPeriod;+A delay in cycles between fuel-enrich. portions;"cycles",        1,     0,  0,    500,  0
 	float tpsAccelFractionDivisor;+A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef",        1,     0,  0,    100,  2
