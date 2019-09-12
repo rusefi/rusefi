@@ -39,6 +39,11 @@ public:
     static void SetMockValue(SensorType type, float value);
 
     /*
+     * Mock a value for a particular sensor, using the integer index.
+     */
+    static void SetMockValue(int type, float value);
+
+    /*
      * Reset mock for a particular sensor.
      */
     static void ResetMockValue(SensorType type);

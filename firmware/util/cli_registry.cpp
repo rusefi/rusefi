@@ -97,6 +97,10 @@ void addConsoleActionIIP(const char *token, VoidIntIntVoidPtr callback, void *pa
 	doAddAction(token, TWO_INTS_PARAMETER_P, (Void) callback, param);
 }
 
+void addConsoleActionIF(const char *token, VoidIntFloat callback) {
+	doAddAction(token, INT_FLOAT_PARAMETER, (Void) callback, NULL);
+}
+
 void addConsoleActionS(const char *token, VoidCharPtr callback) {
 	doAddAction(token, STRING_PARAMETER, (Void) callback, NULL);
 }
@@ -149,6 +153,7 @@ static int getParameterCount(action_type_e parameterType) {
 	case STRING2_PARAMETER_P:
 	case TWO_INTS_PARAMETER:
 	case TWO_INTS_PARAMETER_P:
+	case INT_FLOAT_PARAMETER:
 		return 2;
 	case STRING3_PARAMETER:
 		return 3;
@@ -394,13 +399,38 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 			print("invalid float [%s]\r\n", parameter);
 			return;
 		}
-if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
+	if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
 			VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
 			(*callbackS)(value1, value2);
 		} else {
 			VoidFloatFloatVoidPtr callbackS = (VoidFloatFloatVoidPtr) current->callback;
 			(*callbackS)(value1, value2, current->param);
 		}
+		return;
+	}
+
+	if (current->parameterType == INT_FLOAT_PARAMETER) {
+		int spaceIndex = findEndOfToken(parameter);
+		if (spaceIndex == -1)
+			return;
+		REPLACE_SPACES_WITH_ZERO;
+		int value1 = atoi(parameter);
+		if (absI(value1) == ERROR_CODE) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+			scheduleMsg(logging, "not an integer [%s]", parameter);
+#endif
+			return;
+		}
+		parameter += spaceIndex + 1;
+		float value2 = atoff(parameter);
+
+		if (cisnan(value2)) {
+			print("invalid float [%s]\r\n", parameter);
+			return;
+		}
+		
+		VoidIntFloat callbackS = (VoidIntFloat) current->callback;
+
 		return;
 	}
 
