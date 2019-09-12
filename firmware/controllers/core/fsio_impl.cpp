@@ -29,11 +29,6 @@
  */
 #define NO_PWM 0
 
-// see useFSIO12ForIdleOffset
-#define MAGIC_OFFSET_FOR_IDLE_OFFSET 12
-// see useFSIO13ForIdleMinValue
-#define MAGIC_OFFSET_FOR_IDLE_MIN_VALUE 13
-
 // see useFSIO15ForIdleRpmAdjustment
 #define MAGIC_OFFSET_FOR_IDLE_TARGET_RPM 14
 // see useFSIO16ForTimingAdjustment
@@ -612,7 +607,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 #endif
 }
 
-static void setFsioExpression(const char *indexStr, const char *quotedLine) {
+void setFsioExpression(const char *indexStr, const char *quotedLine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {

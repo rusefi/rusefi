@@ -9,6 +9,18 @@
 #include "advance_map.h"
 #include "tps.h"
 #include "pid.h"
+#include "fsio_impl.h"
+
+TEST(idle, fsioPidParameters) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+	// todo finish this unit test!
+	engineConfiguration->useFSIO12ForIdleOffset = true;
+	setFsioExpression(MAGIC_OFFSET_FOR_IDLE_OFFSET, "\"ac_on_switch cfg_idleRpmPid_offset cfg_idleRpmPid2_offset if");
+
+	engineConfiguration->useFSIO13ForIdleMinValue = true;
+	setFsioExpression(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE, "\"ac_on_switch cfg_idleRpmPid_minValue cfg_idleRpmPid2_minValue if");
+}
 
 TEST(idle, pid) {
 	print("******************************************* testPidController\r\n");
