@@ -176,7 +176,9 @@ void setBoardConfigurationOverrides(void) {
 	setupTle8888();
 	setupEtb();
 
-	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
+	// MRE has a special main relay control low side pin
+	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
+	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
 	// GPIOE_8: "35 - GP Out 1"
 	boardConfiguration->fuelPumpPin = GPIOE_8;
