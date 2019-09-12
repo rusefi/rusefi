@@ -25,7 +25,8 @@
 // Human-readable: coolant > 120
 #define TOO_HOT_LOGIC "coolant 120 >"
 
-// Human-readable: ac_on_switch & rpm > 850
+// Human-readable: ac_on_switch & rpm > 850 & time_since_ac_on_switch > 0.3
+// ac_on_switch rpm & 850 time_since_ac_on_switch & > 0.3 >
 #define AC_RELAY_LOGIC "ac_on_switch rpm & 850 >"
 // Combined RPM, CLT and VBATT warning light
 

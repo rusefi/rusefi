@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 22:56:58 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1569,10 +1569,10 @@ struct engine_configuration_s {
 	bool useFSIO4ForSeriousEngineWarning : 1;
 	/**
 	offset 1464 bit 29 */
-	bool unused_bit_1472_29 : 1;
+	bool useFSIO12ForIdleOffset : 1;
 	/**
 	offset 1464 bit 30 */
-	bool unused_bit_1472_30 : 1;
+	bool useFSIO13ForIdleMinValue : 1;
 	/**
 	 * offset 1468
 	 */
@@ -2557,7 +2557,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 4040
 	 */
-	int mainUnusedEnd[590];
+	pid_s idleRpmPid2;
+	/**
+	 * offset 4060
+	 */
+	int mainUnusedEnd[585];
 	/** total size 6400*/
 };
 
@@ -2820,4 +2824,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 22:56:58 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019

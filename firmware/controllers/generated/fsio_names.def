@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 18:41:30 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 static LENameOrdinalPair lefanOnTemperature(FSIO_SETTING_FANONTEMPERATURE, "cfg_fanOnTemperature");
@@ -22,3 +22,5 @@ static LENameOrdinalPair leauxPid4_offset(FSIO_SETTING_AUXPID4_OFFSET, "cfg_auxP
 static LENameOrdinalPair leauxPid4_minValue(FSIO_SETTING_AUXPID4_MINVALUE, "cfg_auxPid4_minValue");
 static LENameOrdinalPair leidleTimingPid_offset(FSIO_SETTING_IDLETIMINGPID_OFFSET, "cfg_idleTimingPid_offset");
 static LENameOrdinalPair leidleTimingPid_minValue(FSIO_SETTING_IDLETIMINGPID_MINVALUE, "cfg_idleTimingPid_minValue");
+static LENameOrdinalPair leidleRpmPid2_offset(FSIO_SETTING_IDLERPMPID2_OFFSET, "cfg_idleRpmPid2_offset");
+static LENameOrdinalPair leidleRpmPid2_minValue(FSIO_SETTING_IDLERPMPID2_MINVALUE, "cfg_idleRpmPid2_minValue");

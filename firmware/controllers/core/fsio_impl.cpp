@@ -5,6 +5,8 @@
  * set debug_mode 23
  * https://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
  *
+ * 'fsioinfo' command in console shows current state of FSIO - formulas and current value
+ *
  * @date Oct 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
@@ -26,6 +28,11 @@
  *
  */
 #define NO_PWM 0
+
+// see useFSIO12ForIdleOffset
+#define MAGIC_OFFSET_FOR_IDLE_OFFSET 12
+// see useFSIO13ForIdleMinValue
+#define MAGIC_OFFSET_FOR_IDLE_MIN_VALUE 13
 
 // see useFSIO15ForIdleRpmAdjustment
 #define MAGIC_OFFSET_FOR_IDLE_TARGET_RPM 14
@@ -50,7 +57,9 @@ static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
+// @returns boolean state of A/C toggle switch
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
+// @returns float number of seconds since last A/C toggle
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
@@ -496,10 +505,15 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 
+	if (engineConfiguration->useFSIO12ForIdleOffset) {
+		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_OFFSET, "idle offset", &ENGINE(fsioState.fsioIdleOffset) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	if (engineConfiguration->useFSIO13ForIdleMinValue) {
+		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE, "idle minValue", &ENGINE(fsioState.fsioIdleMinValue) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &ENGINE(fsioState.fsioIdleTargetRPMAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}

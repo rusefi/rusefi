@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 23:14:54 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	FSIO_SETTING_FANONTEMPERATURE = 1000,
@@ -22,3 +22,5 @@
 	FSIO_SETTING_AUXPID4_MINVALUE = 1018,
 	FSIO_SETTING_IDLETIMINGPID_OFFSET = 1019,
 	FSIO_SETTING_IDLETIMINGPID_MINVALUE = 1020,
+	FSIO_SETTING_IDLERPMPID2_OFFSET = 1021,
+	FSIO_SETTING_IDLERPMPID2_MINVALUE = 1022,

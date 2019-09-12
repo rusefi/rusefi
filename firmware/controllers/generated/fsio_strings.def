@@ -1,4 +1,4 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 19:17:01 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	case FSIO_SETTING_FANONTEMPERATURE:
@@ -43,3 +43,7 @@
 		return "cfg_idleTimingPid_offset";
 	case FSIO_SETTING_IDLETIMINGPID_MINVALUE:
 		return "cfg_idleTimingPid_minValue";
+	case FSIO_SETTING_IDLERPMPID2_OFFSET:
+		return "cfg_idleRpmPid2_offset";
+	case FSIO_SETTING_IDLERPMPID2_MINVALUE:
+		return "cfg_idleRpmPid2_minValue";
