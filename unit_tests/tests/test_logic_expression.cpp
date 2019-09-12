@@ -107,11 +107,15 @@ static void testExpression2(float selfValue, const char *line, float expected) {
 	testExpression2(selfValue, line, expected, engine);
 }
 
-static void testExpression(const char *line, float expected) {
-	testExpression2(0, line, expected);
+static void testExpression(const char *line, float expectedValue) {
+	testExpression2(0, line, expectedValue);
 }
 
-TEST(misc, testLogicExpressions) {
+TEST(fsio, testIfFunction) {
+	testExpression("1 22 33 if", 22);
+}
+
+TEST(fsio, testLogicExpressions) {
 	printf("*************************************************** testLogicExpressions\r\n");
 
 	testParsing();
