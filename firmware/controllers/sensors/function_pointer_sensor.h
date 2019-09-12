@@ -8,20 +8,20 @@
  */
 class FunctionPointerSensor final : public Sensor {
 public:
-    FunctionPointerSensor(SensorType type, float (*func)())
-        : Sensor(type)
-        , m_func(func)
+	FunctionPointerSensor(SensorType type, float (*func)())
+		: Sensor(type)
+		, m_func(func)
 	{
-    }
+	}
 
-    SensorResult Get() const final {
-        float result = m_func();
+	SensorResult Get() const final {
+		float result = m_func();
 
-        // TODO: valid = cisnan(result)
+		// TODO: valid = cisnan(result)
 
-        return { true, result };
-    }
+		return { true, result };
+	}
 
 private:
-    float(*m_func)();
+	float(*m_func)();
 };
