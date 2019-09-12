@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:58:30 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2475,17 +2475,17 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * The timing correction works only if RPM is close enough, otherwise the IAC correction works
+	 * When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.
 	 * offset 3988
 	 */
 	int16_t idleTimingPidWorkZone;
 	/**
-	 * If RPM is too perfect, let's leave the advance angle alone to avoid oscillation
+	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	 * offset 3990
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
-	 * Added to the work zone for smooth correction falloff
+	 * Taper out idle timing control over this range as the engine leaves idle conditions
 	 * offset 3992
 	 */
 	int16_t idlePidFalloffDeltaRpm;
@@ -2824,4 +2824,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:58:30 EDT 2019
