@@ -12,17 +12,14 @@
 EXTERN_ENGINE;
 
 // Wrapper to handle PASS_ENGINE_PARAMETER_SIGNATURE
-float getOilPressureLegacyWrapper()
-{
+float getOilPressureLegacyWrapper() {
 	return getOilPressureLegacy(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 FunctionPointerSensor oilpSensor(SensorType::OilPressure, &getOilPressureLegacyWrapper);
 
-void init_oil_pressure()
-{
-	if (!oilpSensor.Register())
-	{
+void init_oil_pressure() {
+	if (!oilpSensor.Register()) {
 		warning(OBD_Oil_Pressure_Sensor_Malfunction, "Duplicate oilp sensor registration, ignoring");
 	}
 }
