@@ -53,7 +53,8 @@ public:
 	float getP(void) const;
 	float getI(void) const;
 	float getD(void) const;
-	float getOffset(void) const;
+	virtual float getOffset(void) const;
+	virtual float getMinValue(void) const;
 	float getIntegration(void) const;
 	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
