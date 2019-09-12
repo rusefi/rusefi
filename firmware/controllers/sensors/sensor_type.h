@@ -8,6 +8,8 @@ enum class SensorType : uint8_t
     Clt,
     Iat,
 
+    OilPressure,
+
     // This is the "resolved" position, potentially composited out of the following two
     Tps1,
     // This is the first sensor

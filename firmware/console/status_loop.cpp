@@ -36,6 +36,7 @@
 
 #include "trigger_central.h"
 #include "allsensors.h"
+#include "sensor_reader.h"
 #include "io_pins.h"
 #include "efi_gpio.h"
 #include "mmc_card.h"
@@ -652,6 +653,8 @@ static LcdController lcdInstance;
 extern HIP9011 instance;
 #endif /* EFI_HIP_9011 */
 
+static SensorReader<SensorType::OilPressure> oilSensor(0.0f);
+
 #if EFI_TUNER_STUDIO
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -682,7 +685,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
-    tsOutputChannels->oilPressure = engine->sensors.oilPressure;
+    tsOutputChannels->oilPressure = oilSensor.GetOrDefault();
 
     tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 

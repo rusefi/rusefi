@@ -6,10 +6,8 @@
 #ifndef OIL_PRESSURE_H_
 #define OIL_PRESSURE_H_
 
-#include "global.h"
-#include "engine_configuration.h"
+#include "global_shared.h"
 
-float getOilPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasOilPressureSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getOilPressureLegacy(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #endif
