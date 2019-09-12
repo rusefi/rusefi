@@ -61,7 +61,29 @@ static bool mightResetPid = false;
 // Use new PID with CIC integrator
 PidCic idlePid;
 #else
-Pid idlePid;
+
+class PidWithOverrides : public Pid {
+public:
+	float getOffset() const override {
+#if EFI_FSIO && ! EFI_UNIT_TEST
+			if (engineConfiguration->useFSIO12ForIdleOffset) {
+				return ENGINE(fsioState.fsioIdleOffset);
+			}
+#endif /* EFI_FSIO */
+		return parameters->offset;
+	}
+
+	float getMinValue() const override {
+#if EFI_FSIO && ! EFI_UNIT_TEST
+			if (engineConfiguration->useFSIO13ForIdleMinValue) {
+				return ENGINE(fsioState.fsioIdleMinValue);
+			}
+#endif /* EFI_FSIO */
+		return parameters->minValue;
+	}
+};
+
+PidWithOverrides idlePid;
 #endif /* EFI_IDLE_INCREMENTAL_PID_CIC */
 
 // todo: extract interface for idle valve hardware, with solenoid and stepper implementations?
@@ -221,7 +243,6 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int targetRpm = getTargetRpmForIdleCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	efitick_t nowNt = getTimeNowNt();
-	// check if within the dead zone
 
 	float rpm;
 	if (CONFIG(useInstantRpmForIdle)) {
@@ -229,6 +250,8 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		rpm = GET_RPM();
 	}
+
+	// check if within the dead zone
 	if (absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
 		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
@@ -249,9 +272,9 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
 
+#if EFI_IDLE_INCREMENTAL_PID_CIC
 	percent_t tpsPos = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if EFI_IDLE_INCREMENTAL_PID_CIC
 	// Treat the 'newValue' as if it contains not an actual IAC position, but an incremental delta.
 	// So we add this delta to the base IAC position, with a smooth taper for TPS transients.
 	newValue = engine->engineState.idle.baseIdlePosition + interpolateClamped(0.0f, newValue, CONFIGB(idlePidDeactivationTpsThreshold), 0.0f, tpsPos);

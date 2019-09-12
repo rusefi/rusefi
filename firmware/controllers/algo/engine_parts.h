@@ -148,6 +148,9 @@ public:
 	float servoValues[SERVO_COUNT];
 	float fsioLastValue[FSIO_COMMAND_COUNT];
 
+	float fsioIdleOffset = 0;
+	float fsioIdleMinValue = 0;
+
 #if EFI_ENABLE_ENGINE_WARNING
 	/**
 	 * Shall we purposely miss on some cylinders in order to attract driver's attention to some problem

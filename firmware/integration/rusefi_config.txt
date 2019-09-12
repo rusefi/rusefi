@@ -737,8 +737,8 @@ bit hasFrequencyReportingMapSensor;
 bit useFSIO15ForIdleRpmAdjustment;
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
-bit unused_bit_1472_29;
-bit unused_bit_1472_30;
+bit useFSIO12ForIdleOffset;
+bit useFSIO13ForIdleMinValue;
 
 	adc_channel_e hipOutputChannel;
 	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
@@ -1056,7 +1056,8 @@ uint8_t[4] unusuedvref;
 uint8_t[4] unusuedsw;
 	int[3] alFIn;
 	uint8_t[4] unusedSpiPadding3;
-	int[590] mainUnusedEnd;
+	pid_s idleRpmPid2
+	int[585] mainUnusedEnd;
 	
 
 end_struct

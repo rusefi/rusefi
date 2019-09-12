@@ -68,7 +68,7 @@ public:
 	// todo: move this to pid_s one day
 	float iTermMin = -1000000.0;
 	float iTermMax =  1000000.0;
-private:
+protected:
 	pid_s *parameters;
 
 private:
