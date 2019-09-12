@@ -3,8 +3,7 @@
 #include "sensor_type.h"
 #include <cstddef>
 
-struct SensorResult
-{
+struct SensorResult {
     const bool Valid;
     const float Value;
 };
@@ -12,8 +11,7 @@ struct SensorResult
 // Fwd declare
 struct SensorRegistryEntry;
 
-class Sensor
-{
+class Sensor {
 public:
     // Register this sensor in the sensor registry.
     // Returns true if registration succeeded, or false if
@@ -50,10 +48,7 @@ public:
 
 protected:
     // Protected constructor - only subclasses call this
-    Sensor(SensorType type)
-        : m_type(type)
-    {
-    }
+    Sensor(SensorType type) : m_type(type) { }
 
 private:
     // Retrieve the current reading from the sensor.
@@ -66,14 +61,12 @@ private:
     SensorType m_type;
 
     // Get this sensor's index in the list
-    constexpr size_t GetIndex()
-    {
+    constexpr size_t GetIndex() {
         return GetIndex(m_type);
     }
 
     // Get the index in the list for a sensor of particular type
-    static constexpr size_t GetIndex(SensorType type)
-    {
+    static constexpr size_t GetIndex(SensorType type) {
         return static_cast<size_t>(type);
     }
 

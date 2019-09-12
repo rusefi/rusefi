@@ -6,17 +6,15 @@
  * to the new system.  This way, producers and consumers can be independently
  * updated to the new system, with sensors being usable either way for some time.
  */
-class FunctionPointerSensor final : public Sensor
-{
+class FunctionPointerSensor final : public Sensor {
 public:
     FunctionPointerSensor(SensorType type, float (*func)())
         : Sensor(type)
         , m_func(func)
-    {
+	{
     }
 
-    SensorResult Get() const final
-    {
+    SensorResult Get() const final {
         float result = m_func();
 
         // TODO: valid = cisnan(result)

@@ -2,8 +2,7 @@
 
 #include <cstdint>
 
-enum class SensorType : uint8_t
-{
+enum class SensorType : uint8_t {
     Invalid = 0,
     Clt,
     Iat,
