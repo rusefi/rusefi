@@ -505,7 +505,7 @@ static void configureInputs(void) {
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_FAST);
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
-	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
+	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_FAST);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
