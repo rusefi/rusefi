@@ -1,3 +1,11 @@
+/**
+ * @file    function_pointer_sensor.h
+ * @brief A sensor to provide a bridge from old getX()-style functions to the new sensor registry.
+ *
+ * @date September 12, 2019
+ * @author Matthew Kennedy, (c) 2019
+ */
+
 #pragma once
 
 #include "sensor.h"

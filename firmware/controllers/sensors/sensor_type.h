@@ -1,8 +1,20 @@
+/**
+ * @file    sensor_type.h
+ * @brief   Enumeration of sensors supported by the ECU.
+ *
+ * @date September 12, 2019
+ * @author Matthew Kennedy, (c) 2019
+ */
+
 #pragma once
 
-#include <cstdint>
+/**
+ **************************************
+ * SEE sensor.h ON HOW TO ADD NEW SENSOR TYPES
+ **************************************
+ */
 
-enum class SensorType : uint8_t {
+enum class SensorType : unsigned char {
 	Invalid = 0,
 	Clt,
 	Iat,

@@ -1,7 +1,30 @@
+/**
+ * @file    stored_value_sensor.h
+ * @brief Base class for a sensor that has its value asynchronously
+ * set, then later retrieved by a consumer.
+ *
+ * @date September 12, 2019
+ * @author Matthew Kennedy, (c) 2019
+ */
+
 #pragma once
 
 #include "sensor.h"
 
+/**
+ * @brief Base class for sensors that compute a value on one thread, and want
+ * to make it available to consumers asynchronously.
+ * 
+ * Common examples include sensors that have to do heavy lifting to produce
+ * a reading, and don't want to perform that conversion at the time of
+ * consumption.
+ * 
+ * To use this class, create a class for your sensor that inherits StoredValueSensor,
+ * and call Invalidate() and SetValidValue(float) as appropriate when readings are available
+ * (or known to be invalid) for your sensor.
+ * 
+ * Consumers will retrieve the last set (or invalidated) value.
+ */
 class StoredValueSensor : public Sensor {
 public:
 	SensorResult Get() const final {
