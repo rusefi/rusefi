@@ -68,32 +68,32 @@ public:
 	[[nodiscard]] bool Register();
 
 	// Remove all sensors from the sensor registry - tread carefully if you use this outside of a unit test
-	static void ResetRegistry();
+	static void resetRegistry();
 
 	/*
 	 * Static helper for sensor lookup
 	 */
-	static const Sensor* GetSensorOfType(SensorType type);
+	static const Sensor* getSensorOfType(SensorType type);
 
 	/*
 	 * Get a reading from the specified sensor.
 	 */
-	static SensorResult Get(SensorType type);
+	static SensorResult get(SensorType type);
 
 	/*
 	 * Mock a value for a particular sensor.
 	 */
-	static void SetMockValue(SensorType type, float value);
+	static void setMockValue(SensorType type, float value);
 
 	/*
 	 * Reset mock for a particular sensor.
 	 */
-	static void ResetMockValue(SensorType type);
+	static void resetMockValue(SensorType type);
 
 	/*
 	 * Reset mocking for all sensors.
 	 */
-	static void ResetAllMocks();
+	static void resetAllMocks();
 
 protected:
 	// Protected constructor - only subclasses call this
@@ -105,22 +105,22 @@ private:
 	// Override this in a particular sensor's implementation.  As reading sensors is in many hot paths,
 	// it is unwise to synchronously read the sensor or do anything otherwise costly here.  At the most,
 	// this should be field lookup and simple math.
-	virtual SensorResult Get() const = 0;
+	virtual SensorResult get() const = 0;
 
 	SensorType m_type;
 
 	// Get this sensor's index in the list
-	constexpr size_t GetIndex() {
-		return GetIndex(m_type);
+	constexpr size_t getIndex() {
+		return getIndex(m_type);
 	}
 
 	// Get the index in the list for a sensor of particular type
-	static constexpr size_t GetIndex(SensorType type) {
+	static constexpr size_t getIndex(SensorType type) {
 		return static_cast<size_t>(type);
 	}
 
 	/*
 	 * Static helper for sensor lookup
 	 */
-	static SensorRegistryEntry* GetEntryForType(SensorType type);
+	static SensorRegistryEntry* getEntryForType(SensorType type);
 };

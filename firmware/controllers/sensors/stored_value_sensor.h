@@ -27,7 +27,7 @@
  */
 class StoredValueSensor : public Sensor {
 public:
-	SensorResult Get() const final {
+	SensorResult get() const final {
 		bool valid = m_isValid;
 		float value = m_value;
 
@@ -38,12 +38,12 @@ protected:
 	StoredValueSensor(SensorType type) : Sensor(type) {}
 
 	// Invalidate the stored value.
-	void Invalidate() {
+	void invalidate() {
 		m_isValid = false;
 	}
 
 	// A new reading is available: set and validate a new value for the sensor.
-	void SetValidValue(float value) {
+	void setValidValue(float value) {
 		// Set value before valid - so we don't briefly have the valid bit set on an invalid value
 		m_value = value;
 		m_isValid = true;

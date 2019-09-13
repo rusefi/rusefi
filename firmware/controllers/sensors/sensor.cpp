@@ -14,7 +14,7 @@ static SensorRegistryEntry s_sensorRegistry[static_cast<size_t>(SensorType::Plac
 
 bool Sensor::Register() {
 	// Get a ref to where we should be
-	auto& entry = s_sensorRegistry[GetIndex()];
+	auto& entry = s_sensorRegistry[getIndex()];
 
 	// If there's somebody already here - a consumer tried to double-register a sensor
 	if (entry.sensor) {
@@ -22,12 +22,12 @@ bool Sensor::Register() {
 		return false;
 	} else {
 		// put ourselves in the registry
-		s_sensorRegistry[GetIndex()].sensor = this;
+		s_sensorRegistry[getIndex()].sensor = this;
 		return true;
 	}
 }
 
-/*static*/ void Sensor::ResetRegistry() {
+/*static*/ void Sensor::resetRegistry() {
 	constexpr size_t len = sizeof(s_sensorRegistry) / sizeof(s_sensorRegistry[0]);
 
 	// Clear all entries
@@ -39,23 +39,23 @@ bool Sensor::Register() {
 	}
 }
 
-/*static*/ SensorRegistryEntry* Sensor::GetEntryForType(SensorType type) {
-	size_t index = GetIndex(type);
+/*static*/ SensorRegistryEntry* Sensor::getEntryForType(SensorType type) {
+	size_t index = getIndex(type);
 	// Check that we didn't get garbage
-	if (index >= GetIndex(SensorType::PlaceholderLast)) {
+	if (index >= getIndex(SensorType::PlaceholderLast)) {
 		return nullptr;
 	}
 
 	return &s_sensorRegistry[index];
 }
 
-/*static*/ const Sensor* Sensor::GetSensorOfType(SensorType type) {
-	auto entry = GetEntryForType(type);
+/*static*/ const Sensor* Sensor::getSensorOfType(SensorType type) {
+	auto entry = getEntryForType(type);
 	return entry ? entry->sensor : nullptr;
 }
 
-/*static*/ SensorResult Sensor::Get(SensorType type) {
-	const auto entry = GetEntryForType(type);
+/*static*/ SensorResult Sensor::get(SensorType type) {
+	const auto entry = getEntryForType(type);
 
 	// Check if this is a valid sensor entry
 	if (!entry) {
@@ -72,15 +72,15 @@ bool Sensor::Register() {
 	const Sensor* s = entry->sensor;
 	if (s) {
 		// If we found the sensor, ask it for a result.
-		return s->Get();
+		return s->get();
 	}
 
 	// We've exhausted all valid ways to return something - sensor not found.
 	return { false, 0 };
 }
 
-/*static*/ void Sensor::SetMockValue(SensorType type, float value) {
-	auto entry = GetEntryForType(type);
+/*static*/ void Sensor::setMockValue(SensorType type, float value) {
+	auto entry = getEntryForType(type);
 
 	if (entry) {
 		entry->mockValue = value;
@@ -88,15 +88,15 @@ bool Sensor::Register() {
 	}
 }
 
-/*static*/ void Sensor::ResetMockValue(SensorType type) {
-	auto entry = GetEntryForType(type);
+/*static*/ void Sensor::resetMockValue(SensorType type) {
+	auto entry = getEntryForType(type);
 
 	if (entry) {
 		entry->useMock = false;
 	}
 }
 
-/*static*/ void Sensor::ResetAllMocks() {
+/*static*/ void Sensor::resetAllMocks() {
 	constexpr size_t len = sizeof(s_sensorRegistry) / sizeof(s_sensorRegistry[0]);
 
 	// Reset all mocks

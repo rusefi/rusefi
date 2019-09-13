@@ -20,16 +20,16 @@
  */
 class ConvertedSensor : public StoredValueSensor {
 public:
-	void PostRawValue(float inputValue) {
-		auto r = ConvertFromInputValue(inputValue);
+	void postRawValue(float inputValue) {
+		auto r = convertFromInputValue(inputValue);
 
 		// This has to happen so that we set the valid bit after
 		// the value is stored, to prevent the data race of reading
 		// an old invalid value
 		if (r.Valid) {
-			SetValidValue(r.Value);
+			setValidValue(r.Value);
 		} else {
-			Invalidate();
+			invalidate();
 		}
 	}
 
@@ -42,5 +42,5 @@ protected:
 	 * For example, this function might convert from a voltage to the pressure
 	 * represented by that voltage.
 	 */
-	virtual SensorResult ConvertFromInputValue(float inputValue) = 0;
+	virtual SensorResult convertFromInputValue(float inputValue) = 0;
 };

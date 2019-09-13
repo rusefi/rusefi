@@ -22,7 +22,7 @@ public:
 	{
 	}
 
-	SensorResult Get() const final {
+	SensorResult get() const final {
 		float result = m_func();
 
 		// TODO: valid = cisnan(result)

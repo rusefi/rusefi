@@ -21,9 +21,9 @@
  * <later>
  * 
  * // Returns the sensor value if valid, or 10.0 if invalid.
- * float currentSensorValue = mySensorReader.GetOrDefault();
+ * float currentSensorValue = mySensorReader.getOrDefault();
  * 
- * Simply calling the Get() method returns the full SensorResult, should
+ * Simply calling the get() method returns the full SensorResult, should
  * more complex logic be required in case of an invalid sensor reading.
  */
 template <SensorType TSensorType>
@@ -33,15 +33,15 @@ public:
 
 	SensorReader(sensorValueType defaultValue) : m_defaultValue(defaultValue) { }
 
-	SensorResult Get() const {
-		return Sensor::Get(TSensorType);
+	SensorResult get() const {
+		return Sensor::get(TSensorType);
 	}
 
 	// Get the sensor's reading, or a default value.
 	// Inteded for applications where a default may be used silently,
 	// while elsewhere in the world the failed sensor is otherwise handled.
-	sensorValueType GetOrDefault() const {
-		auto result = Get();
+	sensorValueType getOrDefault() const {
+		auto result = get();
 
 		if (result.Valid) {
 			return (sensorValueType)result.Value;
