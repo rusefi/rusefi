@@ -9,6 +9,8 @@
  * @date May 23, 2013
  * @author Andrey Belomutskiy, (c) 2012-2018
  *
+ * disable verbose_idle
+ *
  * This file is part of rusEfi - see http://rusefi.com
  *
  * rusEfi is free software; you can redistribute it and/or modify it under the terms of

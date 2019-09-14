@@ -267,6 +267,8 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			}
 
 			state.fsioLogics[i] = logic;
+		} else {
+			scheduleMsg(logger, "No pin - no value! %d", i);
 		}
 	}
 }
