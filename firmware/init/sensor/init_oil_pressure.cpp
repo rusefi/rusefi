@@ -19,6 +19,11 @@ float getOilPressureLegacyWrapper() {
 FunctionPointerSensor oilpSensor(SensorType::OilPressure, &getOilPressureLegacyWrapper);
 
 void init_oil_pressure() {
+	// Only register if we have a sensor
+	if (engineConfiguration->oilPressure.hwChannel == EFI_ADC_NONE) {
+		return;
+	}
+
 	if (!oilpSensor.Register()) {
 		warning(OBD_Oil_Pressure_Sensor_Malfunction, "Duplicate oilp sensor registration, ignoring");
 	}
