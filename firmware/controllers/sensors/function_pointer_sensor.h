@@ -1,3 +1,11 @@
+/**
+ * @file    function_pointer_sensor.h
+ * @brief A sensor to provide a bridge from old getX()-style functions to the new sensor registry.
+ *
+ * @date September 12, 2019
+ * @author Matthew Kennedy, (c) 2019
+ */
+
 #pragma once
 
 #include "sensor.h"
@@ -8,23 +16,21 @@
  * to the new system.  This way, producers and consumers can be independently
  * updated to the new system, with sensors being usable either way for some time.
  */
-class FunctionPointerSensor final : public Sensor
-{
+class FunctionPointerSensor final : public Sensor {
 public:
-    FunctionPointerSensor(SensorType type, float (*func)())
-        : Sensor(type)
-        , m_func(func)
-    {
-    }
+	FunctionPointerSensor(SensorType type, float (*func)())
+		: Sensor(type)
+		, m_func(func)
+	{
+	}
 
-    SensorResult Get() const final
-    {
-        float result = m_func();
-        bool valid = !cisnan(result);
+	SensorResult get() const final {
+		float result = m_func();
+		bool valid = !cisnan(result)
 
-        return { valid, result };
-    }
+		return { valid, result };
+	}
 
 private:
-    float(*m_func)();
+	float(*m_func)();
 };
