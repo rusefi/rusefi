@@ -26,7 +26,7 @@
 EXTERN_ENGINE;
 
 fuel_Map3D_t veMap("VE");
-fuel_Map3D_t ve2Map("VE2");
+fuel_Map3D_t veTpsMap("VE TPS");
 afr_Map3D_t afrMap("AFR");
 baroCorr_Map3D_t baroCorrMap("baro");
 
@@ -175,7 +175,6 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 //	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
 //	setLinearCurve(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
-//	ve2Map.setAll(0.81);
 
 	setRpmTableBin(config->afrRpmBins, FUEL_RPM_COUNT);
 	afrMap.setAll(14.7);
@@ -187,7 +186,7 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
-//	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
+	veTpsMap.init(config->veTable, engineConfiguration->ignitionTpsBins, config->veRpmBins);
 	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);
 	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
 	initMaf2Map();

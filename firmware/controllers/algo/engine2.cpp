@@ -24,6 +24,7 @@
 #endif
 
 extern fuel_Map3D_t veMap;
+extern fuel_Map3D_t veTpsMap;
 extern afr_Map3D_t afrMap;
 
 EXTERN_ENGINE
@@ -203,10 +204,11 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		 */
 		if (CONFIGB(useTPSBasedVeTable)) {
 			// todo: should we have 'veTpsMap' fuel_Map3D_t variable here?
-			currentRawVE = interpolate3d<float, float>(tps, CONFIG(ignitionTpsBins), IGN_TPS_COUNT, rpm, config->veRpmBins, FUEL_RPM_COUNT, veMap.pointers);
+			currentRawVE = veTpsMap.getValue(rpm, tps);
 		} else {
 			currentRawVE = veMap.getValue(rpm, map);
 		}
+
 		// get VE from the separate table for Idle
 		if (CONFIG(useSeparateVeForIdle)) {
 			float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe);

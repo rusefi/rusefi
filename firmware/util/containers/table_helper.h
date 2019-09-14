@@ -25,7 +25,7 @@ public:
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template <int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType, typename TStorageRatio = std::ratio<1>>
+template <int TRpmBins, int TLoadBins, typename vType, typename kType, typename TStorageRatio = std::ratio<1>>
 class Map3D : public ValueProvider3D {
 public:
 	explicit Map3D(const char *name) {
@@ -33,14 +33,14 @@ public:
 		memset(&pointers, 0, sizeof(pointers));
 	}
 
-	void init(vType table[RPM_BIN_SIZE][LOAD_BIN_SIZE],
-			  const kType loadBins[LOAD_BIN_SIZE],
-			  const kType rpmBins[RPM_BIN_SIZE]) {
+	void init(vType table[TRpmBins][TLoadBins],
+			  const kType (&loadBins)[TLoadBins],
+			  const kType (&rpmBins)[TRpmBins]) {
 		// this method cannot use logger because it's invoked before everything
 		// that's because this method needs to be invoked before initial configuration processing
 		// and initial configuration load is done prior to logging initialization
 
-		for (int k = 0; k < LOAD_BIN_SIZE; k++) {
+		for (int k = 0; k < TLoadBins; k++) {
 			pointers[k] = table[k];
 		}
 		initialized = true;
@@ -55,20 +55,19 @@ public:
 			return NAN;
 		}
 		// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-		return interpolate3d<vType, kType>(y, loadBins, LOAD_BIN_SIZE, xRpm, rpmBins, RPM_BIN_SIZE, pointers) /
+		return interpolate3d<vType, kType>(y, loadBins, TLoadBins, xRpm, rpmBins, TRpmBins, pointers) /
 			   GetStorageRatio();
 	}
 
 	void setAll(vType value) {
 		efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
-		for (int l = 0; l < LOAD_BIN_SIZE; l++) {
-			for (int r = 0; r < RPM_BIN_SIZE; r++) {
+	
+		for (int l = 0; l < TLoadBins; l++) {
+			for (int r = 0; r < TRpmBins; r++) {
 				pointers[l][r] = value * GetStorageRatio();
 			}
 		}
 	}
-
-	vType *pointers[LOAD_BIN_SIZE];
 
 	static constexpr float GetStorageRatio() {
 		return static_cast<float>(TStorageRatio::num) / TStorageRatio::den;
@@ -77,12 +76,13 @@ public:
 private:
 	const kType *loadBins = nullptr;
 	const kType *rpmBins = nullptr;
+	vType *pointers[TLoadBins];
 	bool initialized = false;
 	const char *name;
 };
 
 template <int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-void copy2DTable(const vType source[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType destination[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
+void copy2DTable(const vType (&source)[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType (&destination)[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
 	for (int k = 0; k < LOAD_BIN_SIZE; k++) {
 		for (int rpmIndex = 0; rpmIndex < RPM_BIN_SIZE; rpmIndex++) {
 			destination[k][rpmIndex] = source[k][rpmIndex];
