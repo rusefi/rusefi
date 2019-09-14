@@ -46,6 +46,7 @@ typedef enum {
 	// 12 cylinder
 	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 etc
 	FO_1_7_4_10_2_8_6_12_3_9_5_11 = 16, // lamborghini, typical rusEfi use-case
+	FO_1_12_5_8_3_10_6_7_2_11_4_9 = 18, // VAG W12
 
 	// max used = 18
 
