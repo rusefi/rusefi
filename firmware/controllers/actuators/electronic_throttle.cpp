@@ -100,7 +100,7 @@ static Pid tuneWorkingPid(&tuneWorkingPidSettings);
 static PID_AutoTune autoTune;
 
 static LoggingWithStorage logger("ETB");
-static pedal2tps_t pedal2tpsMap("Pedal2Tps", 1);
+static pedal2tps_t pedal2tpsMap("Pedal2Tps");
 
 EXTERN_ENGINE;
 
