@@ -104,6 +104,17 @@ bool Sensor::Register()
     }
 }
 
+/*static*/ void Sensor::SetMockValue(int type, float value)
+{
+	// bounds check
+	if (type <= 0 || type >= static_cast<int>(SensorType::PlaceholderLast))
+	{
+		return;
+	}
+
+	SetMockValue(static_cast<SensorType>(type), value);
+}
+
 /*static*/ void Sensor::ResetMockValue(SensorType type)
 {
     auto entry = GetEntryForType(type);

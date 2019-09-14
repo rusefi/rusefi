@@ -429,7 +429,8 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 			return;
 		}
 		
-		VoidIntFloat callbackS = (VoidIntFloat) current->callback;
+		VoidIntFloat callback = (VoidIntFloat) current->callback;
+		callback(value1, value2);
 
 		return;
 	}

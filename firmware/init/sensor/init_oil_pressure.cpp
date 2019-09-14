@@ -18,7 +18,7 @@ float getOilPressureLegacyWrapper() {
 
 FunctionPointerSensor oilpSensor(SensorType::OilPressure, &getOilPressureLegacyWrapper);
 
-void init_oil_pressure() {
+void initOilPressure() {
 	// Only register if we have a sensor
 	if (engineConfiguration->oilPressure.hwChannel == EFI_ADC_NONE) {
 		return;

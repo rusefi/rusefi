@@ -2,19 +2,19 @@
 #include "cli_registry.h"
 #include "sensor.h"
 
-void init_oil_pressure();
+void initOilPressure();
 
-void init_sensor_cli();
+void initSensorCli();
 
-void init_sensors() {
+void initSensors() {
 	// aux sensors
-	init_oil_pressure();
+	initOilPressure();
 
 	// Init CLI functionality for sensors (mocking)
-	init_sensor_cli();
+	initSensorCli();
 }
 
-void init_sensor_cli() {
+void initSensorCli() {
 	addConsoleActionIF("set_sensor_mock", Sensor::SetMockValue);
 	addConsoleAction("reset_sensor_mocks", Sensor::ResetAllMocks);
 }

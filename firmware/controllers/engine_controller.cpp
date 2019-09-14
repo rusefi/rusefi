@@ -76,6 +76,7 @@
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
+#include "init.h"
 
 #include "pwm_tester.h"
 #include "pwm_generator.h"
@@ -91,6 +92,7 @@
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	initSensors();
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_FSIO
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
@@ -793,7 +795,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 // help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
 // linking process which is the way to raise the alarm
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 19000
+#define RAM_UNUSED_SIZE 190
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 4600
