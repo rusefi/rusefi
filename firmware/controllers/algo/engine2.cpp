@@ -203,7 +203,6 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 		 */
 		if (CONFIGB(useTPSBasedVeTable)) {
-			// todo: should we have 'veTpsMap' fuel_Map3D_t variable here?
 			currentRawVE = veTpsMap.getValue(rpm, tps);
 		} else {
 			currentRawVE = veMap.getValue(rpm, map);
