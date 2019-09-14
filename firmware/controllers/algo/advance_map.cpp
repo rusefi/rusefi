@@ -35,8 +35,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 static ign_Map3D_t advanceMap("advance");
-// This coeff in ctor parameter is sufficient for int16<->float conversion!
-static ign_tps_Map3D_t advanceTpsMap("advanceTps", 1.0 / ADVANCE_TPS_STORAGE_MULT);
+static ign_tps_Map3D_t advanceTpsMap("advanceTps");
 static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
 
 // Init PID later (make it compatible with unit-tests)

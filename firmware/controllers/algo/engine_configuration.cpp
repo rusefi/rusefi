@@ -209,7 +209,7 @@ void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
 void setAfrMap(afr_table_t table, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			table[l][rpmIndex] = (int)(value * AFR_STORAGE_MULT);
+			table[l][rpmIndex] = (int)(value * afr_Map3D_t::GetStorageRatio());
 		}
 	}
 }
@@ -1363,7 +1363,7 @@ void copyTargetAfrTable(fuel_table_t const source, afr_table_t destination) {
 	// todo: extract a template!
 	for (int loadIndex = 0; loadIndex < FUEL_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < FUEL_RPM_COUNT; rpmIndex++) {
-			destination[loadIndex][rpmIndex] = AFR_STORAGE_MULT * source[loadIndex][rpmIndex];
+			destination[loadIndex][rpmIndex] = source[loadIndex][rpmIndex] * afr_Map3D_t::GetStorageRatio();
 		}
 	}
 }
