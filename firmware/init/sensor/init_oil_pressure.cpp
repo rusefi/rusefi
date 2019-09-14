@@ -15,8 +15,13 @@ void initOilPressure() {
 
 	oil_pressure_config_s *sensorCfg = &CONFIG(oilPressure);
 
-	// Limit to max given pressure
-	oilpSensor.configure(sensorCfg->v1, sensorCfg->value1, sensorCfg->v2, sensorCfg->value2, 0, sensorCfg->value2);
+	float val1 = sensorCfg->value1;
+	float val2 = sensorCfg->value2;
+
+	// Limit to max given pressure - val1 or val2 could be larger
+	float greaterOutput = val1 > val2 ? val1 : val2;
+
+	oilpSensor.configure(sensorCfg->v1, val1, sensorCfg->v2, val2, 0, greaterOutput);
 
 	// Subscribe the sensor to ADC
 
