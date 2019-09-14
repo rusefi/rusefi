@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.rusefi.ui.StatusWindow;
+import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class EraseChip {
     private static final String FLASH_SIZE = "0x0100000";
     private static final String ERASE_COMMAND_SUFFIX = " -c init -c targets -c \"halt\" -c \"flash erase_address 0x08000000 " + FLASH_SIZE + "\" -c shutdown";
 
-    private final JButton button = new JButton("ST-LINK Erase Chip");
+    private final JButton button = new JButton("ST-LINK Erase Chip", UiUtils.loadIcon("/com/rusefi/erase.png"));
     private StatusWindow wnd = new StatusWindow();
 
     public EraseChip() {

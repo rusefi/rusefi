@@ -36,26 +36,24 @@ public class FirmwareFlasher {
 
     private final JButton button;
     private String fileName;
-    private StatusWindow wnd = new StatusWindow();
 
     public FirmwareFlasher(String fileName, String buttonTest, String tooltip) {
         this.fileName = fileName;
         button = new JButton(buttonTest);
         button.setToolTipText(tooltip);
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                int dialogResult = JOptionPane.showConfirmDialog(button, "Do you really want to update firmware? Please disconnect vehicle battery before erasing.",
-                        "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
-                if (dialogResult != JOptionPane.YES_OPTION)
-                    return;
+        button.addActionListener(event -> doUpdateFirmware(fileName, button));
+    }
 
+    public static void doUpdateFirmware(String fileName, JComponent component) {
+        StatusWindow wnd = new StatusWindow();
+        int dialogResult = JOptionPane.showConfirmDialog(component, "Do you really want to update firmware? Please disconnect vehicle battery before erasing.",
+                "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
+        if (dialogResult != JOptionPane.YES_OPTION)
+            return;
 
-                wnd.showFrame(TITLE);
+        wnd.showFrame(TITLE);
 
-                ExecHelper.submitAction(() -> doFlashFirmware(), getClass() + " extProcessThread");
-            }
-        });
+        ExecHelper.submitAction(() -> doFlashFirmware(wnd, fileName), FirmwareFlasher.class + " extProcessThread");
     }
 
     public static String getOpenocdCommand() {
@@ -69,7 +67,7 @@ public class FirmwareFlasher {
                 OPENOCD_EXE, wnd);
     }
 
-    private void doFlashFirmware() {
+    private static void doFlashFirmware(StatusWindow wnd, String fileName) {
         if (!new File(fileName).exists()) {
             wnd.appendMsg(fileName + " not found, cannot proceed !!!");
             wnd.setStatus("ERROR");
