@@ -7,6 +7,7 @@ import com.rusefi.maintenance.*;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
@@ -40,6 +41,7 @@ public class StartupFrame {
     private static final String LOGO = "logo.gif";
     public static final String LINK_TEXT = "rusEfi (c) 2012-2019";
     private static final String URI = "http://rusefi.com/?java_console";
+    // private static final int RUSEFI_ORANGE = 0xff7d03;
 
     private final JFrame frame;
     private final JPanel connectPanel = new JPanel(new FlowLayout());
@@ -50,8 +52,8 @@ public class StartupFrame {
     private boolean isFirstTimeApplyingPorts = true;
     private JPanel leftPanel = new JPanel(new VerticalFlowLayout());
 
-    private JPanel realHardwarePanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.LEADING, 5, 10));
-    private JPanel miscPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TRAILING)) {
+    private JPanel realHardwarePanel = new JPanel(new MigLayout());
+    private JPanel miscPanel = new JPanel(new MigLayout()) {
         @Override
         public Dimension getPreferredSize() {
             // want miscPanel and realHardwarePanel to be the same width
@@ -104,11 +106,11 @@ public class StartupFrame {
         comboSpeeds.setToolTipText("For 'STMicroelectronics Virtual COM Port' device any speed setting would work the same");
         connectPanel.add(comboSpeeds);
 
-        final JButton connect = new JButton("Connect");
-        connect.setBackground(new Color(0xff7d03)); // custom orange
-        setToolTip(connect, "Connect to real hardware");
-        connectPanel.add(connect);
-        connect.addActionListener(new ActionListener() {
+        final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
+        //connectButton.setBackground(new Color(RUSEFI_ORANGE)); // custom orange
+        setToolTip(connectButton, "Connect to real hardware");
+        connectPanel.add(connectButton);
+        connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PortHolder.BAUD_RATE = Integer.parseInt((String) comboSpeeds.getSelectedItem());
@@ -131,23 +133,29 @@ public class StartupFrame {
             JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             topButtons.add(createShowDeviceManagerButton());
             topButtons.add(DriverInstall.createButton());
-            realHardwarePanel.add(topButtons);
+            realHardwarePanel.add(topButtons, "right, wrap");
         }
-        realHardwarePanel.add(connectPanel);
-        realHardwarePanel.add(noPortsMessage);
+        realHardwarePanel.add(connectPanel, "right, wrap");
+        realHardwarePanel.add(noPortsMessage, "right, wrap");
         installMessage(noPortsMessage, "Check you cables. Check your drivers. Do you want to start simulator maybe?");
 
         if (FileLog.isWindows()) {
-            realHardwarePanel.add(new HorizontalLine());
-            realHardwarePanel.add(new DfuFlasher(comboPorts).getAutoButton());
-            realHardwarePanel.add(new DfuFlasher(comboPorts).getManualButton());
+            realHardwarePanel.add(new HorizontalLine(), "right, wrap");
+
+            ProgramSelector selector = new ProgramSelector(comboPorts);
+            realHardwarePanel.add(selector.getControl(), "right, wrap");
+
+
+//            realHardwarePanel.add(new DfuFlasher(comboPorts).getAutoButton());
+//            realHardwarePanel.add(new DfuFlasher(comboPorts).getManualButton());
             // for F7 builds we just build one file at the moment
-            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
+//            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
             if (new File(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE).exists()) {
                 // 407 build
-                realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "ST-LINK Program Firmware/NoAsserts", "Please only use this version if you know that you need this version").getButton());
+                FirmwareFlasher firmwareFlasher = new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "ST-LINK Program Firmware/NoAsserts", "Please only use this version if you know that you need this version");
+                realHardwarePanel.add(firmwareFlasher.getButton(), "right, wrap");
             }
-            realHardwarePanel.add(new EraseChip().getButton());
+            realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
         }
 
         SerialPortScanner.INSTANCE.listeners.add(new SerialPortScanner.Listener() {
@@ -184,8 +192,8 @@ public class StartupFrame {
             }
         });
 
-        miscPanel.add(buttonLogViewer);
-        miscPanel.add(new HorizontalLine());
+        miscPanel.add(buttonLogViewer, "wrap");
+        miscPanel.add(new HorizontalLine(), "wrap");
 
         miscPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
