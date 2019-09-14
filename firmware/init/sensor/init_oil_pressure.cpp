@@ -1,13 +1,13 @@
 
+#include "error_handling.h"
 #include "function_pointer_sensor.h"
 #include "oil_pressure.h"
-#include "error_handling.h"
 
-#include "global.h"
-#include "os_access.h"
-#include "interpolation.h"
 #include "analog_input.h"
 #include "engine.h"
+#include "global.h"
+#include "interpolation.h"
+#include "os_access.h"
 
 EXTERN_ENGINE;
 

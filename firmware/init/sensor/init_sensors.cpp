@@ -1,5 +1,5 @@
-#include "init.h"
 #include "cli_registry.h"
+#include "init.h"
 #include "sensor.h"
 
 void initOilPressure();
