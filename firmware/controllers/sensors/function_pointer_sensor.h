@@ -26,7 +26,7 @@ public:
 
 	SensorResult get() const final {
 		float result = m_func();
-		bool valid = !cisnan(result)
+		bool valid = !cisnan(result);
 
 		return { valid, result };
 	}
