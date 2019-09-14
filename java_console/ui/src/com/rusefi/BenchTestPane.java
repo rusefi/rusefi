@@ -16,6 +16,7 @@ public class BenchTestPane {
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         content.add(createFanTest());
+        content.add(createAcRelayTest());
         content.add(createFuelPumpTest());
         content.add(createSparkTest());
         content.add(createInjectorTest());
@@ -64,6 +65,11 @@ public class BenchTestPane {
 
     private Component createFanTest() {
         CommandControl panel = new FixedCommandControl("Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
+        return panel.getContent();
+    }
+
+    private Component createAcRelayTest() {
+        CommandControl panel = new FixedCommandControl("A/C Compressor Relay", ".jpg", TEST, "acrelaybench");
         return panel.getContent();
     }
 
