@@ -187,6 +187,10 @@ void fuelPumpBenchExt(const char *durationMs) {
 	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, CONFIGB(fuelPumpPin));
 }
 
+void acRelayBench(void) {
+	pinbench("0", "1000", "100", "1", &enginePins.acRelay, CONFIGB(acRelayPin));
+}
+
 void fuelPumpBench(void) {
 	fuelPumpBenchExt("3000");
 }
@@ -281,6 +285,9 @@ static void handleCommandX14(uint16_t index) {
 		requestTLE8888initialization();
 #endif
 		return;
+	case 9:
+		acRelayBench();
+		return;
 
 	}
 
@@ -341,6 +348,7 @@ void initInjectorCentral(Logging *sharedLogger) {
 	addConsoleActionII("injector", setInjectorEnabled);
 
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
+	addConsoleAction("acrelaybench", acRelayBench);
 	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
 	addConsoleAction("fanbench", fanBench);
 	addConsoleActionS("fanbench2", fanBenchExt);
