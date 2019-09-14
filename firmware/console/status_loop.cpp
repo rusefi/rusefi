@@ -685,7 +685,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
     tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
-    tsOutputChannels->oilPressure = oilSensor.GetOrDefault();
+    tsOutputChannels->oilPressure = oilSensor.getOrDefault();
 
     tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 

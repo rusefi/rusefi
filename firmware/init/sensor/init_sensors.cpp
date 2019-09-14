@@ -15,6 +15,6 @@ void initSensors() {
 }
 
 void initSensorCli() {
-	addConsoleActionIF("set_sensor_mock", Sensor::SetMockValue);
-	addConsoleAction("reset_sensor_mocks", Sensor::ResetAllMocks);
+	addConsoleActionIF("set_sensor_mock", Sensor::setMockValue);
+	addConsoleAction("reset_sensor_mocks", Sensor::resetAllMocks);
 }

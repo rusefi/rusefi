@@ -96,7 +96,7 @@ bool Sensor::Register() {
 		return;
 	}
 
-	SetMockValue(static_cast<SensorType>(type), value);
+	setMockValue(static_cast<SensorType>(type), value);
 }
 
 /*static*/ void Sensor::resetMockValue(SensorType type) {
