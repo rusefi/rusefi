@@ -16,10 +16,15 @@
 EXTERN_CONFIG;
 
 /**
+ * 1994, 1995 NA
+ * Note that ODB-II car have different wiring!
+ *
+ * https://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Miata_1994
+ *
  * See also setMiataNA_1_6_Configuration
  */
 void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// blue jumper wire to W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
@@ -42,9 +47,6 @@ void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->injectionPins[3] = GPIOB_7; // #4 pin 3Z
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-
-	miataNAcommon(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 }
 
 
