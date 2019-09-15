@@ -113,6 +113,7 @@ void EnginePins::unregisterPins() {
 #if EFI_PROD_CODE
 	fuelPumpRelay.unregisterOutput(activeConfiguration.bc.fuelPumpPin, engineConfiguration->bc.fuelPumpPin);
 	fanRelay.unregisterOutput(activeConfiguration.bc.fanPin, engineConfiguration->bc.fanPin);
+	acRelay.unregisterOutput(activeConfiguration.bc.acRelayPin, engineConfiguration->bc.acRelayPin);
 	hipCs.unregisterOutput(activeConfiguration.bc.hip9011CsPin, engineConfiguration->bc.hip9011CsPin);
 	triggerDecoderErrorPin.unregisterOutput(activeConfiguration.bc.triggerErrorPin,
 		engineConfiguration->bc.triggerErrorPin);
