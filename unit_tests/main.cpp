@@ -6,19 +6,12 @@
  */
 
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "global.h"
-#include "test_interpolation_3d.h"
-#include "test_find_index.h"
 
 #include "engine_configuration.h"
 
-#include "afm2mapConverter.h"
-#include "test_signal_executor.h"
-#include "trigger_central.h"
-#include "map_resize.h"
-#include "engine_math.h"
 #include "engine_test_helper.h"
 #include "gtest/gtest.h"
 

@@ -33,9 +33,7 @@ public:
 		memset(&pointers, 0, sizeof(pointers));
 	}
 
-	void init(vType table[TRpmBins][TLoadBins],
-			  const kType (&loadBins)[TLoadBins],
-			  const kType (&rpmBins)[TRpmBins]) {
+	void init(vType table[TRpmBins][TLoadBins], const kType (&loadBins)[TLoadBins], const kType (&rpmBins)[TRpmBins]) {
 		// this method cannot use logger because it's invoked before everything
 		// that's because this method needs to be invoked before initial configuration processing
 		// and initial configuration load is done prior to logging initialization
@@ -55,13 +53,12 @@ public:
 			return NAN;
 		}
 		// todo: we have a bit of a mess: in TunerStudio, RPM is X-axis
-		return interpolate3d<vType, kType>(y, loadBins, TLoadBins, xRpm, rpmBins, TRpmBins, pointers) /
-			   GetStorageRatio();
+		return interpolate3d<TRpmBins, TLoadBins>(y, loadBins, xRpm, rpmBins, pointers) / GetStorageRatio();
 	}
 
 	void setAll(vType value) {
 		efiAssertVoid(CUSTOM_ERR_6573, initialized, "map not initialized");
-	
+
 		for (int l = 0; l < TLoadBins; l++) {
 			for (int r = 0; r < TRpmBins; r++) {
 				pointers[l][r] = value * GetStorageRatio();
@@ -73,16 +70,19 @@ public:
 		return static_cast<float>(TStorageRatio::num) / TStorageRatio::den;
 	}
 
+	vType *pointers[TLoadBins];
+
 private:
 	const kType *loadBins = nullptr;
 	const kType *rpmBins = nullptr;
-	vType *pointers[TLoadBins];
+
 	bool initialized = false;
 	const char *name;
 };
 
 template <int RPM_BIN_SIZE, int LOAD_BIN_SIZE, typename vType, typename kType>
-void copy2DTable(const vType (&source)[LOAD_BIN_SIZE][RPM_BIN_SIZE], vType (&destination)[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
+void copy2DTable(const vType (&source)[LOAD_BIN_SIZE][RPM_BIN_SIZE],
+				 vType (&destination)[LOAD_BIN_SIZE][RPM_BIN_SIZE]) {
 	for (int k = 0; k < LOAD_BIN_SIZE; k++) {
 		for (int rpmIndex = 0; rpmIndex < RPM_BIN_SIZE; rpmIndex++) {
 			destination[k][rpmIndex] = source[k][rpmIndex];

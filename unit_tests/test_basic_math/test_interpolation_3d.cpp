@@ -25,7 +25,7 @@ float *map[5] = { map0, map1, map2, map3, map4 };
 
 
 static float getValue(float rpm, float maf) {
-	return interpolate3d(rpm, rpmBins, 5, maf, mafBins, 4, map);
+	return interpolate3d<5, 4>(rpm, rpmBins, maf, mafBins, map);
 }
 
 static void newTestToComfirmInterpolation() {

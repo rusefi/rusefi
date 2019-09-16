@@ -100,8 +100,8 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
 /**
  * @brief	Two-dimensional table lookup with linear interpolation
  */
-template<typename vType, typename kType>
-float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kType yBin[], int yBinSize, vType* map[]) {
+template<int TXSize, int TYSize, typename vType, typename kType>
+float interpolate3d(float x, const kType xBin[], float y, const kType yBin[], vType* map[]) {
 	if (cisnan(x)) {
 		warning(CUSTOM_INTEPOLATE_ERROR_3, "%.2f: x is NaN in interpolate3d", x);
 		return NAN;
@@ -111,12 +111,12 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 		return NAN;
 	}
 
-	int xIndex = findIndexMsgExt<kType>("x", xBin, xBinSize, x);
+	int xIndex = findIndexMsgExt<kType>("x", xBin, TXSize, x);
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging())
 		printf("X index=%d\r\n", xIndex);
 #endif /* DEBUG_INTERPOLATION */
-	int yIndex = findIndexMsgExt<kType>("y", yBin, yBinSize, y);
+	int yIndex = findIndexMsgExt<kType>("y", yBin, TYSize, y);
 	if (xIndex < 0 && yIndex < 0) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
@@ -130,7 +130,7 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 		if (needInterpolationLogging())
 			printf("X is smaller than smallest cell in table: %dr\n", xIndex);
 #endif /* DEBUG_INTERPOLATION */
-		if (yIndex == yBinSize - 1)
+		if (yIndex == TYSize - 1)
 			return map[0][yIndex];
 		kType keyMin = yBin[yIndex];
 		kType keyMax = yBin[yIndex + 1];
@@ -145,7 +145,7 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 		if (needInterpolationLogging())
 			printf("Y is smaller than smallest cell in table: %d\r\n", yIndex);
 #endif /* DEBUG_INTERPOLATION */
-		if (xIndex == xBinSize - 1)
+		if (xIndex == TXSize - 1)
 			return map[xIndex][0];
 		kType key1 = xBin[xIndex];
 		kType key2 = xBin[xIndex + 1];
@@ -155,15 +155,15 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 		return interpolateMsg("out3d", key1, value1, key2, value2, x);
 	}
 
-	if (xIndex == xBinSize - 1 && yIndex == yBinSize - 1) {
+	if (xIndex == TXSize - 1 && yIndex == TYSize - 1) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("X and Y are larger than largest cell in table: %d %d\r\n", xIndex, yIndex);
 #endif /* DEBUG_INTERPOLATION */
-		return map[xBinSize - 1][yBinSize - 1];
+		return map[TXSize - 1][TYSize - 1];
 	}
 
-	if (xIndex == xBinSize - 1) {
+	if (xIndex == TXSize - 1) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("TODO BETTER LOGGING x overflow %d\r\n", yIndex);
@@ -178,7 +178,7 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 		return interpolateMsg("out3d", key1, value1, key2, value2, y);
 	}
 
-	if (yIndex == yBinSize - 1) {
+	if (yIndex == TYSize - 1) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging())
 			printf("Y is larger than largest cell in table: %d\r\n", yIndex);
@@ -227,8 +227,7 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 	}
 #endif /* DEBUG_INTERPOLATION */
 
-	float result = interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
-	return result;
+	return interpolateMsg("3d", keyMin, keyMinValue, keyMax, keyMaxValue, y);
 }
 void setCurveValue(float bins[], float values[], int size, float key, float value);
 void initInterpolation(Logging *sharedLogger);
