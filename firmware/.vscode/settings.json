@@ -1,4 +1,12 @@
 {
 	"editor.detectIndentation": false,
-	"editor.insertSpaces": false
+	"editor.insertSpaces": false,
+	"files.exclude": {
+		".dep": true,
+		"build/lst": true
+	},
+	"search.exclude": {
+		"**/.dep": true,
+		"build/lst/**": true
+	},
 }
