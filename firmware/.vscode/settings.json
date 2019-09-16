@@ -3,10 +3,12 @@
 	"editor.insertSpaces": false,
 	"files.exclude": {
 		".dep": true,
-		"build/lst": true
+		"build/lst": true,
+		"build/obj": true,
 	},
 	"search.exclude": {
-		"**/.dep": true,
-		"build/lst/**": true
+		".dep": true,
+		"build/lst": true,
+		"build/obj": true,
 	},
 }
