@@ -141,8 +141,8 @@ static void setupDefaultSensorInputs() {
 	// EFI_ADC_10: "27 - AN volt 1"
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
-	// EFI_ADC_2: "24 - AN temp 3"
-	engineConfiguration->afr.hwChannel = EFI_ADC_2;
+	// EFI_ADC_14: "32 - AN volt 6"
+	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 	// clt = "18 - AN temp 1"
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
