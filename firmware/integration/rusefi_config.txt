@@ -147,10 +147,9 @@ custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFF
 custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
-! todo: explicitly document which use-cases need 10e-7 parameters 
-	float pFactor;;"",      1,      0,       -10000, 10000,      7
-	float iFactor;;"",      1,      0,       -10000, 10000,      7
-	float dFactor;;"",      1,      0,       -10000, 10000,      7
+	float pFactor;;"",      1,      0,       -10000, 10000,      4
+	float iFactor;;"",      1,      0,       -10000, 10000,      4
+	float dFactor;;"",      1,      0,       -10000, 10000,      4
 	int16_t fsio_visible offset;Linear addition to PID logic;"",      1,      0,       -1000, 1000,      0
 	int16_t periodMs;PID dTime;"ms",      1,      0,       0, 3000,      0
 	int16_t fsio_visible minValue;Output min value;"",        1,     0,  -30000,    30000.0,  0
