@@ -1560,7 +1560,6 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 ;			Sensor Inputs
 	dialog = otherSensorInputs,					"Other Sensor Inputs"
 		field = "Fuel level", 						fuelLevelSensor
-		field = "Flex fuel",							flexFuelSensor
 		field = "Clutch down switch",					clutchDownPin
 		field = "Clutch down inverted",					clutchDownPinInverted
 		field = "Clutch up switch",						clutchUpPin

@@ -982,7 +982,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 
-	brain_input_pin_e flexFuelSensor;+This is the processor pin your Flex-fuel sensor is connected to, this is a non standard item so the pin will always be user defined. 
+	uint8_t unusedFlexFuelSensor;
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
