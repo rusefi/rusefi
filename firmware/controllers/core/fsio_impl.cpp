@@ -257,19 +257,13 @@ void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_CONFIG_PARAMET
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	userPool.reset();
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e brainPin = CONFIGB(fsioOutputPins)[i];
-
-		if (brainPin != GPIO_UNASSIGNED) {
-			const char *formula = config->fsioFormulas[i];
-			LEElement *logic = userPool.parseExpression(formula);
-			if (logic == NULL) {
-				warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
-			}
-
-			state.fsioLogics[i] = logic;
-		} else {
-			scheduleMsg(logger, "No pin - no value! %d", i);
+		const char *formula = config->fsioFormulas[i];
+		LEElement *logic = userPool.parseExpression(formula);
+		if (logic == NULL) {
+			warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
 		}
+
+		state.fsioLogics[i] = logic;
 	}
 }
 
