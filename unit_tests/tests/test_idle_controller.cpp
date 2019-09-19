@@ -11,15 +11,20 @@
 #include "pid.h"
 #include "fsio_impl.h"
 
+#define Q(x) #x
+#define QUOTE(x) Q(x)
+
 TEST(idle, fsioPidParameters) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	// todo finish this unit test!
 	engineConfiguration->useFSIO12ForIdleOffset = true;
-	setFsioExpression(MAGIC_OFFSET_FOR_IDLE_OFFSET, "\"ac_on_switch cfg_idleRpmPid_offset cfg_idleRpmPid2_offset if");
+	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "\"ac_on_switch cfg_idleRpmPid_offset cfg_idleRpmPid2_offset if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	setFsioExpression(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE, "\"ac_on_switch cfg_idleRpmPid_minValue cfg_idleRpmPid2_minValue if");
+	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "\"ac_on_switch cfg_idleRpmPid_minValue cfg_idleRpmPid2_minValue if" PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 TEST(idle, pid) {

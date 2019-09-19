@@ -609,8 +609,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 #endif
 }
 
-void setFsioExpression(const char *indexStr, const char *quotedLine) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
+void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
@@ -627,7 +626,6 @@ void setFsioExpression(const char *indexStr, const char *quotedLine) {
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	showFsioInfo();
-#endif
 }
 
 static void rpnEval(char *line) {
