@@ -37,8 +37,6 @@ typedef unsigned int time_t;
 #endif
 
 #ifdef __cplusplus
-#include "cli_registry.h"
-
 #include "eficonsole.h"
 #endif /* __cplusplus */
 
