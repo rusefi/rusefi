@@ -73,5 +73,5 @@
 // Human-readable: fsio_table (3, rpm, map) / 100
 #define BOOST_CONTROLLER "3 rpm map fsio_table 100 /"
 
-// Human-readable: if(fsio_input (0) > 20, 0, 10)
-#define ANALOG_CONDITION "0 fsio_input 20 > 0 10 if"
+// Human-readable: if(fsio_setting (0) > 20, 0, 10)
+#define ANALOG_CONDITION "0 fsio_setting 20 > 0 10 if"

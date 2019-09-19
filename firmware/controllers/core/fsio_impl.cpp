@@ -259,7 +259,8 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		const char *formula = config->fsioFormulas[i];
 		LEElement *logic = userPool.parseExpression(formula);
-		if (logic == NULL) {
+		brain_pin_e brainPin = CONFIGB(fsioOutputPins)[i];
+		if (brainPin != GPIO_UNASSIGNED && logic == NULL) {
 			warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
 		}
 
