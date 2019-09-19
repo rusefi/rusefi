@@ -30,6 +30,7 @@
 #ifdef __cplusplus
 #include "datalogging.h"
 #include "loggingcentral.h"
+#include "cli_registry.h"
 #endif /* __cplusplus */
 
 /**
