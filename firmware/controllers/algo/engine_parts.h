@@ -151,6 +151,14 @@ public:
 	float fsioIdleOffset = 0;
 	float fsioIdleMinValue = 0;
 
+#if EFI_UNIT_TEST
+	float mockFan = 0;
+	float mockRpm = 0;
+	float mockCrankingRpm = 0;
+	float mockTimeSinceBoot = 0;
+	int mockAcToggle = 0;
+#endif
+
 #if EFI_ENABLE_ENGINE_WARNING
 	/**
 	 * Shall we purposely miss on some cylinders in order to attract driver's attention to some problem
