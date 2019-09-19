@@ -35,7 +35,7 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency D
 
 void initFsioImpl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setFsioExpression(const char *indexStr, const char *quotedLine);
+void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX);
