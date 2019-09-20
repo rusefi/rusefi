@@ -97,12 +97,19 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 #endif /* EFI_FSIO */
 }
 
+EXTERN_ENGINE;
+
+#if EFI_ENABLE_MOCK_ADC
+void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+}
+#endif
+
 #if !EFI_UNIT_TEST
 
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
-EXTERN_ENGINE;
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -568,21 +575,17 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	onConfigurationChanged();
 }
 
-#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
+#if EFI_ENABLE_MOCK_ADC
 
-static void setMockVoltage(int hwChannel, float voltage) {
-	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
-}
-
-void setMockCltVoltage(float voltage) {
+void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->clt.adcChannel, voltage);
 }
 
-void setMockIatVoltage(float voltage) {
+void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->iat.adcChannel, voltage);
 }
 
-void setMockMafVoltage(float voltage) {
+void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
 }
 

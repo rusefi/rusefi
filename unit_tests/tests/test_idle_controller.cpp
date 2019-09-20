@@ -11,14 +11,17 @@
 #include "pid.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
+#include "allsensors.h"
+#include "engine_controller.h"
 
 extern IdleController idleControllerInstance;
+extern int timeNowUs;
 
 #define Q(x) #x
 #define QUOTE(x) Q(x)
 
 TEST(idle, fsioPidParameters) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
 
 	// todo finish this unit test!
 	engineConfiguration->useFSIO12ForIdleOffset = true;
@@ -28,6 +31,20 @@ TEST(idle, fsioPidParameters) {
 	setFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch cfg_idleRpmPid_minValue cfg_idleRpmPid2_minValue if" PASS_ENGINE_PARAMETER_SUFFIX);
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
+//	ASSERT_EQ(0, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+//	setMockVoltage(engineConfiguration->acSwitchAdc, 5 PASS_ENGINE_PARAMETER_SUFFIX);
+//	ASSERT_EQ(1, getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
+
+//	timeNowUs = MS2US(700);
+
+//	idleControllerInstance.PeriodicTask();
+
+//	ASSERT_EQ(0, engine->acSwitchLastChangeTime);
+//	ASSERT_EQ(1, engine->acSwitchState);
+
 }
 
 TEST(idle, pid) {
