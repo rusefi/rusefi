@@ -17,6 +17,10 @@
 
 #include "boards.h"
 
+typedef uint32_t iomode_t;
+typedef uint32_t ioportid_t;
+typedef uint32_t ioportmask_t;
+
 //#define chThdGetSelfX() 0
 //#define getRemainingStack(x) (999999)
 #define getCurrentRemainingStack() (999999)
