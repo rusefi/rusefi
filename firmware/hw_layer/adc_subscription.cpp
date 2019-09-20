@@ -8,9 +8,9 @@
 EXTERN_ENGINE;
 
 struct AdcSubscriptionEntry {
-	adc_channel_e Channel;
 	ConvertedSensor* Sensor;
 	float VoltsPerAdcVolt;
+	adc_channel_e Channel;
 };
 
 static size_t s_nextEntry = 0;
@@ -27,15 +27,14 @@ void AdcSubscription::SubscribeSensor(ConvertedSensor& sensor, adc_channel_e cha
 		return;
 	}
 
-	auto& entry = s_entries[s_nextEntry];
-
-	entry.Sensor = &sensor;
-
 	// if 0, default to the board's divider coefficient
 	if (voltsPerAdcVolt == 0) {
 		voltsPerAdcVolt = engineConfiguration->analogInputDividerCoefficient;
 	}
 
+	// Populate the entry
+	auto& entry = s_entries[s_nextEntry];
+	entry.Sensor = &sensor;
 	entry.VoltsPerAdcVolt = voltsPerAdcVolt;
 	entry.Channel = channel;
 
