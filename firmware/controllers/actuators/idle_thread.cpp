@@ -342,7 +342,7 @@ public:
 		}
 
 
-#if EFI_PROD_CODE
+#if EFI_GPIO_HARDWARE
 		// this value is not used yet
 		if (CONFIGB(clutchDownPin) != GPIO_UNASSIGNED) {
 			engine->clutchDownState = efiReadPin(CONFIGB(clutchDownPin));
@@ -365,7 +365,7 @@ public:
 		if (engineConfiguration->brakePedalPin != GPIO_UNASSIGNED) {
 			engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
 		}
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_GPIO_HARDWARE */
 
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
