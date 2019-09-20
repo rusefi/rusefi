@@ -448,7 +448,7 @@ void initHardware(Logging *l) {
 	}
 
 #if EFI_SHAFT_POSITION_INPUT
-	initTriggerDecoder();
+	initTriggerDecoder(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
 #if HAL_USE_ADC
@@ -466,7 +466,7 @@ void initHardware(Logging *l) {
 	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// output pins potentially depend on 'initSmartGpio'
-	initOutputPins();
+	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_MC33816
 	initMc33816();
