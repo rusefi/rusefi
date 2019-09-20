@@ -368,6 +368,7 @@
 #define clutchUpPinMode_offset_hex 3cb
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
+#define CMD_DATE "date"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
 #define CMD_REBOOT "reboot"
@@ -569,8 +570,6 @@
 #define fixedModeTiming_offset_hex 1c4
 #define fixedTiming_offset 2204
 #define fixedTiming_offset_hex 89c
-#define flexFuelSensor_offset 3100
-#define flexFuelSensor_offset_hex c1c
 #define frequencyReportingMapInputPin_offset 970
 #define frequencyReportingMapInputPin_offset_hex 3ca
 #define FSIO_ANALOG_INPUT_COUNT 4
@@ -1877,6 +1876,8 @@
 #define unusedAtBoardConfigurationEnd_offset_hex 3d4
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
+#define unusedFlexFuelSensor_offset 3100
+#define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1756
 #define unusedFormerWarmupAfrPid_offset_hex 6dc
 #define unusedh_offset 1471
