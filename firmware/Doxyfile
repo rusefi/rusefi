@@ -742,6 +742,7 @@ INPUT                  = . \
 	util \
 	console \
 	controllers \
+	init \
 	emulation \
 	hw_layer
 			
