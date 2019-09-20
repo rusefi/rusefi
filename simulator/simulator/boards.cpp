@@ -8,7 +8,6 @@
 #include "global.h"
 #include "boards.h"
 #include "engine.h"
-#include "adc_math.h"
 #include "engine_sniffer.h"
 
 static LoggingWithStorage logger("simulator board");
