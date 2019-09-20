@@ -14,15 +14,15 @@
 /**
  * @brief Base class for sensors that compute a value on one thread, and want
  * to make it available to consumers asynchronously.
- * 
+ *
  * Common examples include sensors that have to do heavy lifting to produce
  * a reading, and don't want to perform that conversion at the time of
  * consumption.
- * 
+ *
  * To use this class, create a class for your sensor that inherits StoredValueSensor,
  * and call Invalidate() and SetValidValue(float) as appropriate when readings are available
  * (or known to be invalid) for your sensor.
- * 
+ *
  * Consumers will retrieve the last set (or invalidated) value.
  */
 class StoredValueSensor : public Sensor {
@@ -31,19 +31,18 @@ public:
 		bool valid = m_isValid;
 		float value = m_value;
 
-		return { valid, value };
+		return {valid, value};
 	}
 
-	void setReportingLocation(float* reportLocation) {
+	void setReportingLocation(float *reportLocation) {
 		m_reportingLocation = reportLocation;
 	}
 
 protected:
 	StoredValueSensor(SensorType type)
 		: Sensor(type)
-		//, m_reportingLocation(reportingLocation)
-	{
-	}
+	//, m_reportingLocation(reportingLocation)
+	{}
 
 	// Invalidate the stored value.
 	void invalidate() {
@@ -57,7 +56,7 @@ protected:
 		m_isValid = true;
 
 		// Report value
-		float* reportLoc = m_reportingLocation;
+		float *reportLoc = m_reportingLocation;
 		if (reportLoc) {
 			*reportLoc = value;
 		}
@@ -67,5 +66,5 @@ private:
 	bool m_isValid = false;
 	float m_value = 0.0f;
 
-	float* m_reportingLocation = nullptr;
+	float *m_reportingLocation = nullptr;
 };

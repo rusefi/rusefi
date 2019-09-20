@@ -1,9 +1,9 @@
+#include "adc_subscription.h"
 #include "engine.h"
 #include "error_handling.h"
 #include "global.h"
 #include "linear_sensor.h"
 #include "tunerstudio_configuration.h"
-#include "adc_subscription.h"
 
 EXTERN_ENGINE;
 

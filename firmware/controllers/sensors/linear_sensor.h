@@ -3,16 +3,16 @@
 #include "converter_sensor.h"
 
 class LinearSensor final : public ConvertedSensor {
-  public:
+public:
 	LinearSensor(SensorType type)
 		: ConvertedSensor(type) {}
 
 	void configure(float in1, float out1, float in2, float out2, float minOutput, float maxOutput);
 
-  protected:
+protected:
 	SensorResult convertFromInputValue(float inputValue) override;
 
-  private:
+private:
 	// Linear equation parameters for equation of form
 	// y = ax + b
 	float m_a = 1;

@@ -12,17 +12,19 @@
 
 /**
  * @brief Provides an interface for reading sensors.
- * 
+ *
  * Example usage:
- * 
+ *
  * // Create a sensor reader for type MySensor, and fallback value 10.0
  * SensorReader<SensorType::MySensor> mySensorReader(10.0f);
- * 
+ *
  * <later>
- * 
+ *
  * // Returns the sensor value if valid, or 10.0 if invalid.
  * float currentSensorValue = mySensorReader.getOrDefault();
- * 
+ * alternatively, because we have implicit conversion:
+ * float currentSensorValue = mySensorReader;
+ *
  * Simply calling the get() method returns the full SensorResult, should
  * more complex logic be required in case of an invalid sensor reading.
  */
@@ -31,7 +33,8 @@ class SensorReader final {
 public:
 	using sensorValueType = float;
 
-	SensorReader(sensorValueType defaultValue) : m_defaultValue(defaultValue) { }
+	SensorReader(sensorValueType defaultValue)
+		: m_defaultValue(defaultValue) {}
 
 	SensorResult get() const {
 		return Sensor::get(TSensorType);
@@ -49,6 +52,12 @@ public:
 			return m_defaultValue;
 		}
 	}
+
+	// Implicit conversion operator
+	operator sensorValueType() const {
+		return getOrDefault();
+	}
+
 private:
 	const sensorValueType m_defaultValue;
 };
