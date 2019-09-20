@@ -306,18 +306,11 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return newValue;
 }
 
-class IdleController : public PeriodicTimerController {
-public:
-	Engine *engine = NULL;
-	engine_configuration_s *engineConfiguration = NULL;
-	persistent_config_s *config = NULL;
-	board_configuration_s *boardConfiguration = NULL;
-
-	int getPeriodMs() override {
+	int IdleController::getPeriodMs() {
 		return GET_PERIOD_LIMITED(&engineConfiguration->idleRpmPid);
 	}
 
-	void PeriodicTask() override	{
+	void IdleController::PeriodicTask() {
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread,
@@ -452,9 +445,9 @@ public:
 		applyIACposition(engine->engineState.idle.currentIdlePosition);
 #endif /* EFI_UNIT_TEST */
 	}
-};
 
-static IdleController idleControllerInstance;
+
+IdleController idleControllerInstance;
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	idlePid.updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);

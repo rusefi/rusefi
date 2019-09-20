@@ -10,6 +10,9 @@
 #include "tps.h"
 #include "pid.h"
 #include "fsio_impl.h"
+#include "idle_thread.h"
+
+extern IdleController idleControllerInstance;
 
 #define Q(x) #x
 #define QUOTE(x) Q(x)
