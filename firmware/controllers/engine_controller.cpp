@@ -90,15 +90,17 @@
 
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_IDLE_CONTROL */
-
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
 #if EFI_FSIO
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
+
+#if EFI_IDLE_CONTROL
+	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_IDLE_CONTROL */
 }
 
 EXTERN_ENGINE;
