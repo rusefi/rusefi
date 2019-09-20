@@ -39,7 +39,7 @@ public:
 	}
 
 protected:
-	StoredValueSensor(SensorType type)
+	explicit StoredValueSensor(SensorType type)
 		: Sensor(type)
 	//, m_reportingLocation(reportingLocation)
 	{}

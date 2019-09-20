@@ -33,7 +33,7 @@ class SensorReader final {
 public:
 	using sensorValueType = float;
 
-	SensorReader(sensorValueType defaultValue)
+	explicit SensorReader(sensorValueType defaultValue)
 		: m_defaultValue(defaultValue) {}
 
 	SensorResult get() const {

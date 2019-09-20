@@ -4,7 +4,7 @@
 
 class LinearSensor final : public ConvertedSensor {
 public:
-	LinearSensor(SensorType type)
+	explicit LinearSensor(SensorType type)
 		: ConvertedSensor(type) {}
 
 	void configure(float in1, float out1, float in2, float out2, float minOutput, float maxOutput);

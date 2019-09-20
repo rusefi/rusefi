@@ -103,7 +103,7 @@ public:
 
 protected:
 	// Protected constructor - only subclasses call this
-	Sensor(SensorType type)
+	explicit Sensor(SensorType type)
 		: m_type(type) {}
 
 private:

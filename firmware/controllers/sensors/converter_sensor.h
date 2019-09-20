@@ -44,7 +44,7 @@ public:
 	}
 
 protected:
-	ConvertedSensor(SensorType type)
+	explicit ConvertedSensor(SensorType type)
 		: StoredValueSensor(type) {}
 
 	/**
