@@ -653,8 +653,6 @@ static LcdController lcdInstance;
 extern HIP9011 instance;
 #endif /* EFI_HIP_9011 */
 
-static SensorReader<SensorType::OilPressure> oilSensor(0.0f);
-
 #if EFI_TUNER_STUDIO
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -684,13 +682,12 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->throttlePositon = tps;
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-    tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
-    tsOutputChannels->oilPressure = oilSensor.getOrDefault();
+	tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 
-    tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
+	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 
-    tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
-    tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
+	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
+	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
 
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);

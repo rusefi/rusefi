@@ -21,6 +21,12 @@
 class ConvertedSensor : public StoredValueSensor {
 public:
 	void postRawValue(float inputValue) {
+		// Report the raw value
+		float* rawReportLocation = m_rawReportingLocation;
+		if (rawReportLocation) {
+			*rawReportLocation = inputValue;
+		}
+		
 		auto r = convertFromInputValue(inputValue);
 
 		// This has to happen so that we set the valid bit after
@@ -33,6 +39,10 @@ public:
 		}
 	}
 
+	void setRawReportingLocation(float* rawReportingLocation) {
+		m_rawReportingLocation = rawReportingLocation;
+	}
+
 protected:
 	ConvertedSensor(SensorType type) : StoredValueSensor(type) { }
 
@@ -43,4 +53,7 @@ protected:
 	 * represented by that voltage.
 	 */
 	virtual SensorResult convertFromInputValue(float inputValue) = 0;
+
+private:
+	float* m_rawReportingLocation = nullptr;
 };
