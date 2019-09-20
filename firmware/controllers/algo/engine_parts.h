@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef CONTROLLERS_ALGO_ENGINE_PARTS_H_
-#define CONTROLLERS_ALGO_ENGINE_PARTS_H_
+#pragma once
 
 #include "global.h"
 #include "engine_configuration_generated_structures.h"
@@ -21,7 +20,7 @@ public:
 	bool hasMockAdc[MOCK_ADC_SIZE];
 	int fakeAdcValues[MOCK_ADC_SIZE];
 
-	void setMockVoltage(int hwChannel, float voltage);
+	void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getMockAdcValue(int hwChannel) const;
 };
 
@@ -190,5 +189,3 @@ public:
 private:
 	void setPumpsCounter(int newValue);
 };
-
-#endif /* CONTROLLERS_ALGO_ENGINE_PARTS_H_ */
