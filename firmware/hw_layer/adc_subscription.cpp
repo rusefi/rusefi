@@ -1,6 +1,5 @@
 #include "adc_subscription.h"
 #include "adc_inputs.h"
-#include "analog_input.h"
 #include "engine.h"
 
 #include <iterator>
