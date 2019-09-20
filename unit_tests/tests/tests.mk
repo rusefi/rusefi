@@ -32,4 +32,5 @@ TESTS_SRC_CPP = \
 	tests/sensor/converter_sensor.cpp \
 	tests/sensor/function_pointer_sensor.cpp \
 	tests/sensor/mock_sensor.cpp \
-	tests/sensor/sensor_reader.cpp
+	tests/sensor/sensor_reader.cpp \
+	tests/sensor/lin_sensor.cpp
