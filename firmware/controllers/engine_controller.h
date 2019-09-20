@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef ENGINE_STATUS_H_
-#define ENGINE_STATUS_H_
+#pragma once
 
 #include "global.h"
 #include "signal_executor.h"
@@ -19,6 +18,10 @@ void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_ENABLE_MOCK_ADC
+void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+#endif
 
 void setMockVBattVoltage(float voltage);
 void setMockMapVoltage(float voltage);
@@ -32,4 +35,3 @@ void setMockCltVoltage(float voltage);
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
 
-#endif /* ENGINE_STATUS_H_ */
