@@ -1245,6 +1245,7 @@ end_struct
 
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
+#define CMD_DATE "date"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_ENABLE "enable"
