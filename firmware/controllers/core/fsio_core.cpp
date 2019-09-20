@@ -20,7 +20,7 @@
 
 #include "fsio_core.h"
 #include "fsio_impl.h"
-#include "analog_input.h"
+#include "adc_inputs.h"
 
 extern fsio8_Map3D_f32t fsioTable1;
 extern fsio8_Map3D_u8t fsioTable2;

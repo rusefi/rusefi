@@ -14,31 +14,29 @@
 
 #define TEST_POOL_SIZE 256
 
-static float mockFan;
-static float mockRpm;
-static float mockCrankingRpm;
-static float mockTimeSinceBoot;
-
 float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(action) {
 	case LE_METHOD_FAN:
-		return mockFan;
+		return engine->fsioState.mockFan;
 	case LE_METHOD_COOLANT:
 		return engine->sensors.clt;
 	case LE_METHOD_RPM:
-		return mockRpm;
+		return engine->fsioState.mockRpm;
 	case LE_METHOD_CRANKING_RPM:
-		return mockCrankingRpm;
+		return engine->fsioState.mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
-		return mockTimeSinceBoot;
-	case LE_METHOD_FAN_ON_SETTING:
-		return 0;
-	case LE_METHOD_FAN_OFF_SETTING:
+		return engine->fsioState.mockTimeSinceBoot;
+	case FSIO_SETTING_FANONTEMPERATURE:
+	case FSIO_SETTING_FANOFFTEMPERATURE:
 		return 0;
 	case LE_METHOD_VBATT:
 		return 12;
 	case LE_METHOD_IS_COOLANT_BROKEN:
+	case FSIO_SETTING_IDLERPMPID_MINVALUE:
+	case FSIO_SETTING_IDLERPMPID2_MINVALUE:
 		return 0;
+	case LE_METHOD_AC_TOGGLE:
+		return engine->fsioState.mockAcToggle;
 	default:
 	firmwareError(OBD_PCM_Processor_Fault, "FSIO: No mock value for %d", action);
 		return NAN;
@@ -108,11 +106,15 @@ static void testExpression2(float selfValue, const char *line, float expected) {
 	testExpression2(selfValue, line, expected, engine);
 }
 
-static void testExpression(const char *line, float expected) {
-	testExpression2(0, line, expected);
+static void testExpression(const char *line, float expectedValue) {
+	testExpression2(0, line, expectedValue);
 }
 
-TEST(misc, testLogicExpressions) {
+TEST(fsio, testIfFunction) {
+	testExpression("1 22 33 if", 22);
+}
+
+TEST(fsio, testLogicExpressions) {
 	printf("*************************************************** testLogicExpressions\r\n");
 
 	testParsing();
@@ -178,7 +180,6 @@ TEST(misc, testLogicExpressions) {
 	 * fan = (not fan && coolant > 90) OR (fan && coolant > 85)
 	 * fan = fan NOT coolant 90 AND more fan coolant 85 more AND OR
 	 */
-	mockFan = 0;
 
 	{
 		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
@@ -211,8 +212,8 @@ TEST(misc, testLogicExpressions) {
 		ASSERT_EQ(0, c.calcLogValue[0]);
 	}
 
-	testExpression("fan_off_setting", 0);
-	testExpression("coolant fan_off_setting >", 1);
+	testExpression("cfg_fanOffTemperature", 0);
+	testExpression("coolant cfg_fanOffTemperature >", 1);
 
 	testExpression("0 1 &", 0);
 	testExpression("0 1 |", 1);
@@ -222,15 +223,12 @@ TEST(misc, testLogicExpressions) {
 	testExpression(FAN_CONTROL_LOGIC, 1);
 
 	{
-		mockRpm = 900;
-		mockCrankingRpm = 200;
-		testExpression("rpm", 900);
-		testExpression("cranking_rpm", 200);
-		testExpression(STARTER_BLOCK, 0);
-		testExpression("rpm cranking_rpm > ", 1);
-
+		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+		engine->fsioState.mockRpm = 900;
+		engine->fsioState.mockCrankingRpm = 200;
+		testExpression2(0, "rpm", 900, engine);
+		testExpression2(0, "cranking_rpm", 200, engine);
+		testExpression2(0, STARTER_BLOCK, 0, engine);
+		testExpression2(0, "rpm cranking_rpm > ", 1, engine);
 	}
-	mockRpm = 900;
-	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
-
 }

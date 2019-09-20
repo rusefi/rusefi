@@ -11,9 +11,10 @@
 
 #include "global.h"
 #include "io_pins.h"
+#include "engine_configuration.h"
 
 void initPrimaryPins(void);
-void initOutputPins(void);
+void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_GPIO_HARDWARE
 void turnAllPinsOff(void);

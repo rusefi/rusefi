@@ -19,10 +19,9 @@
 #include "ego.h"
 #include "voltage.h"
 #include "thermistors.h"
-#include "flex_fuel.h"
 #include "adc_inputs.h"
 
-#include "analog_input.h"
+#include "adc_inputs.h"
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 

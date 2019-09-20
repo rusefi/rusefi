@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 22:56:58 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:58:30 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1569,10 +1569,10 @@ struct engine_configuration_s {
 	bool useFSIO4ForSeriousEngineWarning : 1;
 	/**
 	offset 1464 bit 29 */
-	bool unused_bit_1472_29 : 1;
+	bool useFSIO12ForIdleOffset : 1;
 	/**
 	offset 1464 bit 30 */
-	bool unused_bit_1472_30 : 1;
+	bool useFSIO13ForIdleMinValue : 1;
 	/**
 	 * offset 1468
 	 */
@@ -2475,17 +2475,17 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * The timing correction works only if RPM is close enough, otherwise the IAC correction works
+	 * When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.
 	 * offset 3988
 	 */
 	int16_t idleTimingPidWorkZone;
 	/**
-	 * If RPM is too perfect, let's leave the advance angle alone to avoid oscillation
+	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	 * offset 3990
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
-	 * Added to the work zone for smooth correction falloff
+	 * Taper out idle timing control over this range as the engine leaves idle conditions
 	 * offset 3992
 	 */
 	int16_t idlePidFalloffDeltaRpm;
@@ -2557,7 +2557,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 4040
 	 */
-	int mainUnusedEnd[590];
+	pid_s idleRpmPid2;
+	/**
+	 * offset 4060
+	 */
+	int mainUnusedEnd[585];
 	/** total size 6400*/
 };
 
@@ -2820,4 +2824,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 22:56:58 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:58:30 EDT 2019

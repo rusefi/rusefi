@@ -14,12 +14,19 @@
 #include "pid.h"
 #include "engine_state_generated.h"
 
+#define BRAIN_PIN_COUNT (1 << sizeof(brain_pin_e))
+
+
 class EngineState : public engine_state2_s {
 public:
 	EngineState();
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+#if ! EFI_PROD_CODE
+	bool mockPinStates[BRAIN_PIN_COUNT];
+#endif
 
 	FuelConsumptionState fuelConsumption;
 
@@ -102,6 +109,9 @@ public:
 #if EFI_ENABLE_MOCK_ADC
 	MockAdcState mockAdcState;
 #endif /* EFI_ENABLE_MOCK_ADC */
+
+
+
 };
 
 

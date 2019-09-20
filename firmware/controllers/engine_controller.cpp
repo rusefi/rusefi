@@ -94,7 +94,11 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 #if !EFI_UNIT_TEST
 	initSensors();
 #endif
-	
+
+#if EFI_IDLE_CONTROL
+	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_IDLE_CONTROL */
+
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_FSIO
@@ -102,12 +106,19 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 #endif /* EFI_FSIO */
 }
 
+EXTERN_ENGINE;
+
+#if EFI_ENABLE_MOCK_ADC
+void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+}
+#endif
+
 #if !EFI_UNIT_TEST
 
 extern bool hasFirmwareErrorFlag;
 extern EnginePins enginePins;
 
-EXTERN_ENGINE;
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
@@ -573,21 +584,17 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	onConfigurationChanged();
 }
 
-#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
+#if EFI_ENABLE_MOCK_ADC
 
-static void setMockVoltage(int hwChannel, float voltage) {
-	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
-}
-
-void setMockCltVoltage(float voltage) {
+void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->clt.adcChannel, voltage);
 }
 
-void setMockIatVoltage(float voltage) {
+void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->iat.adcChannel, voltage);
 }
 
-void setMockMafVoltage(float voltage) {
+void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
 }
 
@@ -659,10 +666,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #if EFI_SENSOR_CHART
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
-
-#if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_IDLE_CONTROL */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	// todo: this is a mess, remove code duplication with simulator
@@ -819,6 +822,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190910;
+	return 20190914;
 }
 #endif /* EFI_UNIT_TEST */

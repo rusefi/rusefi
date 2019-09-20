@@ -4,7 +4,7 @@
 #include "engine.h"
 #include "tps.h"
 #include "interpolation.h"
-#include "analog_input.h"
+#include "adc_inputs.h"
 #if EFI_PROD_CODE
 #include "settings.h"
 #endif /* EFI_PROD_CODE */

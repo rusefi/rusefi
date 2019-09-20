@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 10 22:56:58 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -710,6 +710,14 @@ public class Fields {
 	public static final int idlePidRpmDeadZone_offset = 1894;
 	public static final int idlePidRpmDeadZone_offset_hex = 766;
 	public static final int idlePidRpmUpperLimit_offset = 1484;
+	public static final int idleRpmPid2_dFactor_offset = 4048;
+	public static final int idleRpmPid2_iFactor_offset = 4044;
+	public static final int idleRpmPid2_maxValue_offset = 4058;
+	public static final int idleRpmPid2_minValue_offset = 4056;
+	public static final int idleRpmPid2_offset = 4040;
+	public static final int idleRpmPid2_offset_offset = 4052;
+	public static final int idleRpmPid2_periodMs_offset = 4054;
+	public static final int idleRpmPid2_pFactor_offset = 4040;
 	public static final int idleRpmPid_dFactor_offset = 1796;
 	public static final int idleRpmPid_dFactor_offset_hex = 704;
 	public static final int idleRpmPid_iFactor_offset = 1792;
@@ -899,7 +907,7 @@ public class Fields {
 	public static final int mafSensorType_offset = 948;
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4040;
+	public static final int mainUnusedEnd_offset = 4060;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPin_offset_hex = 294;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
@@ -1205,8 +1213,6 @@ public class Fields {
 	public static final int unused1234234_offset = 2042;
 	public static final int unused_1484_bit_20_offset = 1476;
 	public static final int unused_1484_bit_21_offset = 1476;
-	public static final int unused_bit_1472_29_offset = 1464;
-	public static final int unused_bit_1472_30_offset = 1464;
 	public static final int unused_board_984_31_offset = 744;
 	public static final int unused_former_warmup_target_afr_offset = 2096;
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
@@ -1235,7 +1241,9 @@ public class Fields {
 	public static final int useFixedBaroCorrFromMap_offset = 1476;
 	public static final int useFSIO10ForServo3_offset = 1464;
 	public static final int useFSIO11ForServo4_offset = 1464;
+	public static final int useFSIO12ForIdleOffset_offset = 1464;
 	public static final int useFSIO12ForServo5_offset = 1464;
+	public static final int useFSIO13ForIdleMinValue_offset = 1464;
 	public static final int useFSIO15ForIdleRpmAdjustment_offset = 1464;
 	public static final int useFSIO16ForTimingAdjustment_offset = 1464;
 	public static final int useFSIO4ForSeriousEngineWarning_offset = 1464;
@@ -1721,8 +1729,8 @@ public class Fields {
 	public static final Field USEFSIO15FORIDLERPMADJUSTMENT = Field.create("USEFSIO15FORIDLERPMADJUSTMENT", 1464, FieldType.BIT, 26);
 	public static final Field USEFSIO5FORCRITICALISSUEENGINESTOP = Field.create("USEFSIO5FORCRITICALISSUEENGINESTOP", 1464, FieldType.BIT, 27);
 	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1464, FieldType.BIT, 28);
-	public static final Field UNUSED_BIT_1472_29 = Field.create("UNUSED_BIT_1472_29", 1464, FieldType.BIT, 29);
-	public static final Field UNUSED_BIT_1472_30 = Field.create("UNUSED_BIT_1472_30", 1464, FieldType.BIT, 30);
+	public static final Field USEFSIO12FORIDLEOFFSET = Field.create("USEFSIO12FORIDLEOFFSET", 1464, FieldType.BIT, 29);
+	public static final Field USEFSIO13FORIDLEMINVALUE = Field.create("USEFSIO13FORIDLEMINVALUE", 1464, FieldType.BIT, 30);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1468, FieldType.INT8, adc_channel_e);
 	public static final Field ACSWITCHADC = Field.create("ACSWITCHADC", 1469, FieldType.INT8, adc_channel_e);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1470, FieldType.INT8, adc_channel_e);
@@ -2039,6 +2047,13 @@ public class Fields {
 	public static final Field IDLERPMPID_ITERMMAX = Field.create("IDLERPMPID_ITERMMAX", 4006, FieldType.INT16);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4008, FieldType.INT8);
 	public static final Field ETBIDLETHROTTLERANGE = Field.create("ETBIDLETHROTTLERANGE", 4012, FieldType.FLOAT);
+	public static final Field IDLERPMPID2_PFACTOR = Field.create("IDLERPMPID2_PFACTOR", 4040, FieldType.FLOAT);
+	public static final Field IDLERPMPID2_IFACTOR = Field.create("IDLERPMPID2_IFACTOR", 4044, FieldType.FLOAT);
+	public static final Field IDLERPMPID2_DFACTOR = Field.create("IDLERPMPID2_DFACTOR", 4048, FieldType.FLOAT);
+	public static final Field IDLERPMPID2_OFFSET = Field.create("IDLERPMPID2_OFFSET", 4052, FieldType.INT16);
+	public static final Field IDLERPMPID2_PERIODMS = Field.create("IDLERPMPID2_PERIODMS", 4054, FieldType.INT16);
+	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 4056, FieldType.INT16);
+	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, FieldType.INT);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, FieldType.INT);
@@ -2493,8 +2508,8 @@ public class Fields {
 	USEFSIO15FORIDLERPMADJUSTMENT,
 	USEFSIO5FORCRITICALISSUEENGINESTOP,
 	USEFSIO4FORSERIOUSENGINEWARNING,
-	UNUSED_BIT_1472_29,
-	UNUSED_BIT_1472_30,
+	USEFSIO12FORIDLEOFFSET,
+	USEFSIO13FORIDLEMINVALUE,
 	HIPOUTPUTCHANNEL,
 	ACSWITCHADC,
 	VREFADCCHANNEL,
@@ -2806,6 +2821,13 @@ public class Fields {
 	IDLERPMPID_ITERMMAX,
 	MC33972SPIDEVICE,
 	ETBIDLETHROTTLERANGE,
+	IDLERPMPID2_PFACTOR,
+	IDLERPMPID2_IFACTOR,
+	IDLERPMPID2_DFACTOR,
+	IDLERPMPID2_OFFSET,
+	IDLERPMPID2_PERIODMS,
+	IDLERPMPID2_MINVALUE,
+	IDLERPMPID2_MAXVALUE,
 	PEDALTOTPSTABLE,
 	FSIOFORMULAS1,
 	FSIOFORMULAS2,

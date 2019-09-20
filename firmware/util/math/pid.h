@@ -53,7 +53,8 @@ public:
 	float getP(void) const;
 	float getI(void) const;
 	float getD(void) const;
-	float getOffset(void) const;
+	virtual float getOffset(void) const;
+	virtual float getMinValue(void) const;
 	float getIntegration(void) const;
 	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
@@ -67,7 +68,7 @@ public:
 	// todo: move this to pid_s one day
 	float iTermMin = -1000000.0;
 	float iTermMax =  1000000.0;
-private:
+protected:
 	pid_s *parameters;
 
 private:
@@ -78,6 +79,7 @@ private:
 /**
  * A PID implementation with a modified cascaded integrator-comb (CIC) filtering.
  * Used for incremental auto-IAC control. See autoIdle() in idle_thread.cpp
+ * See pid_cic.md.
  *
  * https://rusefi.com/forum/viewtopic.php?f=9&t=1315
  */

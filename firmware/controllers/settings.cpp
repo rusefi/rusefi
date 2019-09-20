@@ -314,8 +314,6 @@ static void setTimingMode(int value) {
 }
 
 void setEngineType(int value) {
-//	enginePins.stopPins(); // this is mostly needed by functional tests
-
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_ENGINE_SNIFFER
@@ -701,7 +699,7 @@ static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->alternatorControlPin, "alternator");
 }
 
-static void setACPin(const char *pinName) {
+static void setACRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->acRelayPin, "A/C");
 }
 
@@ -1170,9 +1168,9 @@ const command_f_s commandsF[] = {
 		{MOCK_IAT_COMMAND, setMockIatVoltage},
 		{MOCK_PPS_POSITION_COMMAND, setMockThrottlePedalPosition},
 		{MOCK_PPS_VOLTAGE_COMMAND, setMockThrottlePedalSensorVoltage},
-		{MOCK_TPS_COMMAND, setMockMafVoltage},
-		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_TPS_COMMAND, setMockThrottlePositionSensorVoltage},
+		{MOCK_MAF_COMMAND, setMockMafVoltage},
+		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
 		{"mock_vbatt_voltage", setMockVBattVoltage},
 		{MOCK_CLT_COMMAND, setMockCltVoltage},
@@ -1429,7 +1427,7 @@ void initSettings(void) {
 
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
-	addConsoleActionS("set_ac_pin", setACPin);
+	addConsoleActionS("set_acrelay_pin", setACRelayPin);
 	addConsoleActionS("set_alternator_pin", setAlternatorPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);

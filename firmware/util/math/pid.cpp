@@ -58,7 +58,7 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 
 	previousError = error;
 
-	return pTerm + iTerm + dTerm + parameters->offset;
+	return pTerm + iTerm + dTerm + getOffset();
 }
 
 /**
@@ -69,8 +69,8 @@ float Pid::getOutput(float target, float input, float dTime) {
 
 	if (output > parameters->maxValue) {
 		output = parameters->maxValue;
-	} else if (output < parameters->minValue) {
-		output = parameters->minValue;
+	} else if (output < getMinValue()) {
+		output = getMinValue();
 	}
 	this->output = output;
 	return output;
@@ -114,6 +114,10 @@ float Pid::getOffset(void) const {
 	return parameters->offset;
 }
 
+float Pid::getMinValue(void) const {
+	return parameters->minValue;
+}
+
 void Pid::setErrorAmplification(float coef) {
 	errorAmplificationCoef = coef;
 }
@@ -152,7 +156,7 @@ void Pid::sleep() {
 void Pid::showPidStatus(Logging *logging, const char*msg) {
 	scheduleMsg(logging, "%s settings: offset=%d P=%.5f I=%.5f D=%.5f period=%dms",
 			msg,
-			parameters->offset,
+			getOffset(),
 			parameters->pFactor,
 			parameters->iFactor,
 			parameters->dFactor,

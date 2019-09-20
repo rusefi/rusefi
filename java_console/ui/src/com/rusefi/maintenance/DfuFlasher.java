@@ -34,35 +34,37 @@ public class DfuFlasher {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                String port = comboPorts.getSelectedItem().toString();
-                port = PortDetector.autoDetectSerialIfNeeded(port);
-                if (port == null) {
-                    JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
-                    return;
-                }
-                IoStream stream = SerialIoStreamJSerialComm.open(port, PortHolder.BAUD_RATE, FileLog.LOGGER);
-                byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
-                try {
-                    stream.sendPacket(command, FileLog.LOGGER);
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                runDfuProgramming();
+                doAutoDfu(comboPorts);
             }
         });
 
         manualButton.addActionListener(e -> runDfuProgramming());
     }
 
-    private void runDfuProgramming() {
-        StatusWindow wnd = new StatusWindow();
-        wnd.showFrame("DFU status");
-        ExecHelper.submitAction(() -> executeDFU(wnd), getClass() + " thread");
+    public static void doAutoDfu(JComboBox<String> comboPorts) {
+        String port = comboPorts.getSelectedItem().toString();
+        port = PortDetector.autoDetectSerialIfNeeded(port);
+        if (port == null) {
+            JOptionPane.showMessageDialog(Launcher.getFrame(), "rusEfi serial port not detected");
+            return;
+        }
+        IoStream stream = SerialIoStreamJSerialComm.open(port, PortHolder.BAUD_RATE, FileLog.LOGGER);
+        byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
+        try {
+            stream.sendPacket(command, FileLog.LOGGER);
+            stream.close();
+        } catch (IOException ignored) {
+        }
+        runDfuProgramming();
     }
 
-    private void executeDFU(StatusWindow wnd) {
+    public static void runDfuProgramming() {
+        StatusWindow wnd = new StatusWindow();
+        wnd.showFrame("DFU status");
+        ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
+    }
+
+    private static void executeDFU(StatusWindow wnd) {
         wnd.appendMsg("Giving time for USB enumeration...");
         try {
             Thread.sleep(3 * Timeouts.SECOND);

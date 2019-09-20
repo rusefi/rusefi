@@ -5,6 +5,8 @@
  * set debug_mode 23
  * https://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
  *
+ * 'fsioinfo' command in console shows current state of FSIO - formulas and current value
+ *
  * @date Oct 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
@@ -50,10 +52,10 @@ static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
+// @returns boolean state of A/C toggle switch
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
+// @returns float number of seconds since last A/C toggle
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
-static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
-static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, "fsio_table");
@@ -65,6 +67,8 @@ static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
 static LENameOrdinalPair leStartupFuelPumpDuration(LE_METHOD_STARTUP_FUEL_PUMP_DURATION, "startup_fuel_pump_duration");
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
+
+#include "fsio_names.def"
 
 #define LE_EVAL_POOL_SIZE 32
 
@@ -136,10 +140,6 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 
-	case LE_METHOD_FAN_OFF_SETTING:
-		return engineConfiguration->fanOffTemperature;
-	case LE_METHOD_FAN_ON_SETTING:
-		return engineConfiguration->fanOnTemperature;
 	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
 		return engineConfiguration->startUpFuelPumpDuration;
 
@@ -257,17 +257,14 @@ void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_CONFIG_PARAMET
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	userPool.reset();
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+		const char *formula = config->fsioFormulas[i];
+		LEElement *logic = userPool.parseExpression(formula);
 		brain_pin_e brainPin = CONFIGB(fsioOutputPins)[i];
-
-		if (brainPin != GPIO_UNASSIGNED) {
-			const char *formula = config->fsioFormulas[i];
-			LEElement *logic = userPool.parseExpression(formula);
-			if (logic == NULL) {
-				warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
-			}
-
-			state.fsioLogics[i] = logic;
+		if (brainPin != GPIO_UNASSIGNED && logic == NULL) {
+			warning(CUSTOM_FSIO_PARSING, "parsing [%s]", formula);
 		}
+
+		state.fsioLogics[i] = logic;
 	}
 }
 
@@ -364,16 +361,13 @@ static const char * action2String(le_action_e action) {
 			return "cranking_rpm";
 		case LE_METHOD_COOLANT:
 			return "CLT";
-		case LE_METHOD_FAN_ON_SETTING:
-			return "fan_on";
-		case LE_METHOD_FAN_OFF_SETTING:
-			return "fan_off";
 		case LE_METHOD_FAN:
 			return "fan";
 		case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
 			return "startup_fuel_pump_duration";
 		case LE_METHOD_IN_SHUTDOWN:
 			return "in_shutdown";
+#include "fsio_strings.def"
 
 		default: {
 			// this is here to make compiler happy
@@ -503,10 +497,15 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 
+	if (engineConfiguration->useFSIO12ForIdleOffset) {
+		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_OFFSET, "idle offset", &ENGINE(fsioState.fsioIdleOffset) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+	if (engineConfiguration->useFSIO13ForIdleMinValue) {
+		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE, "idle minValue", &ENGINE(fsioState.fsioIdleMinValue) PASS_ENGINE_PARAMETER_SUFFIX);
+	}
 	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &ENGINE(fsioState.fsioIdleTargetRPMAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
@@ -605,8 +604,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 #endif
 }
 
-static void setFsioExpression(const char *indexStr, const char *quotedLine) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
+void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid FSIO index: %d", index);
@@ -623,7 +621,6 @@ static void setFsioExpression(const char *indexStr, const char *quotedLine) {
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	showFsioInfo();
-#endif
 }
 
 static void rpnEval(char *line) {

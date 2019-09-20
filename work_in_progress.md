@@ -1,3 +1,10 @@
+Sep, 19 2019 status:
+* https://github.com/rusefi/rusefi/issues/796 Missing dwell altogether in some corner cases still should be addressed
+* Ion Sense https://rusefi.com/forum/viewtopic.php?f=4&t=963 is now somewhere on top of the list!
+* [DONE] build server is reliable again
+* [DONE] Electronic throttle body is now road-tested including idle control
+* CJ125 - probably falling off the wagon since no time :(
+
 June, 07 2019 status:
 * new annoying issue: integration testing on new build server is unreliable - disconnects https://github.com/rusefi/rusefi/issues/816
 * https://github.com/rusefi/rusefi/issues/796 should be addressed

@@ -267,5 +267,9 @@ const char *getPinFunction(brain_input_pin_e brainPin) {
 
 	return getBrainUsedPin(index);
 }
-
-#endif
+#else
+const char *hwPortname(brain_pin_e brainPin) {
+	(void)brainPin;
+	return "N/A";
+}
+#endif /* EFI_PROD_CODE */

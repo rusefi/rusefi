@@ -13,8 +13,8 @@
 // Andrey Belomutskiy, (c) 2012-2017
 //
 
-// Human-readable: (fan and (coolant > fan_off_setting)) | (coolant > fan_on_setting) | is_clt_broken
-#define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > and coolant fan_on_setting > | is_clt_broken |"
+// Human-readable: (fan and (coolant > cfg_fanOffTemperature)) | (coolant > cfg_fanOnTemperature) | is_clt_broken
+#define FAN_CONTROL_LOGIC "fan coolant cfg_fanOffTemperature > and coolant cfg_fanOnTemperature > | is_clt_broken |"
 
 // Human-readable: (time_since_boot < startup_fuel_pump_duration) | (rpm > 0)
 #define FUEL_PUMP_LOGIC "time_since_boot startup_fuel_pump_duration < rpm 0 > |"
@@ -25,7 +25,8 @@
 // Human-readable: coolant > 120
 #define TOO_HOT_LOGIC "coolant 120 >"
 
-// Human-readable: ac_on_switch & rpm > 850
+// Human-readable: ac_on_switch & rpm > 850 & time_since_ac_on_switch > 0.3
+// ac_on_switch rpm & 850 time_since_ac_on_switch & > 0.3 >
 #define AC_RELAY_LOGIC "ac_on_switch rpm & 850 >"
 // Combined RPM, CLT and VBATT warning light
 
@@ -72,5 +73,5 @@
 // Human-readable: fsio_table (3, rpm, map) / 100
 #define BOOST_CONTROLLER "3 rpm map fsio_table 100 /"
 
-// Human-readable: if(fsio_input (0) > 20, 0, 10)
-#define ANALOG_CONDITION "0 fsio_input 20 > 0 10 if"
+// Human-readable: if(fsio_setting (0) > 20, 0, 10)
+#define ANALOG_CONDITION "0 fsio_setting 20 > 0 10 if"

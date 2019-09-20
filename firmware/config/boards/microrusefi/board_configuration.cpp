@@ -49,7 +49,11 @@ static void setIgnitionPins() {
 
 static void setLedPins() {
 	//engineConfiguration->atalErrorPin = GPIOE_3;		// d21 = red
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
 	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
+#endif /* EFI_COMMUNICATION_PIN */
 	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
 	boardConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
 }
@@ -137,8 +141,8 @@ static void setupDefaultSensorInputs() {
 	// EFI_ADC_10: "27 - AN volt 1"
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
-	// EFI_ADC_2: "24 - AN temp 3"
-	engineConfiguration->afr.hwChannel = EFI_ADC_2;
+	// EFI_ADC_14: "32 - AN volt 6"
+	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 	// clt = "18 - AN temp 1"
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
@@ -176,8 +180,10 @@ void setBoardConfigurationOverrides(void) {
 	setupTle8888();
 	setupEtb();
 
-	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
-	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
+	// MRE has a special main relay control low side pin
+	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
+	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
+	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
 	// GPIOE_8: "35 - GP Out 1"
 	boardConfiguration->fuelPumpPin = GPIOE_8;
 

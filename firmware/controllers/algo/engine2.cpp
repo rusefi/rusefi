@@ -67,8 +67,8 @@ MockAdcState::MockAdcState() {
 	memset(hasMockAdc, 0, sizeof(hasMockAdc));
 }
 
-#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
-void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
+#if EFI_ENABLE_MOCK_ADC
+void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	scheduleMsg(&engineLogger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
@@ -108,6 +108,10 @@ TransmissionState::TransmissionState() {
 
 EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
+
+#if ! EFI_PROD_CODE
+	memset(mockPinStates, 0, sizeof(mockPinStates));
+#endif /* EFI_PROD_CODE */
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

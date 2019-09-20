@@ -1,0 +1,26 @@
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
+
+// by class com.rusefi.output.FileFsioSettingsConsumer
+static LENameOrdinalPair lefanOnTemperature(FSIO_SETTING_FANONTEMPERATURE, "cfg_fanOnTemperature");
+static LENameOrdinalPair lefanOffTemperature(FSIO_SETTING_FANOFFTEMPERATURE, "cfg_fanOffTemperature");
+static LENameOrdinalPair lealternatorControl_offset(FSIO_SETTING_ALTERNATORCONTROL_OFFSET, "cfg_alternatorControl_offset");
+static LENameOrdinalPair lealternatorControl_minValue(FSIO_SETTING_ALTERNATORCONTROL_MINVALUE, "cfg_alternatorControl_minValue");
+static LENameOrdinalPair leetb_offset(FSIO_SETTING_ETB_OFFSET, "cfg_etb_offset");
+static LENameOrdinalPair leetb_minValue(FSIO_SETTING_ETB_MINVALUE, "cfg_etb_minValue");
+static LENameOrdinalPair leidleRpmPid_offset(FSIO_SETTING_IDLERPMPID_OFFSET, "cfg_idleRpmPid_offset");
+static LENameOrdinalPair leidleRpmPid_minValue(FSIO_SETTING_IDLERPMPID_MINVALUE, "cfg_idleRpmPid_minValue");
+static LENameOrdinalPair lestartUpFuelPumpDuration(FSIO_SETTING_STARTUPFUELPUMPDURATION, "cfg_startUpFuelPumpDuration");
+static LENameOrdinalPair lefuelClosedLoopPid_offset(FSIO_SETTING_FUELCLOSEDLOOPPID_OFFSET, "cfg_fuelClosedLoopPid_offset");
+static LENameOrdinalPair lefuelClosedLoopPid_minValue(FSIO_SETTING_FUELCLOSEDLOOPPID_MINVALUE, "cfg_fuelClosedLoopPid_minValue");
+static LENameOrdinalPair leauxPid1_offset(FSIO_SETTING_AUXPID1_OFFSET, "cfg_auxPid1_offset");
+static LENameOrdinalPair leauxPid1_minValue(FSIO_SETTING_AUXPID1_MINVALUE, "cfg_auxPid1_minValue");
+static LENameOrdinalPair leauxPid2_offset(FSIO_SETTING_AUXPID2_OFFSET, "cfg_auxPid2_offset");
+static LENameOrdinalPair leauxPid2_minValue(FSIO_SETTING_AUXPID2_MINVALUE, "cfg_auxPid2_minValue");
+static LENameOrdinalPair leauxPid3_offset(FSIO_SETTING_AUXPID3_OFFSET, "cfg_auxPid3_offset");
+static LENameOrdinalPair leauxPid3_minValue(FSIO_SETTING_AUXPID3_MINVALUE, "cfg_auxPid3_minValue");
+static LENameOrdinalPair leauxPid4_offset(FSIO_SETTING_AUXPID4_OFFSET, "cfg_auxPid4_offset");
+static LENameOrdinalPair leauxPid4_minValue(FSIO_SETTING_AUXPID4_MINVALUE, "cfg_auxPid4_minValue");
+static LENameOrdinalPair leidleTimingPid_offset(FSIO_SETTING_IDLETIMINGPID_OFFSET, "cfg_idleTimingPid_offset");
+static LENameOrdinalPair leidleTimingPid_minValue(FSIO_SETTING_IDLETIMINGPID_MINVALUE, "cfg_idleTimingPid_minValue");
+static LENameOrdinalPair leidleRpmPid2_offset(FSIO_SETTING_IDLERPMPID2_OFFSET, "cfg_idleRpmPid2_offset");
+static LENameOrdinalPair leidleRpmPid2_minValue(FSIO_SETTING_IDLERPMPID2_MINVALUE, "cfg_idleRpmPid2_minValue");

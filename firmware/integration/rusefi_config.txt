@@ -147,10 +147,9 @@ custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array,   F32,   @OFF
 custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array,   U08,   @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@],"deg",	   1,     0,     -720,  720,    2
 
 struct pid_s
-! todo: explicitly document which use-cases need 10e-7 parameters 
-	float pFactor;;"",      1,      0,       -10000, 10000,      7
-	float iFactor;;"",      1,      0,       -10000, 10000,      7
-	float dFactor;;"",      1,      0,       -10000, 10000,      7
+	float pFactor;;"",      1,      0,       -10000, 10000,      4
+	float iFactor;;"",      1,      0,       -10000, 10000,      4
+	float dFactor;;"",      1,      0,       -10000, 10000,      4
 	int16_t fsio_visible offset;Linear addition to PID logic;"",      1,      0,       -1000, 1000,      0
 	int16_t periodMs;PID dTime;"ms",      1,      0,       0, 3000,      0
 	int16_t fsio_visible minValue;Output min value;"",        1,     0,  -30000,    30000.0,  0
@@ -737,8 +736,8 @@ bit hasFrequencyReportingMapSensor;
 bit useFSIO15ForIdleRpmAdjustment;
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
-bit unused_bit_1472_29;
-bit unused_bit_1472_30;
+bit useFSIO12ForIdleOffset;
+bit useFSIO13ForIdleMinValue;
 
 	adc_channel_e hipOutputChannel;
 	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
@@ -982,7 +981,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult",      1,     0,   0.0,    300, 
 	float[FSIO_CURVE_8] fsioCurve4Bins;;"x",        1,     0,   -999,    1000.0,  3
 	float[FSIO_CURVE_8] fsioCurve4;;"y",      1,     0,      -999,    1000.0,   3
 
-	brain_input_pin_e flexFuelSensor;+This is the processor pin your Flex-fuel sensor is connected to, this is a non standard item so the pin will always be user defined. 
+	uint8_t unusedFlexFuelSensor;
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
 	adc_channel_e externalKnockSenseAdc;
@@ -1031,9 +1030,9 @@ tChargeMode_e tChargeMode;
 	etb_io etb2
 
 	pid_s idleTimingPid;See useIdleTimingPidControl
-	int16_t idleTimingPidWorkZone;The timing correction works only if RPM is close enough, otherwise the IAC correction works;"RPM",        1,     0,  0,    1000,  0
-	int16_t idleTimingPidDeadZone;If RPM is too perfect, let's leave the advance angle alone to avoid oscillation;"RPM",        1,     0,  0,    1000,  0
-	int16_t idlePidFalloffDeltaRpm;Added to the work zone for smooth correction falloff;"RPM",        1,     0,  0,    1000,  0
+	int16_t idleTimingPidWorkZone;+When the current RPM is closer than this value to the target, closed-loop idle timing control is enabled.;"RPM",        1,     0,  0,    1000,  0
+	int16_t idleTimingPidDeadZone;+If the RPM closer to target than this value, disable timing correction to prevent oscillation;"RPM",        1,     0,  0,    1000,  0
+	int16_t idlePidFalloffDeltaRpm;+Taper out idle timing control over this range as the engine leaves idle conditions;"RPM",        1,     0,  0,    1000,  0
 
 	int16_t tpsAccelFractionPeriod;+A delay in cycles between fuel-enrich. portions;"cycles",        1,     0,  0,    500,  0
 	float tpsAccelFractionDivisor;+A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef",        1,     0,  0,    100,  2
@@ -1056,7 +1055,8 @@ uint8_t[4] unusuedvref;
 uint8_t[4] unusuedsw;
 	int[3] alFIn;
 	uint8_t[4] unusedSpiPadding3;
-	int[590] mainUnusedEnd;
+	pid_s idleRpmPid2
+	int[585] mainUnusedEnd;
 	
 
 end_struct

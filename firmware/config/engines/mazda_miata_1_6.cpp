@@ -197,6 +197,9 @@ static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyFuelTable(miataNA6_maf_fuel_table, config->fuelTable);
 }
 
+/**
+ * MIATA_NA6_MAP
+ */
 void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

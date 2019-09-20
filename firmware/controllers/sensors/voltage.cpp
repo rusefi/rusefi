@@ -9,7 +9,7 @@
 
 #include "global.h"
 #include "engine.h"
-#include "analog_input.h"
+#include "adc_inputs.h"
 #include "voltage.h"
 
 EXTERN_ENGINE;

@@ -125,6 +125,32 @@ public class ConfigFieldParserTest {
                             "\tFSIO_SETTING_ETB2_OFFSET = 1006,\n" +
                             "\tFSIO_SETTING_ETB2_MINVALUE = 1007,\n",
                     fsioSettingsConsumer.getEnumDefinition());
+
+            assertEquals("static LENameOrdinalPair leoffset(FSIO_SETTING_OFFSET, \"cfg_offset\");\n" +
+                    "static LENameOrdinalPair leminValue(FSIO_SETTING_MINVALUE, \"cfg_minValue\");\n" +
+                    "static LENameOrdinalPair lealternatorControl_offset(FSIO_SETTING_ALTERNATORCONTROL_OFFSET, \"cfg_alternatorControl_offset\");\n" +
+                    "static LENameOrdinalPair lealternatorControl_minValue(FSIO_SETTING_ALTERNATORCONTROL_MINVALUE, \"cfg_alternatorControl_minValue\");\n" +
+                    "static LENameOrdinalPair leetb1_offset(FSIO_SETTING_ETB1_OFFSET, \"cfg_etb1_offset\");\n" +
+                    "static LENameOrdinalPair leetb1_minValue(FSIO_SETTING_ETB1_MINVALUE, \"cfg_etb1_minValue\");\n" +
+                    "static LENameOrdinalPair leetb2_offset(FSIO_SETTING_ETB2_OFFSET, \"cfg_etb2_offset\");\n" +
+                    "static LENameOrdinalPair leetb2_minValue(FSIO_SETTING_ETB2_MINVALUE, \"cfg_etb2_minValue\");\n", fsioSettingsConsumer.getNames());
+
+            assertEquals("\tcase FSIO_SETTING_OFFSET:\n" +
+                    "\t\treturn \"cfg_offset\";\n" +
+                    "\tcase FSIO_SETTING_MINVALUE:\n" +
+                    "\t\treturn \"cfg_minValue\";\n" +
+                    "\tcase FSIO_SETTING_ALTERNATORCONTROL_OFFSET:\n" +
+                    "\t\treturn \"cfg_alternatorControl_offset\";\n" +
+                    "\tcase FSIO_SETTING_ALTERNATORCONTROL_MINVALUE:\n" +
+                    "\t\treturn \"cfg_alternatorControl_minValue\";\n" +
+                    "\tcase FSIO_SETTING_ETB1_OFFSET:\n" +
+                    "\t\treturn \"cfg_etb1_offset\";\n" +
+                    "\tcase FSIO_SETTING_ETB1_MINVALUE:\n" +
+                    "\t\treturn \"cfg_etb1_minValue\";\n" +
+                    "\tcase FSIO_SETTING_ETB2_OFFSET:\n" +
+                    "\t\treturn \"cfg_etb2_offset\";\n" +
+                    "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
+                    "\t\treturn \"cfg_etb2_minValue\";\n", fsioSettingsConsumer.getStrings());
         }
     }
 

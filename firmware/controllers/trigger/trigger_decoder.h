@@ -165,7 +165,7 @@ uint32_t findTriggerZeroEventIndex(TriggerState *state, TriggerShape * shape, tr
 
 class Engine;
 
-void initTriggerDecoder(void);
+void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initTriggerDecoderLogger(Logging *sharedLogger);
 
 bool isTriggerDecoderError(void);
