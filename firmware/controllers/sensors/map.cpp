@@ -8,7 +8,7 @@
 #include "global.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
-#include "analog_input.h"
+#include "adc_inputs.h"
 #include "interpolation.h"
 #include "map.h"
 #include "engine_controller.h"

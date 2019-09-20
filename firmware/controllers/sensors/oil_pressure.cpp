@@ -5,7 +5,7 @@
 #include "os_access.h"
 #include "oil_pressure.h"
 #include "interpolation.h"
-#include "analog_input.h"
+#include "adc_inputs.h"
 #include "engine.h"
 
 EXTERN_ENGINE;
