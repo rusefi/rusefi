@@ -22,7 +22,7 @@
 #include "oil_pressure.h"
 #include "adc_inputs.h"
 
-#include "analog_input.h"
+#include "adc_inputs.h"
 
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
