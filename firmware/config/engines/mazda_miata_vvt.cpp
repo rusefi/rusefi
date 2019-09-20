@@ -1,6 +1,7 @@
 /*
  * @file	mazda_miata_vvt.cpp
  *
+ * MAZDA_MIATA_2003
  * set engine_type 47
  *
  * @date Oct 4, 2016
@@ -264,7 +265,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.periodMs = 10;
 } // end of setMazdaMiataEngineNB2Defaults
 
-
+// MAZDA_MIATA_2003
 void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 

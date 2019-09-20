@@ -1136,7 +1136,7 @@ static void getValue(const char *paramStr) {
 	}
 
 #if EFI_RTC
-	else if (strEqualCaseInsensitive(paramStr, "date")) {
+	else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		printDateTime();
 	}
 #endif
@@ -1357,7 +1357,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC
-	} else if (strEqualCaseInsensitive(paramStr, "date")) {
+	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);
 #endif
