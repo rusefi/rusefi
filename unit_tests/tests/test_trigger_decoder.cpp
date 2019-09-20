@@ -55,7 +55,6 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 
 static void testDodgeNeonDecoder(void) {
 	printf("*************************************************** testDodgeNeonDecoder95\r\n");
-	initTriggerDecoder();
 
 	ASSERT_EQ( 8,  getTriggerZeroEventIndex(DODGE_NEON_1995)) << "DODGE_NEON_1995: trigger zero index";
 

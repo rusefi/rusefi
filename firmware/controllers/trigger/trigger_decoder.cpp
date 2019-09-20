@@ -763,7 +763,7 @@ void TriggerState::runtimeStatistics(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SU
 	// empty base implementation
 }
 
- void initTriggerDecoder(void) {
+ void initTriggerDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
 	enginePins.triggerDecoderErrorPin.initPin("trg_err", CONFIGB(triggerErrorPin),
 			&CONFIGB(triggerErrorPinMode));

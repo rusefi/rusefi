@@ -305,7 +305,7 @@ OutputPin::OutputPin() {
 }
 
 bool OutputPin::isInitialized() {
-#if EFI_GPIO_HARDWARE
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	if (ext)
 		return true;
@@ -362,7 +362,7 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
-void initOutputPins(void) {
+void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_GPIO_HARDWARE
 	/**
 	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
@@ -420,7 +420,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
-#if EFI_GPIO_HARDWARE
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 
@@ -480,14 +480,16 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 #if EFI_GPIO_HARDWARE
 
 // questionable trick: we avoid using 'getHwPort' and 'getHwPin' in case of errors in order to increase the changes of turning the LED
-// by reducing stack requirment
+// by reducing stack requirement
 ioportid_t errorLedPort;
 ioportmask_t errorLedPin;
 
 void initPrimaryPins(void) {
+#if EFI_PROD_CODE
 	enginePins.errorLedPin.initPin("led: ERROR status", LED_ERROR_BRAIN_PIN);
 	errorLedPort = getHwPort("primary", LED_ERROR_BRAIN_PIN);
 	errorLedPin = getHwPin("primary", LED_ERROR_BRAIN_PIN);
+#endif /* EFI_PROD_CODE */
 }
 
 /**
@@ -502,11 +504,5 @@ void turnAllPinsOff(void) {
 	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
 		enginePins.coils[i].setValue(false);
 	}
-}
-
-#else /* EFI_GPIO_HARDWARE */
-const char *hwPortname(brain_pin_e brainPin) {
-	(void)brainPin;
-	return "N/A";
 }
 #endif /* EFI_GPIO_HARDWARE */
