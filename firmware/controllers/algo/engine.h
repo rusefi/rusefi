@@ -4,8 +4,8 @@
  * @date May 21, 2014
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
-#ifndef H_ENGINE_H_
-#define H_ENGINE_H_
+
+#pragma once
 
 #include "global.h"
 #include "globalaccess.h"
@@ -322,5 +322,3 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-#endif /* H_ENGINE_H_ */
