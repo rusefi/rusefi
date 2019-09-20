@@ -239,7 +239,7 @@ fileVersion = { 20190701 }
       engineLoadAccelExtra = scalar,F32, 124, "value",        1,         0
       tpsAccelFuel    = scalar,  F32,    128, "ms",           1,         0
       baroCorrection  = scalar,  F32,    132, "%",            1,         0
-      pedalPosition   = scalar,  F32,    136, "%",            1,         0
+      throttlePedalPosition   = scalar,  F32,    136, "%",            1,         0
       injectorDutyCycle= scalar, F32,    140, "%",            1,         0
       knockCount      = scalar,  U32,    144, "counter",      1,         0
       fuelTankLevel   = scalar,  F32,    148, "amount",       1,         0
@@ -718,7 +718,7 @@ fileVersion = { 20190701 }
    table = pedalToTpsTbl,  pedalToTpsMap,  "ETB Pedal to TPS",   1
       ;       constant, variable
       xBins       = pedalToTpsRpmBins,  RPMValue
-      yBins       = pedalToTpsPedalBins,  pedalPosition
+      yBins       = pedalToTpsPedalBins,  throttlePedalPosition
       zBins       = pedalToTpsTable
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
@@ -830,7 +830,7 @@ gaugeCategory = Fueling
 #else
    tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "deg F",      -40,    285,       5,     35,     205,   230,  1,   1
 #endif
-   baroCorrectionGauge  = baroCorrection,"Fuel: Barometric pressure correction",           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
+   baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
    crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    cltCorrectionGauge = cltCorrection, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
@@ -844,7 +844,7 @@ gaugeCategory = Fueling
    fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_PID_CORR@@,      "mSec",        -11,   11,     1.0,    1.2,      20,    25,   3, 1
 
 gaugeCategory = Throttle Body (incl. ETB)
-   pedalPositionGauge = pedalPosition, "Throttle pedal position",        "%",    0,    120,      0,     0,     100,   100,   1,   1
+   pedalPositionGauge = throttlePedalPosition, @@GAUGE_NAME_THROTTLE_PEDAL@@,        "%",    0,    120,      0,     0,     100,   100,   1,   1
    tpsADCGauge       = tpsADC,           "tps1 ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0
    TPSGauge			 = TPSValue,      "Throttle position",         "%",        0,    100,       0,      0,     100,   100,   1,   1
 
@@ -949,9 +949,9 @@ gaugeCategory = Throttle Body (incl. ETB)
    entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
    entry = rpmAcceleration, "dRPM",        float,  "%.3f"
-   entry = massAirFlowValue,"air flow",    float,  "%.3f"
-   entry = chargeAirMass,   "air mass",    float,  "%.3f"
-   entry = pedalPosition,   "pedal",       float,  "%.3f"
+   entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
+   entry = chargeAirMass,   @@GAUGE_NAME_AIR_MASS@@,    float,  "%.3f"
+   entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
    entry = triggerErrorsCounter, "trg err",int,    "%d"
    entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
 
@@ -986,7 +986,7 @@ gaugeCategory = Throttle Body (incl. ETB)
    entry = wallFuelCorrection,@@GAUGE_NAME_FUEL_WALL_CORRECTION@@,	float,   "%.3f"
    entry = wallFuelAmount, @@GAUGE_NAME_FUEL_WALL_AMOUNT@@,	float,   "%.3f"
    
-   entry = baroCorrection,   "baroCorrection",float,"%.3f"
+   entry = baroCorrection,  @@GAUGE_NAME_FUEL_BARO_CORR@@,float,"%.3f"
    entry = iatCorrection,   @@GAUGE_NAME_FUEL_IAT_CORR@@,	float,   "%.3f"
    entry = cltCorrection,	@@GAUGE_NAME_FUEL_CLT_CORR@@, float,"%.3f"
 
@@ -1052,7 +1052,7 @@ gaugeCategory = Throttle Body (incl. ETB)
    entry = clutchUpState,   @@INDICATOR_NAME_CLUTCH_UP@@,int,"%d"
    entry = clutchDownState,   @@INDICATOR_NAME_CLUTCH_DOWN@@,int,"%d"
    entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
-   entry = acSwitchIndicator,   "AC switch",int,"%d"
+   entry = acSwitchIndicator,   @@INDICATOR_NAME_AC_SWITCH@@,int,"%d"
    entry = ind_fan, "radiator fan",int,"%d"
 
 ; Electronic throttle body

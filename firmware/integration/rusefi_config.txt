@@ -1193,7 +1193,10 @@ end_struct
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
+#define INDICATOR_NAME_AC_SWITCH "AC switch"
 
+#define GAUGE_NAME_AIR_FLOW "air flow"
+#define GAUGE_NAME_AIR_MASS "air mass"
 
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
@@ -1203,6 +1206,8 @@ end_struct
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 
 
+#define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
+#define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"

@@ -184,6 +184,10 @@ static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			engineConfiguration->ignitionMode;
 }
 
+static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
+}
+
 static void printSensors(Logging *log) {
 	bool fileFormat = true; // todo:remove this unused variable
 	// current time, in milliseconds
@@ -212,6 +216,18 @@ static void printSensors(Logging *log) {
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
 	}
+
+	reportSensorF(log, GAUGE_NAME_FUEL_BARO_CORR, "x", engine->engineState.baroCorrection, 2);
+
+	reportSensorF(log, GAUGE_NAME_AIR_FLOW, "v", getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
+	reportSensorF(log, GAUGE_NAME_AIR_MASS, "x", engine->engineState.sd.airMassInOneCylinder, 2);
+
+//	if (hasMafSensor()) {
+//		reportSensorF(log, , "V", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
+//	}
+
+	getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 #if EFI_ANALOG_SENSORS
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, "MAP", "kPa", getMap(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
@@ -291,11 +307,18 @@ static void printSensors(Logging *log) {
 	reportSensorF(log, GAUGE_NAME_TIMING_ADVANCE, "deg", engine->engineState.timingAdvance, 2);
 
 
+	if (hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		// 136
+		reportSensorF(log, GAUGE_NAME_THROTTLE_PEDAL, "%", getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
+	}
+
+
 		floatms_t fuelBase = getBaseFuel(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		reportSensorF(log, GAUGE_NAME_FUEL_BASE, "ms", fuelBase, 2);
 		reportSensorF(log, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", ENGINE(actualLastInjection), 2);
 		reportSensorF(log, GAUGE_NAME_INJECTOR_LAG, "ms", engine->engineState.running.injectorLag, 2);
 		reportSensorF(log, GAUGE_NAME_FUEL_RUNNING, "ms", ENGINE(engineState.running.fuel), 2);
+		// 268
 		reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.running.pidCorrection), 2);
 
 		reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel).getWallFuel(0), 2);
@@ -348,6 +371,7 @@ static void printSensors(Logging *log) {
 		reportSensorI(log, INDICATOR_NAME_CLUTCH_UP, "bool", engine->clutchUpState);
 		reportSensorI(log, INDICATOR_NAME_CLUTCH_DOWN, "bool", engine->clutchDownState);
 		reportSensorI(log, INDICATOR_NAME_BRAKE_DOWN, "bool", engine->brakePedalState);
+		reportSensorI(log, INDICATOR_NAME_AC_SWITCH, "bool", engine->acSwitchState);
 
 }
 
@@ -652,6 +676,7 @@ static LcdController lcdInstance;
 extern HIP9011 instance;
 #endif /* EFI_HIP_9011 */
 
+
 #if EFI_TUNER_STUDIO
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -674,62 +699,105 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
-	// engine state
+	// offset 0
 	tsOutputChannels->rpm = rpm;
+	// offset 4
 	tsOutputChannels->coolantTemperature = coolant;
+	// offset 8
 	tsOutputChannels->intakeAirTemperature = intake;
+	// offset 12
 	tsOutputChannels->throttlePositon = tps;
+	// offset 16
 	tsOutputChannels->massAirFlowVoltage = hasMafSensor() ? getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
-	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-    tsOutputChannels->massAirFlow = hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
-    tsOutputChannels->oilPressure = engine->sensors.oilPressure;
 
-    tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
-
-    tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
-    tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
-
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-		tsOutputChannels->veValue = engine->engineState.currentBaroCorrectedVE * PERCENT_MULT;
-		// todo: bug here? target afr could work based on real MAF?
-		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
-		tsOutputChannels->manifoldAirPressure = mapValue;
-	}
 	if (hasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		// offset 20
 		tsOutputChannels->airFuelRatio = getAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
+	// offset 24
+	tsOutputChannels->engineLoad = engineLoad;
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		// offset 28
 		tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
+	// offset 32
 	tsOutputChannels->tpsADC = getTPS12bitAdc(PASS_ENGINE_PARAMETER_SIGNATURE) / TPS_TS_CONVERSION;
+	// offset 36
 #if EFI_ANALOG_SENSORS
 	tsOutputChannels->baroPressure = hasBaroSensor() ? getBaroPressure() : 0;
 #endif /* EFI_ANALOG_SENSORS */
-	tsOutputChannels->engineLoad = engineLoad;
+	// 48
+	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
+	// 64
+	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
+
+	// offset 108
+	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
+    tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// offset 116
+	// TPS acceleration
+	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
+	// 120
 	tsOutputChannels->triggerErrorsCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
+	// 132
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
+	// 136
 	tsOutputChannels->pedalPosition = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE) ? getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE) : 0;
+	// 140
+	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	// 148
+	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
+	// 160
+	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
+	// 164
+	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
+	// 168
+	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel).wallFuelCorrection;
+	// 184
+	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
+	// 188
+	tsOutputChannels->fuelRunning = ENGINE(engineState.running.fuel);
+	// 196
+	tsOutputChannels->injectorLagMs = ENGINE(engineState.running.injectorLag);
+	// 224
+	efitimesec_t timeSeconds = getTimeNowSeconds();
+	tsOutputChannels->timeSeconds = timeSeconds;
+	// 248
+	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
+	// 252
+	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+	// 264
+	tsOutputChannels->firmwareVersion = getRusEfiVersion();
+	// 268
+	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
+    // 276
+    tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
+    // 278
+    tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
+    // 280
+    tsOutputChannels->oilPressure = engine->sensors.oilPressure;
+    // 288
+    tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
+
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		float mapValue = getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		// // offset 112
+		tsOutputChannels->veValue = engine->engineState.currentBaroCorrectedVE * PERCENT_MULT;
+		// todo: bug here? target afr could work based on real MAF?
+		tsOutputChannels->currentTargetAfr = afrMap.getValue(rpm, mapValue);
+		// offset 40
+		tsOutputChannels->manifoldAirPressure = mapValue;
+	}
+
 	tsOutputChannels->knockCount = engine->knockCount;
 	tsOutputChannels->knockLevel = engine->knockVolts;
-	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
 
 	tsOutputChannels->hasFatalError = hasFirmwareError();
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
-	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	tsOutputChannels->fuelRunning = ENGINE(engineState.running.fuel);
-	tsOutputChannels->fuelPidCorrection = ENGINE(engineState.running.pidCorrection);
-	tsOutputChannels->injectorLagMs = ENGINE(engineState.running.injectorLag);
-	tsOutputChannels->fuelBase = engine->engineState.baseFuel;
-	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
-
 	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
-	efitimesec_t timeSeconds = getTimeNowSeconds();
-	tsOutputChannels->timeSeconds = timeSeconds;
-	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
 	tsOutputChannels->isCltBroken = engine->isCltBroken;
@@ -737,8 +805,87 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isKnockChipOk = (instance.invalidHip9011ResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
+
+	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
+	// engine load acceleration
+	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	}
+	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
+
+	tsOutputChannels->checkEngine = hasErrorCodes();
+
+#if	HAL_USE_ADC
+	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
+#endif /* HAL_USE_ADC */
+
+#if EFI_MAX_31855
+	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
+		tsOutputChannels->egtValues.values[i] = getEgtValue(i);
+#endif /* EFI_MAX_31855 */
+
+#if EFI_IDLE_CONTROL
+	tsOutputChannels->idlePosition = getIdlePosition();
+#endif
+
+#if EFI_PROD_CODE
+	tsOutputChannels->isTriggerError = isTriggerErrorNow();
+
+#if EFI_INTERNAL_FLASH
+	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
+#endif /* EFI_INTERNAL_FLASH */
+
+#if EFI_FILE_LOGGING
+	tsOutputChannels->hasSdCard = isSdCardAlive();
+#endif /* EFI_FILE_LOGGING */
+
+	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
+	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
+	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
+	tsOutputChannels->isIgnitionEnabled = engineConfiguration->isIgnitionEnabled;
+	tsOutputChannels->isInjectionEnabled = engineConfiguration->isInjectionEnabled;
+	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
+	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
+	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
+#if EFI_VEHICLE_SPEED
+	float vehicleSpeed = getVehicleSpeed();
+	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
+	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
+
+#endif /* EFI_VEHICLE_SPEED */
+	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+#endif /* EFI_PROD_CODE */
+
+	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
+
+	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
+	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
+	for (int i = 0; i < 8;i++) {
+		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
+	}
+
+	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
+	tsOutputChannels->knockEverIndicator = engine->knockEver;
+
+	tsOutputChannels->clutchUpState = engine->clutchUpState;
+	tsOutputChannels->clutchDownState = engine->clutchDownState;
+	tsOutputChannels->brakePedalState = engine->brakePedalState;
+	tsOutputChannels->acSwitchState = engine->acSwitchState;
+
+	// tCharge depends on the previous state, so we should use the stored value.
+	tsOutputChannels->tCharge = ENGINE(engineState.sd.tCharge);
+	float timing = engine->engineState.timingAdvance;
+	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
+	// 60
+	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
+	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
+
+
 	switch (engineConfiguration->debugMode)	{
 	case DBG_AUX_TEMPERATURE:
+		// // 68
 		tsOutputChannels->debugFloatField1 = engine->sensors.auxTemp1;
 		tsOutputChannels->debugFloatField2 = engine->sensors.auxTemp2;
 		break;
@@ -857,93 +1004,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	default:
 		;
 	}
-
-	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
-	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel).wallFuelCorrection;
-	// TPS acceleration
-	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
-	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
-	// engine load acceleration
-	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / getMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
-
-
-	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
-	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
-
-	tsOutputChannels->checkEngine = hasErrorCodes();
-
-	tsOutputChannels->vvtPosition = engine->triggerCentral.vvtPosition;
-
-	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-#if	HAL_USE_ADC
-	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
-#endif /* HAL_USE_ADC */
-
-#if EFI_MAX_31855
-	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
-		tsOutputChannels->egtValues.values[i] = getEgtValue(i);
-#endif /* EFI_MAX_31855 */
-
-#if EFI_IDLE_CONTROL
-	tsOutputChannels->idlePosition = getIdlePosition();
-#endif
-
-#if EFI_PROD_CODE
-	tsOutputChannels->isTriggerError = isTriggerErrorNow();
-
-#if EFI_INTERNAL_FLASH
-	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
-#endif /* EFI_INTERNAL_FLASH */
-
-#if EFI_FILE_LOGGING
-	tsOutputChannels->hasSdCard = isSdCardAlive();
-#endif /* EFI_FILE_LOGGING */
-
-	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
-	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
-	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	tsOutputChannels->isIgnitionEnabled = engineConfiguration->isIgnitionEnabled;
-	tsOutputChannels->isInjectionEnabled = engineConfiguration->isInjectionEnabled;
-	tsOutputChannels->isCylinderCleanupEnabled = engineConfiguration->isCylinderCleanupEnabled;
-	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
-	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
-#if EFI_VEHICLE_SPEED
-	float vehicleSpeed = getVehicleSpeed();
-	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
-	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
-
-#endif /* EFI_VEHICLE_SPEED */
-	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
-	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
-#endif /* EFI_PROD_CODE */
-
-	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
-	
-	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
-	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
-	for (int i = 0; i < 8;i++) {
-		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
-	}
-
-	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
-	tsOutputChannels->knockEverIndicator = engine->knockEver;
-
-	tsOutputChannels->clutchUpState = engine->clutchUpState;
-	tsOutputChannels->clutchDownState = engine->clutchDownState;
-	tsOutputChannels->brakePedalState = engine->brakePedalState;
-	tsOutputChannels->acSwitchState = engine->acSwitchState;
-
-	// tCharge depends on the previous state, so we should use the stored value.
-	tsOutputChannels->tCharge = ENGINE(engineState.sd.tCharge);
-	float timing = engine->engineState.timingAdvance;
-	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
-	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->crankingFuelMs = engine->isCylinderCleanupMode ? 0 : getCrankingFuel(PASS_ENGINE_PARAMETER_SIGNATURE);
-	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;
