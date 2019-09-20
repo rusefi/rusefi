@@ -7,5 +7,10 @@ BOARDINC = $(PROJECT_DIR)/config/boards/nucleo_f767 $(PROJECT_DIR)/config/stm32f
 
 LDSCRIPT= $(PROJECT_DIR)/config/boards/nucleo_f767/STM32F76xxI.ld
 
+# Set this if you want a default engine type other than normal MRE
+ifeq ($(DEFAULT_ENGINE_TYPE),)
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MICRO_RUS_EFI
+endif
+
 # Override DEFAULT_ENGINE_TYPE
-DDEFS += -DSTM32F767xx -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEfi\"
+DDEFS += -DSTM32F767xx -DEFI_USE_OSC=TRUE -DEFI_FATAL_ERROR_PIN=GPIOE_3 -DFIRMWARE_ID=\"microRusEfi\" $(DEFAULT_ENGINE_TYPE)

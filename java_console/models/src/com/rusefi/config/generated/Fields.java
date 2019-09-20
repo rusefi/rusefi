@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 18:08:52 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -237,6 +237,7 @@ public class Fields {
 	public static final int clutchUpPinMode_offset = 971;
 	public static final String CMD_CALIBRATE_PEDAL_DOWN = "calibrate_pedal_down";
 	public static final String CMD_CALIBRATE_PEDAL_UP = "calibrate_pedal_up";
+	public static final String CMD_DATE = "date";
 	public static final String CMD_DISABLE = "disable";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_REBOOT = "reboot";
@@ -366,7 +367,6 @@ public class Fields {
 	public static final int firingOrder_offset_hex = 194;
 	public static final int fixedModeTiming_offset = 452;
 	public static final int fixedTiming_offset = 2204;
-	public static final int flexFuelSensor_offset = 3100;
 	public static final int frequencyReportingMapInputPin_offset = 970;
 	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
 	public static final int FSIO_COMMAND_COUNT = 16;
@@ -1219,6 +1219,7 @@ public class Fields {
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtBoardConfigurationEnd_offset = 980;
 	public static final int unusedErrorPin_offset = 2040;
+	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1756;
 	public static final int unusedh_offset = 1471;
 	public static final int unusedMa2_offset = 711;
@@ -1989,7 +1990,7 @@ public class Fields {
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2704, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2708, FieldType.FLOAT);
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2712, FieldType.INT8);
-	public static final Field FLEXFUELSENSOR = Field.create("FLEXFUELSENSOR", 3100, FieldType.INT8, brain_input_pin_e);
+	public static final Field UNUSEDFLEXFUELSENSOR = Field.create("UNUSEDFLEXFUELSENSOR", 3100, FieldType.INT8);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3102, FieldType.INT8, pin_output_mode_e);
 	public static final Field EXTERNALKNOCKSENSEADC = Field.create("EXTERNALKNOCKSENSEADC", 3103, FieldType.INT8, adc_channel_e);
@@ -2764,7 +2765,7 @@ public class Fields {
 	OILPRESSURE_V2,
 	OILPRESSURE_VALUE2,
 	ACCELEROMETERSPIDEVICE,
-	FLEXFUELSENSOR,
+	UNUSEDFLEXFUELSENSOR,
 	TEST557PIN,
 	STEPPERDIRECTIONPINMODE,
 	EXTERNALKNOCKSENSEADC,
