@@ -10,6 +10,18 @@
 #define IDLE_THREAD_H_
 
 #include "engine.h"
+#include "periodic_task.h"
+
+class IdleController : public PeriodicTimerController {
+public:
+	Engine *engine = NULL;
+	engine_configuration_s *engineConfiguration = NULL;
+	persistent_config_s *config = NULL;
+	board_configuration_s *boardConfiguration = NULL;
+
+	int getPeriodMs() override;
+	void PeriodicTask() override;
+};
 
 percent_t getIdlePosition(void);
 void setIdleValvePosition(int positionPercent);

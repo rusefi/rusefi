@@ -108,6 +108,10 @@ TransmissionState::TransmissionState() {
 
 EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
+
+#if ! EFI_PROD_CODE
+	memset(mockPinStates, 0, sizeof(mockPinStates));
+#endif /* EFI_PROD_CODE */
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
