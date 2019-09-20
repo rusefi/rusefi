@@ -2,37 +2,32 @@
 
 #include <gtest/gtest.h>
 
-class SensorConverted : public ::testing::Test
-{
+class SensorConverted : public ::testing::Test {
 protected:
-	void SetUp() override
-	{
+	void SetUp() override {
 		Sensor::resetRegistry();
 	}
 
-	void TearDown() override
-	{
+	void TearDown() override {
 		Sensor::resetRegistry();
 	}
 };
 
-class DoublerConverterSensor final : public ConvertedSensor
-{
+class DoublerConverterSensor final : public ConvertedSensor {
 public:
-	DoublerConverterSensor() : ConvertedSensor(SensorType::Clt) {}
+	DoublerConverterSensor()
+		: ConvertedSensor(SensorType::Clt) {}
 
 protected:
-	SensorResult convertFromInputValue(float input)
-	{
+	SensorResult convertFromInputValue(float input) {
 		bool valid = input > 0;
 		float value = input * 2;
 
-		return { valid, value };
+		return {valid, value};
 	}
 };
 
-TEST_F(SensorConverted, TestValid)
-{
+TEST_F(SensorConverted, TestValid) {
 	DoublerConverterSensor dut;
 	ASSERT_TRUE(dut.Register());
 
@@ -52,8 +47,7 @@ TEST_F(SensorConverted, TestValid)
 	}
 }
 
-TEST_F(SensorConverted, TestInvalid)
-{
+TEST_F(SensorConverted, TestInvalid) {
 	DoublerConverterSensor dut;
 	ASSERT_TRUE(dut.Register());
 

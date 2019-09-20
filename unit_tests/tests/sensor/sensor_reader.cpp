@@ -1,26 +1,21 @@
 #include "sensor_reader.h"
 
-#include <gtest/gtest.h>
-
 #include "mock/mock_sensor.h"
 
-class SensorBasicReader : public ::testing::Test
-{
+#include <gtest/gtest.h>
+
+class SensorBasicReader : public ::testing::Test {
 protected:
-	void SetUp() override
-	{
+	void SetUp() override {
 		Sensor::resetRegistry();
 	}
 
-	void TearDown() override
-	{
+	void TearDown() override {
 		Sensor::resetRegistry();
 	}
 };
 
-
-TEST_F(SensorBasicReader, Value)
-{
+TEST_F(SensorBasicReader, Value) {
 	// Create a sensor - but don't register it
 	MockSensor dut(SensorType::Tps1);
 
@@ -52,8 +47,7 @@ TEST_F(SensorBasicReader, Value)
 	}
 }
 
-TEST_F(SensorBasicReader, FallbackValue)
-{
+TEST_F(SensorBasicReader, FallbackValue) {
 	// Create a sensor - but don't register it
 	MockSensor dut(SensorType::Tps1);
 

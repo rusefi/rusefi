@@ -1,25 +1,20 @@
+#include "mock/mock_sensor.h"
 #include "stored_value_sensor.h"
 
 #include <gtest/gtest.h>
 
-#include "mock/mock_sensor.h"
-
-class SensorBasic : public ::testing::Test
-{
+class SensorBasic : public ::testing::Test {
 protected:
-	void SetUp() override
-	{
+	void SetUp() override {
 		Sensor::resetRegistry();
 	}
 
-	void TearDown() override
-	{
+	void TearDown() override {
 		Sensor::resetRegistry();
 	}
 };
 
-TEST_F(SensorBasic, Registry)
-{
+TEST_F(SensorBasic, Registry) {
 	// Create a sensor - but don't register it
 	MockSensor dut(SensorType::Tps1);
 
@@ -47,8 +42,7 @@ TEST_F(SensorBasic, Registry)
 	}
 }
 
-TEST_F(SensorBasic, DoubleRegister)
-{
+TEST_F(SensorBasic, DoubleRegister) {
 	// Create a sensor, register it
 	MockSensor dut(SensorType::Tps1);
 	ASSERT_TRUE(dut.Register());
@@ -63,15 +57,13 @@ TEST_F(SensorBasic, DoubleRegister)
 	EXPECT_NE(shouldBeDut, &dut2);
 }
 
-TEST_F(SensorBasic, SensorNotInitialized)
-{
+TEST_F(SensorBasic, SensorNotInitialized) {
 	auto result = Sensor::get(SensorType::Clt);
 
 	EXPECT_FALSE(result.Valid);
 }
 
-TEST_F(SensorBasic, SensorInitialized)
-{
+TEST_F(SensorBasic, SensorInitialized) {
 	MockSensor dut(SensorType::Clt);
 	ASSERT_TRUE(dut.Register());
 

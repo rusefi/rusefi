@@ -1,30 +1,27 @@
+#include "mock/mock_sensor.h"
+
 #include "sensor.h"
 
 #include <gtest/gtest.h>
 
-#include "mock/mock_sensor.h"
-
-class SensorMocking : public ::testing::Test
-{
+class SensorMocking : public ::testing::Test {
 protected:
 	MockSensor realSensor;
 
-	SensorMocking() : realSensor(SensorType::Clt) { }
+	SensorMocking()
+		: realSensor(SensorType::Clt) {}
 
-	void SetUp() override
-	{
+	void SetUp() override {
 		Sensor::resetRegistry();
 		ASSERT_TRUE(realSensor.Register());
 	}
 
-	void TearDown() override
-	{
+	void TearDown() override {
 		Sensor::resetRegistry();
 	}
 };
 
-TEST_F(SensorMocking, MockSensor)
-{
+TEST_F(SensorMocking, MockSensor) {
 	// Set a value on the "real" sensor
 	realSensor.set(25.0f);
 
@@ -46,8 +43,7 @@ TEST_F(SensorMocking, MockSensor)
 	}
 }
 
-TEST_F(SensorMocking, ResetOne)
-{
+TEST_F(SensorMocking, ResetOne) {
 	// Set a value on the "real" sensor
 	realSensor.set(13.0f);
 
@@ -71,8 +67,7 @@ TEST_F(SensorMocking, ResetOne)
 	}
 }
 
-TEST_F(SensorMocking, ResetAll)
-{
+TEST_F(SensorMocking, ResetAll) {
 	// Set a value on the "real" sensor
 	realSensor.set(46.0f);
 

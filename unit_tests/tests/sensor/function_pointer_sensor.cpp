@@ -2,27 +2,22 @@
 
 #include <gtest/gtest.h>
 
-class SensorFunctionPointer : public ::testing::Test
-{
+class SensorFunctionPointer : public ::testing::Test {
 protected:
-	void SetUp() override
-	{
+	void SetUp() override {
 		Sensor::resetRegistry();
 	}
 
-	void TearDown() override
-	{
+	void TearDown() override {
 		Sensor::resetRegistry();
 	}
 };
 
-float testFunc()
-{
+float testFunc() {
 	return 23;
 }
 
-TEST_F(SensorFunctionPointer, TestValue)
-{
+TEST_F(SensorFunctionPointer, TestValue) {
 	FunctionPointerSensor dut(SensorType::Clt, testFunc);
 	ASSERT_TRUE(dut.Register());
 
