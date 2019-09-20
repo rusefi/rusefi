@@ -3,6 +3,6 @@
 
 class AdcSubscription {
 public:
-	static void SubscribeSensor(ConvertedSensor& sensor, adc_channel_e channel, float voltsPerAdcVolt = 1.0f);
+	static void SubscribeSensor(ConvertedSensor& sensor, adc_channel_e channel, float voltsPerAdcVolt = 0.0f);
 	static void UpdateSubscribers();
 };

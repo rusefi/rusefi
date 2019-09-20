@@ -45,8 +45,9 @@ void AdcSubscription::UpdateSubscribers() {
 	for (size_t i = 0; i < s_nextEntry; i++) {
 		auto& entry = s_entries[i];
 
-		float volts = getVoltage("sensor", entry.Channel);
+		float mcuVolts = getVoltage("sensor", entry.Channel);
+		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
 
-		entry.Sensor->postRawValue(volts);
+		entry.Sensor->postRawValue(sensorVolts);
 	}
 }
