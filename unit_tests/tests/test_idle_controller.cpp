@@ -40,7 +40,7 @@ TEST(idle, fsioPidParameters) {
 
 //	timeNowUs = MS2US(700);
 
-//	idleControllerInstance.PeriodicTask();
+	idleControllerInstance.PeriodicTask();
 
 //	ASSERT_EQ(0, engine->acSwitchLastChangeTime);
 //	ASSERT_EQ(1, engine->acSwitchState);

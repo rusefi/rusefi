@@ -90,6 +90,10 @@
 
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if EFI_IDLE_CONTROL
+	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_IDLE_CONTROL */
+
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_FSIO
@@ -657,10 +661,6 @@ void commonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S
 #if EFI_SENSOR_CHART
 	initSensorChart();
 #endif /* EFI_SENSOR_CHART */
-
-#if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_IDLE_CONTROL */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	// todo: this is a mess, remove code duplication with simulator
