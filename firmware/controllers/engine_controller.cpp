@@ -91,8 +91,11 @@
 
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#if !EFI_UNIT_TEST
 	initSensors();
+#endif
+	
+	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #if EFI_FSIO
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);

@@ -7,6 +7,8 @@
 
 EXTERN_ENGINE;
 
+#if !EFI_UNIT_TEST
+
 struct AdcSubscriptionEntry {
 	ConvertedSensor* Sensor;
 	float VoltsPerAdcVolt;
@@ -51,3 +53,5 @@ void AdcSubscription::UpdateSubscribers() {
 		entry.Sensor->postRawValue(sensorVolts);
 	}
 }
+
+#endif// !EFI_UNIT_TEST
