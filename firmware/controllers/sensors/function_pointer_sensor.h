@@ -10,7 +10,6 @@
 
 #include "sensor.h"
 
-#include "efilib.h"
 
 /* This class is intended as a bridge to bridge from old getMySensor() functions
  * to the new system.  This way, producers and consumers can be independently
@@ -26,7 +25,9 @@ public:
 
 	SensorResult get() const final {
 		float result = m_func();
-		bool valid = !cisnan(result);
+
+		// check for NaN
+		bool valid = !(result != result);
 
 		return { valid, result };
 	}
