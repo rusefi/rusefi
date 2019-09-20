@@ -67,8 +67,8 @@ MockAdcState::MockAdcState() {
 	memset(hasMockAdc, 0, sizeof(hasMockAdc));
 }
 
-#if EFI_ENABLE_MOCK_ADC || EFI_SIMULATOR
-void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
+#if EFI_ENABLE_MOCK_ADC
+void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	scheduleMsg(&engineLogger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
