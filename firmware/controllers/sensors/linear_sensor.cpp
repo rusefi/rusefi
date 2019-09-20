@@ -14,7 +14,7 @@ SensorResult LinearSensor::convertFromInputValue(float inputValue) {
 	float result = m_a * inputValue + m_b;
 
 	// Bounds check
-	bool isValid = result > m_maxOutput || result < m_minOutput;
+	bool isValid = result <= m_maxOutput && result >= m_minOutput;
 
 	return {isValid, result};
 }
