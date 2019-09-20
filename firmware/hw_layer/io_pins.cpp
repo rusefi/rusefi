@@ -8,9 +8,9 @@
  */
 
 #include "global.h"
+#include "io_pins.h"
 
 #if EFI_PROD_CODE
-#include "io_pins.h"
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
 
@@ -112,4 +112,9 @@ void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 	icuStart(icup, config);
 }
 #endif /* HAL_USE_ICU */
-#endif
+
+#else
+bool efiReadPin(brain_pin_e pin) {
+	return false;
+}
+#endif /* EFI_PROD_CODE */
