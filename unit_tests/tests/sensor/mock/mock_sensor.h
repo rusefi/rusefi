@@ -8,13 +8,13 @@ struct MockSensor final : public StoredValueSensor
 	{
 	}
 
-	void Set(float value)
+	void set(float value)
 	{
-		SetValidValue(value);
+		setValidValue(value);
 	}
 
-	void Invalidate()
+	void invalidate()
 	{
-		StoredValueSensor::Invalidate();
+		StoredValueSensor::invalidate();
 	}
 };

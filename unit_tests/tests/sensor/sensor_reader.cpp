@@ -9,12 +9,12 @@ class SensorBasicReader : public ::testing::Test
 protected:
 	void SetUp() override
 	{
-		Sensor::ResetRegistry();
+		Sensor::resetRegistry();
 	}
 
 	void TearDown() override
 	{
-		Sensor::ResetRegistry();
+		Sensor::resetRegistry();
 	}
 };
 
@@ -29,7 +29,7 @@ TEST_F(SensorBasicReader, Value)
 
 	// Expect not to find it
 	{
-		auto result = dutReader.Get();
+		auto result = dutReader.get();
 		EXPECT_FALSE(result.Valid);
 	}
 
@@ -38,15 +38,15 @@ TEST_F(SensorBasicReader, Value)
 
 	// Still expect invalid - no value has been set yet
 	{
-		auto result = dutReader.Get();
+		auto result = dutReader.get();
 		EXPECT_FALSE(result.Valid);
 	}
 
-	dut.Set(47.0f);
+	dut.set(47.0f);
 
 	// Expect valid - with the value 47 we just set
 	{
-		auto result = dutReader.Get();
+		auto result = dutReader.get();
 		EXPECT_TRUE(result.Valid);
 		EXPECT_FLOAT_EQ(result.Value, 47.0f);
 	}
@@ -62,7 +62,7 @@ TEST_F(SensorBasicReader, FallbackValue)
 
 	// Expect not to find it
 	{
-		auto result = dutReader.Get();
+		auto result = dutReader.get();
 		EXPECT_FALSE(result.Valid);
 	}
 
@@ -71,21 +71,21 @@ TEST_F(SensorBasicReader, FallbackValue)
 
 	// Still expect invalid - no value has been set yet
 	{
-		auto result = dutReader.Get();
+		auto result = dutReader.get();
 		EXPECT_FALSE(result.Valid);
 	}
 
 	// However - we should be able to get the fallback value
 	{
-		auto result = dutReader.GetOrDefault();
+		auto result = dutReader.getOrDefault();
 		EXPECT_FLOAT_EQ(result, 123.0f);
 	}
 
 	// Now set the value for real, and ensure we get that instead
-	dut.Set(63);
+	dut.set(63);
 
 	{
-		auto result = dutReader.GetOrDefault();
+		auto result = dutReader.getOrDefault();
 		EXPECT_FLOAT_EQ(result, 63.0f);
 	}
 }
