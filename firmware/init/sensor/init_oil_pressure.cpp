@@ -3,6 +3,7 @@
 #include "global.h"
 #include "linear_sensor.h"
 #include "tunerstudio_configuration.h"
+#include "adc_subscription.h"
 
 EXTERN_ENGINE;
 
@@ -12,7 +13,8 @@ LinearSensor oilpSensor(SensorType::OilPressure);
 
 void initOilPressure() {
 	// Only register if we have a sensor
-	if (engineConfiguration->oilPressure.hwChannel == EFI_ADC_NONE) {
+	auto channel = engineConfiguration->oilPressure.hwChannel;
+	if (channel == EFI_ADC_NONE) {
 		return;
 	}
 
@@ -29,9 +31,10 @@ void initOilPressure() {
 	oilpSensor.configure(sensorCfg->v1, val1, sensorCfg->v2, val2, /*minOutput*/ -5, greaterOutput);
 
 	// Tell it to report to its output channel
-	oilpSensor.setReportingLocation(&tsOutputChannels->oilPressure);
+	oilpSensor.setReportingLocation(&tsOutputChannels.oilPressure);
 
-	// TODO: Subscribe the sensor to ADC
+	// Subscribe the sensor to the ADC
+	AdcSubscription::SubscribeSensor(oilpSensor, channel);
 
 	if (!oilpSensor.Register()) {
 		warning(OBD_Oil_Pressure_Sensor_Malfunction, "Duplicate oilp sensor registration, ignoring");

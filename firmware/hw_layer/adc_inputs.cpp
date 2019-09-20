@@ -27,6 +27,7 @@
 
 #include "engine.h"
 #include "adc_inputs.h"
+#include "adc_subscription.h"
 #include "AdcConfiguration.h"
 #include "mpu_util.h"
 
@@ -467,6 +468,8 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		}
 		slowAdcCounter++;
 	}
+
+	AdcSubscription::UpdateSubscribers();
 }
 
 static char errorMsgBuff[10];
