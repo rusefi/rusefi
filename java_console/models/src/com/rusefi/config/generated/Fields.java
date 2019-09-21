@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 19:43:59 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 20:31:53 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -583,6 +583,9 @@ public class Fields {
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
+	public static final String GAUGE_NAME_ETB_DUTY = "ETB duty cycle";
+	public static final String GAUGE_NAME_ETB_ERROR = "ETB position error";
+	public static final String GAUGE_NAME_ETB_TARGET = "ETB position target";
 	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure correction";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";

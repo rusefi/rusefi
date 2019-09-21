@@ -1183,6 +1183,9 @@ end_struct
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
+#define GAUGE_NAME_ETB_TARGET "ETB position target"
+#define GAUGE_NAME_ETB_ERROR "ETB position error"
+#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"

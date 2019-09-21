@@ -848,9 +848,9 @@ gaugeCategory = Throttle Body (incl. ETB)
    tpsADCGauge       = tpsADC,           "tps1 ADC",       "ADC",        0,   1024,       0,      0,       0,     0,   0,   0
    TPSGauge			 = TPSValue,      "Throttle position",         "%",        0,    100,       0,      0,     100,   100,   1,   1
 
-   etbTargetGauge     = etbTarget,     "ETB position target", "%",    0,    100,    0,     0,     100,   100,   1,   1
-   etbErrorGauge      = etb1Error,     "ETB position error",  "%",    -20,  20,    -10,   -5,    5,    10,  2, 0
-   etbDutyCycleGauge  = etb1DutyCycle, "ETB duty cycle",                 "%",    -100, 100,   -75,   -50,   50,   75,  0, 0
+   etbTargetGauge     = etbTarget,     @@GAUGE_NAME_ETB_TARGET@@, "%",    0,    100,    0,     0,     100,   100,   1,   1
+   etbErrorGauge      = etb1Error,     @@GAUGE_NAME_ETB_ERROR@@,  "%",    -20,  20,    -10,   -5,    5,    10,  2, 0
+   etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,                 "%",    -100, 100,   -75,   -50,   50,   75,  0, 0
 
 
 [WueAnalyze]
