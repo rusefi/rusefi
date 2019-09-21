@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 20:31:53 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 21:55:21 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -327,16 +327,16 @@ public class Fields {
 	public static final int engineType_offset = 0;
 	public static final int engineType_offset_hex = 0;
 	public static final int etb1_controlPin1_offset = 682;
+	public static final int etb1_controlPinMode_offset = 683;
 	public static final int etb1_directionPin1_offset = 680;
 	public static final int etb1_directionPin2_offset = 681;
 	public static final int etb1_offset = 680;
-	public static final int etb1_unusedPin_offset = 683;
 	public static final int etb1_use_two_wires_offset = 76;
 	public static final int etb2_controlPin1_offset = 3966;
+	public static final int etb2_controlPinMode_offset = 3967;
 	public static final int etb2_directionPin1_offset = 3964;
 	public static final int etb2_directionPin2_offset = 3965;
 	public static final int etb2_offset = 3964;
-	public static final int etb2_unusedPin_offset = 3967;
 	public static final int etb2_use_two_wires_offset = 76;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int etb_dFactor_offset = 1744;
@@ -1513,7 +1513,7 @@ public class Fields {
 	public static final Field ETB1_DIRECTIONPIN1 = Field.create("ETB1_DIRECTIONPIN1", 680, FieldType.INT8, brain_pin_e);
 	public static final Field ETB1_DIRECTIONPIN2 = Field.create("ETB1_DIRECTIONPIN2", 681, FieldType.INT8, brain_pin_e);
 	public static final Field ETB1_CONTROLPIN1 = Field.create("ETB1_CONTROLPIN1", 682, FieldType.INT8, brain_pin_e);
-	public static final Field ETB1_UNUSEDPIN = Field.create("ETB1_UNUSEDPIN", 683, FieldType.INT8, brain_pin_e);
+	public static final Field ETB1_CONTROLPINMODE = Field.create("ETB1_CONTROLPINMODE", 683, FieldType.INT8, pin_output_mode_e);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 684, FieldType.FLOAT);
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 688, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
@@ -2038,7 +2038,7 @@ public class Fields {
 	public static final Field ETB2_DIRECTIONPIN1 = Field.create("ETB2_DIRECTIONPIN1", 3964, FieldType.INT8, brain_pin_e);
 	public static final Field ETB2_DIRECTIONPIN2 = Field.create("ETB2_DIRECTIONPIN2", 3965, FieldType.INT8, brain_pin_e);
 	public static final Field ETB2_CONTROLPIN1 = Field.create("ETB2_CONTROLPIN1", 3966, FieldType.INT8, brain_pin_e);
-	public static final Field ETB2_UNUSEDPIN = Field.create("ETB2_UNUSEDPIN", 3967, FieldType.INT8, brain_pin_e);
+	public static final Field ETB2_CONTROLPINMODE = Field.create("ETB2_CONTROLPINMODE", 3967, FieldType.INT8, pin_output_mode_e);
 	public static final Field IDLETIMINGPID_PFACTOR = Field.create("IDLETIMINGPID_PFACTOR", 3968, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_IFACTOR = Field.create("IDLETIMINGPID_IFACTOR", 3972, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_DFACTOR = Field.create("IDLETIMINGPID_DFACTOR", 3976, FieldType.FLOAT);
@@ -2297,7 +2297,7 @@ public class Fields {
 	ETB1_DIRECTIONPIN1,
 	ETB1_DIRECTIONPIN2,
 	ETB1_CONTROLPIN1,
-	ETB1_UNUSEDPIN,
+	ETB1_CONTROLPINMODE,
 	FUELLEVELEMPTYTANKVOLTAGE,
 	FUELLEVELFULLTANKVOLTAGE,
 	AFR_TYPE,
@@ -2813,7 +2813,7 @@ public class Fields {
 	ETB2_DIRECTIONPIN1,
 	ETB2_DIRECTIONPIN2,
 	ETB2_CONTROLPIN1,
-	ETB2_UNUSEDPIN,
+	ETB2_CONTROLPINMODE,
 	IDLETIMINGPID_PFACTOR,
 	IDLETIMINGPID_IFACTOR,
 	IDLETIMINGPID_DFACTOR,

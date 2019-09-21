@@ -491,7 +491,7 @@ struct etb_io
 	brain_pin_e directionPin1;
 	brain_pin_e directionPin2;
 	brain_pin_e controlPin1;
-	brain_pin_e unusedPin
+	pin_output_mode_e controlPinMode;
 end_struct
 	
 struct_no_prefix board_configuration_s
