@@ -217,6 +217,15 @@ static void printSensors(Logging *log) {
 		reportSensorF(log, GAUGE_NAME_VBAT, "V", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #6
 	}
 
+
+	// 312
+	reportSensorF(log, GAUGE_NAME_ETB_TARGET, "v", tsOutputChannels.etbTarget, 2);
+	// 316
+	reportSensorF(log, GAUGE_NAME_ETB_DUTY, "e", tsOutputChannels.etb1DutyCycle, 2);
+	// 320
+	reportSensorF(log, GAUGE_NAME_ETB_ERROR, "d", tsOutputChannels.etb1Error, 2);
+
+
 	reportSensorF(log, GAUGE_NAME_FUEL_BARO_CORR, "x", engine->engineState.baroCorrection, 2);
 
 	reportSensorF(log, GAUGE_NAME_AIR_FLOW, "v", getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE), 2);

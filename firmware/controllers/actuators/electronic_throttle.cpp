@@ -295,8 +295,11 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 /* DISPLAY_ELSE */
 		DISPLAY_TEXT(No_Pedal_Sensor);
 /* DISPLAY_ENDIF */
+		// 312
 		tsOutputChannels.etbTarget = targetPosition;
+		// 316
 		tsOutputChannels.etb1DutyCycle = currentEtbDuty;
+		// 320
 		// Error is positive if the throttle needs to open further
 		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
 	}
