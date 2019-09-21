@@ -601,6 +601,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
+	boardConfiguration->sdCardPeriodMs = 50;
+
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
 		config->fsioFormulas[i][0] = 0;
 	}

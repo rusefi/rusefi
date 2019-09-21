@@ -48,7 +48,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190914;
+    public static final int CONSOLE_VERSION = 20190919;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
@@ -254,7 +254,9 @@ public class Launcher {
                 if (ConnectionStatus.INSTANCE.getValue() == ConnectionStatus.Value.CONNECTED) {
                     long unixGmtTime = System.currentTimeMillis() / 1000L;
                     long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
-                    CommandQueue.getInstance().write("set date " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
+                    CommandQueue.getInstance().write("set " +
+                                    Fields.CMD_DATE +
+                                    " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
                             InvocationConfirmationListener.VOID, false);
                 }
             }

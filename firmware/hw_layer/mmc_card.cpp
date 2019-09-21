@@ -42,6 +42,10 @@ static bool fs_ready = false;
 
 EXTERN_ENGINE;
 
+#define F_SYNC_FREQUENCY 100
+
+static int writeCounter = 0;
+
 #define LOG_INDEX_FILENAME "index.txt"
 
 #define RUSEFI_LOG_PREFIX "rus"
@@ -90,7 +94,7 @@ static SPIConfig ls_spicfg = {
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp
 static MMCConfig mmccfg = { NULL, &ls_spicfg, &hs_spicfg };
 
-#define FILE_LOG_DELAY 200
+#define FILE_LOG_MIN_DELAY 3
 
 /**
  * fatfs MMC/SPI
@@ -210,7 +214,15 @@ static void createLogFile(void) {
 		printError("Seek error", err);
 		return;
 	}
-	f_sync(&FDLogFile);
+	writeCounter++;
+	if (writeCounter >= F_SYNC_FREQUENCY) {
+		/**
+		 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
+		 * todo: one day someone should actualy measure the relative cost of f_sync
+		 */
+		f_sync(&FDLogFile);
+		writeCounter = 0;
+	}
 	fs_ready = true;						// everything Ok
 	unlockSpi();
 }
@@ -299,7 +311,7 @@ void readLogFileContent(char *buffer, short fileId, short offset, short length) 
  * @brief Appends specified line to the current log file
  */
 void appendToLog(const char *line) {
-	UINT bytesWrited;
+	UINT bytesWritten;
 
 	if (!fs_ready) {
 		if (!errorReported)
@@ -310,8 +322,8 @@ void appendToLog(const char *line) {
 	UINT lineLength = strlen(line);
 	engine->engineState.totalLoggedBytes += lineLength;
 	lockSpi(SPI_NONE);
-	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWrited);
-	if (bytesWrited < lineLength) {
+	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
+	if (bytesWritten < lineLength) {
 		printError("write error or disk full", err); // error or disk full
 	}
 	f_sync(&FDLogFile);
@@ -425,7 +437,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		if (isSdCardAlive())
 			writeLogLine();
 
-		chThdSleepMilliseconds(FILE_LOG_DELAY);
+		int periodMs = maxI(boardConfiguration->sdCardPeriodMs, FILE_LOG_MIN_DELAY);
+		chThdSleepMilliseconds(periodMs);
 	}
 }
 
@@ -434,6 +447,10 @@ bool isSdCardAlive(void) {
 }
 
 void initMmcCard(void) {
+	 // temporary value while we migrate
+	if (boardConfiguration->sdCardPeriodMs == 0)
+		boardConfiguration->sdCardPeriodMs = 50;
+
 	logName[0] = 0;
 	addConsoleAction("sdinfo", sdStatistics);
 	if (!CONFIGB(isSdCardEnabled)) {

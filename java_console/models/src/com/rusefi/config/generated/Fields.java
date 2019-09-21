@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Sep 11 20:00:32 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 21:55:21 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -237,6 +237,7 @@ public class Fields {
 	public static final int clutchUpPinMode_offset = 971;
 	public static final String CMD_CALIBRATE_PEDAL_DOWN = "calibrate_pedal_down";
 	public static final String CMD_CALIBRATE_PEDAL_UP = "calibrate_pedal_up";
+	public static final String CMD_DATE = "date";
 	public static final String CMD_DISABLE = "disable";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_REBOOT = "reboot";
@@ -326,16 +327,16 @@ public class Fields {
 	public static final int engineType_offset = 0;
 	public static final int engineType_offset_hex = 0;
 	public static final int etb1_controlPin1_offset = 682;
+	public static final int etb1_controlPinMode_offset = 683;
 	public static final int etb1_directionPin1_offset = 680;
 	public static final int etb1_directionPin2_offset = 681;
 	public static final int etb1_offset = 680;
-	public static final int etb1_unusedPin_offset = 683;
 	public static final int etb1_use_two_wires_offset = 76;
 	public static final int etb2_controlPin1_offset = 3966;
+	public static final int etb2_controlPinMode_offset = 3967;
 	public static final int etb2_directionPin1_offset = 3964;
 	public static final int etb2_directionPin2_offset = 3965;
 	public static final int etb2_offset = 3964;
-	public static final int etb2_unusedPin_offset = 3967;
 	public static final int etb2_use_two_wires_offset = 76;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int etb_dFactor_offset = 1744;
@@ -366,7 +367,6 @@ public class Fields {
 	public static final int firingOrder_offset_hex = 194;
 	public static final int fixedModeTiming_offset = 452;
 	public static final int fixedTiming_offset = 2204;
-	public static final int flexFuelSensor_offset = 3100;
 	public static final int frequencyReportingMapInputPin_offset = 970;
 	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
 	public static final int FSIO_COMMAND_COUNT = 16;
@@ -565,6 +565,8 @@ public class Fields {
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
+	public static final String GAUGE_NAME_AIR_FLOW = "air flow";
+	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
 	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
 	public static final String GAUGE_NAME_DEBUG_F2 = "debug f2: iTerm";
@@ -581,6 +583,10 @@ public class Fields {
 	public static final String GAUGE_NAME_DWELL_DUTY = "dwell: coil duty cycle";
 	public static final String GAUGE_NAME_ECU_TEMPERATURE = "ECU temperature";
 	public static final String GAUGE_NAME_ENGINE_LOAD = "Engine Load";
+	public static final String GAUGE_NAME_ETB_DUTY = "ETB duty cycle";
+	public static final String GAUGE_NAME_ETB_ERROR = "ETB position error";
+	public static final String GAUGE_NAME_ETB_TARGET = "ETB position target";
+	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure correction";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
@@ -602,6 +608,7 @@ public class Fields {
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
+	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIMING_ADVANCE = "timing";
 	public static final String GAUGE_NAME_VBAT = "VBatt";
 	public static final String GAUGE_NAME_VERSION = "firmware";
@@ -788,6 +795,7 @@ public class Fields {
 	public static final int ignitionTpsBins_offset = 3800;
 	public static final int ignitionTpsTable_offset = 3288;
 	public static final int ignMathCalculateAtIndex_offset = 1488;
+	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "brake: down";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "clutch: up";
@@ -1042,6 +1050,8 @@ public class Fields {
 	public static final int runningLedPin_offset = 1813;
 	public static final int runningLedPin_offset_hex = 715;
 	public static final int sdCardCsPin_offset = 707;
+	public static final int sdCardPeriodMs_offset = 804;
+	public static final int sdCardPeriodMs_offset_hex = 324;
 	public static final int sdCardSpiDevice_offset = 2592;
 	public static final int secondTriggerChannelEnabled_offset = 1476;
 	public static final int sensorChartFrequency_offset = 520;
@@ -1219,12 +1229,13 @@ public class Fields {
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtBoardConfigurationEnd_offset = 980;
 	public static final int unusedErrorPin_offset = 2040;
+	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1756;
 	public static final int unusedh_offset = 1471;
 	public static final int unusedMa2_offset = 711;
 	public static final int unusedOldWarmupAfr_offset = 744;
-	public static final int unusedSpiPadding2_offset = 804;
-	public static final int unusedSpiPadding2_offset_hex = 324;
+	public static final int unusedSpiPadding2_offset = 806;
+	public static final int unusedSpiPadding2_offset_hex = 326;
 	public static final int unusedSpiPadding3_offset = 4036;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
@@ -1502,7 +1513,7 @@ public class Fields {
 	public static final Field ETB1_DIRECTIONPIN1 = Field.create("ETB1_DIRECTIONPIN1", 680, FieldType.INT8, brain_pin_e);
 	public static final Field ETB1_DIRECTIONPIN2 = Field.create("ETB1_DIRECTIONPIN2", 681, FieldType.INT8, brain_pin_e);
 	public static final Field ETB1_CONTROLPIN1 = Field.create("ETB1_CONTROLPIN1", 682, FieldType.INT8, brain_pin_e);
-	public static final Field ETB1_UNUSEDPIN = Field.create("ETB1_UNUSEDPIN", 683, FieldType.INT8, brain_pin_e);
+	public static final Field ETB1_CONTROLPINMODE = Field.create("ETB1_CONTROLPINMODE", 683, FieldType.INT8, pin_output_mode_e);
 	public static final Field FUELLEVELEMPTYTANKVOLTAGE = Field.create("FUELLEVELEMPTYTANKVOLTAGE", 684, FieldType.FLOAT);
 	public static final Field FUELLEVELFULLTANKVOLTAGE = Field.create("FUELLEVELFULLTANKVOLTAGE", 688, FieldType.FLOAT);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"};
@@ -1616,6 +1627,7 @@ public class Fields {
 	public static final Field MAX31855_CS6 = Field.create("MAX31855_CS6", 801, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS7 = Field.create("MAX31855_CS7", 802, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS8 = Field.create("MAX31855_CS8", 803, FieldType.INT8, brain_pin_e);
+	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 804, FieldType.INT16);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
@@ -1989,7 +2001,7 @@ public class Fields {
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2704, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE2 = Field.create("OILPRESSURE_VALUE2", 2708, FieldType.FLOAT);
 	public static final Field ACCELEROMETERSPIDEVICE = Field.create("ACCELEROMETERSPIDEVICE", 2712, FieldType.INT8);
-	public static final Field FLEXFUELSENSOR = Field.create("FLEXFUELSENSOR", 3100, FieldType.INT8, brain_input_pin_e);
+	public static final Field UNUSEDFLEXFUELSENSOR = Field.create("UNUSEDFLEXFUELSENSOR", 3100, FieldType.INT8);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3102, FieldType.INT8, pin_output_mode_e);
 	public static final Field EXTERNALKNOCKSENSEADC = Field.create("EXTERNALKNOCKSENSEADC", 3103, FieldType.INT8, adc_channel_e);
@@ -2026,7 +2038,7 @@ public class Fields {
 	public static final Field ETB2_DIRECTIONPIN1 = Field.create("ETB2_DIRECTIONPIN1", 3964, FieldType.INT8, brain_pin_e);
 	public static final Field ETB2_DIRECTIONPIN2 = Field.create("ETB2_DIRECTIONPIN2", 3965, FieldType.INT8, brain_pin_e);
 	public static final Field ETB2_CONTROLPIN1 = Field.create("ETB2_CONTROLPIN1", 3966, FieldType.INT8, brain_pin_e);
-	public static final Field ETB2_UNUSEDPIN = Field.create("ETB2_UNUSEDPIN", 3967, FieldType.INT8, brain_pin_e);
+	public static final Field ETB2_CONTROLPINMODE = Field.create("ETB2_CONTROLPINMODE", 3967, FieldType.INT8, pin_output_mode_e);
 	public static final Field IDLETIMINGPID_PFACTOR = Field.create("IDLETIMINGPID_PFACTOR", 3968, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_IFACTOR = Field.create("IDLETIMINGPID_IFACTOR", 3972, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_DFACTOR = Field.create("IDLETIMINGPID_DFACTOR", 3976, FieldType.FLOAT);
@@ -2285,7 +2297,7 @@ public class Fields {
 	ETB1_DIRECTIONPIN1,
 	ETB1_DIRECTIONPIN2,
 	ETB1_CONTROLPIN1,
-	ETB1_UNUSEDPIN,
+	ETB1_CONTROLPINMODE,
 	FUELLEVELEMPTYTANKVOLTAGE,
 	FUELLEVELFULLTANKVOLTAGE,
 	AFR_TYPE,
@@ -2397,6 +2409,7 @@ public class Fields {
 	MAX31855_CS6,
 	MAX31855_CS7,
 	MAX31855_CS8,
+	SDCARDPERIODMS,
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,
@@ -2764,7 +2777,7 @@ public class Fields {
 	OILPRESSURE_V2,
 	OILPRESSURE_VALUE2,
 	ACCELEROMETERSPIDEVICE,
-	FLEXFUELSENSOR,
+	UNUSEDFLEXFUELSENSOR,
 	TEST557PIN,
 	STEPPERDIRECTIONPINMODE,
 	EXTERNALKNOCKSENSEADC,
@@ -2800,7 +2813,7 @@ public class Fields {
 	ETB2_DIRECTIONPIN1,
 	ETB2_DIRECTIONPIN2,
 	ETB2_CONTROLPIN1,
-	ETB2_UNUSEDPIN,
+	ETB2_CONTROLPINMODE,
 	IDLETIMINGPID_PFACTOR,
 	IDLETIMINGPID_IFACTOR,
 	IDLETIMINGPID_DFACTOR,

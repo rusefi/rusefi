@@ -95,15 +95,17 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 	initSensors();
 #endif
 
-#if EFI_IDLE_CONTROL
-	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_IDLE_CONTROL */
-
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+
 #if EFI_FSIO
 	initFsioImpl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
+
+#if EFI_IDLE_CONTROL
+	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_IDLE_CONTROL */
 }
 
 EXTERN_ENGINE;
@@ -822,6 +824,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20190914;
+	return 20190919;
 }
 #endif /* EFI_UNIT_TEST */

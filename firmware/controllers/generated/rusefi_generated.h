@@ -368,6 +368,7 @@
 #define clutchUpPinMode_offset_hex 3cb
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
+#define CMD_DATE "date"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
 #define CMD_REBOOT "reboot"
@@ -496,26 +497,26 @@
 #define engineType_offset_hex 0
 #define etb1_controlPin1_offset 682
 #define etb1_controlPin1_offset_hex 2aa
+#define etb1_controlPinMode_offset 683
+#define etb1_controlPinMode_offset_hex 2ab
 #define etb1_directionPin1_offset 680
 #define etb1_directionPin1_offset_hex 2a8
 #define etb1_directionPin2_offset 681
 #define etb1_directionPin2_offset_hex 2a9
 #define etb1_offset 680
 #define etb1_offset_hex 2a8
-#define etb1_unusedPin_offset 683
-#define etb1_unusedPin_offset_hex 2ab
 #define etb1_use_two_wires_offset 76
 #define etb1_use_two_wires_offset_hex 4c
 #define etb2_controlPin1_offset 3966
 #define etb2_controlPin1_offset_hex f7e
+#define etb2_controlPinMode_offset 3967
+#define etb2_controlPinMode_offset_hex f7f
 #define etb2_directionPin1_offset 3964
 #define etb2_directionPin1_offset_hex f7c
 #define etb2_directionPin2_offset 3965
 #define etb2_directionPin2_offset_hex f7d
 #define etb2_offset 3964
 #define etb2_offset_hex f7c
-#define etb2_unusedPin_offset 3967
-#define etb2_unusedPin_offset_hex f7f
 #define etb2_use_two_wires_offset 76
 #define etb2_use_two_wires_offset_hex 4c
 #define ETB_BIAS_CURVE_LENGTH 8
@@ -569,8 +570,6 @@
 #define fixedModeTiming_offset_hex 1c4
 #define fixedTiming_offset 2204
 #define fixedTiming_offset_hex 89c
-#define flexFuelSensor_offset 3100
-#define flexFuelSensor_offset_hex c1c
 #define frequencyReportingMapInputPin_offset 970
 #define frequencyReportingMapInputPin_offset_hex 3ca
 #define FSIO_ANALOG_INPUT_COUNT 4
@@ -871,6 +870,8 @@
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
+#define GAUGE_NAME_AIR_FLOW "air flow"
+#define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
@@ -887,6 +888,10 @@
 #define GAUGE_NAME_DWELL_DUTY "dwell: coil duty cycle"
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
+#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
+#define GAUGE_NAME_ETB_ERROR "ETB position error"
+#define GAUGE_NAME_ETB_TARGET "ETB position target"
+#define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
 #define GAUGE_NAME_FUEL_BASE "fuel: base"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
@@ -908,6 +913,7 @@
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
+#define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
@@ -1192,6 +1198,7 @@
 #define ignitionTpsTable_offset_hex cd8
 #define ignMathCalculateAtIndex_offset 1488
 #define ignMathCalculateAtIndex_offset_hex 5d0
+#define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
@@ -1572,6 +1579,8 @@
 #define runningLedPin_offset_hex 715
 #define sdCardCsPin_offset 707
 #define sdCardCsPin_offset_hex 2c3
+#define sdCardPeriodMs_offset 804
+#define sdCardPeriodMs_offset_hex 324
 #define sdCardSpiDevice_offset 2592
 #define sdCardSpiDevice_offset_hex a20
 #define secondTriggerChannelEnabled_offset 1476
@@ -1877,6 +1886,8 @@
 #define unusedAtBoardConfigurationEnd_offset_hex 3d4
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
+#define unusedFlexFuelSensor_offset 3100
+#define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1756
 #define unusedFormerWarmupAfrPid_offset_hex 6dc
 #define unusedh_offset 1471
@@ -1885,8 +1896,8 @@
 #define unusedMa2_offset_hex 2c7
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding2_offset 804
-#define unusedSpiPadding2_offset_hex 324
+#define unusedSpiPadding2_offset 806
+#define unusedSpiPadding2_offset_hex 326
 #define unusedSpiPadding3_offset 4036
 #define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593

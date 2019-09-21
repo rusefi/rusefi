@@ -491,7 +491,7 @@ struct etb_io
 	brain_pin_e directionPin1;
 	brain_pin_e directionPin2;
 	brain_pin_e controlPin1;
-	brain_pin_e unusedPin
+	pin_output_mode_e controlPinMode;
 end_struct
 	
 struct_no_prefix board_configuration_s
@@ -636,7 +636,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 
 custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
-	uint8_t[4] unusedSpiPadding2;
+	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
+	uint8_t[2] unusedSpiPadding2;
 		uint8_t[4] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
@@ -1182,6 +1183,9 @@ end_struct
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_ENGINE_LOAD "Engine Load"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
+#define GAUGE_NAME_ETB_TARGET "ETB position target"
+#define GAUGE_NAME_ETB_ERROR "ETB position error"
+#define GAUGE_NAME_ETB_DUTY "ETB duty cycle"
 
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
@@ -1193,7 +1197,10 @@ end_struct
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
+#define INDICATOR_NAME_AC_SWITCH "AC switch"
 
+#define GAUGE_NAME_AIR_FLOW "air flow"
+#define GAUGE_NAME_AIR_MASS "air mass"
 
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
@@ -1203,6 +1210,8 @@ end_struct
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 
 
+#define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
+#define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
@@ -1245,6 +1254,7 @@ end_struct
 
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
+#define CMD_DATE "date"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_ENABLE "enable"
