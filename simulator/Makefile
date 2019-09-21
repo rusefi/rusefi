@@ -3,6 +3,15 @@
 # NOTE: Can be overridden externally.
 #
 
+#
+# As of Sep 2019, this is known to compile on Linux
+# in my case I had to
+# sudo apt-get install gcc-multilib g++-multilib
+# 
+# todo: automatically execute that command same as we automatically fetch submodules?
+# 
+
+
 
 CHIBIOS = ../firmware/ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
