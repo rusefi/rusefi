@@ -1,3 +1,7 @@
+/**
+ * @file init_sensorss.cpp
+ */
+
 #include "cli_registry.h"
 #include "init.h"
 #include "sensor.h"

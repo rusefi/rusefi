@@ -118,6 +118,7 @@ include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/console/console.mk
+include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/hw_layer/hw_layer.mk
@@ -157,6 +158,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
+	$(INIT_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
@@ -180,6 +182,7 @@ INCDIR = . \
           $(PLATFORMINC) \
           $(BOARDINC) \
           $(UTIL_INC) \
+          $(PROJECT_DIR)/init \
           $(PROJECT_DIR)/console \
           $(PROJECT_DIR)/console/binary \
           $(PROJECT_DIR)/console/fl_binary \
