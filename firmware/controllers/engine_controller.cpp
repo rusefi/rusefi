@@ -73,7 +73,10 @@
 #include "periodic_task.h"
 #endif
 
+#if ! EFI_UNIT_TEST
 #include "init.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
