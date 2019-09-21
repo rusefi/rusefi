@@ -299,7 +299,7 @@ void readLogFileContent(char *buffer, short fileId, short offset, short length) 
  * @brief Appends specified line to the current log file
  */
 void appendToLog(const char *line) {
-	UINT bytesWrited;
+	UINT bytesWritten;
 
 	if (!fs_ready) {
 		if (!errorReported)
@@ -310,8 +310,8 @@ void appendToLog(const char *line) {
 	UINT lineLength = strlen(line);
 	engine->engineState.totalLoggedBytes += lineLength;
 	lockSpi(SPI_NONE);
-	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWrited);
-	if (bytesWrited < lineLength) {
+	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
+	if (bytesWritten < lineLength) {
 		printError("write error or disk full", err); // error or disk full
 	}
 	f_sync(&FDLogFile);
