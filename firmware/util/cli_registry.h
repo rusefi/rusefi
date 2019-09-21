@@ -30,6 +30,7 @@ typedef enum {
 	TWO_INTS_PARAMETER_P,
 	FLOAT_FLOAT_PARAMETER,
 	FLOAT_FLOAT_PARAMETER_P,
+	INT_FLOAT_PARAMETER,
 } action_type_e;
 
 typedef struct {
@@ -60,6 +61,8 @@ void addConsoleActionP(const char *token, VoidPtr callback, void *param);
 
 void addConsoleActionI(const char *token, VoidInt callback);
 void addConsoleActionIP(const char *token, VoidIntVoidPtr callback, void *param);
+
+void addConsoleActionIF(const char* token, VoidIntFloat callback);
 
 void addConsoleActionII(const char *token, VoidIntInt callback);
 void addConsoleActionIIP(const char *token, VoidIntIntVoidPtr callback, void *param);

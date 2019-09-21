@@ -120,6 +120,7 @@ typedef void (*VoidFloatFloat)(float, float);
 typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
 typedef void (*VoidIntInt)(int, int);
 typedef void (*VoidIntIntVoidPtr)(int, int, void*);
+typedef void (*VoidIntFloat)(int, float);
 
 typedef void (*VoidCharPtr)(const char *);
 typedef void (*VoidCharPtrVoidPtr)(const char *, void*);

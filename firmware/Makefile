@@ -164,6 +164,7 @@ include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/console/console.mk
+include $(PROJECT_DIR)/init/init.mk
 
 ifeq ($(BOOTLOADERINC),)
   # include default bootloader code
@@ -229,6 +230,7 @@ CPPSRC = $(CHCPPSRC) \
 	$(UTILSRC_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
+	$(INIT_SRC_CPP) \
 	rusefi.cpp \
 	main.cpp
 
@@ -297,6 +299,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
 	$(UTIL_INC) \
+	init \
 	development \
 	development/hw_layer \
 	development/test \

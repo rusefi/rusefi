@@ -76,6 +76,7 @@
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
+#include "init.h"
 
 #include "pwm_tester.h"
 #include "pwm_generator.h"
@@ -90,6 +91,10 @@
 
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+#if !EFI_UNIT_TEST
+	initSensors();
+#endif
+
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
 	initAccelEnrichment(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
