@@ -4,6 +4,17 @@
  * MAZDA_MIATA_2003
  * set engine_type 47
  *
+ * coil1/4          (p1 +5 VP)    GPIOE_14
+ * coil2/2          (p1 +5 VP)    GPIOC_9
+ * tachometer +5 VP (p3 +12 VP)   GPIOE_8
+ * alternator +5 VP (p3 +12 VP)   GPIOE_10
+ * ETB PWM                        GPIOE_6 inverted low-side with pull-up
+ * ETB dir1                       GPIOE_12
+ * ETB dir2                       GPIOC_7
+ *
+ * COP ion #1                     GPIOD_8
+ * COP ion #3                     GPIOD_9
+ *
  * @date Oct 4, 2016
  * @author Andrey Belomutskiy, (c) 2012-2019
  * http://rusefi.com/forum/viewtopic.php?f=3&t=1095
@@ -20,14 +31,15 @@
  * Cam     vvt input              PC6 (3G in Miata board)       blue
  * Wideband input                 PA3 (3J in Miata board)
  *
- * coil1/4          (p1 +5 VP)    PE14
- * coil2/2          (p1 +5 VP)    PC7
+ * coil1/4          (p1 +5 VP)    GPIOE_14
+ * coil2/2          (p1 +5 VP)    GPIOC_7
  *
- * tachometer +5 VP (p3 +12 VP)   PE8
- * alternator +5 VP (p3 +12 VP)   PE10
+ * tachometer +5 VP (p3 +12 VP)   GPIOE_8
+ * alternator +5 VP (p3 +12 VP)   GPIOE_10
  *
- * VVT solenoid on aux PID#1      PE3
- * warning light                  PE6
+ * VVT solenoid on aux PID#1      GPIOE_3
+ * warning light                  GPIOE_6
+ *
  *
  * idle solenoid                  PC13 on middle harness plug. diodes seem to be in the harness
  */
@@ -331,7 +343,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_6; // just for a test
+	boardConfiguration->malfunctionIndicatorPin = GPIOE_0;
 
 
 //	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
@@ -375,6 +387,37 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set debug_mode 3
 	// set idle_rpm 1700
 	// see setDefaultIdleParameters
+
+	// VNH2SP30 three-wire ETB control
+	// PWM
+	boardConfiguration->etb1.controlPin1 = GPIOE_6;
+	boardConfiguration->etb1.controlPinMode = OM_INVERTED;
+	//
+	boardConfiguration->etb1.directionPin1 = GPIOE_12;
+	//
+	boardConfiguration->etb1.directionPin2 = GPIOC_7;
+
+	// set_analog_input_pin tps PC3
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3
+
+	engineConfiguration->idleMode = IM_AUTO;
+	CONFIGB(useETBforIdleControl) = true;
+	// set_analog_input_pin pps PA2
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
+
+	engineConfiguration->idleRpmPid.offset = 0;
+	engineConfiguration->idleRpmPid.pFactor = 0.2;
+	engineConfiguration->idleRpmPid.iFactor = 0.0001;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.periodMs = 10;
+
+	engineConfiguration->bc.isFasterEngineSpinUpEnabled = true;
+
+	//set etb_p 12
+	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
+	engineConfiguration->etb.iFactor = 	0;
+	engineConfiguration->etb.dFactor = 0;
+	engineConfiguration->etb.offset = 0;
 
 }
 
