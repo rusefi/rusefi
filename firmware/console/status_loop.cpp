@@ -235,8 +235,6 @@ static void printSensors(Logging *log) {
 //		reportSensorF(log, , "V", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
 //	}
 
-	getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 #if EFI_ANALOG_SENSORS
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		reportSensorF(log, "MAP", "kPa", getMap(PASS_ENGINE_PARAMETER_SIGNATURE), 2);
