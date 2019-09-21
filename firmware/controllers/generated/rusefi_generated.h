@@ -1576,6 +1576,8 @@
 #define runningLedPin_offset_hex 715
 #define sdCardCsPin_offset 707
 #define sdCardCsPin_offset_hex 2c3
+#define sdCardPeriodMs_offset 804
+#define sdCardPeriodMs_offset_hex 324
 #define sdCardSpiDevice_offset 2592
 #define sdCardSpiDevice_offset_hex a20
 #define secondTriggerChannelEnabled_offset 1476
@@ -1891,8 +1893,8 @@
 #define unusedMa2_offset_hex 2c7
 #define unusedOldWarmupAfr_offset 744
 #define unusedOldWarmupAfr_offset_hex 2e8
-#define unusedSpiPadding2_offset 804
-#define unusedSpiPadding2_offset_hex 324
+#define unusedSpiPadding2_offset 806
+#define unusedSpiPadding2_offset_hex 326
 #define unusedSpiPadding3_offset 4036
 #define unusedSpiPadding3_offset_hex fc4
 #define unusedSpiPadding4_offset 2593

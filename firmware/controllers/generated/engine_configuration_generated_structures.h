@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 18:08:52 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 19:43:59 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -846,9 +846,14 @@ struct board_configuration_s {
 	 */
 	brain_pin_e max31855_cs[EGT_CHANNEL_COUNT];
 	/**
+	 * SD card logging period, in milliseconds
 	 * offset 204
 	 */
-	uint8_t unusedSpiPadding2[4];
+	int16_t sdCardPeriodMs;
+	/**
+	 * offset 206
+	 */
+	uint8_t unusedSpiPadding2[2];
 	/**
 	 * offset 208
 	 */
@@ -2823,4 +2828,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 18:08:52 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 19:43:59 EDT 2019
