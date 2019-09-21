@@ -110,6 +110,10 @@ static LoggingWithStorage logger("mmcCard");
 
 static int fatFsErrors = 0;
 
+static void setSdCardReady(bool value) {
+	fs_ready = value;
+}
+
 // print FAT error function
 static void printError(const char *str, FRESULT f_error) {
 	if (fatFsErrors++ > 16) {
@@ -137,7 +141,7 @@ static void sdStatistics(void) {
 	printMmcPinout();
 	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIGB(isSdCardEnabled)),
 			sdStatus);
-	if (fs_ready) {
+	if (isSdCardAlive()) {
 		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
 	}
 }
@@ -220,12 +224,12 @@ static void createLogFile(void) {
 		return;
 	}
 	f_sync(&FDLogFile);
-	fs_ready = true;						// everything Ok
+	setSdCardReady(true);						// everything Ok
 	unlockSpi();
 }
 
 static void removeFile(const char *pathx) {
-	if (!fs_ready) {
+	if (!isSdCardAlive()) {
 		scheduleMsg(&logger, "Error: No File system is mounted");
 		return;
 	}
@@ -256,7 +260,7 @@ int
 
 static void listDirectory(const char *path) {
 
-	if (!fs_ready) {
+	if (!isSdCardAlive()) {
 		scheduleMsg(&logger, "Error: No File system is mounted");
 		return;
 	}
@@ -310,7 +314,7 @@ void readLogFileContent(char *buffer, short fileId, short offset, short length) 
 void appendToLog(const char *line) {
 	UINT bytesWritten;
 
-	if (!fs_ready) {
+	if (!isSdCardAlive()) {
 		if (!errorReported)
 			scheduleMsg(&logger, "appendToLog Error: No File system is mounted");
 		errorReported = TRUE;
@@ -335,8 +339,6 @@ void appendToLog(const char *line) {
 		writeCounter = 0;
 	}
 
-
-
 	unlockSpi();
 
 	if (engineConfiguration->debugMode == DBG_SD_CARD) {
@@ -344,14 +346,13 @@ void appendToLog(const char *line) {
 		tsOutputChannels.debugIntField2 = totalWritesCounter;
 		tsOutputChannels.debugIntField3 = totalSyncCounter;
 	}
-
 }
 
 /*
  * MMC card umount.
  */
 static void MMCumount(void) {
-	if (!fs_ready) {
+	if (!isSdCardAlive()) {
 		scheduleMsg(&logger, "Error: No File system is mounted. \"mountsd\" first");
 		return;
 	}
@@ -361,7 +362,7 @@ static void MMCumount(void) {
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
 	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
-	fs_ready = false;							// status = false
+	setSdCardReady(false);						// status = false
 	scheduleMsg(&logger, "MMC/SD card removed");
 }
 
@@ -374,7 +375,7 @@ static uint8_t blkbuf[RAMDISK_BLOCK_SIZE];
 static void MMCmount(void) {
 //	printMmcPinout();
 
-	if (fs_ready) {
+	if (isSdCardAlive()) {
 		scheduleMsg(&logger, "Error: Already mounted. \"umountsd\" first");
 		return;
 	}
@@ -444,7 +445,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		// this returns TRUE if SD module is there, even without an SD card?
 		if (blkIsInserted(&MMCD1)) {
 
-			if (!fs_ready) {
+			if (!isSdCardAlive()) {
 				MMCmount();
 			}
 		} else {
