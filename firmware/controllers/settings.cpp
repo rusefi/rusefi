@@ -1075,6 +1075,7 @@ const plain_get_integer_s getI_plain[] = {
 };
 
 const plain_get_float_s getF_plain[] = {
+		{"adcVcc", &engineConfiguration->adcVcc},
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &boardConfiguration->manIdlePosition},
 		{"ignition_offset", &engineConfiguration->ignitionOffset},
