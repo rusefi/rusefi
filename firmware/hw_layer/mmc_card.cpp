@@ -42,6 +42,10 @@ static bool fs_ready = false;
 
 EXTERN_ENGINE;
 
+#define F_SYNC_FREQUENCY 100
+
+static int writeCounter = 0;
+
 #define LOG_INDEX_FILENAME "index.txt"
 
 #define RUSEFI_LOG_PREFIX "rus"
@@ -210,7 +214,15 @@ static void createLogFile(void) {
 		printError("Seek error", err);
 		return;
 	}
-	f_sync(&FDLogFile);
+	writeCounter++;
+	if (writeCounter >= F_SYNC_FREQUENCY) {
+		/**
+		 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
+		 * todo: one day someone should actualy measure the relative cost of f_sync
+		 */
+		f_sync(&FDLogFile);
+		writeCounter = 0;
+	}
 	fs_ready = true;						// everything Ok
 	unlockSpi();
 }
