@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 19:03:27 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 19:43:59 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1047,6 +1047,8 @@ public class Fields {
 	public static final int runningLedPin_offset = 1813;
 	public static final int runningLedPin_offset_hex = 715;
 	public static final int sdCardCsPin_offset = 707;
+	public static final int sdCardPeriodMs_offset = 804;
+	public static final int sdCardPeriodMs_offset_hex = 324;
 	public static final int sdCardSpiDevice_offset = 2592;
 	public static final int secondTriggerChannelEnabled_offset = 1476;
 	public static final int sensorChartFrequency_offset = 520;
@@ -1229,8 +1231,8 @@ public class Fields {
 	public static final int unusedh_offset = 1471;
 	public static final int unusedMa2_offset = 711;
 	public static final int unusedOldWarmupAfr_offset = 744;
-	public static final int unusedSpiPadding2_offset = 804;
-	public static final int unusedSpiPadding2_offset_hex = 324;
+	public static final int unusedSpiPadding2_offset = 806;
+	public static final int unusedSpiPadding2_offset_hex = 326;
 	public static final int unusedSpiPadding3_offset = 4036;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
@@ -1622,6 +1624,7 @@ public class Fields {
 	public static final Field MAX31855_CS6 = Field.create("MAX31855_CS6", 801, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS7 = Field.create("MAX31855_CS7", 802, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS8 = Field.create("MAX31855_CS8", 803, FieldType.INT8, brain_pin_e);
+	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 804, FieldType.INT16);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
@@ -2403,6 +2406,7 @@ public class Fields {
 	MAX31855_CS6,
 	MAX31855_CS7,
 	MAX31855_CS8,
+	SDCARDPERIODMS,
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,

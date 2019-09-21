@@ -90,7 +90,7 @@ static SPIConfig ls_spicfg = {
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp
 static MMCConfig mmccfg = { NULL, &ls_spicfg, &hs_spicfg };
 
-#define FILE_LOG_DELAY 200
+#define FILE_LOG_MIN_DELAY 3
 
 /**
  * fatfs MMC/SPI
@@ -425,7 +425,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		if (isSdCardAlive())
 			writeLogLine();
 
-		chThdSleepMilliseconds(FILE_LOG_DELAY);
+		int periodMs = maxI(boardConfiguration->sdCardPeriodMs, FILE_LOG_MIN_DELAY);
+		chThdSleepMilliseconds(periodMs);
 	}
 }
 
@@ -434,6 +435,10 @@ bool isSdCardAlive(void) {
 }
 
 void initMmcCard(void) {
+	 // temporary value while we migrate
+	if (boardConfiguration->sdCardPeriodMs == 0)
+		boardConfiguration->sdCardPeriodMs = 50;
+
 	logName[0] = 0;
 	addConsoleAction("sdinfo", sdStatistics);
 	if (!CONFIGB(isSdCardEnabled)) {

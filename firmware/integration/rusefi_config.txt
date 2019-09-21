@@ -636,7 +636,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 
 custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
-	uint8_t[4] unusedSpiPadding2;
+	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
+	uint8_t[2] unusedSpiPadding2;
 		uint8_t[4] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
