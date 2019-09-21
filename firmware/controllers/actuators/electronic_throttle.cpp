@@ -234,7 +234,8 @@ class EtbController : public PeriodicTimerController {
 
 		int rpm = GET_RPM();
 		percent_t targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
-		percent_t targetPosition = targetFromTable + engine->engineState.etbIdleAddition;
+		percent_t etbIdleAddition = CONFIGB(useETBforIdleControl) ? engine->engineState.etbIdleAddition : 0;
+		percent_t targetPosition = targetFromTable + etbIdleAddition;
 
 		if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 #if EFI_TUNER_STUDIO
