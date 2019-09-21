@@ -73,8 +73,6 @@ extern const USBConfig msdusbcfg;
 #endif /* HAL_USE_USB_MSD */
 
 
-#define PUSHPULLDELAY 500
-
 static THD_WORKING_AREA(mmcThreadStack,3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
@@ -349,9 +347,9 @@ void appendToLog(const char *line) {
 }
 
 /*
- * MMC card umount.
+ * MMC card un-mount.
  */
-static void MMCumount(void) {
+static void mmcUnMount(void) {
 	if (!isSdCardAlive()) {
 		scheduleMsg(&logger, "Error: No File system is mounted. \"mountsd\" first");
 		return;
@@ -492,7 +490,7 @@ void initMmcCard(void) {
 
 	addConsoleAction("mountsd", MMCmount);
 	addConsoleActionS("appendtolog", appendToLog);
-	addConsoleAction("umountsd", MMCumount);
+	addConsoleAction("umountsd", mmcUnMount);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);
 	addConsoleAction("incfilename", incLogFileName);
