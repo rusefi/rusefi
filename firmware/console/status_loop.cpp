@@ -36,6 +36,7 @@
 
 #include "trigger_central.h"
 #include "allsensors.h"
+#include "sensor_reader.h"
 #include "io_pins.h"
 #include "efi_gpio.h"
 #include "mmc_card.h"
@@ -782,8 +783,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
     tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
     // 278
     tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
-    // 280
-    tsOutputChannels->oilPressure = engine->sensors.oilPressure;
     // 288
     tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
 

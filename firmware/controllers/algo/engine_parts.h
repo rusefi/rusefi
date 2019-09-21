@@ -63,11 +63,6 @@ public:
 	float auxTemp1 = NAN;
 	float auxTemp2 = NAN;
 
-	/**
-	 * Oil pressure in kPa
-	 */
-	float oilPressure;
-
 	Accelerometer accelerometer;
 
 	float vBatt = 0;

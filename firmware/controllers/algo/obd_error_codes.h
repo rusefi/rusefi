@@ -550,6 +550,7 @@ typedef enum {
 	//P0518 Idle Air Control Circuit Intermittent
 	//P0519 Idle Air Control System Performance
 	//P0520 Engine Oil Pressure Sensor/Switch Circuit Malfunction
+	OBD_Oil_Pressure_Sensor_Malfunction = 520,
 	//P0521 Engine Oil Pressure Sensor/Switch Circuit Range/Performance
 	//P0522 Engine Oil Pressure Sensor/Switch Circuit Low Voltage
 	//P0523 Engine Oil Pressure Sensor/Switch Circuit High Voltage
