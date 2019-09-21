@@ -49,6 +49,7 @@ EXTERN_ENGINE;
 #define F_SYNC_FREQUENCY 100
 
 static int totalLoggedBytes = 0;
+static int fileCreatedCounter = 0;
 static int writeCounter = 0;
 static int totalWritesCounter = 0;
 static int totalSyncCounter = 0;
@@ -108,6 +109,8 @@ static LoggingWithStorage logger("mmcCard");
 
 static int fatFsErrors = 0;
 
+static void mmcUnMount(void);
+
 static void setSdCardReady(bool value) {
 	fs_ready = value;
 }
@@ -160,7 +163,7 @@ static void incLogFileName(void) {
 		scheduleMsg(&logger, "Got content [%s] size %d", data, result);
 		f_close(&FDCurrFile);
 		if (result < 5) {
-                      data[result] = 0;
+            data[result] = 0;
 			logFileIndex = atoi(data);
 			if (absI(logFileIndex) == ERROR_CODE) {
 				logFileIndex = 1;
@@ -324,26 +327,22 @@ void appendToLog(const char *line) {
 	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
 	if (bytesWritten < lineLength) {
 		printError("write error or disk full", err); // error or disk full
-	}
-	writeCounter++;
-	totalWritesCounter++;
-	if (writeCounter >= F_SYNC_FREQUENCY) {
-		/**
-		 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
-		 * todo: one day someone should actualy measure the relative cost of f_sync
-		 */
-		f_sync(&FDLogFile);
-		totalSyncCounter++;
-		writeCounter = 0;
+		mmcUnMount();
+	} else {
+		writeCounter++;
+		totalWritesCounter++;
+		if (writeCounter >= F_SYNC_FREQUENCY) {
+			/**
+			 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
+			 * todo: one day someone should actually measure the relative cost of f_sync
+			 */
+			f_sync(&FDLogFile);
+			totalSyncCounter++;
+			writeCounter = 0;
+		}
 	}
 
 	unlockSpi();
-
-	if (engineConfiguration->debugMode == DBG_SD_CARD) {
-		tsOutputChannels.debugIntField1 = totalLoggedBytes;
-		tsOutputChannels.debugIntField2 = totalWritesCounter;
-		tsOutputChannels.debugIntField3 = totalSyncCounter;
-	}
 }
 
 /*
@@ -430,6 +429,7 @@ static void MMCmount(void) {
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		createLogFile();
+		fileCreatedCounter++;
 		scheduleMsg(&logger, "MMC/SD mounted!");
 	} else {
 		sdStatus = SD_STATE_MOUNT_FAILED;
@@ -440,6 +440,13 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	chRegSetThreadName("MMC_Monitor");
 
 	while (true) {
+		if (engineConfiguration->debugMode == DBG_SD_CARD) {
+			tsOutputChannels.debugIntField1 = totalLoggedBytes;
+			tsOutputChannels.debugIntField2 = totalWritesCounter;
+			tsOutputChannels.debugIntField3 = totalSyncCounter;
+			tsOutputChannels.debugIntField4 = fileCreatedCounter;
+		}
+
 		// this returns TRUE if SD module is there, even without an SD card?
 		if (blkIsInserted(&MMCD1)) {
 
