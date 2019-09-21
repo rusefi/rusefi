@@ -123,11 +123,12 @@ public:
 	
 	void start(bool useTwoWires, 
 			brain_pin_e pinEnable,
+			pin_output_mode_e pinEnableMode,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2) {
 		dcMotor.SetType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
-		m_pinEnable.initPin("ETB Enable", pinEnable);
+		m_pinEnable.initPin("ETB Enable", pinEnable, &pinEnableMode);
 		m_pinDir1.initPin("ETB Dir 1", pinDir1);
 		m_pinDir2.initPin("ETB Dir 2", pinDir2);
 
@@ -454,6 +455,7 @@ void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static bool isSamePins(etb_io *current, etb_io *active) {
 	return 	current->controlPin1 != active->controlPin1 ||
+			current->controlPinMode != active->controlPinMode ||
 			current->directionPin1 != active->directionPin1 ||
 			current->directionPin2 != active->directionPin2;
 }
@@ -477,9 +479,11 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 
 void startETBPins(void) {
 
+	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
 	etb1.start(
 			CONFIG(etb1_use_two_wires),
 			CONFIGB(etb1.controlPin1),
+			CONFIGB(etb1.controlPinMode),
 			CONFIGB(etb1.directionPin1),
 			CONFIGB(etb1.directionPin2)
 			);

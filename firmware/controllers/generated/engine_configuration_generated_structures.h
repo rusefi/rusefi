@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 19:43:59 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 21:55:21 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -435,7 +435,7 @@ struct etb_io {
 	/**
 	 * offset 3
 	 */
-	brain_pin_e unusedPin;
+	pin_output_mode_e controlPinMode;
 	/** total size 4*/
 };
 
@@ -2828,4 +2828,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 19:43:59 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 21:55:21 EDT 2019
