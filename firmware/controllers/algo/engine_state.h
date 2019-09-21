@@ -16,7 +16,6 @@
 
 #define BRAIN_PIN_COUNT (1 << sizeof(brain_pin_e))
 
-
 class EngineState : public engine_state2_s {
 public:
 	EngineState();
@@ -87,7 +86,6 @@ public:
 	float currentRawVE = 0;
 
 	int vssEventCounter = 0;
-	int totalLoggedBytes = 0;
 
 
 	/**
