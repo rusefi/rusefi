@@ -28,6 +28,10 @@
 
 #include "rtc_helper.h"
 
+#if EFI_TUNER_STUDIO
+extern TunerStudioOutputChannels tsOutputChannels;
+#endif
+
 #define SD_STATE_INIT "init"
 #define SD_STATE_MOUNTED "MOUNTED"
 #define SD_STATE_MOUNT_FAILED "MOUNT_FAILED"
@@ -44,7 +48,10 @@ EXTERN_ENGINE;
 
 #define F_SYNC_FREQUENCY 100
 
+static int totalLoggedBytes = 0;
 static int writeCounter = 0;
+static int totalWritesCounter = 0;
+static int totalSyncCounter = 0;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
@@ -94,8 +101,6 @@ static SPIConfig ls_spicfg = {
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.cpp
 static MMCConfig mmccfg = { NULL, &ls_spicfg, &hs_spicfg };
 
-#define FILE_LOG_MIN_DELAY 3
-
 /**
  * fatfs MMC/SPI
  */
@@ -133,7 +138,7 @@ static void sdStatistics(void) {
 	scheduleMsg(&logger, "SD enabled=%s status=%s", boolToString(CONFIGB(isSdCardEnabled)),
 			sdStatus);
 	if (fs_ready) {
-		scheduleMsg(&logger, "filename=%s size=%d", logName, engine->engineState.totalLoggedBytes);
+		scheduleMsg(&logger, "filename=%s size=%d", logName, totalLoggedBytes);
 	}
 }
 
@@ -214,15 +219,7 @@ static void createLogFile(void) {
 		printError("Seek error", err);
 		return;
 	}
-	writeCounter++;
-	if (writeCounter >= F_SYNC_FREQUENCY) {
-		/**
-		 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
-		 * todo: one day someone should actualy measure the relative cost of f_sync
-		 */
-		f_sync(&FDLogFile);
-		writeCounter = 0;
-	}
+	f_sync(&FDLogFile);
 	fs_ready = true;						// everything Ok
 	unlockSpi();
 }
@@ -320,14 +317,34 @@ void appendToLog(const char *line) {
 		return;
 	}
 	UINT lineLength = strlen(line);
-	engine->engineState.totalLoggedBytes += lineLength;
+	totalLoggedBytes += lineLength;
 	lockSpi(SPI_NONE);
 	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWritten);
 	if (bytesWritten < lineLength) {
 		printError("write error or disk full", err); // error or disk full
 	}
-	f_sync(&FDLogFile);
+	writeCounter++;
+	totalWritesCounter++;
+	if (writeCounter >= F_SYNC_FREQUENCY) {
+		/**
+		 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
+		 * todo: one day someone should actualy measure the relative cost of f_sync
+		 */
+		f_sync(&FDLogFile);
+		totalSyncCounter++;
+		writeCounter = 0;
+	}
+
+
+
 	unlockSpi();
+
+	if (engineConfiguration->debugMode == DBG_SD_CARD) {
+		tsOutputChannels.debugIntField1 = totalLoggedBytes;
+		tsOutputChannels.debugIntField2 = totalWritesCounter;
+		tsOutputChannels.debugIntField3 = totalSyncCounter;
+	}
+
 }
 
 /*
@@ -434,11 +451,15 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			sdStatus = SD_STATE_NOT_INSERTED;
 		}
 
-		if (isSdCardAlive())
+		if (isSdCardAlive()) {
 			writeLogLine();
+		} else {
+			chThdSleepMilliseconds(100);
+		}
 
-		int periodMs = maxI(boardConfiguration->sdCardPeriodMs, FILE_LOG_MIN_DELAY);
-		chThdSleepMilliseconds(periodMs);
+		if (boardConfiguration->sdCardPeriodMs > 0) {
+			chThdSleepMilliseconds(boardConfiguration->sdCardPeriodMs);
+		}
 	}
 }
 
@@ -447,10 +468,6 @@ bool isSdCardAlive(void) {
 }
 
 void initMmcCard(void) {
-	 // temporary value while we migrate
-	if (boardConfiguration->sdCardPeriodMs == 0)
-		boardConfiguration->sdCardPeriodMs = 50;
-
 	logName[0] = 0;
 	addConsoleAction("sdinfo", sdStatistics);
 	if (!CONFIGB(isSdCardEnabled)) {

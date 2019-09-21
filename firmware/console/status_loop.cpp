@@ -956,9 +956,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	case DBG_VEHICLE_SPEED_SENSOR:
 		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
 		break;
-	case DBG_SD_CARD:
-		tsOutputChannels->debugIntField1 = engine->engineState.totalLoggedBytes;
-		break;
 	case DBG_CRANKING_DETAILS:
 		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 		break;
