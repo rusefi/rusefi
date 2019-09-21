@@ -31,6 +31,7 @@ public:
 	OutputPin();
 	/**
 	 * initializes pin & registers it in pin repository
+	 * todo: add a comment explaining why outputMode POINTER not VALUE?
 	 */
 	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
 	/**

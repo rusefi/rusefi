@@ -123,12 +123,13 @@ public:
 	
 	void start(bool useTwoWires, 
 			brain_pin_e pinEnable,
-			pin_output_mode_e pinEnableMode,
+			// since we have pointer magic here we cannot simply have value parameter
+			pin_output_mode_e *pinEnableMode,
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2) {
 		dcMotor.SetType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
 
-		m_pinEnable.initPin("ETB Enable", pinEnable, &pinEnableMode);
+		m_pinEnable.initPin("ETB Enable", pinEnable, pinEnableMode);
 		m_pinDir1.initPin("ETB Dir 1", pinDir1);
 		m_pinDir2.initPin("ETB Dir 2", pinDir2);
 
@@ -483,7 +484,7 @@ void startETBPins(void) {
 	etb1.start(
 			CONFIG(etb1_use_two_wires),
 			CONFIGB(etb1.controlPin1),
-			CONFIGB(etb1.controlPinMode),
+			&CONFIGB(etb1.controlPinMode),
 			CONFIGB(etb1.directionPin1),
 			CONFIGB(etb1.directionPin2)
 			);
