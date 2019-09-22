@@ -246,7 +246,7 @@ SensorsState::SensorsState() {
 }
 
 int MockAdcState::getMockAdcValue(int hwChannel) const {
-	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
+	efiAssert(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds", -1);
 	return fakeAdcValues[hwChannel];
 }
 
