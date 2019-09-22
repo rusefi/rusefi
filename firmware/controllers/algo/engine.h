@@ -120,7 +120,7 @@ public:
 	/**
 	 * That's the list of pending spark firing events
 	 */
-	IgnitionEvent *iHead = NULL;
+	IgnitionEvent *iHead = nullptr;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */
@@ -158,12 +158,12 @@ public:
 	bool withError = false;
 
 	RpmCalculator rpmCalculator;
-	persistent_config_s *config = NULL;
+	persistent_config_s *config = nullptr;
 	/**
 	 * we use funny unique name to make sure that compiler is not confused between global variable and class member
 	 * todo: this variable is probably a sign of some problem, should we even have it?
 	 */
-	engine_configuration_s *engineConfigurationPtr = NULL;
+	engine_configuration_s *engineConfigurationPtr = nullptr;
 
 	/**
 	 * this is about 'stopengine' command

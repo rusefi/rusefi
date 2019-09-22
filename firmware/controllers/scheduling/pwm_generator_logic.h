@@ -56,7 +56,7 @@ public:
 	PwmConfig();
 	PwmConfig(float *switchTimes, SingleWave *waves);
 	void init(float *switchTimes, SingleWave *waves);
-	void *arg = NULL;
+	void *arg = nullptr;
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
@@ -102,7 +102,7 @@ public:
 	/**
 	 * this main callback is invoked when it's time to switch level on any of the output channels
 	 */
-	pwm_gen_callback *stateChangeCallback = NULL;
+	pwm_gen_callback *stateChangeCallback = nullptr;
 private:
 	/**
 	 * float value of PWM period
