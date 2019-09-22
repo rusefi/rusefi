@@ -11,15 +11,14 @@
 #ifndef ADC_MATH_H_
 #define ADC_MATH_H_
 
-#include "global.h"
+#include "engine_configuration.h"
 #define ADC_MAX_VALUE 4095
 
 #define adcToVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
 
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / (engineConfiguration->adcVcc)))
 
-// voltage in MCU universe, from zero to VDD
-#define getVoltage(msg, hwChannel) (adcToVolts(getAdcValue(msg, hwChannel)))
+float getVoltage(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 //  DECLARE_ENGINE_PARAMETER_SUFFIX
 float getVoltageDivided(const char *msg, adc_channel_e channel);
