@@ -243,8 +243,8 @@ public:
 
 		if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 #if EFI_TUNER_STUDIO
-			tsOutputChannels.debugFloatField1 = targetFromTable;
-			tsOutputChannels.debugFloatField2 = engine->engineState.etbIdleAddition;
+			tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
+			tsOutputChannels.debugFloatField2 = engine->engineState.idle.etbIdleAddition;
 #endif /* EFI_TUNER_STUDIO */
 		}
 
