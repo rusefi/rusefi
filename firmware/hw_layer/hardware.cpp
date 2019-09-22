@@ -350,7 +350,7 @@ void applyNewHardwareSettings(void) {
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	if (etbRestartNeeded) {
-		startETBPins();
+		startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
