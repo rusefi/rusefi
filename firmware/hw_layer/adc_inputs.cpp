@@ -53,6 +53,11 @@ float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_
 	return getVoltage(msg, hwChannel PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->analogInputDividerCoefficient;
 }
 
+// voltage in MCU universe, from zero to VDD
+float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return adcToVolts(getAdcValue(msg, hwChannel));
+}
+
 AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	this->hwConfig = hwConfig;
 	channelCount = 0;
