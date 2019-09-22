@@ -20,7 +20,6 @@
 
 float getVoltage(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-//  DECLARE_ENGINE_PARAMETER_SUFFIX
-float getVoltageDivided(const char *msg, adc_channel_e channel);
+float getVoltageDivided(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* ADC_MATH_H_ */
