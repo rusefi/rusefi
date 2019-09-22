@@ -24,15 +24,15 @@ extern bool verboseMode;
 uint32_t maxSchedulingPrecisionLoss = 0;
 
 scheduling_s::scheduling_s() {
-	callback = NULL;
-	next = NULL;
-	param = NULL;
+	callback = nullptr;
+	next = nullptr;
+	param = nullptr;
 	isScheduled = false;
 	momentX = 0;
 }
 
 EventQueue::EventQueue() {
-	head = NULL;
+	head = nullptr;
 	setLateDelay(100);
 }
 
@@ -128,8 +128,8 @@ static uint32_t lastEventCallbackDuration;
 int EventQueue::executeAll(efitime_t now) {
 	scheduling_s * current, *tmp;
 
-	scheduling_s * executionList = NULL;
-	scheduling_s * lastInExecutionList = NULL;
+	scheduling_s * executionList = nullptr;
+	scheduling_s * lastInExecutionList = nullptr;
 
 	int listIterationCounter = 0;
 	int executionCounter = 0;
@@ -233,5 +233,5 @@ scheduling_s *EventQueue::getForUnitText(int index) {
 }
 
 void EventQueue::clear(void) {
-	head = NULL;
+	head = nullptr;
 }

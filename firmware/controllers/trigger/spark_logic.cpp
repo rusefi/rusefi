@@ -25,7 +25,7 @@ extern bool verboseMode;
 static cyclic_buffer<int> ignitionErrorDetection;
 static Logging *logger;
 
-static const char *prevSparkName = NULL;
+static const char *prevSparkName = nullptr;
 
 IgnitionEventList::IgnitionEventList() {
 	isReady = false;
@@ -100,7 +100,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, floatms_t sparkD
 		secondOutput = &enginePins.coils[secondCoilIndex];
 		assertPinAssigned(secondOutput);
 	} else {
-		secondOutput = NULL;
+		secondOutput = nullptr;
 	}
 
 	assertPinAssigned(output);

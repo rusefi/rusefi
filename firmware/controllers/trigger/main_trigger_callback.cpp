@@ -61,7 +61,7 @@ EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
 
-static const char *prevOutputName = NULL;
+static const char *prevOutputName = nullptr;
 
 static InjectionEvent primeInjEvent;
 

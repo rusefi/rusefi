@@ -212,7 +212,7 @@ void brain_pin_markUnused(brain_pin_e brainPin)
 
 	if (getBrainUsedPin(index) != NULL)
 		totalPinsUsed--;
-	getBrainUsedPin(index) = NULL;
+	getBrainUsedPin(index) = nullptr;
 }
 
 /**
@@ -255,7 +255,7 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 
 	if (getBrainUsedPin(index) != NULL)
 		totalPinsUsed--;
-	getBrainUsedPin(index) = NULL;
+	getBrainUsedPin(index) = nullptr;
 }
 
 const char *getPinFunction(brain_input_pin_e brainPin) {

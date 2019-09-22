@@ -41,9 +41,9 @@ PwmConfig::PwmConfig() {
 	mode = PM_NORMAL;
 	memset(&outputPins, 0, sizeof(outputPins));
 	phaseCount = 0;
-	pwmCycleCallback = NULL;
-	stateChangeCallback = NULL;
-	executor = NULL;
+	pwmCycleCallback = nullptr;
+	stateChangeCallback = nullptr;
+	executor = nullptr;
 	name = "[noname]";
 	arg = this;
 }

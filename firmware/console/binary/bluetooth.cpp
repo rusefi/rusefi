@@ -28,8 +28,8 @@ static ts_channel_s *tsChannel;
 
 
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
-static thread_t *btThread = NULL;
-static thread_reference_t btThreadRef = NULL; // used by thread suspend/resume as a flag
+static thread_t *btThread = nullptr;
+static thread_reference_t btThreadRef = nullptr; // used by thread suspend/resume as a flag
 
 static LoggingWithStorage btLogger("bluetooth");
 
