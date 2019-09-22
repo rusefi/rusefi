@@ -35,13 +35,10 @@
 #include "engine_math.h"
 #include "engine_controller.h"
 #include "maf.h"
-//#include "biquad.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      8
 #define ADC_BUF_DEPTH_FAST      4
-
-//static Biquad biq[ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
@@ -454,15 +451,16 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {
 		/* Calculates the average values from the ADC samples.*/
+		float alpha = CONFIG(slowAdcAlpha);
+		float m1alpha = 1 - alpha;
+
 		for (int i = 0; i < slowAdc.size(); i++) {
+			// Average samples
 			int value = getAvgAdcValue(i, slowAdc.samples, ADC_BUF_DEPTH_SLOW, slowAdc.size());
+
+			// Exponential moving average filter
 			adcsample_t prev = slowAdc.values.adc_data[i];
-			float result = (slowAdcCounter == 0) ? value :
-					CONFIG(slowAdcAlpha) * value + (1 - CONFIG(slowAdcAlpha)) * prev;
-//			if (slowAdcCounter == 0) {
-//				biq[i].initValue(value);
-//			}
-//			float result = biq[i].getValue(value);
+			float result = (slowAdcCounter == 0) ? value : alpha * value + m1alpha * prev;
 
 			slowAdc.values.adc_data[i] = (int)result;
 		}
