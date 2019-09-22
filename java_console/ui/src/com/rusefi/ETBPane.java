@@ -8,13 +8,14 @@ import com.rusefi.ui.etb.EtbCommandsPanel;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
+
 /**
  * Controls related to Electronic Throttle Body
  *
  * (c) Andrey Belomutskiy 2013-2019
  */
 public class ETBPane {
-    public static final String SET_ETB = "set_etb ";
     private final JPanel content = new JPanel(new BorderLayout());
 
     public ETBPane() {

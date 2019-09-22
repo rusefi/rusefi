@@ -1,6 +1,6 @@
 package com.rusefi.ui.etb;
 
-import com.rusefi.ETBPane;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.CommandQueue;
 import org.putgemin.VerticalFlowLayout;
 
@@ -8,14 +8,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
+
 /**
  * Little panel to drive ETB duty cycle directly
  *
  * (c) Andrey Belomutskiy
- * @see ETBPane#SET_ETB
+ * @see Fields#CMD_ETB_DUTY
  */
 public class DirectDrivePanel {
-    public static final String CANCEL_DIRECT_DRIVE_COMMAND = ETBPane.SET_ETB + "NaN";
+    public static final String CANCEL_DIRECT_DRIVE_COMMAND = CMD_ETB_DUTY + " NaN";
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel currentOverride = new JLabel("NaN");
     private final JTextArea increment = new JTextArea("0.5");
@@ -26,8 +28,8 @@ public class DirectDrivePanel {
         content.setBorder(BorderFactory.createTitledBorder("Direct Drive"));
 
         CommandQueue.getInstance().addListener(command -> {
-            if (command.startsWith(ETBPane.SET_ETB)) {
-                command = command.substring(ETBPane.SET_ETB.length());
+            if (command.startsWith(CMD_ETB_DUTY + " ")) {
+                command = command.substring((CMD_ETB_DUTY + " ").length());
                 directDriverValue = parseDouble(command, Double.NaN);
                 SwingUtilities.invokeLater(() -> currentOverride.setText("PWM override " + directDriverValue));
                 reset.setEnabled(!Double.isNaN(directDriverValue));
@@ -41,7 +43,7 @@ public class DirectDrivePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double newValue = getCurrent() + getIncrement();
-                CommandQueue.getInstance().write(ETBPane.SET_ETB + newValue);
+                CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + newValue);
             }
         });
         upDownPanel.add(more);
@@ -51,7 +53,7 @@ public class DirectDrivePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double newValue = getCurrent() - getIncrement();
-                CommandQueue.getInstance().write(ETBPane.SET_ETB + newValue);
+                CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + newValue);
             }
         });
 

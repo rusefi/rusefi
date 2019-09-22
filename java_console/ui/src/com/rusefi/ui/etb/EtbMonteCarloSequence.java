@@ -1,6 +1,5 @@
 package com.rusefi.ui.etb;
 
-import com.rusefi.ETBPane;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -17,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.romraider.util.ThreadUtil.sleep;
 import static com.rusefi.SensorLogger.getSecondsSinceFileStart;
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 import static com.rusefi.etb.TestSequenceStep.count;
 import static com.rusefi.ui.etb.DirectDrivePanel.CANCEL_DIRECT_DRIVE_COMMAND;
 import static com.rusefi.ui.etb.EtbTestSequence.*;
@@ -135,6 +135,6 @@ public class EtbMonteCarloSequence {
     }
 
     private void stopETB() {
-        CommandQueue.getInstance().write(ETBPane.SET_ETB + 0);
+        CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + 0);
     }
 }
