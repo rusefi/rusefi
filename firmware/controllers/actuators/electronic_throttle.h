@@ -24,7 +24,7 @@ void setEtbOffset(int value);
 void setThrottleDutyCycle(percent_t level);
 bool isETBRestartNeeded(void);
 void stopETBPins(void);
-void startETBPins(void);
+void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
 

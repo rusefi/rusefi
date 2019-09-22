@@ -211,7 +211,7 @@ public:
 			return;
 		}
 
-		percent_t actualThrottlePosition = getTPS();
+		percent_t actualThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		if (engine->etbAutoTune) {
 			autoTune.input = actualThrottlePosition;
@@ -302,6 +302,7 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 /* DISPLAY_ELSE */
 		DISPLAY_TEXT(No_Pedal_Sensor);
 /* DISPLAY_ENDIF */
+#if EFI_TUNER_STUDIO
 		// 312
 		tsOutputChannels.etbTarget = targetPosition;
 		// 316
@@ -309,6 +310,7 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		// 320
 		// Error is positive if the throttle needs to open further
 		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
+#endif /* EFI_TUNER_STUDIO */
 	}
 };
 
@@ -331,6 +333,7 @@ void setThrottleDutyCycle(percent_t level) {
 	scheduleMsg(&logger, "duty ETB duty=%f", dc);
 }
 
+#if EFI_PROD_CODE
 static void showEthInfo(void) {
 	static char pinNameBuffer[16];
 
@@ -338,12 +341,12 @@ static void showEthInfo(void) {
 			engine->etbAutoTune);
 
 	scheduleMsg(&logger, "throttlePedal=%.2f %.2f/%.2f @%s",
-			getPedalPosition(),
+			getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE),
 			engineConfiguration->throttlePedalUpVoltage,
 			engineConfiguration->throttlePedalWOTVoltage,
 			getPinNameByAdcChannel("tPedal", engineConfiguration->throttlePedalPositionAdcChannel, pinNameBuffer));
 
-	scheduleMsg(&logger, "TPS=%.2f", getTPS());
+	scheduleMsg(&logger, "TPS=%.2f", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE));
 	scheduleMsg(&logger, "dir=%d DC=%f", etb1.dcMotor.isOpenDirection(), etb1.dcMotor.Get());
 
 	scheduleMsg(&logger, "etbControlPin1=%s duty=%.2f freq=%d",
@@ -399,6 +402,7 @@ void setEtbOffset(int value) {
 	etbPid.reset();
 	showEthInfo();
 }
+#endif /* EFI_PROD_CODE */
 
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
@@ -485,7 +489,7 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 	shouldResetPid = !etbPid.isSame(&previousConfiguration->etb);
 }
 
-void startETBPins(void) {
+void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// controlPinMode is a strange feature - it's simply because I am short on 5v I/O on Frankenso with Miata NB2 test mule
 	etb1.start(
@@ -554,8 +558,10 @@ void unregisterEtbPins() {
 }
 
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
+#endif /* EFI_PROD_CODE */
 
 	etbPid.initPidClass(&engineConfiguration->etb);
 
@@ -570,7 +576,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	autoTune.SetOutputStep(0.1);
 
-	startETBPins();
+	startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// manual duty cycle control without PID. Percent value from 0 to 100
 	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
@@ -585,11 +591,13 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tuneWorkingPidSettings.maxValue = 100;
 	tuneWorkingPidSettings.periodMs = 100;
 
+#if EFI_PROD_CODE
 	// this is useful once you do "enable etb_auto"
 	addConsoleActionF("set_etbat_output", setTempOutput);
 	addConsoleActionF("set_etbat_step", setAutoStep);
 	addConsoleActionI("set_etbat_period", setAutoPeriod);
 	addConsoleActionI("set_etbat_offset", setAutoOffset);
+#endif /* EFI_PROD_CODE */
 
 	etbPid.reset();
 
