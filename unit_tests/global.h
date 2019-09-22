@@ -15,8 +15,6 @@
 
 #include "common_headers.h"
 
-#include "boards.h"
-
 typedef uint32_t iomode_t;
 typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;

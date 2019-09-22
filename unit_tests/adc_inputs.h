@@ -8,4 +8,6 @@
 #ifndef ADC_INPUTS_H_
 #define ADC_INPUTS_H_
 
+#include "boards.h"
+
 #endif /* ADC_INPUTS_H_ */

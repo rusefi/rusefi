@@ -385,7 +385,7 @@ static char pinNameBuffer[16];
 
 static void printThermistor(const char *msg, ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
 	adc_channel_e adcChannel = config->adcChannel;
-	float voltage = getVoltageDivided("term", adcChannel);
+	float voltage = getVoltageDivided("term", adcChannel PASS_ENGINE_PARAMETER_SUFFIX);
 	float r = getResistance(config, voltage);
 
 	float t = getTemperatureC(config, tm, useLinear);

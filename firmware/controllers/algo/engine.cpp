@@ -164,7 +164,7 @@ void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// todo: move this logic somewhere to sensors folder?
 	if (CONFIG(fuelLevelSensor) != EFI_ADC_NONE) {
-		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor);
+		float fuelLevelVoltage = getVoltageDivided("fuel", engineConfiguration->fuelLevelSensor PASS_ENGINE_PARAMETER_SUFFIX);
 		sensors.fuelTankLevel = interpolateMsg("fgauge", CONFIGB(fuelLevelEmptyTankVoltage), 0,
 				CONFIGB(fuelLevelFullTankVoltage), 100,
 				fuelLevelVoltage);

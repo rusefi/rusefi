@@ -1,6 +1,6 @@
 #include "linear_sensor.h"
 
-#include <gtest/gtest.h>
+#include "unit_test_framework.h"
 
 class SensorLinear : public ::testing::Test {
 protected:
@@ -21,7 +21,7 @@ protected:
 		auto result = dut.get();                                                                                       \
                                                                                                                        \
 		EXPECT_TRUE(result.Valid);                                                                                     \
-		EXPECT_FLOAT_EQ(result.Value, (out));                                                                          \
+		ASSERT_NEAR(result.Value, (out), EPS4D) << "Not " << out << " for " << in;                                     \
 	}
 
 #define test_point_invalid(in)                                                                                         \

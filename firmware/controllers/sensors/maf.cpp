@@ -10,7 +10,7 @@ EXTERN_ENGINE
  * @return MAF sensor voltage
  */
 float getMafVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("maf", engineConfiguration->mafAdcChannel);
+	return getVoltageDivided("maf", engineConfiguration->mafAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

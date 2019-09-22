@@ -148,7 +148,7 @@ float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return interpolateMsg("rmap", CONFIGB(mapFrequency0Kpa), 0, CONFIGB(mapFrequency100Kpa), 100, mapFreq);
 	}
 
-	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel);
+	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
@@ -168,7 +168,7 @@ float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Override the real Baro sensor with the stored initial MAP value, if the option is set.
 	if (CONFIG(useFixedBaroCorrFromMap))
 		return storedInitialBaroPressure;
-	float voltage = getVoltageDivided("baro", engineConfiguration->baroSensor.hwChannel);
+	float voltage = getVoltageDivided("baro", engineConfiguration->baroSensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
 	return decodePressure(voltage, &engineConfiguration->baroSensor PASS_ENGINE_PARAMETER_SUFFIX);
 }
 

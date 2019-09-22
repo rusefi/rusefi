@@ -21,8 +21,6 @@
 #include "thermistors.h"
 #include "adc_inputs.h"
 
-#include "adc_inputs.h"
-
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
