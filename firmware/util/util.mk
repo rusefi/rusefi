@@ -15,7 +15,6 @@ UTILSRC_CPP = \
 	$(UTIL_DIR)/math/pid.cpp \
 	$(UTIL_DIR)/math/avg_values.cpp \
 	$(UTIL_DIR)/math/interpolation.cpp \
-	$(UTIL_DIR)/math/biquad.cpp \
 	$(PROJECT_DIR)/util/datalogging.cpp \
 	$(PROJECT_DIR)/util/loggingcentral.cpp \
 	$(PROJECT_DIR)/util/cli_registry.cpp \
