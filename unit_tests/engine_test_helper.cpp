@@ -67,6 +67,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
 	// magic voltage to get nice CLT
 	testCltValue = 1.492964;
+	//todosetMockCltVoltage(1.492964 PASS_ENGINE_PARAMETER_SUFFIX);
 	// magic voltage to get nice IAT
 	testIatValue = 4.03646;
 
