@@ -44,5 +44,5 @@ extern WaveChart waveChart;
 InjectionSignalPair::InjectionSignalPair() {
 	isScheduled = false;
 	memset(outputs, 0, sizeof(outputs));
-	event = NULL;
+	event = nullptr;
 }
