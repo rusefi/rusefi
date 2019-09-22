@@ -740,6 +740,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection);
 
 
+	// 104
+	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	// offset 108
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
     tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -932,7 +934,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
 		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
-		tsOutputChannels->debugFloatField4 = engine->rpmCalculator.getRpmAcceleration();
 		break;
 	case DBG_FSIO_ADC:
 		// todo: implement a proper loop
