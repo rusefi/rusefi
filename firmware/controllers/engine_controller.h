@@ -23,15 +23,15 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 
-void setMockVBattVoltage(float voltage);
-void setMockMapVoltage(float voltage);
+void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 // throttle body sensor
-void setMockThrottlePositionSensorVoltage(float voltage);
-void setMockThrottlePedalSensorVoltage(float voltage);
-void setMockAfrVoltage(float voltage);
-void setMockMafVoltage(float voltage);
-void setMockIatVoltage(float voltage);
-void setMockCltVoltage(float voltage);
+void setMockThrottlePositionSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockThrottlePedalSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
 

@@ -75,7 +75,7 @@
 
 #if ! EFI_UNIT_TEST
 #include "init.h"
-#endif
+#endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
@@ -96,7 +96,7 @@
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
 	initSensors();
-#endif
+#endif /* EFI_UNIT_TEST */
 
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -593,39 +593,40 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	getFloat(offset);
 	onConfigurationChanged();
 }
+#endif /* EFI_UNIT_TEST */
 
 #if EFI_ENABLE_MOCK_ADC
 
 void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->clt.adcChannel, voltage);
+	setMockVoltage(engineConfiguration->clt.adcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->iat.adcChannel, voltage);
+	setMockVoltage(engineConfiguration->iat.adcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
+	setMockVoltage(engineConfiguration->mafAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void setMockAfrVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
+void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setMockVoltage(engineConfiguration->afr.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void setMockThrottlePedalSensorVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->throttlePedalPositionAdcChannel, voltage);
+void setMockThrottlePedalSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setMockVoltage(engineConfiguration->throttlePedalPositionAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void setMockThrottlePositionSensorVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage);
+void setMockThrottlePositionSensorVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setMockVoltage(engineConfiguration->tps1_1AdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void setMockMapVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
+void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
-void setMockVBattVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage);
+void setMockVBattVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	setMockVoltage(engineConfiguration->vbattAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 static void initMockVoltage(void) {
@@ -640,6 +641,9 @@ static void initMockVoltage(void) {
 }
 
 #endif /* EFI_ENABLE_MOCK_ADC */
+
+
+#if !EFI_UNIT_TEST
 
 static void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
