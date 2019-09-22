@@ -89,7 +89,7 @@ typedef struct {
 	unsigned int isKnockChipOk : 1; // bit 9
 	int tsConfigVersion; // 84
 	egt_values_s egtValues; // 88
-	float unusedOffset104; // 104
+	float rpmAcceleration; // 104
 	float massAirFlow; // 108
 	/**
 	 * Current volumetric efficiency
