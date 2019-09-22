@@ -741,7 +741,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 
 	// 104
-	tsOutputChannels->rpmAcceleration engine->rpmCalculator.getRpmAcceleration();
+	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	// offset 108
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
     tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
