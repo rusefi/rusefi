@@ -182,3 +182,11 @@ TEST(idle, timingPid) {
 	ASSERT_FLOAT_EQ(-5.0f, corr) << "getAdvanceCorrections#7";
 
 }
+
+
+TEST(idle, testTargetTpsIsFloatBug945) {
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+
+
+}

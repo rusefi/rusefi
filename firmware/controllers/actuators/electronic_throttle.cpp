@@ -578,10 +578,6 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	// manual duty cycle control without PID. Percent value from 0 to 100
-	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
-
-
 	tuneWorkingPidSettings.pFactor = 1;
 	tuneWorkingPidSettings.iFactor = 0;
 	tuneWorkingPidSettings.dFactor = 0;
@@ -592,6 +588,8 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tuneWorkingPidSettings.periodMs = 100;
 
 #if EFI_PROD_CODE
+	// manual duty cycle control without PID. Percent value from 0 to 100
+	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
 	// this is useful once you do "enable etb_auto"
 	addConsoleActionF("set_etbat_output", setTempOutput);
 	addConsoleActionF("set_etbat_step", setAutoStep);

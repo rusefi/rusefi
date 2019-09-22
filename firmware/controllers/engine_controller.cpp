@@ -109,6 +109,11 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 #if EFI_IDLE_CONTROL
 	startIdleThread(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_IDLE_CONTROL */
+
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
 }
 
 EXTERN_ENGINE;
@@ -759,10 +764,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #if EFI_AUX_PID
 	initAuxPid(sharedLogger);
 #endif
-
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	initElectronicThrottle();
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();
