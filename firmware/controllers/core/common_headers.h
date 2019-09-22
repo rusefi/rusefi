@@ -66,10 +66,10 @@
 #define DISPLAY_IF(x) x
 
 #define DECLARE_ENGINE_PTR                              \
-	Engine *engine = NULL;                              \
-	engine_configuration_s *engineConfiguration = NULL; \
-	persistent_config_s *config = NULL;                 \
-	board_configuration_s *boardConfiguration = NULL;
+	Engine *engine = nullptr;                              \
+	engine_configuration_s *engineConfiguration = nullptr; \
+	persistent_config_s *config = nullptr;                 \
+	board_configuration_s *boardConfiguration = nullptr;
 
 
 #define INJECT_ENGINE_REFERENCE(x)              \
