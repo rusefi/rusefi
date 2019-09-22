@@ -212,7 +212,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	DISPLAY_TEXT(Analog_MCU_reads);
 
 	float voltage = getVoltageDivided("pPS", CONFIG(DISPLAY_CONFIG(throttlePedalPositionAdcChannel)));
-	float result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
+	percent_t result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 
 	// this would put the value into the 0-100 range
 	return maxF(0, minF(100, result));

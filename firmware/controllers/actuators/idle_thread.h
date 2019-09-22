@@ -14,10 +14,7 @@
 
 class IdleController : public PeriodicTimerController {
 public:
-	Engine *engine = NULL;
-	engine_configuration_s *engineConfiguration = NULL;
-	persistent_config_s *config = NULL;
-	board_configuration_s *boardConfiguration = NULL;
+	DECLARE_ENGINE_PTR;
 
 	int getPeriodMs() override;
 	void PeriodicTask() override;
