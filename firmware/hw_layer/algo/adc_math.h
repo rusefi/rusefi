@@ -11,6 +11,7 @@
 #ifndef ADC_MATH_H_
 #define ADC_MATH_H_
 
+#include "global.h"
 #define ADC_MAX_VALUE 4095
 
 #define adcToVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
@@ -20,7 +21,7 @@
 // voltage in MCU universe, from zero to VDD
 #define getVoltage(msg, hwChannel) (adcToVolts(getAdcValue(msg, hwChannel)))
 
-// Board voltage, with divider coefficient accounted for
-#define getVoltageDivided(msg, hwChannel) (getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient)
+//  DECLARE_ENGINE_PARAMETER_SUFFIX
+float getVoltageDivided(const char *msg, adc_channel_e channel);
 
 #endif /* ADC_MATH_H_ */

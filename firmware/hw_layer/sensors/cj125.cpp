@@ -114,7 +114,7 @@ static float getUr() {
 		return getVoltage("cj125ur", CONFIG(cj125ur));
 	} else {
 		// if a standard voltage division scheme with OpAmp is used
-		return getVoltageDivided("cj125ur", CONFIG(cj125ur));
+		return getVoltageDivided("cj125ur", CONFIG(cj125ur) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_PROD_CODE */
 	}
@@ -129,7 +129,7 @@ static float getUa() {
 	if (CONFIG(cj125ua) != EFI_ADC_NONE) {
 #if EFI_PROD_CODE
 		if (engineConfiguration->cj125isUaDivided) {
-			return getVoltageDivided("cj125ua", CONFIG(cj125ua));
+			return getVoltageDivided("cj125ua", CONFIG(cj125ua) PASS_ENGINE_PARAMETER_SUFFIX);
 		} else {
 			return getVoltage("cj125ua", CONFIG(cj125ua));
 		}

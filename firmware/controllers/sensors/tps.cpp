@@ -133,7 +133,7 @@ percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * Return voltage on TPS AND channel
  * */
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel);
+	return getVoltageDivided("tps", engineConfiguration->tps1_1AdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 /*
@@ -176,7 +176,7 @@ void grabTPSIsWideOpen() {
 
 void grabPedalIsUp() {
 #if EFI_PROD_CODE
-	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
+	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->throttlePedalUpVoltage = voltage;
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
@@ -184,7 +184,7 @@ void grabPedalIsUp() {
 
 void grabPedalIsWideOpen() {
 #if EFI_PROD_CODE
-	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel);
+	float voltage = getVoltageDivided("pPS", engineConfiguration->throttlePedalPositionAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->throttlePedalWOTVoltage = voltage;
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
@@ -211,7 +211,7 @@ percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	DISPLAY_TAG(PEDAL_SECTION);
 	DISPLAY_TEXT(Analog_MCU_reads);
 
-	float voltage = getVoltageDivided("pPS", CONFIG(DISPLAY_CONFIG(throttlePedalPositionAdcChannel)));
+	float voltage = getVoltageDivided("pPS", CONFIG(DISPLAY_CONFIG(throttlePedalPositionAdcChannel)) PASS_ENGINE_PARAMETER_SUFFIX);
 	percent_t result = interpolateMsg("pedal", engineConfiguration->throttlePedalUpVoltage, 0, engineConfiguration->throttlePedalWOTVoltage, 100, voltage);
 
 	// this would put the value into the 0-100 range

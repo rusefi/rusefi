@@ -46,6 +46,13 @@
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
 
+EXTERN_ENGINE;
+
+// Board voltage, with divider coefficient accounted for
+float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
+}
+
 AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	this->hwConfig = hwConfig;
 	channelCount = 0;

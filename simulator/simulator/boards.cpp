@@ -9,11 +9,17 @@
 #include "boards.h"
 #include "engine.h"
 #include "engine_sniffer.h"
+#include "adc_math.h"
 
 static LoggingWithStorage logger("simulator board");
-extern engine_configuration_s *engineConfiguration;
-extern Engine *engine;
+
+EXTERN_ENGINE;
 
 int getAdcValue(const char *msg, int hwChannel) {
 	return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
+}
+
+// Board voltage, with divider coefficient accounted for
+float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	return getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
 }

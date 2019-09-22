@@ -1,18 +1,18 @@
 /*
- * boards.h
+ * @file boards.h
  *
- *  Created on: Nov 15, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2015
+ * @date Nov 15, 2013
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef BOARDS_H_
 #define BOARDS_H_
 
-#include "rusefi_enums.h"
+#include "engine_configuration.h"
 
 #define ADC_CHANNEL_VREF 0
 
-float getVoltageDivided(const char *msg, adc_channel_e);
+float getVoltageDivided(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
 float getVoltage(const char *msg, int channel);
 int getAdcValue(const char *msg, int channel);
 

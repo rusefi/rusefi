@@ -89,7 +89,7 @@ temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useL
 	DISPLAY_TEXT(Analog_ECU_reads);
 #if EFI_UNIT_TEST
 // todo: get rid of this branch, unify unit test with real firmware. maybe analogInputDividerCoefficient needs to be set?
-		tm->voltageBoard = getVoltageDivided("term", cfg->adcChannel);
+		tm->voltageBoard = getVoltageDivided("term", cfg->adcChannel PASS_ENGINE_PARAMETER_SUFFIX);
 //	CONFIG(analogInputDividerCoefficient) = 1;
 //		tm-> ISPLAY_FIELD(voltageBoard) =  ISPLAY_TEXT(Rdivider) tm->voltageMCU * CONFIG( ISPLAY_CONFIG(analogInputDividerCoefficient));
 #else
