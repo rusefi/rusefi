@@ -13,6 +13,16 @@
 #define DEFAULT_ETB_PWM_FREQUENCY 300
 
 #include "engine.h"
+#include "periodic_task.h"
+
+class EtbController : public PeriodicTimerController {
+public:
+	DECLARE_ENGINE_PTR;
+
+	int getPeriodMs() override;
+	void PeriodicTask() override;
+};
+
 void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);

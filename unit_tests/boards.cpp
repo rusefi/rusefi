@@ -13,6 +13,7 @@ float testMafValue = 0;
 float testCltValue = 0;
 float testIatValue = 0;
 
+// see setMockVoltage
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch(hwChannel) {
 	case TEST_MAF_CHANNEL:
@@ -24,7 +25,7 @@ float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_
 		return testIatValue;
 		//return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));
 	}
-	return 0;
+	return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));;
 }
 
 float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {

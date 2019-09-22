@@ -174,15 +174,12 @@ static percent_t currentEtbDuty;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
-class EtbController : public PeriodicTimerController {
-public:
-	DECLARE_ENGINE_PTR;
 
-	int getPeriodMs() override {
+	int EtbController::getPeriodMs() {
 		return GET_PERIOD_LIMITED(&engineConfiguration->etb);
 	}
 
-	void PeriodicTask() override {
+	void EtbController::PeriodicTask() {
 		// set debug_mode 17
 		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
 #if EFI_TUNER_STUDIO
@@ -312,9 +309,8 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 		tsOutputChannels.etb1Error = targetPosition - actualThrottlePosition;
 #endif /* EFI_TUNER_STUDIO */
 	}
-};
 
-static EtbController etbController;
+EtbController etbController;
 
 /**
  * set_etb_duty X
