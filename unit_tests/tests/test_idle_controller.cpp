@@ -13,6 +13,7 @@
 #include "idle_thread.h"
 #include "allsensors.h"
 #include "engine_controller.h"
+#include "electronic_throttle.h"
 
 extern IdleController idleControllerInstance;
 extern int timeNowUs;
@@ -183,10 +184,23 @@ TEST(idle, timingPid) {
 
 }
 
+// not great that we are reusing shared instance. todo: move EtbController to Engine?
+extern EtbController etbController;
 
 TEST(idle, testTargetTpsIsFloatBug945) {
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	setMockThrottlePedalSensorVoltage(3 PASS_ENGINE_PARAMETER_SUFFIX);
+	etbController.PeriodicTask();
+	ASSERT_NEAR(50, engine->engineState.targetFromTable, EPS4D);
+
+	setMockThrottlePedalSensorVoltage(3.05 PASS_ENGINE_PARAMETER_SUFFIX);
+	etbController.PeriodicTask();
+	ASSERT_NEAR(50, engine->engineState.targetFromTable, EPS4D);
+
+	setMockThrottlePedalSensorVoltage(3.1 PASS_ENGINE_PARAMETER_SUFFIX);
+	etbController.PeriodicTask();
+	ASSERT_NEAR(51, engine->engineState.targetFromTable, EPS4D);
 
 }
