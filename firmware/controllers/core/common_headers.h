@@ -65,4 +65,17 @@
 #define DISPLAY_SENSOR(x) {}
 #define DISPLAY_IF(x) x
 
+#define DECLARE_ENGINE_PTR                              \
+	Engine *engine = NULL;                              \
+	engine_configuration_s *engineConfiguration = NULL; \
+	persistent_config_s *config = NULL;                 \
+	board_configuration_s *boardConfiguration = NULL;
+
+
+#define INJECT_ENGINE_REFERENCE(x)              \
+	x.engine = engine;                           \
+	x.engineConfiguration = engineConfiguration; \
+	x.config = config;                           \
+	x.boardConfiguration = boardConfiguration;
+
 #endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */

@@ -117,6 +117,8 @@ private:
 	SimplePwm etbPwmUp;
 
 public:
+	DECLARE_ENGINE_PTR;
+
 	EtbControl() : etbPwmUp("etbUp"), dcMotor(&m_pwmEnable, &m_pwmDir1, &m_pwmDir2) {}
 
 	TwoPinDcMotor dcMotor;
@@ -163,7 +165,7 @@ static EtbControl etb1;
 
 extern percent_t mockPedalPosition;
 
-Pid etbPid(&engineConfiguration->etb);
+Pid etbPid;
 
 static percent_t directPwmValue = NAN;
 static percent_t currentEtbDuty;
@@ -173,6 +175,8 @@ static percent_t currentEtbDuty;
 #define ETB_PERCENT_TO_DUTY(X) (maxF(minF((X * 0.01), ETB_DUTY_LIMIT - 0.01), 0.01 - ETB_DUTY_LIMIT))
 
 class EtbController : public PeriodicTimerController {
+public:
+	DECLARE_ENGINE_PTR;
 
 	int getPeriodMs() override {
 		return GET_PERIOD_LIMITED(&engineConfiguration->etb);
@@ -396,7 +400,7 @@ void setEtbOffset(int value) {
 	showEthInfo();
 }
 
-void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
 	engineConfiguration->etbBiasBins[1] = 1;
 	engineConfiguration->etbBiasBins[2] = 5;
@@ -426,7 +430,7 @@ void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasValues[7] = 28;
 }
 
-void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(etbIdleThrottleRange) = 5;
 
 	setLinearCurveAny<uint8_t>(config->pedalToTpsPedalBins, PEDAL_TO_TPS_SIZE, /*from*/0, /*to*/100, 1);
@@ -462,6 +466,7 @@ static bool isSamePins(etb_io *current, etb_io *active) {
 			current->directionPin2 != active->directionPin2;
 }
 
+#if EFI_PROD_CODE
 bool isETBRestartNeeded(void) {
 	/**
 	 * We do not want any interruption in HW pin while adjusting other properties
@@ -474,6 +479,7 @@ void stopETBPins(void) {
 	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin1);
 	brain_pin_markUnused(activeConfiguration.bc.etb1.directionPin2);
 }
+#endif /* EFI_PROD_CODE */
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 	shouldResetPid = !etbPid.isSame(&previousConfiguration->etb);
@@ -513,7 +519,7 @@ static void setAutoOffset(int offset) {
 	autoTune.reset();
 }
 
-void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
 	engineConfiguration->etbBiasBins[1] = 1;
 	engineConfiguration->etbBiasBins[2] = 2;
@@ -547,12 +553,18 @@ void unregisterEtbPins() {
 
 }
 
-void initElectronicThrottle(void) {
+void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
+
+	etbPid.initPidClass(&engineConfiguration->etb);
+
+	INJECT_ENGINE_REFERENCE(etb1);
+	INJECT_ENGINE_REFERENCE(etbController);
+
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
 
-	engine->engineState.hasEtbPedalPositionSensor = hasPedalPositionSensor();
+	engine->engineState.hasEtbPedalPositionSensor = hasPedalPositionSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}

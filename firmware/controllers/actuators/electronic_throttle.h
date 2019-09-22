@@ -13,10 +13,10 @@
 #define DEFAULT_ETB_PWM_FREQUENCY 300
 
 #include "engine.h"
-void initElectronicThrottle(void);
-void setDefaultEtbBiasCurve(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setDefaultEtbParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setBoschVNH2SP30Curve(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
 void setEtbDFactor(float value);

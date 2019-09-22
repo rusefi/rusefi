@@ -18,10 +18,13 @@
 #include "engine_math.h"
 #include "fsio_impl.h"
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
+#include "electronic_throttle.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "can_hw.h"
 #include "scheduler.h"
-#include "electronic_throttle.h"
 #endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE;
