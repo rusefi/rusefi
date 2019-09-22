@@ -12,7 +12,7 @@
 #include "cyclic_buffer.h"
 #include "thermistor_generated.h"
 
-#define MOCK_ADC_SIZE 16
+#define MOCK_ADC_SIZE 26
 
 class MockAdcState {
 public:

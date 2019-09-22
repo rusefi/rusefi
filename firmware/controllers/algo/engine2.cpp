@@ -69,6 +69,7 @@ MockAdcState::MockAdcState() {
 
 #if EFI_ENABLE_MOCK_ADC
 void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
 	scheduleMsg(&engineLogger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
@@ -245,6 +246,7 @@ SensorsState::SensorsState() {
 }
 
 int MockAdcState::getMockAdcValue(int hwChannel) const {
+	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
 	return fakeAdcValues[hwChannel];
 }
 
