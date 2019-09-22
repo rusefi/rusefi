@@ -343,7 +343,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_0;
+	boardConfiguration->malfunctionIndicatorPin = GPIOD_5;
 
 
 //	boardConfiguration->malfunctionIndicatorPin = GPIOD_9;
@@ -387,6 +387,15 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set debug_mode 3
 	// set idle_rpm 1700
 	// see setDefaultIdleParameters
+
+	engineConfiguration->adcVcc = 3.3f;
+	engineConfiguration->vbattDividerCoeff = 9.70f;
+
+	// 1K pull-down to read current from this MAF
+	engineConfiguration->mafAdcChannel = EFI_ADC_6; // PA6 W46 <> W46
+
+	engineConfiguration->throttlePedalUpVoltage = 0.65f;
+
 
 	// VNH2SP30 three-wire ETB control
 	// PWM
