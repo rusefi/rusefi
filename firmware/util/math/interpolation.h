@@ -203,7 +203,7 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 	vType rpmMinKeyMinValue = map[xIndex][yIndex];
 	vType rpmMaxKeyMinValue = map[xIndex + 1][yIndex];
 
-	vType keyMinValue = interpolateMsg("", xMin, rpmMinKeyMinValue, xMax, rpmMaxKeyMinValue, x);
+	float keyMinValue = interpolateMsg("", xMin, rpmMinKeyMinValue, xMax, rpmMaxKeyMinValue, x);
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {
@@ -218,7 +218,7 @@ float interpolate3d(float x, const kType xBin[], int xBinSize, float y, const kT
 	vType rpmMinKeyMaxValue = map[xIndex][keyMaxIndex];
 	vType rpmMaxKeyMaxValue = map[rpmMaxIndex][keyMaxIndex];
 
-	vType keyMaxValue = interpolateMsg("3d", xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
+	float keyMaxValue = interpolateMsg("3d", xMin, rpmMinKeyMaxValue, xMax, rpmMaxKeyMaxValue, x);
 
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging()) {

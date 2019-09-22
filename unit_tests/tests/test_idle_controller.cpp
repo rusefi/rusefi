@@ -196,11 +196,12 @@ TEST(idle, testTargetTpsIsFloatBug945) {
 	ASSERT_NEAR(50, engine->engineState.targetFromTable, EPS4D);
 
 	setMockThrottlePedalSensorVoltage(3.05 PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_NEAR(50.8302, getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE), EPS4D);
 	etbController.PeriodicTask();
-	ASSERT_NEAR(50, engine->engineState.targetFromTable, EPS4D);
+	ASSERT_NEAR(50.8302, engine->engineState.targetFromTable, EPS4D);
 
 	setMockThrottlePedalSensorVoltage(3.1 PASS_ENGINE_PARAMETER_SUFFIX);
 	etbController.PeriodicTask();
-	ASSERT_NEAR(51, engine->engineState.targetFromTable, EPS4D);
+	ASSERT_NEAR(51.6605, engine->engineState.targetFromTable, EPS4D);
 
 }
