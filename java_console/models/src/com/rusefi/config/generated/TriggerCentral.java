@@ -1,8 +1,8 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_central.txt Tue Sep 03 19:14:15 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/trigger_central.txt Sun Sep 22 08:31:58 EDT 2019
 
-// by class com.rusefi.output.JavaFieldsConsumer
+// by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class TriggerCentral {

@@ -237,9 +237,9 @@ public:
 		percent_t pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		int rpm = GET_RPM();
-		percent_t targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
-		percent_t etbIdleAddition = CONFIGB(useETBforIdleControl) ? engine->engineState.etbIdleAddition : 0;
-		percent_t targetPosition = targetFromTable + etbIdleAddition;
+		engine->engineState.targetFromTable = pedal2tpsMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, pedalPosition);
+		percent_t etbIdleAddition = CONFIGB(useETBforIdleControl) ? engine->engineState.idle.etbIdleAddition : 0;
+		percent_t targetPosition = engine->engineState.targetFromTable + etbIdleAddition;
 
 		if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 #if EFI_TUNER_STUDIO

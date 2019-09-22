@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 15:38:18 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 22 08:39:46 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -67,7 +67,12 @@ struct idle_state_s {
 	 * offset 12
 	 */
 	int throttlePedalUpState = (int)0;
-	/** total size 16*/
+	/**
+	 * ETB position adjustment related to idle RPM control
+	 * offset 16
+	 */
+	percent_t etbIdleAddition = (percent_t)0;
+	/** total size 20*/
 };
 
 typedef struct idle_state_s idle_state_s;
@@ -161,63 +166,67 @@ struct engine_state2_s {
 	 */
 	idle_state_s idle;
 	/**
-	 * offset 48
+	 * offset 52
 	 */
 	float targetAFR = (float)0;
 	/**
-	 * offset 52
+	 * offset 56
 	 */
 	float engineCycleDurationMs = (float)0;
 	/**
-	 * offset 56
+	 * offset 60
 	 */
 	float minRpmKcurrentTPS = (float)0;
 	/**
-	 * offset 60
+	 * offset 64
 	 */
 	int currentTpsAdc = (int)0;
 	/**
-	 * offset 64
+	 * offset 68
 	 */
 	float tpsVoltageMCU = (float)0;
 	/**
-	 * offset 68
+	 * offset 72
 	 */
 	float tpsVoltageBoard = (float)0;
 	/**
-	 * offset 72
+	 * offset 76
 	 */
 	float currentBaroCorrectedVE = (float)0;
 	/**
-	 * offset 76
+	 * offset 80
 	 */
 	float baroCorrection = (float)0;
 	/**
-	offset 80 bit 0 */
+	offset 84 bit 0 */
 	bool isCrankingState : 1;
 	/**
-	offset 80 bit 1 */
+	offset 84 bit 1 */
 	bool hasEtbPedalPositionSensor : 1;
 	/**
-	offset 80 bit 2 */
+	offset 84 bit 2 */
 	bool isAutomaticIdle : 1;
 	/**
-	 * offset 84
+	 * offset 88
 	 */
 	cranking_fuel_s cranking;
 	/**
-	 * offset 104
+	 * offset 108
 	 */
 	running_fuel_s running;
 	/**
-	 * offset 136
+	 * offset 140
 	 */
 	percent_t etbFeedForward = (percent_t)0;
-	/** total size 140*/
+	/**
+	 * offset 144
+	 */
+	percent_t targetFromTable = (percent_t)0;
+	/** total size 148*/
 };
 
 typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 01 15:38:18 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 22 08:39:46 EDT 2019

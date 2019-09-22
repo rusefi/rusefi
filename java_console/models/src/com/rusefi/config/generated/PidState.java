@@ -1,8 +1,8 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/pid_state.txt Sun Sep 01 19:07:42 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/pid_state.txt Sun Sep 22 08:31:57 EDT 2019
 
-// by class com.rusefi.output.JavaFieldsConsumer
+// by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class PidState {
