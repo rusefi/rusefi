@@ -24,5 +24,5 @@ bool hasVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 float getVBatt(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
+	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->vbattDividerCoeff;
 }

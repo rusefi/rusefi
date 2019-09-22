@@ -111,7 +111,7 @@ static float getUr() {
 #if EFI_PROD_CODE
 	if (!engineConfiguration->cj125isUrDivided) {
 		// in case of directly connected Ur signal from CJ125 to the ADC pin of MCU
-		return getVoltage("cj125ur", CONFIG(cj125ur));
+		return getVoltage("cj125ur", CONFIG(cj125ur) PASS_ENGINE_PARAMETER_SUFFIX);
 	} else {
 		// if a standard voltage division scheme with OpAmp is used
 		return getVoltageDivided("cj125ur", CONFIG(cj125ur) PASS_ENGINE_PARAMETER_SUFFIX);
