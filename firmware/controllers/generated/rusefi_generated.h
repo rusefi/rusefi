@@ -371,6 +371,7 @@
 #define CMD_DATE "date"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
+#define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
 #define CMD_TRIGGER_HW_INPUT "trigger_hw_input"

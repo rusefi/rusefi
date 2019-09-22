@@ -46,7 +46,7 @@
  * set etb_d X
  * set etb_o X
  *
- * set_etb X
+ * set_etb_duty X
  *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
@@ -311,7 +311,7 @@ DISPLAY(DISPLAY_IF(hasEtbPedalPositionSensor))
 static EtbController etbController;
 
 /**
- * set_etb X
+ * set_etb_duty X
  * manual duty cycle control without PID. Percent value from 0 to 100
  */
 void setThrottleDutyCycle(percent_t level) {
@@ -561,7 +561,7 @@ void initElectronicThrottle(void) {
 	startETBPins();
 
 	// manual duty cycle control without PID. Percent value from 0 to 100
-	addConsoleActionNANF("set_etb", setThrottleDutyCycle);
+	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
 
 
 	tuneWorkingPidSettings.pFactor = 1;

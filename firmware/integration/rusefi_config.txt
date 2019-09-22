@@ -1251,6 +1251,7 @@ end_struct
 
 #define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
+#define CMD_ETB_DUTY "set_etb_duty"
 
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_WRITECONFIG "writeconfig"
