@@ -369,7 +369,7 @@ static void printSensors(Logging *log) {
 		if (engineConfiguration->fsioAdc[i] != EFI_ADC_NONE) {
 			strcpy(buf, "adcX");
 			buf[3] = '0' + i;
-			reportSensorF(log, buf, "", getVoltage("fsio", engineConfiguration->fsioAdc[i]), 2);
+			reportSensorF(log, buf, "", getVoltage("fsio", engineConfiguration->fsioAdc[i] PASS_ENGINE_PARAMETER_SUFFIX), 2);
 		}
 	}
 
@@ -939,7 +939,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		// todo: implement a proper loop
 		if (engineConfiguration->fsioAdc[0] != EFI_ADC_NONE) {
 			strcpy(buf, "adcX");
-			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0]);
+			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		break;
 	case DBG_FSIO_EXPRESSION:
@@ -991,7 +991,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField7 = (engineConfiguration->afr.hwChannel != EFI_ADC_NONE) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		break;
 	case DBG_ANALOG_INPUTS2:
-		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel);
+		tsOutputChannels->debugFloatField4 = getVoltage("debug", engineConfiguration->throttlePedalPositionAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
 		break;
 	case DBG_INSTANT_RPM:
 		{

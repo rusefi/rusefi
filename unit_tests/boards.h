@@ -13,7 +13,7 @@
 #define ADC_CHANNEL_VREF 0
 
 float getVoltageDivided(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
-float getVoltage(const char *msg, int channel);
-int getAdcValue(const char *msg, int channel);
+float getVoltage(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
+int getAdcValue(const char *msg, adc_channel_e channel);
 
 #endif /* BOARDS_H_ */

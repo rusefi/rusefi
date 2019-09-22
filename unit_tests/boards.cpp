@@ -23,11 +23,11 @@ float getVoltageDivided(const char *msg, adc_channel_e channel DECLARE_ENGINE_PA
 	return 0;
 }
 
-float getVoltage(const char *msg, int channel) {
+float getVoltage(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 0;
 }
 
-int getAdcValue(const char *msg, int channel) {
+int getAdcValue(const char *msg, adc_channel_e channel) {
 	return 0;
 }
 

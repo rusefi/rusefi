@@ -83,7 +83,7 @@ temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useL
 	tm->setConfig(&cfg->config); // implementation checks if configuration has changed or not
 
 	DISPLAY_TEXT(Analog_MCU_reads);
-	tm->DISPLAY_FIELD(voltageMCU) = DISPLAY_TEXT(from_pin) getVoltage("term", cfg->DISPLAY_CONFIG(adcChannel));
+	tm->DISPLAY_FIELD(voltageMCU) = DISPLAY_TEXT(from_pin) getVoltage("term", cfg->DISPLAY_CONFIG(adcChannel) PASS_ENGINE_PARAMETER_SUFFIX);
 	DISPLAY_TEXT(EOL);
 
 	DISPLAY_TEXT(Analog_ECU_reads);

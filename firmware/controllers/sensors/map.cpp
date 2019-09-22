@@ -232,7 +232,7 @@ static void printMAPInfo(void) {
 		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
 		static char pinNameBuffer[16];
 
-		scheduleMsg(logger, "MAP %.2fv @%s", getVoltage("mapinfo", mapAdc),
+		scheduleMsg(logger, "MAP %.2fv @%s", getVoltage("mapinfo", mapAdc PASS_ENGINE_PARAMETER_SUFFIX),
 				getPinNameByAdcChannel("map", mapAdc, pinNameBuffer));
 		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
 			scheduleMsg(logger, "at %.2fv=%.2f at %.2fv=%.2f",

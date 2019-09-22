@@ -284,7 +284,7 @@ bool LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SU
 		// todo: implement code for digital inout!!!
 	case LE_METHOD_FSIO_ANALOG_INPUT:
 		// todo: start taking index parameter!!!
-		push(element->action, getVoltage("fsio", engineConfiguration->fsioAdc[0]));
+		push(element->action, getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX));
 		break;
 	case LE_METHOD_KNOCK:
 		push(element->action, engine->knockCount);

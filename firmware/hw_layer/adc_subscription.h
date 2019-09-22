@@ -4,7 +4,6 @@
 
 #include "global.h"
 #include "converter_sensor.h"
-#include "rusefi_hw_enums.h"
 
 class AdcSubscription {
 public:
