@@ -30,7 +30,7 @@ public:
 	bool isStartedTooLongAgo() const;
 private:
 	Logging logging;
-	char timeBuffer[10];
+	char timeBuffer[_MAX_FILLER + 2];
 	uint32_t counter = 0;
 	/**
 	 * We want to avoid visual jitter thus we want the left edge to be aligned
