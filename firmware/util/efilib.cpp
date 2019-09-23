@@ -129,26 +129,37 @@ int atoi(const char *string) {
 
 static char todofixthismesswithcopy[100];
 
-/**
- * WARNING: due to implementation details specific buffer should be at least size of '_MAX_FILLER'
- */
-static char *ltoa_internal(char *p, long num, unsigned radix) {
-	int i;
-	char *q;
+static char *ltoa_internal(char *p, uint32_t num, unsigned radix) {
+	constexpr int bufferLength = 10;
+	
+	char buffer[bufferLength];
 
-	q = p + _MAX_FILLER;
-	do {
-		i = (int) (num % radix);
-		i += '0';
-		if (i > '9')
-			i += 'A' - '0' - 10;
-		*--q = i;
+	size_t idx = bufferLength - 1;
+
+	// First, we write from right-to-left so that we don't have to compute
+	// log(num)/log(radix)
+	do
+	{
+		auto digit = num % radix;
+
+		// Digits 0-9 -> '0'-'9'
+		// Digits 10-15 -> 'a'-'f'
+		char c = digit < 10
+			? digit + '0'
+			: digit + 'a' - 10;
+
+		// Write this digit in to the buffer
+		buffer[idx] = c;
+		idx--;
 	} while ((num /= radix) != 0);
+	
+	idx++;
 
-	i = (int) (p + _MAX_FILLER - q);
-	do {
-		*p++ = *q++;
-	} while (--i);
+	// Now, we copy characters in to place in the final buffer
+	while (idx < bufferLength)
+	{
+		*p++ = buffer[idx++];
+	}
 
 	return p;
 }
