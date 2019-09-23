@@ -200,7 +200,7 @@ static void lcdPrintf(const char *fmt, ...) {
 }
 
 static void showLine(lcd_line_e line, int screenY) {
-	static char buffer[10];
+	static char buffer[_MAX_FILLER + 2];
 
 	switch (line) {
 	case LL_VERSION:
