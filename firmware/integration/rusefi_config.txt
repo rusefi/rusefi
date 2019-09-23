@@ -743,7 +743,7 @@ bit useFSIO13ForIdleMinValue;
 	adc_channel_e hipOutputChannel;
 	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
 	adc_channel_e vRefAdcChannel;
-uint8_t[1] unusedh;
+	uint8_t etbNeutralPosition;+Expected neutral position;"%",      1,      0,       0, 100,      0
 
 custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "Automatic", "Manual"
 	idle_mode_e idleMode;See also idleRpmPid;

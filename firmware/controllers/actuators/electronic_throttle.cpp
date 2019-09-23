@@ -104,6 +104,10 @@ static pedal2tps_t pedal2tpsMap("Pedal2Tps", 1);
 
 EXTERN_ENGINE;
 
+static bool startupPositionError = false;
+
+#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 1
+
 class EtbControl {
 private:
 	OutputPin m_pinEnable;
@@ -191,6 +195,11 @@ static percent_t currentEtbDuty;
 			// set debug_mode 29
 			tsOutputChannels.debugFloatField1 = directPwmValue;
 #endif /* EFI_TUNER_STUDIO */
+		}
+
+		if (startupPositionError) {
+			etb1.dcMotor.Set(0);
+			return;
 		}
 
 		if (shouldResetPid) {
@@ -571,6 +580,17 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 	autoTune.SetOutputStep(0.1);
+
+	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (absF(startupThrottlePosition - engineConfiguration->etbNeutralPosition) > STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD) {
+		/**
+		 * Unexpected electronic throttle start-up position is worth a fatal error
+		 */
+		firmwareError(OBD_Throttle_Actuator_Control_Range_Performance_Bank_1, "startup ETB position %.2f not %d",
+				startupThrottlePosition,
+				engineConfiguration->etbNeutralPosition);
+		startupPositionError = true;
+	}
 
 	startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
