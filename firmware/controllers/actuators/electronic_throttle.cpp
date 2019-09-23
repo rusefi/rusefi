@@ -581,6 +581,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	autoTune.SetOutputStep(0.1);
 
+#if ! EFI_UNIT_TEST
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (absF(startupThrottlePosition - engineConfiguration->etbNeutralPosition) > STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD) {
 		/**
@@ -591,6 +592,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				engineConfiguration->etbNeutralPosition);
 		startupPositionError = true;
 	}
+#endif /* EFI_UNIT_TEST */
 
 	startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
