@@ -146,7 +146,7 @@ static char *ltoa_internal(char *p, uint32_t num, unsigned radix) {
 		// Digits 10-15 -> 'a'-'f'
 		char c = digit < 10
 			? digit + '0'
-			: digit + 'a';
+			: digit + 'a' - 10;
 
 		// Write this digit in to the buffer
 		buffer[idx] = c;
