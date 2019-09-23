@@ -215,6 +215,11 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 01-05 (purple) - #195500-4060
+	 *
+	 * NB2 Miata has an absolute pressure fuel system - NB2 fuel rail regulator has no vacuum line.
+	 *
+	 * Theoretically we shall have injectorFlow(MAP) curve, practically VE gets artificially high as MAP increases and
+	 * accounts for flow change.
 	 */
 	engineConfiguration->injector.flow = 265;
 
