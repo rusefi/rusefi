@@ -9,8 +9,6 @@ import com.rusefi.etb.TestSequenceStep;
 import com.rusefi.io.CommandQueue;
 
 import javax.swing.*;
-
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.romraider.util.ThreadUtil.sleep;
@@ -30,7 +28,6 @@ public class EtbMonteCarloSequence {
     private static final double DEFAULT_POSITION = 7;
     private static final int CLT_THRESHOLD = 75;
     private final JButton button = new JButton("ETB I feel lucky!");
-    private final static Random r = new Random();
     private int counter;
 
     private double bestResultSoFar = 750;

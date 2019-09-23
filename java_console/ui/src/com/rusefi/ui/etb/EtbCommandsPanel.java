@@ -47,6 +47,7 @@ public class EtbCommandsPanel {
         content.add(testParameters);
         content.add(spotsPane);
         content.add(UiUtils.wrap(new EtbMonteCarloSequence().getButton()));
+        content.add(UiUtils.wrap(new EtbReturnToNeutral().getContent()));
 
         content.add(AnyCommand.createArea(new Node(), CMD_ETB_DUTY + " " + "10", false, false).getContent());
 
