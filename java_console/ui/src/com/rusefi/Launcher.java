@@ -48,7 +48,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see EngineSnifferPanel
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20190919;
+    public static final int CONSOLE_VERSION = 20190922;
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
     public static final String TOOLS_PATH = System.getProperty("tools_path", ".");
