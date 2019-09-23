@@ -2467,6 +2467,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = etbDialogRight
 		field = "!https://rusefi.com/s/debugmode"
+		field = "Neutral Position",						etbNeutralPosition
 		field = "Debug mode",							debugMode
 		field = "use ETB for idle",						useETBforIdleControl
 		field = "ETB idle maximum angle",				etbIdleRange

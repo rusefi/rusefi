@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sat Sep 21 21:56:11 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 22 22:54:07 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -356,6 +356,7 @@ public class Fields {
 	public static final int etbFreq_offset = 2514;
 	public static final int etbIdleRange_offset = 972;
 	public static final int etbIdleThrottleRange_offset = 4012;
+	public static final int etbNeutralPosition_offset = 1471;
 	public static final int externalKnockSenseAdc_offset = 3103;
 	public static final int extraInjectionOffset_offset = 432;
 	public static final int fanOffTemperature_offset = 472;
@@ -1232,7 +1233,6 @@ public class Fields {
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1756;
-	public static final int unusedh_offset = 1471;
 	public static final int unusedMa2_offset = 711;
 	public static final int unusedOldWarmupAfr_offset = 744;
 	public static final int unusedSpiPadding2_offset = 806;
@@ -1747,7 +1747,7 @@ public class Fields {
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1468, FieldType.INT8, adc_channel_e);
 	public static final Field ACSWITCHADC = Field.create("ACSWITCHADC", 1469, FieldType.INT8, adc_channel_e);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1470, FieldType.INT8, adc_channel_e);
-	public static final Field UNUSEDH = Field.create("UNUSEDH", 1471, FieldType.INT8);
+	public static final Field ETBNEUTRALPOSITION = Field.create("ETBNEUTRALPOSITION", 1471, FieldType.INT8);
 	public static final Field IDLEMODE = Field.create("IDLEMODE", 1472, FieldType.INT);
 	public static final Field ISINJECTIONENABLED = Field.create("ISINJECTIONENABLED", 1476, FieldType.BIT, 0);
 	public static final Field ISIGNITIONENABLED = Field.create("ISIGNITIONENABLED", 1476, FieldType.BIT, 1);
@@ -2527,7 +2527,7 @@ public class Fields {
 	HIPOUTPUTCHANNEL,
 	ACSWITCHADC,
 	VREFADCCHANNEL,
-	UNUSEDH,
+	ETBNEUTRALPOSITION,
 	IDLEMODE,
 	ISINJECTIONENABLED,
 	ISIGNITIONENABLED,

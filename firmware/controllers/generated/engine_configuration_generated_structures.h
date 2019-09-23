@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 21:55:21 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 22 22:54:07 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1592,9 +1592,10 @@ struct engine_configuration_s {
 	 */
 	adc_channel_e vRefAdcChannel;
 	/**
+	 * Expected neutral position
 	 * offset 1471
 	 */
-	uint8_t unusedh;
+	uint8_t etbNeutralPosition;
 	/**
 	 * See also idleRpmPid
 	 * offset 1472
@@ -2828,4 +2829,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Fri Sep 20 21:55:21 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 22 22:54:07 EDT 2019

@@ -24,7 +24,8 @@ public class EtbReturnToNeutral {
 
     private JButton button = new JButton("ETB Spring Test");
 
-    private final static float SHUT_CLOSED = -30;
+    private final static float SHUT_OPEN = 70;
+    private final static float SHUT_CLOSED = -70;
 
     public EtbReturnToNeutral() {
         button.addActionListener(new ActionListener() {
@@ -65,6 +66,8 @@ public class EtbReturnToNeutral {
             if (isError)
                 errorCount++;
 
+            CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + SHUT_OPEN);
+            Thread.sleep((long) (0.5 * SECOND));
 
             CommandQueue.getInstance().write(CMD_ETB_DUTY + " " + SHUT_CLOSED);
             Thread.sleep(SECOND);

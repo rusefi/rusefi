@@ -553,6 +553,8 @@
 #define etbIdleRange_offset_hex 3cc
 #define etbIdleThrottleRange_offset 4012
 #define etbIdleThrottleRange_offset_hex fac
+#define etbNeutralPosition_offset 1471
+#define etbNeutralPosition_offset_hex 5bf
 #define externalKnockSenseAdc_offset 3103
 #define externalKnockSenseAdc_offset_hex c1f
 #define extraInjectionOffset_offset 432
@@ -1891,8 +1893,6 @@
 #define unusedFlexFuelSensor_offset_hex c1c
 #define unusedFormerWarmupAfrPid_offset 1756
 #define unusedFormerWarmupAfrPid_offset_hex 6dc
-#define unusedh_offset 1471
-#define unusedh_offset_hex 5bf
 #define unusedMa2_offset 711
 #define unusedMa2_offset_hex 2c7
 #define unusedOldWarmupAfr_offset 744

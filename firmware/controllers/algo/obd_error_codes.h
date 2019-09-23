@@ -668,7 +668,7 @@ typedef enum {
 	//P0635 Power Steering Control Circuit
 	//P0636 Power Steering Control Circuit Low
 	//P0637 Power Steering Control Circuit High
-	//P0638 Throttle Actuator Control Range/Performance (Bank 1)
+	OBD_Throttle_Actuator_Control_Range_Performance_Bank_1 = 638,
 	//P0639 Throttle Actuator Control Range/Performance (Bank 2)
 	//P0640 Intake Air Heater Control Circuit
 	//P0641 Sensor Reference Voltage &ldquo;A&rdquo; Circuit/Open
