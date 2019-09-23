@@ -484,7 +484,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	AdcSubscription::UpdateSubscribers();
 }
 
-static char errorMsgBuff[_MAX_FILLER];
+static char errorMsgBuff[_MAX_FILLER + 2];
 
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (setting == EFI_ADC_NONE) {
