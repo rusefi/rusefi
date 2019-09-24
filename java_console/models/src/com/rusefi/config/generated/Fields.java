@@ -1,11 +1,12 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 22 22:54:07 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 24 16:26:43 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class Fields {
+	public static final int absoluteFuelPressure_offset = 76;
 	public static final int accelerometerSpiDevice_offset = 2712;
 	public static final int acCutoffHighRpm_offset = 1494;
 	public static final int acCutoffLowRpm_offset = 1492;
@@ -560,6 +561,7 @@ public class Fields {
 	public static final int fuelPumpPin_offset_hex = 292;
 	public static final int fuelPumpPinMode_offset = 659;
 	public static final int fuelPumpPinMode_offset_hex = 293;
+	public static final int fuelRailPressure_offset = 980;
 	public static final int fuelRpmBins_offset = 16224;
 	public static final int fuelTable_offset = 15136;
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
@@ -855,7 +857,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_19_offset = 76;
 	public static final int issue_294_21_offset = 76;
 	public static final int issue_294_22_offset = 76;
 	public static final int issue_294_23_offset = 76;
@@ -1229,7 +1230,7 @@ public class Fields {
 	public static final int unused_former_warmup_target_afr_offset = 2096;
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unusedAnotherOne_offset = 744;
-	public static final int unusedAtBoardConfigurationEnd_offset = 980;
+	public static final int unusedAtBoardConfigurationEnd_offset = 984;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1756;
@@ -1328,7 +1329,7 @@ public class Fields {
 	public static final Field USETLE8888_HALL_MODE = Field.create("USETLE8888_HALL_MODE", 76, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 76, FieldType.BIT, 17);
 	public static final Field USEINSTANTRPMFORIDLE = Field.create("USEINSTANTRPMFORIDLE", 76, FieldType.BIT, 18);
-	public static final Field ISSUE_294_19 = Field.create("ISSUE_294_19", 76, FieldType.BIT, 19);
+	public static final Field ABSOLUTEFUELPRESSURE = Field.create("ABSOLUTEFUELPRESSURE", 76, FieldType.BIT, 19);
 	public static final Field ISSUE_294_21 = Field.create("ISSUE_294_21", 76, FieldType.BIT, 20);
 	public static final Field ISSUE_294_22 = Field.create("ISSUE_294_22", 76, FieldType.BIT, 21);
 	public static final Field ISSUE_294_23 = Field.create("ISSUE_294_23", 76, FieldType.BIT, 22);
@@ -1713,6 +1714,7 @@ public class Fields {
 	public static final Field ETBIDLERANGE = Field.create("ETBIDLERANGE", 972, FieldType.FLOAT);
 	public static final Field CLUTCHUPPININVERTED = Field.create("CLUTCHUPPININVERTED", 976, FieldType.BIT, 0);
 	public static final Field CLUTCHDOWNPININVERTED = Field.create("CLUTCHDOWNPININVERTED", 976, FieldType.BIT, 1);
+	public static final Field FUELRAILPRESSURE = Field.create("FUELRAILPRESSURE", 980, FieldType.FLOAT);
 	public static final Field VVTDISPLAYINVERTED = Field.create("VVTDISPLAYINVERTED", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
@@ -2120,7 +2122,7 @@ public class Fields {
 	USETLE8888_HALL_MODE,
 	USETLE8888_CRANKING_HACK,
 	USEINSTANTRPMFORIDLE,
-	ISSUE_294_19,
+	ABSOLUTEFUELPRESSURE,
 	ISSUE_294_21,
 	ISSUE_294_22,
 	ISSUE_294_23,
@@ -2493,6 +2495,7 @@ public class Fields {
 	ETBIDLERANGE,
 	CLUTCHUPPININVERTED,
 	CLUTCHDOWNPININVERTED,
+	FUELRAILPRESSURE,
 	VVTDISPLAYINVERTED,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,

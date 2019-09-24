@@ -300,7 +300,7 @@ bit cj125isUrDivided;looks like 3v range should be enough, divider not needed
 bit useTLE8888_hall_mode;
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;
-bit issue_294_19;
+bit absoluteFuelPressure;+If your fuel regulator does not have vacuum line
 bit issue_294_21;
 bit issue_294_22;
 bit issue_294_23;
@@ -702,7 +702,8 @@ maf_sensor_type_e mafSensorType;
 	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
 	bit clutchUpPinInverted
 	bit clutchDownPinInverted
-	int[121] unusedAtBoardConfigurationEnd;
+	float fuelRailPressure;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	int[120] unusedAtBoardConfigurationEnd;
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
