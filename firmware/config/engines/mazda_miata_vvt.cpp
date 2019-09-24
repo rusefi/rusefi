@@ -396,6 +396,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->adcVcc = 3.3f;
 	engineConfiguration->vbattDividerCoeff = 9.70f;
 
+	// by the way NB2 MAF internal diameter is about 2.5 inches / 63mm
 	// 1K pull-down to read current from this MAF
 	engineConfiguration->mafAdcChannel = EFI_ADC_6; // PA6 W46 <> W46
 
