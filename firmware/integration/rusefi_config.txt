@@ -702,8 +702,7 @@ maf_sensor_type_e mafSensorType;
 	float etbIdleRange;;"angle",      1,      0,       -100, 100,      2
 	bit clutchUpPinInverted
 	bit clutchDownPinInverted
-	float fuelRailPressure;;     "kPa",    1,      0.0,       0,  1000.0,        2
-	int[120] unusedAtBoardConfigurationEnd;
+	int[121] unusedAtBoardConfigurationEnd;
 end_struct	
 custom le_formula_t 200 string, ASCII, @OFFSET@, 200
 	
@@ -821,7 +820,8 @@ custom pin_mode_e 1 bits,    U08,   @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float wwaeTau;+Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds",        1,     0,    0.0,    3.0,  2
 	pid_s alternatorControl;
 	pid_s etb;
-	uint8_t[20] unusedFormerWarmupAfrPid;
+	float fuelRailPressure;;     "kPa",    1,      0.0,       0,  1000.0,        2
+	uint8_t[16] unusedFormerWarmupAfrPid;
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle	
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa",        1,     0,    -100.0,    100.0,  2

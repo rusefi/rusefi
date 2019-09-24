@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 22 08:32:24 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Sep 24 18:13:29 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -26,25 +26,26 @@ public class EngineState {
 	public static final Field TPSVOLTAGEMCU = Field.create("TPSVOLTAGEMCU", 68, FieldType.FLOAT);
 	public static final Field TPSVOLTAGEBOARD = Field.create("TPSVOLTAGEBOARD", 72, FieldType.FLOAT);
 	public static final Field CURRENTBAROCORRECTEDVE = Field.create("CURRENTBAROCORRECTEDVE", 76, FieldType.FLOAT);
-	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 80, FieldType.FLOAT);
-	public static final Field ISCRANKINGSTATE = Field.create("ISCRANKINGSTATE", 84, FieldType.BIT, 0);
-	public static final Field HASETBPEDALPOSITIONSENSOR = Field.create("HASETBPEDALPOSITIONSENSOR", 84, FieldType.BIT, 1);
-	public static final Field ISAUTOMATICIDLE = Field.create("ISAUTOMATICIDLE", 84, FieldType.BIT, 2);
-	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 88, FieldType.FLOAT);
-	public static final Field CRANKING_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKING_COOLANTTEMPERATURECOEFFICIENT", 92, FieldType.FLOAT);
-	public static final Field CRANKING_TPSCOEFFICIENT = Field.create("CRANKING_TPSCOEFFICIENT", 96, FieldType.FLOAT);
-	public static final Field CRANKING_DURATIONCOEFFICIENT = Field.create("CRANKING_DURATIONCOEFFICIENT", 100, FieldType.FLOAT);
-	public static final Field CRANKING_FUEL = Field.create("CRANKING_FUEL", 104, FieldType.FLOAT);
-	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 108, FieldType.FLOAT);
-	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 112, FieldType.FLOAT);
-	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 116, FieldType.FLOAT);
-	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 120, FieldType.FLOAT);
-	public static final Field RUNNING_INJECTORLAG = Field.create("RUNNING_INJECTORLAG", 124, FieldType.FLOAT);
-	public static final Field RUNNING_PIDCORRECTION = Field.create("RUNNING_PIDCORRECTION", 128, FieldType.FLOAT);
-	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 132, FieldType.FLOAT);
-	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 136, FieldType.FLOAT);
-	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 140, FieldType.FLOAT);
-	public static final Field TARGETFROMTABLE = Field.create("TARGETFROMTABLE", 144, FieldType.FLOAT);
+	public static final Field INJECTORFLOWCORRECTION = Field.create("INJECTORFLOWCORRECTION", 80, FieldType.FLOAT);
+	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 84, FieldType.FLOAT);
+	public static final Field ISCRANKINGSTATE = Field.create("ISCRANKINGSTATE", 88, FieldType.BIT, 0);
+	public static final Field HASETBPEDALPOSITIONSENSOR = Field.create("HASETBPEDALPOSITIONSENSOR", 88, FieldType.BIT, 1);
+	public static final Field ISAUTOMATICIDLE = Field.create("ISAUTOMATICIDLE", 88, FieldType.BIT, 2);
+	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 92, FieldType.FLOAT);
+	public static final Field CRANKING_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKING_COOLANTTEMPERATURECOEFFICIENT", 96, FieldType.FLOAT);
+	public static final Field CRANKING_TPSCOEFFICIENT = Field.create("CRANKING_TPSCOEFFICIENT", 100, FieldType.FLOAT);
+	public static final Field CRANKING_DURATIONCOEFFICIENT = Field.create("CRANKING_DURATIONCOEFFICIENT", 104, FieldType.FLOAT);
+	public static final Field CRANKING_FUEL = Field.create("CRANKING_FUEL", 108, FieldType.FLOAT);
+	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 112, FieldType.FLOAT);
+	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 116, FieldType.FLOAT);
+	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 120, FieldType.FLOAT);
+	public static final Field RUNNING_TIMESINCECRANKINGINSECS = Field.create("RUNNING_TIMESINCECRANKINGINSECS", 124, FieldType.FLOAT);
+	public static final Field RUNNING_INJECTORLAG = Field.create("RUNNING_INJECTORLAG", 128, FieldType.FLOAT);
+	public static final Field RUNNING_PIDCORRECTION = Field.create("RUNNING_PIDCORRECTION", 132, FieldType.FLOAT);
+	public static final Field RUNNING_BASEFUEL = Field.create("RUNNING_BASEFUEL", 136, FieldType.FLOAT);
+	public static final Field RUNNING_FUEL = Field.create("RUNNING_FUEL", 140, FieldType.FLOAT);
+	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 144, FieldType.FLOAT);
+	public static final Field TARGETFROMTABLE = Field.create("TARGETFROMTABLE", 148, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ISTCHARGEAIRMODEL,
 	AIRMASSINONECYLINDER,
@@ -66,6 +67,7 @@ public class EngineState {
 	TPSVOLTAGEMCU,
 	TPSVOLTAGEBOARD,
 	CURRENTBAROCORRECTEDVE,
+	INJECTORFLOWCORRECTION,
 	BAROCORRECTION,
 	ISCRANKINGSTATE,
 	HASETBPEDALPOSITIONSENSOR,

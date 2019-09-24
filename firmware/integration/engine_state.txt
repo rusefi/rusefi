@@ -51,6 +51,7 @@ float tpsVoltageMCU
 float tpsVoltageBoard
 
 	float currentBaroCorrectedVE;
+	float injectorFlowCorrection;
 float baroCorrection;
 
 bit isCrankingState
