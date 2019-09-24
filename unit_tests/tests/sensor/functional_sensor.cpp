@@ -1,25 +1,9 @@
-#include "converter_sensor.h"
+#include "functional_sensor.h"
 
 #include <gtest/gtest.h>
 
-class SensorConverted : public ::testing::Test {
-protected:
-	void SetUp() override {
-		Sensor::resetRegistry();
-	}
-
-	void TearDown() override {
-		Sensor::resetRegistry();
-	}
-};
-
-class DoublerConverterSensor final : public ConvertedSensor {
-public:
-	DoublerConverterSensor()
-		: ConvertedSensor(SensorType::Clt) {}
-
-protected:
-	SensorResult convertFromInputValue(float input) {
+struct DoublerFunc final : public SensorConverter {
+	SensorResult convert(float input) const {
 		bool valid = input > 0;
 		float value = input * 2;
 
@@ -27,8 +11,22 @@ protected:
 	}
 };
 
+class SensorConverted : public ::testing::Test {
+protected:
+	SensorConverted() : dut(SensorType::Clt) { }
+
+	void SetUp() override {
+		Sensor::resetRegistry();
+	}
+
+	void TearDown() override {
+		Sensor::resetRegistry();
+	}
+
+	FunctionalSensor<DoublerFunc> dut;
+};
+
 TEST_F(SensorConverted, TestValid) {
-	DoublerConverterSensor dut;
 	ASSERT_TRUE(dut.Register());
 
 	// Should be invalid - not set yet
@@ -48,7 +46,6 @@ TEST_F(SensorConverted, TestValid) {
 }
 
 TEST_F(SensorConverted, TestInvalid) {
-	DoublerConverterSensor dut;
 	ASSERT_TRUE(dut.Register());
 
 	// Should be invalid - not set yet
@@ -65,4 +62,9 @@ TEST_F(SensorConverted, TestInvalid) {
 		EXPECT_FALSE(s.Valid);
 		EXPECT_FLOAT_EQ(s.Value, 0);
 	}
+}
+
+TEST_F(SensorConverted, TestGet) {
+	// we're only checking that this compiles
+	DoublerFunc& f = dut.f();
 }
