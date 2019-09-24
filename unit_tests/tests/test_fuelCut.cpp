@@ -122,3 +122,9 @@ TEST(fuelCut, criticalEngineTemperature) {
 
 	ASSERT_TRUE(engine->stopEngineRequestTimeNt > 0);
 }
+
+
+TEST(fuel, injectorFlowCorrection) {
+
+
+}

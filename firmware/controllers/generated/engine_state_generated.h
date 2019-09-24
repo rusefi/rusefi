@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 22 08:39:46 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Sep 24 18:13:29 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -196,37 +196,41 @@ struct engine_state2_s {
 	/**
 	 * offset 80
 	 */
+	float injectorFlowCorrection = (float)0;
+	/**
+	 * offset 84
+	 */
 	float baroCorrection = (float)0;
 	/**
-	offset 84 bit 0 */
+	offset 88 bit 0 */
 	bool isCrankingState : 1;
 	/**
-	offset 84 bit 1 */
+	offset 88 bit 1 */
 	bool hasEtbPedalPositionSensor : 1;
 	/**
-	offset 84 bit 2 */
+	offset 88 bit 2 */
 	bool isAutomaticIdle : 1;
 	/**
-	 * offset 88
+	 * offset 92
 	 */
 	cranking_fuel_s cranking;
 	/**
-	 * offset 108
+	 * offset 112
 	 */
 	running_fuel_s running;
 	/**
-	 * offset 140
+	 * offset 144
 	 */
 	percent_t etbFeedForward = (percent_t)0;
 	/**
-	 * offset 144
+	 * offset 148
 	 */
 	percent_t targetFromTable = (percent_t)0;
-	/** total size 148*/
+	/** total size 152*/
 };
 
 typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Sun Sep 22 08:39:46 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Sep 24 18:13:29 EDT 2019

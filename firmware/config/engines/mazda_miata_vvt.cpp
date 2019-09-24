@@ -190,6 +190,7 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
+
 	setCommonNTCSensor(&engineConfiguration->clt);
 	setCommonNTCSensor(&engineConfiguration->iat);
 
@@ -222,6 +223,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * accounts for flow change.
 	 */
 	engineConfiguration->injector.flow = 265;
+	engineConfiguration->fuelRailPressure = 400; // 400 kPa, 58 psi
+	engineConfiguration->absoluteFuelPressure = true;
 
 
 	CONFIG(isAlternatorControlEnabled) = true;
