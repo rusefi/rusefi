@@ -306,6 +306,7 @@ INCDIR = $(CHIBIOS)/os/license \
 	development/test \
 	$(CONTROLLERS_INC) \
 	controllers/sensors \
+	controllers/sensors/converters \
 	controllers/system \
 	controllers/algo \
 	controllers/core \
