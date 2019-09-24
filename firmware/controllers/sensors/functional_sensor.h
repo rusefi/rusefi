@@ -7,12 +7,14 @@
 
 #pragma once
 
-#include "stored_value_sensor.h"
 #include "converters/sensor_converter_func.h"
+#include "stored_value_sensor.h"
+
 #include <type_traits>
 
 struct FunctionalSensorBase : public StoredValueSensor {
-	FunctionalSensorBase(SensorType type) : StoredValueSensor(type) { }
+	FunctionalSensorBase(SensorType type)
+		: StoredValueSensor(type) {}
 
 	virtual void postRawValue(float value) = 0;
 };
@@ -24,7 +26,7 @@ struct FunctionalSensorBase : public StoredValueSensor {
  * To use this class, implement the conversion operation for your sensor
  * as a class that inherits from SensorConverter, and implement convert
  * to convert a raw reading from the sensor to a usable value (and valid bit).
- * 
+ *
  * Register an instance of the new class with an interface
  * that provides and posts raw values so the sensor can update.
  */
@@ -61,7 +63,7 @@ public:
 	}
 
 	// Allow access to the underlying function
-	TFunc& f() {
+	TFunc &f() {
 		return m_function;
 	}
 

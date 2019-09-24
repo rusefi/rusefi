@@ -2,7 +2,6 @@
 
 #include "sensor.h"
 
-struct SensorConverter
-{
+struct SensorConverter {
 	virtual SensorResult convert(float raw) const = 0;
 };
