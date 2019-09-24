@@ -2,6 +2,8 @@
 // was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt
 //
 
+#define absoluteFuelPressure_offset 76
+#define absoluteFuelPressure_offset_hex 4c
 #define accelerometerSpiDevice_offset 2712
 #define accelerometerSpiDevice_offset_hex a98
 #define acCutoffHighRpm_offset 1494
@@ -864,6 +866,8 @@
 #define fuelPumpPin_offset_hex 292
 #define fuelPumpPinMode_offset 659
 #define fuelPumpPinMode_offset_hex 293
+#define fuelRailPressure_offset 980
+#define fuelRailPressure_offset_hex 3d4
 #define fuelRpmBins_offset 16224
 #define fuelRpmBins_offset_hex 3f60
 #define fuelTable_offset 15136
@@ -1286,8 +1290,6 @@
 #define isMapAveragingEnabled_offset_hex 5c4
 #define isSdCardEnabled_offset 744
 #define isSdCardEnabled_offset_hex 2e8
-#define issue_294_19_offset 76
-#define issue_294_19_offset_hex 4c
 #define issue_294_21_offset 76
 #define issue_294_21_offset_hex 4c
 #define issue_294_22_offset 76
@@ -1885,8 +1887,8 @@
 #define unused_former_warmup_target_afr_offset_hex 830
 #define unusedAnotherOne_offset 744
 #define unusedAnotherOne_offset_hex 2e8
-#define unusedAtBoardConfigurationEnd_offset 980
-#define unusedAtBoardConfigurationEnd_offset_hex 3d4
+#define unusedAtBoardConfigurationEnd_offset 984
+#define unusedAtBoardConfigurationEnd_offset_hex 3d8
 #define unusedErrorPin_offset 2040
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100

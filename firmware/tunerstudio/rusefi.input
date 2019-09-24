@@ -1081,7 +1081,7 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelay,				"Main relay"
-		subMenu = fuelPump,					"Fuel pump"
+		subMenu = fuelPump,					"Fuel rail"
 		subMenu = fanSetting,				"Fan"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
@@ -1971,10 +1971,12 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "On temperature",					fanOnTemperature
 		field = "Off temperature",					fanOffTemperature
 
-	dialog = fuelPump, "Fuel Pump"
+	dialog = fuelPump, "Fuel Rail"
 		field = "Pin",						fuelPumpPin
 		field = "Pin mode",         	        fuelPumpPinMode
 		field = "Prime duration",				startUpFuelPumpDuration
+		field = "Absolute Fuel Pressure",			absoluteFuelPressure
+		field = "Fuel Rail pressure",			fuelRailPressure, {absoluteFuelPressure == 1}
 
 ;			Controller->Actuator Outputs
 	dialog = mainRelay, "Main relay output"

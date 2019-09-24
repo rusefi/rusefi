@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 22 22:54:07 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 24 16:26:43 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1016,7 +1016,11 @@ struct board_configuration_s {
 	/**
 	 * offset 380
 	 */
-	int unusedAtBoardConfigurationEnd[121];
+	float fuelRailPressure;
+	/**
+	 * offset 384
+	 */
+	int unusedAtBoardConfigurationEnd[120];
 	/** total size 864*/
 };
 
@@ -1102,8 +1106,9 @@ struct engine_configuration_s {
 	offset 76 bit 18 */
 	bool useInstantRpmForIdle : 1;
 	/**
+	 * If your fuel regulator does not have vacuum line
 	offset 76 bit 19 */
-	bool issue_294_19 : 1;
+	bool absoluteFuelPressure : 1;
 	/**
 	offset 76 bit 20 */
 	bool issue_294_21 : 1;
@@ -2829,4 +2834,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 22 22:54:07 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 24 16:26:43 EDT 2019
