@@ -1,5 +1,4 @@
 #include "linear_func.h"
-
 #include "unit_test_framework.h"
 
 class LinearFuncTest : public ::testing::Test {
@@ -21,9 +20,7 @@ protected:
 	}
 
 #define test_point_invalid(in)                                                                                         \
-	{                                                                                                                  \
-		EXPECT_FALSE(dut.convert(in).Valid);                                                                                 \
-	}
+	{ EXPECT_FALSE(dut.convert(in).Valid); }
 
 TEST_F(LinearFuncTest, TestInRange) {
 	test_point(2.5, 0);

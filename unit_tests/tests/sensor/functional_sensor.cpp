@@ -13,7 +13,8 @@ struct DoublerFunc final : public SensorConverter {
 
 class SensorConverted : public ::testing::Test {
 protected:
-	SensorConverted() : dut(SensorType::Clt) { }
+	SensorConverted()
+		: dut(SensorType::Clt) {}
 
 	void SetUp() override {
 		Sensor::resetRegistry();
@@ -66,5 +67,5 @@ TEST_F(SensorConverted, TestInvalid) {
 
 TEST_F(SensorConverted, TestGet) {
 	// we're only checking that this compiles
-	DoublerFunc& f = dut.f();
+	DoublerFunc &f = dut.f();
 }
