@@ -408,11 +408,11 @@ void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
+	if (!hasCltSensor()) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
 
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
+	if (!hasIatSensor()) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 

@@ -21,11 +21,9 @@
 #define convertCelsiusToKelvin(tempC) ((tempC) + KELV)
 
 temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool isValidCoolantTemperature(temperature_t temperature);
 temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool isValidIntakeAirTemperature(temperature_t temperature);
-bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasIatSensor();
+bool hasCltSensor();
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);
 void setDodgeSensor(ThermistorConf *thermistorConf);

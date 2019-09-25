@@ -20,17 +20,17 @@
 
 EXTERN_ENGINE;
 
-bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
+static SensorReader<SensorType::Clt> cltReader(273.15 + 70.0f);
+
+bool hasCltSensor() {
+	return cltReader.get().Valid;
 }
 
 /**
  * @return coolant temperature, in Celsius
  */
 temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	static SensorReader<SensorType::Clt> reader(273.15 + 70.0f);
-
-	SensorResult result = reader.get();
+	SensorResult result = cltReader.get();
 
 	if (!result.Valid) {
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT");
@@ -38,27 +38,27 @@ temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engine->isCltBroken = !result.Valid;
 
-	return reader - 273.15f;
+	return cltReader.getOrDefault() - 273.15f;
 }
 
 
-bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
+static SensorReader<SensorType::Iat> iatReader(273.15f + 20.0f);
+
+bool hasIatSensor() {
+	return iatReader.get().Valid;
 }
 
 /**
  * @return Celsius value
  */
 temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	static SensorReader<SensorType::Iat> reader(273.15f + 20.0f);
-
-	auto result = reader.get();
+	auto result = iatReader.get();
 
 	if (!result.Valid) {
 		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT");
 	}
 
-	return reader - 273.15f;
+	return iatReader.getOrDefault() - 273.15f;
 }
 
 void setDodgeSensor(ThermistorConf *thermistorConf) {

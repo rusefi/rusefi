@@ -119,21 +119,8 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// this feeds rusEfi console Live Data
 	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-
 	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// todo: reduce code duplication with 'getCoolantTemperature'
-	if (engineConfiguration->auxTempSensor1.adcChannel != EFI_ADC_NONE) {
-		engine->sensors.auxTemp1 = getTemperatureC(&engineConfiguration->auxTempSensor1,
-				&engine->engineState.auxTemp1Curve,
-				false PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->auxTempSensor2.adcChannel != EFI_ADC_NONE) {
-		engine->sensors.auxTemp2 = getTemperatureC(&engineConfiguration->auxTempSensor2,
-				&engine->engineState.auxTemp2Curve,
-				false PASS_ENGINE_PARAMETER_SUFFIX);
-	}
 
 #if EFI_UNIT_TEST
 	if (!cisnan(engine->sensors.mockClt)) {
