@@ -13,12 +13,7 @@
 #include "global.h"
 #include "sensor_reader.h"
 #include "thermistors.h"
-#include "engine_configuration.h"
 #include "engine_math.h"
-
-#define _5_VOLTS 5.0
-
-EXTERN_ENGINE;
 
 static SensorReader<SensorType::Clt> cltReader(273.15 + 70.0f);
 
@@ -29,14 +24,12 @@ bool hasCltSensor() {
 /**
  * @return coolant temperature, in Celsius
  */
-temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+temperature_t getCoolantTemperature() {
 	SensorResult result = cltReader.get();
 
 	if (!result.Valid) {
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT");
 	}
-
-	engine->isCltBroken = !result.Valid;
 
 	return cltReader.getOrDefault() - 273.15f;
 }
@@ -51,7 +44,7 @@ bool hasIatSensor() {
 /**
  * @return Celsius value
  */
-temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+temperature_t getIntakeAirTemperature() {
 	auto result = iatReader.get();
 
 	if (!result.Valid) {

@@ -8,20 +8,18 @@
 #ifndef THERMISTORS_H_
 #define THERMISTORS_H_
 
-#include "global.h"
+#include "engine_configuration_generated_structures.h"
 
 #define KELV 273.15f
-
-#include "engine.h"
 
 /**
  * converts Kelvin temperature into Celsius temperature
  */
-#define convertKelvinToCelcius(tempK) ((tempK) - KELV)
-#define convertCelsiusToKelvin(tempC) ((tempC) + KELV)
+constexpr float convertKelvinToCelcius(float kelvin) { return kelvin - KELV; }
+constexpr float convertCelsiusToKelvin(float celsius) { return celsius + KELV; }
 
-temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+temperature_t getCoolantTemperature();
+temperature_t getIntakeAirTemperature();
 bool hasIatSensor();
 bool hasCltSensor();
 
