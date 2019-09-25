@@ -65,13 +65,11 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	 * 18K Ohm @ -20C
 	 * 2.1K Ohm @ 24C
 	 * 100 Ohm @ 120C
+	 * 1500 = same pullup as OEM ECU
 	 */
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 1500; // same as OEM ECU
-
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 1500; // same as OEM ECU
-
+	setCommonNTCSensor(&engineConfiguration->clt, 1500);
+	setCommonNTCSensor(&engineConfiguration->iat, 1500);
+	
 	// set cranking_charge_angle 35
 	engineConfiguration->crankingChargeAngle = 70;
 	// set cranking_timing_angle 0

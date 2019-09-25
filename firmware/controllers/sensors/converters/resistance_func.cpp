@@ -7,7 +7,7 @@ void ResistanceFunc::configure(float supplyVoltage, float pullupResistor) {
 
 SensorResult ResistanceFunc::convert(float raw) const {
 	// If the voltage is very low, the sensor is a dead short.
-	if (raw < 0.2) {
+	if (raw < 0.1) {
 		return {false, 0.0f};
 	}
 	

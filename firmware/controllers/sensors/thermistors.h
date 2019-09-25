@@ -25,8 +25,8 @@ temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasIatSensor();
 bool hasCltSensor();
 
-void setCommonNTCSensor(ThermistorConf *thermistorConf);
-void setDodgeSensor(ThermistorConf *thermistorConf);
-void set10K_4050K(ThermistorConf *thermistorConf);
+void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup);
+void setDodgeSensor(ThermistorConf *thermistorConf, float pullup);
+void set10K_4050K(ThermistorConf *thermistorConf, float pullup);
 
 #endif /* THERMISTORS_H_ */
