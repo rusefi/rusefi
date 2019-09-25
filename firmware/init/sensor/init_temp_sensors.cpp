@@ -3,7 +3,7 @@
 
 #include "adc_subscription.h"
 #include "converters/linear_func.h"
-#include "converters/converter_chain.h"
+#include "converters/func_chain.h"
 #include "converters/thermistor_func.h"
 #include "converters/resistance_func.h"
 #include "engine.h"
@@ -23,22 +23,23 @@ using resist = ResistanceFunc;
 union FuncPair {
 	FuncPair() { }
 
-	FunctionalSensor<LinearFunc> linear;
-	FunctionalSensor<ConverterChain<resist, therm>> thermistor;
+	LinearFunc linear;
+	FuncChain<resist, therm> thermistor;
 };
 
-static SensorConversionFunction* configureTempSensorFunction(thermistor_conf_s& cfg, FuncPair& p, bool isLinear) {
+static SensorConverter& configureTempSensorFunction(thermistor_conf_s& cfg, FuncPair& p, bool isLinear) {
 	if (isLinear) {
-		p.linear.f().configure(cfg.resistance_1, cfg.tempC_1, cfg.resistance_2, cfg.tempC_2, -50, 250);
+		p.linear = LinearFunc();
+		p.linear.configure(cfg.resistance_1, cfg.tempC_1, cfg.resistance_2, cfg.tempC_2, -50, 250);
 
-		return &p.linear;
+		return p.linear;
 	} else /* sensor is thermistor */{
-		p.thermistor = ConverterChain<resist, therm>();
+		p.thermistor = FuncChain<resist, therm>();
 		
-		p.thermistor.configure<resist>(5, 2700);
-		p.thermistor.
+		p.thermistor.get<resist>().configure(5.0f, cfg.bias_resistor);
+		p.thermistor.get<therm>().configure(cfg);
 
-		return &p.thermistor;
+		return p.thermistor;
 	}
 }
 

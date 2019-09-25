@@ -6,11 +6,15 @@
 #include "init.h"
 #include "sensor.h"
 
+void initTempSensors();
 void initOilPressure();
 
 void initSensorCli();
 
 void initSensors() {
+	// temperature sensors
+	initTempSensors();
+
 	// aux sensors
 	initOilPressure();
 
