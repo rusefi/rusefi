@@ -11,6 +11,7 @@
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"
+#include "sensor.h"
 
 #define TEST_POOL_SIZE 256
 
@@ -183,7 +184,7 @@ TEST(fsio, testLogicExpressions) {
 
 	{
 		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-		engine->sensors.mockClt = 100;
+		Sensor::setMockValue(SensorType::Clt, 100);
 		engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 		testExpression2(0, "coolant 1 +", 101, engine);
 	}
