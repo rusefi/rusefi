@@ -2,14 +2,15 @@
 #include "engine.h"
 #include "error_handling.h"
 #include "global.h"
-#include "linear_sensor.h"
+#include "functional_sensor.h"
+#include "linear_func.h"
 #include "tunerstudio_configuration.h"
 
 EXTERN_ENGINE;
 
 extern TunerStudioOutputChannels tsOutputChannels;
 
-LinearSensor oilpSensor(SensorType::OilPressure);
+FunctionalSensor<LinearFunc> oilpSensor(SensorType::OilPressure);
 
 void initOilPressure() {
 	// Only register if we have a sensor
@@ -28,7 +29,7 @@ void initOilPressure() {
 	float greaterOutput = val1 > val2 ? val1 : val2;
 
 	// Allow slightly negative output (-5kpa) so as to not fail the sensor when engine is off
-	oilpSensor.configure(sensorCfg->v1, val1, sensorCfg->v2, val2, /*minOutput*/ -5, greaterOutput);
+	oilpSensor.f().configure(sensorCfg->v1, val1, sensorCfg->v2, val2, /*minOutput*/ -5, greaterOutput);
 
 	// Tell it to report to its output channel
 	oilpSensor.setReportingLocation(&tsOutputChannels.oilPressure);
