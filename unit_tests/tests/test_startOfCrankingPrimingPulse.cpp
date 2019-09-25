@@ -37,7 +37,6 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 
 	engineConfiguration->startOfCrankingPrimingPulse = 4;
 
-	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 
 	// this -70 value comes from CLT error handling code
