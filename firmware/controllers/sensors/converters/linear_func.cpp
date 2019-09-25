@@ -1,8 +1,8 @@
-#include "linear_sensor.h"
+#include "linear_func.h"
 
 #include "interpolation.h"
 
-void LinearSensor::configure(float in1, float out1, float in2, float out2, float minOutput, float maxOutput) {
+void LinearFunc::configure(float in1, float out1, float in2, float out2, float minOutput, float maxOutput) {
 	m_minOutput = minOutput;
 	m_maxOutput = maxOutput;
 
@@ -10,7 +10,7 @@ void LinearSensor::configure(float in1, float out1, float in2, float out2, float
 	m_b = out1 - m_a * in1;
 }
 
-SensorResult LinearSensor::convertFromInputValue(float inputValue) {
+SensorResult LinearFunc::convert(float inputValue) const {
 	float result = m_a * inputValue + m_b;
 
 	// Bounds check

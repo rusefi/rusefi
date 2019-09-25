@@ -170,6 +170,7 @@ INCDIR = . \
 	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/controllers/sensors \
+	$(PROJECT_DIR)/controllers/sensors/converters \
 	$(PROJECT_DIR)/controllers/algo \
 	$(PROJECT_DIR)/controllers/core \
 	$(PROJECT_DIR)/controllers/math \

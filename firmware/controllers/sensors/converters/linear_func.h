@@ -1,16 +1,14 @@
 #pragma once
 
-#include "converter_sensor.h"
+#include "sensor_converter_func.h"
 
-class LinearSensor final : public ConvertedSensor {
+class LinearFunc final : public SensorConverter {
 public:
-	explicit LinearSensor(SensorType type)
-		: ConvertedSensor(type) {}
+	LinearFunc() = default;
 
 	void configure(float in1, float out1, float in2, float out2, float minOutput, float maxOutput);
 
-protected:
-	SensorResult convertFromInputValue(float inputValue) override;
+	SensorResult convert(float inputValue) const override;
 
 private:
 	// Linear equation parameters for equation of form

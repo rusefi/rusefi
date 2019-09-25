@@ -1,4 +1,5 @@
 #include "adc_subscription.h"
+
 #include "adc_inputs.h"
 #include "engine.h"
 
@@ -9,7 +10,7 @@ EXTERN_ENGINE;
 #if !EFI_UNIT_TEST
 
 struct AdcSubscriptionEntry {
-	ConvertedSensor* Sensor;
+	FunctionalSensorBase *Sensor;
 	float VoltsPerAdcVolt;
 	adc_channel_e Channel;
 };
@@ -17,12 +18,14 @@ struct AdcSubscriptionEntry {
 static size_t s_nextEntry = 0;
 static AdcSubscriptionEntry s_entries[8];
 
-void AdcSubscription::SubscribeSensor(ConvertedSensor& sensor, adc_channel_e channel, float voltsPerAdcVolt /*= 0.0f*/) {
+void AdcSubscription::SubscribeSensor(FunctionalSensorBase &sensor,
+									  adc_channel_e channel,
+									  float voltsPerAdcVolt /*= 0.0f*/) {
 	// Don't subscribe null channels
 	if (channel == EFI_ADC_NONE) {
 		return;
 	}
-	
+
 	// bounds check
 	if (s_nextEntry >= std::size(s_entries)) {
 		return;
@@ -34,7 +37,7 @@ void AdcSubscription::SubscribeSensor(ConvertedSensor& sensor, adc_channel_e cha
 	}
 
 	// Populate the entry
-	auto& entry = s_entries[s_nextEntry];
+	auto &entry = s_entries[s_nextEntry];
 	entry.Sensor = &sensor;
 	entry.VoltsPerAdcVolt = voltsPerAdcVolt;
 	entry.Channel = channel;
@@ -44,7 +47,7 @@ void AdcSubscription::SubscribeSensor(ConvertedSensor& sensor, adc_channel_e cha
 
 void AdcSubscription::UpdateSubscribers() {
 	for (size_t i = 0; i < s_nextEntry; i++) {
-		auto& entry = s_entries[i];
+		auto &entry = s_entries[i];
 
 		float mcuVolts = getVoltage("sensor", entry.Channel);
 		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
@@ -53,4 +56,4 @@ void AdcSubscription::UpdateSubscribers() {
 	}
 }
 
-#endif// !EFI_UNIT_TEST
+#endif // !EFI_UNIT_TEST

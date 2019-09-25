@@ -1,14 +1,10 @@
-#include "linear_sensor.h"
-
+#include "linear_func.h"
 #include "unit_test_framework.h"
 
-class SensorLinear : public ::testing::Test {
+class LinearFuncTest : public ::testing::Test {
 protected:
 	// Maps (1, 4) -> (100, -100)
-	LinearSensor dut;
-
-	SensorLinear()
-		: dut(SensorType::Clt) {}
+	LinearFunc dut;
 
 	void SetUp() override {
 		dut.configure(1, 100, 4, -100, -110, 110);
@@ -17,26 +13,22 @@ protected:
 
 #define test_point(in, out)                                                                                            \
 	{                                                                                                                  \
-		dut.postRawValue(in);                                                                                          \
-		auto result = dut.get();                                                                                       \
+		auto result = dut.convert(in);                                                                                 \
                                                                                                                        \
 		EXPECT_TRUE(result.Valid);                                                                                     \
 		ASSERT_NEAR(result.Value, (out), EPS4D) << "Not " << out << " for " << in;                                     \
 	}
 
 #define test_point_invalid(in)                                                                                         \
-	{                                                                                                                  \
-		dut.postRawValue(in);                                                                                          \
-		EXPECT_FALSE(dut.get().Valid);                                                                                 \
-	}
+	{ EXPECT_FALSE(dut.convert(in).Valid); }
 
-TEST_F(SensorLinear, TestInRange) {
+TEST_F(LinearFuncTest, TestInRange) {
 	test_point(2.5, 0);
 	test_point(1, 100);
 	test_point(4, -100);
 }
 
-TEST_F(SensorLinear, TestOutOfRange) {
+TEST_F(LinearFuncTest, TestOutOfRange) {
 	test_point(1, 100);
 	test_point_invalid(0.5);
 
