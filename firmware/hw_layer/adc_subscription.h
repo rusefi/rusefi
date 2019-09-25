@@ -9,6 +9,6 @@
 
 class AdcSubscription {
 public:
-	static void SubscribeSensor(FunctionalSensorBase &sensor, adc_channel_e channel, float voltsPerAdcVolt = 0.0f);
+	static void SubscribeSensor(FunctionalSensor &sensor, adc_channel_e channel, float voltsPerAdcVolt = 0.0f);
 	static void UpdateSubscribers();
 };
