@@ -221,6 +221,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 *
 	 * Theoretically we shall have injectorFlow(MAP) curve, practically VE gets artificially high as MAP increases and
 	 * accounts for flow change.
+	 *
+	 * Wall wetting AE could be an argument for honest injectorFlow(MAP)
 	 */
 	engineConfiguration->injector.flow = 265;
 	engineConfiguration->fuelRailPressure = 400; // 400 kPa, 58 psi
