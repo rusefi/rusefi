@@ -19,6 +19,9 @@ enum class SensorType : unsigned char {
 	Clt,
 	Iat,
 
+	AuxTemp1,
+	AuxTemp2,
+
 	OilPressure,
 
 	// This is the "resolved" position, potentially composited out of the following two
