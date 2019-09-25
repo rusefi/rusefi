@@ -142,6 +142,9 @@ public:
 		// Clamp to >100hz
 		int freq = maxI(100, engineConfiguration->etbFreq);
 
+
+// no need to complicate event queue with ETB PWM in unit tests
+#if ! EFI_UNIT_TEST
 		startSimplePwm(&m_pwmEnable, "ETB Enable",
 				&engine->executor,
 				&m_pinEnable,
@@ -162,6 +165,7 @@ public:
 				freq,
 				0,
 				(pwm_gen_callback*)applyPinState);
+#endif EFI_UNIT_TEST
 	}
 };
 
