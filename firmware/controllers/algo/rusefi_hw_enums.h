@@ -261,8 +261,6 @@ typedef enum __attribute__ ((__packed__)) {
 	 * and TunerStudio would need these ordinals to fit into field size
 	 */
     TEST_MAF_CHANNEL = 18,
-    TEST_CLT_CHANNEL = 19,
-    TEST_IAT_CHANNEL = 20,
 #endif /* EFI_UNIT_TEST */
 } adc_channel_e;
 

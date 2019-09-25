@@ -18,12 +18,6 @@ float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_
 	switch(hwChannel) {
 	case TEST_MAF_CHANNEL:
 		return testMafValue;
-	case TEST_CLT_CHANNEL:
-		return testCltValue;
-		//return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));
-	case TEST_IAT_CHANNEL:
-		return testIatValue;
-		//return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));
 	}
 	return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));;
 }
