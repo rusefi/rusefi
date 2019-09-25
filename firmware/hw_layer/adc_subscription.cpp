@@ -10,7 +10,7 @@ EXTERN_ENGINE;
 #if !EFI_UNIT_TEST
 
 struct AdcSubscriptionEntry {
-	FunctionalSensorBase *Sensor;
+	FunctionalSensor *Sensor;
 	float VoltsPerAdcVolt;
 	adc_channel_e Channel;
 };
@@ -18,7 +18,7 @@ struct AdcSubscriptionEntry {
 static size_t s_nextEntry = 0;
 static AdcSubscriptionEntry s_entries[8];
 
-void AdcSubscription::SubscribeSensor(FunctionalSensorBase &sensor,
+void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 									  adc_channel_e channel,
 									  float voltsPerAdcVolt /*= 0.0f*/) {
 	// Don't subscribe null channels

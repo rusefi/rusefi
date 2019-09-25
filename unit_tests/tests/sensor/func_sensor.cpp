@@ -17,6 +17,7 @@ protected:
 		: dut(SensorType::Clt) {}
 
 	void SetUp() override {
+		dut.setFunction(func);
 		Sensor::resetRegistry();
 	}
 
@@ -24,7 +25,8 @@ protected:
 		Sensor::resetRegistry();
 	}
 
-	FunctionalSensor<DoublerFunc> dut;
+	FunctionalSensor dut;
+	DoublerFunc func;
 };
 
 TEST_F(SensorConverted, TestValid) {
@@ -63,9 +65,4 @@ TEST_F(SensorConverted, TestInvalid) {
 		EXPECT_FALSE(s.Valid);
 		EXPECT_FLOAT_EQ(s.Value, 0);
 	}
-}
-
-TEST_F(SensorConverted, TestGet) {
-	// we're only checking that this compiles
-	DoublerFunc &f = dut.f();
 }
