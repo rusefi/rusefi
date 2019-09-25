@@ -184,9 +184,11 @@ TEST(fsio, testLogicExpressions) {
 
 	{
 		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-		Sensor::setMockValue(SensorType::Clt, 100);
+		Sensor::setMockValue(SensorType::Clt, 100 + 273.15);
 		engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 		testExpression2(0, "coolant 1 +", 101, engine);
+
+		Sensor::resetRegistry();
 	}
 	testExpression("fan", 0);
 	testExpression("fan not", 1);
