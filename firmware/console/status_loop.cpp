@@ -204,14 +204,14 @@ static void printSensors(Logging *log) {
 	// why do we still send data into console in text mode?
 
 	if (hasCltSensor()) {
-		reportSensorF(log, "CLT", "C", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #4
+		reportSensorF(log, "CLT", "C", getCoolantTemperature(), 2); // log column #4
 	}
 	if (hasTpsSensor()) {
 		reportSensorF(log, "TPS", "%", getTPS(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #5
 	}
 
 	if (hasIatSensor()) {
-		reportSensorF(log, "IAT", "C", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE), 2); // log column #7
+		reportSensorF(log, "IAT", "C", getIntakeAirTemperature(), 2); // log column #7
 	}
 
 	if (hasVBatt(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -699,8 +699,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_PROD_CODE */
 
 	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-	float coolant = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
-	float intake = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float coolant = getCoolantTemperature();
+	float intake = getIntakeAirTemperature();
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 

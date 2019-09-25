@@ -26,6 +26,7 @@
 #include "engine_math.h"
 #include "tps.h"
 #include "idle_thread.h"
+#include "thermistors.h"
 
 EXTERN_ENGINE
 ;
@@ -116,10 +117,10 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection;
-	if (cisnan(engine->sensors.iat)) {
+	if (hasIatSensor()) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, engine->sensors.iat);
+		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, getIntakeAirTemperature());
 	}
 	// PID Ignition Advance angle correction
 	float pidTimingCorrection = 0.0f;

@@ -34,16 +34,6 @@ public:
 class SensorsState {
 public:
 	SensorsState();
-	/**
-	 * Performance optimization:
-	 * log() function needed for thermistor logic is relatively heavy, to avoid it we have these
-	 * pre-calculated values
-	 * Access to these two fields is not synchronized in any way - that should work since float read/write are atomic.
-	 *
-	 * values are in Celsius
-	 */
-	float iat = NAN;
-	float clt = NAN;
 
 	Accelerometer accelerometer;
 

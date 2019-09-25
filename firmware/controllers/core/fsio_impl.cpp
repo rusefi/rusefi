@@ -123,11 +123,11 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_AC_TOGGLE:
 		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_COOLANT:
-		return getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getCoolantTemperature();
 	case LE_METHOD_IS_COOLANT_BROKEN:
 		return engine->isCltBroken;
 	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getIntakeAirTemperature();
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.getRpm();
 	case LE_METHOD_MAF:

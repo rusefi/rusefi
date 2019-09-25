@@ -303,15 +303,13 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief Engine warm-up fuel correction.
  */
 float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (cisnan(engine->sensors.clt))
-		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("cltf", engine->sensors.clt, config->cltFuelCorrBins, config->cltFuelCorr);
+	return interpolate2d("cltf", getCoolantTemperature(), config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (cisnan(engine->sensors.clt))
+	if (!hasCltSensor())
 		return 0; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d("timc", engine->sensors.clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+	return interpolate2d("timc", getCoolantTemperature(), engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
 float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -337,7 +335,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 		// gather events
 		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
 		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
-		bool cltDeactivate = cisnan(engine->sensors.clt) ? false : (engine->sensors.clt < (float)CONFIG(coastingFuelCutClt));
+		bool cltDeactivate = hasCltSensor() ? false : (getCoolantTemperature() < (float)CONFIG(coastingFuelCutClt));
 		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
 		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
 		
@@ -392,7 +390,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Duration of fuel injection while craning
  */
 floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getCrankingFuel3(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE),
+	return getCrankingFuel3(getCoolantTemperature(),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 #endif

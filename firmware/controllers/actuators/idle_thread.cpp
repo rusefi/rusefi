@@ -294,8 +294,8 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		engine->engineState.idle.idleState = PID_UPPER;
-		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
+		if (CONFIGB(useIacTableForCoasting) && hasCltSensor()) {
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", getCoolantTemperature(), CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
@@ -364,7 +364,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		float clt = engine->sensors.clt;
+		float clt = getCoolantTemperature();
 #if EFI_SHAFT_POSITION_INPUT
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else

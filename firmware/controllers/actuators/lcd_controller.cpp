@@ -228,10 +228,10 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %.2f", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Coolant %.2f", getCoolantTemperature());
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature());
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
@@ -254,7 +254,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_FUEL_IAT_CORRECTION:
-		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SIGNATURE));
 		return;
 	case LL_FUEL_INJECTOR_LAG:
 		lcdPrintf("ING LAG %.2f", getInjectorLag(engine->sensors.vBatt PASS_ENGINE_PARAMETER_SIGNATURE));
