@@ -172,7 +172,6 @@ TEST(big, testNoiselessDecoder) {
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	// we'll test on 60-2 wheel
 	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2 PASS_ENGINE_PARAMETER_SUFFIX);
