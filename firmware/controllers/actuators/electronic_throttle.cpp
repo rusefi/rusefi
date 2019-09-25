@@ -165,7 +165,7 @@ public:
 				freq,
 				0,
 				(pwm_gen_callback*)applyPinState);
-#endif EFI_UNIT_TEST
+#endif /* EFI_UNIT_TEST */
 	}
 };
 
