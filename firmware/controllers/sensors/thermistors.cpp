@@ -10,10 +10,9 @@
  * http://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
  */
 
-#include "global.h"
+#include "error_handling.h"
 #include "sensor_reader.h"
 #include "thermistors.h"
-#include "engine_math.h"
 
 static SensorReader<SensorType::Clt> cltReader(273.15 + 70.0f);
 
