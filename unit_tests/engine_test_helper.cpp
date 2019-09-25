@@ -63,13 +63,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	resetConfigurationExt(NULL, boardCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 	engine->engineConfigurationPtr->mafAdcChannel = TEST_MAF_CHANNEL;
-	engine->engineConfigurationPtr->clt.adcChannel = TEST_CLT_CHANNEL;
-	engine->engineConfigurationPtr->iat.adcChannel = TEST_IAT_CHANNEL;
-	// magic voltage to get nice CLT
-	testCltValue = 1.492964;
-	//todosetMockCltVoltage(1.492964 PASS_ENGINE_PARAMETER_SUFFIX);
-	// magic voltage to get nice IAT
-	testIatValue = 4.03646;
+	
+	Sensor::resetRegistry();
+	Sensor::setMockValue(SensorType::Clt, 70);
+	Sensor::setMockValue(SensorType::Iat, 30);
+
 
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
@@ -216,9 +214,6 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	setArrayValues(engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE, 0);
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
-
 
 	ASSERT_EQ( 0,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
 	eth->setTriggerType(trigger PASS_ENGINE_PARAMETER_SUFFIX);

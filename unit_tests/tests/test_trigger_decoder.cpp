@@ -299,10 +299,6 @@ TEST(misc, testRpmCalculator) {
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engine->sensors.clt = 70; // 'testCltValue' does not give us exact number so we have to hack here. todo: migrate test
-	engine->sensors.iat = 30; // 'testIatValue' does not give us exact number so we have to hack here. todo: migrate test
-
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
@@ -566,7 +562,9 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	eth->assertRpm(0, "RPM=0");
 	ASSERT_EQ( 0,  getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE)) << "setTestBug299 EL";
-	ASSERT_NEAR( 30,  engine->sensors.iat, EPS4D) << "setTestBug299 IAT";
+
+	Sensor::setMockValue(SensorType::Iat, 30);
+
 	eth->fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth->assertRpm(0, "setTestBug299: RPM#1");
@@ -1091,8 +1089,6 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	ASSERT_NEAR( 70,  engine->sensors.clt, EPS4D) << "CLT";
 
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

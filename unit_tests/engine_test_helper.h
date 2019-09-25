@@ -12,6 +12,7 @@
 #include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
+#include "sensor.h"
 
 class EngineTestHelperBase
 {

@@ -11,7 +11,7 @@
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"
-#include "sensor.h"
+#include "thermistors.h"
 
 #define TEST_POOL_SIZE 256
 
@@ -20,7 +20,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
 	case LE_METHOD_COOLANT:
-		return engine->sensors.clt;
+		return getCoolantTemperature();
 	case LE_METHOD_RPM:
 		return engine->fsioState.mockRpm;
 	case LE_METHOD_CRANKING_RPM:
@@ -184,7 +184,7 @@ TEST(fsio, testLogicExpressions) {
 
 	{
 		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-		Sensor::setMockValue(SensorType::Clt, 100 + 273.15);
+		Sensor::setMockValue(SensorType::Clt, 100);
 		engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 		testExpression2(0, "coolant 1 +", 101, engine);
 

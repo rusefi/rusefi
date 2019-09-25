@@ -142,8 +142,8 @@ TEST(idle, timingPid) {
 	setMockTpsAdc(0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// disable temperature sensors
-	eth.engine.sensors.clt = NAN;
-	eth.engine.sensors.iat = NAN;
+	Sensor::resetMockValue(SensorType::Clt);
+	Sensor::resetMockValue(SensorType::Iat);
 
 	// all corrections disabled, should be 0
 	engineConfiguration->bc.useIdleTimingPidControl = false;

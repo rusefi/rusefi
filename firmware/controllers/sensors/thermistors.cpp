@@ -15,7 +15,7 @@
 #include "error_handling.h"
 #include "sensor_reader.h"
 
-static SensorReader<SensorType::Clt> cltReader(273.15 + 70.0f);
+static SensorReader<SensorType::Clt> cltReader(70.0f);
 
 bool hasCltSensor() {
 	return cltReader.get().Valid;
@@ -31,11 +31,11 @@ temperature_t getCoolantTemperature() {
 		warning(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "unrealistic CLT");
 	}
 
-	return cltReader.getOrDefault() - 273.15f;
+	return cltReader.getOrDefault();
 }
 
 
-static SensorReader<SensorType::Iat> iatReader(273.15f + 20.0f);
+static SensorReader<SensorType::Iat> iatReader(20.0f);
 
 bool hasIatSensor() {
 	return iatReader.get().Valid;
@@ -51,7 +51,7 @@ temperature_t getIntakeAirTemperature() {
 		warning(OBD_Intake_Air_Temperature_Circuit_Malfunction, "unrealistic IAT");
 	}
 
-	return iatReader.getOrDefault() - 273.15f;
+	return iatReader.getOrDefault();
 }
 
 

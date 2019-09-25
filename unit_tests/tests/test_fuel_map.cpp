@@ -85,11 +85,8 @@ TEST(misc, testFuelMap) {
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	float iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_FALSE(cisnan(iat));
 	float iatCorrection = getIatFuelCorrection(-KELV PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 2,  iatCorrection) << "IAT";
-	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
 	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 	ASSERT_EQ( 1,  cltCorrection) << "CLT";
 	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
