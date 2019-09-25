@@ -36,13 +36,12 @@ public:
 		}
 
 		// If no function is set, this sensor isn't valid.
-		auto function = m_function;
-		if (!function) {
+		if (!m_function) {
 			invalidate();
 			return;
 		}
 
-		auto r = function->convert(inputValue);
+		auto r = m_function->convert(inputValue);
 
 		// This has to happen so that we set the valid bit after
 		// the value is stored, to prevent the data race of reading
