@@ -892,11 +892,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 
 	switch (engineConfiguration->debugMode)	{
-	case DBG_AUX_TEMPERATURE:
-		// // 68
-		tsOutputChannels->debugFloatField1 = engine->sensors.auxTemp1;
-		tsOutputChannels->debugFloatField2 = engine->sensors.auxTemp2;
-		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);

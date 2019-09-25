@@ -381,29 +381,7 @@ static void setOperationMode(int value) {
 	doPrintConfiguration();
 }
 
-static char pinNameBuffer[16];
-
-static void printThermistor(const char *msg, ThermistorConf *config, ThermistorMath *tm, bool useLinear) {
-	adc_channel_e adcChannel = config->adcChannel;
-	float voltage = getVoltageDivided("term", adcChannel PASS_ENGINE_PARAMETER_SUFFIX);
-	float r = getResistance(config, voltage);
-
-	float t = getTemperatureC(config, tm, useLinear);
-
-	thermistor_conf_s *tc = &config->config;
-
-	scheduleMsg(&logger, "%s volts=%.2f Celsius=%.2f sensorR=%.2f on channel %d", msg, voltage, t, r, adcChannel);
-	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(msg, adcChannel, pinNameBuffer));
-	scheduleMsg(&logger, "C=%.2f/R=%.2f C=%.2f/R=%.2f C=%.2f/R=%.2f",
-			tc->tempC_1, tc->resistance_1,
-			tc->tempC_2, tc->resistance_2,
-			tc->tempC_3, tc->resistance_3);
-
-	// %.5f
-	scheduleMsg(&logger, "bias resistor=%.2fK A=%.5f B=%.5f C=%.5f", tc->bias_resistor / 1000,
-			tm->s_h_a, tm->s_h_b, tm->s_h_c);
-	scheduleMsg(&logger, "==============================");
-}
+//static char pinNameBuffer[16];
 
 void printTPSInfo(void) {
 #if EFI_PROD_CODE && HAL_USE_ADC
@@ -430,13 +408,10 @@ void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
-			engineConfiguration->useLinearCltSensor);
 	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
-	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve,
-			engineConfiguration->useLinearIatSensor);
+
 	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}

@@ -24,19 +24,6 @@ public:
 	int getMockAdcValue(int hwChannel) const;
 };
 
-class ThermistorMath : public thermistor_state_s {
-public:
-	void setConfig(thermistor_conf_s *config);
-	void prepareThermistorCurve(thermistor_conf_s *tc);
-	float getKelvinTemperatureByResistance(float resistance) const;
-	float s_h_a = 0;
-	float s_h_b = 0;
-	float s_h_c = 0;
-	bool isLinear;
-private:
-	thermistor_conf_s currentConfig = {};
-};
-
 class Accelerometer {
 public:
 	float x = 0; // G value
@@ -56,12 +43,7 @@ public:
 	 * values are in Celsius
 	 */
 	float iat = NAN;
-#if EFI_UNIT_TEST
-	float mockClt = NAN;
-#endif
 	float clt = NAN;
-	float auxTemp1 = NAN;
-	float auxTemp2 = NAN;
 
 	Accelerometer accelerometer;
 
