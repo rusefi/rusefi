@@ -2,11 +2,10 @@
 
 #include "sensor_converter_func.h"
 
-#include <utility>
 #include <type_traits>
+#include <utility>
 
-namespace priv
-{
+namespace priv {
 template <class... _Types>
 class FuncChain;
 
@@ -54,7 +53,7 @@ public:
 private:
 	TFirst m_f;
 };
-}
+} // namespace priv
 
 template <typename... TFuncs>
 class FuncChain : public SensorConverter {
@@ -63,8 +62,8 @@ public:
 		return m_fs.convert(input);
 	}
 
-	template<typename TGet>
-	TGet& get() {
+	template <typename TGet>
+	TGet &get() {
 		return m_fs.template get<TGet>();
 	}
 

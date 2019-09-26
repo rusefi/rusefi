@@ -10,7 +10,7 @@ SensorResult ResistanceFunc::convert(float raw) const {
 	if (raw < 0.1) {
 		return {false, 0.0f};
 	}
-	
+
 	// If the voltage is very high (95% VCC), the sensor is open circuit.
 	if (raw > (m_supplyVoltage * 0.95f)) {
 		return {false, 1e6};

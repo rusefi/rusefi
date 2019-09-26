@@ -5,8 +5,7 @@
 SensorResult ThermistorFunc::convert(float ohms) const {
 	// This resistance should have already been validated - only
 	// thing we can check is that it's non-negative
-	if(ohms <= 0)
-	{
+	if (ohms <= 0) {
 		return {false, 0};
 	}
 
@@ -23,11 +22,11 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 	return {true, celsius};
 }
 
-void ThermistorFunc::configure(thermistor_conf_s& cfg) {
+void ThermistorFunc::configure(thermistor_conf_s &cfg) {
 	float t1 = cfg.tempC_1 + 273.15f;
 	float t2 = cfg.tempC_2 + 273.15f;
 	float t3 = cfg.tempC_3 + 273.15f;
-	
+
 	// https://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
 	float l1 = logf(cfg.resistance_1);
 	float l2 = logf(cfg.resistance_2);
