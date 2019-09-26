@@ -15,8 +15,12 @@
 /**
  * converts Kelvin temperature into Celsius temperature
  */
-constexpr float convertKelvinToCelcius(float kelvin) { return kelvin - KELV; }
-constexpr float convertCelsiusToKelvin(float celsius) { return celsius + KELV; }
+constexpr float convertKelvinToCelcius(float kelvin) {
+	return kelvin - KELV;
+}
+constexpr float convertCelsiusToKelvin(float celsius) {
+	return celsius + KELV;
+}
 
 temperature_t getCoolantTemperature();
 temperature_t getIntakeAirTemperature();

@@ -34,7 +34,6 @@ temperature_t getCoolantTemperature() {
 	return cltReader.getOrDefault();
 }
 
-
 static SensorReader<SensorType::Iat> iatReader(20.0f);
 
 bool hasIatSensor() {
@@ -53,7 +52,6 @@ temperature_t getIntakeAirTemperature() {
 
 	return iatReader.getOrDefault();
 }
-
 
 void setDodgeSensor(ThermistorConf *thermistorConf, float pullup) {
 	thermistorConf->config = {-40, 30, 120, 336660, 7550, 390, pullup};
