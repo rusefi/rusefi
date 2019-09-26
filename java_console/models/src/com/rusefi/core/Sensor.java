@@ -99,6 +99,11 @@ public enum Sensor {
     debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 292, BackgroundColor.MUD, 0, 5),
     debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 294, BackgroundColor.MUD, 0, 5),
 
+
+    etbTarget(GAUGE_NAME_ETB_TARGET, SensorCategory.OTHERS, FieldType.FLOAT, 312, BackgroundColor.MUD),
+    etb1DutyCycle(GAUGE_NAME_ETB_DUTY, SensorCategory.OTHERS, FieldType.FLOAT, 316, BackgroundColor.MUD),
+    etb1Error(GAUGE_NAME_ETB_ERROR, SensorCategory.OTHERS, FieldType.FLOAT, 320, BackgroundColor.MUD),
+
     ;
 
     private final String name;
