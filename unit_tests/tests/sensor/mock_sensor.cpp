@@ -90,28 +90,3 @@ TEST_F(SensorMocking, ResetAll) {
 		EXPECT_FLOAT_EQ(result.Value, 46.0f);
 	}
 }
-
-TEST_F(SensorMocking, ResetWithResetRegistry) {
-	// Set a value on the "real" sensor
-	realSensor.set(46.0f);
-
-	// Now set a mock value
-	Sensor::setMockValue(SensorType::Clt, 33.0f);
-
-	// Expect to see the mock value
-	{
-		auto result = Sensor::get(SensorType::Clt);
-		EXPECT_TRUE(result.Valid);
-		EXPECT_FLOAT_EQ(result.Value, 33.0f);
-	}
-
-	// Reset registry - including mocks
-	Sensor::resetRegistry();
-
-	{
-		auto result = Sensor::get(SensorType::Clt);
-		EXPECT_TRUE(result.Valid);
-		EXPECT_FLOAT_EQ(result.Value, 46.0f);
-	}
-}
-
