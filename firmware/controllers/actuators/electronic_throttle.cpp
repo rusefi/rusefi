@@ -5,7 +5,7 @@
  * todo: make this more universal if/when we get other hardware options
  *
  * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
- * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 on BOSCH 0280750009
+ * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 "eBay red board" on BOSCH 0280750009
  * Apr 2019 two-wire TLE7209 support added
  * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30 on BOSCH 0280750009
  * Jan 2019 actually driven around the block but still need some work.
