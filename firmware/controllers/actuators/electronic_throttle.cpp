@@ -106,7 +106,7 @@ EXTERN_ENGINE;
 
 static bool startupPositionError = false;
 
-#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 1
+#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
 class EtbControl {
 private:
@@ -127,6 +127,12 @@ public:
 
 	TwoPinDcMotor dcMotor;
 	
+	void setFrequency(int frequency) {
+		m_pwmEnable.setFrequency(frequency);
+		m_pwmDir1.setFrequency(frequency);
+		m_pwmDir2.setFrequency(frequency);
+	}
+
 	void start(bool useTwoWires, 
 			brain_pin_e pinEnable,
 			// since we have pointer magic here we cannot simply have value parameter
@@ -142,6 +148,9 @@ public:
 		// Clamp to >100hz
 		int freq = maxI(100, engineConfiguration->etbFreq);
 
+
+// no need to complicate event queue with ETB PWM in unit tests
+#if ! EFI_UNIT_TEST
 		startSimplePwm(&m_pwmEnable, "ETB Enable",
 				&engine->executor,
 				&m_pinEnable,
@@ -162,6 +171,7 @@ public:
 				freq,
 				0,
 				(pwm_gen_callback*)applyPinState);
+#endif /* EFI_UNIT_TEST */
 	}
 };
 
@@ -372,6 +382,12 @@ void setEtbPFactor(float value) {
 	showEthInfo();
 }
 
+static void setEtbFrequency(int frequency) {
+	engineConfiguration->etbFreq = frequency;
+
+	etb1.setFrequency(frequency);
+}
+
 static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
@@ -566,6 +582,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
+	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
 	etbPid.initPidClass(&engineConfiguration->etb);

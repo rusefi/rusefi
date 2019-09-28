@@ -31,6 +31,9 @@ public class IdleThreadMeta {
 				new ConfigRequest("IDLERPMPID_IFACTOR"),
 				new ConfigRequest("IDLERPMPID_DFACTOR"),
 				new ConfigRequest("IDLERPMPID_OFFSET"),
+				new TextRequest("eol"),
+				new TextRequest("ETB_Idle"),
+				new FieldRequest("Engine", "etbIdleAddition"),
 },
 				new Request[]{
 				new TextRequest("Manual_idle_control"),

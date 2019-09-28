@@ -107,8 +107,6 @@ TEST(idle, timingPid) {
 	print("******************************************* testTimingPidController\r\n");
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	// basic engine setup
-	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	// set PID settings
 	pid_s pidS;

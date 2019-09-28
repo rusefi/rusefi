@@ -438,6 +438,27 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.dFactor = 0;
 	engineConfiguration->etb.offset = 0;
 
+	engineConfiguration->cranking.baseFuel = 1;
+	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient
+	config->crankingFuelBins[0] = -20; // temperature in C
+	config->crankingFuelCoef[1] = 22;
+	config->crankingFuelBins[1] = -10;
+	config->crankingFuelCoef[2] = 18;
+	config->crankingFuelBins[2] = 5;
+	config->crankingFuelCoef[3] = 15;
+	config->crankingFuelBins[3] = 30;
+
+	config->crankingFuelCoef[4] = 10;
+	config->crankingFuelBins[4] = 35;
+	config->crankingFuelCoef[5] = 10;
+	config->crankingFuelBins[5] = 50;
+	config->crankingFuelCoef[6] = 10;
+	config->crankingFuelBins[6] = 65;
+	config->crankingFuelCoef[7] = 10;
+	config->crankingFuelBins[7] = 90;
+
+//	engineConfiguration->crankingIACposition = 65;
+
 }
 
 /**
