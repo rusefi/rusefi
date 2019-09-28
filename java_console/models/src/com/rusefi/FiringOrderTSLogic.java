@@ -35,17 +35,22 @@ public class FiringOrderTSLogic {
                 continue;
             }
             line = line.substring(index + FIRING_ORDER_PREFIX.length());
-            line = line.replaceAll("[\\s\\,]", "");
-            System.out.println("Processing " + line);
-
-            String s[] = line.split("\\=");
-            String order[] = s[0].split("_");
-            int ordinal = Integer.parseInt(s[1]);
-
-            System.out.println("order " + Arrays.toString(order) + ": " + ordinal);
-
-            ordinal2order.put(ordinal, order);
+            parseLine(line);
         }
+    }
+
+    public static void parseLine(String line) {
+        line = line.replaceAll("[\\s]*\\,.*", "");
+        line = line.replaceAll("[\\s\\,]", "");
+        System.out.println("Processing " + line);
+
+        String s[] = line.split("\\=");
+        String order[] = s[0].split("_");
+        int ordinal = Integer.parseInt(s[1]);
+
+        System.out.println("order " + Arrays.toString(order) + ": " + ordinal);
+
+        ordinal2order.put(ordinal, order);
     }
 
     private static void processId(int cylinderId) {
