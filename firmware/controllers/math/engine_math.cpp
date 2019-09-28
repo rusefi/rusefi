@@ -289,9 +289,9 @@ static const int order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
 
 // 8 cylinder
 static const int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
-
 static const int order_1_8_7_2_6_5_4_3[] = { 1, 8, 7, 2, 6, 5, 4, 3 };
 static const int order_1_5_4_2_6_3_7_8[] = { 1, 5, 4, 2, 6, 3, 7, 8 };
+static const int order_1_2_7_8_4_5_6_3[] = { 1, 2, 7, 8, 4, 5, 6, 3 };
 
 // 10 cylinder
 static const int order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
@@ -333,6 +333,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_8_4_3_6_5_7_2:
 	case FO_1_8_7_2_6_5_4_3:
 	case FO_1_5_4_2_6_3_7_8:
+	case FO_1_2_7_8_4_5_6_3:
 		return 8;
 
 // 10 cylinder
@@ -414,6 +415,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return order_1_8_7_2_6_5_4_3[index];
 	case FO_1_5_4_2_6_3_7_8:
 		return order_1_5_4_2_6_3_7_8[index];
+	case FO_1_2_7_8_4_5_6_3:
+		return order_1_2_7_8_4_5_6_3[index];
 
 // 10 cylinder
 	case FO_1_10_9_4_3_6_5_8_7_2:
