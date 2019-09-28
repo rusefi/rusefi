@@ -106,7 +106,7 @@ EXTERN_ENGINE;
 
 static bool startupPositionError = false;
 
-#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 1
+#define STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD 5
 
 class EtbControl {
 private:
