@@ -110,8 +110,7 @@ TEST_F(SensorMocking, ResetWithResetRegistry) {
 
 	{
 		auto result = Sensor::get(SensorType::Clt);
-		EXPECT_TRUE(result.Valid);
-		EXPECT_FLOAT_EQ(result.Value, 46.0f);
+		EXPECT_FALSE(result.Valid);
 	}
 }
 
