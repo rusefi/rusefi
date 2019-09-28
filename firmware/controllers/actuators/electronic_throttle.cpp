@@ -127,6 +127,12 @@ public:
 
 	TwoPinDcMotor dcMotor;
 	
+	void setFrequency(int frequency) {
+		m_pwmEnable.setFrequency(frequency);
+		m_pwmDir1.setFrequency(frequency);
+		m_pwmDir2.setFrequency(frequency);
+	}
+
 	void start(bool useTwoWires, 
 			brain_pin_e pinEnable,
 			// since we have pointer magic here we cannot simply have value parameter
@@ -376,6 +382,12 @@ void setEtbPFactor(float value) {
 	showEthInfo();
 }
 
+static void setEtbFrequency(int frequency) {
+	engineConfiguration->etbFreq = frequency;
+
+	etb1.setFrequency(frequency);
+}
+
 static void etbReset() {
 	scheduleMsg(&logger, "etbReset");
 	
@@ -570,6 +582,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
+	addConsoleActionI("etb_freq", setEtbFrequency);
 #endif /* EFI_PROD_CODE */
 
 	etbPid.initPidClass(&engineConfiguration->etb);
