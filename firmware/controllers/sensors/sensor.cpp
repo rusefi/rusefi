@@ -35,6 +35,7 @@ bool Sensor::Register() {
 		auto &entry = s_sensorRegistry[i];
 
 		entry.sensor = nullptr;
+		entry.useMock = false;
 		entry.mockValue = 0.0f;
 	}
 }
