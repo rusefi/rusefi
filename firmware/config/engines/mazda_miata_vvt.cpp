@@ -440,6 +440,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.iFactor = 	0;
 	engineConfiguration->etb.dFactor = 0;
 	engineConfiguration->etb.offset = 0;
+	engineConfiguration->etb.minValue = -60;
+	engineConfiguration->etb.maxValue = 50;
 
 	engineConfiguration->cranking.baseFuel = 1;
 	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient

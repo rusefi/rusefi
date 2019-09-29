@@ -64,3 +64,27 @@ TEST(util, pid) {
 	ASSERT_EQ( 0,  pid.iTerm) << "target=50, input=50 iTerm";
 
 }
+
+TEST(util, pidLimits) {
+
+	pid_s pidS;
+	pidS.pFactor = 0;
+	pidS.iFactor = 50;
+	pidS.dFactor = 0;
+	pidS.offset = 0;
+	pidS.minValue = 10;
+	pidS.maxValue = 40;
+	pidS.periodMs = 1;
+
+	Pid pid(&pidS);
+
+	pid.iTermMax = 45;
+
+	ASSERT_EQ( 12.5,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #0";
+	ASSERT_EQ( 25  ,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #1";
+
+	ASSERT_EQ( 37.5,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #2";
+
+	ASSERT_EQ( 40.0,  pid.getOutput(/*target*/50, /*input*/0)) << "target=50, input=0 #3";
+
+}
