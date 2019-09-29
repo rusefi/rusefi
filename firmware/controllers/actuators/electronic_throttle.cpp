@@ -596,9 +596,12 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}
+#if 0
+	// not alive code
 	autoTune.SetOutputStep(0.1);
+#endif
 
-#if ! EFI_UNIT_TEST
+#if 0 && ! EFI_UNIT_TEST
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (absF(startupThrottlePosition - engineConfiguration->etbNeutralPosition) > STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD) {
 		/**
@@ -613,6 +616,22 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	if (engineConfiguration->etbCalibrationOnStart) {
+		etb1.dcMotor.Set(70);
+		chThdSleep(600);
+		grabTPSIsWideOpen();
+		etb1.dcMotor.Set(-70);
+		chThdSleep(600);
+		grabTPSIsClosed();
+	}
+
+
+#if EFI_PROD_CODE
+	// manual duty cycle control without PID. Percent value from 0 to 100
+	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
+#endif
+
+#if EFI_PROD_CODE && 0
 	tuneWorkingPidSettings.pFactor = 1;
 	tuneWorkingPidSettings.iFactor = 0;
 	tuneWorkingPidSettings.dFactor = 0;
@@ -622,15 +641,13 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tuneWorkingPidSettings.maxValue = 100;
 	tuneWorkingPidSettings.periodMs = 100;
 
-#if EFI_PROD_CODE
-	// manual duty cycle control without PID. Percent value from 0 to 100
-	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
 	// this is useful once you do "enable etb_auto"
 	addConsoleActionF("set_etbat_output", setTempOutput);
 	addConsoleActionF("set_etbat_step", setAutoStep);
 	addConsoleActionI("set_etbat_period", setAutoPeriod);
 	addConsoleActionI("set_etbat_offset", setAutoOffset);
 #endif /* EFI_PROD_CODE */
+
 
 	etbPid.reset();
 

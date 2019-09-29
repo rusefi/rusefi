@@ -1,7 +1,10 @@
 package com.rusefi.ui.etb;
 
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.ldmp.generated.ElectronicThrottleMeta;
+import com.rusefi.ui.config.BitConfigField;
+import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -41,6 +44,11 @@ public class EtbCommandsPanel {
         testParameters.add(new JLabel("set etb_o X"));
         testParameters.add(new JLabel("For example:"));
         testParameters.add(new JLabel("set etb_p 1.1"));
+
+        testParameters.add(new BitConfigField(Fields.PAUSEETBCONTROL, "Pause").getContent());
+        testParameters.add(new ConfigField(Fields.ETB_PFACTOR, "pFactor").getContent());
+        testParameters.add(new ConfigField(Fields.ETB_IFACTOR, "iFactor").getContent());
+        testParameters.add(new ConfigField(Fields.ETB_DFACTOR, "dFactor").getContent());
 
         content.setBorder(BorderFactory.createTitledBorder("Commands"));
 

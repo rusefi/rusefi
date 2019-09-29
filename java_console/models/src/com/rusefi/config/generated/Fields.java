@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 24 18:34:53 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -353,6 +353,7 @@ public class Fields {
 	public static final int etb_pFactor_offset = 1736;
 	public static final int etbBiasBins_offset = 3888;
 	public static final int etbBiasValues_offset = 3920;
+	public static final int etbCalibrationOnStart_offset = 1476;
 	public static final int etbDeadband_offset = 3960;
 	public static final int etbFreq_offset = 2514;
 	public static final int etbIdleRange_offset = 972;
@@ -1224,13 +1225,23 @@ public class Fields {
 	public static final int unrealisticRpmThreashold_offset = 760;
 	public static final int unused1133_offset = 676;
 	public static final int unused1234234_offset = 2042;
-	public static final int unused_1484_bit_20_offset = 1476;
 	public static final int unused_1484_bit_21_offset = 1476;
+	public static final int unused_1484_bit_22_offset = 1476;
+	public static final int unused_1484_bit_23_offset = 1476;
+	public static final int unused_1484_bit_24_offset = 1476;
+	public static final int unused_1484_bit_25_offset = 1476;
+	public static final int unused_1484_bit_26_offset = 1476;
+	public static final int unused_1484_bit_27_offset = 1476;
+	public static final int unused_1484_bit_28_offset = 1476;
+	public static final int unused_1484_bit_29_offset = 1476;
+	public static final int unused_1484_bit_30_offset = 1476;
+	public static final int unused_1484_bit_31_offset = 1476;
 	public static final int unused_board_984_31_offset = 744;
 	public static final int unused_former_warmup_target_afr_offset = 2096;
 	public static final int unused_former_warmup_target_afr_offset_hex = 830;
 	public static final int unusedAnotherOne_offset = 744;
 	public static final int unusedAtBoardConfigurationEnd_offset = 980;
+	public static final int unusedBit31_offset = 1464;
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1760;
@@ -1745,6 +1756,7 @@ public class Fields {
 	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1464, FieldType.BIT, 28);
 	public static final Field USEFSIO12FORIDLEOFFSET = Field.create("USEFSIO12FORIDLEOFFSET", 1464, FieldType.BIT, 29);
 	public static final Field USEFSIO13FORIDLEMINVALUE = Field.create("USEFSIO13FORIDLEMINVALUE", 1464, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT31 = Field.create("UNUSEDBIT31", 1464, FieldType.BIT, 31);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1468, FieldType.INT8, adc_channel_e);
 	public static final Field ACSWITCHADC = Field.create("ACSWITCHADC", 1469, FieldType.INT8, adc_channel_e);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1470, FieldType.INT8, adc_channel_e);
@@ -1770,8 +1782,18 @@ public class Fields {
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1476, FieldType.BIT, 17);
 	public static final Field USEADVANCECORRECTIONSFORCRANKING = Field.create("USEADVANCECORRECTIONSFORCRANKING", 1476, FieldType.BIT, 18);
 	public static final Field USETPSADVANCETABLE = Field.create("USETPSADVANCETABLE", 1476, FieldType.BIT, 19);
-	public static final Field UNUSED_1484_BIT_20 = Field.create("UNUSED_1484_BIT_20", 1476, FieldType.BIT, 20);
+	public static final Field ETBCALIBRATIONONSTART = Field.create("ETBCALIBRATIONONSTART", 1476, FieldType.BIT, 20);
 	public static final Field UNUSED_1484_BIT_21 = Field.create("UNUSED_1484_BIT_21", 1476, FieldType.BIT, 21);
+	public static final Field UNUSED_1484_BIT_22 = Field.create("UNUSED_1484_BIT_22", 1476, FieldType.BIT, 22);
+	public static final Field UNUSED_1484_BIT_23 = Field.create("UNUSED_1484_BIT_23", 1476, FieldType.BIT, 23);
+	public static final Field UNUSED_1484_BIT_24 = Field.create("UNUSED_1484_BIT_24", 1476, FieldType.BIT, 24);
+	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1476, FieldType.BIT, 25);
+	public static final Field UNUSED_1484_BIT_26 = Field.create("UNUSED_1484_BIT_26", 1476, FieldType.BIT, 26);
+	public static final Field UNUSED_1484_BIT_27 = Field.create("UNUSED_1484_BIT_27", 1476, FieldType.BIT, 27);
+	public static final Field UNUSED_1484_BIT_28 = Field.create("UNUSED_1484_BIT_28", 1476, FieldType.BIT, 28);
+	public static final Field UNUSED_1484_BIT_29 = Field.create("UNUSED_1484_BIT_29", 1476, FieldType.BIT, 29);
+	public static final Field UNUSED_1484_BIT_30 = Field.create("UNUSED_1484_BIT_30", 1476, FieldType.BIT, 30);
+	public static final Field UNUSED_1484_BIT_31 = Field.create("UNUSED_1484_BIT_31", 1476, FieldType.BIT, 31);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1480, FieldType.INT);
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1484, FieldType.INT16);
 	public static final Field PRIMEINJFALLOFFTEMPERATURE = Field.create("PRIMEINJFALLOFFTEMPERATURE", 1486, FieldType.INT16);
@@ -2526,6 +2548,7 @@ public class Fields {
 	USEFSIO4FORSERIOUSENGINEWARNING,
 	USEFSIO12FORIDLEOFFSET,
 	USEFSIO13FORIDLEMINVALUE,
+	UNUSEDBIT31,
 	HIPOUTPUTCHANNEL,
 	ACSWITCHADC,
 	VREFADCCHANNEL,
@@ -2551,8 +2574,18 @@ public class Fields {
 	USESEPARATEADVANCEFORCRANKING,
 	USEADVANCECORRECTIONSFORCRANKING,
 	USETPSADVANCETABLE,
-	UNUSED_1484_BIT_20,
+	ETBCALIBRATIONONSTART,
 	UNUSED_1484_BIT_21,
+	UNUSED_1484_BIT_22,
+	UNUSED_1484_BIT_23,
+	UNUSED_1484_BIT_24,
+	UNUSED_1484_BIT_25,
+	UNUSED_1484_BIT_26,
+	UNUSED_1484_BIT_27,
+	UNUSED_1484_BIT_28,
+	UNUSED_1484_BIT_29,
+	UNUSED_1484_BIT_30,
+	UNUSED_1484_BIT_31,
 	ENGINECHARTSIZE,
 	IDLEPIDRPMUPPERLIMIT,
 	PRIMEINJFALLOFFTEMPERATURE,
