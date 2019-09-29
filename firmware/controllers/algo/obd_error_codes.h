@@ -1155,8 +1155,8 @@ typedef enum {
 	//P2223 NOx Sensor Heater Sense Circ Low Bank2
 	//P2224 NOx Sensor Heater Sense Circ High Bank2
 	//P2225 NOx Sensor Heater Sense Circ Interm Bank2
-	//P2226 Barometric Press Circ
-	//P2227 Barometric Press Circ Range/Perf
+	OBD_Barometric_Press_Circ = 2226,
+	OBD_Barometric_Press_Circ_Range_Perf = 2227,
 	//P2228 Barometric Press Circ Low
 	//P2229 Barometric Press Circ High
 	//P2230 Barometric Press Circ Interm
