@@ -616,6 +616,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+#if EFI_PROD_CODE
 	if (engineConfiguration->etbCalibrationOnStart) {
 		etb1.dcMotor.Set(70);
 		chThdSleep(600);
@@ -625,8 +626,6 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		grabTPSIsClosed();
 	}
 
-
-#if EFI_PROD_CODE
 	// manual duty cycle control without PID. Percent value from 0 to 100
 	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
 #endif
