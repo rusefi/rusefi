@@ -739,6 +739,7 @@ bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
 bit useFSIO12ForIdleOffset;
 bit useFSIO13ForIdleMinValue;
+bit unusedBit31
 
 	adc_channel_e hipOutputChannel;
 	adc_channel_e acSwitchAdc;A/C button input handled as analogue input
@@ -768,8 +769,18 @@ bit useFixedBaroCorrFromMap
 bit useSeparateAdvanceForCranking;+This activates a separate advance table for cranking conditions, this allows cranking advance to be RPM dependant.
 bit useAdvanceCorrectionsForCranking;+This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 bit useTPSAdvanceTable;+This flag allows to use TPS for ignition lookup while in Speed Density Fuel Mode
-bit unused_1484_bit_20
+bit etbCalibrationOnStart
 bit unused_1484_bit_21
+bit unused_1484_bit_22
+bit unused_1484_bit_23
+bit unused_1484_bit_24
+bit unused_1484_bit_25
+bit unused_1484_bit_26
+bit unused_1484_bit_27
+bit unused_1484_bit_28
+bit unused_1484_bit_29
+bit unused_1484_bit_30
+bit unused_1484_bit_31
 
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
