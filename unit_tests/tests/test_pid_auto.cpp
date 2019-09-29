@@ -1,8 +1,8 @@
 /*
- * test_pid_auto.cpp
+ * @file test_pid_auto.cpp
  *
- *  Created on: Sep 14, 2017
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @date Sep 14, 2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "global.h"

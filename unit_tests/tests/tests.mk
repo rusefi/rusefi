@@ -25,6 +25,7 @@ TESTS_SRC_CPP = \
 	tests/test_cpp_memory_layout.cpp \
 	tests/test_sensors.cpp \
 	tests/test_pid_auto.cpp \
+	tests/test_pid.cpp \
 	tests/test_accel_enrichment.cpp \
 	tests/test_gpiochip.cpp \
 \
