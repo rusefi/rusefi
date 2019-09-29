@@ -116,11 +116,13 @@ float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * This function checks if Baro/MAP sensor value is inside of expected range
  * @return unchanged mapKPa parameter or NaN
  */
-float validateBaroMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float validateBaroMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const float atmoPressure = 100.0f;
 	const float atmoPressureRange = 15.0f;	// 85..115
-	if (cisnan(mapKPa) || absF(mapKPa - atmoPressure) > atmoPressureRange)
+	if (cisnan(mapKPa) || absF(mapKPa - atmoPressure) > atmoPressureRange) {
+		warning(OBD_Barometric_Press_Circ, "Invalid start-up baro pressure = %.2fkPa", mapKPa);
 		return NAN;
+	}
 	return mapKPa;
 }
 

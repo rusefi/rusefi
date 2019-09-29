@@ -166,9 +166,6 @@ floatms_t getSpeedDensityFuel(float map DECLARE_GLOBAL_SUFFIX) {
 	return sdMath(airMass, ENGINE(engineState.targetAFR) PASS_GLOBAL_SUFFIX) * 1000;
 }
 
-// Default baro table is all 1.0, we can't recommend a reasonable default here
-static const baro_corr_table_t default_baro_corr = {1};
-
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
 	veMap.setAll(80);
@@ -182,7 +179,12 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
 	setLinearCurve(engineConfiguration->baroCorrPressureBins, BARO_CORR_SIZE, 75, 105, 1);
-	memcpy(engineConfiguration->baroCorrTable, default_baro_corr, sizeof(default_baro_corr));
+	for (int i = 0; i < BARO_CORR_SIZE;i++) {
+		for (int j = 0; j < BARO_CORR_SIZE;j++) {
+			// Default baro table is all 1.0, we can't recommend a reasonable default here
+			engineConfiguration->baroCorrTable[i][j] = 1;
+		}
+	}
 }
 
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
