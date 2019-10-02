@@ -346,7 +346,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[2] = GPIOC_9;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
+	// set tps_min 90
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
+	// set tps_max 540
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 
@@ -437,6 +439,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.iFactor = 	0;
 	engineConfiguration->etb.dFactor = 0;
 	engineConfiguration->etb.offset = 0;
+	engineConfiguration->etb.minValue = -60;
+	engineConfiguration->etb.maxValue = 50;
 
 	engineConfiguration->cranking.baseFuel = 1;
 	config->crankingFuelCoef[0] = 28; // base cranking fuel adjustment coefficient

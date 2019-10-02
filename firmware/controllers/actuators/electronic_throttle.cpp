@@ -5,7 +5,7 @@
  * todo: make this more universal if/when we get other hardware options
  *
  * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
- * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 on BOSCH 0280750009
+ * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 "eBay red board" on BOSCH 0280750009
  * Apr 2019 two-wire TLE7209 support added
  * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30 on BOSCH 0280750009
  * Jan 2019 actually driven around the block but still need some work.
@@ -596,9 +596,12 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!engine->engineState.hasEtbPedalPositionSensor) {
 		return;
 	}
+#if 0
+	// not alive code
 	autoTune.SetOutputStep(0.1);
+#endif
 
-#if ! EFI_UNIT_TEST
+#if 0 && ! EFI_UNIT_TEST
 	percent_t startupThrottlePosition = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
 	if (absF(startupThrottlePosition - engineConfiguration->etbNeutralPosition) > STARTUP_NEUTRAL_POSITION_ERROR_THRESHOLD) {
 		/**
@@ -613,6 +616,21 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	startETBPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+#if EFI_PROD_CODE
+	if (engineConfiguration->etbCalibrationOnStart) {
+		etb1.dcMotor.Set(70);
+		chThdSleep(600);
+		grabTPSIsWideOpen();
+		etb1.dcMotor.Set(-70);
+		chThdSleep(600);
+		grabTPSIsClosed();
+	}
+
+	// manual duty cycle control without PID. Percent value from 0 to 100
+	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
+#endif
+
+#if EFI_PROD_CODE && 0
 	tuneWorkingPidSettings.pFactor = 1;
 	tuneWorkingPidSettings.iFactor = 0;
 	tuneWorkingPidSettings.dFactor = 0;
@@ -622,15 +640,13 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tuneWorkingPidSettings.maxValue = 100;
 	tuneWorkingPidSettings.periodMs = 100;
 
-#if EFI_PROD_CODE
-	// manual duty cycle control without PID. Percent value from 0 to 100
-	addConsoleActionNANF(CMD_ETB_DUTY, setThrottleDutyCycle);
 	// this is useful once you do "enable etb_auto"
 	addConsoleActionF("set_etbat_output", setTempOutput);
 	addConsoleActionF("set_etbat_step", setAutoStep);
 	addConsoleActionI("set_etbat_period", setAutoPeriod);
 	addConsoleActionI("set_etbat_offset", setAutoOffset);
 #endif /* EFI_PROD_CODE */
+
 
 	etbPid.reset();
 

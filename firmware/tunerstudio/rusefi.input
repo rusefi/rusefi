@@ -2457,6 +2457,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Throttle Pedal Up",					throttlePedalUpVoltage
 		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
 		field = "PWM Frequency",						etbFreq, {throttlePedalPositionAdcChannel != 16}
+		field = etbCalibrationOnStart,					etbCalibrationOnStart
 		field = "No1 Direction #1",						etb1_directionPin1, {throttlePedalPositionAdcChannel != 16}
 		field = "No1 Direction #2",						etb1_directionPin2, {throttlePedalPositionAdcChannel != 16}
 		field = "Two-wire mode",						etb1_use_two_wires, {throttlePedalPositionAdcChannel != 16}

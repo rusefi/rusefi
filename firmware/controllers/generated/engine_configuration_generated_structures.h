@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 24 18:34:53 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1580,6 +1580,9 @@ struct engine_configuration_s {
 	offset 1464 bit 30 */
 	bool useFSIO13ForIdleMinValue : 1;
 	/**
+	offset 1464 bit 31 */
+	bool unusedBit31 : 1;
+	/**
 	 * offset 1468
 	 */
 	adc_channel_e hipOutputChannel;
@@ -1682,10 +1685,40 @@ struct engine_configuration_s {
 	bool useTPSAdvanceTable : 1;
 	/**
 	offset 1476 bit 20 */
-	bool unused_1484_bit_20 : 1;
+	bool etbCalibrationOnStart : 1;
 	/**
 	offset 1476 bit 21 */
 	bool unused_1484_bit_21 : 1;
+	/**
+	offset 1476 bit 22 */
+	bool unused_1484_bit_22 : 1;
+	/**
+	offset 1476 bit 23 */
+	bool unused_1484_bit_23 : 1;
+	/**
+	offset 1476 bit 24 */
+	bool unused_1484_bit_24 : 1;
+	/**
+	offset 1476 bit 25 */
+	bool unused_1484_bit_25 : 1;
+	/**
+	offset 1476 bit 26 */
+	bool unused_1484_bit_26 : 1;
+	/**
+	offset 1476 bit 27 */
+	bool unused_1484_bit_27 : 1;
+	/**
+	offset 1476 bit 28 */
+	bool unused_1484_bit_28 : 1;
+	/**
+	offset 1476 bit 29 */
+	bool unused_1484_bit_29 : 1;
+	/**
+	offset 1476 bit 30 */
+	bool unused_1484_bit_30 : 1;
+	/**
+	offset 1476 bit 31 */
+	bool unused_1484_bit_31 : 1;
 	/**
 	 * offset 1480
 	 */
@@ -2834,4 +2867,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Sep 24 18:34:53 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019

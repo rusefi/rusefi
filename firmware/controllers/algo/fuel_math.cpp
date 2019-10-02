@@ -379,7 +379,12 @@ floatms_t getBaseTableFuel(int rpm, float engineLoad) {
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (hasBaroSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		return baroCorrMap.getValue(GET_RPM(), getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
+		float correction = baroCorrMap.getValue(GET_RPM(), getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE));
+		if (cisnan(correction) || correction < 0.01) {
+			warning(OBD_Barometric_Press_Circ_Range_Perf, "Invalid baro correction %f", correction);
+			return 1;
+		}
+		return correction;
 	} else {
 		return 1;
 	}
