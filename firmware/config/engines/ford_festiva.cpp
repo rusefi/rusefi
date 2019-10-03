@@ -207,10 +207,8 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->tunerStudioSerialSpeed = 19200;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 	// we have a 1999 Auto Miata TB mounted on this car
 	engineConfiguration->tpsMin = 630; // convert 12to10 bit (ADC/4)

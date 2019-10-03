@@ -152,10 +152,8 @@ void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
 	// thermistors
-	setThermistorConfiguration(&engineConfiguration->clt, -10, 9300, 20, 2500, 80, 335);
-	engineConfiguration->iat.config.bias_resistor = 2200;
-	setThermistorConfiguration(&engineConfiguration->iat, -10, 9300, 20, 2500, 80, 335);
-	engineConfiguration->clt.config.bias_resistor = 2200;
+	engineConfiguration->clt.config = {-10, 20, 80, 9300, 2500, 335, 2200};
+	engineConfiguration->iat.config = {-10, 20, 80, 9300, 2500, 335, 2200};
 
 //	/**
 //	 * This saves a couple of ticks in trigger emulation methods

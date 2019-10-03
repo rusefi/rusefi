@@ -107,8 +107,8 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
 
-	setCommonNTCSensor(&engineConfiguration->clt);
-	setCommonNTCSensor(&engineConfiguration->iat);
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTimingTable(mapBased16IgnitionTable, config->ignitionTable);
@@ -121,9 +121,6 @@ static void miataNAcommonEngineSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void miataNAcommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	miataNAcommonEngineSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	engineConfiguration->iat.config.bias_resistor = 2700;
 
 	boardConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
 
