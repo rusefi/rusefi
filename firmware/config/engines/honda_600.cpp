@@ -117,10 +117,8 @@ void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 
 	/**

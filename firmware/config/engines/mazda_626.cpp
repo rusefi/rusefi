@@ -71,10 +71,9 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// http://s1.micp.ru/tOb0U.png
-	setThermistorConfiguration(&engineConfiguration->clt, -15, 5900, 23, 1750, 97, 165);
+	engineConfiguration->clt.config = {-15, 23, 97, 5900, 1750, 165, 2700};
 	// http://s2.micp.ru/I6Cfe.png
-	setThermistorConfiguration(&engineConfiguration->iat, 23, 1750, 41, 810, 97, 165);
-	engineConfiguration->iat.config.bias_resistor = 1820;
+	engineConfiguration->iat.config = {23, 41, 97, 1750, 810, 165, 1820};
 
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;

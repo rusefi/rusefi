@@ -99,20 +99,13 @@ void setRoverv8(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
     boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
-    setCommonNTCSensor(&engineConfiguration->clt);
-    engineConfiguration->clt.config.bias_resistor = 2700;
-    setCommonNTCSensor(&engineConfiguration->iat);
-    engineConfiguration->iat.config.bias_resistor = 2700;
+    setCommonNTCSensor(&engineConfiguration->clt, 2700);
+    setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
     engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; //Frankenstein: inp2
     engineConfiguration->vbattAdcChannel = EFI_ADC_0; //Frankenstein: inp5
     engineConfiguration->clt.adcChannel = EFI_ADC_11;
     engineConfiguration->iat.adcChannel = EFI_ADC_13;
-
-    setCommonNTCSensor(&engineConfiguration->clt);
-    engineConfiguration->clt.config.bias_resistor = 2700;
-    setCommonNTCSensor(&engineConfiguration->iat);
-    engineConfiguration->iat.config.bias_resistor = 2700;
 
     /**
      * TPS 0% 0.9v

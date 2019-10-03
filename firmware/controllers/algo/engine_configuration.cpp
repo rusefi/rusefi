@@ -704,12 +704,10 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	initEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	setThermistorConfiguration(&engineConfiguration->clt, 0, 9500, 23.8889, 2100, 48.8889, 1000);
-	engineConfiguration->clt.config.bias_resistor = 1500;
+	engineConfiguration->clt.config = {0, 23.8889, 48.8889, 9500, 2100, 1000, 1500};
 
-	setThermistorConfiguration(&engineConfiguration->iat, 32, 9500, 75, 2100, 120, 1000);
 // todo: this value is way off! I am pretty sure temp coeffs are off also
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	engineConfiguration->iat.config = {32, 75, 120, 9500, 2100, 1000, 2700};
 
 #if EFI_PROD_CODE
 	engineConfiguration->warningPeriod = 10;

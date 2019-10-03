@@ -51,12 +51,9 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionOffset = 13;
 	engineConfiguration->extraInjectionOffset = 207.269999;
 
-	setThermistorConfiguration(&engineConfiguration->clt, -10.0, 160310.0, 60.0, 7700.0, 120.0, 1180.0);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-
-	setThermistorConfiguration(&engineConfiguration->iat, -10.0, 160310.0, 60.0, 7700.0, 120.0, 1180.0);
-	engineConfiguration->iat.config.bias_resistor = 2700;
-
+	engineConfiguration->clt.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
+	engineConfiguration->iat.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
+	
 	// 12ch analog board pinout:
 	// input channel 3 is PA7, that's ADC7
 	// input channel 5 is PA4, that's ADC4

@@ -39,13 +39,10 @@ bool isValidIntakeAirTemperature(temperature_t temperature);
 bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-void setThermistorConfiguration(ThermistorConf * tc, float temp1, float r1, float temp2, float r2, float temp3,
-		float r3);
-
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void setCommonNTCSensor(ThermistorConf *thermistorConf);
-void setDodgeSensor(ThermistorConf *thermistorConf);
-void set10K_4050K(ThermistorConf *thermistorConf);
+void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup);
+void setDodgeSensor(ThermistorConf *thermistorConf, float pullup);
+void set10K_4050K(ThermistorConf *thermistorConf, float pullup);
 
 #endif /* THERMISTORS_H_ */

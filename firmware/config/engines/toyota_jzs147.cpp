@@ -62,8 +62,8 @@ static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * http://thesafetyaversionsociety.com/wordpress/wp-content/uploads/2010/08/Troubleshooting-2JZ-GTE.pdf
 	 * pages 44&46
 	 */
-	setThermistorConfiguration(&engineConfiguration->clt, -20, 15000, 40, 1200, 120.0, 200.0);
-	setThermistorConfiguration(&engineConfiguration->iat, -20, 15000, 40, 1200, 120.0, 200.0);
+	engineConfiguration->clt.config = {-20, 40, 120.0, 15000, 1200, 200.0, 2700};
+	engineConfiguration->iat.config = {-20, 40, 120.0, 15000, 1200, 200.0, 2700};
 
 }
 

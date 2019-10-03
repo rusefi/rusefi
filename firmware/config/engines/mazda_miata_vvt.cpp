@@ -190,9 +190,8 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
-
-	setCommonNTCSensor(&engineConfiguration->clt);
-	setCommonNTCSensor(&engineConfiguration->iat);
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 	//	0.0825
 	//	0.1375

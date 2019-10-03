@@ -46,10 +46,8 @@ void vag_18_Turbo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 	//engineConfiguration->tps1_1AdcChannel = PF3;   TODO: ADC channel 3
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
