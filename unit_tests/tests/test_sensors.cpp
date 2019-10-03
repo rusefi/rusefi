@@ -10,7 +10,7 @@
 #include "allsensors.h"
 #include "engine_test_helper.h"
 
-static ThermistorConf tc;
+
 
 TEST(sensors, mapDecoding) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
