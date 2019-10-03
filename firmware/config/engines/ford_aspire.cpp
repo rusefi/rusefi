@@ -98,8 +98,8 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * 2.1K Ohm @ 24C
 	 * 1K Ohm @ 49C
 	 */
-	setThermistorConfiguration(&engineConfiguration->clt, -20, 18000, 23.8889, 2100, 48.8889, 1000);
-	engineConfiguration->clt.config.bias_resistor = 3300; // that's my custom resistor value!
+	// that's my custom resistor value!
+	engineConfiguration->clt.config = {-20, 23.8889, 48.8889, 18000, 2100, 1000, 3300};
 
 //	engineConfiguration->ignitionPinMode = OM_INVERTED;
 

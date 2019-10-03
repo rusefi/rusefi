@@ -79,11 +79,8 @@ void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->vbattDividerCoeff = ((float) (8.93 + 41.27)) / 8.93 * 2;
 	engineConfiguration->vbattDividerCoeff = 9.6;
 
-	setDodgeSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-
-	setDodgeSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	setDodgeSensor(&engineConfiguration->clt, 2700);
+	setDodgeSensor(&engineConfiguration->iat, 2700);
 
 	boardConfiguration->useStepperIdle = true;
 }

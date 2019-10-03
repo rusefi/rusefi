@@ -229,24 +229,24 @@ temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return temperature;
 }
 
-void setDodgeSensor(ThermistorConf *thermistorConf) {
-	setThermistorConfiguration(thermistorConf, -40, 336660, 30, 7550, 120, 390);
+void setDodgeSensor(ThermistorConf *thermistorConf, float pullup) {
+	thermistorConf->config = {-40, 30, 120, 336660, 7550, 390, pullup};
 }
 
 // todo: better method name?
-void setCommonNTCSensor(ThermistorConf *thermistorConf) {
+void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup) {
 	/**
 	 * 18K Ohm @ -20C
 	 * 2.1K Ohm @ 24C
 	 * 294 Ohm @ 80C
 	 * http://www.rexbo.eu/hella/coolant-temperature-sensor-6pt009107121?c=100334&at=3130
 	 */
-	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
+	thermistorConf->config = {-20, 23.8889, 120, 18000, 2100, 100, pullup};
 }
 
-void set10K_4050K(ThermistorConf *thermistorConf) {
+void set10K_4050K(ThermistorConf *thermistorConf, float pullup) {
 	// see https://www.taydaelectronics.com/datasheets/A-409.pdf
-	setThermistorConfiguration(thermistorConf, -30, 108000, 25.0, 10000, 130.0, 225);
+	thermistorConf->config = {-30, 25, 130, 108000, 10000, 225, pullup};
 }
 
 #if EFI_PROD_CODE

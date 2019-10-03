@@ -114,10 +114,8 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 
 	/**
@@ -286,8 +284,7 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// EFI_ADC_15 = PC5
 	engineConfiguration->clt.adcChannel = EFI_ADC_15;
-	set10K_4050K(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 10000;
+	set10K_4050K(&engineConfiguration->clt, 10000);
 
 	// see also setDefaultEtbBiasCurve
 }

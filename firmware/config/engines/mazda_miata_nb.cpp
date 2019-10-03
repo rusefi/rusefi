@@ -32,11 +32,8 @@ void setMazdaMiataNb1EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set_firing_order 2
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-
-	setThermistorConfiguration(&engineConfiguration->iat, -10, 160310, 60, 7700, 120.00, 1180);
-	engineConfiguration->iat.config.bias_resistor = 2700;
+	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
+	engineConfiguration->iat.config = {-10, 60, 120.00, 160310, 7700, 1180, 2700};
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // 15 is the old value
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0; // 1 is the old value

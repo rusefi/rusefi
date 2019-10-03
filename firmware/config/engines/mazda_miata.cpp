@@ -163,11 +163,8 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
 
-	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.config.bias_resistor = 2700;
-
+	setCommonNTCSensor(&engineConfiguration->clt, 2700);
+	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 }
 
 void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
