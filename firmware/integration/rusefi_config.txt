@@ -376,7 +376,7 @@ injection_mode_e injectionMode;+This is where the fuel injection type is defined
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
-custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
+custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "Two distributors"
 ignition_mode_e ignitionMode;+"One Coil" is for use on distributed ignition system. "Individual Coils" is to be used when you have one coil per cylinder (COP or similar). "Wasted" means one coil is driving two spark plugs in two cylinders, with one of the sparks not doing anything since it's happening on the exhaust cycle\nset ignition_mode X
 
 angle_t ignitionOffset;+this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
