@@ -39,9 +39,9 @@ void configureGmTriggerShape(TriggerShape *s) {
 	s->setTriggerSynchronizationGap(6);
 }
 
-static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, int mult)
+static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerShape* s, int mult)
 {
-	int window = (isLongShort ? 10 : 5) * mult;
+	int window = (isShortLong ? 5 : 10) * mult;
 	int end = startAngle + mult * 15;
 
 	s->addEvent720(startAngle + window, T_PRIMARY, TV_RISE);
@@ -103,8 +103,9 @@ void initGmLS24(TriggerShape *s) {
 
 	s->useOnlyPrimaryForSync = true;
 
-	s->setTriggerSynchronizationGap(1.6);
-	s->setSecondTriggerSynchronizationGap(1);
-	s->setThirdTriggerSynchronizationGap(2.5);
+	// This is tooth #20, at 310 degrees ATDC #1
+	s->setTriggerSynchronizationGap(2.0f);
+	s->setSecondTriggerSynchronizationGap(0.5f);
+	s->setThirdTriggerSynchronizationGap(2.0f);
 }
 
