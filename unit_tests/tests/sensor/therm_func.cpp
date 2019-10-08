@@ -1,30 +1,36 @@
-
 /*
-TEST(sensors, thermistors) {
+ * @author Matthew Kennedy, (c) 2019
+ */
 
-	ThermistorMath tm;
-	{
-		setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
-		tm.setConfig(&tc.config);
-		float t = tm.getKelvinTemperatureByResistance(2100);
-		ASSERT_FLOAT_EQ(75 + KELV, t);
+#include "unit_test_framework.h"
+#include "thermistor_func.h"
+#include "thermistors.h"
 
-		ASSERT_NEAR(-0.003, tm.s_h_a, EPS4D);
-		ASSERT_NEAR(0.001, tm.s_h_b, EPS4D);
-		ASSERT_NEAR(0.0, tm.s_h_c, EPS5D);
+TEST(sensors, Thermistor1) {
+	ThermistorFunc tf;
+	thermistor_conf_s tc = {32, 75, 120, 9500, 2100, 1000, 0};
+	tf.configure(tc);
 
-	}
+	SensorResult t = tf.convert(2100);
+	ASSERT_TRUE(t.Valid);
+	ASSERT_FLOAT_EQ(75, t.Value);
 
-	{
-		// 2003 Neon sensor
-		setThermistorConfiguration(&tc, 0, 32500, 30, 7550, 100, 700);
-		tm.setConfig(&tc.config);
+	ASSERT_NEAR(-0.003, tf.m_a, EPS4D);
+	ASSERT_NEAR(0.001, tf.m_b, EPS4D);
+	ASSERT_NEAR(0.0, tf.m_c, EPS5D);
+}
 
-		float t = tm.getKelvinTemperatureByResistance(38000);
-		ASSERT_NEAR(-2.7983, t - KELV, EPS4D);
+TEST(sensors, ThermistorNeon) {
+	ThermistorFunc tf;
+	// 2003 Neon sensor
+	thermistor_conf_s tc = {0, 30, 100, 32500, 7550, 700, 0};
+	tf.configure(tc);
 
-		assertEqualsM("A", 0.0009, tm.s_h_a);
-		assertEqualsM("B", 0.0003, tm.s_h_b);
-		ASSERT_NEAR(0.0, tm.s_h_c, EPS4D);
-	}
-}*/
+	SensorResult t = tf.convert(38000);
+	ASSERT_TRUE(t.Valid);
+	ASSERT_NEAR(-2.7983, t.Value, EPS4D);
+
+	assertEqualsM("A", 0.0009, tf.m_a);
+	assertEqualsM("B", 0.0003, tf.m_b);
+	ASSERT_NEAR(0.0, tf.m_c, EPS4D);
+}
