@@ -16,15 +16,15 @@ TEST(resistance, OutOfRange)
         ASSERT_TRUE(r.Valid);
     }
 
-    // Something near 0.1v should be valid
+    // Something near 0.05v should be valid
     {
-        auto r = f.convert(0.11f);
+        auto r = f.convert(0.051f);
         EXPECT_TRUE(r.Valid);
     }
 
-    // Something just under 0.1v should be invalid
+    // Something just under 0.05v should be invalid
     {
-        auto r = f.convert(0.09f);
+        auto r = f.convert(0.049f);
         EXPECT_FALSE(r.Valid);
     }
 
