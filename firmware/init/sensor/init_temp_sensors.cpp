@@ -20,22 +20,17 @@ using therm = ThermistorFunc;
 using resist = ResistanceFunc;
 
 
-union FuncPair {
-	FuncPair() { }
-
+struct FuncPair {
 	LinearFunc linear;
 	FuncChain<resist, therm> thermistor;
 };
 
 static SensorConverter& configureTempSensorFunction(thermistor_conf_s& cfg, FuncPair& p, bool isLinear) {
 	if (isLinear) {
-		p.linear = LinearFunc();
 		p.linear.configure(cfg.resistance_1, cfg.tempC_1, cfg.resistance_2, cfg.tempC_2, -50, 250);
 
 		return p.linear;
 	} else /* sensor is thermistor */{
-		p.thermistor = FuncChain<resist, therm>();
-		
 		p.thermistor.get<resist>().configure(5.0f, cfg.bias_resistor);
 		p.thermistor.get<therm>().configure(cfg);
 
@@ -66,14 +61,14 @@ static void configureTempSensor(FunctionalSensor& sensor, FuncPair& p, Thermisto
 	AdcSubscription::SubscribeSensor(sensor, channel);
 }
 
+static FunctionalSensor  clt(SensorType::Clt);
+static FunctionalSensor  iat(SensorType::Iat);
+static FunctionalSensor aux1(SensorType::AuxTemp1);
+static FunctionalSensor aux2(SensorType::AuxTemp2);
+
+static FuncPair fclt, fiat, faux1, faux2;
+
 void initTempSensors() {
-	static FunctionalSensor  clt(SensorType::Clt);
-	static FunctionalSensor  iat(SensorType::Iat);
-	static FunctionalSensor aux1(SensorType::AuxTemp1);
-	static FunctionalSensor aux2(SensorType::AuxTemp2);
-
-	static FuncPair fclt, fiat, faux1, faux2;
-
 	configureTempSensor(clt,  fclt,  engineConfiguration->clt, engineConfiguration->useLinearCltSensor, &tsOutputChannels.coolantTemperature);
 	configureTempSensor(iat,  fiat,  engineConfiguration->iat, engineConfiguration->useLinearIatSensor, &tsOutputChannels.intakeAirTemperature);
 	configureTempSensor(aux1, faux1, engineConfiguration->auxTempSensor1, false,                        nullptr /* fixme! */);
