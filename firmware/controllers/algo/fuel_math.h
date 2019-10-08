@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef FUEL_MAP_H_
-#define FUEL_MAP_H_
+#pragma once
 
 #include "engine.h"
 
@@ -40,5 +39,3 @@ percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 // convert injection duration (Ms/Nt) to fuel rate (L/h)
 float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-#endif /* FUEL_MAP_H_ */
