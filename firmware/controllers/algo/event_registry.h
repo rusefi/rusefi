@@ -12,6 +12,9 @@
 #include "fl_stack.h"
 #include "trigger_structure.h"
 
+#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
+
+
 class Engine;
 
 class InjectionEvent {
@@ -29,6 +32,28 @@ public:
 	Engine *engine;
 #endif
 	event_trigger_position_s injectionStart;
+};
+
+/**
+ * This class knows about when to inject fuel
+ */
+class FuelSchedule {
+public:
+	FuelSchedule();
+	/**
+	 * this method schedules all fuel events for an engine cycle
+	 */
+	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	/**
+	 * injection events, per cylinder
+	 */
+	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
+	bool isReady;
+
+private:
+	void clear();
 };
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
@@ -74,6 +99,9 @@ public:
 
 class IgnitionEventList {
 public:
+	/**
+	 * ignition events, per cylinder
+	 */
 	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
 	bool isReady = false;
 };

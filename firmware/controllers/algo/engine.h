@@ -29,27 +29,7 @@
 #include "global_execution_queue.h"
 #endif /* EFI_UNIT_TEST */
 
-#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
 #define FAST_CALLBACK_PERIOD_MS 20
-
-/**
- * This class knows about when to inject fuel
- */
-class FuelSchedule {
-public:
-	FuelSchedule();
-	/**
-	 * this method schedules all fuel events for an engine cycle
-	 */
-	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
-	bool isReady;
-
-private:
-	void clear();
-};
 
 class RpmCalculator;
 
