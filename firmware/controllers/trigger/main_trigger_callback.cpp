@@ -282,7 +282,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 		scheduling_s * sUp = &pair->signalTimerUp;
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
-		scheduling_s * sDown = &pair->signalTimerDown;
+		scheduling_s * sDown = &pair->endOfInjectionEvent;
 
 		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
 		engine->executor.scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
@@ -323,7 +323,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		pair->outputs[0] = output;
 		pair->outputs[1] = event->outputs[1];
 		scheduling_s * sUp = &pair->signalTimerUp;
-		scheduling_s * sDown = &pair->signalTimerDown;
+		scheduling_s * sDown = &pair->endOfInjectionEvent;
 
 		pair->isScheduled = true;
 		pair->event = event;
@@ -582,7 +582,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		primeInjEvent.ownIndex = 0;
 		primeInjEvent.isSimultanious = true;
 
-		scheduling_s *sDown = &ENGINE(fuelActuators[0]).signalTimerDown;
+		scheduling_s *sDown = &ENGINE(fuelActuators[0]).endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.

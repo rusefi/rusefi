@@ -27,10 +27,6 @@ static Logging *logger;
 
 static const char *prevSparkName = nullptr;
 
-IgnitionEventList::IgnitionEventList() {
-	isReady = false;
-}
-
 int isInjectionEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: is this worth a method? should this be inlined?
 	return CONFIG(isInjectionEnabled);
@@ -129,7 +125,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 #if !EFI_UNIT_TEST
 if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
-	uint32_t actualDwellDurationNt = getTimeNowLowerNt() - event->startOfDwell;
+	uint32_t actualDwellDurationNt = getTimeNowLowerNt() - event->actualStartOfDwellNt;
 	/**
 	 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
 	 */
@@ -201,7 +197,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {
-	event->startOfDwell = getTimeNowLowerNt();
+	event->actualStartOfDwellNt = getTimeNowLowerNt();
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
@@ -241,7 +237,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
 	 * when an event is scheduled within the next revolution.
 	 */
-	scheduling_s * sUp = &iEvent->signalTimerUp;
+	scheduling_s * sUp = &iEvent->dwellStartTimer;
 	scheduling_s * sDown = &iEvent->signalTimerDown;
 
 
@@ -348,7 +344,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 	engine->m.beforeIgnitionSch = getTimeNowLowerNt();
 	/**
 	 * TODO: warning. there is a bit of a hack here, todo: improve.
-	 * currently output signals/times signalTimerUp from the previous revolutions could be
+	 * currently output signals/times dwellStartTimer from the previous revolutions could be
 	 * still used because they have crossed the revolution boundary
 	 * but we are already re-purposing the output signals, but everything works because we
 	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'

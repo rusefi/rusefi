@@ -37,11 +37,17 @@ class IgnitionEvent {
 public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
-	scheduling_s signalTimerUp;
+	scheduling_s dwellStartTimer;
 	scheduling_s signalTimerDown;
+	/**
+	 * Desired timing advance
+	 */
 	angle_t advance = NAN;
 	floatms_t sparkDwell;
-	uint32_t startOfDwell;
+	/**
+	 * this timestamp allows us to measure actual dwell time
+	 */
+	uint32_t actualStartOfDwellNt;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
 	/**
@@ -49,7 +55,7 @@ public:
 	 */
 	IgnitionEvent *next = nullptr;
 	/**
-	 * Sequential number of all spark events
+	 * Sequential number of currently processed spark event
 	 * @see globalSparkIdCounter
 	 */
 	int sparkId = 0;
@@ -68,7 +74,6 @@ public:
 
 class IgnitionEventList {
 public:
-	IgnitionEventList();
 	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
-	bool isReady;
+	bool isReady = false;
 };
