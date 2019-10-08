@@ -34,9 +34,9 @@ void ThermistorFunc::configure(thermistor_conf_s &cfg) {
 	float l2 = logf(cfg.resistance_2);
 	float l3 = logf(cfg.resistance_3);
 
-	float y1 = 1 / convertKelvinToCelcius(cfg.tempC_1);
-	float y2 = 1 / convertKelvinToCelcius(cfg.tempC_2);
-	float y3 = 1 / convertKelvinToCelcius(cfg.tempC_3);
+	float y1 = 1 / convertCelsiusToKelvin(cfg.tempC_1);
+	float y2 = 1 / convertCelsiusToKelvin(cfg.tempC_2);
+	float y3 = 1 / convertCelsiusToKelvin(cfg.tempC_3);
 
 	float u2 = (y2 - y1) / (l2 - l1);
 	float u3 = (y3 - y1) / (l3 - l1);
