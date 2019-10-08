@@ -30,8 +30,8 @@ public:
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
 	void applyTriggerShape();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void fireRise(int delayMs);
-	void fireFall(int delayMs);
+	void fireRise(float delayMs);
+	void fireFall(float delayMs);
 
 	/**
 	 * See also #fireRise() which would also move time forward
@@ -42,8 +42,8 @@ public:
 	 */
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
-	void fireTriggerEventsWithDuration(int delayMs);
-	void fireTriggerEvents2(int count, int delayMs);
+	void fireTriggerEventsWithDuration(float delayMs);
+	void fireTriggerEvents2(int count, float delayMs);
 	void clearQueue();
 
 	scheduling_s * assertEvent5(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX);

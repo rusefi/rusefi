@@ -86,7 +86,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(
 /**
  * mock a change of time and fire single RISE front event
  */
-void EngineTestHelper::fireRise(int delayMs) {
+void EngineTestHelper::fireRise(float delayMs) {
 	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
@@ -99,7 +99,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
 }
 
-void EngineTestHelper::fireFall(int delayMs) {
+void EngineTestHelper::fireFall(float delayMs) {
 	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerFall();
 }
@@ -109,7 +109,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
 }
 
-void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
+void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
 	fireTriggerEvents2(/*count*/1, durationMs);
 }
 
@@ -118,7 +118,7 @@ void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
  *
  * This is helpful for TT_ONE trigger wheel decoder and probably other decoders as well.
  */
-void EngineTestHelper::fireTriggerEvents2(int count, int durationMs) {
+void EngineTestHelper::fireTriggerEvents2(int count, float durationMs) {
 	for (int i = 0; i < count; i++) {
 		fireRise(durationMs);
 		fireFall(durationMs);

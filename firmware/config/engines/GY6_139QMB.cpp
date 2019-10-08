@@ -2,9 +2,13 @@
  * @file	GY6_139QMB.cpp
  * @brief	139qmb default engine configuration
  *
+ * 4-stroke one cylinder
+ *
+ * set engine_type 8
+ *
  * @date Feb 13, 2014
  * @author rus084, (c) 2015
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "global.h"
@@ -102,4 +106,6 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 	boardConfiguration->injectionPins[0] = GPIOC_9;
 	boardConfiguration->ignitionPins[0] = GPIOC_8;
 
+	// set injection_mode 1
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 }

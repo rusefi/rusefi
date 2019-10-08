@@ -1,9 +1,9 @@
 /*
  * @file GY6_139QMB.h
  *
- * @date 13 feb 2014 y.
+ * @date 13 Feb 2014
  * @author rus084
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #ifndef GY6_139QMB_H_
