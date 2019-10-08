@@ -365,16 +365,16 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
 	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(operationMode));
 
-	int index = triggerIndexByAngle[(int)angle];
-	angle_t eventAngle = eventAngles[index];
-	if (angle < eventAngle) {
-		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, eventAngle);
+	int triggerEventIndex = triggerIndexByAngle[(int)angle];
+	angle_t triggerEventAngle = eventAngles[triggerEventIndex];
+	if (angle < triggerEventAngle) {
+		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, triggerEventAngle);
 		return;
 	}
 
-	position->eventIndex = index;
-	position->eventAngle = eventAngle;
-	position->angleOffset = angle - eventAngle;
+	position->eventIndex = triggerEventIndex;
+	position->eventAngle = triggerEventAngle;
+	position->angleOffset = angle - triggerEventAngle;
 }
 
 void TriggerShape::prepareShape() {
