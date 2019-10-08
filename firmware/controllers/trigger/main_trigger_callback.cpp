@@ -35,7 +35,6 @@
 #include "trigger_central.h"
 #include "spark_logic.h"
 #include "rpm_calculator.h"
-#include "signal_executor.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "advance_map.h"

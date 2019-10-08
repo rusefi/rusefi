@@ -9,7 +9,6 @@
 #pragma once
 
 #include "global.h"
-#include "signal_executor.h"
 #include "engine_configuration.h"
 #include "engine.h"
 

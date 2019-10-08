@@ -5,7 +5,6 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "signal_executor.h"
 #include "global_execution_queue.h"
 
 bool_t debugSignalExecutor = false;

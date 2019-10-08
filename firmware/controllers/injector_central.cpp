@@ -28,7 +28,6 @@
 
 #include "injector_central.h"
 #include "io_pins.h"
-#include "signal_executor.h"
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
 #include "pin_repository.h"

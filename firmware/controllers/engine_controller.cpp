@@ -33,7 +33,6 @@
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "rpm_calculator.h"
-#include "signal_executor.h"
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"

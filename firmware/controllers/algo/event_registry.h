@@ -8,7 +8,8 @@
 #pragma once
 
 #include "global.h"
-#include "signal_executor.h"
+#include "efi_gpio.h"
+#include "scheduler.h"
 #include "fl_stack.h"
 #include "trigger_structure.h"
 
