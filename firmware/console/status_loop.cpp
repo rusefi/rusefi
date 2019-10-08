@@ -699,8 +699,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #endif /* EFI_PROD_CODE */
 
 	float tps = getTPS(PASS_ENGINE_PARAMETER_SIGNATURE);
-	float coolant = getCoolantTemperature();
-	float intake = getIntakeAirTemperature();
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -709,10 +707,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	// offset 0
 	tsOutputChannels->rpm = rpm;
-	// offset 4
-	tsOutputChannels->coolantTemperature = coolant;
-	// offset 8
-	tsOutputChannels->intakeAirTemperature = intake;
 	// offset 12
 	tsOutputChannels->throttlePositon = tps;
 	// offset 16
