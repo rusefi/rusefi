@@ -235,7 +235,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
-	iEvent->sparkId = engine->globalSparkIdCoutner++;
+	iEvent->sparkId = engine->globalSparkIdCounter++;
 
 	/**
 	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
@@ -310,7 +310,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
-		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(iHead), iEvent);
+		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(ignitionEventsHead), iEvent);
 		if (isPending) {
 #if SPARK_EXTREME_LOGGING
 			scheduleMsg(logger, "not adding to queue sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs());
@@ -318,7 +318,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 			return;
 		}
 
-		LL_APPEND(ENGINE(iHead), iEvent);
+		LL_APPEND(ENGINE(ignitionEventsHead), iEvent);
 	}
 }
 
@@ -379,11 +379,11 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	IgnitionEvent *current, *tmp;
 
-	LL_FOREACH_SAFE(ENGINE(iHead), current, tmp)
+	LL_FOREACH_SAFE(ENGINE(ignitionEventsHead), current, tmp)
 	{
 		if (current->sparkPosition.triggerEventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
-			LL_DELETE(ENGINE(iHead), current);
+			LL_DELETE(ENGINE(ignitionEventsHead), current);
 
 			scheduling_s * sDown = &current->signalTimerDown;
 

@@ -79,9 +79,10 @@ public:
 	LocalVersionHolder auxParametersVersion;
 	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-
-
-	int globalSparkIdCoutner = 0;
+	/**
+	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
+	 */
+	int globalSparkIdCounter = 0;
 
 #if !EFI_PROD_CODE
 	float mockMapValue = 0;
@@ -118,9 +119,9 @@ public:
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
-	 * That's the list of pending spark firing events
+	 * That's the linked list of pending spark firing events
 	 */
-	IgnitionEvent *iHead = nullptr;
+	IgnitionEvent *ignitionEventsHead = nullptr;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */

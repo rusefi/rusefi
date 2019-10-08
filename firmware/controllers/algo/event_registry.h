@@ -45,9 +45,13 @@ public:
 	uint32_t startOfDwell;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
+	/**
+	 * Ignition scheduler maintains a linked list of all pending ignition events.
+	 */
 	IgnitionEvent *next = nullptr;
 	/**
-	 * @see globalSparkIdCoutner
+	 * Sequential number of all spark events
+	 * @see globalSparkIdCounter
 	 */
 	int sparkId = 0;
 	/**
