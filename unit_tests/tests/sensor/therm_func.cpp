@@ -6,7 +6,7 @@
 #include "thermistor_func.h"
 #include "thermistors.h"
 
-TEST(sensors, Thermistor1) {
+TEST(thermistor, Thermistor1) {
 	ThermistorFunc tf;
 	thermistor_conf_s tc = {32, 75, 120, 9500, 2100, 1000, 0};
 	tf.configure(tc);
@@ -20,7 +20,7 @@ TEST(sensors, Thermistor1) {
 	ASSERT_NEAR(0.0, tf.m_c, EPS5D);
 }
 
-TEST(sensors, ThermistorNeon) {
+TEST(thermistor, ThermistorNeon) {
 	ThermistorFunc tf;
 	// 2003 Neon sensor
 	thermistor_conf_s tc = {0, 30, 100, 32500, 7550, 700, 0};
