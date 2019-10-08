@@ -46,8 +46,8 @@ public:
 	void fireTriggerEvents2(int count, float delayMs);
 	void clearQueue();
 
-	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX);
-	void assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param);
+	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);
+	void assertEvent(const char *msg, int index, void *callback, efitime_t momentX, long param);
 	void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
 	void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
 	// todo: open question if this is worth a helper method or should be inlined?

@@ -25,8 +25,8 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 
-	eth.assertEvent5("sim start", 0, (void*)startSimultaniousInjection, eth.getTimeNowUs(), 100000 - 1875);
-	eth.assertEvent5("sim end", 1, (void*)endSimultaniousInjection, eth.getTimeNowUs(), 100000);
+	eth.assertEvent5("sim start", 0, (void*)startSimultaniousInjection, 100000 - 1875);
+	eth.assertEvent5("sim end", 1, (void*)endSimultaniousInjection, 100000);
 }
 
 
