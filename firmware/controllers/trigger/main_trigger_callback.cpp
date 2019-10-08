@@ -260,7 +260,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 //	scheduleMsg(logger, "handleFuel engineCycleDuration=%.2f", engineCycleDuration);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
+	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffsetFromTriggerEvent;
 
 #if EFI_DEFAILED_LOGGING
 	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->outputs[0]->name,
@@ -282,7 +282,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 		scheduling_s * sUp = &pair->signalTimerUp;
 // todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
-		scheduling_s * sDown = &pair->signalTimerDown;
+		scheduling_s * sDown = &pair->endOfInjectionEvent;
 
 		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
 		engine->executor.scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
@@ -290,7 +290,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 	} else {
 #if EFI_UNIT_TEST
-		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffset, injectionStartDelayUs, injectionDuration);
+		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, injectionStartDelayUs, injectionDuration);
 #endif
 
 		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS/IM_SINGLE_POINT injection
@@ -323,7 +323,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		pair->outputs[0] = output;
 		pair->outputs[1] = event->outputs[1];
 		scheduling_s * sUp = &pair->signalTimerUp;
-		scheduling_s * sDown = &pair->signalTimerDown;
+		scheduling_s * sDown = &pair->endOfInjectionEvent;
 
 		pair->isScheduled = true;
 		pair->event = event;
@@ -406,7 +406,7 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 
 	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
 		InjectionEvent *event = &fs->elements[injEventIndex];
-		uint32_t eventIndex = event->injectionStart.eventIndex;
+		uint32_t eventIndex = event->injectionStart.triggerEventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
 //		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
 		if (eventIndex != trgEventIndex) {
@@ -582,7 +582,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		primeInjEvent.ownIndex = 0;
 		primeInjEvent.isSimultanious = true;
 
-		scheduling_s *sDown = &ENGINE(fuelActuators[0]).signalTimerDown;
+		scheduling_s *sDown = &ENGINE(fuelActuators[0]).endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.

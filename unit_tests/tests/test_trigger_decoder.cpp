@@ -103,8 +103,8 @@ static void testDodgeNeonDecoder(void) {
 }
 
 static void assertTriggerPosition(event_trigger_position_s *position, int eventIndex, float angleOffset) {
-	assertEqualsM("eventIndex", eventIndex, position->eventIndex);
-	assertEqualsM("angleOffset", angleOffset, position->angleOffset);
+	assertEqualsM("eventIndex", eventIndex, position->triggerEventIndex);
+	assertEqualsM("angleOffset", angleOffset, position->angleOffsetFromTriggerEvent);
 }
 
 TEST(misc, testSomethingWeird) {
@@ -176,11 +176,11 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ( 1,  ecl->isReady) << "ford inline ignition events size";
-	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.eventIndex) << "event index";
-	ASSERT_NEAR(7.8621, ecl->elements[0].dwellPosition.angleOffset, EPS4D) << "angle offset#1";
+	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.triggerEventIndex) << "event index";
+	ASSERT_NEAR(7.8621, ecl->elements[0].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#1";
 
-	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.eventIndex) << "event index";
-	ASSERT_NEAR(7.8621, ecl->elements[5].dwellPosition.angleOffset, EPS4D) << "angle offset#2";
+	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.triggerEventIndex) << "event index";
+	ASSERT_NEAR(7.8621, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#2";
 
 
 	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
@@ -326,7 +326,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
+	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffsetFromTriggerEvent);
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue);
@@ -335,8 +335,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
-	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.eventAngle) << "dwell angle";
-	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffset);
+	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventAngle) << "dwell angle";
+	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffsetFromTriggerEvent);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
 	ASSERT_EQ( 2,  engine->executor.size()) << "queue size/2";
@@ -524,7 +524,7 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("MAZDA_323", MAZDA_323, 0, 0.4833, 0);
-	testTriggerDecoder2("CAMARO_4", CAMARO_4, 34, 0.5, 0);
+	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
 
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CAM, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
@@ -548,10 +548,10 @@ TEST(misc, testTriggerDecoder) {
 
 extern fuel_Map3D_t fuelMap;
 
-static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
+static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
-	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.eventIndex);
-	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
+	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
+	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
 }
 
 static void setTestBug299(EngineTestHelper *eth) {
@@ -591,10 +591,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	FuelSchedule * t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153, false);
-	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333, false);
-	assertInjectionEvent("#2@", &t->elements[2], 0, 0, 153, false);
-	assertInjectionEvent("inj#3@", &t->elements[3], 1, 0, 153 + 180, false);
+	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153);
+	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333);
+	assertInjectionEvent("#2@", &t->elements[2], 0, 0, 153);
+	assertInjectionEvent("inj#3@", &t->elements[3], 1, 0, 153 + 180);
 
 	/**
 	 * Trigger down - no new events, executing some
@@ -759,10 +759,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315, false);
-	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 135, false);
-	assertInjectionEvent("inj#2", &t->elements[2], 0, 0, 153, false);
-	assertInjectionEvent("inj#3", &t->elements[3], 1, 0, 333, false);
+	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315);
+	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 135);
+	assertInjectionEvent("inj#2", &t->elements[2], 0, 0, 153);
+	assertInjectionEvent("inj#3", &t->elements[3], 1, 0, 333);
 
 	eth.moveTimeForwardUs(MS2US(20));
 	ASSERT_EQ( 5,  engine->executor.size()) << "qs#02";
@@ -847,10 +847,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 315, false);
-	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135, false);
-	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315, true);
-	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90, false);
+	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 315);
+	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135);
+	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315);
+	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90);
 
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
@@ -860,7 +860,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
-	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315, false);
+	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -897,10 +897,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225, false); // 87.5 duty cycle
-	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45, false);
-	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225, true);
-	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45, false);
+	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225); // 87.5 duty cycle
+	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45);
+	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225);
+	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45);
 
 	 // todo: what's what? a mix of new something and old something?
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#5";

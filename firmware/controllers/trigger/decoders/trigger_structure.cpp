@@ -350,9 +350,9 @@ void TriggerShape::setShapeDefinitionError(bool value) {
 }
 
 void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
-		angle_t angleOffset DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
-	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angleOffset), "findAngle#1");
-	assertAngleRange(angleOffset, "findAngle#a1", CUSTOM_ERR_6545);
+		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
+	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angle), "findAngle#1");
+	assertAngleRange(angle, "findAngle#a1", CUSTOM_ERR_6545);
 
 	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(tdcPosition), "tdcPos#1")
 	assertAngleRange(tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
@@ -361,20 +361,20 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
 	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
-	angleOffset += tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
-	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angleOffset), "findAngle#2");
-	fixAngle2(angleOffset, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(operationMode));
+	angle += tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
+	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
+	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(operationMode));
 
-	int index = triggerIndexByAngle[(int)angleOffset];
-	angle_t eventAngle = eventAngles[index];
-	if (angleOffset < eventAngle) {
-		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angleOffset, eventAngle);
+	int triggerEventIndex = triggerIndexByAngle[(int)angle];
+	angle_t triggerEventAngle = eventAngles[triggerEventIndex];
+	if (angle < triggerEventAngle) {
+		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, triggerEventAngle);
 		return;
 	}
 
-	position->eventIndex = index;
-	position->eventAngle = eventAngle;
-	position->angleOffset = angleOffset - eventAngle;
+	position->triggerEventIndex = triggerEventIndex;
+	position->triggerEventAngle = triggerEventAngle;
+	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
 }
 
 void TriggerShape::prepareShape() {

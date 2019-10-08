@@ -340,7 +340,7 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
-	spiConfig->end_cb = NULL;
+	spiConfig->end_cb = nullptr;
 	ioportid_t port = getHwPort("spi", csPin);
 	ioportmask_t pin = getHwPin("spi", csPin);
 	spiConfig->ssport = port;

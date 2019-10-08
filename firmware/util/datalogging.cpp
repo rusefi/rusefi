@@ -296,11 +296,6 @@ void Logging::appendPrintf(const char *fmt, ...) {
 #endif /* ! EFI_UNIT_TEST */
 
 Logging::Logging() {
-	name = NULL;
-	buffer = NULL;
-	linePointer = NULL;
-	bufferSize = 0;
-	isInitialized = false;
 }
 
 Logging::Logging(char const *name, char *buffer, int bufferSize) : Logging(){

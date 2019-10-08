@@ -1,5 +1,5 @@
 /*
- * test_dwell_corver_case_issue_796.cpp
+ * test_dwell_corner_case_issue_796.cpp
  *
  *  Created on: Jul 1, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019

@@ -25,7 +25,7 @@ class InjectionSignalPair {
 public:
 	InjectionSignalPair();
 	scheduling_s signalTimerUp;
-	scheduling_s signalTimerDown;
+	scheduling_s endOfInjectionEvent;
 
 	/**
 	 * we need atomic flag so that we do not schedule a new pair of up/down before previous down was executed.

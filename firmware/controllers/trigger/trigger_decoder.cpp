@@ -58,7 +58,7 @@ void TriggerState::setShaftSynchronized(bool value) {
 }
 
 void TriggerState::resetTriggerState() {
-	triggerCycleCallback = NULL;
+	triggerCycleCallback = nullptr;
 	setShaftSynchronized(false);
 	toothed_previous_time = 0;
 

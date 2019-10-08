@@ -39,9 +39,9 @@ void configureGmTriggerShape(TriggerShape *s) {
 	s->setTriggerSynchronizationGap(6);
 }
 
-static int gm_tooth_pair(float startAngle, bool isLongShort, TriggerShape* s, int mult)
+static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerShape* s, int mult)
 {
-	int window = (isLongShort ? 12 : 3) * mult;
+	int window = (isShortLong ? 5 : 10) * mult;
 	int end = startAngle + mult * 15;
 
 	s->addEvent720(startAngle + window, T_PRIMARY, TV_RISE);
@@ -67,7 +67,7 @@ void initGmLS24(TriggerShape *s) {
 	 * The GM 24x crank wheel has 48 edges.  There is
 	 * a falling edge every 15 degrees (1/24 revolution).
 	 * After every falling edge, a rising edge occurs either
-	 * 3 or 12 (= 15 - 3) degrees later.  The code 0x0A33BE
+	 * 5 or 10 (= 15 - 5) degrees later.  The code 0x0A33BE
 	 * encodes the pattern of which type of gap occurs in the
 	 * pattern.  Starting from the LSB, each bit left is the 
 	 * next gap in sequence as the crank turns.  A 0 indicates
@@ -80,7 +80,7 @@ void initGmLS24(TriggerShape *s) {
 	 * 
 	 *    |  0  |  1  |  1  |  1  |
 	 * 
-	 *     ___ = 12 degrees, _ = 3 deg
+	 *     ___ = 10 degrees, _ = 5 deg
 	 * 
 	 * There is a falling edge at angle=0=720, and this is position
 	 * is #1 (and #6) TDC.  If there's a falling edge on the cam
@@ -103,8 +103,9 @@ void initGmLS24(TriggerShape *s) {
 
 	s->useOnlyPrimaryForSync = true;
 
-	s->setTriggerSynchronizationGap(1.6);
-	s->setSecondTriggerSynchronizationGap(1);
-	s->setThirdTriggerSynchronizationGap(2.5);
+	// This is tooth #20, at 310 degrees ATDC #1
+	s->setTriggerSynchronizationGap(2.0f);
+	s->setSecondTriggerSynchronizationGap(0.5f);
+	s->setThirdTriggerSynchronizationGap(2.0f);
 }
 

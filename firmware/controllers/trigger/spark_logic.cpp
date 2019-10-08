@@ -27,10 +27,6 @@ static Logging *logger;
 
 static const char *prevSparkName = nullptr;
 
-IgnitionEventList::IgnitionEventList() {
-	isReady = false;
-}
-
 int isInjectionEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: is this worth a method? should this be inlined?
 	return CONFIG(isInjectionEnabled);
@@ -115,7 +111,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngle, floatms_t sparkD
 	TRIGGER_SHAPE(findTriggerPosition(&event->dwellPosition, a PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset)));
 
 #if FUEL_MATH_EXTREME_LOGGING
-	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.eventIndex);
+	printf("addIgnitionEvent %s ind=%d\n", output->name, event->dwellPosition.triggerEventIndex);
 	//	scheduleMsg(logger, "addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 }
@@ -129,7 +125,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 #if !EFI_UNIT_TEST
 if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
-	uint32_t actualDwellDurationNt = getTimeNowLowerNt() - event->startOfDwell;
+	uint32_t actualDwellDurationNt = getTimeNowLowerNt() - event->actualStartOfDwellNt;
 	/**
 	 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
 	 */
@@ -201,7 +197,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {
-	event->startOfDwell = getTimeNowLowerNt();
+	event->actualStartOfDwellNt = getTimeNowLowerNt();
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
@@ -224,7 +220,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
-	floatus_t chargeDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->dwellPosition.angleOffset;
+	floatus_t chargeDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->dwellPosition.angleOffsetFromTriggerEvent;
 	int isIgnitionError = chargeDelayUs < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
@@ -235,13 +231,13 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		return;
 	}
 
-	iEvent->sparkId = engine->globalSparkIdCoutner++;
+	iEvent->sparkId = engine->globalSparkIdCounter++;
 
 	/**
 	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
 	 * when an event is scheduled within the next revolution.
 	 */
-	scheduling_s * sUp = &iEvent->signalTimerUp;
+	scheduling_s * sUp = &iEvent->dwellStartTimer;
 	scheduling_s * sDown = &iEvent->signalTimerDown;
 
 
@@ -273,8 +269,8 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
-		printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.eventIndex, (int)iEvent->dwellPosition.angleOffset,
-			iEvent->sparkPosition.eventIndex, (int)iEvent->sparkPosition.angleOffset,
+		printf("spark dwell@ %d/%d spark@ %d/%d id=%d\r\n", iEvent->dwellPosition.triggerEventIndex, (int)iEvent->dwellPosition.angleOffsetFromTriggerEvent,
+			iEvent->sparkPosition.triggerEventAngle, (int)iEvent->sparkPosition.angleOffsetFromTriggerEvent,
 			iEvent->sparkId);
 	}
 #endif
@@ -292,11 +288,11 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 	 * time-based schedule. This case we would be firing events with best possible angle precision.
 	 *
 	 */
-	if (iEvent->sparkPosition.eventIndex == trgEventIndex) {
+	if (iEvent->sparkPosition.triggerEventIndex == trgEventIndex) {
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */
-		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->sparkPosition.angleOffset;
+		float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * iEvent->sparkPosition.angleOffsetFromTriggerEvent;
 
 #if SPARK_EXTREME_LOGGING
 		scheduleMsg(logger, "scheduling sparkDown ind=%d %d %s now=%d %d later id=%d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), (int)timeTillIgnitionUs, iEvent->sparkId);
@@ -305,12 +301,12 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 		engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, iEvent);
 	} else {
 #if SPARK_EXTREME_LOGGING
-		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkPosition.eventIndex);
+		scheduleMsg(logger, "to queue sparkDown ind=%d %d %s %d for %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs(), iEvent->sparkPosition.triggerEventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
-		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(iHead), iEvent);
+		bool isPending = assertNotInList<IgnitionEvent>(ENGINE(ignitionEventsHead), iEvent);
 		if (isPending) {
 #if SPARK_EXTREME_LOGGING
 			scheduleMsg(logger, "not adding to queue sparkDown ind=%d %d %s %d", trgEventIndex, getRevolutionCounter(), iEvent->getOutputForLoggins()->name, (int)getTimeNowUs());
@@ -318,7 +314,7 @@ static ALWAYS_INLINE void handleSparkEvent(bool limitedSpark, uint32_t trgEventI
 			return;
 		}
 
-		LL_APPEND(ENGINE(iHead), iEvent);
+		LL_APPEND(ENGINE(ignitionEventsHead), iEvent);
 	}
 }
 
@@ -348,7 +344,7 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 	engine->m.beforeIgnitionSch = getTimeNowLowerNt();
 	/**
 	 * TODO: warning. there is a bit of a hack here, todo: improve.
-	 * currently output signals/times signalTimerUp from the previous revolutions could be
+	 * currently output signals/times dwellStartTimer from the previous revolutions could be
 	 * still used because they have crossed the revolution boundary
 	 * but we are already re-purposing the output signals, but everything works because we
 	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
@@ -379,11 +375,11 @@ static ALWAYS_INLINE void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNA
 static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	IgnitionEvent *current, *tmp;
 
-	LL_FOREACH_SAFE(ENGINE(iHead), current, tmp)
+	LL_FOREACH_SAFE(ENGINE(ignitionEventsHead), current, tmp)
 	{
-		if (current->sparkPosition.eventIndex == trgEventIndex) {
+		if (current->sparkPosition.triggerEventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
-			LL_DELETE(ENGINE(iHead), current);
+			LL_DELETE(ENGINE(ignitionEventsHead), current);
 
 			scheduling_s * sDown = &current->signalTimerDown;
 
@@ -392,7 +388,7 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex D
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 
-			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
+			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffsetFromTriggerEvent;
 			engine->executor.scheduleForLater(sDown, (int) timeTillIgnitionUs, (schfunc_t) &fireSparkAndPrepareNextSchedule, current);
 		}
 	}
@@ -422,7 +418,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 	if (ENGINE(ignitionEvents.isReady)) {
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
-			if (event->dwellPosition.eventIndex != trgEventIndex)
+			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;
 			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		}

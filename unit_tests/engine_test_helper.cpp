@@ -84,7 +84,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : EngineTestHelper(
 /**
  * mock a change of time and fire single RISE front event
  */
-void EngineTestHelper::fireRise(int delayMs) {
+void EngineTestHelper::fireRise(float delayMs) {
 	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
@@ -97,7 +97,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
 }
 
-void EngineTestHelper::fireFall(int delayMs) {
+void EngineTestHelper::fireFall(float delayMs) {
 	moveTimeForwardUs(MS2US(delayMs));
 	firePrimaryTriggerFall();
 }
@@ -107,7 +107,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	engine.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, &engine, engine.engineConfigurationPtr, &persistentConfig, boardConfiguration);
 }
 
-void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
+void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
 	fireTriggerEvents2(/*count*/1, durationMs);
 }
 
@@ -116,7 +116,7 @@ void EngineTestHelper::fireTriggerEventsWithDuration(int durationMs) {
  *
  * This is helpful for TT_ONE trigger wheel decoder and probably other decoders as well.
  */
-void EngineTestHelper::fireTriggerEvents2(int count, int durationMs) {
+void EngineTestHelper::fireTriggerEvents2(int count, float durationMs) {
 	for (int i = 0; i < count; i++) {
 		fireRise(durationMs);
 		fireFall(durationMs);
@@ -126,7 +126,7 @@ void EngineTestHelper::fireTriggerEvents2(int count, int durationMs) {
 void EngineTestHelper::clearQueue() {
 	engine.executor.executeAll(99999999); // this is needed to clear 'isScheduled' flag
 	ASSERT_EQ( 0,  engine.executor.size()) << "Failed to clearQueue";
-	engine.iHead = NULL; // let's drop whatever was scheduled just to start from a clean state
+	engine.ignitionEventsHead = nullptr; // let's drop whatever was scheduled just to start from a clean state
 }
 
 int EngineTestHelper::executeActions() {
@@ -151,24 +151,26 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 
 void EngineTestHelper::assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
-	assertEvent(&engine.executor, msg, eventIndex, (void*)seTurnPinHigh, getTimeNowUs(), momentX, (long)pair);
+	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, momentX, (long)pair);
 }
 
 void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
-	assertEvent(&engine.executor, msg, eventIndex, (void*)seTurnPinLow, getTimeNowUs(), momentX, (long)pair);
+	assertEvent(msg, eventIndex, (void*)seTurnPinLow, momentX, (long)pair);
 }
 
-scheduling_s * EngineTestHelper::assertEvent5(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX) {
+scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp) {
+	TestExecutor *executor = &engine.executor;
 	EXPECT_TRUE(executor->size() > index) << msg;
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
-	assertEqualsM(msg, momentX, event->momentX - start);
+	efitime_t start = getTimeNowUs();
+	assertEqualsM(msg, expectedTimestamp, event->momentX - start);
 	return event;
 }
 
-void EngineTestHelper::assertEvent(TestExecutor *executor, const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
-	scheduling_s *event = assertEvent5(executor, msg, index, callback, start, momentX);
+void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitime_t momentX, long param) {
+	scheduling_s *event = assertEvent5(msg, index, callback, momentX);
 
 	InjectionSignalPair *eventPair = (InjectionSignalPair *)event->param;
 

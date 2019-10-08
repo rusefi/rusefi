@@ -33,8 +33,6 @@ void SingleWave::setState(int switchIndex, pin_state_t state) {
 }
 
 MultiWave::MultiWave() {
-	channels = NULL;
-	switchTimes = NULL;
 	reset();
 }
 

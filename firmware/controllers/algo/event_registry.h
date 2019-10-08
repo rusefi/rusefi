@@ -5,13 +5,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef EVENT_REGISTRY_H_
-#define EVENT_REGISTRY_H_
+#pragma once
 
 #include "global.h"
 #include "signal_executor.h"
 #include "fl_stack.h"
 #include "trigger_structure.h"
+
+#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
+
 
 class Engine;
 
@@ -24,12 +26,33 @@ public:
 	 */
 	bool isSimultanious;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
-	bool isOverlapping;
 	int ownIndex;
 #if EFI_UNIT_TEST
 	Engine *engine;
 #endif
 	event_trigger_position_s injectionStart;
+};
+
+/**
+ * This class knows about when to inject fuel
+ */
+class FuelSchedule {
+public:
+	FuelSchedule();
+	/**
+	 * this method schedules all fuel events for an engine cycle
+	 */
+	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	/**
+	 * injection events, per cylinder
+	 */
+	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
+	bool isReady;
+
+private:
+	void clear();
 };
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
@@ -38,23 +61,33 @@ class IgnitionEvent {
 public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
-	scheduling_s signalTimerUp;
+	scheduling_s dwellStartTimer;
 	scheduling_s signalTimerDown;
-	angle_t advance;
+	/**
+	 * Desired timing advance
+	 */
+	angle_t advance = NAN;
 	floatms_t sparkDwell;
-	uint32_t startOfDwell;
+	/**
+	 * this timestamp allows us to measure actual dwell time
+	 */
+	uint32_t actualStartOfDwellNt;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
-	IgnitionEvent *next;
 	/**
-	 * @see globalSparkIdCoutner
+	 * Ignition scheduler maintains a linked list of all pending ignition events.
 	 */
-	int sparkId;
+	IgnitionEvent *next = nullptr;
+	/**
+	 * Sequential number of currently processed spark event
+	 * @see globalSparkIdCounter
+	 */
+	int sparkId = 0;
 	/**
 	 * [0, specs.cylindersCount)
 	 */
-	int cylinderIndex;
-	char *name;
+	int cylinderIndex = 0;
+	char *name = nullptr;
 #if EFI_UNIT_TEST
 	Engine *engine;
 #endif
@@ -65,9 +98,9 @@ public:
 
 class IgnitionEventList {
 public:
-	IgnitionEventList();
+	/**
+	 * ignition events, per cylinder
+	 */
 	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
-	bool isReady;
+	bool isReady = false;
 };
-
-#endif /* EVENT_REGISTRY_H_ */

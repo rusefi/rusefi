@@ -255,7 +255,7 @@ void OutputPin::unregisterOutput(brain_pin_e oldPin, brain_pin_e newPin) {
 		scheduleMsg(logger, "unregistering %s", hwPortname(oldPin));
 #if EFI_GPIO_HARDWARE
 		brain_pin_markUnused(oldPin);
-		port = NULL;
+		port = nullptr;
 #endif /* EFI_GPIO_HARDWARE */
 	}
 }

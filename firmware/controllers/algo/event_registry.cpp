@@ -26,24 +26,12 @@
 
 InjectionEvent::InjectionEvent() {
 	isSimultanious = false;
-	isOverlapping = false;
 	ownIndex = 0;
 	memset(outputs, 0, sizeof(outputs));
 }
 
-event_trigger_position_s::event_trigger_position_s() {
-	eventIndex = 0;
-	eventAngle = 0;
-	angleOffset = 0;
-}
-
 IgnitionEvent::IgnitionEvent() {
-	name = NULL;
-	next = NULL;
 	memset(outputs, 0, sizeof(outputs));
-	advance = NAN;
-	sparkId = 0;
-	cylinderIndex = 0;
 }
 
 IgnitionOutputPin * IgnitionEvent::getOutputForLoggins() {

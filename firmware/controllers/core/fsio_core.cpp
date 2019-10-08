@@ -31,7 +31,7 @@ static fsio8_Map3D_u8t * fsio8t_tables[] = {NULL, NULL, &fsioTable2, &fsioTable3
 
 EXTERN_ENGINE;
 
-LENameOrdinalPair * LE_FIRST = NULL;
+LENameOrdinalPair * LE_FIRST = nullptr;
 
 /**
  * the main point of these static fields is that their constructor would register
@@ -72,7 +72,7 @@ LEElement::LEElement() {
 
 void LEElement::clear() {
 	action = LE_UNDEFINED;
-	next = NULL;
+	next = nullptr;
 	fValue = NAN;
 	iValue = 0;
 }
@@ -91,7 +91,7 @@ LECalculator::LECalculator() {
 }
 
 void LECalculator::reset() {
-	first = NULL;
+	first = nullptr;
 	stack.reset();
 	currentCalculationLogPosition = 0;
 	memset(calcLogAction, 0, sizeof(calcLogAction));
@@ -405,8 +405,8 @@ static char parsingBuffer[64];
 
 LEElement *LEElementPool::parseExpression(const char * line) {
 
-	LEElement *first = NULL;
-	LEElement *last = NULL;
+	LEElement *first = nullptr;
+	LEElement *last = nullptr;
 
 	while (true) {
 		line = getNextToken(line, parsingBuffer, sizeof(parsingBuffer));

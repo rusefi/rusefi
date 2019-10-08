@@ -64,7 +64,7 @@ void PID_AutoTune::reset() {
 	memset(lastPeaks, 0, sizeof(lastPeaks));
 	memset(lastInputs, 0, sizeof(lastInputs));
 
-	logger = NULL;
+	logger = nullptr;
 	input = output = 0;
 	SetLookbackSec(10);
 

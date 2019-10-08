@@ -43,8 +43,8 @@ void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
 
 	// todo: move this into trigger definition
-	// set global_trigger_offset_angle 230
-	engineConfiguration->globalTriggerAngleOffset = 230;
+	// set global_trigger_offset_angle 50
+	engineConfiguration->globalTriggerAngleOffset = 50;
 
 	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 
