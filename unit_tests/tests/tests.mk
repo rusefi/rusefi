@@ -9,12 +9,13 @@ TESTS_SRC_CPP = \
 	tests/test_startOfCrankingPrimingPulse.cpp \
 	tests/test_miata_na6_real_cranking.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
-	tests/test_dwell_corver_case_issue_796.cpp \
+	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
 	tests/test_trigger_decoder.cpp \
 	tests/test_trigger_noiseless.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_fuel_map.cpp \
+	tests/test_one_cylinder_logic.cpp \
 	tests/test_maf2map.cpp \
 	tests/test_fuelCut.cpp \
 	tests/test_trigger_multi_sync.cpp \

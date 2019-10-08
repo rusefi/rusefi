@@ -108,4 +108,6 @@ void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	// set ignition_mode 0
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
 }
