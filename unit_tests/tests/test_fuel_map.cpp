@@ -183,32 +183,32 @@ TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver 0\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
-	ASSERT_NEAR(0.24, injectionStart.angleOffset, EPS5D);
+	ASSERT_NEAR(0.24, injectionStart.angleOffsetFromTriggerEvent, EPS5D);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
-	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
-	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
-	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
-	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	TRIGGER_SHAPE(findTriggerPosition(&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset));
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
-	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffset);
+	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	TriggerShape t;
 	confgiureFordAspireTriggerShape(&t);

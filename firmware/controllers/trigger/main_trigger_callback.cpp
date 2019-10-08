@@ -260,7 +260,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 //	scheduleMsg(logger, "handleFuel engineCycleDuration=%.2f", engineCycleDuration);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
+	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffsetFromTriggerEvent;
 
 #if EFI_DEFAILED_LOGGING
 	scheduleMsg(logger, "handleFuel pin=%s eventIndex %d duration=%.2fms %d", event->outputs[0]->name,
@@ -290,7 +290,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 
 	} else {
 #if EFI_UNIT_TEST
-		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffset, injectionStartDelayUs, injectionDuration);
+		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", event->injectionStart.angleOffsetFromTriggerEvent, injectionStartDelayUs, injectionDuration);
 #endif
 
 		// we are in this branch of code only in case of NOT IM_SIMULTANEOUS/IM_SINGLE_POINT injection

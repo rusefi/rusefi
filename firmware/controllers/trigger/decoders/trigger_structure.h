@@ -43,19 +43,18 @@
 	}
 
 /**
- * This structure defines an angle position within the trigger
+ * This structure defines an angle position in relation to specific tooth within trigger shape
  */
 class event_trigger_position_s {
 public:
-	/**
-	 * That's trigger event index
-	 */
 	uint32_t triggerEventIndex = 0;
-	angle_t eventAngle = 0;
 	/**
-	 * Angle offset from the trigger event
+	 * angle of that 'triggerEventIndex' event
+	 * todo: Technically we can simply take angle of trigger event from trigger shape by 'triggerEventIndex'?
 	 */
-	angle_t angleOffset = 0;
+	angle_t triggerEventAngle = 0;
+
+	angle_t angleOffsetFromTriggerEvent = 0;
 };
 
 #define TRIGGER_CHANNEL_COUNT 3
@@ -84,7 +83,7 @@ public:
 	void initializeTriggerShape(Logging *logger, operation_mode_e ambiguousOperationMode,
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
 	void findTriggerPosition(event_trigger_position_s *position,
-			angle_t angleOffset DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
+			angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
 	void setShapeDefinitionError(bool value);
 
 	/**
