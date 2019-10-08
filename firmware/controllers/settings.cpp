@@ -381,8 +381,6 @@ static void setOperationMode(int value) {
 	doPrintConfiguration();
 }
 
-//static char pinNameBuffer[16];
-
 void printTPSInfo(void) {
 #if EFI_PROD_CODE && HAL_USE_ADC
 	if (!hasTpsSensor()) {
