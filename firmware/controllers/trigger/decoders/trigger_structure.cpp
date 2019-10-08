@@ -372,7 +372,7 @@ void TriggerShape::findTriggerPosition(event_trigger_position_s *position,
 		return;
 	}
 
-	position->eventIndex = triggerEventIndex;
+	position->triggerEventIndex = triggerEventIndex;
 	position->eventAngle = triggerEventAngle;
 	position->angleOffset = angle - triggerEventAngle;
 }
