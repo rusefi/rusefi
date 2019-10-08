@@ -552,7 +552,7 @@ TEST(misc, testTriggerDecoder) {
 
 extern fuel_Map3D_t fuelMap;
 
-static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
+static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool unused) {
 	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
