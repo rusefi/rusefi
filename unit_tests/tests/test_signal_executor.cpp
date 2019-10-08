@@ -8,7 +8,6 @@
 #include "global.h"
 #include <time.h>
 
-#include "signal_executor.h"
 #include "test_signal_executor.h"
 #include "io_pins.h"
 #include "event_queue.h"

@@ -34,7 +34,6 @@
 #include "allsensors.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
-#include "signal_executor.h"
 #include "engine.h"
 #include "engine_math.h"
 

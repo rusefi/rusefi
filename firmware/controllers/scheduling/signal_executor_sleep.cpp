@@ -24,7 +24,6 @@
 
 #include "global.h"
 #include "scheduler.h"
-#include "signal_executor.h"
 #include "main_trigger_callback.h"
 
 #if EFI_SIMULATOR
