@@ -1,5 +1,7 @@
 #include "thermistor_func.h"
 
+#include "thermistors.h"
+
 #include <math.h>
 
 SensorResult ThermistorFunc::convert(float ohms) const {
@@ -17,24 +19,20 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 
 	float kelvin = 1 / recip;
 
-	float celsius = kelvin - 273.15f;
+	float celsius = convertKelvinToCelcius(kelvin);
 
 	return {true, celsius};
 }
 
 void ThermistorFunc::configure(thermistor_conf_s &cfg) {
-	float t1 = cfg.tempC_1 + 273.15f;
-	float t2 = cfg.tempC_2 + 273.15f;
-	float t3 = cfg.tempC_3 + 273.15f;
-
 	// https://en.wikipedia.org/wiki/Steinhart%E2%80%93Hart_equation
 	float l1 = logf(cfg.resistance_1);
 	float l2 = logf(cfg.resistance_2);
 	float l3 = logf(cfg.resistance_3);
 
-	float y1 = 1 / t1;
-	float y2 = 1 / t2;
-	float y3 = 1 / t3;
+	float y1 = 1 / convertKelvinToCelcius(cfg.tempC_1);
+	float y2 = 1 / convertKelvinToCelcius(cfg.tempC_2);
+	float y3 = 1 / convertKelvinToCelcius(cfg.tempC_3);
 
 	float u2 = (y2 - y1) / (l2 - l1);
 	float u3 = (y3 - y1) / (l3 - l1);
