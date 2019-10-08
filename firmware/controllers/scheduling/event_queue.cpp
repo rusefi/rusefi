@@ -23,14 +23,6 @@ extern bool verboseMode;
 
 uint32_t maxSchedulingPrecisionLoss = 0;
 
-scheduling_s::scheduling_s() {
-	callback = nullptr;
-	next = nullptr;
-	param = nullptr;
-	isScheduled = false;
-	momentX = 0;
-}
-
 EventQueue::EventQueue() {
 	head = nullptr;
 	setLateDelay(100);
