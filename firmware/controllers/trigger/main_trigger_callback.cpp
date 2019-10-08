@@ -271,7 +271,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
-	InjectionSignalPair *pair = &ENGINE(fuelActuators[injEventIndex]);
+	InjectionSignalPair *pair = &event->pair;
 
 	if (event->isSimultanious) {
 		/**
@@ -582,7 +582,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		primeInjEvent.ownIndex = 0;
 		primeInjEvent.isSimultanious = true;
 
-		scheduling_s *sDown = &ENGINE(fuelActuators[0]).endOfInjectionEvent;
+		scheduling_s *sDown = &ENGINE(injectionEvents.elements[0].pair).endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.

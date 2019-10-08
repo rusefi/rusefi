@@ -53,8 +53,6 @@ public:
 	void setConfig(persistent_config_s *config);
 	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-	InjectionSignalPair fuelActuators[INJECTION_PIN_COUNT];
-	IgnitionEventList ignitionEvents;
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
 	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -93,6 +91,7 @@ public:
 
 #if EFI_ENGINE_CONTROL
 	FuelSchedule injectionEvents;
+	IgnitionEventList ignitionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
 	WallFuel wallFuel;

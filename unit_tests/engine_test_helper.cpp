@@ -152,12 +152,12 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 }
 
 void EngineTestHelper::assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
-	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
+	InjectionSignalPair *pair = &engine.injectionEvents.elements[injectorIndex].pair;
 	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, momentX, (long)pair);
 }
 
 void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
-	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
+	InjectionSignalPair *pair = &engine.injectionEvents.elements[injectorIndex].pair;
 	assertEvent(msg, eventIndex, (void*)seTurnPinLow, momentX, (long)pair);
 }
 
