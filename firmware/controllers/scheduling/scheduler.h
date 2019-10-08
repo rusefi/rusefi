@@ -13,17 +13,17 @@ typedef void (*schfunc_t)(void *);
 
 class scheduling_s {
 public:
-	scheduling_s();
-
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 	virtual_timer_t timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
-	volatile efitime_t momentX;
-	schfunc_t callback;
-	void *param;
-	scheduling_s *next;
-	bool isScheduled;
+	volatile efitime_t momentX = 0;
+	bool isScheduled = false;
+
+	scheduling_s *next = nullptr;
+
+	schfunc_t callback = nullptr;
+	void *param = nullptr;
 };
 
 class ExecutorInterface {
