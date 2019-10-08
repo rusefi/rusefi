@@ -1,3 +1,10 @@
+/**
+ * @author Matthew Kennedy, (c) 2019
+ * 
+ * A function to convert resistance to thermistor temperature (NTC). Uses the
+ * Steinhart-Hart equation to prevent having to compute many logarithms at runtime.
+ */
+
 #pragma once
 
 #include "engine_configuration_generated_structures.h"

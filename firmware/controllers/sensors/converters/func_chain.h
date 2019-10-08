@@ -1,3 +1,11 @@
+/**
+ * @author Matthew Kennedy, (c) 2019
+ * 
+ * This lets us compose multiple functions in to a single function. If we have
+ * conversion functions F(x), G(x), and H(x), we can define a new function
+ * FuncChain<F, G, H> that will compute H(G(F(X))).  F first, then G, then H.
+ */
+
 #pragma once
 
 #include "sensor_converter_func.h"
@@ -58,10 +66,12 @@ private:
 template <typename... TFuncs>
 class FuncChain : public SensorConverter {
 public:
+	// Perform chained conversion of all functions in TFuncs
 	SensorResult convert(float input) const override {
 		return m_fs.convert(input);
 	}
 
+	// Access the sub-function of type TGet
 	template <typename TGet>
 	TGet &get() {
 		return m_fs.template get<TGet>();

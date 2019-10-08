@@ -1,3 +1,7 @@
+/**
+ * @author Matthew Kennedy, (c) 2019
+ */
+
 #include "thermistor_func.h"
 
 #include "thermistors.h"
