@@ -11,9 +11,6 @@
 
 MenuTree::MenuTree(MenuItem *root) {
 	this->root = root;
-	current = NULL;
-	linesCount = 0;
-	topVisible = NULL;
 }
 
 void MenuTree::init(MenuItem *first, int linesCount) {
@@ -74,10 +71,10 @@ void MenuItem::baseConstructor(MenuItem * parent, lcd_line_e lcdLine, const char
 	this->text = text;
 	this->callback = callback;
 
-	firstChild = NULL;
-	lastChild = NULL;
-	topOfTheList = NULL;
-	next = NULL;
+	firstChild = nullptr;
+	lastChild = nullptr;
+	topOfTheList = nullptr;
+	next = nullptr;
 	index = 0;
 
 	// root element has NULL parent

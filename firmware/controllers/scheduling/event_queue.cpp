@@ -152,7 +152,7 @@ int EventQueue::executeAll(efitime_t now) {
 				lastInExecutionList->next = current;
 				lastInExecutionList = current;
 			}
-			current->next = NULL;
+			current->next = nullptr;
 		} else {
 			/**
 			 * The list is sorted. Once we find one action in the future, all the remaining ones

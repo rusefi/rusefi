@@ -25,21 +25,21 @@ public:
 	void append(const char *text);
 	void appendFast(const char *text);
 	void appendPrintf(const char *fmt, ...);
-	const char *name;
+	const char *name = nullptr;
 	char SMALL_BUFFER[40];
 	/**
 	 * Zero-terminated buffer of pending debug message
 	 *
 	 * Unless a larger external buffer is specified, this is just a pointer to DEFAULT_BUFFER
 	 */
-	char *buffer;
+	char *buffer = nullptr;
 	/**
 	 * This pointer is always pointing at the position within the buffer into which next
 	 * write operation would append additional data
 	 */
-	char *linePointer;
-	int bufferSize;
-	volatile bool isInitialized;
+	char *linePointer = nullptr;
+	int bufferSize = 0;
+	volatile bool isInitialized = false;
 };
 
 class LoggingWithStorage : public Logging {

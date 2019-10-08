@@ -69,9 +69,9 @@ public:
 	void init(MenuItem *first, int linesCount);
 	MenuItem *root;
 
-	int linesCount;
-	MenuItem *current;
-	MenuItem *topVisible;
+	int linesCount = 0;
+	MenuItem *current = nullptr;
+	MenuItem *topVisible = nullptr;
 };
 
 

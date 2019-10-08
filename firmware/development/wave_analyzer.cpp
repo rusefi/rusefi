@@ -143,9 +143,9 @@ static void initWave(const char *name, int index) {
 #endif
 
 WaveReader::WaveReader() {
-	hw = NULL;
+	hw = nullptr;
 	last_wave_high_widthUs = 0;
-	name = NULL;
+	name = nullptr;
 	fallEventCounter = riseEventCounter = 0;
 	currentRevolutionCounter = 0;
 	prevTotalOnTimeUs = 0;

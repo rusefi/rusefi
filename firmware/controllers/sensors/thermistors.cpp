@@ -27,7 +27,7 @@
 EXTERN_ENGINE
 ;
 
-static Logging *logger = NULL;
+static Logging *logger = nullptr;
 
 /**
  * http://en.wikipedia.org/wiki/Voltage_divider
