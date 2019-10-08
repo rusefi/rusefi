@@ -47,16 +47,15 @@
  */
 class event_trigger_position_s {
 public:
-	event_trigger_position_s();
 	/**
 	 * That's trigger event index
 	 */
-	uint32_t eventIndex;
-	angle_t eventAngle;
+	uint32_t eventIndex = 0;
+	angle_t eventAngle = 0;
 	/**
 	 * Angle offset from the trigger event
 	 */
-	angle_t angleOffset;
+	angle_t angleOffset = 0;
 };
 
 #define TRIGGER_CHANNEL_COUNT 3
