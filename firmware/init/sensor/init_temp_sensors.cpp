@@ -1,36 +1,32 @@
 
-#include "engine_configuration_generated_structures.h"
-
 #include "adc_subscription.h"
-#include "converters/linear_func.h"
 #include "converters/func_chain.h"
-#include "converters/thermistor_func.h"
+#include "converters/linear_func.h"
 #include "converters/resistance_func.h"
+#include "converters/thermistor_func.h"
 #include "engine.h"
-#include "tunerstudio_configuration.h"
+#include "engine_configuration_generated_structures.h"
 #include "functional_sensor.h"
+#include "tunerstudio_configuration.h"
 
 EXTERN_ENGINE;
 
-
 extern TunerStudioOutputChannels tsOutputChannels;
-
 
 using therm = ThermistorFunc;
 using resist = ResistanceFunc;
-
 
 struct FuncPair {
 	LinearFunc linear;
 	FuncChain<resist, therm> thermistor;
 };
 
-static SensorConverter& configureTempSensorFunction(thermistor_conf_s& cfg, FuncPair& p, bool isLinear) {
+static SensorConverter &configureTempSensorFunction(thermistor_conf_s &cfg, FuncPair &p, bool isLinear) {
 	if (isLinear) {
 		p.linear.configure(cfg.resistance_1, cfg.tempC_1, cfg.resistance_2, cfg.tempC_2, -50, 250);
 
 		return p.linear;
-	} else /* sensor is thermistor */{
+	} else /* sensor is thermistor */ {
 		p.thermistor.get<resist>().configure(5.0f, cfg.bias_resistor);
 		p.thermistor.get<therm>().configure(cfg);
 
@@ -38,9 +34,9 @@ static SensorConverter& configureTempSensorFunction(thermistor_conf_s& cfg, Func
 	}
 }
 
-static void configureTempSensor(FunctionalSensor& sensor, FuncPair& p, ThermistorConf& config, bool isLinear, float* reportLoc) {
+static void configureTempSensor(FunctionalSensor &sensor, FuncPair &p, ThermistorConf &config, bool isLinear, float *reportLoc) {
 	auto channel = config.adcChannel;
-	
+
 	// Check if channel is set - ignore this sensor if not
 	if (channel == EFI_ADC_NONE) {
 		return;
