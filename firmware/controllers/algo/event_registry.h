@@ -40,21 +40,21 @@ public:
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
-	angle_t advance;
+	angle_t advance = NAN;
 	floatms_t sparkDwell;
 	uint32_t startOfDwell;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
-	IgnitionEvent *next;
+	IgnitionEvent *next = NULL;
 	/**
 	 * @see globalSparkIdCoutner
 	 */
-	int sparkId;
+	int sparkId = 0;
 	/**
 	 * [0, specs.cylindersCount)
 	 */
-	int cylinderIndex;
-	char *name;
+	int cylinderIndex = 0;
+	char *name = NULL;
 #if EFI_UNIT_TEST
 	Engine *engine;
 #endif
