@@ -77,13 +77,13 @@ public:
 	 * Number of signal channels
 	 */
 	int waveCount;
-	SingleWave *channels;
+	SingleWave *channels = nullptr;
 //private:
 	/**
 	 * values in the (0..1] range which refer to points within the period at at which pin state should be changed
 	 * So, in the simplest case we turn pin off at 0.3 and turn it on at 1 - that would give us a 70% duty cycle PWM
 	 */
-	float *switchTimes;
+	float *switchTimes = nullptr;
 };
 
 #endif /* EFI_WAVE_H_ */

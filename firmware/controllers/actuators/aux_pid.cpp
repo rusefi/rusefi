@@ -110,7 +110,7 @@ public:
 private:
 	Pid auxPid;
 	int index = 0;
-	ValueProvider3D *table = NULL;
+	ValueProvider3D *table = nullptr;
 };
 
 static AuxPidController instances[AUX_PID_COUNT];

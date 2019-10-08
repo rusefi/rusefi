@@ -45,7 +45,7 @@ public:
 	uint32_t startOfDwell;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
-	IgnitionEvent *next = NULL;
+	IgnitionEvent *next = nullptr;
 	/**
 	 * @see globalSparkIdCoutner
 	 */
@@ -54,7 +54,7 @@ public:
 	 * [0, specs.cylindersCount)
 	 */
 	int cylinderIndex = 0;
-	char *name = NULL;
+	char *name = nullptr;
 #if EFI_UNIT_TEST
 	Engine *engine;
 #endif

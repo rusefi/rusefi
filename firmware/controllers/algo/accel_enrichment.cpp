@@ -38,7 +38,7 @@ EXTERN_ENGINE
 
 tps_tps_Map3D_t tpsTpsMap("tpsTps");
 
-static Logging *logger = NULL;
+static Logging *logger = nullptr;
 
 WallFuel::WallFuel() {
 	resetWF();
