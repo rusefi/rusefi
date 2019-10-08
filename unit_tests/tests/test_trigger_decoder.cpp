@@ -104,7 +104,7 @@ static void testDodgeNeonDecoder(void) {
 
 static void assertTriggerPosition(event_trigger_position_s *position, int eventIndex, float angleOffset) {
 	assertEqualsM("eventIndex", eventIndex, position->triggerEventIndex);
-	assertEqualsM("angleOffset", angleOffset, position->angleOffset);
+	assertEqualsM("angleOffset", angleOffset, position->angleOffsetFromTriggerEvent);
 }
 
 TEST(misc, testSomethingWeird) {
@@ -177,10 +177,10 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ( 1,  ecl->isReady) << "ford inline ignition events size";
 	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.triggerEventIndex) << "event index";
-	ASSERT_NEAR(7.8621, ecl->elements[0].dwellPosition.angleOffset, EPS4D) << "angle offset#1";
+	ASSERT_NEAR(7.8621, ecl->elements[0].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#1";
 
 	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.triggerEventIndex) << "event index";
-	ASSERT_NEAR(7.8621, ecl->elements[5].dwellPosition.angleOffset, EPS4D) << "angle offset#2";
+	ASSERT_NEAR(7.8621, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#2";
 
 
 	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
@@ -330,7 +330,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffset);
+	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffsetFromTriggerEvent);
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue);
@@ -339,8 +339,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
-	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.eventAngle) << "dwell angle";
-	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffset);
+	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventAngle) << "dwell angle";
+	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffsetFromTriggerEvent);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
 	ASSERT_EQ( 2,  engine->executor.size()) << "queue size/2";
@@ -555,7 +555,7 @@ extern fuel_Map3D_t fuelMap;
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
 	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
-	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
+	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
 }
 
 static void setTestBug299(EngineTestHelper *eth) {
