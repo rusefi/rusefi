@@ -6,8 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef ENGINE_STATE_H_
-#define ENGINE_STATE_H_
+#pragma once
 
 #include "global.h"
 #include "engine_parts.h"
@@ -103,9 +102,5 @@ public:
 	MockAdcState mockAdcState;
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-
-
 };
 
-
-#endif /* ENGINE_STATE_H_ */

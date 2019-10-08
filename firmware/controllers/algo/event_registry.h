@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2017
  */
 
-#ifndef EVENT_REGISTRY_H_
-#define EVENT_REGISTRY_H_
+#pragma once
 
 #include "global.h"
 #include "signal_executor.h"
@@ -73,5 +72,3 @@ public:
 	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
 	bool isReady;
 };
-
-#endif /* EVENT_REGISTRY_H_ */
