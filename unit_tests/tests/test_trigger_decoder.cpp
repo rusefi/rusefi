@@ -552,7 +552,7 @@ TEST(misc, testTriggerDecoder) {
 
 extern fuel_Map3D_t fuelMap;
 
-static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool unused) {
+static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
@@ -593,10 +593,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	FuelSchedule * t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153, false);
-	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333, false);
-	assertInjectionEvent("#2@", &t->elements[2], 0, 0, 153, false);
-	assertInjectionEvent("inj#3@", &t->elements[3], 1, 0, 153 + 180, false);
+	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153);
+	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333);
+	assertInjectionEvent("#2@", &t->elements[2], 0, 0, 153);
+	assertInjectionEvent("inj#3@", &t->elements[3], 1, 0, 153 + 180);
 
 	/**
 	 * Trigger down - no new events, executing some
@@ -761,10 +761,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315, false);
-	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 135, false);
-	assertInjectionEvent("inj#2", &t->elements[2], 0, 0, 153, false);
-	assertInjectionEvent("inj#3", &t->elements[3], 1, 0, 333, false);
+	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315);
+	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 135);
+	assertInjectionEvent("inj#2", &t->elements[2], 0, 0, 153);
+	assertInjectionEvent("inj#3", &t->elements[3], 1, 0, 333);
 
 	eth.moveTimeForwardUs(MS2US(20));
 	ASSERT_EQ( 5,  engine->executor.size()) << "qs#02";
@@ -849,10 +849,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 315, false);
-	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135, false);
-	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315, true);
-	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90, false);
+	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 315);
+	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135);
+	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315);
+	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90);
 
 	setArrayValues(fuelMap.pointers[engineLoadIndex], FUEL_RPM_COUNT, 35);
 	setArrayValues(fuelMap.pointers[engineLoadIndex + 1], FUEL_RPM_COUNT, 35);
@@ -862,7 +862,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
 
 
-	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315, false);
+	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315);
 
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -899,10 +899,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &ENGINE(injectionEvents);
 
-	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225, false); // 87.5 duty cycle
-	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45, false);
-	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225, true);
-	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45, false);
+	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225); // 87.5 duty cycle
+	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45);
+	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225);
+	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45);
 
 	 // todo: what's what? a mix of new something and old something?
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#5";

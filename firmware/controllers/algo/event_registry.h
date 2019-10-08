@@ -26,7 +26,6 @@ public:
 	 */
 	bool isSimultanious;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
-	bool isOverlapping;
 	int ownIndex;
 #if EFI_UNIT_TEST
 	Engine *engine;
