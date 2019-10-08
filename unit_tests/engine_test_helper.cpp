@@ -153,25 +153,26 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 
 void EngineTestHelper::assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
-	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, getTimeNowUs(), momentX, (long)pair);
+	assertEvent(msg, eventIndex, (void*)seTurnPinHigh, momentX, (long)pair);
 }
 
 void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex) {
 	InjectionSignalPair *pair = &engine.fuelActuators[injectorIndex];
-	assertEvent(msg, eventIndex, (void*)seTurnPinLow, getTimeNowUs(), momentX, (long)pair);
+	assertEvent(msg, eventIndex, (void*)seTurnPinLow, momentX, (long)pair);
 }
 
-scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX) {
+scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp) {
 	TestExecutor *executor = &engine.executor;
 	EXPECT_TRUE(executor->size() > index) << msg;
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " up/down", (void*)event->callback == (void*) callback, 1);
-	assertEqualsM(msg, momentX, event->momentX - start);
+	efitime_t start = getTimeNowUs();
+	assertEqualsM(msg, expectedTimestamp, event->momentX - start);
 	return event;
 }
 
-void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitime_t start, efitime_t momentX, long param) {
-	scheduling_s *event = assertEvent5(msg, index, callback, start, momentX);
+void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitime_t momentX, long param) {
+	scheduling_s *event = assertEvent5(msg, index, callback, momentX);
 
 	InjectionSignalPair *eventPair = (InjectionSignalPair *)event->param;
 
