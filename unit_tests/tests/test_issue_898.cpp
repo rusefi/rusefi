@@ -1,7 +1,7 @@
 /*
- * test_issue_898.cpp
+ * @file test_issue_898.cpp
  *
- *  Created on: Aug 8, 2019
+ * @date Aug 8, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
