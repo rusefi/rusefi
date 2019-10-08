@@ -50,7 +50,7 @@ public:
 	/**
 	 * That's trigger event index
 	 */
-	uint32_t eventIndex = 0;
+	uint32_t triggerEventIndex = 0;
 	angle_t eventAngle = 0;
 	/**
 	 * Angle offset from the trigger event

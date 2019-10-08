@@ -103,7 +103,7 @@ static void testDodgeNeonDecoder(void) {
 }
 
 static void assertTriggerPosition(event_trigger_position_s *position, int eventIndex, float angleOffset) {
-	assertEqualsM("eventIndex", eventIndex, position->eventIndex);
+	assertEqualsM("eventIndex", eventIndex, position->triggerEventIndex);
 	assertEqualsM("angleOffset", angleOffset, position->angleOffset);
 }
 
@@ -176,10 +176,10 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ( 1,  ecl->isReady) << "ford inline ignition events size";
-	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.eventIndex) << "event index";
+	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.triggerEventIndex) << "event index";
 	ASSERT_NEAR(7.8621, ecl->elements[0].dwellPosition.angleOffset, EPS4D) << "angle offset#1";
 
-	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.eventIndex) << "event index";
+	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.triggerEventIndex) << "event index";
 	ASSERT_NEAR(7.8621, ecl->elements[5].dwellPosition.angleOffset, EPS4D) << "angle offset#2";
 
 
@@ -554,7 +554,7 @@ extern fuel_Map3D_t fuelMap;
 
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset, bool isOverlapping) {
 	assertEqualsM4(msg, "inj index", injectorIndex, ev->outputs[0]->injectorIndex);
-	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.eventIndex);
+	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
 	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffset);
 }
 
