@@ -24,8 +24,8 @@ void showMainHistogram(void);
 
 void startSimultaniousInjection(Engine *engine);
 void endSimultaniousInjection(InjectionEvent *event);
-void seTurnPinHigh(InjectionSignalPair *pair);
-void seTurnPinLow(InjectionSignalPair *pair);
+void seTurnPinHigh(InjectionEvent *event);
+void seTurnPinLow(InjectionEvent *event);
 
 float getFuel(int rpm, float key);
 

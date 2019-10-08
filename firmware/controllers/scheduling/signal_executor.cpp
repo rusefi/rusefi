@@ -22,27 +22,4 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "signal_executor.h"
-#include "efi_gpio.h"
-#include "engine.h"
 
-/**
- * Signal executors feed digital events right into WaveChart used by Engine Sniffer tab of rusEfi Console
- */
-#include "rpm_calculator.h"
-
-EXTERN_ENGINE;
-
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
-
-#include "efi_gpio.h"
-
-InjectionSignalPair::InjectionSignalPair() {
-	isScheduled = false;
-	memset(outputs, 0, sizeof(outputs));
-	event = nullptr;
-}
