@@ -28,10 +28,6 @@
 
 #include "rtc_helper.h"
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif
-
 #define SD_STATE_INIT "init"
 #define SD_STATE_MOUNTED "MOUNTED"
 #define SD_STATE_MOUNT_FAILED "MOUNT_FAILED"

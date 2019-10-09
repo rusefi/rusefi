@@ -90,9 +90,6 @@
 
 #define ETB_MAX_COUNT 2
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
 static bool shouldResetPid = false;
 
 static pid_s tuneWorkingPidSettings;
