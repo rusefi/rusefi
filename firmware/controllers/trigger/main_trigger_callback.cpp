@@ -68,9 +68,6 @@ static Logging *logger;
 #if ! EFI_UNIT_TEST
 static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
 static Pid fuelPid(fuelPidS);
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
 #endif
 
 // todo: figure out if this even helps?

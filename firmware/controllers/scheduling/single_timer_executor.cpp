@@ -167,10 +167,6 @@ void initSingleTimerExecutorHardware(void) {
 	initMicrosecondTimer();
 }
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
 void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
 #if EFI_TUNER_STUDIO && EFI_SIGNAL_EXECUTOR_ONE_TIMER

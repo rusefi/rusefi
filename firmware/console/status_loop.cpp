@@ -101,11 +101,6 @@ static volatile bool fullLog = true;
 int warningEnabled = true;
 //int warningEnabled = FALSE;
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-extern tunerstudio_counters_s tsState;
-#endif
-
 extern bool hasFirmwareErrorFlag;
 extern int maxTriggerReentraint;
 extern uint32_t maxLockedDuration;
@@ -1009,8 +1004,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		;
 	}
 }
-
-extern TunerStudioOutputChannels tsOutputChannels;
 
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio

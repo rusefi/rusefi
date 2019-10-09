@@ -23,7 +23,6 @@ EXTERN_ENGINE;
 #include "hardware.h"
 #include "backup_ram.h"
 #include "pin_repository.h"
-extern TunerStudioOutputChannels tsOutputChannels;
 
 static Logging *logger;
 static unsigned char tx_buff[2];

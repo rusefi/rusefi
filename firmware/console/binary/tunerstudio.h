@@ -29,6 +29,8 @@ typedef struct {
 	int testCommandCounter;
 } tunerstudio_counters_s;
 
+extern tunerstudio_counters_s tsState;
+
 /**
  * handle non CRC wrapped command
  */
