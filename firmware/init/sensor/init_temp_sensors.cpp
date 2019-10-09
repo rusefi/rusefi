@@ -11,8 +11,6 @@
 
 EXTERN_ENGINE;
 
-extern TunerStudioOutputChannels tsOutputChannels;
-
 using therm = ThermistorFunc;
 using resist = ResistanceFunc;
 
