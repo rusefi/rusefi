@@ -35,7 +35,6 @@
 #include "trigger_central.h"
 #include "spark_logic.h"
 #include "rpm_calculator.h"
-#include "signal_executor.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "advance_map.h"
@@ -69,9 +68,6 @@ static Logging *logger;
 #if ! EFI_UNIT_TEST
 static pid_s *fuelPidS = &persistentState.persistentConfiguration.engineConfiguration.fuelClosedLoopPid;
 static Pid fuelPid(fuelPidS);
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
 #endif
 
 // todo: figure out if this even helps?
@@ -129,9 +125,9 @@ static inline void tempTurnPinHigh(InjectorOutputPin *output) {
 }
 
 // todo: make these macro? kind of a penny optimization if compiler is not smart to inline
-void seTurnPinHigh(InjectionSignalPair *pair) {
+void seTurnPinHigh(InjectionEvent *event) {
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
-		InjectorOutputPin *output = pair->outputs[i];
+		InjectorOutputPin *output = event->outputs[i];
 		if (output != NULL) {
 			tempTurnPinHigh(output);
 		}
@@ -177,25 +173,24 @@ static inline void tempTurnPinLow(InjectorOutputPin *output) {
 	}
 }
 
-void seTurnPinLow(InjectionSignalPair *pair) {
-	pair->isScheduled = false;
+void seTurnPinLow(InjectionEvent *event) {
+	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
-		InjectorOutputPin *output = pair->outputs[i];
+		InjectorOutputPin *output = event->outputs[i];
 		if (output != NULL) {
 			tempTurnPinLow(output);
 		}
 	}
-	efiAssertVoid(CUSTOM_EVENT_6626, pair->event != NULL, "pair event");
 #if EFI_UNIT_TEST
-	Engine *engine = pair->event->engine;
+	Engine *engine = event->engine;
 	EXPAND_Engine;
 #endif
-	ENGINE(injectionEvents.addFuelEventsForCylinder(pair->event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
 }
 
-static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionSignalPair *pair DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, InjectionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if FUEL_MATH_EXTREME_LOGGING
-	InjectorOutputPin *param = pair->outputs[0];
+	InjectorOutputPin *param = event->outputs[0];
 //	scheduleMsg(&sharedLogger, "schX %s %x %d", prefix, scheduling,	time);
 //	scheduleMsg(&sharedLogger, "schX %s", param->name);
 
@@ -203,7 +198,7 @@ static void sescheduleByTimestamp(scheduling_s *scheduling, efitimeus_t time, sc
 	printf("seScheduleByTime %s %s %d sch=%d\r\n", direction, param->name, (int)time, (int)scheduling);
 #endif /* FUEL_MATH_EXTREME_LOGGING || EFI_UNIT_TEST */
 
-	engine->executor.scheduleByTimestamp(scheduling, time, callback, pair);
+	engine->executor.scheduleByTimestamp(scheduling, time, callback, event);
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
@@ -271,7 +266,6 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 			getRevolutionCounter());
 #endif /* EFI_DEFAILED_LOGGING */
 
-	InjectionSignalPair *pair = &ENGINE(fuelActuators[injEventIndex]);
 
 	if (event->isSimultanious) {
 		/**
@@ -280,9 +274,9 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		 * changed into 'scheduleInjection' and unified? todo: think about it.
 		 */
 
-		scheduling_s * sUp = &pair->signalTimerUp;
-// todo: sequential need this logic as well, just do not forget to clear flag		pair->isScheduled = true;
-		scheduling_s * sDown = &pair->endOfInjectionEvent;
+		scheduling_s * sUp = &event->signalTimerUp;
+// todo: sequential need this logic as well, just do not forget to clear flag		event->isScheduled = true;
+		scheduling_s * sDown = &event->endOfInjectionEvent;
 
 		engine->executor.scheduleForLater(sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
 		engine->executor.scheduleForLater(sDown, (int) injectionStartDelayUs + durationUs,
@@ -314,19 +308,16 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 	#endif /*EFI_PRINTF_FUEL_DETAILS */
 
 
-		if (pair->isScheduled) {
+		if (event->isScheduled) {
 	#if EFI_UNIT_TEST || EFI_SIMULATOR
 		printf("still used1 %s %d\r\n", output->name, (int)getTimeNowUs());
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
-			return; // this InjectionSignalPair is still needed for an extremely long injection scheduled previously
+			return; // this InjectionEvent is still needed for an extremely long injection scheduled previously
 		}
-		pair->outputs[0] = output;
-		pair->outputs[1] = event->outputs[1];
-		scheduling_s * sUp = &pair->signalTimerUp;
-		scheduling_s * sDown = &pair->endOfInjectionEvent;
+		scheduling_s * sUp = &event->signalTimerUp;
+		scheduling_s * sDown = &event->endOfInjectionEvent;
 
-		pair->isScheduled = true;
-		pair->event = event;
+		event->isScheduled = true;
 		efitimeus_t turnOnTime = nowUs + (int) injectionStartDelayUs;
 		bool isSecondaryOverlapping = turnOnTime < output->overlappingScheduleOffTime;
 
@@ -336,10 +327,10 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(int injEventIndex, InjectionE
 		printf("please cancel %s %d %d\r\n", output->name, (int)getTimeNowUs(), output->overlappingCounter);
 	#endif /* EFI_UNIT_TEST || EFI_SIMULATOR */
 		} else {
-			sescheduleByTimestamp(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, pair PASS_ENGINE_PARAMETER_SUFFIX);
+			sescheduleByTimestamp(sUp, turnOnTime, (schfunc_t) &seTurnPinHigh, event PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 		efitimeus_t turnOffTime = nowUs + (int) (injectionStartDelayUs + durationUs);
-		sescheduleByTimestamp(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, pair PASS_ENGINE_PARAMETER_SUFFIX);
+		sescheduleByTimestamp(sDown, turnOffTime, (schfunc_t) &seTurnPinLow, event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
 
@@ -582,7 +573,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		primeInjEvent.ownIndex = 0;
 		primeInjEvent.isSimultanious = true;
 
-		scheduling_s *sDown = &ENGINE(fuelActuators[0]).endOfInjectionEvent;
+		scheduling_s *sDown = &ENGINE(injectionEvents.elements[0]).endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.

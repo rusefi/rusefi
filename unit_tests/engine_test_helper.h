@@ -48,7 +48,7 @@ public:
 	void clearQueue();
 
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);
-	void assertEvent(const char *msg, int index, void *callback, efitime_t momentX, long param);
+	void assertEvent(const char *msg, int index, void *callback, efitime_t momentX, InjectionEvent *event);
 	void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
 	void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
 	// todo: open question if this is worth a helper method or should be inlined?

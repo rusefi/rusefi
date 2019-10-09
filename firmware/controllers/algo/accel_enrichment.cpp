@@ -27,10 +27,8 @@
 #include "accel_enrichment.h"
 #include "allsensors.h"
 #include "engine_math.h"
-#include "signal_executor.h"
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
-extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 EXTERN_ENGINE

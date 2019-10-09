@@ -25,7 +25,6 @@
 #include "advance_map.h"
 #include "fuel_math.h"
 #include "settings.h"
-#include "signal_executor.h"
 #include "speed_density.h"
 #include "fsio_impl.h"
 

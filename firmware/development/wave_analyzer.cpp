@@ -18,7 +18,6 @@
 #include "data_buffer.h"
 #include "pin_repository.h"
 #include "allsensors.h"
-#include "signal_executor.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"
 #include "os_util.h"

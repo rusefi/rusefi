@@ -180,4 +180,6 @@ typedef struct {
 	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
 
+extern TunerStudioOutputChannels tsOutputChannels;
+
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

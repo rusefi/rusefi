@@ -33,7 +33,6 @@
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "rpm_calculator.h"
-#include "signal_executor.h"
 #include "main_trigger_callback.h"
 #include "io_pins.h"
 #include "flash_main.h"
@@ -832,6 +831,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191006;
+	return 20191007;
 }
 #endif /* EFI_UNIT_TEST */

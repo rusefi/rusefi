@@ -33,10 +33,6 @@ extern fsio8_Map3D_f32t fsioTable1;
 // todo: this is to some extent a copy-paste of alternator_controller. maybe same loop
 // for all PIDs?
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
 static Logging *logger;
 
 static bool isEnabled(int index) {

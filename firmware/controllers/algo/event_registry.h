@@ -8,12 +8,13 @@
 #pragma once
 
 #include "global.h"
-#include "signal_executor.h"
+#include "efi_gpio.h"
+#include "scheduler.h"
 #include "fl_stack.h"
 #include "trigger_structure.h"
 
 #define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
-
+#define MAX_WIRES_COUNT 2
 
 class Engine;
 
@@ -31,7 +32,20 @@ public:
 	Engine *engine;
 #endif
 	event_trigger_position_s injectionStart;
+
+	scheduling_s signalTimerUp;
+	scheduling_s endOfInjectionEvent;
+
+	/**
+	 * we need atomic flag so that we do not schedule a new pair of up/down before previous down was executed.
+	 *
+	 * That's because we want to be sure that no 'down' side callback would be ignored since we are counting to see
+	 * overlaps so we need the end counter to always have zero.
+	 * TODO: make watchdog decrement relevant counter
+	 */
+	bool isScheduled = false;
 };
+
 
 /**
  * This class knows about when to inject fuel

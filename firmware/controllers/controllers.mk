@@ -12,7 +12,6 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/algo/aux_pid.cpp \
 	$(CONTROLLERS_DIR)/actuators/lcd_controller.cpp \
 	$(CONTROLLERS_DIR)/scheduling/signal_executor_sleep.cpp \
-	$(CONTROLLERS_DIR)/scheduling/signal_executor.cpp \
 	$(CONTROLLERS_DIR)/scheduling/single_timer_executor.cpp \
 	$(CONTROLLERS_DIR)/scheduling/pwm_generator_logic.cpp \
 	$(CONTROLLERS_DIR)/scheduling/event_queue.cpp \

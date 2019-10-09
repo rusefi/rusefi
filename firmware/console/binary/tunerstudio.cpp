@@ -129,10 +129,6 @@ static ts_channel_s tsChannel;
 // this thread wants a bit extra stack
 static THD_WORKING_AREA(tunerstudioThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 
-extern TunerStudioOutputChannels tsOutputChannels;
-
-extern tunerstudio_counters_s tsState;
-
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
 }

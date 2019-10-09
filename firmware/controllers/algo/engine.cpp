@@ -42,10 +42,6 @@ LoggingWithStorage engineLogger("engine");
 EXTERN_ENGINE
 ;
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
 FsioState::FsioState() {
 #if EFI_ENABLE_ENGINE_WARNING
 	isEngineWarning = FALSE;

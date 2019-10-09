@@ -36,10 +36,6 @@ Pid alternatorPid(altPidS);
 
 static percent_t currentAltDuty;
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
 static bool currentPlainOnOffState = false;
 static bool shouldResetPid = false;
 

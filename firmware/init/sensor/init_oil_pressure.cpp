@@ -8,8 +8,6 @@
 
 EXTERN_ENGINE;
 
-extern TunerStudioOutputChannels tsOutputChannels;
-
 LinearFunc oilpSensorFunc;
 FunctionalSensor oilpSensor(SensorType::OilPressure);
 

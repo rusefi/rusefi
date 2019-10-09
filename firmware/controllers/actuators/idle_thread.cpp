@@ -47,9 +47,7 @@ static StepperMotor iacMotor;
 
 
 static Logging *logger;
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
+
 EXTERN_ENGINE
 ;
 

@@ -11,7 +11,6 @@
 #ifndef INJECTOR_CENTRAL_H_
 #define INJECTOR_CENTRAL_H_
 
-#include "signal_executor.h"
 #include "engine.h"
 
 void fanBench(void);
