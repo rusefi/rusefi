@@ -195,8 +195,6 @@ extern AdcDevice fastAdc;
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
-	fastAdc.invalidateSamplesCache();
-
 	(void) buffer;
 	(void) n;
 	/**
@@ -204,6 +202,8 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	 * intermediate callback when the buffer is half full.
 	 * */
 	if (adcp->state == ADC_COMPLETE) {
+		fastAdc.invalidateSamplesCache();
+
 		/**
 		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
 		 */
