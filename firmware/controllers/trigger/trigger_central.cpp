@@ -32,7 +32,6 @@
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
-extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_ENGINE_SNIFFER

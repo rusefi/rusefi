@@ -32,10 +32,6 @@ EXTERN_ENGINE
 // this does not look exactly right
 extern LoggingWithStorage engineLogger;
 
-#if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
 WarningCodeState::WarningCodeState() {
 	clear();
 }

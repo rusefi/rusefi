@@ -16,8 +16,6 @@
 #include "efilib.h"
 #include "tunerstudio_configuration.h"
 
-extern TunerStudioOutputChannels tsOutputChannels;
-
 static uint16_t buffer[1000] CCM_OPTIONAL;
 static size_t NextIdx = 0;
 static volatile bool ToothLoggerEnabled = false;
