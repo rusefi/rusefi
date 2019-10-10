@@ -9,7 +9,12 @@
 
 #if EFI_VEHICLE_SPEED
 
+#if !(HAL_USE_PAL)
+#error PAL must be enabled for VSS
+#endif
+
 #include "engine.h"
+#include "digital_input_exti.h"
 #include "pin_repository.h"
 
 EXTERN_ENGINE
@@ -66,15 +71,14 @@ bool hasVehicleSpeedSensor() {
 }
 
 void stopVSSPins(void) {
-	removeWaveAnalyzerDriver("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
+	efiExtiDisablePin(activeConfiguration.bc.vehicleSpeedSensorInputPin);
 }
 
 void startVSSPins(void) {
 	if (!hasVehicleSpeedSensor())
 		return;
-	digital_input_s* vehicleSpeedInput = addWaveAnalyzerDriver("VSS", CONFIGB(vehicleSpeedSensorInputPin));
-	startInputDriver("VSS", vehicleSpeedInput, true);
-	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
+
+	efiExtiEnablePin("VSS", CONFIGB(vehicleSpeedSensorInputPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)vsAnaWidthCallback, nullptr);
 }
 
 void initVehicleSpeed(Logging *l) {
