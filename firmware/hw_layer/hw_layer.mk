@@ -22,7 +22,7 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/adc_inputs.cpp \
 	$(PROJECT_DIR)/hw_layer/adc_subscription.cpp \
 	$(PROJECT_DIR)/hw_layer/pwm_generator.cpp \
-	$(PROJECT_DIR)/hw_layer/trigger_input.cpp \
+	$(PROJECT_DIR)/hw_layer/trigger_input_exti.cpp \
 	$(PROJECT_DIR)/hw_layer/hip9011.cpp \
 	$(PROJECT_DIR)/hw_layer/mc33816.cpp \
 	$(PROJECT_DIR)/hw_layer/hip9011_logic.cpp \
@@ -38,4 +38,3 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 # '-include' is a magic kind of 'include' which would survive if file to be included is not found
 #	
 -include $(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER)/hw_ports.mk
-	
