@@ -78,7 +78,13 @@ void startVSSPins(void) {
 	if (!hasVehicleSpeedSensor())
 		return;
 
-	efiExtiEnablePin("VSS", CONFIGB(vehicleSpeedSensorInputPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)vsAnaWidthCallback, nullptr);
+	efiExtiEnablePin(
+		"VSS",
+		CONFIGB(vehicleSpeedSensorInputPin),
+		PAL_EVENT_MODE_RISING_EDGE,
+		(palcallback_t)vsAnaWidthCallback,
+		nullptr
+	);
 }
 
 void initVehicleSpeed(Logging *l) {
