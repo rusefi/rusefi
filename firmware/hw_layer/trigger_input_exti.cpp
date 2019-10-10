@@ -40,8 +40,9 @@ static ioline_t primary_line;
 
 static void shaft_callback(void *arg) {
 	ioline_t pal_line = (ioline_t)arg;
+	bool rise = (palReadLine(pal_line) == PAL_HIGH);
+
 	// todo: support for 3rd trigger input channel
-	// todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
 		return;
 
@@ -50,7 +51,6 @@ static void shaft_callback(void *arg) {
 		return;
 	}
 
-	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 	trigger_event_e signal;
 	// todo: add support for 3rd channel
 	if (rise) {
