@@ -264,7 +264,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-#if HAL_USE_PAL
+#if HAL_USE_PAL && EFI_PROD_CODE
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 		efiExtiEnablePin(
 			"Frequency MAP",
