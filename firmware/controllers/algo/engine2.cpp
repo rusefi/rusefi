@@ -116,8 +116,8 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 
-	engine->sensors.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
-	engine->sensors.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->sensors.iat = getIntakeAirTemperature();
+	engine->sensors.clt = getCoolantTemperature();
 
 	// todo: reduce code duplication with 'getCoolantTemperature'
 	if (engineConfiguration->auxTempSensor1.adcChannel != EFI_ADC_NONE) {

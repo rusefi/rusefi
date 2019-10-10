@@ -397,7 +397,7 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @return Duration of fuel injection while craning
  */
 floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getCrankingFuel3(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE),
+	return getCrankingFuel3(getCoolantTemperature(),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 #endif
