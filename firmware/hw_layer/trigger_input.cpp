@@ -2,8 +2,6 @@
  * @file	trigger_input.cpp
  * @brief	Position sensor hardware layer (ICU and PAL drivers)
  *
- * todo: code reuse with digital_input_hw.cpp was never finished
- * todo: at the moment due to half-done code reuse we already depend on EFI_ICU_INPUTS but still have custom code
  * todo: VVT implementation is a nasty copy-paste :(
  *
  * see digital_input_hw.cp
@@ -18,10 +16,9 @@ volatile int icuWidthCallbackCounter = 0;
 volatile int icuWidthPeriodCounter = 0;
 bool hwTriggerInputEnabled = true; // this is useful at least for real hardware integration testing
 
-#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
+#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE) && (HAL_USE_COMP == FALSE)
 
 #include "trigger_input.h"
-#include "digital_input_hw.h"
 #include "digital_input_exti.h"
 #include "pin_repository.h"
 #include "trigger_structure.h"
@@ -37,8 +34,6 @@ EXTERN_ENGINE
 static Logging *logger;
 
 #if EFI_PROD_CODE
-/* PAL based implementation */
-#if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 
 /* static variables for PAL implementation */
 static ioline_t primary_line;
@@ -101,145 +96,6 @@ static void setPrimaryChannel(brain_pin_e brainPin) {
 	primary_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 }
 
-/* ICU based implementation */
-#elif (HAL_USE_ICU)
-
-/* static vars for ICU implementation */
-static ICUDriver *primaryCrankDriver;
-
-static void cam_icu_width_callback(ICUDriver *icup) {
-    (void)icup;
-	hwHandleVvtCamSignal(TV_RISE);
-}
-
-static void cam_icu_period_callback(ICUDriver *icup) {
-    (void)icup;
-	hwHandleVvtCamSignal(TV_FALL);
-}
-
-/**
- * that's hardware timer input capture IRQ entry point
- * 'width' events happens before the 'period' event
- */
-static void shaft_icu_width_callback(ICUDriver *icup) {
-	if (!hwTriggerInputEnabled) {
-		return;
-	}
-	icuWidthCallbackCounter++;
-// todo: support for 3rd trigger input channel
-// todo: start using real event time from HW event, not just software timer?
-	if (hasFirmwareErrorFlag)
-		return;
-	int isPrimary = icup == primaryCrankDriver;
-	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
-		return;
-	}
-	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
-	// todo: add support for 3rd channel
-	trigger_event_e signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-
-	hwHandleShaftSignal(signal);
-}
-
-static void shaft_icu_period_callback(ICUDriver *icup) {
-	if (!hwTriggerInputEnabled) {
-		return;
-	}
-	icuWidthPeriodCounter++;
-	if (hasFirmwareErrorFlag)
-		return;
-	int isPrimary = icup == primaryCrankDriver;
-	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
-		return;
-	}
-
-	// todo: add support for 3rd channel
-	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
-	trigger_event_e signal =
-			isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : (engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	hwHandleShaftSignal(signal);
-}
-
-/**
- * the main purpose of this configuration structure is to specify the input interrupt callbacks
- */
-static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW,
-                                  100000, /* 100kHz ICU clock frequency.   */
-                                  shaft_icu_width_callback,
-                                  shaft_icu_period_callback,
-                                  NULL,
-                                  ICU_CHANNEL_1,
-                                  0};
-
-/**
- * this is about VTTi and stuff kind of cam sensor
- */
-static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW,
-                                100000, /* 100kHz ICU clock frequency.   */
-                                cam_icu_width_callback,
-                                cam_icu_period_callback,
-                                NULL,
-                                ICU_CHANNEL_1,
-                                0};
-
-static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft) {
-	ICUConfig *icucfg;
-
-	if (brainPin == GPIO_UNASSIGNED) {
-		return -1;
-	}
-
-	if (is_shaft) {
-		icucfg = &shaft_icucfg;
-	} else {
-		icucfg = &cam_icucfg;
-	}
-
-	// configure pin
-	turnOnCapturePin(msg, brainPin);
-	icucfg->channel = getInputCaptureChannel(brainPin);
-
-	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
-	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(brainPin));
-	// todo: reuse 'setWaveReaderMode' method here?
-	if (driver != NULL) {
-		// todo: once http://forum.chibios.org/phpbb/viewtopic.php?f=16&t=1757 is fixed
-//		bool needWidthCallback = !CONFIG(useOnlyRisingEdgeForTrigger) || TRIGGER_SHAPE(useRiseEdge);
-//		shaft_icucfg.width_cb = needWidthCallback ? shaft_icu_width_callback : NULL;
-
-//		bool needPeriodCallback = !CONFIG(useOnlyRisingEdgeForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
-//		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
-
-		efiIcuStart(msg, driver, icucfg);
-		if (driver->state == ICU_READY) {
-			efiAssert(CUSTOM_ERR_ASSERT, driver != NULL, "ti: driver is NULL", -1);
-			efiAssert(CUSTOM_ERR_ASSERT, driver->state == ICU_READY, "ti: driver not ready", -1);
-            icuStartCapture(driver); // this would change state from READY to WAITING
-            icuEnableNotifications(driver);
-		} else {
-			// we would be here for example if same pin is used for multiple input capture purposes
-			firmwareError(CUSTOM_ERR_ICU_STATE, "ICU unexpected state [%s]", hwPortname(brainPin));
-		}
-	}
-	return 0;
-}
-
-static void turnOffTriggerInputPin(brain_pin_e brainPin) {
-	ICUDriver *driver = getInputCaptureDriver("trigger_off", brainPin);
-	if (driver != NULL) {
-        icuDisableNotifications(driver);
-        icuStopCapture(driver);
-		icuStop(driver);
-		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(brainPin));
-		turnOffCapturePin(brainPin);
-	}
-}
-
-static void setPrimaryChannel(brain_pin_e brainPin) {
-	primaryCrankDriver = getInputCaptureDriver("primary", brainPin);
-}
-
-#endif /* HAL_USE_ICU */
 #endif /* EFI_PROD_CODE */
 
 /*==========================================================================*/
@@ -295,4 +151,4 @@ void applyNewTriggerInputPins(void) {
 	startTriggerInputPins();
 }
 
-#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)) */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE) && (HAL_USE_COMP == FALSE)) */

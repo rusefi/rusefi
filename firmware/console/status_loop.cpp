@@ -30,9 +30,6 @@
 #include "engine_controller.h"
 
 #include "adc_inputs.h"
-#if EFI_WAVE_ANALYZER
-#include "wave_analyzer.h"
-#endif /* EFI_WAVE_ANALYZER */
 
 #include "trigger_central.h"
 #include "allsensors.h"
@@ -445,10 +442,6 @@ void printOverallStatus(systime_t nowSeconds) {
 	printOutPin(PROTOCOL_HIP_NAME, CONFIGB(hip9011IntHoldPin));
 	printOutPin(PROTOCOL_TACH_NAME, CONFIGB(tachOutputPin));
 	printOutPin(PROTOCOL_DIZZY_NAME, engineConfiguration->dizzySparkOutputPin);
-#if EFI_WAVE_ANALYZER
-	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIGB(logicAnalyzerPins)[0]);
-	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIGB(logicAnalyzerPins)[1]);
-#endif /* EFI_WAVE_ANALYZER */
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		printOutPin(enginePins.coils[i].getShortName(), CONFIGB(ignitionPins)[i]);
@@ -510,10 +503,6 @@ void updateDevConsoleState(void) {
 #else
 	chThdSleepMilliseconds(200);
 #endif
-
-#if EFI_WAVE_ANALYZER
-	printWave(&logger);
-#endif /* EFI_WAVE_ANALYZER */
 
 	scheduleLogging(&logger);
 }

@@ -546,12 +546,6 @@ void triggerInfo(void) {
 
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 		scheduleMsg(logger, "trigger PAL mode %d", hwTriggerInputEnabled);
-#else
-
-#if HAL_USE_ICU == TRUE
-	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter, hwTriggerInputEnabled);
-#endif /* HAL_USE_ICU */
-
 #endif /* HAL_TRIGGER_USE_PAL */
 
 	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",

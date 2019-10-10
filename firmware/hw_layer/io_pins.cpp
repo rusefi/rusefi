@@ -101,18 +101,6 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 	}
 }
 
-#if HAL_USE_ICU
-void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
-	if (icup->state != ICU_STOP && icup->state != ICU_READY) {
-		static char icuError[30];
-		sprintf(icuError, "ICU already used %s", msg);
-		firmwareError(CUSTOM_ERR_6679, icuError);
-		return;
-	}
-	icuStart(icup, config);
-}
-#endif /* HAL_USE_ICU */
-
 #else
 bool efiReadPin(brain_pin_e pin) {
 	return false;

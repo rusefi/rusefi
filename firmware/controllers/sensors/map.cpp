@@ -14,7 +14,6 @@
 #include "engine_controller.h"
 
 #if EFI_PROD_CODE
-#include "digital_input_hw.h"
 #include "pin_repository.h"
 #endif
 
@@ -272,6 +271,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
 	}
+#endif
 
 	if (CONFIG(useFixedBaroCorrFromMap)) {
 		// Read initial MAP sensor value and store it for Baro correction.
@@ -287,7 +287,6 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 	
 	addConsoleAction("mapinfo", printMAPInfo);
-#endif
 }
 
 #else /* EFI_ANALOG_SENSORS */
