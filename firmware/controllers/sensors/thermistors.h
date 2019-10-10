@@ -32,12 +32,19 @@ float convertFtoCelcius(float tempF);
 float getKelvinTemperature(float resistance, ThermistorMath *tm);
 float getResistance(ThermistorConf *cfg, float voltage);
 temperature_t getTemperatureC(ThermistorConf *cfg, ThermistorMath *tm, bool useLinear DECLARE_ENGINE_PARAMETER_SUFFIX);
-temperature_t getCoolantTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+temperature_t getCoolantTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isValidCoolantTemperature(temperature_t temperature);
-temperature_t getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+#define getCoolantTemperature() getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE)
+#define getIntakeAirTemperature() getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE)
+
 bool isValidIntakeAirTemperature(temperature_t temperature);
-bool hasIatSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasCltSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasIatSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasCltSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+#define hasIatSensor() hasIatSensorM(PASS_ENGINE_PARAMETER_SIGNATURE)
+#define hasCltSensor() hasCltSensorM(PASS_ENGINE_PARAMETER_SIGNATURE)
 
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 

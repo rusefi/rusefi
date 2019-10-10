@@ -432,12 +432,12 @@ static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
 	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve,
 			engineConfiguration->useLinearCltSensor);
-	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
+	if (!isValidCoolantTemperature(getCoolantTemperature())) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
 	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve,
 			engineConfiguration->useLinearIatSensor);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE))) {
+	if (!isValidIntakeAirTemperature(getIntakeAirTemperature())) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 
