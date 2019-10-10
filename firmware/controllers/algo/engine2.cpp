@@ -160,7 +160,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	running.intakeTemperatureCoefficient = getIatFuelCorrection(engine->sensors.iat PASS_ENGINE_PARAMETER_SUFFIX);
+	running.intakeTemperatureCoefficient = getIatFuelCorrection(getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SUFFIX);
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 

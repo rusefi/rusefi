@@ -41,7 +41,7 @@ temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
  * for actual slow calculation see 'getCoolantTemperatureM'
  */
 #define getCoolantTemperature() engine->sensors.clt
-#define getIntakeAirTemperature() getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE)
+#define getIntakeAirTemperature() engine->sensors.iat
 
 bool isValidIntakeAirTemperature(temperature_t temperature);
 bool hasIatSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -363,7 +363,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		finishIdleTestIfNeeded();
 		undoIdleBlipIfNeeded();
 
-		float clt = engine->sensors.clt;
+		float clt = getCoolantTemperature();
 #if EFI_SHAFT_POSITION_INPUT
 		bool isRunning = engine->rpmCalculator.isRunning(PASS_ENGINE_PARAMETER_SIGNATURE);
 #else

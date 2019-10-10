@@ -544,7 +544,7 @@ void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
 }
 
 int getTargetRpmForIdleCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	float clt = engine->sensors.clt;
+	float clt = getCoolantTemperature();
 	int targetRpm;
 	if (cisnan(clt)) {
 		// error is already reported, let's take first value from the table should be good enough error handing solution
