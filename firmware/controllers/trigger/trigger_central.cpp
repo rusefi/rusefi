@@ -533,11 +533,6 @@ void resetMaxValues() {
 #endif /* EFI_PROD_CODE  */
 }
 
-#if HAL_USE_ICU == TRUE
-extern int icuWidthCallbackCounter;
-extern int icuWidthPeriodCounter;
-#endif /* HAL_USE_ICU */
-
 void triggerInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
