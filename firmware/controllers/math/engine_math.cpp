@@ -442,6 +442,10 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 0;
 		break;
 	case IM_WASTED_SPARK: {
+		if (CONFIG(specs.cylindersCount) == 1) {
+			// we do not want to divide by zero
+			return 0;
+		}
 		return i % (CONFIG(specs.cylindersCount) / 2);
 	}
 		break;
