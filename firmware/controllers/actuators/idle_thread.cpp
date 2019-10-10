@@ -294,7 +294,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		engine->engineState.idle.idleState = PID_UPPER;
 		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
-			percent_t iacPosForCoasting = interpolate2d("iacCoasting", engine->sensors.clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
+			percent_t iacPosForCoasting = interpolate2d("iacCoasting", getCoolantTemperature(), CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
 			// Well, just leave it as is, without PID regulation...
