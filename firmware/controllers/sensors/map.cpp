@@ -14,6 +14,7 @@
 #include "engine_controller.h"
 
 #if EFI_PROD_CODE
+#include "digital_input_exti.h"
 #include "pin_repository.h"
 #endif
 
@@ -262,14 +263,16 @@ static void printMAPInfo(void) {
 void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	//engine->configurationListeners.registerCallback(applyConfiguration);
 
-#if HAL_USE_ICU
+#if HAL_USE_PAL
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		digital_input_s* digitalMapInput = addWaveAnalyzerDriver("map freq", CONFIGB(frequencyReportingMapInputPin));
-		startInputDriver("MAP", digitalMapInput, true);
-
-		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
+		efiExtiEnablePin(
+			"Frequency MAP",
+			CONFIGB(frequencyReportingMapInputPin),
+			PAL_EVENT_MODE_RISING_EDGE,
+			(palcallback_t)digitalMapWidthCallback,
+			nullptr
+		);
 	}
 #endif
 
