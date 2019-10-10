@@ -54,6 +54,17 @@
 #define EFI_CONSOLE_NO_THREAD TRUE
 
 /**
+ * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
+ */
+#ifndef EFI_WAVE_ANALYZER
+#define EFI_WAVE_ANALYZER FALSE
+#endif
+
+#ifndef EFI_ICU_INPUTS
+#define EFI_ICU_INPUTS FALSE
+#endif
+
+/**
  * TunerStudio support.
  */
 #define EFI_TUNER_STUDIO TRUE
