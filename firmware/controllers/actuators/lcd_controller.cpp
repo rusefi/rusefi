@@ -228,10 +228,10 @@ static void showLine(lcd_line_e line, int screenY) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %.2f", getCoolantTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Coolant %.2f", getCoolantTemperature());
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("Intake Air %.2f", getIntakeAirTemperature());
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
