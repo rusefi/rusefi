@@ -36,7 +36,11 @@ temperature_t getCoolantTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool isValidCoolantTemperature(temperature_t temperature);
 temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-#define getCoolantTemperature() getCoolantTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE)
+/**
+ * This macro points to readily-available pre-calculated value
+ * for actual slow calculation see 'getCoolantTemperatureM'
+ */
+#define getCoolantTemperature() engine->sensors.clt
 #define getIntakeAirTemperature() getIntakeAirTemperatureM(PASS_ENGINE_PARAMETER_SIGNATURE)
 
 bool isValidIntakeAirTemperature(temperature_t temperature);
