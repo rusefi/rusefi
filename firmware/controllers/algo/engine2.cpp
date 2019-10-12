@@ -15,6 +15,8 @@
 #include "engine_math.h"
 #include "advance_map.h"
 #include "aux_valves.h"
+#include "perf_trace.h"
+
 #if EFI_PROD_CODE
 #include "svnversion.h"
 #endif
@@ -139,6 +141,8 @@ void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf perf(PE::EngineStatePeriodicFastCallback);
+
 #if EFI_ENGINE_CONTROL
 	if (!engine->slowCallBackWasInvoked) {
 		warning(CUSTOM_ERR_6696, "Slow not invoked yet");

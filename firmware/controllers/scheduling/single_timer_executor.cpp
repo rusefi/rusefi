@@ -24,7 +24,7 @@
 #include "os_access.h"
 #include "single_timer_executor.h"
 #include "efitime.h"
-
+#include "perf_trace.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 
@@ -114,6 +114,8 @@ void SingleTimerExecutor::onTimerCallback() {
  * this private method is executed under lock
  */
 void SingleTimerExecutor::doExecute() {
+	ScopePerf perf(PE::SingleTimerExecutorDoExecute);
+
 	doExecuteCounter++;
 	/**
 	 * Let's execute actions we should execute at this point.
@@ -159,6 +161,7 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
 	uint32_t beforeHwSetTimer = getTimeNowLowerNt();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
+	perfEventInstantGlobal(PE::SingleTimerExecutorScheduleTimerCallback);
 	hwSetTimerDuration = getTimeNowLowerNt() - beforeHwSetTimer;
 }
 

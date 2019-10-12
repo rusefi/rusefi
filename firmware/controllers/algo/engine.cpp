@@ -24,6 +24,7 @@
 #include "aux_valves.h"
 #include "map_averaging.h"
 #include "fsio_impl.h"
+#include "perf_trace.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -116,6 +117,8 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static efitick_t tle8888CrankingResetTime = 0;
 
 void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf perf(PE::EnginePeriodicSlowCallback);
+	
 	watchdog();
 	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 	checkShutdown();
@@ -363,6 +366,7 @@ operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * so that trigger event handler/IO scheduler tasks are faster.
  */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
 #if EFI_MAP_AVERAGING
 	refreshMapAveragingPreCalc(PASS_ENGINE_PARAMETER_SIGNATURE);

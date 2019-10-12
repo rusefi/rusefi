@@ -9,7 +9,7 @@
 
 #include "thread_controller.h"
 #include "efitime.h"
-
+#include "perf_trace.h"
 
 /**
  * @brief Base class for a controller that needs to run periodically to perform work.
@@ -65,8 +65,12 @@ private:
             systime_t before = chVTGetSystemTime();
             efitime_t nowNt = getTimeNowNt();
 
-            // Run the controller's periodic work
-            PeriodicTask(nowNt);
+			{
+				ScopePerf perf(PE::PeriodicControllerPeriodicTask);
+
+				// Run the controller's periodic work
+				PeriodicTask(nowNt);
+			}
 
             // This ensures the loop _actually_ runs at the desired frequency.
             // Suppose we want a loop speed of 500hz:

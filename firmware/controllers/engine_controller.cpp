@@ -59,6 +59,7 @@
 #include "aux_pid.h"
 #include "accelerometer.h"
 #include "counter64.h"
+#include "perf_trace.h"
 
 #if HAL_USE_ADC
 #include "AdcConfiguration.h"
@@ -284,38 +285,29 @@ static void resetAccel(void) {
 
 static int previousSecond;
 
-#if EFI_CLOCK_LOCKS
-
-typedef FLStack<int, 16> irq_enter_timestamps_t;
-
-static irq_enter_timestamps_t irqEnterTimestamps;
+#if ENABLE_PERF_TRACE
 
 void irqEnterHook(void) {
-	irqEnterTimestamps.push(getTimeNowLowerNt());
+	perfEventBegin(PE::ISR);
 }
 
-static int currentIrqDurationAccumulator = 0;
-static int currentIrqCounter = 0;
-/**
- * See also maxLockedDuration
- */
-int perSecondIrqDuration = 0;
-int perSecondIrqCounter = 0;
 void irqExitHook(void) {
-	int enterTime = irqEnterTimestamps.pop();
-	currentIrqDurationAccumulator += (getTimeNowLowerNt() - enterTime);
-	currentIrqCounter++;
+	perfEventEnd(PE::ISR);
 }
-#endif /* EFI_CLOCK_LOCKS */
 
-static void invokePerSecond(void) {
-#if EFI_CLOCK_LOCKS
-	// this data transfer is not atomic but should be totally good enough
-	perSecondIrqDuration = currentIrqDurationAccumulator;
-	perSecondIrqCounter = currentIrqCounter;
-	currentIrqDurationAccumulator = currentIrqCounter = 0;
-#endif /* EFI_CLOCK_LOCKS */
+void idleEnterHook(void) {
+	perfEventBegin(PE::Idle);
 }
+
+void idleExitHook(void) {
+	perfEventEnd(PE::Idle);
+}
+
+void contextSwitchHook() {
+	perfEventInstantGlobal(PE::ContextSwitch);
+}
+
+#endif /* ENABLE_PERF_TRACE */
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
@@ -329,11 +321,6 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateAndSet(&halTime.state, getTimeNowLowerNt());
     /* Leaving the critical zone.*/
     chSysRestoreStatusX(sts);
-	int timeSeconds = getTimeNowSeconds();
-	if (previousSecond != timeSeconds) {
-		previousSecond = timeSeconds;
-		invokePerSecond();
-	}
 #endif /* EFI_PROD_CODE */
 
 	/**

@@ -47,6 +47,7 @@
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "aux_pid.h"
+#include "perf_trace.h"
 
 #if EFI_MC33816
 #include "mc33816.h"
@@ -197,11 +198,16 @@ extern AdcDevice fastAdc;
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
+
+	ScopePerf perf(PE::AdcCallbackFast);
+
 	/**
 	 * Note, only in the ADC_COMPLETE state because the ADC driver fires an
 	 * intermediate callback when the buffer is half full.
 	 * */
 	if (adcp->state == ADC_COMPLETE) {
+		perfEventEnd(PE::AdcConversionFast, 0);
+
 		fastAdc.invalidateSamplesCache();
 
 		/**
