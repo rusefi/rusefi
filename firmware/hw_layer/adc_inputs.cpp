@@ -35,7 +35,7 @@
 #include "engine_math.h"
 #include "engine_controller.h"
 #include "maf.h"
-//#include "biquad.h"
+#include "perf_trace.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      8
@@ -227,6 +227,10 @@ void doSlowAdc(void) {
 		;
 		return;
 	}
+
+	// This event ends in the conversion callback
+	perfEventBegin(PE::AdcConversionSlow, 0);
+
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_BUF_DEPTH_SLOW);
 	chSysUnlockFromISR()
 	;
@@ -260,6 +264,10 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 		;
 		return;
 	}
+
+	// This event ends in the conversion callback
+	perfEventBegin(PE::AdcConversionFast, 0);
+
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
 	chSysUnlockFromISR()
 	;
@@ -459,9 +467,13 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
 
+	ScopePerf perf(PE::AdcCallbackSlow);
+
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {
+		perfEventEnd(PE::AdcConversionSlow, 0);
+
 		slowAdc.invalidateSamplesCache();
 
 		efiAssertVoid(CUSTOM_ERR_6671, getCurrentRemainingStack() > 128, "lowstck#9c");

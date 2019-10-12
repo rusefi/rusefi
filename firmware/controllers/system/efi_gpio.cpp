@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "efi_gpio.h"
 #include "drivers/gpio/gpio_ext.h"
+#include "perf_trace.h"
 
 #if EFI_GPIO_HARDWARE
 #include "pin_repository.h"
@@ -344,6 +345,8 @@ void OutputPin::setValue(int logicValue) {
 			setPinValue(this, eValue, logicValue);
 		}
 	#endif
+
+	perfEventInstantGlobal(PE::OutputPinSetValue, static_cast<uint16_t>(this->brainPin));
 
 #else /* EFI_PROD_CODE */
 	setPinValue(this, eValue, logicValue);

@@ -26,6 +26,8 @@
 
 #include "rpm_calculator.h"
 
+#include "perf_trace.h"
+
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
@@ -197,6 +199,8 @@ static bool isInsideTriggerHandler = false;
 
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+	ScopePerf perf(PE::HandleShaftSignal, static_cast<uint8_t>(signal));
+
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
 	// We want to do this before anything else as we

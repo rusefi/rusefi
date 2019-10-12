@@ -35,6 +35,7 @@
 #include "engine_math.h"
 #include "trigger_central.h"
 #include "trigger_simulator.h"
+#include "perf_trace.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -418,6 +419,8 @@ void TriggerState::onShaftSynchronization(efitime_t nowNt, trigger_wheel_e trigg
  * @param nowNt current time
  */
 void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	ScopePerf perf(PE::DecodeTriggerEvent, static_cast<uint8_t>(signal));
+	
 	bool useOnlyRisingEdgeForTrigger = CONFIG(useOnlyRisingEdgeForTrigger);
 	// todo: use 'triggerShape' instead of TRIGGER_SHAPE in order to decouple this method from engine #635
 	TriggerShape *triggerShape = &ENGINE(triggerCentral.triggerShape);
