@@ -36,6 +36,7 @@
 #include "interpolation.h"
 #include "engine.h"
 #include "engine_math.h"
+#include "perf_trace.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -255,6 +256,9 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  */
 static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
+	ScopePerf perf(PE::MapAveragingTriggerCallback);
+	
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);

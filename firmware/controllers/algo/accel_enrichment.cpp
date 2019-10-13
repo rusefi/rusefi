@@ -27,6 +27,7 @@
 #include "accel_enrichment.h"
 #include "allsensors.h"
 #include "engine_math.h"
+#include "perf_trace.h"
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
 #endif /* EFI_TUNER_STUDIO */
@@ -55,6 +56,8 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGI
 	if (ENGINE(rpmCalculator).isCranking(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 		return desiredFuel;
 	}
+
+	ScopePerf perf(PE::WallFuelAdjust);
 
 	/*
 		this math is based on 
@@ -171,6 +174,8 @@ float AccelEnrichment::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
 floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	ScopePerf perf(PE::GetTpsEnrichment);
+
 	int maxDeltaIndex = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 //	FuelSchedule *fs = engineConfiguration->injectionEvents;

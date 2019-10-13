@@ -11,6 +11,7 @@
 
 #include "utlist.h"
 #include "event_queue.h"
+#include "perf_trace.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
@@ -395,6 +396,8 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex D
 
 void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 		 DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
+	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
 	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
 		 // this might happen for instance in case of a single trigger event after a pause

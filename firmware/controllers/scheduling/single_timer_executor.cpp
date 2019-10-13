@@ -84,6 +84,8 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
  */
 void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
+	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
+
 	scheduleCounter++;
 	bool alreadyLocked = true;
 	if (!reentrantFlag) {
@@ -150,6 +152,8 @@ void SingleTimerExecutor::doExecute() {
  * This method is always invoked under a lock
  */
 void SingleTimerExecutor::scheduleTimerCallback() {
+	ScopePerf perf(PE::SingleTimerExecutorScheduleTimerCallback);
+
 	/**
 	 * Let's grab fresh time value
 	 */
@@ -161,7 +165,6 @@ void SingleTimerExecutor::scheduleTimerCallback() {
 	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
 	uint32_t beforeHwSetTimer = getTimeNowLowerNt();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
-	perfEventInstantGlobal(PE::SingleTimerExecutorScheduleTimerCallback);
 	hwSetTimerDuration = getTimeNowLowerNt() - beforeHwSetTimer;
 }
 
