@@ -11,6 +11,7 @@
 #include "fsio_impl.h"
 #include "cli_registry.h"
 #include "engine_test_helper.h"
+#include "thermistors.h"
 
 #define TEST_POOL_SIZE 256
 
@@ -19,7 +20,7 @@ float getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
 	case LE_METHOD_COOLANT:
-		return engine->sensors.clt;
+		return getCoolantTemperature();
 	case LE_METHOD_RPM:
 		return engine->fsioState.mockRpm;
 	case LE_METHOD_CRANKING_RPM:

@@ -223,9 +223,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL
-	float coolantC = ENGINE(sensors.clt);
-	float intakeC = ENGINE(sensors.iat);
-	float newTCharge = getTCharge(rpm, tps, coolantC, intakeC PASS_ENGINE_PARAMETER_SUFFIX);
+	float newTCharge = getTCharge(rpm, tps, getCoolantTemperature(), getIntakeAirTemperature() PASS_ENGINE_PARAMETER_SUFFIX);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;
