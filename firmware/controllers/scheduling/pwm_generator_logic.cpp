@@ -13,6 +13,7 @@
 #include "pwm_generator_logic.h"
 #include "pwm_generator.h"
 #include "error_handling.h"
+#include "perf_trace.h"
 
 /**
  * We need to limit the number of iterations in order to avoid precision loss while calculating
@@ -225,6 +226,8 @@ efitimeus_t PwmConfig::togglePwmState() {
  * First invocation happens on application thread
  */
 static void timerCallback(PwmConfig *state) {
+	ScopePerf perf(PE::PwmGeneratorCallback);
+
 	state->dbgNestingLevel++;
 	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 

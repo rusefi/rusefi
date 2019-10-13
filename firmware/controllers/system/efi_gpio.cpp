@@ -322,6 +322,8 @@ void OutputPin::toggle() {
 
 }
 void OutputPin::setValue(int logicValue) {
+	ScopePerf perf(PE::OutputPinSetValue);
+
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6621, modePtr!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *modePtr;
@@ -345,8 +347,6 @@ void OutputPin::setValue(int logicValue) {
 			setPinValue(this, eValue, logicValue);
 		}
 	#endif
-
-	perfEventInstantGlobal(PE::OutputPinSetValue, static_cast<uint16_t>(this->brainPin));
 
 #else /* EFI_PROD_CODE */
 	setPinValue(this, eValue, logicValue);

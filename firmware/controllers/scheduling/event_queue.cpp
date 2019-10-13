@@ -177,7 +177,12 @@ int EventQueue::executeAll(efitime_t now) {
 #if EFI_UNIT_TEST
 		printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->param);
 #endif
-		current->callback(current->param);
+
+		{
+			ScopePerf perf2(PE::EventQueueExecuteCallback);
+			current->callback(current->param);
+		}
+
 		// even with overflow it's safe to subtract here
 		lastEventCallbackDuration = getTimeNowLowerNt() - before;
 		if (lastEventCallbackDuration > maxEventCallbackDuration)

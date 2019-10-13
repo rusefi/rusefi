@@ -84,6 +84,8 @@
 #include "loggingcentral.h"
 #include "status_loop.h"
 #include "mmc_card.h"
+#include "perf_trace.h"
+
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif
@@ -749,6 +751,8 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 
 
 int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
+
 	char command = data[0];
 	data++;
 

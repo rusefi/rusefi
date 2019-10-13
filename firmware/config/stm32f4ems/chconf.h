@@ -696,7 +696,6 @@
  * @note    This macro can be used to activate a power saving mode.
  */
 #define CH_CFG_IDLE_ENTER_HOOK() {                                          \
-  idleEnterHook();                                                          \
 }
 
 /**
@@ -706,7 +705,6 @@
  * @note    This macro can be used to deactivate a power saving mode.
  */
 #define CH_CFG_IDLE_LEAVE_HOOK() {                                          \
-  idleExitHook();                                                           \
 }
 
 /**

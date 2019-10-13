@@ -394,6 +394,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	}
 
 	if (triggerState.isValidIndex(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		ScopePerf perf(PE::ShaftPositionListeners);
+
 #if TRIGGER_EXTREME_LOGGING
 	scheduleMsg(logger, "trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* FUEL_MATH_EXTREME_LOGGING */

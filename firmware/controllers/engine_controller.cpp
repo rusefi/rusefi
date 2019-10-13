@@ -295,14 +295,6 @@ void irqExitHook(void) {
 	perfEventEnd(PE::ISR);
 }
 
-void idleEnterHook(void) {
-	perfEventBegin(PE::Idle);
-}
-
-void idleExitHook(void) {
-	perfEventEnd(PE::Idle);
-}
-
 void contextSwitchHook() {
 	perfEventInstantGlobal(PE::ContextSwitch);
 }
@@ -310,7 +302,7 @@ void contextSwitchHook() {
 #endif /* ENABLE_PERF_TRACE */
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**

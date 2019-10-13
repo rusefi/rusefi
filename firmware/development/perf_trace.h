@@ -8,8 +8,8 @@
 // each element in PE more than once, as they should each indicate that a specific thing began,
 // ended, or occured.
 enum class PE : uint8_t {
+	INVALID,
 	ISR,
-	Idle,
 	ContextSwitch,
 	OutputPinSetValue,
 	DecodeTriggerEvent,
@@ -28,6 +28,23 @@ enum class PE : uint8_t {
 	AdcConversionSlow,
 	AdcConversionFast,
 	AdcSubscriptionUpdateSubscribers,
+	GetRunningFuel,
+	GetInjectionDuration,
+	HandleFuel,
+	MainTriggerCallback,
+	OnTriggerEventSparkLogic,
+	ShaftPositionListeners,
+	GetBaseFuel,
+	GetTpsEnrichment,
+	GetSpeedDensityFuel,
+	WallFuelAdjust,
+	MapAveragingTriggerCallback,
+	AdcCallbackFastComplete,
+	SingleTimerExecutorScheduleByTimestamp,
+	ScheduleByAngle,
+	EventQueueExecuteCallback,
+	PwmGeneratorCallback,
+	TunerStudioHandleCrcCommand
 };
 
 void perfEventBegin(PE event, uint8_t data);
@@ -57,16 +74,17 @@ class ScopePerf
 public:
 	ScopePerf(PE event) : ScopePerf(event, 0) {}
 
-	ScopePerf(PE event, uint8_t data) : m_event(event)
+	ScopePerf(PE event, uint8_t data) : m_event(event), m_data(data)
 	{
 		perfEventBegin(event, data);
 	}
 
 	~ScopePerf()
 	{
-		perfEventEnd(m_event, 0);
+		perfEventEnd(m_event, m_data);
 	}
 
 private:
 	const PE m_event;
+	const uint8_t m_data;
 };
