@@ -774,7 +774,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 
 #if EFI_MAP_AVERAGING
 	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger, engine);
+		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_MAP_AVERAGING */
 
@@ -831,6 +831,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191009;
+	return 20191013;
 }
 #endif /* EFI_UNIT_TEST */
