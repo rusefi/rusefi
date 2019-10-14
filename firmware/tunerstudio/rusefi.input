@@ -159,7 +159,7 @@ fileVersion = { 20190701 }
    ochGetCommand    = "O%2o%2c"
 
 ; see TS_OUTPUT_SIZE in console source code
-   ochBlockSize     = 356
+   ochBlockSize     = 372
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -295,6 +295,19 @@ fileVersion = { 20190701 }
       etb1DutyCycle    = scalar,F32, 316, "%", 1, 0
       etb1Error        = scalar,F32, 320, "%", 1, 0
 
+      sensor_raw_clt   = scalar,F32, 324, "V", 1, 0
+      sensor_raw_iat   = scalar,F32, 328, "V", 1, 0
+      sensor_raw_aux1  = scalar,F32, 332, "V", 1, 0
+      sensor_raw_aux2  = scalar,F32, 336, "V", 1, 0
+
+      sensor_raw_pad1  = scalar,F32, 340, "V", 1, 0
+      sensor_raw_pad2  = scalar,F32, 344, "V", 1, 0
+      sensor_raw_pad3  = scalar,F32, 348, "V", 1, 0
+      sensor_raw_pad4  = scalar,F32, 352, "V", 1, 0
+      sensor_raw_pad5  = scalar,F32, 356, "V", 1, 0
+      sensor_raw_pad6  = scalar,F32, 360, "V", 1, 0
+      sensor_raw_pad7  = scalar,F32, 364, "V", 1, 0
+      sensor_raw_pad8  = scalar,F32, 368, "V", 1, 0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -851,6 +864,12 @@ gaugeCategory = Throttle Body (incl. ETB)
    etbTargetGauge     = etbTarget,     @@GAUGE_NAME_ETB_TARGET@@, "%",    0,    100,    0,     0,     100,   100,   1,   1
    etbErrorGauge      = etb1Error,     @@GAUGE_NAME_ETB_ERROR@@,  "%",    -20,  20,    -10,   -5,    5,    10,  2, 0
    etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,                 "%",    -100, 100,   -75,   -50,   50,   75,  0, 0
+
+gaugeCategory = Sensors - Raw
+   cltSensorGauge  = sensor_raw_clt , " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
+   iatSensorGauge  = sensor_raw_iat , " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
+   aux1SensorGauge = sensor_raw_aux1, " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
+   aux2SensorGauge = sensor_raw_aux2, " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
 
 
 [WueAnalyze]
