@@ -236,6 +236,9 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) * i / engineConfiguration->specs.cylindersCount;
 			efiAssertVoid(CUSTOM_ERR_6692, !cisnan(cylinderOffset), "cylinderOffset");
+			// part of this formula related to specific cylinder offset is never changing - we can
+			// move the loop into start-up calculation and not have this loop as part of periodic calculation
+			// todo: change the logic as described above in order to reduce periodic CPU usage?
 			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
 			fixAngle(cylinderStart, "cylinderStart", CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
@@ -297,7 +300,9 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 
 		fixAngle(samplingEnd, "samplingEnd", CUSTOM_ERR_6563);
 		// only if value is already prepared
-		int structIndex = engine->rpmCalculator.getRevolutionCounter() % 2;
+		int structIndex = getRevolutionCounter() % 2;
+		// at the moment we schedule based on time prediction based on current RPM and angle
+		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(rpm, &startTimer[i][structIndex], samplingStart,
 				startAveraging, NULL, &engine->rpmCalculator);

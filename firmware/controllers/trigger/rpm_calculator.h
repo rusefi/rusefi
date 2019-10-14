@@ -89,7 +89,7 @@ public:
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
 	void onNewEngineCycle();
-	uint32_t getRevolutionCounter(void) const;
+	uint32_t getRevolutionCounterM(void) const;
 	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * The same as setRpmValue() but without state change.
@@ -158,7 +158,7 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-int getRevolutionCounter(void);
+#define getRevolutionCounter() ENGINE(rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
 #define addEngineSnifferEvent(name, msg) if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); }
