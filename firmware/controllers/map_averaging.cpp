@@ -110,18 +110,15 @@ static bool isAveraging = false;
 static void startAveraging(void *arg) {
 	(void) arg;
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
-#if !EFI_UNIT_TEST
+
 	bool wasLocked = lockAnyContext();
-#endif
 	// with locking we would have a consistent state
 	mapAdcAccumulator = 0;
 	mapMeasurementsCounter = 0;
 	isAveraging = true;
-#if !EFI_UNIT_TEST
 	if (!wasLocked) {
 		unlockAnyContext();
 	}
-#endif /* !EFI_UNIT_TEST */
 
 	mapAveragingPin.setHigh();
 }
