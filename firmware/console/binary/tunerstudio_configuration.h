@@ -19,6 +19,14 @@ typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];
 } egt_values_s;
 
+typedef struct {
+	float cltVoltage;	// 324
+	float iatVoltage;	// 328
+	float auxTemp1Voltage; // 332
+	float auxTemp2Voltage; // 336
+	float padding[8];	// 332
+} sensors_raw_s;
+
 /**
  * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
  */
@@ -176,7 +184,7 @@ typedef struct {
 	float etbTarget;		// 312
 	float etb1DutyCycle;	// 316
 	float etb1Error;		// 320
-	int unused3[8];
+	sensors_raw_s sensorsRaw; // 324
 	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
 

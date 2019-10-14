@@ -32,7 +32,12 @@ static SensorConverter &configureTempSensorFunction(thermistor_conf_s &cfg, Func
 	}
 }
 
-static void configureTempSensor(FunctionalSensor &sensor, FuncPair &p, ThermistorConf &config, bool isLinear, float *reportLoc) {
+static void configureTempSensor(FunctionalSensor &sensor,
+								FuncPair &p,
+								ThermistorConf &config,
+								bool isLinear,
+								float *reportLoc,
+								float *rawReportLoc) {
 	auto channel = config.adcChannel;
 
 	// Check if channel is set - ignore this sensor if not
@@ -46,6 +51,9 @@ static void configureTempSensor(FunctionalSensor &sensor, FuncPair &p, Thermisto
 	// Set report location
 	sensor.setReportingLocation(reportLoc);
 
+	// Set raw report location (voltage)
+	sensor.setRawReportingLocation(rawReportLoc);
+
 	// Register & subscribe
 	if (!sensor.Register()) {
 		// uhh?
@@ -55,16 +63,39 @@ static void configureTempSensor(FunctionalSensor &sensor, FuncPair &p, Thermisto
 	AdcSubscription::SubscribeSensor(sensor, channel);
 }
 
-static FunctionalSensor  clt(SensorType::Clt);
-static FunctionalSensor  iat(SensorType::Iat);
+static FunctionalSensor clt(SensorType::Clt);
+static FunctionalSensor iat(SensorType::Iat);
 static FunctionalSensor aux1(SensorType::AuxTemp1);
 static FunctionalSensor aux2(SensorType::AuxTemp2);
 
 static FuncPair fclt, fiat, faux1, faux2;
 
 void initTempSensors() {
-	configureTempSensor(clt,  fclt,  engineConfiguration->clt, engineConfiguration->useLinearCltSensor, &tsOutputChannels.coolantTemperature);
-	configureTempSensor(iat,  fiat,  engineConfiguration->iat, engineConfiguration->useLinearIatSensor, &tsOutputChannels.intakeAirTemperature);
-	configureTempSensor(aux1, faux1, engineConfiguration->auxTempSensor1, false,                        nullptr /* fixme! */);
-	configureTempSensor(aux2, faux2, engineConfiguration->auxTempSensor2, false,                        nullptr /* fixme! */);
+	configureTempSensor(clt,
+						fclt,
+						engineConfiguration->clt,
+						engineConfiguration->useLinearCltSensor,
+						&tsOutputChannels.coolantTemperature,
+						&tsOutputChannels.sensorsRaw.cltVoltage);
+
+	configureTempSensor(iat,
+						fiat,
+						engineConfiguration->iat,
+						engineConfiguration->useLinearIatSensor,
+						&tsOutputChannels.intakeAirTemperature,
+						&tsOutputChannels.sensorsRaw.iatVoltage);
+
+	configureTempSensor(aux1,
+						faux1,
+						engineConfiguration->auxTempSensor1,
+						false,
+						nullptr /* fixme! */,
+						&tsOutputChannels.sensorsRaw.auxTemp1Voltage);
+
+	configureTempSensor(aux2,
+						faux2,
+						engineConfiguration->auxTempSensor2,
+						false,
+						nullptr /* fixme! */,
+						&tsOutputChannels.sensorsRaw.auxTemp1Voltage);
 }
