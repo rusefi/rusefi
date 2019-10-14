@@ -113,6 +113,12 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
+#if EFI_MAP_AVERAGING
+	if (engineConfiguration->isMapAveragingEnabled) {
+		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif /* EFI_MAP_AVERAGING */
+
 }
 
 EXTERN_ENGINE;
@@ -771,12 +777,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 #if EFI_MALFUNCTION_INDICATOR
 	initMalfunctionIndicator();
 #endif /* EFI_MALFUNCTION_INDICATOR */
-
-#if EFI_MAP_AVERAGING
-	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_MAP_AVERAGING */
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
