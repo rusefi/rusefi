@@ -344,7 +344,7 @@ float getMap(void) {
 }
 #endif /* EFI_PROD_CODE */
 
-void initMapAveraging(Logging *sharedLogger DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void initMapAveraging(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	logger = sharedLogger;
 
 //	startTimer[0].name = "map start0";
