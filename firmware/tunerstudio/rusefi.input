@@ -866,10 +866,10 @@ gaugeCategory = Throttle Body (incl. ETB)
    etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,                 "%",    -100, 100,   -75,   -50,   50,   75,  0, 0
 
 gaugeCategory = Sensors - Raw
-   cltVoltageGauge  = sensor_raw_clt , " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
-   iatVoltageGauge  = sensor_raw_iat , " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
-   aux1VoltageGauge = sensor_raw_aux1, " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
-   aux2VoltageGauge = sensor_raw_aux2, " Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
+   cltVoltageGauge  = sensor_raw_clt , "CLT Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
+   iatVoltageGauge  = sensor_raw_iat , "IAT Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
+   aux1VoltageGauge = sensor_raw_aux1, "Aux Temp 1 Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
+   aux2VoltageGauge = sensor_raw_aux2, "Aux Temp 2 Voltage", "volts", 0, 5, 0, 0, 5, 5, 2, 0
 
 
 [WueAnalyze]
