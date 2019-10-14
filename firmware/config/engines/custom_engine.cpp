@@ -450,6 +450,10 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->ignitionPins[7] = GPIO_UNASSIGNED;
 
 
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+
 	// fuel pump is useful to test power on/off scenario
 //	boardConfiguration->fuelPumpPin = TLE8888_PIN_22;
 
