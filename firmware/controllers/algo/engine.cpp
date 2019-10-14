@@ -53,10 +53,8 @@ FsioState::FsioState() {
 
 void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-#if !EFI_UNIT_TEST
 	// we have a confusing threading model so some synchronization would not hurt
 	bool alreadyLocked = lockAnyContext();
-#endif /* EFI_UNIT_TEST */
 
 	TRIGGER_SHAPE(initializeTriggerShape(logger,
 			engineConfiguration->ambiguousOperationMode,
@@ -86,11 +84,9 @@ void Engine::eInitializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_SU
 		engine->engineCycleEventCount = TRIGGER_SHAPE(getLength());
 	}
 
-#if !EFI_UNIT_TEST
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
-#endif /* EFI_UNIT_TEST */
 
 	if (!TRIGGER_SHAPE(shapeDefinitionError)) {
 		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
