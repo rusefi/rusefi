@@ -64,5 +64,6 @@
 #define EFI_BOARD_TEST FALSE
 #define EFI_JOYSTICK FALSE
 
+#define EFI_MAP_AVERAGING TRUE
 
 #endif /* EFIFEATURES_H_ */

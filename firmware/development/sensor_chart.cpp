@@ -39,7 +39,7 @@ void scAddData(float angle, float value) {
 		return;
 	}
 
-	if (engine->rpmCalculator.getRevolutionCounter() % engineConfiguration->sensorChartFrequency != 0) {
+	if (getRevolutionCounter() % engineConfiguration->sensorChartFrequency != 0) {
 		/**
 		 * We are here if we do NOT need to add an event to the analog chart
 		 */
