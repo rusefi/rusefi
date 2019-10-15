@@ -186,6 +186,16 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
 }
 
+TEST(misc, testGetCoilDutyCycleIssue977) {
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+
+	int rpm = 2000;
+	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+
+	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 0.0001);
+}
+
 TEST(misc, testFordAspire) {
 	printf("*************************************************** testFordAspire\r\n");
 
@@ -207,9 +217,6 @@ TEST(misc, testFordAspire) {
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
-
-	ASSERT_NEAR( 6.666666666, getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 0.0001);
-
 
 	engine->rpmCalculator.setRpmValue(6000 PASS_ENGINE_PARAMETER_SUFFIX);
 	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
