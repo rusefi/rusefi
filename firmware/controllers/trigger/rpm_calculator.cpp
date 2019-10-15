@@ -6,8 +6,11 @@
  * Actual getRpm() is calculated once per crankshaft revolution, based on the amount of time passed
  * since the start of previous shaft revolution.
  *
+ * We also have 'instant RPM' logic separate from this 'cycle RPM' logic. Open question is why do we not use
+ * instant RPM instead of cycle RPM more often.
+ *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "global.h"
@@ -22,8 +25,7 @@
 
 #if EFI_PROD_CODE
 #include "os_util.h"
-#include "engine.h"
-#endif
+#endif /* EFI_PROD_CODE */
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -86,8 +88,6 @@ extern bool hasFirmwareErrorFlag;
 
 static Logging * logger;
 
-int revolutionCounterSinceBootForUnitTest = 0;
-
 RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
@@ -97,7 +97,6 @@ RpmCalculator::RpmCalculator() {
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (efitime_t) -10 * US2NT(US_PER_SECOND_LL);
-	revolutionCounterSinceBootForUnitTest = 0;
 }
 
 /**
@@ -179,12 +178,9 @@ spinning_state_e RpmCalculator::getState() const {
 void RpmCalculator::onNewEngineCycle() {
 	revolutionCounterSinceBoot++;
 	revolutionCounterSinceStart++;
-#if EFI_UNIT_TEST
-	revolutionCounterSinceBootForUnitTest = revolutionCounterSinceBoot;
-#endif /* EFI_UNIT_TEST */
 }
 
-uint32_t RpmCalculator::getRevolutionCounter(void) const {
+uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 	return revolutionCounterSinceBoot;
 }
 
@@ -231,9 +227,7 @@ void RpmCalculator::setSpinningUp(efitime_t nowNt DECLARE_ENGINE_PARAMETER_SUFFI
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t nowNt = getTimeNowNt();
-#if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6632, getCurrentRemainingStack() > 256, "lowstckRCL");
-#endif
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
@@ -316,7 +310,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
-		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
+		int revIndex2 = getRevolutionCounter() % 2;
 		int rpm = GET_RPM();
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
@@ -324,12 +318,6 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 					(schfunc_t) onTdcCallback, NULL, &engine->rpmCalculator);
 		}
 	}
-}
-#endif
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-int getRevolutionCounter() {
-	return engine->rpmCalculator.getRevolutionCounter();
 }
 #endif
 
@@ -362,7 +350,6 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addTriggerEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 /**
  * Schedules a callback 'angle' degree of crankshaft from now.
  * The callback would be executed once after the duration of time which
@@ -370,17 +357,17 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  */
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
 		schfunc_t callback, void *param, RpmCalculator *calc DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// todo: remove 'calc' parameter
 	UNUSED(rpm);
 
 	ScopePerf perf(PE::ScheduleByAngle);
 
 	efiAssertVoid(CUSTOM_ANGLE_NAN, !cisnan(angle), "NaN angle?");
 	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
-	float delayUs = calc->oneDegreeUs * angle;
+	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 	efiAssertVoid(CUSTOM_ERR_6635, !cisnan(delayUs), "NaN delay?");
-	engine->executor.scheduleForLater(timer, (int) delayUs, callback, param);
+	ENGINE(executor.scheduleForLater(timer, (int) delayUs, callback, param));
 }
-#endif
 
 #else
 RpmCalculator::RpmCalculator() {

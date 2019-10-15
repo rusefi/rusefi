@@ -37,6 +37,10 @@ int isIgnitionTimingError(void) {
 }
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+#endif /* EFI_UNIT_TEST */
+
 #if SPARK_EXTREME_LOGGING
 	scheduleMsg(logger, "spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);
@@ -162,7 +166,12 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
+#if EFI_UNIT_TEST
+	Engine *engine = event->engine;
+	EXPAND_Engine;
+#endif /* EFI_UNIT_TEST */
 
+	// todo: no reason for this to be disabled in unit_test mode?!
 #if ! EFI_UNIT_TEST
 
 	if (GET_RPM_VALUE > 2 * engineConfiguration->cranking.rpm) {

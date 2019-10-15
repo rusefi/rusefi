@@ -37,7 +37,7 @@
 #include "tps.h"
 #include "engine_math.h"
 #include "fuel_math.h"
-#include "allsensors.h"
+#include "thermistors.h"
 
 extern CANTxFrame txmsg;
 
