@@ -2294,8 +2294,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Fraction Divisor",				tpsAccelFractionDivisor
 		
 	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
-		field = "evaporation time constant",          wwaeTau
-		field = "added to wall coef",                   wwaeBeta
+		field = "evaporation time constant / tau",          wwaeTau
+		field = "added to wall coef / beta",                   wwaeBeta
 	
 		
 ;			Tuning->AccelEnrichment
