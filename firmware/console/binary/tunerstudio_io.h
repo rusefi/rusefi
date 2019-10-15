@@ -73,6 +73,10 @@ typedef struct {
 #define TS_SET_LOGGER_MODE   'l'
 #define TS_GET_LOGGER_BUFFER 'L'
 
+// Performance tracing
+#define TS_PERF_TRACE_BEGIN 'r'
+#define TS_PERF_TRACE_GET_BUFFER 'b'
+
 #define TS_SINGLE_WRITE_COMMAND 'W' // 0x57 pageValueWrite
 #define TS_CHUNK_WRITE_COMMAND 'C' // 0x43 pageChunkWrite
 #define TS_BURN_COMMAND 'B' // 0x42 burnCommand
