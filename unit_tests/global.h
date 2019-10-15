@@ -100,4 +100,8 @@ void print(const char *fmt, ...);
 
 #define CONFIG_PARAM(x) (x)
 
+#define lockAnyContext() false
+
+#define unlockAnyContext() {}
+
 #endif /* GLOBAL_H_ */

@@ -91,6 +91,8 @@
 #include "cj125.h"
 #endif /* EFI_CJ125 */
 
+EXTERN_ENGINE;
+
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
@@ -112,6 +114,12 @@ void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMET
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+#if EFI_MAP_AVERAGING
+	if (engineConfiguration->isMapAveragingEnabled) {
+		initMapAveraging(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
+	}
+#endif /* EFI_MAP_AVERAGING */
 
 }
 
@@ -772,12 +780,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initMalfunctionIndicator();
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
-#if EFI_MAP_AVERAGING
-	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(sharedLogger, engine);
-	}
-#endif /* EFI_MAP_AVERAGING */
-
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
@@ -831,6 +833,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191009;
+	return 20191013;
 }
 #endif /* EFI_UNIT_TEST */

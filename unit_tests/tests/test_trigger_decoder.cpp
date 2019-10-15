@@ -582,7 +582,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#00";
-	ASSERT_EQ( 3,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#3";
+	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
 	eth->assertInjectorUpEvent("setTestBug299: 1@0", 0, MS2US(8.5), 0);
 	eth->assertInjectorDownEvent("@1", 1, MS2US(10), 0);
 	eth->assertInjectorUpEvent("1@2", 2, MS2US(18.5), 1);
@@ -605,7 +605,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 8,  engine->executor.size()) << "qs#0";
-	ASSERT_EQ( 3,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#3";
+	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
 	eth->assertInjectorUpEvent("02@0", 0, MS2US(-11.5), 0);
 	eth->assertInjectorDownEvent("@1", 1, MS2US(-10), 0);
 	eth->assertInjectorUpEvent("@2", 2, MS2US(-1.5), 1);
@@ -648,7 +648,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|........|........|
 	// inj #1 |........|.......#|........|........|
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#0-2";
-	ASSERT_EQ( 4,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4";
+	ASSERT_EQ( 4,  getRevolutionCounter()) << "rev cnt#4";
 	eth->assertInjectorUpEvent("0@0", 0, MS2US(8.5), 0);
 	eth->assertInjectorDownEvent("0@1", 1, MS2US(10), 0);
 	eth->assertInjectorUpEvent("0@2", 2, MS2US(18.5), 1);
@@ -704,9 +704,9 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	ASSERT_EQ( 0,  engine->executor.size()) << "qs#1#2";
 
 
-	ASSERT_EQ( 4,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4#0";
+	ASSERT_EQ( 4,  getRevolutionCounter()) << "rev cnt#4#0";
 	eth.firePrimaryTriggerRise();
-	ASSERT_EQ( 5,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4#1";
+	ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#4#1";
 	// time...|0.......|10......|20......|30......|40......|50......|60......|
 	// inj #0 |########|##...###|########|.....###|########|........|........|
 	// inj #1 |.....###|########|....####|########|........|........|........|
@@ -724,7 +724,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 //	{
 //		scheduling_s *ev = engine->executor.getForUnitTest(9);
-//		ASSERT_EQ( 5,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#4#2";
+//		ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#4#2";
 //		ASSERT_TRUE(ev == &engineConfiguration->fuelActuators[2].signalPair[1].signalTimerDown) << "down 50";
 //	}
 
@@ -734,7 +734,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.fireFall(20);
 	ASSERT_EQ( 8,  engine->executor.size()) << "qs#2#1";
-	ASSERT_EQ( 5,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt#5";
+	ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#5";
 	// using old fuel schedule - but already wider pulses
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |........|.....###|########|.....###|########|........|........|
@@ -779,7 +779,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#2#2";
-	ASSERT_EQ( 6,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt6";
+	ASSERT_EQ( 6,  getRevolutionCounter()) << "rev cnt6";
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |########|.....###|########|....####|........|........|........|
 	// inj #1 |.....###|########|.....###|########|........|........|........|
@@ -819,7 +819,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	eth.firePrimaryTriggerFall();
 
 	ASSERT_EQ( 5,  engine->executor.size()) << "qs#3";
-	ASSERT_EQ( 6,  engine->rpmCalculator.getRevolutionCounter()) << "rev cnt6";
+	ASSERT_EQ( 6,  getRevolutionCounter()) << "rev cnt6";
 	ASSERT_EQ( 0,  eth.executeActions()) << "executed #6";
 
 
