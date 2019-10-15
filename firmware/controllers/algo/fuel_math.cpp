@@ -72,11 +72,13 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
 
-	DISPLAY_TEXT(Cranking_fuel);
-	floatms_t crankingFuel = engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = baseCrankingFuel
+	floatms_t crankingFuel = baseCrankingFuel
 			* engine->engineState.cranking.durationCoefficient
 			* engine->engineState.cranking.coolantTemperatureCoefficient
 			* engine->engineState.cranking.tpsCoefficient;
+
+	DISPLAY_TEXT(Cranking_fuel);
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = crankingFuel;
 
 	if (crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
