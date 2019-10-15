@@ -81,12 +81,13 @@ void perfEventInstantGlobal(PE event, uint8_t data) {
 	perfEventImpl(event, EPhase::InstantGlobal, data);
 }
 
-size_t perfTraceEnable() {
+void perfTraceEnable() {
 	s_isTracing = true;
-
-	return sizeof(s_traceBuffer);
 }
 
-const uint8_t* getTraceBuffer() {
-	return reinterpret_cast<const uint8_t*>(s_traceBuffer);
+const TraceBufferResult perfTraceGetBuffer() {
+	// stop tracing if you try to get the buffer early
+	s_isTracing = false;
+
+	return {reinterpret_cast<const uint8_t*>(s_traceBuffer), sizeof(s_traceBuffer)};
 }

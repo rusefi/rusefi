@@ -67,9 +67,16 @@ inline void perfEventInstantGlobal(PE event) {
 }
 
 // Enable one buffer's worth of perf tracing, and retrieve the buffer size in bytes
-size_t perfTraceEnable();
+void perfTraceEnable();
+
+struct TraceBufferResult
+{
+	const uint8_t* const Buffer;
+	const size_t Size;
+};
+
 // Retrieve the trace buffer
-const uint8_t* getTraceBuffer();
+const TraceBufferResult perfTraceGetBuffer();
 
 class ScopePerf
 {
