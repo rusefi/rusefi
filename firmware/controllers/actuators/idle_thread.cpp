@@ -371,7 +371,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
-		if (cisnan(clt))
+		if (!hasCltSensor())
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {

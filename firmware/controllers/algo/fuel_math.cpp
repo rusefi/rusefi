@@ -72,11 +72,13 @@ DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTem
 	DISPLAY_SENSOR(TPS);
 	DISPLAY_TEXT(eol);
 
-	DISPLAY_TEXT(Cranking_fuel);
-	floatms_t crankingFuel = engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = baseCrankingFuel
+	floatms_t crankingFuel = baseCrankingFuel
 			* engine->engineState.cranking.durationCoefficient
 			* engine->engineState.cranking.coolantTemperatureCoefficient
 			* engine->engineState.cranking.tpsCoefficient;
+
+	DISPLAY_TEXT(Cranking_fuel);
+	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = crankingFuel;
 
 	if (crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
@@ -335,7 +337,9 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 		// gather events
 		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
 		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
-		bool cltDeactivate = hasCltSensor() ? false : (getCoolantTemperature() < (float)CONFIG(coastingFuelCutClt));
+
+		// If no CLT sensor (or broken), don't allow DFCO
+		bool cltDeactivate = hasCltSensor() ? (getCoolantTemperature() < (float)CONFIG(coastingFuelCutClt)) : true;
 		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
 		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
 		
