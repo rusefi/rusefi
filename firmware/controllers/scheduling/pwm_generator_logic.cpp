@@ -152,6 +152,8 @@ void PwmConfig::handleCycleStart() {
  * @return Next time for signal toggle
  */
 efitimeus_t PwmConfig::togglePwmState() {
+	ScopePerf perf(PE::PwmConfigTogglePwmState);
+
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
 	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
@@ -186,7 +188,10 @@ efitimeus_t PwmConfig::togglePwmState() {
 		cbStateIndex = 1;
 	}
 
-	stateChangeCallback(cbStateIndex, arg);
+	{
+		ScopePerf perf(PE::PwmConfigStateChangeCallback);
+		stateChangeCallback(cbStateIndex, arg);
+	}
 
 	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(this);
 #if DEBUG_PWM
