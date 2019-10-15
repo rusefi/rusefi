@@ -91,6 +91,8 @@
 #include "cj125.h"
 #endif /* EFI_CJ125 */
 
+EXTERN_ENGINE;
+
 // this method is used by real firmware and simulator and unit test
 void mostCommonInitEngineController(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if !EFI_UNIT_TEST
