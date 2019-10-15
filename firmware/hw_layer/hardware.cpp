@@ -206,7 +206,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	 * intermediate callback when the buffer is half full.
 	 * */
 	if (adcp->state == ADC_COMPLETE) {
-		perfEventEnd(PE::AdcConversionFast, 0);
+		ScopePerf perf(PE::AdcCallbackFastComplete);
 
 		fastAdc.invalidateSamplesCache();
 
