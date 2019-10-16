@@ -1,7 +1,7 @@
 /**
  * @file	test_accel_enrichment.cpp
  *
- *  Created on: apr 29, 2014
+ * @date Apr 29, 2014
  *  	Author: Dmitry Sidin
  *      Author: Andrey Belomutskiy, (c) 2012-2018
  */
@@ -11,7 +11,7 @@
 #include "accel_enrichment.h"
 #include "engine_test_helper.h"
 
-TEST(big, testAccelEnrichment) {
+TEST(fuel, testTpsAccelEnrichment) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
