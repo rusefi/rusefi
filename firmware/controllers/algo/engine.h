@@ -29,7 +29,7 @@
 #include "global_execution_queue.h"
 #endif /* EFI_UNIT_TEST */
 
-#define FAST_CALLBACK_PERIOD_MS 5
+#define FAST_CALLBACK_PERIOD_MS 20
 
 class RpmCalculator;
 
