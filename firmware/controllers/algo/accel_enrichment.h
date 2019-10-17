@@ -68,16 +68,14 @@ private:
  */
 class WallFuel : public wall_fuel_state {
 public:
-	WallFuel();
 	/**
 	 * @param target desired squirt duration
 	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
 	 */
-	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
-	floatms_t getWallFuel(int injectorIndex) const;
+	floatms_t adjust(floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
+	floatms_t getWallFuel() const;
 	void resetWF();
 	int invocationCounter = 0;
-private:
 };
 
 void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
