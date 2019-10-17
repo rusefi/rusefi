@@ -38,16 +38,12 @@ tps_tps_Map3D_t tpsTpsMap("tpsTps");
 
 static Logging *logger = nullptr;
 
-WallFuel::WallFuel() {
-	resetWF();
-}
-
 void WallFuel::resetWF() {
 	wallFuel = 0;
 }
 
 //
-floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	invocationCounter++;
 	if (cisnan(desiredFuel)) {
 		return desiredFuel;
@@ -116,7 +112,7 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGI
 		beta = alpha;
 	}
 
-	float fuelFilmMass = wallFuel/*[injectorIndex]*/;
+	float fuelFilmMass = wallFuel;
 	float M_cmd = (desiredFuel - (1 - alpha) * fuelFilmMass) / (1 - beta);
 	
 	// We can't inject a negative amount of fuel
@@ -130,15 +126,15 @@ floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGI
 	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
 
 	DISPLAY_TEXT(Current_Wall_Fuel_Film);
-	DISPLAY_FIELD(wallFuel)/*[injectorIndex]*/ = fuelFilmMassNext;
+	DISPLAY_FIELD(wallFuel) = fuelFilmMassNext;
 	DISPLAY_TEXT(Fuel correction);
 	DISPLAY_FIELD(wallFuelCorrection) = M_cmd - desiredFuel;
 	DISPLAY_TEXT(ms);
 	return M_cmd;
 }
 
-floatms_t WallFuel::getWallFuel(int injectorIndex) const {
-	return wallFuel/*[injectorIndex]*/;
+floatms_t WallFuel::getWallFuel() const {
+	return wallFuel;
 }
 
 int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
