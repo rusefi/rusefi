@@ -11,7 +11,7 @@
 #include "engine_test_helper.h"
 
 
-TEST(fuel, testWallWettingEnrichment) {
+TEST(fuel, testWallWettingEnrichmentMath) {
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
 	engineConfiguration->wwaeTau = 1.0f;
@@ -19,10 +19,31 @@ TEST(fuel, testWallWettingEnrichment) {
 
 	engine->rpmCalculator.setRpmValue(3000 PASS_ENGINE_PARAMETER_SUFFIX);
 
+	// each invocation of 'adjust' changes WallWetting internal state
 	ASSERT_NEAR(16.6666, ENGINE(wallFuel).adjust(0, 10.0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
-
-
 	ASSERT_NEAR(16.198, ENGINE(wallFuel).adjust(0, 10.0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+}
+
+TEST(fuel, testWallWettingEnrichmentScheduling) {
+
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+
+	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 
 
+	eth.fireTriggerEvents2(/* count */ 5, 25 /* ms */);
+	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
+
+	int expectedInvocationCounter = 4;
+	ASSERT_EQ(expectedInvocationCounter, ENGINE(wallFuel).invocationCounter);
+
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// still same 4 - wall wetting is NOT invoked from 'periodicFastCallback'
+	ASSERT_EQ(expectedInvocationCounter, ENGINE(wallFuel).invocationCounter);
 }

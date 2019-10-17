@@ -48,6 +48,7 @@ void WallFuel::resetWF() {
 
 //
 floatms_t WallFuel::adjust(int injectorIndex, floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	invocationCounter++;
 	if (cisnan(desiredFuel)) {
 		return desiredFuel;
 	}
@@ -286,6 +287,8 @@ void AccelEnrichment::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUF
 void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// we update values in handleFuel() directly
 	//onNewValue(getTPS(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+
+	onUpdateInvocationCounter++;
 
 	// we used some extra fuel during the current cycle, so we "charge" our "acceleration pump" with it
 	accumulatedValue -= maxExtraPerPeriod;
