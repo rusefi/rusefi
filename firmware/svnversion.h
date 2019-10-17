@@ -8,5 +8,5 @@
 
 
 #ifndef VCS_VERSION
-#define VCS_VERSION "20053"
+#define VCS_VERSION "053"
 #endif
