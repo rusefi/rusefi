@@ -30,6 +30,7 @@ public:
 	void setLength(int length);
 	cyclic_buffer<float> cb;
 	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+	int onUpdateInvocationCounter = 0;
 };
 
 class LoadAccelEnrichment : public AccelEnrichment {
@@ -75,6 +76,7 @@ public:
 	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
 	floatms_t getWallFuel(int injectorIndex) const;
 	void resetWF();
+	int invocationCounter = 0;
 private:
 };
 
