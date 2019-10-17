@@ -389,12 +389,6 @@ static ALWAYS_INLINE void handleFuel(const bool limitedFuel, uint32_t trgEventIn
 		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	}
 
-	/**
-	 * we have same assignment of 'getInjectionDuration' to 'injectionDuration' in periodicFastCallback()
-	 * Open question why do we refresh that in two places?
-	 */
-	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-
 	for (int injEventIndex = 0; injEventIndex < CONFIG(specs.cylindersCount); injEventIndex++) {
 		InjectionEvent *event = &fs->elements[injEventIndex];
 		uint32_t eventIndex = event->injectionStart.triggerEventIndex;
