@@ -1,3 +1,5 @@
+CI
+
 Sep, 19 2019 status:
 * https://github.com/rusefi/rusefi/issues/796 Missing dwell altogether in some corner cases still should be addressed
 * Ion Sense https://rusefi.com/forum/viewtopic.php?f=4&t=963 is now somewhere on top of the list!
