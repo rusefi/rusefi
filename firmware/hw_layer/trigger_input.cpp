@@ -255,8 +255,7 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 void stopTriggerInputPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (CONFIGB(triggerInputPins)[i]
-				!= activeConfiguration.bc.triggerInputPins[i]) {
+		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}

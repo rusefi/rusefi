@@ -2,11 +2,10 @@
  * @file	electronic_throttle.h
  *
  * @date Dec 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef ELECTRONIC_THROTTLE_H_
-#define ELECTRONIC_THROTTLE_H_
+#pragma once
 
 // https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem
 #define DEFAULT_ETB_LOOP_FREQUENCY 200
@@ -37,5 +36,3 @@ void stopETBPins(void);
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
-
-#endif /* ELECTRONIC_THROTTLE_H_ */
