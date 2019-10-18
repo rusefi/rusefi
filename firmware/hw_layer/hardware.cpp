@@ -33,6 +33,7 @@
 
 #include "AdcConfiguration.h"
 #include "electronic_throttle.h"
+#include "idle_thread.h"
 #include "mcp3208.h"
 #include "hip9011.h"
 #include "histogram.h"
@@ -274,6 +275,7 @@ void applyNewHardwareSettings(void) {
 	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
+
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
@@ -287,6 +289,13 @@ void applyNewHardwareSettings(void) {
 #if EFI_HIP_9011
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
+
+#if EFI_IDLE_CONTROL
+	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
+	if (isIdleRestartNeeded) {
+		// todostopIdleHardware();
+	}
+#endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	bool etbRestartNeeded = isETBRestartNeeded();
@@ -347,6 +356,12 @@ void applyNewHardwareSettings(void) {
 	startHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
+
+#if EFI_IDLE_CONTROL
+//	if (isIdleRestartNeeded) {
+		 initIdleHardware();
+//	}
+#endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	if (etbRestartNeeded) {
