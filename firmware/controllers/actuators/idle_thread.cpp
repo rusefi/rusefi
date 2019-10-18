@@ -526,6 +526,24 @@ static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_g
 	}
 }
 
+bool isIdleHardwareRestartNeeded() {
+	return  isConfigurationChanged(stepperEnablePin) ||
+			isConfigurationChanged(stepperEnablePinMode) ||
+			isConfigurationChanged(bc.idle.stepperStepPin) ||
+			isConfigurationChanged(bc.idle.stepperStepPin) ||
+		isConfigurationChanged(bc.idle.solenoidFrequency) ||
+//		isConfigurationChanged() ||
+		//		isConfigurationChanged() ||
+		//		isConfigurationChanged() ||
+			isConfigurationChanged(bc.useETBforIdleControl) ||
+			isConfigurationChanged(bc.idle.solenoidPin);
+
+}
+
+static void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+
+}
+
 static void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIGB(useStepperIdle)) {
 		iacMotor.initialize(CONFIGB(idle).stepperStepPin,

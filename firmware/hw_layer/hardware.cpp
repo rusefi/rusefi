@@ -307,13 +307,13 @@ void applyNewHardwareSettings(void) {
 	stopAuxPins();
 #endif /* EFI_AUX_PID */
 
-	if (engineConfiguration->bc.is_enabled_spi_1 != activeConfiguration.bc.is_enabled_spi_1)
+	if (isConfigurationChanged(bc.is_enabled_spi_1))
 		stopSpi(SPI_DEVICE_1);
 
-	if (engineConfiguration->bc.is_enabled_spi_2 != activeConfiguration.bc.is_enabled_spi_2)
+	if (isConfigurationChanged(bc.is_enabled_spi_2))
 		stopSpi(SPI_DEVICE_2);
 
-	if (engineConfiguration->bc.is_enabled_spi_3 != activeConfiguration.bc.is_enabled_spi_3)
+	if (isConfigurationChanged(bc.is_enabled_spi_3))
 		stopSpi(SPI_DEVICE_3);
 
 #if EFI_HD44780_LCD
