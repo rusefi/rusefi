@@ -189,13 +189,12 @@ void EnginePins::startIgnitionPins(void) {
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		// todo: we need to check if mode has changed
-		if (CONFIGB(ignitionPins)[i] != activeConfiguration.bc.ignitionPins[i]) {
-			output->initPin(output->name, CONFIGB(ignitionPins)[i],
-				&CONFIGB(ignitionPinMode));
+		if (isConfigurationChanged(bc.ignitionPins[i])) {
+			output->initPin(output->name, CONFIGB(ignitionPins)[i], &CONFIGB(ignitionPinMode));
 		}
 	}
 	// todo: we need to check if mode has changed
-	if (engineConfiguration->dizzySparkOutputPin != activeConfiguration.dizzySparkOutputPin) {
+	if (isConfigurationChanged(dizzySparkOutputPin)) {
 		enginePins.dizzyOutput.initPin("dizzy tach", engineConfiguration->dizzySparkOutputPin,
 				&engineConfiguration->dizzySparkOutputPinMode);
 

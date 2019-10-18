@@ -481,7 +481,7 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etb.maxValue = 200;
 }
 
-static bool isSamePins(etb_io *current, etb_io *active) {
+static bool isEtbPinsChanged(etb_io *current, etb_io *active) {
 	return 	current->controlPin1 != active->controlPin1 ||
 			current->controlPinMode != active->controlPinMode ||
 			current->directionPin1 != active->directionPin1 ||
@@ -493,7 +493,7 @@ bool isETBRestartNeeded(void) {
 	/**
 	 * We do not want any interruption in HW pin while adjusting other properties
 	 */
-	return isSamePins(&engineConfiguration->bc.etb1, &activeConfiguration.bc.etb1);
+	return isEtbPinsChanged(&engineConfiguration->bc.etb1, &activeConfiguration.bc.etb1);
 }
 
 void stopETBPins(void) {
