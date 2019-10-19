@@ -119,7 +119,8 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 
-#define ADC_SAMPLING_SLOW ADC_SAMPLE_480
+// See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
+#define ADC_SAMPLING_SLOW ADC_SAMPLE_56
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 /*
  * ADC conversion group.
