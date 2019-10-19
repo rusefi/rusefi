@@ -293,7 +293,7 @@ void applyNewHardwareSettings(void) {
 #if EFI_IDLE_CONTROL
 	bool isIdleRestartNeeded = isIdleHardwareRestartNeeded();
 	if (isIdleRestartNeeded) {
-		// todostopIdleHardware();
+		stopIdleHardware();
 	}
 #endif
 
@@ -358,9 +358,9 @@ void applyNewHardwareSettings(void) {
 
 
 #if EFI_IDLE_CONTROL
-//	if (isIdleRestartNeeded) {
+	if (isIdleRestartNeeded) {
 		 initIdleHardware();
-//	}
+	}
 #endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
