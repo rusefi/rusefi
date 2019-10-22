@@ -32,8 +32,6 @@
 		extern persistent_config_container_s persistentState; \
 		extern persistent_config_s *config; \
 
-#define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)
-
 #define EXTERN_ENGINE \
 		extern Engine ___engine; \
 		extern Engine *engine; \

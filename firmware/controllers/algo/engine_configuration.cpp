@@ -184,7 +184,7 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_IDLE_CONTROL */
 
 #if EFI_SHAFT_POSITION_INPUT
-	onConfigurationChangeTriggerCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
+	onConfigurationChangeTriggerCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 #if EFI_EMULATE_POSITION_SENSORS
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
