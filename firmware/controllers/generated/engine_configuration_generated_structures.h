@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 23 21:40:23 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1839,7 +1839,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 1760
 	 */
-	uint8_t unusedFormerWarmupAfrPid[16];
+	float alternator_derivativeFilterLoss;
+	/**
+	 * offset 1764
+	 */
+	float alternator_antiwindupFreq;
+	/**
+	 * offset 1768
+	 */
+	uint8_t unusedFormerWarmupAfrPid[8];
 	/**
 	 * kPa value which is too low to be true
 	 * offset 1776
@@ -2867,4 +2875,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Sep 29 11:56:14 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 23 21:40:23 EDT 2019

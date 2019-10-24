@@ -57,6 +57,10 @@
 #define alFIn_offset_hex fb8
 #define alignEngineSnifferAtTDC_offset 744
 #define alignEngineSnifferAtTDC_offset_hex 2e8
+#define alternator_antiwindupFreq_offset 1764
+#define alternator_antiwindupFreq_offset_hex 6e4
+#define alternator_derivativeFilterLoss_offset 1760
+#define alternator_derivativeFilterLoss_offset_hex 6e0
 #define alternatorControl_dFactor_offset 1724
 #define alternatorControl_dFactor_offset_hex 6bc
 #define alternatorControl_iFactor_offset 1720
@@ -1915,8 +1919,8 @@
 #define unusedErrorPin_offset_hex 7f8
 #define unusedFlexFuelSensor_offset 3100
 #define unusedFlexFuelSensor_offset_hex c1c
-#define unusedFormerWarmupAfrPid_offset 1760
-#define unusedFormerWarmupAfrPid_offset_hex 6e0
+#define unusedFormerWarmupAfrPid_offset 1768
+#define unusedFormerWarmupAfrPid_offset_hex 6e8
 #define unusedMa2_offset 711
 #define unusedMa2_offset_hex 2c7
 #define unusedOldWarmupAfr_offset 744
