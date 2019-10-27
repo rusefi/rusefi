@@ -443,7 +443,6 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 	switch (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 	case IM_ONE_COIL:
 		return 0;
-		break;
 	case IM_WASTED_SPARK: {
 		if (CONFIG(specs.cylindersCount) == 1) {
 			// we do not want to divide by zero
@@ -451,10 +450,10 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 		}
 		return cylinderIndex % (CONFIG(specs.cylindersCount) / 2);
 	}
-		break;
 	case IM_INDIVIDUAL_COILS:
 		return cylinderIndex;
-		break;
+	case IM_TWO_COILS:
+		return cylinderIndex % 2;
 
 	default:
 		warning(CUSTOM_OBD_IGNITION_MODE, "unsupported ignitionMode %d in getIgnitionPinForIndex()", engineConfiguration->ignitionMode);
