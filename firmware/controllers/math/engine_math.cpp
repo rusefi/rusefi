@@ -436,7 +436,10 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return 1;
 }
 
-static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
+/**
+ * @param cylinderIndex from 9 to cylinderCount, not cylinder number
+ */
+static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 	case IM_ONE_COIL:
 		return 0;
@@ -446,11 +449,11 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			// we do not want to divide by zero
 			return 0;
 		}
-		return i % (CONFIG(specs.cylindersCount) / 2);
+		return cylinderIndex % (CONFIG(specs.cylindersCount) / 2);
 	}
 		break;
 	case IM_INDIVIDUAL_COILS:
-		return i;
+		return cylinderIndex;
 		break;
 
 	default:
@@ -462,8 +465,8 @@ static int getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (ignitionMode != engine->ignitionModeForPinIndices) {
 #if EFI_ENGINE_CONTROL
-		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER_SUFFIX);
+		for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+			ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 #endif /* EFI_ENGINE_CONTROL */
 		engine->ignitionModeForPinIndices = ignitionMode;
@@ -509,7 +512,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_UNIT_TEST */
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		ENGINE(ignitionPositionWithinEngineCycle[i])= ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
+		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 	}
 
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
