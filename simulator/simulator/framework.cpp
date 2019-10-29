@@ -16,16 +16,6 @@ efitimeus_t getTimeNowUs(void) {
 	return chVTGetSystemTimeX() * (1000000 / CH_CFG_ST_FREQUENCY);
 }
 
-// todo; reduce code duplication with prod code?
-efitimems_t currentTimeMillis(void) {
-	return chVTGetSystemTimeX() / 1000;
-}
-
-// todo; reduce code duplication with prod code?
-efitimesec_t getTimeNowSeconds(void) {
-	return currentTimeMillis() / CH_CFG_ST_FREQUENCY;
-}
-
 static size_t wt_writes(void *ip, const uint8_t *bp, size_t n) {
 	printToConsole((char*)bp);
 	return CONSOLE_PORT->vmt->write(CONSOLE_PORT, bp, n);
