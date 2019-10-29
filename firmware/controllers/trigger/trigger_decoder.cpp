@@ -111,7 +111,7 @@ bool printTriggerDebug = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
-static Logging * logger;
+static Logging * logger = NULL;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -561,7 +561,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 								i);
 					} else {
 						scheduleMsg(logger, "time=%d index=%d: gap=%.2f expected from %.2f to %.2f error=%s",
-							getTimeNowSeconds(),
+							/* cast is needed to nake sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
