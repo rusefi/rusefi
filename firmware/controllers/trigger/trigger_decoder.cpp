@@ -308,8 +308,6 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 #define needToSkipFall(type) ((!TRIGGER_SHAPE(gapBothDirections)) && (( TRIGGER_SHAPE(useRiseEdge)) && (type != TV_RISE)))
 #define needToSkipRise(type) ((!TRIGGER_SHAPE(gapBothDirections)) && ((!TRIGGER_SHAPE(useRiseEdge)) && (type != TV_FALL)))
 
-#define isLessImportant(type) (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap()) )
-
 int TriggerState::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
@@ -449,7 +447,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 	bool isPrimary = triggerWheel == T_PRIMARY;
 
-	if (isLessImportant(type)) {
+	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
 #if EFI_UNIT_TEST
 		if (printTriggerDebug) {
 			printf("%s isLessImportant %s now=%lld index=%d\r\n",
@@ -552,7 +550,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 			if (CONFIG(verboseTriggerSynchDetails) || (someSortOfTriggerError && !silentTriggerError)) {
 				for (int i = 0;i<GAP_TRACKING_LENGTH;i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
@@ -561,7 +559,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 								i);
 					} else {
 						scheduleMsg(logger, "time=%d index=%d: gap=%.2f expected from %.2f to %.2f error=%s",
-							/* cast is needed to nake sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
+							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
 							TRIGGER_SHAPE(syncronizationRatioFrom[i]),
