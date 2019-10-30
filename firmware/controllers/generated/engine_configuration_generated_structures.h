@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 23 21:40:23 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 30 09:25:38 EDT 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -2612,7 +2612,19 @@ struct engine_configuration_s {
 	/**
 	 * offset 4060
 	 */
-	int mainUnusedEnd[585];
+	iac_pid_mult_t iacPidMultTable;
+	/**
+	 * offset 4124
+	 */
+	uint8_t iacPidMultLoadBins[IAC_PID_MULT_SIZE];
+	/**
+	 * offset 4132
+	 */
+	uint8_t iacPidMultRpmBins[IAC_PID_MULT_SIZE];
+	/**
+	 * offset 4140
+	 */
+	int mainUnusedEnd[565];
 	/** total size 6400*/
 };
 
@@ -2875,4 +2887,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 23 21:40:23 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 30 09:25:38 EDT 2019
