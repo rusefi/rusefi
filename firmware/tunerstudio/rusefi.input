@@ -294,7 +294,8 @@ fileVersion = { 20190701 }
       etbTarget        = scalar,F32, 312, "%", 1, 0
       etb1DutyCycle    = scalar,F32, 316, "%", 1, 0
       etb1Error        = scalar,F32, 320, "%", 1, 0
-
+      tpsAdcMin        = scalar,F32, 324, "%", 1, 0
+      tpsAdcMax        = scalar,F32, 328, "%", 1, 0
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -314,9 +315,12 @@ fileVersion = { 20190701 }
 [PcVariables]
     wueAfrTargetOffset = array, S16, [ 16], ":1",   0.1, 0.0, -3.0, 3.0, 1;
     wueAnalRecommend   = array, U08, [ 16], "%",  1.00, 0.0, 100, 255.00, 0
+    calibrateMode = bits,   U08,   [0:0], "Set", "Calibrate"
 
 [ConstantsExtensions]
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
+    maintainConstantValue = tpsMin,{ calibrateMode ? tpsAdcMin : tpsMin}    
+    maintainConstantValue = tpsMax,{ calibrateMode ? tpsAdcMax : tpsMax}
 
 [CurveEditor]
 ;	xAxis       =  leftValue, rightValue, step
@@ -1245,6 +1249,9 @@ menuDialog = main
 		subMenu = etbTpsBiasCurve,			"Electronic throttle body bias curve" @@if_ts_show_etb
 		subMenu = pedalToTpsTbl,			"Electronic Pedal Map" @@if_ts_show_etb
 
+menu = "Tools"
+       subMenu = driveByWireCal, "Calibrate ETB TPS"
+	   subMenu = driveByWirePedal, "Calibrate Throttle Pedal"
 
 [ControllerCommands]
 ; commandName    = command1, command2, commandn...
@@ -2588,8 +2595,39 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "Ignition Math Logic @",				ignMathCalculateAtIndex
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
+	field = "Target temperature", 			postCrankingTargetClt
 
-		field = "Target temperature", 			postCrankingTargetClt
+    dialog = tpsAdGauge, "TPS ADC"
+         gauge = tpsADCGauge
+							
+    dialog = calmode, "Calibration Mode"
+	  radio = horizontal, "", calibrateMode
+		
+    dialog = tpsAdcFields, "TPS Min / Max"
+	    commandButton = "Calibrate ETB TPS", cmd_test_ac_relay, {calibrateMode}
+	   field = "",
+       field = "TPS Min", tpsMin
+	   field = "TPS Max", tpsMax
+		    		
+	dialog = fieldsAndGauge, "", xAxis
+		panel = tpsAdcFields
+		panel = tpsADGauge
+			 		
+	dialog = driveByWireCal, ""
+		panel = calmode
+		panel = fieldsAndGauge
+
+    dialog = driveByWirePedal,""
+		field = "Throttle Pedal Up",					throttlePedalUpVoltage
+		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
+	dialog = driveByWireCal, ""
+		panel = calmode
+		panel = fieldsAndGauge
+
+    dialog = driveByWirePedal,""
+		field = "Throttle Pedal Up",					throttlePedalUpVoltage
+		field = "Throttle Pedal Wide Open",				throttlePedalWOTVoltage
+
 
 [Tools]
  ;addTool = toolName, PanelName
