@@ -268,6 +268,10 @@ void stopSpi(spi_device_e device) {
 #endif /* HAL_USE_SPI */
 }
 
+/**
+ * this method is NOT currently invoked on ECU start
+ * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
+ */
 void applyNewHardwareSettings(void) {
     // all 'stop' methods need to go before we begin starting pins
 
