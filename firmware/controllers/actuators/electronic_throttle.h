@@ -36,3 +36,4 @@ void stopETBPins(void);
 void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
+void setEtbTps();
