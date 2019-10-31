@@ -36,6 +36,7 @@
 #include "idle_thread.h"
 #include "periodic_thread_controller.h"
 #include "tps.h"
+#include "electronic_throttle.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -187,7 +188,7 @@ void fuelPumpBenchExt(const char *durationMs) {
 }
 
 void acRelayBench(void) {
-	pinbench("0", "1000", "100", "1", &enginePins.acRelay, CONFIGB(acRelayPin));
+		setEtbTps();
 }
 
 void fuelPumpBench(void) {
