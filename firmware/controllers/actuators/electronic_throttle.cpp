@@ -420,6 +420,18 @@ void setEtbOffset(int value) {
 	etbPid.reset();
 	showEthInfo();
 }
+void setEtbTps() {
+	directPwmValue = 70;
+	chThdSleep(600);
+	grabTPSIsWideOpen();
+	directPwmValue = -70;
+	chThdSleep(600);
+	grabTPSIsClosed();
+	chThdSleep(300);
+	directPwmValue = NAN;
+
+	etbPid.reset();
+}
 #endif /* EFI_PROD_CODE */
 
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
