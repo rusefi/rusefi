@@ -162,6 +162,7 @@ void grabTPSIsClosed() {
 #if EFI_PROD_CODE
 	printTPSInfo();
 	engineConfiguration->tpsMin = getTPS10bitAdc();
+	tsOutputChannels.tpsAdcMin = engineConfiguration->tpsMin;
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
 }
@@ -170,6 +171,7 @@ void grabTPSIsWideOpen() {
 #if EFI_PROD_CODE
 	printTPSInfo();
 	engineConfiguration->tpsMax = getTPS10bitAdc();
+	tsOutputChannels.tpsAdcMax = engineConfiguration->tpsMax;
 	printTPSInfo();
 #endif /* EFI_PROD_CODE */
 }
