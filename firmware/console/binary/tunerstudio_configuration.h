@@ -176,7 +176,9 @@ typedef struct {
 	float etbTarget;		// 312
 	float etb1DutyCycle;	// 316
 	float etb1Error;		// 320
-	int unused3[8];
+	float tpsAdcMin;        // 324
+	float tpsAdcMax ;       // 328  
+	int unused3[6];
 	/* see also [OutputChannels] in rusefi.input */
 } TunerStudioOutputChannels;
 
