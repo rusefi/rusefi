@@ -73,7 +73,7 @@ void print(const char *fmt, ...);
 #define CCM_OPTIONAL
 
 #define EXTERN_ENGINE extern EnginePins enginePins; \
-	 extern engine_configuration_s activeConfiguration
+	 extern engine_configuration_s & activeConfiguration
 
 #define EXTERN_CONFIG
 
