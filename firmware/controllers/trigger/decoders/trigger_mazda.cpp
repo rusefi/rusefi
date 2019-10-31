@@ -103,7 +103,7 @@ void initializeMazdaMiataNb2Crank(TriggerShape *s) {
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-	s->setTriggerSynchronizationGap(0.11f);
+	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
 	s->useRiseEdge = false;
 	s->bothFrontsRequired = true;
 	s->useOnlyPrimaryForSync = true;

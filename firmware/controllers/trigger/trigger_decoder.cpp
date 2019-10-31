@@ -558,7 +558,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 						scheduleMsg(logger, "index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						scheduleMsg(logger, "time=%d index=%d: gap=%.2f expected from %.2f to %.2f error=%s",
+						scheduleMsg(logger, "time=%d index=%d: gap=%.3f expected from %.3f to %.3f error=%s",
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							i,
 							gap,
