@@ -486,6 +486,7 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
  * set engine_type 13
  */
 void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+#if (BOARD_TLE8888_COUNT > 0)
 	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
@@ -564,5 +565,5 @@ void setMiataNB2_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 0.3#4 has wrong R139 as well?
 	// 56k high side/10k low side multiplied by above analogInputDividerCoefficient = 11
 	engineConfiguration->vbattDividerCoeff = (66.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
-
+#endif /* BOARD_TLE8888_COUNT */
 }
