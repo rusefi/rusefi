@@ -124,3 +124,16 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 }
 
 #endif /* HAL_USE_ADC */
+
+#if EFI_PROD_CODE
+#define BOOTLOADER_LOCATION 0x1C00001CUL
+void jump_to_bootloader() {
+	typedef void (*bootloader_start_t)(void * arg);
+	// Read the function address from the ROM API tree and turn it into a function pointer
+	bootloader_start_t bootloaderStart = (bootloader_start_t)(**(uint32_t **)BOOTLOADER_LOCATION);
+	// Call the function!
+	bootloaderStart(NULL);
+	// Will not return from here
+	NVIC_SystemReset();
+}
+#endif /* EFI_PROD_CODE */
