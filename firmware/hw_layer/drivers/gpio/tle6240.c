@@ -380,7 +380,7 @@ int tle6240_writePad(void *data, brain_pin_e pin, int value)
 {
 	struct tle6240_priv *chip;
 
-	if ((pin >= TLE6240_DIRECT_OUTPUTS) || (data == NULL))
+	if ((pin >= TLE6240_OUTPUTS) || (data == NULL))
 		return -1;
 
 	chip = (struct tle6240_priv *)data;
