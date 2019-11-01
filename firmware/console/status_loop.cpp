@@ -91,6 +91,10 @@ extern int icuWidthPeriodCounter;
 #include "fsio_impl.h"
 #endif /* EFI_FSIO */
 
+#if (BOARD_TLE8888_COUNT > 0)
+#include "tle8888.h"
+#endif /* BOARD_TLE8888_COUNT */
+
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
@@ -324,8 +328,8 @@ static void printSensors(Logging *log) {
 		// 268
 		reportSensorF(log, GAUGE_NAME_FUEL_PID_CORR, "ms", ENGINE(engineState.running.pidCorrection), 2);
 
-		reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel).getWallFuel(0), 2);
-		reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel).wallFuelCorrection, 2);
+		reportSensorF(log, GAUGE_NAME_FUEL_WALL_AMOUNT, "v", ENGINE(wallFuel[0]).getWallFuel(), 2);
+		reportSensorF(log, GAUGE_NAME_FUEL_WALL_CORRECTION, "v", ENGINE(wallFuel[0]).wallFuelCorrection, 2);
 
 		reportSensorI(log, GAUGE_NAME_VERSION, "#", getRusEfiVersion());
 
@@ -748,11 +752,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 148
 	tsOutputChannels->fuelTankLevel = engine->sensors.fuelTankLevel;
 	// 160
-	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel).getWallFuel(0);
+	tsOutputChannels->wallFuelAmount = ENGINE(wallFuel[0]).getWallFuel();
 	// 164
 	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
 	// 168
-	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel).wallFuelCorrection;
+	tsOutputChannels->wallFuelCorrection = ENGINE(wallFuel[0]).wallFuelCorrection;
 	// 184
 	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
 	// 188
@@ -988,6 +992,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_CDM_INTEGRATION
 		ionPostState(tsOutputChannels);
 #endif /* EFI_CDM_INTEGRATION */
+		break;
+	case DBG_TLE8888:
+#if (BOARD_TLE8888_COUNT > 0)
+		tle8888PostState(tsOutputChannels);
+#endif /* BOARD_TLE8888_COUNT */
 		break;
 	default:
 		;

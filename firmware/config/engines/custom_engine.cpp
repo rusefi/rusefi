@@ -389,6 +389,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 30
  */
 void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+#if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->directSelfStimulation = true; // this engine type is used for board validation
 
 	boardConfiguration->triggerSimulatorFrequency = 60;
@@ -496,6 +497,7 @@ void mreBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
 	boardConfiguration->injectionPins[2 - 1] = GPIOE_10;
+#endif /* BOARD_TLE8888_COUNT */
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */

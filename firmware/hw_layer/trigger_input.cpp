@@ -255,13 +255,12 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 void stopTriggerInputPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (CONFIGB(triggerInputPins)[i]
-				!= activeConfiguration.bc.triggerInputPins[i]) {
+		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		if (engineConfiguration->camInputs[i] != activeConfiguration.camInputs[i]) {
+		if (isConfigurationChanged(camInputs[i])) {
 			turnOffTriggerInputPin(activeConfiguration.camInputs[i]);
 		}
 	}
@@ -271,15 +270,14 @@ void stopTriggerInputPins(void) {
 void startTriggerInputPins(void) {
 #if EFI_PROD_CODE
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (CONFIGB(triggerInputPins)[i]
-				!= activeConfiguration.bc.triggerInputPins[i]) {
+		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			const char * msg = (i == 0 ? "trigger#1" : (i == 1 ? "trigger#2" : "trigger#3"));
 			turnOnTriggerInputPin(msg, CONFIGB(triggerInputPins)[i], true);
 		}
 	}
 
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		if (engineConfiguration->camInputs[i] != activeConfiguration.camInputs[i]) {
+		if (isConfigurationChanged(camInputs[i])) {
 			turnOnTriggerInputPin("cam", engineConfiguration->camInputs[i], false);
 		}
 	}

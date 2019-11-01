@@ -15,6 +15,7 @@ TESTS_SRC_CPP = \
 	tests/test_trigger_noiseless.cpp \
 	tests/test_issue_898.cpp \
 	tests/test_fuel_map.cpp \
+	tests/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_maf2map.cpp \
 	tests/test_fuelCut.cpp \
@@ -29,7 +30,6 @@ TESTS_SRC_CPP = \
 	tests/test_pid.cpp \
 	tests/test_accel_enrichment.cpp \
 	tests/test_gpiochip.cpp \
-\
 	tests/sensor/basic_sensor.cpp \
 	tests/sensor/func_sensor.cpp \
 	tests/sensor/function_pointer_sensor.cpp \

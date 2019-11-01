@@ -40,13 +40,6 @@
 #include "pin_repository.h"
 #include "os_util.h"
 
-/* to be removed  */
-#if EFI_TUNER_STUDIO
-#include "engine_configuration.h"
-EXTERN_CONFIG;
-#include "tunerstudio.h"
-#endif /* EFI_TUNER_STUDIO */
-
 /*
  * TODO list:
  */
@@ -118,6 +111,7 @@ static int reinitializationCounter = 0;
 static int initResponsesAccumulator = 0;
 static int initResponse0 = 0;
 static int initResponse1 = 0;
+static uint16_t spiRxb = 0, spiTxb = 0;
 
 
 /* Driver private data */
@@ -150,6 +144,18 @@ static const char* tle8888_pin_names[TLE8888_OUTPUTS] = {
 	"TLE8888.IGN1",		"TLE8888.IGN2",		"TLE8888.IGN3",		"TLE8888.IGN4"
 };
 
+#if EFI_TUNER_STUDIO
+void tle8888PostState(TunerStudioOutputChannels *tsOutputChannels) {
+	tsOutputChannels->debugIntField1 = tle8888SpiCounter;
+	tsOutputChannels->debugIntField2 = spiTxb;
+	tsOutputChannels->debugIntField3 = spiRxb;
+	tsOutputChannels->debugIntField4 = initResponsesAccumulator;
+	tsOutputChannels->debugIntField5 = reinitializationCounter;
+	tsOutputChannels->debugFloatField1 = initResponse0;
+	tsOutputChannels->debugFloatField2 = initResponse1;
+}
+#endif /* EFI_TUNER_STUDIO */
+
 /*==========================================================================*/
 /* Driver local functions.													*/
 /*==========================================================================*/
@@ -179,27 +185,18 @@ static int tle8888_spi_rw(struct tle8888_priv *chip, uint16_t tx, uint16_t *rx)
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
-	uint16_t rxb = spiPolledExchange(spi, tx);
+	spiRxb = spiPolledExchange(spi, tx);
 	//spiExchange(spi, 2, &tx, &rxb); 8 bit version just in case?
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_TLE8888) {
-		tsOutputChannels.debugIntField1 = tle8888SpiCounter++;
-		tsOutputChannels.debugIntField2 = tx;
-		tsOutputChannels.debugIntField3 = rxb;
-		tsOutputChannels.debugIntField4 = initResponsesAccumulator;
-		tsOutputChannels.debugIntField5 = reinitializationCounter;
-		tsOutputChannels.debugFloatField1 = initResponse0;
-		tsOutputChannels.debugFloatField2 = initResponse1;
-	}
-#endif /* EFI_TUNER_STUDIO */
+	spiTxb = tx;
+	tle8888SpiCounter++;
 
 	if (rx)
-		*rx = rxb;
+		*rx = spiRxb;
 
 	/* no errors for now */
 	return 0;

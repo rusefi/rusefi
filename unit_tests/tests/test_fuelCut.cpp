@@ -1,7 +1,8 @@
 /*
- * test_fuelCut.cpp
+ * @file test_fuelCut.cpp
  *
- *  Created on: Mar 22, 2018
+ * @date Mar 22, 2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "engine_math.h"

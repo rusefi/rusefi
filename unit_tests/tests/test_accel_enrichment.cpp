@@ -1,7 +1,9 @@
 /**
  * @file	test_accel_enrichment.cpp
  *
- *  Created on: apr 29, 2014
+ * See also test_fuel_wall_wetting.cpp
+ *
+ * @date Apr 29, 2014
  *  	Author: Dmitry Sidin
  *      Author: Andrey Belomutskiy, (c) 2012-2018
  */
@@ -10,8 +12,9 @@
 #include "engine_configuration.h"
 #include "accel_enrichment.h"
 #include "engine_test_helper.h"
+#include "tps.h"
 
-TEST(big, testAccelEnrichment) {
+TEST(fuel, testTpsAccelEnrichmentMath) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
@@ -38,6 +41,40 @@ TEST(big, testAccelEnrichment) {
 	ASSERT_EQ( 0,  engine->tpsAccelEnrichment.getMaxDelta(PASS_ENGINE_PARAMETER_SIGNATURE)) << "maxDelta";
 }
 
+TEST(fuel, testTpsAccelEnrichmentScheduling) {
+	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+
+	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+
+	setMockTpsValue(7 PASS_ENGINE_PARAMETER_SUFFIX);
+
+	eth.fireTriggerEvents2(/* count */ 5, 25 /* ms */);
+	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
+	int expectedInvocationCounter = 1;
+	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
+
+	setMockTpsValue(70 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.fireTriggerEvents2(/* count */ 1, 25 /* ms */);
+
+	float expectedAEValue = 29.2;
+	// it does not matter how many times we invoke 'getTpsEnrichment' - state does not change
+	for (int i = 0; i <20;i++) {
+		ASSERT_NEAR(expectedAEValue, ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE)), EPS4D);
+	}
+
+	expectedInvocationCounter++;
+	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
+
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
+}
+
 static void doFractionalTpsIteration(int period, int divisor, int numCycles, std::vector<floatms_t> &tpsEnrich DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// every cycle
 	engineConfiguration->tpsAccelFractionPeriod = period;
@@ -53,7 +90,7 @@ static void doFractionalTpsIteration(int period, int divisor, int numCycles, std
 	}
 }
 
-TEST(big, testAccelEnrichmentFractionalTps) {
+TEST(fuel, testAccelEnrichmentFractionalTps) {
 	printf("====================================================================================== testAccelEnrichmentFractionalTps\r\n");
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);

@@ -44,7 +44,6 @@ MEMORY
   ram5     : org = 0x00000000, len = 0
   ram6     : org = 0x00000000, len = 0
   ram7     : org = 0x00000000, len = 0
-  config   : org = 0x00075000, len = 0xB000
 }
 
 /* Flash region for the configuration bytes.*/
@@ -58,14 +57,6 @@ SECTIONS
   {
     KEEP(*(.cfmconfig))
   } > flash1b
-
-  .config : ALIGN(4)
-    {
-        . = ALIGN(4);
-        *(.config)
-        *(.config.*)
-        . = ALIGN(4);
-    } > config AT > config
 }
 
 /* For each data/text section two region are defined, a virtual region

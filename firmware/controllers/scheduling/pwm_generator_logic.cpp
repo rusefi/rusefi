@@ -62,6 +62,10 @@ void PwmConfig::init(float *st, SingleWave *waves) {
  * See also setFrequency
  */
 void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
+	if (isStopRequested) {
+		// we are here in order to not change pin once PWM stop was requested
+		return;
+	}
 	if (cisnan(dutyCycle)) {
 		warning(CUSTOM_DUTY_INVALID, "spwd:dutyCycle %.2f", dutyCycle);
 		return;
@@ -128,6 +132,10 @@ void PwmConfig::setFrequency(float frequency) {
 	periodNt = US2NT(frequency2periodUs(frequency));
 }
 
+void PwmConfig::stop() {
+	isStopRequested = true;
+}
+
 void PwmConfig::handleCycleStart() {
 	efiAssertVoid(CUSTOM_ERR_6697, safe.phaseIndex == 0, "handleCycleStart");
 		if (pwmCycleCallback != NULL) {
@@ -151,6 +159,9 @@ void PwmConfig::handleCycleStart() {
  * @return Next time for signal toggle
  */
 efitimeus_t PwmConfig::togglePwmState() {
+	if (isStopRequested) {
+		return 0;
+	}
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
 	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
@@ -229,6 +240,10 @@ static void timerCallback(PwmConfig *state) {
 	efiAssertVoid(CUSTOM_ERR_6581, state->dbgNestingLevel < 25, "PWM nesting issue");
 
 	efitimeus_t switchTimeUs = state->togglePwmState();
+	if (switchTimeUs == 0) {
+		// we are here when PWM gets stopped
+		return;
+	}
 	if (state->executor == NULL) {
 		firmwareError(CUSTOM_ERR_6695, "exec on %s", state->name);
 		return;
@@ -271,6 +286,7 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 		pin_state_t *const*pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	UNUSED(msg);
 	this->executor = executor;
+	isStopRequested = false;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {

@@ -97,6 +97,15 @@ void rusEfiFunctionalTest(void) {
 	itoa10(versionBuffer, (int)getRusEfiVersion());
 	printToConsole(versionBuffer);
 
+#if EFI_SHAFT_POSITION_INPUT
+	/**
+	 * This is so early because we want to init logger
+	 * which would be used while finding trigger sync index
+	 * while reading configuration
+	 */
+	initTriggerDecoderLogger(&sharedLogger);
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
 	initIntermediateLoggingBuffer();
 
 	engine->setConfig(config);
@@ -119,9 +128,6 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerCentral(&sharedLogger);
 	initTriggerEmulator(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#if EFI_MAP_AVERAGING
-	initMapAveraging(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_MAP_AVERAGING */
 
 	initMainEventListener(&sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 

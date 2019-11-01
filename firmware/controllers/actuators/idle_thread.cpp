@@ -526,7 +526,30 @@ static void applyIdleSolenoidPinState(int stateIndex, PwmConfig *state) /* pwm_g
 	}
 }
 
-static void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool isIdleHardwareRestartNeeded() {
+	return  isConfigurationChanged(stepperEnablePin) ||
+			isConfigurationChanged(stepperEnablePinMode) ||
+			isConfigurationChanged(bc.idle.stepperStepPin) ||
+			isConfigurationChanged(bc.idle.solenoidFrequency) ||
+			isConfigurationChanged(bc.useStepperIdle) ||
+//			isConfigurationChanged() ||
+			isConfigurationChanged(bc.useETBforIdleControl) ||
+			isConfigurationChanged(bc.idle.solenoidPin);
+
+}
+
+void stopIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	brain_pin_markUnused(activeConfiguration.stepperEnablePin);
+	brain_pin_markUnused(activeConfiguration.bc.idle.stepperStepPin);
+	brain_pin_markUnused(activeConfiguration.bc.idle.solenoidPin);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+//	brain_pin_markUnused(activeConfiguration.bc.idle.);
+
+}
+
+void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIGB(useStepperIdle)) {
 		iacMotor.initialize(CONFIGB(idle).stepperStepPin,
 				CONFIGB(idle).stepperDirectionPin,
@@ -537,7 +560,7 @@ static void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				logger);
 		// This greatly improves PID accuracy for steppers with a small number of steps
 		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
-	} else {
+	} else if (!engineConfiguration->bc.useETBforIdleControl) {
 		/**
 		 * Start PWM for idleValvePin
 		 */
@@ -559,7 +582,8 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	idlePid.initPidClass(&engineConfiguration->idleRpmPid);
 
 #if ! EFI_UNIT_TEST
-	// todo: re-initialize idle pins on the fly
+	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
+	// 'applyNewHardwareSettings' todo: maybe unify these two use-cases?
 	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_UNIT_TEST */
 

@@ -78,4 +78,6 @@
 	x.config = config;                           \
 	x.boardConfiguration = boardConfiguration;
 
+#define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)
+
 #endif /* CONTROLLERS_CORE_COMMON_HEADERS_H_ */

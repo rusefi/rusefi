@@ -55,8 +55,9 @@ SPIDriver SPID2;
 /* Driver local functions.                                                   */
 /*===========================================================================*/
 
-static int32_t spi_detectPCS(bool isMaster, ioportid_t ssport, uint16_t sspad) {
+static int32_t spi_detectPCS(bool isMaster, ioportid_t ssport, uint16_t sspad, int *alt) {
 	// todo: check if PCS corresponds to SPI number
+	*alt = 3;
 	if (ssport == GPIOA) {
 		switch (sspad) {
 		case 6: 
@@ -78,9 +79,11 @@ static int32_t spi_detectPCS(bool isMaster, ioportid_t ssport, uint16_t sspad) {
 	} else if (ssport == GPIOD && sspad == 3) {
 		return isMaster ? kLPSPI_MasterPcs0 : kLPSPI_SlavePcs0;
 	} else if (ssport == GPIOE && sspad == 6) {
+		*alt = 2;
 		return isMaster ? kLPSPI_MasterPcs2 : kLPSPI_SlavePcs2;
 	}
 	// wrong/unrecognized PCS!
+	*alt = 0;
 	return -1;
 }
 
@@ -165,9 +168,17 @@ void spi_lld_start(SPIDriver *spip) {
 #endif
 
 	spip->isMaster = (spip->config->cr1 & SPI_CR1_MSTR) != 0;
-	int pcsIdx = spi_detectPCS(spip->isMaster, spip->config->ssport, spip->config->sspad);
-	osalDbgAssert(pcsIdx >= 0, "invalid SPI PCS pin");
-	spip->flags = pcsIdx;  // kLPSPI_MasterByteSwap;
+	spip->flags = 0;  // kLPSPI_MasterByteSwap;
+	int pcsAlt;
+	int pcsIdx = spi_detectPCS(spip->isMaster, spip->config->ssport, spip->config->sspad, &pcsAlt);
+	if (pcsIdx >= 0) {
+		spip->flags |= pcsIdx;
+		// enable corresponding alt.mode for hardware PCS control
+		palSetPadMode(spip->config->ssport, spip->config->sspad, PAL_MODE_ALTERNATE(pcsAlt));
+	} else {
+		// software PCS control for non-standard pins
+		palSetPadMode(spip->config->ssport, spip->config->sspad, PAL_MODE_OUTPUT_OPENDRAIN);
+	}
 	
 	//CLOCK_SetIpSrc(clockName, kCLOCK_IpSrcSysPllAsync);
 
@@ -245,8 +256,9 @@ void spi_lld_stop(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_select(SPIDriver *spip) {
-
-	//palClearPad(spip->config->ssport, spip->config->sspad);
+	// software PCS control for non-standard pins
+	if (!(spip->flags & LPSPI_MASTER_PCS_MASK))
+		palClearPad(spip->config->ssport, spip->config->sspad);
 }
 
 /**
@@ -258,8 +270,9 @@ void spi_lld_select(SPIDriver *spip) {
  * @notapi
  */
 void spi_lld_unselect(SPIDriver *spip) {
-
-	//palSetPad(spip->config->ssport, spip->config->sspad);
+	// software PCS control for non-standard pins
+	if (!(spip->flags & LPSPI_MASTER_PCS_MASK))
+		palSetPad(spip->config->ssport, spip->config->sspad);
 }
 
 /**

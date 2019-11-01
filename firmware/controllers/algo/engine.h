@@ -29,7 +29,7 @@
 #include "global_execution_queue.h"
 #endif /* EFI_UNIT_TEST */
 
-#define FAST_CALLBACK_PERIOD_MS 20
+#define FAST_CALLBACK_PERIOD_MS 5
 
 class RpmCalculator;
 
@@ -94,7 +94,7 @@ public:
 	IgnitionEventList ignitionEvents;
 #endif /* EFI_ENGINE_CONTROL */
 
-	WallFuel wallFuel;
+	WallFuel wallFuel[INJECTION_PIN_COUNT];
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**

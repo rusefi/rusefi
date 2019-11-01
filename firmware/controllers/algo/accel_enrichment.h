@@ -30,6 +30,7 @@ public:
 	void setLength(int length);
 	cyclic_buffer<float> cb;
 	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+	int onUpdateInvocationCounter = 0;
 };
 
 class LoadAccelEnrichment : public AccelEnrichment {
@@ -67,15 +68,14 @@ private:
  */
 class WallFuel : public wall_fuel_state {
 public:
-	WallFuel();
 	/**
 	 * @param target desired squirt duration
 	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
 	 */
-	floatms_t adjust(int injectorIndex, floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
-	floatms_t getWallFuel(int injectorIndex) const;
+	floatms_t adjust(floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
+	floatms_t getWallFuel() const;
 	void resetWF();
-private:
+	int invocationCounter = 0;
 };
 
 void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
