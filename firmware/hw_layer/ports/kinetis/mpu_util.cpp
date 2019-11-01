@@ -181,7 +181,7 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	ioportmask_t pin = getHwPin("spi", csPin);
 	spiConfig->ssport = port;
 	spiConfig->sspad = pin;
-	// todo: we use hardware CS control?
+	// CS is controlled inside 'hal_spi_lld' driver using both software and hardware methods.
 	//efiSetPadMode("chip select", csPin, PAL_MODE_OUTPUT_OPENDRAIN);
 }
 
