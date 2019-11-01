@@ -265,11 +265,14 @@ efitick_t getTimeNowNt(void) {
 
 }
 
+#endif /* EFI_PROD_CODE */
+
+#if ! EFI_UNIT_TEST
+
 /**
  * number of SysClock ticks in one ms
  */
 #define TICKS_IN_MS  (CH_CFG_ST_FREQUENCY / 1000)
-
 
 // todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
@@ -281,8 +284,7 @@ efitimems_t currentTimeMillis(void) {
 efitimesec_t getTimeNowSeconds(void) {
 	return currentTimeMillis() / 1000;
 }
-
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_UNIT_TEST */
 
 static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
@@ -837,6 +839,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191018;
+	return 20191030;
 }
 #endif /* EFI_UNIT_TEST */

@@ -581,6 +581,11 @@ void startIdleThread(Logging*sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	idlePid.initPidClass(&engineConfiguration->idleRpmPid);
 
+#if ! EFI_UNIT_TEST
+	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
+	// 'applyNewHardwareSettings' todo: maybe unify these two use-cases?
+	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_UNIT_TEST */
 
 	DISPLAY_STATE(Engine)
 	DISPLAY_TEXT(Idle_State);

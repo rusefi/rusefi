@@ -103,45 +103,44 @@ void initializeMazdaMiataNb2Crank(TriggerShape *s) {
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerShape *s, float offset) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, true);
-	s->setTriggerSynchronizationGap(0.11f);
+	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
 	s->useRiseEdge = false;
-
 	s->bothFrontsRequired = true;
+	s->useOnlyPrimaryForSync = true;
+	efiAssertVoid(OBD_PCM_Processor_Fault, s->gapBothDirections == false, "NB1 trigger measures on FALL events");
 
-	s->invertOnAdd = true;
 	s->tdcPosition = 276;
 
 	/**
 	 * cam sensor is primary, crank sensor is secondary
 	 */
-	s->addEvent720(20.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(20.0f, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(offset + 66.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 70.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 136.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 140.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 246.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 250.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 316.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 320.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 66.0f, T_SECONDARY,  TV_RISE);
+	s->addEvent720(offset + 70.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 136.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 140.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 246.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 250.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 316.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 320.0f, T_SECONDARY, TV_FALL);
 
-	s->addEvent720(340.0f, T_PRIMARY, TV_FALL);
-	s->addEvent720(360.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(340.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(360.0f, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(380.0f, T_PRIMARY, TV_FALL);
-	s->addEvent720(400.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(380.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(400.0f, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(offset + 426.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 430.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 496.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 500.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 606.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 610.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 676.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 680.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 426.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 430.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 496.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 500.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 606.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 610.0f, T_SECONDARY, TV_FALL);
+	s->addEvent720(offset + 676.0f, T_SECONDARY, TV_RISE);
+	s->addEvent720(offset + 680.0f, T_SECONDARY, TV_FALL);
 
-	s->addEvent720(720.0f, T_PRIMARY, TV_FALL);
-	s->useOnlyPrimaryForSync = true;
+	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }
 
 void initializeMazdaMiataNb1Shape(TriggerShape *s) {

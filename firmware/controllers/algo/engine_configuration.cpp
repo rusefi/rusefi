@@ -141,9 +141,10 @@ static fuel_table_t alphaNfuel = {
  * todo: place this field next to 'engineConfiguration'?
  */
 #ifdef EFI_ACTIVE_CONFIGURATION_IN_FLASH
-engine_configuration_s EFI_ACTIVE_CONFIGURATION_IN_FLASH activeConfiguration;
+engine_configuration_s & activeConfiguration = *(engine_configuration_s *)EFI_ACTIVE_CONFIGURATION_IN_FLASH;
 #else
-engine_configuration_s activeConfiguration;
+static engine_configuration_s activeConfigurationLocalStorage;
+engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 extern engine_configuration_s *engineConfiguration;
@@ -159,6 +160,8 @@ extern LoggingWithStorage sharedLogger;
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
+ *
+ * this method is NOT currently invoked on ECU start - actual user input has to happen!
  */
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(globalConfigurationVersion++);

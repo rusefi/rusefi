@@ -91,6 +91,10 @@ extern int icuWidthPeriodCounter;
 #include "fsio_impl.h"
 #endif /* EFI_FSIO */
 
+#if (BOARD_TLE8888_COUNT > 0)
+#include "tle8888.h"
+#endif /* BOARD_TLE8888_COUNT */
+
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
@@ -998,6 +1002,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_CDM_INTEGRATION
 		ionPostState(tsOutputChannels);
 #endif /* EFI_CDM_INTEGRATION */
+		break;
+	case DBG_TLE8888:
+#if (BOARD_TLE8888_COUNT > 0)
+		tle8888PostState(tsOutputChannels);
+#endif /* BOARD_TLE8888_COUNT */
 		break;
 	default:
 		;
