@@ -1,7 +1,7 @@
 /*
  * @file engine_template.h
  *
- * @date
+ * @date Nov 1, 2019
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
@@ -9,4 +9,4 @@
 
 #include "engine_configuration.h"
 
-void setEngineTemplateConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE);
