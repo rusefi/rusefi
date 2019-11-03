@@ -9,8 +9,7 @@
  *
  */
  
-#ifndef EFIFEATURES_SKELRUSEFI_H_
-#define EFIFEATURES_SKELRUSEFI_H_
+#pragma once
 
 // General software features
 
@@ -400,5 +399,3 @@
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
 #undef EFI_CONSOLE_SERIAL_DEVICE
 #endif
-
-#endif /* EFIFEATURES_MICRORUSEFI_H_ */

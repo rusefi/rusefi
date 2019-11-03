@@ -6,7 +6,7 @@
 ;   rusefi_config.txt	the project specific file
 ;
 ; In TunerStudio some fields have little question mark on the left of the name for additional field tips.
-; Those tips are defined in ../integraion/rusefi_config.txt
+; Those tips are defined in ../integration/rusefi_config.txt
 ;
 ; For example
 ;
