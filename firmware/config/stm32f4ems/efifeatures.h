@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef EFIFEATURES_STM32F4_H_
-#define EFIFEATURES_STM32F4_H_
+#pragma once
 
 #define EFI_GPIO_HARDWARE TRUE
 
@@ -404,5 +403,3 @@
 #define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
 
 #define EFI_JOYSTICK TRUE
-
-#endif /* EFIFEATURES_STM32F4_H_ */

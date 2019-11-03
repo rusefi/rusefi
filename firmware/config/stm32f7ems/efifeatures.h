@@ -12,8 +12,7 @@
  
 #include "../stm32f4ems/efifeatures.h"
 
-#ifndef EFIFEATURES_STM32F7_H_
-#define EFIFEATURES_STM32F7_H_
+#pragma once
 
 // Warning! This is a test config!
 
@@ -109,5 +108,3 @@
 
 // todo: temporary ignore errors, this is a test config
 #define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
-
-#endif /* EFIFEATURES_STM32F7_H_ */
