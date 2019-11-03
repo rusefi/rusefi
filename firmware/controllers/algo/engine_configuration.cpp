@@ -1156,7 +1156,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NB1:
-		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_323:
@@ -1169,20 +1168,16 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setSuzukiVitara(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FORD_ESCORT_GT:
-		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1990:
-		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_DEVIATOR:
-		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMiata1994_d(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_SPAGS:
 	case MIATA_1996:
-		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:

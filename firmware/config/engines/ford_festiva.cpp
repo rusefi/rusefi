@@ -69,9 +69,9 @@ EXTERN_CONFIG;
  * set engine_type 14
  */
 void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
+	common079721_2351(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	common079721_2351(engineConfiguration, boardConfiguration);
+	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);

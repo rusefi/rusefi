@@ -167,7 +167,8 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 }
 
-void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->engineChartSize = 300;
 
@@ -204,7 +205,7 @@ void common079721_2351(engine_configuration_s *engineConfiguration, board_config
  * Frankenstein board
  */
 void setMiata1990(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common079721_2351(engineConfiguration, boardConfiguration);
+	common079721_2351(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -313,6 +314,7 @@ static void setMiata1994_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  */
 void setMiata1994_d(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiata1994_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 	/**
 	 * This board was avoiding PE0 & PE1 mosfets altogether
