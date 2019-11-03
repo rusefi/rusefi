@@ -532,7 +532,7 @@ static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) 
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
-static void setCanFrankensoDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setCanFrankensoDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
@@ -957,9 +957,9 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
-static void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
-	setCanFrankensoDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setCanFrankensoDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->clt.adcChannel = EFI_ADC_6;
@@ -1004,7 +1004,7 @@ static void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	// set optional subsystem configs
 #if EFI_MEMS
 	// this would override some values from above
-	configureAccelerometerPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	configureAccelerometerPins(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_MEMS */
 
 #if EFI_HIP_9011
@@ -1012,7 +1012,7 @@ static void setDefaultFrankensoConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 #endif /* EFI_HIP_9011 */
 
 #if EFI_FILE_LOGGING
-	setDefaultSdCardParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultSdCardParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_FILE_LOGGING */
 
 	boardConfiguration->is_enabled_spi_1 = false;
@@ -1047,7 +1047,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	 */
 	switch (engineType) {
 	case DEFAULT_FRANKENSO:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6:
@@ -1067,16 +1067,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		break;
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setDodgeNeon1995EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_NEON_2003_CAM:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case DODGE_NEON_2003_CRANK:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-		setDodgeNeonNGCEngineConfigurationCrankBased(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case LADA_KALINA:
 		setLadaKalina(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1085,7 +1080,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
@@ -1106,15 +1101,13 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setZil130(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_MAP:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_NA6_VAF:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMiataNA6_VAF_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ETB_BENCH_ENGINE:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setEtbTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MICRO_RUS_EFI:
@@ -1124,7 +1117,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NA8:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_CIVIC_4_0_BOTH:
@@ -1140,19 +1132,19 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setHondaAccordConfiguration1_24_shifted(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FRANKENSO_QA_ENGINE:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_CD_DIP:
 		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MITSU_4G93:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6
 	case FORD_INLINE_6_1995:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setFordInline6(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
@@ -1160,11 +1152,11 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setGy6139qmbDefaultEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_600:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_NB1:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_323:
@@ -1177,38 +1169,35 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setSuzukiVitara(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FORD_ESCORT_GT:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1990:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_DEVIATOR:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMiata1994_d(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1994_SPAGS:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-		setMiata1994_s(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MIATA_1996:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ROVER_V8:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setRoverv8(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_E34:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setBmwE34(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DODGE_RAM:
@@ -1218,7 +1207,7 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setDodgeStratus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case VW_ABA:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #if EFI_UNIT_TEST
@@ -1234,19 +1223,19 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif
 
 	case TEST_ENGINE:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_NA_RAIL:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfigurationNaFuelRail(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_BOARD_TEST:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setMazdaMiata2003EngineConfigurationBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROMETHEUS_DEFAULTS:
@@ -1256,18 +1245,18 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 		setSubaruEJ20GDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case TEST_ENGINE_VVT:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setTestVVTEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case SACHS:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setSachs(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case DAIHATSU:
 		setDaihatsu(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CAMARO_4:
-		setDefaultFrankensoConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setCamaro4(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CHEVY_C20_1973:
