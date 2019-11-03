@@ -3,13 +3,13 @@
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 # Target ECU board design
-BOARDSRC_CPP = $(BOARDS_DIR)/microrusefi/board_configuration.cpp
+BOARDSRC_CPP = $(BOARDS_DIR)/skeleton/board_configuration.cpp
 
 # Target processor details
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   MCU_DEFS = -DSTM32F407xx
   BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
-  BOARDINC = $(BOARDS_DIR)/microrusefi
+  BOARDINC = $(BOARDS_DIR)/skeleton
   BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
   BOARDINC += $(BOARDS_DIR)/st_stm32f4
   LDSCRIPT= $(BOARDS_DIR)/prometheus/STM32F405xG.ld
@@ -21,10 +21,10 @@ else
   LDSCRIPT= $(BOARDS_DIR)/nucleo_f767/STM32F76xxI.ld
 endif
 
-# Set this if you want a default engine type other than normal MRE
+# Set this if you want a default engine type
 ifeq ($(DEFAULT_ENGINE_TYPE),)
   DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MICRO_RUS_EFI
 endif
 
 # Add them all together
-DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE -DEFI_FATAL_ERROR_PIN=GPIOE_3 -DFIRMWARE_ID=\"microRusEfi\" $(DEFAULT_ENGINE_TYPE)
+DDEFS += $(MCU_DEFS) -DEFI_USE_OSC=TRUE -DEFI_FATAL_ERROR_PIN=GPIOE_3 -DFIRMWARE_ID=\"skeleton\" $(DEFAULT_ENGINE_TYPE)
