@@ -81,6 +81,7 @@ void copyFuelTable(fuel_table_t const source, fuel_table_t destination);
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination);
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
+void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 typedef void (*configuration_callback_t)(engine_configuration_s*);
 

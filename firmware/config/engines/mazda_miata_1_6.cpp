@@ -198,6 +198,8 @@ static void setMiataNA6_settings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * MIATA_NA6_MAP
  */
 void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	boardConfiguration->isHip9011Enabled = false;
