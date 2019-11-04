@@ -88,6 +88,8 @@ static void setDefaultAspireMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
 
