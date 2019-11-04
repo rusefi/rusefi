@@ -93,6 +93,6 @@ int MultiWave::findAngleMatch(const float angle, const int size) const {
 }
 
 void MultiWave::setSwitchTime(const int index, const float value) {
-	efiAssertVoid(CUSTOM_ERR_6690, switchTimes != NULL, "switchTimes");
+	efiAssertVoid(CUSTOM_ERR_PWM_SWITCH_ASSERT, switchTimes != NULL, "switchTimes");
 	switchTimes[index] = value;
 }
