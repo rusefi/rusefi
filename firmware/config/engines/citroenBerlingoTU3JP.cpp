@@ -71,6 +71,8 @@ static const ignition_table_t default_tps_advance_table = {
 EXTERN_CONFIG;
 
 void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	engineConfiguration->engineType = CITROEN_TU3JP;
 
 	/**
