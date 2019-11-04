@@ -76,7 +76,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 // todo: I guess we would have to use ChibiOS timer and not our own timer because
 // todo: adcStartConversionI requires OS lock. currently slow ADC is 20Hz
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define PWM_PERIOD_SLOW 250  /* PWM period (in PWM ticks).    */
+#define PWM_PERIOD_SLOW 25  /* PWM period (in PWM ticks).    */
 #endif /* PWM_FREQ_SLOW PWM_PERIOD_SLOW */
 
 #if !defined(PWM_FREQ_FAST) || !defined(PWM_PERIOD_FAST)
@@ -516,9 +516,9 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("baro", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_FAST);
+	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
 	addChannel("fuel", engineConfiguration->fuelLevelSensor, ADC_SLOW);
-	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_FAST);
+	addChannel("pPS", engineConfiguration->throttlePedalPositionAdcChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
