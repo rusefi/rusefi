@@ -200,7 +200,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(int *prevIndexOut, 
 		return NOISY_RPM;
 	}
 	angle_t previousAngle = currentAngle - 90;
-	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_6560);
+	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	// todo: prevIndex should be pre-calculated
 	int prevIndex = TRIGGER_SHAPE(triggerIndexByAngle[(int)previousAngle]);
 
