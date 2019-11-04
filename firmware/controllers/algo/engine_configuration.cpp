@@ -1048,7 +1048,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 	case DEFAULT_FRANKENSO:
 	case GEO_STORM:
 	case FRANKENSO_QA_ENGINE:
-		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_MIATA_NA6:
@@ -1206,7 +1205,6 @@ void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallb
 #endif
 
 	case TEST_ENGINE:
-		setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003:
