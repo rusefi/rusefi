@@ -46,4 +46,11 @@ EXTERN_CONFIG;
 
 void setEngineBMW_M73(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->specs.cylindersCount = 12;
+	engineConfiguration->specs.displacement = 5.4;
+	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+
+	// 13641435991 injector
+	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 }
