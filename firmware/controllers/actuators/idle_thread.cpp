@@ -293,7 +293,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int idlePidLowerRpm = targetRpm + CONFIG(idlePidRpmDeadZone);
 	if (CONFIG(idlePidRpmUpperLimit) > 0) {
 		engine->engineState.idle.idleState = PID_UPPER;
-		if (CONFIGB(useIacTableForCoasting) && !cisnan(engine->sensors.clt)) {
+		if (CONFIGB(useIacTableForCoasting) && hasCltSensor()) {
 			percent_t iacPosForCoasting = interpolate2d("iacCoasting", getCoolantTemperature(), CONFIG(iacCoastingBins), CONFIG(iacCoasting));
 			newValue = interpolateClamped(idlePidLowerRpm, newValue, idlePidLowerRpm + CONFIG(idlePidRpmUpperLimit), iacPosForCoasting, rpm);
 		} else {
@@ -371,7 +371,7 @@ static percent_t automaticIdleController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 		// cltCorrection is used only for cranking or running in manual mode
 		float cltCorrection;
-		if (cisnan(clt))
+		if (!hasCltSensor())
 			cltCorrection = 1.0f;
 		// Use separate CLT correction table for cranking
 		else if (engineConfiguration->overrideCrankingIacSetting && !isRunning) {
