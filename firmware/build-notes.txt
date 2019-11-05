@@ -1,10 +1,4 @@
 
-[Doxygen](https://rusefi.com/docs/html/)
-
-[Q&A on source code](https://rusefi.com/forum/viewtopic.php?f=5&t=10)
-
-See also [../unit_tests](../unit_tests)
-
 This directory contains the source code for the RusEFI firmware.
 
 The ideal is that typical end users should be able to use pre-built
@@ -44,9 +38,9 @@ The firmware build is moving toward a system that separates board
 features from processor features.  This will require specifying both
 the board type and specific processor.
 
-The existing system evolved based on the original RusEFI boards.  Those
+The existing system evolved based on the original RusEFI boards which
 used 'STM32 Discovery' development boards plugged into base boards
-that held the ECU-specific chips.  That approach resulted in hard-coded
+that held the ECU specific chips.  That resulted in hard-coded
 assumption about pin assignments, and associations of hardware with a
 specific processor variant.  That legacy is slowly being cleaned up,
 but is still evident in some settings and limitations.

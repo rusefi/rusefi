@@ -316,9 +316,9 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
 		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
-	efiAssertVoid(CUSTOM_ERR_6692, state != NULL, "state");
-	efiAssertVoid(CUSTOM_ERR_6665, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
-	efiAssertVoid(CUSTOM_ERR_6693, stateChangeCallback != NULL, "listener");
+	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
+	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
+	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != NULL, "listener");
 	if (frequency < 1) {
 		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
 		return;

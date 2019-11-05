@@ -85,6 +85,7 @@ void disableLCD(board_configuration_s *boardConfiguration) {
 
 // todo: should this be part of more default configurations?
 void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	setFrankenso_01_LCD(boardConfiguration);
@@ -244,6 +245,7 @@ void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 // ETB_BENCH_ENGINE
 // set engine_type 58
 void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	// VAG test ETB
 	// set tps_min 54
 	engineConfiguration->tpsMin = 54;

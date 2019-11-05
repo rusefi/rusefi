@@ -1,38 +1,95 @@
 /**
  * @file efifeatures.h
  *
- * @brief In this header we can configure which firmware modules are used.
+ * @brief Configure which firmware modules are used.
+ * @author Donald Becker October 2019
+ * @author Hugo Becker November 2019
  *
- * @date Aug 29, 2013
- * @author Andrey Belomutskiy, (c) 2012-2019
+ * This configuration is a "skeleton" example for RusEFI boards.
+ *
  */
-
+ 
 #pragma once
 
-#define EFI_GPIO_HARDWARE TRUE
+// General software features
 
+// Use the GPIO port setup code -- almost always set.
+#define EFI_GPIO_HARDWARE TRUE
+// Internal ADC -- almost always set.
+#define EFI_INTERNAL_ADC TRUE
+#define EFI_ANALOG_SENSORS TRUE
+
+// Console I/O features to monitor formulas and pin state
 #define EFI_FSIO TRUE
 
-#ifndef EFI_CDM_INTEGRATION
-#define EFI_CDM_INTEGRATION TRUE
-#endif
-
-#ifndef EFI_TOOTH_LOGGER
+// Log crank/cam sensor events, a frequently needed diag for new installations
 #define EFI_TOOTH_LOGGER TRUE
-#endif
 
+// Log other events, see also EFI_PRINT_MESSAGES_TO_TERMINAL
 #define EFI_TEXT_LOGGING TRUE
 
+// Monitor changes to Default settings that create failures -- note spelling
+#define EFI_DEFAILED_LOGGING FALSE
+
+// Build the logic analyzer support.
+// A logic analyzer viewer is included in the java console.
+#define EFI_WAVE_ANALYZER TRUE
+
+// A development feature to test output jitter and consistency
 #define EFI_PWM_TESTER FALSE
-
-#define EFI_MC33816 TRUE
-
-#define HAL_USE_USB_MSD FALSE
 
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
 
+#define EFI_CAN_SUPPORT TRUE
+
+// Internal MCU features
+
+// Use STM32 Core Coupled Memory as general purpose RAM.
 #define EFI_USE_CCM TRUE
+
+// Support USB Mass Storage Devices
+// Typically off as it requires USB OTG and power output.
+#define HAL_USE_USB_MSD FALSE
+
+
+// Hardware feature and chip support
+// Some require a non-zero count to include support, others are TRUE/FALSE
+// Other inconsistencies, such as naming, abound.
+
+// Capacitive Discharge Module ion sense for detontation/knock detection
+#define EFI_CDM_INTEGRATION FALSE
+
+// MCP42010 digital potentiometer
+#define EFI_POTENTIOMETER FALSE
+// MC33816 Programmable Gate Driver over SPI
+#define EFI_MC33816 FALSE
+// MAX31855 Thermocouple interface over SPI
+#define EFI_MAX_31855 FALSE
+// MCP3208 ADC over SPI
+#define EFI_MCP_3208 FALSE
+// HIP9011 Knock / Detonation Detector SPI config
+#define EFI_HIP_9011 FALSE
+// Bosch CJ125 Wideband Exhaust Gas Oxygen Sensor interface 
+#define EFI_CJ125 FALSE
+// LIS302DL MEMS Accelerometer over SPI, as on F4 Discovery board.
+#define EFI_MEMS FALSE
+
+// HD44780 Character LCD, the only client of EFI_LCD
+#define EFI_HD44780_LCD FALSE
+#define EFI_LCD FALSE
+// and the closely related joystick input for the LCD menu system.
+#define EFI_JOYSTICK FALSE
+
+
+#define BOARD_TLE6240_COUNT	0
+#define BOARD_MC33972_COUNT	0
+#define BOARD_TLE8888_COUNT 	0
+
+// Future: move these outside of efifeatures.h
+#define BOARD_EXT_GPIOCHIPS  (BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
+#define BOARD_EXT_PINREPOPINS 24
+
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
@@ -54,37 +111,22 @@
 
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
-/**
- * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
- */
-#ifndef EFI_WAVE_ANALYZER
-#define EFI_WAVE_ANALYZER TRUE
-#endif
 
-#ifndef EFI_ICU_INPUTS
 #define EFI_ICU_INPUTS TRUE
-#endif
 
 #ifndef HAL_TRIGGER_USE_PAL
 #define HAL_TRIGGER_USE_PAL FALSE
 #endif /* HAL_TRIGGER_USE_PAL */
 
-/**
- * TunerStudio support.
- */
+// TunerStudio support.
 #define EFI_TUNER_STUDIO TRUE
+#define EFI_TUNER_STUDIO_VERBOSE TRUE		// Debugging output
 
-/**
- * Bluetooth UART setup support.
- */
+// HC-06 Bluetooth module UART setup (output an initial configuration string)
 #define EFI_BLUETOOTH_SETUP FALSE
+// Serial port NMEA GPS reporting
+#define EFI_UART_GPS FALSE
 
-/**
- * TunerStudio debug output
- */
-#define EFI_TUNER_STUDIO_VERBOSE TRUE
-
-#define EFI_DEFAILED_LOGGING FALSE
 
 /**
  * Dev console support.
@@ -118,77 +160,16 @@
 #define EFI_SHAFT_POSITION_INPUT TRUE
 #endif
 
-/**
- * Maybe we are just sniffing what's going on?
- */
 #define EFI_ENGINE_CONTROL TRUE
 
 #define EFI_SPEED_DENSITY TRUE
 
-/**
- * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
- * stock ECU
- */
-//#define EFI_POTENTIOMETER FALSE
-#define EFI_POTENTIOMETER TRUE
-
-#ifndef BOARD_TLE6240_COUNT
-#define BOARD_TLE6240_COUNT         1
-#endif
-
-#ifndef BOARD_MC33972_COUNT
-#define BOARD_MC33972_COUNT			1
-#endif
-
-#ifndef BOARD_TLE8888_COUNT
-#define BOARD_TLE8888_COUNT 	1
-#endif
-
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT)
-
-// todo: move this outside of efifeatures.h
-#define BOARD_EXT_PINREPOPINS 24
-
 #define EFI_ANALOG_SENSORS TRUE
 
-#ifndef EFI_MAX_31855
-#define EFI_MAX_31855 TRUE
-#endif
-
-#define EFI_MCP_3208 FALSE
-
-#ifndef EFI_HIP_9011
-#define EFI_HIP_9011 TRUE
-#endif
-
-#ifndef EFI_CJ125
-#define EFI_CJ125 TRUE
-#endif
-
-#if !defined(EFI_MEMS)
- #define EFI_MEMS FALSE
-#endif
-
-#ifndef EFI_INTERNAL_ADC
-#define EFI_INTERNAL_ADC TRUE
-#endif
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
 #define EFI_DENSO_ADC FALSE
-
-#ifndef EFI_CAN_SUPPORT
-#define EFI_CAN_SUPPORT TRUE
-#endif
-
-#ifndef EFI_HD44780_LCD
-#define EFI_HD44780_LCD TRUE
-#endif
-
-#ifndef EFI_LCD
-#define EFI_LCD TRUE
-#endif
 
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
@@ -238,14 +219,11 @@
 #define EFI_FILE_LOGGING TRUE
 #endif
 
-#ifndef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
-#endif
 
-/**
- * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
- * over which configurations go into the binary
- */
+// For now we can still embed all car configurations into the firmware binary.
+// These give us control over which configurations go in.
+
 #define EFI_SUPPORT_DODGE_NEON TRUE
 #define EFI_SUPPORT_FORD_ASPIRE TRUE
 #define EFI_SUPPORT_FORD_FIESTA TRUE
@@ -270,28 +248,24 @@
 /**
  * Do we need GPS logic?
  */
-#define EFI_UART_GPS TRUE
 //#define EFI_UART_GPS FALSE
 
 #define EFI_SERVO TRUE
 
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
-//#define EFI_ELECTRONIC_THROTTLE_BODY FALSE
 
-/**
- * Do we need Malfunction Indicator blinking logic?
- */
+
+// MIL Malfunction Indicator Lamp logic
+
 #define EFI_MALFUNCTION_INDICATOR TRUE
-//#define EFI_MALFUNCTION_INDICATOR FALSE
 
 #define CONSOLE_MAX_ACTIONS 180
 
 #define EFI_MAP_AVERAGING TRUE
-//#define EFI_MAP_AVERAGING FALSE
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for slow ADC?
+// todo: switch to continuous ADC conversion for slow ADC?
 // https://github.com/rusefi/rusefi/issues/630
 #define EFI_INTERNAL_SLOW_ADC_PWM	&PWMD8
 // todo: switch to continues ADC conversion for fast ADC?
@@ -336,7 +310,7 @@
  */
 
 
-// todo: start using consoleUartDevice? Not sure
+// Future: Consistently use consoleUartDevice
 #ifndef EFI_CONSOLE_SERIAL_DEVICE
 #define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
@@ -358,26 +332,6 @@
 #if (TS_UART_DMA_MODE || TS_UART_MODE)
 #undef EFI_CONSOLE_SERIAL_DEVICE
 #endif
-
-// todo: start using consoleSerialTxPin? Not sure
-#ifndef EFI_CONSOLE_TX_PORT
-#define EFI_CONSOLE_TX_PORT GPIOC
-#endif
-#ifndef EFI_CONSOLE_TX_PIN
-#define EFI_CONSOLE_TX_PIN 10
-#endif
-// todo: start using consoleSerialRxPin? Not sure
-#ifndef EFI_CONSOLE_RX_PORT
-#define EFI_CONSOLE_RX_PORT GPIOC
-#endif
-#ifndef EFI_CONSOLE_RX_PIN
-#define EFI_CONSOLE_RX_PIN 11
-#endif
-// todo: this should be detected automatically based on pin selection
-#define EFI_CONSOLE_AF 7
-
-// todo: this should be detected automatically based on pin selection
-#define TS_SERIAL_AF 7
 
 #ifndef LED_ERROR_BRAIN_PIN
 #define LED_ERROR_BRAIN_PIN GPIOD_14
@@ -402,4 +356,46 @@
  */
 #define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
 
-#define EFI_JOYSTICK TRUE
+
+// Enable file logging (like SD card) logic
+#define EFI_FILE_LOGGING FALSE
+#define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
+
+#define EFI_USB_SERIAL TRUE
+
+// GPS reporting NMEA protocol on a serial port
+#undef EFI_UART_GPS
+#define EFI_UART_GPS FALSE
+
+// consoleUartDevice is unused but provided on UART4 Tx:PC10 Rx:PC11
+// USART3 would work on the same pins but is reserved for future LIN bus use.
+//  ToDo: Fix so that UART4 will work here.
+
+#define HAL_USE_SERIAL_USB TRUE
+#undef EFI_CONSOLE_SERIAL_DEVICE
+#undef TS_UART_DEVICE
+#undef TS_SERIAL_DEVICE
+#undef TS_UART_MODE
+#define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
+//#define EFI_CONSOLE_SERIAL_DEVICE (&SDU1)
+#define EFI_UART_ECHO_TEST_MODE TRUE
+#define TS_UART_DEVICE (&UARTD3)
+#define TS_SERIAL_DEVICE (&SD3)
+
+// USART3 is Alternate Function 7, UART4 is AF8
+// todo: start using consoleSerial{Tx,Rx}Pin
+#define EFI_CONSOLE_AF 7
+#define TS_SERIAL_AF 7
+#define EFI_CONSOLE_TX_PORT GPIOC
+#define EFI_CONSOLE_TX_PIN 10
+#define EFI_CONSOLE_RX_PORT GPIOC
+#define EFI_CONSOLE_RX_PIN 11
+
+// todo: document the limitations of DMA mode for the UART.
+#undef TS_UART_DMA_MODE
+#define TS_UART_DMA_MODE FALSE
+
+// todo: add DMA-mode for Console?
+#if (TS_UART_DMA_MODE || TS_UART_MODE)
+#undef EFI_CONSOLE_SERIAL_DEVICE
+#endif

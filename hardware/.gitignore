@@ -2,5 +2,6 @@
 *.bak
 *.kicad_pcb-bak
 _saved*.sch
+*.sch-bak
 _autosave*.*
 ibom/*

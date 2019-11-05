@@ -20,6 +20,7 @@ EXTERN_CONFIG
 ;
 
 void setBmwE34(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	// chartsize 450
 	engineConfiguration->engineChartSize = 450;
 
