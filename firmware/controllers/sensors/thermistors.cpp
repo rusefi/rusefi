@@ -129,15 +129,14 @@ bool hasCltSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!haveSensorChannel) {
 		return false;
 	}
-//	return !cisnan(engine->sensors.clt); todo why would unit tests fail?!
-	return true;
+	return !cisnan(engine->sensors.clt);
 }
 
 /**
  * @return coolant temperature, in Celsius
  */
 temperature_t getCoolantTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasCltSensor()) {
+	if (engineConfiguration->clt.adcChannel == EFI_ADC_NONE) {
 		engine->isCltBroken = false;
 		return NO_CLT_SENSOR_TEMPERATURE;
 	}
@@ -212,14 +211,18 @@ void ThermistorMath::prepareThermistorCurve(thermistor_conf_s *tc) {
 }
 
 bool hasIatSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
+	bool haveSensorChannel = engineConfiguration->iat.adcChannel != EFI_ADC_NONE;
+	if (!haveSensorChannel) {
+		return false;
+	}
+	return !cisnan(engine->sensors.iat);
 }
 
 /**
  * @return Celsius value
  */
 temperature_t getIntakeAirTemperatureM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasIatSensor()) {
+	if (engineConfiguration->iat.adcChannel == EFI_ADC_NONE) {
 		return NO_IAT_SENSOR_TEMPERATURE;
 	}
 	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve,
