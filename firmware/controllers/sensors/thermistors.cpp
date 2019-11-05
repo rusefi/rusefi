@@ -125,7 +125,12 @@ bool isValidIntakeAirTemperature(temperature_t temperature) {
 }
 
 bool hasCltSensorM(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
+	bool haveSensorChannel = engineConfiguration->clt.adcChannel != EFI_ADC_NONE;
+	if (!haveSensorChannel) {
+		return false;
+	}
+//	return !cisnan(engine->sensors.clt); todo why would unit tests fail?!
+	return true;
 }
 
 /**
