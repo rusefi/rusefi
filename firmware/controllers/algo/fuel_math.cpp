@@ -309,14 +309,10 @@ float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!hasCltSensor())
-		return 0; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d("timc", getCoolantTemperature(), engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
 float getIatFuelCorrection(float iat DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(iat))
-		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d("iatc", iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
