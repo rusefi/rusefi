@@ -266,7 +266,7 @@ static void mapAveragingTriggerCallback(trigger_event_e ckpEventType,
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
 	UNUSED(ckpEventType);
-	if (index != CONFIG(mapAveragingSchedulingAtIndex))
+	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
 	engine->m.beforeMapAveragingCb = getTimeNowLowerNt();

@@ -117,7 +117,8 @@ private:
 	SensorType m_type;
 
 	// Get this sensor's index in the list
-	constexpr size_t getIndex() {
+	// constexpr size_t getIndex() {
+	size_t getIndex() {
 		return getIndex(m_type);
 	}
 

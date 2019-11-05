@@ -290,7 +290,7 @@ static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
 
-	for (int i = 0; i < sizeof(engine->wallFuel) / sizeof(engine->wallFuel[0]); i++)
+	for (unsigned i = 0; i < sizeof(engine->wallFuel) / sizeof(engine->wallFuel[0]); i++)
 	{
 		engine->wallFuel[i].resetWF();
 	}
