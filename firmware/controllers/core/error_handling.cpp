@@ -18,7 +18,7 @@ static MemoryStream firmwareErrorMessageStream;
 
 #define WARNING_BUFFER_SIZE 80
 static char warningBuffer[WARNING_BUFFER_SIZE];
-static bool isWarningStreamInitialized = false;
+static volatile bool isWarningStreamInitialized = false;
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"

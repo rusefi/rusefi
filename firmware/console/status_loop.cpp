@@ -869,9 +869,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
 
 #endif /* EFI_VEHICLE_SPEED */
-	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature());
-	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature());
 #endif /* EFI_PROD_CODE */
+
+	tsOutputChannels->isCltError = !hasCltSensor();
+	tsOutputChannels->isIatError = !hasIatSensor();
 
 	tsOutputChannels->fuelConsumptionPerHour = engine->engineState.fuelConsumption.perSecondConsumption;
 

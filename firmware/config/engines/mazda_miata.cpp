@@ -167,7 +167,8 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 }
 
-void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->engineChartSize = 300;
 
@@ -204,7 +205,7 @@ void common079721_2351(engine_configuration_s *engineConfiguration, board_config
  * Frankenstein board
  */
 void setMiata1990(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common079721_2351(engineConfiguration, boardConfiguration);
+	common079721_2351(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -313,6 +314,7 @@ static void setMiata1994_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  */
 void setMiata1994_d(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setMiata1994_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 	/**
 	 * This board was avoiding PE0 & PE1 mosfets altogether
@@ -324,47 +326,6 @@ void setMiata1994_d(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// todo: add the diode? change idle valve logic?
 	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-}
-
-void setMiata1994_s(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiata1994_common(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
-
-	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
-
-	engineConfiguration->acSwitchAdc = EFI_ADC_1; // PA1, W50 on Frankenso
-
-	engineConfiguration->afr.hwChannel = EFI_ADC_3;
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
-
-	/**
-	 * This board has PE0<>PD5 & PE1<>PD3 rewired in order to avoid Discovery issue
-	 */
-	boardConfiguration->injectionPins[0] = GPIOD_3; // avoiding PE1
-	boardConfiguration->injectionPins[1] = GPIOE_2; // injector #2
-	boardConfiguration->injectionPins[2] = GPIOB_8; // injector #3
-	boardConfiguration->injectionPins[3] = GPIOB_7; // injector #4
-
-	//	setFsio(engineConfiguration, 0, GPIOD_11, "coolant 80 >");
-	boardConfiguration->idle.solenoidFrequency = 500;
-
-	engineConfiguration->acCutoffLowRpm = 400;
-	engineConfiguration->acCutoffHighRpm = 4500;
-	engineConfiguration->acIdleRpmBump = 200;
-
-	//engineConfiguration->idleMode != IM_AUTO;
-	setTargetRpmCurve(800 PASS_CONFIG_PARAMETER_SUFFIX);
-
-
-	engineConfiguration->tpsMax = 86;
-	engineConfiguration->tpsMin = 596;
-
-	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-
-	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
-	setMazdaMiataNAMaf(config);
-	engineConfiguration->injector.flow = 230;
 }
 
 /**
