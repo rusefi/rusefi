@@ -113,7 +113,6 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float iatCorrection;
-
 	if (!hasIatSensor()) {
 		iatCorrection = 0;
 	} else {
