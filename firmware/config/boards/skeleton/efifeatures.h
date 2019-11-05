@@ -1,7 +1,7 @@
 /**
  * @file efifeatures.h
  *
- * @brief Configure which firmware modules are used.
+ * @brief Configure which firmware features and modules are used.
  * @author Donald Becker October 2019
  * @author Hugo Becker November 2019
  *
@@ -14,11 +14,24 @@
 
 // General software features
 
-// Use the GPIO port setup code -- almost always set.
+// Firmware features that are almost certainly needed.
+
+// Use the GPIO port setup code
 #define EFI_GPIO_HARDWARE TRUE
-// Internal ADC -- almost always set.
+// Internal ADC
 #define EFI_INTERNAL_ADC TRUE
 #define EFI_ANALOG_SENSORS TRUE
+
+#define EFI_SHAFT_POSITION_INPUT TRUE
+
+// Support for common engine features
+// Count ticks from a VSS - Vehicle Speed Sensor
+#define EFI_VEHICLE_SPEED TRUE
+// Control loop for a ETB motorized throttle plate
+#define EFI_ELECTRONIC_THROTTLE_BODY TRUE
+
+
+// I/O and Logging
 
 // Console I/O features to monitor formulas and pin state
 #define EFI_FSIO TRUE
@@ -44,21 +57,36 @@
 
 #define EFI_CAN_SUPPORT TRUE
 
+
 // Internal MCU features
 
 // Use STM32 Core Coupled Memory as general purpose RAM.
 #define EFI_USE_CCM TRUE
+// Use the MCU Real Time Clock
+#define EFI_RTC TRUE
+
+// Measuring the crank/cam position/speed/acceleration accurately is one
+// of the key challenges.  There are many combinations of sensors,
+// connections, and hardware measurement features.  Set how we measure
+// the edges and time intervals.
+// Use the STM32 timer Input Capture Unit to measure precise time intervals.
+#define EFI_ICU_INPUTS TRUE
+// Use the STM32 PAL Port Abstraction Layer to measure time intervals
+#define HAL_TRIGGER_USE_PAL FALSE
+
+
 
 // Support USB Mass Storage Devices
 // Typically off as it requires USB OTG and power output.
 #define HAL_USE_USB_MSD FALSE
 
 
-// Hardware feature and chip support
+// Hardware feature and external chip support
 // Some require a non-zero count to include support, others are TRUE/FALSE
 // Other inconsistencies, such as naming, abound.
 
 // Capacitive Discharge Module ion sense for detontation/knock detection
+#undef EFI_CDM_INTEGRATION
 #define EFI_CDM_INTEGRATION FALSE
 
 // MCP42010 digital potentiometer
@@ -110,14 +138,6 @@
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 
-//#define EFI_UART_ECHO_TEST_MODE TRUE
-
-
-#define EFI_ICU_INPUTS TRUE
-
-#ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
-#endif /* HAL_TRIGGER_USE_PAL */
 
 // TunerStudio support.
 #define EFI_TUNER_STUDIO TRUE
@@ -134,7 +154,9 @@
  */
 #define EFI_CLI_SUPPORT TRUE
 
-#define EFI_RTC TRUE
+#define FUEL_MATH_EXTREME_LOGGING FALSE
+#define SPARK_EXTREME_LOGGING FALSE
+#define TRIGGER_EXTREME_LOGGING FALSE
 
 #define EFI_ALTERNATOR_CONTROL TRUE
 
@@ -144,28 +166,13 @@
 #define EFI_SIGNAL_EXECUTOR_ONE_TIMER TRUE
 #define EFI_SIGNAL_EXECUTOR_HW_TIMER FALSE
 
-#define FUEL_MATH_EXTREME_LOGGING FALSE
-
-#define SPARK_EXTREME_LOGGING FALSE
-
-#define TRIGGER_EXTREME_LOGGING FALSE
-
 #ifndef EFI_INTERNAL_FLASH
 #define EFI_INTERNAL_FLASH TRUE
-#endif
-
-/**
- * Usually you need shaft position input, but maybe you do not need it?
- */
-#ifndef EFI_SHAFT_POSITION_INPUT
-#define EFI_SHAFT_POSITION_INPUT TRUE
 #endif
 
 #define EFI_ENGINE_CONTROL TRUE
 
 #define EFI_SPEED_DENSITY TRUE
-
-#define EFI_ANALOG_SENSORS TRUE
 
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
@@ -190,7 +197,6 @@
 #endif
 
 #ifndef EFI_VEHICLE_SPEED
-#define EFI_VEHICLE_SPEED TRUE
 #endif
 
 #define EFI_FUEL_PUMP TRUE
@@ -204,8 +210,9 @@
 #endif
 
 /**
- * This macros is used to hide hardware-specific pieces of the code from unit tests and simulator, so it only makes
- * sense in folders exposed to the tests projects (simulator and unit tests).
+ * This macro is used to hide hardware-specific pieces of the code from unit
+ * tests and simulator.  It is only relevant in folders exposed to the
+ * tests projects (simulator and unit tests).
  * This macros is NOT about taking out logging in general.
  * See also EFI_UNIT_TEST
  * See also EFI_SIMULATOR
@@ -213,14 +220,6 @@
  */
 #define EFI_PROD_CODE TRUE
 
-/**
- * Do we need file logging (like SD card) logic?
- */
-#ifndef EFI_FILE_LOGGING
-#define EFI_FILE_LOGGING TRUE
-#endif
-
-#define EFI_USB_SERIAL TRUE
 
 // For now we can still embed all car configurations into the firmware binary.
 // These give us control over which configurations go in.
@@ -246,18 +245,11 @@
 #define DL_OUTPUT_BUFFER 8000
 #endif
 
-/**
- * Do we need GPS logic?
- */
-//#define EFI_UART_GPS FALSE
-
-#define EFI_SERVO TRUE
-
-#define EFI_ELECTRONIC_THROTTLE_BODY TRUE
+// Control a hobby-style servo with a PWM signal, see Wiki Hardware:Servo_motor
+#define EFI_SERVO FALSE
 
 
 // MIL Malfunction Indicator Lamp logic
-
 #define EFI_MALFUNCTION_INDICATOR TRUE
 
 #define CONSOLE_MAX_ACTIONS 180
@@ -273,47 +265,19 @@
 #define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
 
 #define EFI_SPI1_AF 5
-
 #define EFI_SPI2_AF 5
-
-/**
- * This section is for right-side center SPI
- */
-
 #define EFI_SPI3_AF 6
 
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
 #define EFI_I2C_AF 4
+#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
+#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
 
-/**
- * Patched version of ChibiOS/RT support extra details in the system error messages
- */
+// Modify ChibiOS/RT support extra details in the system error messages
 #define EFI_CUSTOM_PANIC_METHOD TRUE
-
-#define ADC_CHANNEL_VREF ADC_CHANNEL_IN14
-
-/**
- * currently ChibiOS uses only first and second channels of each timer for input capture
- *
- * So, our options are:
- *
- * TIM2_CH1
- *  PA5
- *
- * TIM4_CH1
- *  PB6
- * 	PD12
- *
- * TIM9_CH1
- *  PE5
- */
-
 
 // Future: Consistently use consoleUartDevice
 #ifndef EFI_CONSOLE_SERIAL_DEVICE
-#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
+///#define EFI_CONSOLE_SERIAL_DEVICE (&SD3)
 #endif
 
 /**
@@ -334,10 +298,6 @@
 #undef EFI_CONSOLE_SERIAL_DEVICE
 #endif
 
-#ifndef LED_ERROR_BRAIN_PIN
-#define LED_ERROR_BRAIN_PIN GPIOD_14
-#endif
-
 // USART1 -> check defined STM32_SERIAL_USE_USART1
 // For GPS we have USART1. We can start with PB7 USART1_RX and PB6 USART1_TX
 #define GPS_SERIAL_DEVICE &SD1
@@ -352,6 +312,9 @@
 #define CONFIG_RESET_SWITCH_PIN 6
 #endif
 
+// Another obsolete setting
+#define LED_ERROR_BRAIN_PIN GPIOD_14
+
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
@@ -365,7 +328,6 @@
 #define EFI_USB_SERIAL TRUE
 
 // GPS reporting NMEA protocol on a serial port
-#undef EFI_UART_GPS
 #define EFI_UART_GPS FALSE
 
 // consoleUartDevice is unused but provided on UART4 Tx:PC10 Rx:PC11
@@ -377,8 +339,9 @@
 #undef TS_UART_DEVICE
 #undef TS_SERIAL_DEVICE
 #undef TS_UART_MODE
-#define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
+//#define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
 //#define EFI_CONSOLE_SERIAL_DEVICE (&SDU1)
+// Enable character echo only for early testing, disable once serial verified.
 #define EFI_UART_ECHO_TEST_MODE TRUE
 #define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)
