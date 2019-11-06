@@ -228,9 +228,11 @@ void setMap(fuel_table_t table, float value) {
 	}
 }
 
+#if 0
 static void setWholeVEMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->veTable, value);
 }
+#endif
 
 void setWholeFuelMap(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	setMap(config->fuelTable, value);
@@ -240,6 +242,8 @@ void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
 #if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
 	// todo: make setMap a template
 	setMap(config->ignitionIatCorrTable, value);
+#else
+	UNUSED(value);
 #endif
 }
 
