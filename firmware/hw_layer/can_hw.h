@@ -48,7 +48,9 @@ void setTxBit(int offset, int index);
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+#if defined(EFI_TUNER_STUDIO)
 void postCanState(TunerStudioOutputChannels *tsOutputChannels);
+#endif
 #endif
 
 #endif /* CAN_HW_H_ */

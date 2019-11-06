@@ -27,7 +27,7 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 	}
 
 	// bounds check
-	if (s_nextEntry >= std::size(s_entries)) {
+	if (s_nextEntry >= 8) { 		/* std::size(s_entries) is invalid */
 		return;
 	}
 
