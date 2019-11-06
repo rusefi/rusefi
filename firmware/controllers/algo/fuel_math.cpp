@@ -43,6 +43,11 @@ extern baroCorr_Map3D_t baroCorrMap;
 
 DISPLAY_STATE(Engine)
 
+DISPLAY(DISPLAY_FIELD(sparkDwell))
+DISPLAY(DISPLAY_FIELD(dwellAngle))
+DISPLAY(DISPLAY_FIELD(cltTimingCorrection))
+DISPLAY_TEXT(eol);
+
 DISPLAY(DISPLAY_IF(isCrankingState)) floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
