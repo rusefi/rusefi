@@ -61,7 +61,7 @@ void setFuelLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 
-void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
+void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 // we combine trigger-defined triggerShape.tdcPosition with user-defined CONFIG(globalTriggerAngleOffset)
 // expectation is that for well-known triggers CONFIG(globalTriggerAngleOffset) would usually be zero
