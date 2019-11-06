@@ -166,6 +166,6 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
-void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc DECLARE_ENGINE_PARAMETER_SUFFIX);
+void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* RPM_REPORTER_H_ */

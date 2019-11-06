@@ -314,7 +314,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType,
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
-					(schfunc_t) onTdcCallback, NULL, &engine->rpmCalculator);
+					(schfunc_t) onTdcCallback, NULL);
 		}
 	}
 }
@@ -355,9 +355,7 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * it takes the crankshaft to rotate to the specified angle.
  */
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
-		schfunc_t callback, void *param, RpmCalculator *calc DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	// todo: remove 'calc' parameter
-	UNUSED(rpm);
+		schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ANGLE_NAN, !cisnan(angle), "NaN angle?");
 	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
