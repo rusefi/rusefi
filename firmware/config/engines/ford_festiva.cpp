@@ -155,7 +155,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setWholeFuelMap(5 PASS_CONFIG_PARAMETER_SUFFIX);
 	setAfrMap(config->afrTable, 13.5);
 
-	setSingleCoilDwell(engineConfiguration);
+	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;

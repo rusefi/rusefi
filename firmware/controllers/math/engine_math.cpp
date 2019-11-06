@@ -80,7 +80,10 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
+/**
+ * see also setConstantDwell
+ */
+void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = i + 1;
 		engineConfiguration->sparkDwellValues[i] = 4;
