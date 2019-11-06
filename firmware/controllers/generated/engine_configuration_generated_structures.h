@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 30 09:25:38 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 05 21:04:57 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_CONFIGURATION_GENERATED_STRUCTURES_H
@@ -1256,12 +1256,12 @@ struct engine_configuration_s {
 	 */
 	engine_load_mode_e fuelAlgorithm;
 	/**
-	 * This is the type of injection strategy (See Fuel/Injection settings for more detail) it is suggested to use "Simultaneous" for easiest starting.
+	 * This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 	 * offset 424
 	 */
 	injection_mode_e crankingInjectionMode;
 	/**
-	 * This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". 
+	 * This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups. If your injectors are individually wired you will also need to enable "Two wire batch emulation". 
 	 * set injection_mode X
 	 * See also twoWireBatchInjection
 	 * offset 428
@@ -2887,4 +2887,4 @@ typedef struct persistent_config_s persistent_config_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 30 09:25:38 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Tue Nov 05 21:04:57 EST 2019
