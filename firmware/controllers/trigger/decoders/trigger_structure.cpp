@@ -241,7 +241,7 @@ void TriggerShape::addEvent(angle_t angle, trigger_wheel_e const channelIndex, t
 	}
 
 	int exactMatch = wave.findAngleMatch(angle, privateTriggerDefinitionSize);
-	if (exactMatch != EFI_ERROR_CODE) {
+	if (exactMatch != (int)EFI_ERROR_CODE) {
 		warning(CUSTOM_ERR_SAME_ANGLE, "same angle: not supported");
 		setShapeDefinitionError(true);
 		return;

@@ -173,8 +173,6 @@ void configureHondaCbr600(TriggerShape *s) {
 
 	s->setTriggerSynchronizationGap(6);
 
-	// w = 15
-	float w = 720 / 2 / 24;
 
 	int totalTeethCount = 24;
 	int skippedCount = 0;
@@ -182,6 +180,8 @@ void configureHondaCbr600(TriggerShape *s) {
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
 	0, 349);
 
+	// w = 15
+	// float w = 720 / 2 / 24;
 
 	//s->addEvent720(360 -w, T_SECONDARY, TV_RISE);
 
