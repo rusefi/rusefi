@@ -519,6 +519,7 @@ void startETBPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			);
 }
 
+#if EFI_PROD_CODE && 0
 static void setTempOutput(float value) {
 	autoTune.output = value;
 }
@@ -540,6 +541,7 @@ static void setAutoOffset(int offset) {
 	tuneWorkingPidSettings.offset = offset;
 	autoTune.reset();
 }
+#endif
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->etbBiasBins[0] = 0;
