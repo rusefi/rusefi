@@ -129,13 +129,15 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUF
 	return true;
 }
 
-void RpmCalculator::assignRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void RpmCalculator::assignRpmValue(float floatRpmValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	previousRpmValue = rpmValue;
-	rpmValue = value;
+	// we still persist integer RPM! todo: figure out the next steps
+	rpmValue = floatRpmValue;
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
 	} else {
-		oneDegreeUs = getOneDegreeTimeUs(rpmValue);
+		// here it's really important to have more precise float RPM value, see #796
+		oneDegreeUs = getOneDegreeTimeUs(floatRpmValue);
 		if (previousRpmValue == 0) {
 			/**
 			 * this would make sure that we have good numbers for first cranking revolution
@@ -248,7 +250,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 				rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
-				float rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
+				float rpm = 60.0 * US2NT(US_PER_SECOND_LL) * mult / diffNt;
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 		}
