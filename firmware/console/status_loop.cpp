@@ -580,8 +580,7 @@ static void showFuelInfo(void) {
 }
 #endif
 
-// Is checkEnginePin supposed to be listed twice?  What about FatalError?
-static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin, &enginePins.checkEnginePin,
+static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
