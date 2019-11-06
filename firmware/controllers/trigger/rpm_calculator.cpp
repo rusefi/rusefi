@@ -129,7 +129,7 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUF
 	return true;
 }
 
-void RpmCalculator::assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void RpmCalculator::assignRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	previousRpmValue = rpmValue;
 	rpmValue = value;
 	if (rpmValue <= 0) {
@@ -146,7 +146,7 @@ void RpmCalculator::assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-void RpmCalculator::setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void RpmCalculator::setRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	assignRpmValue(value PASS_ENGINE_PARAMETER_SUFFIX);
 	spinning_state_e oldState = state;
 	// Change state
@@ -248,7 +248,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 				rpmState->setRpmValue(NOISY_RPM PASS_ENGINE_PARAMETER_SUFFIX);
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
-				int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
+				float rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm PASS_ENGINE_PARAMETER_SUFFIX);
 			}
 		}
@@ -354,7 +354,7 @@ void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle,
+void scheduleByAngle(float rpm, scheduling_s *timer, angle_t angle,
 		schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(CUSTOM_ANGLE_NAN, !cisnan(angle), "NaN angle?");
 	efiAssertVoid(CUSTOM_ERR_6634, isValidRpm(rpm), "RPM check expected");
