@@ -4,7 +4,7 @@
 #include "global.h"
 #include "functional_sensor.h"
 #include "linear_func.h"
-#if defined(EFI_TUNER_STUDIO)
+#if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
 #endif
 
@@ -33,7 +33,7 @@ void initOilPressure() {
 	oilpSensorFunc.configure(sensorCfg->v1, val1, sensorCfg->v2, val2, /*minOutput*/ -5, greaterOutput);
 	oilpSensor.setFunction(oilpSensorFunc);
 
-#if defined(EFI_TUNER_STUDIO)
+#if EFI_TUNER_STUDIO
 	// Tell it to report to its output channel
 	oilpSensor.setReportingLocation(&tsOutputChannels.oilPressure);
 #endif
