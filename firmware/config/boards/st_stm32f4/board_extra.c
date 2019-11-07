@@ -1,3 +1,8 @@
+/**
+ * @file board_extra.c
+ */
+
+#include "chconf_common.h"
 
 /**
  * @brief   Board-specific configuration code overrides.
