@@ -26,6 +26,6 @@ private:
 	void feedSimulatedEvent(TriggerState *state, TriggerShape * shape, int i DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
-bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration);
+bool isUsefulSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* CONTROLLERS_TRIGGER_TRIGGER_SIMULATOR_H_ */
