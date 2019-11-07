@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef CAN_HW_H_
-#define CAN_HW_H_
+#pragma once
 
 #include "efifeatures.h"
 #if EFI_TUNER_STUDIO
@@ -48,7 +47,9 @@ void setTxBit(int offset, int index);
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+#if defined(EFI_TUNER_STUDIO)
 void postCanState(TunerStudioOutputChannels *tsOutputChannels);
-#endif
+#endif /* EFI_TUNER_STUDIO */
+#endif /* EFI_CAN_SUPPORT */
 
-#endif /* CAN_HW_H_ */
+
