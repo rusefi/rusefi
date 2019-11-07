@@ -144,14 +144,14 @@ void StepperMotor::setDirection(bool isIncrementing) {
 void StepperMotor::pulse() {
 #if EFI_PROD_CODE
 	palWritePad(enablePort, enablePin, 0); // enable stepper
-	palWritePad(stepPort, stepPin, 0);
+	palWritePad(stepPort, stepPin, 1);
 	chThdSleepMilliseconds(reactionTime);
 
 	palWritePad(stepPort, stepPin, 0);
 	chThdSleepMilliseconds(reactionTime);
 
 	palWritePad(enablePort, enablePin, 1); // disable stepper
-#endif
+#endif /* EFI_PROD_CODE */
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
