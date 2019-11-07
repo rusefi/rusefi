@@ -207,7 +207,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIGB(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal, engineConfiguration)) {
+		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -334,7 +334,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal, engineConfiguration)) {
+		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
