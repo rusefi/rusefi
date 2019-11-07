@@ -1,4 +1,6 @@
 38 pin Chrysler NGC connector
+
+48x32mm
  
 ![Board](board.png)
 
