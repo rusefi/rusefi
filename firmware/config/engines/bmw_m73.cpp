@@ -10,12 +10,18 @@
  * 2/2 plugs grey
  *
  *
- * 40 pin section:
- * ECU pin 6:  IN          start signal from ignition key
- * ECU pin 17: OUT BLK     engine speed output for gauge cluster
- * ECU pin 26: IN  GRN/BLK +12 hot in start & run
+ * Plug #1 9 pin
+ * ECU pin 4:  GND BRN/ORG
+ * ECU pin 6:  GND BRN
+ * ECU pin 7:  IN  RED     +12v hot at all times
+ * ECU pin 8:  IN  RED/BLU +12v from ECU relay
  *
- * 52 pin section:
+ * Plug #2 24 pin
+ * ECU pin 3:  CAN xxx/xxx CAN low
+ * ECU pin 4:  CAN xxx/xxx CAN high
+ * ECU pin 23: OUT BRN/BLK ECU relay control, low-side
+ *
+ * Plug #3 52 pin
  * ECU pin 2:  OUT         injector #4
  * ECU pin 6:  GND         ECU
  * ECU pin 15: OUT         injector #2
@@ -31,11 +37,11 @@
  * ECU pin 46: IN  BLK     VR crankshaft sensor
  *
  *
- * 9 pin section:
- * ECU pin 4:  GND
- * ECU pin 6:  GND
- * ECU pin 7:  IN  RED     +12v hot at all times
- * ECU pin 8:  IN  RED/BLU
+ * Plug #4 40 pin
+ * ECU pin 6:  IN          start signal from ignition key
+ * ECU pin 17: OUT BLK     engine speed output for gauge cluster
+ * ECU pin 26: IN  GRN/BLK +12 hot in start & run
+ * ECU pin 40: OUT YEL/BRN starter enable
  *
  *
  * @date Nov 1, 2019
