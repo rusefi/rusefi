@@ -305,7 +305,7 @@ void setCanType(int type) {
 	canInfo();
 }
 
-#if defined(EFI_TUNER_STUDIO)
+#if EFI_TUNER_STUDIO
 void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugIntField1 = isCanEnabled ? canReadCounter : -1;
 	tsOutputChannels->debugIntField2 = isCanEnabled ? canWriteOk : -1;

@@ -21,7 +21,7 @@ TriggerStimulatorHelper::TriggerStimulatorHelper() {
 static const bool isRisingEdge[6] = { false, true, false, true, false, true };
 
 // todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
-bool isUsefulSignal(trigger_event_e signal, engine_configuration_s *engineConfiguration) {
+bool isUsefulSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return !engineConfiguration->useOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
 }
 
@@ -65,21 +65,21 @@ void TriggerStimulatorHelper::feedSimulatedEvent(TriggerState *state, TriggerSha
 	if (needEvent(stateIndex, size, multiWave, 0)) {
 		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/0, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
-		if (isUsefulSignal(s, engineConfiguration))
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
 			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (needEvent(stateIndex, size, multiWave, 1)) {
 		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/1, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-		if (isUsefulSignal(s, engineConfiguration))
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
 			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	if (needEvent(stateIndex, size, multiWave, 2)) {
 		pin_state_t currentValue = multiWave->getChannelState(/*phaseIndex*/2, stateIndex);
 		trigger_event_e s = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
-		if (isUsefulSignal(s, engineConfiguration))
+		if (isUsefulSignal(s PASS_ENGINE_PARAMETER_SUFFIX))
 			state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 }
