@@ -590,6 +590,10 @@ static void initStatusLeds(void) {
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
+
+	enginePins.debugTriggerSync.initPin("debug: sync", CONFIGB(debugTriggerSync));
+	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIGB(debugTimerCallback));
+	enginePins.debugSetTimer.initPin("debug: set timer", CONFIGB(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33
