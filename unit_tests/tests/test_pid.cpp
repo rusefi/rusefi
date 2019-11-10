@@ -138,11 +138,11 @@ TEST(util, pidIndustrial) {
 	pid.derivativeFilterLoss = 0.1;
 
 	// now the first value is much less due to the derivative filtering
-	ASSERT_EQ(10.5288095f, pid.getOutput(1, 0));
+	ASSERT_NEAR(10.5288095f, pid.getOutput(1, 0), EPS4D);
 	// here we still have some leftovers of the initial D-term
-	ASSERT_EQ(10.0802946f, pid.getOutput(1, 0));
+	ASSERT_NEAR(10.0802946f, pid.getOutput(1, 0), EPS4D);
 	// but the fading is slower than with 'weaker' derivative filter above
-	ASSERT_EQ(9.65337563f, pid.getOutput(1, 0));
+	ASSERT_NEAR(9.65337563f, pid.getOutput(1, 0), EPS4D);
 
 	pid.reset();
 	pid.derivativeFilterLoss = 0;
@@ -153,8 +153,8 @@ TEST(util, pidIndustrial) {
 	// the first value is clipped, and that's when the anti-windup comes into effect
 	ASSERT_EQ(100.0f, pid.getOutput(1, 0));
 	// it stores a small negative offset in the I-term to avoid it's saturation!
-	ASSERT_EQ(-0.0455025025f, pid.getIntegration());
+	ASSERT_NEAR(-0.0455025025f, pid.getIntegration(), EPS4D);
 	// and that's why the second output is smaller then that of normal PID (=1.00999999)
-	ASSERT_EQ(0.959497511f, pid.getOutput(1, 0));
+	ASSERT_NEAR(0.959497511f, pid.getOutput(1, 0), EPS4D);
 
 }
