@@ -60,6 +60,7 @@ extern bool hasFirmwareErrorFlag;
  * This function should be invoked under kernel lock which would disable interrupts.
  */
 void setHardwareUsTimer(int32_t timeUs) {
+	enginePins.debugSetTimer.setValue(1);
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwStarted, "HW.started");
 	setHwTimerCounter++;
 	/**
@@ -75,6 +76,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 	efiAssertVoid(CUSTOM_ERR_6681, timeUs > 0, "not positive timeUs");
 	if (timeUs >= 10 * US_PER_SECOND) {
 		firmwareError(CUSTOM_ERR_TIMER_OVERFLOW, "setHardwareUsTimer() too long: %d", timeUs);
+		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
 
@@ -83,20 +85,25 @@ void setHardwareUsTimer(int32_t timeUs) {
 	}
 	if (GPTDEVICE.state != GPT_READY) {
 		firmwareError(CUSTOM_HW_TIMER, "HW timer state %d/%d", GPTDEVICE.state, setHwTimerCounter);
+		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
 	}
-	if (hasFirmwareError())
+	if (hasFirmwareError()) {
+		// let's make this look special and NOT toggle enginePins.debugSetTimer
 		return;
+	}
 	gptStartOneShotI(&GPTDEVICE, timeUs);
 
 	lastSetTimerTimeNt = getTimeNowNt();
 	lastSetTimerValue = timeUs;
 	isTimerPending = TRUE;
 	timerRestartCounter++;
+	enginePins.debugSetTimer.setValue(0);
 }
 
 static void hwTimerCallback(GPTDriver *gptp) {
 	(void)gptp;
+	enginePins.debugTimerCallback.setValue(1);
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
 		firmwareError(CUSTOM_ERR_NULL_TIMER_CALLBACK, "NULL globalTimerCallback");
@@ -110,6 +117,7 @@ static void hwTimerCallback(GPTDriver *gptp) {
 	if (precisionCallbackDuration > maxPrecisionCallbackDuration) {
 		maxPrecisionCallbackDuration = precisionCallbackDuration;
 	}
+	enginePins.debugTimerCallback.setValue(0);
 }
 
 class MicrosecondTimerWatchdogController : public PeriodicTimerController {

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Wed Oct 30 09:25:38 EDT 2019
+// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on integration\rusefi_config.txt Sun Nov 10 11:14:31 EST 2019
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -297,6 +297,10 @@ public class Fields {
 	public static final int cylindersCount_offset = 400;
 	public static final int cylindersCount_offset_hex = 190;
 	public static final int debugMode_offset = 2092;
+	public static final int debugSetTimer_offset = 806;
+	public static final int debugSetTimer_offset_hex = 326;
+	public static final int debugTimerCallback_offset = 711;
+	public static final int debugTriggerSync_offset = 676;
 	public static final int DIGIPOT_COUNT = 4;
 	public static final int digitalPotentiometerChipSelect1_offset = 668;
 	public static final int digitalPotentiometerChipSelect2_offset = 669;
@@ -1230,7 +1234,6 @@ public class Fields {
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unrealisticRpmThreashold_offset = 760;
-	public static final int unused1133_offset = 676;
 	public static final int unused1234234_offset = 2042;
 	public static final int unused_1484_bit_21_offset = 1476;
 	public static final int unused_1484_bit_22_offset = 1476;
@@ -1252,10 +1255,9 @@ public class Fields {
 	public static final int unusedErrorPin_offset = 2040;
 	public static final int unusedFlexFuelSensor_offset = 3100;
 	public static final int unusedFormerWarmupAfrPid_offset = 1768;
-	public static final int unusedMa2_offset = 711;
 	public static final int unusedOldWarmupAfr_offset = 744;
-	public static final int unusedSpiPadding2_offset = 806;
-	public static final int unusedSpiPadding2_offset_hex = 326;
+	public static final int unusedSpiPadding2_offset = 807;
+	public static final int unusedSpiPadding2_offset_hex = 327;
 	public static final int unusedSpiPadding3_offset = 4036;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding5_offset = 2713;
@@ -1526,7 +1528,7 @@ public class Fields {
 	public static final Field WBOHEATERPIN = Field.create("WBOHEATERPIN", 673, FieldType.INT8, brain_pin_e);
 	public static final Field CJ125CSPIN = Field.create("CJ125CSPIN", 674, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855SPIDEVICE = Field.create("MAX31855SPIDEVICE", 675, FieldType.INT8);
-	public static final Field UNUSED1133 = Field.create("UNUSED1133", 676, FieldType.INT8, brain_pin_e);
+	public static final Field DEBUGTRIGGERSYNC = Field.create("DEBUGTRIGGERSYNC", 676, FieldType.INT8, brain_pin_e);
 	public static final Field DIGITALPOTENTIOMETERSPIDEVICE = Field.create("DIGITALPOTENTIOMETERSPIDEVICE", 677, FieldType.INT8);
 	public static final Field MC33972_CS = Field.create("MC33972_CS", 678, FieldType.INT8, brain_pin_e);
 	public static final Field MC33972_CSPINMODE = Field.create("MC33972_CSPINMODE", 679, FieldType.INT8, pin_output_mode_e);
@@ -1550,7 +1552,7 @@ public class Fields {
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 708, FieldType.INT8, brain_pin_e);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 709, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 710, FieldType.INT8);
-	public static final Field UNUSEDMA2 = Field.create("UNUSEDMA2", 711, FieldType.INT8);
+	public static final Field DEBUGTIMERCALLBACK = Field.create("DEBUGTIMERCALLBACK", 711, FieldType.INT8, brain_pin_e);
 	public static final Field IDLETHREADPERIODMS = Field.create("IDLETHREADPERIODMS", 712, FieldType.INT);
 	public static final Field CONSOLELOOPPERIODMS = Field.create("CONSOLELOOPPERIODMS", 716, FieldType.INT);
 	public static final Field LCDTHREADPERIODMS = Field.create("LCDTHREADPERIODMS", 720, FieldType.INT);
@@ -1648,6 +1650,8 @@ public class Fields {
 	public static final Field MAX31855_CS7 = Field.create("MAX31855_CS7", 802, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS8 = Field.create("MAX31855_CS8", 803, FieldType.INT8, brain_pin_e);
 	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 804, FieldType.INT16);
+	public static final Field DEBUGSETTIMER = Field.create("DEBUGSETTIMER", 806, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSEDSPIPADDING2 = Field.create("UNUSEDSPIPADDING2", 807, FieldType.INT8);
 	public static final Field MAPMINBUFFERLENGTH = Field.create("MAPMINBUFFERLENGTH", 812, FieldType.INT);
 	public static final Field IDLEPIDDEACTIVATIONTPSTHRESHOLD = Field.create("IDLEPIDDEACTIVATIONTPSTHRESHOLD", 816, FieldType.INT16);
 	public static final Field STEPPERPARKINGEXTRASTEPS = Field.create("STEPPERPARKINGEXTRASTEPS", 818, FieldType.INT16);
@@ -2325,7 +2329,7 @@ public class Fields {
 	WBOHEATERPIN,
 	CJ125CSPIN,
 	MAX31855SPIDEVICE,
-	UNUSED1133,
+	DEBUGTRIGGERSYNC,
 	DIGITALPOTENTIOMETERSPIDEVICE,
 	MC33972_CS,
 	MC33972_CSPINMODE,
@@ -2348,7 +2352,7 @@ public class Fields {
 	CANTXPIN,
 	CANRXPIN,
 	THROTTLEPEDALUPPINMODE,
-	UNUSEDMA2,
+	DEBUGTIMERCALLBACK,
 	IDLETHREADPERIODMS,
 	CONSOLELOOPPERIODMS,
 	LCDTHREADPERIODMS,
@@ -2445,6 +2449,8 @@ public class Fields {
 	MAX31855_CS7,
 	MAX31855_CS8,
 	SDCARDPERIODMS,
+	DEBUGSETTIMER,
+	UNUSEDSPIPADDING2,
 	MAPMINBUFFERLENGTH,
 	IDLEPIDDEACTIVATIONTPSTHRESHOLD,
 	STEPPERPARKINGEXTRASTEPS,

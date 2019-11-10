@@ -1297,7 +1297,8 @@ cmd_test_inj13 = "w\x00\x13\x00\x0d"
 cmd_test_inj14 = "w\x00\x13\x00\x0e"
 cmd_test_inj15 = "w\x00\x13\x00\x0f"
 cmd_test_inj16 = "w\x00\x13\x00\x10"
-		
+
+; 		
 cmd_test_fuel_pump           = "w\x00\x14\x00\x01"
 cmd_calibrate_tps_1_closed   = "w\x00\x14\x00\x02"
 cmd_calibrate_tps_1_wot      = "w\x00\x14\x00\x03"
@@ -1307,6 +1308,7 @@ cmd_calibrate_pedal_up       = "w\x00\x14\x00\x06"
 cmd_calibrate_pedal_down     = "w\x00\x14\x00\x07"
 cmd_tle8888_init     		 = "w\x00\x14\x00\x08"
 cmd_test_ac_relay     		 = "w\x00\x14\x00\x09"
+cmd_write_config     		 = "w\x00\x14\x00\x0A"
 
 cmd_test_radiator_fan        = "w\x00\x15\x00\x01"
 cmd_test_check_engine_light  = "w\x00\x16\x00\x01"
@@ -1714,6 +1716,11 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		field = "output #15", 							fsioOutputPins15
 		field = "output #16", 							fsioOutputPins16
 
+	dialog = allPins2_3
+		field = "Debug Trigger Sync", 					debugTriggerSync
+		field = "Debug Timer Callback", 				debugTimerCallback
+		field = "Debug Set Timer", 						debugSetTimer
+
 	dialog = allPins1_3
 		field = "FSIO ADC #1",							fsioAdc1
 		field = "FSIO ADC #2",							fsioAdc2
@@ -1762,6 +1769,7 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 
 	dialog = allPins2, "All Pins 2/2", xAxis
 		panel = allPins2_1_and_2
+		panel = allPins2_3
 
 
 ;			Sensors->CLT sensor
@@ -2521,7 +2529,8 @@ cmd_set_engine_type_default					= "w\x00\x31\x00\x00"
 		commandButton = "Check Engine", cmd_test_check_engine_light
 		commandButton = "Idle Air Valve", cmd_test_idle_valve
 		commandButton = "A/C Relay", cmd_test_ac_relay          
-		commandButton = "Stop Engine", cmd_stop_engine          
+		commandButton = "Stop Engine", cmd_stop_engine
+		commandButton = "Write Config", cmd_write_config          
 		commandButton = "Reset ECU", cmd_reset_controller
 		commandButton = "Reset to DFU", cmd_dfu
 
