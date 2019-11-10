@@ -35,7 +35,9 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Werror=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+   # Not in earlier versions of GCC
+   #   USE_OPT += -Wno-error=implicit-fallthrough -Wno-error=bool-operation
 endif
 
 # C specific options here (added to USE_OPT).
@@ -46,7 +48,15 @@ endif
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
   # constexpr float expf_taylor_impl probably needs just c++14 but why not go with 17?
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  USE_CPPOPT = -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings -Werror=type-limits
+  # GCC version dependent options
+  # USE_CPPOPT += -Wno-register 
+  # Check for compatibility with earlier standards, default to C++-2017 features
+  ifeq ($(USE_STD),CPP11)
+    USE_CPPOPT += -std=c++11
+  else
+    USE_CPPOPT += -std=c++17
+  endif
 endif
 
 # Enable this if you want the linker to remove unused code and data

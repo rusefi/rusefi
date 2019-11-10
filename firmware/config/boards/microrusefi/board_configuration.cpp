@@ -47,17 +47,32 @@ static void setIgnitionPins() {
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
+// The MicroRusEFI board has the main LEDs on pins E1..E4
+// PE1 Yellow
+// PE2 Blue
+// PE3 Red
+// PE4 Green
 static void setLedPins() {
-	//engineConfiguration->atalErrorPin = GPIOE_3;		// d21 = red
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOE_2; // d23 = blue
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOE_4;		// d22 = green
-	boardConfiguration->triggerErrorPin = GPIOE_1;		// d27 = orange
+
+	//engineConfiguration->FatalErrorPin = GPIOE_3;		// red
+	engineConfiguration->communicationLedPin = GPIOE_2;	// blue
+	engineConfiguration->runningLedPin = GPIOE_4;		// green
+	boardConfiguration->triggerErrorPin = GPIOE_1;		// orange
 }
 
+// Set the coeffficients from sensed voltage to ADC count.
+// For most uses these coefficients are not used.
+// The ADC Vref is the buffered and divided 5V sensor supply, using
+// an input structure that matches the sensors.
+// Thus ratiometric sensors will use the full ADC range, inheriently
+// corrected for temperature, voltage and component variations.
+//
+// MRE versions through 0.3 used a 1K / 1.5K (high / low side) divider,
+// version 0.4 and later use a 6.8K / 10K resistor divider.
+//  1.00K / 1.50K = 0.600   3.00V from a 5.00V supply
+//  6.8K / 10.0K  = 0.595
+// On all versions the 12V supply is measured by a 39K/10K divider,
+// using the buffered/divided input structure.
 static void setupVbatt() {
 	// 1k high side/1.5k low side = 1.6667 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.5f / 1.5f;
@@ -69,11 +84,13 @@ static void setupVbatt() {
 	engineConfiguration->adcVcc = 3.29f;
 }
 
+// Configure the TLE8888 control interface.
+// Future: Change to SPI1 to allow SPI3 to be mapped elsewhere.
 static void setupTle8888() {
-	// Enable spi3
+	// Enable SPI3
 	boardConfiguration->is_enabled_spi_3 = true;
 
-	// Wire up spi3
+	// Wire up SPI3
 	boardConfiguration->spi3mosiPin = GPIOB_5;
 	boardConfiguration->spi3misoPin = GPIOB_4;
 	boardConfiguration->spi3sckPin = GPIOB_3;
@@ -85,13 +102,16 @@ static void setupTle8888() {
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_3;
 }
 
+// Configure the Electronic Throttle Body (ETB) driver.
+// On MRE the ETB is intended to be driven by the TLE9201 H-Bridge.
+// 
+// This chip has three control pins:
+//  DIR - sets direction of the motor
+//  PWM - control (enable high, coast low), PWM capable
+//  DIS - disables motor (enable low)
+// ToDo: Clarify assumptions about analog feedback from the ETB.
+// Future: Probe for a connected diagnostic interface on SPI3
 static void setupEtb() {
-	// TLE9201 driver
-	// This chip has three control pins:
-	// DIR - sets direction of the motor
-	// PWM - pwm control (enable high, coast low)
-	// DIS - disables motor (enable low)
-
 	// PWM pin
 	boardConfiguration->etb1.controlPin1 = GPIOC_7;
 	// DIR pin
@@ -121,22 +141,29 @@ static void setupEtb() {
 	engineConfiguration->etbFreq = 800;
 }
 
+// Configure key sensors inputs.
+//
+// The Trigger is our primary timing signal, usually from the crank.
+// MRE default to the VR output from the TLE8888.
+// A secondary Cam signal is assumed to be a Hall sensor or pre-conditioned
+// logic-level or open-collector signal.
+// ToDo: Review count assumption with initialization of unused triggers/cams
+// ToDo: Resolve angst over default input assignments.
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	// tle8888 VR conditioner
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_5;
 
-	// open question if it's great to have TPS in default TPS - the down-side is for
-	// vehicles without TPS or for first start without TPS one would have to turn in off
-	// to avoid cranking corrections based on wrong TPS data
+	// Open question if it's great to have TPS in default TPS
+	// The down-side is for vehicles without TPS or for first start
+	// without TPS one would have to turn it off to avoid cranking
+	// corrections based on wrong TPS data
 	// tps = "20 - AN volt 5"
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-
 
 	// EFI_ADC_10: "27 - AN volt 1"
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
@@ -156,6 +183,7 @@ static void setupDefaultSensorInputs() {
 void setPinConfigurationOverrides(void) {
 }
 
+// Future: configure USART3 for LIN bus and UART4 for console
 void setSerialConfigurationOverrides(void) {
 	boardConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
@@ -180,23 +208,28 @@ void setBoardConfigurationOverrides(void) {
 	setupTle8888();
 	setupEtb();
 
-	// MRE has a special main relay control low side pin
-	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
-	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
-	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
+	// The MRE uses the TLE8888 fixed-function main relay control pin.
+	// This firmware is not involved with main relay control, although
+	// the pin inputs can be over-ridden through the TLE8888 Cmd0 register.
+	// ToDo: Review if EFI_MAIN_RELAY_CONTROL should be TRUE or FALSE
+	// for this type of partial control.
+
+	// Configure the TLE8888 outputs, some are controlled by pin mappings,
+	// others through SPI registers.
+
+	// TLE8888_IN11 -> TLE8888_OUT21
 	// GPIOE_8: "35 - GP Out 1"
 	boardConfiguration->fuelPumpPin = GPIOE_8;
 
-
-	// TLE8888 high current low side: VVT2 IN9 / OUT5
+	// TLE8888_IN9 -> OUT5 high current low side: VVT2
 	// GPIOE_10: "3 - Lowside 2"
 	boardConfiguration->idle.solenoidPin = GPIOE_10;
 
-
+	// This is a SPI controlled output
 	// TLE8888_PIN_22: "34 - GP Out 2"
 	boardConfiguration->fanPin = TLE8888_PIN_22;
 
-	// "required" hardware is done - set some reasonable defaults
+	// The "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
 	// Some sensible defaults for other options
@@ -208,9 +241,11 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
+	// Ign is IM_{ONE_COIL,TWO_COILS,INDIVIDUAL_COILS,WASTED_SPARK}
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	// Inj mode: IM_SIMULTANEOUS, IM_SEQUENTIAL, IM_BATCH, IM_SINGLE_POINT
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 }
 
 void setAdcChannelOverrides(void) {
