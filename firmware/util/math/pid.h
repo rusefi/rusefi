@@ -113,6 +113,9 @@ private:
  */
 class PidIndustrial : public Pid {
 public:
+	PidIndustrial();
+	explicit PidIndustrial(pid_s *pid);
+
 	using Pid::getOutput;
 	float getOutput(float target, float input, float dTime) override;
 
