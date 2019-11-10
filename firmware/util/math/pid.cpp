@@ -236,6 +236,12 @@ void PidCic::updateITerm(float value) {
 	iTerm = iTermSum * iTermInvNum;
 }
 
+PidIndustrial::PidIndustrial() : Pid() {
+}
+
+PidIndustrial::PidIndustrial(pid_s *parameters) : Pid(parameters) {
+}
+
 float PidIndustrial::getOutput(float target, float input, float dTime) {
 	float ad, bd;
 	float error = (target - input) * errorAmplificationCoef;

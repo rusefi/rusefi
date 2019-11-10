@@ -31,7 +31,8 @@ EXTERN_ENGINE
 static Logging *logger;
 
 static SimplePwm alternatorControl("alt");
-PidIndustrial alternatorPid;
+static pid_s *altPidS = &persistentState.persistentConfiguration.engineConfiguration.alternatorControl;
+static PidIndustrial alternatorPid(altPidS);
 
 static percent_t currentAltDuty;
 
@@ -156,8 +157,6 @@ void initAlternatorCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	addConsoleAction("altinfo", showAltInfo);
 	if (CONFIGB(alternatorControlPin) == GPIO_UNASSIGNED)
 		return;
-
-	alternatorPid.initPidClass(&engineConfiguration->alternatorControl);
 
 	if (CONFIGB(onOffAlternatorLogic)) {
 		enginePins.alternatorPin.initPin("on/off alternator", CONFIGB(alternatorControlPin));
