@@ -125,9 +125,10 @@ static void setWarningEnabled(int value) {
 // this one needs to be in main ram so that SD card SPI DMA works fine
 static char FILE_LOGGER[1000] MAIN_RAM;
 static Logging fileLogger("file logger", FILE_LOGGER, sizeof(FILE_LOGGER));
+static int logFileLineIndex = 0;
+
 #endif /* EFI_FILE_LOGGING */
 
-static int logFileLineIndex = 0;
 #define TAB "\t"
 
 static void reportSensorF(Logging *log, const char *caption, const char *units, float value,
@@ -151,6 +152,9 @@ static void reportSensorF(Logging *log, const char *caption, const char *units, 
 			appendFloat(log, value, precision);
 			append(log, TAB);
 		}
+#else
+		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
+		UNUSED(precision);
 #endif /* EFI_FILE_LOGGING */
 	}
 }
@@ -166,6 +170,8 @@ static void reportSensorI(Logging *log, const char *caption, const char *units, 
 		} else {
 			appendPrintf(log, "%d%s", value, TAB);
 		}
+#else
+		UNUSED(log);UNUSED(caption);UNUSED(units);UNUSED(value);
 #endif /* EFI_FILE_LOGGING */
 }
 
@@ -188,6 +194,7 @@ static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return hasMafSensor() ? getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE) : engine->engineState.airFlow;
 }
 
+#if EFI_FILE_LOGGING
 static void printSensors(Logging *log) {
 	bool fileFormat = true; // todo:remove this unused variable
 	// current time, in milliseconds
@@ -381,6 +388,8 @@ static void printSensors(Logging *log) {
 		reportSensorI(log, INDICATOR_NAME_AC_SWITCH, "bool", engine->acSwitchState);
 
 }
+#endif /* EFI_FILE_LOGGING */
+
 
 void writeLogLine(void) {
 #if EFI_FILE_LOGGING
@@ -571,7 +580,7 @@ static void showFuelInfo(void) {
 }
 #endif
 
-static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin, &enginePins.checkEnginePin,
+static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
@@ -581,6 +590,10 @@ static void initStatusLeds(void) {
 
 	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin);
 	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin);
+
+	enginePins.debugTriggerSync.initPin("debug: sync", CONFIGB(debugTriggerSync));
+	enginePins.debugTimerCallback.initPin("debug: timer callback", CONFIGB(debugTimerCallback));
+	enginePins.debugSetTimer.initPin("debug: set timer", CONFIGB(debugSetTimer));
 }
 
 #define BLINKING_PERIOD_MS 33

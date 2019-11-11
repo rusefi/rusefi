@@ -24,6 +24,7 @@ public:
 	int getMockAdcValue(int hwChannel) const;
 };
 
+
 class Accelerometer {
 public:
 	float x = 0; // G value

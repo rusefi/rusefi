@@ -23,8 +23,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	eth.moveTimeForwardMs(1000 /*ms*/);
-	eth.firePrimaryTriggerRise();
+	eth.fireRise(1000 /*ms*/);
 
 	// check if it's true
 	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));

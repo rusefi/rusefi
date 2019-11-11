@@ -128,13 +128,13 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 #if !EFI_UNIT_TEST
 if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
+#if EFI_TUNER_STUDIO
 	uint32_t actualDwellDurationNt = getTimeNowLowerNt() - event->actualStartOfDwellNt;
 	/**
 	 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
 	 */
 	float ratio = NT2US(actualDwellDurationNt) / 1000.0 / event->sparkDwell;
 
-#if EFI_TUNER_STUDIO
 	// todo: smarted solution for index to field mapping
 	if (event->cylinderIndex == 0) {
 		tsOutputChannels.debugFloatField1 = ratio;

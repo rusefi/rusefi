@@ -111,6 +111,7 @@ static void sayHello(void) {
 	chThdSleepMilliseconds(5);
 }
 
+#if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 static uintptr_t CountFreeStackSpace(const void* wabase)
 {
 	const uint8_t* stackBase = reinterpret_cast<const uint8_t*>(wabase);
@@ -124,6 +125,7 @@ static uintptr_t CountFreeStackSpace(const void* wabase)
 
 	return stackUsage - stackBase;
 }
+#endif
 
 /**
  * This methods prints all threads, their stack usage, and their total times
@@ -164,6 +166,8 @@ void print(const char *format, ...) {
 	va_start(ap, format);
 	chvprintf((BaseSequentialStream*) getConsoleChannel(), format, ap);
 	va_end(ap);
+#else
+	UNUSED(format);
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
 

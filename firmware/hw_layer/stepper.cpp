@@ -143,20 +143,21 @@ void StepperMotor::setDirection(bool isIncrementing) {
 
 void StepperMotor::pulse() {
 #if EFI_PROD_CODE
-	palWritePad(enablePort, enablePin, false); // enable stepper
-	palWritePad(stepPort, stepPin, true);
+	palWritePad(enablePort, enablePin, 0); // enable stepper
+	palWritePad(stepPort, stepPin, 1);
 	chThdSleepMilliseconds(reactionTime);
 
-	palWritePad(stepPort, stepPin, false);
+	palWritePad(stepPort, stepPin, 0);
 	chThdSleepMilliseconds(reactionTime);
 
-	palWritePad(enablePort, enablePin, true); // disable stepper
-#endif
+	palWritePad(enablePort, enablePin, 1); // disable stepper
+#endif /* EFI_PROD_CODE */
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode,
 		float reactionTime, int totalSteps,
 		brain_pin_e enablePin, pin_output_mode_e enablePinMode, Logging *sharedLogger) {
+	UNUSED(enablePinMode);
 	this->reactionTime = maxF(1, reactionTime);
 	this->totalSteps = maxI(3, totalSteps);
 	

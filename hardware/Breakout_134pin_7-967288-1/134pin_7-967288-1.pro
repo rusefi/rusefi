@@ -1,4 +1,4 @@
-update=9/29/2019 5:18:38 PM
+update=11/10/2019 7:27:19 AM
 version=1
 last_client=kicad
 [general]
@@ -25,7 +25,7 @@ ERC_TestSimilarLabels=1
 [pcbnew]
 version=1
 PageLayoutDescrFile=rusefi_lib_external/Border.kicad_wks
-LastNetListRead=microRusEfi.net
+LastNetListRead=134pin_7-967288-1.net
 CopperLayerCount=2
 BoardThickness=1.6
 AllowMicroVias=0

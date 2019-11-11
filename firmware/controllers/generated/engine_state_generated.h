@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Sep 24 18:13:29 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Nov 05 23:21:45 EST 2019
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #ifndef CONTROLLERS_GENERATED_ENGINE_STATE_GENERATED_H
@@ -226,11 +226,28 @@ struct engine_state2_s {
 	 * offset 148
 	 */
 	percent_t targetFromTable = (percent_t)0;
-	/** total size 152*/
+	/**
+	 * ignition dwell duration in ms
+	 * See also dwellAngle
+	 * offset 152
+	 */
+	floatms_t sparkDwell = (floatms_t)0;
+	/**
+	 * ignition dwell duration as crankshaft angle
+	 * NAN if engine is stopped
+	 * See also sparkDwell
+	 * offset 156
+	 */
+	angle_t dwellAngle = (angle_t)0;
+	/**
+	 * offset 160
+	 */
+	angle_t cltTimingCorrection = (angle_t)0;
+	/** total size 164*/
 };
 
 typedef struct engine_state2_s engine_state2_s;
 
 #endif
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Sep 24 18:13:29 EDT 2019
+// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on integration/engine_state.txt Tue Nov 05 23:21:45 EST 2019
