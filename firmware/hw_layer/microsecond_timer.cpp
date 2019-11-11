@@ -25,6 +25,14 @@
 #include "engine.h"
 EXTERN_ENGINE;
 
+// Just in case we have a mechanism to validate that hardware timer is clocked right and all the
+// conversions between wall clock and hardware frequencies are done right
+// delay in milliseconds
+#define TEST_CALLBACK_DELAY 30
+// if hardware timer is 20% off we throw a fatal error and call it a day
+// maybe this threshold should be 5%? 10%?
+#define TIMER_PRECISION_THRESHOLD 0.2
+
 /**
  * Maximum duration of complete timer callback, all pending events together
  * See also 'maxEventCallbackDuration' for maximum duration of one event
@@ -142,6 +150,10 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 
 static MicrosecondTimerWatchdogController watchdogControllerInstance;
 
+/*
+ * The specific 1MHz frequency is important here since 'setHardwareUsTimer' method takes microsecond parameter
+ * For any arbitrary frequency to work we would need an additional layer of conversion.
+ */
 static constexpr GPTConfig gpt5cfg = { 1000000, /* 1 MHz timer clock.*/
 		hwTimerCallback, /* Timer callback.*/
 0, 0 };
@@ -158,6 +170,36 @@ static void watchDogBuddyCallback(void *arg) {
 	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(1000), watchDogBuddyCallback, NULL);
 }
 
+static volatile bool testSchedulingHappened = false;
+static efitimems_t testSchedulingStart;
+
+static void timerValidationCallback(void *arg) {
+	(void)arg;
+
+	testSchedulingHappened = true;
+	efitimems_t actualTimeSinceScheduling = (currentTimeMillis() - testSchedulingStart);
+
+	if (absI(actualTimeSinceScheduling - TEST_CALLBACK_DELAY) > TEST_CALLBACK_DELAY * TIMER_PRECISION_THRESHOLD) {
+		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME, "hwTimer broken precision");
+	}
+}
+
+/**
+ * This method would validate that hardware timer callbacks happen with some reasonable precision
+ * helps to make sure our GPT hardware settings are somewhat right
+ */
+static void validateHardwareTimer() {
+	testSchedulingStart = currentTimeMillis();
+
+	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
+	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback, NULL);
+
+	chThdSleepMilliseconds(2 * TEST_CALLBACK_DELAY);
+	if (!testSchedulingHappened) {
+		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_NOT_HAPPENED, "hwTimer not alive");
+	}
+}
+
 void initMicrosecondTimer(void) {
 
 	gptStart(&GPTDEVICE, &gpt5cfg);
@@ -165,6 +207,8 @@ void initMicrosecondTimer(void) {
 	hwStarted = true;
 
 	lastSetTimerTimeNt = getTimeNowNt();
+
+	validateHardwareTimer();
 
 	watchDogBuddyCallback(NULL);
 #if EFI_EMULATE_POSITION_SENSORS
