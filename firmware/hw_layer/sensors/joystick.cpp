@@ -7,7 +7,7 @@
  * TODO: separate EXTI layer from joystick logic
  * You cannot use two pins with same index for EXTI (for instance PA5 and PE5) since these would
  * be using same EXTI line. See https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
- * See also comments in digital_input_hw.cpp
+ * See also comments in digital_input_icu.cpp
  *
  * @date Jan 2, 2015
  * @author Andrey Belomutskiy, (c) 2012-2018

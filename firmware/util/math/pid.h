@@ -105,4 +105,27 @@ private:
 	void updateITerm(float value) override;
 };
 
+/**
+ * A PID with derivative filtering (backward differences) and integrator anti-windup.
+ * See: Wittenmark B., Astrom K., Arzen K. IFAC Professional Brief. Computer Control: An Overview. 
+ * Two additional parameters used: derivativeFilterLoss and antiwindupFreq
+ * (If both are 0, then this controller is identical to PidParallelController)
+ */
+class PidIndustrial : public Pid {
+public:
+	PidIndustrial();
+	explicit PidIndustrial(pid_s *pid);
+
+	using Pid::getOutput;
+	float getOutput(float target, float input, float dTime) override;
+
+public:
+	// todo: move this to pid_s one day
+	float_t antiwindupFreq = 0.0f;			// = 1/ResetTime
+	float_t derivativeFilterLoss = 0.0f;	// = 1/Gain
+
+private:
+	float limitOutput(float v) const;
+};
+
 #endif /* PID_H_ */

@@ -775,7 +775,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initMalfunctionCentral();
 
 #if EFI_ALTERNATOR_CONTROL
-	initAlternatorCtrl(sharedLogger);
+	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 #if EFI_AUX_PID
@@ -839,6 +839,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191105;
+	return 20191110;
 }
 #endif /* EFI_UNIT_TEST */

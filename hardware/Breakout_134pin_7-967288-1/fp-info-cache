@@ -1,4 +1,11 @@
-16362305503149652
+16362306104008798
+134pin_7-967288-1_KC5_FOOTPRINT
+7-967288-1_134-pin-connector
+
+
+0
+134
+134
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -272,13 +279,6 @@ battery CR-3032 coin cell vertical
 0
 2
 2
-Breakout_134pin_7-967288-1_KC5
-7-967288-1_134-pin-connector
-
-
-0
-134
-134
 Button_Switch_Keyboard
 SW_Cherry_MX_1.00u_PCB
 Cherry MX keyswitch, 1.00u, PCB mount, http://cherryamericas.com/wp-content/uploads/2014/12/mx_cat.pdf

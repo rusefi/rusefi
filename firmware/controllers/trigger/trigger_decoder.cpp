@@ -537,6 +537,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 			}
 			isSynchronizationPoint = isSync;
+			if (isSynchronizationPoint) {
+				enginePins.debugTriggerSync.setValue(1);
+			}
 
 
 			/**
@@ -584,6 +587,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, efitime_t no
 
 
 #endif /* EFI_PROD_CODE */
+			enginePins.debugTriggerSync.setValue(0);
 
 		} else {
 			/**
