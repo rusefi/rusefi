@@ -30,13 +30,13 @@ void startTriggerInputPins(void) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			const char * msg = (i == 0 ? "trigger#1" : (i == 1 ? "trigger#2" : "trigger#3"));
-			turnOnTriggerInputPin(msg, CONFIGB(triggerInputPins)[i], true);
+			turnOnTriggerInputPin(msg, i, true);
 		}
 	}
 
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
 		if (isConfigurationChanged(camInputs[i])) {
-			turnOnTriggerInputPin("cam", engineConfiguration->camInputs[i], false);
+			turnOnTriggerInputPin("cam", i, false);
 		}
 	}
 
