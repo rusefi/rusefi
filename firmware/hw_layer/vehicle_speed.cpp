@@ -67,7 +67,7 @@ bool hasVehicleSpeedSensor() {
 }
 
 void stopVSSPins(void) {
-	removeWaveAnalyzerDriver("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
+	stopDigitalCapture("VSS", activeConfiguration.bc.vehicleSpeedSensorInputPin);
 }
 
 void startVSSPins(void) {
