@@ -311,6 +311,8 @@ TEST(misc, testRpmCalculator) {
 
 	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
+	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
