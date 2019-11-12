@@ -14,7 +14,7 @@
 #include "engine_controller.h"
 
 #if EFI_PROD_CODE
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
 #include "digital_input_exti.h"
 #include "pin_repository.h"
 #endif
@@ -266,13 +266,11 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 
-#if HAL_USE_ICU
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		digital_input_s* digitalMapInput = addWaveAnalyzerDriver("map freq", CONFIGB(frequencyReportingMapInputPin));
-		startInputDriver("MAP", digitalMapInput, true);
+#if HAL_USE_ICU
+		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIGB(frequencyReportingMapInputPin), true);
 
-		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
-	}
+		digitalMapInput->setWidthCallback((VoidInt) digitalMapWidthCallback, NULL);
 #else
  #if EFI_PROD_CODE
 	efiExtiEnablePin(
@@ -284,6 +282,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			);
  #endif /* EFI_PROD_CODE */
 #endif /* HAL_USE_ICU */
+	}
 
 	if (CONFIG(useFixedBaroCorrFromMap)) {
 		// Read initial MAP sensor value and store it for Baro correction.

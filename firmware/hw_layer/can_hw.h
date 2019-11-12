@@ -51,5 +51,3 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void postCanState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 #endif /* EFI_CAN_SUPPORT */
-
-

@@ -1,5 +1,5 @@
 /*
- * @file	digital_input_hw.cpp
+ * @file	digital_input_icu.cpp
  * @brief	Helper methods related to Input Capture Unit (ICU)
  *
  * There are some ChibiOS limitation or STM32 limitations or limitations of my brain
@@ -24,7 +24,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
+
 #include "fl_stack.h"
 
 #if EFI_ICU_INPUTS
@@ -286,6 +287,12 @@ void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isA
 		icuEnableNotifications(driver);
 	}
 	hw->started = true;
+}
+
+digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin, bool isActiveHigh) {
+	digital_input_s* input = addWaveAnalyzerDriver(msg, brainPin);
+	startInputDriver(msg, input, isActiveHigh);
+	return input;
 }
 
 #endif /* EFI_ICU_INPUTS */

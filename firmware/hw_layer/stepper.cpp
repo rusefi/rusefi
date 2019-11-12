@@ -185,10 +185,10 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin
 	efiSetPadMode("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
 
 #if EFI_PROD_CODE
-	palWritePad(this->enablePort, enablePin, true); // disable stepper
+	palWritePad(this->enablePort, enablePin, 1); // disable stepper
 
 	// All pins must be 0 for correct hardware startup (e.g. stepper auto-disabling circuit etc.).
-	palWritePad(this->stepPort, this->stepPin, false);
+	palWritePad(this->stepPort, this->stepPin, 0);
 #endif
 
 	this->directionPin.setValue(false);

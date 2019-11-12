@@ -860,13 +860,11 @@ static void setSpiMode(int index, bool mode) {
 	printSpiState(&logger, boardConfiguration);
 }
 
-extern bool hwTriggerInputEnabled;
-
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
-		hwTriggerInputEnabled = isEnabled;
+		engine->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {

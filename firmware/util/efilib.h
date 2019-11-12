@@ -74,6 +74,17 @@ float expf_taylor(float x);
 
 #ifdef __cplusplus
 }
+
+//// C++ helpers go here
+//namespace efi
+//{
+//template <class T, size_t N>
+//constexpr size_t size(const T (&)[N])
+//{
+//    return N;
+//}
+//} // namespace efi
+
 #endif /* __cplusplus */
 
 #endif /* EFILIB_H_ */

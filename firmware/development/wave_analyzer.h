@@ -14,7 +14,7 @@
 
 #if EFI_WAVE_ANALYZER
 
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
 #include "engine_sniffer.h"
 
 class WaveReader {
