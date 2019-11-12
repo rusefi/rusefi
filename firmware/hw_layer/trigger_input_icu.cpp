@@ -1,6 +1,6 @@
 /**
  * @file	trigger_input_icu.cpp
- * @brief	Position sensor hardware layer (ICU and PAL drivers)
+ * @brief	Position sensor hardware layer - ICU version
  *
  * todo: code reuse with digital_input_hw.cpp was never finished
  * todo: at the moment due to half-done code reuse we already depend on EFI_ICU_INPUTS but still have custom code
@@ -16,93 +16,18 @@
 
 volatile int icuWidthCallbackCounter = 0;
 volatile int icuWidthPeriodCounter = 0;
-bool hwTriggerInputEnabled = true; // this is useful at least for real hardware integration testing
 
-#if EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
+#if EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
 
 #include "trigger_input.h"
 #include "digital_input_hw.h"
-#include "digital_input_exti.h"
-#include "pin_repository.h"
-#include "trigger_structure.h"
-#include "trigger_central.h"
-#include "engine_configuration.h"
+
+EXTERN_ENGINE;
 
 extern bool hasFirmwareErrorFlag;
 
-EXTERN_ENGINE
-;
 static Logging *logger;
 
-#if EFI_PROD_CODE
-/* PAL based implementation */
-#if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
-
-/* static variables for PAL implementation */
-static ioline_t primary_line;
-
-static void shaft_callback(void *arg) {
-	ioline_t pal_line = (ioline_t)arg;
-	// todo: support for 3rd trigger input channel
-	// todo: start using real event time from HW event, not just software timer?
-	if (hasFirmwareErrorFlag)
-		return;
-
-	bool isPrimary = pal_line == primary_line;
-	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
-		return;
-	}
-
-	bool rise = (palReadLine(pal_line) == PAL_HIGH);
-	trigger_event_e signal;
-	// todo: add support for 3rd channel
-	if (rise) {
-		signal = isPrimary ?
-					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) :
-					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-	} else {
-		signal = isPrimary ?
-					(engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) :
-					(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	}
-
-	hwHandleShaftSignal(signal);
-}
-
-static void cam_callback(void *arg) {
-	ioline_t pal_line = (ioline_t)arg;
-
-	bool rise = (palReadLine(pal_line) == PAL_HIGH);
-
-	if (rise) {
-		hwHandleVvtCamSignal(TV_RISE);
-	} else {
-		hwHandleVvtCamSignal(TV_FALL);
-	}
-}
-
-static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft) {
-	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
-
-	/* TODO:
-	 * * do not set to both edges if we need only one
-	 * * simplify callback in case of one edge */
-	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
-	return efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, is_shaft ? shaft_callback : cam_callback, (void *)pal_line);
-}
-
-static void turnOffTriggerInputPin(brain_pin_e brainPin) {
-	efiExtiDisablePin(brainPin);
-}
-
-static void setPrimaryChannel(brain_pin_e brainPin) {
-	primary_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
-}
-
-/* ICU based implementation */
-#elif (HAL_USE_ICU)
-
-/* static vars for ICU implementation */
 static ICUDriver *primaryCrankDriver;
 
 static void cam_icu_width_callback(ICUDriver *icup) {
@@ -120,7 +45,7 @@ static void cam_icu_period_callback(ICUDriver *icup) {
  * 'width' events happens before the 'period' event
  */
 static void shaft_icu_width_callback(ICUDriver *icup) {
-	if (!hwTriggerInputEnabled) {
+	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
 	icuWidthCallbackCounter++;
@@ -140,7 +65,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 }
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
-	if (!hwTriggerInputEnabled) {
+	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
 	icuWidthPeriodCounter++;
@@ -180,14 +105,14 @@ static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW,
                                 ICU_CHANNEL_1,
                                 0};
 
-static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_shaft) {
+int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool isVvtShaft) {
 	ICUConfig *icucfg;
 
 	if (brainPin == GPIO_UNASSIGNED) {
 		return -1;
 	}
 
-	if (is_shaft) {
+	if (isVvtShaft) {
 		icucfg = &shaft_icucfg;
 	} else {
 		icucfg = &cam_icucfg;
@@ -222,7 +147,7 @@ static int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool is_
 	return 0;
 }
 
-static void turnOffTriggerInputPin(brain_pin_e brainPin) {
+void turnOffTriggerInputPin(brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver("trigger_off", brainPin);
 	if (driver != NULL) {
         icuDisableNotifications(driver);
@@ -233,12 +158,9 @@ static void turnOffTriggerInputPin(brain_pin_e brainPin) {
 	}
 }
 
-static void setPrimaryChannel(brain_pin_e brainPin) {
+void setPrimaryChannel(brain_pin_e brainPin) {
 	primaryCrankDriver = getInputCaptureDriver("primary", brainPin);
 }
-
-#endif /* HAL_USE_ICU */
-#endif /* EFI_PROD_CODE */
 
 /*==========================================================================*/
 /* Exported functions.														*/
@@ -249,39 +171,4 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 
 	applyNewTriggerInputPins();
 }
-
-void stopTriggerInputPins(void) {
-#if EFI_PROD_CODE
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (isConfigurationChanged(bc.triggerInputPins[i])) {
-			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
-		}
-	}
-	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		if (isConfigurationChanged(camInputs[i])) {
-			turnOffTriggerInputPin(activeConfiguration.camInputs[i]);
-		}
-	}
-#endif /* EFI_PROD_CODE */
-}
-
-void startTriggerInputPins(void) {
-#if EFI_PROD_CODE
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (isConfigurationChanged(bc.triggerInputPins[i])) {
-			const char * msg = (i == 0 ? "trigger#1" : (i == 1 ? "trigger#2" : "trigger#3"));
-			turnOnTriggerInputPin(msg, CONFIGB(triggerInputPins)[i], true);
-		}
-	}
-
-	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		if (isConfigurationChanged(camInputs[i])) {
-			turnOnTriggerInputPin("cam", engineConfiguration->camInputs[i], false);
-		}
-	}
-
-	setPrimaryChannel(CONFIGB(triggerInputPins)[0]);
-#endif /* EFI_PROD_CODE */
-}
-
-#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE || HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)) */
+#endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)) */
