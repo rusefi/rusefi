@@ -288,4 +288,10 @@ void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isA
 	hw->started = true;
 }
 
+digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin, bool isActiveHigh) {
+	digital_input_s* input = addWaveAnalyzerDriver(msg, brainPin);
+	startInputDriver(msg, input, isActiveHigh);
+	return input;
+}
+
 #endif /* EFI_ICU_INPUTS */
