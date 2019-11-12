@@ -120,14 +120,14 @@
 #define BOARD_EXT_PINREPOPINS 24
 
 
-/**
- * if you have a 60-2 trigger, or if you just want better performance, you
- * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
+/*
+ * With a 60-2 trigger, or if there is a processor performance problem, set
+ * EFI_ENABLE_ASSERTS to be FALSE.
+ * Chibios features that may be disabled (define FALSE in chconf.h) for
+ * performance are
  * CH_DBG_ENABLE_CHECKS
  * CH_DBG_ENABLE_ASSERTS
  * CH_DBG_ENABLE_TRACE
- * in chconf.h
- *
  */
 #if !defined(EFI_ENABLE_ASSERTS)
  #define EFI_ENABLE_ASSERTS TRUE
@@ -138,10 +138,9 @@
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 
-
-// TunerStudio support.
+// TunerStudio (TS) support and TS debugging output.
 #define EFI_TUNER_STUDIO TRUE
-#define EFI_TUNER_STUDIO_VERBOSE TRUE		// Debugging output
+#define EFI_TUNER_STUDIO_VERBOSE TRUE
 
 // HC-06 Bluetooth module UART setup (output an initial configuration string)
 #define EFI_BLUETOOTH_SETUP FALSE
@@ -173,7 +172,6 @@
 #define EFI_ENGINE_CONTROL TRUE
 
 #define EFI_SPEED_DENSITY TRUE
-
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
@@ -221,7 +219,8 @@
 #define EFI_PROD_CODE TRUE
 
 
-// For now we can still embed all car configurations into the firmware binary.
+// For now we can still fit most tested engine configurations into the
+// firmware binary.
 // These give us control over which configurations go in.
 
 #define EFI_SUPPORT_DODGE_NEON TRUE
@@ -248,7 +247,6 @@
 // Control a hobby-style servo with a PWM signal, see Wiki Hardware:Servo_motor
 #define EFI_SERVO FALSE
 
-
 // MIL Malfunction Indicator Lamp logic
 #define EFI_MALFUNCTION_INDICATOR TRUE
 
@@ -264,6 +262,8 @@
 // todo: switch to continues ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
 
+// These control STM32 pin Alternate Functions, and should eventually move to
+// a processor-specific configuration file.
 #define EFI_SPI1_AF 5
 #define EFI_SPI2_AF 5
 #define EFI_SPI3_AF 6

@@ -233,3 +233,10 @@ void startSmartCsPins() {
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
 #endif /* EFI_PROD_CODE */
+
+/*
+ * Local variables:
+ *  c-basic-indent: 4
+ *  tab-width: 4
+ * End:
+ */

@@ -335,7 +335,11 @@ constexpr float constant_e = 2.71828f;
 // "yes, this thing, it's a 'pure function' that only depends on its inputs and has no side effects"
 // like how const is a constant value, constexpr is a constant expression
 // so if somewhere you used it in a way that it could determine the exact arguments to the function at compile time, it will _run_ the function at compile time, and cook in the result as a constant
+#if 0		// Does not work.  Cleverness that doesn't work is stupidity
 constexpr float expf_taylor_impl(float x, uint8_t n)
+#else
+float expf_taylor_impl(float x, uint8_t n)
+#endif
 {
 	if (x < -2)
 	{

@@ -93,11 +93,6 @@
 #define TS_UART_DEVICE (&UARTD3)
 #define TS_SERIAL_DEVICE (&SD3)
 
-// USART3 is Alternate Function 7, UART4 is AF8
-#undef EFI_CONSOLE_AF
-#undef TS_SERIAL_AF
-#define EFI_CONSOLE_AF 7
-#define TS_SERIAL_AF 7
 
 // todo: document limitations of DMA mode for the UART.
 #undef TS_UART_DMA_MODE
@@ -108,11 +103,18 @@
 #undef EFI_CONSOLE_SERIAL_DEVICE
 #endif
 
-// todo: start using consoleSerialTxPin? Not sure
+#undef EFI_CONSOLE_AF
+#undef TS_SERIAL_AF
 #undef EFI_CONSOLE_TX_PIN
 #undef EFI_CONSOLE_TX_PORT
 #undef EFI_CONSOLE_RX_PORT
 #undef EFI_CONSOLE_RX_PIN
+
+// todo: start using consoleSerialTxPin? Not sure
+#define TS_SERIAL_AF 7
+
+// USART3 is Alternate Function 7, UART4 is AF8
+#define EFI_CONSOLE_AF 7
 #define EFI_CONSOLE_TX_PORT GPIOC
 #define EFI_CONSOLE_TX_PIN 10
 #define EFI_CONSOLE_RX_PORT GPIOC

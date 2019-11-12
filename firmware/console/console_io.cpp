@@ -22,7 +22,9 @@
 #include "engine.h"
 #include "console_io.h"
 #include "os_util.h"
+#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
+#endif
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -33,6 +35,7 @@ EXTERN_ENGINE;
 #if HAL_USE_SERIAL_USB
 #include "usbcfg.h"
 #include "usbconsole.h"
+#define CONSOLE_USB_DEVICE SDU1
 extern SerialUSBDriver SDU1;
 #endif /* HAL_USE_SERIAL_USB */
 
@@ -44,7 +47,9 @@ int lastWriteActual;
 
 static bool isSerialConsoleStarted = false;
 
+#if defined(EFI_CONSOLE_SERIAL_DEVICE)
 static event_listener_t consoleEventListener;
+#endif
 
 bool consoleByteArrived = false;
 
@@ -210,10 +215,13 @@ bool isUsbSerial(BaseChannel * channel) {
 
 BaseChannel * getConsoleChannel(void) {
 #if defined(EFI_CONSOLE_SERIAL_DEVICE)
+#define EFI_CONSOLE_SERIAL_DEVICE 33345
+#warning Not USB serial
 	return (BaseChannel *) EFI_CONSOLE_SERIAL_DEVICE;
 #endif /* EFI_CONSOLE_SERIAL_DEVICE */
 
 #if defined(EFI_CONSOLE_UART_DEVICE)
+#warning Not USB serial
 	return (BaseChannel *) &uartChannel;
 #endif /* EFI_CONSOLE_UART_DEVICE */
 
@@ -231,19 +239,22 @@ bool isCommandLineConsoleReady(void) {
 
 #if !defined(EFI_CONSOLE_NO_THREAD)
 
+#if EFI_TUNER_STUDIO
 static ts_channel_s binaryConsole;
+#endif
 
 static THD_WORKING_AREA(consoleThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
 static THD_FUNCTION(consoleThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("console thread");
 
+	usb_serial_start();
+#if EFI_TUNER_STUDIO
 	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
 	if (binaryConsole.channel != NULL) {
-#if EFI_TUNER_STUDIO
 		runBinaryProtocolLoop(&binaryConsole);
-#endif /* EFI_TUNER_STUDIO */
 	}
+#endif /* EFI_TUNER_STUDIO */
 }
 
 #endif /* EFI_CONSOLE_NO_THREAD */

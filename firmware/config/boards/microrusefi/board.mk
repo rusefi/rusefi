@@ -1,5 +1,6 @@
 # Combine the related files for a specific platform and MCU.
 
+CONFIGPATH=config/boards/microrusefi
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 # Target ECU board design
@@ -10,8 +11,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   MCU_DEFS = -DSTM32F407xx
   BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.c
   BOARDINC = $(BOARDS_DIR)/microrusefi
-  BOARDINC += $(PROJECT_DIR)/config/stm32f4ems	# For board.h
-  BOARDINC += $(BOARDS_DIR)/st_stm32f4
+  BOARDINC += $(PROJECT_DIR)/config/stm32f4ems		# For chconf.h,halconf.h
+  BOARDINC += $(BOARDS_DIR)/st_stm32f4			# For board.h
   LDSCRIPT= $(BOARDS_DIR)/prometheus/STM32F405xG.ld
 else
   MCU_DEFS = -DSTM32F767xx
