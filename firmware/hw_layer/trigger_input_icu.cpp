@@ -99,7 +99,7 @@ void turnOnTriggerInputPin(const char *msg, int index, bool isVvtShaft) {
 
 void turnOffTriggerInputPin(brain_pin_e brainPin) {
 
-	removeWaveAnalyzerDriver("trigger", brainPin);
+	stopDigitalCapture("trigger", brainPin);
 }
 
 void setPrimaryChannel(brain_pin_e brainPin) {
