@@ -11,6 +11,8 @@
 
 #include "engine.h"
 
+#define TRIGGER_SUPPORTED_CHANNELS 2
+
 void turnOnTriggerInputPins(Logging *sharedLogger);
 void applyNewTriggerInputPins(void);
 void startTriggerInputPins(void);

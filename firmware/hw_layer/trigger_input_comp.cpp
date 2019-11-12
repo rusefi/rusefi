@@ -20,8 +20,6 @@
 #include "trigger_central.h"
 #include "engine_configuration.h"
 
-#define TRIGGER_SUPPORTED_CHANNELS 2
-
 extern bool hasFirmwareErrorFlag;
 
 EXTERN_ENGINE
@@ -117,13 +115,6 @@ void stopTriggerInputPins(void) {
 		turnOffTriggerInputPin(activeConfiguration.camInput);
 	}
 #endif
-}
-
-void applyNewTriggerInputPins(void) {
-	// first we will turn off all the changed pins
-	stopTriggerInputPins();
-	// then we will enable all the changed pins
-	startTriggerInputPins();
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT && HAL_USE_COMP */
