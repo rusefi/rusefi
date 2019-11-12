@@ -104,18 +104,6 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 	reader->onFallEvent();
 }
 
-static void setWaveModeSilent(int index, int mode) {
-	WaveReader *reader = &readers[index];
-
-	startInputDriver("wave", reader->hw, mode);
-}
-
-//static int getEventCounter(int index) {
-//	WaveReader *reader = &readers[index];
-//	ensureInitialized(reader);
-//	return reader->eventCounter;
-//}
-
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = CONFIGB(logicAnalyzerPins)[index];
 
@@ -129,7 +117,8 @@ static void initWave(const char *name, int index) {
 	WaveReader *reader = &readers[index];
 	reader->name = name;
 
-	reader->hw = addWaveAnalyzerDriver("wave input", brainPin);
+	reader->hw = startDigitalCapture("wave input", brainPin, mode);
+
 	if (reader->hw != NULL) {
 		reader->hw->widthListeners.registerCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
 
@@ -137,7 +126,6 @@ static void initWave(const char *name, int index) {
 	}
 
 	print("wave%d input on %s\r\n", index, hwPortname(brainPin));
-	startInputDriver("wave", reader->hw, mode);
 }
 #endif
 
@@ -259,7 +247,6 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 
 	addConsoleAction("waveinfo", showWaveInfo);
 
-	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 #else
 	print("wave disabled\r\n");
 #endif

@@ -268,8 +268,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
 #if HAL_USE_ICU
-		digital_input_s* digitalMapInput = addWaveAnalyzerDriver("map freq", CONFIGB(frequencyReportingMapInputPin));
-		startInputDriver("MAP", digitalMapInput, true);
+		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIGB(frequencyReportingMapInputPin), true);
 
 		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
 #else
