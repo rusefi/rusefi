@@ -15,10 +15,7 @@
 
 #include "trigger_input.h"
 #include "digital_input_hw.h"
-#include "pin_repository.h"
-#include "trigger_structure.h"
-#include "trigger_central.h"
-#include "engine_configuration.h"
+
 
 extern bool hasFirmwareErrorFlag;
 

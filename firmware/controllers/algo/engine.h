@@ -62,6 +62,11 @@ public:
 	 */
 	int globalSparkIdCounter = 0;
 
+	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
+	// GND input pins instead of leaving them floating
+	bool hwTriggerInputEnabled = true;
+
+
 #if !EFI_PROD_CODE
 	float mockMapValue = 0;
 	// for historical reasons we have options to mock TPS on different layers :(

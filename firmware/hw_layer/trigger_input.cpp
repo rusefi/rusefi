@@ -10,6 +10,41 @@
 
 #if (EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
+EXTERN_ENGINE;
+
+#if (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE)
+void stopTriggerInputPins(void) {
+	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+		if (isConfigurationChanged(bc.triggerInputPins[i])) {
+			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
+		}
+	}
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (isConfigurationChanged(camInputs[i])) {
+			turnOffTriggerInputPin(activeConfiguration.camInputs[i]);
+		}
+	}
+}
+
+void startTriggerInputPins(void) {
+	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+		if (isConfigurationChanged(bc.triggerInputPins[i])) {
+			const char * msg = (i == 0 ? "trigger#1" : (i == 1 ? "trigger#2" : "trigger#3"));
+			turnOnTriggerInputPin(msg, CONFIGB(triggerInputPins)[i], true);
+		}
+	}
+
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
+		if (isConfigurationChanged(camInputs[i])) {
+			turnOnTriggerInputPin("cam", engineConfiguration->camInputs[i], false);
+		}
+	}
+
+	setPrimaryChannel(CONFIGB(triggerInputPins)[0]);
+}
+#endif
+
+
 void applyNewTriggerInputPins(void) {
 	// first we will turn off all the changed pins
 	stopTriggerInputPins();
