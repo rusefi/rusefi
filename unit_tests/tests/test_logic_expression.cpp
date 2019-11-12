@@ -186,34 +186,24 @@ TEST(fsio, testLogicExpressions) {
 		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
 		Sensor::setMockValue(SensorType::Clt, 100);
 		engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 		testExpression2(0, "coolant 1 +", 101, engine);
+
+		testExpression2(0, "coolant 90 >", 1, engine);
+		testExpression2(0, "fan not coolant 90 > and", 1, engine);
+
+		testExpression2(0, "fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1, engine);
 
 		Sensor::resetRegistry();
 	}
+
 	testExpression("fan", 0);
 	testExpression("fan not", 1);
-	testExpression("coolant 90 >", 1);
-	testExpression("fan not coolant 90 > and", 1);
-
+	
 	testExpression("100 200 1 if", 200);
 	testExpression("10 99 max", 99);
 
 	testExpression2(123, "10 self max", 123);
-
-	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
-	{
-		WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
-		LEElement thepool[TEST_POOL_SIZE];
-		LEElementPool pool(thepool, TEST_POOL_SIZE);
-		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
-		ASSERT_TRUE(element != NULL) << "Not NULL expected";
-		LECalculator c;
-		ASSERT_EQ( 1,  c.getValue2(0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
-
-		ASSERT_EQ(12, c.currentCalculationLogPosition);
-		ASSERT_EQ(102, c.calcLogAction[0]);
-		ASSERT_EQ(0, c.calcLogValue[0]);
-	}
 
 	testExpression("cfg_fanOffTemperature", 0);
 	testExpression("coolant cfg_fanOffTemperature >", 1);
