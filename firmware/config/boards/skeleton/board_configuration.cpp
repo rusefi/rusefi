@@ -2,7 +2,7 @@
  * @file boards/skeleton/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for an example RusEFI board
+ * @brief Example configuration defaults for a RusEFI board
  *
  * @author Donald Becker November 2019
  * @author Hugo Becker November 2019
@@ -10,7 +10,16 @@
  * This file is an example of board-specific firmware for RusEFI.
  * It contains the unique code need for the setup of a specific board.
  * 
- * These are called from firmware/controllers/algo/engine_configuration.cpp
+ * This file must contain the configuration for the hard-wired aspects
+ * of the board, for instance the pins used for a specific MCU functional
+ * unit such as SPI.
+ *
+ * It may also contain preferences for the assignment of external connector
+ * such as which analog input is used to measure coolant temperature, or
+ * of if an analog input is connected to a throttle pedal.
+ *
+ * These initialization functions are called from
+ * firmware/controllers/algo/engine_configuration.cpp
  *  void setBoardConfigurationOverrides(void);
  *  void setPinConfigurationOverrides(void);
  *  void setSerialConfigurationOverrides(void);
@@ -135,6 +144,9 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->communicationLedPin = GPIOE_2;
 	engineConfiguration->FatalErrorPin = GPIOE_3;
 	engineConfiguration->runningLedPin = GPIOE_4;
+	engineConfiguration->warningLedPin = GPIOE_5;
+	engineConfiguration->checkEngineLedPin = GPIOE_6;
+	engineConfiguration->errorLedPin = GPIOE_7;
 
 	// Set injector pins and the pin output mode
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
@@ -159,7 +171,8 @@ void setBoardConfigurationOverrides(void) {
 	}
 
 	// Board-specific scaling values to convert ADC fraction to Volts.
-	// It is good to make the math explicit, but still compile time constants
+	// It is good practice to make the math explicit, but still simple.
+	// The results should be compile time constants
 
 	// The ADC reference voltage
 	engineConfiguration->adcVcc = 3.30f;
@@ -174,8 +187,7 @@ void setBoardConfigurationOverrides(void) {
 	  (49.0f / 10.0f) * engineConfiguration->analogInputDividerCoefficient;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
-
-
+	// Configure any special on-board chips
 	setupTle8888();
 	setupEtb();
 
@@ -198,7 +210,7 @@ void setBoardConfigurationOverrides(void) {
 	// TLE8888_PIN_22: "34 - GP Out 2"
 	boardConfiguration->fanPin = TLE8888_PIN_22;
 
-	// "required" hardware is done - set some reasonable defaults
+	// The "required" hardware is done - set some reasonable input defaults
 	setupDefaultSensorInputs();
 
 	// Some sensible defaults for other options
@@ -210,14 +222,16 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
+	// Ign is IM_ONE_COIL, IM_TWO_COILS, IM_INDIVIDUAL_COILS, IM_WASTED_SPARK
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	// Inj mode: IM_SIMULTANEOUS, IM_SEQUENTIAL, IM_BATCH, IM_SINGLE_POINT
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 }
 
 void setAdcChannelOverrides(void) {
 }
-
+
 /*
  * Local variables:
  *  c-basic-indent: 4

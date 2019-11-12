@@ -375,8 +375,8 @@ engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity cont
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
-injection_mode_e crankingInjectionMode;+This is the type of injection strategy (See Fuel/Injection settings for more detail) it is suggested to use "Simultaneous" for easiest starting.
-injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, only use this if you have individually wired injectors. "batched" will fire the injectors in groups, if your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
+injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start.  See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
+injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.  If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg",    1,      0.0,       -720,     720,        2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nset cranking_timing_angle X;     "deg",    1,      0.0,    -360,     360,        2
 
@@ -542,7 +542,7 @@ switch_input_pin_e clutchDownPin;some cars have a switch to indicate that clutch
 	brain_pin_e wboHeaterPin;
 	brain_pin_e cj125CsPin;
 	spi_device_e max31855spiDevice;
-	brain_pin_e unused1133;
+	brain_pin_e debugTriggerSync;
 	
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	brain_pin_e mc33972_cs;
@@ -570,7 +570,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	brain_pin_e canRxPin;
 
 pin_input_mode_e throttlePedalUpPinMode;
-	uint8_t[1] unusedMa2;
+	brain_pin_e debugTimerCallback
 
 	int idleThreadPeriodMs;
 	int consoleLoopPeriodMs;
@@ -641,8 +641,9 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 custom uart_device_e 1 bits,U32,   @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
 	int16_t sdCardPeriodMs;+SD card logging period, in milliseconds;"ms",        1,     0,  0,    30000,  0
-	uint8_t[2] unusedSpiPadding2;
-		uint8_t[4] unuseduartPadding1;
+	brain_pin_e debugSetTimer
+	uint8_t[1] unusedSpiPadding2;
+	uint8_t[4] unuseduartPadding1;
 	
 	int mapMinBufferLength;;"count",        1,     0,  0,    24,  0
 	int16_t idlePidDeactivationTpsThreshold;;"%",        1,     0,  0,    100.0,  0

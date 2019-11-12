@@ -290,7 +290,7 @@ static void resetAccel(void) {
 	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
 
-	for (int i = 0; i < sizeof(engine->wallFuel) / sizeof(engine->wallFuel[0]); i++)
+	for (unsigned int i = 0; i < sizeof(engine->wallFuel) / sizeof(engine->wallFuel[0]); i++)
 	{
 		engine->wallFuel[i].resetWF();
 	}
@@ -775,7 +775,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	initMalfunctionCentral();
 
 #if EFI_ALTERNATOR_CONTROL
-	initAlternatorCtrl(sharedLogger);
+	initAlternatorCtrl(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 #if EFI_AUX_PID
@@ -839,6 +839,6 @@ int getRusEfiVersion(void) {
 	if (initBootloader() != 0)
 		return 123;
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
-	return 20191103;
+	return 20191110;
 }
 #endif /* EFI_UNIT_TEST */

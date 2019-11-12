@@ -1,33 +1,25 @@
 /**
- * @file digital_input_hw.h
+ * @file digital_input_icu.h
  *
  * @date Jun 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2017
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
-#ifndef DIGITAL_INPUT_HW_H_
-#define DIGITAL_INPUT_HW_H_
+#pragma once
 
-#include "global.h"
+#include "digital_input.h"
 
 #if HAL_USE_ICU
 
-#include "listener_array.h"
-
-typedef struct {
-	ICUDriver *driver;
-	bool isActiveHigh; // false for ICU_INPUT_ACTIVE_LOW, true for ICU_INPUT_ACTIVE_HIGH
-	volatile bool started;
-	brain_pin_e brainPin;
-	IntListenerArray<1> widthListeners;
-	IntListenerArray<1> periodListeners;
-} digital_input_s;
+digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin, bool isActiveHigh);
 
 void turnOnCapturePin(const char *msg, brain_pin_e brainPin);
 void turnOffCapturePin(brain_pin_e brainPin);
 
+// deprecated API
 digital_input_s *addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isActiveHigh);
+
 void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 
 //Nullable
@@ -37,4 +29,3 @@ icuchannel_t getInputCaptureChannel(brain_pin_e hwPin);
 
 #endif /* HAL_USE_ICU */
 
-#endif /* DIGITAL_INPUT_HW_H_ */

@@ -90,12 +90,12 @@ public:
 	 */
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounterM(void) const;
-	void setRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
 	 * The same as setRpmValue() but without state change.
 	 * We need this to be public because of calling rpmState->assignRpmValue() from rpmShaftPositionCallback()
 	 */
-	void assignRpmValue(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void assignRpmValue(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
 	uint32_t getRevolutionCounterSinceStart(void) const;
 	/**
 	 * RPM rate of change between current RPM and RPM measured during previous engine cycle
@@ -166,6 +166,6 @@ float getCrankshaftAngleNt(efitime_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
-void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc DECLARE_ENGINE_PARAMETER_SUFFIX);
+void scheduleByAngle(float rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #endif /* RPM_REPORTER_H_ */

@@ -123,7 +123,7 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set cranking_timing_angle 37
 	engineConfiguration->crankingTimingAngle = -37;
 
-	setSingleCoilDwell(engineConfiguration);
+	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

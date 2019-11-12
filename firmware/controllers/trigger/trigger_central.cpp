@@ -207,7 +207,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!CONFIGB(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal, engineConfiguration)) {
+		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -334,7 +334,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 			return;
 		}
 		// moved here from hwHandleShaftSignal()
-		if (!isUsefulSignal(signal, engineConfiguration)) {
+		if (!isUsefulSignal(signal PASS_ENGINE_PARAMETER_SUFFIX)) {
 			return;
 		}
 	}
@@ -511,7 +511,6 @@ extern int perSecondIrqCounter;
 
 #if EFI_PROD_CODE
 extern uint32_t maxPrecisionCallbackDuration;
-extern bool hwTriggerInputEnabled;
 #endif /* EFI_PROD_CODE  */
 
 extern uint32_t maxSchedulingPrecisionLoss;
@@ -545,11 +544,11 @@ void triggerInfo(void) {
 
 
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
-		scheduleMsg(logger, "trigger PAL mode %d", hwTriggerInputEnabled);
+		scheduleMsg(logger, "trigger PAL mode %d", engine->hwTriggerInputEnabled);
 #else
 
 #if HAL_USE_ICU == TRUE
-	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter, hwTriggerInputEnabled);
+	scheduleMsg(logger, "trigger ICU hw: %d %d %d", icuWidthCallbackCounter, icuWidthPeriodCounter, engine->hwTriggerInputEnabled);
 #endif /* HAL_USE_ICU */
 
 #endif /* HAL_TRIGGER_USE_PAL */
