@@ -336,14 +336,15 @@ TEST(misc, testRpmCalculator) {
 
 	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	assertEqualsM("fuel #1", 5.585f, engine->injectionDuration);
+	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 22.005f, ie0->injectionStart.angleOffsetFromTriggerEvent);
+	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffsetFromTriggerEvent);
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, eth.engine.rpmCalculator.rpmValue);
 
 	assertEqualsM("dwell", 4.5, engine->engineState.dwellAngle);
+	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
 	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventAngle) << "dwell angle";
