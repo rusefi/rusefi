@@ -105,13 +105,18 @@ static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW,
                                 ICU_CHANNEL_1,
                                 0};
 
-int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool isVvtShaft) {
+int turnOnTriggerInputPin(const char *msg, int index, bool isVvtShaft) {
+
+	brain_pin_e brainPin = isVvtShaft ? engineConfiguration->camInputs[index] : CONFIGB(triggerInputPins)[index];
+
+
 	ICUConfig *icucfg;
 
 	if (brainPin == GPIO_UNASSIGNED) {
 		return -1;
 	}
 
+	//digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
 	if (isVvtShaft) {
 		icucfg = &shaft_icucfg;
 	} else {
@@ -148,6 +153,7 @@ int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool isVvtShaft
 }
 
 void turnOffTriggerInputPin(brain_pin_e brainPin) {
+
 	ICUDriver *driver = getInputCaptureDriver("trigger_off", brainPin);
 	if (driver != NULL) {
         icuDisableNotifications(driver);
