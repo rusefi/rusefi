@@ -14,7 +14,7 @@
 #include "engine_controller.h"
 
 #if EFI_PROD_CODE
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
 #include "digital_input_exti.h"
 #include "pin_repository.h"
 #endif
@@ -270,7 +270,7 @@ void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if HAL_USE_ICU
 		digital_input_s* digitalMapInput = startDigitalCapture("MAP freq", CONFIGB(frequencyReportingMapInputPin), true);
 
-		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
+		digitalMapInput->setWidthCallback((VoidInt) digitalMapWidthCallback, NULL);
 #else
  #if EFI_PROD_CODE
 	efiExtiEnablePin(

@@ -2,11 +2,11 @@
  * @file	trigger_input_icu.cpp
  * @brief	Position sensor hardware layer - ICU version
  *
- * todo: code reuse with digital_input_hw.cpp was never finished
+ * todo: code reuse with digital_input_icu.cpp was never finished
  * todo: at the moment due to half-done code reuse we already depend on EFI_ICU_INPUTS but still have custom code
  * todo: VVT implementation is a nasty copy-paste :(
  *
- * see digital_input_hw.cp
+ * see digital_input_icu.cpp
  *
  * @date Dec 30, 2012
  * @author Andrey Belomutskiy, (c) 2012-2019
@@ -20,7 +20,7 @@ volatile int icuWidthPeriodCounter = 0;
 #if EFI_SHAFT_POSITION_INPUT && (HAL_USE_ICU == TRUE) && (HAL_USE_COMP == FALSE)
 
 #include "trigger_input.h"
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
 
 EXTERN_ENGINE;
 

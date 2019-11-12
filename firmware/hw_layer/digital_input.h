@@ -20,4 +20,8 @@ typedef struct {
 	brain_pin_e brainPin = GPIO_UNASSIGNED;
 	IntListenerArray<1> widthListeners;
 	IntListenerArray<1> periodListeners;
+
+	// Width/Period names are historically inherited from ICU implementation, todo: migrate to better names, high/low? rise/hall?
+	void setWidthCallback(VoidInt handler, void *arg);
+	void setPeridoCallback(VoidInt handler, void *arg);
 } digital_input_s;

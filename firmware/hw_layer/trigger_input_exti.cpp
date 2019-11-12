@@ -4,7 +4,7 @@
  *
  * todo: VVT implementation is a nasty copy-paste :(
  *
- * see digital_input_hw.cp
+ * see digital_input_icu.cp
  *
  * @date Dec 30, 2012
  * @author Andrey Belomutskiy, (c) 2012-2019

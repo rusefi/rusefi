@@ -14,7 +14,7 @@
 #include "hal_comp.h"
 
 #include "trigger_input.h"
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
 
 
 extern bool hasFirmwareErrorFlag;
