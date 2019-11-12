@@ -28,15 +28,13 @@ extern bool hasFirmwareErrorFlag;
 
 static Logging *logger;
 
-static ICUDriver *primaryCrankDriver;
-
-static void cam_icu_width_callback(ICUDriver *icup) {
-    (void)icup;
+static void cam_icu_width_callback(void *arg) {
+    (void)arg;
 	hwHandleVvtCamSignal(TV_RISE);
 }
 
-static void cam_icu_period_callback(ICUDriver *icup) {
-    (void)icup;
+static void cam_icu_period_callback(void *arg) {
+    (void)arg;
 	hwHandleVvtCamSignal(TV_FALL);
 }
 
@@ -44,7 +42,7 @@ static void cam_icu_period_callback(ICUDriver *icup) {
  * that's hardware timer input capture IRQ entry point
  * 'width' events happens before the 'period' event
  */
-static void shaft_icu_width_callback(ICUDriver *icup) {
+static void shaftWidthCallback(bool isPrimary) {
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
@@ -53,7 +51,6 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 // todo: start using real event time from HW event, not just software timer?
 	if (hasFirmwareErrorFlag)
 		return;
-	int isPrimary = icup == primaryCrankDriver;
 	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
 		return;
 	}
@@ -64,14 +61,13 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 	hwHandleShaftSignal(signal);
 }
 
-static void shaft_icu_period_callback(ICUDriver *icup) {
+static void shaftPeriodCallback(bool isPrimary) {
 	if (!engine->hwTriggerInputEnabled) {
 		return;
 	}
 	icuWidthPeriodCounter++;
 	if (hasFirmwareErrorFlag)
 		return;
-	int isPrimary = icup == primaryCrankDriver;
 	if (!isPrimary && !TRIGGER_SHAPE(needSecondTriggerInput)) {
 		return;
 	}
@@ -83,89 +79,31 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 	hwHandleShaftSignal(signal);
 }
 
-/**
- * the main purpose of this configuration structure is to specify the input interrupt callbacks
- */
-static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW,
-                                  100000, /* 100kHz ICU clock frequency.   */
-                                  shaft_icu_width_callback,
-                                  shaft_icu_period_callback,
-                                  NULL,
-                                  ICU_CHANNEL_1,
-                                  0};
-
-/**
- * this is about VTTi and stuff kind of cam sensor
- */
-static ICUConfig cam_icucfg = { ICU_INPUT_ACTIVE_LOW,
-                                100000, /* 100kHz ICU clock frequency.   */
-                                cam_icu_width_callback,
-                                cam_icu_period_callback,
-                                NULL,
-                                ICU_CHANNEL_1,
-                                0};
-
-int turnOnTriggerInputPin(const char *msg, int index, bool isVvtShaft) {
+void turnOnTriggerInputPin(const char *msg, int index, bool isVvtShaft) {
 
 	brain_pin_e brainPin = isVvtShaft ? engineConfiguration->camInputs[index] : CONFIGB(triggerInputPins)[index];
-
-
-	ICUConfig *icucfg;
-
 	if (brainPin == GPIO_UNASSIGNED) {
-		return -1;
+		return;
 	}
 
-	//digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
+	digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
 	if (isVvtShaft) {
-		icucfg = &shaft_icucfg;
+		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, NULL);
+		input->setPeriodCallback((VoidInt)(void*)shaftPeriodCallback, NULL);
 	} else {
-		icucfg = &cam_icucfg;
+		void * arg = (void*) (index == 0);
+		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, arg);
+		input->setPeriodCallback((VoidInt)(void*)shaftPeriodCallback, arg);
 	}
-
-	// configure pin
-	turnOnCapturePin(msg, brainPin);
-	icucfg->channel = getInputCaptureChannel(brainPin);
-
-	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
-	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(brainPin));
-	// todo: reuse 'setWaveReaderMode' method here?
-	if (driver != NULL) {
-		// todo: once http://forum.chibios.org/phpbb/viewtopic.php?f=16&t=1757 is fixed
-//		bool needWidthCallback = !CONFIG(useOnlyRisingEdgeForTrigger) || TRIGGER_SHAPE(useRiseEdge);
-//		shaft_icucfg.width_cb = needWidthCallback ? shaft_icu_width_callback : NULL;
-
-//		bool needPeriodCallback = !CONFIG(useOnlyRisingEdgeForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
-//		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
-
-		efiIcuStart(msg, driver, icucfg);
-		if (driver->state == ICU_READY) {
-			efiAssert(CUSTOM_ERR_ASSERT, driver != NULL, "ti: driver is NULL", -1);
-			efiAssert(CUSTOM_ERR_ASSERT, driver->state == ICU_READY, "ti: driver not ready", -1);
-            icuStartCapture(driver); // this would change state from READY to WAITING
-            icuEnableNotifications(driver);
-		} else {
-			// we would be here for example if same pin is used for multiple input capture purposes
-			firmwareError(CUSTOM_ERR_ICU_STATE, "ICU unexpected state [%s]", hwPortname(brainPin));
-		}
-	}
-	return 0;
 }
 
 void turnOffTriggerInputPin(brain_pin_e brainPin) {
 
-	ICUDriver *driver = getInputCaptureDriver("trigger_off", brainPin);
-	if (driver != NULL) {
-        icuDisableNotifications(driver);
-        icuStopCapture(driver);
-		icuStop(driver);
-		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(brainPin));
-		turnOffCapturePin(brainPin);
-	}
+	removeWaveAnalyzerDriver("trigger", brainPin);
 }
 
 void setPrimaryChannel(brain_pin_e brainPin) {
-	primaryCrankDriver = getInputCaptureDriver("primary", brainPin);
+
 }
 
 /*==========================================================================*/
