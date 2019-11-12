@@ -52,18 +52,20 @@ EnginePins::EnginePins() {
 	dizzyOutput.name = PROTOCOL_DIZZY_NAME;
 	tachOut.name = PROTOCOL_TACH_NAME;
 
-	efiAssertVoid(CUSTOM_ERR_PIN_COUNT_TOO_LARGE, (sizeof(sparkNames) / sizeof(char*)) >= IGNITION_PIN_COUNT, "spark pin count");
+	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
 	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
 	}
-	efiAssertVoid(CUSTOM_ERR_PIN_COUNT_TOO_LARGE, (sizeof(injectorNames) / sizeof(char*)) >= INJECTION_PIN_COUNT, "inj pin count");
+
+	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins");
 	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
 	}
-	efiAssertVoid(CUSTOM_ERR_PIN_COUNT_TOO_LARGE, (sizeof(auxValveShortNames) / sizeof(char*)) >= AUX_DIGITAL_VALVE_COUNT, "aux pin count");
+
+	static_assert(efi::size(auxValveShortNames) >= AUX_DIGITAL_VALVE_COUNT, "Too many aux valve pins");
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		enginePins.auxValve[i].name = auxValveShortNames[i];
 	}
