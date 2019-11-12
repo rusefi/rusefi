@@ -1,5 +1,5 @@
 /*
- * @file	digital_input_hw.cpp
+ * @file	digital_input_icu.cpp
  * @brief	Helper methods related to Input Capture Unit (ICU)
  *
  * There are some ChibiOS limitation or STM32 limitations or limitations of my brain
@@ -24,7 +24,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2018
  */
 
-#include "digital_input_hw.h"
+#include "digital_input_icu.h"
+
 #include "fl_stack.h"
 
 #if EFI_ICU_INPUTS

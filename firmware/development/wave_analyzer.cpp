@@ -8,7 +8,7 @@
  * this is rusEfi build-in logic analyzer
  *
  * @date Jan 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2018
+ * @author Andrey Belomutskiy, (c) 2012-2019
  */
 
 #include "global.h"
@@ -35,7 +35,7 @@ EXTERN_ENGINE;
 
 #if EFI_ENGINE_SNIFFER
 extern WaveChart waveChart;
-#endif
+#endif /* EFI_ENGINE_SNIFFER */
 extern bool hasFirmwareErrorFlag;
 
 /**
@@ -53,8 +53,6 @@ static void ensureInitialized(WaveReader *reader) {
 	/*may be*/UNUSED(reader);
 	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
-
-#if EFI_WAVE_ANALYZER
 
 static void waAnaWidthCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
@@ -92,12 +90,9 @@ void WaveReader::onFallEvent() {
 		totalOnTimeAccumulatorUs = 0;
 
 		waveOffsetUs = nowUs - previousEngineCycleTimeUs;
-
 	}
 
 	periodEventTimeUs = nowUs;
-
-//	uint32_t period = engineCycleDurationUs;  // local copy of volatile variable
 }
 
 static void waIcuPeriodCallback(WaveReader *reader) {
@@ -120,14 +115,13 @@ static void initWave(const char *name, int index) {
 	reader->hw = startDigitalCapture("wave input", brainPin, mode);
 
 	if (reader->hw != NULL) {
-		reader->hw->widthListeners.registerCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
+		reader->hw->setWidthCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
 
-		reader->hw->periodListeners.registerCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
+		reader->hw->setPeridoCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
 	}
 
 	print("wave%d input on %s\r\n", index, hwPortname(brainPin));
 }
-#endif
 
 WaveReader::WaveReader() {
 	hw = nullptr;
@@ -142,14 +136,6 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 	engineCycleDurationUs = nowUs - previousEngineCycleTimeUs;
 	previousEngineCycleTimeUs = nowUs;
 }
-
-/*
-static uint32_t getWaveLowWidth(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->last_wave_low_widthUs;
-}
-*/
 
 static float getSignalOnTime(int index) {
 	WaveReader *reader = &readers[index];
@@ -171,12 +157,6 @@ static float getSignalPeriodMs(int index) {
 	ensureInitialized(reader);
 	return reader->signalPeriodUs / 1000.0f;
 }
-
-//static efitime_t getWidthEventTime(int index) {
-//	WaveReader *reader = &readers[index];
-//	ensureInitialized(reader);
-//	return reader->widthEventTimeUs;
-//}
 
 static void reportWave(Logging *logging, int index) {
 	if (readers[index].hw == NULL) {
@@ -239,17 +219,16 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 	if (hasFirmwareError()) {
 		return;
 	}
-#if EFI_WAVE_ANALYZER
+
 	initWave(PROTOCOL_WA_CHANNEL_1, 0);
 	initWave(PROTOCOL_WA_CHANNEL_2, 1);
+	initWave(PROTOCOL_WA_CHANNEL_3, 2);
+	initWave(PROTOCOL_WA_CHANNEL_4, 3);
 
 	addTriggerEventListener(waTriggerEventListener, "wave analyzer", engine);
 
 	addConsoleAction("waveinfo", showWaveInfo);
 
-#else
-	print("wave disabled\r\n");
-#endif
 }
 
-#endif
+#endif /* EFI_WAVE_ANALYZER */
