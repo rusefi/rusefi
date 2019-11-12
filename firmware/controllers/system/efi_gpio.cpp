@@ -22,6 +22,16 @@
 
 EXTERN_ENGINE;
 
+// C++ helpers go here
+namespace efi
+{
+template <class T, size_t N>
+constexpr size_t size(const T (&)[N])
+{
+    return N;
+}
+} // namespace efi
+
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
