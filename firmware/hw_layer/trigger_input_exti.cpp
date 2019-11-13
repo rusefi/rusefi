@@ -64,20 +64,18 @@ static void cam_callback(void *arg) {
 	}
 }
 
-void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
-	brain_pin_e brainPin = isTriggerShaft ? CONFIGB(triggerInputPins)[index] : engineConfiguration->camInputs[index];
-
+int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool isVvtShaft) {
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
 
 	/* TODO:
 	 * * do not set to both edges if we need only one
 	 * * simplify callback in case of one edge */
 	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
-	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isVvtShaft ? shaft_callback : cam_callback, (void *)pal_line);
+	return efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isVvtShaft ? shaft_callback : cam_callback, (void *)pal_line);
 }
 
 void turnOffTriggerInputPin(brain_pin_e brainPin) {
-	stopDigitalCapture("trigger", brainPin);
+	efiExtiDisablePin(brainPin);
 }
 
 void setPrimaryChannel(brain_pin_e brainPin) {

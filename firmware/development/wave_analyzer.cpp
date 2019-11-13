@@ -117,7 +117,7 @@ static void initWave(const char *name, int index) {
 	if (reader->hw != NULL) {
 		reader->hw->setWidthCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
 
-		reader->hw->setPeriodCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
+		reader->hw->setPeridoCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
 	}
 
 	print("wave%d input on %s\r\n", index, hwPortname(brainPin));

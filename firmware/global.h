@@ -15,8 +15,6 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-#include "common_headers.h"
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -24,6 +22,7 @@ extern "C"
 
 // todo: remove this from here and rely on os_access.h. unfortunately hal.h includes ch.h :(
 #include <hal.h>
+#include "common_headers.h"
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__

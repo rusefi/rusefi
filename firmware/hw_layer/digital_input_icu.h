@@ -20,7 +20,7 @@ void turnOffCapturePin(brain_pin_e brainPin);
 digital_input_s *addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw, bool isActiveHigh);
 
-void stopDigitalCapture(const char *msg, brain_pin_e brainPin);
+void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin);
 
 //Nullable
 ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin);

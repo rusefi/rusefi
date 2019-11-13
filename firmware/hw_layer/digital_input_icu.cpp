@@ -233,7 +233,7 @@ digital_input_s * addWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 /**
  * turns pin off and returns digital_input_s back into registeredIcus pool
  */
-void stopDigitalCapture(const char *msg, brain_pin_e brainPin) {
+void removeWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
