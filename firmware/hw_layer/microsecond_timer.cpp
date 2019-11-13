@@ -176,6 +176,10 @@ static efitimems_t testSchedulingStart;
 static void timerValidationCallback(void *arg) {
 	(void)arg;
 
+	if (hasFirmwareError()) {
+		return;
+	}
+
 	testSchedulingHappened = true;
 	efitimems_t actualTimeSinceScheduling = (currentTimeMillis() - testSchedulingStart);
 
