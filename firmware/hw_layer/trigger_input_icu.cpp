@@ -28,12 +28,12 @@ extern bool hasFirmwareErrorFlag;
 
 static Logging *logger;
 
-static void cam_icu_width_callback(void *arg) {
+static void vvtWidthCallback(void *arg) {
     (void)arg;
 	hwHandleVvtCamSignal(TV_RISE);
 }
 
-static void cam_icu_period_callback(void *arg) {
+static void vvtPeriodCallback(void *arg) {
     (void)arg;
 	hwHandleVvtCamSignal(TV_FALL);
 }
@@ -79,21 +79,21 @@ static void shaftPeriodCallback(bool isPrimary) {
 	hwHandleShaftSignal(signal);
 }
 
-void turnOnTriggerInputPin(const char *msg, int index, bool isVvtShaft) {
+void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
 
-	brain_pin_e brainPin = isVvtShaft ? engineConfiguration->camInputs[index] : CONFIGB(triggerInputPins)[index];
+	brain_pin_e brainPin = isTriggerShaft ? CONFIGB(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 	if (brainPin == GPIO_UNASSIGNED) {
 		return;
 	}
 
 	digital_input_s* input = startDigitalCapture("trigger", brainPin, true);
-	if (isVvtShaft) {
-		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, NULL);
-		input->setPeriodCallback((VoidInt)(void*)shaftPeriodCallback, NULL);
-	} else {
+	if (isTriggerShaft) {
 		void * arg = (void*) (index == 0);
 		input->setWidthCallback((VoidInt)(void*)shaftWidthCallback, arg);
 		input->setPeriodCallback((VoidInt)(void*)shaftPeriodCallback, arg);
+	} else {
+		input->setWidthCallback((VoidInt)(void*)vvtWidthCallback, NULL);
+		input->setPeriodCallback((VoidInt)(void*)vvtPeriodCallback, NULL);
 	}
 }
 
