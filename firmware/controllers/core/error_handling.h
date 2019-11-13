@@ -8,13 +8,14 @@
 #ifndef ERROR_HANDLING_H_
 #define ERROR_HANDLING_H_
 
-#include "global.h"
-#include "obd_error_codes.h"
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
+
+#include "global.h"
+#include "obd_error_codes.h"
+
 
 /**
  * Something is wrong, but we can live with it: some minor sensor is disconnected
@@ -30,7 +31,7 @@ typedef uint8_t fatal_msg_t[200];
  *
  * see also warning()
  */
-void firmwareError(obd_code_e code, const char *fmt, ...);
+EXTERNC void firmwareError(obd_code_e code, const char *fmt, ...);
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
