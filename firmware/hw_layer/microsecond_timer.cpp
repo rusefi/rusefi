@@ -176,10 +176,6 @@ static efitimems_t testSchedulingStart;
 static void timerValidationCallback(void *arg) {
 	(void)arg;
 
-	if (hasFirmwareError()) {
-		return;
-	}
-
 	testSchedulingHappened = true;
 	efitimems_t actualTimeSinceScheduling = (currentTimeMillis() - testSchedulingStart);
 
@@ -193,6 +189,9 @@ static void timerValidationCallback(void *arg) {
  * helps to make sure our GPT hardware settings are somewhat right
  */
 static void validateHardwareTimer() {
+	if (hasFirmwareError()) {
+		return;
+	}
 	testSchedulingStart = currentTimeMillis();
 
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
