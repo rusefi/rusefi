@@ -22,6 +22,6 @@ void startTriggerInputPins(void);
 void stopTriggerInputPins(void);
 void setPrimaryChannel(brain_pin_e brainPin);
 void turnOffTriggerInputPin(brain_pin_e brainPin);
-void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft);
+int turnOnTriggerInputPin(const char *msg, brain_pin_e brainPin, bool isVvtShaft);
 
 #endif /* CRANK_INPUT_H_ */
