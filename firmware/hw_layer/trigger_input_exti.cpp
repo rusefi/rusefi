@@ -64,8 +64,8 @@ static void cam_callback(void *arg) {
 	}
 }
 
-void turnOnTriggerInputPin(const char *msg, int index, bool isVvtShaft) {
-	brain_pin_e brainPin = isVvtShaft ? engineConfiguration->camInputs[index] : CONFIGB(triggerInputPins)[index];
+void turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
+	brain_pin_e brainPin = isTriggerShaft ? CONFIGB(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
 	scheduleMsg(logger, "turnOnTriggerInputPin(PAL) %s %s", msg, hwPortname(brainPin));
 
