@@ -11,6 +11,6 @@ void digital_input_s::setWidthCallback(VoidInt handler, void *arg) {
 	widthListeners.registerCallback(handler, arg);
 }
 
-void digital_input_s::setPeriodCallback(VoidInt handler, void *arg) {
+void digital_input_s::setPeridoCallback(VoidInt handler, void *arg) {
 	periodListeners.registerCallback(handler, arg);
 }

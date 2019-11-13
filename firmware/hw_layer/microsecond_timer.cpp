@@ -189,9 +189,6 @@ static void timerValidationCallback(void *arg) {
  * helps to make sure our GPT hardware settings are somewhat right
  */
 static void validateHardwareTimer() {
-	if (hasFirmwareError()) {
-		return;
-	}
 	testSchedulingStart = currentTimeMillis();
 
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
@@ -211,7 +208,7 @@ void initMicrosecondTimer(void) {
 
 	lastSetTimerTimeNt = getTimeNowNt();
 
-	//todo:uncomment 	validateHardwareTimer();
+	validateHardwareTimer();
 
 	watchDogBuddyCallback(NULL);
 #if EFI_EMULATE_POSITION_SENSORS
