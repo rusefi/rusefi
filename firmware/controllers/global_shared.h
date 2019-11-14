@@ -57,6 +57,10 @@
 /**
  * this macro allows the compiled to figure out the complete static address, that's a performance
  * optimization which is hopefully useful at least for anything trigger-related
+ *
+ * this is related to the fact that for unit tests we prefer to explicitly pass references in method signature thus code covered by
+ * unit tests would need to use by-reference access. These macro allow us to have faster by-address access in real firmware and by-reference
+ * access in unit tests
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define CONFIGB(x) persistentState.persistentConfiguration.engineConfiguration.bc.x
